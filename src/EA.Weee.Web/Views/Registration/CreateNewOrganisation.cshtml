@@ -1,0 +1,86 @@
+﻿@model EA.Weee.Web.ViewModels.Registration.CreateNewOrganisationViewModel
+
+@{
+    ViewBag.Title = "Organisation Details";
+}
+<h1 class="heading-large">
+    Add a new organisation
+</h1>
+<p>Enter your correspondence address</p>
+
+@using (Html.BeginForm("CreateNewOrganisation", "Registration"))
+{
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
+
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.Name)">
+        @Html.ValidationMessageFor(m => m.Name)
+        @Html.Gds().LabelFor(m => m.Name)
+        @Html.Gds().TextBoxFor(m => m.Name)
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.Building)">
+        @Html.ValidationMessageFor(m => m.Building)
+        @Html.Gds().LabelFor(m => m.Building)
+        @Html.Gds().TextBoxFor(m => m.Building)
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.Address1)">
+        @Html.ValidationMessageFor(m => m.Address1)
+        @Html.Gds().LabelFor(m => m.Address1)
+        @Html.Gds().TextBoxFor(m => m.Address1)
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.Address2)">
+        @Html.ValidationMessageFor(m => m.Address2)
+        @Html.Gds().LabelFor(m => m.Address2)
+        @Html.Gds().TextBoxFor(m => m.Address2)
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.TownOrCity)">
+        @Html.ValidationMessageFor(m => m.TownOrCity)
+        @Html.Gds().LabelFor(m => m.TownOrCity)
+        @Html.Gds().TextBoxFor(m => m.TownOrCity)
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.Postcode)">
+        @Html.ValidationMessageFor(m => m.Postcode)
+        @Html.Gds().LabelFor(m => m.Postcode)
+        @Html.Gds().TextBoxFor(m => m.Postcode)
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.CountryId)">
+        @Html.ValidationMessageFor(m => m.CountryId)
+        @Html.Gds().LabelFor(m => m.CountryId)
+        @Html.Gds().DropDownListFor(m => m.CountryId, new SelectList(Model.Countries, "Id", "Name", Model.DefaultCountry.Id))
+    </div>
+    <div class="form-group" @Html.Gds().FormGroupClass(m => m.EntityType)>
+        @Html.ValidationMessageFor(m => m.EntityType)
+        <label class="form-label">Organisation type</label>
+        <label class="block-label">
+            @Html.RadioButtonFor(m => m.EntityType, "Sole Trader") Sole trader
+        </label>
+        <label class="block-label">
+            @Html.RadioButtonFor(m => m.EntityType, "Partnership") Partnership
+        </label>
+        <label class="block-label" data-target="companies-house-number">
+            @Html.RadioButtonFor(m => m.EntityType, "Limited Company") Limited company
+        </label>
+        <div class="panel-indent @(Model.EntityType != null && Model.EntityType.Equals("Limited Company") ? "" : "js-hidden")" id="companies-house-number">
+            <div class="form-group" @Html.Gds().FormGroupClass(m => m.CompaniesHouseReference)>
+                @Html.ValidationMessageFor(m => m.CompaniesHouseReference)
+                @Html.Gds().LabelFor(m => m.CompaniesHouseReference)
+                @Html.Gds().TextBoxFor(m => m.CompaniesHouseReference)
+            </div>
+            <div class="form-group">
+                <details>
+                    <summary><span class="summary">Where can I find my company number</span></summary>
+                    <div class="panel-indent">
+                        <p>
+                            Your Companies House number is on your organisation's certificate of incorporation.
+                            You can also get the number from your organisation's accountant or accounts department, or
+                            <a href="http://wck2.companieshouse.gov.uk">search the Companies House online services</a>
+                        </p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="submit" class="button" value="Continue" />
+    </div>
+}

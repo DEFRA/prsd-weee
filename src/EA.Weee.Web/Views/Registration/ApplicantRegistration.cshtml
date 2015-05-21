@@ -1,0 +1,138 @@
+﻿@model EA.Weee.Web.ViewModels.Registration.ApplicantRegistrationViewModel
+@{
+    ViewBag.Title = "Register";
+    var signin = Request.QueryString["signin"];
+}
+<h1 class="heading-large">
+    About you and your organisation
+</h1>
+<p>
+    Enter your contact details and the name of your organisation
+</p>
+<h1 class="heading-large"></h1>
+
+@using (Html.BeginForm("ApplicantRegistration", "Registration"))
+{
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
+
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.Name)">
+        @Html.ValidationMessageFor(m => m.Name)
+        @Html.Gds().LabelFor(m => m.Name)
+        @Html.Gds().TextBoxFor(m => m.Name)
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.Surname)">
+        @Html.ValidationMessageFor(m => m.Surname)
+        @Html.Gds().LabelFor(m => m.Surname)
+        @Html.Gds().TextBoxFor(m => m.Surname)
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.OrganisationName)">
+        @Html.ValidationMessageFor(m => m.OrganisationName)
+        @Html.Gds().LabelFor(m => m.OrganisationName)
+        @Html.Gds().TextBoxFor(m => m.OrganisationName)
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.PhoneNumber)">
+        @Html.ValidationMessageFor(m => m.PhoneNumber)
+        @Html.Gds().LabelFor(m => m.PhoneNumber)
+        @Html.Gds().TextBoxFor(m => m.PhoneNumber)
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.Email)">
+        @Html.ValidationMessageFor(m => m.Email)
+        @Html.Gds().LabelFor(m => m.Email)
+        @Html.Gds().TextBoxFor(m => m.Email)
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.Password)">
+        @Html.ValidationMessageFor(m => m.Password)
+        @Html.Gds().LabelFor(m => m.Password)
+        <p class="form-hint text">Password must be at least 6 characters and contain at least 1 uppercase letter, 1 lowercase letter and 1 number</p>
+        @Html.Gds().PasswordFor(m => m.Password)
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.ConfirmPassword)">
+        @Html.ValidationMessageFor(m => m.ConfirmPassword)
+        @Html.Gds().LabelFor(m => m.ConfirmPassword)
+        @Html.Gds().PasswordFor(m => m.ConfirmPassword)
+    </div>
+    <div class="grid-row">
+        <div class="column-half">
+            <div class="form-group" @Html.Gds().FormGroupClass(m => m.TermsAndConditions)>
+                <fieldset>
+                    <div>@Html.ValidationMessageFor(m => m.TermsAndConditions)</div>
+                    <label class="block-label" for="checkbox-1">
+                        @Html.CheckBoxFor(m => m.TermsAndConditions, new { @id = "checkbox-1" })
+                        Accept terms and conditions for use
+                    </label>
+                </fieldset>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="button" value="Continue" />
+            </div>
+        </div>
+        <div class="column-half">
+            <details>
+                <summary><span class="summary">Read full terms and conditions for use</span></summary>
+                <div class="panel-indent">
+                    <b>Terms and conditions of use</b>
+                    <p>
+                        The general purpose of the website is to provide access to web-based transactions and services relating to international waste shipments and to grant access to related data held by the Environment Agency (EA) in accordance with applicable legal provisions.
+                    </p>
+                    <p>
+                        Access to, and use of any part of the website including text, and software are governed by these terms and conditions and using them constitutes acceptance of these terms and conditions by the user.
+                    </p>
+                    <p>
+                        The EA reserves the right to amend these terms and conditions at any time by posting amended terms and conditions on the website.
+                    </p>
+                    <p>
+                        The EA reserves the right to modify, limit or discontinue - in full or in part and without prior notice - the services and information available on the website at any time, to restrict access to the website and to deny, without notice, and at its sole discretion, any user's access to the website or any part thereof.
+                    </p>
+                    <p>
+                        Users of the website must comply with all applicable laws and regulations. They must refrain from violating or attempting to violate the EA’s network security, and, in particular, from uploading or attaching viruses, corrupted files or any software that might damage the operation of these services.
+                    </p>
+                    <p>
+                        Some of the services available on this website require registration. Users must provide correct and complete information when registering, and update it as necessary. They must not misuse any access rights granted to them (for example by transferring data to unauthorised third persons). By registering, users agree to being contacted by the EA by e‑mail.
+                    </p>
+                    <ol class="list-number">
+                        <li>Registered users are responsible for maintaining the confidentiality of their account and password to prevent unauthorised access to that account. Users must take all necessary steps to keep their password secure and must inform the EA without delay at needanappropriateemailaddress@ea.gov.uk if it is being or could be used without authorisation.</li>
+                        <li>In the event of any violation of the above user obligations, the EA is entitled to revoke the user's access rights without prior notice.</li>
+                    </ol>
+                </div>
+            </details>
+            <details>
+                <summary>
+                    <span class="summary">Read standard data notice</span>
+                </summary>
+                <div class="panel-indent">
+                    <p>
+                        <h3>How we will use your personal information</h3>
+                    </p>
+                    
+                    <p>
+                        We, the Environment Agency, will process the information you provide so that we can:
+
+                        <ul class="list-bullet">
+                            <li>deal with your application;</li>
+                            <li>make sure you keep to the conditions of the licence, permit or registration; and</li>
+                            <li>process renewals.</li>
+                        </ul>
+                    </p>
+                    
+                    <p>
+                        We may also process or release the information to:
+
+                        <ul class="list-bullet">
+                            <li>offer you documents or services relating to environmental matters;</li>
+                            <li>consult the public, public organisations and other organisations (for example, the Health and Safety Executive, local authorities, the emergency services, the Department for Environment, Food and Rural Affairs) on environmental issues;</li>
+                            <li>carry out research and development work on environmental issues;</li>
+                            <li>prevent anyone from breaking environmental law, investigate cases where environmental law may have been broken, and take any action that is needed;</li>
+                            <li>assess whether customers are satisfied with our service, and to improve our service; and</li>
+                            <li>respond to requests for information under the Freedom of Information Act 2000 and the Environmental Information Regulations 2004 (if the Data Protection Act allows).</li>
+                        </ul>
+                    </p>
+                    <p>
+                        We may pass the information on to our agents or representatives to do these things for us.
+                    </p>
+                    
+                </div>
+            </details>
+        </div>
+    </div>
+}

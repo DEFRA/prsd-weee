@@ -1,0 +1,1 @@
+& $env:TF_BUILD_SOURCESDIRECTORY\tools\NuGet\nuget.exe restore $env:TF_BUILD_SOURCESDIRECTORY\src\EA.Weee.sln

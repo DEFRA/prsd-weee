@@ -1,0 +1,32 @@
+﻿@model EA.Weee.Web.ViewModels.NotificationApplication.ExporterNotifier
+
+@{
+    ViewBag.Title = "Exporter Notifier";
+}
+
+@using (Html.BeginForm("ExporterNotifier", "NotificationApplication", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
+
+    <header class="hgroup">
+        <h2 class="heading-large">Add exporter - notifier</h2>
+        <div class="colored-header-bar"></div>
+    </header>
+
+    <div class="form-group">
+        @Html.HiddenFor(m => m.NotificationId)
+    </div>
+
+    @Html.EditorFor(m => m.BusinessViewModel)
+
+    <h2 class="heading-medium">Address</h2>
+    <hr />
+    @Html.EditorFor(m => m.AddressDetails)
+
+    <h2 class="heading-medium">Contact person</h2>
+    <hr />
+    @Html.EditorFor(m => m.ContactDetails)
+
+    <button class="button" type="submit">Continue</button>
+}

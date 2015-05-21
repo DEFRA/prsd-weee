@@ -1,0 +1,31 @@
+﻿@model EA.Weee.Web.ViewModels.Shared.ContactPersonViewModel
+
+<div class="form-group">
+    @Html.ValidationMessageFor(model => model.FirstName)
+    @Html.Gds().LabelFor(model => model.FirstName)
+    @Html.Gds().TextBoxFor(model => model.FirstName)
+</div>
+
+<div class="form-group">
+    @Html.ValidationMessageFor(model => model.LastName)
+    @Html.Gds().LabelFor(model => model.LastName)
+    @Html.Gds().TextBoxFor(model => model.LastName)
+</div>
+
+<div class="form-group">
+    @Html.ValidationMessageFor(model => model.Telephone)
+    @Html.Gds().LabelFor(model => model.Telephone)
+    @Html.Gds().TextBoxFor(model => model.Telephone)
+</div>
+
+<div class="form-group">
+    @Html.ValidationMessageFor(model => model.Fax)
+    @Html.Gds().LabelFor(model => model.Fax)
+    @Html.Gds().TextBoxFor(model => model.Fax)
+</div>
+
+<div class="form-group">
+    @Html.ValidationMessageFor(model => model.Email)
+    @Html.Gds().LabelFor(model => model.Email)
+    @Html.Gds().TextBoxFor(model => model.Email)
+</div>
