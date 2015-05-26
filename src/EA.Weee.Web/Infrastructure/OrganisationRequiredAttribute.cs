@@ -24,7 +24,7 @@
 
                 if (!organisationRegistered)
                 {
-                    filterContext.Result = new RedirectResult("/Registration/CreateNewOrganisation");
+                    filterContext.Result = new RedirectResult("/NewOrganisation/CreateNewOrganisation");
                 }
             }
         }

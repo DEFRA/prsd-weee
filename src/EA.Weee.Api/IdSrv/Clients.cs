@@ -11,14 +11,14 @@
             {
                 new Client
                 {
-                    ClientName = "IWS Web",
-                    ClientId = "iws",
+                    ClientName = "WEEE Web",
+                    ClientId = "weee",
                     Enabled = true,
                     AccessTokenType = AccessTokenType.Reference,
                     Flow = Flows.ResourceOwner,
                     ClientSecrets = new List<ClientSecret>
                     {
-                        new ClientSecret("4945361C-A026-4B28-B077-9DA715238C23".Sha256())
+                        new ClientSecret("C11A1534-554B-453D-B881-3FEAD3EEFEE9".Sha256())
                     }
                 }
             };

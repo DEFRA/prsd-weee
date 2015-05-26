@@ -8,7 +8,7 @@
     {
         public static ClaimsIdentity GenerateUserIdentity(this TokenResponse response)
         {
-            var identity = new ClaimsIdentity(Constants.IwsAuthType);
+            var identity = new ClaimsIdentity(Constants.WeeeAuthType);
             identity.AddClaim(new Claim(OAuth2Constants.AccessToken, response.AccessToken));
 
             if (response.RefreshToken != null)

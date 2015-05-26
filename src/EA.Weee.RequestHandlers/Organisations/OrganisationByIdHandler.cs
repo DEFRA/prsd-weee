@@ -10,9 +10,9 @@
 
     internal class OrganisationByIdHandler : IRequestHandler<OrganisationById, OrganisationData>
     {
-        private readonly IwsContext context;
+        private readonly WeeeContext context;
 
-        public OrganisationByIdHandler(IwsContext context)
+        public OrganisationByIdHandler(WeeeContext context)
         {
             this.context = context;
         }

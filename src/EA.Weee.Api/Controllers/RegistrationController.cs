@@ -9,20 +9,20 @@
     using Identity;
     using Microsoft.AspNet.Identity;
 
-    [RoutePrefix("api/Registration")]
-    public class RegistrationController : ApiController
+    [RoutePrefix("api/NewUser")]
+    public class NewUserController : ApiController
     {
         private readonly ApplicationUserManager userManager;
 
-        public RegistrationController(ApplicationUserManager userManager)
+        public NewUserController(ApplicationUserManager userManager)
         {
             this.userManager = userManager;
         }
 
-        // POST api/Registration/Register
+        // POST api/NewUser/CreateUser
         [AllowAnonymous]
-        [Route("Register")]
-        public async Task<IHttpActionResult> Register(ApplicantRegistrationData model)
+        [Route("CreateUser")]
+        public async Task<IHttpActionResult> CreateUser(UserCreationData model)
         {
             if (!ModelState.IsValid)
             {
@@ -33,7 +33,6 @@
             {
                 UserName = model.Email,
                 Email = model.Email,
-                PhoneNumber = model.Phone,
                 FirstName = model.FirstName,
                 Surname = model.Surname
             };

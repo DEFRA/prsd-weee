@@ -48,29 +48,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="scripts\Update\Sprint7\20150515-145639-Add-Facility-Rename-Waste-Action.sql" />
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="schema_compare.ps1" />
-    <Content Include="scripts\TestData\20150511-092300-Sunil-test-user.sql" />
-    <Content Include="scripts\TestData\20150511-164100-SFW-test-organisation.sql" />
-    <Content Include="scripts\Update\Sprint6\20150424-152702-EA.Iws.sql" />
-    <None Include="scripts\Update\Sprint6\20150429-150715-EA.Iws.sql" />
-    <None Include="scripts\Update\Sprint6\20150430-115148-EA.Iws.sql" />
-    <None Include="scripts\Update\Sprint6\20150430-104718-EA.Iws.sql" />
-    <None Include="scripts\Update\Sprint6\20150501-154209-EA.Iws.sql" />
-    <None Include="scripts\Update\Sprint6\20150505-095059-EA.Iws.sql" />
-    <None Include="scripts\Update\Sprint6\20150505-144700-EA.Iws.sql" />
-    <None Include="scripts\Update\Sprint7\20150512-121114-EA.Iws.sql" />
-    <Content Include="scripts\Update\Sprint7\20150508-095646-EA.Iws.sql" />
-    <Content Include="scripts\Update\Sprint7\20150508-214414-EA.Iws.sql" />
-    <Content Include="scripts\Update\Sprint7\20150514-093139-NotificationProducer-table.sql" />
-    <Content Include="scripts\Update\Sprint7\20150514-110531-Remove-NotificationId-from-Producer.sql" />
-    <None Include="scripts\Update\Sprint7\20150514-115543-Rename-CompanyHouseNumber-in-Exporter.sql" />
-    <Content Include="scripts\Update\Sprint7\20150514-122432-Add-Columns-to-flatten-database.sql" />
-    <None Include="scripts\Update\Sprint7\20150514-145256-Change-Registration-column-names.sql" />
-    <None Include="scripts\Update\Sprint7\20150515-100120-Added-primary-key-to-NotificationProducer.sql" />
-    <None Include="scripts\Update\Sprint7\20150515-134647-Add-Importer.sql" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />
@@ -78,14 +58,10 @@
     <Content Include="scripts\Create\placeholder.txt" />
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
-    <Content Include="scripts\Update\Sprint6\20150424-164300-AspNetIdentity.sql" />
-    <Content Include="scripts\Update\Sprint6\20150501-112343-CountryData.sql" />
-    <Content Include="scripts\Update\Sprint7\20150508-161516-EA.Iws.sql" />
-    <Content Include="scripts\Update\Sprint7\20150511-091545-EA.Iws.sql" />
-    <Content Include="scripts\Update\Sprint7\20150513-152000-Notification-ExporterId.sql" />
-    <Content Include="scripts\Update\Sprint7\20150515-093436-Flatten-DB.sql" />
     <Content Include="scripts\Update\placeholder.txt" />
+    <Content Include="scripts\Update\Sprint0-IWS\20150526-164637-IntialiseFromIws.sql" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

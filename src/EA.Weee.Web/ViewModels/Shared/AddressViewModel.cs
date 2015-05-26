@@ -4,13 +4,10 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using Requests.Registration;
 
     public class AddressViewModel
     {
         private const string DefaultCountryName = "United Kingdom";
-
-        public IEnumerable<CountryData> Countries { get; set; }
 
         [Required]
         [Display(Name = "Building name or number")]
@@ -38,27 +35,5 @@
         public Guid CountryId { get; set; }
 
         public string CountryName { get; set; }
-
-        public CountryData DefaultCountry
-        {
-            get
-            {
-                if (Countries == null || !Countries.Any())
-                {
-                    return null;
-                }
-                var country = Countries.SingleOrDefault(c => c.Name.Equals(DefaultCountryName));
-                
-                if (this.CountryId == Guid.Empty)
-                {
-                    if (country != null)
-                    {
-                        this.CountryId = country.Id;
-                    }
-                }
-
-                return country ?? Countries.First();
-            }
-        }
     }
 }

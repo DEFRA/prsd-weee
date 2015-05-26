@@ -4,7 +4,7 @@
 
     public class ApplicationUserStore : UserStore<ApplicationUser>
     {
-        public ApplicationUserStore(IwsIdentityContext context)
+        public ApplicationUserStore(WeeeIdentityContext context)
             : base(context)
         {
         }

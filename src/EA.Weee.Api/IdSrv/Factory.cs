@@ -18,7 +18,7 @@
 
             var efConfig = new EntityFrameworkServiceOptions
             {
-                ConnectionString = "Iws.DefaultConnection",
+                ConnectionString = "Weee.DefaultConnection",
                 Schema = "Identity"
             };
 

@@ -12,7 +12,7 @@
     // https://github.com/NuGet/NuGetGallery
     public class ConfigurationService
     {
-        private const string SettingPrefix = "Iws.";
+        private const string SettingPrefix = "Weee.";
 
         private AppConfiguration currentConfiguration;
 

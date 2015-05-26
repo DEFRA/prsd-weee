@@ -19,7 +19,7 @@
             {
                 foreach (var identity in claimsPrincipal.Identities)
                 {
-                    if (identity.AuthenticationType == Constants.IwsAuthType)
+                    if (identity.AuthenticationType == Constants.WeeeAuthType)
                     {
                         var idClaim = identity.FindFirst(JwtClaimTypes.Subject);
 

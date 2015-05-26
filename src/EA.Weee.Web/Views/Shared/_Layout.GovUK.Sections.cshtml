@@ -10,8 +10,8 @@
 }
 
 @section head {
-    @Html.Partial("_IwsHead")
-    @Html.Partial("_IwsTracking")
+    @Html.Partial("_WeeeHead")
+    @Html.Partial("_WeeeTracking")
     @RenderSection("head", required: false)
 }
 
@@ -20,7 +20,7 @@
 }
 
 @section proposition_header {
-    @Html.Partial("_IwsNavigation")
+    @Html.Partial("_WeeeNavigation")
 }
 
 @section after_header {
@@ -39,7 +39,7 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/govuk_toolkit")
-    @Scripts.Render("~/bundles/govuk_iws")
+    @Scripts.Render("~/bundles/govuk_weee")
     @Scripts.Render("~/bundles/prism")
     @RenderSection("scripts", required: false)
 }
