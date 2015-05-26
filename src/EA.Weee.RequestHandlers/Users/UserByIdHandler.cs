@@ -5,15 +5,15 @@
     using System.Threading.Tasks;
     using DataAccess;
     using Prsd.Core.Mediator;
+    using Requests.NewUser;
     using Requests.Organisations;
-    using Requests.Registration.Users;
     using Requests.Shared;
 
     internal class UserByIdHandler : IRequestHandler<UserById, User>
     {
-        private readonly IwsContext context;
+        private readonly WeeeContext context;
 
-        public UserByIdHandler(IwsContext context)
+        public UserByIdHandler(WeeeContext context)
         {
             this.context = context;
         }
@@ -25,7 +25,6 @@
                 Email = u.Email,
                 FirstName = u.FirstName,
                 Id = u.Id,
-                PhoneNumber = u.PhoneNumber,
                 Surname = u.Surname,
                 Organisation = new OrganisationData()
                 {

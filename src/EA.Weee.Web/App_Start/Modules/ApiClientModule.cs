@@ -13,8 +13,8 @@
             {
                 var cc = c.Resolve<IComponentContext>();
                 var config = cc.Resolve<AppConfiguration>();
-                return new IwsClient(config.ApiUrl);
-            }).As<IIwsClient>();
+                return new WeeeClient(config.ApiUrl);
+            }).As<IWeeeClient>();
 
             builder.Register(c =>
             {

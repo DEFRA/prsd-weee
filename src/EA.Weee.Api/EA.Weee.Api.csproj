@@ -215,13 +215,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutofacBootstrapper.cs" />
-    <Compile Include="App_Start\Modules\DocumentGeneratorModule.cs" />
     <Compile Include="App_Start\Modules\UserContextModule.cs" />
     <Compile Include="Infrastructure\HttpStatusCodeResult.cs" />
     <Compile Include="Controllers\MediatorController.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\EmailService.cs" />
-    <Compile Include="Identity\SmsService.cs" />
     <Compile Include="Controllers\RegistrationController.cs" />
     <Compile Include="Identity\UserContext.cs" />
     <Compile Include="IdSrv\Clients.cs" />
@@ -242,7 +240,6 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Documents\NotificationMergeTemplate.docx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -253,6 +250,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="App_Readme\" />
+    <Folder Include="Documents\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.Api.Client\EA.Weee.Api.Client.csproj">
@@ -262,10 +260,6 @@
     <ProjectReference Include="..\EA.Weee.DataAccess\EA.Weee.DataAccess.csproj">
       <Project>{46300373-D7AE-40AA-BF96-3FC3889825A4}</Project>
       <Name>EA.Weee.DataAccess</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EA.Weee.DocumentGeneration\EA.Weee.DocumentGeneration.csproj">
-      <Project>{4e8f11ab-abc4-4b67-bbde-0a50e51580de}</Project>
-      <Name>EA.Weee.DocumentGeneration</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Prsd.Core.Autofac\EA.Prsd.Core.Autofac.csproj">
       <Project>{333C65B9-EBB6-4D04-921E-89094F80E2E3}</Project>

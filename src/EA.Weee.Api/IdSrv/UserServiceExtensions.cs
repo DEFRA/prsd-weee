@@ -15,7 +15,7 @@
             factory.UserService = new Registration<IUserService, UserService>() { Mode = RegistrationMode.InstancePerHttpRequest };
             factory.Register(new Registration<ApplicationUserManager>() { Mode = RegistrationMode.InstancePerHttpRequest });
             factory.Register(new Registration<IUserStore<ApplicationUser>, ApplicationUserStore>() { Mode = RegistrationMode.InstancePerHttpRequest });
-            factory.Register(new Registration<IwsIdentityContext>() { Mode = RegistrationMode.InstancePerHttpRequest });
+            factory.Register(new Registration<WeeeIdentityContext>() { Mode = RegistrationMode.InstancePerHttpRequest });
             factory.Register(new Registration<IDataProtectionProvider>(f => app.GetDataProtectionProvider()) { Mode = RegistrationMode.InstancePerHttpRequest });
         }
     }

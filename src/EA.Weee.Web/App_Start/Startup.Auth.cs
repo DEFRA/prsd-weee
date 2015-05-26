@@ -20,7 +20,7 @@
         {
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
-                AuthenticationType = Constants.IwsAuthType,
+                AuthenticationType = Constants.WeeeAuthType,
                 LoginPath = new PathString("/Account/Login"),
                 Provider = new CookieAuthenticationProvider
                 {
@@ -90,7 +90,7 @@
                 claims.Add(nameId);
             }
 
-            var id = new ClaimsIdentity(Constants.IwsAuthType);
+            var id = new ClaimsIdentity(Constants.WeeeAuthType);
             id.AddClaims(claims);
 
             return new ClaimsPrincipal(id);

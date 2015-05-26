@@ -15,7 +15,7 @@
     internal class FindMatchingOrganisationsHandler :
         IRequestHandler<FindMatchingOrganisations, IList<OrganisationData>>
     {
-        private readonly IwsContext context;
+        private readonly WeeeContext context;
 
         private readonly SpecialBusinessSearchCase[] specialCases =
         {
@@ -25,7 +25,7 @@
             new SpecialBusinessSearchCase(new[] { "COMPANY", "CO" }, Position.End)
         };
 
-        public FindMatchingOrganisationsHandler(IwsContext context)
+        public FindMatchingOrganisationsHandler(WeeeContext context)
         {
             this.context = context;
         }

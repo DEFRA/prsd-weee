@@ -4,7 +4,7 @@ param
     [string]$sqlServerName = ".\sqlexpress"
 )
 
-$databaseName = "EA.Iws"
+$databaseName = "EA.Weee"
 $base_dir = resolve-path .
 $databaseScripts = "$base_dir\"
 $SqlPackage = "C:\Program Files (x86)\Microsoft SQL Server\120\DAC\bin\SqlPackage.exe"

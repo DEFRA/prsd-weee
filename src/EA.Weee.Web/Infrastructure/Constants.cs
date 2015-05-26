@@ -2,6 +2,6 @@
 {
     public static class Constants
     {
-        public static readonly string IwsAuthType = "IWS";
+        public static readonly string WeeeAuthType = "WEEE";
     }
 }
