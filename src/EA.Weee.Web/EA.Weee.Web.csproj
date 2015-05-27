@@ -469,13 +469,8 @@
     <Content Include="Views\NewUser\UserCreation.cshtml" />
     <Content Include="Views\JoinOrganisation\SelectOrganisation.cshtml" />
     <Content Include="Views\Home\LandingPage.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\ContactPerson.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\ContactPersonViewModel.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\BusinessViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressData.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\ContactData.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\BusinessData.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
