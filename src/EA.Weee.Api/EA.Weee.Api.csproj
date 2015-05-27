@@ -236,7 +236,7 @@
     <Compile Include="Controllers\MediatorController.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\EmailService.cs" />
-    <Compile Include="Controllers\RegistrationController.cs" />
+    <Compile Include="Controllers\NewUserController.cs" />
     <Compile Include="Identity\UserContext.cs" />
     <Compile Include="IdSrv\Clients.cs" />
     <Compile Include="IdSrv\DebugLogger.cs" />
