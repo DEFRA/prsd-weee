@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EA.Iws.Api</RootNamespace>
-    <AssemblyName>EA.Iws.Api</AssemblyName>
+    <RootNamespace>EA.Weee.Api</RootNamespace>
+    <AssemblyName>EA.Weee.Api</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44301</IISExpressSSLPort>
@@ -62,6 +62,18 @@
     <Reference Include="AutoMapper.Net4, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15146.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.15146-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15146.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15146-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15146.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.Web.1.0.15146-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
     </Reference>
     <Reference Include="Elmah">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
@@ -187,6 +199,10 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Thinktecture.IdentityModel.Client.Net45, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Thinktecture.IdentityModel.Client.4.0.1\lib\net45\Thinktecture.IdentityModel.Client.Net45.dll</HintPath>
+    </Reference>
     <Reference Include="Thinktecture.IdentityModel.Core, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Thinktecture.IdentityModel.Core.1.4.0\lib\net45\Thinktecture.IdentityModel.Core.dll</HintPath>
       <Private>True</Private>
@@ -260,18 +276,6 @@
     <ProjectReference Include="..\EA.Weee.DataAccess\EA.Weee.DataAccess.csproj">
       <Project>{46300373-D7AE-40AA-BF96-3FC3889825A4}</Project>
       <Name>EA.Weee.DataAccess</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EA.Prsd.Core.Autofac\EA.Prsd.Core.Autofac.csproj">
-      <Project>{333C65B9-EBB6-4D04-921E-89094F80E2E3}</Project>
-      <Name>EA.Prsd.Core.Autofac</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EA.Prsd.Core.Web\EA.Prsd.Core.Web.csproj">
-      <Project>{67EB0694-6149-4A6F-89DE-144F24802C7F}</Project>
-      <Name>EA.Prsd.Core.Web</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
-      <Project>{D38EA5EF-F9F5-480C-AE0A-214122559426}</Project>
-      <Name>EA.Prsd.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
       <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>

@@ -7,8 +7,8 @@
     <ProjectGuid>{87FBB5CC-A732-4363-A158-39DBF3707407}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EA.Iws.Requests</RootNamespace>
-    <AssemblyName>EA.Iws.Requests</AssemblyName>
+    <RootNamespace>EA.Weee.Requests</RootNamespace>
+    <AssemblyName>EA.Weee.Requests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>38d74d2b</NuGetPackageImportStamp>
@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15146.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.1.0.15146-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -50,12 +54,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NewUser\User.cs" />
     <Compile Include="NewUser\UserById.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
-      <Project>{D38EA5EF-F9F5-480C-AE0A-214122559426}</Project>
-      <Name>EA.Prsd.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

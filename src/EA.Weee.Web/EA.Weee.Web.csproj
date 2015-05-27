@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EA.Iws.Web</RootNamespace>
-    <AssemblyName>EA.Iws.Web</AssemblyName>
+    <RootNamespace>EA.Weee.Web</RootNamespace>
+    <AssemblyName>EA.Weee.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -62,6 +62,18 @@
     <Reference Include="Autofac.Integration.WebApi, Version=3.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15146.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15146-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15146.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15146-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15146.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15146-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
@@ -455,7 +467,7 @@
     <Content Include="Views\Shared\EditorTemplates\RadioButtonStringCollectionBaseViewModel.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\NewUser\UserCreation.cshtml" />
-    <Content Include="Views\NewUser\SelectOrganisation.cshtml" />
+    <Content Include="Views\JoinOrganisation\SelectOrganisation.cshtml" />
     <Content Include="Views\Home\LandingPage.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ContactPerson.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
@@ -515,7 +527,6 @@
     <Compile Include="ViewModels\Shared\AddressViewModel.cs" />
     <Compile Include="ViewModels\Shared\ContactPersonViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionOptionalViewModel.cs" />
-    <Compile Include="ViewModels\NotificationApplication\CompetentAuthorityChoiceViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
     <Compile Include="Views\Shared\ViewBase.cs" />
   </ItemGroup>
@@ -527,18 +538,6 @@
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
       <Project>{87FBB5CC-A732-4363-A158-39DBF3707407}</Project>
       <Name>EA.Weee.Requests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EA.Prsd.Core.Web.Mvc\EA.Prsd.Core.Web.Mvc.csproj">
-      <Project>{212c8803-bfe2-4091-81b0-b25be91c1c04}</Project>
-      <Name>EA.Prsd.Core.Web.Mvc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EA.Prsd.Core.Web\EA.Prsd.Core.Web.csproj">
-      <Project>{67EB0694-6149-4A6F-89DE-144F24802C7F}</Project>
-      <Name>EA.Prsd.Core.Web</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
-      <Project>{D38EA5EF-F9F5-480C-AE0A-214122559426}</Project>
-      <Name>EA.Prsd.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
@@ -571,11 +570,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52657</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:52657/</IISUrl>
+          <IISUrl>http://localhost:52655/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

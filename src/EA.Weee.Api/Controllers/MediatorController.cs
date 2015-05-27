@@ -6,13 +6,12 @@
     using System.Security.Authentication;
     using System.Threading.Tasks;
     using System.Web.Http;
+    using EA.Prsd.Core.Mediator;
+    using EA.Prsd.Core.Web.ApiClient;
     using Elmah;
     using Infrastructure;
     using Newtonsoft.Json;
-    using Prsd.Core.Mediator;
-    using Prsd.Core.Web.ApiClient;
 
-    [RoutePrefix("api")]
     public class MediatorController : ApiController
     {
         private readonly IMediator mediator;
