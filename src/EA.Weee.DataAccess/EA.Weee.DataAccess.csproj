@@ -7,8 +7,8 @@
     <ProjectGuid>{46300373-D7AE-40AA-BF96-3FC3889825A4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EA.Iws.DataAccess</RootNamespace>
-    <AssemblyName>EA.Iws.DataAccess</AssemblyName>
+    <RootNamespace>EA.Weee.DataAccess</RootNamespace>
+    <AssemblyName>EA.Weee.DataAccess</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>cb820cdc</NuGetPackageImportStamp>
@@ -36,6 +36,14 @@
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15146.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.15146-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.DataAccess, Version=1.0.15146.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.15146-develop1\lib\net452\EA.Prsd.Core.DataAccess.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -83,14 +91,6 @@
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
       <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>
       <Name>EA.Weee.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EA.Prsd.Core.DataAccess\EA.Prsd.Core.DataAccess.csproj">
-      <Project>{C5EF212B-402C-4586-992B-D051626E3747}</Project>
-      <Name>EA.Prsd.Core.DataAccess</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EA.Prsd.Core\EA.Prsd.Core.csproj">
-      <Project>{D38EA5EF-F9F5-480C-AE0A-214122559426}</Project>
-      <Name>EA.Prsd.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
