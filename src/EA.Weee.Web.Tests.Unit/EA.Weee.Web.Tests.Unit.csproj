@@ -56,10 +56,13 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="EA.Prsd.Core">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.15146-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15149-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Core.Web">
-      <HintPath>..\packages\EA.Prsd.Core.Web.1.0.15146-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15149-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Web.Mvc">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15149-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="FakeItEasy, Version=1.25.2.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
       <HintPath>..\packages\FakeItEasy.1.25.2\lib\net40\FakeItEasy.dll</HintPath>

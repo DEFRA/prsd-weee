@@ -44,7 +44,7 @@
                 var refreshTokenClaim = context.Identity.FindFirst(OAuth2Constants.RefreshToken);
                 if (refreshTokenClaim != null)
                 {
-                    var oauthClient = new OAuthClient(config.ApiUrl, config.ApiSecret);
+                    var oauthClient = new OAuthClient(config.ApiUrl, config.ApiClientId, config.ApiSecret);
                     var response = await oauthClient.GetRefreshTokenAsync(refreshTokenClaim.Value);
                     var auth = context.OwinContext.Authentication;
 
