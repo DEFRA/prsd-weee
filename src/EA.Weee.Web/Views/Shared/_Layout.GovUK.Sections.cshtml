@@ -44,7 +44,23 @@
     @RenderSection("scripts", required: false)
 }
 
-<main id="page-container" role="main">
-    @Html.Partial("_FeedbackBanner")
-    @RenderBody()
-</main>
+@section two_thirds {
+    @if (IsSectionDefined("two_thirds"))
+    {
+        <div class="grid-row">
+            <section class="column-two-thirds">
+                @RenderSection("two_thirds", required: false)
+            </section>
+            @if (IsSectionDefined("related_container"))
+            {
+                <div class="related-container">
+                    <div class="related">
+                        @RenderSection("related_container", required: false)
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+
+@RenderBody()
