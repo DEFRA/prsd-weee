@@ -1,4 +1,4 @@
-@RenderSection("top_of_page", required: false)
+﻿@RenderSection("top_of_page", required: false)
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lte-ie8" lang="@(ViewBag.HtmlLang ?? "en")"><![endif]-->
 <!--[if gt IE 8]><!--><html lang="@(ViewBag.HtmlLang ?? "en")"><!--<![endif]-->
@@ -96,7 +96,11 @@
     <div id="global-header-bar"></div>
     <!--end global-header-bar-->
 
-    @RenderBody()
+    <main id="page-container" role="main">
+        @Html.Partial("_FeedbackBanner")
+        @RenderBody()
+        @RenderSection("two_thirds")
+    </main>
 
     <footer class="group js-footer" id="footer" role="contentinfo">
 
