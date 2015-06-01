@@ -1,17 +1,13 @@
 ﻿@model EA.Weee.Web.ViewModels.NewUser.UserCreationViewModel
 @{
     ViewBag.Title = "Register";
-    var signin = Request.QueryString["signin"];
 }
 <h1 class="heading-large">
-    About you and your organisation
+    Your user account details
 </h1>
-<p>
-    Enter your contact details and the name of your organisation
-</p>
 <h1 class="heading-large"></h1>
 
-@using (Html.BeginForm("CreateUser", "NewUser"))
+@using (Html.BeginForm("UserCreation", "NewUser"))
 {
     @Html.AntiForgeryToken()
     @Html.Gds().ValidationSummary()
@@ -34,7 +30,7 @@
     <div class="form-group @Html.Gds().FormGroupClass(m => m.Password)">
         @Html.ValidationMessageFor(m => m.Password)
         @Html.Gds().LabelFor(m => m.Password)
-        <p class="form-hint text">Password must be at least 6 characters and contain at least 1 uppercase letter, 1 lowercase letter and 1 number</p>
+        <p class="form-hint text">Your password has to be at least 8 characters long and must contain at least 1 lower-case letter, 1 upper-case letter and 1 number.</p>
         @Html.Gds().PasswordFor(m => m.Password)
     </div>
     <div class="form-group @Html.Gds().FormGroupClass(m => m.ConfirmPassword)">
@@ -43,6 +39,6 @@
         @Html.Gds().PasswordFor(m => m.ConfirmPassword)
     </div>
     <div class="form-group">
-        <input type="submit" class="button" value="Continue" />
+        <input type="submit" class="button" value="Create a user account" />
     </div>
 }
