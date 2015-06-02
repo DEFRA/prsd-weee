@@ -2,16 +2,13 @@
     <div class="content">
         <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
         <nav id="proposition-menu">
-            <a href="/" id="proposition-name">International Waste Shipments</a>
+            <a href="@Url.Content("~/")" id="proposition-name">Waste Electrical and Electronic Equipment (WEEE)</a>
             @if (Request.IsAuthenticated)
             {
                 using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
                 {
                     @Html.AntiForgeryToken()
                     <ul id="proposition-links">
-                        <li>
-                            @Html.ActionLink(linkText: "Home", actionName: "Home", controllerName: "Applicant")
-                        </li>
                         <li style="float:right;">
                             <a href="javascript:document.getElementById('logoutForm').submit()">Sign out</a>
                         </li>
