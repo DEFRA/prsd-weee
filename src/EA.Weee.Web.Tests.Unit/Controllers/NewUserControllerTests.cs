@@ -63,7 +63,7 @@
 
         private static NewUserController GetMockNewUserController(object viewModel)
         {
-            var registrationController = new NewUserController(() => new OAuthClient("test", "test", "test"), () => new WeeeClient("test"), null);
+            var registrationController = new NewUserController(() => new WeeeClient("test"));
             // Mimic the behaviour of the model binder which is responsible for Validating the Model
             var validationContext = new ValidationContext(viewModel, null, null);
             var validationResults = new List<ValidationResult>();
