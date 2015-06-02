@@ -156,7 +156,7 @@
     <Compile Include="TestHelpers\Factories\AutofacContainerFactory.cs" />
     <Compile Include="TestHelpers\HttpContextMocker.cs" />
     <Compile Include="TestHelpers\ViewModelValidator.cs" />
-    <Compile Include="Controllers\RegistrationControllerTests.cs" />
+    <Compile Include="Controllers\NewUserControllerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

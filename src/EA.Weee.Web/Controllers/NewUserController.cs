@@ -21,15 +21,10 @@
     public class NewUserController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly IAuthenticationManager authenticationManager;
-        private readonly Func<IOAuthClient> oauthClient;
 
-        public NewUserController(Func<IOAuthClient> oauthClient, Func<IWeeeClient> apiClient,
-            IAuthenticationManager authenticationManager)
+        public NewUserController(Func<IWeeeClient> apiClient)
         {
-            this.oauthClient = oauthClient;
             this.apiClient = apiClient;
-            this.authenticationManager = authenticationManager;
         }
 
         [HttpGet]
@@ -59,12 +54,8 @@
 
                     try
                     {
-                        var response = await client.NewUser.CreateUserAsync(userCreationData);
-
-                        var signInResponse = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
-                        authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
-
-                        return RedirectToAction("SelectOrganisation", "JoinOrganisation");
+                        await client.NewUser.CreateUserAsync(userCreationData);
+                        return RedirectToAction("Confirm", "NewUser");
                     }
                     catch (ApiBadRequestException ex)
                     {
@@ -81,6 +72,13 @@
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Confirm()
+        {
+            return View();
         }
 
         [HttpGet]
