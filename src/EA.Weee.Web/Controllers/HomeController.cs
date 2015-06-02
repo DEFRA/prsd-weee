@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
+    using EA.Weee.Web.ViewModels.Shared;
     using System.Web.Mvc;
 
     public class HomeController : Controller
@@ -20,7 +21,7 @@
         [AllowAnonymous]
         public ActionResult LandingPage()
         {
-           return View();
+            return View("LandingPage");
         }
     }
 }
