@@ -47,17 +47,17 @@
 <main id="page-container" role="main">
     @Html.Partial("_FeedbackBanner")
     @RenderBody()
-    @if (IsSectionDefined("two_thirds"))
+    @if (IsSectionDefined("main_content"))
     {
         <div class="grid-row">
             <section class="column-two-thirds">
-                @RenderSection("two_thirds", required: false)
+                @RenderSection("main_content", required: false)
             </section>
-            @if (IsSectionDefined("related_container"))
+            @if (IsSectionDefined("related_content"))
             {
                 <div class="related-container">
                     <div class="related">
-                        @RenderSection("related_container", required: false)
+                        @RenderSection("related_content", required: false)
                     </div>
                 </div>
             }
