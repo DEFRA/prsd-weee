@@ -1,0 +1,20 @@
+﻿
+@model EA.Weee.Web.ViewModels.Shared.YesNoChoiceViewModel
+@{
+    ViewBag.Title = "Do you need a user account?";
+}
+
+@using (Html.BeginForm(actionName: "CheckComplianceYear", controllerName: "NewUser", method: FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <header class="hgroup">
+        <h2 class="heading-large">Do you need a user account?</h2>
+    </header>
+    <p>Do you wish to perform activities for the 2016 compliance year?</p>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.Choices.SelectedValue)">
+        @Html.EditorFor(m => m.Choices)
+    </div>
+    <div class="form-group">
+        <button class="button" type="submit">Continue</button>
+    </div>
+}
