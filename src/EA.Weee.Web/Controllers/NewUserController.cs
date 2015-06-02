@@ -16,6 +16,7 @@
     using Requests.Organisations;
     using ViewModels.JoinOrganisation;
     using ViewModels.NewUser;
+    using ViewModels.Shared;
 
     [Authorize]
     public class NewUserController : Controller
@@ -30,6 +31,103 @@
             this.oauthClient = oauthClient;
             this.apiClient = apiClient;
             this.authenticationManager = authenticationManager;
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ViewResult CheckUserAccountCreation()
+        {
+            return View(new YesNoChoiceViewModel()); 
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult CheckUserAccountCreation(YesNoChoiceViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var selectedOption = viewModel.Choices.SelectedValue;
+            if (selectedOption.Equals("No"))
+            {
+                return RedirectToAction("CheckIsPcs");
+            }
+
+            return RedirectToAction("Login", "Account");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ViewResult CheckIsPcs()
+        {
+            return View(new YesNoChoiceViewModel());
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult CheckIsPcs(YesNoChoiceViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var selectedOption = viewModel.Choices.SelectedValue;
+
+            if (selectedOption.Equals("No"))
+            {
+                return RedirectToAction("AccountNotRequired");
+            }
+
+            if (selectedOption.Equals("Yes"))
+            {
+                return RedirectToAction("CheckComplianceYear");
+            }
+
+            throw new ArgumentException("Unexpected argument value received, expected Yes or No");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ViewResult CheckComplianceYear()
+        {
+            return View(new YesNoChoiceViewModel());
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult CheckComplianceYear(YesNoChoiceViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var selectedOption = viewModel.Choices.SelectedValue;
+
+            if (selectedOption.Equals("No"))
+            {
+                return RedirectToAction("AccountNotRequired");
+            }
+
+            if (selectedOption.Equals("Yes"))
+            {
+                return RedirectToAction("UserCreation");
+            }
+
+            throw new ArgumentException("Unexpected argument value received, expected Yes or No");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ViewResult AccountNotRequired()
+        {
+            return View();
         }
 
         [HttpGet]
