@@ -2,16 +2,15 @@
 @{
     ViewBag.Title = "Register";
 }
-<h1 class="heading-large">
-    Your user account details
-</h1>
-<h1 class="heading-large"></h1>
 
 @using (Html.BeginForm("UserCreation", "NewUser"))
 {
     @Html.AntiForgeryToken()
     @Html.Gds().ValidationSummary()
-
+    <header class="hgroup">
+        <h2 class="heading-large">Your user account details</h2>
+        <div class="colored-header-bar"></div>
+    </header>
     <div class="form-group @Html.Gds().FormGroupClass(m => m.Name)">
         @Html.ValidationMessageFor(m => m.Name)
         @Html.Gds().LabelFor(m => m.Name)
