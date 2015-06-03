@@ -63,17 +63,17 @@
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15149.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EA.Prsd.Core, Version=1.0.15154.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15149-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15154-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15149.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15154.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15149-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15154-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15149.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15154.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15149-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15154-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
