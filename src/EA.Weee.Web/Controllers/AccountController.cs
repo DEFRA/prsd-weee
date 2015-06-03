@@ -3,13 +3,11 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Infrastructure;
+    using EA.Prsd.Core.Web.OAuth;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.ViewModels.Account;
     using Microsoft.Owin.Security;
-    using Prsd.Core.Web.OAuth;
-
     using Thinktecture.IdentityModel.Client;
-
-    using ViewModels.Account;
 
     [Authorize]
     public class AccountController : Controller
