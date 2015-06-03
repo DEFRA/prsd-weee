@@ -21,7 +21,26 @@
         [AllowAnonymous]
         public ActionResult LandingPage()
         {
-            return View("LandingPage");
+            return View(new YesNoChoiceViewModel());
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult LandingPage(YesNoChoiceViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var selectedOption = viewModel.Choices.SelectedValue;
+            if (selectedOption.Equals("No"))
+            {
+                return RedirectToAction("CheckIsPcs", "NewUser");
+            }
+
+            return RedirectToAction("Login", "Account");
         }
     }
 }

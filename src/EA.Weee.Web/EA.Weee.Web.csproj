@@ -472,7 +472,6 @@
     <Content Include="Views\NewUser\AccountNotRequired.cshtml" />
     <Content Include="Views\NewUser\CheckIsPcs.cshtml" />
     <Content Include="Views\NewUser\CheckComplianceYear.cshtml" />
-    <Content Include="Views\NewUser\CheckUserAccountCreation.cshtml" />
     <Content Include="Views\NewUser\Confirm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
