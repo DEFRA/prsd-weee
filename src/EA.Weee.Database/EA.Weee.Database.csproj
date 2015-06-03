@@ -60,6 +60,7 @@
     <Content Include="scripts\TestData\placeholder.txt" />
     <Content Include="scripts\Update\placeholder.txt" />
     <Content Include="scripts\Update\Sprint0-IWS\20150526-164637-IntialiseFromIws.sql" />
+    <Content Include="scripts\Update\Sprint6-WEEE\20150603-161233-UpdateOrganisationTable.sql" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
