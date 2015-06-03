@@ -25,32 +25,6 @@
 
         [HttpGet]
         [AllowAnonymous]
-        public ViewResult CheckUserAccountCreation()
-        {
-            return View(new YesNoChoiceViewModel());
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public ActionResult CheckUserAccountCreation(YesNoChoiceViewModel viewModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(viewModel);
-            }
-
-            var selectedOption = viewModel.Choices.SelectedValue;
-            if (selectedOption.Equals("No"))
-            {
-                return RedirectToAction("CheckIsPcs");
-            }
-
-            return RedirectToAction("Login", "Account");
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
         public ViewResult CheckIsPcs()
         {
             return View(new YesNoChoiceViewModel());
