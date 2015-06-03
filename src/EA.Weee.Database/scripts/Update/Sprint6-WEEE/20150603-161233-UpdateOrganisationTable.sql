@@ -50,17 +50,17 @@ SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 SET XACT_ABORT ON;
 
 CREATE TABLE [Organisation].[tmp_ms_xx_Organisation] (
-    [Id]                    UNIQUEIDENTIFIER NOT NULL,
-    [RowVersion]            ROWVERSION       NOT NULL,
-    [Type]                  NVARCHAR (64)    NOT NULL,
-    [Status]                NCHAR (10)       CONSTRAINT [DF_Organisation_Status] DEFAULT (N'Incomplete') NOT NULL,
-    [Name]                  NVARCHAR (2048)  NOT NULL,
-    [TradingName]           NVARCHAR (2048)  NULL,
-    [CompanyRegistrationNo] NVARCHAR (64)    NULL,
-    [ContactId]             UNIQUEIDENTIFIER NULL,
-    [OrganisationAddressId] UNIQUEIDENTIFIER NULL,
-    [BusinessAddressId]     UNIQUEIDENTIFIER NULL,
-    [NotificationAddressId] UNIQUEIDENTIFIER NULL,
+    [Id]                        UNIQUEIDENTIFIER NOT NULL,
+    [RowVersion]                ROWVERSION       NOT NULL,
+    [Type]                      NVARCHAR (64)    NOT NULL,
+    [Status]                    NCHAR (10)       CONSTRAINT [DF_Organisation_Status] DEFAULT (N'Incomplete') NOT NULL,
+    [Name]                      NVARCHAR (2048)  NOT NULL,
+    [TradingName]               NVARCHAR (2048)  NULL,
+    [CompanyRegistrationNumber] NVARCHAR (64)    NULL,
+    [ContactId]                 UNIQUEIDENTIFIER NULL,
+    [OrganisationAddressId]     UNIQUEIDENTIFIER NULL,
+    [BusinessAddressId]         UNIQUEIDENTIFIER NULL,
+    [NotificationAddressId]     UNIQUEIDENTIFIER NULL,
     CONSTRAINT [tmp_ms_xx_constraint_PK_Organisation_Id] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
