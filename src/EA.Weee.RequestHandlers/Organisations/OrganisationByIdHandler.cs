@@ -8,7 +8,7 @@
     using Requests.Organisations;
     using Requests.Shared;
 
-    internal class OrganisationByIdHandler : IRequestHandler<OrganisationById, OrganisationData>
+    internal class OrganisationByIdHandler : IRequestHandler<OrganisationSearchById, OrganisationSearchData>
     {
         private readonly WeeeContext context;
 
@@ -17,11 +17,11 @@
             this.context = context;
         }
 
-        public async Task<OrganisationData> HandleAsync(OrganisationById query)
+        public async Task<OrganisationSearchData> HandleAsync(OrganisationSearchById query)
         {
             return await context
                 .Organisations
-                .Select(o => new OrganisationData
+                .Select(o => new OrganisationSearchData
                 {
                     Address = new AddressData
                     {

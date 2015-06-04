@@ -108,6 +108,7 @@
         {
             if (ModelState.IsValid)
             {
+              //  return RedirectToAction("MainContactPerson", "Organisation", new {id = new Guid() });
                 using (var client = apiClient())
                 {
                     var userCreationData = new UserCreationData

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using EA.Weee.Web.ViewModels.Shared;
     using System.Web.Mvc;
+    using ViewModels.Shared;
 
     public class HomeController : Controller
     {
