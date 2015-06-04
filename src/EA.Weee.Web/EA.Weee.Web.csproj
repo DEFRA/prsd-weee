@@ -473,10 +473,11 @@
     <Content Include="Views\NewUser\CheckIsPcs.cshtml" />
     <Content Include="Views\NewUser\CheckComplianceYear.cshtml" />
     <Content Include="Views\NewUser\Confirm.cshtml" />
-    <Content Include="Views\OrganisationRegistration\Type.cshtml" />
+    <Content Include="Views\OrganisationRegistration\MainContactPerson.cshtml" />
     <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\Type.cshtml" />
     <Content Include="Views\OrganisationRegistration\OrganisationContactDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -515,8 +516,9 @@
     <Compile Include="ViewModels\JoinOrganisation\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\PartnershipDetailsViewModel.cs" />
-    <Compile Include="ViewModels\OrganisationRegistration\Details\SoleTraderDetailsViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\RegisteredCompanyDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\SoleTraderDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\OrganisationContactPersonViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeEnum.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\OrganisationContactDetailsViewModel.cs" />
@@ -539,9 +541,7 @@
       <Name>EA.Weee.Requests</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

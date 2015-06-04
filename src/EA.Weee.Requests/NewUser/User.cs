@@ -12,6 +12,6 @@
 
         public string Email { get; set; }
 
-        public virtual OrganisationData Organisation { get; set; }
+        public virtual OrganisationSearchData Organisation { get; set; }
     }
 }

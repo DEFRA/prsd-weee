@@ -77,12 +77,14 @@
         private Address MakeAddress(string identifier)
         {
             return new Address(
-                "Building " + identifier,
                 "Line 1 " + identifier,
                 "Line 2 " + identifier,
                 "Town " + identifier,
+                "Region" + identifier,
                 "Postcode " + identifier,
-                "Country " + identifier);
+                "Country " + identifier,
+                "Phone" + identifier,
+                "Email" + identifier);
         }
     }
 }

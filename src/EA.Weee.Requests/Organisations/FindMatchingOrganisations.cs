@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Prsd.Core.Mediator;
 
-    public class FindMatchingOrganisations : IRequest<IList<OrganisationData>>
+    public class FindMatchingOrganisations : IRequest<IList<OrganisationSearchData>>
     {
         public string CompanyName { get; private set; }
 

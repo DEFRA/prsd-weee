@@ -9,13 +9,14 @@
         {
             ToTable("Address", "Organisation");
 
-            Property(x => x.Building).HasColumnName("Building");
-            Property(x => x.Address1).HasColumnName("Address1");
+            Property(x => x.Address1).HasColumnName("Address1").IsRequired();
             Property(x => x.Address2).HasColumnName("Address2");
-            Property(x => x.TownOrCity).HasColumnName("TownOrCity");
-            Property(x => x.PostalCode).HasColumnName("PostalCode");
-            Property(x => x.Country).HasColumnName("Country");
-
+            Property(x => x.TownOrCity).HasColumnName("TownOrCity").IsRequired();
+            Property(x => x.CountyOrRegion).HasColumnName("CountyOrRegion");
+            Property(x => x.PostalCode).HasColumnName("PostalCode").IsRequired();
+            Property(x => x.Country).HasColumnName("Country").IsRequired();
+            Property(x => x.Telephone).HasColumnName("Telephone").IsRequired();
+            Property(x => x.Email).HasColumnName("Email").IsRequired();
             this.Ignore(address => address.IsUkAddress);
         }
     }

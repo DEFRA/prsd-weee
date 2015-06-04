@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web
 {
     using System.Web.Mvc;
-    using Infrastructure;
     using Prsd.Core.Web.Mvc.Filters;
 
     public class FilterConfig

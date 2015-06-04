@@ -13,7 +13,7 @@
     using Requests.Shared;
 
     internal class FindMatchingOrganisationsHandler :
-        IRequestHandler<FindMatchingOrganisations, IList<OrganisationData>>
+        IRequestHandler<FindMatchingOrganisations, IList<OrganisationSearchData>>
     {
         private readonly WeeeContext context;
 
@@ -30,7 +30,7 @@
             this.context = context;
         }
 
-        public async Task<IList<OrganisationData>> HandleAsync(FindMatchingOrganisations query)
+        public async Task<IList<OrganisationSearchData>> HandleAsync(FindMatchingOrganisations query)
         {
             var searchTerm = PrepareQuery(query);
 
@@ -72,17 +72,19 @@
                     m => possibleOrganisations.Single(o => o.Id == m.Key));
 
             return matchingOrganisations.Select(o => 
-                new OrganisationData
+                new OrganisationSearchData
                 {
                     Id = o.Id, 
                     Address = new AddressData
                     {
-                        Building = o.OrganisationAddress.Building,
-                        StreetOrSuburb = o.OrganisationAddress.Address1,
+                        Address1 = o.OrganisationAddress.Address1,
                         Address2 = o.OrganisationAddress.Address2,
-                        CountryName = o.OrganisationAddress.Country,
                         TownOrCity = o.OrganisationAddress.TownOrCity,
-                        PostalCode = o.OrganisationAddress.PostalCode
+                        CountyOrRegion = o.OrganisationAddress.CountyOrRegion,
+                        PostalCode = o.OrganisationAddress.PostalCode,
+                        Country = o.OrganisationAddress.Country,
+                        Telephone = o.OrganisationAddress.Telephone,
+                        Email = o.OrganisationAddress.Email
                     }, 
                     Name = o.Name
                 }).ToList();
