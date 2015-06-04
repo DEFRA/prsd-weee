@@ -1,18 +1,25 @@
-﻿@{
+﻿@model EA.Weee.Web.ViewModels.Shared.YesNoChoiceViewModel
+@{
     ViewBag.Title = "Landing Page";
 }
-<div class="grid-row">
-    <div class="column-two-thirds">
+
+@section main_content
+{
+    @using (Html.BeginForm(actionName: "LandingPage", controllerName: "Home", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
         <header class="hgroup">
-            <h1 class="heading-large">Register for WEEE</h1>
-            <p>Register or sign in to report your activities relating to the WEEE regime.</p>
-            <p class="heading-large"></p>
+            <h2 class="heading-large">Do you need a user account?</h2>
+            <div class="colored-header-bar"></div>
         </header>
-        @Html.ActionLink("Create User", "UserCreation", "NewUser", null, new { @class = "button-get-started button" })
-    </div>
-    <div class="column-third">
-        <h1 class="heading-medium">Your account</h1>
-        <div class="colored-header-bar"></div>
-        @Html.ActionLink("Sign in to your account", "Login", "Account")
-    </div>
-</div>
+        <p>Having an account will enable you to sign into the system.</p>
+        <p>If you are not sure whether you have already created yourself an account, or are uncertain whether you require an account, please choose "no".</p>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Choices.SelectedValue)">
+            @Html.EditorFor(m => m.Choices)
+        </div>
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+    }
+}

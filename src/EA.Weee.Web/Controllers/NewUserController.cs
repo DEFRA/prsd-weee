@@ -1,21 +1,17 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
     using Infrastructure;
-    using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
-    using Prsd.Core.Web.OAuth;
-    using Requests.NewUser;
     using Requests.Organisations;
     using ViewModels.JoinOrganisation;
     using ViewModels.NewUser;
+    using ViewModels.Shared;
 
     [Authorize]
     public class NewUserController : Controller
@@ -25,6 +21,77 @@
         public NewUserController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ViewResult CheckIsPcs()
+        {
+            return View(new YesNoChoiceViewModel());
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult CheckIsPcs(YesNoChoiceViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var selectedOption = viewModel.Choices.SelectedValue;
+
+            if (selectedOption.Equals("No"))
+            {
+                return RedirectToAction("AccountNotRequired");
+            }
+
+            if (selectedOption.Equals("Yes"))
+            {
+                return RedirectToAction("CheckComplianceYear");
+            }
+
+            throw new ArgumentException("Unexpected argument value received, expected Yes or No");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ViewResult CheckComplianceYear()
+        {
+            return View(new YesNoChoiceViewModel());
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult CheckComplianceYear(YesNoChoiceViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var selectedOption = viewModel.Choices.SelectedValue;
+
+            if (selectedOption.Equals("No"))
+            {
+                return RedirectToAction("AccountNotRequired");
+            }
+
+            if (selectedOption.Equals("Yes"))
+            {
+                return RedirectToAction("UserCreation");
+            }
+
+            throw new ArgumentException("Unexpected argument value received, expected Yes or No");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ViewResult AccountNotRequired()
+        {
+            return View();
         }
 
         [HttpGet]
@@ -105,7 +172,7 @@
                 }
             }
 
-            return View(model);
+            return View("SelectOrganisation", model);
         }
     }
 }
