@@ -17,6 +17,7 @@
     {
         private readonly OrganisationType anyType = OrganisationType.RegisteredCompany;
         private readonly OrganisationStatus anyStatus = OrganisationStatus.Incomplete;
+     
         private readonly DbContextHelper helper = new DbContextHelper();
 
         [Theory]
@@ -63,7 +64,7 @@
 
         private Address GetAddress()
         {
-            return new Address("1", "street", null, "Woking", "GU21 5EE", "United Kingdom");
+            return new Address("1", "street", "Woking", "Hampshire", "GU21 5EE", "United Kingdom", "12345678", "test@co.uk");
         }
 
         [Fact]

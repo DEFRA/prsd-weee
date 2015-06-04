@@ -26,18 +26,20 @@
                 FirstName = u.FirstName,
                 Id = u.Id,
                 Surname = u.Surname,
-                Organisation = new OrganisationData()
+                Organisation = new OrganisationSearchData()
                 {
                     Id = u.Organisation.Id,
                     Name = u.Organisation.Name,
                     Address = new AddressData()
                     {
+                        Address1 = u.Organisation.OrganisationAddress.Address1,
                         Address2 = u.Organisation.OrganisationAddress.Address2,
-                        Building = u.Organisation.OrganisationAddress.Building,
-                        CountryName = u.Organisation.OrganisationAddress.Country,
+                        TownOrCity = u.Organisation.OrganisationAddress.TownOrCity,
+                        CountyOrRegion = u.Organisation.OrganisationAddress.CountyOrRegion,
                         PostalCode = u.Organisation.OrganisationAddress.PostalCode,
-                        StreetOrSuburb = u.Organisation.OrganisationAddress.Address1,
-                        TownOrCity = u.Organisation.OrganisationAddress.TownOrCity
+                        Country = u.Organisation.OrganisationAddress.Country,
+                        Telephone = u.Organisation.OrganisationAddress.Telephone,
+                        Email = u.Organisation.OrganisationAddress.Email
                     }
                 }
             }).SingleOrDefaultAsync(u => u.Id == query.Id);

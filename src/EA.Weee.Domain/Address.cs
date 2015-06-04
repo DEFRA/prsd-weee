@@ -6,37 +6,44 @@
 
     public class Address : Entity
     {
-        public Address(string building, string address1, string address2, string townOrCity, string postalCode, string country)
+        public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postalCode, string country, string telephone, string email)
         {
-            Guard.ArgumentNotNull(building);
+            Guard.ArgumentNotNull(address1);
             Guard.ArgumentNotNull(townOrCity);
             Guard.ArgumentNotNull(postalCode);
             Guard.ArgumentNotNull(country);
-            Guard.ArgumentNotNull(address1);
+            Guard.ArgumentNotNull(telephone);
+            Guard.ArgumentNotNull(email);
 
-            Building = building;
+            Address1 = address1;
+            Address2 = address2;
             TownOrCity = townOrCity;
             PostalCode = postalCode;
             Country = country;
-            Address2 = address2;
-            Address1 = address1;
+            Telephone = telephone;
+            CountyOrRegion = countyOrRegion;
+            Email = email;
         }
 
         protected Address()
         {
         }
-
-        public string Building { get; private set; }
-
+        
         public string Address1 { get; private set; }
 
-        public string Address2 { get; private set; }
+        public string Address2 { get; set; }
 
         public string TownOrCity { get; private set; }
+        
+        public string CountyOrRegion { get; set; }
 
         public string PostalCode { get; private set; }
 
         public string Country { get; private set; }
+
+        public string Telephone { get; private set; }
+
+        public string Email { get; private set; }
 
         public bool IsUkAddress
         {
