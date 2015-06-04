@@ -16,7 +16,7 @@
                 CountyOrRegion = source.CountyOrRegion,
                 PostalCode = source.PostalCode,
                 Country = source.Country,
-                Telphone = source.Telephone,
+                Telephone = source.Telephone,
                 Email = source.Email
             };
         }
