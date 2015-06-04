@@ -77,12 +77,14 @@
                     Id = o.Id, 
                     Address = new AddressData
                     {
-                        Building = o.Address.Building,
-                        StreetOrSuburb = o.Address.Address1,
-                        Address2 = o.Address.Address2,
-                        CountryName = o.Address.Country,
-                        TownOrCity = o.Address.TownOrCity,
-                        PostalCode = o.Address.PostalCode
+                        Address1 = o.OrganisationAddress.Address1,
+                        Address2 = o.OrganisationAddress.Address2,
+                        TownOrCity = o.OrganisationAddress.TownOrCity,
+                        CountyOrRegion = o.OrganisationAddress.CountyOrRegion,
+                        PostalCode = o.OrganisationAddress.PostalCode,
+                        Country = o.OrganisationAddress.Country,
+                        Telphone = o.OrganisationAddress.TelePhone,
+                        Email = o.OrganisationAddress.Email
                     }, 
                     Name = o.Name
                 }).ToList();

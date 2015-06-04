@@ -39,7 +39,9 @@
 
         private Organisation GetOrganisationWithName(string name)
         {
-            var organisation = new Organisation(name, GetAddress(), anyType);
+            var organisation = new Organisation(name, anyType);
+
+            organisation.OrganisationAddress = GetAddress();
 
             var properties = typeof(Organisation).GetProperties();
 
@@ -60,7 +62,7 @@
 
         private Address GetAddress()
         {
-            return new Address("1", "street", null, "Woking", "GU21 5EE", "United Kingdom");
+            return new Address("1", "street", "Woking", "Hampshire", "GU21 5EE", "United Kingdom", "12345678", "test@co.uk");
         }
 
         [Fact]

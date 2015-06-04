@@ -32,12 +32,14 @@
                     Name = u.Organisation.Name,
                     Address = new AddressData()
                     {
-                        Address2 = u.Organisation.Address.Address2,
-                        Building = u.Organisation.Address.Building,
-                        CountryName = u.Organisation.Address.Country,
-                        PostalCode = u.Organisation.Address.PostalCode,
-                        StreetOrSuburb = u.Organisation.Address.Address1,
-                        TownOrCity = u.Organisation.Address.TownOrCity
+                        Address1 = u.Organisation.OrganisationAddress.Address1,
+                        Address2 = u.Organisation.OrganisationAddress.Address2,
+                        TownOrCity = u.Organisation.OrganisationAddress.TownOrCity,
+                        CountyOrRegion = u.Organisation.OrganisationAddress.CountyOrRegion,
+                        PostalCode = u.Organisation.OrganisationAddress.PostalCode,
+                        Country = u.Organisation.OrganisationAddress.Country,
+                        Telphone = u.Organisation.OrganisationAddress.TelePhone,
+                        Email = u.Organisation.OrganisationAddress.Email
                     }
                 }
             }).SingleOrDefaultAsync(u => u.Id == query.Id);
