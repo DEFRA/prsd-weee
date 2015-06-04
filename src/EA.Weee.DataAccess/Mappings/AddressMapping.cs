@@ -3,10 +3,12 @@
     using System.Data.Entity.ModelConfiguration;
     using Domain;
 
-    internal class AddressMapping : ComplexTypeConfiguration<Address>
+    internal class AddressMapping : EntityTypeConfiguration<Address>
     {
         public AddressMapping()
         {
+            ToTable("Address", "Organisation");
+
             Property(x => x.Address1).HasColumnName("Address1").IsRequired();
             Property(x => x.Address2).HasColumnName("Address2");
             Property(x => x.TownOrCity).HasColumnName("TownOrCity").IsRequired();
