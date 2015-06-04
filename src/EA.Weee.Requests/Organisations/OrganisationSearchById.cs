@@ -3,11 +3,11 @@
     using System;
     using Prsd.Core.Mediator;
 
-    public class OrganisationById : IRequest<OrganisationData>
+    public class OrganisationSearchById : IRequest<OrganisationSearchData>
     {
         public readonly Guid Id;
 
-        public OrganisationById(Guid id)
+        public OrganisationSearchById(Guid id)
         {
             Id = id;
         }

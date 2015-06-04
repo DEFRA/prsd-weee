@@ -26,7 +26,7 @@
                 FirstName = u.FirstName,
                 Id = u.Id,
                 Surname = u.Surname,
-                Organisation = new OrganisationData()
+                Organisation = new OrganisationSearchData()
                 {
                     Id = u.Organisation.Id,
                     Name = u.Organisation.Name,
