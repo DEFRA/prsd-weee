@@ -3,15 +3,16 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Infrastructure;
-    using Prsd.Core.Extensions;
-    using Prsd.Core.Web.ApiClient;
-    using Prsd.Core.Web.Mvc.Extensions;
-    using Requests.Organisations;
-    using ViewModels.Organisation;
-    using ViewModels.Organisation.Type;
-    using ViewModels.OrganisationRegistration.Details;
+    using EA.Prsd.Core.Extensions;
+    using EA.Prsd.Core.Web.ApiClient;
+    using EA.Prsd.Core.Web.Extensions;
+    using EA.Prsd.Core.Web.Mvc.Extensions;
+    using EA.Weee.Api.Client;
+    using EA.Weee.Requests.Organisations;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.ViewModels.JoinOrganisation;
+    using EA.Weee.Web.ViewModels.Organisation.Type;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
 
     [Authorize]
     public class OrganisationRegistrationController : Controller
@@ -108,6 +109,38 @@
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> Search(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return View(new SelectOrganisationViewModel());
+            }
+
+            using (var client = apiClient())
+            {
+                try
+                {
+                    var matchingOrganisations = await client.SendAsync(
+                        User.GetAccessToken(),
+                        new FindMatchingOrganisations(name));
+
+                    return View(new SelectOrganisationViewModel(name, matchingOrganisations));
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                    //this.HandleBadRequest(ex);
+                    //if (ModelState.IsValid)
+                    //{
+                    //    throw;
+                    //}
+                }
+
+                return View(new SelectOrganisationViewModel(name));
+            }
         }
 
         [HttpGet]

@@ -477,6 +477,7 @@
     <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\Search.cshtml" />
     <Content Include="Views\OrganisationRegistration\Type.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

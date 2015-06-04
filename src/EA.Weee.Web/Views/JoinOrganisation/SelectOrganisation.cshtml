@@ -4,9 +4,8 @@
 }
 
 <h1 class="heading-large">Organisation address</h1>
-@if (Model.Organisations != null && Model.Organisations.Count > 0)
+@if (Model.MatchingOrganisations != null && Model.MatchingOrganisations.Count > 0)
 {
-
     <p>Select an organisation address from the options below or add a new address.</p>
 
     using (Html.BeginForm(actionName: "SelectOrganisation", controllerName: "Registration", method: FormMethod.Post))
@@ -15,7 +14,7 @@
         @Html.ValidationMessageFor(m => m.Selected)
         @Html.HiddenFor(m => m.Name)
 
-         for (int i = 0; i < Model.Organisations.Count; i++)
+         for (int i = 0; i < Model.MatchingOrganisations.Count; i++)
          {
              bool shouldBeANewRow = i%2 == 0;
 
@@ -27,29 +26,29 @@
             <div class="column-half">
                 <h3 class="heading-small">Address @(i + 1)</h3>
                 <div class="colored-header-bar"></div>
-                @Html.HiddenFor(m => m.Organisations[i].Id)
+                @Html.HiddenFor(m => m.MatchingOrganisations[i].Id)
                 <ul>
                     <li>
-                        @Html.HiddenFor(m => m.Organisations[i].Name)
-                        <span class="bold-small">@Html.DisplayFor(m => m.Organisations[i].Name)</span>
+                        @Html.HiddenFor(m => m.MatchingOrganisations[i].Name)
+                        <span class="bold-small">@Html.DisplayFor(m => m.MatchingOrganisations[i].Name)</span>
                     </li>
                     <li>
-                        @Html.HiddenFor(m => m.Organisations[i].Address.Building)
-                        @Html.DisplayFor(m => m.Organisations[i].Address.Building),
+                        @Html.HiddenFor(m => m.MatchingOrganisations[i].Address.Building)
+                        @Html.DisplayFor(m => m.MatchingOrganisations[i].Address.Building),
                     </li>
                     <li>
-                        @Html.HiddenFor(m => m.Organisations[i].Address.TownOrCity)
-                        @Html.DisplayFor(m => m.Organisations[i].Address.TownOrCity),
+                        @Html.HiddenFor(m => m.MatchingOrganisations[i].Address.TownOrCity)
+                        @Html.DisplayFor(m => m.MatchingOrganisations[i].Address.TownOrCity),
                     </li>
                     <li>
-                        @Html.HiddenFor(m => m.Organisations[i].Address.PostalCode)
-                        @Html.DisplayFor(m => m.Organisations[i].Address.PostalCode)
+                        @Html.HiddenFor(m => m.MatchingOrganisations[i].Address.PostalCode)
+                        @Html.DisplayFor(m => m.MatchingOrganisations[i].Address.PostalCode)
                     </li>
                 </ul>
-                <button type="submit" name="submitButton" value="@Html.Raw(Model.Organisations[i].Id)" class="link-submit">Use this address</button>
+                <button type="submit" name="submitButton" value="@Html.Raw(Model.MatchingOrganisations[i].Id)" class="link-submit">Use this address</button>
             </div>
 
-            if (!shouldBeANewRow || i == Model.Organisations.Count - 1)
+             if (!shouldBeANewRow || i == Model.MatchingOrganisations.Count - 1)
             {
             @:</div>
             }
