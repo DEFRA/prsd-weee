@@ -465,7 +465,7 @@
     <Content Include="Views\Shared\EditorTemplates\RadioButtonStringCollectionBaseViewModel.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\NewUser\UserCreation.cshtml" />
-    <Content Include="Views\JoinOrganisation\SelectOrganisation.cshtml" />
+    <Content Include="Views\OrganisationRegistration\SelectOrganisation.cshtml" />
     <Content Include="Views\Home\LandingPage.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressData.cshtml" />
@@ -477,7 +477,6 @@
     <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
-    <Content Include="Views\OrganisationRegistration\Search.cshtml" />
     <Content Include="Views\OrganisationRegistration\Type.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

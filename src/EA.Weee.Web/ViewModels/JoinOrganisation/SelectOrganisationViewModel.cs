@@ -14,14 +14,14 @@
         [Required]
         public Guid? Selected { get; set; }
 
-        public SelectOrganisationViewModel(string name, IList<OrganisationData> matchingOrganisations)
+        public SelectOrganisationViewModel(string name, IList<OrganisationSearchData> matchingOrganisations)
         {
             Name = name;
             MatchingOrganisations = matchingOrganisations;
         }
 
         public SelectOrganisationViewModel(string name)
-            : this(name, new List<OrganisationData>())
+            : this(name, new List<OrganisationSearchData>())
         {
         }
 
