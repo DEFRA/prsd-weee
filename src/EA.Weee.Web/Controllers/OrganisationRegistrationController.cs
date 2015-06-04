@@ -115,7 +115,8 @@
         {
             using (var client = apiClient())
             {
-                var response = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+                //TODO: Get organisation id from organisation record
+                //var response = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
                 var model = new OrganisationContactPersonViewModel { OrganisationId = new Guid() };
                 return View(model);
             }
@@ -131,14 +132,15 @@
                 {
                     try
                     {
-                        var response = await client.SendAsync(User.GetAccessToken(),
-                            new AddContactPersonToOrganisation
-                            {
-                                OrganisationId = model.OrganisationId,
-                                MainContactPerson = model.MainContactPerson
-                            });
+                        //TODO: Save details
+                        //var response = await client.SendAsync(User.GetAccessToken(),
+                        //    new AddContactPersonToOrganisation
+                        //    {
+                        //        OrganisationId = model.OrganisationId,
+                        //        MainContactPerson = model.MainContactPerson
+                        //    });
 
-                        return RedirectToAction("ContactDetails", "Organisation");
+                        return RedirectToAction("ContactDetails", "Organisation"); //TODO: change this to correct address
                     }
                     catch (ApiBadRequestException ex)
                     {
