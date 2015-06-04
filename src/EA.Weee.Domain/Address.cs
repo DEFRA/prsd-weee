@@ -4,7 +4,7 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
 
-    public class Address
+    public class Address : Entity
     {
         public Address(string building, string address1, string address2, string townOrCity, string postalCode, string country)
         {

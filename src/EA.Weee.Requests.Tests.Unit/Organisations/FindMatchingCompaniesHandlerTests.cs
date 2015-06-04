@@ -15,7 +15,8 @@
 
     public class FindMatchingCompaniesHandlerTests
     {
-        private readonly string anyType = "Company";
+        private readonly OrganisationType anyType = OrganisationType.RegisteredCompany;
+        private readonly OrganisationStatus anyStatus = OrganisationStatus.Incomplete;
         private readonly DbContextHelper helper = new DbContextHelper();
 
         [Theory]
@@ -39,7 +40,9 @@
 
         private Organisation GetOrganisationWithName(string name)
         {
-            var organisation = new Organisation(name, GetAddress(), anyType);
+            var organisation = new Organisation(name, anyType, anyStatus);
+
+            organisation.OrganisationAddress = GetAddress();
 
             var properties = typeof(Organisation).GetProperties();
 
