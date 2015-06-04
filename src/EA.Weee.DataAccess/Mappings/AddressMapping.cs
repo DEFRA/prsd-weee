@@ -15,7 +15,7 @@
             Property(x => x.CountyOrRegion).HasColumnName("CountyOrRegion");
             Property(x => x.PostalCode).HasColumnName("PostalCode").IsRequired();
             Property(x => x.Country).HasColumnName("Country").IsRequired();
-            Property(x => x.TelePhone).HasColumnName("TelePhone").IsRequired();
+            Property(x => x.Telephone).HasColumnName("Telephone").IsRequired();
             Property(x => x.Email).HasColumnName("Email").IsRequired();
             this.Ignore(address => address.IsUkAddress);
         }

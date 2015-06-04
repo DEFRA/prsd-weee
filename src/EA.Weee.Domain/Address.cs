@@ -20,7 +20,8 @@
             TownOrCity = townOrCity;
             PostalCode = postalCode;
             Country = country;
-            TelePhone = telephone;
+            Telephone = telephone;
+            CountyOrRegion = countyOrRegion;
             Email = email;
         }
 
@@ -40,7 +41,7 @@
 
         public string Country { get; private set; }
 
-        public string TelePhone { get; private set; }
+        public string Telephone { get; private set; }
 
         public string Email { get; private set; }
 
