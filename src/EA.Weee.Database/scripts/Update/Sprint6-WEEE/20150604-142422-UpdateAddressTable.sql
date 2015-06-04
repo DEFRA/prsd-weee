@@ -58,7 +58,7 @@ IF EXISTS (SELECT TOP 1 1
     BEGIN
         INSERT INTO [Organisation].[tmp_ms_xx_Address] ( [Id], [Building],[Address1], [TownOrCity],[Address2], [PostalCode],[Country],[RowVersion])
         SELECT   [Id],
-				 [Buiding],
+				 [Building],
 				 [Address1],
 				 [TownOrcity],
 				 [Address2],
