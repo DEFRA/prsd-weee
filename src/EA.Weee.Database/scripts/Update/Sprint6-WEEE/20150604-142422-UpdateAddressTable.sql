@@ -53,22 +53,6 @@ CREATE TABLE [Organisation].[tmp_ms_xx_Address] (
     CONSTRAINT [tmp_ms_xx_constraint_PK_Address_Id] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-IF EXISTS (SELECT TOP 1 1 
-           FROM   [Organisation].[Address])
-    BEGIN
-        INSERT INTO [Organisation].[tmp_ms_xx_Address] ( [Id], [Building],[Address1], [TownOrCity],[Address2], [PostalCode],[Country],[RowVersion])
-        SELECT   [Id],
-				 [Building],
-				 [Address1],
-				 [TownOrcity],
-				 [Address2],
-				 [PostalCode],
-				 [Country],
-				 [RowVersion]	
-        FROM     [Organisation].[Address]
-        ORDER BY [Id] ASC;
-    END
-
 DROP TABLE [Organisation].[Address];
 
 EXECUTE sp_rename N'[Organisation].[tmp_ms_xx_Address]', N'Address';
