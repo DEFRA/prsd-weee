@@ -474,6 +474,10 @@
     <Content Include="Views\NewUser\CheckComplianceYear.cshtml" />
     <Content Include="Views\NewUser\Confirm.cshtml" />
     <Content Include="Views\OrganisationRegistration\MainContactPerson.cshtml" />
+    <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\Type.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -492,7 +496,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
-    <Compile Include="Infrastructure\OrganisationRequiredAttribute.cs" />
     <Compile Include="Infrastructure\TokenResponseExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -511,7 +514,12 @@
     <Compile Include="ViewModels\NewUser\UserCreationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\PartnershipDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\RegisteredCompanyDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\SoleTraderDetailsViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\OrganisationContactPersonViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeEnum.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionBaseViewModel.cs" />
