@@ -31,7 +31,7 @@
                         CountyOrRegion = o.OrganisationAddress.CountyOrRegion,
                         PostalCode = o.OrganisationAddress.PostalCode,
                         Country = o.OrganisationAddress.Country,
-                        Telphone = o.OrganisationAddress.Telephone,
+                        Telephone = o.OrganisationAddress.Telephone,
                         Email = o.OrganisationAddress.Email
                     },
                     Id = o.Id,

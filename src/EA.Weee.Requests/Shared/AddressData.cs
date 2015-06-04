@@ -30,7 +30,7 @@
 
         [Required]
         [Display(Name = "Telephone number")]
-        public string Telphone { get; set; }
+        public string Telephone { get; set; }
 
         [Required]
         [EmailAddress]
