@@ -5,7 +5,7 @@
     public enum Type
     {
         [Display(Name = "Registered company")]
-        RegisteretCompany = 1,
+        RegisteredCompany = 1,
         [Display(Name = "Partnership")]
         Partnership = 2,
         [Display(Name = "Sole trader or individual")]
