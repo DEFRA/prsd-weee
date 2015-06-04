@@ -11,6 +11,7 @@
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.ViewModels.JoinOrganisation;
+    using EA.Weee.Web.ViewModels.Organisation;
     using EA.Weee.Web.ViewModels.Organisation.Type;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
 
@@ -112,7 +113,7 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> Search(string name)
+        public async Task<ViewResult> SelectOrganisation(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -123,23 +124,20 @@
             {
                 try
                 {
-                    var matchingOrganisations = await client.SendAsync(
-                        User.GetAccessToken(),
-                        new FindMatchingOrganisations(name));
+                    var matchingOrganisations =
+                        await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(name));
 
                     return View(new SelectOrganisationViewModel(name, matchingOrganisations));
                 }
-                catch (Exception ex)
+                catch (ApiBadRequestException ex)
                 {
-                    throw;
-                    //this.HandleBadRequest(ex);
-                    //if (ModelState.IsValid)
-                    //{
-                    //    throw;
-                    //}
+                    this.HandleBadRequest(ex);
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                    return View(new SelectOrganisationViewModel(name));
                 }
-
-                return View(new SelectOrganisationViewModel(name));
             }
         }
 
