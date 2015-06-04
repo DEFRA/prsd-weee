@@ -9,9 +9,25 @@
     {
         public string Name { get; set; }
 
-        public IList<OrganisationSearchData> Organisations { get; set; }
+        public IList<OrganisationSearchData> MatchingOrganisations { get; private set; }
 
         [Required]
         public Guid? Selected { get; set; }
+
+        public SelectOrganisationViewModel(string name, IList<OrganisationData> matchingOrganisations)
+        {
+            Name = name;
+            MatchingOrganisations = matchingOrganisations;
+        }
+
+        public SelectOrganisationViewModel(string name)
+            : this(name, new List<OrganisationData>())
+        {
+        }
+
+        public SelectOrganisationViewModel()
+            : this(string.Empty)
+        {
+        }
     }
 }
