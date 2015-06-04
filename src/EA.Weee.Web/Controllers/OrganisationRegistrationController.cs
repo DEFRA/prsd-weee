@@ -11,17 +11,16 @@
     using ViewModels.Organisation;
     
     [Authorize]
-    public class OrganisationController : Controller
+    public class OrganisationRegistrationController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
 
-        public OrganisationController(Func<IWeeeClient> apiClient)
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<ActionResult> MainContactPerson(Guid id)
         {
             using (var client = apiClient())
@@ -33,7 +32,6 @@
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> MainContactPerson(OrganisationContactPersonViewModel model)
         {

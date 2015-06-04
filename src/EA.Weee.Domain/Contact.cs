@@ -1,17 +1,16 @@
 ﻿namespace EA.Weee.Domain
 {
-    using System.Reflection;
+    using EA.Prsd.Core.Domain;
     using Prsd.Core;
 
-    public class Contact
+    public class Contact : Entity
     {
-        public Contact(string title, string firstName, string lastName, string position)
+        public Contact(string firstName, string lastName, string position)
         {
             Guard.ArgumentNotNull(firstName);
             Guard.ArgumentNotNull(lastName);
-            Guard.ArgumentNotNull(Position);
+            Guard.ArgumentNotNull(position);
 
-            Title = title;
             FirstName = firstName;
             LastName = lastName;
             Position = position;
@@ -21,12 +20,10 @@
         {
         }
 
-        public string Title { get; private set; }
+        public string Position { get; set; }
+        
+        public string LastName { get; set; }
 
-        public string FirstName { get; private set; }
-
-        public string LastName { get; private set; }
-
-        public string Position { get; private set; }
+        public string FirstName { get; set; }
     }
 }

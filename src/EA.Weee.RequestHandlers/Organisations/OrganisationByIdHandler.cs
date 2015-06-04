@@ -25,12 +25,14 @@
                 {
                     Address = new AddressData
                     {
-                        Address2 = o.Address.Address2,
-                        Building = o.Address.Building,
-                        CountryName = o.Address.Country,
-                        PostalCode = o.Address.PostalCode,
-                        StreetOrSuburb = o.Address.Address1,
-                        TownOrCity = o.Address.TownOrCity
+                        Address1 = o.OrganisationAddress.Address1,
+                        Address2 = o.OrganisationAddress.Address2,
+                        TownOrCity = o.OrganisationAddress.TownOrCity,
+                        CountyOrRegion = o.OrganisationAddress.CountyOrRegion,
+                        PostalCode = o.OrganisationAddress.PostalCode,
+                        Country = o.OrganisationAddress.Country,
+                        Telphone = o.OrganisationAddress.TelePhone,
+                        Email = o.OrganisationAddress.Email
                     },
                     Id = o.Id,
                     Name = o.Name

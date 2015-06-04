@@ -19,19 +19,15 @@
         <div class="form-group">
             @Html.HiddenFor(m => m.OrganisationId)
         </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.MainContactPerson.Title)">
-            @Html.Gds().LabelFor(m => m.MainContactPerson.Title)
-            @Html.Gds().TextBoxFor(m => m.MainContactPerson.Title)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.MainContactPerson.FirstName)">
+            @Html.ValidationMessageFor(m => m.MainContactPerson.FirstName)
+            @Html.Gds().LabelFor(m => m.MainContactPerson.FirstName)
+            @Html.Gds().TextBoxFor(m => m.MainContactPerson.FirstName)
         </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.MainContactPerson.Firstname)">
-            @Html.ValidationMessageFor(m => m.MainContactPerson.Firstname)
-            @Html.Gds().LabelFor(m => m.MainContactPerson.Firstname)
-            @Html.Gds().TextBoxFor(m => m.MainContactPerson.Firstname)
-        </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.MainContactPerson.Lastname)">
-            @Html.ValidationMessageFor(m => m.MainContactPerson.Lastname)
-            @Html.Gds().LabelFor(m => m.MainContactPerson.Lastname)
-            @Html.Gds().TextBoxFor(m => m.MainContactPerson.Lastname)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.MainContactPerson.LastName)">
+            @Html.ValidationMessageFor(m => m.MainContactPerson.LastName)
+            @Html.Gds().LabelFor(m => m.MainContactPerson.LastName)
+            @Html.Gds().TextBoxFor(m => m.MainContactPerson.LastName)
         </div>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.MainContactPerson.Position)">
             @Html.ValidationMessageFor(m => m.MainContactPerson.Position)

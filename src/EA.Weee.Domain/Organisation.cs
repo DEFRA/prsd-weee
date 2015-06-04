@@ -5,14 +5,12 @@
 
     public class Organisation : Entity
     {
-        public Organisation(string name, Address address, string type)
+        public Organisation(string name, string type)
         {
             Guard.ArgumentNotNull(name);
-            Guard.ArgumentNotNull(address);
             Guard.ArgumentNotNull(type);
 
             Name = name;
-            Address = address;
             Type = type;
         }
 
@@ -22,8 +20,20 @@
 
         public string Name { get; private set; }
 
-        public Address Address { get; private set; }
-
         public string Type { get; private set; }
+
+        public string Status { get; set; }
+
+        public string TradingName { get; set; }
+
+        public string CompanyRegistrationNumber { get; set; }
+
+        public Address OrganisationAddress { get; set; }
+
+        public Address BusinessAddress { get; set; }
+
+        public Address NotificationAddress { get; set; }
+
+        public Contact Contact { get; set; }
     }
 }
