@@ -473,6 +473,7 @@
     <Content Include="Views\NewUser\CheckIsPcs.cshtml" />
     <Content Include="Views\NewUser\CheckComplianceYear.cshtml" />
     <Content Include="Views\NewUser\Confirm.cshtml" />
+    <Content Include="Views\Organisation\OrganisationContactDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -490,6 +491,7 @@
     <Compile Include="App_Start\Modules\ApiClientModule.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Infrastructure\OrganisationRequiredAttribute.cs" />
     <Compile Include="Infrastructure\TokenResponseExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -509,6 +511,7 @@
     <Compile Include="ViewModels\NewUser\UserCreationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationViewModel.cs" />
+    <Compile Include="ViewModels\Organisation\OrganisationContactDetailsViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionBaseViewModel.cs" />
