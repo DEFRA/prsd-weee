@@ -38,7 +38,7 @@
                         CountyOrRegion = u.Organisation.OrganisationAddress.CountyOrRegion,
                         PostalCode = u.Organisation.OrganisationAddress.PostalCode,
                         Country = u.Organisation.OrganisationAddress.Country,
-                        Telphone = u.Organisation.OrganisationAddress.TelePhone,
+                        Telphone = u.Organisation.OrganisationAddress.Telephone,
                         Email = u.Organisation.OrganisationAddress.Email
                     }
                 }
