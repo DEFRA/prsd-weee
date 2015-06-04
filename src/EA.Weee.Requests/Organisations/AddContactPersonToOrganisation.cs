@@ -6,6 +6,6 @@
     {
         public Guid OrganisationId { get; set; }
 
-        public ContactData MainContactPerson { get; set; }
+        public ContactData ContactPerson { get; set; }
     }
 }
