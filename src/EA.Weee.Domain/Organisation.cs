@@ -33,5 +33,7 @@
         public Address BusinessAddress { get; set; }
 
         public Address NotificationAddress { get; set; }
+
+        public Contact Contact { get; set; }
     }
 }

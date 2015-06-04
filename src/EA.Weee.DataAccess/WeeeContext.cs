@@ -16,6 +16,10 @@
 
         public virtual DbSet<Organisation> Organisations { get; set; }
 
+        public virtual DbSet<Address> Addresses { get; set; }
+
+        public virtual DbSet<Contact> Contacts { get; set; }
+
         public virtual DbSet<User> Users { get; set; }
 
         public WeeeContext(IUserContext userContext)

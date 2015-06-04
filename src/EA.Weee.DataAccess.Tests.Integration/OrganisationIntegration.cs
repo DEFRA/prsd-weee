@@ -2,6 +2,7 @@
 {
     using System;
     using System.Data.Entity.Infrastructure;
+    using System.Linq;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Domain;
@@ -24,32 +25,15 @@
         [Fact]
         public async Task CanCreateOrganisation()
         {
-            var organisationAddress = new Address(
-                "Building O",
-                "Line 1 O",
-                "Line 2 O",
-                "Town O",
-                "Postcode O",
-                "Country O");
+            var contact = new Contact("Test firstname", "Test lastname", "Test position");
 
-            var businessAddress = new Address(
-                "Building B",
-                "Line 1 B",
-                "Line 2 B",
-                "Town B",
-                "Postcode B",
-                "Country B");
+            var organisationAddress = MakeAddress("O");
+            var businessAddress = MakeAddress("B");
+            var notificationAddress = MakeAddress("N");
 
-            var notificationAddress = new Address(
-                "Building N",
-                "Line 1 N",
-                "Line 2 N",
-                "Town N",
-                "Postcode N",
-                "Country N");
-
-            var organisation = new Organisation("Test Organisation", "Registered company")
+            var organisation = new Organisation("Test Organisation For CCOTest", "Registered company")
             {
+                Contact = contact,
                 OrganisationAddress = organisationAddress,
                 BusinessAddress = businessAddress,
                 NotificationAddress = notificationAddress,
@@ -62,7 +46,32 @@
 
             await context.SaveChangesAsync();
 
-            // it's good to know it doesn't crash at this point, but we ought to verify the org now exists!
+            var thisTestOrganisationArray = context.Organisations.Where(o => o.Name == "Test Organisation For CCOTest").ToArray();
+
+            Assert.NotNull(thisTestOrganisationArray);
+            Assert.NotEmpty(thisTestOrganisationArray);
+
+            var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
+
+            context.Addresses.Remove(thisTestOrganisation.OrganisationAddress);
+            context.Addresses.Remove(thisTestOrganisation.BusinessAddress);
+            context.Addresses.Remove(thisTestOrganisation.NotificationAddress);
+            context.Contacts.Remove(thisTestOrganisation.Contact);
+
+            context.Organisations.Remove(thisTestOrganisation);
+
+            await context.SaveChangesAsync();
+        }
+
+        private Address MakeAddress(string identifier)
+        {
+            return new Address(
+                "Building " + identifier,
+                "Line 1 " + identifier,
+                "Line 2 " + identifier,
+                "Town " + identifier,
+                "Postcode " + identifier,
+                "Country " + identifier);
         }
     }
 }
