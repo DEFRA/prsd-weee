@@ -9,9 +9,9 @@
 
         public string Name { get; set; }
 
-        public string Type { get; set; }
+        public Type OrganisationType { get; set; }
 
-        public string Status { get; set; }
+        public Status OrganisationStatus { get; set; }
 
         public string TradingName { get; set; }
 

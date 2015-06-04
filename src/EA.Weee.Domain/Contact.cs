@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain
 {
-    using EA.Prsd.Core.Domain;
     using Prsd.Core;
+    using Prsd.Core.Domain;
 
     public class Contact : Entity
     {

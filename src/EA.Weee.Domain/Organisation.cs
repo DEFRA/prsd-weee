@@ -1,17 +1,19 @@
 ﻿namespace EA.Weee.Domain
 {
-    using Prsd.Core;
-    using Prsd.Core.Domain;
+    using EA.Prsd.Core;
+    using EA.Prsd.Core.Domain;
 
     public class Organisation : Entity
     {
-        public Organisation(string name, string type)
+        public Organisation(string name, OrganisationType organisationType, OrganisationStatus organisationStatus)
         {
             Guard.ArgumentNotNull(name);
-            Guard.ArgumentNotNull(type);
+            Guard.ArgumentNotNull(organisationType);
+            Guard.ArgumentNotNull(organisationStatus);
 
             Name = name;
-            Type = type;
+            OrganisationType = organisationType;
+            OrganisationStatus = organisationStatus;
         }
 
         protected Organisation()
@@ -20,9 +22,9 @@
 
         public string Name { get; private set; }
 
-        public string Type { get; private set; }
+        public OrganisationType OrganisationType { get; private set; }
 
-        public string Status { get; set; }
+        public OrganisationStatus OrganisationStatus { get; set; }
 
         public string TradingName { get; set; }
 
