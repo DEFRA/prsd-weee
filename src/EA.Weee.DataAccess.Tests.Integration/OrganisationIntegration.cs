@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
     using System;
-    using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Domain;
@@ -27,19 +26,25 @@
         {
             var contact = new Contact("Test firstname", "Test lastname", "Test position");
 
+            const string Name = "Test Organisation For CCOTest";
+            const string TradingName = "Test Trading Name";
+            const string Crn = "12345678";
+            var status = OrganisationStatus.Incomplete;
+            var type = OrganisationType.RegisteredCompany;
+
             var organisationAddress = MakeAddress("O");
             var businessAddress = MakeAddress("B");
             var notificationAddress = MakeAddress("N");
 
-            var organisation = new Organisation("Test Organisation For CCOTest", "Registered company")
+            var organisation = new Organisation(Name, type, status)
             {
                 Contact = contact,
                 OrganisationAddress = organisationAddress,
                 BusinessAddress = businessAddress,
                 NotificationAddress = notificationAddress,
-                CompanyRegistrationNumber = "12345678",
-                Status = "Incomplete",
-                TradingName = "Test Trading Name"
+                CompanyRegistrationNumber = Crn,
+                OrganisationStatus = status,
+                TradingName = TradingName
             };
 
             context.Organisations.Add(organisation);
@@ -52,6 +57,12 @@
             Assert.NotEmpty(thisTestOrganisationArray);
 
             var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
+
+            Assert.Equal(Name, thisTestOrganisation.Name);
+            Assert.Equal(TradingName, thisTestOrganisation.TradingName);
+            Assert.Equal(Crn, thisTestOrganisation.CompanyRegistrationNumber);
+            Assert.Equal(status, thisTestOrganisation.OrganisationStatus);
+            Assert.Equal(type, thisTestOrganisation.OrganisationType);
 
             context.Addresses.Remove(thisTestOrganisation.OrganisationAddress);
             context.Addresses.Remove(thisTestOrganisation.BusinessAddress);

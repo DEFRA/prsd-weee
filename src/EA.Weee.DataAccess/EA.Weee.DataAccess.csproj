@@ -79,6 +79,8 @@
     <Compile Include="Identity\WeeeIdentityContext.cs" />
     <Compile Include="Mappings\ContactMapping.cs" />
     <Compile Include="Mappings\OrganisationMapping.cs" />
+    <Compile Include="Mappings\OrganisationStatusMapping.cs" />
+    <Compile Include="Mappings\OrganisationTypeMapping.cs" />
     <Compile Include="WeeeContext.cs" />
     <Compile Include="Mappings\AddressMapping.cs" />
     <Compile Include="Mappings\UKCompetentAuthorityMapping.cs" />

@@ -63,6 +63,7 @@
     <Content Include="scripts\Update\Sprint6-WEEE\20150603-161233-UpdateOrganisationTable.sql" />
     <Content Include="scripts\Update\Sprint6-WEEE\20150604-093607-AddContactTable.sql" />
     <Content Include="scripts\Update\Sprint6-WEEE\20150604-100316-AddContactTableRowVersion.sql" />
+    <Content Include="scripts\Update\Sprint6-WEEE\20150604-114306-UpdateStatusAndTypeColumns.sql" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
