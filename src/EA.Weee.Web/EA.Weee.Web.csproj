@@ -470,6 +470,10 @@
     <Content Include="Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressData.cshtml" />
     <Content Include="Views\NewUser\Confirm.cshtml" />
+    <Content Include="Views\OrganisationRegistration\Type.cshtml" />
+    <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -487,7 +491,7 @@
     <Compile Include="App_Start\Modules\ApiClientModule.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Infrastructure\OrganisationRequiredAttribute.cs" />
+    <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Infrastructure\TokenResponseExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -506,6 +510,11 @@
     <Compile Include="ViewModels\NewUser\UserCreationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\PartnershipDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\SoleTraderDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\RegisteredCompanyDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeEnum.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionBaseViewModel.cs" />
@@ -525,7 +534,9 @@
       <Name>EA.Weee.Requests</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
