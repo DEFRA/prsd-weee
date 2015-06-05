@@ -140,7 +140,7 @@
                         //        MainContactPerson = model.MainContactPerson
                         //    });
 
-                        return RedirectToAction("ContactDetails", "Organisation"); //TODO: change this to correct address
+                        return RedirectToAction("ContactDetails", "OrganisationRegistration"); //TODO: change this to correct address
                     }
                     catch (ApiBadRequestException ex)
                     {

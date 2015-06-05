@@ -11,6 +11,7 @@
         {
             if (User.Identity.IsAuthenticated)
             {
+              //TODO : Aunthenticated user home page to perfrom different activities
                 return RedirectToAction(actionName: "Home", controllerName: "Applicant");
             }
 
