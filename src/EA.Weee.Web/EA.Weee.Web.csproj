@@ -478,7 +478,6 @@
     <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\Type.cshtml" />
-    <Content Include="Views\OrganisationRegistration\OrganisationContactDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -521,7 +520,6 @@
     <Compile Include="ViewModels\OrganisationRegistration\OrganisationContactPersonViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeEnum.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
-    <Compile Include="ViewModels\OrganisationRegistration\Details\OrganisationContactDetailsViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionBaseViewModel.cs" />
