@@ -166,7 +166,7 @@
             {
                 //TODO: Get organisation id from organisation record
                 //var response = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                var model = new OrganisationContactDetailsViewModel { OrganisationId = new Guid() };
+                var model = new OrganisationContactDetailsViewModel { OrganisationId = id };
                 return View(model);
             }
         }

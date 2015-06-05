@@ -18,6 +18,8 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+        
+        @Html.HiddenFor(m => m.OrganisationId)
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Address1)">
             @Html.ValidationMessageFor(m => m.Address1)
