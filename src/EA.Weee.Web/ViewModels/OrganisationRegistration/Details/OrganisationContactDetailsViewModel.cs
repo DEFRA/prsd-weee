@@ -1,9 +1,12 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration.Details
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
 
     public class OrganisationContactDetailsViewModel
     {
+        public Guid OrganisationId { get; set; }
+
         [Required]
         [DataType(DataType.Text)]
         [StringLength(50)]

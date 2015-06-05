@@ -9,6 +9,7 @@
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Requests.Organisations;
+    using Requests.Shared;
     using ViewModels.Organisation;
     using ViewModels.Organisation.Type;
     using ViewModels.OrganisationRegistration.Details;
@@ -140,7 +141,67 @@
                         //        MainContactPerson = model.MainContactPerson
                         //    });
 
-                        return RedirectToAction("ContactDetails", "Organisation"); //TODO: change this to correct address
+                        return RedirectToAction("ContactDetails", "OrganisationRegistration"); //TODO: change this to correct address
+                    }
+                    catch (ApiBadRequestException ex)
+                    {
+                        this.HandleBadRequest(ex);
+
+                        if (ModelState.IsValid)
+                        {
+                            throw;
+                        }
+                    }
+
+                    return View(model);
+                }
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> OrganisationContactDetails(Guid id)
+        {
+            using (var client = apiClient())
+            {
+                //TODO: Get organisation id from organisation record
+                //var response = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+                var model = new OrganisationContactDetailsViewModel { OrganisationId = new Guid() };
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> OrganisationContactDetails(OrganisationContactDetailsViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var client = apiClient())
+                {
+                    try
+                    {
+                        //TODO: Save details
+                        var address = new AddressData
+                        {
+                            Address1 = model.Address1,
+                            Address2 = model.Address2,
+                            Country = model.Country,
+                            CountyOrRegion = model.CountyOrRegion,
+                            Email = model.Email,
+                            PostalCode = model.Postcode,
+                            Telephone = model.Phone,
+                            TownOrCity = model.TownOrCity
+                        };
+
+                        var response = await client.SendAsync(User.GetAccessToken(),
+                            new AddOrganisationContactDetails
+                            {
+                                OrganisationId = model.OrganisationId,
+                                OrganisationContactAddress = address
+                            });
+
+                        return RedirectToAction("OrganisationRegisteredOfficePrePopulate", "OrganisationRegistration"); //TODO: change this to correct address
                     }
                     catch (ApiBadRequestException ex)
                     {

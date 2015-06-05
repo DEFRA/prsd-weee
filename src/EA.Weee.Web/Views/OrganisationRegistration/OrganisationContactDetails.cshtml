@@ -6,7 +6,7 @@
 
 @section main_content {
     <div class="back">
-        <a href="@Url.Action("OrganisationContactPerson", "Organisation")">Back</a>
+        <a href="@Url.Action("MainContactPerson", "OrganisationRegistration")">Back</a>
     </div>
     <header class="hgroup">
         <h1 class="heading-large">
@@ -14,7 +14,7 @@
         </h1>
         <div class="colored-header-bar"></div>
     </header>
-    @using (Html.BeginForm("OrganisationContactDetails", "Organisation", FormMethod.Post, new { @class = "form", role = "form" }))
+    @using (Html.BeginForm("OrganisationContactDetails", "OrganisationRegistration", FormMethod.Post, new { @class = "form", role = "form" }))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
