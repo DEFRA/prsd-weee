@@ -71,6 +71,8 @@
   <ItemGroup>
     <Compile Include="Mappings\AddressMap.cs" />
     <Compile Include="Mappings\ContactMap.cs" />
+    <Compile Include="Mappings\ValueObjectInitializer.cs" />
+    <Compile Include="Organisations\AddOrganisationContactDetailsHandler.cs" />
     <Compile Include="Organisations\FindMatchingOrganisationsHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
