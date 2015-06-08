@@ -1,11 +1,11 @@
-﻿@model EA.Weee.Web.ViewModels.Organisation.OrganisationContactPersonViewModel
+﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.OrganisationContactPersonViewModel
 @{
     ViewBag.Title = "Organisation Main Contact Person";
 }
 
 @section main_content
 {
-    @using (Html.BeginForm(actionName: "MainContactPerson", controllerName: "Organisation", method: FormMethod.Post))
+    @using (Html.BeginForm(actionName: "MainContactPerson", controllerName: "OrganisationRegistration", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
