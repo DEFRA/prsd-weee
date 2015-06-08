@@ -9,10 +9,18 @@
     {
         public string Name { get; set; }
 
-        public IList<OrganisationSearchData> MatchingOrganisations { get; private set; }
+        public IList<OrganisationSearchData> MatchingOrganisations { get; set; }
 
         [Required]
         public Guid? Selected { get; set; }
+
+        public int TotalPages { get; set; }
+
+        public int PreviousPage { get; set; }
+
+        public int NextPage { get; set; }
+
+        public int StartingAt { get; set; }
 
         public SelectOrganisationViewModel(string name, IList<OrganisationSearchData> matchingOrganisations)
         {
