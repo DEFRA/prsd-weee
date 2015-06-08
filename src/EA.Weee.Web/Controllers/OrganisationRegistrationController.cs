@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using EA.Prsd.Core.Extensions;
@@ -113,7 +114,7 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> SelectOrganisation(string name)
+        public async Task<ViewResult> SelectOrganisation(string name, int page = 1)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -124,10 +125,27 @@
             {
                 try
                 {
+                    const int OrganisationsPerPage = 4; // would rather bake this into the db query but not really feasible
+
                     var matchingOrganisations =
                         await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(name));
 
-                    return View(new SelectOrganisationViewModel(name, matchingOrganisations));
+                    var totalPages = (int)Math.Ceiling(((double)matchingOrganisations.Count() / (double)OrganisationsPerPage));
+
+                    var organisationsForThisPage =
+                        matchingOrganisations.Skip((page - 1) * OrganisationsPerPage)
+                            .Take(OrganisationsPerPage)
+                            .ToList();
+
+                    return View(new SelectOrganisationViewModel
+                    {
+                        Name = name,
+                        MatchingOrganisations = organisationsForThisPage,
+                        NextPage = page + 1,
+                        PreviousPage = page - 1,
+                        TotalPages = totalPages,
+                        StartingAt = ((page - 1) * OrganisationsPerPage) + 1,
+                    });
                 }
                 catch (ApiBadRequestException ex)
                 {
