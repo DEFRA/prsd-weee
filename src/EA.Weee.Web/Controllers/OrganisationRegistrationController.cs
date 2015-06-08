@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
     using System;
+    using System.IdentityModel.Metadata;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -9,8 +10,8 @@
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Requests.Organisations;
-    using ViewModels.Organisation;
     using ViewModels.Organisation.Type;
+    using ViewModels.OrganisationRegistration;
     using ViewModels.OrganisationRegistration.Details;
 
     [Authorize]
@@ -117,7 +118,7 @@
             {
                 //TODO: Get organisation id from organisation record
                 //var response = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                var model = new OrganisationContactPersonViewModel { OrganisationId = new Guid() };
+                var model = new OrganisationContactPersonViewModel { OrganisationId = id };
                 return View(model);
             }
         }
@@ -132,13 +133,17 @@
                 {
                     try
                     {
-                        //TODO: Save details
-                        //var response = await client.SendAsync(User.GetAccessToken(),
-                        //    new AddContactPersonToOrganisation
-                        //    {
-                        //        OrganisationId = model.OrganisationId,
-                        //        MainContactPerson = model.MainContactPerson
-                        //    });
+                        var response = await client.SendAsync(User.GetAccessToken(),
+                            new AddContactPersonToOrganisation
+                            {
+                                OrganisationId = model.OrganisationId, 
+                                ContactPerson = new ContactData()
+                                {
+                                    FirstName = model.FirstName,
+                                    LastName = model.LastName,
+                                    Position = model.Position
+                                }
+                            });
 
                         return RedirectToAction("ContactDetails", "OrganisationRegistration"); //TODO: change this to correct address
                     }

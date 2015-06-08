@@ -48,6 +48,7 @@
     <Compile Include="ClaimTypes.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisation.cs" />
     <Compile Include="Organisations\ContactData.cs" />
+    <Compile Include="Organisations\CreateOrganisation.cs" />
     <Compile Include="Organisations\GetOrganisationInfo.cs" />
     <Compile Include="Organisations\OrganisationData.cs" />
     <Compile Include="Shared\Status.cs" />
