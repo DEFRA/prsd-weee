@@ -64,10 +64,10 @@
             Assert.Equal(status, thisTestOrganisation.OrganisationStatus);
             Assert.Equal(type, thisTestOrganisation.OrganisationType);
 
-            context.Addresses.Remove(thisTestOrganisation.OrganisationAddress);
-            context.Addresses.Remove(thisTestOrganisation.BusinessAddress);
-            context.Addresses.Remove(thisTestOrganisation.NotificationAddress);
-            context.Contacts.Remove(thisTestOrganisation.Contact);
+            //context.Addresses.Remove(thisTestOrganisation.OrganisationAddress);
+            //context.Addresses.Remove(thisTestOrganisation.BusinessAddress);
+            //context.Addresses.Remove(thisTestOrganisation.NotificationAddress);
+            //context.Contacts.Remove(thisTestOrganisation.Contact);
 
             context.Organisations.Remove(thisTestOrganisation);
 
