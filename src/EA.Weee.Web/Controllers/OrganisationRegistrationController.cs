@@ -133,19 +133,8 @@
                 {
                     try
                     {
-                        var response = await client.SendAsync(User.GetAccessToken(),
-                            new AddContactPersonToOrganisation
-                            {
-                                OrganisationId = model.OrganisationId, 
-                                ContactPerson = new ContactData()
-                                {
-                                    FirstName = model.FirstName,
-                                    LastName = model.LastName,
-                                    Position = model.Position
-                                }
-                            });
-
-                        return RedirectToAction("ContactDetails", "OrganisationRegistration"); //TODO: change this to correct address
+                        var response = await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
+                        return RedirectToAction("ContactDetails", "OrganisationRegistration"); 
                     }
                     catch (ApiBadRequestException ex)
                     {

@@ -43,7 +43,7 @@
                 break;
 
                 case Type.SoleTraderOrIndividual:
-                type = OrganisationType.SoleTrader;
+                type = OrganisationType.SoleTraderOrIndividual;
                 break;
             }
             var organisation = new Organisation(command.Organisation.Name, type, OrganisationStatus.Incomplete);
