@@ -11,16 +11,17 @@
     public class CreatePartnershipRequestHandler : IRequestHandler<CreatePartnershipRequest, Guid>
     {
         private readonly WeeeContext db;
+        private readonly IMap<CreatePartnershipRequest, Organisation> mapper;
 
-        public CreatePartnershipRequestHandler(WeeeContext db)
+        public CreatePartnershipRequestHandler(WeeeContext db, IMap<CreatePartnershipRequest, Organisation> mapper)
         {
             this.db = db;
+            this.mapper = mapper;
         }
 
         public async Task<Guid> HandleAsync(CreatePartnershipRequest message)
         {
-            var organisation = new Organisation(message.TradingName, OrganisationType.Partnership,
-                OrganisationStatus.Incomplete);
+            var organisation = mapper.Map(message);
             db.Organisations.Add(organisation);
             await db.SaveChangesAsync();
 

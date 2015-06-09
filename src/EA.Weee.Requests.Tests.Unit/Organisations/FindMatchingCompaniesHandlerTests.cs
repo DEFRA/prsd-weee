@@ -41,7 +41,10 @@
 
         private Organisation GetOrganisationWithName(string name)
         {
-            var organisation = new Organisation(name, anyType, anyStatus);
+            var organisation = new Organisation(anyType, anyStatus)
+            {
+                Name = name
+            };
 
             organisation.OrganisationAddress = GetAddress();
 

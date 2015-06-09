@@ -72,6 +72,9 @@
     <Compile Include="Helpers\TestDbAsyncEnumerable.cs" />
     <Compile Include="Helpers\TestDbAsyncEnumerator.cs" />
     <Compile Include="Helpers\TestDbAsyncQueryProvider.cs" />
+    <Compile Include="Organisations\Create\CreateRegisteredCompanyRequestMapTests.cs" />
+    <Compile Include="Organisations\Create\CreatePartnershipRequestMapTests.cs" />
+    <Compile Include="Organisations\Create\CreateSoleTraderRequestMapTests.cs" />
     <Compile Include="Organisations\FindMatchingCompaniesHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

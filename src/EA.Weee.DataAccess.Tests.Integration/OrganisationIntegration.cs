@@ -36,8 +36,9 @@
             var businessAddress = MakeAddress("B");
             var notificationAddress = MakeAddress("N");
 
-            var organisation = new Organisation(name, type, status)
+            var organisation = new Organisation(type, status)
             {
+                Name = name,
                 Contact = contact,
                 OrganisationAddress = organisationAddress,
                 BusinessAddress = businessAddress,
