@@ -2,7 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using Requests.Organisations;
+    using Weee.Requests.Organisations;
 
     public class OrganisationContactPersonViewModel
     {

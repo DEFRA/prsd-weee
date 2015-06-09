@@ -3,11 +3,13 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Api.Client;
     using Infrastructure;
     using Prsd.Core.Extensions;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
+    using Requests;
     using ViewModels.Organisation.Type;
     using ViewModels.OrganisationRegistration;
     using ViewModels.OrganisationRegistration.Details;
@@ -16,10 +18,12 @@
     public class OrganisationRegistrationController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator;
 
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient)
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator)
         {
             this.apiClient = apiClient;
+            this.soleTraderDetailsRequestCreator = soleTraderDetailsRequestCreator;
         }
 
         [HttpGet]
@@ -63,8 +67,12 @@
         {
             if (ModelState.IsValid)
             {
-                // TODO: Save details 
-                return RedirectToAction("Search", "OrganisationRegistration"); // TODO: Change this to correct address
+                // TODO: Temp data needs to be handled by the organisation search after redirect
+                TempData[typeof(SoleTraderDetailsViewModel).Name] = model;
+                return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
+                {
+                    name = model.BusinessTradingName
+                });
             }
 
             return View(model);
@@ -82,8 +90,12 @@
         {
             if (ModelState.IsValid)
             {
-                // TODO: Save details 
-                return RedirectToAction("Search", "OrganisationRegistration"); // TODO: Change this to correct address
+                // TODO: Temp data needs to be handled by the organisation search after redirect
+                TempData[typeof(PartnershipDetailsViewModel).Name] = model;
+                return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
+                {
+                    name = model.BusinessTradingName
+                });
             }
 
             return View(model);
@@ -99,11 +111,14 @@
         [HttpPost]
         public ActionResult RegisteredCompanyDetails(RegisteredCompanyDetailsViewModel model)
         {
-            // TODO: Validate company registration number
             if (ModelState.IsValid)
             {
-                // TODO: Save details 
-                return RedirectToAction("Search", "OrganisationRegistration"); // TODO: Change this to correct address
+                // TODO: Temp data needs to be handled by the organisation search after redirect
+                TempData[typeof(PartnershipDetailsViewModel).Name] = model;
+                return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
+                {
+                    name = model.CompanyName
+                });
             }
 
             return View(model);

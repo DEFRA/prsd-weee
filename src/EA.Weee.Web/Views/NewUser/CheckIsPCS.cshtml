@@ -3,18 +3,23 @@
     ViewBag.Title = "Do you need a user account?";
 }
 
-@using (Html.BeginForm(actionName: "CheckIsPcs", controllerName: "NewUser", method: FormMethod.Post))
+@section main_content
 {
-    @Html.AntiForgeryToken()
     <header class="hgroup">
-        <h2 class="heading-large">Do you need a user account?</h2>
-        <div class="colored-header-bar"></div>
+        <h1 class="heading-large">
+            Does your organisation, or the organisation you work on behalf of, operate as a producer compliance scheme?
+        </h1>
     </header>
-    <p>Does your organisation, or organisation you work on behalf of, currently operate as a producer compliance scheme under the WEEE regulations?</p>
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.Choices.SelectedValue)">
-        @Html.EditorFor(m => m.Choices)
-    </div>
-    <div class="form-group">
-        <button class="button" type="submit">Continue</button>
-    </div>
+
+    @using (Html.BeginForm(actionName: "CheckIsPcs", controllerName: "NewUser", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Choices.SelectedValue)">
+            @Html.EditorFor(m => m.Choices)
+        </div>
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+    }
 }
