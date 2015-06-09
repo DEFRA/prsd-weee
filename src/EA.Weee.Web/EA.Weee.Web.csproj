@@ -369,6 +369,7 @@
     <Content Include="Global.asax" />
     <Content Include="packages.config" />
     <Content Include="Scripts\application.js" />
+    <Content Include="Scripts\custom-validation.js" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
     <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />

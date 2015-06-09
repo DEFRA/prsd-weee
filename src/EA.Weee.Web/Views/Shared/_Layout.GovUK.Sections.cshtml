@@ -44,7 +44,7 @@
     @RenderSection("scripts", required: false)
 }
 
-<main id="page-container" role="main">
+<main id="content" role="main">
     @Html.Partial("_FeedbackBanner")
     @RenderBody()
     @if (IsSectionDefined("main_content"))
