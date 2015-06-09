@@ -14,27 +14,31 @@
         [Required]
         public Guid? Selected { get; set; }
 
-        public int TotalPages { get; set; }
+        public int TotalPages { get; private set; }
 
-        public int PreviousPage { get; set; }
+        public int PreviousPage { get; private set; }
 
-        public int NextPage { get; set; }
+        public int NextPage { get; private set; }
 
-        public int StartingAt { get; set; }
+        public int StartingAt { get; private set; }
 
-        public SelectOrganisationViewModel(string name, IList<OrganisationSearchData> matchingOrganisations)
+        public SelectOrganisationViewModel(string name, IList<OrganisationSearchData> matchingOrganisations, int totalPages, int previousPage, int nextPage, int startingAt)
         {
             Name = name;
             MatchingOrganisations = matchingOrganisations;
+            TotalPages = totalPages;
+            PreviousPage = previousPage;
+            NextPage = nextPage;
+            StartingAt = startingAt;
         }
 
-        public SelectOrganisationViewModel(string name)
-            : this(name, new List<OrganisationSearchData>())
+        public SelectOrganisationViewModel(int totalPages, int previousPage, int nextPage, int startingAt)
+            : this(string.Empty, new List<OrganisationSearchData>(), totalPages, previousPage, nextPage, startingAt)
         {
         }
 
         public SelectOrganisationViewModel()
-            : this(string.Empty)
+            : this(totalPages: 1, previousPage: 0, nextPage: 2, startingAt: 1)
         {
         }
     }

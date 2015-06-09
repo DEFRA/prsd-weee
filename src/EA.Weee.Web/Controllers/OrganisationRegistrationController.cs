@@ -137,15 +137,20 @@
                             .Take(OrganisationsPerPage)
                             .ToList();
 
-                    return View(new SelectOrganisationViewModel
-                    {
-                        Name = name,
-                        MatchingOrganisations = organisationsForThisPage,
-                        NextPage = page + 1,
-                        PreviousPage = page - 1,
-                        TotalPages = totalPages,
-                        StartingAt = ((page - 1) * OrganisationsPerPage) + 1,
-                    });
+                    var previousPage = page - 1;
+                    var nextPage = page + 1;
+                    var startingAt = ((page - 1) * OrganisationsPerPage) + 1;
+
+                    return
+                        View(
+                            new SelectOrganisationViewModel(totalPages: totalPages,
+                                previousPage: previousPage,
+                                nextPage: nextPage,
+                                startingAt: startingAt)
+                            {
+                                MatchingOrganisations = organisationsForThisPage,
+                                Name = name
+                            });
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -154,7 +159,10 @@
                     {
                         throw;
                     }
-                    return View(new SelectOrganisationViewModel(name));
+                    return View(new SelectOrganisationViewModel
+                    {
+                        Name = name
+                    });
                 }
             }
         }
