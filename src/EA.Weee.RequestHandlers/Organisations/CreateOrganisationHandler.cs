@@ -1,8 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
     using System;
-    using System.Data;
-    using System.Data.Entity;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using DataAccess;
@@ -13,7 +11,7 @@
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using ClaimTypes = Requests.ClaimTypes;
-    using Type = Requests.Organisations.Type;
+    using OrganisationType = Domain.OrganisationType;
 
     internal class CreateOrganisationHandler : IRequestHandler<CreateOrganisation, Guid>
     {
@@ -30,23 +28,27 @@
 
         public async Task<Guid> HandleAsync(CreateOrganisation command)
         {
-            OrganisationType type = OrganisationType.RegisteredCompany;
-            var orgData = command.Organisation;
+            OrganisationType organisationType;
+      
             switch (command.Organisation.OrganisationType)
             {
-                case Type.Partnership:
-                    type = OrganisationType.Partnership;
+                case Requests.Organisations.OrganisationType.Partnership:
+                    organisationType = OrganisationType.Partnership;
                     break;
 
-                case Type.RegisteredCompany:
-                type = OrganisationType.RegisteredCompany;
+                case Requests.Organisations.OrganisationType.RegisteredCompany:
+                organisationType = OrganisationType.RegisteredCompany;
                 break;
 
-                case Type.SoleTraderOrIndividual:
-                type = OrganisationType.SoleTraderOrIndividual;
+                case Requests.Organisations.OrganisationType.SoleTraderOrIndividual:
+                organisationType = OrganisationType.SoleTraderOrIndividual;
                 break;
+
+                default:
+                throw new InvalidOperationException(string.Format("Unknown organisation type: {0}", command.Organisation.OrganisationType));
             }
-            var organisation = new Organisation(command.Organisation.Name, type, OrganisationStatus.Incomplete);
+
+            var organisation = new Organisation(command.Organisation.Name, organisationType, OrganisationStatus.Incomplete);
 
             db.Organisations.Add(organisation);
 
