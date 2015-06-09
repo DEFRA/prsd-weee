@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using System.IdentityModel.Metadata;
     using Requests.Organisations;
 
     public class OrganisationContactPersonViewModel
