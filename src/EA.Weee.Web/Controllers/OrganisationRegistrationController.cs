@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
     using System;
-    using System.IdentityModel.Metadata;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -9,7 +8,6 @@
     using Prsd.Core.Extensions;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
-    using Requests.Organisations;
     using ViewModels.Organisation.Type;
     using ViewModels.OrganisationRegistration;
     using ViewModels.OrganisationRegistration.Details;
