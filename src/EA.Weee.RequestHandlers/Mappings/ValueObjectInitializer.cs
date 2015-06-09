@@ -4,22 +4,25 @@
     using Domain;
     using Requests.Organisations;
     using Requests.Shared;
-    using OrganisationType = Requests.Organisations.Type;
+    using OrganisationType = Requests.Organisations.OrganisationType;
 
     internal class ValueObjectInitializer
     {
-        private static Domain.OrganisationType GetOrganisationType(OrganisationType type)
+        private static Domain.OrganisationType GetOrganisationType(OrganisationType organisationType)
         {
-            switch (type)
+            switch (organisationType)
             {
                 case OrganisationType.RegisteredCompany:
                     return Domain.OrganisationType.RegisteredCompany;
+               
                 case OrganisationType.SoleTraderOrIndividual:
                     return Domain.OrganisationType.SoleTraderOrIndividual;
+                
                 case OrganisationType.Partnership:
                     return Domain.OrganisationType.Partnership;
+                
                 default:
-                    throw new ArgumentException(string.Format("Unknown organisation type: {0}", type), "type");
+                    throw new ArgumentException(string.Format("Unknown organisation type: {0}", organisationType), "organisationType");
             }
         }
 

@@ -27,7 +27,7 @@
         {
             return new AddContactPersonToOrganisation
             {
-                OrganisationId = OrganisationId, //new Guid("D94A2FA8-6DCF-4C11-BAEF-9B2B3AC1FA92")
+                OrganisationId = OrganisationId, 
                 ContactPerson = new ContactData()
                     {
                         FirstName = FirstName,
