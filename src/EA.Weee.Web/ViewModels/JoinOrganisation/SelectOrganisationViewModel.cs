@@ -9,7 +9,7 @@
     {
         public string Name { get; set; }
 
-        public IList<OrganisationSearchData> MatchingOrganisations { get; set; }
+        public IList<OrganisationSearchData> MatchingOrganisations { get; private set; }
 
         [Required]
         public Guid? Selected { get; set; }

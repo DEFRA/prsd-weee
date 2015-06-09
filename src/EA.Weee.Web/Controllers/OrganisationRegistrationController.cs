@@ -156,14 +156,11 @@
 
                     return
                         View(
-                            new SelectOrganisationViewModel(totalPages: totalPages,
+                            new SelectOrganisationViewModel(name, organisationsForThisPage,
+                                totalPages: totalPages,
                                 previousPage: previousPage,
                                 nextPage: nextPage,
-                                startingAt: startingAt)
-                            {
-                                MatchingOrganisations = organisationsForThisPage,
-                                Name = name
-                            });
+                                startingAt: startingAt));
                 }
                 catch (ApiBadRequestException ex)
                 {
