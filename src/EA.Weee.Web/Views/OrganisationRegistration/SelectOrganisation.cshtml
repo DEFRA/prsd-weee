@@ -22,9 +22,9 @@
 
         for (int i = 0; i < Model.MatchingOrganisations.Count; i++)
         {
-            bool shouldBeANewRow = i % 2 == 0;
+            bool isNewRow = i % 2 == 0;
 
-            if (shouldBeANewRow)
+            if (isNewRow)
             {
                 @:<div class="grid-row">
             }
@@ -53,7 +53,7 @@
                 <button type="submit" name="submitButton" value="@Html.Raw(Model.MatchingOrganisations[i].Id)" class="link-submit">Request to join this organisation</button>
             </div>
 
-            if (!shouldBeANewRow || i == Model.MatchingOrganisations.Count - 1)
+            if (!isNewRow || i == Model.MatchingOrganisations.Count - 1)
             {
                 @:</div>
             }
