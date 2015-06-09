@@ -55,7 +55,7 @@
     <Compile Include="Organisations\GetOrganisationInfo.cs" />
     <Compile Include="Organisations\OrganisationData.cs" />
     <Compile Include="Shared\Status.cs" />
-    <Compile Include="Organisations\Type.cs" />
+    <Compile Include="Organisations\OrganisationType.cs" />
     <Compile Include="Shared\CompetentAuthority.cs" />
     <Compile Include="Shared\AddressData.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations.cs" />
