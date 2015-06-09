@@ -48,6 +48,10 @@
     <Compile Include="ClaimTypes.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisation.cs" />
     <Compile Include="Organisations\ContactData.cs" />
+    <Compile Include="Organisations\Create\Base\CreateOrganisationReqeust.cs" />
+    <Compile Include="Organisations\Create\CreateRegisteredCompanyRequest.cs" />
+    <Compile Include="Organisations\Create\CreatePartnershipRequest.cs" />
+    <Compile Include="Organisations\Create\CreateSoleTraderRequest.cs" />
     <Compile Include="Organisations\GetOrganisationInfo.cs" />
     <Compile Include="Organisations\OrganisationData.cs" />
     <Compile Include="Shared\Status.cs" />
