@@ -9,7 +9,7 @@
 
         public string Name { get; set; }
 
-        public Type OrganisationType { get; set; }
+        public OrganisationType OrganisationType { get; set; }
 
         public Status OrganisationStatus { get; set; }
 

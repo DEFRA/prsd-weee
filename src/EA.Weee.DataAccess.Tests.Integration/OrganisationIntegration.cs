@@ -3,9 +3,9 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Prsd.Core.Domain;
-    using EA.Weee.Domain;
+    using Domain;
     using FakeItEasy;
+    using Prsd.Core.Domain;
     using Xunit;
 
     public class OrganisationIntegration
@@ -26,9 +26,9 @@
         {
             var contact = new Contact("Test firstname", "Test lastname", "Test position");
 
-            const string Name = "Test Organisation For CCOTest";
-            const string TradingName = "Test Trading Name";
-            const string Crn = "12345678";
+            const string name = "Test Organisation For CCOTest";
+            const string tradingName = "Test Trading Name";
+            const string crn = "12345678";
             var status = OrganisationStatus.Incomplete;
             var type = OrganisationType.RegisteredCompany;
 
@@ -36,40 +36,38 @@
             var businessAddress = MakeAddress("B");
             var notificationAddress = MakeAddress("N");
 
-            var organisation = new Organisation(Name, type, status)
+            var organisation = new Organisation(name, type, status)
             {
                 Contact = contact,
                 OrganisationAddress = organisationAddress,
                 BusinessAddress = businessAddress,
                 NotificationAddress = notificationAddress,
-                CompanyRegistrationNumber = Crn,
+                CompanyRegistrationNumber = crn,
                 OrganisationStatus = status,
-                TradingName = TradingName
+                TradingName = tradingName
             };
 
             context.Organisations.Add(organisation);
 
             await context.SaveChangesAsync();
 
-            var thisTestOrganisationArray = context.Organisations.Where(o => o.Name == "Test Organisation For CCOTest").ToArray();
+            var thisTestOrganisationArray =
+                context.Organisations.Where(o => o.Name == "Test Organisation For CCOTest").ToArray();
 
             Assert.NotNull(thisTestOrganisationArray);
             Assert.NotEmpty(thisTestOrganisationArray);
 
             var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
 
-            Assert.Equal(Name, thisTestOrganisation.Name);
-            Assert.Equal(TradingName, thisTestOrganisation.TradingName);
-            Assert.Equal(Crn, thisTestOrganisation.CompanyRegistrationNumber);
-            Assert.Equal(status, thisTestOrganisation.OrganisationStatus);
-            Assert.Equal(type, thisTestOrganisation.OrganisationType);
-
-            context.Addresses.Remove(thisTestOrganisation.OrganisationAddress);
-            context.Addresses.Remove(thisTestOrganisation.BusinessAddress);
-            context.Addresses.Remove(thisTestOrganisation.NotificationAddress);
-            context.Contacts.Remove(thisTestOrganisation.Contact);
-
-            context.Organisations.Remove(thisTestOrganisation);
+            if (thisTestOrganisation != null)
+            {
+                Assert.Equal(name, thisTestOrganisation.Name);
+                Assert.Equal(tradingName, thisTestOrganisation.TradingName);
+                Assert.Equal(crn, thisTestOrganisation.CompanyRegistrationNumber);
+                Assert.Equal(status, thisTestOrganisation.OrganisationStatus);
+                Assert.Equal(type, thisTestOrganisation.OrganisationType);
+                await CleanUp(thisTestOrganisation);
+            }
 
             await context.SaveChangesAsync();
         }
@@ -85,6 +83,13 @@
                 "Country " + identifier,
                 "Phone" + identifier,
                 "Email" + identifier);
+        }
+
+        private async Task CleanUp(Organisation organisation)
+        {
+            context.Organisations.Remove(organisation);
+
+            await context.SaveChangesAsync();
         }
     }
 }

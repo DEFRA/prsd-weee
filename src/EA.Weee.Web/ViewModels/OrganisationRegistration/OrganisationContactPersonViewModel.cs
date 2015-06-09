@@ -1,7 +1,8 @@
-﻿namespace EA.Weee.Web.ViewModels.Organisation
+﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using Weee.Requests.Organisations;
 
     public class OrganisationContactPersonViewModel
     {
@@ -21,5 +22,19 @@
         [Display(Name = "Position")]
         [DataType(DataType.Text)]
         public string Position { get; set; }
+
+        public AddContactPersonToOrganisation ToAddRequest()
+        {
+            return new AddContactPersonToOrganisation
+            {
+                OrganisationId = OrganisationId, 
+                ContactPerson = new ContactData()
+                    {
+                        FirstName = FirstName,
+                        LastName = LastName,
+                        Position = Position
+                    }
+            };
+        }
     }
 }

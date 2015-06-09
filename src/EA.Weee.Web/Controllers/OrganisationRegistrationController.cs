@@ -10,8 +10,8 @@
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Requests;
-    using ViewModels.Organisation;
     using ViewModels.Organisation.Type;
+    using ViewModels.OrganisationRegistration;
     using ViewModels.OrganisationRegistration.Details;
 
     [Authorize]
@@ -131,7 +131,7 @@
             {
                 //TODO: Get organisation id from organisation record
                 //var response = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                var model = new OrganisationContactPersonViewModel { OrganisationId = new Guid() };
+                var model = new OrganisationContactPersonViewModel { OrganisationId = id };
                 return View(model);
             }
         }
@@ -146,15 +146,8 @@
                 {
                     try
                     {
-                        //TODO: Save details
-                        //var response = await client.SendAsync(User.GetAccessToken(),
-                        //    new AddContactPersonToOrganisation
-                        //    {
-                        //        OrganisationId = model.OrganisationId,
-                        //        MainContactPerson = model.MainContactPerson
-                        //    });
-
-                        return RedirectToAction("ContactDetails", "Organisation"); //TODO: change this to correct address
+                        var response = await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
+                        return RedirectToAction("ContactDetails", "OrganisationRegistration"); 
                     }
                     catch (ApiBadRequestException ex)
                     {
