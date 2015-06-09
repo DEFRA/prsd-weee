@@ -6,24 +6,26 @@
     using System.Web.Mvc;
     using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Web.ApiClient;
-    using EA.Prsd.Core.Web.Extensions;
     using EA.Prsd.Core.Web.Mvc.Extensions;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Requests;
     using EA.Weee.Web.ViewModels.JoinOrganisation;
-    using EA.Weee.Web.ViewModels.Organisation;
     using EA.Weee.Web.ViewModels.Organisation.Type;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
 
     [Authorize]
     public class OrganisationRegistrationController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator;
 
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient)
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator)
         {
             this.apiClient = apiClient;
+            this.soleTraderDetailsRequestCreator = soleTraderDetailsRequestCreator;
         }
 
         [HttpGet]
@@ -67,8 +69,12 @@
         {
             if (ModelState.IsValid)
             {
-                // TODO: Save details 
-                return RedirectToAction("Search", "OrganisationRegistration"); // TODO: Change this to correct address
+                // TODO: Temp data needs to be handled by the organisation search after redirect
+                TempData[typeof(SoleTraderDetailsViewModel).Name] = model;
+                return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
+                {
+                    name = model.BusinessTradingName
+                });
             }
 
             return View(model);
@@ -86,8 +92,12 @@
         {
             if (ModelState.IsValid)
             {
-                // TODO: Save details 
-                return RedirectToAction("Search", "OrganisationRegistration"); // TODO: Change this to correct address
+                // TODO: Temp data needs to be handled by the organisation search after redirect
+                TempData[typeof(PartnershipDetailsViewModel).Name] = model;
+                return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
+                {
+                    name = model.BusinessTradingName
+                });
             }
 
             return View(model);
@@ -103,11 +113,14 @@
         [HttpPost]
         public ActionResult RegisteredCompanyDetails(RegisteredCompanyDetailsViewModel model)
         {
-            // TODO: Validate company registration number
             if (ModelState.IsValid)
             {
-                // TODO: Save details 
-                return RedirectToAction("Search", "OrganisationRegistration"); // TODO: Change this to correct address
+                // TODO: Temp data needs to be handled by the organisation search after redirect
+                TempData[typeof(PartnershipDetailsViewModel).Name] = model;
+                return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
+                {
+                    name = model.CompanyName
+                });
             }
 
             return View(model);
@@ -174,7 +187,7 @@
             {
                 //TODO: Get organisation id from organisation record
                 //var response = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                var model = new OrganisationContactPersonViewModel { OrganisationId = new Guid() };
+                var model = new OrganisationContactPersonViewModel { OrganisationId = id };
                 return View(model);
             }
         }
@@ -189,15 +202,8 @@
                 {
                     try
                     {
-                        //TODO: Save details
-                        //var response = await client.SendAsync(User.GetAccessToken(),
-                        //    new AddContactPersonToOrganisation
-                        //    {
-                        //        OrganisationId = model.OrganisationId,
-                        //        MainContactPerson = model.MainContactPerson
-                        //    });
-
-                        return RedirectToAction("ContactDetails", "Organisation"); //TODO: change this to correct address
+                        var response = await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
+                        return RedirectToAction("ContactDetails", "OrganisationRegistration"); 
                     }
                     catch (ApiBadRequestException ex)
                     {

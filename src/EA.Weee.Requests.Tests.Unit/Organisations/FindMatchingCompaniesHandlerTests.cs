@@ -15,7 +15,7 @@
 
     public class FindMatchingCompaniesHandlerTests
     {
-        private readonly OrganisationType anyType = OrganisationType.RegisteredCompany;
+        private readonly Domain.OrganisationType anyType = Domain.OrganisationType.RegisteredCompany;
         private readonly OrganisationStatus anyStatus = OrganisationStatus.Incomplete;
      
         private readonly DbContextHelper helper = new DbContextHelper();

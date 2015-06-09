@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Requests.Organisations
 {
     using System;
-    using System.ComponentModel.DataAnnotations;
 
     public class ContactData
     {

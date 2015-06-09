@@ -15,7 +15,7 @@
         public static readonly UKCompetentAuthority Wales = new UKCompetentAuthority(4, "Natural Resources Wales", "NRW");
         private readonly string shortName;
 
-        private UKCompetentAuthority()
+        protected UKCompetentAuthority()
         {
         }
 

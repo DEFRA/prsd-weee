@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Requests.Organisations;
+    using Weee.Requests.Organisations;
 
     public class SelectOrganisationViewModel
     {

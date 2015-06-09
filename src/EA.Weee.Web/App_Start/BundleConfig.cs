@@ -14,7 +14,7 @@
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*",
-                        "~/Scripts/CustomValidation.js"));
+                        "~/Scripts/custom-validation.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_toolkit").Include(
                       "~/Scripts/govuk_toolkit/vendor/polyfills/bind.js",

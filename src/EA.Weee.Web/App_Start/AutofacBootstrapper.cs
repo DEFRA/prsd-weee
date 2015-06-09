@@ -1,7 +1,10 @@
 ﻿namespace EA.Weee.Web
 {
+    using System.Linq;
+    using System.Reflection;
     using Autofac;
     using Autofac.Integration.Mvc;
+    using Requests.Base;
 
     public class AutofacBootstrapper
     {
@@ -25,6 +28,10 @@
 
             // Register all Autofac specific IModule implementations
             builder.RegisterAssemblyModules(typeof(Startup).Assembly);
+
+            // Register request creators
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                .AsClosedTypesOf(typeof(IRequestCreator<,>));
 
             return builder.Build();
         }
