@@ -3,7 +3,7 @@
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
 
-    public class Organisation : Entity
+    public partial class Organisation : Entity
     {
         public Organisation(string name, OrganisationType organisationType, OrganisationStatus organisationStatus)
         {

@@ -3,19 +3,23 @@
 @{
     ViewBag.Title = "Do you need a user account?";
 }
-
-@using (Html.BeginForm(actionName: "CheckComplianceYear", controllerName: "NewUser", method: FormMethod.Post))
+@section main_content
 {
-    @Html.AntiForgeryToken()
     <header class="hgroup">
-        <h2 class="heading-large">Do you need a user account?</h2>
-        <div class="colored-header-bar"></div>
+        <h1 class="heading-large">
+            Do you want to manage activities for the 2016 compliance year?
+        </h1>
     </header>
-    <p>Do you wish to perform activities for the 2016 compliance year?</p>
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.Choices.SelectedValue)">
-        @Html.EditorFor(m => m.Choices)
-    </div>
-    <div class="form-group">
-        <button class="button" type="submit">Continue</button>
-    </div>
+    @using (Html.BeginForm(actionName: "CheckComplianceYear", controllerName: "NewUser", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Choices.SelectedValue)">
+            @Html.EditorFor(m => m.Choices)
+        </div>
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+    }
 }
