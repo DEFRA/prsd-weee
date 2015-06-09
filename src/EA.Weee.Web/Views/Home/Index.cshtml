@@ -7,22 +7,30 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="heading-large">Manage Your Waste Electrical and Electronic Equipment Account</h1>
+        <h1 class="heading-xlarge">Waste Electrical and Electronic Equipment Online Service</h1>
     </header>
 
     <div>
-        <p>Report your activities relating to the WEEE regime.</p>
+        <h2 class="heading-large">Manage your WEEE activities</h2>
     </div>
 
     <div>
-        <p>Use this service to:</p>
-        <ul class="list-bullet">
-            <li>Create your organisation within the WEEE regime.</li>
-            <li>Manage members of your Producer Compliance Scheme.</li>
-        </ul>
+        <p>
+            Use this service to manage members of your producer compliance scheme.
+        </p>
     </div>
-
     <p id="get-started" class="get-started group">
         @Html.ActionLink("Start now", "LandingPage", "Home", null, new { @class = "button-get-started button" })
     </p>
+
+<div>
+    <h3 class="heading-medium">Before you start</h3>
+    <p>You must create a user account.</p>
+    <p>Once you have created user account you will need to associate your account with the organisation(s) that you work for, or behalf of.</p>
+    <p>You will need:</p>
+    <ul class="list-bullet">
+        <li>Your company registration number (if applicable).</li>
+        <li>The address of your registered office or principal place of business (if applicable).</li>
+    </ul>
+</div>
 }
