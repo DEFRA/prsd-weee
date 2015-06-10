@@ -81,11 +81,11 @@ namespace EA.Weee.Web.Tests.Integration.SpecifyWhichOrganisationIWorkFor
 #line 3
 this.ScenarioSetup(scenarioInfo);
 #line 4
-testRunner.Given("I select the sole trader or indivdual option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+testRunner.Given("I selected the sole trader or individual option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 5
-testRunner.When("I select continue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+testRunner.When("I continue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 6
-testRunner.Then("I should by redirected to the sole trader or individual page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+testRunner.Then("I should be redirected to the sole trader or individual page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -101,7 +101,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 9
 testRunner.Given("I selected the partnership option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 10
-testRunner.When("I select continue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+testRunner.When("I continue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 11
 testRunner.Then("I should be redirected to the partnership details page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
@@ -119,7 +119,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 14
 testRunner.Given("I selected the registered company option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 15
-testRunner.When("I select continue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+testRunner.When("I continue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 16
 testRunner.Then("I should be redirected to the registered company details page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden

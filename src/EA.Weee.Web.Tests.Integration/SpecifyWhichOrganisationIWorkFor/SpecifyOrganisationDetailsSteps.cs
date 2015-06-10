@@ -80,8 +80,8 @@
             switch (selectedOrganisationType)
             {
                 case OrganisationTypeEnum.Partnership:
-                        Assert.IsType<PartnershipDetailsViewModel>(tempData);
-                        break;
+                    Assert.IsType<PartnershipDetailsViewModel>(tempData);
+                    break;
                 case OrganisationTypeEnum.SoleTrader:
                     Assert.IsType<SoleTraderDetailsViewModel>(tempData);
                     break;
