@@ -43,12 +43,17 @@
                 possibleOrganisations.Select(o => new KeyValuePair<string, Guid>(o.Name.ToUpperInvariant(), o.Id))
                     .ToArray();
 
+            var uppercaseTradingNames =
+                possibleOrganisations.Select(o => new KeyValuePair<string, Guid>(o.TradingName.ToUpperInvariant(), o.Id))
+                    .ToArray();
+
             // Special cases should be ignored when counting the distance. This loop replaces special cases with string.Empty.
             for (var i = 0; i < possibleOrganisations.Length; i++)
             {
                 foreach (var specialCase in specialCases)
                 {
                     specialCase.CleanseSpecialCases(ref uppercaseOrganisationNames[i]);
+                    specialCase.CleanseSpecialCases(ref uppercaseTradingNames[i]);
                 }
             }
 
@@ -56,12 +61,18 @@
 
             for (var i = 0; i < possibleOrganisations.Length; i++)
             {
-                var distance = StringSearch.CalculateLevenshteinDistance(searchTerm, uppercaseOrganisationNames[i].Key);
+                var organisationNameDistance = StringSearch.CalculateLevenshteinDistance(searchTerm, uppercaseOrganisationNames[i].Key);
+                var tradingNameDistance = StringSearch.CalculateLevenshteinDistance(searchTerm, uppercaseTradingNames[i].Key);
 
-                if (distance <= permittedDistance)
+                if (organisationNameDistance <= permittedDistance)
                 {
                     matchingIdsWithDistance.Add(new KeyValuePair<Guid, int>(uppercaseOrganisationNames[i].Value,
-                        distance));
+                        organisationNameDistance));
+                }
+                else if (tradingNameDistance <= permittedDistance)
+                {
+                    matchingIdsWithDistance.Add(new KeyValuePair<Guid, int>(uppercaseTradingNames[i].Value,
+                        organisationNameDistance));
                 }
             }
 
@@ -129,7 +140,9 @@
             return await context.Organisations
                 .Include(o => o.OrganisationAddress)
                 .Where(o => o.Name.StartsWith(firstLetterOfSearchTerm)
-                            || o.Name.StartsWith("THE "))
+                         || o.Name.StartsWith("THE ")
+                         || o.TradingName.StartsWith(firstLetterOfSearchTerm)
+                         || o.TradingName.StartsWith("THE "))
                 .ToArrayAsync();
         }
 
