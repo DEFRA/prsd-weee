@@ -72,7 +72,8 @@
             var tempData = controller.TempData.Values.Single();
 
             var organisationTypeViewModel =
-                (OrganisationTypeViewModel)ScenarioContext.Current[typeof(OrganisationTypeEnum).Name];
+                ScenarioContext.Current.Get<OrganisationTypeViewModel>(typeof(OrganisationTypeEnum).Name);
+
             var selectedOrganisationType = organisationTypeViewModel.OrganisationTypes.SelectedValue
                 .GetValueFromDisplayName<OrganisationTypeEnum>();
 
@@ -93,10 +94,16 @@
         [Then(@"I should be redirected to the select organisation page")]
         public void ThenIShouldBeRedirectedToTheSelectOrganisationPage()
         {
-            var result = (RedirectToRouteResult)ScenarioContext.Current["result"];
+            var result = ScenarioContext.Current.Get<RedirectToRouteResult>("result");
 
             Assert.Equal("OrganisationRegistration", result.RouteValues["controller"]);
             Assert.Equal("SelectOrganisation", result.RouteValues["action"]);
+        }
+
+        [AfterScenario]
+        public void Cleanup()
+        {
+            ScenarioContext.Current.Clear();
         }
 
         private OrganisationRegistrationController OrganisationRegistrationController()

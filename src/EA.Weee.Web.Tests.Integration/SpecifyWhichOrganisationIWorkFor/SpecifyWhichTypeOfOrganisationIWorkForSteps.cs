@@ -38,9 +38,9 @@
         [When(@"I select continue")]
         public void WhenISelectContinue()
         {
-            var controller = OrganisationRegistrationController();              
+            var controller = OrganisationRegistrationController();
 
-            var model = (OrganisationTypeViewModel)ScenarioContext.Current[typeof(OrganisationTypeViewModel).Name];
+            var model = ScenarioContext.Current.Get<OrganisationTypeViewModel>(typeof(OrganisationTypeViewModel).Name);
 
             ScenarioContext.Current["Result"] = controller.Type(model);
         }
@@ -48,7 +48,7 @@
         [Then(@"I should by redirected to the sole trader or individual page")]
         public void ThenIShouldByRedirectedToTheSoleTraderOrIndividualPage()
         {
-            var result = (RedirectToRouteResult)ScenarioContext.Current["Result"];
+            var result = ScenarioContext.Current.Get<RedirectToRouteResult>("Result");
 
             Assert.Equal("OrganisationRegistration", result.RouteValues["controller"]);
             Assert.Equal("SoleTraderDetails", result.RouteValues["action"]);
@@ -57,7 +57,7 @@
         [Then(@"I should be redirected to the partnership details page")]
         public void ThenIShouldBeRedirectedToThePartnershipDetailsPage()
         {
-            var result = (RedirectToRouteResult)ScenarioContext.Current["Result"];
+            var result = ScenarioContext.Current.Get<RedirectToRouteResult>("Result");
 
             Assert.Equal("OrganisationRegistration", result.RouteValues["controller"]);
             Assert.Equal("PartnershipDetails", result.RouteValues["action"]);
@@ -66,10 +66,16 @@
         [Then(@"I should be redirected to the registered company details page")]
         public void ThenIShouldBeRedirectedToTheRegisteredCompanyDetailsPage()
         {
-            var result = (RedirectToRouteResult)ScenarioContext.Current["Result"];
+            var result = ScenarioContext.Current.Get<RedirectToRouteResult>("Result");
 
             Assert.Equal("OrganisationRegistration", result.RouteValues["controller"]);
             Assert.Equal("RegisteredCompanyDetails", result.RouteValues["action"]);
+        }
+
+        [AfterScenario]
+        public void Cleanup()
+        {
+            ScenarioContext.Current.Clear();
         }
 
         private OrganisationRegistrationController OrganisationRegistrationController()
