@@ -5,17 +5,17 @@
 
 @section main_content
 {
+    <header class="hgroup">
+        <h1 class="heading-large">Main contact person</h1>
+    </header>
+    <p class="form-hint">Details for the main contact person for your organisation.</p>
+
     @using (Html.BeginForm(actionName: "MainContactPerson", controllerName: "OrganisationRegistration", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
         
-        <header class="hgroup">
-            <h2 class="heading-large">Main contact person</h2>
-            <div class="colored-header-bar"></div>
-        </header>
-        <p>Details for the main contact person for your organisation.</p>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
             @Html.ValidationMessageFor(m => m.FirstName)
             @Html.Gds().LabelFor(m => m.FirstName)
