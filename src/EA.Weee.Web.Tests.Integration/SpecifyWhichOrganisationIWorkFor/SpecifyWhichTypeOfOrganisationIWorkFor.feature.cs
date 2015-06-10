@@ -18,15 +18,15 @@ namespace EA.Weee.Web.Tests.Integration.SpecifyWhichOrganisationIWorkFor
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "1.9.0.77")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class SpecifyWhichOrganisationIWorkForFeature : Xunit.IClassFixture<SpecifyWhichOrganisationIWorkForFeature.FixtureData>, System.IDisposable
+    public partial class SpecifyWhichTypeOfOrganisationIWorkForFeature : Xunit.IClassFixture<SpecifyWhichTypeOfOrganisationIWorkForFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "SoleTraderOrIndividual.feature"
+#line 1 "SpecifyWhichTypeOfOrganisationIWorkFor.feature"
 #line hidden
         
-        public SpecifyWhichOrganisationIWorkForFeature()
+        public SpecifyWhichTypeOfOrganisationIWorkForFeature()
         {
             this.TestInitialize();
         }
@@ -34,7 +34,7 @@ namespace EA.Weee.Web.Tests.Integration.SpecifyWhichOrganisationIWorkFor
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Specify which organisation I work for", "", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Specify which type of organisation I work for", "", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -63,7 +63,7 @@ namespace EA.Weee.Web.Tests.Integration.SpecifyWhichOrganisationIWorkFor
             testRunner.CollectScenarioErrors();
         }
         
-        public virtual void SetFixture(SpecifyWhichOrganisationIWorkForFeature.FixtureData fixtureData)
+        public virtual void SetFixture(SpecifyWhichTypeOfOrganisationIWorkForFeature.FixtureData fixtureData)
         {
         }
         
@@ -73,7 +73,7 @@ namespace EA.Weee.Web.Tests.Integration.SpecifyWhichOrganisationIWorkFor
         }
         
         [Xunit.FactAttribute()]
-        [Xunit.TraitAttribute("FeatureTitle", "Specify which organisation I work for")]
+        [Xunit.TraitAttribute("FeatureTitle", "Specify which type of organisation I work for")]
         [Xunit.TraitAttribute("Description", "Sole trader or individual")]
         public virtual void SoleTraderOrIndividual()
         {
@@ -90,6 +90,42 @@ testRunner.Then("I should by redirected to the sole trader or individual page", 
             this.ScenarioCleanup();
         }
         
+        [Xunit.FactAttribute()]
+        [Xunit.TraitAttribute("FeatureTitle", "Specify which type of organisation I work for")]
+        [Xunit.TraitAttribute("Description", "Partnership")]
+        public virtual void Partnership()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Partnership", ((string[])(null)));
+#line 8
+this.ScenarioSetup(scenarioInfo);
+#line 9
+testRunner.Given("I selected the partnership option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 10
+testRunner.When("I select continue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 11
+testRunner.Then("I should be redirected to the partnership details page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.FactAttribute()]
+        [Xunit.TraitAttribute("FeatureTitle", "Specify which type of organisation I work for")]
+        [Xunit.TraitAttribute("Description", "Registered company")]
+        public virtual void RegisteredCompany()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Registered company", ((string[])(null)));
+#line 13
+this.ScenarioSetup(scenarioInfo);
+#line 14
+testRunner.Given("I selected the registered company option", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 15
+testRunner.When("I select continue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 16
+testRunner.Then("I should be redirected to the registered company details page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
         [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "1.9.0.77")]
         [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         public class FixtureData : System.IDisposable
@@ -97,12 +133,12 @@ testRunner.Then("I should by redirected to the sole trader or individual page", 
             
             public FixtureData()
             {
-                SpecifyWhichOrganisationIWorkForFeature.FeatureSetup();
+                SpecifyWhichTypeOfOrganisationIWorkForFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                SpecifyWhichOrganisationIWorkForFeature.FeatureTearDown();
+                SpecifyWhichTypeOfOrganisationIWorkForFeature.FeatureTearDown();
             }
         }
     }
