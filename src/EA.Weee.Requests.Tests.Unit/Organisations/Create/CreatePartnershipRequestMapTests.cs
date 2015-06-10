@@ -19,17 +19,6 @@
         }
 
         [Fact]
-        public void MapFullyPopulatedCreatePartnershipRequest_SetsStatusToIncomplete()
-        {
-            const string tradingName = "test trading name";
-
-            var mapper = new CreatePartnershipRequestMap();
-            var organisation = mapper.Map(FullyPopulatedCreatePartnershipRequest(tradingName));
-
-            Assert.Equal(OrganisationStatus.Incomplete, organisation.OrganisationStatus);
-        }
-
-        [Fact]
         public void MapFullyPopulatedCreatePartnershipRequest_MapsAllProperties()
         {
             const string tradingName = "test trading name";

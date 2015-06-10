@@ -19,17 +19,6 @@
         }
 
         [Fact]
-        public void MapFullyPopulatedCreateSoleTraderRequest_SetsStatusToIncomplete()
-        {
-            const string tradingName = "test trading name";
-
-            var mapper = new CreateSoleTraderRequestMap();
-            var organisation = mapper.Map(FullyPopulatedCreateSoleTraderRequest(tradingName));
-
-            Assert.Equal(OrganisationStatus.Incomplete, organisation.OrganisationStatus);
-        }
-
-        [Fact]
         public void MapFullyPopulatedCreateSoleTraderRequest_MapsAllProperties()
         {
             const string tradingName = "test trading name";
