@@ -1,0 +1,111 @@
+﻿@model EA.Weee.Web.ViewModels.JoinOrganisation.SelectOrganisationViewModel
+@{
+    ViewBag.Title = "Choose your organisation";
+}
+
+@*<div class="back">
+    <a href="@Url.Action("AboutOrganisation", "Organisation")">Back</a>
+</div>*@
+@*<h1 class="heading-large">Choose your organisation</h1>*@
+<h1 class="heading-large">Choose to join an existing organisation, or add a new one</h1>
+@if (Model.MatchingOrganisations != null && Model.MatchingOrganisations.Count > 0)
+{
+
+    @*<p>Select or add your organisation.</p>*@
+    <p>We have found some organisations that match the information you have provided. Select your organisation or add it, if it is not listed.</p>
+
+    using (Html.BeginForm(actionName: "SelectOrganisation", controllerName: "OrganisationRegistration", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationMessageFor(m => m.Selected)
+        @Html.HiddenFor(m => m.Name)
+
+        for (int i = 0; i < Model.MatchingOrganisations.Count; i++)
+        {
+            bool isNewRow = i % 2 == 0;
+
+            if (isNewRow)
+            {
+                @:<div class="grid-row">
+            }
+
+            <div class="column-half">
+                <h3 class="heading-small">@*Organisation @(Model.StartingAt + i)*@</h3>
+                <div class="colored-header-bar"></div>
+                <ul>
+                    <li>
+                        @Html.HiddenFor(m => m.MatchingOrganisations[i].Name)
+                        <span class="bold-small">@Html.DisplayFor(m => m.MatchingOrganisations[i].Name)</span>
+                    </li>
+                    <li>
+                        @Html.HiddenFor(m => m.MatchingOrganisations[i].Address.Address1)
+                        @Html.DisplayFor(m => m.MatchingOrganisations[i].Address.Address1),
+                    </li>
+                    <li>
+                        @Html.HiddenFor(m => m.MatchingOrganisations[i].Address.TownOrCity)
+                        @Html.DisplayFor(m => m.MatchingOrganisations[i].Address.TownOrCity),
+                    </li>
+                    <li>
+                        @Html.HiddenFor(m => m.MatchingOrganisations[i].Address.PostalCode)
+                        @Html.DisplayFor(m => m.MatchingOrganisations[i].Address.PostalCode)
+                    </li>
+                </ul>
+                <button type="submit" name="submitButton" value="@Html.Raw(Model.MatchingOrganisations[i].Id)" class="link-submit">Request to join this organisation</button>
+            </div>
+
+            if (!isNewRow || i == Model.MatchingOrganisations.Count - 1)
+            {
+                @:</div>
+            }
+        }
+        <br />
+        <ul class="previous-next-navigation">
+            @if (Model.PreviousPage >= 1)
+            {
+                <li class="previous">
+                    <a href="@Url.Action("SelectOrganisation", "OrganisationRegistration", new { @Name = Model.Name, @page = Model.PreviousPage })">
+                        Previous page
+                        <span class="page-numbers">@Model.PreviousPage of @Model.TotalPages</span>
+                    </a>
+                </li>
+            }
+
+            @if (Model.NextPage <= Model.TotalPages)
+            {
+                <li class="next">
+                    <a href="@Url.Action("SelectOrganisation", "OrganisationRegistration", new { @Name = Model.Name, @page = @Model.NextPage })">
+                        Next page
+                        <span class="page-numbers">@Model.NextPage of @Model.TotalPages</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+}
+else
+{
+    @*<p>No organisations matching your organisation name have been found. Please create an account for your organisation.</p>*@
+    <p>We haven't found any organisations that match your search criteria. If you are expecting to see your organisation, you can go back and search again, otherwise you can add a new one.</p>
+}
+<hr />
+@*<h2 class="heading-medium">Organisation not listed?</h2>*@
+<p>Organisation not listed?</p>
+@Html.ActionLink(linkText: "Add new", actionName: "DisplayPartnershipOrMainOrgContact", controllerName: "Organisation", routeValues: new { organisationName = Model.Name }, htmlAttributes: new { @class = "button" })<br />
+
+<style>
+    .link-submit {
+        margin-top: 10px;
+        background: none;
+        border: none;
+        padding: 0;
+        color: #005ea5;
+        font-family: "nta", Arial, sans-serif;
+        cursor: pointer;
+        font-size: 19px;
+        text-decoration: underline;
+    }
+
+        .link-submit:hover {
+            color: #2E8ACA;
+        }
+</style>

@@ -127,6 +127,7 @@
             var firstLetterOfSearchTerm = searchTerm[0].ToString();
 
             return await context.Organisations
+                .Include(o => o.OrganisationAddress)
                 .Where(o => o.Name.StartsWith(firstLetterOfSearchTerm)
                             || o.Name.StartsWith("THE "))
                 .ToArrayAsync();
