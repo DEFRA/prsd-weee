@@ -14,8 +14,8 @@
     [Binding]
     public class SpecifyWhichOrganisationIWorkForSteps
     {
-        [Given(@"I select the sole trader or indivdual option")]
-        public void GivenISelectTheSoleTraderOrIndivdualOption()
+        [Given(@"I selected the sole trader or individual option")]
+        public void GivenISelectedTheSoleTraderOrIndividualOption()
         {
             ScenarioContext.Current[typeof(OrganisationTypeViewModel).Name] =
                 OrganisationType(OrganisationTypeEnum.SoleTrader);
@@ -35,7 +35,7 @@
                 OrganisationType(OrganisationTypeEnum.RegisteredCompany);
         }
 
-        [When(@"I select continue")]
+        [When(@"I continue")]
         public void WhenISelectContinue()
         {
             var controller = OrganisationRegistrationController();
@@ -45,8 +45,8 @@
             ScenarioContext.Current["Result"] = controller.Type(model);
         }
 
-        [Then(@"I should by redirected to the sole trader or individual page")]
-        public void ThenIShouldByRedirectedToTheSoleTraderOrIndividualPage()
+        [Then(@"I should be redirected to the sole trader or individual page")]
+        public void ThenIShouldBeRedirectedToTheSoleTraderOrIndividualPage()
         {
             var result = ScenarioContext.Current.Get<RedirectToRouteResult>("Result");
 
