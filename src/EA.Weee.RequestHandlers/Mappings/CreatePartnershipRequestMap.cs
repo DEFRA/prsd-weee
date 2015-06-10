@@ -8,7 +8,7 @@
     {
         public Organisation Map(CreatePartnershipRequest source)
         {
-            return new Organisation(OrganisationType.Partnership, OrganisationStatus.Incomplete)
+            return new Organisation(OrganisationType.Partnership)
             {
                 TradingName = source.TradingName
             };

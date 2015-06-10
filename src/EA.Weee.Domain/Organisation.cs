@@ -5,13 +5,12 @@
 
     public partial class Organisation : Entity
     {
-        public Organisation(OrganisationType organisationType, OrganisationStatus organisationStatus)
+        public Organisation(OrganisationType organisationType)
         {
             Guard.ArgumentNotNull(organisationType);
-            Guard.ArgumentNotNull(organisationStatus);
 
             OrganisationType = organisationType;
-            OrganisationStatus = organisationStatus;
+            OrganisationStatus = OrganisationStatus.Incomplete;
         }
 
         protected Organisation()

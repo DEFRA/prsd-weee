@@ -21,19 +21,6 @@
         }
 
         [Fact]
-        public void MapFullyPopulatedCreateRegisteredCompanyRequest_SetsStatusToIncomplete()
-        {
-            const string tradingName = "test trading name";
-            const string businessName = "test business name";
-            const string companyRegistrationNumber = "AB123456";
-
-            var mapper = new CreateRegisteredCompanyRequestMap();
-            var organisation = mapper.Map(FullyPopulatedCreateRegisteredCompanyRequest(tradingName, businessName, companyRegistrationNumber));
-
-            Assert.Equal(OrganisationStatus.Incomplete, organisation.OrganisationStatus);
-        }
-
-        [Fact]
         public void MapFullyPopulatedCreateRegisteredCompanyRequest_MapsAllProperties()
         {
             const string tradingName = "test trading name";
