@@ -11,17 +11,15 @@
     public class CreateSoleTraderRequestHandler : IRequestHandler<CreateSoleTraderRequest, Guid>
     {
         private readonly WeeeContext db;
-        private readonly IMap<CreateSoleTraderRequest, Organisation> mapping; 
 
-        public CreateSoleTraderRequestHandler(WeeeContext db, IMap<CreateSoleTraderRequest, Organisation> mapping)
+        public CreateSoleTraderRequestHandler(WeeeContext db)
         {
             this.db = db;
-            this.mapping = mapping;
         }
 
         public async Task<Guid> HandleAsync(CreateSoleTraderRequest message)
         {
-            var organisation = mapping.Map(message); 
+            var organisation = Organisation.CreateSoleTrader(message.TradingName);
             db.Organisations.Add(organisation);
             await db.SaveChangesAsync();
 
