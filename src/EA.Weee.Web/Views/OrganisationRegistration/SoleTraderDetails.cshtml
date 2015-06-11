@@ -2,22 +2,34 @@
 @{
     ViewBag.Title = "Sole trader or individual";
 }
-
-<h1 class="heading-large">
-    What is your business trading name?
-</h1>
-
-@using (Html.BeginForm())
+@section main_content
 {
-    @Html.AntiForgeryToken()
-    @Html.Gds().ValidationSummary()
-
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
-        @Html.Gds().LabelFor(m => m.BusinessTradingName)
-        @Html.Gds().TextBoxFor(m => m.BusinessTradingName)
-    </div>
+    <header class="hgroup">
+        <h1 class="heading-large">What is your business trading name?</h1>
+    </header>
 
     <div class="form-group">
-        <button class="button" type="submit">Continue</button>
+        <details>
+            <summary><span class="summary">What does business trading name mean?</span></summary>
+            <div class="panel-indent">
+                <p>
+                    This is either your individual name or your business name. A business name is is any name under which someone carries on business. In the case of a sole trader, it means a name other than a surname with or without forenames or initials.
+                </p>
+            </div>
+        </details>
     </div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
+            @Html.Gds().LabelFor(m => m.BusinessTradingName)
+            @Html.ValidationMessageFor(m => m.BusinessTradingName)
+            @Html.Gds().TextBoxFor(m => m.BusinessTradingName)
+        </div>
+
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+    }
 }

@@ -421,6 +421,7 @@
     <Content Include="Content\govuk_toolkit\stylesheets\_css3.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\_conditionals.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\_colours.scss" />
+    <Content Include="Content\weee\_pagination.scss" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\error-tracking.js" />
@@ -472,7 +473,7 @@
     <Content Include="Views\Shared\EditorTemplates\RadioButtonStringCollectionBaseViewModel.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\NewUser\UserCreation.cshtml" />
-    <Content Include="Views\JoinOrganisation\SelectOrganisation.cshtml" />
+    <Content Include="Views\OrganisationRegistration\SelectOrganisation.cshtml" />
     <Content Include="Views\Home\LandingPage.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressData.cshtml" />
