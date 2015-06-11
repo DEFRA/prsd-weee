@@ -46,11 +46,11 @@
                 switch (organisationType)
                 {
                     case OrganisationTypeEnum.SoleTrader:
-                        return RedirectToAction("SoleTraderDetails");
+                        return RedirectToAction("SoleTraderDetails", "OrganisationRegistration");
                     case OrganisationTypeEnum.RegisteredCompany:
-                        return RedirectToAction("RegisteredCompanyDetails");
+                        return RedirectToAction("RegisteredCompanyDetails", "OrganisationRegistration");
                     case OrganisationTypeEnum.Partnership:
-                        return RedirectToAction("PartnershipDetails");
+                        return RedirectToAction("PartnershipDetails", "OrganisationRegistration");
                 }
             }
 
