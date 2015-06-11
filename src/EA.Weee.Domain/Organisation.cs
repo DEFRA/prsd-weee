@@ -30,12 +30,12 @@
 
         public string CompanyRegistrationNumber { get; set; }
 
-        public Address OrganisationAddress { get; set; }
+        public virtual Address OrganisationAddress { get; set; }
 
-        public Address BusinessAddress { get; set; }
+        public virtual Address BusinessAddress { get; set; }
 
-        public Address NotificationAddress { get; set; }
+        public virtual Address NotificationAddress { get; set; }
 
-        public Contact Contact { get; set; }
+        public virtual Contact Contact { get; set; }
     }
 }

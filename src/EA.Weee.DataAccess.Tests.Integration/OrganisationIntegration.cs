@@ -66,6 +66,8 @@
                 Assert.Equal(crn, thisTestOrganisation.CompanyRegistrationNumber);
                 Assert.Equal(status, thisTestOrganisation.OrganisationStatus);
                 Assert.Equal(type, thisTestOrganisation.OrganisationType);
+                Assert.NotNull(thisTestOrganisation.OrganisationAddress);
+
                 await CleanUp(thisTestOrganisation);
             }
 
