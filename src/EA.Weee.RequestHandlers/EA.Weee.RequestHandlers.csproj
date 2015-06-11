@@ -78,9 +78,6 @@
   <ItemGroup>
     <Compile Include="Mappings\AddressMap.cs" />
     <Compile Include="Mappings\ContactMap.cs" />
-    <Compile Include="Mappings\CreatePartnershipRequestMap.cs" />
-    <Compile Include="Mappings\CreateRegisteredCompanyRequestMap.cs" />
-    <Compile Include="Mappings\CreateSoleTraderRequestMap.cs" />
     <Compile Include="Mappings\ValueObjectInitializer.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandler.cs" />
     <Compile Include="Organisations\Create\CreateRegisteredCompanyRequestHandler.cs" />

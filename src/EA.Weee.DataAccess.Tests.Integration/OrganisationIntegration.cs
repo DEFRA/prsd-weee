@@ -36,17 +36,11 @@
             var businessAddress = MakeAddress("B");
             var notificationAddress = MakeAddress("N");
 
-            var organisation = new Organisation(type, status)
-            {
-                Name = name,
-                Contact = contact,
-                OrganisationAddress = organisationAddress,
-                BusinessAddress = businessAddress,
-                NotificationAddress = notificationAddress,
-                CompanyRegistrationNumber = crn,
-                OrganisationStatus = status,
-                TradingName = tradingName
-            };
+            var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
+            organisation.AddMainContactPerson(contact);
+            organisation.OrganisationAddress = organisationAddress;
+            organisation.BusinessAddress = businessAddress;
+            organisation.NotificationAddress = notificationAddress;
 
             context.Organisations.Add(organisation);
 
