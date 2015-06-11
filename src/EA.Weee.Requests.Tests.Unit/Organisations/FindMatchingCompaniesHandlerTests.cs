@@ -68,7 +68,7 @@
             return new Address("1", "street", "Woking", "Hampshire", "GU21 5EE", "United Kingdom", "12345678", "test@co.uk");
         }
 
-        [Fact(Skip = "Needs updating")]
+        [Fact]
         public async Task FindMatchingOrganisationsHandler_WithLtdCompany_OneMatches()
         {
             var organisations = helper.GetAsyncEnabledDbSet(new[]
@@ -92,7 +92,7 @@
             Assert.Equal(1, strings.Count);
         }
 
-        [Fact(Skip = "Needs updating")]
+        [Fact]
         public async Task FindMatchingOrganisationsHandler_WithLtdAndLimitedCompany_TwoMatches()
         {
             var organisations = helper.GetAsyncEnabledDbSet(new[]
@@ -112,7 +112,7 @@
             Assert.Equal(2, strings.Count);
         }
 
-        [Fact(Skip = "Needs updating")]
+        [Fact]
         public async Task FindMatchingOrganisationsHandler_SearchTermContainsThe_ReturnsMatchingResults()
         {
             var organisations = helper.GetAsyncEnabledDbSet(new[]
@@ -132,7 +132,7 @@
             Assert.Equal(2, results.Count);
         }
 
-        [Fact(Skip = "Needs updating")]
+        [Fact]
         public async Task FindMatchingOrganisationsHandler_DataContainsThe_ReturnsMatchingResults()
         {
             var data = new[]
@@ -155,7 +155,7 @@
             Assert.Equal(data.Length, results.Count);
         }
 
-        [Fact(Skip = "Needs updating")]
+        [Fact]
         public async Task FindMatchingOrganisationsHandler_AllDataMatches_ReturnedStringsMatchInputDataWithCase()
         {
             var names = new[] { "Environment Agency", "Environemnt Agincy" };
@@ -175,7 +175,7 @@
             Assert.Equal(names, results.Select(r => r.Name));
         }
 
-        [Fact(Skip = "Needs updating")]
+        [Fact]
         public async Task FindMatchingOrganisationsHandler_AllDataMatches_ReturnsDataOrderedByEditDistance()
         {
             var searchTerm = "bee keepers";
