@@ -34,8 +34,8 @@
                 <div class="colored-header-bar"></div>
                 <ul>
                     <li>
-                        @Html.HiddenFor(m => m.MatchingOrganisations[i].Name)
-                        <span class="bold-small">@Html.DisplayFor(m => m.MatchingOrganisations[i].Name)</span>
+                        @Html.HiddenFor(m => m.MatchingOrganisations[i].DisplayName)
+                        <span class="bold-small">@Html.DisplayFor(m => m.MatchingOrganisations[i].DisplayName)</span>
                     </li>
                     <li>
                         @Html.HiddenFor(m => m.MatchingOrganisations[i].Address.Address1)
