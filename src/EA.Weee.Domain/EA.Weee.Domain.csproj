@@ -48,6 +48,7 @@
     <Compile Include="Address.cs" />
     <Compile Include="Contact.cs" />
     <Compile Include="Organisation.cs" />
+    <Compile Include="Organisation.MainContactPerson.cs" />
     <Compile Include="Organisation.OrganisationContactDetails.cs" />
     <Compile Include="OrganisationStatus.cs" />
     <Compile Include="OrganisationType.cs" />

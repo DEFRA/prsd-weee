@@ -87,7 +87,7 @@
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("LandingPage", "Home");
+            return RedirectToAction("Type", "OrganisationRegistration");
         }
     }
 }
