@@ -18,11 +18,10 @@
 
         public async Task<Guid> HandleAsync(CreateRegisteredCompanyRequest message)
         {
-            var organisation = new Organisation(message.BusinessName, OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete)
+            var organisation = new Organisation(message.BusinessName, null, OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete)
             {
-                TradingName = message.TradingName,
                 CompanyRegistrationNumber = message.CompanyRegistrationNumber
-            }; 
+            };
 
             db.Organisations.Add(organisation);
             await db.SaveChangesAsync();
