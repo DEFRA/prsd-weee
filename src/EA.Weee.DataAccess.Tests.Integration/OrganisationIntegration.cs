@@ -8,9 +8,11 @@
     using Prsd.Core.Domain;
     using Xunit;
 
-    public class OrganisationIntegration
+    public class OrganisationIntegration : IDisposable
     {
         private readonly WeeeContext context;
+
+        private Organisation testOrganisationToCleanUp;
 
         public OrganisationIntegration()
         {
@@ -26,9 +28,9 @@
         {
             var contact = new Contact("Test firstname", "Test lastname", "Test position");
 
-            const string name = "Test Organisation For CCOTest";
-            const string tradingName = "Test Trading Name";
-            const string crn = "12345678";
+            string name = "Test Name" + Guid.NewGuid();
+            string tradingName = "Test Trading Name" + Guid.NewGuid();
+            string crn = new Random().Next(100000000).ToString();
             var status = OrganisationStatus.Incomplete;
             var type = OrganisationType.RegisteredCompany;
 
@@ -47,12 +49,14 @@
                 TradingName = tradingName
             };
 
+            this.testOrganisationToCleanUp = organisation;
+
             context.Organisations.Add(organisation);
 
             await context.SaveChangesAsync();
 
             var thisTestOrganisationArray =
-                context.Organisations.Where(o => o.Name == "Test Organisation For CCOTest").ToArray();
+                context.Organisations.Where(o => o.Name == name).ToArray();
 
             Assert.NotNull(thisTestOrganisationArray);
             Assert.NotEmpty(thisTestOrganisationArray);
@@ -79,9 +83,13 @@
             Assert.Equal(organisationAddress.Telephone, thisTestOrganisationAddress.Telephone);
             Assert.Equal(organisationAddress.Email, thisTestOrganisationAddress.Email);
 
-            await CleanUp(thisTestOrganisation);
-
             await context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            context.Organisations.Remove(testOrganisationToCleanUp);
+            context.SaveChangesAsync();
         }
 
         private Address MakeAddress(string identifier)
@@ -95,13 +103,6 @@
                 "Country " + identifier,
                 "Phone" + identifier,
                 "Email" + identifier);
-        }
-
-        private async Task CleanUp(Organisation organisation)
-        {
-            context.Organisations.Remove(organisation);
-
-            await context.SaveChangesAsync();
         }
     }
 }
