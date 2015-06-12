@@ -60,7 +60,7 @@
 
         private IEnumerable<Func<Organisation, string>> GetDataExtractors()
         {
-            Func<Organisation, string> getName = ((o) => o.Name.ToUpperInvariant());
+            Func<Organisation, string> getName = ((o) => (o.Name != null ? o.Name.ToUpperInvariant() : string.Empty));
             Func<Organisation, string> getTradingName = ((o) => (o.TradingName != null ? o.TradingName.ToUpperInvariant() : string.Empty));
 
             return new List<Func<Organisation, string>> { getName, getTradingName };
@@ -184,8 +184,8 @@
             var firstLetterOfSearchTerm = searchTerm[0].ToString();
 
             return await context.Organisations
-                .Where(o => o.Name.StartsWith(firstLetterOfSearchTerm)
-                         || o.Name.StartsWith("THE ")
+                .Where(o => (o.Name != null && o.Name.StartsWith(firstLetterOfSearchTerm))
+                         || (o.Name != null && o.Name.StartsWith("THE "))
                          || (o.TradingName != null && o.TradingName.StartsWith(firstLetterOfSearchTerm))
                          || (o.TradingName != null && o.TradingName.StartsWith("THE ")))
                 .ToArrayAsync();

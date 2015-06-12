@@ -16,7 +16,6 @@
 
     public class FindMatchingCompaniesHandlerTests
     {
-        private readonly Domain.OrganisationType anyType = Domain.OrganisationType.RegisteredCompany;
         private readonly OrganisationStatus anyStatus = OrganisationStatus.Incomplete;
      
         private readonly DbContextHelper helper = new DbContextHelper();
@@ -42,7 +41,25 @@
 
         private Organisation GetOrganisationWithName(string name)
         {
-            var organisation = new Organisation(name, anyType, anyStatus);
+            return GetOrganisationWithDetails(name, null, Domain.OrganisationType.RegisteredCompany);
+        }
+
+        private Organisation GetOrganisationWithDetails(string name, string tradingName, Domain.OrganisationType type)
+        {
+            Organisation organisation;
+
+            if (type == Domain.OrganisationType.RegisteredCompany)
+            {
+                organisation = new Organisation(name, tradingName, type, anyStatus);
+            }
+            else if (type == Domain.OrganisationType.Partnership)
+            {
+                organisation = new Organisation(null, tradingName, type, anyStatus);
+            }
+            else
+            {
+                organisation = new Organisation(null, tradingName, type, anyStatus);
+            }
 
             organisation.OrganisationAddress = GetAddress();
 
@@ -199,6 +216,30 @@
             var results = await handler.HandleAsync(new FindMatchingOrganisations(searchTerm));
 
             Assert.Equal(namesWithDistances.OrderBy(n => n.Value).Select(n => n.Key), results.Select(r => r.DisplayName));
+        }
+
+        [Fact]
+        public async Task FindMatchingOrganisationsHandler_IncludingSearchOnTradingName_ReturnsMatchingResults()
+        {
+            var data = new[]
+            {
+                GetOrganisationWithDetails("THE  Environemnt Agency", null, Domain.OrganisationType.RegisteredCompany),
+                GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency", Domain.OrganisationType.RegisteredCompany),
+                GetOrganisationWithDetails(null, "THE Environemnt Agency", Domain.OrganisationType.SoleTraderOrIndividual),
+                GetOrganisationWithDetails(null, "Environment Agency", Domain.OrganisationType.Partnership)
+            };
+
+            var organisations = helper.GetAsyncEnabledDbSet(data);
+
+            var context = A.Fake<WeeeContext>();
+
+            A.CallTo(() => context.Organisations).Returns(organisations);
+
+            var handler = new FindMatchingOrganisationsHandler(context);
+
+            var results = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency"));
+
+            Assert.Equal(data.Length, results.Count);
         }
     }
 }

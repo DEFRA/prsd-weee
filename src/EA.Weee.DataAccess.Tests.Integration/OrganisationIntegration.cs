@@ -24,12 +24,11 @@
         }
 
         [Fact]
-        public async Task CanCreateOrganisation()
+        public async Task CanCreateRegisteredCompany()
         {
-            var contact = new Contact("Test firstname", "Test lastname", "Test position");
+            var contact = MakeContact();
 
             string name = "Test Name" + Guid.NewGuid();
-            string tradingName = "Test Trading Name" + Guid.NewGuid();
             string crn = new Random().Next(100000000).ToString();
             var status = OrganisationStatus.Incomplete;
             var type = OrganisationType.RegisteredCompany;
@@ -38,7 +37,7 @@
             var businessAddress = MakeAddress("B");
             var notificationAddress = MakeAddress("N");
 
-            var organisation = new Organisation(name, type, status)
+            var organisation = new Organisation(name, null, type, status)
             {
                 Contact = contact,
                 OrganisationAddress = organisationAddress,
@@ -46,7 +45,6 @@
                 NotificationAddress = notificationAddress,
                 CompanyRegistrationNumber = crn,
                 OrganisationStatus = status,
-                TradingName = tradingName
             };
 
             this.testOrganisationToCleanUp = organisation;
@@ -62,28 +60,91 @@
             Assert.NotEmpty(thisTestOrganisationArray);
 
             var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
-            Assert.NotNull(thisTestOrganisation);
 
-            Assert.Equal(name, thisTestOrganisation.Name);
-            Assert.Equal(tradingName, thisTestOrganisation.TradingName);
-            Assert.Equal(crn, thisTestOrganisation.CompanyRegistrationNumber);
-            Assert.Equal(status, thisTestOrganisation.OrganisationStatus);
-            Assert.Equal(type, thisTestOrganisation.OrganisationType);
-
-            var thisTestOrganisationAddress = thisTestOrganisation.OrganisationAddress;
-            Assert.NotNull(thisTestOrganisationAddress);
-
-            // this wants to be in a compare method on the class, doesn't it? will have to exclude Id/RowVersion though
-            Assert.Equal(organisationAddress.Address1, thisTestOrganisationAddress.Address1);
-            Assert.Equal(organisationAddress.Address2, thisTestOrganisationAddress.Address2);
-            Assert.Equal(organisationAddress.TownOrCity, thisTestOrganisationAddress.TownOrCity);
-            Assert.Equal(organisationAddress.CountyOrRegion, thisTestOrganisationAddress.CountyOrRegion);
-            Assert.Equal(organisationAddress.PostalCode, thisTestOrganisationAddress.PostalCode);
-            Assert.Equal(organisationAddress.Country, thisTestOrganisationAddress.Country);
-            Assert.Equal(organisationAddress.Telephone, thisTestOrganisationAddress.Telephone);
-            Assert.Equal(organisationAddress.Email, thisTestOrganisationAddress.Email);
+            VerifyOrganisation(name, null, crn, status, type, thisTestOrganisation);
+            VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
 
             await context.SaveChangesAsync();
+        }
+
+        [Fact]
+        public async Task CanCreateSoleTrader()
+        {
+            var contact = MakeContact();
+
+            string tradingName = "Test Name" + Guid.NewGuid();
+            string crn = new Random().Next(100000000).ToString();
+            var status = OrganisationStatus.Incomplete;
+            var type = OrganisationType.SoleTraderOrIndividual;
+
+            var organisationAddress = MakeAddress("O");
+            var businessAddress = MakeAddress("B");
+            var notificationAddress = MakeAddress("N");
+
+            var organisation = new Organisation(null, tradingName, type, status)
+            {
+                Contact = contact,
+                OrganisationAddress = organisationAddress,
+                BusinessAddress = businessAddress,
+                NotificationAddress = notificationAddress,
+                CompanyRegistrationNumber = crn,
+                OrganisationStatus = status,
+            };
+
+            this.testOrganisationToCleanUp = organisation;
+
+            context.Organisations.Add(organisation);
+
+            await context.SaveChangesAsync();
+
+            var thisTestOrganisationArray =
+                context.Organisations.Where(o => o.TradingName == tradingName).ToArray();
+
+            Assert.NotNull(thisTestOrganisationArray);
+            Assert.NotEmpty(thisTestOrganisationArray);
+
+            var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
+
+            VerifyOrganisation(null, tradingName, crn, status, type, thisTestOrganisation);
+            VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
+
+            await context.SaveChangesAsync();
+        }
+
+        private void VerifyOrganisation(string expectedName, string expectedTradingName, string expectedCrn, OrganisationStatus expectedStatus, OrganisationType expectedType, Organisation fromDatabase)
+        {
+            Assert.NotNull(fromDatabase);
+
+            if (expectedType == OrganisationType.RegisteredCompany)
+            {
+                Assert.Equal(expectedName, fromDatabase.Name);
+            }
+            else
+            {
+                Assert.Equal(expectedTradingName, fromDatabase.TradingName);
+            }
+
+            Assert.Equal(expectedCrn, fromDatabase.CompanyRegistrationNumber);
+            Assert.Equal(expectedStatus, fromDatabase.OrganisationStatus);
+            Assert.Equal(expectedType, fromDatabase.OrganisationType);
+
+            var thisTestOrganisationAddress = fromDatabase.OrganisationAddress;
+            Assert.NotNull(thisTestOrganisationAddress);
+        }
+
+        private void VerifyAddress(Address expected, Address fromDatabase)
+        {
+            Assert.NotNull(fromDatabase);
+
+            // this wants to be in a compare method on the class, doesn't it? will have to exclude Id/RowVersion though
+            Assert.Equal(expected.Address1, fromDatabase.Address1);
+            Assert.Equal(expected.Address2, fromDatabase.Address2);
+            Assert.Equal(expected.TownOrCity, fromDatabase.TownOrCity);
+            Assert.Equal(expected.CountyOrRegion, fromDatabase.CountyOrRegion);
+            Assert.Equal(expected.PostalCode, fromDatabase.PostalCode);
+            Assert.Equal(expected.Country, fromDatabase.Country);
+            Assert.Equal(expected.Telephone, fromDatabase.Telephone);
+            Assert.Equal(expected.Email, fromDatabase.Email);
         }
 
         public void Dispose()
@@ -103,6 +164,11 @@
                 "Country " + identifier,
                 "Phone" + identifier,
                 "Email" + identifier);
+        }
+
+        private Contact MakeContact()
+        {
+            return new Contact("Test firstname", "Test lastname", "Test position");
         }
     }
 }

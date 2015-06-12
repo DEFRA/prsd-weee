@@ -5,13 +5,23 @@
 
     public partial class Organisation : Entity
     {
-        public Organisation(string name, OrganisationType organisationType, OrganisationStatus organisationStatus)
+        public Organisation(string name, string tradingName, OrganisationType organisationType, OrganisationStatus organisationStatus)
         {
-            Guard.ArgumentNotNull(name);
             Guard.ArgumentNotNull(organisationType);
             Guard.ArgumentNotNull(organisationStatus);
 
-            Name = name;
+            if (organisationType == OrganisationType.RegisteredCompany)
+            {
+                Guard.ArgumentNotNull(name);
+                Name = name;
+                TradingName = tradingName;
+            }
+            else
+            {
+                Guard.ArgumentNotNull(tradingName);
+                TradingName = tradingName;
+            }
+
             OrganisationType = organisationType;
             OrganisationStatus = organisationStatus;
         }
@@ -20,13 +30,21 @@
         {
         }
 
+        public string DisplayName
+        {
+            get
+            {
+                return OrganisationType == OrganisationType.RegisteredCompany ? Name : TradingName;
+            }
+        }
+
         public string Name { get; private set; }
+
+        public string TradingName { get; private set; }
 
         public OrganisationType OrganisationType { get; private set; }
 
         public OrganisationStatus OrganisationStatus { get; set; }
-
-        public string TradingName { get; set; }
 
         public string CompanyRegistrationNumber { get; set; }
 
