@@ -30,6 +30,41 @@
             this.context = context;
         }
 
+        private class OrganisationDataFields
+        {
+            private readonly Guid id;
+            private readonly List<string> dataFields;
+
+            public OrganisationDataFields(Guid id)
+            {
+                this.id = id;
+                dataFields = new List<string>();
+            }
+
+            public Guid GetId()
+            {
+                return id;
+            }
+
+            public void AddDataField(string testData)
+            {
+                dataFields.Add(testData);
+            }
+
+            public IEnumerable<string> GetDataFields()
+            {
+                return dataFields.AsReadOnly();
+            }
+        }
+
+        private IEnumerable<Func<Organisation, string>> GetDataExtractors()
+        {
+            Func<Organisation, string> getName = ((o) => o.Name.ToUpperInvariant());
+            Func<Organisation, string> getTradingName = ((o) => (o.TradingName != null ? o.TradingName.ToUpperInvariant() : string.Empty));
+
+            return new List<Func<Organisation, string>> { getName, getTradingName };
+        }
+
         public async Task<IList<OrganisationSearchData>> HandleAsync(FindMatchingOrganisations query)
         {
             var searchTerm = PrepareQuery(query);
@@ -39,40 +74,50 @@
 
             var possibleOrganisations = await GetPossibleOrganisationNames(searchTerm);
 
-            var uppercaseOrganisationNames =
-                possibleOrganisations.Select(o => new KeyValuePair<string, Guid>(o.Name.ToUpperInvariant(), o.Id))
-                    .ToArray();
+            // extract data fields we want to compare against query and clean them up
 
-            var uppercaseTradingNames =
-                possibleOrganisations.Select(o => new KeyValuePair<string, Guid>((o.TradingName != null ? o.TradingName.ToUpperInvariant() : string.Empty), o.Id))
-                    .ToArray();
+            IEnumerable<Func<Organisation, string>> dataExtractors = GetDataExtractors();
+            List<OrganisationDataFields> organisationDataFieldsCollection = new List<OrganisationDataFields>();
 
-            // Special cases should be ignored when counting the distance. This loop replaces special cases with string.Empty.
-            for (var i = 0; i < possibleOrganisations.Length; i++)
+            foreach (var possibleOrganisation in possibleOrganisations)
             {
-                foreach (var specialCase in specialCases)
+                var organisationDataFields = new OrganisationDataFields(possibleOrganisation.Id);
+
+                foreach (var dataExtractor in dataExtractors)
                 {
-                    specialCase.CleanseSpecialCases(ref uppercaseOrganisationNames[i]);
-                    specialCase.CleanseSpecialCases(ref uppercaseTradingNames[i]);
+                    var dataField = dataExtractor(possibleOrganisation);
+
+                    foreach (var specialCase in specialCases)
+                    {
+                        specialCase.CleanseSpecialCases(ref dataField);
+                    }
+
+                    organisationDataFields.AddDataField(dataField);
                 }
+
+                organisationDataFieldsCollection.Add(organisationDataFields);
             }
+
+            // compare extracted data fields against query
 
             var matchingIdsWithDistance = new List<KeyValuePair<Guid, int>>();
 
-            for (var i = 0; i < possibleOrganisations.Length; i++)
+            foreach (var organisationDataFields in organisationDataFieldsCollection)
             {
-                var organisationNameDistance = StringSearch.CalculateLevenshteinDistance(searchTerm, uppercaseOrganisationNames[i].Key);
-                var tradingNameDistance = StringSearch.CalculateLevenshteinDistance(searchTerm, uppercaseTradingNames[i].Key);
+                var lowestDistance = int.MaxValue;
 
-                if (organisationNameDistance <= permittedDistance)
+                foreach (string dataField in organisationDataFields.GetDataFields())
                 {
-                    matchingIdsWithDistance.Add(new KeyValuePair<Guid, int>(uppercaseOrganisationNames[i].Value,
-                        organisationNameDistance));
+                    var distance = StringSearch.CalculateLevenshteinDistance(searchTerm, dataField);
+                    if (distance < lowestDistance)
+                    {
+                        lowestDistance = distance;
+                    }
                 }
-                else if (tradingNameDistance <= permittedDistance)
+
+                if (lowestDistance <= permittedDistance)
                 {
-                    matchingIdsWithDistance.Add(new KeyValuePair<Guid, int>(uppercaseTradingNames[i].Value,
-                        organisationNameDistance));
+                    matchingIdsWithDistance.Add(new KeyValuePair<Guid, int>(organisationDataFields.GetId(), lowestDistance));
                 }
             }
 
