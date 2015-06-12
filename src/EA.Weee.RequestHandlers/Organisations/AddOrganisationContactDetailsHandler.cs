@@ -22,10 +22,10 @@
             var countryName = string.Empty;
             var address = ValueObjectInitializer.CreateAddress(message.OrganisationContactAddress, countryName);
 
+            var organisation = await context.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
+            organisation.AddOrganisationContactDetails(address);
             var organisationContactAddress = context.Addresses.Add(address);
-
             await context.SaveChangesAsync();
-
             return organisationContactAddress.Id;
         }
     }
