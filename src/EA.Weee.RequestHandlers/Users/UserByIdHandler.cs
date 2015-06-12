@@ -29,7 +29,7 @@
                 Organisation = new OrganisationSearchData()
                 {
                     Id = u.Organisation.Id,
-                    Name = u.Organisation.Name,
+                    DisplayName = u.Organisation.Name,
                     Address = new AddressData()
                     {
                         Address1 = u.Organisation.OrganisationAddress.Address1,

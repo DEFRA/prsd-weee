@@ -172,7 +172,7 @@
 
             var results = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency"));
 
-            Assert.Equal(names, results.Select(r => r.Name));
+            Assert.Equal(names, results.Select(r => r.DisplayName));
         }
 
         [Fact]
@@ -198,7 +198,7 @@
 
             var results = await handler.HandleAsync(new FindMatchingOrganisations(searchTerm));
 
-            Assert.Equal(namesWithDistances.OrderBy(n => n.Value).Select(n => n.Key), results.Select(r => r.Name));
+            Assert.Equal(namesWithDistances.OrderBy(n => n.Value).Select(n => n.Key), results.Select(r => r.DisplayName));
         }
     }
 }

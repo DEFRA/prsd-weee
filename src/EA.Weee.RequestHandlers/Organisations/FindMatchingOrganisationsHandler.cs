@@ -11,6 +11,7 @@
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Requests.Shared;
+    using OrganisationType = EA.Weee.Domain.OrganisationType;
 
     internal class FindMatchingOrganisationsHandler :
         IRequestHandler<FindMatchingOrganisations, IList<OrganisationSearchData>>
@@ -142,7 +143,7 @@
                         Telephone = o.OrganisationAddress.Telephone,
                         Email = o.OrganisationAddress.Email
                     }, 
-                    Name = o.Name
+                    DisplayName = o.OrganisationType == OrganisationType.RegisteredCompany ? o.Name : o.TradingName
                 }).ToList();
         }
 
