@@ -44,7 +44,7 @@
                     .ToArray();
 
             var uppercaseTradingNames =
-                possibleOrganisations.Select(o => new KeyValuePair<string, Guid>(o.TradingName.ToUpperInvariant(), o.Id))
+                possibleOrganisations.Select(o => new KeyValuePair<string, Guid>((o.TradingName != null ? o.TradingName.ToUpperInvariant() : string.Empty), o.Id))
                     .ToArray();
 
             // Special cases should be ignored when counting the distance. This loop replaces special cases with string.Empty.
@@ -138,11 +138,10 @@
             var firstLetterOfSearchTerm = searchTerm[0].ToString();
 
             return await context.Organisations
-                .Include(o => o.OrganisationAddress)
                 .Where(o => o.Name.StartsWith(firstLetterOfSearchTerm)
                          || o.Name.StartsWith("THE ")
-                         || o.TradingName.StartsWith(firstLetterOfSearchTerm)
-                         || o.TradingName.StartsWith("THE "))
+                         || (o.TradingName != null && o.TradingName.StartsWith(firstLetterOfSearchTerm))
+                         || (o.TradingName != null && o.TradingName.StartsWith("THE ")))
                 .ToArrayAsync();
         }
 

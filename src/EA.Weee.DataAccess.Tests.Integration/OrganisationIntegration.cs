@@ -58,18 +58,28 @@
             Assert.NotEmpty(thisTestOrganisationArray);
 
             var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
+            Assert.NotNull(thisTestOrganisation);
 
-            if (thisTestOrganisation != null)
-            {
-                Assert.Equal(name, thisTestOrganisation.Name);
-                Assert.Equal(tradingName, thisTestOrganisation.TradingName);
-                Assert.Equal(crn, thisTestOrganisation.CompanyRegistrationNumber);
-                Assert.Equal(status, thisTestOrganisation.OrganisationStatus);
-                Assert.Equal(type, thisTestOrganisation.OrganisationType);
-                Assert.NotNull(thisTestOrganisation.OrganisationAddress);
+            Assert.Equal(name, thisTestOrganisation.Name);
+            Assert.Equal(tradingName, thisTestOrganisation.TradingName);
+            Assert.Equal(crn, thisTestOrganisation.CompanyRegistrationNumber);
+            Assert.Equal(status, thisTestOrganisation.OrganisationStatus);
+            Assert.Equal(type, thisTestOrganisation.OrganisationType);
 
-                await CleanUp(thisTestOrganisation);
-            }
+            var thisTestOrganisationAddress = thisTestOrganisation.OrganisationAddress;
+            Assert.NotNull(thisTestOrganisationAddress);
+
+            // this wants to be in a compare method on the class, doesn't it? will have to exclude Id/RowVersion though
+            Assert.Equal(organisationAddress.Address1, thisTestOrganisationAddress.Address1);
+            Assert.Equal(organisationAddress.Address2, thisTestOrganisationAddress.Address2);
+            Assert.Equal(organisationAddress.TownOrCity, thisTestOrganisationAddress.TownOrCity);
+            Assert.Equal(organisationAddress.CountyOrRegion, thisTestOrganisationAddress.CountyOrRegion);
+            Assert.Equal(organisationAddress.PostalCode, thisTestOrganisationAddress.PostalCode);
+            Assert.Equal(organisationAddress.Country, thisTestOrganisationAddress.Country);
+            Assert.Equal(organisationAddress.Telephone, thisTestOrganisationAddress.Telephone);
+            Assert.Equal(organisationAddress.Email, thisTestOrganisationAddress.Email);
+
+            await CleanUp(thisTestOrganisation);
 
             await context.SaveChangesAsync();
         }
