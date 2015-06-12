@@ -63,6 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\EntityHelper.cs" />
+    <Compile Include="Helpers\ObjectFactory.cs" />
+    <Compile Include="Helpers\ObjectInstantiator.cs" />
+    <Compile Include="Organisation\ContactPersonTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
