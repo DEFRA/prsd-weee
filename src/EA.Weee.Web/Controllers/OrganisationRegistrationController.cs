@@ -9,6 +9,7 @@
     using EA.Prsd.Core.Web.Mvc.Extensions;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Organisations;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Requests;
     using EA.Weee.Web.ViewModels.JoinOrganisation;
@@ -201,7 +202,6 @@
                     {
                         var response = await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
                         return RedirectToAction("ContactDetails", "OrganisationRegistration"); 
-                        
                     }
                     catch (ApiBadRequestException ex)
                     {

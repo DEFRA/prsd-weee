@@ -2,7 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-
+    // Organisation contact details viewmodel
     public class OrganisationContactDetailsViewModel
     {
         public Guid OrganisationId { get; set; }
