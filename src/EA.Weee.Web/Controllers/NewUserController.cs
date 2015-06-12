@@ -8,10 +8,10 @@
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
-    using Requests.Organisations;
     using ViewModels.JoinOrganisation;
     using ViewModels.NewUser;
     using ViewModels.Shared;
+    using Weee.Requests.Organisations;
 
     [Authorize]
     public class NewUserController : Controller
@@ -147,33 +147,6 @@
         public ActionResult Confirm()
         {
             return View();
-        }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult> SelectOrganisation(string organisationName)
-        {
-            var model = new SelectOrganisationViewModel
-            {
-                Name = organisationName
-            };
-
-            if (string.IsNullOrEmpty(organisationName))
-            {
-                model.Organisations = null;
-            }
-            else
-            {
-                using (var client = apiClient())
-                {
-                    var response =
-                        await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(organisationName));
-
-                    model.Organisations = response;
-                }
-            }
-
-            return View("SelectOrganisation", model);
         }
     }
 }

@@ -49,12 +49,16 @@
     <Compile Include="Organisations\AddContactPersonToOrganisation.cs" />
     <Compile Include="Organisations\AddOrganisationContactDetails.cs" />
     <Compile Include="Organisations\ContactData.cs" />
+    <Compile Include="Organisations\Create\Base\CreateOrganisationReqeust.cs" />
+    <Compile Include="Organisations\Create\CreateRegisteredCompanyRequest.cs" />
+    <Compile Include="Organisations\Create\CreatePartnershipRequest.cs" />
+    <Compile Include="Organisations\Create\CreateSoleTraderRequest.cs" />
     <Compile Include="Organisations\GetOrganisationContactDetailsById.cs" />
     <Compile Include="Organisations\GetOrganisationInfo.cs" />
     <Compile Include="Organisations\OrganisationData.cs" />
     <Compile Include="Organisations\UpdateOrganisationContactDetails.cs" />
     <Compile Include="Shared\Status.cs" />
-    <Compile Include="Organisations\Type.cs" />
+    <Compile Include="Organisations\OrganisationType.cs" />
     <Compile Include="Shared\CompetentAuthority.cs" />
     <Compile Include="Shared\AddressData.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations.cs" />

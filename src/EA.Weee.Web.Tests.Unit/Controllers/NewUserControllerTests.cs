@@ -6,9 +6,6 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
-    using Prsd.Core.Web.Mvc;
-    using Prsd.Core.Web.OAuth;
-    using Services;
     using ViewModels.NewUser;
     using Web.Controllers;
     using Xunit;
@@ -78,18 +75,18 @@
 
         private static UserCreationViewModel GetValidUserCreationViewModel()
         {
-            const string ValidEmail = "test@test.com";
-            const string ValidPassword = "P@ssword1";
-            const string ValidName = "ValidName";
-            const string ValidSurname = "ValidSurname";
+            const string validEmail = "test@test.com";
+            const string validPassword = "P@ssword1";
+            const string validName = "ValidName";
+            const string validSurname = "ValidSurname";
 
             var validuserCreationViewModel = new UserCreationViewModel
             {
-                Email = ValidEmail,
-                Password = ValidPassword,
-                ConfirmPassword = ValidPassword,
-                Name = ValidName,
-                Surname = ValidSurname,
+                Email = validEmail,
+                Password = validPassword,
+                ConfirmPassword = validPassword,
+                Name = validName,
+                Surname = validSurname,
             };
 
             return validuserCreationViewModel;
