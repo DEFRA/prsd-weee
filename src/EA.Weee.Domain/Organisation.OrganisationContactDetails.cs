@@ -2,7 +2,16 @@
 {
     using System;
 
-    public partial class OrganisationContactDetails
+    public partial class Organisation
     {
+        public void AddOrganisationContactDetails(Address orgContactDetails)
+        {
+            OrganisationAddress = orgContactDetails;
+        }
+
+        public void RemoveOrganisationContactDetails()
+        {
+            OrganisationAddress = null;
+        }
     }
 }

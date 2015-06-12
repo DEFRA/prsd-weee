@@ -2,6 +2,8 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using EA.Weee.Requests.Organisations;
+    using EA.Weee.Requests.Shared;
     // Organisation contact details viewmodel
     public class OrganisationContactDetailsViewModel
     {
@@ -47,5 +49,24 @@
         [DataType(DataType.EmailAddress)]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        public AddOrganisationContactDetails ToAddRequest()
+        {
+            return new AddOrganisationContactDetails
+            {
+                OrganisationId = OrganisationId,
+                OrganisationContactAddress = new AddressData()
+                {
+                    Address1 = Address1,
+                    Address2 = Address2,
+                    TownOrCity = TownOrCity,
+                    CountyOrRegion = CountyOrRegion,
+                    PostalCode = Postcode,
+                    Country = Country,
+                    Telephone = Phone,
+                    Email = Email
+                }
+            };
+        }
     }
 }

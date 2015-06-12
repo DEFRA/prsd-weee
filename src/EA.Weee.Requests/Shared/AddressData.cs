@@ -6,7 +6,9 @@
     public class AddressData
     {
         private const string DefaultCountryName = "United Kingdom";
-    
+
+        public Guid Id { get; set; }
+
         [Required]
         [Display(Name = "Address line 1")]
         public string Address1 { get; set; }

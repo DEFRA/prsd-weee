@@ -201,7 +201,7 @@
                     try
                     {
                         var response = await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
-                        return RedirectToAction("ContactDetails", "OrganisationRegistration"); 
+                        return RedirectToAction("OrganisationContactDetails", "OrganisationRegistration"); 
                     }
                     catch (ApiBadRequestException ex)
                     {
@@ -241,27 +241,8 @@
                 {
                     try
                     {
-                        //TODO: Save details
-                        var address = new AddressData
-                        {
-                            Address1 = model.Address1,
-                            Address2 = model.Address2,
-                            Country = model.Country,
-                            CountyOrRegion = model.CountyOrRegion,
-                            Email = model.Email,
-                            PostalCode = model.Postcode,
-                            Telephone = model.Phone,
-                            TownOrCity = model.TownOrCity
-                        };
-
-                        var response = await client.SendAsync(User.GetAccessToken(),
-                            new AddOrganisationContactDetails
-                            {
-                                OrganisationId = model.OrganisationId,
-                                OrganisationContactAddress = address
-                            });
-
-                        return RedirectToAction("OrganisationRegisteredOfficePrePopulate", "OrganisationRegistration"); //TODO: change this to correct address
+                        var response = await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
+                        return RedirectToAction("OrganisationRegisteredOfficePrePopulate", "OrganisationRegistration"); 
                     }
                     catch (ApiBadRequestException ex)
                     {
