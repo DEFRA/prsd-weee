@@ -1,4 +1,4 @@
-﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.OrganisationContactPersonViewModel
+﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.ContactPersonViewModel
 @{
     ViewBag.Title = "Organisation Main Contact Person";
 }
@@ -17,18 +17,18 @@
         @Html.HiddenFor(m => m.OrganisationId)
         
         <div class="form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
-            @Html.ValidationMessageFor(m => m.FirstName)
             @Html.Gds().LabelFor(m => m.FirstName)
+            @Html.ValidationMessageFor(m => m.FirstName)
             @Html.Gds().TextBoxFor(m => m.FirstName)
         </div>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.LastName)">
-            @Html.ValidationMessageFor(m => m.LastName)
             @Html.Gds().LabelFor(m => m.LastName)
+            @Html.ValidationMessageFor(m => m.LastName)
             @Html.Gds().TextBoxFor(m => m.LastName)
         </div>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Position)">
-            @Html.ValidationMessageFor(m => m.Position)
             @Html.Gds().LabelFor(m => m.Position)
+            @Html.ValidationMessageFor(m => m.Position)
             @Html.Gds().TextBoxFor(m => m.Position)
         </div>
 

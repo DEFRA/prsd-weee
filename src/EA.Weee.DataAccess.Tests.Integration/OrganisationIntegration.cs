@@ -38,14 +38,15 @@
 
             var organisation = new Organisation(name, type, status)
             {
-                Contact = contact,
-                OrganisationAddress = organisationAddress,
-                BusinessAddress = businessAddress,
-                NotificationAddress = notificationAddress,
                 CompanyRegistrationNumber = crn,
                 OrganisationStatus = status,
                 TradingName = tradingName
             };
+
+            organisation.AddMainContactPerson(contact);
+            organisation.AddAddress(AddressType.OrganisationAddress, organisationAddress);
+            organisation.AddAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
+            organisation.AddAddress(AddressType.SercviceOfNoticeAddress, notificationAddress);
 
             context.Organisations.Add(organisation);
 

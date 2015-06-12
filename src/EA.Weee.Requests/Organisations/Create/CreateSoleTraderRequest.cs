@@ -2,7 +2,7 @@
 {
     using Base;
 
-    public class CreateSoleTraderRequest : CreateOrganisationReqeust
+    public class CreateSoleTraderRequest : CreateOrganisationRequest
     {
     }
 }

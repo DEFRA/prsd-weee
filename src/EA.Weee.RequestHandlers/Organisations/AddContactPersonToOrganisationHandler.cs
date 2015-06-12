@@ -14,16 +14,16 @@
 
         public AddContactPersonToOrganisationHandler(WeeeContext context)
         {
-            this.db = context;
+            db = context;
         }
 
-        public async Task<Guid> HandleAsync(AddContactPersonToOrganisation command)
+        public async Task<Guid> HandleAsync(AddContactPersonToOrganisation message)
         {
-            var contactPerson = ValueObjectInitializer.CreateContact(command.ContactPerson);
-            var organisation = await db.Organisations.SingleAsync(o => o.Id == command.OrganisationId);
+            var contactPerson = ValueObjectInitializer.CreateContact(message.ContactPerson);
+            var organisation = await db.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
             organisation.AddMainContactPerson(contactPerson);
-            await db.SaveChangesAsync();
-            return contactPerson.Id;
+            int x = await db.SaveChangesAsync();
+            return organisation.Contact.Id;
         }
     }
 }

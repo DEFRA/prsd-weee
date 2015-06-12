@@ -14,29 +14,29 @@
         @Html.Gds().ValidationSummary()
       
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Name)">
-            @Html.ValidationMessageFor(m => m.Name)
             @Html.Gds().LabelFor(m => m.Name)
+            @Html.ValidationMessageFor(m => m.Name)
             @Html.Gds().TextBoxFor(m => m.Name)
         </div>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Surname)">
-            @Html.ValidationMessageFor(m => m.Surname)
             @Html.Gds().LabelFor(m => m.Surname)
+            @Html.ValidationMessageFor(m => m.Surname)
             @Html.Gds().TextBoxFor(m => m.Surname)
         </div>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Email)">
-            @Html.ValidationMessageFor(m => m.Email)
             @Html.Gds().LabelFor(m => m.Email)
+            @Html.ValidationMessageFor(m => m.Email)
             @Html.Gds().TextBoxFor(m => m.Email)
         </div>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Password)">
-            @Html.ValidationMessageFor(m => m.Password)
             @Html.Gds().LabelFor(m => m.Password)
+            @Html.ValidationMessageFor(m => m.Password)
             <p class="form-hint text">Your password has to be at least 8 characters long and must contain at least 1 lower-case letter, 1 upper-case letter and 1 number.</p>
             @Html.Gds().PasswordFor(m => m.Password)
         </div>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.ConfirmPassword)">
-            @Html.ValidationMessageFor(m => m.ConfirmPassword)
             @Html.Gds().LabelFor(m => m.ConfirmPassword)
+            @Html.ValidationMessageFor(m => m.ConfirmPassword)
             @Html.Gds().PasswordFor(m => m.ConfirmPassword)
         </div>
         <div class="form-group">

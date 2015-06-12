@@ -3,7 +3,7 @@
     using System;
     using Prsd.Core.Mediator;
 
-    public abstract class CreateOrganisationReqeust : IRequest<Guid>
+    public abstract class CreateOrganisationRequest : IRequest<Guid>
     {
         public string TradingName { get; set; }
     }
