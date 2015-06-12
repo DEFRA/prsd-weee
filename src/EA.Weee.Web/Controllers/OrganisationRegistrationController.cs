@@ -178,12 +178,10 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> MainContactPerson(Guid id)
+        public ActionResult MainContactPerson(Guid id)
         {
             using (var client = apiClient())
             {
-                //TODO: Get organisation id from organisation record
-                //var response = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
                 var model = new OrganisationContactPersonViewModel { OrganisationId = id };
                 return View(model);
             }
