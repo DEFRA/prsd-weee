@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using Weee.Requests.Organisations;
 
-    public class OrganisationContactPersonViewModel
+    public class ContactPersonViewModel
     {
         public Guid OrganisationId { get; set; }
 
@@ -34,8 +34,7 @@
                 LastName = LastName,
                 Position = Position
             };
-
-           return new AddContactPersonToOrganisation(OrganisationId, contact);
+            return new AddContactPersonToOrganisation(OrganisationId, contact);
         }
     }
 }

@@ -44,7 +44,7 @@
         private Organisation GetOrganisationWithName(string name)
         {
             var organisation = Organisation.CreateRegisteredCompany(name, companyRegistrationNumber);
-            organisation.OrganisationAddress = GetAddress();
+            organisation.AddAddress(AddressType.OrganisationAddress, GetAddress());
 
             var properties = typeof(Organisation).GetProperties();
 

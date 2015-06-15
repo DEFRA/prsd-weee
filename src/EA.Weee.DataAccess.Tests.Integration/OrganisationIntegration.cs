@@ -38,9 +38,9 @@
 
             var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
             organisation.AddMainContactPerson(contact);
-            organisation.OrganisationAddress = organisationAddress;
-            organisation.BusinessAddress = businessAddress;
-            organisation.NotificationAddress = notificationAddress;
+            organisation.AddAddress(AddressType.OrganisationAddress, organisationAddress);
+            organisation.AddAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
+            organisation.AddAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
 
             context.Organisations.Add(organisation);
             await context.SaveChangesAsync();

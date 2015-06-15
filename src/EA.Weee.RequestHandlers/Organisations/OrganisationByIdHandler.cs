@@ -29,14 +29,14 @@
                         Address2 = o.OrganisationAddress.Address2,
                         TownOrCity = o.OrganisationAddress.TownOrCity,
                         CountyOrRegion = o.OrganisationAddress.CountyOrRegion,
-                        PostalCode = o.OrganisationAddress.PostalCode,
+                        Postcode = o.OrganisationAddress.Postcode,
                         Country = o.OrganisationAddress.Country,
                         Telephone = o.OrganisationAddress.Telephone,
                         Email = o.OrganisationAddress.Email
                     },
                     Id = o.Id,
                     Name = o.Name
-                }).SingleAsync();
+                }).SingleAsync(p => p.Id == query.OrganisationId);
         }
     }
 }
