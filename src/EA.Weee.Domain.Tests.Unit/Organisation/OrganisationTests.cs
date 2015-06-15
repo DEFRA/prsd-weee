@@ -52,7 +52,7 @@
             const string companyName = "test company name";
             const string companyRegistrationNumber = "6chars";
 
-            Assert.Throws<Exception>(() => Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber));
+            Assert.Throws<InvalidOperationException>(() => Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber));
         }
 
         [Fact]
@@ -61,7 +61,7 @@
             const string companyName = "test company name";
             const string companyRegistrationNumber = "ninechars";
 
-            Assert.Throws<Exception>(() => Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber));
+            Assert.Throws<InvalidOperationException>(() => Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber));
         }
     }
 }
