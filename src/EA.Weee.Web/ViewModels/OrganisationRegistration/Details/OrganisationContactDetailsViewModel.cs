@@ -11,7 +11,6 @@
 
         [Required]
         [DataType(DataType.Text)]
-        [StringLength(50)]
         [Display(Name = "Address line 1")]
         public string Address1 { get; set; }
 
@@ -28,7 +27,6 @@
         [Display(Name = "County or region")]
         public string CountyOrRegion { get; set; }
 
-        [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Postcode")]
         public string Postcode { get; set; }

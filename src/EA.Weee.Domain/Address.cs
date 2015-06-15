@@ -10,7 +10,7 @@
         {
             Guard.ArgumentNotNull(address1);
             Guard.ArgumentNotNull(townOrCity);
-            Guard.ArgumentNotNull(postalCode);
+            //Guard.ArgumentNotNull(postalCode);
             Guard.ArgumentNotNull(country);
             Guard.ArgumentNotNull(telephone);
             Guard.ArgumentNotNull(email);
