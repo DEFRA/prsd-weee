@@ -37,15 +37,13 @@
             {
                 case 1:
                     return organisation.OrganisationAddress.Id;
-                    break;
-
+      
                 case 2:
                     return organisation.BusinessAddress.Id;
-                    break;
-
+      
                 case 3:
                     return organisation.NotificationAddress.Id;
-                    break;
+      
                 default:
                     throw new InvalidOperationException("No address id found.");
             }
