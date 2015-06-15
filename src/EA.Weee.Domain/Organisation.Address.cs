@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.Domain
 {
     using System;
+    using Prsd.Core;
+
     public partial class Organisation
     {
         public void AddAddress(AddressType type, Address address)
         {
-            //Guard.ArgumentNotNull(() => address, address);
+            Guard.ArgumentNotNull(address);
             
             if (address != null)
             {
