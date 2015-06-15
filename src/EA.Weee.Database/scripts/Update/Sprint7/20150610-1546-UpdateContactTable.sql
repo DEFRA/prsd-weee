@@ -17,7 +17,6 @@ CREATE TABLE [Organisation].[tmp_ms_xx_Contact] (
     [FirstName] NVARCHAR (35)    NOT NULL,
     [LastName]  NVARCHAR (35)    NOT NULL,
     [Position]  NVARCHAR (35)   NOT NULL,
-	[RowVersion] ROWVERSION NOT NULL, 
     CONSTRAINT [tmp_ms_xx_constraint_PK_Contact_Id] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

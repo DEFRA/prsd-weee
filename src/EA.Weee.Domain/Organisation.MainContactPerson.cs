@@ -8,6 +8,7 @@
     {
         public void AddMainContactPerson(Contact contactPerson)
         {
+            Guard.ArgumentNotNull(contactPerson);
             //Guard.ArgumentNotNull(() => contactPerson, contactPerson);
             if (Contact != null)
             {
