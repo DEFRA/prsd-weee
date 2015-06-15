@@ -61,7 +61,7 @@
                 organisation = new Organisation(null, tradingName, type, anyStatus);
             }
 
-            organisation.OrganisationAddress = GetAddress();
+            organisation.AddAddress(AddressType.OrganisationAddress, GetAddress());
 
             var properties = typeof(Organisation).GetProperties();
 

@@ -14,9 +14,8 @@
             {
                 throw new InvalidOperationException(
                     string.Format(
-                        "Cannot add Contact to Organisation {0}. This organisation already has a Contact {1}.",
-                        this.Id,
-                        this.Contact.Id));
+                        "Cannot add Contact to Organisation {0}. This organisation already has a Contact.",
+                        this.Id));
             }
 
             this.Contact = contactPerson;

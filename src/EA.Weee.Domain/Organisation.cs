@@ -48,11 +48,19 @@
 
         public string CompanyRegistrationNumber { get; set; }
 
+<<<<<<< HEAD
         public virtual Address OrganisationAddress { get; set; }
 
         public virtual Address BusinessAddress { get; set; }
 
         public virtual Address NotificationAddress { get; set; }
+=======
+        public virtual Address OrganisationAddress { get; private set; }
+
+        public virtual Address BusinessAddress { get; private set; }
+
+        public virtual Address NotificationAddress { get; private set; }
+>>>>>>> develop
 
         public virtual Contact Contact { get; private set; }
     }

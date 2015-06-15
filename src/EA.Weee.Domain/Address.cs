@@ -10,7 +10,6 @@
         {
             Guard.ArgumentNotNull(address1);
             Guard.ArgumentNotNull(townOrCity);
-            Guard.ArgumentNotNull(postalCode);
             Guard.ArgumentNotNull(country);
             Guard.ArgumentNotNull(telephone);
             Guard.ArgumentNotNull(email);
@@ -18,7 +17,7 @@
             Address1 = address1;
             Address2 = address2;
             TownOrCity = townOrCity;
-            PostalCode = postalCode;
+            Postcode = postalCode;
             Country = country;
             Telephone = telephone;
             CountyOrRegion = countyOrRegion;
@@ -37,7 +36,7 @@
         
         public string CountyOrRegion { get; private set; }
 
-        public string PostalCode { get; private set; }
+        public string Postcode { get; set; }
 
         public string Country { get; private set; }
 
