@@ -17,19 +17,17 @@ CREATE TABLE [Organisation].[tmp_ms_xx_Contact] (
     [FirstName] NVARCHAR (35)    NOT NULL,
     [LastName]  NVARCHAR (35)    NOT NULL,
     [Position]  NVARCHAR (35)   NOT NULL,
-	[RowVersion] [timestamp] NOT NULL,
     CONSTRAINT [tmp_ms_xx_constraint_PK_Contact_Id] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
 IF EXISTS (SELECT TOP 1 1 
            FROM   [Organisation].[Contact])
     BEGIN
-        INSERT INTO [Organisation].[tmp_ms_xx_Contact] ([Id], [FirstName], [LastName],[Position], [RowVersion])
+        INSERT INTO [Organisation].[tmp_ms_xx_Contact] ([Id], [FirstName], [LastName],[Position])
         SELECT   [Id],
                  [FirstName],
                  [LastName],
 				 [Position],
-				 [RowVersion]
         FROM     [Organisation].[Contact]
         ORDER BY [Id] ASC;
     END
