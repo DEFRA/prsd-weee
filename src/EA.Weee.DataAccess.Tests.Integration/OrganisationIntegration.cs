@@ -39,13 +39,14 @@
 
             var organisation = new Organisation(name, null, type, status)
             {
-                Contact = contact,
                 OrganisationAddress = organisationAddress,
                 BusinessAddress = businessAddress,
                 NotificationAddress = notificationAddress,
                 CompanyRegistrationNumber = crn,
                 OrganisationStatus = status,
             };
+
+            organisation.AddMainContactPerson(contact);
 
             this.testOrganisationToCleanUp = organisation;
 

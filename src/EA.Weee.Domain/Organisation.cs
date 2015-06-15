@@ -54,6 +54,6 @@
 
         public virtual Address NotificationAddress { get; set; }
 
-        public virtual Contact Contact { get; set; }
+        public virtual Contact Contact { get; private set; }
     }
 }
