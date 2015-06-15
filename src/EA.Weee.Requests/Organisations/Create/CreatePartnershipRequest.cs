@@ -2,7 +2,7 @@
 {
     using Base;
 
-    public class CreatePartnershipRequest : CreateOrganisationReqeust
+    public class CreatePartnershipRequest : CreateOrganisationRequest
     {       
     }
 }
