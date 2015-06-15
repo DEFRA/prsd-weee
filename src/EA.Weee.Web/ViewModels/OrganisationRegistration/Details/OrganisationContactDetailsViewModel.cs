@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Shared;
-    // Organisation contact details viewmodel
+    
     public class OrganisationContactDetailsViewModel
     {
         public Guid OrganisationId { get; set; }
