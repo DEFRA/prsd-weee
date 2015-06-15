@@ -131,9 +131,14 @@
         [HttpGet]
         public async Task<ViewResult> SelectOrganisation(string name, int page = 1)
         {
+            var fallbackPagingViewModel = new PagingViewModel(
+                "SelectOrganisation",
+                "OrganisationRegistration",
+                new { Name = name });
+
             if (string.IsNullOrEmpty(name))
             {
-                return View(new SelectOrganisationViewModel());
+                return View(new SelectOrganisationViewModel(fallbackPagingViewModel));
             }
 
             using (var client = apiClient())
@@ -145,24 +150,15 @@
                     var matchingOrganisations =
                         await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(name));
 
-                    var totalPages = (int)Math.Ceiling(((double)matchingOrganisations.Count() / (double)OrganisationsPerPage));
-
                     var organisationsForThisPage =
                         matchingOrganisations.Skip((page - 1) * OrganisationsPerPage)
                             .Take(OrganisationsPerPage)
                             .ToList();
 
-                    var previousPage = page - 1;
-                    var nextPage = page + 1;
-                    var startingAt = ((page - 1) * OrganisationsPerPage) + 1;
+                    var pagingViewModel = PagingViewModel.FromValues(matchingOrganisations.Count(), OrganisationsPerPage,
+                                                                page, "SelectOrganisation", "OrganisationRegistration", new { Name = name });
 
-                    return
-                        View(
-                            new SelectOrganisationViewModel(name, organisationsForThisPage,
-                                totalPages: totalPages,
-                                previousPage: previousPage,
-                                nextPage: nextPage,
-                                startingAt: startingAt));
+                    return View(new SelectOrganisationViewModel(name, organisationsForThisPage, pagingViewModel));
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -171,7 +167,8 @@
                     {
                         throw;
                     }
-                    return View(new SelectOrganisationViewModel
+
+                    return View(new SelectOrganisationViewModel(fallbackPagingViewModel)
                     {
                         Name = name
                     });

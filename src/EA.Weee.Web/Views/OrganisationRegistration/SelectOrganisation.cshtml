@@ -46,8 +46,8 @@
                         @Html.DisplayFor(m => m.MatchingOrganisations[i].Address.TownOrCity),
                     </li>
                     <li>
-                        @Html.HiddenFor(m => m.MatchingOrganisations[i].Address.PostalCode)
-                        @Html.DisplayFor(m => m.MatchingOrganisations[i].Address.PostalCode)
+                        @Html.HiddenFor(m => m.MatchingOrganisations[i].Address.Postcode)
+                        @Html.DisplayFor(m => m.MatchingOrganisations[i].Address.Postcode)
                     </li>
                 </ul>
                 <button type="submit" name="submitButton" value="@Html.Raw(Model.MatchingOrganisations[i].Id)" class="link-submit">Request to join this organisation</button>
@@ -59,27 +59,7 @@
             }
         }
         <br />
-        <ul class="previous-next-navigation">
-            @if (Model.PreviousPage >= 1)
-            {
-                <li class="previous">
-                    <a href="@Url.Action("SelectOrganisation", "OrganisationRegistration", new { @Name = Model.Name, @page = Model.PreviousPage })">
-                        Previous page
-                        <span class="page-numbers">@Model.PreviousPage of @Model.TotalPages</span>
-                    </a>
-                </li>
-            }
-
-            @if (Model.NextPage <= Model.TotalPages)
-            {
-                <li class="next">
-                    <a href="@Url.Action("SelectOrganisation", "OrganisationRegistration", new { @Name = Model.Name, @page = @Model.NextPage })">
-                        Next page
-                        <span class="page-numbers">@Model.NextPage of @Model.TotalPages</span>
-                    </a>
-                </li>
-            }
-        </ul>
+        @Html.Partial("_WeeePaging", Model.PagingViewModel)
     }
 }
 else
