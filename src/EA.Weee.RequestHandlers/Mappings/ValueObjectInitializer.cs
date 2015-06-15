@@ -8,6 +8,23 @@
 
     internal class ValueObjectInitializer
     {
+        public static Contact CreateContact(ContactData contact)
+        {
+            return new Contact(contact.FirstName, contact.LastName, contact.Position);
+        }
+
+        public static Address CreateAddress(AddressData address)
+        {
+            return new Address(address.Address1,
+                address.Address2,
+                address.TownOrCity,
+                address.CountyOrRegion,
+                address.PostalCode,
+                address.Country,
+                address.Telephone,
+                address.Email);
+        }
+
         private static Domain.OrganisationType GetOrganisationType(OrganisationType organisationType)
         {
             switch (organisationType)
@@ -24,23 +41,6 @@
                 default:
                     throw new ArgumentException(string.Format("Unknown organisation type: {0}", organisationType), "organisationType");
             }
-        }
-
-        public static Contact CreateContact(ContactData contact)
-        {
-            return new Contact(contact.FirstName, contact.LastName, contact.Position);
-        }
-
-        public static Address CreateAddress(AddressData address, string countryName)
-        {
-            return new Address(address.Address1,
-                address.Address2,
-                address.TownOrCity,
-                address.CountyOrRegion,
-                address.PostalCode,
-                address.Country,
-                address.Telephone,
-                address.Email);
         }
     }
 }

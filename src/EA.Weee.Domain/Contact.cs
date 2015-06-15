@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Domain
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
     using Prsd.Core;
     using Prsd.Core.Domain;
 
@@ -20,10 +22,47 @@
         {
         }
 
-        public string Position { get; set; }
-        
-        public string LastName { get; set; }
+        private string firstname;
+        private string lastname;
+        private string position;
 
-        public string FirstName { get; set; }
+        public string Position
+        {
+            get { return position; }
+            private set
+            {
+                if (value != null && value.Length > 35)
+                {
+                  throw new InvalidOperationException(string.Format(("Position cannot be greater than 35 characters")));  
+                }
+                position = value;
+            }
+        }
+
+        public string FirstName
+        {
+            get { return firstname; }
+            private set
+            {
+                if (value != null && value.Length > 35)
+                {
+                    throw new InvalidOperationException(string.Format(("Firstname cannot be greater than 35 characters")));
+                }
+                firstname = value;
+            }
+        }
+
+        public string LastName
+        {
+            get { return lastname; }
+            private set
+            {
+                if (value != null && value.Length > 35)
+                {
+                    throw new InvalidOperationException(string.Format(("LastName cannot be greater than 35 characters")));
+                }
+                lastname = value;
+            }
+        }
     }
 }

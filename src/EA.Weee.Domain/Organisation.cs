@@ -6,12 +6,27 @@
 
     public partial class Organisation : Entity
     {
-        public Organisation(OrganisationType organisationType)
+        private Organisation(OrganisationType organisationType, string tradingName)
         {
             Guard.ArgumentNotNull(organisationType);
+            Guard.ArgumentNotNull(tradingName);
+
+            OrganisationType = organisationType;
+            TradingName = tradingName;
+            OrganisationStatus = OrganisationStatus.Incomplete;
+        }
+
+        private Organisation(OrganisationType organisationType, string companyName, string companyRegistrationNumber, string tradingName = null)
+        {
+            Guard.ArgumentNotNull(organisationType);
+            Guard.ArgumentNotNull(companyName);
+            Guard.ArgumentNotNull(companyRegistrationNumber);
 
             OrganisationType = organisationType;
             OrganisationStatus = OrganisationStatus.Incomplete;
+            Name = companyName;
+            CompanyRegistrationNumber = companyRegistrationNumber;
+            TradingName = tradingName;
         }
 
         protected Organisation()
@@ -34,37 +49,26 @@
 
         public Address NotificationAddress { get; set; }
 
-        public Contact Contact { get; set; }
+        public virtual Contact Contact { get; private set; }
 
         public static Organisation CreateSoleTrader(string tradingName)
         {
-            return new Organisation(OrganisationType.SoleTraderOrIndividual)
-            {
-                TradingName = tradingName
-            };
+            return new Organisation(OrganisationType.SoleTraderOrIndividual, tradingName);
         }
 
         public static Organisation CreatePartnership(string tradingName)
         {
-            return new Organisation(OrganisationType.Partnership)
-            {
-                TradingName = tradingName
-            };
+            return new Organisation(OrganisationType.Partnership, tradingName);
         }
 
         public static Organisation CreateRegisteredCompany(string companyName, string companyRegistrationNumber, string tradingName = null)
         {
             if (companyRegistrationNumber.Length < 7 || companyRegistrationNumber.Length > 8)
             {
-                throw new Exception("Company registration number must be 7 or 8 characters");
+                throw new InvalidOperationException("Company registration number must be 7 or 8 characters");
             }
 
-            return new Organisation(OrganisationType.RegisteredCompany)
-            {
-                Name = companyName,
-                CompanyRegistrationNumber = companyRegistrationNumber,
-                TradingName = tradingName
-            };
+            return new Organisation(OrganisationType.RegisteredCompany, companyName, companyRegistrationNumber, tradingName);
         }
     }
 }

@@ -43,7 +43,6 @@
             organisation.NotificationAddress = notificationAddress;
 
             context.Organisations.Add(organisation);
-
             await context.SaveChangesAsync();
 
             var thisTestOrganisationArray =
