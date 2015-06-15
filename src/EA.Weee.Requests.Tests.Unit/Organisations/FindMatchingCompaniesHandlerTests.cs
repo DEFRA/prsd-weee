@@ -16,8 +16,7 @@
 
     public class FindMatchingCompaniesHandlerTests
     {
-        private readonly Domain.OrganisationType anyType = Domain.OrganisationType.RegisteredCompany;
-        private readonly OrganisationStatus anyStatus = OrganisationStatus.Incomplete;
+        private readonly string companyRegistrationNumber = "AB123456";
      
         private readonly DbContextHelper helper = new DbContextHelper();
 
@@ -42,7 +41,26 @@
 
         private Organisation GetOrganisationWithName(string name)
         {
-            var organisation = new Organisation(name, anyType, anyStatus);
+            return GetOrganisationWithDetails(name, null, Domain.OrganisationType.RegisteredCompany);
+        }
+
+        private Organisation GetOrganisationWithDetails(string name, string tradingName, Domain.OrganisationType type)
+        {
+            Organisation organisation;
+
+            if (type == Domain.OrganisationType.RegisteredCompany)
+            {
+                organisation = Organisation.CreateRegisteredCompany(name, companyRegistrationNumber, tradingName);
+            }
+            else if (type == Domain.OrganisationType.Partnership)
+            {
+                organisation = Organisation.CreatePartnership(tradingName);
+            }
+            else
+            {
+                organisation = Organisation.CreateSoleTrader(tradingName);
+            }
+
             organisation.AddAddress(AddressType.OrganisationAddress, GetAddress());
 
             var properties = typeof(Organisation).GetProperties();
@@ -67,7 +85,7 @@
             return new Address("1", "street", "Woking", "Hampshire", "GU21 5EE", "United Kingdom", "12345678", "test@co.uk");
         }
 
-        [Fact(Skip = "Needs updating")]
+        [Fact]
         public async Task FindMatchingOrganisationsHandler_WithLtdCompany_OneMatches()
         {
             var organisations = helper.GetAsyncEnabledDbSet(new[]
@@ -91,7 +109,7 @@
             Assert.Equal(1, strings.Count);
         }
 
-        [Fact(Skip = "Needs updating")]
+        [Fact]
         public async Task FindMatchingOrganisationsHandler_WithLtdAndLimitedCompany_TwoMatches()
         {
             var organisations = helper.GetAsyncEnabledDbSet(new[]
@@ -111,7 +129,7 @@
             Assert.Equal(2, strings.Count);
         }
 
-        [Fact(Skip = "Needs updating")]
+        [Fact]
         public async Task FindMatchingOrganisationsHandler_SearchTermContainsThe_ReturnsMatchingResults()
         {
             var organisations = helper.GetAsyncEnabledDbSet(new[]
@@ -131,7 +149,7 @@
             Assert.Equal(2, results.Count);
         }
 
-        [Fact(Skip = "Needs updating")]
+        [Fact]
         public async Task FindMatchingOrganisationsHandler_DataContainsThe_ReturnsMatchingResults()
         {
             var data = new[]
@@ -154,7 +172,7 @@
             Assert.Equal(data.Length, results.Count);
         }
 
-        [Fact(Skip = "Needs updating")]
+        [Fact]
         public async Task FindMatchingOrganisationsHandler_AllDataMatches_ReturnedStringsMatchInputDataWithCase()
         {
             var names = new[] { "Environment Agency", "Environemnt Agincy" };
@@ -171,10 +189,10 @@
 
             var results = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency"));
 
-            Assert.Equal(names, results.Select(r => r.Name));
+            Assert.Equal(names, results.Select(r => r.DisplayName));
         }
 
-        [Fact(Skip = "Needs updating")]
+        [Fact]
         public async Task FindMatchingOrganisationsHandler_AllDataMatches_ReturnsDataOrderedByEditDistance()
         {
             var searchTerm = "bee keepers";
@@ -197,7 +215,31 @@
 
             var results = await handler.HandleAsync(new FindMatchingOrganisations(searchTerm));
 
-            Assert.Equal(namesWithDistances.OrderBy(n => n.Value).Select(n => n.Key), results.Select(r => r.Name));
+            Assert.Equal(namesWithDistances.OrderBy(n => n.Value).Select(n => n.Key), results.Select(r => r.DisplayName));
+        }
+
+        [Fact]
+        public async Task FindMatchingOrganisationsHandler_IncludingSearchOnTradingName_ReturnsMatchingResults()
+        {
+            var data = new[]
+            {
+                GetOrganisationWithDetails("THE  Environemnt Agency", null, Domain.OrganisationType.RegisteredCompany),
+                GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency", Domain.OrganisationType.RegisteredCompany),
+                GetOrganisationWithDetails(null, "THE Environemnt Agency", Domain.OrganisationType.SoleTraderOrIndividual),
+                GetOrganisationWithDetails(null, "Environment Agency", Domain.OrganisationType.Partnership)
+            };
+
+            var organisations = helper.GetAsyncEnabledDbSet(data);
+
+            var context = A.Fake<WeeeContext>();
+
+            A.CallTo(() => context.Organisations).Returns(organisations);
+
+            var handler = new FindMatchingOrganisationsHandler(context);
+
+            var results = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency"));
+
+            Assert.Equal(data.Length, results.Count);
         }
     }
 }
