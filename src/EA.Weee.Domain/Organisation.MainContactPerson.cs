@@ -6,14 +6,20 @@
 
     public partial class Organisation
     {
-       public void AddMainContactPerson(Contact contactPerson)
-       {
-           Contact = contactPerson;
-       }
-
-        public void RemoveContact()
+        public void AddMainContactPerson(Contact contactPerson)
         {
-            Contact = null;
+            Guard.ArgumentNotNull(contactPerson);
+            //Guard.ArgumentNotNull(() => contactPerson, contactPerson);
+            if (Contact != null)
+            {
+                throw new InvalidOperationException(
+                    string.Format(
+                        "Cannot add Contact to Organisation {0}. This organisation already has a Contact {1}.",
+                        this.Id,
+                        this.Contact.Id));
+            }
+
+            this.Contact = contactPerson;
         }
     }
 }

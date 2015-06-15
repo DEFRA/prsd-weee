@@ -38,7 +38,6 @@
 
             var organisation = new Organisation(name, type, status)
             {
-                Contact = contact,
                 OrganisationAddress = organisationAddress,
                 BusinessAddress = businessAddress,
                 NotificationAddress = notificationAddress,
@@ -46,6 +45,8 @@
                 OrganisationStatus = status,
                 TradingName = tradingName
             };
+
+            organisation.AddMainContactPerson(contact);
 
             context.Organisations.Add(organisation);
 
