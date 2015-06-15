@@ -123,31 +123,6 @@
                 {
                     name = model.CompanyName
                 });
-
-                //Create organisation
-                //using (var client = apiClient())
-                //{
-                //    try
-                //    {
-                //        var response = await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
-                        
-                //        return RedirectToAction("MainContactPerson", "OrganisationRegistration", new
-                //        {
-                //            id = response
-                //        });
-                //    }
-                //    catch (ApiBadRequestException ex)
-                //    {
-                //        this.HandleBadRequest(ex);
-
-                //        if (ModelState.IsValid)
-                //        {
-                //            throw;
-                //        }
-                //    }
-
-                //    return View(model);
-                //}
             }
 
             return View(model);

@@ -46,8 +46,7 @@
             organisation.AddMainContactPerson(contact);
             organisation.AddAddress(AddressType.OrganisationAddress, organisationAddress);
             organisation.AddAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
-            organisation.AddAddress(AddressType.SercviceOfNoticeAddress, notificationAddress);
-
+            organisation.AddAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
             context.Organisations.Add(organisation);
 
             await context.SaveChangesAsync();
