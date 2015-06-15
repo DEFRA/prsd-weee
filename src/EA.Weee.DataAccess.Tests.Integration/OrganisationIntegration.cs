@@ -44,15 +44,12 @@
             };
 
             organisation.AddMainContactPerson(contact);
-<<<<<<< HEAD
-
-            this.testOrganisationToCleanUp = organisation;
-
-=======
             organisation.AddAddress(AddressType.OrganisationAddress, organisationAddress);
             organisation.AddAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
             organisation.AddAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
->>>>>>> develop
+
+            this.testOrganisationToCleanUp = organisation;
+
             context.Organisations.Add(organisation);
 
             await context.SaveChangesAsync();
@@ -87,13 +84,14 @@
 
             var organisation = new Organisation(null, tradingName, type, status)
             {
-                Contact = contact,
-                OrganisationAddress = organisationAddress,
-                BusinessAddress = businessAddress,
-                NotificationAddress = notificationAddress,
                 CompanyRegistrationNumber = crn,
                 OrganisationStatus = status,
             };
+
+            organisation.AddMainContactPerson(contact);
+            organisation.AddAddress(AddressType.OrganisationAddress, organisationAddress);
+            organisation.AddAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
+            organisation.AddAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
 
             this.testOrganisationToCleanUp = organisation;
 
@@ -145,7 +143,7 @@
             Assert.Equal(expected.Address2, fromDatabase.Address2);
             Assert.Equal(expected.TownOrCity, fromDatabase.TownOrCity);
             Assert.Equal(expected.CountyOrRegion, fromDatabase.CountyOrRegion);
-            Assert.Equal(expected.PostalCode, fromDatabase.PostalCode);
+            Assert.Equal(expected.Postcode, fromDatabase.Postcode);
             Assert.Equal(expected.Country, fromDatabase.Country);
             Assert.Equal(expected.Telephone, fromDatabase.Telephone);
             Assert.Equal(expected.Email, fromDatabase.Email);
