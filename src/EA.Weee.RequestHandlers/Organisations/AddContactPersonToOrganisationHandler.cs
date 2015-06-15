@@ -22,7 +22,7 @@
             var contactPerson = ValueObjectInitializer.CreateContact(message.ContactPerson);
             var organisation = await db.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
             organisation.AddMainContactPerson(contactPerson);
-            int x = await db.SaveChangesAsync();
+            await db.SaveChangesAsync();
             return organisation.Contact.Id;
         }
     }

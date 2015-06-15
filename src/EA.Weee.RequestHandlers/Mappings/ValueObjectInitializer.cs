@@ -56,7 +56,7 @@
                     return Domain.AddressType.RegisteredOrPPBAddress;
 
                 case AddressType.ServiceOfNotice:
-                    return Domain.AddressType.SercviceOfNoticeAddress;
+                    return Domain.AddressType.ServiceOfNoticeAddress;
 
                 default:
                     throw new ArgumentException(string.Format("Unknown organisation type: {0}", addressType),
