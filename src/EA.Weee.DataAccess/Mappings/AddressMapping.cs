@@ -13,7 +13,7 @@
             Property(x => x.Address2).HasColumnName("Address2");
             Property(x => x.TownOrCity).HasColumnName("TownOrCity").IsRequired();
             Property(x => x.CountyOrRegion).HasColumnName("CountyOrRegion");
-            Property(x => x.PostalCode).HasColumnName("PostalCode").IsRequired();
+            Property(x => x.PostalCode).HasColumnName("PostalCode");
             Property(x => x.Country).HasColumnName("Country").IsRequired();
             Property(x => x.Telephone).HasColumnName("Telephone").IsRequired();
             Property(x => x.Email).HasColumnName("Email").IsRequired();

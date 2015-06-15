@@ -201,7 +201,7 @@
                     try
                     {
                         var response = await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
-                        return RedirectToAction("OrganisationContactDetails", "OrganisationRegistration"); 
+                        return RedirectToAction("OrganisationContactDetails", "OrganisationRegistration", new { id = model.OrganisationId });
                     }
                     catch (ApiBadRequestException ex)
                     {
@@ -242,7 +242,7 @@
                     try
                     {
                         var response = await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
-                        return RedirectToAction("OrganisationRegisteredOfficePrePopulate", "OrganisationRegistration"); 
+                        return RedirectToAction("OrganisationRegisteredOfficePrePopulate", "OrganisationRegistration");
                     }
                     catch (ApiBadRequestException ex)
                     {
