@@ -148,17 +148,12 @@
                     const int OrganisationsPerPage = 4; // would rather bake this into the db query but not really feasible
 
                     var matchingOrganisations =
-                        await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(name));
-
-                    var organisationsForThisPage =
-                        matchingOrganisations.Skip((page - 1) * OrganisationsPerPage)
-                            .Take(OrganisationsPerPage)
-                            .ToList();
+                        await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(name, page, OrganisationsPerPage));
 
                     var pagingViewModel = PagingViewModel.FromValues(matchingOrganisations.Count(), OrganisationsPerPage,
                                                                 page, "SelectOrganisation", "OrganisationRegistration", new { Name = name });
 
-                    return View(new SelectOrganisationViewModel(name, organisationsForThisPage, pagingViewModel));
+                    return View(new SelectOrganisationViewModel(name, matchingOrganisations, pagingViewModel));
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -168,10 +163,7 @@
                         throw;
                     }
 
-                    return View(new SelectOrganisationViewModel(fallbackPagingViewModel)
-                    {
-                        Name = name
-                    });
+                    return View(new SelectOrganisationViewModel(fallbackPagingViewModel));
                 }
             }
         }
