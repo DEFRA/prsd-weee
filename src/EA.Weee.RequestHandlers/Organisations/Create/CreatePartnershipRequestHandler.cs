@@ -19,8 +19,7 @@
 
         public async Task<Guid> HandleAsync(CreatePartnershipRequest message)
         {
-            var organisation = new Organisation(message.TradingName, OrganisationType.Partnership,
-                OrganisationStatus.Incomplete);
+            var organisation = Organisation.CreatePartnership(message.TradingName);
             db.Organisations.Add(organisation);
             await db.SaveChangesAsync();
 

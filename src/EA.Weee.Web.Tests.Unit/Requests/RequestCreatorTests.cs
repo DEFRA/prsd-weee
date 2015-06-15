@@ -43,7 +43,7 @@
             Assert.Equal(companyRegistrationNumber, request.CompanyRegistrationNumber);
         }
 
-        public SoleTraderDetailsViewModel FullyPopulatedSoleTraderDetailsViewModel(string businessTradingName)
+        private SoleTraderDetailsViewModel FullyPopulatedSoleTraderDetailsViewModel(string businessTradingName)
         {
             return new SoleTraderDetailsViewModel
             {
@@ -51,7 +51,7 @@
             };
         }
 
-        public PartnershipDetailsViewModel FullyPopulatedPartnershipDetailsViewModel(string businessTradingName)
+        private PartnershipDetailsViewModel FullyPopulatedPartnershipDetailsViewModel(string businessTradingName)
         {
             return new PartnershipDetailsViewModel
             {
@@ -59,7 +59,7 @@
             };
         }
 
-        public RegisteredCompanyDetailsViewModel FullyPopulatedRegisteredCompanyDetailsViewModel(string companyName, string businessTradingName, string companyRegistrationNumber)
+        private RegisteredCompanyDetailsViewModel FullyPopulatedRegisteredCompanyDetailsViewModel(string companyName, string businessTradingName, string companyRegistrationNumber)
         {
             return new RegisteredCompanyDetailsViewModel
             {

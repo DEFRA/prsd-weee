@@ -19,7 +19,7 @@
 
         public async Task<Guid> HandleAsync(CreateSoleTraderRequest message)
         {
-            var organisation = new Organisation(message.TradingName, OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Incomplete); 
+            var organisation = Organisation.CreateSoleTrader(message.TradingName);
             db.Organisations.Add(organisation);
             await db.SaveChangesAsync();
 

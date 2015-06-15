@@ -2,7 +2,7 @@
 {
     using Base;
 
-    public class CreateRegisteredCompanyRequest : CreateOrganisationReqeust
+    public class CreateRegisteredCompanyRequest : CreateOrganisationRequest
     {
         public string BusinessName { get; set; }
 

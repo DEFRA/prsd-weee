@@ -10,7 +10,6 @@
         {
             Guard.ArgumentNotNull(address1);
             Guard.ArgumentNotNull(townOrCity);
-            //Guard.ArgumentNotNull(postalCode);
             Guard.ArgumentNotNull(country);
             Guard.ArgumentNotNull(telephone);
             Guard.ArgumentNotNull(email);
@@ -18,7 +17,7 @@
             Address1 = address1;
             Address2 = address2;
             TownOrCity = townOrCity;
-            PostalCode = postalCode;
+            Postcode = postalCode;
             Country = country;
             Telephone = telephone;
             CountyOrRegion = countyOrRegion;
@@ -28,7 +27,7 @@
         protected Address()
         {
         }
-
+        
         private string address1;
         private string address2;
         private string townOrCity;
@@ -63,7 +62,7 @@
                 address2 = value;
             }
         }
-
+        
         public string TownOrCity
         {
             get { return townOrCity; }
@@ -141,7 +140,7 @@
                 email = value;
             }
         }
-        
+
         public bool IsUkAddress
         {
             get

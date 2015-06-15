@@ -36,20 +36,13 @@
             var businessAddress = MakeAddress("B");
             var notificationAddress = MakeAddress("N");
 
-            var organisation = new Organisation(name, type, status)
-            {
-                OrganisationAddress = organisationAddress,
-                BusinessAddress = businessAddress,
-                NotificationAddress = notificationAddress,
-                CompanyRegistrationNumber = crn,
-                OrganisationStatus = status,
-                TradingName = tradingName
-            };
-
+            var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
             organisation.AddMainContactPerson(contact);
+            organisation.AddAddress(AddressType.OrganisationAddress, organisationAddress);
+            organisation.AddAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
+            organisation.AddAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
 
             context.Organisations.Add(organisation);
-
             await context.SaveChangesAsync();
 
             var thisTestOrganisationArray =

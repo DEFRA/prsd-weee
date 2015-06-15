@@ -18,6 +18,7 @@
     {
         private readonly Domain.OrganisationType anyType = Domain.OrganisationType.RegisteredCompany;
         private readonly OrganisationStatus anyStatus = OrganisationStatus.Incomplete;
+        private readonly string companyRegistrationNumber = "AB123456";
      
         private readonly DbContextHelper helper = new DbContextHelper();
 
@@ -42,9 +43,8 @@
 
         private Organisation GetOrganisationWithName(string name)
         {
-            var organisation = new Organisation(name, anyType, anyStatus);
-
-            organisation.OrganisationAddress = GetAddress();
+            var organisation = Organisation.CreateRegisteredCompany(name, companyRegistrationNumber);
+            organisation.AddAddress(AddressType.OrganisationAddress, GetAddress());
 
             var properties = typeof(Organisation).GetProperties();
 

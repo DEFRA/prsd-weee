@@ -4,6 +4,7 @@
     using Domain;
     using Requests.Organisations;
     using Requests.Shared;
+    using AddressType = Requests.Shared.AddressType;
     using OrganisationType = Requests.Organisations.OrganisationType;
 
     internal class ValueObjectInitializer
@@ -19,7 +20,7 @@
                 address.Address2,
                 address.TownOrCity,
                 address.CountyOrRegion,
-                address.PostalCode,
+                address.Postcode,
                 address.Country,
                 address.Telephone,
                 address.Email);
@@ -31,15 +32,35 @@
             {
                 case OrganisationType.RegisteredCompany:
                     return Domain.OrganisationType.RegisteredCompany;
-               
+
                 case OrganisationType.SoleTraderOrIndividual:
                     return Domain.OrganisationType.SoleTraderOrIndividual;
-                
+
                 case OrganisationType.Partnership:
                     return Domain.OrganisationType.Partnership;
-                
+
                 default:
-                    throw new ArgumentException(string.Format("Unknown organisation type: {0}", organisationType), "organisationType");
+                    throw new ArgumentException(string.Format("Unknown organisation type: {0}", organisationType),
+                        "organisationType");
+            }
+        }
+
+        public static Domain.AddressType GetAddressType(AddressType addressType)
+        {
+            switch (addressType)
+            {
+                case AddressType.OrganistionAddress:
+                    return Domain.AddressType.OrganisationAddress;
+
+                case AddressType.RegisteredorPPBAddress:
+                    return Domain.AddressType.RegisteredOrPPBAddress;
+
+                case AddressType.ServiceOfNotice:
+                    return Domain.AddressType.ServiceOfNoticeAddress;
+
+                default:
+                    throw new ArgumentException(string.Format("Unknown organisation type: {0}", addressType),
+                        "addressType");
             }
         }
     }
