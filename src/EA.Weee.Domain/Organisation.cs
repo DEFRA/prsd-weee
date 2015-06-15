@@ -6,6 +6,8 @@
 
     public partial class Organisation : Entity
     {
+        private string companyRegistrationNumber;
+
         private Organisation(OrganisationType organisationType, string tradingName)
         {
             Guard.ArgumentNotNull(organisationType);
@@ -41,7 +43,19 @@
 
         public string TradingName { get; private set; }
 
-        public string CompanyRegistrationNumber { get; private set; }
+        public string CompanyRegistrationNumber
+        {
+            get { return companyRegistrationNumber; }
+            private set
+            {
+                if (value.Length < 7 || value.Length > 8)
+                {
+                    throw new InvalidOperationException("Company registration number must be 7 or 8 characters");
+                }
+
+                companyRegistrationNumber = value;
+            }
+        }
 
         public Address OrganisationAddress { get; set; }
 
@@ -63,11 +77,6 @@
 
         public static Organisation CreateRegisteredCompany(string companyName, string companyRegistrationNumber, string tradingName = null)
         {
-            if (companyRegistrationNumber.Length < 7 || companyRegistrationNumber.Length > 8)
-            {
-                throw new InvalidOperationException("Company registration number must be 7 or 8 characters");
-            }
-
             return new Organisation(OrganisationType.RegisteredCompany, companyName, companyRegistrationNumber, tradingName);
         }
     }
