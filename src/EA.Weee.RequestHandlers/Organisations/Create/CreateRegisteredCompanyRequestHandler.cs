@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using DataAccess;
     using Domain;
+    using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Organisations.Create;
 
@@ -18,11 +19,8 @@
 
         public async Task<Guid> HandleAsync(CreateRegisteredCompanyRequest message)
         {
-            var organisation = new Organisation(message.BusinessName, null, OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete)
-            {
-                CompanyRegistrationNumber = message.CompanyRegistrationNumber
-            };
-
+            var organisation = Organisation.CreateRegisteredCompany(message.BusinessName,
+                message.CompanyRegistrationNumber, message.TradingName);
             db.Organisations.Add(organisation);
             await db.SaveChangesAsync();
 

@@ -17,6 +17,7 @@
     public class FindMatchingCompaniesHandlerTests
     {
         private readonly OrganisationStatus anyStatus = OrganisationStatus.Incomplete;
+        private readonly string companyRegistrationNumber = "AB123456";
      
         private readonly DbContextHelper helper = new DbContextHelper();
 

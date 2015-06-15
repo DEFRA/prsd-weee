@@ -21,6 +21,11 @@
             builder.RegisterAssemblyTypes()
                 .AsClosedTypesOf(typeof(IRequest<>))
                 .AsImplementedInterfaces();
+
+            // Register the map classes
+            builder.RegisterAssemblyTypes(this.GetType().Assembly)
+                .Where(t => t.Namespace.Contains("Mappings"))
+                .AsImplementedInterfaces();
         }
     }
 }
