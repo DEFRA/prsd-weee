@@ -19,8 +19,7 @@
 
         public async Task<Guid> HandleAsync(AddOrganisationContactDetails message)
         {
-            var countryName = string.Empty;
-            var address = ValueObjectInitializer.CreateAddress(message.OrganisationContactAddress, countryName);
+            var address = ValueObjectInitializer.CreateAddress(message.OrganisationContactAddress);
 
             var organisation = await context.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
             organisation.AddOrganisationContactDetails(address);
