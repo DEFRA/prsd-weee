@@ -46,8 +46,8 @@
                         @Html.DisplayFor(m => m.MatchingOrganisations[i].Address.TownOrCity),
                     </li>
                     <li>
-                        @Html.HiddenFor(m => m.MatchingOrganisations[i].Address.PostalCode)
-                        @Html.DisplayFor(m => m.MatchingOrganisations[i].Address.PostalCode)
+                        @Html.HiddenFor(m => m.MatchingOrganisations[i].Address.Postcode)
+                        @Html.DisplayFor(m => m.MatchingOrganisations[i].Address.Postcode)
                     </li>
                 </ul>
                 <button type="submit" name="submitButton" value="@Html.Raw(Model.MatchingOrganisations[i].Id)" class="link-submit">Request to join this organisation</button>
