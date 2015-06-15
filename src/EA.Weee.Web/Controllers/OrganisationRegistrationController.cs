@@ -16,6 +16,8 @@
     using EA.Weee.Web.ViewModels.Organisation.Type;
     using EA.Weee.Web.ViewModels.OrganisationRegistration;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
+    using EA.Weee.Web.ViewModels.Shared;
+    using Weee.Requests.Shared;
 
     [Authorize]
     public class OrganisationRegistrationController : Controller
@@ -183,14 +185,14 @@
         {
             using (var client = apiClient())
             {
-                var model = new OrganisationContactPersonViewModel { OrganisationId = id };
+                var model = new ContactPersonViewModel { OrganisationId = id };
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> MainContactPerson(OrganisationContactPersonViewModel model)
+        public async Task<ActionResult> MainContactPerson(ContactPersonViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -199,6 +201,70 @@
                     try
                     {
                         var response = await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
+                        return RedirectToAction("OrganisationAddress", "OrganisationRegistration", new
+                        {
+                            id = model.OrganisationId
+                        });
+                    }
+                    catch (ApiBadRequestException ex)
+                    {
+                        this.HandleBadRequest(ex);
+
+                        if (ModelState.IsValid)
+                        {
+                            throw;
+                        }
+                    }
+
+                    return View(model);
+                }
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RegisteredOfficeAddress(Guid id)
+        {
+            using (var client = apiClient())
+            {
+                var model = new AddressViewModel { OrganisationId = id };
+                try
+                {
+                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+                    string organisationType = organisation.OrganisationType.ToString();
+                    ViewBag.OrgType = organisationType;
+                    return View(model);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                }
+             return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var client = apiClient())
+                {
+                    try
+                    {
+                        AddressType type = AddressType.RegisteredorPPBAddress;
+                        AddAddressToOrganisation request = model.ToAddRequest(type);
+                        var response = await client.SendAsync(User.GetAccessToken(), request);
+                        return RedirectToAction("ServiceOfNoticeAddress", "OrganisationRegistration", new
+                        {
+                            id = model.OrganisationId
+                        });
                         return RedirectToAction("OrganisationContactDetails", "OrganisationRegistration", new { id = model.OrganisationId });
                     }
                     catch (ApiBadRequestException ex)
