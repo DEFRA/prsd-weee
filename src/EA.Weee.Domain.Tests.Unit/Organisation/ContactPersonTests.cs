@@ -68,7 +68,7 @@
 
         private static Organisation GetTestOrganisation()
         {
-            var organisation = new Organisation("Test", OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete);
+            var organisation = new Organisation("Test", null, OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete);
             return organisation;
         }
     }
