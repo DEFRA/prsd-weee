@@ -16,7 +16,6 @@
 
     public class FindMatchingCompaniesHandlerTests
     {
-        private readonly OrganisationStatus anyStatus = OrganisationStatus.Incomplete;
         private readonly string companyRegistrationNumber = "AB123456";
      
         private readonly DbContextHelper helper = new DbContextHelper();
@@ -51,15 +50,15 @@
 
             if (type == Domain.OrganisationType.RegisteredCompany)
             {
-                organisation = new Organisation(name, tradingName, type, anyStatus);
+                organisation = Organisation.CreateRegisteredCompany(name, companyRegistrationNumber, tradingName);
             }
             else if (type == Domain.OrganisationType.Partnership)
             {
-                organisation = new Organisation(null, tradingName, type, anyStatus);
+                organisation = Organisation.CreatePartnership(tradingName);
             }
             else
             {
-                organisation = new Organisation(null, tradingName, type, anyStatus);
+                organisation = Organisation.CreateSoleTrader(tradingName);
             }
 
             organisation.AddAddress(AddressType.OrganisationAddress, GetAddress());

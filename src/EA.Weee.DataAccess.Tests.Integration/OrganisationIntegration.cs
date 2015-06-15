@@ -29,6 +29,7 @@
             var contact = MakeContact();
 
             string name = "Test Name" + Guid.NewGuid();
+            string tradingName = "Test Trading Name" + Guid.NewGuid();
             string crn = new Random().Next(100000000).ToString();
             var status = OrganisationStatus.Incomplete;
             var type = OrganisationType.RegisteredCompany;
@@ -67,8 +68,7 @@
         {
             var contact = MakeContact();
 
-            string tradingName = "Test Name" + Guid.NewGuid();
-            string crn = new Random().Next(100000000).ToString();
+            string tradingName = "Test Trading Name" + Guid.NewGuid();
             var status = OrganisationStatus.Incomplete;
             var type = OrganisationType.SoleTraderOrIndividual;
 
@@ -76,11 +76,7 @@
             var businessAddress = MakeAddress("B");
             var notificationAddress = MakeAddress("N");
 
-            var organisation = new Organisation(null, tradingName, type, status)
-            {
-                CompanyRegistrationNumber = crn,
-                OrganisationStatus = status,
-            };
+            var organisation = Organisation.CreateSoleTrader(tradingName);
 
             organisation.AddMainContactPerson(contact);
             organisation.AddAddress(AddressType.OrganisationAddress, organisationAddress);
@@ -101,7 +97,7 @@
 
             var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
 
-            VerifyOrganisation(null, tradingName, crn, status, type, thisTestOrganisation);
+            VerifyOrganisation(null, tradingName, null, status, type, thisTestOrganisation);
             VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
 
             await context.SaveChangesAsync();
