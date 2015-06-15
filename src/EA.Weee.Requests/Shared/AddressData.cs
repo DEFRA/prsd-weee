@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Requests.Shared
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     public class AddressData
@@ -35,8 +36,12 @@
         public string Postcode { get; set; }
 
         [Required]
-        [DataType(DataType.Text)]
+        [Display(Name = "Country")]
+        public Guid CountryId { get; set; }
+
         public string Country { get; set; }
+
+        //public IEnumerable<UKCompetentAuthorityData> Countries { get; set; }
 
         [Required]
         [StringLength(20)]

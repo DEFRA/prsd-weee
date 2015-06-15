@@ -42,3 +42,28 @@
         </div>
     }
 }
+
+@section scripts{
+    <script>
+        (function ($) {
+            $(function () {
+                $('#ukcountry-list').selectToAutocomplete();
+            });
+        })(jQuery);
+    </script>
+}
+@*@section scripts{
+    <script>
+        (function ($) {
+            $(function () {
+                $('#region-list').selectToAutocomplete();
+            });
+        })(jQuery);
+
+        function getComboDescription(sel) {
+            if (sel.selectedIndex > 0) {
+                document.getElementById("descriptionTextArea").innerHTML = sel.options[sel.selectedIndex].getAttribute('description');
+            }
+        }
+    </script>
+}*@

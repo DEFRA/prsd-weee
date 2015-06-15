@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="Mappings\AddressMap.cs" />
     <Compile Include="Mappings\ContactMap.cs" />
+    <Compile Include="Mappings\UKCompetentAuthorityMap.cs" />
     <Compile Include="Mappings\ValueObjectInitializer.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandler.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestHandlerModule.cs" />
+    <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
     <Compile Include="Users\UserByIdHandler.cs" />
   </ItemGroup>
   <ItemGroup>
