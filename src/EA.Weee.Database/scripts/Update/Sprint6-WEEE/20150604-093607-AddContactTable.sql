@@ -10,7 +10,6 @@ CREATE TABLE [Organisation].[Contact] (
     [FirstName] NVARCHAR (64)    NOT NULL,
     [LastName]  NVARCHAR (64)    NOT NULL,
     [Position]  NVARCHAR (128)   NOT NULL,
-	[RowVersion] ROWVERSION NOT NULL, 
     CONSTRAINT [PK_Contact_Id] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
