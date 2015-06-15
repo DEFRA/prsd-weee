@@ -37,12 +37,7 @@
             var businessAddress = MakeAddress("B");
             var notificationAddress = MakeAddress("N");
 
-            var organisation = new Organisation(name, null, type, status)
-            {
-                CompanyRegistrationNumber = crn,
-                OrganisationStatus = status,
-            };
-
+            var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
             organisation.AddMainContactPerson(contact);
             organisation.AddAddress(AddressType.OrganisationAddress, organisationAddress);
             organisation.AddAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
@@ -51,7 +46,6 @@
             this.testOrganisationToCleanUp = organisation;
 
             context.Organisations.Add(organisation);
-
             await context.SaveChangesAsync();
 
             var thisTestOrganisationArray =
