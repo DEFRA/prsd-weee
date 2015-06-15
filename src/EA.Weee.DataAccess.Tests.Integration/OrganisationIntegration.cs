@@ -39,17 +39,20 @@
 
             var organisation = new Organisation(name, null, type, status)
             {
-                OrganisationAddress = organisationAddress,
-                BusinessAddress = businessAddress,
-                NotificationAddress = notificationAddress,
                 CompanyRegistrationNumber = crn,
                 OrganisationStatus = status,
             };
 
             organisation.AddMainContactPerson(contact);
+<<<<<<< HEAD
 
             this.testOrganisationToCleanUp = organisation;
 
+=======
+            organisation.AddAddress(AddressType.OrganisationAddress, organisationAddress);
+            organisation.AddAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
+            organisation.AddAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
+>>>>>>> develop
             context.Organisations.Add(organisation);
 
             await context.SaveChangesAsync();
