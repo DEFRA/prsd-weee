@@ -65,6 +65,7 @@
     <Content Include="scripts\Update\Sprint6-WEEE\20150604-100316-AddContactTableRowVersion.sql" />
     <Content Include="scripts\Update\Sprint6-WEEE\20150604-120420-EnumerateStatusAndType.sql" />
     <Content Include="scripts\Update\Sprint6-WEEE\20150604-142422-UpdateAddressTable.sql" />
+    <Content Include="scripts\Update\Sprint7\20150615-0852-AddContactTableRowVersion.sql" />
     <Content Include="scripts\Update\Sprint7\20150610-1546-UpdateContactTable.sql" />
   </ItemGroup>
   <ItemGroup />
