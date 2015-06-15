@@ -27,7 +27,7 @@ IF EXISTS (SELECT TOP 1 1
         SELECT   [Id],
                  [FirstName],
                  [LastName],
-				 [Position],
+				 [Position]
         FROM     [Organisation].[Contact]
         ORDER BY [Id] ASC;
     END
