@@ -37,11 +37,9 @@
 
         [Required]
         [Display(Name = "Country")]
-        public Guid CountryId { get; set; }
+        public Guid? CountryId { get; set; }
 
         public string Country { get; set; }
-
-        //public IEnumerable<UKCompetentAuthorityData> Countries { get; set; }
 
         [Required]
         [StringLength(20)]

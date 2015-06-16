@@ -32,16 +32,9 @@
 
 <div class="form-group @Html.Gds().FormGroupClass(m => m.CountryId)">
     @Html.Gds().LabelFor(m => m.CountryId)
-    @Html.Gds().DropDownListFor(m => m.CountryId, (SelectList)ViewBag.UKRegions, new { id = "ukcountry-list" })
-    @*<select onchange=" getComboDescription(this) " data-val="true" data-val-required="The Selected Country field is required." id="region-list" name="SelectedRegion">
-        <option description="" selected="selected" value=""></option>
-        @foreach (var country in Model.Countries)
-        {
-            <option description="@country.Region" value="@country.Id">@country.Region</option>
-        }
-    </select>*@
+    @Html.ValidationMessageFor(m => m.CountryId)
+    @Html.Gds().DropDownListFor(m => m.CountryId, (SelectList)ViewBag.UKRegions, string.Empty)
 </div>
-
 <div class="form-group @Html.Gds().FormGroupClass(m => m.Telephone)">
     @Html.Gds().LabelFor(m => m.Telephone)
     @Html.ValidationMessageFor(m => m.Telephone)
