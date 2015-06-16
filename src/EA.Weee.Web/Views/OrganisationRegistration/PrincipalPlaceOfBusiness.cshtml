@@ -15,6 +15,8 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+        
+        @Html.HiddenFor(m => m.OrganisationId)
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Address1)">
             @Html.Gds().LabelFor(m => m.Address1)
@@ -49,7 +51,7 @@
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Country)">
             @Html.Gds().LabelFor(m => m.Country)
             @Html.ValidationMessageFor(m => m.Country)
-            @Html.Gds().DropDownListFor(m => m.CountryOptions, Model.CountryOptions)
+            @Html.Gds().DropDownListFor(m => m.Country, Model.CountryOptions)
         </div>
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Telephone)">
