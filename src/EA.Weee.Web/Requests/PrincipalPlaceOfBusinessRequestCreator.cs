@@ -3,6 +3,7 @@
     using AutoMapper;
     using Base;
     using ViewModels.OrganisationRegistration;
+    using ViewModels.OrganisationRegistration.PrincipalPlaceOfBusiness;
     using Weee.Requests.Organisations;
     using Weee.Requests.Shared;
 

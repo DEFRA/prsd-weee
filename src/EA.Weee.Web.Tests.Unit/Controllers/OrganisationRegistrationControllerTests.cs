@@ -6,6 +6,7 @@
     using FakeItEasy;
     using Prsd.Core.Mediator;
     using ViewModels.OrganisationRegistration;
+    using ViewModels.OrganisationRegistration.PrincipalPlaceOfBusiness;
     using Web.Controllers;
     using Web.Requests;
     using Weee.Requests.Organisations;

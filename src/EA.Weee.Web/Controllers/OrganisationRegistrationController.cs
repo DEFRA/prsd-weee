@@ -16,6 +16,7 @@
     using EA.Weee.Web.ViewModels.OrganisationRegistration;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
     using EA.Weee.Web.ViewModels.Shared;
+    using ViewModels.OrganisationRegistration.PrincipalPlaceOfBusiness;
     using Weee.Requests.Shared;
 
     [Authorize]

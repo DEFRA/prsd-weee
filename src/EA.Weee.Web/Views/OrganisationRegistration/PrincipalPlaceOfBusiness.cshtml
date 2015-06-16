@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.PrincipalPlaceOfBusinessViewModel
+﻿@using EA.Weee.Web.ViewModels.OrganisationRegistration.PrincipalPlaceOfBusiness
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.PrincipalPlaceOfBusiness.PrincipalPlaceOfBusinessViewModel
 @{
     ViewBag.Title = "Principal Place Of Business";
 }
@@ -51,7 +52,7 @@
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Country)">
             @Html.Gds().LabelFor(m => m.Country)
             @Html.ValidationMessageFor(m => m.Country)
-            @Html.Gds().DropDownListFor(m => m.Country, Model.CountryOptions)
+            @Html.Gds().DropDownListFor(m => m.Country, EnumHelper.GetSelectList(typeof(UkCountry)))
         </div>
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Telephone)">

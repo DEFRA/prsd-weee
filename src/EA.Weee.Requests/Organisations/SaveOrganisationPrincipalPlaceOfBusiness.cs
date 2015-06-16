@@ -6,9 +6,13 @@
 
     public class SaveOrganisationPrincipalPlaceOfBusiness : IRequest<Guid>
     {
-        public Guid OrganisationId { get; private set; }
+        public Guid OrganisationId { get; set; }
 
-        public AddressData PrincipalPlaceOfBusiness { get; private set; }
+        public AddressData PrincipalPlaceOfBusiness { get; set; }
+
+        public SaveOrganisationPrincipalPlaceOfBusiness()
+        {            
+        }
 
         public SaveOrganisationPrincipalPlaceOfBusiness(Guid organisationId, AddressData principalPlaceOfBusiness)
         {
