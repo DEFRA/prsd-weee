@@ -37,6 +37,7 @@
 
 @section body_end {
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery-ui")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/govuk_toolkit")
     @Scripts.Render("~/bundles/govuk_weee")
@@ -44,7 +45,7 @@
     @RenderSection("scripts", required: false)
 }
 
-<main id="page-container" role="main">
+<main id="content" role="main">
     @Html.Partial("_FeedbackBanner")
     @RenderBody()
     @if (IsSectionDefined("main_content"))

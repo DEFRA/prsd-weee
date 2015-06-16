@@ -16,8 +16,8 @@
 
         public FindMatchingOrganisations(string companyName, int? page = null, int? organisationsPerPage = null)
         {
-            Guard.ArgumentNotNull(companyName);
-
+            Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
+    
             CompanyName = companyName;
 
             if (page.HasValue && organisationsPerPage.HasValue)

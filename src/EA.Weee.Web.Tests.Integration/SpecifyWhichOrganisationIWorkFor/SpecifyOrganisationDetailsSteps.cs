@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Integration.SpecifyWhichOrganisationIWorkFor
 {
-    using System;
-    using TechTalk.SpecFlow;
     using System.Configuration;
     using System.Linq;
     using System.Web.Mvc;
@@ -9,8 +7,9 @@
     using Controllers;
     using Prsd.Core.Extensions;
     using Requests;
-    using ViewModels.Organisation.Type;
+    using TechTalk.SpecFlow;
     using ViewModels.OrganisationRegistration.Details;
+    using ViewModels.OrganisationRegistration.Type;
     using ViewModels.Shared;
     using Xunit;
 
@@ -109,8 +108,8 @@
         private OrganisationRegistrationController OrganisationRegistrationController()
         {
             return new OrganisationRegistrationController(
-                    () => new WeeeClient(ConfigurationManager.AppSettings["Weee.ApiUrl"]),
-                    new SoleTraderDetailsRequestCreator());
+                () => new WeeeClient(ConfigurationManager.AppSettings["Weee.ApiUrl"]),
+                new SoleTraderDetailsRequestCreator());
         }
 
         private OrganisationTypeViewModel OrganisationType(OrganisationTypeEnum selectedOption)

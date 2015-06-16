@@ -65,10 +65,13 @@
     <Content Include="scripts\Update\Sprint6-WEEE\20150604-100316-AddContactTableRowVersion.sql" />
     <Content Include="scripts\Update\Sprint6-WEEE\20150604-120420-EnumerateStatusAndType.sql" />
     <Content Include="scripts\Update\Sprint6-WEEE\20150604-142422-UpdateAddressTable.sql" />
+    <Content Include="scripts\Update\Sprint7\20150612-164414-NullableOrganisationName.sql" />
+    <Content Include="scripts\Update\Sprint7\20150615-1100-AddCompetentAuthorityData.sql" />
     <Content Include="scripts\Update\Sprint6-WEEE\20150609-151300-UpdateOrganisationTable.sql" />
     <Content Include="scripts\Update\Sprint7\20150615-0852-AddContactTableRowVersion.sql" />
     <Content Include="scripts\Update\Sprint7\20150610-1546-UpdateContactTable.sql" />
     <Content Include="scripts\Update\Sprint7\20150610-1618-UpdateAddressTable.sql" />
+    <Content Include="scripts\Update\Sprint7\20150615-1043-UpdateCompetentAuthorityTable.sql" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
