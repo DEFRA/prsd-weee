@@ -1,10 +1,8 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration.PrincipalPlaceOfBusiness
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Web.Mvc;
-    using Validation;
+    using Prsd.Core.Validation;
 
     public class PrincipalPlaceOfBusinessViewModel
     {
