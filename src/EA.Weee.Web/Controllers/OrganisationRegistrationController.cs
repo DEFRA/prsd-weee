@@ -13,10 +13,10 @@
     using ViewModels.JoinOrganisation;
     using ViewModels.OrganisationRegistration;
     using ViewModels.OrganisationRegistration.Details;
+    using ViewModels.OrganisationRegistration.PrincipalPlaceOfBusiness;
     using ViewModels.OrganisationRegistration.Type;
     using ViewModels.Shared;
     using Weee.Requests.Organisations;
-    using ViewModels.OrganisationRegistration.PrincipalPlaceOfBusiness;
     using Weee.Requests.Shared;
 
     [Authorize]
