@@ -6,7 +6,7 @@
 
     public class Address : Entity
     {
-        public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postalCode, string country, string telephone, string email)
+        public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode, string country, string telephone, string email)
         {
             Guard.ArgumentNotNull(address1);
             Guard.ArgumentNotNull(townOrCity);
@@ -17,7 +17,7 @@
             Address1 = address1;
             Address2 = address2;
             TownOrCity = townOrCity;
-            Postcode = postalCode;
+            Postcode = postcode;
             Country = country;
             Telephone = telephone;
             CountyOrRegion = countyOrRegion;
