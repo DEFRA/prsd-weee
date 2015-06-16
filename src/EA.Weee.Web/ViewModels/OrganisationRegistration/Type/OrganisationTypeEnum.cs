@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.ViewModels.Organisation.Type
+﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration.Type
 {
     using System.ComponentModel.DataAnnotations;
 

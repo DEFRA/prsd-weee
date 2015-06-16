@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using EA.Weee.Web.ViewModels.Shared;
     using Weee.Requests.Organisations;
 
     public class SelectOrganisationViewModel
@@ -11,34 +12,19 @@
 
         public IList<OrganisationSearchData> MatchingOrganisations { get; private set; }
 
+        public PagingViewModel PagingViewModel { get; private set; }
+
         [Required]
         public Guid? Selected { get; set; }
 
-        public int TotalPages { get; private set; }
-
-        public int PreviousPage { get; private set; }
-
-        public int NextPage { get; private set; }
-
-        public int StartingAt { get; private set; }
-
-        public SelectOrganisationViewModel(string name, IList<OrganisationSearchData> matchingOrganisations, int totalPages, int previousPage, int nextPage, int startingAt)
+        public SelectOrganisationViewModel(string name, IList<OrganisationSearchData> matchingOrganisations, PagingViewModel pagingViewModel)
         {
             Name = name;
             MatchingOrganisations = matchingOrganisations;
-            TotalPages = totalPages;
-            PreviousPage = previousPage;
-            NextPage = nextPage;
-            StartingAt = startingAt;
+            PagingViewModel = pagingViewModel;
         }
 
-        public SelectOrganisationViewModel(int totalPages, int previousPage, int nextPage, int startingAt)
-            : this(string.Empty, new List<OrganisationSearchData>(), totalPages, previousPage, nextPage, startingAt)
-        {
-        }
-
-        public SelectOrganisationViewModel()
-            : this(totalPages: 1, previousPage: 0, nextPage: 2, startingAt: 1)
+        public SelectOrganisationViewModel(PagingViewModel pagingViewModel) : this(string.Empty, new List<OrganisationSearchData>(), pagingViewModel)
         {
         }
     }
