@@ -203,6 +203,14 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SelectOrganisation(SelectOrganisationViewModel viewModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateOrganisation(SelectOrganisationViewModel viewModel)
         {
             using (var client = apiClient())
