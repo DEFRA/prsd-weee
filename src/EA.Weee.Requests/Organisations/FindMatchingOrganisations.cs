@@ -14,22 +14,18 @@
 
         public int OrganisationsPerPage { get; set; }
 
-        public FindMatchingOrganisations(string companyName)
+        public FindMatchingOrganisations(string companyName, int? page = null, int? organisationsPerPage = null)
         {
             Guard.ArgumentNotNull(companyName);
 
             CompanyName = companyName;
-            Paged = false;
-        }
 
-        public FindMatchingOrganisations(string companyName, int page, int organisationsPerPage)
-        {
-            Guard.ArgumentNotNull(companyName);
-
-            CompanyName = companyName;
-            Paged = true;
-            Page = page;
-            OrganisationsPerPage = organisationsPerPage;
+            if (page.HasValue && organisationsPerPage.HasValue)
+            {
+                Paged = true;
+                Page = page.Value;
+                OrganisationsPerPage = organisationsPerPage.Value;
+            }
         }
     }
 }
