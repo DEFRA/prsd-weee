@@ -52,7 +52,7 @@
 
         private static Organisation GetTestOrganisation()
         {
-            var organisation = new Organisation("Test", OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete);
+            var organisation = Organisation.CreateRegisteredCompany("Test", "AB123456");
             return organisation;
         }
     }

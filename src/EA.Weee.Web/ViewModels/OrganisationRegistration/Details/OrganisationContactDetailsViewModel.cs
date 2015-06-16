@@ -59,7 +59,7 @@
                     Address2 = Address2,
                     TownOrCity = TownOrCity,
                     CountyOrRegion = CountyOrRegion,
-                    PostalCode = Postcode,
+                    Postcode = Postcode,
                     Country = Country,
                     Telephone = Phone,
                     Email = Email

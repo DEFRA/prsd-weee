@@ -17,7 +17,7 @@
             Address1 = address1;
             Address2 = address2;
             TownOrCity = townOrCity;
-            Postcode = postalCode;
+            PostalCode = postalCode;
             Country = country;
             Telephone = telephone;
             CountyOrRegion = countyOrRegion;
