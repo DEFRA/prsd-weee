@@ -9,15 +9,4 @@
             this.ToTable("CompetentAuthority", "Lookup");
         }
     }
-
-    //internal class UKCompetentAuthorityMapping : ComplexTypeConfiguration<UKCompetentAuthority>
-    //{
-    //    public UKCompetentAuthorityMapping()
-    //    {
-    //        Ignore(x => x.DisplayName);
-    //        Ignore(x => x.ShortName);
-    //        Property(x => x.Value)
-    //            .HasColumnName("CompetentAuthority");
-    //    }
-    //}
 }
