@@ -2,15 +2,11 @@
 {
     using System.Data.Entity.ModelConfiguration;
     using Domain;
-
-    internal class UKCompetentAuthorityMapping : ComplexTypeConfiguration<UKCompetentAuthority>
+    internal class UKCompetentAuthorityMapping : EntityTypeConfiguration<UKCompetentAuthority>
     {
         public UKCompetentAuthorityMapping()
         {
-            Ignore(x => x.DisplayName);
-            Ignore(x => x.ShortName);
-            Property(x => x.Value)
-                .HasColumnName("CompetentAuthority");
+            this.ToTable("CompetentAuthority", "Lookup");
         }
     }
 }

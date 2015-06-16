@@ -42,3 +42,13 @@
         </div>
     }
 }
+
+@section scripts{
+    <script>
+        (function ($) {
+            $(function () {
+                $('#Address_CountryId').selectToAutocomplete();
+            });
+        })(jQuery);
+    </script>
+}

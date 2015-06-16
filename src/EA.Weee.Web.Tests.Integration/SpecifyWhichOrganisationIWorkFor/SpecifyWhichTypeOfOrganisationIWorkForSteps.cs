@@ -7,7 +7,7 @@
     using Api.Client;
     using Controllers;
     using Requests;
-    using ViewModels.Organisation.Type;
+    using ViewModels.OrganisationRegistration.Type;
     using ViewModels.Shared;
     using Xunit;
 

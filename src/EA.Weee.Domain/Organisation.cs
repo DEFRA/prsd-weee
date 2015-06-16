@@ -10,9 +10,9 @@
 
         private Organisation(OrganisationType organisationType, string tradingName)
         {
-            Guard.ArgumentNotNull(organisationType);
-            Guard.ArgumentNotNull(tradingName);
-
+            Guard.ArgumentNotNull(() => organisationType, organisationType);
+            Guard.ArgumentNotNullOrEmpty(() => tradingName, tradingName);
+        
             OrganisationType = organisationType;
             TradingName = tradingName;
             OrganisationStatus = OrganisationStatus.Incomplete;
@@ -20,10 +20,10 @@
 
         private Organisation(OrganisationType organisationType, string companyName, string companyRegistrationNumber, string tradingName = null)
         {
-            Guard.ArgumentNotNull(organisationType);
-            Guard.ArgumentNotNull(companyName);
-            Guard.ArgumentNotNull(companyRegistrationNumber);
-
+            Guard.ArgumentNotNull(() => organisationType, organisationType);
+            Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
+            Guard.ArgumentNotNullOrEmpty(() => companyRegistrationNumber, companyRegistrationNumber);
+          
             OrganisationType = organisationType;
             OrganisationStatus = OrganisationStatus.Incomplete;
             Name = companyName;
