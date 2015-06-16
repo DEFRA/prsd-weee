@@ -22,12 +22,13 @@
     public class OrganisationRegistrationController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator;
+        private readonly IPrincipalPlaceOfBusinessRequestCreator principalPlaceOfBusinessRequestCreator;
 
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator)
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
+            IPrincipalPlaceOfBusinessRequestCreator principalPlaceOfBusinessRequestCreator)
         {
             this.apiClient = apiClient;
-            this.soleTraderDetailsRequestCreator = soleTraderDetailsRequestCreator;
+            this.principalPlaceOfBusinessRequestCreator = principalPlaceOfBusinessRequestCreator;
         }
 
         [HttpGet]
@@ -279,6 +280,76 @@
                 }
             }
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> PrincipalPlaceOfBusiness(Guid id) // Organisation Id
+        {
+            using (var client = apiClient())
+            {
+                try
+                {
+                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+
+                    // TODO: Refactor
+                    if (organisation.OrganisationType == OrganisationType.Partnership
+                        || organisation.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+                    {
+                        return View(new PrincipalPlaceOfBusinessViewModel
+                        {
+                            OrganisationId = id
+                        });
+                    }
+
+                    throw new InvalidOperationException(
+                        "Principal place of business cannot be specified for organisations which are not either a Partnership or Sole Trader");
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                }    
+            }
+
+            // If we got this far, something has gone wrong
+            throw new Exception("An attempt was made to load the 'principal place of business' page, however it could not be loaded");
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<ActionResult> PrincipalPlaceOfBusiness(PrincipalPlaceOfBusinessViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                try
+                {
+                    await client.SendAsync(User.GetAccessToken(),
+                        principalPlaceOfBusinessRequestCreator.ViewModelToRequest(model));
+
+                    return RedirectToAction("ServiceOfNoticeOptions", "OrganisationRegistration");
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            // If we got this far, something has gone wrong
+            throw new Exception("An attempt was made to submit the 'principal place of business' details, however something went wrong");
         }
     }
 }
