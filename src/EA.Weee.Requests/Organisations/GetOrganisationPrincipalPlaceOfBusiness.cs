@@ -5,7 +5,11 @@
 
     public class GetOrganisationPrincipalPlaceOfBusiness : IRequest<OrganisationData>
     {
-        public Guid OrganisationId { get; private set; }
+        public Guid OrganisationId { get; set; }
+
+        public GetOrganisationPrincipalPlaceOfBusiness()
+        {           
+        }
 
         public GetOrganisationPrincipalPlaceOfBusiness(Guid organisationId)
         {

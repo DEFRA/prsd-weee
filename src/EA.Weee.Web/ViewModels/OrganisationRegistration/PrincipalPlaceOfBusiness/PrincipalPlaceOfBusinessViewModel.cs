@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration
+﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration.PrincipalPlaceOfBusiness
 {
     using System;
     using System.Collections.Generic;
@@ -8,20 +8,6 @@
 
     public class PrincipalPlaceOfBusinessViewModel
     {
-        public PrincipalPlaceOfBusinessViewModel()
-        {
-            // TODO: Populate this from the database
-            CountryOptions = new List<SelectListItem>
-            {
-                new SelectListItem { Text = "England", Value = "England"},
-                new SelectListItem { Text = "Northern Ireland", Value = "NorthernIreland"},
-                new SelectListItem { Text = "Scotland", Value = "Scotland"},
-                new SelectListItem { Text = "Wales", Value = "Wales"},
-            };
-        }
-
-        public IEnumerable<SelectListItem> CountryOptions { get; set; }
-
         public Guid OrganisationId { get; set; }
 
         [Required]
@@ -55,7 +41,7 @@
         public string Country { get; set; } 
 
         [Required]
-        [UkPhoneNumber(ErrorMessage = "The Phone field should be contain a valid UK phone number")]
+        [UkPhoneNumber(ErrorMessage = "The Phone field should contain a valid UK phone number")]
         [StringLength(20, ErrorMessage = "The Phone field should be no more than 20 characters")]
         [Display(Name = "Phone")]
         [DataType(DataType.Text)]
