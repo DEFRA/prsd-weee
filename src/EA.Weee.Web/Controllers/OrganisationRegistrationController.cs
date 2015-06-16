@@ -218,7 +218,7 @@
             {
                 try
                 {
-                    var command = CreateCreateOrganisationRequest(
+                    var command = MakeOrganisationCreationRequest(
                         viewModel.Name,
                         viewModel.TradingName,
                         viewModel.CompaniesRegistrationNumber,
@@ -239,7 +239,7 @@
             }
         }
 
-        private CreateOrganisationRequest CreateCreateOrganisationRequest(string name, string tradingName, string companiesRegistrationNumber, OrganisationType organisationType)
+        private CreateOrganisationRequest MakeOrganisationCreationRequest(string name, string tradingName, string companiesRegistrationNumber, OrganisationType organisationType)
         {
             switch (organisationType)
             {
