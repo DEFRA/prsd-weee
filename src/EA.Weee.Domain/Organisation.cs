@@ -48,7 +48,7 @@
             get { return companyRegistrationNumber; }
             private set
             {
-                if (value.Length < 7 || value.Length > 8)
+                if (value != null && (value.Length < 7 || value.Length > 8))
                 {
                     throw new InvalidOperationException("Company registration number must be 7 or 8 characters");
                 }
