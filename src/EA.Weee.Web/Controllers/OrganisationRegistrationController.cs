@@ -17,9 +17,9 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Requests;
     using EA.Weee.Web.ViewModels.JoinOrganisation;
-    using EA.Weee.Web.ViewModels.Organisation.Type;
     using EA.Weee.Web.ViewModels.OrganisationRegistration;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using EA.Weee.Web.ViewModels.Shared;
 
     [Authorize]
@@ -28,7 +28,8 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator;
 
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator)
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
+            ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator)
         {
             this.apiClient = apiClient;
             this.soleTraderDetailsRequestCreator = soleTraderDetailsRequestCreator;
@@ -324,6 +325,7 @@
                     var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
                     string organisationType = organisation.OrganisationType.ToString();
                     ViewBag.OrgType = organisationType;
+                    await this.BindUKCompetentAuthorityRegionsList(client, User);
                     return View(model);
                 }
                 catch (ApiBadRequestException ex)
@@ -335,7 +337,7 @@
                         throw;
                     }
                 }
-             return View(model);
+                return View(model);
             }
         }
 
@@ -343,33 +345,38 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel model)
         {
-            if (ModelState.IsValid)
+            await this.BindUKCompetentAuthorityRegionsList(apiClient, User);
+      
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
             {
                 using (var client = apiClient())
                 {
-                    try
-                    {
-                        AddressType type = AddressType.RegisteredorPPBAddress;
-                        AddAddressToOrganisation request = model.ToAddRequest(type);
-                        var response = await client.SendAsync(User.GetAccessToken(), request);
-                        return RedirectToAction("ServiceOfNoticeAddress", "OrganisationRegistration", new
-                        {
-                            id = model.OrganisationId
-                        });
-                    }
-                    catch (ApiBadRequestException ex)
-                    {
-                        this.HandleBadRequest(ex);
+                    var type = AddressType.RegisteredorPPBAddress;
 
-                        if (ModelState.IsValid)
-                        {
-                            throw;
-                        }
-                    }
-
-                    return View(model);
+                    model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
+                    var request = model.ToAddRequest(type);
+                    var response = await client.SendAsync(User.GetAccessToken(), request);
+                    return RedirectToAction("ServiceOfNoticeAddress", "OrganisationRegistration", new
+                    {
+                        id = model.OrganisationId
+                    });
                 }
             }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+            }
+
             return View(model);
         }
     }

@@ -7,8 +7,8 @@
     {
         public void AddAddress(AddressType type, Address address)
         {
-            Guard.ArgumentNotNull(address);
-            
+            Guard.ArgumentNotNull(() => address, address);
+
             if (address != null)
             {
                 Address addr = new Address(address.Address1, address.Address2, address.TownOrCity,
