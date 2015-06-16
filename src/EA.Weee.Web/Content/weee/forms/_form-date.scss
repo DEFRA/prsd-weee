@@ -1,46 +1,38 @@
-// Date of birth
+// Date pattern
 
-.form-date label {
-  display: block;
-  margin-bottom: 5px;
+// Hide the 'spinner' for webkit
+// and also for Firefox
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-.form-date .form-group {
-  width: 50px;
-  float: left;
-  margin-right: 20px;
-  margin-bottom: 0;
-  clear: none;
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
-.form-date .form-group-year {
-  width: 70px;
-}
+.form-date {
 
-.form-date .form-group input {
-  width: 100%;
-}
+  .form-group {
+    float: left;
+    width: 50px;
 
+    margin-right: 20px;
+    margin-bottom: 0;
+    clear: none;
 
-// Use Modernizr to detect for touch events
-// Build: http://modernizr.com/download/#-touch-cssclasses-teststyles-prefixes
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
 
-// Hide date of birth
-.touch .form-date {
-  display: none;
-}
+    input {
+      width: 100%;
+    }
+  }
 
-// Hide native date of birth
-.no-touch .native-date-picker {
-  display: none;
-}
-
-// Show native date of birth
-.touch .native-date-picker {
-  display: block;
-}
-
-// Set a minimum height for date inputs
-.touch input[type="date"] {
-  min-height: 36px;
+  .form-group-year {
+    width: 70px;
+  }
 }
