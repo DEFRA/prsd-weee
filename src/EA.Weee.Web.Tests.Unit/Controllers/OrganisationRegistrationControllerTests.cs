@@ -25,16 +25,16 @@
         [Fact]
         public async void GetPrincipalPlaceOfBusiness_ApiThrowsException_ExceptionShouldNotBeCaught()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<IRequest<OrganisationData>>._))
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationPrincipalPlaceOfBusiness>._))
                 .Throws<Exception>();
 
             await Assert.ThrowsAnyAsync<Exception>(() => OrganisationRegistrationController().PrincipalPlaceOfBusiness(A<Guid>._));
         }
 
         [Fact]
-        public async void GetPrincipalPlaceOfBusiness_ApiReturnsOrganisation_ShouldReturnViewWithModel()
+        public async void GetPrincipalPlaceOfBusiness_ApiReturnsOrganisationData_ShouldReturnViewWithModel()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<IRequest<OrganisationData>>._))
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationPrincipalPlaceOfBusiness>._))
                 .Returns(new OrganisationData());
         
             var result = await OrganisationRegistrationController().PrincipalPlaceOfBusiness(A<Guid>._);
@@ -64,7 +64,7 @@
 
             await OrganisationRegistrationController().PrincipalPlaceOfBusiness(model);
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<AddAddressToOrganisation>._))
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<SaveOrganisationPrincipalPlaceOfBusiness>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
