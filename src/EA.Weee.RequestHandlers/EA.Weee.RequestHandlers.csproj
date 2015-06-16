@@ -84,7 +84,6 @@
     <Compile Include="Organisations\Create\CreateRegisteredCompanyRequestHandler.cs" />
     <Compile Include="Organisations\Create\CreateSoleTraderRequestHandler.cs" />
     <Compile Include="Organisations\Create\CreatePartnershipRequestHandler.cs" />
-    <Compile Include="Organisations\AddOrganisationContactDetailsHandler.cs" />
     <Compile Include="Organisations\FindMatchingOrganisationsHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

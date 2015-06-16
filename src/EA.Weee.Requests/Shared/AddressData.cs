@@ -7,8 +7,6 @@
     {
         private const string DefaultCountryName = "United Kingdom";
     
-        public Guid Id { get; set; }
-
         [Required]
         [StringLength(35)]
         [DataType(DataType.Text)]
