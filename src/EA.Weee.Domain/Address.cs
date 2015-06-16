@@ -17,7 +17,7 @@
             Address1 = address1;
             Address2 = address2;
             TownOrCity = townOrCity;
-            PostalCode = postalCode;
+            PostalCode = postcode;
             Country = country;
             Telephone = telephone;
             CountyOrRegion = countyOrRegion;
@@ -55,7 +55,7 @@
             get { return address2; }
             private set
             {
-                if (value.Length > 35)
+                if (value != null && value.Length > 35)
                 {
                     throw new InvalidOperationException(string.Format(("Address2 cannot be greater than 35 characters")));
                 }
@@ -81,7 +81,7 @@
             get { return countyOrRegion; }
             private set
             {
-                if (value.Length > 35)
+                if (value != null && value.Length > 35)
                 {
                     throw new InvalidOperationException(string.Format(("County Or Region cannot be greater than 35 characters")));
                 }
@@ -94,7 +94,7 @@
             get { return postalCode; }
             private set
             {
-                if (value.Length > 10)
+                if (value != null && value.Length > 10)
                 {
                     throw new InvalidOperationException(string.Format(("PostalCode cannot be greater than 10 characters")));
                 }

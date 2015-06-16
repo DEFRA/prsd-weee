@@ -12,8 +12,8 @@
         {
             var organisation = GetTestOrganisation();
             var contactDetails = GetTestContactDetails();
-            organisation.AddOrganisationContactDetails(contactDetails);
-            Assert.Throws<InvalidOperationException>(() => organisation.AddOrganisationContactDetails(contactDetails));
+            organisation.AddAddress(AddressType.OrganisationAddress, contactDetails);
+            Assert.Throws<InvalidOperationException>(() => organisation.AddAddress(AddressType.OrganisationAddress, contactDetails));
         }
 
         private const string smallStringValue = "abcdefghijk";   // More than 10

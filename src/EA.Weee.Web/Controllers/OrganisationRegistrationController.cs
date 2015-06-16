@@ -244,7 +244,7 @@
                         throw;
                     }
                 }
-             return View(model);
+                return View(model);
             }
         }
 
@@ -284,20 +284,18 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> OrganisationContactDetails(Guid id)
+        public async Task<ActionResult> OrganisationAddress(Guid id)
         {
             using (var client = apiClient())
             {
-                //TODO: Get organisation id from organisation record
-                //var response = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                var model = new OrganisationContactDetailsViewModel { OrganisationId = id };
+                var model = new AddressViewModel { OrganisationId = id };
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> OrganisationContactDetails(OrganisationContactDetailsViewModel model)
+        public async Task<ActionResult> OrganisationAddress(AddressViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -305,8 +303,13 @@
                 {
                     try
                     {
-                        var response = await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
-                        return RedirectToAction("OrganisationRegisteredOfficePrePopulate", "OrganisationRegistration");
+                        AddressType type = AddressType.OrganistionAddress;
+                        AddAddressToOrganisation request = model.ToAddRequest(type);
+                        var response = await client.SendAsync(User.GetAccessToken(), request);
+                        return RedirectToAction("RegisteredOfficeAddress", "OrganisationRegistration", new
+                        {
+                            id = model.OrganisationId
+                        });
                     }
                     catch (ApiBadRequestException ex)
                     {
