@@ -536,7 +536,6 @@
     <Compile Include="Services\AppConfiguration.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Validation\UkPhoneNumberAttribute.cs" />
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
     <Compile Include="ViewModels\Home\IndexViewModel.cs" />
     <Compile Include="ViewModels\NewUser\UserCreationViewModel.cs" />
