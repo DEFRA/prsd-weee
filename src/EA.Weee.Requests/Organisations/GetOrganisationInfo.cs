@@ -5,7 +5,7 @@
 
     public class GetOrganisationInfo : IRequest<OrganisationData>
     {
-         public Guid OrganisationId { get; set; }
+        public Guid OrganisationId { get; set; }
 
         public GetOrganisationInfo(Guid organisationId)
         {
