@@ -289,20 +289,13 @@
             {
                 try
                 {
+                    // TODO: Implement api layer
                     var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-
-                    // TODO: Refactor
-                    if (organisation.OrganisationType == OrganisationType.Partnership
-                        || organisation.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+                    organisation.Id = id;
+                    return View(new PrincipalPlaceOfBusinessViewModel
                     {
-                        return View(new PrincipalPlaceOfBusinessViewModel
-                        {
-                            OrganisationId = id
-                        });
-                    }
-
-                    throw new InvalidOperationException(
-                        "Principal place of business cannot be specified for organisations which are not either a Partnership or Sole Trader");
+                        OrganisationId = organisation.Id
+                    });
                 }
                 catch (ApiBadRequestException ex)
                 {

@@ -23,7 +23,7 @@
         }
 
         [Fact]
-        public async void GetPrincipalPlaceOfBusiness_OrganisationIdIsInvalid_ExceptionShouldNotBeCaught()
+        public async void GetPrincipalPlaceOfBusiness_ApiThrowsException_ExceptionShouldNotBeCaught()
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<IRequest<OrganisationData>>._))
                 .Throws<Exception>();
@@ -32,28 +32,11 @@
         }
 
         [Fact]
-        public async void GetPrincipalPlaceOfBusiness_OrganisationIdIsValidAndOrganisationTypeIsRegisteredCompany_ShouldThrowException()
+        public async void GetPrincipalPlaceOfBusiness_ApiReturnsOrganisation_ShouldReturnViewWithModel()
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<IRequest<OrganisationData>>._))
-                .Returns(new OrganisationData
-                {
-                    OrganisationType = OrganisationType.RegisteredCompany
-                });
-
-            await Assert.ThrowsAnyAsync<Exception>(() => OrganisationRegistrationController().PrincipalPlaceOfBusiness(A<Guid>._));
-        }
-
-        [Theory]
-        [InlineData(OrganisationType.SoleTraderOrIndividual)]
-        [InlineData(OrganisationType.Partnership)]
-        public async void GetPrincipalPlaceOfBusiness_OrganisationIdIsValidAndOrganisationTypeIsSoleTraderOrPartnership_ShouldReturnViewWithModel(OrganisationType type)
-        {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<IRequest<OrganisationData>>._))
-                .Returns(new OrganisationData
-                {
-                    OrganisationType = type // Not registered company
-                });
-
+                .Returns(new OrganisationData());
+        
             var result = await OrganisationRegistrationController().PrincipalPlaceOfBusiness(A<Guid>._);
             var model = ((ViewResult)result).Model;
 
