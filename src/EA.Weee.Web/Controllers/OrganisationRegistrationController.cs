@@ -289,12 +289,11 @@
             {
                 try
                 {
-                    // TODO: Implement api layer
-                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationPrincipalPlaceOfBusiness(id));
                     organisation.Id = id;
                     return View(new PrincipalPlaceOfBusinessViewModel
                     {
-                        OrganisationId = organisation.Id
+                        OrganisationId = id
                     });
                 }
                 catch (ApiBadRequestException ex)

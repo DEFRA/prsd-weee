@@ -6,12 +6,12 @@
     using Weee.Requests.Organisations;
     using Weee.Requests.Shared;
 
-    public class PrincipalPlaceOfBusinessRequestCreator : RequestCreator<PrincipalPlaceOfBusinessViewModel, AddAddressToOrganisation>, IPrincipalPlaceOfBusinessRequestCreator
+    public class PrincipalPlaceOfBusinessRequestCreator : RequestCreator<PrincipalPlaceOfBusinessViewModel, SaveOrganisationPrincipalPlaceOfBusiness>, IPrincipalPlaceOfBusinessRequestCreator
     {
-        public override AddAddressToOrganisation ViewModelToRequest(PrincipalPlaceOfBusinessViewModel viewModel)
+        public override SaveOrganisationPrincipalPlaceOfBusiness ViewModelToRequest(PrincipalPlaceOfBusinessViewModel viewModel)
         {
-            var addressMap = Mapper.DynamicMap<AddressData>(viewModel);
-            return new AddAddressToOrganisation(viewModel.OrganisationId, AddressType.RegisteredorPPBAddress, addressMap);
+            // TODO: Implement
+            return base.ViewModelToRequest(viewModel);
         }
     }
 }

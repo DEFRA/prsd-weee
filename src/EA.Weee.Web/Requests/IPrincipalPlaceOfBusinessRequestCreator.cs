@@ -4,7 +4,7 @@
     using ViewModels.OrganisationRegistration;
     using Weee.Requests.Organisations;
 
-    public interface IPrincipalPlaceOfBusinessRequestCreator : IRequestCreator<PrincipalPlaceOfBusinessViewModel, AddAddressToOrganisation>
+    public interface IPrincipalPlaceOfBusinessRequestCreator : IRequestCreator<PrincipalPlaceOfBusinessViewModel, SaveOrganisationPrincipalPlaceOfBusiness>
     {
     }
 }
