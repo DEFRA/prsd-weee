@@ -14,7 +14,7 @@
                 Address2 = source.Address2,
                 TownOrCity = source.TownOrCity,
                 CountyOrRegion = source.CountyOrRegion,
-                Postcode = source.Postcode,
+                Postcode = source.PostalCode,
                 Country = source.Country,
                 Telephone = source.Telephone,
                 Email = source.Email
