@@ -4,18 +4,18 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using EA.Prsd.Core.Extensions;
-    using EA.Prsd.Core.Web.ApiClient;
-    using EA.Prsd.Core.Web.Mvc.Extensions;
-    using EA.Weee.Api.Client;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Web.Infrastructure;
-    using EA.Weee.Web.Requests;
-    using EA.Weee.Web.ViewModels.JoinOrganisation;
-    using EA.Weee.Web.ViewModels.Organisation.Type;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
-    using EA.Weee.Web.ViewModels.Shared;
+    using Api.Client;
+    using Infrastructure;
+    using Prsd.Core.Extensions;
+    using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
+    using Requests;
+    using ViewModels.JoinOrganisation;
+    using ViewModels.OrganisationRegistration;
+    using ViewModels.OrganisationRegistration.Details;
+    using ViewModels.OrganisationRegistration.Type;
+    using ViewModels.Shared;
+    using Weee.Requests.Organisations;
     using Weee.Requests.Shared;
 
     [Authorize]
@@ -24,7 +24,8 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator;
 
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator)
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
+            ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator)
         {
             this.apiClient = apiClient;
             this.soleTraderDetailsRequestCreator = soleTraderDetailsRequestCreator;
@@ -140,12 +141,13 @@
             {
                 try
                 {
-                    const int OrganisationsPerPage = 4; // would rather bake this into the db query but not really feasible
+                    const int OrganisationsPerPage = 4;
+                    // would rather bake this into the db query but not really feasible
 
                     var matchingOrganisations =
                         await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(name));
 
-                    var totalPages = (int)Math.Ceiling(((double)matchingOrganisations.Count() / (double)OrganisationsPerPage));
+                    var totalPages = (int)Math.Ceiling((matchingOrganisations.Count() / (double)OrganisationsPerPage));
 
                     var organisationsForThisPage =
                         matchingOrganisations.Skip((page - 1) * OrganisationsPerPage)
@@ -158,11 +160,8 @@
 
                     return
                         View(
-                            new SelectOrganisationViewModel(name, organisationsForThisPage,
-                                totalPages: totalPages,
-                                previousPage: previousPage,
-                                nextPage: nextPage,
-                                startingAt: startingAt));
+                            new SelectOrganisationViewModel(name, organisationsForThisPage, totalPages, previousPage,
+                                nextPage, startingAt));
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -232,6 +231,7 @@
                     var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
                     string organisationType = organisation.OrganisationType.ToString();
                     ViewBag.OrgType = organisationType;
+                    await this.BindUKCompetentAuthorityRegionsList(client, User);
                     return View(model);
                 }
                 catch (ApiBadRequestException ex)
@@ -243,7 +243,7 @@
                         throw;
                     }
                 }
-             return View(model);
+                return View(model);
             }
         }
 
@@ -251,33 +251,38 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel model)
         {
-            if (ModelState.IsValid)
+            await this.BindUKCompetentAuthorityRegionsList(apiClient, User);
+      
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
             {
                 using (var client = apiClient())
                 {
-                    try
-                    {
-                        AddressType type = AddressType.RegisteredorPPBAddress;
-                        AddAddressToOrganisation request = model.ToAddRequest(type);
-                        var response = await client.SendAsync(User.GetAccessToken(), request);
-                        return RedirectToAction("ServiceOfNoticeAddress", "OrganisationRegistration", new
-                        {
-                            id = model.OrganisationId
-                        });
-                    }
-                    catch (ApiBadRequestException ex)
-                    {
-                        this.HandleBadRequest(ex);
+                    var type = AddressType.RegisteredorPPBAddress;
 
-                        if (ModelState.IsValid)
-                        {
-                            throw;
-                        }
-                    }
-
-                    return View(model);
+                    model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
+                    var request = model.ToAddRequest(type);
+                    var response = await client.SendAsync(User.GetAccessToken(), request);
+                    return RedirectToAction("ServiceOfNoticeAddress", "OrganisationRegistration", new
+                    {
+                        id = model.OrganisationId
+                    });
                 }
             }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+            }
+
             return View(model);
         }
     }
