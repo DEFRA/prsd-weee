@@ -3,15 +3,10 @@
     ViewBag.Title = "Choose your organisation";
 }
 
-@*<div class="back">
-    <a href="@Url.Action("AboutOrganisation", "Organisation")">Back</a>
-</div>*@
-@*<h1 class="heading-large">Choose your organisation</h1>*@
 <h1 class="heading-large">Choose to join an existing organisation, or add a new one</h1>
+
 @if (Model.MatchingOrganisations != null && Model.MatchingOrganisations.Count > 0)
 {
-
-    @*<p>Select or add your organisation.</p>*@
     <p>We have found some organisations that match the information you have provided. Select your organisation or add it, if it is not listed.</p>
 
     using (Html.BeginForm(actionName: "SelectOrganisation", controllerName: "OrganisationRegistration", method: FormMethod.Post))
@@ -19,6 +14,9 @@
         @Html.AntiForgeryToken()
         @Html.ValidationMessageFor(m => m.Selected)
         @Html.HiddenFor(m => m.Name)
+        @Html.HiddenFor(m => m.TradingName)
+        @Html.HiddenFor(m => m.CompaniesRegistrationNumber)
+        @Html.HiddenFor(m => m.Type)
 
         for (int i = 0; i < Model.MatchingOrganisations.Count; i++)
         {
@@ -30,7 +28,7 @@
             }
 
             <div class="column-half">
-                <h3 class="heading-small">@*Organisation @(Model.StartingAt + i)*@</h3>
+                <h3 class="heading-small"></h3>
                 <div class="colored-header-bar"></div>
                 <ul>
                     <li>
@@ -64,13 +62,24 @@
 }
 else
 {
-    @*<p>No organisations matching your organisation name have been found. Please create an account for your organisation.</p>*@
     <p>We haven't found any organisations that match your search criteria. If you are expecting to see your organisation, you can go back and search again, otherwise you can add a new one.</p>
 }
+
 <hr />
-@*<h2 class="heading-medium">Organisation not listed?</h2>*@
+
 <p>Organisation not listed?</p>
-@Html.ActionLink(linkText: "Add new", actionName: "DisplayPartnershipOrMainOrgContact", controllerName: "Organisation", routeValues: new { organisationName = Model.Name }, htmlAttributes: new { @class = "button" })<br />
+
+@using (Html.BeginForm(actionName: "CreateOrganisation", controllerName: "OrganisationRegistration", method: FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    
+    @Html.HiddenFor(m => m.Name)
+    @Html.HiddenFor(m => m.TradingName)
+    @Html.HiddenFor(m => m.CompaniesRegistrationNumber)
+    @Html.HiddenFor(m => m.Type)
+    
+    <button type="submit" name="submitButton" class="link-submit">Add new</button>
+}
 
 <style>
     .link-submit {

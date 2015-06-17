@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Integration.SpecifyWhichOrganisationIWorkFor
 {
+    using System.ComponentModel;
     using System.Configuration;
     using System.Linq;
     using System.Web.Mvc;
@@ -67,8 +68,7 @@
         [Then(@"the details should be stored")]
         public void ThenTheDetailsShouldBeStored()
         {
-            var controller = (OrganisationRegistrationController)ScenarioContext.Current["controller"];
-            var tempData = controller.TempData.Values.Single();
+            var result = (RedirectToRouteResult)ScenarioContext.Current["result"];
 
             var organisationTypeViewModel =
                 ScenarioContext.Current.Get<OrganisationTypeViewModel>(typeof(OrganisationTypeEnum).Name);
@@ -76,17 +76,26 @@
             var selectedOrganisationType = organisationTypeViewModel.OrganisationTypes.SelectedValue
                 .GetValueFromDisplayName<OrganisationTypeEnum>();
 
-            switch (selectedOrganisationType)
+            if (selectedOrganisationType == OrganisationTypeEnum.Partnership)
             {
-                case OrganisationTypeEnum.Partnership:
-                    Assert.IsType<PartnershipDetailsViewModel>(tempData);
-                    break;
-                case OrganisationTypeEnum.SoleTrader:
-                    Assert.IsType<SoleTraderDetailsViewModel>(tempData);
-                    break;
-                case OrganisationTypeEnum.RegisteredCompany:
-                    Assert.IsType<RegisteredCompanyDetailsViewModel>(tempData);
-                    break;
+                Assert.True(result.RouteValues.ContainsKey("tradingName"));
+                Assert.Equal(EA.Weee.Requests.Organisations.OrganisationType.Partnership, result.RouteValues["type"]);
+            }
+            else if (selectedOrganisationType == OrganisationTypeEnum.SoleTrader)
+            {
+                Assert.True(result.RouteValues.ContainsKey("tradingName"));
+                Assert.Equal(EA.Weee.Requests.Organisations.OrganisationType.SoleTraderOrIndividual, result.RouteValues["type"]);
+            }
+            else if (selectedOrganisationType == OrganisationTypeEnum.RegisteredCompany)
+            {
+                Assert.True(result.RouteValues.ContainsKey("name"));
+                Assert.True(result.RouteValues.ContainsKey("tradingName"));
+                Assert.True(result.RouteValues.ContainsKey("companiesRegistrationNumber"));
+                Assert.Equal(EA.Weee.Requests.Organisations.OrganisationType.RegisteredCompany, result.RouteValues["type"]);
+            }
+            else
+            {
+                throw new InvalidEnumArgumentException("We should not be here because there are only three kinds of PCS");
             }
         }
 
