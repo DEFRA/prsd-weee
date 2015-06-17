@@ -138,7 +138,7 @@
                         Address2 = o.OrganisationAddress.Address2,
                         TownOrCity = o.OrganisationAddress.TownOrCity,
                         CountyOrRegion = o.OrganisationAddress.CountyOrRegion,
-                        Postcode = o.OrganisationAddress.PostCode,
+                        Postcode = o.OrganisationAddress.Postcode,
                         Country = o.OrganisationAddress.Country,
                         Telephone = o.OrganisationAddress.Telephone,
                         Email = o.OrganisationAddress.Email
