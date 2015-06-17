@@ -41,7 +41,7 @@
 
         private Organisation GetOrganisationWithName(string name)
         {
-            return GetOrganisationWithDetails(name, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete);
+            return GetOrganisationWithDetails(name, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved);
         }
 
         private Organisation GetOrganisationWithDetails(string name, string tradingName, Domain.OrganisationType type, OrganisationStatus status)
@@ -63,9 +63,17 @@
 
             organisation.AddAddress(AddressType.OrganisationAddress, GetAddress());
 
-            if (status == OrganisationStatus.Complete)
+            organisation.AddMainContactPerson(GetContact());
+
+            if (status == OrganisationStatus.Pending)
             {
-                organisation.Complete();
+                organisation.ToPending();
+            }
+
+            if (status == OrganisationStatus.Approved)
+            {
+                organisation.ToPending();
+                organisation.ToApproved();
             }
 
             var properties = typeof(Organisation).GetProperties();
@@ -88,6 +96,11 @@
         private Address GetAddress()
         {
             return new Address("1", "street", "Woking", "Hampshire", "GU21 5EE", "United Kingdom", "12345678", "test@co.uk");
+        }
+
+        private Contact GetContact()
+        {
+            return new Contact("Test first name", "Test last name", "Test position");
         }
 
         [Fact]
@@ -228,10 +241,10 @@
         {
             var data = new[]
             {
-                GetOrganisationWithDetails("THE  Environemnt Agency", null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
-                GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency", Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
-                GetOrganisationWithDetails(null, "THE Environemnt Agency", Domain.OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Complete),
-                GetOrganisationWithDetails(null, "Environment Agency", Domain.OrganisationType.Partnership, OrganisationStatus.Complete)
+                GetOrganisationWithDetails("THE  Environemnt Agency", null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency", Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                GetOrganisationWithDetails(null, "THE Environemnt Agency", Domain.OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Approved),
+                GetOrganisationWithDetails(null, "Environment Agency", Domain.OrganisationType.Partnership, OrganisationStatus.Approved)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
@@ -257,10 +270,10 @@
 
             var data = new[]
             {
-                GetOrganisationWithDetails(IdenticalToQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
-                GetOrganisationWithDetails(CloseToQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
-                GetOrganisationWithDetails(QuiteDifferentToQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
-                GetOrganisationWithDetails(CompletelyUnlikeQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete)
+                GetOrganisationWithDetails(IdenticalToQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                GetOrganisationWithDetails(CloseToQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                GetOrganisationWithDetails(QuiteDifferentToQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                GetOrganisationWithDetails(CompletelyUnlikeQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
@@ -296,7 +309,7 @@
 
             var data = new[]
             {
-                GetOrganisationWithDetails(CompleteName,   null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
+                GetOrganisationWithDetails(CompleteName,   null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
                 GetOrganisationWithDetails(IncompleteName, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete)
             };
 
