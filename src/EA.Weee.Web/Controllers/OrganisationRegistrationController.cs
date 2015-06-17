@@ -138,13 +138,13 @@
             var routeValues = new { name = name, tradingName = tradingName, companiesRegistrationNumber = companiesRegistrationNumber, type = type };
 
             var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", routeValues);
+            var fallbackSelectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type, 
+                                new List<OrganisationSearchData>(), fallbackPagingViewModel);
 
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(tradingName))
             {
                 ModelState.AddModelError(string.Empty, "No name or trading name supplied, unable to perform search");
-
-                return View(BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type, 
-                                new List<OrganisationSearchData>(), fallbackPagingViewModel));
+                return View(fallbackSelectOrganisationViewModel);
             }
 
             using (var client = apiClient())
@@ -170,9 +170,7 @@
                     {
                         throw;
                     }
-
-                    return View(BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
-                                    new List<OrganisationSearchData>(), fallbackPagingViewModel));
+                    return View(fallbackSelectOrganisationViewModel);
                 }
             }
         }
