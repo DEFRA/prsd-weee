@@ -72,6 +72,7 @@
     <Content Include="scripts\Update\Sprint7\20150610-1546-UpdateContactTable.sql" />
     <Content Include="scripts\Update\Sprint7\20150610-1618-UpdateAddressTable.sql" />
     <Content Include="scripts\Update\Sprint7\20150615-1043-UpdateCompetentAuthorityTable.sql" />
+    <Content Include="scripts\Update\Sprint7\20150616-163500-UpdateAddressTable.sql" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

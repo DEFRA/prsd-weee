@@ -13,7 +13,7 @@
             {
                 Address addr = new Address(address.Address1, address.Address2, address.TownOrCity,
                     address.CountyOrRegion,
-                    address.Postcode, address.Country, address.Telephone, address.Email);
+                    address.PostCode, address.Country, address.Telephone, address.Email);
                 switch (type.Value)
                 {
                     case 1:
