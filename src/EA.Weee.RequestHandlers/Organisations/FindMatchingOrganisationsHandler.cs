@@ -14,7 +14,7 @@
     using OrganisationType = EA.Weee.Domain.OrganisationType;
 
     internal class FindMatchingOrganisationsHandler :
-        IRequestHandler<FindMatchingOrganisations, IList<OrganisationSearchData>>
+        IRequestHandler<FindMatchingOrganisations, OrganisationSearchDataResult>
     {
         private readonly WeeeContext context;
 
@@ -66,14 +66,14 @@
             return new List<Func<Organisation, string>> { getName, getTradingName };
         }
 
-        public async Task<IList<OrganisationSearchData>> HandleAsync(FindMatchingOrganisations query)
+        public async Task<OrganisationSearchDataResult> HandleAsync(FindMatchingOrganisations query)
         {
             var searchTerm = PrepareQuery(query);
 
             // This search uses the Levenshtein edit distance as a search algorithm.
             var permittedDistance = CalculateMaximumLevenshteinDistance(searchTerm);
 
-            var possibleOrganisations = await GetPossibleOrganisationNames(searchTerm);
+            var possibleOrganisations = (await GetPossibleOrganisationNames(searchTerm)).Where(o => o.OrganisationStatus == OrganisationStatus.Complete);
 
             // extract data fields we want to compare against query and clean them up
 
@@ -124,11 +124,11 @@
 
             matchingIdsWithDistance = matchingIdsWithDistance.OrderBy(m => m.Value).ToList();
 
-            var matchingOrganisations =
+            var totalMatchingOrganisations =
                 matchingIdsWithDistance.Select(
                     m => possibleOrganisations.Single(o => o.Id == m.Key));
 
-            var searchResult = matchingOrganisations.Select(o =>
+            var totalMatchingOrganisationsData = totalMatchingOrganisations.Select(o =>
                 new OrganisationSearchData
                 {
                     Id = o.Id,
@@ -148,13 +148,19 @@
 
             if (query.Paged)
             {
-                return searchResult.Skip((query.Page - 1) * query.OrganisationsPerPage)
+                var pagedMatchingOrganisationsData = totalMatchingOrganisationsData.Skip((query.Page - 1) * query.OrganisationsPerPage)
                         .Take(query.OrganisationsPerPage)
                         .ToList();
+
+                return new OrganisationSearchDataResult(
+                    pagedMatchingOrganisationsData,
+                    totalMatchingOrganisationsData.Count);
             }
             else
             {
-                return searchResult;
+                return new OrganisationSearchDataResult(
+                    totalMatchingOrganisationsData,
+                    totalMatchingOrganisationsData.Count);
             }
         }
 
