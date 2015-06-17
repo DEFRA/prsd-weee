@@ -135,25 +135,16 @@
         [HttpGet]
         public async Task<ActionResult> SelectOrganisation(string name, string tradingName, string companiesRegistrationNumber, OrganisationType type, int page = 1)
         {
+            var routeValues = new { name = name, tradingName = tradingName, companiesRegistrationNumber = companiesRegistrationNumber, type = type };
+
+            var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", routeValues);
+
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(tradingName))
             {
                 ModelState.AddModelError(string.Empty, "No name or trading name supplied, unable to perform search");
 
-                var routeValues = new { name = name, tradingName = tradingName, companiesRegistrationNumber = companiesRegistrationNumber, type = type };
-
-                var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", routeValues);
-
-                var viewModel = new SelectOrganisationViewModel
-                {
-                    Name = name,
-                    TradingName = tradingName,
-                    CompaniesRegistrationNumber = companiesRegistrationNumber,
-                    Type = type,
-                    MatchingOrganisations = new List<OrganisationSearchData>(),
-                    PagingViewModel = fallbackPagingViewModel
-                };
-
-                return View(viewModel);
+                return View(BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type, 
+                                new List<OrganisationSearchData>(), fallbackPagingViewModel));
             }
 
             using (var client = apiClient())
@@ -166,22 +157,11 @@
                     var organisationSearchResultData =
                         await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(name ?? tradingName, page, OrganisationsPerPage));
 
-                    var routeValues = new { name = name, tradingName = tradingName, companiesRegistrationNumber = companiesRegistrationNumber, type = type };
-
                     var pagingViewModel = PagingViewModel.FromValues(organisationSearchResultData.TotalMatchingOrganisations, OrganisationsPerPage,
                         page, "SelectOrganisation", "OrganisationRegistration", routeValues);
 
-                    var viewModel = new SelectOrganisationViewModel
-                    {
-                        Name = name,
-                        TradingName = tradingName,
-                        CompaniesRegistrationNumber = companiesRegistrationNumber,
-                        Type = type,
-                        MatchingOrganisations = organisationSearchResultData.Results,
-                        PagingViewModel = pagingViewModel
-                    };
-
-                    return View(viewModel);
+                    return View(BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
+                                    organisationSearchResultData.Results, pagingViewModel));
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -191,23 +171,23 @@
                         throw;
                     }
 
-                    var routeValues = new { name = name, tradingName = tradingName, companiesRegistrationNumber = companiesRegistrationNumber, type = type };
-
-                    var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", routeValues);
-
-                    var viewModel = new SelectOrganisationViewModel
-                    {
-                        Name = name,
-                        TradingName = tradingName,
-                        CompaniesRegistrationNumber = companiesRegistrationNumber,
-                        Type = type,
-                        MatchingOrganisations = new List<OrganisationSearchData>(),
-                        PagingViewModel = fallbackPagingViewModel
-                    };
-
-                    return View(viewModel);
+                    return View(BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
+                                    new List<OrganisationSearchData>(), fallbackPagingViewModel));
                 }
             }
+        }
+
+        private SelectOrganisationViewModel BuildSelectOrganisationViewModel(string name, string tradingName, string companiesRegistrationNumber, OrganisationType type, IList<OrganisationSearchData> matchingOrganisations, PagingViewModel pagingViewModel)
+        {
+            return new SelectOrganisationViewModel
+            {
+                Name = name,
+                TradingName = tradingName,
+                CompaniesRegistrationNumber = companiesRegistrationNumber,
+                Type = type,
+                MatchingOrganisations = matchingOrganisations,
+                PagingViewModel = pagingViewModel
+            };
         }
 
         [HttpPost]
