@@ -29,7 +29,7 @@
                         Address2 = o.OrganisationAddress.Address2,
                         TownOrCity = o.OrganisationAddress.TownOrCity,
                         CountyOrRegion = o.OrganisationAddress.CountyOrRegion,
-                        Postcode = o.OrganisationAddress.PostalCode,
+                        Postcode = o.OrganisationAddress.PostCode,
                         Country = o.OrganisationAddress.Country,
                         Telephone = o.OrganisationAddress.Telephone,
                         Email = o.OrganisationAddress.Email

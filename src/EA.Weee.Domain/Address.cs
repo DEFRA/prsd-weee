@@ -17,7 +17,7 @@
             Address1 = address1;
             Address2 = address2;
             TownOrCity = townOrCity;
-            PostalCode = postcode;
+            PostCode = postcode;
             Country = country;
             Telephone = telephone;
             CountyOrRegion = countyOrRegion;
@@ -32,7 +32,7 @@
         private string address2;
         private string townOrCity;
         private string countyOrRegion;
-        private string postalCode;
+        private string postCode;
         private string country;
         private string telephone;
         private string email;
@@ -89,16 +89,16 @@
             }
         }
 
-        public string PostalCode
+        public string PostCode
         {
-            get { return postalCode; }
+            get { return postCode; }
             private set
             {
                 if (value != null && value.Length > 10)
                 {
-                    throw new InvalidOperationException(string.Format(("PostalCode cannot be greater than 10 characters")));
+                    throw new InvalidOperationException(string.Format(("PostCode cannot be greater than 10 characters")));
                 }
-                postalCode = value;
+                postCode = value;
             }
         }
 
