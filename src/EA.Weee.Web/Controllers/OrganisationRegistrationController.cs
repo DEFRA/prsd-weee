@@ -146,13 +146,16 @@
             {
                 try
                 {
-                    const int OrganisationsPerPage = 4; // would rather bake this into the db query but not really feasible
+                    const int OrganisationsPerPage = 4;
+                    // would rather bake this into the db query but not really feasible
 
                     var matchingOrganisations =
-                        await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(name, page, OrganisationsPerPage));
+                        await
+                            client.SendAsync(User.GetAccessToken(),
+                                new FindMatchingOrganisations(name, page, OrganisationsPerPage));
 
                     var pagingViewModel = PagingViewModel.FromValues(matchingOrganisations.Count(), OrganisationsPerPage,
-                                                                page, "SelectOrganisation", "OrganisationRegistration", new { Name = name });
+                        page, "SelectOrganisation", "OrganisationRegistration", new { Name = name });
 
                     return View(new SelectOrganisationViewModel(name, matchingOrganisations, pagingViewModel));
                 }
@@ -234,7 +237,7 @@
                         throw;
                     }
                 }
-             return View(model);
+                return View(model);
             }
         }
 
@@ -243,7 +246,7 @@
         public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel model)
         {
             await this.BindUKCompetentAuthorityRegionsList(apiClient, User);
-      
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -257,24 +260,20 @@
 
                     model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
                     var request = model.ToAddRequest(type);
-                        var response = await client.SendAsync(User.GetAccessToken(), request);
-                        return RedirectToAction("ServiceOfNoticeAddress", "OrganisationRegistration", new
-                        {
-                            id = model.OrganisationId
-                        });
-                        return RedirectToAction("OrganisationContactDetails", "OrganisationRegistration", new { id = model.OrganisationId });
-                    }
-                    catch (ApiBadRequestException ex)
+                    var response = await client.SendAsync(User.GetAccessToken(), request);
+                    return RedirectToAction("ServiceOfNoticeAddress", "OrganisationRegistration", new
                     {
-                        this.HandleBadRequest(ex);
+                        id = model.OrganisationId
+                    });
+                }
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
 
-                        if (ModelState.IsValid)
-                        {
-                            throw;
-                        }
-                    }
-
-                    return View(model);
+                if (ModelState.IsValid)
+                {
+                    throw;
                 }
             }
             return View(model);
@@ -286,6 +285,20 @@
             using (var client = apiClient())
             {
                 var model = new AddressViewModel { OrganisationId = id };
+                try
+                {
+                    await this.BindUKCompetentAuthorityRegionsList(client, User);
+                    return View(model);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                }
                 return View(model);
             }
         }
@@ -294,32 +307,38 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> OrganisationAddress(AddressViewModel model)
         {
-            if (ModelState.IsValid)
+            await this.BindUKCompetentAuthorityRegionsList(apiClient, User);
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
             {
                 using (var client = apiClient())
                 {
-                    try
-                    {
-                        AddressType type = AddressType.OrganistionAddress;
-                        AddAddressToOrganisation request = model.ToAddRequest(type);
-                        var response = await client.SendAsync(User.GetAccessToken(), request);
-                        return RedirectToAction("RegisteredOfficeAddress", "OrganisationRegistration", new
-                        {
-                            id = model.OrganisationId
-                        });
-                    }
-            }
-                    catch (ApiBadRequestException ex)
-                    {
-                        this.HandleBadRequest(ex);
+                    var type = AddressType.OrganistionAddress;
 
-                        if (ModelState.IsValid)
-                        {
-                            throw;
-                        }
-                    }
-
-                    return View(model);
+                    model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
+                    var request = model.ToAddRequest(type);
+                    var response = await client.SendAsync(User.GetAccessToken(), request);
+                    return RedirectToAction("RegisteredOfficeAddress", "OrganisationRegistration", new
+                    {
+                        id = model.OrganisationId
+                    });
                 }
             }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+            }
+            return View(model);
+        }
+    }
 }
