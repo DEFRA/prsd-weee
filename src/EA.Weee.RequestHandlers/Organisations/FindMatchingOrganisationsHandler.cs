@@ -73,7 +73,8 @@
             // This search uses the Levenshtein edit distance as a search algorithm.
             var permittedDistance = CalculateMaximumLevenshteinDistance(searchTerm);
 
-            var possibleOrganisations = (await GetPossibleOrganisationNames(searchTerm)).Where(o => o.OrganisationStatus == OrganisationStatus.Complete);
+            var possibleOrganisations = (await GetPossibleOrganisationNames(searchTerm))
+                .Where(o => o.OrganisationStatus == OrganisationStatus.Pending || o.OrganisationStatus == OrganisationStatus.Approved);
 
             // extract data fields we want to compare against query and clean them up
 
