@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Prsd.Core.Validation;
-    using Web.Validation;
+    using Validation;
 
     public class AddressData
     {
