@@ -190,6 +190,7 @@
         {
             return View(new JoinOrganisationViewModel(selected));
         }
+
         [HttpPost]
         public async Task<ActionResult> JoinOrganisation(JoinOrganisationViewModel viewModel)
         {
@@ -205,6 +206,8 @@
                     client.SendAsync(
                         User.GetAccessToken(),
                         new JoinOrganisation(User.Identity.ToString(), viewModel.OrganisationToJoin));
+
+                throw new NotImplementedException();
             }
         }
 
