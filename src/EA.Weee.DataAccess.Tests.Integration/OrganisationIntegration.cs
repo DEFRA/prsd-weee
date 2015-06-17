@@ -133,7 +133,7 @@
             Assert.Equal(expected.Address2, fromDatabase.Address2);
             Assert.Equal(expected.TownOrCity, fromDatabase.TownOrCity);
             Assert.Equal(expected.CountyOrRegion, fromDatabase.CountyOrRegion);
-            Assert.Equal(expected.PostalCode, fromDatabase.PostalCode);
+            Assert.Equal(expected.PostCode, fromDatabase.PostCode);
             Assert.Equal(expected.Country, fromDatabase.Country);
             Assert.Equal(expected.Telephone, fromDatabase.Telephone);
             Assert.Equal(expected.Email, fromDatabase.Email);
