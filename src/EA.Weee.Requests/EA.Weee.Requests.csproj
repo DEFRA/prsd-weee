@@ -48,8 +48,6 @@
     <Compile Include="ClaimTypes.cs" />
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisation.cs" />
-    <Compile Include="Organisations\GetOrganisationPrincipalPlaceOfBusiness.cs" />
-    <Compile Include="Organisations\SaveOrganisationPrincipalPlaceOfBusiness.cs" />
     <Compile Include="Shared\AddressType.cs" />
     <Compile Include="Organisations\ContactData.cs" />
     <Compile Include="Organisations\Create\Base\CreateOrganisationRequest.cs" />

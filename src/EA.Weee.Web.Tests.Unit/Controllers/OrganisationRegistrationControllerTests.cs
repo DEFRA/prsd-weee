@@ -4,9 +4,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using FakeItEasy;
-    using Prsd.Core.Mediator;
-    using ViewModels.OrganisationRegistration;
-    using ViewModels.OrganisationRegistration.PrincipalPlaceOfBusiness;
+    using ViewModels.Shared;
     using Web.Controllers;
     using Web.Requests;
     using Weee.Requests.Organisations;
@@ -15,66 +13,64 @@
     public class OrganisationRegistrationControllerTests
     {
         private readonly IWeeeClient apiClient;
-        private readonly IPrincipalPlaceOfBusinessRequestCreator principalPlaceOfBusinessRequestCreator;
 
         public OrganisationRegistrationControllerTests()
         {
             apiClient = A.Fake<IWeeeClient>();
-            principalPlaceOfBusinessRequestCreator = A.Fake<IPrincipalPlaceOfBusinessRequestCreator>();
         }
 
         [Fact]
-        public async void GetPrincipalPlaceOfBusiness_ApiThrowsException_ExceptionShouldNotBeCaught()
+        public async void GetRegisteredOfficeAddress_ApiThrowsException_ExceptionShouldNotBeCaught()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationPrincipalPlaceOfBusiness>._))
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Throws<Exception>();
 
-            await Assert.ThrowsAnyAsync<Exception>(() => OrganisationRegistrationController().PrincipalPlaceOfBusiness(A<Guid>._));
+            await Assert.ThrowsAnyAsync<Exception>(() => OrganisationRegistrationController().RegisteredOfficeAddress(A<Guid>._));
         }
 
         [Fact]
-        public async void GetPrincipalPlaceOfBusiness_ApiReturnsOrganisationData_ShouldReturnViewWithModel()
+        public async void GetRegisteredOfficeAddress_ApiReturnsOrganisationData_ShouldReturnViewWithModel()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationPrincipalPlaceOfBusiness>._))
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(new OrganisationData());
         
-            var result = await OrganisationRegistrationController().PrincipalPlaceOfBusiness(A<Guid>._);
+            var result = await OrganisationRegistrationController().RegisteredOfficeAddress(A<Guid>._);
             var model = ((ViewResult)result).Model;
 
             Assert.NotNull(model);
-            Assert.IsType<PrincipalPlaceOfBusinessViewModel>(model);
+            Assert.IsType<AddressViewModel>(model);
         }
 
         [Fact]
-        public async void PostPrincipalPlaceOfBusiness_ModelStateIsInvalid_ShouldReturnViewWithInvalidModel()
+        public async void PostRegisteredOfficeAddress_ModelStateIsInvalid_ShouldReturnViewWithInvalidModel()
         {
-            var model = new PrincipalPlaceOfBusinessViewModel();
+            var model = new AddressViewModel();
             var controller = OrganisationRegistrationController();
             controller.ModelState.AddModelError("Key", "Error"); // To make the model state invalid
 
-            var result = await controller.PrincipalPlaceOfBusiness(model);
+            var result = await controller.RegisteredOfficeAddress(model);
             var returnedModel = ((ViewResult)result).Model;
 
             Assert.Equal(model, returnedModel);
         }
 
         [Fact]
-        public async void PostPrincipalPlaceOfBusiness_PrincipalPlaceOfBusinessIsValid_ShouldSubmitDetailsToApi()
+        public async void PostRegisteredOfficeAddress_PrincipalPlaceOfBusinessIsValid_ShouldSubmitDetailsToApi()
         {
-            var model = new PrincipalPlaceOfBusinessViewModel();
+            var model = new AddressViewModel();
 
-            await OrganisationRegistrationController().PrincipalPlaceOfBusiness(model);
+            await OrganisationRegistrationController().RegisteredOfficeAddress(model);
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<SaveOrganisationPrincipalPlaceOfBusiness>._))
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<AddAddressToOrganisation>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async void PostPrincipalPlaceOfBusiness_PrincipalPlaceOfBusinessIsValid_ShouldRedirectToPageWithOptionsForServiceOfNoticeAddress()
+        public async void PostRegisteredOfficeAddress_PrincipalPlaceOfBusinessIsValid_ShouldRedirectToPageWithOptionsForServiceOfNoticeAddress()
         {
-            var model = new PrincipalPlaceOfBusinessViewModel();
+            var model = new AddressViewModel();
 
-            var result = await OrganisationRegistrationController().PrincipalPlaceOfBusiness(model);
+            var result = await OrganisationRegistrationController().RegisteredOfficeAddress(model);
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal("OrganisationRegistration", redirectToRouteResult.RouteValues["controller"]);
@@ -83,7 +79,7 @@
 
         private OrganisationRegistrationController OrganisationRegistrationController()
         {
-            return new OrganisationRegistrationController(() => apiClient, principalPlaceOfBusinessRequestCreator);
+            return new OrganisationRegistrationController(() => apiClient);
         }
     }
 }

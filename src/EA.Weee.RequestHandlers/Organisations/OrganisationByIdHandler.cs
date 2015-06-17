@@ -1,42 +1,35 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
+    using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
+    using Domain;
+    using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Requests.Shared;
+    using OrganisationType = Requests.Organisations.OrganisationType;
 
     internal class OrganisationByIdHandler : IRequestHandler<GetOrganisationInfo, OrganisationData>
     {
         private readonly WeeeContext context;
+        private IMap<Organisation, OrganisationData> organisationMap;
 
-        public OrganisationByIdHandler(WeeeContext context)
+        public OrganisationByIdHandler(WeeeContext context, IMap<Organisation, OrganisationData> organisationMap)
         {
             this.context = context;
+            this.organisationMap = organisationMap;
         }
 
         public async Task<OrganisationData> HandleAsync(GetOrganisationInfo query)
         {
-            return await context
-                .Organisations
-                .Select(o => new OrganisationData
-                {
-                    OrganisationAddress = new AddressData
-                    {
-                        Address1 = o.OrganisationAddress.Address1,
-                        Address2 = o.OrganisationAddress.Address2,
-                        TownOrCity = o.OrganisationAddress.TownOrCity,
-                        CountyOrRegion = o.OrganisationAddress.CountyOrRegion,
-                        Postcode = o.OrganisationAddress.Postcode,
-                        Country = o.OrganisationAddress.Country,
-                        Telephone = o.OrganisationAddress.Telephone,
-                        Email = o.OrganisationAddress.Email
-                    },
-                    Id = o.Id,
-                    Name = o.Name
-                }).SingleAsync(p => p.Id == query.OrganisationId);
+            // Need to materialize EF request before mapping (because mapping parses enums)
+            var org = await context.Organisations
+                .SingleAsync(o => o.Id == query.OrganisationId);
+
+            return organisationMap.Map(org);
         }
     }
 }
