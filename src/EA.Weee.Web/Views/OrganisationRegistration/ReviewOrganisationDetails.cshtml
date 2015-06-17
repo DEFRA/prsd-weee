@@ -1,0 +1,196 @@
+﻿@{
+    ViewBag.Title = "Review Organisation Details";
+}
+
+<!-- Pollyfill Kickoff -->
+<!-- HTML5 Details Tag Support -->
+<script>
+    (function () {
+        //basic html5 shim just for the elements we're using
+        for (var tags = ['details', 'summary'], i = 0; i < tags.length; i++) {
+            document.createElement(tags[i]);
+        }
+    })();
+</script>
+<!-- End Pollyfill Kickoff -->
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">Check the information you have provided before creating your organisation</h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "ConfirmOrganisationDetails", controllerName: "OrganisationRegistration", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+
+            <!-- //////////// Main Accordion /////////////// -->
+        <section id="form-summary" role="main">
+
+            <div class="overview-summary">
+                <!-- //////////// Exporter-notifier /////////////// -->
+                <details role="group">
+                    <summary role="button" aria-controls="details-content-1" tabindex="0" aria-expanded="false">
+                        <h3 title="Exporter-notifier">About your organisation</h3>
+                        @*<a href="" title="Edit">Edit</a>*@
+                    </summary>
+                    <div class="form-detail-cont" id="details-content-0" aria-hidden="true" style="display: block;">
+                        <!-- ///// Info Divider/Header //// -->
+                        <h4>Form Information</h4>
+                        <!-- ///// Section //// -->
+                        <div class="grid-row form-detail">
+                            <span class="column-third">
+                                Company name
+                            </span>
+                            <span class="column-two-thirds">
+                                AnyMajorCompany Ltd.
+                            </span>
+                        </div>
+                        <!-- ///// Section //// -->
+                        <div class="grid-row form-detail">
+                            <span class="column-third">
+                                Address
+                            </span>
+                            <span class="column-two-thirds">
+                                Knutsford Road<br>
+                                Latchford<br>
+                                Warrington<br>
+                                Cheshire<br>
+                                WA4 1HT<br>
+                            </span>
+                        </div>
+                        <!-- ///// Section //// -->
+                        <div class="grid-row form-detail">
+                            <span class="column-third">Telephone</span>
+                            <span class="column-two-thirds">07986 444 666</span>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- //////////// Generator-producer /////////////// -->
+                <details role="group">
+                    <summary role="button" aria-controls="details-content-2" tabindex="0" aria-expanded="false">
+                        <h3 title="Generator-producer">The main contact for your organisation</h3>
+                        @*<a href="" title="Edit">Edit</a>*@
+                    </summary>
+                    <div class="form-detail-cont" id="details-content-2" aria-hidden="true" style="display: block;">
+                        <!-- ///// Info Divider/Header //// -->
+                        <h4>Form Information</h4>
+                        <!-- ///// Section //// -->
+                        <div class="grid-row form-detail">
+                            <span class="column-third">
+                                Company name
+                            </span>
+                            <span class="column-two-thirds">
+                                AnyMajorCompany Ltd.
+                            </span>
+                        </div>
+                        <!-- ///// Section //// -->
+                        <div class="grid-row form-detail">
+                            <span class="column-third">
+                                Address
+                            </span>
+                            <span class="column-two-thirds">
+                                Knutsford Road<br>
+                                Latchford<br>
+                                Warrington<br>
+                                Cheshire<br>
+                                WA4 1HT<br>
+                            </span>
+                        </div>
+                        <!-- ///// Section //// -->
+                        <div class="grid-row form-detail">
+                            <span class="column-third">Telephone</span>
+                            <span class="column-two-thirds">07986 444 666</span>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- //////////// Importer-consignee /////////////// -->
+                <details role="group">
+                    <summary role="button" aria-controls="details-content-3" tabindex="0" aria-expanded="false">
+                        <h3 title="Importer-consignee">Your organisation details</h3>
+                        @*<a href="" title="Edit">Edit</a>*@
+                    </summary>
+                    <div class="form-detail-cont" id="details-content-3" aria-hidden="true" style="display: block;">
+                        <!-- ///// Info Divider/Header //// -->
+                        <h4>Form Information</h4>
+                        <!-- ///// Section //// -->
+                        <div class="grid-row form-detail">
+                            <span class="column-third">
+                                Company name
+                            </span>
+                            <span class="column-two-thirds">
+                                AnyMajorCompany Ltd.
+                            </span>
+                        </div>
+                        <!-- ///// Section //// -->
+                        <div class="grid-row form-detail">
+                            <span class="column-third">
+                                Address
+                            </span>
+                            <span class="column-two-thirds">
+                                Knutsford Road<br>
+                                Latchford<br>
+                                Warrington<br>
+                                Cheshire<br>
+                                WA4 1HT<br>
+                            </span>
+                        </div>
+                        <!-- ///// Section //// -->
+                        <div class="grid-row form-detail">
+                            <span class="column-third">Telephone</span>
+                            <span class="column-two-thirds">07986 444 666</span>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- //////////// Disposal-facilities /////////////// -->
+                <details role="group">
+                    <summary role="button" aria-controls="details-content-4" tabindex="0" aria-expanded="false">
+                        <h3 title="Disposal-facilities">Your principal place of business</h3>
+                        @*<a href="" title="Edit">Edit</a>*@
+                    </summary>
+                    <div class="form-detail-cont" id="details-content-4" aria-hidden="true" style="display: block;">
+                        <!-- ///// Info Divider/Header //// -->
+                        <h4>Form Information</h4>
+                        <!-- ///// Section //// -->
+                        <div class="grid-row form-detail">
+                            <span class="column-third">
+                                Company name
+                            </span>
+                            <span class="column-two-thirds">
+                                AnyMajorCompany Ltd.
+                            </span>
+                        </div>
+                        <!-- ///// Section //// -->
+                        <div class="grid-row form-detail">
+                            <span class="column-third">
+                                Address
+                            </span>
+                            <span class="column-two-thirds">
+                                Knutsford Road<br>
+                                Latchford<br>
+                                Warrington<br>
+                                Cheshire<br>
+                                WA4 1HT<br>
+                            </span>
+                        </div>
+                        <!-- ///// Section //// -->
+                        <div class="grid-row form-detail">
+                            <span class="column-third">Telephone</span>
+                            <span class="column-two-thirds">07986 444 666</span>
+                        </div>
+                    </div>
+                </details>
+
+            </div>
+
+            <div class="form-group">
+                <input type="submit" class="button" value="Create organisation" />
+            </div>
+        </section>
+    }
+}
+
