@@ -13,7 +13,6 @@
                 Name = source.Name,
                 Abbreviation = source.Abbreviation,
                 Region = source.Region,
-                IsSystemUser = source.IsSystemUser,
                 Id = source.Id
             };
         }

@@ -322,71 +322,6 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RegisteredOfficeAddress(Guid id)
-        {
-            using (var client = apiClient())
-            {
-                var model = new AddressViewModel { OrganisationId = id };
-                try
-                {
-                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                    string organisationType = organisation.OrganisationType.ToString();
-                    ViewBag.OrgType = organisationType;
-                    await this.BindUKCompetentAuthorityRegionsList(client, User);
-                    return View(model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                }
-                return View(model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel model)
-        {
-            await this.BindUKCompetentAuthorityRegionsList(apiClient, User);
-
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            try
-            {
-                using (var client = apiClient())
-                {
-                    var type = AddressType.RegisteredorPPBAddress;
-
-                    model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
-                    var request = model.ToAddRequest(type);
-                    var response = await client.SendAsync(User.GetAccessToken(), request);
-                    return RedirectToAction("ServiceOfNoticeAddress", "OrganisationRegistration", new
-                    {
-                        id = model.OrganisationId
-                    });
-                }
-            }
-            catch (ApiBadRequestException ex)
-            {
-                this.HandleBadRequest(ex);
-
-                if (ModelState.IsValid)
-                {
-                    throw;
-                }
-            }
-            return View(model);
-        }
-
-        [HttpGet]
         public async Task<ActionResult> OrganisationAddress(Guid id)
         {
             using (var client = apiClient())
@@ -431,6 +366,70 @@
                     var request = model.ToAddRequest(type);
                     var response = await client.SendAsync(User.GetAccessToken(), request);
                     return RedirectToAction("RegisteredOfficeAddress", "OrganisationRegistration", new
+                    {
+                        id = model.OrganisationId
+                    });
+                }
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RegisteredOfficeAddress(Guid id)
+        {
+            using (var client = apiClient())
+            {
+                var model = new AddressViewModel { OrganisationId = id };
+                try
+                {
+                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+                    string organisationType = organisation.OrganisationType.ToString();
+                    ViewBag.OrgType = organisationType;
+                    await this.BindUKCompetentAuthorityRegionsList(client, User);
+                    return View(model);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                }
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel model)
+        {
+            await this.BindUKCompetentAuthorityRegionsList(apiClient, User);
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                using (var client = apiClient())
+                {
+                    var type = AddressType.RegisteredorPPBAddress;
+                    model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
+                    var request = model.ToAddRequest(type);
+                    var response = await client.SendAsync(User.GetAccessToken(), request);
+                    return RedirectToAction("ReviewOrganisationSummary", "OrganisationRegistration", new
                     {
                         id = model.OrganisationId
                     });
