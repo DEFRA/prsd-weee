@@ -241,5 +241,46 @@
 
             Assert.Equal(data.Length, results.Count);
         }
+
+        [Fact]
+        public async Task FindMatchingOrganisationsHandler_Paged_ReturnsMatchingResults()
+        {
+            const string IdenticalToQuery = "Environment Agency";
+            const string CloseToQuery = "Enviroment Agency";
+            const string QuiteDifferentToQuery = "Environmt Agecy";
+            const string CompletelyUnlikeQuery = "I am a lamppost";
+
+            var data = new[]
+            {
+                GetOrganisationWithDetails(IdenticalToQuery, null, Domain.OrganisationType.RegisteredCompany),
+                GetOrganisationWithDetails(CloseToQuery, null, Domain.OrganisationType.RegisteredCompany),
+                GetOrganisationWithDetails(QuiteDifferentToQuery, null, Domain.OrganisationType.RegisteredCompany),
+                GetOrganisationWithDetails(CompletelyUnlikeQuery, null, Domain.OrganisationType.RegisteredCompany)
+            };
+
+            var organisations = helper.GetAsyncEnabledDbSet(data);
+
+            var context = A.Fake<WeeeContext>();
+
+            A.CallTo(() => context.Organisations).Returns(organisations);
+
+            var handler = new FindMatchingOrganisationsHandler(context);
+
+            const int PageSize = 2;
+
+            var firstPage = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency", 1, PageSize));
+            var secondPage = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency", 2, PageSize));
+            var thirdEmptyPage = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency", 3, PageSize));
+
+            Assert.Equal(PageSize, firstPage.Count);
+            Assert.Equal(PageSize - 1, secondPage.Count); // we aren't expecting to see the one named CompletelyUnlikeQuery
+            Assert.Equal(0, thirdEmptyPage.Count);
+
+            // handler sorts by distance
+            Assert.Equal(IdenticalToQuery, firstPage[0].DisplayName);
+            Assert.Equal(CloseToQuery, firstPage[1].DisplayName);
+
+            Assert.Equal(QuiteDifferentToQuery, secondPage[0].DisplayName);
+        }
     }
 }

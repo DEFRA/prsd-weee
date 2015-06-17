@@ -128,10 +128,10 @@
                 matchingIdsWithDistance.Select(
                     m => possibleOrganisations.Single(o => o.Id == m.Key));
 
-            return matchingOrganisations.Select(o => 
+            var searchResult = matchingOrganisations.Select(o =>
                 new OrganisationSearchData
                 {
-                    Id = o.Id, 
+                    Id = o.Id,
                     Address = new AddressData
                     {
                         Address1 = o.OrganisationAddress.Address1,
@@ -142,9 +142,20 @@
                         Country = o.OrganisationAddress.Country,
                         Telephone = o.OrganisationAddress.Telephone,
                         Email = o.OrganisationAddress.Email
-                    }, 
+                    },
                     DisplayName = o.OrganisationType == OrganisationType.RegisteredCompany ? o.Name : o.TradingName
                 }).ToList();
+
+            if (query.Paged)
+            {
+                return searchResult.Skip((query.Page - 1) * query.OrganisationsPerPage)
+                        .Take(query.OrganisationsPerPage)
+                        .ToList();
+            }
+            else
+            {
+                return searchResult;
+            }
         }
 
         private string PrepareQuery(FindMatchingOrganisations query)

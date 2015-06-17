@@ -18,6 +18,8 @@
 
         public virtual DbSet<User> Users { get; set; }
 
+        public virtual DbSet<UKCompetentAuthority> UKCompetentAuthorities { get; set; }
+
         public WeeeContext(IUserContext userContext)
             : base("name=Weee.DefaultConnection")
         {

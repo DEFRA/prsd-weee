@@ -59,27 +59,7 @@
             }
         }
         <br />
-        <ul class="previous-next-navigation">
-            @if (Model.PreviousPage >= 1)
-            {
-                <li class="previous">
-                    <a href="@Url.Action("SelectOrganisation", "OrganisationRegistration", new { @Name = Model.Name, @page = Model.PreviousPage })">
-                        Previous page
-                        <span class="page-numbers">@Model.PreviousPage of @Model.TotalPages</span>
-                    </a>
-                </li>
-            }
-
-            @if (Model.NextPage <= Model.TotalPages)
-            {
-                <li class="next">
-                    <a href="@Url.Action("SelectOrganisation", "OrganisationRegistration", new { @Name = Model.Name, @page = @Model.NextPage })">
-                        Next page
-                        <span class="page-numbers">@Model.NextPage of @Model.TotalPages</span>
-                    </a>
-                </li>
-            }
-        </ul>
+        @Html.Partial("_WeeePaging", Model.PagingViewModel)
     }
 }
 else

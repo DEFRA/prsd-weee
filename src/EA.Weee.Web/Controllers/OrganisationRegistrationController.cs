@@ -4,19 +4,18 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using EA.Prsd.Core.Extensions;
-    using EA.Prsd.Core.Web.ApiClient;
-    using EA.Prsd.Core.Web.Mvc.Extensions;
-    using EA.Weee.Api.Client;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Requests.Shared;
-    using EA.Weee.Web.Infrastructure;
-    using EA.Weee.Web.Requests;
-    using EA.Weee.Web.ViewModels.JoinOrganisation;
-    using EA.Weee.Web.ViewModels.Organisation.Type;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
-    using EA.Weee.Web.ViewModels.Shared;
+    using Api.Client;
+    using Infrastructure;
+    using Prsd.Core.Extensions;
+    using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
+    using Requests;
+    using ViewModels.JoinOrganisation;
+    using ViewModels.OrganisationRegistration;
+    using ViewModels.OrganisationRegistration.Details;
+    using ViewModels.OrganisationRegistration.Type;
+    using ViewModels.Shared;
+    using Weee.Requests.Organisations;
     using Weee.Requests.Shared;
 
     [Authorize]
@@ -25,7 +24,8 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator;
 
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator)
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
+            ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator)
         {
             this.apiClient = apiClient;
             this.soleTraderDetailsRequestCreator = soleTraderDetailsRequestCreator;
@@ -132,9 +132,14 @@
         [HttpGet]
         public async Task<ViewResult> SelectOrganisation(string name, int page = 1)
         {
+            var fallbackPagingViewModel = new PagingViewModel(
+                "SelectOrganisation",
+                "OrganisationRegistration",
+                new { Name = name });
+
             if (string.IsNullOrEmpty(name))
             {
-                return View(new SelectOrganisationViewModel());
+                return View(new SelectOrganisationViewModel(fallbackPagingViewModel));
             }
 
             using (var client = apiClient())
@@ -144,26 +149,12 @@
                     const int OrganisationsPerPage = 4; // would rather bake this into the db query but not really feasible
 
                     var matchingOrganisations =
-                        await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(name));
+                        await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(name, page, OrganisationsPerPage));
 
-                    var totalPages = (int)Math.Ceiling(((double)matchingOrganisations.Count() / (double)OrganisationsPerPage));
+                    var pagingViewModel = PagingViewModel.FromValues(matchingOrganisations.Count(), OrganisationsPerPage,
+                                                                page, "SelectOrganisation", "OrganisationRegistration", new { Name = name });
 
-                    var organisationsForThisPage =
-                        matchingOrganisations.Skip((page - 1) * OrganisationsPerPage)
-                            .Take(OrganisationsPerPage)
-                            .ToList();
-
-                    var previousPage = page - 1;
-                    var nextPage = page + 1;
-                    var startingAt = ((page - 1) * OrganisationsPerPage) + 1;
-
-                    return
-                        View(
-                            new SelectOrganisationViewModel(name, organisationsForThisPage,
-                                totalPages: totalPages,
-                                previousPage: previousPage,
-                                nextPage: nextPage,
-                                startingAt: startingAt));
+                    return View(new SelectOrganisationViewModel(name, matchingOrganisations, pagingViewModel));
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -172,10 +163,8 @@
                     {
                         throw;
                     }
-                    return View(new SelectOrganisationViewModel
-                    {
-                        Name = name
-                    });
+
+                    return View(new SelectOrganisationViewModel(fallbackPagingViewModel));
                 }
             }
         }
@@ -233,6 +222,7 @@
                     var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
                     string organisationType = organisation.OrganisationType.ToString();
                     ViewBag.OrgType = organisationType;
+                    await this.BindUKCompetentAuthorityRegionsList(client, User);
                     return View(model);
                 }
                 catch (ApiBadRequestException ex)
@@ -244,7 +234,7 @@
                         throw;
                     }
                 }
-                return View(model);
+             return View(model);
             }
         }
 
@@ -252,14 +242,21 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel model)
         {
-            if (ModelState.IsValid)
+            await this.BindUKCompetentAuthorityRegionsList(apiClient, User);
+      
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
             {
                 using (var client = apiClient())
                 {
-                    try
-                    {
-                        AddressType type = AddressType.RegisteredorPPBAddress;
-                        AddAddressToOrganisation request = model.ToAddRequest(type);
+                    var type = AddressType.RegisteredorPPBAddress;
+
+                    model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
+                    var request = model.ToAddRequest(type);
                         var response = await client.SendAsync(User.GetAccessToken(), request);
                         return RedirectToAction("ServiceOfNoticeAddress", "OrganisationRegistration", new
                         {
@@ -311,6 +308,7 @@
                             id = model.OrganisationId
                         });
                     }
+            }
                     catch (ApiBadRequestException ex)
                     {
                         this.HandleBadRequest(ex);
@@ -324,7 +322,4 @@
                     return View(model);
                 }
             }
-            return View(model);
-        }
-    }
 }
