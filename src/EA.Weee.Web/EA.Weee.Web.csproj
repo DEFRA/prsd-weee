@@ -425,6 +425,7 @@
     <Content Include="Content\govuk_toolkit\stylesheets\_colours.scss" />
     <Content Include="Content\weee\_pagination.scss" />
     <Content Include="Content\jquery-autocomplete.scss" />
+    <Content Include="Content\weee\_summary.scss" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\error-tracking.js" />
@@ -493,6 +494,7 @@
     <Content Include="Views\OrganisationRegistration\Type.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddress.cshtml" />
     <Content Include="Views\Shared\_WeeePaging.cshtml" />
+    <Content Include="Views\OrganisationRegistration\ReviewOrganisationDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
