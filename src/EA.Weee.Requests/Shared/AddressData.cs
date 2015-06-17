@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Prsd.Core.Validation;
+    using Web.Validation;
 
     public class AddressData
     {
@@ -45,7 +46,7 @@
         [Required]
         [StringLength(20)]
         [DataType(DataType.Text)]
-        [UkPhoneNumber(ErrorMessage = "The Phone field should contain a valid UK phone number")]
+        [GenericPhoneNumber(ErrorMessage = "The Phone field should contain a valid phone number")]
         [Display(Name = "Phone")]
         public string Telephone { get; set; }
 
