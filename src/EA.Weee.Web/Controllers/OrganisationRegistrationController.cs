@@ -185,11 +185,27 @@
             };
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SelectOrganisation(SelectOrganisationViewModel viewModel)
+        [HttpGet]
+        public async Task<ViewResult> JoinOrganisation(Guid selected)
         {
-            throw new NotImplementedException();
+            return View(new JoinOrganisationViewModel(selected));
+        }
+        [HttpPost]
+        public async Task<ActionResult> JoinOrganisation(JoinOrganisationViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            using (var client = apiClient())
+            {
+                var response =
+                    await
+                    client.SendAsync(
+                        User.GetAccessToken(),
+                        new JoinOrganisation(User.Identity.ToString(), viewModel.OrganisationToJoin));
+            }
         }
 
         [HttpPost]
