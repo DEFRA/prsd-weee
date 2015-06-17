@@ -8,7 +8,7 @@
     public class AddressData
     {
         private const string DefaultCountryName = "United Kingdom";
-
+    
         [Required]
         [StringLength(35)]
         [DataType(DataType.Text)]
