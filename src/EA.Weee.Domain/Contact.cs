@@ -9,10 +9,10 @@
     {
         public Contact(string firstName, string lastName, string position)
         {
-            Guard.ArgumentNotNull(firstName);
-            Guard.ArgumentNotNull(lastName);
-            Guard.ArgumentNotNull(position);
-
+            Guard.ArgumentNotNullOrEmpty(() => firstName, firstName);
+            Guard.ArgumentNotNullOrEmpty(() => lastName, lastName);
+            Guard.ArgumentNotNullOrEmpty(() => position, position);
+         
             FirstName = firstName;
             LastName = lastName;
             Position = position;

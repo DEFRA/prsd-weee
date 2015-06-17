@@ -8,12 +8,12 @@
     {
         public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode, string country, string telephone, string email)
         {
-            Guard.ArgumentNotNull(address1);
-            Guard.ArgumentNotNull(townOrCity);
-            Guard.ArgumentNotNull(country);
-            Guard.ArgumentNotNull(telephone);
-            Guard.ArgumentNotNull(email);
-
+            Guard.ArgumentNotNullOrEmpty(() => address1, address1);
+            Guard.ArgumentNotNullOrEmpty(() => townOrCity, townOrCity);
+            Guard.ArgumentNotNullOrEmpty(() => country, country);
+            Guard.ArgumentNotNullOrEmpty(() => telephone, telephone);
+            Guard.ArgumentNotNullOrEmpty(() => email, email);
+       
             Address1 = address1;
             Address2 = address2;
             TownOrCity = townOrCity;

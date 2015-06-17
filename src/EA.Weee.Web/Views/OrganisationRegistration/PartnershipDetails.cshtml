@@ -25,7 +25,7 @@
    
         <div class="form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
             @Html.Gds().LabelFor(m => m.BusinessTradingName)
-            @Html.ValidationMessageFor(m => m.BusinessTradingName)
+            @Html.Gds().ValidationMessageFor(m => m.BusinessTradingName)
             @Html.Gds().TextBoxFor(m => m.BusinessTradingName)
         </div>
 
