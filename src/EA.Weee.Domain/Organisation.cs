@@ -87,6 +87,18 @@
                 throw new InvalidOperationException("Organisation status is already complete");
             }
 
+            if (OrganisationAddress == null)
+            {
+                throw new InvalidOperationException("A complete organisation must have an OrganisationAddress");
+            }
+
+            if (Contact == null)
+            {
+                throw new InvalidOperationException("A complete organisation must have a Contact");
+            }
+
+            // insert other guards as needed...
+
             OrganisationStatus = OrganisationStatus.Complete;
         }
     }
