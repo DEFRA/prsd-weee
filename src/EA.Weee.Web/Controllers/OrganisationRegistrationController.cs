@@ -139,7 +139,9 @@
             {
                 ModelState.AddModelError(string.Empty, "No name or trading name supplied, unable to perform search");
 
-                var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", new { Name = name });
+                var routeValues = new { name = name, tradingName = tradingName, companiesRegistrationNumber = companiesRegistrationNumber, type = type };
+
+                var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", routeValues);
 
                 var viewModel = new SelectOrganisationViewModel
                 {
@@ -161,11 +163,13 @@
                     const int OrganisationsPerPage = 4;
                     // would rather bake this into the db query but not really feasible
 
-                    var matchingOrganisations =
+                    var organisationSearchResultData =
                         await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(name ?? tradingName, page, OrganisationsPerPage));
 
-                    var pagingViewModel = PagingViewModel.FromValues(matchingOrganisations.Count(), OrganisationsPerPage,
-                        page, "SelectOrganisation", "OrganisationRegistration", new { Name = name });
+                    var routeValues = new { name = name, tradingName = tradingName, companiesRegistrationNumber = companiesRegistrationNumber, type = type };
+
+                    var pagingViewModel = PagingViewModel.FromValues(organisationSearchResultData.TotalMatchingOrganisations, OrganisationsPerPage,
+                        page, "SelectOrganisation", "OrganisationRegistration", routeValues);
 
                     var viewModel = new SelectOrganisationViewModel
                     {
@@ -173,7 +177,7 @@
                         TradingName = tradingName,
                         CompaniesRegistrationNumber = companiesRegistrationNumber,
                         Type = type,
-                        MatchingOrganisations = matchingOrganisations,
+                        MatchingOrganisations = organisationSearchResultData.Results,
                         PagingViewModel = pagingViewModel
                     };
 
@@ -187,7 +191,9 @@
                         throw;
                     }
 
-                    var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", new { Name = name });
+                    var routeValues = new { name = name, tradingName = tradingName, companiesRegistrationNumber = companiesRegistrationNumber, type = type };
+
+                    var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", routeValues);
 
                     var viewModel = new SelectOrganisationViewModel
                     {

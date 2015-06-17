@@ -79,5 +79,15 @@
         {
             return new Organisation(OrganisationType.RegisteredCompany, companyName, companyRegistrationNumber, tradingName);
         }
+
+        public void Complete()
+        {
+            if (OrganisationStatus == OrganisationStatus.Complete)
+            {
+                throw new InvalidOperationException("Organisation status is already complete");
+            }
+
+            OrganisationStatus = OrganisationStatus.Complete;
+        }
     }
 }

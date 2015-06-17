@@ -41,10 +41,10 @@
 
         private Organisation GetOrganisationWithName(string name)
         {
-            return GetOrganisationWithDetails(name, null, Domain.OrganisationType.RegisteredCompany);
+            return GetOrganisationWithDetails(name, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete);
         }
 
-        private Organisation GetOrganisationWithDetails(string name, string tradingName, Domain.OrganisationType type)
+        private Organisation GetOrganisationWithDetails(string name, string tradingName, Domain.OrganisationType type, OrganisationStatus status)
         {
             Organisation organisation;
 
@@ -62,6 +62,11 @@
             }
 
             organisation.AddAddress(AddressType.OrganisationAddress, GetAddress());
+
+            if (status == OrganisationStatus.Complete)
+            {
+                organisation.Complete();
+            }
 
             var properties = typeof(Organisation).GetProperties();
 
@@ -106,7 +111,7 @@
 
             var strings = await handler.HandleAsync(new FindMatchingOrganisations("sfw"));
 
-            Assert.Equal(1, strings.Count);
+            Assert.Equal(1, strings.Results.Count());
         }
 
         [Fact]
@@ -126,7 +131,7 @@
 
             var strings = await handler.HandleAsync(new FindMatchingOrganisations("sfw"));
 
-            Assert.Equal(2, strings.Count);
+            Assert.Equal(2, strings.Results.Count());
         }
 
         [Fact]
@@ -146,7 +151,7 @@
 
             var results = await handler.HandleAsync(new FindMatchingOrganisations("THe environment agency"));
 
-            Assert.Equal(2, results.Count);
+            Assert.Equal(2, results.Results.Count());
         }
 
         [Fact]
@@ -169,7 +174,7 @@
 
             var results = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency"));
 
-            Assert.Equal(data.Length, results.Count);
+            Assert.Equal(data.Length, results.Results.Count());
         }
 
         [Fact]
@@ -189,7 +194,7 @@
 
             var results = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency"));
 
-            Assert.Equal(names, results.Select(r => r.DisplayName));
+            Assert.Equal(names, results.Results.Select(r => r.DisplayName).ToArray());
         }
 
         [Fact]
@@ -215,7 +220,7 @@
 
             var results = await handler.HandleAsync(new FindMatchingOrganisations(searchTerm));
 
-            Assert.Equal(namesWithDistances.OrderBy(n => n.Value).Select(n => n.Key), results.Select(r => r.DisplayName));
+            Assert.Equal(namesWithDistances.OrderBy(n => n.Value).Select(n => n.Key), results.Results.Select(r => r.DisplayName));
         }
 
         [Fact]
@@ -223,10 +228,10 @@
         {
             var data = new[]
             {
-                GetOrganisationWithDetails("THE  Environemnt Agency", null, Domain.OrganisationType.RegisteredCompany),
-                GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency", Domain.OrganisationType.RegisteredCompany),
-                GetOrganisationWithDetails(null, "THE Environemnt Agency", Domain.OrganisationType.SoleTraderOrIndividual),
-                GetOrganisationWithDetails(null, "Environment Agency", Domain.OrganisationType.Partnership)
+                GetOrganisationWithDetails("THE  Environemnt Agency", null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
+                GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency", Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
+                GetOrganisationWithDetails(null, "THE Environemnt Agency", Domain.OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Complete),
+                GetOrganisationWithDetails(null, "Environment Agency", Domain.OrganisationType.Partnership, OrganisationStatus.Complete)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
@@ -239,7 +244,7 @@
 
             var results = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency"));
 
-            Assert.Equal(data.Length, results.Count);
+            Assert.Equal(data.Length, results.Results.Count());
         }
 
         [Fact]
@@ -252,10 +257,10 @@
 
             var data = new[]
             {
-                GetOrganisationWithDetails(IdenticalToQuery, null, Domain.OrganisationType.RegisteredCompany),
-                GetOrganisationWithDetails(CloseToQuery, null, Domain.OrganisationType.RegisteredCompany),
-                GetOrganisationWithDetails(QuiteDifferentToQuery, null, Domain.OrganisationType.RegisteredCompany),
-                GetOrganisationWithDetails(CompletelyUnlikeQuery, null, Domain.OrganisationType.RegisteredCompany)
+                GetOrganisationWithDetails(IdenticalToQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
+                GetOrganisationWithDetails(CloseToQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
+                GetOrganisationWithDetails(QuiteDifferentToQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
+                GetOrganisationWithDetails(CompletelyUnlikeQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
@@ -272,15 +277,41 @@
             var secondPage = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency", 2, PageSize));
             var thirdEmptyPage = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency", 3, PageSize));
 
-            Assert.Equal(PageSize, firstPage.Count);
-            Assert.Equal(PageSize - 1, secondPage.Count); // we aren't expecting to see the one named CompletelyUnlikeQuery
-            Assert.Equal(0, thirdEmptyPage.Count);
+            Assert.Equal(PageSize, firstPage.Results.Count());
+            Assert.Equal(PageSize - 1, secondPage.Results.Count()); // we aren't expecting to see the one named CompletelyUnlikeQuery
+            Assert.Equal(0, thirdEmptyPage.Results.Count());
 
             // handler sorts by distance
-            Assert.Equal(IdenticalToQuery, firstPage[0].DisplayName);
-            Assert.Equal(CloseToQuery, firstPage[1].DisplayName);
+            Assert.Equal(IdenticalToQuery, firstPage.Results[0].DisplayName);
+            Assert.Equal(CloseToQuery, firstPage.Results[1].DisplayName);
 
-            Assert.Equal(QuiteDifferentToQuery, secondPage[0].DisplayName);
+            Assert.Equal(QuiteDifferentToQuery, secondPage.Results[0].DisplayName);
+        }
+
+        [Fact]
+        public async Task FindMatchingOrganisationsHandler_SearchMightIncludeIncompleteOrgs_OnlyShowComplete()
+        {
+            const string CompleteName   = "Environment Agency 1";
+            const string IncompleteName = "Environment Agency 2";
+
+            var data = new[]
+            {
+                GetOrganisationWithDetails(CompleteName,   null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
+                GetOrganisationWithDetails(IncompleteName, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete)
+            };
+
+            var organisations = helper.GetAsyncEnabledDbSet(data);
+
+            var context = A.Fake<WeeeContext>();
+
+            A.CallTo(() => context.Organisations).Returns(organisations);
+
+            var handler = new FindMatchingOrganisationsHandler(context);
+
+            var results = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency"));
+
+            Assert.Equal(1, results.Results.Count());
+            Assert.Equal(CompleteName, results.Results[0].DisplayName);
         }
     }
 }
