@@ -10,22 +10,17 @@
     {
         public string Name { get; set; }
 
-        public IList<OrganisationSearchData> MatchingOrganisations { get; private set; }
+        public string TradingName { get; set; }
 
-        public PagingViewModel PagingViewModel { get; private set; }
+        public string CompaniesRegistrationNumber { get; set; }
+
+        public OrganisationType Type { get; set; }
+
+        public IList<OrganisationSearchData> MatchingOrganisations { get; set; }
+
+        public PagingViewModel PagingViewModel { get; set; }
 
         [Required]
         public Guid? Selected { get; set; }
-
-        public SelectOrganisationViewModel(string name, IList<OrganisationSearchData> matchingOrganisations, PagingViewModel pagingViewModel)
-        {
-            Name = name;
-            MatchingOrganisations = matchingOrganisations;
-            PagingViewModel = pagingViewModel;
-        }
-
-        public SelectOrganisationViewModel(PagingViewModel pagingViewModel) : this(string.Empty, new List<OrganisationSearchData>(), pagingViewModel)
-        {
-        }
     }
 }

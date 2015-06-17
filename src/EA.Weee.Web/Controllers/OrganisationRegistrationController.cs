@@ -1,22 +1,26 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Infrastructure;
-    using Prsd.Core.Extensions;
-    using Prsd.Core.Web.ApiClient;
-    using Prsd.Core.Web.Mvc.Extensions;
-    using Requests;
-    using ViewModels.JoinOrganisation;
-    using ViewModels.OrganisationRegistration;
-    using ViewModels.OrganisationRegistration.Details;
-    using ViewModels.OrganisationRegistration.Type;
-    using ViewModels.Shared;
-    using Weee.Requests.Organisations;
-    using Weee.Requests.Shared;
+    using EA.Prsd.Core.Extensions;
+    using EA.Prsd.Core.Web.ApiClient;
+    using EA.Prsd.Core.Web.Mvc.Extensions;
+    using EA.Weee.Api.Client;
+    using EA.Weee.Requests.Organisations;
+    using EA.Weee.Requests.Organisations.Create;
+    using EA.Weee.Requests.Organisations.Create.Base;
+    using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Requests;
+    using EA.Weee.Web.ViewModels.JoinOrganisation;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
+    using EA.Weee.Web.ViewModels.Shared;
 
     [Authorize]
     public class OrganisationRegistrationController : Controller
@@ -72,11 +76,10 @@
         {
             if (ModelState.IsValid)
             {
-                // TODO: Temp data needs to be handled by the organisation search after redirect
-                TempData[typeof(SoleTraderDetailsViewModel).Name] = model;
                 return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
                 {
-                    name = model.BusinessTradingName
+                    tradingName = model.BusinessTradingName,
+                    type = OrganisationType.SoleTraderOrIndividual
                 });
             }
 
@@ -95,11 +98,10 @@
         {
             if (ModelState.IsValid)
             {
-                // TODO: Temp data needs to be handled by the organisation search after redirect
-                TempData[typeof(PartnershipDetailsViewModel).Name] = model;
                 return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
                 {
-                    name = model.BusinessTradingName
+                    tradingName = model.BusinessTradingName,
+                    type = OrganisationType.Partnership
                 });
             }
 
@@ -118,11 +120,12 @@
         {
             if (ModelState.IsValid)
             {
-                // TODO: Temp data needs to be handled by the organisation search after redirect
-                TempData[typeof(PartnershipDetailsViewModel).Name] = model;
                 return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
                 {
-                    name = model.CompanyName
+                    name = model.CompanyName,
+                    tradingName = model.BusinessTradingName,
+                    companiesRegistrationNumber = model.CompaniesRegistrationNumber,
+                    type = OrganisationType.RegisteredCompany
                 });
             }
 
@@ -130,16 +133,25 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> SelectOrganisation(string name, int page = 1)
+        public async Task<ActionResult> SelectOrganisation(string name, string tradingName, string companiesRegistrationNumber, OrganisationType type, int page = 1)
         {
-            var fallbackPagingViewModel = new PagingViewModel(
-                "SelectOrganisation",
-                "OrganisationRegistration",
-                new { Name = name });
-
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(tradingName))
             {
-                return View(new SelectOrganisationViewModel(fallbackPagingViewModel));
+                ModelState.AddModelError(string.Empty, "No name or trading name supplied, unable to perform search");
+
+                var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", new { Name = name });
+
+                var viewModel = new SelectOrganisationViewModel
+                {
+                    Name = name,
+                    TradingName = tradingName,
+                    CompaniesRegistrationNumber = companiesRegistrationNumber,
+                    Type = type,
+                    MatchingOrganisations = new List<OrganisationSearchData>(),
+                    PagingViewModel = fallbackPagingViewModel
+                };
+
+                return View(viewModel);
             }
 
             using (var client = apiClient())
@@ -150,14 +162,22 @@
                     // would rather bake this into the db query but not really feasible
 
                     var matchingOrganisations =
-                        await
-                            client.SendAsync(User.GetAccessToken(),
-                                new FindMatchingOrganisations(name, page, OrganisationsPerPage));
+                        await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(name ?? tradingName, page, OrganisationsPerPage));
 
                     var pagingViewModel = PagingViewModel.FromValues(matchingOrganisations.Count(), OrganisationsPerPage,
                         page, "SelectOrganisation", "OrganisationRegistration", new { Name = name });
 
-                    return View(new SelectOrganisationViewModel(name, matchingOrganisations, pagingViewModel));
+                    var viewModel = new SelectOrganisationViewModel
+                    {
+                        Name = name,
+                        TradingName = tradingName,
+                        CompaniesRegistrationNumber = companiesRegistrationNumber,
+                        Type = type,
+                        MatchingOrganisations = matchingOrganisations,
+                        PagingViewModel = pagingViewModel
+                    };
+
+                    return View(viewModel);
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -167,8 +187,89 @@
                         throw;
                     }
 
-                    return View(new SelectOrganisationViewModel(fallbackPagingViewModel));
+                    var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", new { Name = name });
+
+                    var viewModel = new SelectOrganisationViewModel
+                    {
+                        Name = name,
+                        TradingName = tradingName,
+                        CompaniesRegistrationNumber = companiesRegistrationNumber,
+                        Type = type,
+                        MatchingOrganisations = new List<OrganisationSearchData>(),
+                        PagingViewModel = fallbackPagingViewModel
+                    };
+
+                    return View(viewModel);
                 }
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SelectOrganisation(SelectOrganisationViewModel viewModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateOrganisation(SelectOrganisationViewModel viewModel)
+        {
+            using (var client = apiClient())
+            {
+                try
+                {
+                    var command = MakeOrganisationCreationRequest(
+                        viewModel.Name,
+                        viewModel.TradingName,
+                        viewModel.CompaniesRegistrationNumber,
+                        viewModel.Type);
+                    var organisationId = await client.SendAsync(User.GetAccessToken(), command);
+                    return RedirectToAction("MainContactPerson", new { id = organisationId });
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+
+                    return RedirectToAction("Type"); // where ought this really go? redirect will eat the model errors!
+                }
+            }
+        }
+
+        private CreateOrganisationRequest MakeOrganisationCreationRequest(string name, string tradingName, string companiesRegistrationNumber, OrganisationType organisationType)
+        {
+            switch (organisationType)
+            {
+                case OrganisationType.RegisteredCompany:
+
+                    return new CreateRegisteredCompanyRequest
+                    {
+                        BusinessName = name,
+                        CompanyRegistrationNumber = companiesRegistrationNumber,
+                        TradingName = tradingName
+                    };
+
+                case OrganisationType.SoleTraderOrIndividual:
+
+                    return new CreateSoleTraderRequest
+                    {
+                        TradingName = tradingName
+                    };
+
+                case OrganisationType.Partnership:
+
+                    return new CreatePartnershipRequest
+                    {
+                        TradingName = tradingName
+                    };
+
+                default:
+
+                    throw new InvalidEnumArgumentException("organisationType");
             }
         }
 
