@@ -13,7 +13,6 @@
     using ViewModels.JoinOrganisation;
     using ViewModels.OrganisationRegistration;
     using ViewModels.OrganisationRegistration.Details;
-    using ViewModels.OrganisationRegistration.PrincipalPlaceOfBusiness;
     using ViewModels.OrganisationRegistration.Type;
     using ViewModels.Shared;
     using Weee.Requests.Organisations;
@@ -23,13 +22,10 @@
     public class OrganisationRegistrationController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly IPrincipalPlaceOfBusinessRequestCreator principalPlaceOfBusinessRequestCreator;
 
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
-            IPrincipalPlaceOfBusinessRequestCreator principalPlaceOfBusinessRequestCreator)
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
-            this.principalPlaceOfBusinessRequestCreator = principalPlaceOfBusinessRequestCreator;
         }
 
         [HttpGet]
@@ -221,8 +217,7 @@
                 try
                 {
                     var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                    string organisationType = organisation.OrganisationType.ToString();
-                    ViewBag.OrgType = organisationType;
+                    model.OrganisationType = organisation.OrganisationType;
                     await this.BindUKCompetentAuthorityRegionsList(client, User);
                     return View(model);
                 }
@@ -259,7 +254,7 @@
                     model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
                     var request = model.ToAddRequest(type);
                     var response = await client.SendAsync(User.GetAccessToken(), request);
-                    return RedirectToAction("ServiceOfNoticeAddress", "OrganisationRegistration", new
+                    return RedirectToAction("ServiceOfNoticeOptions", "OrganisationRegistration", new
                     {
                         id = model.OrganisationId
                     });
@@ -276,68 +271,6 @@
             }
 
             return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> PrincipalPlaceOfBusiness(Guid id) // Organisation Id
-        {
-            using (var client = apiClient())
-            {
-                try
-                {
-                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationPrincipalPlaceOfBusiness(id));
-                    organisation.Id = id;
-                    return View(new PrincipalPlaceOfBusinessViewModel
-                    {
-                        OrganisationId = id
-                    });
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                }    
-            }
-
-            // If we got this far, something has gone wrong
-            throw new Exception("An attempt was made to load the 'principal place of business' page, however it could not be loaded");
-        }
-
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public async Task<ActionResult> PrincipalPlaceOfBusiness(PrincipalPlaceOfBusinessViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            using (var client = apiClient())
-            {
-                try
-                {
-                    await client.SendAsync(User.GetAccessToken(),
-                        principalPlaceOfBusinessRequestCreator.ViewModelToRequest(model));
-
-                    return RedirectToAction("ServiceOfNoticeOptions", "OrganisationRegistration");
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                }
-            }
-
-            // If we got this far, something has gone wrong
-            throw new Exception("An attempt was made to submit the 'principal place of business' details, however something went wrong");
         }
     }
 }
