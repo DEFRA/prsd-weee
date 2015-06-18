@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.OrganisationSummaryViewModel
+﻿@using EA.Weee.Requests.Organisations
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.OrganisationSummaryViewModel
 @{
     ViewBag.Title = "Review Organisation Details";
 }
@@ -14,7 +15,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-            <!-- //////////// Main Accordion /////////////// -->
+        <!-- //////////// Main Accordion /////////////// -->
         <section id="form-summary" role="main">
             <div class="overview-summary">
                 <!-- //////////// About-your-organisation /////////////// -->
@@ -24,34 +25,30 @@
                         @*<a href="" title="Edit">Edit</a>*@
                     </summary>
                     <div class="form-detail-cont" id="details-content-0" aria-hidden="true" style="display: block;">
-                        <!-- ///// Info Divider/Header //// -->
+
                         <h4>Form Information</h4>
-                        <!-- ///// Section //// -->
+
                         <div class="grid-row form-detail">
                             <span class="column-third">
                                 Organisation type
                             </span>
                             <span class="column-two-thirds">
-                                @Model.OrganisationData.
+                                @Model.OrganisationData.OrganisationType
                             </span>
                         </div>
-                        <!-- ///// Section //// -->
+
                         <div class="grid-row form-detail">
                             <span class="column-third">
-                                Address
+                                Company name
                             </span>
                             <span class="column-two-thirds">
-                                Knutsford Road<br>
-                                Latchford<br>
-                                Warrington<br>
-                                Cheshire<br>
-                                WA4 1HT<br>
+                                @Model.OrganisationData.Name
                             </span>
                         </div>
-                        <!-- ///// Section //// -->
+
                         <div class="grid-row form-detail">
-                            <span class="column-third">Telephone</span>
-                            <span class="column-two-thirds">07986 444 666</span>
+                            <span class="column-third">Trading name</span>
+                            <span class="column-two-thirds">@Model.OrganisationData.TradingName</span>
                         </div>
                     </div>
                 </details>
@@ -63,34 +60,25 @@
                         @*<a href="" title="Edit">Edit</a>*@
                     </summary>
                     <div class="form-detail-cont" id="details-content-2" aria-hidden="true" style="display: block;">
-                        <!-- ///// Info Divider/Header //// -->
+
                         <h4>Form Information</h4>
-                        <!-- ///// Section //// -->
+
                         <div class="grid-row form-detail">
                             <span class="column-third">
-                                Company name
+                                Name
                             </span>
                             <span class="column-two-thirds">
-                                AnyMajorCompany Ltd.
+                                @Model.OrganisationData.Contact.FirstName @Model.OrganisationData.Contact.LastName
                             </span>
                         </div>
-                        <!-- ///// Section //// -->
+
                         <div class="grid-row form-detail">
                             <span class="column-third">
-                                Address
+                                Position
                             </span>
                             <span class="column-two-thirds">
-                                Knutsford Road<br>
-                                Latchford<br>
-                                Warrington<br>
-                                Cheshire<br>
-                                WA4 1HT<br>
+                                @Model.OrganisationData.Contact.Position
                             </span>
-                        </div>
-                        <!-- ///// Section //// -->
-                        <div class="grid-row form-detail">
-                            <span class="column-third">Telephone</span>
-                            <span class="column-two-thirds">07986 444 666</span>
                         </div>
                     </div>
                 </details>
@@ -102,34 +90,44 @@
                         @*<a href="" title="Edit">Edit</a>*@
                     </summary>
                     <div class="form-detail-cont" id="details-content-3" aria-hidden="true" style="display: block;">
-                        <!-- ///// Info Divider/Header //// -->
+
                         <h4>Form Information</h4>
-                        <!-- ///// Section //// -->
-                        <div class="grid-row form-detail">
-                            <span class="column-third">
-                                Company name
-                            </span>
-                            <span class="column-two-thirds">
-                                AnyMajorCompany Ltd.
-                            </span>
-                        </div>
-                        <!-- ///// Section //// -->
+
                         <div class="grid-row form-detail">
                             <span class="column-third">
                                 Address
                             </span>
                             <span class="column-two-thirds">
-                                Knutsford Road<br>
-                                Latchford<br>
-                                Warrington<br>
-                                Cheshire<br>
-                                WA4 1HT<br>
+                                @Model.OrganisationData.OrganisationAddress.Address1<br />
+                                @if (Model.OrganisationData.OrganisationAddress.Address2 != null)
+                                {
+                                    @Model.OrganisationData.OrganisationAddress.Address2<br />
+                                }
+                                @Model.OrganisationData.OrganisationAddress.TownOrCity<br />
+                                @if (Model.OrganisationData.OrganisationAddress.CountyOrRegion != null)
+                                {
+                                    @Model.OrganisationData.OrganisationAddress.CountyOrRegion<br />
+                                }
+                                @if (Model.OrganisationData.OrganisationAddress.Postcode != null)
+                                {
+                                    @Model.OrganisationData.OrganisationAddress.Postcode<br />
+                                }
+                                @Model.OrganisationData.OrganisationAddress.Country<br />
                             </span>
                         </div>
-                        <!-- ///// Section //// -->
+
                         <div class="grid-row form-detail">
-                            <span class="column-third">Telephone</span>
-                            <span class="column-two-thirds">07986 444 666</span>
+                            <span class="column-third">
+                                Phone
+                            </span>
+                            <span class="column-two-thirds">
+                                @Model.OrganisationData.OrganisationAddress.Telephone
+                            </span>
+                        </div>
+
+                        <div class="grid-row form-detail">
+                            <span class="column-third">Email</span>
+                            <span class="column-two-thirds">@Model.OrganisationData.OrganisationAddress.Email</span>
                         </div>
                     </div>
                 </details>
@@ -137,38 +135,55 @@
                 <!-- //////////// Your-principal-place-of-business or Your-registered-company /////////////// -->
                 <details role="group">
                     <summary role="button" aria-controls="details-content-4" tabindex="0" aria-expanded="false">
+                        @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+                        {
                         <h3 title="Your-principal-place-of-business">Your principal place of business</h3>
+                        }
+                        else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+                        {
+                        <h3 title="Your-registered-company">Your registered company</h3>
+                        }
                         @*<a href="" title="Edit">Edit</a>*@
                     </summary>
                     <div class="form-detail-cont" id="details-content-4" aria-hidden="true" style="display: block;">
-                        <!-- ///// Info Divider/Header //// -->
+
                         <h4>Form Information</h4>
-                        <!-- ///// Section //// -->
-                        <div class="grid-row form-detail">
-                            <span class="column-third">
-                                Company name
-                            </span>
-                            <span class="column-two-thirds">
-                                AnyMajorCompany Ltd.
-                            </span>
-                        </div>
-                        <!-- ///// Section //// -->
+
                         <div class="grid-row form-detail">
                             <span class="column-third">
                                 Address
                             </span>
                             <span class="column-two-thirds">
-                                Knutsford Road<br>
-                                Latchford<br>
-                                Warrington<br>
-                                Cheshire<br>
-                                WA4 1HT<br>
+                                @Model.OrganisationData.BusinessAddress.Address1<br />
+                                @if (Model.OrganisationData.BusinessAddress.Address2 != null)
+                                {
+                                    @Model.OrganisationData.BusinessAddress.Address2<br />
+                                }
+                                @Model.OrganisationData.BusinessAddress.TownOrCity<br />
+                                @if (Model.OrganisationData.BusinessAddress.CountyOrRegion != null)
+                                {
+                                    @Model.OrganisationData.BusinessAddress.CountyOrRegion<br />
+                                }
+                                @if (Model.OrganisationData.BusinessAddress.Postcode != null)
+                                {
+                                    @Model.OrganisationData.BusinessAddress.Postcode<br />
+                                }
+                                @Model.OrganisationData.BusinessAddress.Country<br />
                             </span>
                         </div>
-                        <!-- ///// Section //// -->
+
                         <div class="grid-row form-detail">
-                            <span class="column-third">Telephone</span>
-                            <span class="column-two-thirds">07986 444 666</span>
+                            <span class="column-third">
+                                Phone
+                            </span>
+                            <span class="column-two-thirds">
+                                @Model.OrganisationData.BusinessAddress.Telephone
+                            </span>
+                        </div>
+
+                        <div class="grid-row form-detail">
+                            <span class="column-third">Email</span>
+                            <span class="column-two-thirds">@Model.OrganisationData.BusinessAddress.Email</span>
                         </div>
                     </div>
                 </details>
