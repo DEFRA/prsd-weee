@@ -7,7 +7,7 @@
     public class Address : Entity
     {
         public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode, string country, string telephone, string email)
-        {      
+        {
             Address1 = address1;
             Address2 = address2;
             TownOrCity = townOrCity;
@@ -144,14 +144,31 @@
         {
             get
             {
-                if (Country == null
-                    || !Country.Equals("United Kingdom",
-                        StringComparison.InvariantCultureIgnoreCase))
+                if (Country != null && IsUKRegion)
                 {
-                    return false;
+                    return true;
                 }
 
-                return true;
+                return false;
+            }
+        }
+      
+        private bool IsUKRegion
+        {
+            get
+            {
+                if (Country != null && 
+                    (Country.Equals("England", StringComparison.InvariantCultureIgnoreCase)
+                    || 
+                    Country.Equals("Wales", StringComparison.InvariantCultureIgnoreCase)
+                    || 
+                    Country.Equals("Northern Ireland", StringComparison.InvariantCultureIgnoreCase)
+                    || 
+                    Country.Equals("England", StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    return true;
+                }
+                return false;
             }
         }
     }

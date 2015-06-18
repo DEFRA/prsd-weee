@@ -20,27 +20,32 @@
                     case 1:
                         if (OrganisationAddress != null)
                         {
-                            throw new InvalidOperationException(string.Format("Cannot add Organisation address to Organisation {0}. This organisation already has a organisation address {1}.",
-                                                    this.Id,
-                                                    this.OrganisationAddress.Id));
+                            throw new InvalidOperationException(string.Format("Cannot add Organisation address to Organisation {0}. This organisation already has a organisation address",
+                                                    this.Id));
                         }
                         OrganisationAddress = addr;
                         break;
                     case 2:
                         if (BusinessAddress != null)
                         {
-                            throw new InvalidOperationException(string.Format("Cannot add Business address to Organisation {0}. This organisation already has a business address {1}.",
-                                                    this.Id,
-                                                    this.BusinessAddress.Id));
+                            throw new InvalidOperationException(string.Format("Cannot add Business address to Organisation {0}. This organisation already has a business address.",
+                                                    this.Id));
                         }
-                        BusinessAddress = addr;
+                        if (addr.IsUkAddress)
+                        {
+                            BusinessAddress = addr;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException(string.Format("Cannot add Business address to Organisation {0}. Address should be UK address.",
+                                                    this.Id));
+                        }
                         break;
                     case 3:
                         if (NotificationAddress != null)
                         {
-                            throw new InvalidOperationException(string.Format("Cannot add Notification address to Organisation {0}. This organisation already has a notification address {1}.",
-                                                    this.Id,
-                                                    this.NotificationAddress.Id));
+                            throw new InvalidOperationException(string.Format("Cannot add Notification address to Organisation {0}. This organisation already has a notification address.",
+                                                    this.Id));
                         }
                         NotificationAddress = addr;
                         break;
