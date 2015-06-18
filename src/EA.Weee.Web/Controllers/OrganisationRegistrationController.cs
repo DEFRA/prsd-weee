@@ -274,7 +274,7 @@
                 {
                     try
                     {
-                        var response = await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
+                        await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
                         return RedirectToAction("OrganisationAddress", "OrganisationRegistration", new
                         {
                             id = model.OrganisationId
@@ -301,23 +301,7 @@
         {
             using (var client = apiClient())
             {
-                var model = new AddressViewModel { OrganisationId = id };
-                try
-                {
-                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                    model.OrganisationType = organisation.OrganisationType;
-                    await this.BindUKCompetentAuthorityRegionsList(client, User);
-                    return View(model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                }
+                var model = await GetAddressViewModel(id, client);
                 return View(model);
             }
         }
@@ -337,11 +321,7 @@
             {
                 using (var client = apiClient())
                 {
-                    var type = AddressType.OrganistionAddress;
-
-                    model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
-                    var request = model.ToAddRequest(type);
-                    var response = await client.SendAsync(User.GetAccessToken(), request);
+                    await AddAddressToOrganisation(model, AddressType.OrganistionAddress, client);
                     return RedirectToAction("RegisteredOfficeAddress", "OrganisationRegistration", new
                     {
                         id = model.OrganisationId
@@ -365,24 +345,7 @@
         {
             using (var client = apiClient())
             {
-                var model = new AddressViewModel { OrganisationId = id };
-                try
-                {
-                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                    string organisationType = organisation.OrganisationType.ToString();
-                    ViewBag.OrgType = organisationType;
-                    await this.BindUKCompetentAuthorityRegionsList(client, User);
-                    return View(model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                }
+                var model = await GetAddressViewModel(id, client);
                 return View(model);
             }
         }
@@ -402,10 +365,7 @@
             {
                 using (var client = apiClient())
                 {
-                    var type = AddressType.RegisteredorPPBAddress;
-                    model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
-                    var request = model.ToAddRequest(type);
-                    var response = await client.SendAsync(User.GetAccessToken(), request);
+                    await AddAddressToOrganisation(model, AddressType.RegisteredorPPBAddress, client);
                     return RedirectToAction("ReviewOrganisationSummary", "OrganisationRegistration", new
                     {
                         id = model.OrganisationId
@@ -422,6 +382,26 @@
                 }
             }
             return View(model);
+        }
+
+       private async Task<AddressViewModel> GetAddressViewModel(Guid id, IWeeeClient client)
+        {
+            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+            var model = new AddressViewModel
+            {
+                OrganisationId = id,
+                OrganisationType = organisation.OrganisationType,
+            };
+
+            await this.BindUKCompetentAuthorityRegionsList(client, User);
+            return model;
+        }
+
+        private async Task AddAddressToOrganisation(AddressViewModel model, AddressType type, IWeeeClient client)
+        {
+            model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
+            var request = model.ToAddRequest(type);
+            await client.SendAsync(User.GetAccessToken(), request);
         }
     }
 }
