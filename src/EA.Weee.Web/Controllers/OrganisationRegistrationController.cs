@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using EA.Prsd.Core.Extensions;
@@ -15,7 +16,6 @@
     using EA.Weee.Requests.Organisations.Create.Base;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Infrastructure;
-    using EA.Weee.Web.Requests;
     using EA.Weee.Web.ViewModels.JoinOrganisation;
     using EA.Weee.Web.ViewModels.OrganisationRegistration;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
@@ -209,11 +209,13 @@
 
             using (var client = apiClient())
             {
+                var userId = ((ClaimsIdentity)User.Identity).Claims.FirstOrDefault(c => c.Type == "sub").Value;
+
                 var response =
                     await
                     client.SendAsync(
                         User.GetAccessToken(),
-                        new JoinOrganisation("temp and fake", viewModel.OrganisationToJoin));
+                        new JoinOrganisation(userId, viewModel.OrganisationToJoin));
 
                 return RedirectToAction("JoinOrganisationConfirmation");
             }
