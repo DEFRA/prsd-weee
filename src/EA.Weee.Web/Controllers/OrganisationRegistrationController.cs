@@ -135,23 +135,16 @@
         [HttpGet]
         public async Task<ActionResult> SelectOrganisation(string name, string tradingName, string companiesRegistrationNumber, OrganisationType type, int page = 1)
         {
+            var routeValues = new { name = name, tradingName = tradingName, companiesRegistrationNumber = companiesRegistrationNumber, type = type };
+
+            var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", routeValues);
+            var fallbackSelectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type, 
+                                new List<OrganisationSearchData>(), fallbackPagingViewModel);
+
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(tradingName))
             {
                 ModelState.AddModelError(string.Empty, "No name or trading name supplied, unable to perform search");
-
-                var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", new { Name = name });
-
-                var viewModel = new SelectOrganisationViewModel
-                {
-                    Name = name,
-                    TradingName = tradingName,
-                    CompaniesRegistrationNumber = companiesRegistrationNumber,
-                    Type = type,
-                    MatchingOrganisations = new List<OrganisationSearchData>(),
-                    PagingViewModel = fallbackPagingViewModel
-                };
-
-                return View(viewModel);
+                return View(fallbackSelectOrganisationViewModel);
             }
 
             using (var client = apiClient())
@@ -161,23 +154,14 @@
                     const int OrganisationsPerPage = 4;
                     // would rather bake this into the db query but not really feasible
 
-                    var matchingOrganisations =
+                    var organisationSearchResultData =
                         await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(name ?? tradingName, page, OrganisationsPerPage));
 
-                    var pagingViewModel = PagingViewModel.FromValues(matchingOrganisations.Count(), OrganisationsPerPage,
-                        page, "SelectOrganisation", "OrganisationRegistration", new { Name = name });
+                    var pagingViewModel = PagingViewModel.FromValues(organisationSearchResultData.TotalMatchingOrganisations, OrganisationsPerPage,
+                        page, "SelectOrganisation", "OrganisationRegistration", routeValues);
 
-                    var viewModel = new SelectOrganisationViewModel
-                    {
-                        Name = name,
-                        TradingName = tradingName,
-                        CompaniesRegistrationNumber = companiesRegistrationNumber,
-                        Type = type,
-                        MatchingOrganisations = matchingOrganisations,
-                        PagingViewModel = pagingViewModel
-                    };
-
-                    return View(viewModel);
+                    return View(BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
+                                    organisationSearchResultData.Results, pagingViewModel));
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -186,22 +170,22 @@
                     {
                         throw;
                     }
-
-                    var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", new { Name = name });
-
-                    var viewModel = new SelectOrganisationViewModel
-                    {
-                        Name = name,
-                        TradingName = tradingName,
-                        CompaniesRegistrationNumber = companiesRegistrationNumber,
-                        Type = type,
-                        MatchingOrganisations = new List<OrganisationSearchData>(),
-                        PagingViewModel = fallbackPagingViewModel
-                    };
-
-                    return View(viewModel);
+                    return View(fallbackSelectOrganisationViewModel);
                 }
             }
+        }
+
+        private SelectOrganisationViewModel BuildSelectOrganisationViewModel(string name, string tradingName, string companiesRegistrationNumber, OrganisationType type, IList<OrganisationSearchData> matchingOrganisations, PagingViewModel pagingViewModel)
+        {
+            return new SelectOrganisationViewModel
+            {
+                Name = name,
+                TradingName = tradingName,
+                CompaniesRegistrationNumber = companiesRegistrationNumber,
+                Type = type,
+                MatchingOrganisations = matchingOrganisations,
+                PagingViewModel = pagingViewModel
+            };
         }
 
         [HttpPost]
@@ -316,71 +300,6 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RegisteredOfficeAddress(Guid id)
-        {
-            using (var client = apiClient())
-            {
-                var model = new AddressViewModel { OrganisationId = id };
-                try
-                {
-                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                    string organisationType = organisation.OrganisationType.ToString();
-                    ViewBag.OrgType = organisationType;
-                    await this.BindUKCompetentAuthorityRegionsList(client, User);
-                    return View(model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                }
-                return View(model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel model)
-        {
-            await this.BindUKCompetentAuthorityRegionsList(apiClient, User);
-
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            try
-            {
-                using (var client = apiClient())
-                {
-                    var type = AddressType.RegisteredorPPBAddress;
-
-                    model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
-                    var request = model.ToAddRequest(type);
-                    var response = await client.SendAsync(User.GetAccessToken(), request);
-                    return RedirectToAction("ServiceOfNoticeAddress", "OrganisationRegistration", new
-                    {
-                        id = model.OrganisationId
-                    });
-                }
-            }
-            catch (ApiBadRequestException ex)
-            {
-                this.HandleBadRequest(ex);
-
-                if (ModelState.IsValid)
-                {
-                    throw;
-                }
-            }
-            return View(model);
-        }
-
-        [HttpGet]
         public async Task<ActionResult> OrganisationAddress(Guid id)
         {
             using (var client = apiClient())
@@ -425,6 +344,70 @@
                     var request = model.ToAddRequest(type);
                     var response = await client.SendAsync(User.GetAccessToken(), request);
                     return RedirectToAction("RegisteredOfficeAddress", "OrganisationRegistration", new
+                    {
+                        id = model.OrganisationId
+                    });
+                }
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RegisteredOfficeAddress(Guid id)
+        {
+            using (var client = apiClient())
+            {
+                var model = new AddressViewModel { OrganisationId = id };
+                try
+                {
+                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+                    string organisationType = organisation.OrganisationType.ToString();
+                    ViewBag.OrgType = organisationType;
+                    await this.BindUKCompetentAuthorityRegionsList(client, User);
+                    return View(model);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                }
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel model)
+        {
+            await this.BindUKCompetentAuthorityRegionsList(apiClient, User);
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                using (var client = apiClient())
+                {
+                    var type = AddressType.RegisteredorPPBAddress;
+                    model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
+                    var request = model.ToAddRequest(type);
+                    var response = await client.SendAsync(User.GetAccessToken(), request);
+                    return RedirectToAction("ReviewOrganisationSummary", "OrganisationRegistration", new
                     {
                         id = model.OrganisationId
                     });

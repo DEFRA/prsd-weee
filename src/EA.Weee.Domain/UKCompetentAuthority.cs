@@ -12,9 +12,7 @@
         public string Name { get; private set; }
 
         public string Abbreviation { get; private set; }
-
-        public bool IsSystemUser { get; private set; }
-
+ 
         public string Region { get; private set; }
     }
 }
