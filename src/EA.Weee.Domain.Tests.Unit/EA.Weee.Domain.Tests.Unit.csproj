@@ -67,7 +67,6 @@
     </Compile>
     <Compile Include="Helpers\EntityHelper.cs" />
     <Compile Include="Organisation\ContactPersonTests.cs" />
-    <Compile Include="Organisation\RegistedOfficeOrPPBAddressTests.cs" />
     <Compile Include="Organisation\OrganisationAddressTests.cs" />
     <Compile Include="Organisation\OrganisationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
