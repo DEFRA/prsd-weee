@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.Requests.Organisations
 {
-    using System.Collections.Generic;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mediator;
 
-    public class FindMatchingOrganisations : IRequest<IList<OrganisationSearchData>>
+    public class FindMatchingOrganisations : IRequest<OrganisationSearchDataResult>
     {
         public string CompanyName { get; private set; }
 
