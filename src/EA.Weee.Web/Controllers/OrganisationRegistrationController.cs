@@ -424,6 +424,7 @@
             return View(model);
         }
 
+        [HttpGet]
         public async Task<ActionResult> ReviewOrganisationDetails(Guid id)
         {
             var model = new OrganisationSummaryViewModel { OrganisationId = id };
