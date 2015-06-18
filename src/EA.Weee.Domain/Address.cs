@@ -164,7 +164,7 @@
                     || 
                     Country.Equals("Northern Ireland", StringComparison.InvariantCultureIgnoreCase)
                     || 
-                    Country.Equals("England", StringComparison.InvariantCultureIgnoreCase)))
+                    Country.Equals("Scotland", StringComparison.InvariantCultureIgnoreCase)))
                 {
                     return true;
                 }
