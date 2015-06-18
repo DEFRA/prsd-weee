@@ -398,8 +398,7 @@
 
         private async Task<AddressViewModel> GetAddressViewModel(Guid id, IWeeeClient client)
         {
-            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                // Check the organisation Id is valid
+            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id)); // Check the organisation Id is valid
             var model = new AddressViewModel
             {
                 OrganisationId = id,
