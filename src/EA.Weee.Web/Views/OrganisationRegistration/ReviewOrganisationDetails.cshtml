@@ -1,4 +1,5 @@
-﻿@{
+﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.OrganisationSummaryViewModel
+@{
     ViewBag.Title = "Review Organisation Details";
 }
 
@@ -28,10 +29,10 @@
                         <!-- ///// Section //// -->
                         <div class="grid-row form-detail">
                             <span class="column-third">
-                                Company name
+                                Organisation type
                             </span>
                             <span class="column-two-thirds">
-                                AnyMajorCompany Ltd.
+                                @Model.OrganisationData.
                             </span>
                         </div>
                         <!-- ///// Section //// -->

@@ -138,7 +138,7 @@
             var routeValues = new { name = name, tradingName = tradingName, companiesRegistrationNumber = companiesRegistrationNumber, type = type };
 
             var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", routeValues);
-            var fallbackSelectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type, 
+            var fallbackSelectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
                                 new List<OrganisationSearchData>(), fallbackPagingViewModel);
 
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(tradingName))
@@ -407,7 +407,7 @@
                     model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
                     var request = model.ToAddRequest(type);
                     var response = await client.SendAsync(User.GetAccessToken(), request);
-                    return RedirectToAction("ReviewOrganisationSummary", "OrganisationRegistration", new
+                    return RedirectToAction("ReviewOrganisationDetails", "OrganisationRegistration", new
                     {
                         id = model.OrganisationId
                     });
@@ -425,9 +425,28 @@
             return View(model);
         }
 
-        public async Task<ActionResult> ReviewOrganisationDetails()
+        public async Task<ActionResult> ReviewOrganisationDetails(Guid id)
         {
-            return View();
+            var model = new OrganisationSummaryViewModel { OrganisationId = id };
+            using (var client = apiClient())
+            {
+                try
+                {
+                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+                    model.OrganisationData = organisation;
+                    return View(model);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                }
+                return View(model);
+            }
         }
     }
 }
