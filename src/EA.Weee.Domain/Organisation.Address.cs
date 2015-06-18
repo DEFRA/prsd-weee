@@ -8,6 +8,7 @@
         public void AddAddress(AddressType type, Address address)
         {
             Guard.ArgumentNotNull(() => address, address);
+            Guard.ArgumentNotNull(() => type, type);
 
             if (address != null)
             {
