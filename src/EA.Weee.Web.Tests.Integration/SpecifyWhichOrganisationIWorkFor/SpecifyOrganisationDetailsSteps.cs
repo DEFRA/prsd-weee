@@ -117,8 +117,7 @@
         private OrganisationRegistrationController OrganisationRegistrationController()
         {
             return new OrganisationRegistrationController(
-                () => new WeeeClient(ConfigurationManager.AppSettings["Weee.ApiUrl"]),
-                new SoleTraderDetailsRequestCreator());
+                    () => new WeeeClient(ConfigurationManager.AppSettings["Weee.ApiUrl"]));
         }
 
         private OrganisationTypeViewModel OrganisationType(OrganisationTypeEnum selectedOption)

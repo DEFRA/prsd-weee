@@ -26,13 +26,10 @@
     public class OrganisationRegistrationController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator;
 
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
-            ISoleTraderDetailsRequestCreator soleTraderDetailsRequestCreator)
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
-            this.soleTraderDetailsRequestCreator = soleTraderDetailsRequestCreator;
         }
 
         [HttpGet]
@@ -307,6 +304,8 @@
                 var model = new AddressViewModel { OrganisationId = id };
                 try
                 {
+                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+                    model.OrganisationType = organisation.OrganisationType;
                     await this.BindUKCompetentAuthorityRegionsList(client, User);
                     return View(model);
                 }

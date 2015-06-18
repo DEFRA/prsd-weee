@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Prsd.Core.Validation;
+    using Validation;
 
     public class AddressData
     {
@@ -44,7 +46,7 @@
         [Required]
         [StringLength(20)]
         [DataType(DataType.Text)]
-        [RegularExpression("^[0-9+\\(\\)#\\.\\s\\/ext-]+$", ErrorMessage = "The entered phone number is invalid")]
+        [GenericPhoneNumber(ErrorMessage = "The Phone field should contain a valid phone number")]
         [Display(Name = "Phone")]
         public string Telephone { get; set; }
 

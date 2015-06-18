@@ -13,6 +13,8 @@
 
         public Guid OrganisationId { get; set; }
 
+        public OrganisationType OrganisationType { get; set; }
+
         public AddressData Address { get; set; }
 
         public AddAddressToOrganisation ToAddRequest(AddressType type)

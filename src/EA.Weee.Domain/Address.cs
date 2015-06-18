@@ -7,13 +7,7 @@
     public class Address : Entity
     {
         public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode, string country, string telephone, string email)
-        {
-            Guard.ArgumentNotNullOrEmpty(() => address1, address1);
-            Guard.ArgumentNotNullOrEmpty(() => townOrCity, townOrCity);
-            Guard.ArgumentNotNullOrEmpty(() => country, country);
-            Guard.ArgumentNotNullOrEmpty(() => telephone, telephone);
-            Guard.ArgumentNotNullOrEmpty(() => email, email);
-       
+        {      
             Address1 = address1;
             Address2 = address2;
             TownOrCity = townOrCity;
@@ -42,7 +36,8 @@
             get { return address1; }
             private set
             {
-                if (value != null && value.Length > 35)
+                Guard.ArgumentNotNullOrEmpty(() => value, value);
+                if (value.Length > 35)
                 {
                     throw new InvalidOperationException(string.Format(("Address1 cannot be greater than 35 characters")));
                 }
@@ -68,7 +63,8 @@
             get { return townOrCity; }
             private set
             {
-                if (value != null && value.Length > 35)
+                Guard.ArgumentNotNullOrEmpty(() => value, value);
+                if (value.Length > 35)
                 {
                     throw new InvalidOperationException(string.Format(("Town Or City cannot be greater than 35 characters")));
                 }
@@ -107,7 +103,8 @@
             get { return country; }
             private set
             {
-                if (value != null && value.Length > 35)
+                Guard.ArgumentNotNullOrEmpty(() => value, value);
+                if (value.Length > 35)
                 {
                     throw new InvalidOperationException(string.Format(("Country cannot be greater than 35 characters")));
                 }
@@ -120,7 +117,8 @@
             get { return telephone; }
             private set
             {
-                if (value != null && value.Length > 20)
+                Guard.ArgumentNotNullOrEmpty(() => value, value);
+                if (value.Length > 20)
                 {
                     throw new InvalidOperationException(string.Format(("Telephone cannot be greater than 20 characters")));
                 }
@@ -133,7 +131,8 @@
             get { return email; }
             private set
             {
-                if (value != null && value.Length > 256)
+                Guard.ArgumentNotNullOrEmpty(() => value, value);
+                if (value.Length > 256)
                 {
                     throw new InvalidOperationException(string.Format(("Email cannot be greater than 256 characters")));
                 }
