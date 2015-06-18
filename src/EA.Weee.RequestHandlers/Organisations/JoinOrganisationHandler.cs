@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
+    using EA.Weee.Domain;
     using EA.Weee.Requests.Organisations;
 
     internal class JoinOrganisationHandler : IRequestHandler<JoinOrganisation, Guid>
@@ -16,7 +17,7 @@
             this.context = context;
         }
 
-        public Task<Guid> HandleAsync(JoinOrganisation message)
+        public async Task<Guid> HandleAsync(JoinOrganisation message)
         {
             var organisation = context.Organisations.FirstOrDefault(o => o.Id == message.OrganisationId);
 
@@ -25,7 +26,13 @@
                 throw new ArgumentException(string.Format("Could not find an organisation with id {0}", message.OrganisationId));
             }
 
-            return Task.FromResult(Guid.NewGuid()); // not worrying about actual implementation of this juuuust yet
+            var organisationUser = new OrganisationUser(message.UserId, message.OrganisationId, OrganisationUserStatus.Pending);
+
+            context.OrganisationUsers.Add(organisationUser);
+
+            await context.SaveChangesAsync();
+
+            return message.OrganisationId;
         }
     }
 }

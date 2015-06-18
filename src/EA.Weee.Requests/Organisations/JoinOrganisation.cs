@@ -5,14 +5,14 @@ namespace EA.Weee.Requests.Organisations
 
     public class JoinOrganisation : IRequest<Guid>
     {
-        public string UserId { get; private set; }
+        public string UserId { get; set; }
 
-        public Guid OrganisationId { get; private set; }
+        public Guid OrganisationId { get; set; }
 
-        public JoinOrganisation(string userId, Guid organisationId)
+        public JoinOrganisation(string userId, Guid organisationToJoin)
         {
             UserId = userId;
-            OrganisationId = organisationId;
+            OrganisationId = organisationToJoin;
         }
     }
 }
