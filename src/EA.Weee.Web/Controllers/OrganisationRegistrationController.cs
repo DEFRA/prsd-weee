@@ -290,10 +290,15 @@
         }
 
         [HttpGet]
-        public ActionResult MainContactPerson(Guid id)
+        public async Task<ActionResult> MainContactPerson(Guid id)
         {
             using (var client = apiClient())
             {
+                /* RP: Check with the API to see if this is a valid organisation
+                 * It would be annoying for a user to fill out a form only to get an error at the end, 
+                 * when this could be avoided by checking the validity of the ID before the page loads */
+                await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+
                 var model = new ContactPersonViewModel { OrganisationId = id };
                 return View(model);
             }
@@ -336,23 +341,14 @@
         {
             using (var client = apiClient())
             {
-                var model = new AddressViewModel { OrganisationId = id };
-                try
+                await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id)); // Check the organisation Id is valid
+                var model = new AddressViewModel
                 {
-                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                    model.OrganisationType = organisation.OrganisationType;
-                    await this.BindUKCompetentAuthorityRegionsList(client, User);
-                    return View(model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
+                    OrganisationId = id
+                };
 
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                }
+                await this.BindUKCompetentAuthorityRegionsList(client, User);
+
                 return View(model);
             }
         }
