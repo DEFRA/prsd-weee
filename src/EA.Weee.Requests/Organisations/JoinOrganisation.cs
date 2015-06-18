@@ -1,4 +1,4 @@
-namespace EA.Weee.Web.Controllers
+namespace EA.Weee.Requests.Organisations
 {
     using System;
     using EA.Prsd.Core.Mediator;
