@@ -6,7 +6,6 @@
     using FakeItEasy;
     using ViewModels.Shared;
     using Web.Controllers;
-    using Web.Requests;
     using Weee.Requests.Organisations;
     using Xunit;
 
@@ -52,7 +51,7 @@
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(new OrganisationData());
-        
+
             var result = await OrganisationRegistrationController().RegisteredOfficeAddress(A<Guid>._);
             var model = ((ViewResult)result).Model;
 
