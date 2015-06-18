@@ -2,7 +2,7 @@
 
 @section main_content
     {
-    @if (@ViewBag.OrgType == "Partnership" || @ViewBag.OrgType == "Sole trader or individual")
+    @if (@Model.OrganisationType.ToString().ToLower() == "partnership" || @Model.OrganisationType.ToString().ToLower() == "soletraderorindividual")
     {
         ViewBag.Title = "Principal place of business";
         <header class="hgroup">
@@ -34,10 +34,12 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.OrganisationType)
 
         @Html.EditorFor(m => m.Address)
     
         <div class="form-group">
+
             <input type="submit" class="button" value="Continue" />
         </div>
     }
