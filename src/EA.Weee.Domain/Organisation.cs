@@ -79,5 +79,57 @@
         {
             return new Organisation(OrganisationType.RegisteredCompany, companyName, companyRegistrationNumber, tradingName);
         }
+
+        public void ToPending()
+        {
+            if (OrganisationStatus != OrganisationStatus.Incomplete)
+            {
+                throw new InvalidOperationException("Organisation status must be Incomplete to transition to Pending");
+            }
+
+            if (OrganisationAddress == null)
+            {
+                throw new InvalidOperationException("A Pending organisation must have an OrganisationAddress");
+            }
+
+            if (Contact == null)
+            {
+                throw new InvalidOperationException("A Pending organisation must have a Contact");
+            }
+
+            OrganisationStatus = OrganisationStatus.Pending;
+        }
+
+        public void ToApproved()
+        {
+            if (OrganisationStatus != OrganisationStatus.Pending)
+            {
+                throw new InvalidOperationException("Organisation status must be Pending to transition to Approved");
+            }
+
+            // insert other guards as needed...
+
+            OrganisationStatus = OrganisationStatus.Approved;
+        }
+
+        public void ToRefused()
+        {
+            if (OrganisationStatus != OrganisationStatus.Pending)
+            {
+                throw new InvalidOperationException("Organisation status must be Pending to transition to Refused");
+            }
+
+            OrganisationStatus = OrganisationStatus.Refused;
+        }
+
+        public void ToWithdrawn()
+        {
+            if (OrganisationStatus != OrganisationStatus.Approved)
+            {
+                throw new InvalidOperationException("Organisation status must be Approved to transition to Withdrawn");
+            }
+
+            OrganisationStatus = OrganisationStatus.Withdrawn;
+        }
     }
 }

@@ -66,7 +66,7 @@
         }
 
         [Fact]
-        public async void PostRegisteredOfficeAddress_PrincipalPlaceOfBusinessIsValid_ShouldRedirectToPageWithOptionsForServiceOfNoticeAddress()
+        public async void PostRegisteredOfficeAddress_PrincipalPlaceOfBusinessIsValid_ShouldRedirectToSummaryPage()
         {
             var model = new AddressViewModel();
 
@@ -74,7 +74,7 @@
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal("OrganisationRegistration", redirectToRouteResult.RouteValues["controller"]);
-            Assert.Equal("ServiceOfNoticeOptions", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal("ReviewOrganisationSummary", redirectToRouteResult.RouteValues["action"]);
         }
 
         private OrganisationRegistrationController OrganisationRegistrationController()
