@@ -62,7 +62,7 @@
 
             if (organisationType == OrganisationType.Partnership)
             {
-                return Organisation.CreateSoleTrader("Trading Name");
+                return Organisation.CreatePartnership("Trading Name");
             }
 
             return Organisation.CreateRegisteredCompany("Company Name", "AB123456", "Trading Name");
