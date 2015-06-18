@@ -365,24 +365,14 @@
         {
             using (var client = apiClient())
             {
-                var model = new AddressViewModel { OrganisationId = id };
-                try
+                var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+                var model = new AddressViewModel
                 {
-                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                    string organisationType = organisation.OrganisationType.ToString();
-                    ViewBag.OrgType = organisationType;
-                    await this.BindUKCompetentAuthorityRegionsList(client, User);
-                    return View(model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                }
+                    OrganisationId = id, 
+                    OrganisationType = organisation.OrganisationType,
+                };
+                    
+                await this.BindUKCompetentAuthorityRegionsList(client, User);
                 return View(model);
             }
         }
