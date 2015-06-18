@@ -41,6 +41,25 @@
             Assert.IsType<AddressViewModel>(model);
         }
 
+        [Theory]
+        [InlineData("Sole trader or individual")]
+        [InlineData("Partnership")]
+        [InlineData("Registered Company")]
+        public async void GetRegisteredOfficeAddress_ApiReturnsOrganisationData_ShouldMapOrganisationTypeToModel(string organisationType)
+        {
+            var orgType = CastOrganisationType(organisationType);
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData
+                {
+                    OrganisationType = orgType
+                });
+
+            var result = await OrganisationRegistrationController().RegisteredOfficeAddress(A<Guid>._);
+            var model = (AddressViewModel)((ViewResult)result).Model;
+
+            Assert.Equal(orgType, model.OrganisationType);
+        }
+
         [Fact]
         public async void PostRegisteredOfficeAddress_ModelStateIsInvalid_ShouldReturnViewWithInvalidModel()
         {
@@ -80,6 +99,19 @@
         private OrganisationRegistrationController OrganisationRegistrationController()
         {
             return new OrganisationRegistrationController(() => apiClient);
+        }
+
+        private OrganisationType CastOrganisationType(string organisationType)
+        {
+            switch (organisationType)
+            {
+                case "Sole trader or individual":
+                    return OrganisationType.SoleTraderOrIndividual;
+                case "Partnership":
+                    return OrganisationType.Partnership;
+                default:
+                    return OrganisationType.RegisteredCompany;
+            }
         }
     }
 }
