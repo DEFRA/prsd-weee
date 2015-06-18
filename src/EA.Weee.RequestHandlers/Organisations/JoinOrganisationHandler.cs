@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
-    using EA.Weee.Web.Controllers;
+    using EA.Weee.Requests.Organisations;
 
     internal class JoinOrganisationHandler : IRequestHandler<JoinOrganisation, Guid>
     {
@@ -25,7 +25,7 @@
                 throw new ArgumentException(string.Format("Could not find an organisation with id {0}", message.OrganisationId));
             }
 
-            throw new NotImplementedException();
+            return Task.FromResult(Guid.NewGuid()); // not worrying about actual implementation of this juuuust yet
         }
     }
 }

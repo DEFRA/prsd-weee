@@ -185,13 +185,21 @@
             };
         }
 
-        [HttpGet]
-        public async Task<ViewResult> JoinOrganisation(Guid selected)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SelectOrganisation(SelectOrganisationViewModel model, string submitButton)
         {
-            return View(new JoinOrganisationViewModel(selected));
+            return RedirectToAction("JoinOrganisation", new { organisationId = Guid.Parse(submitButton) });
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> JoinOrganisation(Guid organisationId)
+        {
+            return View(new JoinOrganisationViewModel { OrganisationToJoin = organisationId });
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> JoinOrganisation(JoinOrganisationViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -205,10 +213,16 @@
                     await
                     client.SendAsync(
                         User.GetAccessToken(),
-                        new JoinOrganisation(User.Identity.ToString(), viewModel.OrganisationToJoin));
+                        new JoinOrganisation("temp and fake", viewModel.OrganisationToJoin));
 
-                throw new NotImplementedException();
+                return RedirectToAction("JoinOrganisationConfirmation");
             }
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> JoinOrganisationConfirmation()
+        {
+            return View();
         }
 
         [HttpPost]
