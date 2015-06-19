@@ -14,7 +14,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
-
+        @Html.HiddenFor(m => m.OrganisationData.Id)
         <!-- //////////// Main Accordion /////////////// -->
         <section id="form-summary" role="main">
             <div class="overview-summary">

@@ -10,8 +10,6 @@
             OrganisationData = new OrganisationData();
         }
 
-        public Guid OrganisationId { get; set; }
-
         public OrganisationData OrganisationData { get; set; }
     }
 }
