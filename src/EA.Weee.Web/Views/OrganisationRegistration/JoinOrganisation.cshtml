@@ -16,6 +16,7 @@
     @using (Html.BeginForm("JoinOrganisation", "OrganisationRegistration", FormMethod.Post, new { @class = "form", role = "form" }))
     {
         @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationToJoin)
         <button type="submit" name="submitButton" class="link-submit">Send request</button>
     }

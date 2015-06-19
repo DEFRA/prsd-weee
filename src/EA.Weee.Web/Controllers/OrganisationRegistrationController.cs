@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -20,20 +21,6 @@
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using EA.Weee.Web.ViewModels.Shared;
-    using Api.Client;
-    using Infrastructure;
-    using Prsd.Core.Extensions;
-    using Prsd.Core.Web.ApiClient;
-    using Prsd.Core.Web.Mvc.Extensions;
-    using ViewModels.JoinOrganisation;
-    using ViewModels.OrganisationRegistration;
-    using ViewModels.OrganisationRegistration.Details;
-    using ViewModels.OrganisationRegistration.Type;
-    using ViewModels.Shared;
-    using Weee.Requests.Organisations;
-    using Weee.Requests.Organisations.Create;
-    using Weee.Requests.Organisations.Create.Base;
-    using Weee.Requests.Shared;
 
     [Authorize]
     public class OrganisationRegistrationController : Controller
@@ -233,11 +220,22 @@
             {
                 var userId = ((ClaimsIdentity)User.Identity).Claims.FirstOrDefault(c => c.Type == "sub").Value;
 
-                var response =
+                try
+                {
                     await
-                    client.SendAsync(
-                        User.GetAccessToken(),
-                        new JoinOrganisation(userId, viewModel.OrganisationToJoin));
+                        client.SendAsync(
+                            User.GetAccessToken(),
+                            new JoinOrganisation(userId, viewModel.OrganisationToJoin));
+                }
+                catch (ApiException ex)
+                {
+                    if (ex.ErrorData != null)
+                    {
+                        ModelState.AddModelError(string.Empty, ex.ErrorData.ExceptionMessage);
+                        return View(viewModel);
+                    }
+                    throw;
+                }
 
                 return RedirectToAction("JoinOrganisationConfirmation");
             }
