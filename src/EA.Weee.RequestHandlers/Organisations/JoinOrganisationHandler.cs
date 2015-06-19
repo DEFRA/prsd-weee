@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
@@ -12,16 +13,21 @@
     {
         private readonly WeeeContext context;
 
-        public JoinOrganisationHandler(WeeeContext context)
+        private readonly IUserContext userContext;
+
+        public JoinOrganisationHandler(WeeeContext context, IUserContext userContext)
         {
             this.context = context;
+            this.userContext = userContext;
         }
 
         public async Task<Guid> HandleAsync(JoinOrganisation message)
         {
-            if (context.Users.FirstOrDefault(u => u.Id == message.UserId.ToString()) == null)
+            var userId = userContext.UserId;
+
+            if (context.Users.FirstOrDefault(u => u.Id == userId.ToString()) == null)
             {
-                throw new ArgumentException(string.Format("Could not find a user with id {0}", message.UserId));
+                throw new ArgumentException(string.Format("Could not find a user with id {0}", userId));
             }
 
             if (context.Organisations.FirstOrDefault(o => o.Id == message.OrganisationId) == null)
@@ -29,7 +35,7 @@
                 throw new ArgumentException(string.Format("Could not find an organisation with id {0}", message.OrganisationId));
             }
 
-            var organisationUser = new OrganisationUser(message.UserId, message.OrganisationId, OrganisationUserStatus.Pending);
+            var organisationUser = new OrganisationUser(userId, message.OrganisationId, OrganisationUserStatus.Pending);
 
             context.OrganisationUsers.Add(organisationUser);
 

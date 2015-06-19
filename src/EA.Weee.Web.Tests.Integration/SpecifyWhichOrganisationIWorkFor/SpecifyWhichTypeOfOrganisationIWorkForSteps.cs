@@ -6,7 +6,6 @@
     using System.Web.Mvc;
     using Api.Client;
     using Controllers;
-    using EA.Weee.Api.Identity;
     using Requests;
     using ViewModels.OrganisationRegistration.Type;
     using ViewModels.Shared;
@@ -81,7 +80,7 @@
 
         private OrganisationRegistrationController OrganisationRegistrationController()
         {
-            return new OrganisationRegistrationController(() => new WeeeClient(ConfigurationManager.AppSettings["Weee.ApiUrl"]), new UserContext());
+            return new OrganisationRegistrationController(() => new WeeeClient(ConfigurationManager.AppSettings["Weee.ApiUrl"]));
         }
 
         private OrganisationTypeViewModel OrganisationType(OrganisationTypeEnum selectedOption)

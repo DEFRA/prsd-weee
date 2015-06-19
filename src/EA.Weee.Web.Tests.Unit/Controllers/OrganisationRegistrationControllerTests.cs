@@ -3,7 +3,6 @@
     using System;
     using System.Web.Mvc;
     using Api.Client;
-    using EA.Weee.Api.Identity;
     using FakeItEasy;
     using ViewModels.Shared;
     using Web.Controllers;
@@ -98,7 +97,7 @@
 
         private OrganisationRegistrationController OrganisationRegistrationController()
         {
-            return new OrganisationRegistrationController(() => apiClient, new UserContext());
+            return new OrganisationRegistrationController(() => apiClient);
         }
 
         private OrganisationType CastOrganisationType(string organisationType)
