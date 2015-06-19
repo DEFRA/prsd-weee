@@ -19,10 +19,10 @@
         public void AddAddressToOrganisation_AddressAlreadyExists_InvalidOperationShouldBeThrown(string addressType, string organisationType)
         {
             var organisation = ValidOrganisation(CastOrganisationType(organisationType));
-            organisation.AddAddress(CastAddressType(addressType), ValidAddress());
+            organisation.AddAddress(CastAddressType(addressType), ValidAddress(addressType));
 
             // Already added address, should fail if we try again
-            Assert.Throws<InvalidOperationException>(() => organisation.AddAddress(CastAddressType(addressType), ValidAddress())); 
+            Assert.Throws<InvalidOperationException>(() => organisation.AddAddress(CastAddressType(addressType), ValidAddress(addressType))); 
         }
 
         [Theory]
@@ -49,8 +49,7 @@
         public void AddAddressToOrganisation_AddressTypeIsNull_ArgumentNullExceptionShouldBeThrown(string organisationType)
         {
             var organisation = ValidOrganisation(CastOrganisationType(organisationType));
-
-            Assert.Throws<ArgumentNullException>(() => organisation.AddAddress(null, ValidAddress()));
+            Assert.Throws<ArgumentNullException>(() => organisation.AddAddress(null, ValidAddress(null)));
         }
 
         private Organisation ValidOrganisation(OrganisationType organisationType)
@@ -68,8 +67,17 @@
             return Organisation.CreateRegisteredCompany("Company Name", "AB123456", "Trading Name");
         }
 
-        private Address ValidAddress()
+        private Address ValidAddress(string type)
         {
+            if (!string.IsNullOrEmpty(type))
+            {
+                if (type.Equals("Registered or PPB address"))
+                {
+                    return new Address("Address Line 1", "Address Line 1", "Town Or City", "County Or Region",
+                        "Postcode",
+                        "England", "01234567890", "email@email.email");
+                }
+            }
             return new Address("Address Line 1", "Address Line 1", "Town Or City", "County Or Region", "Postcode",
                 "Country", "01234567890", "email@email.email");
         }

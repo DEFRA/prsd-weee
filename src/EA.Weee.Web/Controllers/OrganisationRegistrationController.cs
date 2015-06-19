@@ -3,24 +3,22 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using EA.Prsd.Core.Extensions;
-    using EA.Prsd.Core.Web.ApiClient;
-    using EA.Prsd.Core.Web.Mvc.Extensions;
-    using EA.Weee.Api.Client;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Requests.Organisations.Create;
-    using EA.Weee.Requests.Organisations.Create.Base;
-    using EA.Weee.Requests.Shared;
-    using EA.Weee.Web.Infrastructure;
-    using EA.Weee.Web.Requests;
-    using EA.Weee.Web.ViewModels.JoinOrganisation;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
-    using EA.Weee.Web.ViewModels.Shared;
+    using Api.Client;
+    using Infrastructure;
+    using Prsd.Core.Extensions;
+    using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
+    using ViewModels.JoinOrganisation;
+    using ViewModels.OrganisationRegistration;
+    using ViewModels.OrganisationRegistration.Details;
+    using ViewModels.OrganisationRegistration.Type;
+    using ViewModels.Shared;
+    using Weee.Requests.Organisations;
+    using Weee.Requests.Organisations.Create;
+    using Weee.Requests.Organisations.Create.Base;
+    using Weee.Requests.Shared;
 
     [Authorize]
     public class OrganisationRegistrationController : Controller
@@ -130,12 +128,15 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> SelectOrganisation(string name, string tradingName, string companiesRegistrationNumber, OrganisationType type, int page = 1)
+        public async Task<ActionResult> SelectOrganisation(string name, string tradingName,
+            string companiesRegistrationNumber, OrganisationType type, int page = 1)
         {
-            var routeValues = new { name = name, tradingName = tradingName, companiesRegistrationNumber = companiesRegistrationNumber, type = type };
+            var routeValues = new { name, tradingName, companiesRegistrationNumber, type };
 
-            var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration", routeValues);
-            var fallbackSelectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
+            var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration",
+                routeValues);
+            var fallbackSelectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName,
+                companiesRegistrationNumber, type,
                                 new List<OrganisationSearchData>(), fallbackPagingViewModel);
 
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(tradingName))
@@ -152,9 +153,13 @@
                     // would rather bake this into the db query but not really feasible
 
                     var organisationSearchResultData =
-                        await client.SendAsync(User.GetAccessToken(), new FindMatchingOrganisations(name ?? tradingName, page, OrganisationsPerPage));
+                        await
+                            client.SendAsync(User.GetAccessToken(),
+                                new FindMatchingOrganisations(name ?? tradingName, page, OrganisationsPerPage));
 
-                    var pagingViewModel = PagingViewModel.FromValues(organisationSearchResultData.TotalMatchingOrganisations, OrganisationsPerPage,
+                    var pagingViewModel =
+                        PagingViewModel.FromValues(organisationSearchResultData.TotalMatchingOrganisations,
+                            OrganisationsPerPage,
                         page, "SelectOrganisation", "OrganisationRegistration", routeValues);
 
                     return View(BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
@@ -172,7 +177,9 @@
             }
         }
 
-        private SelectOrganisationViewModel BuildSelectOrganisationViewModel(string name, string tradingName, string companiesRegistrationNumber, OrganisationType type, IList<OrganisationSearchData> matchingOrganisations, PagingViewModel pagingViewModel)
+        private SelectOrganisationViewModel BuildSelectOrganisationViewModel(string name, string tradingName,
+            string companiesRegistrationNumber, OrganisationType type,
+            IList<OrganisationSearchData> matchingOrganisations, PagingViewModel pagingViewModel)
         {
             return new SelectOrganisationViewModel
             {
@@ -221,7 +228,8 @@
             }
         }
 
-        private CreateOrganisationRequest MakeOrganisationCreationRequest(string name, string tradingName, string companiesRegistrationNumber, OrganisationType organisationType)
+        private CreateOrganisationRequest MakeOrganisationCreationRequest(string name, string tradingName,
+            string companiesRegistrationNumber, OrganisationType organisationType)
         {
             switch (organisationType)
             {
@@ -263,7 +271,6 @@
                  * It would be annoying for a user to fill out a form only to get an error at the end, 
                  * when this could be avoided by checking the validity of the ID before the page loads */
                 await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-
                 var model = new ContactPersonViewModel { OrganisationId = id };
                 return View(model);
             }
@@ -279,7 +286,7 @@
                 {
                     try
                     {
-                        var response = await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
+                        await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
                         return RedirectToAction("OrganisationAddress", "OrganisationRegistration", new
                         {
                             id = model.OrganisationId
@@ -306,14 +313,7 @@
         {
             using (var client = apiClient())
             {
-                await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id)); // Check the organisation Id is valid
-                var model = new AddressViewModel
-                {
-                    OrganisationId = id
-                };
-
-                await this.BindUKCompetentAuthorityRegionsList(client, User);
-
+                var model = await GetAddressViewModel(id, client);
                 return View(model);
             }
         }
@@ -333,11 +333,7 @@
             {
                 using (var client = apiClient())
                 {
-                    var type = AddressType.OrganistionAddress;
-
-                    model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
-                    var request = model.ToAddRequest(type);
-                    var response = await client.SendAsync(User.GetAccessToken(), request);
+                    await AddAddressToOrganisation(model, AddressType.OrganistionAddress, client);
                     return RedirectToAction("RegisteredOfficeAddress", "OrganisationRegistration", new
                     {
                         id = model.OrganisationId
@@ -361,14 +357,7 @@
         {
             using (var client = apiClient())
             {
-                var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                var model = new AddressViewModel
-                {
-                    OrganisationId = id,
-                    OrganisationType = organisation.OrganisationType,
-                };
-
-                await this.BindUKCompetentAuthorityRegionsList(client, User);
+                var model = await GetAddressViewModel(id, client);
                 return View(model);
             }
         }
@@ -388,10 +377,7 @@
             {
                 using (var client = apiClient())
                 {
-                    var type = AddressType.RegisteredorPPBAddress;
-                    model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
-                    var request = model.ToAddRequest(type);
-                    var response = await client.SendAsync(User.GetAccessToken(), request);
+                    await AddAddressToOrganisation(model, AddressType.RegisteredorPPBAddress, client);
                     return RedirectToAction("ReviewOrganisationDetails", "OrganisationRegistration", new
                     {
                         id = model.OrganisationId
@@ -450,6 +436,26 @@
                 }
             }
             return View(model);
+        }
+
+        private async Task<AddressViewModel> GetAddressViewModel(Guid id, IWeeeClient client)
+        {
+            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id)); // Check the organisation Id is valid
+            var model = new AddressViewModel
+            {
+                OrganisationId = id,
+                OrganisationType = organisation.OrganisationType
+            };
+
+            await this.BindUKCompetentAuthorityRegionsList(client, User);
+            return model;
+        }
+
+        private async Task AddAddressToOrganisation(AddressViewModel model, AddressType type, IWeeeClient client)
+        {
+            model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
+            var request = model.ToAddRequest(type);
+            await client.SendAsync(User.GetAccessToken(), request);
         }
     }
 }
