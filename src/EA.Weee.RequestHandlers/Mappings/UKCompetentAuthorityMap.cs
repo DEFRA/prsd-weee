@@ -12,7 +12,7 @@
             {
                 Name = source.Name,
                 Abbreviation = source.Abbreviation,
-                Region = source.Region,
+                CountryId = source.Country.Id,
                 Id = source.Id
             };
         }
