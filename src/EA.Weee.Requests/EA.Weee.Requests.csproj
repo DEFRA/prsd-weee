@@ -50,6 +50,7 @@
     <Compile Include="Organisations\AddContactPersonToOrganisation.cs" />
     <Compile Include="Organisations\JoinOrganisation.cs" />
     <Compile Include="Organisations\CompleteRegistration.cs" />
+    <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOffice.cs" />
     <Compile Include="Organisations\OrganisationSearchDataResult.cs" />
     <Compile Include="Organisations\VerifyOrganisationExists.cs" />
     <Compile Include="Shared\AddressType.cs" />
