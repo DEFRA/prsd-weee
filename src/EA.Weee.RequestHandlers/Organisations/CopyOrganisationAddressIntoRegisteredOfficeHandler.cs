@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
+    using EA.Weee.Domain;
     using EA.Weee.Requests.Organisations;
 
     internal class CopyOrganisationAddressIntoRegisteredOfficeHandler : IRequestHandler<CopyOrganisationAddressIntoRegisteredOffice, Guid>
@@ -25,7 +26,21 @@
                 throw new ArgumentException(string.Format("Could not find an organisation with Id {0}", message.OrganisationId));
             }
 
-            organisation.BusinessAddressIsSameAsOrganisationAddress();
+            var oa = organisation.OrganisationAddress;
+
+            // we're explicitly making a copy here rather than pointing at the same address row
+            // this is only assumed to be the preferred option
+            var businessAddress = new Address(
+                oa.Address1,
+                oa.Address2,
+                oa.TownOrCity,
+                oa.CountyOrRegion,
+                oa.Postcode,
+                oa.Country,
+                oa.Telephone,
+                oa.Email);
+
+            organisation.AddAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
 
             context.SaveChangesAsync();
 
