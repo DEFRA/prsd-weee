@@ -19,7 +19,7 @@
 
         public async Task<Guid> HandleAsync(JoinOrganisation message)
         {
-            if (context.Users.FirstOrDefault(u => u.Id == message.UserId) == null)
+            if (context.Users.FirstOrDefault(u => u.Id == message.UserId.ToString()) == null)
             {
                 throw new ArgumentException(string.Format("Could not find a user with id {0}", message.UserId));
             }
