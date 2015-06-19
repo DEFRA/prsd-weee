@@ -389,10 +389,25 @@
                 using (var client = apiClient())
                 {
                     await AddAddressToOrganisation(model, AddressType.OrganistionAddress, client);
-                    return RedirectToAction("RegisteredOfficeAddressPrepopulate", "OrganisationRegistration", new
+
+                    var isUkAddress = await client.SendAsync(
+                        User.GetAccessToken(),
+                        new IsUkOrganisationAddress(model.OrganisationId));
+
+                    if (isUkAddress)
                     {
-                        id = model.OrganisationId
-                    });
+                        return RedirectToAction(
+                            "RegisteredOfficeAddressPrepopulate",
+                            "OrganisationRegistration",
+                            new { id = model.OrganisationId });
+                    }
+                    else
+                    {
+                        return RedirectToAction(
+                            "RegisteredOfficeAddress",
+                            "OrganisationRegistration",
+                            new { id = model.OrganisationId });
+                    }
                 }
             }
             catch (ApiBadRequestException ex)
