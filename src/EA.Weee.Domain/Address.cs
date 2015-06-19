@@ -158,13 +158,13 @@
             get
             {
                 if (Country != null && 
-                    (Country.Equals("England", StringComparison.InvariantCultureIgnoreCase)
+                    (Country.ToLower().Contains("england")
                     || 
-                    Country.Equals("Wales", StringComparison.InvariantCultureIgnoreCase)
+                    Country.ToLower().Contains("wales")
+                    ||
+                    Country.ToLower().Contains("northern ireland")
                     || 
-                    Country.Equals("Northern Ireland", StringComparison.InvariantCultureIgnoreCase)
-                    || 
-                    Country.Equals("Scotland", StringComparison.InvariantCultureIgnoreCase)))
+                    Country.ToLower().Contains("scotland")))
                 {
                     return true;
                 }

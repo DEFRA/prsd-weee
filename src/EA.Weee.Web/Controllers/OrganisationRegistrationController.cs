@@ -278,7 +278,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> MainContactPerson(ContactPersonViewModel model)
+        public async Task<ActionResult> MainContactPerson(ContactPersonViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -286,26 +286,25 @@
                 {
                     try
                     {
-                        await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
+                        await client.SendAsync(User.GetAccessToken(), viewModel.ToAddRequest());
                         return RedirectToAction("OrganisationAddress", "OrganisationRegistration", new
                         {
-                            id = model.OrganisationId
+                            id = viewModel.OrganisationId
                         });
                     }
-                    catch (ApiBadRequestException ex)
+                    catch (ApiException ex)
                     {
-                        this.HandleBadRequest(ex);
-
-                        if (ModelState.IsValid)
+                        if (ex.ErrorData != null)
                         {
-                            throw;
+                            ModelState.AddModelError(string.Empty, ex.ErrorData.ExceptionMessage);
+                            return View(viewModel);
                         }
                     }
 
-                    return View(model);
+                    return View(viewModel);
                 }
             }
-            return View(model);
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -314,42 +313,42 @@
             using (var client = apiClient())
             {
                 var model = await GetAddressViewModel(id, client);
+                await this.BindCountriesList(apiClient, User);
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> OrganisationAddress(AddressViewModel model)
+        public async Task<ActionResult> OrganisationAddress(AddressViewModel viewModel)
         {
-            await this.BindUKCompetentAuthorityRegionsList(apiClient, User);
+            await this.BindCountriesList(apiClient, User);
 
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(viewModel);
             }
 
             try
             {
                 using (var client = apiClient())
                 {
-                    await AddAddressToOrganisation(model, AddressType.OrganistionAddress, client);
+                    await AddAddressToOrganisation(viewModel, AddressType.OrganistionAddress, client);
                     return RedirectToAction("RegisteredOfficeAddress", "OrganisationRegistration", new
                     {
-                        id = model.OrganisationId
+                        id = viewModel.OrganisationId
                     });
                 }
             }
-            catch (ApiBadRequestException ex)
+            catch (ApiException ex)
             {
-                this.HandleBadRequest(ex);
-
-                if (ModelState.IsValid)
+                if (ex.ErrorData != null)
                 {
-                    throw;
+                    ModelState.AddModelError(string.Empty, ex.ErrorData.ExceptionMessage);
+                    return View(viewModel);
                 }
             }
-            return View(model);
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -358,42 +357,42 @@
             using (var client = apiClient())
             {
                 var model = await GetAddressViewModel(id, client);
+                await this.BindUKRegionsList(client, User);
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel model)
+        public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel viewModel)
         {
-            await this.BindUKCompetentAuthorityRegionsList(apiClient, User);
+            await this.BindUKRegionsList(apiClient, User);
 
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(viewModel);
             }
 
             try
             {
                 using (var client = apiClient())
                 {
-                    await AddAddressToOrganisation(model, AddressType.RegisteredorPPBAddress, client);
+                    await AddAddressToOrganisation(viewModel, AddressType.RegisteredorPPBAddress, client);
                     return RedirectToAction("ReviewOrganisationSummary", "OrganisationRegistration", new
                     {
-                        id = model.OrganisationId
+                        id = viewModel.OrganisationId
                     });
                 }
             }
-            catch (ApiBadRequestException ex)
+            catch (ApiException ex)
             {
-                this.HandleBadRequest(ex);
-
-                if (ModelState.IsValid)
+                if (ex.ErrorData != null)
                 {
-                    throw;
+                    ModelState.AddModelError(string.Empty, ex.ErrorData.ExceptionMessage);
+                    return View(viewModel);
                 }
             }
-            return View(model);
+            return View(viewModel);
         }
 
         private async Task<AddressViewModel> GetAddressViewModel(Guid id, IWeeeClient client)
@@ -404,14 +403,12 @@
                 OrganisationId = id,
                 OrganisationType = organisation.OrganisationType
             };
-
-            await this.BindUKCompetentAuthorityRegionsList(client, User);
             return model;
         }
 
         private async Task AddAddressToOrganisation(AddressViewModel model, AddressType type, IWeeeClient client)
         {
-            model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
+            model.Address.Country = this.GetCountrybyId(model.Address.CountryId);
             var request = model.ToAddRequest(type);
             await client.SendAsync(User.GetAccessToken(), request);
         }

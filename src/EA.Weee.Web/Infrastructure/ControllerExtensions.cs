@@ -10,43 +10,53 @@
 
     public static class ControllerExtensions
     {
-        public static async Task BindUKCompetentAuthorityRegionsList(this Controller controller,
+        public static async Task BindCountriesList(this Controller controller,
+          Func<IWeeeClient> apiClient, IPrincipal user)
+        {
+            using (var client = apiClient())
+            {
+                await controller.BindCountriesList(client, user);
+            }
+        }
+
+        public static async Task BindCountriesList(this Controller controller, IWeeeClient client,
+                   IPrincipal user)
+        {
+            var regions = await client.SendAsync(user.GetAccessToken(), new GetCountries());
+            controller.ViewBag.Countries = new SelectList(regions, "Id", "Name");
+        }
+
+        public static async Task BindUKRegionsList(this Controller controller,
             Func<IWeeeClient> apiClient, IPrincipal user)
         {
             using (var client = apiClient())
             {
-                await controller.BindUKCompetentAuthorityRegionsList(client, user);
+                await controller.BindUKRegionsList(client, user);
             }
         }
 
-        public static async Task BindUKCompetentAuthorityRegionsList(this Controller controller, IWeeeClient client,
+        public static async Task BindUKRegionsList(this Controller controller, IWeeeClient client,
             IPrincipal user)
         {
-            var regions = await client.SendAsync(user.GetAccessToken(), new GetUKCompetentAuthorities());
-            controller.ViewBag.UKRegions = new SelectList(regions, "Id", "Region");
+            var ukcountryData = await client.SendAsync(user.GetAccessToken(), new GetUKCompetentAuthorities());
+            var countries = await client.SendAsync(user.GetAccessToken(), new GetCountries());
+            
+            var ukregions = countries.Join(ukcountryData, c => c.Id, u => u.CountryId, (c, u) => new {c.Id, c.Name});
+            controller.ViewBag.Countries = new SelectList(ukregions, "Id", "Name");
         }
 
-        public static string GetUKRegionById(this Controller controller, Guid? id)
+        public static string GetCountrybyId(this Controller controller, Guid? id)
         {
             if (id != null)
             {
-                var regions = (SelectList)controller.ViewBag.UKRegions;
-                var region = regions.SingleOrDefault(r => r.Value == id.ToString());
-                if (region != null)
+                var countries = (SelectList)controller.ViewBag.Countries;
+                var country = countries.SingleOrDefault(r => r.Value == id.ToString());
+                if (country != null)
                 {
-                    return region.Text;
+                    return country.Text;
                 }
             }
             return string.Empty;
-        }
-
-        public static Guid GetDefaultUKCountryId(this Controller controller)
-        {
-            var regions = (SelectList)controller.ViewBag.UKRegions;
-
-            var defaultId = regions.Single(c => c.Text.Equals("England", StringComparison.InvariantCultureIgnoreCase)).Value;
-
-            return new Guid(defaultId);
         }
     }
 }
