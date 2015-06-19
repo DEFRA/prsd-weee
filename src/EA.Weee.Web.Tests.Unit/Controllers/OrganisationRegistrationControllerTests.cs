@@ -6,7 +6,6 @@
     using FakeItEasy;
     using ViewModels.Shared;
     using Web.Controllers;
-    using Web.Requests;
     using Weee.Requests.Organisations;
     using Xunit;
 
@@ -28,19 +27,6 @@
             await Assert.ThrowsAnyAsync<Exception>(() => OrganisationRegistrationController().RegisteredOfficeAddress(A<Guid>._));
         }
 
-        [Fact]
-        public async void GetRegisteredOfficeAddress_ApiReturnsOrganisationData_ShouldReturnViewWithModel()
-        {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(new OrganisationData());
-        
-            var result = await OrganisationRegistrationController().RegisteredOfficeAddress(A<Guid>._);
-            var model = ((ViewResult)result).Model;
-
-            Assert.NotNull(model);
-            Assert.IsType<AddressViewModel>(model);
-        }
-
         [Theory]
         [InlineData("Sole trader or individual")]
         [InlineData("Partnership")]
@@ -58,6 +44,19 @@
             var model = (AddressViewModel)((ViewResult)result).Model;
 
             Assert.Equal(orgType, model.OrganisationType);
+        }
+
+        [Fact]
+        public async void GetRegisteredOfficeAddress_ApiReturnsOrganisationData_ShouldReturnViewWithModel()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData());
+
+            var result = await OrganisationRegistrationController().RegisteredOfficeAddress(A<Guid>._);
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<AddressViewModel>(model);
         }
 
         [Fact]
