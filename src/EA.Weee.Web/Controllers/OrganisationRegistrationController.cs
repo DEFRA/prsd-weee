@@ -137,7 +137,7 @@
                 routeValues);
             var fallbackSelectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName,
                 companiesRegistrationNumber, type,
-                new List<OrganisationSearchData>(), fallbackPagingViewModel);
+                                new List<OrganisationSearchData>(), fallbackPagingViewModel);
 
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(tradingName))
             {
@@ -160,10 +160,10 @@
                     var pagingViewModel =
                         PagingViewModel.FromValues(organisationSearchResultData.TotalMatchingOrganisations,
                             OrganisationsPerPage,
-                            page, "SelectOrganisation", "OrganisationRegistration", routeValues);
+                        page, "SelectOrganisation", "OrganisationRegistration", routeValues);
 
                     return View(BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
-                        organisationSearchResultData.Results, pagingViewModel));
+                                    organisationSearchResultData.Results, pagingViewModel));
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -323,8 +323,8 @@
             using (var client = apiClient())
             {
                 /* RP: Check with the API to see if this is a valid organisation
-               * It would be annoying for a user to fill out a form only to get an error at the end, 
-               * when this could be avoided by checking the validity of the ID before the page loads */
+                 * It would be annoying for a user to fill out a form only to get an error at the end, 
+                 * when this could be avoided by checking the validity of the ID before the page loads */
                 await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
                 var model = new ContactPersonViewModel { OrganisationId = id };
                 return View(model);
@@ -433,11 +433,53 @@
                 using (var client = apiClient())
                 {
                     await AddAddressToOrganisation(model, AddressType.RegisteredorPPBAddress, client);
-                    return RedirectToAction("ReviewOrganisationSummary", "OrganisationRegistration", new
+                    return RedirectToAction("ReviewOrganisationDetails", "OrganisationRegistration", new
                     {
                         id = model.OrganisationId
                     });
                 }
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ReviewOrganisationDetails(Guid id)
+        {
+            var model = new OrganisationSummaryViewModel();
+            using (var client = apiClient())
+            {
+                var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+                model.OrganisationData = organisation;
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ConfirmOrganisationDetails(OrganisationSummaryViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            try
+            {
+                using (var client = apiClient())
+                {
+                    await
+                        client.SendAsync(User.GetAccessToken(),
+                            new CompleteRegistration(model.OrganisationData.Id));
+                }
+                return RedirectToAction("Index", "Home");
             }
             catch (ApiBadRequestException ex)
             {

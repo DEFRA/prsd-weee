@@ -92,7 +92,7 @@
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal("OrganisationRegistration", redirectToRouteResult.RouteValues["controller"]);
-            Assert.Equal("ReviewOrganisationSummary", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal("ReviewOrganisationDetails", redirectToRouteResult.RouteValues["action"]);
         }
 
         private OrganisationRegistrationController OrganisationRegistrationController()
