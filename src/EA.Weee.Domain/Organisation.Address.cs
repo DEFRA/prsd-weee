@@ -27,7 +27,6 @@
                     case "Registered or PPB address":
                         if (BusinessAddress != null)
                         {
-
                             throw new InvalidOperationException(
                                 "Cannot add Business address to Organisation. This organisation already has a business address.");
                         }
