@@ -552,7 +552,6 @@
                         "Yes",
                         "No"
                     },
-                    SelectedValue = "No"
                 }
             };
 
