@@ -50,6 +50,7 @@
     <Content Include="scripts\Update\Sprint7\20150619-1017-InsertCountryData.sql" />
     <Content Include="scripts\Update\Sprint7\20150619-1023-UpdateCATable-AddCountryId.sql" />
     <Content Include="scripts\Update\Sprint7\20150619-1013-AddCountryTable.sql" />
+    <Content Include="scripts\Update\Sprint7\20150619-130853-RemoveAspNetUserOrganisationFK.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -78,6 +79,7 @@
     <Content Include="scripts\Update\Sprint7\20150615-1043-UpdateCompetentAuthorityTable.sql" />
     <Content Include="scripts\Update\Sprint7\20150616-163500-UpdateAddressTable.sql" />
     <Content Include="scripts\Update\Sprint7\20150616-UpdateCATable-Remove_IsSysetmUser.sql" />
+    <Content Include="scripts\Update\Sprint7\20150618-162503-AddOrganisationUserTable.sql" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
