@@ -364,10 +364,10 @@
                 var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
                 var model = new AddressViewModel
                 {
-                    OrganisationId = id, 
+                    OrganisationId = id,
                     OrganisationType = organisation.OrganisationType,
                 };
-                    
+
                 await this.BindUKCompetentAuthorityRegionsList(client, User);
                 return View(model);
             }
@@ -413,26 +413,43 @@
         [HttpGet]
         public async Task<ActionResult> ReviewOrganisationDetails(Guid id)
         {
-            var model = new OrganisationSummaryViewModel { OrganisationId = id };
+            var model = new OrganisationSummaryViewModel();
             using (var client = apiClient())
             {
-                try
-                {
-                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                    model.OrganisationData = organisation;
-                    return View(model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                }
+                var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+                model.OrganisationData = organisation;
                 return View(model);
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ConfirmOrganisationDetails(OrganisationSummaryViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            try
+            {
+                using (var client = apiClient())
+                {
+                    await
+                        client.SendAsync(User.GetAccessToken(),
+                            new CompleteRegistration(model.OrganisationData.Id));
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+            }
+            return View(model);
         }
     }
 }
