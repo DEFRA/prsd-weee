@@ -31,6 +31,8 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.OrganisationType)
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.ContactDetailsSameAs.SelectedValue)" id="ContactDetailsSameAs">
             @Html.EditorFor(m => m.ContactDetailsSameAs)
