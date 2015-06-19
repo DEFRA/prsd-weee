@@ -5,7 +5,6 @@
     using System.ComponentModel;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Web.ApiClient;
     using EA.Prsd.Core.Web.Mvc.Extensions;
@@ -26,12 +25,9 @@
     {
         private readonly Func<IWeeeClient> apiClient;
 
-        private readonly IUserContext userContext;
-
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, IUserContext userContext)
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
-            this.userContext = userContext;
         }
 
         [HttpGet]
@@ -220,14 +216,12 @@
 
             using (var client = apiClient())
             {
-                var userId = userContext.UserId;
-
                 try
                 {
                     await
                         client.SendAsync(
                             User.GetAccessToken(),
-                            new JoinOrganisation(userId, viewModel.OrganisationToJoin));
+                            new JoinOrganisation(viewModel.OrganisationToJoin));
                 }
                 catch (ApiException ex)
                 {
