@@ -33,21 +33,43 @@
                                 Organisation type
                             </span>
                             <span class="column-two-thirds">
-                                @Model.OrganisationData.OrganisationType
+                                @if (Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+                                {
+                                    <label>Sole trader or individual</label>
+                                }
+                                else if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership)
+                                {
+                                    <label>Partnership</label>
+                                }
+                                else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+                                {
+                                    <label>Registered company</label>
+                                }
                             </span>
                         </div>
 
-                        <div class="grid-row form-detail">
-                            <span class="column-third">
-                                Company name
-                            </span>
-                            <span class="column-two-thirds">
-                                @Model.OrganisationData.Name
-                            </span>
-                        </div>
+                        @if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+                        {
+                            <div class="grid-row form-detail">
+                                <span class="column-third">
+                                    Company name
+                                </span>
+                                <span class="column-two-thirds">
+                                    @Model.OrganisationData.Name
+                                </span>
+                            </div>
+                            <div class="grid-row form-detail">
+                                <span class="column-third">
+                                    Company registration number
+                                </span>
+                                <span class="column-two-thirds">
+                                    @Model.OrganisationData.CompanyRegistrationNumber
+                                </span>
+                            </div>
+                        }
 
                         <div class="grid-row form-detail">
-                            <span class="column-third">Trading name</span>
+                            <span class="column-third">Business trading name</span>
                             <span class="column-two-thirds">@Model.OrganisationData.TradingName</span>
                         </div>
                     </div>
@@ -137,11 +159,11 @@
                     <summary role="button" aria-controls="details-content-4" tabindex="0" aria-expanded="false">
                         @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
                         {
-                        <h3 title="Your-principal-place-of-business">Your principal place of business</h3>
+                            <h3 title="Your-principal-place-of-business">Your principal place of business</h3>
                         }
                         else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
                         {
-                        <h3 title="Your-registered-company">Your registered company</h3>
+                            <h3 title="Your-registered-company">Your registered company</h3>
                         }
                         @*<a href="" title="Edit">Edit</a>*@
                     </summary>
