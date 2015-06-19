@@ -5,20 +5,20 @@
     using System.ComponentModel;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Infrastructure;
-    using Prsd.Core.Extensions;
-    using Prsd.Core.Web.ApiClient;
-    using Prsd.Core.Web.Mvc.Extensions;
-    using ViewModels.JoinOrganisation;
-    using ViewModels.OrganisationRegistration;
-    using ViewModels.OrganisationRegistration.Details;
-    using ViewModels.OrganisationRegistration.Type;
-    using ViewModels.Shared;
-    using Weee.Requests.Organisations;
-    using Weee.Requests.Organisations.Create;
-    using Weee.Requests.Organisations.Create.Base;
-    using Weee.Requests.Shared;
+    using EA.Prsd.Core.Extensions;
+    using EA.Prsd.Core.Web.ApiClient;
+    using EA.Prsd.Core.Web.Mvc.Extensions;
+    using EA.Weee.Api.Client;
+    using EA.Weee.Requests.Organisations;
+    using EA.Weee.Requests.Organisations.Create;
+    using EA.Weee.Requests.Organisations.Create.Base;
+    using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.ViewModels.JoinOrganisation;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
+    using EA.Weee.Web.ViewModels.Shared;
 
     [Authorize]
     public class OrganisationRegistrationController : Controller
@@ -137,7 +137,7 @@
                 routeValues);
             var fallbackSelectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName,
                 companiesRegistrationNumber, type,
-                new List<OrganisationSearchData>(), fallbackPagingViewModel);
+                                new List<OrganisationSearchData>(), fallbackPagingViewModel);
 
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(tradingName))
             {
@@ -160,10 +160,10 @@
                     var pagingViewModel =
                         PagingViewModel.FromValues(organisationSearchResultData.TotalMatchingOrganisations,
                             OrganisationsPerPage,
-                            page, "SelectOrganisation", "OrganisationRegistration", routeValues);
+                        page, "SelectOrganisation", "OrganisationRegistration", routeValues);
 
                     return View(BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
-                        organisationSearchResultData.Results, pagingViewModel));
+                                    organisationSearchResultData.Results, pagingViewModel));
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -194,9 +194,64 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SelectOrganisation(SelectOrganisationViewModel viewModel)
+        public async Task<ActionResult> SelectOrganisation(SelectOrganisationViewModel model, string submitButton)
         {
-            throw new NotImplementedException();
+            return RedirectToAction("JoinOrganisation", new { organisationId = Guid.Parse(submitButton) });
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> JoinOrganisation(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var organisationExists =
+                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(organisationId));
+
+                if (!organisationExists)
+                {
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
+                }
+                
+                return View(new JoinOrganisationViewModel { OrganisationToJoin = organisationId });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> JoinOrganisation(JoinOrganisationViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            using (var client = apiClient())
+            {
+                try
+                {
+                    await
+                        client.SendAsync(
+                            User.GetAccessToken(),
+                            new JoinOrganisation(viewModel.OrganisationToJoin));
+                }
+                catch (ApiException ex)
+                {
+                    if (ex.ErrorData != null)
+                    {
+                        ModelState.AddModelError(string.Empty, ex.ErrorData.ExceptionMessage);
+                        return View(viewModel);
+                    }
+                    throw;
+                }
+
+                return RedirectToAction("JoinOrganisationConfirmation");
+            }
+        }
+
+        [HttpGet]
+        public ViewResult JoinOrganisationConfirmation()
+        {
+            return View();
         }
 
         [HttpPost]
@@ -263,15 +318,21 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> MainContactPerson(Guid id)
+        public async Task<ActionResult> MainContactPerson(Guid organisationId)
         {
             using (var client = apiClient())
             {
                 /* RP: Check with the API to see if this is a valid organisation
-               * It would be annoying for a user to fill out a form only to get an error at the end, 
-               * when this could be avoided by checking the validity of the ID before the page loads */
-                await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                var model = new ContactPersonViewModel { OrganisationId = id };
+                 * It would be annoying for a user to fill out a form only to get an error at the end, 
+                 * when this could be avoided by checking the validity of the ID before the page loads */
+                var organisationExists =
+                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(organisationId));
+
+                if (!organisationExists)
+                {
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
+                }
+                var model = new ContactPersonViewModel { OrganisationId = organisationId };
                 return View(model);
             }
         }
@@ -378,7 +439,7 @@
                 using (var client = apiClient())
                 {
                     await AddAddressToOrganisation(viewModel, AddressType.RegisteredorPPBAddress, client);
-                    return RedirectToAction("ReviewOrganisationSummary", "OrganisationRegistration", new
+                    return RedirectToAction("ReviewOrganisationDetails", "OrganisationRegistration", new
                     {
                         id = viewModel.OrganisationId
                     });
@@ -395,12 +456,54 @@
             return View(viewModel);
         }
 
-        private async Task<AddressViewModel> GetAddressViewModel(Guid id, IWeeeClient client)
+        [HttpGet]
+        public async Task<ActionResult> ReviewOrganisationDetails(Guid organisationId)
         {
-            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id)); // Check the organisation Id is valid
+            var model = new OrganisationSummaryViewModel();
+            using (var client = apiClient())
+            {
+                var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
+                model.OrganisationData = organisation;
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ConfirmOrganisationDetails(OrganisationSummaryViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            try
+            {
+                using (var client = apiClient())
+                {
+                    await
+                        client.SendAsync(User.GetAccessToken(),
+                            new CompleteRegistration(model.OrganisationData.Id));
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+            }
+            return View(model);
+        }
+
+        private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client)
+        {
+            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId)); // Check the organisation Id is valid
             var model = new AddressViewModel
             {
-                OrganisationId = id,
+                OrganisationId = organisationId,
                 OrganisationType = organisation.OrganisationType
             };
             return model;
