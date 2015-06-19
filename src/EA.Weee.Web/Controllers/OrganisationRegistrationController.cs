@@ -318,7 +318,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> MainContactPerson(Guid organisationId)
+        public async Task<ActionResult> MainContactPerson(Guid id)
         {
             using (var client = apiClient())
             {
@@ -326,13 +326,13 @@
                  * It would be annoying for a user to fill out a form only to get an error at the end, 
                  * when this could be avoided by checking the validity of the ID before the page loads */
                 var organisationExists =
-                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(organisationId));
+                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
 
                 if (!organisationExists)
                 {
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
-                var model = new ContactPersonViewModel { OrganisationId = organisationId };
+                var model = new ContactPersonViewModel { OrganisationId = id };
                 return View(model);
             }
         }
@@ -457,12 +457,12 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ReviewOrganisationDetails(Guid organisationId)
+        public async Task<ActionResult> ReviewOrganisationDetails(Guid id)
         {
             var model = new OrganisationSummaryViewModel();
             using (var client = apiClient())
             {
-                var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
+                var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
                 model.OrganisationData = organisation;
                 return View(model);
             }
