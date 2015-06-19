@@ -202,7 +202,18 @@
         [HttpGet]
         public async Task<ViewResult> JoinOrganisation(Guid organisationId)
         {
-            return View(new JoinOrganisationViewModel { OrganisationToJoin = organisationId });
+            using (var client = apiClient())
+            {
+                var organisationExists =
+                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(organisationId));
+
+                if (!organisationExists)
+                {
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
+                }
+                
+                return View(new JoinOrganisationViewModel { OrganisationToJoin = organisationId });
+            }
         }
 
         [HttpPost]
