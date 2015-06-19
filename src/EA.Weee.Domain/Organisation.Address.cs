@@ -15,32 +15,37 @@
                 Address addr = new Address(address.Address1, address.Address2, address.TownOrCity,
                     address.CountyOrRegion,
                     address.Postcode, address.Country, address.Telephone, address.Email);
-                switch (type.Value)
+                switch (type.DisplayName)
                 {
-                    case 1:
+                    case "Organisation address":
                         if (OrganisationAddress != null)
                         {
-                            throw new InvalidOperationException(string.Format("Cannot add Organisation address to Organisation {0}. This organisation already has a organisation address {1}.",
-                                                    this.Id,
-                                                    this.OrganisationAddress.Id));
+                            throw new InvalidOperationException(string.Format("Cannot add Organisation address to Organisation {0}. This organisation already has a organisation address",
+                                                    this.Id));
                         }
                         OrganisationAddress = addr;
                         break;
-                    case 2:
+                    case "Registered or PPB address":
                         if (BusinessAddress != null)
                         {
-                            throw new InvalidOperationException(string.Format("Cannot add Business address to Organisation {0}. This organisation already has a business address {1}.",
-                                                    this.Id,
-                                                    this.BusinessAddress.Id));
+                            throw new InvalidOperationException(string.Format("Cannot add Business address to Organisation {0}. This organisation already has a business address.",
+                                                    this.Id));
                         }
-                        BusinessAddress = addr;
+                        if (addr.IsUkAddress)
+                        {
+                            BusinessAddress = addr;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException(string.Format("Cannot add Business address to Organisation {0}. Address should be UK address.",
+                                                    this.Id));
+                        }
                         break;
-                    case 3:
+                    case "Service of notice address":
                         if (NotificationAddress != null)
                         {
-                            throw new InvalidOperationException(string.Format("Cannot add Notification address to Organisation {0}. This organisation already has a notification address {1}.",
-                                                    this.Id,
-                                                    this.NotificationAddress.Id));
+                            throw new InvalidOperationException(string.Format("Cannot add Notification address to Organisation {0}. This organisation already has a notification address.",
+                                                    this.Id));
                         }
                         NotificationAddress = addr;
                         break;
