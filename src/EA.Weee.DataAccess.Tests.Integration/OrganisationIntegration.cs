@@ -35,7 +35,7 @@
             var type = OrganisationType.RegisteredCompany;
 
             var organisationAddress = MakeAddress("O");
-            var businessAddress = MakeAddress("B");
+            var businessAddress = MakeUKAddress("B");
             var notificationAddress = MakeAddress("N");
 
             var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
@@ -73,7 +73,7 @@
             var type = OrganisationType.SoleTraderOrIndividual;
 
             var organisationAddress = MakeAddress("O");
-            var businessAddress = MakeAddress("B");
+            var businessAddress = MakeUKAddress("B");
             var notificationAddress = MakeAddress("N");
 
             var organisation = Organisation.CreateSoleTrader(tradingName);
@@ -145,7 +145,7 @@
             context.SaveChangesAsync();
         }
 
-        private Address MakeAddress(string identifier)
+        private static Address MakeAddress(string identifier)
         {
             return new Address(
                 "Line 1 " + identifier,
@@ -158,6 +158,18 @@
                 "Email" + identifier);
         }
 
+        private static Address MakeUKAddress(string identifier)
+        {
+            return new Address(
+                "Line 1 " + identifier,
+                "Line 2 " + identifier,
+                "Town " + identifier,
+                "Region" + identifier,
+                "Postcode " + identifier,
+                "England",
+                "Phone" + identifier,
+                "Email" + identifier);
+        }
         private Contact MakeContact()
         {
             return new Contact("Test firstname", "Test lastname", "Test position");
