@@ -53,6 +53,8 @@
     <Compile Include="Organisation.MainContactPerson.cs" />
     <Compile Include="OrganisationStatus.cs" />
     <Compile Include="OrganisationType.cs" />
+    <Compile Include="OrganisationUser.cs" />
+    <Compile Include="OrganisationUserStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UKCompetentAuthority.cs" />
     <Compile Include="User.cs" />
