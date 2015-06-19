@@ -15,9 +15,9 @@
         {
         }
 
-        public OrganisationUser(string userId, Guid organisationId, OrganisationUserStatus userStatus)
+        public OrganisationUser(Guid userId, Guid organisationId, OrganisationUserStatus userStatus)
         {
-            UserId = userId;
+            UserId = userId.ToString();
             OrganisationId = organisationId;
             UserStatus = userStatus;
         }

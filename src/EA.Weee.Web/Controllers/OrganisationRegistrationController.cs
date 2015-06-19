@@ -3,10 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Web.ApiClient;
     using EA.Prsd.Core.Web.Mvc.Extensions;
@@ -27,9 +26,12 @@
     {
         private readonly Func<IWeeeClient> apiClient;
 
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient)
+        private readonly IUserContext userContext;
+
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, IUserContext userContext)
         {
             this.apiClient = apiClient;
+            this.userContext = userContext;
         }
 
         [HttpGet]
@@ -218,7 +220,7 @@
 
             using (var client = apiClient())
             {
-                var userId = ((ClaimsIdentity)User.Identity).Claims.FirstOrDefault(c => c.Type == "sub").Value;
+                var userId = userContext.UserId;
 
                 try
                 {
