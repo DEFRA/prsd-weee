@@ -408,6 +408,38 @@
         }
 
         [HttpGet]
+        public async Task<ViewResult> RegisteredOfficeAddressPrepopulate(Guid id)
+        {
+            using (var client = apiClient())
+            {
+                return View(GetAddressPrepopulateViewModel(id, client));
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> RegisteredOfficeAddressPrepopulate(AddressPrepopulateViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (viewModel.ContactDetailsSameAs.SelectedValue == "No")
+                {
+                    return RedirectToAction("RegisteredOfficeAddress", new { id = viewModel.OrganisationId });
+                }
+                if (viewModel.ContactDetailsSameAs.SelectedValue == "Yes")
+                {
+                    using (var client = apiClient())
+                    {
+                        await client.SendAsync(User.GetAccessToken(), new CopyOrganisationAddressIntoRegisteredOffice(viewModel.OrganisationId));
+                    }
+
+                    return RedirectToAction("ReviewOrganisationSummary", new { id = viewModel.OrganisationId });
+                }
+            }
+            
+            return View(viewModel);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> RegisteredOfficeAddress(Guid id)
         {
             using (var client = apiClient())
@@ -503,6 +535,27 @@
             };
 
             await this.BindUKCompetentAuthorityRegionsList(client, User);
+            return model;
+        }
+
+        private async Task<AddressPrepopulateViewModel> GetAddressPrepopulateViewModel(Guid id, IWeeeClient client)
+        {
+            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+            var model = new AddressPrepopulateViewModel()
+            {
+                OrganisationId = id,
+                OrganisationType = organisation.OrganisationType,
+                ContactDetailsSameAs = new RadioButtonStringCollectionViewModel
+                {
+                    PossibleValues = new List<string>
+                    {
+                        "Yes",
+                        "No"
+                    },
+                    SelectedValue = "No"
+                }
+            };
+
             return model;
         }
 

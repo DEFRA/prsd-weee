@@ -131,5 +131,20 @@
 
             OrganisationStatus = OrganisationStatus.Withdrawn;
         }
+
+        public void BusinessAddressIsSameAsOrganisationAddress()
+        {
+            if (OrganisationAddress == null)
+            {
+                throw new InvalidOperationException("Trying to copy a null OrganisationAddress into BusinessAddress");
+            }
+
+            if (BusinessAddress != null)
+            {
+                throw new InvalidOperationException("BusinessAddress has already been set");
+            }
+
+            BusinessAddress = OrganisationAddress;
+        }
     }
 }
