@@ -389,7 +389,7 @@
                 using (var client = apiClient())
                 {
                     await AddAddressToOrganisation(model, AddressType.OrganistionAddress, client);
-                    return RedirectToAction("RegisteredOfficeAddress", "OrganisationRegistration", new
+                    return RedirectToAction("RegisteredOfficeAddressPrepopulate", "OrganisationRegistration", new
                     {
                         id = model.OrganisationId
                     });
@@ -412,7 +412,7 @@
         {
             using (var client = apiClient())
             {
-                return View(GetAddressPrepopulateViewModel(id, client));
+                return View(await GetAddressPrepopulateViewModel(id, client));
             }
         }
 
