@@ -432,7 +432,7 @@
                         await client.SendAsync(User.GetAccessToken(), new CopyOrganisationAddressIntoRegisteredOffice(viewModel.OrganisationId));
                     }
 
-                    return RedirectToAction("ReviewOrganisationSummary", new { id = viewModel.OrganisationId });
+                    return RedirectToAction("ReviewOrganisationDetails", new { id = viewModel.OrganisationId });
                 }
             }
             
