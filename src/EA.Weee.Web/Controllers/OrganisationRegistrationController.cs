@@ -5,20 +5,20 @@
     using System.ComponentModel;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Infrastructure;
-    using Prsd.Core.Extensions;
-    using Prsd.Core.Web.ApiClient;
-    using Prsd.Core.Web.Mvc.Extensions;
-    using ViewModels.JoinOrganisation;
-    using ViewModels.OrganisationRegistration;
-    using ViewModels.OrganisationRegistration.Details;
-    using ViewModels.OrganisationRegistration.Type;
-    using ViewModels.Shared;
-    using Weee.Requests.Organisations;
-    using Weee.Requests.Organisations.Create;
-    using Weee.Requests.Organisations.Create.Base;
-    using Weee.Requests.Shared;
+    using EA.Prsd.Core.Extensions;
+    using EA.Prsd.Core.Web.ApiClient;
+    using EA.Prsd.Core.Web.Mvc.Extensions;
+    using EA.Weee.Api.Client;
+    using EA.Weee.Requests.Organisations;
+    using EA.Weee.Requests.Organisations.Create;
+    using EA.Weee.Requests.Organisations.Create.Base;
+    using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.ViewModels.JoinOrganisation;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
+    using EA.Weee.Web.ViewModels.Shared;
 
     [Authorize]
     public class OrganisationRegistrationController : Controller
@@ -194,9 +194,64 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SelectOrganisation(SelectOrganisationViewModel viewModel)
+        public async Task<ActionResult> SelectOrganisation(SelectOrganisationViewModel model, string submitButton)
         {
-            throw new NotImplementedException();
+            return RedirectToAction("JoinOrganisation", new { organisationId = Guid.Parse(submitButton) });
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> JoinOrganisation(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var organisationExists =
+                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(organisationId));
+
+                if (!organisationExists)
+                {
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
+                }
+                
+                return View(new JoinOrganisationViewModel { OrganisationToJoin = organisationId });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> JoinOrganisation(JoinOrganisationViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            using (var client = apiClient())
+            {
+                try
+                {
+                    await
+                        client.SendAsync(
+                            User.GetAccessToken(),
+                            new JoinOrganisation(viewModel.OrganisationToJoin));
+                }
+                catch (ApiException ex)
+                {
+                    if (ex.ErrorData != null)
+                    {
+                        ModelState.AddModelError(string.Empty, ex.ErrorData.ExceptionMessage);
+                        return View(viewModel);
+                    }
+                    throw;
+                }
+
+                return RedirectToAction("JoinOrganisationConfirmation");
+            }
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> JoinOrganisationConfirmation()
+        {
+            return View();
         }
 
         [HttpPost]

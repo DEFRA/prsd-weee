@@ -496,6 +496,8 @@
     <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddress.cshtml" />
     <Content Include="Views\Shared\_WeeePaging.cshtml" />
     <Content Include="Views\OrganisationRegistration\OrganisationAddress.cshtml" />
+    <Content Include="Views\OrganisationRegistration\JoinOrganisation.cshtml" />
+    <Content Include="Views\OrganisationRegistration\JoinOrganisationConfirmation.cshtml" />
     <Content Include="Views\OrganisationRegistration\ReviewOrganisationDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -514,6 +516,7 @@
     <Compile Include="App_Start\Modules\ApiClientModule.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Infrastructure\ControllerExtensions.cs" />
     <Compile Include="Infrastructure\TokenResponseExtensions.cs" />
