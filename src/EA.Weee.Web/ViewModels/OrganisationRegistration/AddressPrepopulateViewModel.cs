@@ -8,7 +8,7 @@
     public class AddressPrepopulateViewModel
     {
         [Required]
-        public RadioButtonStringCollectionViewModel ContactDetailsSameAs { get; set; }
+        public YesNoChoiceViewModel ContactDetailsSameAs { get; set; }
 
         public Guid OrganisationId { get; set; }
 

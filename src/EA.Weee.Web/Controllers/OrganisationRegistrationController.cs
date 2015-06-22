@@ -436,11 +436,11 @@
         {
             if (ModelState.IsValid)
             {
-                if (viewModel.ContactDetailsSameAs.SelectedValue == "No")
+                if (viewModel.ContactDetailsSameAs.Choices.SelectedValue == "No")
                 {
                     return RedirectToAction("RegisteredOfficeAddress", new { id = viewModel.OrganisationId });
                 }
-                if (viewModel.ContactDetailsSameAs.SelectedValue == "Yes")
+                if (viewModel.ContactDetailsSameAs.Choices.SelectedValue == "Yes")
                 {
                     using (var client = apiClient())
                     {
@@ -560,14 +560,7 @@
             {
                 OrganisationId = id,
                 OrganisationType = organisation.OrganisationType,
-                ContactDetailsSameAs = new RadioButtonStringCollectionViewModel
-                {
-                    PossibleValues = new List<string>
-                    {
-                        "Yes",
-                        "No"
-                    },
-                }
+                ContactDetailsSameAs = new YesNoChoiceViewModel()
             };
 
             return model;
