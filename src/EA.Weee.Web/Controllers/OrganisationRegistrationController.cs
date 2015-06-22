@@ -457,6 +457,14 @@
             var model = new OrganisationSummaryViewModel();
             using (var client = apiClient())
             {
+                var organisationExists =
+                   await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
+
+                if (!organisationExists)
+                {
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
+                }
+
                 var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
                 model.OrganisationData = organisation;
                 return View(model);
