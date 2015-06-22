@@ -36,7 +36,7 @@
                         }
                         else
                         {
-                            throw new InvalidOperationException("Cannot add Business address to Organisation.Address should be UK address.");
+                            throw new InvalidOperationException("Cannot add Business address to Organisation. Address should be UK address.");
                         }
                         break;
                     case "Service of notice address":
