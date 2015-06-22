@@ -5,8 +5,8 @@
     public class OrganisationUserStatus : Enumeration
     {
         public static readonly OrganisationUserStatus Pending = new OrganisationUserStatus(1, "Pending");
-        public static readonly OrganisationUserStatus NormalUser = new OrganisationUserStatus(2, "Normal user");
-        public static readonly OrganisationUserStatus AdminUser = new OrganisationUserStatus(3, "Admin user");
+        public static readonly OrganisationUserStatus Approved = new OrganisationUserStatus(2, "Approved");
+        public static readonly OrganisationUserStatus Refused = new OrganisationUserStatus(3, "Refused");
 
         protected OrganisationUserStatus()
         {
