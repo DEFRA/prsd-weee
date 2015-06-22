@@ -20,6 +20,8 @@
      
         private readonly DbContextHelper helper = new DbContextHelper();
 
+        private readonly OrganisationHelper orgHelper = new OrganisationHelper();
+
         [Theory]
         [InlineData("", "", 0)]
         [InlineData("", "Bee", 3)]
@@ -39,81 +41,17 @@
             Assert.Equal(result, StringSearch.CalculateLevenshteinDistance(s1, s2));
         }
 
-        private Organisation GetOrganisationWithName(string name)
-        {
-            return GetOrganisationWithDetails(name, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved);
-        }
-
-        private Organisation GetOrganisationWithDetails(string name, string tradingName, Domain.OrganisationType type, OrganisationStatus status)
-        {
-            Organisation organisation;
-
-            if (type == Domain.OrganisationType.RegisteredCompany)
-            {
-                organisation = Organisation.CreateRegisteredCompany(name, companyRegistrationNumber, tradingName);
-            }
-            else if (type == Domain.OrganisationType.Partnership)
-            {
-                organisation = Organisation.CreatePartnership(tradingName);
-            }
-            else
-            {
-                organisation = Organisation.CreateSoleTrader(tradingName);
-            }
-
-            organisation.AddAddress(AddressType.OrganisationAddress, GetAddress());
-
-            organisation.AddMainContactPerson(GetContact());
-
-            if (status == OrganisationStatus.Pending)
-            {
-                organisation.ToPending();
-            }
-
-            if (status == OrganisationStatus.Approved)
-            {
-                organisation.ToPending();
-                organisation.ToApproved();
-            }
-
-            var properties = typeof(Organisation).GetProperties();
-
-            foreach (var propertyInfo in properties)
-            {
-                if (propertyInfo.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var baseProperty = typeof(Organisation).BaseType.GetProperty(propertyInfo.Name);
-
-                    baseProperty.SetValue(organisation, Guid.NewGuid(), null);
-
-                    break;
-                }
-            }
-
-            return organisation;
-        }
-
-        private Address GetAddress()
-        {
-            return new Address("1", "street", "Woking", "Hampshire", "GU21 5EE", "United Kingdom", "12345678", "test@co.uk");
-        }
-
-        private Contact GetContact()
-        {
-            return new Contact("Test first name", "Test last name", "Test position");
-        }
-
         [Fact]
         public async Task FindMatchingOrganisationsHandler_WithLtdCompany_OneMatches()
         {
             var organisations = helper.GetAsyncEnabledDbSet(new[]
             {
-                GetOrganisationWithName("SFW Ltd"),
-                GetOrganisationWithName("swf"),
-                GetOrganisationWithName("mfw"),
-                GetOrganisationWithName("mfi Kitchens and Showrooms Ltd"),
-                GetOrganisationWithName("SEPA England"),
-                GetOrganisationWithName("Tesco Recycling")
+                orgHelper.GetOrganisationWithName("SFW Ltd"),
+                orgHelper.GetOrganisationWithName("swf"),
+                orgHelper.GetOrganisationWithName("mfw"),
+                orgHelper.GetOrganisationWithName("mfi Kitchens and Showrooms Ltd"),
+                orgHelper.GetOrganisationWithName("SEPA England"),
+                orgHelper.GetOrganisationWithName("Tesco Recycling")
             });
 
             var context = A.Fake<WeeeContext>();
@@ -132,8 +70,8 @@
         {
             var organisations = helper.GetAsyncEnabledDbSet(new[]
             {
-                GetOrganisationWithName("SFW Ltd"),
-                GetOrganisationWithName("SFW  Limited")
+                orgHelper.GetOrganisationWithName("SFW Ltd"),
+                orgHelper.GetOrganisationWithName("SFW  Limited")
             });
 
             var context = A.Fake<WeeeContext>();
@@ -152,8 +90,8 @@
         {
             var organisations = helper.GetAsyncEnabledDbSet(new[]
             {
-                GetOrganisationWithName("Environment Agency"),
-                GetOrganisationWithName("Enivronent Agency")
+                orgHelper.GetOrganisationWithName("Environment Agency"),
+                orgHelper.GetOrganisationWithName("Enivronent Agency")
             });
 
             var context = A.Fake<WeeeContext>();
@@ -172,9 +110,9 @@
         {
             var data = new[]
             {
-                GetOrganisationWithName("THE  Environemnt Agency"),
-                GetOrganisationWithName("THE Environemnt Agency"),
-                GetOrganisationWithName("Environment Agency")
+                orgHelper.GetOrganisationWithName("THE  Environemnt Agency"),
+                orgHelper.GetOrganisationWithName("THE Environemnt Agency"),
+                orgHelper.GetOrganisationWithName("Environment Agency")
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
@@ -195,7 +133,7 @@
         {
             var names = new[] { "Environment Agency", "Environemnt Agincy" };
 
-            var data = names.Select(GetOrganisationWithName).ToArray();
+            var data = names.Select(orgHelper.GetOrganisationWithName).ToArray();
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
 
@@ -223,7 +161,7 @@
             };
 
             var organisations =
-                helper.GetAsyncEnabledDbSet(namesWithDistances.Select(n => GetOrganisationWithName(n.Key)).ToArray());
+                helper.GetAsyncEnabledDbSet(namesWithDistances.Select(n => orgHelper.GetOrganisationWithName(n.Key)).ToArray());
 
             var context = A.Fake<WeeeContext>();
 
@@ -241,10 +179,10 @@
         {
             var data = new[]
             {
-                GetOrganisationWithDetails("THE  Environemnt Agency", null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency", Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                GetOrganisationWithDetails(null, "THE Environemnt Agency", Domain.OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Approved),
-                GetOrganisationWithDetails(null, "Environment Agency", Domain.OrganisationType.Partnership, OrganisationStatus.Approved)
+                orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", null, companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency", companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(null, "THE Environemnt Agency", companyRegistrationNumber, Domain.OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(null, "Environment Agency", companyRegistrationNumber, Domain.OrganisationType.Partnership, OrganisationStatus.Approved)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
@@ -270,10 +208,10 @@
 
             var data = new[]
             {
-                GetOrganisationWithDetails(IdenticalToQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                GetOrganisationWithDetails(CloseToQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                GetOrganisationWithDetails(QuiteDifferentToQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                GetOrganisationWithDetails(CompletelyUnlikeQuery, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved)
+                orgHelper.GetOrganisationWithDetails(IdenticalToQuery, null, companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(CloseToQuery, null, companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(QuiteDifferentToQuery, null, companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(CompletelyUnlikeQuery, null, companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
@@ -309,8 +247,8 @@
 
             var data = new[]
             {
-                GetOrganisationWithDetails(CompleteName,   null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                GetOrganisationWithDetails(IncompleteName, null, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete)
+                orgHelper.GetOrganisationWithDetails(CompleteName,   null, companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(IncompleteName, null, companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
