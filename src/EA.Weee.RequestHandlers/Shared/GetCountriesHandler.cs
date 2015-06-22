@@ -5,27 +5,26 @@
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
+    using Domain;
+    using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Shared;
 
     internal class GetCountriesHandler : IRequestHandler<GetCountries, IList<CountryData>>
     {
         private readonly WeeeContext context;
+        private readonly IMap<Country, CountryData> mapper;
 
-        public GetCountriesHandler(WeeeContext context)
+        public GetCountriesHandler(WeeeContext context, IMap<Country, CountryData> mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         public async Task<IList<CountryData>> HandleAsync(GetCountries query)
         {
-            var result = await context.Countries.ToArrayAsync();
-            var countryData = result.Select(c => new CountryData
-            {
-                Name = c.Name,
-                Id = c.Id
-            }).OrderBy(c => c.Name).ToArray();
-            return countryData;
+            var countries = await context.Countries.ToArrayAsync();
+            return countries.Select(mapper.Map).ToArray();
         }
     }
 }
