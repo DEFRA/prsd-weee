@@ -56,6 +56,25 @@
         }
 
         [Fact]
+        public async Task JoinOrganisationHandler_HappyPath_SetsOrganisationUserStatusToPending()
+        {
+            var context = SetupFakeWeeeContext();
+            var userContext = SetupFakeUserContext();
+
+            OrganisationUser addedOrganisationUser = null;
+            A.CallTo(() => context.OrganisationUsers.Add(A<OrganisationUser>._))
+                .Invokes((OrganisationUser ou) => addedOrganisationUser = ou);
+
+            var handler = new JoinOrganisationHandler(context, userContext);
+
+            var organisationWeWillJoin = context.Organisations.FirstOrDefault();
+
+            await handler.HandleAsync(new JoinOrganisation(organisationWeWillJoin.Id));
+
+            Assert.Equal(OrganisationUserStatus.Pending, addedOrganisationUser.UserStatus);
+        }
+
+        [Fact]
         public async Task JoinOrganisationHandler_NoSuchUser_ThrowsArgumentException()
         {
             var context = SetupFakeWeeeContext();
