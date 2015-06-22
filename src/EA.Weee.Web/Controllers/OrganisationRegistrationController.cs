@@ -395,10 +395,25 @@
                 using (var client = apiClient())
                 {
                     await AddAddressToOrganisation(model, AddressType.OrganistionAddress, client);
-                    return RedirectToAction("RegisteredOfficeAddress", "OrganisationRegistration", new
+
+                    var isUkAddress = await client.SendAsync(
+                        User.GetAccessToken(),
+                        new IsUkOrganisationAddress(model.OrganisationId));
+
+                    if (isUkAddress)
                     {
-                        id = model.OrganisationId
-                    });
+                        return RedirectToAction(
+                            "RegisteredOfficeAddressPrepopulate",
+                            "OrganisationRegistration",
+                            new { id = model.OrganisationId });
+                    }
+                    else
+                    {
+                        return RedirectToAction(
+                            "RegisteredOfficeAddress",
+                            "OrganisationRegistration",
+                            new { id = model.OrganisationId });
+                    }
                 }
             }
             catch (ApiBadRequestException ex)
@@ -411,6 +426,38 @@
                 }
             }
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> RegisteredOfficeAddressPrepopulate(Guid id)
+        {
+            using (var client = apiClient())
+            {
+                return View(await GetAddressPrepopulateViewModel(id, client));
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> RegisteredOfficeAddressPrepopulate(AddressPrepopulateViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (viewModel.ContactDetailsSameAs.Choices.SelectedValue == "No")
+                {
+                    return RedirectToAction("RegisteredOfficeAddress", new { id = viewModel.OrganisationId });
+                }
+                if (viewModel.ContactDetailsSameAs.Choices.SelectedValue == "Yes")
+                {
+                    using (var client = apiClient())
+                    {
+                        await client.SendAsync(User.GetAccessToken(), new CopyOrganisationAddressIntoRegisteredOffice(viewModel.OrganisationId));
+                    }
+
+                    return RedirectToAction("ReviewOrganisationDetails", new { id = viewModel.OrganisationId });
+                }
+            }
+            
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -509,6 +556,19 @@
             };
 
             await this.BindUKCompetentAuthorityRegionsList(client, User);
+            return model;
+        }
+
+        private async Task<AddressPrepopulateViewModel> GetAddressPrepopulateViewModel(Guid id, IWeeeClient client)
+        {
+            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+            var model = new AddressPrepopulateViewModel()
+            {
+                OrganisationId = id,
+                OrganisationType = organisation.OrganisationType,
+                ContactDetailsSameAs = new YesNoChoiceViewModel()
+            };
+
             return model;
         }
 
