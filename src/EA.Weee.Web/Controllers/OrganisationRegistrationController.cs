@@ -325,7 +325,13 @@
                 /* RP: Check with the API to see if this is a valid organisation
                  * It would be annoying for a user to fill out a form only to get an error at the end, 
                  * when this could be avoided by checking the validity of the ID before the page loads */
-                await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
+                var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
+
+                if (!orgExists)
+                {
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
+                }
+
                 var model = new ContactPersonViewModel { OrganisationId = id };
                 return View(model);
             }

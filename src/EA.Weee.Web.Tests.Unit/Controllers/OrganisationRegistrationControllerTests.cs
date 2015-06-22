@@ -4,6 +4,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using FakeItEasy;
+    using ViewModels.OrganisationRegistration;
     using ViewModels.Shared;
     using Web.Controllers;
     using Weee.Requests.Organisations;
@@ -93,6 +94,30 @@
 
             Assert.Equal("OrganisationRegistration", redirectToRouteResult.RouteValues["controller"]);
             Assert.Equal("ReviewOrganisationDetails", redirectToRouteResult.RouteValues["action"]);
+        }
+
+        [Fact]
+        public async void GetMainContactPerson_OrganisationIdIsInvalid_ShouldThrowArgumentException()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(false);
+
+            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().MainContactPerson(A<Guid>._));
+        }
+
+        [Fact]
+        public async void
+            GetMainContactPerson_OrganisationIdIsValid_ShouldReturnContactPersonViewModelWithOrganisationId()
+        {
+            var organisationId = Guid.NewGuid();
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+
+            var result = await OrganisationRegistrationController().MainContactPerson(organisationId);
+            var model = ((ViewResult)result).Model;
+
+            Assert.IsType<ContactPersonViewModel>(model);
+            Assert.Equal(organisationId, ((ContactPersonViewModel)model).OrganisationId);
         }
 
         private OrganisationRegistrationController OrganisationRegistrationController()
