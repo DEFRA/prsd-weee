@@ -6,7 +6,7 @@
 
     public class Address : Entity
     {
-        public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode, string country, string telephone, string email)
+        public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode, Country country, string telephone, string email)
         {
             Address1 = address1;
             Address2 = address2;
@@ -27,9 +27,10 @@
         private string townOrCity;
         private string countyOrRegion;
         private string postcode;
-        private string country;
         private string telephone;
         private string email;
+
+        public virtual Country Country { get; private set; }
 
         public string Address1
         {
@@ -98,20 +99,6 @@
             }
         }
 
-        public string Country
-        {
-            get { return country; }
-            private set
-            {
-                Guard.ArgumentNotNullOrEmpty(() => value, value);
-                if (value.Length > 35)
-                {
-                    throw new InvalidOperationException(string.Format(("Country cannot be greater than 35 characters")));
-                }
-                country = value;
-            }
-        }
-
         public string Telephone
         {
             get { return telephone; }
@@ -144,27 +131,10 @@
         {
             get
             {
-                if (Country != null && IsUKRegion)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-        }
-      
-        private bool IsUKRegion
-        {
-            get
-            {
-                if (Country != null && 
-                    (Country.ToLower().Contains("england")
-                    || 
-                    Country.ToLower().Contains("wales")
-                    ||
-                    Country.ToLower().Contains("northern ireland")
-                    || 
-                    Country.ToLower().Contains("scotland")))
+                if (Country.Id.Equals(Guid.Parse("FE1E7E10-D8AA-47BD-B8B7-F2C5C43643F3"))
+                    || Country.Id.Equals(Guid.Parse("50B51FED-A94D-415B-9692-6A381E6EACA9"))
+                    || Country.Id.Equals(Guid.Parse("B592E944-F39D-427E-949E-A7E79D999A42"))
+                    || Country.Id.Equals(Guid.Parse("9CBFED0C-3341-4FFD-BA24-87605D0BBDA7"))) 
                 {
                     return true;
                 }

@@ -15,7 +15,7 @@
                 TownOrCity = source.TownOrCity,
                 CountyOrRegion = source.CountyOrRegion,
                 Postcode = source.Postcode,
-                Country = source.Country,
+                CountryId = source.Country.Id,
                 Telephone = source.Telephone,
                 Email = source.Email
             };

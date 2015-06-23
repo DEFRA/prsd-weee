@@ -14,6 +14,11 @@
             return new Contact(contact.FirstName, contact.LastName, contact.Position);
         }
 
+        public static Country CreateCountry(CountryData country)
+        {
+            return new Country(country.Id, country.Name);
+        }
+
         public static Address CreateAddress(AddressData address)
         {
             return new Address(address.Address1,
@@ -21,7 +26,7 @@
                 address.TownOrCity,
                 address.CountyOrRegion,
                 address.Postcode,
-                address.Country,
+                CreateCountry(address.Country),
                 address.Telephone,
                 address.Email);
         }

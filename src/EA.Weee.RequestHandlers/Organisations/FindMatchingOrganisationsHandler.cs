@@ -140,7 +140,7 @@
                         TownOrCity = o.OrganisationAddress.TownOrCity,
                         CountyOrRegion = o.OrganisationAddress.CountyOrRegion,
                         Postcode = o.OrganisationAddress.Postcode,
-                        Country = o.OrganisationAddress.Country,
+                        CountryId = o.OrganisationAddress.Country.Id,
                         Telephone = o.OrganisationAddress.Telephone,
                         Email = o.OrganisationAddress.Email
                     },

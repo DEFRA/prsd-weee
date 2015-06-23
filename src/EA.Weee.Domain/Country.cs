@@ -4,6 +4,12 @@
 
     public class Country
     {
+        public Country(Guid id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+
         protected Country()
         {
         }

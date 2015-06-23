@@ -3,11 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Prsd.Core.Validation;
-    using Validation;
-
+   
     public class AddressData
     {
+        public AddressData()
+        {
+            Country = new CountryData();    
+        }
+
         private const string DefaultCountryName = "United Kingdom";
     
         [Required]
@@ -34,9 +37,11 @@
 
         [Required]
         [Display(Name = "Country")]
-        public Guid? CountryId { get; set; }
+        public Guid CountryId { get; set; }
+       
+        public CountryData Country { get; set; }
 
-        public string Country { get; set; }
+       public IEnumerable<CountryData> Countries { get; set; }
 
         [Required]
         [StringLength(20)]

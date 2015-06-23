@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit
 {
     using System;
+    using Helpers;
     using Xunit;
     using Address = Domain.Address;
 
@@ -23,64 +24,65 @@
         public void CreateAddress_RequiredPropertyIsNullOrEmpty_ShouldThrowArgumentException(string address1, string address2,
             string townOrCity, string countyOrRegion, string postcode, string country, string telephone, string email)
         {
-            Assert.ThrowsAny<ArgumentException>(
-                () => new Address(address1, address2, townOrCity, countyOrRegion, postcode, country, telephone, email));
+            Country countrydata = new Country(new Guid(), country);
+                Assert.ThrowsAny<ArgumentException>(
+                () => new Address(address1, address2, townOrCity, countyOrRegion, postcode, countrydata, telephone, email));
         }
 
         [Fact]
         public void CreateAddress_AddressLine1Is36Characters_ShouldThrowInvalidOperationException()
         {
+            Country countrydata = new Country(new Guid(), "R");
             Assert.ThrowsAny<InvalidOperationException>(
-                () => new Address(CharacterString(36), "NR", "R", "NR", "NR", "R", "R", "R"));
+                () => new Address(CharacterString(36), "NR", "R", "NR", "NR", countrydata, "R", "R"));
         }
 
         [Fact]
         public void CreateAddress_AddressLine2Is36Characters_ShouldThrowInvalidOperationException()
         {
+            Country countrydata = new Country(new Guid(), "R");
             Assert.ThrowsAny<InvalidOperationException>(
-                () => new Address("R", CharacterString(36), "R", "NR", "NR", "R", "R", "R"));
+                () => new Address("R", CharacterString(36), "R", "NR", "NR", countrydata, "R", "R"));
         }
 
         [Fact]
         public void CreateAddress_TownOrCityIs36Characters_ShouldThrowInvalidOperationException()
         {
+            Country countrydata = new Country(new Guid(), "R");
             Assert.ThrowsAny<InvalidOperationException>(
-                () => new Address("R", "R", CharacterString(36), "NR", "NR", "R", "R", "R"));
+                () => new Address("R", "R", CharacterString(36), "NR", "NR", countrydata, "R", "R"));
         }
 
         [Fact]
         public void CreateAddress_CountyOrRegionIs36Characters_ShouldThrowInvalidOperationException()
         {
+            Country countrydata = new Country(new Guid(), "R");
             Assert.ThrowsAny<InvalidOperationException>(
-                () => new Address("R", "R", "R", CharacterString(36), "NR", "R", "R", "R"));
+                () => new Address("R", "R", "R", CharacterString(36), "NR", countrydata, "R", "R"));
         }
 
         [Fact]
         public void CreateAddress_PostcodeIs11Characters_ShouldThrowInvalidOperationException()
         {
+            Country countrydata = new Country(new Guid(), "R");
             Assert.ThrowsAny<InvalidOperationException>(
-                () => new Address("R", "R", "R", "NR", CharacterString(11), "R", "R", "R"));
+                () => new Address("R", "R", "R", "NR", CharacterString(11), countrydata, "R", "R"));
         }
-
-        [Fact]
-        public void CreateAddress_CountryIs36Characters_ShouldThrowInvalidOperationException()
-        {
-            Assert.ThrowsAny<InvalidOperationException>(
-                () => new Address("R", "R", "R", "NR", "NR", CharacterString(36), "R", "R"));
-        }
-
+       
         [Fact]
         public void CreateAddress_TelephoneIs21Characters_ShouldThrowInvalidOperationException()
         {
+            Country countrydata = new Country(new Guid(), "R");
             Assert.ThrowsAny<InvalidOperationException>(
-                () => new Address("R", "R", "R", "NR", "NR", "R", CharacterString(21), "R"));
+                () => new Address("R", "R", "R", "NR", "NR", countrydata, CharacterString(21), "R"));
         }
 
         [Fact]
         public void CreateAddress_EmailIs257Characters_ShouldThrowInvalidOperationException()
         {
+            Country countrydata = new Country(new Guid(), "R");
             Assert.ThrowsAny<InvalidOperationException>(
-                () => new Address("R", "R", "R", "NR", "NR", "R", "R", CharacterString(257)));
+                () => new Address("R", "R", "R", "NR", "NR", countrydata, "R", CharacterString(257)));
         }
 
         private string CharacterString(int length)
@@ -92,6 +94,11 @@
             }
 
             return characters;
+        }
+
+        private Guid GetTestCountryId()
+        {
+            return new Guid("836BEFCC-A2DA-454C-B5B9-DD72AFDAC543"); 
         }
     }
 }

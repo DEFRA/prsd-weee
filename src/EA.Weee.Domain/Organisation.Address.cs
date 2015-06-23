@@ -30,7 +30,7 @@
                             throw new InvalidOperationException(
                                 "Cannot add Business address to Organisation. This organisation already has a business address.");
                         }
-                        if (addr.IsUkAddress)
+                        if (address.IsUkAddress)
                         {
                             BusinessAddress = addr;
                         }
@@ -38,7 +38,7 @@
                         {
                             throw new InvalidOperationException("Cannot add Business address to Organisation. Address should be UK address.");
                         }
-                        break;
+                    break;
                     case "Service of notice address":
                         if (NotificationAddress != null)
                         {

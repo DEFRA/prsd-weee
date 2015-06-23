@@ -75,11 +75,16 @@
                 {
                     return new Address("Address Line 1", "Address Line 1", "Town Or City", "County Or Region",
                         "Postcode",
-                        "England", "01234567890", "email@email.email");
+                        GetCountry(), "01234567890", "email@email.email");
                 }
             }
             return new Address("Address Line 1", "Address Line 1", "Town Or City", "County Or Region", "Postcode",
-                "Country", "01234567890", "email@email.email");
+                GetCountry(), "01234567890", "email@email.email");
+        }
+
+        private Country GetCountry()
+        {
+            return new Country(new Guid(), "country");
         }
 
         private AddressType CastAddressType(string addressType)

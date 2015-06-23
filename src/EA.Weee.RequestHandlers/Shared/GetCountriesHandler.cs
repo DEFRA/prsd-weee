@@ -23,8 +23,20 @@
 
         public async Task<IList<CountryData>> HandleAsync(GetCountries query)
         {
+            bool regionsOfUKOnly = query.UKRegionsOnly;
             var countries = await context.Countries.ToArrayAsync();
-            return countries.Select(mapper.Map).ToArray();
+            if (regionsOfUKOnly)
+            {
+                var ukcompetentauthories = await context.UKCompetentAuthorities.ToArrayAsync();
+
+                var ukregions = countries.Join(ukcompetentauthories, c => c.Id, u => u.Country.Id,
+                    (c, u) => new CountryData { Id = c.Id, Name = c.Name });
+                return ukregions.ToList();
+            }
+            else
+            {
+                return countries.Select(mapper.Map).ToArray();    
+            }
         }
     }
 }
