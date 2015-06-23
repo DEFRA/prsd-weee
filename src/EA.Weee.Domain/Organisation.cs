@@ -80,6 +80,11 @@
             return new Organisation(OrganisationType.RegisteredCompany, companyName, companyRegistrationNumber, tradingName);
         }
 
+        public void CompleteRegistration()
+        {
+            ToPending();
+        }
+
         public void ToPending()
         {
             if (OrganisationStatus != OrganisationStatus.Incomplete)
