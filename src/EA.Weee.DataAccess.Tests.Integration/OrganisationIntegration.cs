@@ -134,7 +134,7 @@
             Assert.Equal(expected.TownOrCity, fromDatabase.TownOrCity);
             Assert.Equal(expected.CountyOrRegion, fromDatabase.CountyOrRegion);
             Assert.Equal(expected.Postcode, fromDatabase.Postcode);
-            Assert.Equal(expected.Country, fromDatabase.Country);
+            Assert.Equal(expected.Country.Id, fromDatabase.Country.Id);
             Assert.Equal(expected.Telephone, fromDatabase.Telephone);
             Assert.Equal(expected.Email, fromDatabase.Email);
         }
@@ -147,29 +147,38 @@
 
         private static Address MakeAddress(string identifier)
         {
+            Country country = MakeCountry();
+
             return new Address(
                 "Line 1 " + identifier,
                 "Line 2 " + identifier,
                 "Town " + identifier,
                 "Region" + identifier,
                 "Postcode " + identifier,
-                "Country " + identifier,
+                 country,
                 "Phone" + identifier,
                 "Email" + identifier);
         }
 
         private static Address MakeUKAddress(string identifier)
         {
+            Country country = new Country(Guid.Parse("FE1E7E10-D8AA-47BD-B8B7-F2C5C43643F3"), "England");
             return new Address(
                 "Line 1 " + identifier,
                 "Line 2 " + identifier,
                 "Town " + identifier,
                 "Region" + identifier,
                 "Postcode " + identifier,
-                "England",
+                country,
                 "Phone" + identifier,
                 "Email" + identifier);
         }
+
+        private static Country MakeCountry()
+        {
+            return new Country(new Guid(), "Country");
+        }
+
         private Contact MakeContact()
         {
             return new Contact("Test firstname", "Test lastname", "Test position");

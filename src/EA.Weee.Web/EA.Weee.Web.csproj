@@ -70,17 +70,17 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15167-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15167.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EA.Prsd.Core, Version=1.0.15170.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15167-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15170-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web.Mvc">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15167-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15170.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15170-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15170.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15170-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
@@ -379,9 +379,6 @@
     </Content>
     <Content Include="Scripts\application.js" />
     <Content Include="Scripts\custom-validation.js" />
-    <Content Include="Scripts\govuk\govuk-template.js" />
-    <Content Include="Scripts\govuk\ie.js" />
-    <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
     <Content Include="Content\weee-page-ie6.scss" />
     <Content Include="Content\weee-page-ie7.scss" />
     <Content Include="Content\weee-page-ie8.scss" />
@@ -427,7 +424,14 @@
     <Content Include="Content\weee\_pagination.scss" />
     <Content Include="Content\jquery-autocomplete.scss" />
     <Content Include="Content\weee\_summary.scss" />
+    <Content Include="Content\govuk\stylesheets\fonts\GDSTransportWebsite-Bold.eot" />
+    <Content Include="Content\govuk\stylesheets\fonts\GDSTransportWebsite.eot" />
+    <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Light.eot" />
+    <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Bold.eot" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
+    <Content Include="Scripts\govuk\govuk-template.js" />
+    <Content Include="Scripts\govuk\ie.js" />
+    <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\error-tracking.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\google-analytics-universal-tracker.js" />
@@ -458,14 +462,6 @@
     <Content Include="Scripts\vendor\modernizr.custom.77028.js" />
     <Content Include="Scripts\vendor\prism.js" />
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTATabularNumbers-Light.woff" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTATabularNumbers-Light.eot" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTATabularNumbers-Bold.woff" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTATabularNumbers-Bold.eot" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTA-Light-20130221.woff" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTA-Light-20130221.eot" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTA-Bold-20130221.woff" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTA-Bold-20130221.eot" />
     <Content Include="Scripts\jquery-2.1.3.min.map" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -519,7 +515,6 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
-    <Compile Include="Infrastructure\ControllerExtensions.cs" />
     <Compile Include="Infrastructure\TokenResponseExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
