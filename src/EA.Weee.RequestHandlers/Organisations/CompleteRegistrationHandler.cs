@@ -36,10 +36,12 @@
             }
 
             var organisationUser = new OrganisationUser(userId, message.OrganisationId, OrganisationUserStatus.Approved);
-            db.OrganisationUsers.Add(organisationUser);
 
             var organisation = await db.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
+
+            db.OrganisationUsers.Add(organisationUser);
             organisation.CompleteRegistration();
+
             await db.SaveChangesAsync();
             return organisation.Id;
         }
