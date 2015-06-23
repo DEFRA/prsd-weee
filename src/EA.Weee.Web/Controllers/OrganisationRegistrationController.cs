@@ -330,7 +330,7 @@
 
                 if (!organisationExists)
                 {
-                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "id");
                 }
                 var model = new ContactPersonViewModel { OrganisationId = id };
                 return View(model);
