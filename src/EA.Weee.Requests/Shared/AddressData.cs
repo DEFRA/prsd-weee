@@ -40,13 +40,11 @@
 
         [Required]
         [StringLength(20)]
-        [GenericPhoneNumber(ErrorMessage = "The Phone field should contain a valid phone number")]
         [Display(Name = "Phone")]
         public string Telephone { get; set; }
 
         [Required]
         [StringLength(256)]
-        [DataType(DataType.Text)]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
