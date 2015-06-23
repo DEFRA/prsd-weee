@@ -33,12 +33,12 @@
 
             if (status == OrganisationStatus.Pending)
             {
-                organisation.ToPending();
+                organisation.CompleteRegistration();
             }
 
             if (status == OrganisationStatus.Approved)
             {
-                organisation.ToPending();
+                organisation.CompleteRegistration();
                 organisation.ToApproved();
             }
 
