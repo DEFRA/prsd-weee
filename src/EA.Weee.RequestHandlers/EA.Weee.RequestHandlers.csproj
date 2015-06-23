@@ -85,10 +85,12 @@
     <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandler.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandler.cs" />
+    <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandler.cs" />
     <Compile Include="Organisations\Create\CreateRegisteredCompanyRequestHandler.cs" />
     <Compile Include="Organisations\Create\CreateSoleTraderRequestHandler.cs" />
     <Compile Include="Organisations\Create\CreatePartnershipRequestHandler.cs" />
     <Compile Include="Organisations\FindMatchingOrganisationsHandler.cs" />
+    <Compile Include="Organisations\IsUkOrganisationAddressHandler.cs" />
     <Compile Include="Organisations\JoinOrganisationHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandler.cs" />

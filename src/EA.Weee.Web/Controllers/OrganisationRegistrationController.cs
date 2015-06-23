@@ -194,7 +194,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SelectOrganisation(SelectOrganisationViewModel model, string submitButton)
+        public ActionResult SelectOrganisation(SelectOrganisationViewModel model, string submitButton)
         {
             return RedirectToAction("JoinOrganisation", new { organisationId = Guid.Parse(submitButton) });
         }
@@ -325,8 +325,7 @@
                 /* RP: Check with the API to see if this is a valid organisation
                  * It would be annoying for a user to fill out a form only to get an error at the end, 
                  * when this could be avoided by checking the validity of the ID before the page loads */
-                var organisationExists =
-                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
+                var organisationExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
 
                 if (!organisationExists)
                 {
@@ -395,20 +394,68 @@
                 using (var client = apiClient())
                 {
                     await AddAddressToOrganisation(viewModel, AddressType.OrganistionAddress, client);
-                    return RedirectToAction("RegisteredOfficeAddress", "OrganisationRegistration", new
+
+                    var isUkAddress = await client.SendAsync(
+                        User.GetAccessToken(),
+                        new IsUkOrganisationAddress(viewModel.OrganisationId));
+
+                    if (isUkAddress)
                     {
-                        id = viewModel.OrganisationId
-                    });
+                        return RedirectToAction(
+                            "RegisteredOfficeAddressPrepopulate",
+                            "OrganisationRegistration",
+                            new { id = viewModel.OrganisationId });
+                    }
+                    else
+                    {
+                        return RedirectToAction(
+                            "RegisteredOfficeAddress",
+                            "OrganisationRegistration",
+                            new { id = viewModel.OrganisationId });
+                    }
                 }
             }
-            catch (ApiException ex)
+            catch (ApiBadRequestException ex)
             {
-                if (ex.ErrorData != null)
+                this.HandleBadRequest(ex);
+
+                if (ModelState.IsValid)
                 {
-                    ModelState.AddModelError(string.Empty, ex.ErrorData.ExceptionMessage);
-                    return View(viewModel);
+                    throw;
                 }
             }
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> RegisteredOfficeAddressPrepopulate(Guid id)
+        {
+            using (var client = apiClient())
+            {
+                return View(await GetAddressPrepopulateViewModel(id, client));
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> RegisteredOfficeAddressPrepopulate(AddressPrepopulateViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (viewModel.ContactDetailsSameAs.Choices.SelectedValue == "No")
+                {
+                    return RedirectToAction("RegisteredOfficeAddress", new { id = viewModel.OrganisationId });
+                }
+                if (viewModel.ContactDetailsSameAs.Choices.SelectedValue == "Yes")
+                {
+                    using (var client = apiClient())
+                    {
+                        await client.SendAsync(User.GetAccessToken(), new CopyOrganisationAddressIntoRegisteredOffice(viewModel.OrganisationId));
+                    }
+
+                    return RedirectToAction("ReviewOrganisationDetails", new { id = viewModel.OrganisationId });
+                }
+            }
+            
             return View(viewModel);
         }
 
@@ -500,12 +547,26 @@
 
         private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client)
         {
-            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));// Check the organisation Id is valid
+            // Check the organisation Id is valid
+            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId)); 
             var model = new AddressViewModel
             {
                 OrganisationId = organisationId,
                 OrganisationType = organisation.OrganisationType
             };
+            return model;
+        }
+
+        private async Task<AddressPrepopulateViewModel> GetAddressPrepopulateViewModel(Guid id, IWeeeClient client)
+        {
+            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+            var model = new AddressPrepopulateViewModel()
+            {
+                OrganisationId = id,
+                OrganisationType = organisation.OrganisationType,
+                ContactDetailsSameAs = new YesNoChoiceViewModel()
+            };
+
             return model;
         }
 
