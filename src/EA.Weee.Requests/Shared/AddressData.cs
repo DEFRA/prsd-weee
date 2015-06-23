@@ -46,7 +46,6 @@
         [Required]
         [StringLength(20)]
         [DataType(DataType.Text)]
-        [GenericPhoneNumber(ErrorMessage = "The Phone field should contain a valid phone number")]
         [Display(Name = "Phone")]
         public string Telephone { get; set; }
 
