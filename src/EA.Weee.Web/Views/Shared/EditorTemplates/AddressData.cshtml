@@ -33,7 +33,7 @@
 <div class="form-group @Html.Gds().FormGroupClass(m => m.CountryId)">
     @Html.Gds().LabelFor(m => m.CountryId)
     @Html.Gds().ValidationMessageFor(m => m.CountryId)
-    @Html.Gds().DropDownListFor(m => m.CountryId, (SelectList)ViewBag.UKRegions, String.Empty)
+    @Html.Gds().DropDownListFor(m => m.CountryId, (SelectList)ViewBag.UKRegions, string.Empty, new { @id = "Address.CountryId" })
 </div>
 <div class="form-group @Html.Gds().FormGroupClass(m => m.Telephone)">
     @Html.Gds().LabelFor(m => m.Telephone)
