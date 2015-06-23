@@ -85,7 +85,7 @@
             ToPending();
         }
 
-        public void ToPending()
+        private void ToPending()
         {
             if (OrganisationStatus != OrganisationStatus.Incomplete)
             {
