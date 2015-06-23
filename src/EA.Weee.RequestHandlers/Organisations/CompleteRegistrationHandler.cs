@@ -35,12 +35,11 @@
                 throw new ArgumentException(string.Format("Could not find an organisation with id {0}", message.OrganisationId));
             }
 
-            var organisationUser = new OrganisationUser(userId, message.OrganisationId, OrganisationUserStatus.Pending);
-
+            var organisationUser = new OrganisationUser(userId, message.OrganisationId, OrganisationUserStatus.Approved);
             db.OrganisationUsers.Add(organisationUser);
 
             var organisation = await db.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
-            organisation.ToPending();
+            organisation.CompleteRegistration();
             await db.SaveChangesAsync();
             return organisation.Id;
         }
