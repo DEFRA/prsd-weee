@@ -16,6 +16,7 @@
                 CountyOrRegion = source.CountyOrRegion,
                 Postcode = source.Postcode,
                 CountryId = source.Country.Id,
+                CountryName = source.Country.Name,
                 Telephone = source.Telephone,
                 Email = source.Email
             };

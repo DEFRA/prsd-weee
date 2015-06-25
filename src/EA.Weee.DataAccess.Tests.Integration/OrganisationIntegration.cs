@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
     using System;
+    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using Domain;
@@ -58,7 +59,10 @@
             var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
 
             VerifyOrganisation(name, null, crn, status, type, thisTestOrganisation);
-            VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
+            if (thisTestOrganisation != null)
+            {
+                VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
+            }
 
             await context.SaveChangesAsync();
         }
@@ -145,10 +149,9 @@
             context.SaveChangesAsync();
         }
 
-        private static Address MakeAddress(string identifier)
+        private Address MakeAddress(string identifier)
         {
-            Country country = MakeCountry();
-
+            var country = context.Countries.Single(c => c.Name == "France");
             return new Address(
                 "Line 1 " + identifier,
                 "Line 2 " + identifier,
@@ -160,9 +163,9 @@
                 "Email" + identifier);
         }
 
-        private static Address MakeUKAddress(string identifier)
+        private Address MakeUKAddress(string identifier)
         {
-            Country country = new Country(Guid.Parse("FE1E7E10-D8AA-47BD-B8B7-F2C5C43643F3"), "England");
+            var country = context.Countries.Single(c => c.Name == "UK - England");
             return new Address(
                 "Line 1 " + identifier,
                 "Line 2 " + identifier,
@@ -173,12 +176,7 @@
                 "Phone" + identifier,
                 "Email" + identifier);
         }
-
-        private static Country MakeCountry()
-        {
-            return new Country(new Guid(), "Country");
-        }
-
+      
         private Contact MakeContact()
         {
             return new Contact("Test firstname", "Test lastname", "Test position");

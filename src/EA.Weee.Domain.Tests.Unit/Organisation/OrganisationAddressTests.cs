@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Organisation
 {
+    using EA.Weee.Domain.Tests.Unit.Helpers;
     using System;
     using Xunit;
     using Organisation = Domain.Organisation;
@@ -75,16 +76,19 @@
                 {
                     return new Address("Address Line 1", "Address Line 1", "Town Or City", "County Or Region",
                         "Postcode",
-                        GetCountry(), "01234567890", "email@email.email");
+                        GetTestCountry(new Guid(), "UK-England"), "01234567890", "email@email.email");
                 }
             }
             return new Address("Address Line 1", "Address Line 1", "Town Or City", "County Or Region", "Postcode",
-                GetCountry(), "01234567890", "email@email.email");
+                GetTestCountry(new Guid(), "France"), "01234567890", "email@email.email");
         }
 
-        private Country GetCountry()
+        private Country GetTestCountry(Guid id, string name)
         {
-            return new Country(new Guid(), "country");
+            var country = ObjectInstantiator<Country>.CreateNew();
+            ObjectInstantiator<Country>.SetProperty(x => x.Id, id, country);
+            ObjectInstantiator<Country>.SetProperty(x => x.Name, name, country);
+            return country;
         }
 
         private AddressType CastAddressType(string addressType)

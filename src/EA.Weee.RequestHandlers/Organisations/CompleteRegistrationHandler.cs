@@ -25,21 +25,23 @@
         {
             var userId = userContext.UserId;
 
-            if (db.Users.FirstOrDefaultAsync(u => u.Id == userId.ToString()) == null)
+            if (await db.Users.FirstOrDefaultAsync(u => u.Id == userId.ToString()) == null)
             {
                 throw new ArgumentException(string.Format("Could not find a user with id {0}", userId));
             }
 
-            if (db.Organisations.FirstOrDefaultAsync(o => o.Id == message.OrganisationId) == null)
+            if (await db.Organisations.FirstOrDefaultAsync(o => o.Id == message.OrganisationId) == null)
             {
                 throw new ArgumentException(string.Format("Could not find an organisation with id {0}", message.OrganisationId));
             }
 
             var organisationUser = new OrganisationUser(userId, message.OrganisationId, OrganisationUserStatus.Approved);
-            db.OrganisationUsers.Add(organisationUser);
 
             var organisation = await db.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
+
+            db.OrganisationUsers.Add(organisationUser);
             organisation.CompleteRegistration();
+
             await db.SaveChangesAsync();
             return organisation.Id;
         }

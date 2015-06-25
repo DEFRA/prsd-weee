@@ -6,8 +6,11 @@
 
     public class Address : Entity
     {
-        public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode, Country country, string telephone, string email)
+        public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode,
+            Country country, string telephone, string email)
         {
+            Guard.ArgumentNotNull(() => country, country);
+
             Address1 = address1;
             Address2 = address2;
             TownOrCity = townOrCity;
@@ -21,7 +24,7 @@
         protected Address()
         {
         }
-        
+
         private string address1;
         private string address2;
         private string townOrCity;
@@ -30,7 +33,7 @@
         private string telephone;
         private string email;
 
-        public virtual Country Country { get; private set; }
+        public virtual Country Country { get; protected set; }
 
         public string Address1
         {
@@ -58,7 +61,7 @@
                 address2 = value;
             }
         }
-        
+
         public string TownOrCity
         {
             get { return townOrCity; }
@@ -67,7 +70,8 @@
                 Guard.ArgumentNotNullOrEmpty(() => value, value);
                 if (value.Length > 35)
                 {
-                    throw new InvalidOperationException(string.Format(("Town Or City cannot be greater than 35 characters")));
+                    throw new InvalidOperationException(
+                        string.Format(("Town Or City cannot be greater than 35 characters")));
                 }
                 townOrCity = value;
             }
@@ -80,7 +84,8 @@
             {
                 if (value != null && value.Length > 35)
                 {
-                    throw new InvalidOperationException(string.Format(("County Or Region cannot be greater than 35 characters")));
+                    throw new InvalidOperationException(
+                        string.Format(("County Or Region cannot be greater than 35 characters")));
                 }
                 countyOrRegion = value;
             }
@@ -127,18 +132,15 @@
             }
         }
 
-        public bool IsUkAddress
+        public bool IsUkAddress()
         {
-            get
+            if (Country != null)
             {
-                if (Country.Id.Equals(Guid.Parse("FE1E7E10-D8AA-47BD-B8B7-F2C5C43643F3"))
-                    || Country.Id.Equals(Guid.Parse("50B51FED-A94D-415B-9692-6A381E6EACA9"))
-                    || Country.Id.Equals(Guid.Parse("B592E944-F39D-427E-949E-A7E79D999A42"))
-                    || Country.Id.Equals(Guid.Parse("9CBFED0C-3341-4FFD-BA24-87605D0BBDA7"))) 
-                {
-                    return true;
-                }
-                return false;
+                return Country.Name.Contains("UK");
+            }
+            else
+            {
+                throw new InvalidOperationException("Country not defined.");    
             }
         }
     }

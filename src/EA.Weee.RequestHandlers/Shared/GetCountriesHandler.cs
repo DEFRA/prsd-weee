@@ -23,7 +23,7 @@
 
         public async Task<IList<CountryData>> HandleAsync(GetCountries query)
         {
-            bool regionsOfUKOnly = query.UKRegionsOnly;
+            var regionsOfUKOnly = query.UKRegionsOnly;
             var countries = await context.Countries.ToArrayAsync();
             if (regionsOfUKOnly)
             {
