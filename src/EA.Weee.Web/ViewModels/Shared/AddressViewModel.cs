@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared
 {
     using System;
-    using System.Collections.Generic;
     using Weee.Requests.Organisations;
     using Weee.Requests.Shared;
 

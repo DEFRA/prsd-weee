@@ -352,11 +352,20 @@
                             id = viewModel.OrganisationId
                         });
                     }
+                    catch (ApiBadRequestException ex)
+                    {
+                        this.HandleBadRequest(ex);
+
+                        if (ModelState.IsValid)
+                        {
+                            throw;
+                        }
+                    }
                     catch (ApiException ex)
                     {
                         if (ex.ErrorData != null)
                         {
-                            ModelState.AddModelError(string.Empty, ex.ErrorData.ExceptionMessage);
+                            ModelState.AddModelError("Unable to save the address.", ex.Message);
                             return View(viewModel);
                         }
                     }
