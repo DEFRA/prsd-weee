@@ -120,9 +120,44 @@
             Assert.Equal(organisationId, ((ContactPersonViewModel)model).OrganisationId);
         }
 
+        [Fact]
+        public async void PostRegisteredOfficeAddressPrepopulate_WithYesSelection_ShouldRedirectToSummaryPage()
+        {
+            var model = GetMockAddressPrepopulateViewModel();
+
+            var result = await OrganisationRegistrationController().RegisteredOfficeAddressPrepopulate(model);
+            var redirectToRouteResult = ((RedirectToRouteResult)result);
+
+            Assert.Equal("ReviewOrganisationDetails", redirectToRouteResult.RouteValues["action"]);
+        }
+
+        [Fact]
+        public async void PostRegisteredOfficeAddressPrepopulate_WithNoSelection_ShouldRedirectToRegisteredOfficeAddress()
+        {
+            var model = GetMockAddressPrepopulateViewModel();
+            model.ContactDetailsSameAs.Choices.SelectedValue = "No";
+
+            var result = await OrganisationRegistrationController().RegisteredOfficeAddressPrepopulate(model);
+            var redirectToRouteResult = ((RedirectToRouteResult)result);
+
+            Assert.Equal("RegisteredOfficeAddress", redirectToRouteResult.RouteValues["action"]);
+        }
+
         private OrganisationRegistrationController OrganisationRegistrationController()
         {
             return new OrganisationRegistrationController(() => apiClient);
+        }
+
+        private AddressPrepopulateViewModel GetMockAddressPrepopulateViewModel()
+        {
+            var addressPrepopulateViewModel = new AddressPrepopulateViewModel
+            {
+                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                OrganisationId = Guid.NewGuid(),
+                ContactDetailsSameAs = new YesNoChoiceViewModel { Choices = new RadioButtonStringCollectionViewModel { PossibleValues = new[] { "Yes", "No" }, SelectedValue = "Yes" } }
+            };
+
+            return addressPrepopulateViewModel;
         }
 
         private OrganisationType CastOrganisationType(string organisationType)

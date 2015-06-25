@@ -61,7 +61,7 @@
 
         private static Country MakeCountry()
         {
-            return new Country(new Guid(), "Country");
+            return new Country(new Guid(), "UK - England");
         }
 
         private Address GetAddress()
