@@ -61,7 +61,7 @@
 
         private Address GetAddress()
         {
-            return new Address("1", "street", "Woking", "Hampshire", "GU21 5EE", "United Kingdom", "12345678", "test@co.uk");
+            return new Address("1", "street", "Woking", "Hampshire", "GU21 5EE", "England", "12345678", "test@co.uk");
         }
 
         private Contact GetContact()
