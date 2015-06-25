@@ -2,7 +2,7 @@
     <div class="content">
         <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
         <nav id="proposition-menu">
-            <a href="@Url.Content("~/")" id="proposition-name">Waste Electrical and Electronic Equipment (WEEE)</a>
+            <div id="proposition-name">Waste Electrical and Electronic Equipment (WEEE)</div>
             @if (Request.IsAuthenticated)
             {
                 using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))

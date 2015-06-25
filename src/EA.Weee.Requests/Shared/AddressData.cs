@@ -3,16 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-   
-    public class AddressData
-    {
-        public AddressData()
-        {
-            Country = new CountryData();    
-        }
 
-        private const string DefaultCountryName = "United Kingdom";
-    
+    public class AddressData : IValidatableObject
+    {
         [Required]
         [StringLength(35)]
         [Display(Name = "Address line 1")]
@@ -38,10 +31,11 @@
         [Required]
         [Display(Name = "Country")]
         public Guid CountryId { get; set; }
-       
-        public CountryData Country { get; set; }
 
-       public IEnumerable<CountryData> Countries { get; set; }
+        [Display(Name = "Country")]
+        public string CountryName { get; set; }
+
+        public IEnumerable<CountryData> Countries { get; set; }
 
         [Required]
         [StringLength(20)]
@@ -53,5 +47,13 @@
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (CountryId == Guid.Empty)
+            {
+                yield return new ValidationResult("Please select a country");
+            }
+        }
     }
 }

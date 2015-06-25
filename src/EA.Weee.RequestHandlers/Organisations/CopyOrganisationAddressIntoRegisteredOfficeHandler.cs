@@ -17,7 +17,7 @@
             this.context = context;
         }
 
-        public Task<Guid> HandleAsync(CopyOrganisationAddressIntoRegisteredOffice message)
+        public async Task<Guid> HandleAsync(CopyOrganisationAddressIntoRegisteredOffice message)
         {
             var organisation = context.Organisations.FirstOrDefault(o => o.Id == message.OrganisationId);
 
@@ -42,9 +42,9 @@
 
             organisation.AddAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
 
-            context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
-            return Task.FromResult(organisation.Id);
+            return organisation.Id;
         }
     }
 }

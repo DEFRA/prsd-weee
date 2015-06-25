@@ -26,7 +26,7 @@
             }
 
             var organisationAddress = organisation.OrganisationAddress;
-            return Task.FromResult(organisationAddress.IsUkAddress);
+            return Task.FromResult(organisationAddress.IsUkAddress());
         }
     }
 }
