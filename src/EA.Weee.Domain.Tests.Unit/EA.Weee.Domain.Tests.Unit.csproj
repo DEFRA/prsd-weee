@@ -72,7 +72,6 @@
     <Compile Include="Organisation\ContactPersonTests.cs" />
     <Compile Include="Organisation\OrganisationAddressTests.cs" />
     <Compile Include="Organisation\OrganisationTests.cs" />
-    <Compile Include="Organisation\WeeeContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
