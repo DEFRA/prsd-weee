@@ -12,14 +12,14 @@
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.ViewModels.Shared;
-    using ViewModels.PCSMemberRegistration;
+    using ViewModels.PCS;
 
     [Authorize]
-    public class PCSMemberRegistrationController : Controller
+    public class PCSController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
 
-        public PCSMemberRegistrationController(Func<IWeeeClient> apiClient)
+        public PCSController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
         }

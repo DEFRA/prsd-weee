@@ -496,7 +496,7 @@
     <Content Include="Views\OrganisationRegistration\JoinOrganisationConfirmation.cshtml" />
     <Content Include="Views\OrganisationRegistration\ReviewOrganisationDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddressPrepopulate.cshtml" />
-    <Content Include="Views\PCSMemberRegistration\ChooseActivity.cshtml" />
+    <Content Include="Views\PCS\ChooseActivity.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -514,7 +514,7 @@
     <Compile Include="App_Start\Modules\ApiClientModule.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Controllers\PCSMemberRegistrationController.cs" />
+    <Compile Include="Controllers\PCSController.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Infrastructure\TokenResponseExtensions.cs" />
@@ -551,7 +551,7 @@
     <Compile Include="ViewModels\OrganisationRegistration\AddressPrepopulateViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeEnum.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
-    <Compile Include="ViewModels\PCSMemberRegistration\ChooseActivityViewModel.cs" />
+    <Compile Include="ViewModels\PCS\ChooseActivityViewModel.cs" />
     <Compile Include="ViewModels\Shared\PagingViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
