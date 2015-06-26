@@ -62,6 +62,8 @@
     <Compile Include="Organisations\Create\CreateSoleTraderRequest.cs" />
     <Compile Include="Organisations\GetOrganisationInfo.cs" />
     <Compile Include="Organisations\OrganisationData.cs" />
+    <Compile Include="Shared\CountryData.cs" />
+    <Compile Include="Shared\GetCountries.cs" />
     <Compile Include="Shared\UKCompetentAuthorityData.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorities.cs" />
     <Compile Include="Shared\Status.cs" />

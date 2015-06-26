@@ -6,8 +6,11 @@
 
     public class Address : Entity
     {
-        public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode, string country, string telephone, string email)
+        public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode,
+            Country country, string telephone, string email)
         {
+            Guard.ArgumentNotNull(() => country, country);
+
             Address1 = address1;
             Address2 = address2;
             TownOrCity = townOrCity;
@@ -21,15 +24,16 @@
         protected Address()
         {
         }
-        
+
         private string address1;
         private string address2;
         private string townOrCity;
         private string countyOrRegion;
         private string postcode;
-        private string country;
         private string telephone;
         private string email;
+
+        public virtual Country Country { get; protected set; }
 
         public string Address1
         {
@@ -57,7 +61,7 @@
                 address2 = value;
             }
         }
-        
+
         public string TownOrCity
         {
             get { return townOrCity; }
@@ -66,7 +70,8 @@
                 Guard.ArgumentNotNullOrEmpty(() => value, value);
                 if (value.Length > 35)
                 {
-                    throw new InvalidOperationException(string.Format(("Town Or City cannot be greater than 35 characters")));
+                    throw new InvalidOperationException(
+                        string.Format(("Town Or City cannot be greater than 35 characters")));
                 }
                 townOrCity = value;
             }
@@ -79,7 +84,8 @@
             {
                 if (value != null && value.Length > 35)
                 {
-                    throw new InvalidOperationException(string.Format(("County Or Region cannot be greater than 35 characters")));
+                    throw new InvalidOperationException(
+                        string.Format(("County Or Region cannot be greater than 35 characters")));
                 }
                 countyOrRegion = value;
             }
@@ -95,20 +101,6 @@
                     throw new InvalidOperationException(string.Format(("PostCode cannot be greater than 10 characters")));
                 }
                 postcode = value;
-            }
-        }
-
-        public string Country
-        {
-            get { return country; }
-            private set
-            {
-                Guard.ArgumentNotNullOrEmpty(() => value, value);
-                if (value.Length > 35)
-                {
-                    throw new InvalidOperationException(string.Format(("Country cannot be greater than 35 characters")));
-                }
-                country = value;
             }
         }
 
@@ -140,35 +132,15 @@
             }
         }
 
-        public bool IsUkAddress
+        public bool IsUkAddress()
         {
-            get
+            if (Country != null)
             {
-                if (Country != null && IsUKRegion)
-                {
-                    return true;
-                }
-
-                return false;
+                return Country.Name.Contains("UK");
             }
-        }
-      
-        private bool IsUKRegion
-        {
-            get
+            else
             {
-                if (Country != null && 
-                    (Country.Equals("England", StringComparison.InvariantCultureIgnoreCase)
-                    || 
-                    Country.Equals("Wales", StringComparison.InvariantCultureIgnoreCase)
-                    || 
-                    Country.Equals("Northern Ireland", StringComparison.InvariantCultureIgnoreCase)
-                    || 
-                    Country.Equals("Scotland", StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    return true;
-                }
-                return false;
+                throw new InvalidOperationException("Country not defined.");    
             }
         }
     }

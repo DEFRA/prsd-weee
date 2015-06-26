@@ -10,47 +10,38 @@
             Guard.ArgumentNotNull(() => address, address);
             Guard.ArgumentNotNull(() => type, type);
 
-            if (address != null)
-            {
-                Address addr = new Address(address.Address1, address.Address2, address.TownOrCity,
-                    address.CountyOrRegion,
-                    address.Postcode, address.Country, address.Telephone, address.Email);
                 switch (type.DisplayName)
                 {
                     case "Organisation address":
                         if (OrganisationAddress != null)
                         {
-                            throw new InvalidOperationException(string.Format("Cannot add Organisation address to Organisation {0}. This organisation already has a organisation address",
-                                                    this.Id));
+                            throw new InvalidOperationException("Cannot add Organisation address to Organisation. This organisation already has a organisation address");
                         }
-                        OrganisationAddress = addr;
+                        OrganisationAddress = address;
                         break;
                     case "Registered or PPB address":
                         if (BusinessAddress != null)
                         {
-                            throw new InvalidOperationException(string.Format("Cannot add Business address to Organisation {0}. This organisation already has a business address.",
-                                                    this.Id));
+                            throw new InvalidOperationException(
+                                "Cannot add Business address to Organisation. This organisation already has a business address.");
                         }
-                        if (addr.IsUkAddress)
+                        if (address.IsUkAddress())
                         {
-                            BusinessAddress = addr;
+                            BusinessAddress = address;
                         }
                         else
                         {
-                            throw new InvalidOperationException(string.Format("Cannot add Business address to Organisation {0}. Address should be UK address.",
-                                                    this.Id));
+                            throw new InvalidOperationException("Cannot add Business address to Organisation. Address should be UK address.");
                         }
-                        break;
+                break;
                     case "Service of notice address":
                         if (NotificationAddress != null)
                         {
-                            throw new InvalidOperationException(string.Format("Cannot add Notification address to Organisation {0}. This organisation already has a notification address.",
-                                                    this.Id));
+                            throw new InvalidOperationException("Cannot add Notification address to Organisation. This organisation already has a notification address.");
                         }
-                        NotificationAddress = addr;
+                        NotificationAddress = address;
                         break;
                 }
             }
         }
     }
-}

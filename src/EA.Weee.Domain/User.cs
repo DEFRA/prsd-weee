@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Domain
 {
-    using EA.Prsd.Core;
+    using Prsd.Core;
 
     public class User
     {

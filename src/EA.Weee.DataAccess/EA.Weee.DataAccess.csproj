@@ -78,6 +78,7 @@
     <Compile Include="Identity\ApplicationUserStore.cs" />
     <Compile Include="Identity\WeeeIdentityContext.cs" />
     <Compile Include="Mappings\ContactMapping.cs" />
+    <Compile Include="Mappings\CountryMapping.cs" />
     <Compile Include="Mappings\OrganisationMapping.cs" />
     <Compile Include="Mappings\OrganisationStatusMapping.cs" />
     <Compile Include="Mappings\OrganisationTypeMapping.cs" />

@@ -59,9 +59,14 @@
             return organisation;
         }
 
+        private static Country MakeCountry()
+        {
+            return new Country(new Guid(), "UK - England");
+        }
+
         private Address GetAddress()
         {
-            return new Address("1", "street", "Woking", "Hampshire", "GU21 5EE", "England", "12345678", "test@co.uk");
+            return new Address("1", "street", "Woking", "Hampshire", "GU21 5EE", MakeCountry(), "12345678", "test@co.uk");
         }
 
         private Contact GetContact()
