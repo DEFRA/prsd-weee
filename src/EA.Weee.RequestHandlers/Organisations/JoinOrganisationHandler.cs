@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
     using System;
-    using System.Linq;
+    using System.Data.Entity;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Mediator;
@@ -25,12 +25,12 @@
         {
             var userId = userContext.UserId;
 
-            if (context.Users.FirstOrDefault(u => u.Id == userId.ToString()) == null)
+            if (await context.Users.FirstOrDefaultAsync(u => u.Id == userId.ToString()) == null)
             {
                 throw new ArgumentException(string.Format("Could not find a user with id {0}", userId));
             }
 
-            if (context.Organisations.FirstOrDefault(o => o.Id == message.OrganisationId) == null)
+            if (await context.Organisations.FirstOrDefaultAsync(o => o.Id == message.OrganisationId) == null)
             {
                 throw new ArgumentException(string.Format("Could not find an organisation with id {0}", message.OrganisationId));
             }

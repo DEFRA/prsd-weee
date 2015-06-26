@@ -29,7 +29,7 @@
 
             var handler = new JoinOrganisationHandler(context, userContext);
 
-            var organisationWeWillJoin = context.Organisations.FirstOrDefault();
+            var organisationWeWillJoin = await context.Organisations.FirstOrDefaultAsync();
 
             await handler.HandleAsync(new JoinOrganisation(organisationWeWillJoin.Id));
 

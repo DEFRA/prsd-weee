@@ -53,6 +53,22 @@ CREATE TABLE [Organisation].[tmp_ms_xx_Address] (
     CONSTRAINT [tmp_ms_xx_constraint_PK_Address_Id] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
+IF EXISTS (SELECT TOP 1 1 
+           FROM   [Organisation].[Address])
+    BEGIN
+        INSERT INTO [Organisation].[tmp_ms_xx_Address] ([Id], [Address1], [Address2], [TownOrCity], [CountyOrRegion], [Postcode], [CountryId], [Telephone], [Email])
+        SELECT   [Id],
+				[Address1],
+				[Address2],
+				[TownOrCity],
+				[CountyOrRegion],
+				[Postcode],
+				(SELECT Id From [Lookup].[Country] WHERE Name LIKE '%'+[Country]+'%'),
+				[Telephone],
+				[Email]
+        FROM     [Organisation].[Address]
+        ORDER BY [Id] ASC;
+    END
 DROP TABLE [Organisation].[Address];
 
 EXECUTE sp_rename N'[Organisation].[tmp_ms_xx_Address]', N'Address';

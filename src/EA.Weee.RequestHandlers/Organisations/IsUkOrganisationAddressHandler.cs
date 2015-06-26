@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
     using System;
-    using System.Linq;
+    using System.Data.Entity;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
@@ -16,17 +16,16 @@
             this.context = context;
         }
 
-        public Task<bool> HandleAsync(IsUkOrganisationAddress message)
+        public async Task<bool> HandleAsync(IsUkOrganisationAddress message)
         {
-            var organisation = context.Organisations.FirstOrDefault(o => o.Id == message.OrganisationId);
+            var organisation = await context.Organisations.FirstOrDefaultAsync(o => o.Id == message.OrganisationId);
 
             if (organisation == null)
             {
                 throw new ArgumentException(string.Format("No organisation found with Id {0}", message.OrganisationId));
             }
 
-            var organisationAddress = organisation.OrganisationAddress;
-            return Task.FromResult(organisationAddress.IsUkAddress());
+            return organisation.OrganisationAddress.IsUkAddress();
         }
     }
 }
