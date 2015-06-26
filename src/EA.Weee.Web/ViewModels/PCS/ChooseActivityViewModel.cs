@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.ViewModels.PCSMemberRegistration
+﻿namespace EA.Weee.Web.ViewModels.PCS
 {
     using System;
     using System.Collections.Generic;

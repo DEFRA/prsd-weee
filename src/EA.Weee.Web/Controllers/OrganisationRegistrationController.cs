@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -31,8 +32,21 @@
         }
 
         [HttpGet]
-        public ActionResult Type()
+        public async Task<ActionResult> Type()
         {
+            using (var client = apiClient())
+            {
+                var organisationUsers = await
+                     client.SendAsync(
+                         User.GetAccessToken(),
+                         new GetApprovedOrganisationsByUserId(User.GetUserId()));
+
+                if (organisationUsers.Count >= 1)
+                {
+                    return RedirectToAction("ChooseActivity", "PCS", new { id = organisationUsers.First().OrganisationId });
+                }
+            }
+
             return View(new OrganisationTypeViewModel());
         }
 

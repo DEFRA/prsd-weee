@@ -1,4 +1,4 @@
-﻿@model EA.Weee.Web.ViewModels.PCSMemberRegistration.ChooseActivityViewModel
+﻿@model EA.Weee.Web.ViewModels.PCS.ChooseActivityViewModel
 @{
     ViewBag.Title = "Choose Activity";
 }
@@ -14,7 +14,7 @@
         </h1>
     </header>
 
-    @using (Html.BeginForm(actionName: "ChooseActivity", controllerName: "PCSMemberRegistration", method: FormMethod.Post))
+    @using (Html.BeginForm(actionName: "ChooseActivity", controllerName: "PCS", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()

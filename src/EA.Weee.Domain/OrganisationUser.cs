@@ -11,6 +11,8 @@
 
         public OrganisationUserStatus UserStatus { get; private set; }
 
+        public virtual Organisation Organisation { get; private set; }
+
         protected OrganisationUser()
         {
         }
