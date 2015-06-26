@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
     using System;
+    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
@@ -19,7 +20,7 @@
 
         public async Task<Guid> HandleAsync(CopyOrganisationAddressIntoRegisteredOffice message)
         {
-            var organisation = context.Organisations.FirstOrDefault(o => o.Id == message.OrganisationId);
+            var organisation = await context.Organisations.FirstOrDefaultAsync(o => o.Id == message.OrganisationId);
 
             if (organisation == null)
             {
