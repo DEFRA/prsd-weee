@@ -5,20 +5,20 @@
     using System.ComponentModel;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using EA.Prsd.Core.Extensions;
-    using EA.Prsd.Core.Web.ApiClient;
-    using EA.Prsd.Core.Web.Mvc.Extensions;
-    using EA.Weee.Api.Client;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Requests.Organisations.Create;
-    using EA.Weee.Requests.Organisations.Create.Base;
-    using EA.Weee.Requests.Shared;
-    using EA.Weee.Web.Infrastructure;
-    using EA.Weee.Web.ViewModels.JoinOrganisation;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration.Details;
-    using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
-    using EA.Weee.Web.ViewModels.Shared;
+    using Api.Client;
+    using Infrastructure;
+    using Prsd.Core.Extensions;
+    using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
+    using ViewModels.JoinOrganisation;
+    using ViewModels.OrganisationRegistration;
+    using ViewModels.OrganisationRegistration.Details;
+    using ViewModels.OrganisationRegistration.Type;
+    using ViewModels.Shared;
+    using Weee.Requests.Organisations;
+    using Weee.Requests.Organisations.Create;
+    using Weee.Requests.Organisations.Create.Base;
+    using Weee.Requests.Shared;
 
     [Authorize]
     public class OrganisationRegistrationController : Controller
@@ -137,7 +137,7 @@
                 routeValues);
             var fallbackSelectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName,
                 companiesRegistrationNumber, type,
-                                new List<OrganisationSearchData>(), fallbackPagingViewModel);
+                new List<OrganisationSearchData>(), fallbackPagingViewModel);
 
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(tradingName))
             {
@@ -160,10 +160,10 @@
                     var pagingViewModel =
                         PagingViewModel.FromValues(organisationSearchResultData.TotalMatchingOrganisations,
                             OrganisationsPerPage,
-                        page, "SelectOrganisation", "OrganisationRegistration", routeValues);
+                            page, "SelectOrganisation", "OrganisationRegistration", routeValues);
 
                     return View(BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
-                                    organisationSearchResultData.Results, pagingViewModel));
+                        organisationSearchResultData.Results, pagingViewModel));
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -194,7 +194,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SelectOrganisation(SelectOrganisationViewModel model, string submitButton)
+        public ActionResult SelectOrganisation(SelectOrganisationViewModel model, string submitButton)
         {
             return RedirectToAction("JoinOrganisation", new { organisationId = Guid.Parse(submitButton) });
         }
@@ -211,7 +211,7 @@
                 {
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
-                
+
                 return View(new JoinOrganisationViewModel { OrganisationToJoin = organisationId });
             }
         }
@@ -249,7 +249,7 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> JoinOrganisationConfirmation()
+        public ViewResult JoinOrganisationConfirmation()
         {
             return View();
         }
@@ -325,13 +325,12 @@
                 /* RP: Check with the API to see if this is a valid organisation
                  * It would be annoying for a user to fill out a form only to get an error at the end, 
                  * when this could be avoided by checking the validity of the ID before the page loads */
-                var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
+                var organisationExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
 
-                if (!orgExists)
+                if (!organisationExists)
                 {
-                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "id");
                 }
-
                 var model = new ContactPersonViewModel { OrganisationId = id };
                 return View(model);
             }
@@ -339,7 +338,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> MainContactPerson(ContactPersonViewModel model)
+        public async Task<ActionResult> MainContactPerson(ContactPersonViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -347,10 +346,10 @@
                 {
                     try
                     {
-                        await client.SendAsync(User.GetAccessToken(), model.ToAddRequest());
+                        await client.SendAsync(User.GetAccessToken(), viewModel.ToAddRequest());
                         return RedirectToAction("OrganisationAddress", "OrganisationRegistration", new
                         {
-                            id = model.OrganisationId
+                            id = viewModel.OrganisationId
                         });
                     }
                     catch (ApiBadRequestException ex)
@@ -362,11 +361,19 @@
                             throw;
                         }
                     }
+                    catch (ApiException ex)
+                    {
+                        if (ex.ErrorData != null)
+                        {
+                            ModelState.AddModelError("Unable to save the address.", ex.Message);
+                            return View(viewModel);
+                        }
+                    }
 
-                    return View(model);
+                    return View(viewModel);
                 }
             }
-            return View(model);
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -374,46 +381,33 @@
         {
             using (var client = apiClient())
             {
-                var model = await GetAddressViewModel(id, client);
+                var model = await GetAddressViewModel(id, client, false);
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> OrganisationAddress(AddressViewModel model)
+        public async Task<ActionResult> OrganisationAddress(AddressViewModel viewModel)
         {
-            await this.BindUKCompetentAuthorityRegionsList(apiClient, User);
+            viewModel.Address.Countries = await this.GetCountries(false);
 
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(viewModel);
             }
 
             try
             {
                 using (var client = apiClient())
                 {
-                    await AddAddressToOrganisation(model, AddressType.OrganistionAddress, client);
+                    await AddAddressToOrganisation(viewModel, AddressType.OrganistionAddress, client);
 
                     var isUkAddress = await client.SendAsync(
                         User.GetAccessToken(),
-                        new IsUkOrganisationAddress(model.OrganisationId));
+                        new IsUkOrganisationAddress(viewModel.OrganisationId));
 
-                    if (isUkAddress)
-                    {
-                        return RedirectToAction(
-                            "RegisteredOfficeAddressPrepopulate",
-                            "OrganisationRegistration",
-                            new { id = model.OrganisationId });
-                    }
-                    else
-                    {
-                        return RedirectToAction(
-                            "RegisteredOfficeAddress",
-                            "OrganisationRegistration",
-                            new { id = model.OrganisationId });
-                    }
+                    return RedirectToAction(isUkAddress ? "RegisteredOfficeAddressPrepopulate" : "RegisteredOfficeAddress", "OrganisationRegistration", new { id = viewModel.OrganisationId });
                 }
             }
             catch (ApiBadRequestException ex)
@@ -425,7 +419,7 @@
                     throw;
                 }
             }
-            return View(model);
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -465,30 +459,30 @@
         {
             using (var client = apiClient())
             {
-                var model = await GetAddressViewModel(id, client);
+                var model = await GetAddressViewModel(id, client, true);
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel model)
+        public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel viewModel)
         {
-            await this.BindUKCompetentAuthorityRegionsList(apiClient, User);
+            viewModel.Address.Countries = await this.GetCountries(true);
 
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(viewModel);
             }
 
             try
             {
                 using (var client = apiClient())
                 {
-                    await AddAddressToOrganisation(model, AddressType.RegisteredorPPBAddress, client);
+                    await AddAddressToOrganisation(viewModel, AddressType.RegisteredorPPBAddress, client);
                     return RedirectToAction("ReviewOrganisationDetails", "OrganisationRegistration", new
                     {
-                        id = model.OrganisationId
+                        id = viewModel.OrganisationId
                     });
                 }
             }
@@ -501,7 +495,15 @@
                     throw;
                 }
             }
-            return View(model);
+            catch (ApiException ex)
+            {
+                if (ex.ErrorData != null)
+                {
+                    ModelState.AddModelError("Unable to save the address.", ex.Message);
+                    return View(viewModel);
+                }
+            }
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -515,7 +517,7 @@
 
                 if (!organisationExists)
                 {
-                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "id");
                 }
 
                 var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
@@ -530,7 +532,7 @@
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("ReviewOrganisationDetails", model);
             }
             try
             {
@@ -551,19 +553,19 @@
                     throw;
                 }
             }
-            return View(model);
+            return View("ReviewOrganisationDetails", model);
         }
 
-        private async Task<AddressViewModel> GetAddressViewModel(Guid id, IWeeeClient client)
+        private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly)
         {
-            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id)); // Check the organisation Id is valid
+            // Check the organisation Id is valid
+            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId)); 
             var model = new AddressViewModel
             {
-                OrganisationId = id,
+                OrganisationId = organisationId,
                 OrganisationType = organisation.OrganisationType
             };
-
-            await this.BindUKCompetentAuthorityRegionsList(client, User);
+            model.Address.Countries = await this.GetCountries(regionsOfUKOnly);
             return model;
         }
 
@@ -582,9 +584,16 @@
 
         private async Task AddAddressToOrganisation(AddressViewModel model, AddressType type, IWeeeClient client)
         {
-            model.Address.Country = this.GetUKRegionById(model.Address.CountryId);
             var request = model.ToAddRequest(type);
             await client.SendAsync(User.GetAccessToken(), request);
+        }
+
+        private async Task<IEnumerable<CountryData>> GetCountries(bool regionsOfUKOnly)
+        {
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), new GetCountries(regionsOfUKOnly));
+            }
         }
     }
 }

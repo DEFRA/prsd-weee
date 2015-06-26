@@ -46,6 +46,12 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="scripts\Update\Sprint7\20150619-1126-InsertCompetentAuthorityData.sql" />
+    <Content Include="scripts\Update\Sprint7\20150619-1017-InsertCountryData.sql" />
+    <Content Include="scripts\Update\Sprint7\20150619-1023-UpdateCATable-AddCountryId.sql" />
+    <Content Include="scripts\Update\Sprint7\20150619-1013-AddCountryTable.sql" />
+    <Content Include="scripts\Update\Sprint7\20150619-130853-RemoveAspNetUserOrganisationFK.sql" />
+    <Content Include="scripts\Update\Sprint7\20150622-124955-UpdateAddressTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

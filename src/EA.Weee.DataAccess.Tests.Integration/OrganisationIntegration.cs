@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
     using System;
+    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using Domain;
@@ -58,7 +59,10 @@
             var thisTestOrganisation = thisTestOrganisationArray.FirstOrDefault();
 
             VerifyOrganisation(name, null, crn, status, type, thisTestOrganisation);
-            VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
+            if (thisTestOrganisation != null)
+            {
+                VerifyAddress(organisationAddress, thisTestOrganisation.OrganisationAddress);
+            }
 
             await context.SaveChangesAsync();
         }
@@ -134,7 +138,7 @@
             Assert.Equal(expected.TownOrCity, fromDatabase.TownOrCity);
             Assert.Equal(expected.CountyOrRegion, fromDatabase.CountyOrRegion);
             Assert.Equal(expected.Postcode, fromDatabase.Postcode);
-            Assert.Equal(expected.Country, fromDatabase.Country);
+            Assert.Equal(expected.Country.Id, fromDatabase.Country.Id);
             Assert.Equal(expected.Telephone, fromDatabase.Telephone);
             Assert.Equal(expected.Email, fromDatabase.Email);
         }
@@ -145,31 +149,34 @@
             context.SaveChangesAsync();
         }
 
-        private static Address MakeAddress(string identifier)
+        private Address MakeAddress(string identifier)
         {
+            var country = context.Countries.Single(c => c.Name == "France");
             return new Address(
                 "Line 1 " + identifier,
                 "Line 2 " + identifier,
                 "Town " + identifier,
                 "Region" + identifier,
                 "Postcode " + identifier,
-                "Country " + identifier,
+                 country,
                 "Phone" + identifier,
                 "Email" + identifier);
         }
 
-        private static Address MakeUKAddress(string identifier)
+        private Address MakeUKAddress(string identifier)
         {
+            var country = context.Countries.Single(c => c.Name == "UK - England");
             return new Address(
                 "Line 1 " + identifier,
                 "Line 2 " + identifier,
                 "Town " + identifier,
                 "Region" + identifier,
                 "Postcode " + identifier,
-                "England",
+                country,
                 "Phone" + identifier,
                 "Email" + identifier);
         }
+      
         private Contact MakeContact()
         {
             return new Contact("Test firstname", "Test lastname", "Test position");
