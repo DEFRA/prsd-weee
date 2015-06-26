@@ -32,21 +32,8 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Type()
+        public ActionResult Type()
         {
-            using (var client = apiClient())
-            {
-                var organisationUsers = await
-                     client.SendAsync(
-                         User.GetAccessToken(),
-                         new GetApprovedOrganisationsByUserId(User.GetUserId()));
-
-                if (organisationUsers.Count >= 1)
-                {
-                    return RedirectToAction("ChooseActivity", "PCS", new { id = organisationUsers.First().OrganisationId });
-                }
-            }
-
             return View(new OrganisationTypeViewModel());
         }
 
@@ -464,7 +451,7 @@
                     return RedirectToAction("ReviewOrganisationDetails", new { id = viewModel.OrganisationId });
                 }
             }
-            
+
             return View(viewModel);
         }
 
@@ -573,7 +560,7 @@
         private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly)
         {
             // Check the organisation Id is valid
-            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId)); 
+            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
             var model = new AddressViewModel
             {
                 OrganisationId = organisationId,

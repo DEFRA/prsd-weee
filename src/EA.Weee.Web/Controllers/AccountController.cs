@@ -1,8 +1,11 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using EA.Weee.Api.Client;
+    using EA.Weee.Requests.Organisations;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
@@ -14,10 +17,12 @@
     {
         private readonly IAuthenticationManager authenticationManager;
         private readonly Func<IOAuthClient> oauthClient;
+        private readonly Func<IWeeeClient> apiClient;
 
-        public AccountController(Func<IOAuthClient> oauthClient, IAuthenticationManager authenticationManager)
+        public AccountController(Func<IOAuthClient> oauthClient, Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager)
         {
             this.oauthClient = oauthClient;
+            this.apiClient = apiClient;
             this.authenticationManager = authenticationManager;
         }
 
@@ -43,7 +48,7 @@
             if (response.AccessToken != null)
             {
                 authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = model.RememberMe },
-                    response.GenerateUserIdentity());
+                   response.GenerateUserIdentity());
                 return RedirectToLocal(returnUrl);
             }
 
@@ -87,7 +92,26 @@
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Type", "OrganisationRegistration");
+
+            return RedirectToAction("RedirectProcess");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RedirectProcess()
+        {
+            using (var client = apiClient())
+            {
+                var organisationUsers = await
+                     client.SendAsync(
+                         User.GetAccessToken(),
+                         new GetApprovedOrganisationsByUserId(User.GetUserId()));
+
+                if (organisationUsers.Count >= 1)
+                {
+                    return RedirectToAction("ChooseActivity", "PCS", new { id = organisationUsers.First().OrganisationId });
+                }
+                return RedirectToAction("Type", "OrganisationRegistration");
+            }
         }
     }
 }
