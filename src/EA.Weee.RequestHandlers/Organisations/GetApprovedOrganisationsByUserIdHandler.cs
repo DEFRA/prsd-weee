@@ -29,7 +29,7 @@
                 await
                     context.OrganisationUsers.Where(
                         ou =>
-                            ou.Organisation.OrganisationStatus.Value == OrganisationStatus.Approved.Value && ou.UserId == query.UserId).ToListAsync();
+                            ou.UserStatus.Value == EA.Weee.Domain.OrganisationUserStatus.Approved.Value && ou.UserId == query.UserId).ToListAsync();
 
             var organisationUserData = organisationUsers.Select(item => organisationUserMap.Map(item)).ToList();
 
