@@ -1,24 +1,35 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
     using System;
+    using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Api.Client;
+    using Api.Client.Entities;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
+    using Services;
     using Thinktecture.IdentityModel.Client;
     using ViewModels.Account;
 
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly Func<IWeeeClient> apiClient;
         private readonly IAuthenticationManager authenticationManager;
+        private readonly IEmailService emailService;
         private readonly Func<IOAuthClient> oauthClient;
 
-        public AccountController(Func<IOAuthClient> oauthClient, IAuthenticationManager authenticationManager)
+        public AccountController(Func<IOAuthClient> oauthClient,
+            IAuthenticationManager authenticationManager,
+            Func<IWeeeClient> apiClient,
+            IEmailService emailService)
         {
             this.oauthClient = oauthClient;
+            this.apiClient = apiClient;
             this.authenticationManager = authenticationManager;
+            this.emailService = emailService;
         }
 
         [HttpGet]
@@ -47,7 +58,7 @@
                 return RedirectToLocal(returnUrl);
             }
 
-            ModelState.AddModelError(string.Empty, ParseLoginError(response.Error));
+            ModelState.AddModelError(string.Empty, "The username or password is incorrect.");
 
             return View(model);
         }
@@ -87,7 +98,66 @@
             {
                 return Redirect(returnUrl);
             }
+            //TODO: Need redirection to Home page of user to perform the relevant activities
             return RedirectToAction("Type", "OrganisationRegistration");
+        }
+
+        [HttpGet]
+        public ActionResult EmailVerificationRequired()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EmailVerificationRequired(FormCollection model)
+        {
+            try
+            {
+                using (var client = apiClient())
+                {
+                    var verificationToken =
+                        await client.NewUser.GetUserEmailVerificationTokenAsync(User.GetAccessToken());
+                    var verificationEmail =
+                        emailService.GenerateEmailVerificationMessage(
+                            Url.Action("VerifyEmail", "Account", null, Request.Url.Scheme),
+                            verificationToken, User.GetUserId(), User.GetEmailAddress());
+                    var emailSent = await emailService.SendAsync(verificationEmail);
+
+                    if (!emailSent)
+                    {
+                        ViewBag.Errors = new[]
+                        {
+                            "Email is currently unavailable at this time, please try again later."
+                        };
+                        return View();
+                    }
+                }
+            }
+            catch (SmtpException)
+            {
+                ViewBag.Errors = new[] { "The verification email was not sent, please try again later." };
+                return View();
+            }
+
+            return RedirectToAction("EmailVerificationRequired");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> VerifyEmail(Guid id, string code)
+        {
+            using (var client = apiClient())
+            {
+                bool result = await client.NewUser.VerifyEmailAsync(new VerifiedEmailData { Id = id, Code = code });
+
+                if (!result)
+                {
+                    return RedirectToAction("EmailVerificationRequired");
+                }
+            }
+
+            return View();
         }
     }
 }

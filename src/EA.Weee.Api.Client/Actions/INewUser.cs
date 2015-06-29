@@ -2,10 +2,11 @@
 {
     using System.Threading.Tasks;
     using Entities;
-    using Prsd.Core.Web.ApiClient;
 
     public interface INewUser
     {
         Task<string> CreateUserAsync(UserCreationData userCreationData);
+        Task<bool> VerifyEmailAsync(VerifiedEmailData verifiedEmailData);
+        Task<string> GetUserEmailVerificationTokenAsync(string accessToken);
     }
 }

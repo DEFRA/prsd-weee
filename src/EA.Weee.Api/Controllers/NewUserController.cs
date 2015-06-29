@@ -8,15 +8,18 @@
     using DataAccess.Identity;
     using Identity;
     using Microsoft.AspNet.Identity;
+    using Prsd.Core.Domain;
 
     [RoutePrefix("api/NewUser")]
     public class NewUserController : ApiController
     {
         private readonly ApplicationUserManager userManager;
+        private readonly IUserContext userContext;
 
-        public NewUserController(ApplicationUserManager userManager)
+        public NewUserController(ApplicationUserManager userManager, IUserContext userContext)
         {
             this.userManager = userManager;
+            this.userContext = userContext;
         }
 
         // POST api/NewUser/CreateUser
@@ -44,7 +47,25 @@
                 return GetErrorResult(result);
             }
 
-            return Ok(model.Email);
+            return Ok(user.Id);
+        }
+
+        [HttpGet]
+        [Route("GetUserEmailVerificationToken")]
+        public async Task<string> GetUserEmailVerificationToken()
+        {
+            var token = await userManager.GenerateEmailConfirmationTokenAsync(userContext.UserId.ToString());
+
+            return token;
+        }
+
+        [HttpPost]
+        [Route("VerifyEmail")]
+        public async Task<IHttpActionResult> VerifyEmail(VerifiedEmailData model)
+        {
+            var result = await userManager.ConfirmEmailAsync(model.Id.ToString(), model.Code);
+
+            return Ok(result.Succeeded);
         }
 
         private IHttpActionResult GetErrorResult(IdentityResult result)
