@@ -30,7 +30,7 @@
         }
 
         [Fact]
-        public async void GetRedirectProcess_ApprovedOrganisationUserZero_ShouldRedirectToChooseActivity()
+        public async void GetRedirectProcess_ApprovedOrganisationUserZero_ShouldRedirectToType()
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetApprovedOrganisationsByUserId>._))
                 .Returns(new List<OrganisationUserData>());
