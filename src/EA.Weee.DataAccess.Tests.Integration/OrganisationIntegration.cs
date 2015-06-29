@@ -35,9 +35,9 @@
             var status = OrganisationStatus.Incomplete;
             var type = OrganisationType.RegisteredCompany;
 
-            var organisationAddress = MakeAddress("O");
-            var businessAddress = MakeUKAddress("B");
-            var notificationAddress = MakeAddress("N");
+            var organisationAddress = await MakeInternationalAddress("O");
+            var businessAddress = await MakeUKAddress("B");
+            var notificationAddress = await MakeInternationalAddress("N");
 
             var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
             organisation.AddMainContactPerson(contact);
@@ -76,9 +76,9 @@
             var status = OrganisationStatus.Incomplete;
             var type = OrganisationType.SoleTraderOrIndividual;
 
-            var organisationAddress = MakeAddress("O");
-            var businessAddress = MakeUKAddress("B");
-            var notificationAddress = MakeAddress("N");
+            var organisationAddress = await MakeInternationalAddress("O");
+            var businessAddress = await MakeUKAddress("B");
+            var notificationAddress = await MakeInternationalAddress("N");
 
             var organisation = Organisation.CreateSoleTrader(tradingName);
 
@@ -149,9 +149,9 @@
             context.SaveChangesAsync();
         }
 
-        private Address MakeAddress(string identifier)
+        private async Task<Address> MakeInternationalAddress(string identifier)
         {
-            var country = context.Countries.Single(c => c.Name == "France");
+            var country = await context.Countries.SingleAsync(c => c.Name == "France");
             return new Address(
                 "Line 1 " + identifier,
                 "Line 2 " + identifier,
@@ -163,9 +163,9 @@
                 "Email" + identifier);
         }
 
-        private Address MakeUKAddress(string identifier)
+        private async Task<Address> MakeUKAddress(string identifier)
         {
-            var country = context.Countries.Single(c => c.Name == "UK - England");
+            var country = await context.Countries.SingleAsync(c => c.Name == "UK - England");
             return new Address(
                 "Line 1 " + identifier,
                 "Line 2 " + identifier,
