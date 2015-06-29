@@ -503,6 +503,7 @@
     <Content Include="Views\Emails\VerifyEmailAddress.cshtml" />
     <Content Include="Views\Account\VerifyEmail.cshtml" />
     <Content Include="Views\Account\EmailVerificationRequired.cshtml" />
+    <Content Include="Views\PCS\ChooseActivity.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -528,6 +529,7 @@
     <Compile Include="Services\EmailTemplateService.cs" />
     <Compile Include="Services\IEmailService.cs" />
     <Compile Include="Services\IEmailTemplateService.cs" />
+    <Compile Include="Controllers\PCSController.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Infrastructure\TokenResponseExtensions.cs" />
@@ -564,6 +566,8 @@
     <Compile Include="ViewModels\OrganisationRegistration\AddressPrepopulateViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeEnum.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
+    <Compile Include="ViewModels\PCS\ChooseActivityViewModel.cs" />
+    <Compile Include="ViewModels\PCS\PcsAction.cs" />
     <Compile Include="ViewModels\Shared\PagingViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
