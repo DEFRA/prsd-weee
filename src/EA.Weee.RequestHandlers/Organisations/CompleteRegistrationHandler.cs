@@ -35,7 +35,7 @@
                 throw new ArgumentException(string.Format("Could not find an organisation with id {0}", message.OrganisationId));
             }
 
-            var organisationUser = new OrganisationUser(userId, message.OrganisationId, OrganisationUserStatus.Approved);
+            var organisationUser = new OrganisationUser(userId, message.OrganisationId, EA.Weee.Domain.OrganisationUserStatus.Approved);
 
             var organisation = await db.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
 

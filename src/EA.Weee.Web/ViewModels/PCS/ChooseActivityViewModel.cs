@@ -5,7 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.ViewModels.Shared;
-    
+
     public class ChooseActivityViewModel
     {
         [Required]
@@ -15,7 +15,7 @@
 
         public ChooseActivityViewModel()
         {
-            List<string> collection = new List<string> { "Add / amend PCS members", "Manage organisation users" };
+            List<string> collection = new List<string> { PcsAction.ManagePcsMembers, PcsAction.ManageOrganisationUsers };
             ActivityOptions = new RadioButtonStringCollectionViewModel(collection);
         }
     }

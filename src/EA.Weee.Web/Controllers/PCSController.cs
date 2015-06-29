@@ -49,11 +49,11 @@
         {
             if (ModelState.IsValid)
             {
-                if (viewModel.ActivityOptions.SelectedValue == "Add / amend PCS members")
+                if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManagePcsMembers)
                 {
                     return RedirectToAction("ManagePCSMembers", new { id = viewModel.OrganisationId });
                 }
-                if (viewModel.ActivityOptions.SelectedValue == "Manage organisation users")
+                if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManageOrganisationUsers)
                 {
                     return RedirectToAction("ManageOrganisationUsers", new { id = viewModel.OrganisationId });
                 }

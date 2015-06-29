@@ -55,6 +55,7 @@
     <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOffice.cs" />
     <Compile Include="Organisations\OrganisationSearchDataResult.cs" />
     <Compile Include="Organisations\OrganisationUserData.cs" />
+    <Compile Include="Organisations\OrganisationUserStatus.cs" />
     <Compile Include="Organisations\VerifyOrganisationExists.cs" />
     <Compile Include="Shared\AddressType.cs" />
     <Compile Include="Organisations\ContactData.cs" />

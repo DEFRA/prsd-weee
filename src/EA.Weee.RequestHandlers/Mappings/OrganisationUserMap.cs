@@ -5,7 +5,7 @@
     using Prsd.Core.Mapper;
     using Requests.Organisations;
     using Requests.Shared;
-    using OrganisationType = Requests.Organisations.OrganisationType;
+    using OrganisationUserStatus = Requests.Organisations.OrganisationUserStatus;
 
     public class OrganisationUserMap : IMap<OrganisationUser, OrganisationUserData>
     {
@@ -23,6 +23,10 @@
                 Id = source.Id,
                 UserId = source.UserId,
                 OrganisationId = source.OrganisationId,
+                OrganisationUserStatus =
+                    (OrganisationUserStatus)
+                        Enum.Parse(typeof(OrganisationUserStatus),
+                            source.UserStatus.Value.ToString()),
 
                 // Use existing mappers to map addresses and contact
                 Organisation = source.Organisation != null
