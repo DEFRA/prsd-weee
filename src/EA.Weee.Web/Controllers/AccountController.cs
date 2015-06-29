@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
     using System;
+    using System.Linq;
     using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -12,6 +13,7 @@
     using Services;
     using Thinktecture.IdentityModel.Client;
     using ViewModels.Account;
+    using Weee.Requests.Organisations;
 
     [Authorize]
     public class AccountController : Controller
@@ -58,7 +60,7 @@
                 return RedirectToLocal(returnUrl);
             }
 
-            ModelState.AddModelError(string.Empty, "The username or password is incorrect.");
+            ModelState.AddModelError(string.Empty, ParseLoginError(response.Error));
 
             return View(model);
         }
@@ -98,8 +100,27 @@
             {
                 return Redirect(returnUrl);
             }
-            //TODO: Need redirection to Home page of user to perform the relevant activities
-            return RedirectToAction("Type", "OrganisationRegistration");
+
+            return RedirectToAction("RedirectProcess");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RedirectProcess()
+        {
+            using (var client = apiClient())
+            {
+                var organisationUsers = await
+                    client.SendAsync(
+                        User.GetAccessToken(),
+                        new GetApprovedOrganisationsByUserId(User.GetUserId()));
+
+                if (organisationUsers.Count >= 1)
+                {
+                    return RedirectToAction("ChooseActivity", "PCS",
+                        new { id = organisationUsers.First().OrganisationId });
+                }
+                return RedirectToAction("Type", "OrganisationRegistration");
+            }
         }
 
         [HttpGet]

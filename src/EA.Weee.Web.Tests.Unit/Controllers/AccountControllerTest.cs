@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
     using Api.Client;
@@ -26,7 +25,7 @@
         
         private AccountController AccountController()
         {
-            return new AccountController(() => oauthClient, () => apiClient, authenticationManager);
+            return new AccountController(() => oauthClient, authenticationManager, () => apiClient, null);
         }
 
         [Fact]
