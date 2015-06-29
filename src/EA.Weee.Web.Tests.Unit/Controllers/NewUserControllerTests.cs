@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Prsd.Core.Web.OAuth;
     using ViewModels.NewUser;
     using Web.Controllers;
     using Xunit;
@@ -60,17 +61,17 @@
 
         private static NewUserController GetMockNewUserController(object viewModel)
         {
-            var registrationController = new NewUserController(() => new WeeeClient("test"));
+            var newuserController = new NewUserController(() => new OAuthClient("test", "test", "test"), () => new WeeeClient("test"), null, null);
             // Mimic the behaviour of the model binder which is responsible for Validating the Model
             var validationContext = new ValidationContext(viewModel, null, null);
             var validationResults = new List<ValidationResult>();
             Validator.TryValidateObject(viewModel, validationContext, validationResults, true);
             foreach (var validationResult in validationResults)
             {
-                registrationController.ModelState.AddModelError(validationResult.MemberNames.First(), validationResult.ErrorMessage);
+                newuserController.ModelState.AddModelError(validationResult.MemberNames.First(), validationResult.ErrorMessage);
             }
 
-            return registrationController;
+            return newuserController;
         }
 
         private static UserCreationViewModel GetValidUserCreationViewModel()

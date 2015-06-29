@@ -6,21 +6,31 @@
     using Api.Client;
     using Api.Client.Entities;
     using Infrastructure;
+    using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
-    using ViewModels.JoinOrganisation;
+    using Prsd.Core.Web.OAuth;
+    using Services;
     using ViewModels.NewUser;
     using ViewModels.Shared;
-    using Weee.Requests.Organisations;
 
     [Authorize]
     public class NewUserController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IAuthenticationManager authenticationManager;
+        private readonly IEmailService emailService;
+        private readonly Func<IOAuthClient> oauthClient;
 
-        public NewUserController(Func<IWeeeClient> apiClient)
+        public NewUserController(Func<IOAuthClient> oauthClient,
+            Func<IWeeeClient> apiClient,
+            IAuthenticationManager authenticationManager,
+            IEmailService emailService)
         {
+            this.oauthClient = oauthClient;
             this.apiClient = apiClient;
+            this.authenticationManager = authenticationManager;
+            this.emailService = emailService;
         }
 
         [HttpGet]
@@ -108,7 +118,6 @@
         {
             if (ModelState.IsValid)
             {
-              //  return RedirectToAction("MainContactPerson", "Organisation", new {id = new Guid() });
                 using (var client = apiClient())
                 {
                     var userCreationData = new UserCreationData
@@ -122,7 +131,18 @@
 
                     try
                     {
-                        await client.NewUser.CreateUserAsync(userCreationData);
+                        var userId = await client.NewUser.CreateUserAsync(userCreationData);
+                       
+                        var signInResponse = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
+                        
+                        authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
+
+                        var verificationCode = await client.NewUser.GetUserEmailVerificationTokenAsync(signInResponse.AccessToken);
+                        
+                        var verificationEmail = emailService.GenerateEmailVerificationMessage(Url.Action("VerifyEmail", "Account", null, Request.Url.Scheme), verificationCode, userId, model.Email);
+                        
+                        await emailService.SendAsync(verificationEmail);
+
                         return RedirectToAction("Confirm", "NewUser");
                     }
                     catch (ApiBadRequestException ex)

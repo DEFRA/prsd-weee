@@ -7,7 +7,7 @@
 
     internal class NewUser : INewUser
     {
-        private const string controller = "NewUser/";
+        private const string Controller = "NewUser/";
         private readonly HttpClient httpClient;
 
         public NewUser(HttpClient httpClient)
@@ -17,7 +17,24 @@
 
         public async Task<string> CreateUserAsync(UserCreationData userCreationData)
         {
-            var response = await httpClient.PostAsJsonAsync(controller + "CreateUser", userCreationData);
+            var response = await httpClient.PostAsJsonAsync(Controller + "CreateUser", userCreationData);
+            return await response.CreateResponseAsync<string>();
+        }
+
+        public async Task<bool> VerifyEmailAsync(VerifiedEmailData verifiedEmailData)
+        {
+            var response = await httpClient.PostAsJsonAsync(Controller + "VerifyEmail", verifiedEmailData);
+
+            return await response.CreateResponseAsync<bool>();
+        }
+
+        public async Task<string> GetUserEmailVerificationTokenAsync(string accessToken)
+        {
+            httpClient.SetBearerToken(accessToken);
+
+            string url = Controller + "GetUserEmailVerificationToken";
+            var response = await httpClient.GetAsync(url);
+
             return await response.CreateResponseAsync<string>();
         }
     }
