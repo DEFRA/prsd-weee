@@ -390,7 +390,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> OrganisationAddress(AddressViewModel viewModel)
         {
-            viewModel.Address.Countries = await this.GetCountries(false);
+            viewModel.Address.Countries = await GetCountries(false);
 
             if (!ModelState.IsValid)
             {
@@ -407,7 +407,10 @@
                         User.GetAccessToken(),
                         new IsUkOrganisationAddress(viewModel.OrganisationId));
 
-                    return RedirectToAction(isUkAddress ? "RegisteredOfficeAddressPrepopulate" : "RegisteredOfficeAddress", "OrganisationRegistration", new { id = viewModel.OrganisationId });
+                    return
+                        RedirectToAction(
+                            isUkAddress ? "RegisteredOfficeAddressPrepopulate" : "RegisteredOfficeAddress",
+                            "OrganisationRegistration", new { id = viewModel.OrganisationId });
                 }
             }
             catch (ApiBadRequestException ex)
@@ -444,13 +447,15 @@
                 {
                     using (var client = apiClient())
                     {
-                        await client.SendAsync(User.GetAccessToken(), new CopyOrganisationAddressIntoRegisteredOffice(viewModel.OrganisationId));
+                        await
+                            client.SendAsync(User.GetAccessToken(),
+                                new CopyOrganisationAddressIntoRegisteredOffice(viewModel.OrganisationId));
                     }
 
                     return RedirectToAction("ReviewOrganisationDetails", new { id = viewModel.OrganisationId });
                 }
             }
-            
+
             return View(viewModel);
         }
 
@@ -468,7 +473,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel viewModel)
         {
-            viewModel.Address.Countries = await this.GetCountries(true);
+            viewModel.Address.Countries = await GetCountries(true);
 
             if (!ModelState.IsValid)
             {
@@ -513,7 +518,7 @@
             using (var client = apiClient())
             {
                 var organisationExists =
-                   await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
+                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
 
                 if (!organisationExists)
                 {
@@ -556,23 +561,24 @@
             return View("ReviewOrganisationDetails", model);
         }
 
-        private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly)
+        private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client,
+            bool regionsOfUKOnly)
         {
             // Check the organisation Id is valid
-            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId)); 
+            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
             var model = new AddressViewModel
             {
                 OrganisationId = organisationId,
                 OrganisationType = organisation.OrganisationType
             };
-            model.Address.Countries = await this.GetCountries(regionsOfUKOnly);
+            model.Address.Countries = await GetCountries(regionsOfUKOnly);
             return model;
         }
 
         private async Task<AddressPrepopulateViewModel> GetAddressPrepopulateViewModel(Guid id, IWeeeClient client)
         {
             var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-            var model = new AddressPrepopulateViewModel()
+            var model = new AddressPrepopulateViewModel
             {
                 OrganisationId = id,
                 OrganisationType = organisation.OrganisationType,

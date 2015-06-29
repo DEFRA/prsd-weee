@@ -35,7 +35,7 @@
                 throw new ArgumentException(string.Format("Could not find an organisation with id {0}", message.OrganisationId));
             }
 
-            var organisationUser = new OrganisationUser(userId, message.OrganisationId, OrganisationUserStatus.Pending);
+            var organisationUser = new OrganisationUser(userId, message.OrganisationId, EA.Weee.Domain.OrganisationUserStatus.Pending);
 
             context.OrganisationUsers.Add(organisationUser);
 

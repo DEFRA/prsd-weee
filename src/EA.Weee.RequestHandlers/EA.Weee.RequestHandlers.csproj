@@ -80,6 +80,7 @@
     <Compile Include="Mappings\ContactMap.cs" />
     <Compile Include="Mappings\CountryMap.cs" />
     <Compile Include="Mappings\OrganisationMap.cs" />
+    <Compile Include="Mappings\OrganisationUserMap.cs" />
     <Compile Include="Mappings\UKCompetentAuthorityMap.cs" />
     <Compile Include="Mappings\ValueObjectInitializer.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Organisations\Create\CreateSoleTraderRequestHandler.cs" />
     <Compile Include="Organisations\Create\CreatePartnershipRequestHandler.cs" />
     <Compile Include="Organisations\FindMatchingOrganisationsHandler.cs" />
+    <Compile Include="Organisations\GetApprovedOrganisationsByUserIdHandler.cs" />
     <Compile Include="Organisations\IsUkOrganisationAddressHandler.cs" />
     <Compile Include="Organisations\JoinOrganisationHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
