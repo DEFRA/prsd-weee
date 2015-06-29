@@ -23,7 +23,7 @@
         {
             var addresstype = ValueObjectInitializer.GetAddressType(message.TypeOfAddress);
 
-            if (db.Organisations.FirstOrDefault(o => o.Id == message.OrganisationId) == null)
+            if (await db.Organisations.FirstOrDefaultAsync(o => o.Id == message.OrganisationId) == null)
             {
                 throw new ArgumentException(string.Format("Could not find an organisation with id {0}",
                     message.OrganisationId));
@@ -31,7 +31,7 @@
 
             var organisation = await db.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
 
-            if (db.Countries.FirstOrDefault(c => c.Id == message.Address.CountryId) == null)
+            if (await db.Countries.FirstOrDefaultAsync(c => c.Id == message.Address.CountryId) == null)
             {
                 throw new ArgumentException(string.Format("Could not find country with id {0}",
                     message.Address.CountryId));
