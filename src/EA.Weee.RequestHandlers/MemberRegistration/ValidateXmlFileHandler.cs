@@ -5,6 +5,7 @@
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
+    using System.Xml;
     using System.Xml.Linq;
     using System.Xml.Schema;
     using EA.Prsd.Core.Mediator;
@@ -42,7 +43,7 @@
                     },
                     false);
             }
-            catch (Exception ex)
+            catch (XmlException ex)
             {
                 errors.Add(new MemberUploadError(ErrorLevel.Error, ex.Message));
             }
