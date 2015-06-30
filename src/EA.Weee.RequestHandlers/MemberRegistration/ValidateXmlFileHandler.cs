@@ -25,21 +25,28 @@
 
         public async Task<Guid> HandleAsync(ValidateXmlFile message)
         {
-            var xmlDocument = XDocument.Parse(message.Data);
-            var schemas = new XmlSchemaSet();
-            var absoluteSchemaLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), SchemaLocation);
-            schemas.Add("http://www.environment-agency.gov.uk/WEEE/XMLSchema", absoluteSchemaLocation);
-
             var errors = new List<MemberUploadError>();
 
-            xmlDocument.Validate(
-                schemas,
-                (sender, args) =>
-                {
-                    errors.Add(new MemberUploadError(ErrorLevel.Error, args.Exception.Message));
-                },
-                false);
+            try
+            {
+                var xmlDocument = XDocument.Parse(message.Data);
+                var schemas = new XmlSchemaSet();
+                var absoluteSchemaLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), SchemaLocation);
+                schemas.Add("http://www.environment-agency.gov.uk/WEEE/XMLSchema", absoluteSchemaLocation);
 
+                xmlDocument.Validate(
+                    schemas,
+                    (sender, args) =>
+                    {
+                        errors.Add(new MemberUploadError(ErrorLevel.Error, args.Exception.Message));
+                    },
+                    false);
+            }
+            catch (Exception ex)
+            {
+                errors.Add(new MemberUploadError(ErrorLevel.Error, ex.Message));
+            }
+            
             MemberUpload upload = new MemberUpload(message.Data, errors);
 
             context.MemberUploads.Add(upload);
