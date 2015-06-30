@@ -124,26 +124,26 @@
         }
 
         [HttpGet]
-        public ActionResult EmailVerificationRequired()
+        public ActionResult UserAccountActivationRequired()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EmailVerificationRequired(FormCollection model)
+        public async Task<ActionResult> UserAccountActivationRequired(FormCollection model)
         {
             try
             {
                 using (var client = apiClient())
                 {
-                    var verificationToken =
-                        await client.NewUser.GetUserEmailVerificationTokenAsync(User.GetAccessToken());
-                    var verificationEmail =
-                        emailService.GenerateEmailVerificationMessage(
-                            Url.Action("VerifyEmail", "Account", null, Request.Url.Scheme),
-                            verificationToken, User.GetUserId(), User.GetEmailAddress());
-                    var emailSent = await emailService.SendAsync(verificationEmail);
+                    var activationToken =
+                        await client.NewUser.GetUserAccountActivationTokenAsync(User.GetAccessToken());
+                    var activationEmail =
+                        emailService.GenerateUserAccountActivationMessage(
+                            Url.Action("ActivateUserAccount", "Account", null, Request.Url.Scheme),
+                            activationToken, User.GetUserId(), User.GetEmailAddress());
+                    var emailSent = await emailService.SendAsync(activationEmail);
 
                     if (!emailSent)
                     {
@@ -157,24 +157,24 @@
             }
             catch (SmtpException)
             {
-                ViewBag.Errors = new[] { "The verification email was not sent, please try again later." };
+                ViewBag.Errors = new[] { "The activation email was not sent, please try again later." };
                 return View();
             }
 
-            return RedirectToAction("EmailVerificationRequired");
+            return RedirectToAction("UserAccountActivationRequired");
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult> VerifyEmail(Guid id, string code)
+        public async Task<ActionResult> ActivateUserAccount(Guid id, string code)
         {
             using (var client = apiClient())
             {
-                bool result = await client.NewUser.VerifyEmailAsync(new VerifiedEmailData { Id = id, Code = code });
+                bool result = await client.NewUser.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code });
 
                 if (!result)
                 {
-                    return RedirectToAction("EmailVerificationRequired");
+                    return RedirectToAction("UserAccountActivationRequired");
                 }
             }
 

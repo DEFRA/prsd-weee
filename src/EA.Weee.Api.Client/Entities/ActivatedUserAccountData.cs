@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class VerifiedEmailData
+    public class ActivatedUserAccountData
     {
         public Guid Id { get; set; }
 

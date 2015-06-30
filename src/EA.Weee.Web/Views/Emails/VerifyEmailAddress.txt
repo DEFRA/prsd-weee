@@ -1,7 +1,0 @@
-﻿Verify your email address
-
-Your email address has been registered with Waste Electrical and Electronic Equipment.
-
-To use this service, please verify your email address using this link: @Model.VerifyLink
-
-If you did not register to use this service, please take no action. The account will be activated only if it has been verified.

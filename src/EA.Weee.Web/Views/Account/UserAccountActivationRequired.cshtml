@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Email Confirmation Required";
+    ViewBag.Title = "User Account activation required";
 }
 
 @if (ViewBag.Errors != null && ((string[])ViewBag.Errors).Length > 0)
@@ -15,16 +15,15 @@
     </div>
 }
 
-<h2 class="heading-large">Confirm your email</h2>
+<h2 class="heading-large">Activate your user account</h2>
 
-<p class="lede">In order to continue using this service you must confirm your email address</p>
-<p>You should have received an email after registering to use the Waste Electrical and Electronic Equipment. Check your email inbox or junk mail folder for the account you registered with.</p>
+<p class="lede">We have sent you an activation email. You need to use the link in the email to activate your user account. Check your email inbox or junk folder.</p>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     <p>
         If you have not received the email you can
-        <button class="link-submit" type="submit">request another email</button>.
+        <button class="link-submit" type="submit">request another activation email.</button>.
     </p>
 }
