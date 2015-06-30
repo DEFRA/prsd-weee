@@ -1,5 +1,4 @@
-﻿@using Thinktecture.IdentityModel.Client
-@model EA.Weee.Web.ViewModels.TemporaryXmlTest.TestViewingUploadViewModel
+﻿@model EA.Weee.Web.ViewModels.TemporaryXmlTest.TestViewingUploadViewModel
 @{
     ViewBag.Title = "TestViewingUpload";
 }
@@ -33,7 +32,10 @@
 
     @foreach (KeyValuePair<string, string> error in Model.ErrorsWithLevels)
     {
-        var errorClass = error.Key == "Warning" ? "panel-indent-warning" : "panel-indent-danger";
+        var errorClass = "panel-indent-info";
+        
+        if (error.Key == "Warning") { errorClass = "panel-indent-warning"; }
+        if (error.Key == "Error")   { errorClass = "panel-indent-danger"; }
         
         <div class="@errorClass">
             <div class="alert alert-danger" role="alert">
