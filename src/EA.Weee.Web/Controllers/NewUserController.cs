@@ -137,13 +137,13 @@
                         
                         authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
 
-                        var verificationCode = await client.NewUser.GetUserEmailVerificationTokenAsync(signInResponse.AccessToken);
+                        var activationCode = await client.NewUser.GetUserAccountActivationTokenAsync(signInResponse.AccessToken);
                         
-                        var verificationEmail = emailService.GenerateEmailVerificationMessage(Url.Action("VerifyEmail", "Account", null, Request.Url.Scheme), verificationCode, userId, model.Email);
+                        var activationEmail = emailService.GenerateUserAccountActivationMessage(Url.Action("ActivateUserAccount", "Account", null, Request.Url.Scheme), activationCode, userId, model.Email);
                         
-                        await emailService.SendAsync(verificationEmail);
+                        await emailService.SendAsync(activationEmail);
 
-                        return RedirectToAction("Confirm", "NewUser");
+                        return RedirectToAction("UserAccountActivationRequired", "Account");
                     }
                     catch (ApiBadRequestException ex)
                     {

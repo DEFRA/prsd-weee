@@ -8,10 +8,8 @@
         private static readonly string[] AllowAnonymousActions =
         {
             "LogOff",
-            "ConfirmEmail",
-            "EmailVerificationRequired",
-            "VerifyEmail",
-            "VerificationEmailSent"
+            "UserAccountActivationRequired",
+            "ActivateUserAccount"
         };
 
         public static bool SkipAuthorisation(this AuthorizationContext authorizationContext)

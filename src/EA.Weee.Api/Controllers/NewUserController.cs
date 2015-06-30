@@ -51,8 +51,8 @@
         }
 
         [HttpGet]
-        [Route("GetUserEmailVerificationToken")]
-        public async Task<string> GetUserEmailVerificationToken()
+        [Route("GetUserAccountActivationToken")]
+        public async Task<string> GetUserAccountActivationToken()
         {
             var token = await userManager.GenerateEmailConfirmationTokenAsync(userContext.UserId.ToString());
 
@@ -60,8 +60,8 @@
         }
 
         [HttpPost]
-        [Route("VerifyEmail")]
-        public async Task<IHttpActionResult> VerifyEmail(VerifiedEmailData model)
+        [Route("ActivateUserAccount")]
+        public async Task<IHttpActionResult> ActivateUserAccount(ActivatedUserAccountData model)
         {
             var result = await userManager.ConfirmEmailAsync(model.Id.ToString(), model.Code);
 

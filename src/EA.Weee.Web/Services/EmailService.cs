@@ -40,11 +40,11 @@
             return false;
         }
 
-        public MailMessage GenerateEmailVerificationMessage(string verificationBaseUrl, string verificationToken, string userId, string mailTo)
+        public MailMessage GenerateUserAccountActivationMessage(string activationBaseUrl, string activationToken, string userId, string mailTo)
         {
-            var email = templateService.TemplateWithDynamicModel("VerifyEmailAddress", new { VerifyLink = GetEmailVerificationUrl(verificationBaseUrl, verificationToken, userId) });
+            var email = templateService.TemplateWithDynamicModel("ActivateUserAccount", new { VerifyLink = GetUserAccountActivationUrl(activationBaseUrl, activationToken, userId) });
 
-            var message = GenerateMailMessageWithHtmlAndPlainTextParts(configurationService.CurrentConfiguration.MailFrom, mailTo, "Verify your email address", email);
+            var message = GenerateMailMessageWithHtmlAndPlainTextParts(configurationService.CurrentConfiguration.MailFrom, mailTo, "Activate your WEEE user account", email);
 
             return message;
         }
@@ -67,14 +67,14 @@
         }
 
         /// <summary>
-        /// Generates the correct verification URL for a user to verify their email.
+        /// Generates the correct activation URL for a user to activate the account.
         /// </summary>
-        private string GetEmailVerificationUrl(string baseUrl, string verificationToken, string userId)
+        private string GetUserAccountActivationUrl(string baseUrl, string activationToken, string userId)
         {
             var uriBuilder = new UriBuilder(baseUrl);
             uriBuilder.Path += "/" + userId;
             var parameters = HttpUtility.ParseQueryString(string.Empty);
-            parameters["code"] = verificationToken;
+            parameters["code"] = activationToken;
             uriBuilder.Query = parameters.ToString();
             return uriBuilder.Uri.ToString();
         }

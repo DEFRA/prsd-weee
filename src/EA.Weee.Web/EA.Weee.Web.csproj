@@ -464,7 +464,7 @@
     <Content Include="Scripts\vendor\jquery-1.11.0.min.js" />
     <Content Include="Scripts\vendor\modernizr.custom.77028.js" />
     <Content Include="Scripts\vendor\prism.js" />
-    <Content Include="Views\Emails\VerifyEmailAddress.txt" />
+    <Content Include="Views\Emails\ActivateUserAccount.txt" />
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
     <Content Include="Scripts\jquery-2.1.3.min.map" />
     <Content Include="Views\_ViewStart.cshtml" />
@@ -487,7 +487,6 @@
     <Content Include="Views\NewUser\AccountNotRequired.cshtml" />
     <Content Include="Views\NewUser\CheckIsPcs.cshtml" />
     <Content Include="Views\NewUser\CheckComplianceYear.cshtml" />
-    <Content Include="Views\NewUser\Confirm.cshtml" />
     <Content Include="Views\OrganisationRegistration\MainContactPerson.cshtml" />
     <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
@@ -500,9 +499,9 @@
     <Content Include="Views\OrganisationRegistration\JoinOrganisationConfirmation.cshtml" />
     <Content Include="Views\OrganisationRegistration\ReviewOrganisationDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddressPrepopulate.cshtml" />
-    <Content Include="Views\Emails\VerifyEmailAddress.cshtml" />
-    <Content Include="Views\Account\VerifyEmail.cshtml" />
-    <Content Include="Views\Account\EmailVerificationRequired.cshtml" />
+    <Content Include="Views\Emails\ActivateUserAccount.cshtml" />
+    <Content Include="Views\Account\ActivateUserAccount.cshtml" />
+    <Content Include="Views\Account\UserAccountActivationRequired.cshtml" />
     <Content Include="Views\PCS\ChooseActivity.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -523,7 +522,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
-    <Compile Include="Infrastructure\EmailVerificationRequiredAttribute.cs" />
+    <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\EmailTemplate.cs" />
     <Compile Include="Services\EmailTemplateService.cs" />

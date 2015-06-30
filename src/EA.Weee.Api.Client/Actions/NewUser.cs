@@ -21,18 +21,18 @@
             return await response.CreateResponseAsync<string>();
         }
 
-        public async Task<bool> VerifyEmailAsync(VerifiedEmailData verifiedEmailData)
+        public async Task<bool> ActivateUserAccountEmailAsync(ActivatedUserAccountData activatedUserAccountData)
         {
-            var response = await httpClient.PostAsJsonAsync(Controller + "VerifyEmail", verifiedEmailData);
+            var response = await httpClient.PostAsJsonAsync(Controller + "ActivateUserAccount", activatedUserAccountData);
 
             return await response.CreateResponseAsync<bool>();
         }
 
-        public async Task<string> GetUserEmailVerificationTokenAsync(string accessToken)
+        public async Task<string> GetUserAccountActivationTokenAsync(string accessToken)
         {
             httpClient.SetBearerToken(accessToken);
 
-            string url = Controller + "GetUserEmailVerificationToken";
+            string url = Controller + "GetUserAccountActivationToken";
             var response = await httpClient.GetAsync(url);
 
             return await response.CreateResponseAsync<string>();

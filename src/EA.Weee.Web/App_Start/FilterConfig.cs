@@ -10,7 +10,7 @@
         {
             filters.Add(new HandleApiErrorAttribute());
             filters.Add(new AuthorizeAttribute());
-            filters.Add(new EmailVerificationRequiredAttribute());
+            filters.Add(new UserAccountActivationAttribute());
         }
     }
 }

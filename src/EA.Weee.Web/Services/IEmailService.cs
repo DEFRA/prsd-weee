@@ -7,7 +7,7 @@
     {
         Task<bool> SendAsync(MailMessage message);
 
-        MailMessage GenerateEmailVerificationMessage(string verificationBaseUrl, string verificationToken, string userId, string mailTo);
+        MailMessage GenerateUserAccountActivationMessage(string verificationBaseUrl, string verificationToken, string userId, string mailTo);
 
         MailMessage GenerateMailMessageWithHtmlAndPlainTextParts(string from, string to, string subject, EmailTemplate emailTemplate);
     }

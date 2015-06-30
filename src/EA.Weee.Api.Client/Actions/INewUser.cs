@@ -6,7 +6,7 @@
     public interface INewUser
     {
         Task<string> CreateUserAsync(UserCreationData userCreationData);
-        Task<bool> VerifyEmailAsync(VerifiedEmailData verifiedEmailData);
-        Task<string> GetUserEmailVerificationTokenAsync(string accessToken);
+        Task<bool> ActivateUserAccountEmailAsync(ActivatedUserAccountData activatedAccountData);
+        Task<string> GetUserAccountActivationTokenAsync(string accessToken);
     }
 }

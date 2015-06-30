@@ -7,7 +7,7 @@
     using Thinktecture.IdentityModel.Client;
     using AuthorizationContext = System.Web.Mvc.AuthorizationContext;
 
-    public class EmailVerificationRequiredAttribute : AuthorizeAttribute
+    public class UserAccountActivationAttribute : AuthorizeAttribute
     {
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
@@ -21,7 +21,7 @@
 
             if (hasEmailVerifiedClaim && identity.Claims.Single(c => c.Type.Equals(JwtClaimTypes.EmailVerified)).Value.Equals("false", StringComparison.InvariantCultureIgnoreCase))
             {
-                filterContext.Result = new RedirectResult("~/Account/EmailVerificationRequired");
+                filterContext.Result = new RedirectResult("~/Account/UserAccountActivationRequired");
             }
         }
     }
