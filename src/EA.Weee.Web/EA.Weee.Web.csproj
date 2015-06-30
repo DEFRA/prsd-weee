@@ -503,6 +503,7 @@
     <Content Include="Views\Account\ActivateUserAccount.cshtml" />
     <Content Include="Views\Account\UserAccountActivationRequired.cshtml" />
     <Content Include="Views\PCS\ChooseActivity.cshtml" />
+    <Content Include="Views\TemporaryXmltest\AddOrAmendMembers.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -529,6 +530,7 @@
     <Compile Include="Services\IEmailService.cs" />
     <Compile Include="Services\IEmailTemplateService.cs" />
     <Compile Include="Controllers\PCSController.cs" />
+    <Compile Include="Controllers\TemporaryXmlTestController.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Infrastructure\TokenResponseExtensions.cs" />

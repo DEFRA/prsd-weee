@@ -83,6 +83,7 @@
     <Compile Include="Mappings\OrganisationUserMap.cs" />
     <Compile Include="Mappings\UKCompetentAuthorityMap.cs" />
     <Compile Include="Mappings\ValueObjectInitializer.cs" />
+    <Compile Include="MemberRegistration\ValidateXmlFileHandler.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandler.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandler.cs" />
