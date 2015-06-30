@@ -11,6 +11,7 @@
     using Prsd.Core.Web.OAuth;
     using Thinktecture.IdentityModel.Client;
     using ViewModels.Account;
+    using ViewModels.OrganisationRegistration;
 
     [Authorize]
     public class AccountController : Controller
@@ -101,16 +102,30 @@
         {
             using (var client = apiClient())
             {
-                var organisationUsers = await
+                var approvedOrganisationUsers = await
                      client.SendAsync(
                          User.GetAccessToken(),
-                         new GetApprovedOrganisationsByUserId(User.GetUserId()));
+                         new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)OrganisationUserStatus.Approved }));
 
-                if (organisationUsers.Count >= 1)
+                var pendingOrganisationUsers = await
+                     client.SendAsync(
+                         User.GetAccessToken(),
+                         new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)OrganisationUserStatus.Pending, (int)OrganisationUserStatus.Refused, (int)OrganisationUserStatus.Inactive }));
+
+                if (approvedOrganisationUsers.Count >= 1)
                 {
-                    return RedirectToAction("ChooseActivity", "PCS", new { id = organisationUsers.First().OrganisationId });
+                    return RedirectToAction("ChooseActivity", "PCS", new { id = approvedOrganisationUsers.First().OrganisationId });
                 }
-                return RedirectToAction("Type", "OrganisationRegistration");
+                else if (pendingOrganisationUsers.Count >= 1)
+                {
+                    //return View("HoldingMessageForPending", "OrganisationRegistration", new OrganisationUserPendingViewModel { OrganisationUserData = pendingOrganisationUsers });
+                    TempData["OrganisationUserPendingViewModel"] = new OrganisationUserPendingViewModel { OrganisationUserData = pendingOrganisationUsers };
+                    return RedirectToAction("HoldingMessageForPending", "OrganisationRegistration");
+                }
+                else
+                {
+                    return RedirectToAction("Type", "OrganisationRegistration");
+                }
             }
         }
     }

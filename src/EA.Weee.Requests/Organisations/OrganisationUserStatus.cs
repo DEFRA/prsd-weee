@@ -11,6 +11,9 @@
         Approved = 2,
 
         [Display(Name = "Refused")]
-        Refused = 3
+        Refused = 3,
+
+        [Display(Name = "Inactive")]
+        Inactive = 4
     }
 }

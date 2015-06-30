@@ -1,0 +1,44 @@
+﻿@using EA.Weee.Requests.Organisations
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.OrganisationUserPendingViewModel
+@{
+    ViewBag.Title = "Holding Message For Pending";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Organisations you have applied to perform activities for:
+        </h1>
+    </header>
+
+    <div class="form-group">
+        <table>
+            <tbody>
+                @for (int i = 0; i < Model.OrganisationUserData.Count; i++)
+                {
+                    <tr>
+                        @if (Model.OrganisationUserData[i].Organisation.OrganisationType == OrganisationType.RegisteredCompany)
+                        {
+                            <td>@Html.DisplayFor(model => model.OrganisationUserData[i].Organisation.Name)</td>
+                        }
+                        else
+                        {
+                            <td>@Html.DisplayFor(model => model.OrganisationUserData[i].Organisation.TradingName)</td>
+                        }
+
+                        <td>@Html.DisplayFor(model => model.OrganisationUserData[i].OrganisationUserStatus)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="form-group">
+        <a href="@Url.Action("Type", "OrganisationRegistration")">Create or join another organisation</a>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" class="button" value="Sign out" />
+    </div>
+}
