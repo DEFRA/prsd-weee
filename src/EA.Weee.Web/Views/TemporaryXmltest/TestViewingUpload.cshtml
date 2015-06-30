@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.ViewModels.TemporaryXmlTest.TestViewingUploadViewModel
+﻿@using Thinktecture.IdentityModel.Client
+@model EA.Weee.Web.ViewModels.TemporaryXmlTest.TestViewingUploadViewModel
 @{
     ViewBag.Title = "TestViewingUpload";
 }
@@ -26,7 +27,7 @@
 @section main_content {
     <header class="hgroup">
         <div>
-            <h1 class="heading-large">XML validation test!</h1>
+            <h1 class="heading-large">XML validation warnings / errors</h1>
         </div>
     </header>
 
@@ -36,7 +37,16 @@
         
         <div class="@errorClass">
             <div class="alert alert-danger" role="alert">
-                <strong>ERROR: </strong>@error.Value
+                <strong>@error.Key.ToUpperInvariant(): </strong>@error.Value
+            </div>
+        </div>
+    }
+
+    @if (Model.ErrorsWithLevels == null || Model.ErrorsWithLevels.Count == 0)
+    {
+        <div class="panel-indent-info">
+            <div class="alert alert-danger" role="alert">
+                <strong>INFO: </strong>No warnings or errors.
             </div>
         </div>
     }
