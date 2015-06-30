@@ -557,6 +557,12 @@
             return View("ReviewOrganisationDetails", model);
         }
 
+        public ActionResult HoldingMessageForPending(OrganisationUserPendingViewModel model)
+        {
+            OrganisationUserPendingViewModel viewmodel = (OrganisationUserPendingViewModel)TempData["OrganisationUserPendingViewModel"];
+            return View("HoldingMessageForPending", viewmodel);
+        }
+
         private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly)
         {
             // Check the organisation Id is valid
