@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Validation;
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
@@ -16,6 +14,8 @@
 
     internal class ValidateXmlFileHandler : IRequestHandler<ValidateXmlFile, Guid>
     {
+        private const string SchemaLocation = @"v3schema.xsd";
+        
         private readonly WeeeContext context;
 
         public ValidateXmlFileHandler(WeeeContext context)
@@ -27,8 +27,8 @@
         {
             var xmlDocument = XDocument.Parse(message.Data);
             var schemas = new XmlSchemaSet();
-            var schemaLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3schema.xsd");
-            schemas.Add("http://www.environment-agency.gov.uk/WEEE/XMLSchema", schemaLocation);
+            var absoluteSchemaLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), SchemaLocation);
+            schemas.Add("http://www.environment-agency.gov.uk/WEEE/XMLSchema", absoluteSchemaLocation);
 
             var errors = new List<MemberUploadError>();
 

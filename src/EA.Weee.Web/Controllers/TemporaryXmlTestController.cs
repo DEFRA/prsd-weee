@@ -40,9 +40,9 @@
             using (var client = apiClient())
             {
                 var memberUploadId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(xmlToValidate));
-            }
 
-            return View();
+                return RedirectToAction("TestViewingUpload", new { id = memberUploadId });
+            }
         }
 
         [HttpGet]
