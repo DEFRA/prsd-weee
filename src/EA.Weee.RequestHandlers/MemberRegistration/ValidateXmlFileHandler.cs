@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Validation;
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
@@ -28,13 +30,13 @@
             var schemaLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3schema.xsd");
             schemas.Add("http://www.environment-agency.gov.uk/WEEE/XMLSchema", schemaLocation);
 
-            var errors = new List<string>();
+            var errors = new List<MemberUploadError>();
 
             xmlDocument.Validate(
                 schemas,
                 (sender, args) =>
                 {
-                    errors.Add(args.Exception.Message);
+                    errors.Add(new MemberUploadError(ErrorLevel.Error, args.Exception.Message));
                 },
                 false);
 

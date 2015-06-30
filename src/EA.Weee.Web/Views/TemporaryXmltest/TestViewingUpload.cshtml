@@ -1,0 +1,43 @@
+﻿@model EA.Weee.Web.ViewModels.TemporaryXmlTest.TestViewingUploadViewModel
+@{
+    ViewBag.Title = "TestViewingUpload";
+}
+
+<style type="text/css">
+    .panel-indent-danger {
+        clear: both;
+        border-left: 4px solid red;
+        padding: 10px;
+    }
+
+    .panel-indent-warning {
+        clear: both;
+        border-left: 4px solid #ffd800;
+        padding: 10px;
+    }
+
+    .panel-indent-info {
+        clear: both;
+        border-left: 4px solid #4856A6;
+        padding: 10px;
+    }
+</style>
+
+@section main_content {
+    <header class="hgroup">
+        <div>
+            <h1 class="heading-large">XML validation test!</h1>
+        </div>
+    </header>
+
+    @foreach (KeyValuePair<string, string> error in Model.ErrorsWithLevels)
+    {
+        var errorClass = error.Key == "Warning" ? "panel-indent-warning" : "panel-indent-danger";
+        
+        <div class="@errorClass">
+            <div class="alert alert-danger" role="alert">
+                <strong>ERROR: </strong>@error.Value
+            </div>
+        </div>
+    }
+}

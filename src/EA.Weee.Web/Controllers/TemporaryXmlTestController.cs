@@ -9,6 +9,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.MemberRegistration;
     using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.ViewModels.TemporaryXmlTest;
 
     public class TemporaryXmlTestController : Controller
     {
@@ -42,6 +43,17 @@
             }
 
             return View();
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> TestViewingUpload(Guid id)
+        {
+            using (var client = apiClient())
+            {
+                var errors = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(id));
+
+                return View(new TestViewingUploadViewModel { ErrorsWithLevels = errors });
+            }
         }
 
         private string FileToString(HttpPostedFileBase file)
