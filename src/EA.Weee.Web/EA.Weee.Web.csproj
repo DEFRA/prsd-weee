@@ -503,7 +503,8 @@
     <Content Include="Views\Account\ActivateUserAccount.cshtml" />
     <Content Include="Views\Account\UserAccountActivationRequired.cshtml" />
     <Content Include="Views\PCS\ChooseActivity.cshtml" />
-    <Content Include="Views\TemporaryXmltest\AddOrAmendMembers.cshtml" />
+    <Content Include="Views\TemporaryXmlTest\AddOrAmendMembers.cshtml" />
+    <Content Include="Views\TemporaryXmlTest\TestViewingUpload.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -576,6 +577,7 @@
     <Compile Include="ViewModels\Shared\AddressViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionOptionalViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
+    <Compile Include="ViewModels\TemporaryXmlTest\TestViewingUploadViewModel.cs" />
     <Compile Include="Views\Shared\ViewBase.cs" />
   </ItemGroup>
   <ItemGroup>
