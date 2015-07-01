@@ -117,9 +117,7 @@
                     return RedirectToAction("ChooseActivity", "PCS", new { id = approvedOrganisationUsers.First().OrganisationId });
                 }
                 else if (pendingOrganisationUsers.Count >= 1)
-                {
-                    //return View("HoldingMessageForPending", "OrganisationRegistration", new OrganisationUserPendingViewModel { OrganisationUserData = pendingOrganisationUsers });
-                    TempData["OrganisationUserPendingViewModel"] = new OrganisationUserPendingViewModel { OrganisationUserData = pendingOrganisationUsers };
+                {   
                     return RedirectToAction("HoldingMessageForPending", "OrganisationRegistration");
                 }
                 else
