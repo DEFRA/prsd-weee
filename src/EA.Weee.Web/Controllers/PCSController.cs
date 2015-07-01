@@ -1,22 +1,16 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using EA.Prsd.Core.Extensions;
-    using EA.Prsd.Core.Web.ApiClient;
-    using EA.Prsd.Core.Web.Mvc.Extensions;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.MemberRegistration;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Infrastructure;
-    using EA.Weee.Web.ViewModels.Shared;
-    using ViewModels.PCS;
+    using EA.Weee.Web.ViewModels.PCS;
 
     [Authorize]
     public class PCSController : Controller
@@ -67,12 +61,6 @@
         }
 
         [HttpGet]
-        public ActionResult Index()
-        {
-            return RedirectToAction("AddOrAmendMembers");
-        }
-
-        [HttpGet]
         public ViewResult AddOrAmendMembers()
         {
             return View();
@@ -87,12 +75,12 @@
             {
                 var memberUploadId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(xmlToValidate));
 
-                return RedirectToAction("TestViewingUpload", new { id = memberUploadId });
+                return RedirectToAction("ViewErrorsAndWarnings", new { id = memberUploadId });
             }
         }
 
         [HttpGet]
-        public async Task<ViewResult> TestViewingUpload(Guid id)
+        public async Task<ViewResult> ViewErrorsAndWarnings(Guid id)
         {
             using (var client = apiClient())
             {
