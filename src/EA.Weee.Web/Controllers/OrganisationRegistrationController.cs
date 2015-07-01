@@ -543,7 +543,7 @@
                         client.SendAsync(User.GetAccessToken(),
                             new CompleteRegistration(model.OrganisationData.Id));
                 }
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("RedirectProcess", "Account");
             }
             catch (ApiBadRequestException ex)
             {
@@ -557,10 +557,22 @@
             return View("ReviewOrganisationDetails", model);
         }
 
-        public ActionResult HoldingMessageForPending(OrganisationUserPendingViewModel model)
+        [HttpGet]
+        public async Task<ActionResult> HoldingMessageForPending()
         {
-            OrganisationUserPendingViewModel viewmodel = (OrganisationUserPendingViewModel)TempData["OrganisationUserPendingViewModel"];
-            return View("HoldingMessageForPending", viewmodel);
+            var model = new OrganisationUserPendingViewModel();
+            
+            using (var client = apiClient())
+            {
+                var pendingOrganisationUsers = await
+                 client.SendAsync(
+                     User.GetAccessToken(),
+                     new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)OrganisationUserStatus.Pending, (int)OrganisationUserStatus.Refused, (int)OrganisationUserStatus.Inactive }));
+
+                model.OrganisationUserData = pendingOrganisationUsers;
+            }
+
+            return View("HoldingMessageForPending", model);
         }
 
         private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly)

@@ -12,12 +12,12 @@
     using Prsd.Core.Mediator;
     using Requests.Organisations;
 
-    internal class GetApprovedOrganisationsByUserIdHandler : IRequestHandler<GetOrganisationsByUserId, List<OrganisationUserData>>
+    internal class GetOrganisationsByUserIdHandler : IRequestHandler<GetOrganisationsByUserId, List<OrganisationUserData>>
     {
         private readonly WeeeContext context;
         private IMap<OrganisationUser, OrganisationUserData> organisationUserMap;
 
-        public GetApprovedOrganisationsByUserIdHandler(WeeeContext context, IUserContext userContext, IMap<OrganisationUser, OrganisationUserData> organisationUserMap)
+        public GetOrganisationsByUserIdHandler(WeeeContext context, IMap<OrganisationUser, OrganisationUserData> organisationUserMap)
         {
             this.context = context;
             this.organisationUserMap = organisationUserMap;

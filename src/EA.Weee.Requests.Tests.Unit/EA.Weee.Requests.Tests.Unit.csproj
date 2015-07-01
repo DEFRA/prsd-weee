@@ -46,6 +46,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime" />
     <Reference Include="System.Threading.Tasks" />
@@ -68,9 +69,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\GetOrganisationsByUserIdHandlerTest.cs" />
     <Compile Include="Helpers\DbContextHelper.cs" />
     <Compile Include="Helpers\ObjectInstantiator.cs" />
     <Compile Include="Helpers\OrganisationHelper.cs" />
+    <Compile Include="Helpers\OrganisationUserHelper.cs" />
     <Compile Include="Helpers\TestDbAsyncEnumerable.cs" />
     <Compile Include="Helpers\TestDbAsyncEnumerator.cs" />
     <Compile Include="Helpers\TestDbAsyncQueryProvider.cs" />
@@ -109,6 +112,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
