@@ -1,0 +1,9 @@
+﻿@{
+    ViewBag.Title = "User account activated";
+}
+
+<h2 class="heading-large">User account activated</h2>
+
+<p>Your user account has been successfully activated.</p>
+
+@(User.Identity.IsAuthenticated ? Html.ActionLink("Continue", "Index", "Home", null, new { @class = "button" }) : Html.ActionLink("Log in to continue using Waste Electrical and Electronic Equipment online service.", "Login", "Account"))

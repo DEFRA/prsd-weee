@@ -11,6 +11,11 @@
 
         public string SiteRoot { get; set; }
 
+        [DefaultValue("true")]
+        public string SendEmail { get; set; }
+
+        public string MailFrom { get; set; }
+
         public string ApiUrl { get; set; }
 
         public string ApiSecret { get; set; }
