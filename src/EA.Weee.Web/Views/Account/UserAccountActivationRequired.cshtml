@@ -16,8 +16,14 @@
 }
 
 <h2 class="heading-large">Activate your user account</h2>
-
-<p class="lede">We have sent you an activation email. You need to use the link in the email to activate your user account. Check your email inbox or junk folder.</p>
+@if (String.IsNullOrEmpty(ViewBag.UserEmailAddress))
+{
+    <p class="lede">We have sent you an activation email. You need to use the link in the email to activate your user account. Check your email inbox or junk folder.</p>
+}
+else
+{
+    <p class="lede">We have sent your activation email to @ViewBag.UserEmailAddress. You need to use the link in the email to activate your user account. Check your email inbox or junk folder.</p>
+}
 
 @using (Html.BeginForm())
 {

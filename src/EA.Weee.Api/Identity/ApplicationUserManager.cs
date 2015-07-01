@@ -1,16 +1,25 @@
 ﻿namespace EA.Weee.Api.Identity
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using DataAccess.Identity;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security.DataProtection;
+    using Services;
 
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
-  public ApplicationUserManager(IUserStore<ApplicationUser> store, IDataProtectionProvider dataProtectionProvider)
+        private readonly ConfigurationService configurationService;
+
+        public ApplicationUserManager(IUserStore<ApplicationUser> store,
+            IDataProtectionProvider dataProtectionProvider,
+            ConfigurationService configurationService)
             : base(store)
         {
+            this.configurationService = configurationService;
             UserValidator = new UserValidator<ApplicationUser>(this)
             {
                 AllowOnlyAlphanumericUserNames = false,
@@ -49,6 +58,43 @@
 
             UserTokenProvider =
                 new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+        }
+
+        public override async Task<IdentityResult> CreateAsync(ApplicationUser user)
+        {
+            SetEmailConfirmedIfRequired(user);
+
+            return await base.CreateAsync(user);
+        }
+
+        private void SetEmailConfirmedIfRequired(ApplicationUser user)
+        {
+            // We exclude verify email where the environment is set to development.
+            if (configurationService.CurrentConfiguration.Environment.Equals("Development",
+                    StringComparison.InvariantCultureIgnoreCase))
+            {
+                var verificationDomains = new List<string>();
+
+                //List not empty
+                if (
+                    !string.IsNullOrWhiteSpace(
+                        configurationService.CurrentConfiguration.VerificationEmailBypassDomains))
+                {
+                    // Get the domains for which email verification is still required.
+                    verificationDomains =
+                        configurationService.CurrentConfiguration.VerificationEmailBypassDomains.Split(
+                            new[] { ',' },
+                            StringSplitOptions.RemoveEmptyEntries).ToList();
+                }
+
+                var domainStarts = user.Email.LastIndexOf("@");
+                var excludeThisEmail = verificationDomains.Any(d => user.Email.Substring(domainStarts).Contains(d));
+
+                if (excludeThisEmail)
+                {
+                    user.EmailConfirmed = true;
+                }
+            }
         }
     }
 }
