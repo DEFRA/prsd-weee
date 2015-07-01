@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests.Tests.Unit.Account
+﻿namespace EA.Weee.Requests.Tests.Unit.Organisations
 {
     using System;
     using System.Data.Entity;
