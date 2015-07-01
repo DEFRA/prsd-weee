@@ -83,6 +83,7 @@
     <Compile Include="Actions\NewUser.cs" />
     <Compile Include="Actions\INewUser.cs" />
     <Compile Include="Entities\UserCreationData.cs" />
+    <Compile Include="Entities\ActivatedUserAccountData.cs" />
     <Compile Include="IWeeeClient.cs" />
     <Compile Include="WeeeClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

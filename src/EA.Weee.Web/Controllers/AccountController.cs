@@ -2,29 +2,37 @@
 {
     using System;
     using System.Linq;
+    using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using EA.Weee.Api.Client;
-    using EA.Weee.Requests.Organisations;
+    using Api.Client;
+    using Api.Client.Entities;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
+    using Services;
     using Thinktecture.IdentityModel.Client;
     using ViewModels.Account;
     using ViewModels.OrganisationRegistration;
+    using Weee.Requests.Organisations;
 
     [Authorize]
     public class AccountController : Controller
     {
-        private readonly IAuthenticationManager authenticationManager;
-        private readonly Func<IOAuthClient> oauthClient;
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IAuthenticationManager authenticationManager;
+        private readonly IEmailService emailService;
+        private readonly Func<IOAuthClient> oauthClient;
 
-        public AccountController(Func<IOAuthClient> oauthClient, Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager)
+        public AccountController(Func<IOAuthClient> oauthClient,
+            IAuthenticationManager authenticationManager,
+            Func<IWeeeClient> apiClient,
+            IEmailService emailService)
         {
             this.oauthClient = oauthClient;
             this.apiClient = apiClient;
             this.authenticationManager = authenticationManager;
+            this.emailService = emailService;
         }
 
         [HttpGet]
@@ -117,14 +125,72 @@
                     return RedirectToAction("ChooseActivity", "PCS", new { id = approvedOrganisationUsers.First().OrganisationId });
                 }
                 else if (pendingOrganisationUsers.Count >= 1)
-                {   
+                {
                     return RedirectToAction("HoldingMessageForPending", "OrganisationRegistration");
                 }
                 else
                 {
-                    return RedirectToAction("Type", "OrganisationRegistration");
-                }
+                return RedirectToAction("Type", "OrganisationRegistration");
             }
         }
+
+        [HttpGet]
+        public ActionResult UserAccountActivationRequired()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UserAccountActivationRequired(FormCollection model)
+        {
+            try
+            {
+                using (var client = apiClient())
+                {
+                    var activationToken =
+                        await client.NewUser.GetUserAccountActivationTokenAsync(User.GetAccessToken());
+                    var activationEmail =
+                        emailService.GenerateUserAccountActivationMessage(
+                            Url.Action("ActivateUserAccount", "Account", null, Request.Url.Scheme),
+                            activationToken, User.GetUserId(), User.GetEmailAddress());
+                    var emailSent = await emailService.SendAsync(activationEmail);
+
+                    if (!emailSent)
+                    {
+                        ViewBag.Errors = new[]
+                        {
+                            "Email is currently unavailable at this time, please try again later."
+                        };
+                        return View();
+                    }
+                }
+            }
+            catch (SmtpException)
+            {
+                ViewBag.Errors = new[] { "The activation email was not sent, please try again later." };
+                return View();
+            }
+
+            return RedirectToAction("UserAccountActivationRequired");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> ActivateUserAccount(Guid id, string code)
+        {
+            using (var client = apiClient())
+            {
+                bool result = await client.NewUser.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code });
+
+                if (!result)
+                {
+                    return RedirectToAction("UserAccountActivationRequired");
+                }
+            }
+
+            return View();
+        }
     }
+}
 }
