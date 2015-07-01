@@ -111,18 +111,24 @@
             using (var client = apiClient())
             {
                 var approvedOrganisationUsers = await
-                     client.SendAsync(
-                         User.GetAccessToken(),
-                         new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)OrganisationUserStatus.Approved }));
+                    client.SendAsync(
+                        User.GetAccessToken(),
+                        new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)OrganisationUserStatus.Approved }));
 
                 var pendingOrganisationUsers = await
-                     client.SendAsync(
-                         User.GetAccessToken(),
-                         new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)OrganisationUserStatus.Pending, (int)OrganisationUserStatus.Refused, (int)OrganisationUserStatus.Inactive }));
+                    client.SendAsync(
+                        User.GetAccessToken(),
+                        new GetOrganisationsByUserId(User.GetUserId(),
+                            new[]
+                            {
+                                (int)OrganisationUserStatus.Pending, (int)OrganisationUserStatus.Refused,
+                                (int)OrganisationUserStatus.Inactive
+                            }));
 
                 if (approvedOrganisationUsers.Count >= 1)
                 {
-                    return RedirectToAction("ChooseActivity", "PCS", new { id = approvedOrganisationUsers.First().OrganisationId });
+                    return RedirectToAction("ChooseActivity", "PCS",
+                        new { id = approvedOrganisationUsers.First().OrganisationId });
                 }
                 else if (pendingOrganisationUsers.Count >= 1)
                 {
@@ -130,7 +136,8 @@
                 }
                 else
                 {
-                return RedirectToAction("Type", "OrganisationRegistration");
+                    return RedirectToAction("Type", "OrganisationRegistration");
+                }
             }
         }
 
@@ -192,5 +199,4 @@
             return View();
         }
     }
-}
 }
