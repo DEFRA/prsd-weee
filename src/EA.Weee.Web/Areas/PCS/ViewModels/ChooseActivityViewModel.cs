@@ -1,10 +1,9 @@
-﻿namespace EA.Weee.Web.ViewModels.PCS
+﻿namespace EA.Weee.Web.Areas.PCS.ViewModels
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Web.ViewModels.Shared;
+    using Web.ViewModels.Shared;
 
     public class ChooseActivityViewModel
     {

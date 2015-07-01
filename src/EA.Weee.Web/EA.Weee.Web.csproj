@@ -432,6 +432,8 @@
     <Content Include="Content\govuk\stylesheets\fonts\GDSTransportWebsite.eot" />
     <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Light.eot" />
     <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Bold.eot" />
+    <Content Include="Areas\PCS\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\PCS\Views\Shared\_Layout.cshtml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
@@ -503,7 +505,7 @@
     <Content Include="Views\Emails\ActivateUserAccount.cshtml" />
     <Content Include="Views\Account\ActivateUserAccount.cshtml" />
     <Content Include="Views\Account\UserAccountActivationRequired.cshtml" />
-    <Content Include="Views\PCS\ChooseActivity.cshtml" />
+    <Content Include="Areas\PCS\Views\Home\ChooseActivity.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -529,11 +531,10 @@
     <Compile Include="Services\EmailTemplateService.cs" />
     <Compile Include="Services\IEmailService.cs" />
     <Compile Include="Services\IEmailTemplateService.cs" />
-    <Compile Include="Controllers\PCSController.cs" />
+    <Compile Include="Areas\PCS\Controllers\HomeController.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\PCS\PCSAreaRegistration.cs" />
-    <Compile Include="Infrastructure\OrganisationRequiredAttribute.cs" />
     <Compile Include="Infrastructure\TokenResponseExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -568,8 +569,8 @@
     <Compile Include="ViewModels\OrganisationRegistration\AddressPrepopulateViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeEnum.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
-    <Compile Include="ViewModels\PCS\ChooseActivityViewModel.cs" />
-    <Compile Include="ViewModels\PCS\PcsAction.cs" />
+    <Compile Include="Areas\PCS\ViewModels\ChooseActivityViewModel.cs" />
+    <Compile Include="Areas\PCS\ViewModels\PcsAction.cs" />
     <Compile Include="ViewModels\Shared\PagingViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
@@ -589,11 +590,7 @@
       <Name>EA.Weee.Requests</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Areas\PCS\Controllers\" />
-    <Folder Include="Areas\PCS\Models\" />
-    <Folder Include="Areas\PCS\Views\Shared\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

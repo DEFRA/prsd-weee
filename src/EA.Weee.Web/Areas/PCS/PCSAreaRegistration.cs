@@ -1,7 +1,8 @@
-﻿using System.Web.Mvc;
-
-namespace EA.Weee.Web.Areas.PCS
+﻿namespace EA.Weee.Web.Areas.PCS
 {
+    using Controllers;
+    using System.Web.Mvc;
+
     public class PCSAreaRegistration : AreaRegistration 
     {
         public override string AreaName 
@@ -12,13 +13,13 @@ namespace EA.Weee.Web.Areas.PCS
             }
         }
 
-        public override void RegisterArea(AreaRegistrationContext context) 
+        public override void RegisterArea(AreaRegistrationContext context)
         {
             context.MapRoute(
-                "PCS_default",
-                "PCS/{controller}/{action}/{id}",
-                new { action = "Index", id = UrlParameter.Optional }
-            );
+                name: "PCS_default",
+                url: "PCS/{id}/{controller}/{action}/{entityId}",
+                defaults: new { action = "Index", controller = "Home", entityId = UrlParameter.Optional },
+                namespaces: new[] { typeof(HomeController).Namespace });
         }
     }
 }
