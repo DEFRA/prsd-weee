@@ -144,6 +144,11 @@
         [HttpGet]
         public ActionResult UserAccountActivationRequired()
         {
+            string email = User.GetEmailAddress();
+            if (!string.IsNullOrEmpty(email))
+            {
+                ViewBag.UserEmailAddress = User.GetEmailAddress();
+            }
             return View();
         }
 
@@ -151,6 +156,11 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UserAccountActivationRequired(FormCollection model)
         {
+            string email = User.GetEmailAddress();
+            if (!string.IsNullOrEmpty(email))
+            {
+                ViewBag.UserEmailAddress = User.GetEmailAddress();
+            }
             try
             {
                 using (var client = apiClient())
