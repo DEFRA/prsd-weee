@@ -414,6 +414,7 @@
     <Content Include="Content\govuk_toolkit\stylesheets\_css3.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\_conditionals.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\_colours.scss" />
+    <Content Include="Areas\PCS\Views\web.config" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\error-tracking.js" />
@@ -486,6 +487,7 @@
     <Compile Include="App_Start\Modules\ApiClientModule.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\PCS\PCSAreaRegistration.cs" />
     <Compile Include="Infrastructure\OrganisationRequiredAttribute.cs" />
     <Compile Include="Infrastructure\TokenResponseExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -524,7 +526,11 @@
       <Name>EA.Weee.Requests</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Areas\PCS\Controllers\" />
+    <Folder Include="Areas\PCS\Models\" />
+    <Folder Include="Areas\PCS\Views\Shared\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
