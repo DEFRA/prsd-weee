@@ -1,0 +1,36 @@
+﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.Details.PartnershipDetailsViewModel
+@{
+    ViewBag.Title = "Partnership";
+}
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">What is your business trading name?</h1>
+    </header>
+
+    <div class="form-group">
+        <details>
+            <summary><span class="summary">What does business trading name mean?</span></summary>
+            <div class="panel-indent">
+                <p>
+                    This is either the partner's names or your business name. A business name is any name under which someone carries on business. In the case of a partnership, it means a name other than the partners names.
+                </p>
+            </div>
+        </details>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+   
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
+            @Html.Gds().LabelFor(m => m.BusinessTradingName)
+            @Html.Gds().ValidationMessageFor(m => m.BusinessTradingName)
+            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = "2048" })
+        </div>
+
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+    }
+}

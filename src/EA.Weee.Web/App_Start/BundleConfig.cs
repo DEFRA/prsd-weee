@@ -9,12 +9,16 @@
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                      "~/Scripts/jquery-{version}.js",
-                      "~/Scripts/jquery.unobtrusive-ajax.js"));
+                     "~/Scripts/jquery-{version}.js",
+                     "~/Scripts/jquery.unobtrusive-ajax.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/jquery-ui").Include(
+                "~/Scripts/jquery-ui-{version}.js",
+                "~/Scripts/jquery.select-to-autocomplete.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*",
-                        "~/Scripts/CustomValidation.js"));
+                        "~/Scripts/custom-validation.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_toolkit").Include(
                       "~/Scripts/govuk_toolkit/vendor/polyfills/bind.js",

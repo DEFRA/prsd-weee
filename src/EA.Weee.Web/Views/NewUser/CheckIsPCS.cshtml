@@ -1,0 +1,25 @@
+﻿@model EA.Weee.Web.ViewModels.Shared.YesNoChoiceViewModel
+@{
+    ViewBag.Title = "Do you need a user account?";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Does your organisation, or the organisation you work on behalf of, operate as a producer compliance scheme?
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "CheckIsPcs", controllerName: "NewUser", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Choices.SelectedValue)">
+            @Html.EditorFor(m => m.Choices)
+        </div>
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+    }
+}

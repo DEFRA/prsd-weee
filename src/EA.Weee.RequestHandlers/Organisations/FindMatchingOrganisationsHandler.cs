@@ -11,9 +11,10 @@
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Requests.Shared;
+    using OrganisationType = EA.Weee.Domain.OrganisationType;
 
     internal class FindMatchingOrganisationsHandler :
-        IRequestHandler<FindMatchingOrganisations, IList<OrganisationData>>
+        IRequestHandler<FindMatchingOrganisations, OrganisationSearchDataResult>
     {
         private readonly WeeeContext context;
 
@@ -30,62 +31,138 @@
             this.context = context;
         }
 
-        public async Task<IList<OrganisationData>> HandleAsync(FindMatchingOrganisations query)
+        private class OrganisationDataFields
+        {
+            private readonly Guid id;
+            private readonly List<string> dataFields;
+
+            public OrganisationDataFields(Guid id)
+            {
+                this.id = id;
+                dataFields = new List<string>();
+            }
+
+            public Guid GetId()
+            {
+                return id;
+            }
+
+            public void AddDataField(string testData)
+            {
+                dataFields.Add(testData);
+            }
+
+            public IEnumerable<string> GetDataFields()
+            {
+                return dataFields.AsReadOnly();
+            }
+        }
+
+        private IEnumerable<Func<Organisation, string>> GetDataExtractors()
+        {
+            Func<Organisation, string> getName = ((o) => (o.Name != null ? o.Name.ToUpperInvariant() : string.Empty));
+            Func<Organisation, string> getTradingName = ((o) => (o.TradingName != null ? o.TradingName.ToUpperInvariant() : string.Empty));
+
+            return new List<Func<Organisation, string>> { getName, getTradingName };
+        }
+
+        public async Task<OrganisationSearchDataResult> HandleAsync(FindMatchingOrganisations query)
         {
             var searchTerm = PrepareQuery(query);
 
             // This search uses the Levenshtein edit distance as a search algorithm.
             var permittedDistance = CalculateMaximumLevenshteinDistance(searchTerm);
 
-            var possibleOrganisations = await GetPossibleOrganisationNames(searchTerm);
+            var possibleOrganisations = (await GetPossibleOrganisationNames(searchTerm))
+                .Where(o => o.OrganisationStatus == OrganisationStatus.Pending || o.OrganisationStatus == OrganisationStatus.Approved);
 
-            var uppercaseOrganisationNames =
-                possibleOrganisations.Select(o => new KeyValuePair<string, Guid>(o.Name.ToUpperInvariant(), o.Id))
-                    .ToArray();
+            // extract data fields we want to compare against query and clean them up
 
-            // Special cases should be ignored when counting the distance. This loop replaces special cases with string.Empty.
-            for (var i = 0; i < possibleOrganisations.Length; i++)
+            IEnumerable<Func<Organisation, string>> dataExtractors = GetDataExtractors();
+            List<OrganisationDataFields> organisationDataFieldsCollection = new List<OrganisationDataFields>();
+
+            foreach (var possibleOrganisation in possibleOrganisations)
             {
-                foreach (var specialCase in specialCases)
+                var organisationDataFields = new OrganisationDataFields(possibleOrganisation.Id);
+
+                foreach (var dataExtractor in dataExtractors)
                 {
-                    specialCase.CleanseSpecialCases(ref uppercaseOrganisationNames[i]);
+                    var dataField = dataExtractor(possibleOrganisation);
+
+                    foreach (var specialCase in specialCases)
+                    {
+                        specialCase.CleanseSpecialCases(ref dataField);
+                    }
+
+                    organisationDataFields.AddDataField(dataField);
                 }
+
+                organisationDataFieldsCollection.Add(organisationDataFields);
             }
+
+            // compare extracted data fields against query
 
             var matchingIdsWithDistance = new List<KeyValuePair<Guid, int>>();
 
-            for (var i = 0; i < possibleOrganisations.Length; i++)
+            foreach (var organisationDataFields in organisationDataFieldsCollection)
             {
-                var distance = StringSearch.CalculateLevenshteinDistance(searchTerm, uppercaseOrganisationNames[i].Key);
+                var lowestDistance = int.MaxValue;
 
-                if (distance <= permittedDistance)
+                foreach (string dataField in organisationDataFields.GetDataFields())
                 {
-                    matchingIdsWithDistance.Add(new KeyValuePair<Guid, int>(uppercaseOrganisationNames[i].Value,
-                        distance));
+                    var distance = StringSearch.CalculateLevenshteinDistance(searchTerm, dataField);
+                    if (distance < lowestDistance)
+                    {
+                        lowestDistance = distance;
+                    }
+                }
+
+                if (lowestDistance <= permittedDistance)
+                {
+                    matchingIdsWithDistance.Add(new KeyValuePair<Guid, int>(organisationDataFields.GetId(), lowestDistance));
                 }
             }
 
             matchingIdsWithDistance = matchingIdsWithDistance.OrderBy(m => m.Value).ToList();
 
-            var matchingOrganisations =
+            var totalMatchingOrganisations =
                 matchingIdsWithDistance.Select(
                     m => possibleOrganisations.Single(o => o.Id == m.Key));
 
-            return matchingOrganisations.Select(o => 
-                new OrganisationData
+            var totalMatchingOrganisationsData = totalMatchingOrganisations.Select(o =>
+                new OrganisationSearchData
                 {
-                    Id = o.Id, 
+                    Id = o.Id,
                     Address = new AddressData
                     {
-                        Building = o.Address.Building,
-                        StreetOrSuburb = o.Address.Address1,
-                        Address2 = o.Address.Address2,
-                        CountryName = o.Address.Country,
-                        TownOrCity = o.Address.TownOrCity,
-                        PostalCode = o.Address.PostalCode
-                    }, 
-                    Name = o.Name
+                        Address1 = o.OrganisationAddress.Address1,
+                        Address2 = o.OrganisationAddress.Address2,
+                        TownOrCity = o.OrganisationAddress.TownOrCity,
+                        CountyOrRegion = o.OrganisationAddress.CountyOrRegion,
+                        Postcode = o.OrganisationAddress.Postcode,
+                        CountryId = o.OrganisationAddress.Country.Id,
+                        Telephone = o.OrganisationAddress.Telephone,
+                        Email = o.OrganisationAddress.Email
+                    },
+                    DisplayName = o.OrganisationType == OrganisationType.RegisteredCompany ? o.Name : o.TradingName
                 }).ToList();
+
+            if (query.Paged)
+            {
+                var pagedMatchingOrganisationsData = totalMatchingOrganisationsData.Skip((query.Page - 1) * query.OrganisationsPerPage)
+                        .Take(query.OrganisationsPerPage)
+                        .ToList();
+
+                return new OrganisationSearchDataResult(
+                    pagedMatchingOrganisationsData,
+                    totalMatchingOrganisationsData.Count);
+            }
+            else
+            {
+                return new OrganisationSearchDataResult(
+                    totalMatchingOrganisationsData,
+                    totalMatchingOrganisationsData.Count);
+            }
         }
 
         private string PrepareQuery(FindMatchingOrganisations query)
@@ -125,8 +202,10 @@
             var firstLetterOfSearchTerm = searchTerm[0].ToString();
 
             return await context.Organisations
-                .Where(o => o.Name.StartsWith(firstLetterOfSearchTerm)
-                            || o.Name.StartsWith("THE "))
+                .Where(o => (o.Name != null && o.Name.StartsWith(firstLetterOfSearchTerm))
+                         || (o.Name != null && o.Name.StartsWith("THE "))
+                         || (o.TradingName != null && o.TradingName.StartsWith(firstLetterOfSearchTerm))
+                         || (o.TradingName != null && o.TradingName.StartsWith("THE ")))
                 .ToArrayAsync();
         }
 

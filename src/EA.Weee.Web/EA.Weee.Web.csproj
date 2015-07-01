@@ -15,10 +15,11 @@
     <AssemblyName>EA.Weee.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
+    <IISExpressSSLPort>
+    </IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <NuGetPackageImportStamp>3ad0f99b</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -63,17 +64,23 @@
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15149.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15149-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15149.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15149-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+    <Reference Include="AutoMapper.Net4">
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15149.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EA.Prsd.Core, Version=1.0.15174.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15149-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15174-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15174.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15174-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15174.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15174-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
@@ -131,6 +138,9 @@
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="RazorEngine">
+      <HintPath>..\packages\RazorEngine.3.7.0\lib\net45\RazorEngine.dll</HintPath>
     </Reference>
     <Reference Include="System.Collections" />
     <Reference Include="System.IdentityModel" />
@@ -367,11 +377,11 @@
     <Content Include="Content\govuk_toolkit\images\player-icon-rewind.png" />
     <Content Include="Content\govuk_toolkit\images\player-icon-volume.png" />
     <Content Include="Global.asax" />
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\application.js" />
-    <Content Include="Scripts\govuk\govuk-template.js" />
-    <Content Include="Scripts\govuk\ie.js" />
-    <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
+    <Content Include="Scripts\custom-validation.js" />
     <Content Include="Content\weee-page-ie6.scss" />
     <Content Include="Content\weee-page-ie7.scss" />
     <Content Include="Content\weee-page-ie8.scss" />
@@ -415,7 +425,17 @@
     <Content Include="Content\govuk_toolkit\stylesheets\_conditionals.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\_colours.scss" />
     <Content Include="Areas\PCS\Views\web.config" />
+    <Content Include="Content\weee\_pagination.scss" />
+    <Content Include="Content\jquery-autocomplete.scss" />
+    <Content Include="Content\weee\_summary.scss" />
+    <Content Include="Content\govuk\stylesheets\fonts\GDSTransportWebsite-Bold.eot" />
+    <Content Include="Content\govuk\stylesheets\fonts\GDSTransportWebsite.eot" />
+    <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Light.eot" />
+    <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Bold.eot" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
+    <Content Include="Scripts\govuk\govuk-template.js" />
+    <Content Include="Scripts\govuk\ie.js" />
+    <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\error-tracking.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\google-analytics-universal-tracker.js" />
@@ -431,6 +451,9 @@
     <Content Include="Scripts\govuk_toolkit\vendor\polyfills\bind.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.min.js" />
+    <Content Include="Scripts\jquery.select-to-autocomplete.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -442,15 +465,8 @@
     <Content Include="Scripts\vendor\jquery-1.11.0.min.js" />
     <Content Include="Scripts\vendor\modernizr.custom.77028.js" />
     <Content Include="Scripts\vendor\prism.js" />
+    <Content Include="Views\Emails\ActivateUserAccount.txt" />
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTATabularNumbers-Light.woff" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTATabularNumbers-Light.eot" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTATabularNumbers-Bold.woff" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTATabularNumbers-Bold.eot" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTA-Light-20130221.woff" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTA-Light-20130221.eot" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTA-Bold-20130221.woff" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTA-Bold-20130221.eot" />
     <Content Include="Scripts\jquery-2.1.3.min.map" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -466,10 +482,28 @@
     <Content Include="Views\Shared\EditorTemplates\RadioButtonStringCollectionBaseViewModel.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\NewUser\UserCreation.cshtml" />
-    <Content Include="Views\JoinOrganisation\SelectOrganisation.cshtml" />
+    <Content Include="Views\OrganisationRegistration\SelectOrganisation.cshtml" />
     <Content Include="Views\Home\LandingPage.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressData.cshtml" />
+    <Content Include="Views\NewUser\AccountNotRequired.cshtml" />
+    <Content Include="Views\NewUser\CheckIsPcs.cshtml" />
+    <Content Include="Views\NewUser\CheckComplianceYear.cshtml" />
+    <Content Include="Views\OrganisationRegistration\MainContactPerson.cshtml" />
+    <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\Type.cshtml" />
+    <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddress.cshtml" />
+    <Content Include="Views\Shared\_WeeePaging.cshtml" />
+    <Content Include="Views\OrganisationRegistration\OrganisationAddress.cshtml" />
+    <Content Include="Views\OrganisationRegistration\JoinOrganisation.cshtml" />
+    <Content Include="Views\OrganisationRegistration\JoinOrganisationConfirmation.cshtml" />
+    <Content Include="Views\OrganisationRegistration\ReviewOrganisationDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddressPrepopulate.cshtml" />
+    <Content Include="Views\Emails\ActivateUserAccount.cshtml" />
+    <Content Include="Views\Account\ActivateUserAccount.cshtml" />
+    <Content Include="Views\Account\UserAccountActivationRequired.cshtml" />
+    <Content Include="Views\PCS\ChooseActivity.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -485,19 +519,38 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\Modules\ApiClientModule.cs" />
+    <Compile Include="App_Start\Modules\EmailModule.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
+    <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
+    <Compile Include="Services\EmailService.cs" />
+    <Compile Include="Services\EmailTemplate.cs" />
+    <Compile Include="Services\EmailTemplateService.cs" />
+    <Compile Include="Services\IEmailService.cs" />
+    <Compile Include="Services\IEmailTemplateService.cs" />
+    <Compile Include="Controllers\PCSController.cs" />
+    <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
+    <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\PCS\PCSAreaRegistration.cs" />
     <Compile Include="Infrastructure\OrganisationRequiredAttribute.cs" />
     <Compile Include="Infrastructure\TokenResponseExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\RegistrationController.cs" />
+    <Compile Include="Controllers\NewUserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Constants.cs" />
     <Compile Include="Infrastructure\PrincipalExtensions.cs" />
+    <Compile Include="Requests\Base\IRequestCreator.cs" />
+    <Compile Include="Requests\Base\RequestCreator.cs" />
+    <Compile Include="Requests\IRegisteredCompanyDetailsRequestCreator.cs" />
+    <Compile Include="Requests\IPartnershipDetailsRequestCreator.cs" />
+    <Compile Include="Requests\ISoleTraderDetailsRequestCreator.cs" />
+    <Compile Include="Requests\RegisteredCompanyDetailsRequestCreator.cs" />
+    <Compile Include="Requests\PartnershipDetailsRequestCreator.cs" />
+    <Compile Include="Requests\SoleTraderDetailsRequestCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AppConfiguration.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
@@ -507,11 +560,21 @@
     <Compile Include="ViewModels\NewUser\UserCreationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\PartnershipDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\RegisteredCompanyDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\SoleTraderDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\ContactPersonViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\OrganisationSummaryViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\AddressPrepopulateViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeEnum.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
+    <Compile Include="ViewModels\PCS\ChooseActivityViewModel.cs" />
+    <Compile Include="ViewModels\PCS\PcsAction.cs" />
+    <Compile Include="ViewModels\Shared\PagingViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionBaseViewModel.cs" />
     <Compile Include="ViewModels\Shared\AddressViewModel.cs" />
-    <Compile Include="ViewModels\Shared\ContactPersonViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionOptionalViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
     <Compile Include="Views\Shared\ViewBase.cs" />
@@ -585,6 +648,7 @@
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

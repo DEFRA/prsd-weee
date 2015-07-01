@@ -12,6 +12,7 @@
     using Infrastructure;
     using Newtonsoft.Json;
 
+    [RoutePrefix("api")]
     public class MediatorController : ApiController
     {
         private readonly IMediator mediator;

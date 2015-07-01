@@ -1,0 +1,56 @@
+﻿@model EA.Weee.Web.ViewModels.Shared.AddressViewModel
+
+@section main_content
+    {
+    @if (@Model.OrganisationType.ToString().ToLower() == "partnership" || @Model.OrganisationType.ToString().ToLower() == "soletraderorindividual")
+    {
+        ViewBag.Title = "Principal place of business";
+        <header class="hgroup">
+            <h1 class="heading-large">Principal place of business</h1>
+        </header>
+        <p>
+            The contact details for your principal place of business.
+        </p>
+    }
+    else
+    {
+        ViewBag.Title = "Registered office";
+        <header class="hgroup">
+            <h1 class="heading-large">
+                Registered office
+            </h1>
+        </header>
+        <p>
+            The contact details for your registered office.
+        </p>
+
+        <p class="form-hint">
+            Your registered office is the address listed with Companies House.
+        </p>
+    }
+
+    @using (Html.BeginForm("RegisteredOfficeAddress", "OrganisationRegistration", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.OrganisationType)
+
+        @Html.EditorFor(m => m.Address)
+    
+        <div class="form-group">
+
+            <input type="submit" class="button" value="Continue" />
+        </div>
+    }
+}
+
+@section scripts{
+    <script>
+        (function ($) {
+            $(function () {
+                $('#Address\\.CountryId').selectToAutocomplete();
+            });
+        })(jQuery);
+    </script>
+}

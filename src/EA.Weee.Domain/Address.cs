@@ -4,52 +4,143 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
 
-    public class Address
+    public class Address : Entity
     {
-        public Address(string building, string address1, string address2, string townOrCity, string postalCode, string country)
+        public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode,
+            Country country, string telephone, string email)
         {
-            Guard.ArgumentNotNull(building);
-            Guard.ArgumentNotNull(townOrCity);
-            Guard.ArgumentNotNull(postalCode);
-            Guard.ArgumentNotNull(country);
-            Guard.ArgumentNotNull(address1);
+            Guard.ArgumentNotNull(() => country, country);
 
-            Building = building;
-            TownOrCity = townOrCity;
-            PostalCode = postalCode;
-            Country = country;
-            Address2 = address2;
             Address1 = address1;
+            Address2 = address2;
+            TownOrCity = townOrCity;
+            Postcode = postcode;
+            Country = country;
+            Telephone = telephone;
+            CountyOrRegion = countyOrRegion;
+            Email = email;
         }
 
         protected Address()
         {
         }
 
-        public string Building { get; private set; }
+        private string address1;
+        private string address2;
+        private string townOrCity;
+        private string countyOrRegion;
+        private string postcode;
+        private string telephone;
+        private string email;
 
-        public string Address1 { get; private set; }
+        public virtual Country Country { get; protected set; }
 
-        public string Address2 { get; private set; }
-
-        public string TownOrCity { get; private set; }
-
-        public string PostalCode { get; private set; }
-
-        public string Country { get; private set; }
-
-        public bool IsUkAddress
+        public string Address1
         {
-            get
+            get { return address1; }
+            private set
             {
-                if (Country == null
-                    || !Country.Equals("United Kingdom",
-                        StringComparison.InvariantCultureIgnoreCase))
+                Guard.ArgumentNotNullOrEmpty(() => value, value);
+                if (value.Length > 35)
                 {
-                    return false;
+                    throw new InvalidOperationException(string.Format(("Address1 cannot be greater than 35 characters")));
                 }
+                address1 = value;
+            }
+        }
 
-                return true;
+        public string Address2
+        {
+            get { return address2; }
+            private set
+            {
+                if (value != null && value.Length > 35)
+                {
+                    throw new InvalidOperationException(string.Format(("Address2 cannot be greater than 35 characters")));
+                }
+                address2 = value;
+            }
+        }
+
+        public string TownOrCity
+        {
+            get { return townOrCity; }
+            private set
+            {
+                Guard.ArgumentNotNullOrEmpty(() => value, value);
+                if (value.Length > 35)
+                {
+                    throw new InvalidOperationException(
+                        string.Format(("Town Or City cannot be greater than 35 characters")));
+                }
+                townOrCity = value;
+            }
+        }
+
+        public string CountyOrRegion
+        {
+            get { return countyOrRegion; }
+            private set
+            {
+                if (value != null && value.Length > 35)
+                {
+                    throw new InvalidOperationException(
+                        string.Format(("County Or Region cannot be greater than 35 characters")));
+                }
+                countyOrRegion = value;
+            }
+        }
+
+        public string Postcode
+        {
+            get { return postcode; }
+            private set
+            {
+                if (value != null && value.Length > 10)
+                {
+                    throw new InvalidOperationException(string.Format(("PostCode cannot be greater than 10 characters")));
+                }
+                postcode = value;
+            }
+        }
+
+        public string Telephone
+        {
+            get { return telephone; }
+            private set
+            {
+                Guard.ArgumentNotNullOrEmpty(() => value, value);
+                if (value.Length > 20)
+                {
+                    throw new InvalidOperationException(string.Format(("Telephone cannot be greater than 20 characters")));
+                }
+                telephone = value;
+            }
+        }
+
+        public string Email
+        {
+            get { return email; }
+            private set
+            {
+                Guard.ArgumentNotNullOrEmpty(() => value, value);
+                if (value.Length > 256)
+                {
+                    throw new InvalidOperationException(string.Format(("Email cannot be greater than 256 characters")));
+                }
+                email = value;
+            }
+        }
+
+        public bool IsUkAddress()
+        {
+            if (Country != null)
+            {
+                return Country.Name.Contains("UK");
+            }
+            else
+            {
+                throw new InvalidOperationException("Country not defined.");    
             }
         }
     }

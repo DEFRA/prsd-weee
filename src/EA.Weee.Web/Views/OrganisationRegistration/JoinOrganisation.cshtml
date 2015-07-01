@@ -1,0 +1,23 @@
+﻿@model EA.Weee.Web.ViewModels.JoinOrganisation.JoinOrganisationViewModel
+
+@{
+    ViewBag.Title = "Join Organisation";
+}
+
+@section main_content {
+    <header class="hgroup">
+        <h1 class="heading-large">
+            You have chosen to join an existing organisation
+        </h1>
+    </header>
+    <p>A request to join this organisation will be sent to their administrator.</p>
+    <p>If you do not wish to join this organisation, you can go back and search for a different one.</p>
+
+    @using (Html.BeginForm("JoinOrganisation", "OrganisationRegistration", FormMethod.Post, new { @class = "form", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationToJoin)
+        <button type="submit" name="submitButton" class="button">Send request</button>
+    }
+}

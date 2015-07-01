@@ -3,11 +3,9 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess;
-    using Prsd.Core.Mediator;
-    using Requests.NewUser;
-    using Requests.Organisations;
-    using Requests.Shared;
+    using EA.Prsd.Core.Mediator;
+    using EA.Weee.DataAccess;
+    using EA.Weee.Requests.NewUser;
 
     internal class UserByIdHandler : IRequestHandler<UserById, User>
     {
@@ -26,20 +24,6 @@
                 FirstName = u.FirstName,
                 Id = u.Id,
                 Surname = u.Surname,
-                Organisation = new OrganisationData()
-                {
-                    Id = u.Organisation.Id,
-                    Name = u.Organisation.Name,
-                    Address = new AddressData()
-                    {
-                        Address2 = u.Organisation.Address.Address2,
-                        Building = u.Organisation.Address.Building,
-                        CountryName = u.Organisation.Address.Country,
-                        PostalCode = u.Organisation.Address.PostalCode,
-                        StreetOrSuburb = u.Organisation.Address.Address1,
-                        TownOrCity = u.Organisation.Address.TownOrCity
-                    }
-                }
             }).SingleOrDefaultAsync(u => u.Id == query.Id);
         }
     }
