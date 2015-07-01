@@ -4,26 +4,30 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using EA.Prsd.Core.Mapper;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
+    using EA.Weee.Domain;
     using EA.Weee.Requests.MemberRegistration;
+    using EA.Weee.Requests.Shared;
 
-    internal class GetMemberUploadDataHandler : IRequestHandler<GetMemberUploadData, List<KeyValuePair<string, string>>>
+    internal class GetMemberUploadDataHandler : IRequestHandler<GetMemberUploadData, List<MemberUploadErrorData>>
     {
         private readonly WeeeContext context;
 
-        public GetMemberUploadDataHandler(WeeeContext context)
+        private readonly IMap<MemberUploadError, MemberUploadErrorData> memberUploadErrorMap;
+
+        public GetMemberUploadDataHandler(WeeeContext context, IMap<MemberUploadError, MemberUploadErrorData> memberUploadErrorMap)
         {
             this.context = context;
+            this.memberUploadErrorMap = memberUploadErrorMap;
         }
 
-        public async Task<List<KeyValuePair<string, string>>> HandleAsync(GetMemberUploadData message)
+        public async Task<List<MemberUploadErrorData>> HandleAsync(GetMemberUploadData message)
         {
             var memberUpload = await context.MemberUploads.FirstOrDefaultAsync(m => m.Id == message.MemberUploadId);
 
-            return
-                memberUpload.Errors.Select(
-                    e => new KeyValuePair<string, string>(e.ErrorLevel.DisplayName, e.Description)).ToList();
+            return memberUpload.Errors.Select(e => memberUploadErrorMap.Map(e)).ToList();
         }
     }
 }

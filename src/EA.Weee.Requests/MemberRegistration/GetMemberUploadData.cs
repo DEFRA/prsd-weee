@@ -3,8 +3,9 @@
     using System;
     using System.Collections.Generic;
     using EA.Prsd.Core.Mediator;
+    using EA.Weee.Requests.Shared;
 
-    public class GetMemberUploadData : IRequest<List<KeyValuePair<string, string>>>
+    public class GetMemberUploadData : IRequest<List<MemberUploadErrorData>>
     {
         public Guid MemberUploadId { get; private set; }
 
