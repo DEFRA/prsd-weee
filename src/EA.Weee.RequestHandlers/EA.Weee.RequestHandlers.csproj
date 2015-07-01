@@ -79,6 +79,7 @@
     <Compile Include="Mappings\AddressMap.cs" />
     <Compile Include="Mappings\ContactMap.cs" />
     <Compile Include="Mappings\CountryMap.cs" />
+    <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\OrganisationMap.cs" />
     <Compile Include="Mappings\OrganisationUserMap.cs" />
     <Compile Include="Mappings\UKCompetentAuthorityMap.cs" />

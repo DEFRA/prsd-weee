@@ -75,6 +75,7 @@
     <Compile Include="Helpers\TestDbAsyncEnumerator.cs" />
     <Compile Include="Helpers\TestDbAsyncQueryProvider.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
+    <Compile Include="MemberRegistration\GetMemberUploadDataHandlerTests.cs" />
     <Compile Include="MemberRegistration\ValidateXmlFileHandlerTests.cs" />
     <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandlerTest.cs" />
     <Compile Include="Organisations\FindMatchingCompaniesHandlerTests.cs" />

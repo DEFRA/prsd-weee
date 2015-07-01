@@ -14,7 +14,7 @@
     <p>Changes to your member registration are made by uploading an XML file containing their details. The XML file needs to use the version 2.2 schema provided in the guidance link below.</p>
     <p>You can download your current members in XML format and make any changes, or you can upload an XML file of your own.</p>
 
-    @using (Html.BeginForm("AddOrAmendMembers", "TemporaryXmlTest", FormMethod.Post, new { id = "frmUpload", enctype = "multipart/form-data" }))
+    @using (Html.BeginForm("AddOrAmendMembers", "PCS", FormMethod.Post, new { id = "frmUpload", enctype = "multipart/form-data" }))
     {
         @Html.ValidationSummary(string.Empty, new { @class = "field-validation-error" })
         @Html.AntiForgeryToken()
@@ -27,10 +27,10 @@
     }
     <ul class="list-bullet">
         <li>
-            @Html.ActionLink(linkText: "Download guidance and XSD schema", actionName: "DownloadXMLTemplate", controllerName: "PCSMemberRegistration")
+            @Html.ActionLink(linkText: "Download guidance and XSD schema", actionName: "DownloadXMLTemplate", controllerName: "PCS")
         </li>
         <li>
-            @Html.ActionLink(linkText: "Download current members as XML", actionName: "DownloadCurrentMembers", controllerName: "PCSMemberRegistration")
+            @Html.ActionLink(linkText: "Download current members as XML", actionName: "DownloadCurrentMembers", controllerName: "PCS")
         </li>
     </ul>
 }
