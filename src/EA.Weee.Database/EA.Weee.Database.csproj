@@ -52,6 +52,7 @@
     <Content Include="scripts\Update\Sprint7\20150619-1013-AddCountryTable.sql" />
     <Content Include="scripts\Update\Sprint7\20150619-130853-RemoveAspNetUserOrganisationFK.sql" />
     <Content Include="scripts\Update\Sprint7\20150622-124955-UpdateAddressTable.sql" />
+    <Content Include="scripts\Update\Sprint8\20150701-152633-CorrectCountryList.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
