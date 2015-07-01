@@ -37,6 +37,7 @@
 
 @section body_end {
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery-ui")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/govuk_toolkit")
     @Scripts.Render("~/bundles/govuk_weee")
@@ -44,7 +45,23 @@
     @RenderSection("scripts", required: false)
 }
 
-<main id="page-container" role="main">
+<main id="content" role="main">
     @Html.Partial("_FeedbackBanner")
     @RenderBody()
+    @if (IsSectionDefined("main_content"))
+    {
+        <div class="grid-row">
+            <section class="column-two-thirds">
+                @RenderSection("main_content", required: false)
+            </section>
+            @if (IsSectionDefined("related_content"))
+            {
+                <div class="related-container">
+                    <div class="related">
+                        @RenderSection("related_content", required: false)
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </main>

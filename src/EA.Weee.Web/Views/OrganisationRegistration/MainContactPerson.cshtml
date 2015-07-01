@@ -1,0 +1,40 @@
+﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.ContactPersonViewModel
+@{
+    ViewBag.Title = "Organisation Main Contact Person";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">Main contact person</h1>
+    </header>
+    <p class="form-hint">Details for the main contact person for your organisation.</p>
+
+    @using (Html.BeginForm(actionName: "MainContactPerson", controllerName: "OrganisationRegistration", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+        
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
+            @Html.Gds().LabelFor(m => m.FirstName)
+            @Html.Gds().ValidationMessageFor(m => m.FirstName)
+            @Html.Gds().TextBoxFor(m => m.FirstName, new { @maxlength = "35" })
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.LastName)">
+            @Html.Gds().LabelFor(m => m.LastName)
+            @Html.Gds().ValidationMessageFor(m => m.LastName)
+            @Html.Gds().TextBoxFor(m => m.LastName, new { @maxlength = "35" })
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Position)">
+            @Html.Gds().LabelFor(m => m.Position)
+            @Html.Gds().ValidationMessageFor(m => m.Position)
+            @Html.Gds().TextBoxFor(m => m.Position, new { @maxlength = "35" })
+        </div>
+
+      
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+    }
+}
