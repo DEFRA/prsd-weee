@@ -132,17 +132,7 @@
                     try
                     {
                         var userId = await client.NewUser.CreateUserAsync(userCreationData);
-                       
-                        var signInResponse = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
-                        
-                        authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
-
-                        var activationCode = await client.NewUser.GetUserAccountActivationTokenAsync(signInResponse.AccessToken);
-                        
-                        var activationEmail = emailService.GenerateUserAccountActivationMessage(Url.Action("ActivateUserAccount", "Account", null, Request.Url.Scheme), activationCode, userId, model.Email);
-                        
-                        await emailService.SendAsync(activationEmail);
-
+                        await SendEmail(model.Email, model.Password, client, userId);
                         return RedirectToAction("UserAccountActivationRequired", "Account");
                     }
                     catch (ApiBadRequestException ex)
@@ -162,11 +152,19 @@
             return View(model);
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult Confirm()
+        public async Task<bool> SendEmail(string email, string password, IWeeeClient client, string userId)
         {
-            return View();
+            var signInResponse = await oauthClient().GetAccessTokenAsync(email, password);
+
+            authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
+
+            var activationCode = await client.NewUser.GetUserAccountActivationTokenAsync(signInResponse.AccessToken);
+
+            string baseUrl = Url.Action("ActivateUserAccount", "Account", null, Request.Url.Scheme);
+
+            var activationEmail = emailService.GenerateUserAccountActivationMessage(baseUrl, activationCode, userId, email);
+
+            return await emailService.SendAsync(activationEmail);
         }
     }
 }
