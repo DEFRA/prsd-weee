@@ -69,7 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Account\GetOrganisationsByUserIdHandlerTest.cs" />
+    <Compile Include="Organisations\GetOrganisationsByUserIdHandlerTest.cs" />
     <Compile Include="Helpers\DbContextHelper.cs" />
     <Compile Include="Helpers\ObjectInstantiator.cs" />
     <Compile Include="Helpers\OrganisationHelper.cs" />
