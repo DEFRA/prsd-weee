@@ -9,12 +9,9 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.MemberRegistration;
     using EA.Weee.Requests.Organisations;
+    using EA.Weee.Web.Areas.PCS.ViewModels;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.ViewModels.PCS;
-    using Api.Client;
-    using Infrastructure;
-    using ViewModels;
-    using Weee.Requests.Organisations;
 
     [Authorize]
     public class HomeController : Controller

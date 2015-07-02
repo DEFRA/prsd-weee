@@ -506,8 +506,8 @@
     <Content Include="Views\Account\ActivateUserAccount.cshtml" />
     <Content Include="Views\Account\UserAccountActivationRequired.cshtml" />
     <Content Include="Areas\PCS\Views\Home\ChooseActivity.cshtml" />
-    <Content Include="Views\PCS\AddOrAmendMembers.cshtml" />
-    <Content Include="Views\PCS\ViewErrorsAndWarnings.cshtml" />
+    <Content Include="Areas\PCS\Views\Home\AddOrAmendMembers.cshtml" />
+    <Content Include="Areas\PCS\Views\Home\ViewErrorsAndWarnings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
