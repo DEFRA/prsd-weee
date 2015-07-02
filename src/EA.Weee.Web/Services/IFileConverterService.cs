@@ -2,7 +2,7 @@
 {
     using System.Web;
 
-    public interface IFileConverter
+    public interface IFileConverterService
     {
         string Convert(HttpPostedFileBase file);
     }

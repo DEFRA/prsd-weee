@@ -4,7 +4,9 @@
     using System.Web;
     using System.Web.Mvc;
     using Api.Client;
+    using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
+    using Prsd.Core.Mediator;
     using Services;
     using Web.Areas.PCS.Controllers;
     using Weee.Requests.MemberRegistration;
@@ -14,12 +16,12 @@
     public class HomeControllerTests
     {
         private readonly IWeeeClient weeeClient;
-        private readonly IFileConverter fileConverter;
+        private readonly IFileConverterService fileConverter;
 
         public HomeControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
-            fileConverter = A.Fake<IFileConverter>();
+            fileConverter = A.Fake<IFileConverterService>();
         }
 
         [Fact]
@@ -58,7 +60,7 @@
         }
 
         [Fact]
-        public async void PostManageMembers_ConvertFileToString()
+        public async void PostManageMembers_ConvertsFileToString()
         {
             try
             {
@@ -73,22 +75,57 @@
         }
 
         [Fact]
-        public async void PostManageMembers_FileIsConvertedSuccessfully_ValidateRequestSent()
+        public async void PostManageMembers_FileIsConvertedSuccessfully_ValidateRequestSentWithConvertedFileDataAndOrganisationId()
         {
+            const string fileData = "myFileContent";
+            var organisationId = Guid.NewGuid();
+            var request = new ValidateXmlFile(A<Guid>._, A<string>._);
+
+            A.CallTo(() => fileConverter.Convert(A<HttpPostedFileBase>._))
+                .Returns(fileData);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ValidateXmlFile>._))
+                .Invokes((string token, IRequest<Guid> req) => request = (ValidateXmlFile)req);
+
             try
             {
-                await HomeController().ManageMembers(A<Guid>._, A<HttpPostedFileBase>._);
+                await HomeController().ManageMembers(organisationId, A<HttpPostedFileBase>._);
             }
             catch (Exception)
             {
             }
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ValidateXMLFile>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ValidateXmlFile>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.NotNull(request);
+            Assert.Equal(fileData, request.Data);
+            Assert.Equal(organisationId, request.OrganisationId);
+        }
+
+        [Fact]
+        public async void PostManageMembers_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
+        {
+            var validationId = Guid.NewGuid();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ValidateXmlFile>._))
+                .Returns(validationId);
+
+            var result = await HomeController().ManageMembers(A<Guid>._, A<HttpPostedFileBase>._);
+            var redirect = (RedirectToRouteResult)result;
+
+            Assert.Equal("PCS", redirect.RouteValues["area"]);
+            Assert.Equal("Home", redirect.RouteValues["controller"]);
+            Assert.Equal("ViewErrorsAndWarnings", redirect.RouteValues["action"]);
+            Assert.Equal(validationId, redirect.RouteValues["memberUploadId"]);
         }
 
         private HomeController HomeController()
         {
-            return new HomeController(() => weeeClient, fileConverter);
+            var controller = new HomeController(() => weeeClient, fileConverter);
+            new HttpContextMocker().AttachToController(controller);
+
+            return controller;
         }
     }
 }

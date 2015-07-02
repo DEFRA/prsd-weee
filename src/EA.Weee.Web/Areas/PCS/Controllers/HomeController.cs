@@ -15,9 +15,9 @@
     public class HomeController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly IFileConverter fileConverter;
+        private readonly IFileConverterService fileConverter;
 
-        public HomeController(Func<IWeeeClient> apiClient, IFileConverter fileConverter)
+        public HomeController(Func<IWeeeClient> apiClient, IFileConverterService fileConverter)
         {
             this.apiClient = apiClient;
             this.fileConverter = fileConverter;
@@ -66,8 +66,8 @@
         {
             using (var client = apiClient())
             {
-                var clientExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
-                if (clientExists)
+                var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
+                if (orgExists)
                 {
                     return View();
                 }
@@ -82,10 +82,10 @@
             var fileData = fileConverter.Convert(file);
             using (var client = apiClient())
             {
-                await client.SendAsync(User.GetAccessToken(), new ValidateXMLFile(id, fileData));
-            }
+                var validationId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(id, fileData));
 
-            throw new NotImplementedException();
+                return RedirectToAction("ViewErrorsAndWarnings", "Home", new { area = "PCS", memberUploadId = validationId });
+            }
         }
     }
 }

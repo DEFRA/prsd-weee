@@ -524,6 +524,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\Modules\ApiClientModule.cs" />
     <Compile Include="App_Start\Modules\EmailModule.cs" />
+    <Compile Include="App_Start\Modules\FileConverterModule.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
@@ -532,10 +533,11 @@
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\EmailTemplate.cs" />
     <Compile Include="Services\EmailTemplateService.cs" />
+    <Compile Include="Services\FileConverterService.cs" />
     <Compile Include="Services\IEmailService.cs" />
     <Compile Include="Services\IEmailTemplateService.cs" />
     <Compile Include="Areas\PCS\Controllers\HomeController.cs" />
-    <Compile Include="Services\IFileConverter.cs" />
+    <Compile Include="Services\IFileConverterService.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\PCS\PCSAreaRegistration.cs" />
