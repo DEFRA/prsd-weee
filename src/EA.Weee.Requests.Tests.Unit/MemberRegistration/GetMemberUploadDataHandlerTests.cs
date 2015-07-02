@@ -57,6 +57,23 @@
             Assert.Empty(memberUploadErrorDataList);
         }
 
+        [Fact]
+        public async Task GetMemberUploadHandler_NonExistentMemberUpload_ArgumentNullException()
+        {
+            var memberUploads = helper.GetAsyncEnabledDbSet(new[]
+            {
+                new MemberUpload(Guid.NewGuid(), "FAKE DATA"), 
+            });
+
+            var context = A.Fake<WeeeContext>();
+
+            A.CallTo(() => context.MemberUploads).Returns(memberUploads);
+
+            var handler = new GetMemberUploadDataHandler(context, new MemberUploadErrorMap());
+
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await handler.HandleAsync(new GetMemberUploadData(Guid.NewGuid())));
+        }
+
         private MemberUpload GetExampleMemberUpload()
         {
             return new MemberUpload(Guid.NewGuid(), "FAKE DATA", new List<MemberUploadError>
