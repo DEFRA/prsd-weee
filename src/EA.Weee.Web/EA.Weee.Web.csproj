@@ -535,6 +535,7 @@
     <Compile Include="Services\IEmailService.cs" />
     <Compile Include="Services\IEmailTemplateService.cs" />
     <Compile Include="Areas\PCS\Controllers\HomeController.cs" />
+    <Compile Include="Services\IFileConverter.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\PCS\PCSAreaRegistration.cs" />
