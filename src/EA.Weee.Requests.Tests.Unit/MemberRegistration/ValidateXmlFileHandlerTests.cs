@@ -30,7 +30,7 @@
 
             var handler = new ValidateXmlFileHandler(fakeContext);
 
-            await handler.HandleAsync(new ValidateXmlFile(validXml));
+            await handler.HandleAsync(new ValidateXmlFile(Guid.NewGuid(), validXml));
 
             Assert.Empty(addedMemberUpload.Errors);
         }
@@ -49,7 +49,7 @@
 
             var handler = new ValidateXmlFileHandler(fakeContext);
 
-            await handler.HandleAsync(new ValidateXmlFile(invalidXml));
+            await handler.HandleAsync(new ValidateXmlFile(Guid.NewGuid(), invalidXml));
 
             Assert.True(addedMemberUpload.Errors.Exists(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -68,7 +68,7 @@
 
             var handler = new ValidateXmlFileHandler(fakeContext);
 
-            await handler.HandleAsync(new ValidateXmlFile(invalidXml));
+            await handler.HandleAsync(new ValidateXmlFile(Guid.NewGuid(), invalidXml));
 
             Assert.True(addedMemberUpload.Errors.Exists(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -87,7 +87,7 @@
 
             var handler = new ValidateXmlFileHandler(fakeContext);
 
-            await handler.HandleAsync(new ValidateXmlFile(invalidXml));
+            await handler.HandleAsync(new ValidateXmlFile(Guid.NewGuid(), invalidXml));
 
             Assert.True(addedMemberUpload.Errors.Exists(me => me.ErrorLevel == ErrorLevel.Error));
         }
