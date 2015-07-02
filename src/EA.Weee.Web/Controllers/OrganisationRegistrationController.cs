@@ -518,7 +518,7 @@
             using (var client = apiClient())
             {
                 var organisationExists =
-                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
+                   await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
 
                 if (!organisationExists)
                 {
@@ -547,7 +547,7 @@
                         client.SendAsync(User.GetAccessToken(),
                             new CompleteRegistration(model.OrganisationData.Id));
                 }
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("RedirectProcess", "Account");
             }
             catch (ApiBadRequestException ex)
             {
@@ -561,8 +561,7 @@
             return View("ReviewOrganisationDetails", model);
         }
 
-        private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client,
-            bool regionsOfUKOnly)
+        private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly)
         {
             // Check the organisation Id is valid
             var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
