@@ -561,24 +561,6 @@
             return View("ReviewOrganisationDetails", model);
         }
 
-        [HttpGet]
-        public async Task<ActionResult> HoldingMessageForPending()
-        {
-            var model = new OrganisationUserPendingViewModel();
-            
-            using (var client = apiClient())
-            {
-                var pendingOrganisationUsers = await
-                 client.SendAsync(
-                     User.GetAccessToken(),
-                     new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)OrganisationUserStatus.Pending, (int)OrganisationUserStatus.Refused, (int)OrganisationUserStatus.Inactive }));
-
-                model.OrganisationUserData = pendingOrganisationUsers;
-            }
-
-            return View("HoldingMessageForPending", model);
-        }
-
         private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly)
         {
             // Check the organisation Id is valid

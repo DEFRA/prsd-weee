@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration
+﻿namespace EA.Weee.Web.ViewModels.Organisation
 {
     using System;
     using System.Collections.Generic;

@@ -32,8 +32,8 @@
         }
 
         [Fact]
-        public async void GetRedirectProcess_ApprovedOrganisationUserZero_ShouldRedirectToType()
-        {   
+        public async void GetRedirectProcess_NoOrganisationUsers_ShouldRedirectToType()
+        {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationsByUserId>._))
                 .Returns(new List<OrganisationUserData>());
 
@@ -47,7 +47,7 @@
         public async void GetRedirectProcess_ApprovedOrganisationUserOne_ShouldRedirectToChooseActivity()
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationsByUserId>._))
-                .Returns(new List<OrganisationUserData> { new OrganisationUserData{OrganisationUserStatus = OrganisationUserStatus.Approved} });
+                .Returns(new List<OrganisationUserData> { new OrganisationUserData() });
 
             var result = await AccountController().RedirectProcess();
             var redirectToRouteResult = ((RedirectToRouteResult)result);

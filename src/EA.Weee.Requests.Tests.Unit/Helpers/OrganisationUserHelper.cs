@@ -5,14 +5,9 @@
 
     internal class OrganisationUserHelper
     {
-        internal OrganisationUser GetApprovedOrganisationUser(Guid userId)
+        internal OrganisationUser GetOrganisationUser(Guid userId, OrganisationUserStatus status)
         {   
-            return new OrganisationUser(userId, new Guid(), OrganisationUserStatus.Approved);
-        }
-
-        internal OrganisationUser GetPendingOrganisationUser(Guid userId)
-        {
-            return new OrganisationUser(userId, new Guid(), OrganisationUserStatus.Pending);
+            return new OrganisationUser(userId, new Guid(), status);
         }
     }
 }

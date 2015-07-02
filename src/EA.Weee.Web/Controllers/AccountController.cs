@@ -115,7 +115,7 @@
                         User.GetAccessToken(),
                         new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)OrganisationUserStatus.Approved }));
 
-                var pendingOrganisationUsers = await
+                var inactiveOrganisationUsers = await
                     client.SendAsync(
                         User.GetAccessToken(),
                         new GetOrganisationsByUserId(User.GetUserId(),
@@ -130,9 +130,9 @@
                     return RedirectToAction("ChooseActivity", "PCS",
                         new { id = approvedOrganisationUsers.First().OrganisationId });
                 }
-                else if (pendingOrganisationUsers.Count >= 1)
+                else if (inactiveOrganisationUsers.Count >= 1)
                 {
-                    return RedirectToAction("HoldingMessageForPending", "OrganisationRegistration");
+                    return RedirectToAction("HoldingMessageForPending", "Organisation");
                 }
                 else
                 {
