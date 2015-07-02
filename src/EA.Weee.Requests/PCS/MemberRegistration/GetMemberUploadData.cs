@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests.MemberRegistration
+﻿namespace EA.Weee.Requests.PCS.MemberRegistration
 {
     using System;
     using System.Collections.Generic;

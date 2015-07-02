@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.MemberRegistration
+﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration
 {
     using System;
     using System.Collections.Generic;
@@ -11,7 +11,7 @@
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
-    using EA.Weee.Requests.MemberRegistration;
+    using EA.Weee.Requests.PCS.MemberRegistration;
 
     internal class ValidateXmlFileHandler : IRequestHandler<ValidateXmlFile, Guid>
     {

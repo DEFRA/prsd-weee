@@ -7,8 +7,8 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.Mappings;
-    using EA.Weee.RequestHandlers.MemberRegistration;
-    using EA.Weee.Requests.MemberRegistration;
+    using EA.Weee.RequestHandlers.PCS.MemberRegistration;
+    using EA.Weee.Requests.PCS.MemberRegistration;
     using EA.Weee.Requests.Tests.Unit.Helpers;
     using FakeItEasy;
     using Xunit;
