@@ -68,7 +68,7 @@
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddOrAmendMembers(HttpPostedFileBase file)
+        public async Task<ActionResult> AddOrAmendMembers(Guid id, HttpPostedFileBase file)
         {
             string xmlToValidate = FileToString(file);
 
@@ -76,16 +76,16 @@
             {
                 var memberUploadId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(xmlToValidate));
 
-                return RedirectToAction("ViewErrorsAndWarnings", new { id = memberUploadId });
+                return RedirectToAction("ViewErrorsAndWarnings", new { memberUploadId = memberUploadId });
             }
         }
 
         [HttpGet]
-        public async Task<ViewResult> ViewErrorsAndWarnings(Guid id)
+        public async Task<ViewResult> ViewErrorsAndWarnings(Guid id, Guid memberUploadId)
         {
             using (var client = apiClient())
             {
-                var errors = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(id));
+                var errors = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(memberUploadId));
 
                 return View(new MemberUploadResultViewModel { ErrorData = errors });
             }
