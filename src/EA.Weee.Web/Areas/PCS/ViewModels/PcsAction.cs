@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.ViewModels.PCS
+﻿namespace EA.Weee.Web.Areas.PCS.ViewModels
 {
     public static class PcsAction
     {
