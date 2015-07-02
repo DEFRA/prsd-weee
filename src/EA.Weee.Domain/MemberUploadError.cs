@@ -9,8 +9,8 @@
 
         public string Description { get; private set; }
 
-        public Guid MemberUploadId { get; set; }
-        public virtual MemberUpload MemberUpload { get; set; }
+        public Guid MemberUploadId { get; private set; }
+        public virtual MemberUpload MemberUpload { get; private set; }
 
         public MemberUploadError(ErrorLevel errorLevel, string description)
         {
