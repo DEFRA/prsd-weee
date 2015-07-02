@@ -13,6 +13,7 @@
     using Services;
     using Thinktecture.IdentityModel.Client;
     using ViewModels.Account;
+    using ViewModels.OrganisationRegistration;
     using Weee.Requests.Organisations;
 
     [Authorize]
@@ -109,22 +110,39 @@
         {
             using (var client = apiClient())
             {
-                var organisationUsers = await
+                var approvedOrganisationUsers = await
                     client.SendAsync(
                         User.GetAccessToken(),
-                        new GetApprovedOrganisationsByUserId(User.GetUserId()));
+                        new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)OrganisationUserStatus.Approved }));
 
-                if (organisationUsers.Count >= 1)
+                var inactiveOrganisationUsers = await
+                    client.SendAsync(
+                        User.GetAccessToken(),
+                        new GetOrganisationsByUserId(User.GetUserId(),
+                            new[]
+                            {
+                                (int)OrganisationUserStatus.Pending, (int)OrganisationUserStatus.Refused,
+                                (int)OrganisationUserStatus.Inactive
+                            }));
+
+                if (approvedOrganisationUsers.Count >= 1)
                 {
                     return RedirectToAction("ChooseActivity", "Home",
                         new
                         {
                             area = "PCS",
-                            id = organisationUsers.First().OrganisationId,                         
+                            id = approvedOrganisationUsers.First().OrganisationId,                         
                         });
                 }
+                else if (inactiveOrganisationUsers.Count >= 1)
+                {
+                    return RedirectToAction("HoldingMessageForPending", "Organisation");
+                }
+                else
+                {
                 return RedirectToAction("Type", "OrganisationRegistration");
             }
+        }
         }
 
         [HttpGet]

@@ -49,7 +49,7 @@
     <Compile Include="MemberRegistration\GetMemberUploadData.cs" />
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisation.cs" />
-    <Compile Include="Organisations\GetApprovedOrganisationsByUserId.cs" />
+    <Compile Include="Organisations\GetOrganisationsByUserId.cs" />
     <Compile Include="Organisations\IsUkOrganisationAddress.cs" />
     <Compile Include="Organisations\JoinOrganisation.cs" />
     <Compile Include="Organisations\CompleteRegistration.cs" />
