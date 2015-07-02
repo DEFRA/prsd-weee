@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Controllers
+﻿namespace EA.Weee.Web.Areas.PCS.Controllers
 {
     using System;
     using System.IO;
@@ -11,13 +11,17 @@
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.ViewModels.PCS;
+    using Api.Client;
+    using Infrastructure;
+    using ViewModels;
+    using Weee.Requests.Organisations;
 
     [Authorize]
-    public class PCSController : Controller
+    public class HomeController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
 
-        public PCSController(Func<IWeeeClient> apiClient)
+        public HomeController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
         }
