@@ -57,7 +57,7 @@
             if (response.AccessToken != null)
             {
                 authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = model.RememberMe },
-                   response.GenerateUserIdentity());
+                    response.GenerateUserIdentity());
                 return RedirectToLocal(returnUrl);
             }
 
@@ -127,8 +127,12 @@
 
                 if (approvedOrganisationUsers.Count >= 1)
                 {
-                    return RedirectToAction("ChooseActivity", "PCS",
-                        new { id = approvedOrganisationUsers.First().OrganisationId });
+                    return RedirectToAction("ChooseActivity", "Home",
+                        new
+                        {
+                            area = "PCS",
+                            id = organisationUsers.First().OrganisationId,                         
+                        });
                 }
                 else if (inactiveOrganisationUsers.Count >= 1)
                 {
@@ -136,9 +140,9 @@
                 }
                 else
                 {
-                    return RedirectToAction("Type", "OrganisationRegistration");
-                }
+                return RedirectToAction("Type", "OrganisationRegistration");
             }
+        }
         }
 
         [HttpGet]

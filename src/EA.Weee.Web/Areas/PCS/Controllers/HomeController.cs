@@ -1,25 +1,19 @@
-﻿namespace EA.Weee.Web.Controllers
+﻿namespace EA.Weee.Web.Areas.PCS.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using EA.Prsd.Core.Extensions;
-    using EA.Prsd.Core.Web.ApiClient;
-    using EA.Prsd.Core.Web.Mvc.Extensions;
-    using EA.Weee.Api.Client;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Web.Infrastructure;
-    using EA.Weee.Web.ViewModels.Shared;
-    using ViewModels.PCS;
+    using Api.Client;
+    using Infrastructure;
+    using ViewModels;
+    using Weee.Requests.Organisations;
 
     [Authorize]
-    public class PCSController : Controller
+    public class HomeController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
 
-        public PCSController(Func<IWeeeClient> apiClient)
+        public HomeController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
         }
