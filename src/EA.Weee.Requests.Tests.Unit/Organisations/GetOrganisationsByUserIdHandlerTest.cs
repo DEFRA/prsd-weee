@@ -21,9 +21,9 @@
         private readonly Guid userId = new Guid("012F9664-5286-433A-8628-AAE13FD1C2F5");
 
         [Fact]
-        public async Task GetOrganisationsByUserIdHandler_IsReturnApprovedOrganisationUser()
-        {   
-            var organisationUsers = MakeApprovedOrganisationUser(userId);
+        public async Task GetOrganisationsByUserIdHandler_RequestApprovedStatus_ReturnsApprovedOrganisationUsersOnly()
+        {
+            var organisationUsers = MakeOrganisationUser(userId);
 
             var context = A.Fake<WeeeContext>();
             var addressMapper = new AddressMap();
@@ -39,13 +39,14 @@
             var organisationUserInfo = orgUsers.FirstOrDefault();
 
             Assert.NotNull(organisationUserInfo);
+            Assert.Equal(1, orgUsers.Count);
             Assert.Equal(organisationUserInfo.OrganisationUserStatus, OrganisationUserStatus.Approved);
         }
 
         [Fact]
-        public async Task GetOrganisationsByUserIdHandler_IsReturnPendingOrganisationUser()
+        public async Task GetOrganisationsByUserIdHandler_RequestPendingAndRefusedStatus_ReturnsPendingAndRefusedOrganisationUsersOnly()
         {
-            var organisationUsers = MakePendingOrganisationUser(userId);
+            var organisationUsers = MakeOrganisationUser(userId);
 
             var context = A.Fake<WeeeContext>();
             var addressMapper = new AddressMap();
@@ -57,26 +58,43 @@
 
             var handler = new GetOrganisationsByUserIdHandler(context, orgUsermapper);
 
-            var orgUsers = await handler.HandleAsync(new GetOrganisationsByUserId(userId.ToString(), new[] { (int)OrganisationUserStatus.Pending }));
+            var orgUsers = await handler.HandleAsync(new GetOrganisationsByUserId(userId.ToString(), new[] { (int)OrganisationUserStatus.Pending, (int)OrganisationUserStatus.Refused }));
             var organisationUserInfo = orgUsers.FirstOrDefault();
 
             Assert.NotNull(organisationUserInfo);
-            Assert.Equal(organisationUserInfo.OrganisationUserStatus, OrganisationUserStatus.Pending);
+            Assert.Equal(2, orgUsers.Count);
+            Assert.True(organisationUserInfo.OrganisationUserStatus == OrganisationUserStatus.Pending || organisationUserInfo.OrganisationUserStatus == OrganisationUserStatus.Refused);
         }
 
-        private DbSet<OrganisationUser> MakeApprovedOrganisationUser(Guid userGuid)
+        [Fact]
+        public async Task GetOrganisationsByUserIdHandler_NoRequestStatus_ReturnsAllOrganisationUsers()
+        {
+            var organisationUsers = MakeOrganisationUser(userId);
+
+            var context = A.Fake<WeeeContext>();
+            var addressMapper = new AddressMap();
+            var contactMapper = new ContactMap();
+            var orgMapper = new OrganisationMap(addressMapper, contactMapper);
+            var orgUsermapper = new OrganisationUserMap(orgMapper);
+
+            A.CallTo(() => context.OrganisationUsers).Returns(organisationUsers);
+
+            var handler = new GetOrganisationsByUserIdHandler(context, orgUsermapper);
+
+            var orgUsers = await handler.HandleAsync(new GetOrganisationsByUserId(userId.ToString(), new int[] {}));
+            var organisationUserInfo = orgUsers.FirstOrDefault();
+
+            Assert.NotNull(organisationUserInfo);
+            Assert.Equal(3, orgUsers.Count);
+        }
+
+        private DbSet<OrganisationUser> MakeOrganisationUser(Guid userGuid)
         {
             return helper.GetAsyncEnabledDbSet(new[]
             {
-                orgUserHelper.GetApprovedOrganisationUser(userGuid)
-            });
-        }
-
-        private DbSet<OrganisationUser> MakePendingOrganisationUser(Guid userGuid)
-        {
-            return helper.GetAsyncEnabledDbSet(new[]
-            {
-                orgUserHelper.GetPendingOrganisationUser(userGuid)
+                orgUserHelper.GetOrganisationUser(userGuid, Domain.OrganisationUserStatus.Approved),
+                orgUserHelper.GetOrganisationUser(userGuid, Domain.OrganisationUserStatus.Pending),
+                orgUserHelper.GetOrganisationUser(userGuid, Domain.OrganisationUserStatus.Refused)
             });
         }
     }
