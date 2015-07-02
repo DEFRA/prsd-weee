@@ -507,8 +507,8 @@
     <Content Include="Views\Account\UserAccountActivationRequired.cshtml" />
     <Content Include="Views\Organisation\HoldingMessageForPending.cshtml" />
     <Content Include="Areas\PCS\Views\Home\ChooseActivity.cshtml" />
-    <Content Include="Areas\PCS\Views\Home\AddOrAmendMembers.cshtml" />
-    <Content Include="Areas\PCS\Views\Home\ViewErrorsAndWarnings.cshtml" />
+    <Content Include="Areas\PCS\Views\MemberRegistration\AddOrAmendMembers.cshtml" />
+    <Content Include="Areas\PCS\Views\MemberRegistration\ViewErrorsAndWarnings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -527,6 +527,7 @@
     <Compile Include="App_Start\Modules\EmailModule.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\PCS\Controllers\MemberRegistrationController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
