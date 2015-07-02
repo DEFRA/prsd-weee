@@ -116,8 +116,12 @@
 
                 if (organisationUsers.Count >= 1)
                 {
-                    return RedirectToAction("ChooseActivity", "PCS",
-                        new { id = organisationUsers.First().OrganisationId });
+                    return RedirectToAction("ChooseActivity", "Home",
+                        new
+                        {
+                            area = "PCS",
+                            id = organisationUsers.First().OrganisationId,                         
+                        });
                 }
                 return RedirectToAction("Type", "OrganisationRegistration");
             }
