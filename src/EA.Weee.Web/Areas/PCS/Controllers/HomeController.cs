@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Mvc;
     using Api.Client;
     using Infrastructure;
@@ -54,6 +55,27 @@
             }
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ManageMembers(Guid id)
+        {
+            using (var client = apiClient())
+            {
+                var clientExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
+                if (clientExists)
+                {
+                    return View();
+                }
+            }
+
+            throw new InvalidOperationException(string.Format("'{0}' is not a valid organisation Id", id));
+        }
+
+        [HttpPost]
+        public ActionResult ManageMembers(Guid id, HttpPostedFileBase file)
+        {
+            throw new NotImplementedException();
         }
     }
 }
