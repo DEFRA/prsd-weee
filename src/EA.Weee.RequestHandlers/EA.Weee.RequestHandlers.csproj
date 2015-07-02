@@ -94,7 +94,7 @@
     <Compile Include="Organisations\Create\CreateSoleTraderRequestHandler.cs" />
     <Compile Include="Organisations\Create\CreatePartnershipRequestHandler.cs" />
     <Compile Include="Organisations\FindMatchingOrganisationsHandler.cs" />
-    <Compile Include="Organisations\GetApprovedOrganisationsByUserIdHandler.cs" />
+    <Compile Include="Organisations\GetOrganisationsByUserIdHandler.cs" />
     <Compile Include="Organisations\IsUkOrganisationAddressHandler.cs" />
     <Compile Include="Organisations\JoinOrganisationHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
