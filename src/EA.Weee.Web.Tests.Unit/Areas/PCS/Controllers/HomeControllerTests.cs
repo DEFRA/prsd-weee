@@ -1,20 +1,25 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.PCS.Controllers
 {
     using System;
+    using System.Web;
     using System.Web.Mvc;
     using Api.Client;
     using FakeItEasy;
+    using Services;
     using Web.Areas.PCS.Controllers;
+    using Weee.Requests.MemberRegistration;
     using Weee.Requests.Organisations;
     using Xunit;
 
     public class HomeControllerTests
     {
         private readonly IWeeeClient weeeClient;
+        private readonly IFileConverter fileConverter;
 
         public HomeControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
+            fileConverter = A.Fake<IFileConverter>();
         }
 
         [Fact]
@@ -26,7 +31,7 @@
             }
             catch (Exception)
             {
-            }          
+            }
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -52,9 +57,38 @@
             Assert.IsType<ViewResult>(result);
         }
 
+        [Fact]
+        public async void PostManageMembers_ConvertFileToString()
+        {
+            try
+            {
+                await HomeController().ManageMembers(A<Guid>._, A<HttpPostedFileBase>._);
+            }
+            catch (Exception)
+            {
+            }
+
+            A.CallTo(() => fileConverter.Convert(A<HttpPostedFileBase>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void PostManageMembers_FileIsConvertedSuccessfully_ValidateRequestSent()
+        {
+            try
+            {
+                await HomeController().ManageMembers(A<Guid>._, A<HttpPostedFileBase>._);
+            }
+            catch (Exception)
+            {
+            }
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ValidateXMLFile>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
         private HomeController HomeController()
         {
-            return new HomeController(() => weeeClient);
+            return new HomeController(() => weeeClient, fileConverter);
         }
     }
 }

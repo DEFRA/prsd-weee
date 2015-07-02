@@ -6,17 +6,21 @@
     using System.Web.Mvc;
     using Api.Client;
     using Infrastructure;
+    using Services;
     using ViewModels;
+    using Weee.Requests.MemberRegistration;
     using Weee.Requests.Organisations;
 
     [Authorize]
     public class HomeController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IFileConverter fileConverter;
 
-        public HomeController(Func<IWeeeClient> apiClient)
+        public HomeController(Func<IWeeeClient> apiClient, IFileConverter fileConverter)
         {
             this.apiClient = apiClient;
+            this.fileConverter = fileConverter;
         }
 
         [HttpGet]
@@ -73,8 +77,14 @@
         }
 
         [HttpPost]
-        public ActionResult ManageMembers(Guid id, HttpPostedFileBase file)
+        public async Task<ActionResult> ManageMembers(Guid id, HttpPostedFileBase file)
         {
+            var fileData = fileConverter.Convert(file);
+            using (var client = apiClient())
+            {
+                await client.SendAsync(User.GetAccessToken(), new ValidateXMLFile(id, fileData));
+            }
+
             throw new NotImplementedException();
         }
     }
