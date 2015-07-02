@@ -48,7 +48,7 @@
                 errors.Add(new MemberUploadError(ErrorLevel.Error, ex.Message));
             }
             
-            MemberUpload upload = new MemberUpload(message.Data, errors);
+            MemberUpload upload = new MemberUpload(message.OrganisationId, message.Data, errors);
 
             context.MemberUploads.Add(upload);
 

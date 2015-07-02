@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Requests.Tests.Unit.MemberRegistration
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -42,7 +43,7 @@
         {
             var memberUploads = helper.GetAsyncEnabledDbSet(new[]
             {
-                new MemberUpload("FAKE DATA"), 
+                new MemberUpload(Guid.NewGuid(), "FAKE DATA"), 
             });
 
             var context = A.Fake<WeeeContext>();
@@ -58,7 +59,7 @@
 
         private MemberUpload GetExampleMemberUpload()
         {
-            return new MemberUpload("FAKE DATA", new List<MemberUploadError>
+            return new MemberUpload(Guid.NewGuid(), "FAKE DATA", new List<MemberUploadError>
             {
                 new MemberUploadError(ErrorLevel.Warning, "FAKE WARNING"),
                 new MemberUploadError(ErrorLevel.Error, "FAKE ERROR"),

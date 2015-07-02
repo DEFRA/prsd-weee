@@ -75,7 +75,7 @@
 
             using (var client = apiClient())
             {
-                var memberUploadId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(xmlToValidate));
+                var memberUploadId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(id, xmlToValidate));
 
                 return RedirectToAction("ViewErrorsAndWarnings", new { memberUploadId = memberUploadId });
             }
