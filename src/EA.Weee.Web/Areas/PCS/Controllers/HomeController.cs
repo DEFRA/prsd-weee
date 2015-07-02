@@ -68,6 +68,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddOrAmendMembers(Guid id, HttpPostedFileBase file)
         {
             string xmlToValidate = FileToString(file);
