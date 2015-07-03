@@ -235,6 +235,7 @@
     <Content Include="Content\govuk\images\gov.uk_logotype_crown.png" />
     <Content Include="Content\govuk\images\gov.uk_logotype_crown_invert.png" />
     <Content Include="Content\govuk\images\gov.uk_logotype_crown_invert_trans.png" />
+    <Content Include="Content\govuk\images\govuk_logotype_email.png" />
     <Content Include="Content\govuk\images\opengraph-image.png" />
     <Content Include="Content\govuk\stylesheets\external-links\external-link-24x24.png" />
     <Content Include="Content\govuk\stylesheets\external-links\external-link-black-12x12.png" />
@@ -508,6 +509,8 @@
     <Content Include="Views\Account\UserAccountActivationRequired.cshtml" />
     <Content Include="Views\Organisation\HoldingMessageForPending.cshtml" />
     <Content Include="Areas\PCS\Views\Home\ChooseActivity.cshtml" />
+    <Content Include="Areas\PCS\Views\MemberRegistration\AddOrAmendMembers.cshtml" />
+    <Content Include="Areas\PCS\Views\MemberRegistration\ViewErrorsAndWarnings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -527,6 +530,7 @@
     <Compile Include="App_Start\Modules\FileConverterModule.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\PCS\Controllers\MemberRegistrationController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
@@ -585,6 +589,7 @@
     <Compile Include="ViewModels\Shared\AddressViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionOptionalViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
+    <Compile Include="ViewModels\PCS\MemberUploadResultViewModel.cs" />
     <Compile Include="Views\Shared\ViewBase.cs" />
   </ItemGroup>
   <ItemGroup>
