@@ -227,6 +227,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\PCS\Views\MemberRegistration\AddOrAmendMembers.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Content\govuk\images\apple-touch-icon-120x120.png" />
     <Content Include="Content\govuk\images\apple-touch-icon-152x152.png" />
     <Content Include="Content\govuk\images\apple-touch-icon-60x60.png" />
@@ -435,7 +438,6 @@
     <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Bold.eot" />
     <Content Include="Areas\PCS\Views\_ViewStart.cshtml" />
     <Content Include="Areas\PCS\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\PCS\Views\Home\ManageMembers.cshtml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
@@ -509,7 +511,6 @@
     <Content Include="Views\Account\UserAccountActivationRequired.cshtml" />
     <Content Include="Views\Organisation\HoldingMessageForPending.cshtml" />
     <Content Include="Areas\PCS\Views\Home\ChooseActivity.cshtml" />
-    <Content Include="Areas\PCS\Views\MemberRegistration\AddOrAmendMembers.cshtml" />
     <Content Include="Areas\PCS\Views\MemberRegistration\ViewErrorsAndWarnings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

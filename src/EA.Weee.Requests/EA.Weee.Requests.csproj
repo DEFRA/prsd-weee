@@ -47,7 +47,6 @@
   <ItemGroup>
     <Compile Include="ClaimTypes.cs" />
     <Compile Include="PCS\MemberRegistration\GetMemberUploadData.cs" />
-    <Compile Include="MemberRegistration\ValidateXmlFile.cs" />
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisation.cs" />
     <Compile Include="Organisations\GetOrganisationsByUserId.cs" />

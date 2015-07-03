@@ -9,7 +9,6 @@
     using Prsd.Core.Mediator;
     using Services;
     using Web.Areas.PCS.Controllers;
-    using Weee.Requests.MemberRegistration;
     using Weee.Requests.Organisations;
     using Xunit;
 
@@ -21,15 +20,14 @@
         public HomeControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
-            fileConverter = A.Fake<IFileConverterService>();
         }
 
         [Fact]
-        public async void GetManageMembers_ChecksForValidityOfOrganisation()
+        public async void GetChooseActivity_ChecksForValidityOfOrganisation()
         {
             try
             {
-                await HomeController().ManageMembers(A<Guid>._);
+                await HomeController().ChooseActivity(A<Guid>._);
             }
             catch (Exception)
             {
@@ -40,89 +38,28 @@
         }
 
         [Fact]
-        public async void GetManageMembers_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
+        public async void GetChooseActivity_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<Exception>(() => HomeController().ManageMembers(A<Guid>._));
+            await Assert.ThrowsAnyAsync<Exception>(() => HomeController().ChooseActivity(A<Guid>._));
         }
 
         [Fact]
-        public async void GetManageMembers_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        public async void GetChooseActivity_IdDoesBelongToAnExistingOrganisation_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
 
-            var result = await HomeController().ManageMembers(A<Guid>._);
+            var result = await HomeController().ChooseActivity(A<Guid>._);
 
             Assert.IsType<ViewResult>(result);
         }
-
-        [Fact]
-        public async void PostManageMembers_ConvertsFileToString()
-        {
-            try
-            {
-                await HomeController().ManageMembers(A<Guid>._, A<HttpPostedFileBase>._);
-            }
-            catch (Exception)
-            {
-            }
-
-            A.CallTo(() => fileConverter.Convert(A<HttpPostedFileBase>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
-        public async void PostManageMembers_FileIsConvertedSuccessfully_ValidateRequestSentWithConvertedFileDataAndOrganisationId()
-        {
-            const string fileData = "myFileContent";
-            var organisationId = Guid.NewGuid();
-            var request = new ValidateXmlFile(A<Guid>._, A<string>._);
-
-            A.CallTo(() => fileConverter.Convert(A<HttpPostedFileBase>._))
-                .Returns(fileData);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ValidateXmlFile>._))
-                .Invokes((string token, IRequest<Guid> req) => request = (ValidateXmlFile)req);
-
-            try
-            {
-                await HomeController().ManageMembers(organisationId, A<HttpPostedFileBase>._);
-            }
-            catch (Exception)
-            {
-            }
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ValidateXmlFile>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
-            Assert.NotNull(request);
-            Assert.Equal(fileData, request.Data);
-            Assert.Equal(organisationId, request.OrganisationId);
-        }
-
-        [Fact]
-        public async void PostManageMembers_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
-        {
-            var validationId = Guid.NewGuid();
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ValidateXmlFile>._))
-                .Returns(validationId);
-
-            var result = await HomeController().ManageMembers(A<Guid>._, A<HttpPostedFileBase>._);
-            var redirect = (RedirectToRouteResult)result;
-
-            Assert.Equal("PCS", redirect.RouteValues["area"]);
-            Assert.Equal("Home", redirect.RouteValues["controller"]);
-            Assert.Equal("ViewErrorsAndWarnings", redirect.RouteValues["action"]);
-            Assert.Equal(validationId, redirect.RouteValues["memberUploadId"]);
-        }
-
+        
         private HomeController HomeController()
         {
-            var controller = new HomeController(() => weeeClient, fileConverter);
+            var controller = new HomeController(() => weeeClient);
             new HttpContextMocker().AttachToController(controller);
 
             return controller;
