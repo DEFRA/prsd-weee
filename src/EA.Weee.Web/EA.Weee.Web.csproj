@@ -577,7 +577,7 @@
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeEnum.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
     <Compile Include="Areas\PCS\ViewModels\ChooseActivityViewModel.cs" />
-    <Compile Include="Areas\PCS\ViewModels\PcsAction.cs" />
+    <Compile Include="Areas\PCS\ViewModels\PCSAction.cs" />
     <Compile Include="ViewModels\Shared\PagingViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
