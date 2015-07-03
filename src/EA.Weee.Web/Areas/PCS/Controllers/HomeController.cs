@@ -50,7 +50,7 @@
             {
                 if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManagePcsMembers)
                 {
-                    return RedirectToAction("ManagePCSMembers", new { id = viewModel.OrganisationId });
+                    return RedirectToAction("ManageMembers", new { id = viewModel.OrganisationId });
                 }
                 if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManageOrganisationUsers)
                 {
