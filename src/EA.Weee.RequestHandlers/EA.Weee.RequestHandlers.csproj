@@ -79,10 +79,13 @@
     <Compile Include="Mappings\AddressMap.cs" />
     <Compile Include="Mappings\ContactMap.cs" />
     <Compile Include="Mappings\CountryMap.cs" />
+    <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\OrganisationMap.cs" />
     <Compile Include="Mappings\OrganisationUserMap.cs" />
     <Compile Include="Mappings\UKCompetentAuthorityMap.cs" />
     <Compile Include="Mappings\ValueObjectInitializer.cs" />
+    <Compile Include="PCS\MemberRegistration\GetMemberUploadDataHandler.cs" />
+    <Compile Include="PCS\MemberRegistration\ValidateXmlFileHandler.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandler.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandler.cs" />
@@ -119,6 +122,10 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="v3schema.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

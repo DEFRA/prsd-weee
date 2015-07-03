@@ -24,6 +24,8 @@
 
         public virtual DbSet<UKCompetentAuthority> UKCompetentAuthorities { get; set; }
 
+        public virtual DbSet<MemberUpload> MemberUploads { get; set; }
+
         public WeeeContext(IUserContext userContext)
             : base("name=Weee.DefaultConnection")
         {

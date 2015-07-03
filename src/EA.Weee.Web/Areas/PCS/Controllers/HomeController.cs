@@ -4,6 +4,10 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using EA.Weee.Api.Client;
+    using EA.Weee.Requests.Organisations;
+    using EA.Weee.Web.Areas.PCS.ViewModels;
+    using EA.Weee.Web.Infrastructure;
     using Api.Client;
     using Infrastructure;
     using Services;

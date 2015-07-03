@@ -21,5 +21,8 @@
         public string ApiSecret { get; set; }
 
         public string ApiClientId { get; set; }
+
+        [DefaultValue("false")]
+        public string TruncateEmailAfterPlus { get; set; }
     }
 }
