@@ -70,9 +70,10 @@
         [Fact]
         public async void PostAddOrAmendMembers_ConvertsFileToString()
         {
+            var postedFile = A.Fake<HttpPostedFileBase>();
             try
             {
-                await MemberRegistrationController().AddOrAmendMembers(A<Guid>._, A<HttpPostedFileBase>._);
+                await MemberRegistrationController().AddOrAmendMembers(A<Guid>._, postedFile);
             }
             catch (Exception)
             {
@@ -88,6 +89,7 @@
             const string fileData = "myFileContent";
             var organisationId = Guid.NewGuid();
             var request = new ValidateXmlFile(A<Guid>._, A<string>._);
+            var postedFile = A.Fake<HttpPostedFileBase>();
 
             A.CallTo(() => fileConverter.Convert(A<HttpPostedFileBase>._))
                 .Returns(fileData);
@@ -97,7 +99,7 @@
 
             try
             {
-                await MemberRegistrationController().AddOrAmendMembers(organisationId, A<HttpPostedFileBase>._);
+                await MemberRegistrationController().AddOrAmendMembers(organisationId, postedFile);
             }
             catch (Exception)
             {
@@ -115,11 +117,12 @@
         public async void PostAddOrAmendMembers_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
         {
             var validationId = Guid.NewGuid();
+            var postedFile = A.Fake<HttpPostedFileBase>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ValidateXmlFile>._))
                 .Returns(validationId);
 
-            var result = await MemberRegistrationController().AddOrAmendMembers(A<Guid>._, A<HttpPostedFileBase>._);
+            var result = await MemberRegistrationController().AddOrAmendMembers(A<Guid>._, postedFile);
             var redirect = (RedirectToRouteResult)result;
 
             Assert.Equal("ViewErrorsAndWarnings", redirect.RouteValues["action"]);
