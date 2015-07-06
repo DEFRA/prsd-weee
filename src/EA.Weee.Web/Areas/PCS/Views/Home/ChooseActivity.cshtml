@@ -15,7 +15,6 @@
     @using (Html.BeginForm(actionName: "ChooseActivity", controllerName: "Home", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.ActivityOptions.SelectedValue)" id="ActivityOptions">
