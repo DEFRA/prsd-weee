@@ -4,7 +4,7 @@
     using System.Web;
     using Validators;
 
-    public class ManageMembersViewModel
+    public class AddOrAmendMembersViewModel
     {
         [Required]
         [FileType("text/xml")]

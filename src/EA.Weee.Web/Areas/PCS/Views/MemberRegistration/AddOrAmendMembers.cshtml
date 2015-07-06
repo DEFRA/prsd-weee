@@ -1,5 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@model EA.Weee.Web.Areas.PCS.ViewModels.ManageMembersViewModel
+@model EA.Weee.Web.Areas.PCS.ViewModels.AddOrAmendMembersViewModel
 @{
     ViewBag.Title = "Manage Members";
 }
@@ -13,23 +13,24 @@
     </header>
 
     <p class="form-hint">To register or update your members' details, upload and submit an xml file</p>
-    <p class="bold-small"><img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image"/>Your XML file must use the version 3.0.2 Schema
+    <p class="bold-small">
+        <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image" />Your XML file must use the version 3.0.2 Schema
     </p>
-    <hr/>
+    <hr />
 
-    @using (Html.BeginForm("ManageMembers", "Home", FormMethod.Post, new { area = "PCS", enctype = "multipart/form-data" }))
+    @using (Html.BeginForm("AddOrAmendMembers", "MemberRegistration", FormMethod.Post, new { area = "PCS", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
         <div id="file-upload-group" class="form-group @Html.Gds().FormGroupClass(m => m.File)">
             <noscript>
-                <input type="file" name="file" id="file" accept=".xml"/>
+                <input type="file" name="file" id="file" accept=".xml" />
             </noscript>
         </div>
 
         <div class="form-group">
-            <input type="submit" value="Upload" class="button"/>
+            <input type="submit" value="Upload" class="button" />
         </div>
     }
 }
@@ -37,7 +38,7 @@
 @section scripts
 {
     <script type="text/javascript">
-        
+
         // If JavaScript is enabled, use an upload link instead
         $("#file-upload-group").append("<p>Browse for a <a href=\"\" id=\"file-upload-link\">file to upload</a><br/><em>- <span id=\"file-upload-name\">No file selected</span></em></p>");
         $("#file-upload-group").append("<input type=\"file\" name=\"file\" id=\"file\" accept=\".xml\" class=\"hidden\"/>");
@@ -52,7 +53,7 @@
 
         // When the file input changes, display the name of the file
         $("#file").change(function (e) {
-            var fullPath = this.value;              
+            var fullPath = this.value;
             if (fullPath) {
                 var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
                 var filename = fullPath.substring(startIndex);
@@ -66,4 +67,6 @@
         });
     </script>
 }
+
+
 

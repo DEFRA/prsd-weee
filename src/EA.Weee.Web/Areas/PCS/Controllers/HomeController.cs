@@ -8,19 +8,17 @@
     using Infrastructure;
     using Services;
     using ViewModels;
-    using Weee.Requests.MemberRegistration;
     using Weee.Requests.Organisations;
+    using Weee.Requests.PCS.MemberRegistration;
 
     [Authorize]
     public class HomeController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly IFileConverterService fileConverter;
 
-        public HomeController(Func<IWeeeClient> apiClient, IFileConverterService fileConverter)
+        public HomeController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
-            this.fileConverter = fileConverter;
         }
 
         [HttpGet]
@@ -50,7 +48,7 @@
             {
                 if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManagePcsMembers)
                 {
-                    return RedirectToAction("ManagePCSMembers", new { id = viewModel.OrganisationId });
+                    return RedirectToAction("AddOrAmendMembers", "MemberRegistration", new { id = viewModel.OrganisationId });
                 }
                 if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManageOrganisationUsers)
                 {
@@ -59,38 +57,6 @@
             }
 
             return View(viewModel);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> ManageMembers(Guid id)
-        {
-            using (var client = apiClient())
-            {
-                var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
-                if (orgExists)
-                {
-                    return View();
-                }
-            }
-
-            throw new InvalidOperationException(string.Format("'{0}' is not a valid organisation Id", id));
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> ManageMembers(Guid id, ManageMembersViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            var fileData = fileConverter.Convert(model.File);
-            using (var client = apiClient())
-            {
-                var validationId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(id, fileData));
-
-                return RedirectToAction("ViewErrorsAndWarnings", "Home", new { area = "PCS", memberUploadId = validationId });
-            }
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿namespace EA.Weee.Requests.MemberRegistration
+namespace EA.Weee.Requests.PCS.MemberRegistration
 {
-    using Prsd.Core.Mediator;
     using System;
+    using EA.Prsd.Core.Mediator;
 
     public class ValidateXmlFile : IRequest<Guid>
     {
@@ -13,6 +13,6 @@
         {
             OrganisationId = organisationId;
             Data = data;
-        }   
+        }
     }
 }
