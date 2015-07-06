@@ -29,9 +29,6 @@
 
             // Register all Autofac specific IModule implementations
             builder.RegisterAssemblyModules(typeof(Startup).Assembly);
-
-            // Register file converter module
-            builder.RegisterModule<FileConverterModule>();
             
             // Register request creators
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
