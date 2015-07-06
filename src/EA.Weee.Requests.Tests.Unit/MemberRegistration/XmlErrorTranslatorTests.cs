@@ -14,6 +14,8 @@
 
         private const string TestType = "TestType";
 
+        private const string TestNamespace = "http://www.fakenamespace.com";
+
         [Fact]
         public void XmlErrorTranslator_MinInclusiveFailed_CorrectMessage()
         {
@@ -68,6 +70,15 @@
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }
 
+        [Fact]
+        public void XmlErrorTranslator_InvalidChildElement_CorrectMessage()
+        {
+            string providedException = string.Format("The element 'TestParentElement' in namespace '{0}' has invalid child element '{1}' in namespace '{0}'. List of possible elements expected: '{2}' in namespace '{0}'.", TestNamespace, TestField, TestType);
+            string expectedFriendlyMessage = string.Format("The field {0} isn't expected here. (Line {1}.)", TestField, TestLineNumber);
+
+            CheckExceptionMessage(expectedFriendlyMessage, providedException);
+        }
+
         // ReSharper disable once UnusedParameter.Local (the assertion is the whole point, R#!)
         private void CheckExceptionMessage(string expectedFriendlyMessage, string providedException)
         {
@@ -81,7 +92,7 @@
 
         private XElement GetTestXElement()
         {
-            return new XElement(XName.Get(TestField, "http://www.fakenamespace.com"))
+            return new XElement(XName.Get(TestField, TestNamespace))
             {
                 Value = TestValue
             };

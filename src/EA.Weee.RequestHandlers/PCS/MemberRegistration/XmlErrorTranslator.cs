@@ -28,12 +28,12 @@
             }
             else if (Regex.IsMatch(message, InvalidChildElementPattern))
             {
-                resultErrorMessage = "Invalid child element oh no! " + message;
+                resultErrorMessage = MakeFriendlyInvalidChildElementMessage(sender, message);
             }
 
             return string.Format("{0} (Line {1}.)", resultErrorMessage, lineNumber);
         }
-
+        
         private string MakeFriendlyGeneralConstraintFailureMessage(XElement sender, string exceptionMessage)
         {
             var constraintWhichFailed = Regex.Match(exceptionMessage, GeneralConstraintFailurePattern).Groups[1].ToString();
@@ -92,6 +92,11 @@
             }
 
             return exceptionMessage;
+        }
+
+        private string MakeFriendlyInvalidChildElementMessage(XElement sender, string message)
+        {
+            return string.Format("The field {0} isn't expected here.", sender.Name.LocalName);
         }
     }
 }
