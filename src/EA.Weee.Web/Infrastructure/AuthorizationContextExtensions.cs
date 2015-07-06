@@ -8,8 +8,14 @@
         private static readonly string[] AllowAnonymousActions =
         {
             "LogOff",
+            "Login",
             "UserAccountActivationRequired",
-            "ActivateUserAccount"
+            "ActivateUserAccount",
+            "CheckIsPcs",
+            "CheckComplianceYear",
+            "UserCreation",
+            "AccountNotRequired",
+            "LandingPage"
         };
 
         public static bool SkipAuthorisation(this AuthorizationContext authorizationContext)

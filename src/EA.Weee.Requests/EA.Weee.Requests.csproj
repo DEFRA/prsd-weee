@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClaimTypes.cs" />
-    <Compile Include="MemberRegistration\ValidateXmlFile.cs" />
+    <Compile Include="PCS\MemberRegistration\GetMemberUploadData.cs" />
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisation.cs" />
     <Compile Include="Organisations\GetOrganisationsByUserId.cs" />
@@ -67,7 +67,9 @@
     <Compile Include="Organisations\GetOrganisationInfo.cs" />
     <Compile Include="Organisations\OrganisationData.cs" />
     <Compile Include="Shared\CountryData.cs" />
+    <Compile Include="Shared\ErrorLevel.cs" />
     <Compile Include="Shared\GetCountries.cs" />
+    <Compile Include="Shared\MemberUploadErrorData.cs" />
     <Compile Include="Shared\UKCompetentAuthorityData.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorities.cs" />
     <Compile Include="Shared\Status.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NewUser\User.cs" />
     <Compile Include="NewUser\UserById.cs" />
+    <Compile Include="PCS\MemberRegistration\ValidateXmlFile.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
