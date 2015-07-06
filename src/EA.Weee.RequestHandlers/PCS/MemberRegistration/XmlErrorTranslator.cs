@@ -44,19 +44,19 @@
             {
                 case "MinInclusive":
                     friendlyMessageTemplate =
-                        "The value '{0}' supplied for type '{1}' is too low.";
+                        "The value '{0}' supplied for field '{1}' is too low.";
                     break;
                 case "MaxInclusive":
                     friendlyMessageTemplate =
-                        "The value '{0}' supplied for type '{1}' is too high.";
+                        "The value '{0}' supplied for field '{1}' is too high.";
                     break;
                 case "Pattern":
                     friendlyMessageTemplate =
-                        "The value '{0}' supplied for type '{1}' doesn't match the required format.";
+                        "The value '{0}' supplied for field '{1}' doesn't match the required format.";
                     break;
                 case "Enumeration":
                     friendlyMessageTemplate =
-                        "The value '{0}' supplied for type '{1}' isn't one of the accepted values.";
+                        "The value '{0}' supplied for field '{1}' isn't one of the accepted values.";
                     break;
             }
 
@@ -78,11 +78,11 @@
             {
                 case "MinLength":
                     friendlyMessageTemplate =
-                        "The value '{0}' supplied for type '{1}' is too short.";
+                        "The value '{0}' supplied for field '{1}' is too short.";
                     break;
                 case "MaxLength":
                     friendlyMessageTemplate =
-                        "The value '{0}' supplied for type '{1}' is too long.";
+                        "The value '{0}' supplied for field '{1}' is too long.";
                     break;
             }
 
