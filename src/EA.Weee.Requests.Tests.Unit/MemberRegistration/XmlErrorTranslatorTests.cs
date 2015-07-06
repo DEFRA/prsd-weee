@@ -68,6 +68,7 @@
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }
 
+        // ReSharper disable once UnusedParameter.Local (the assertion is the whole point, R#!)
         private void CheckExceptionMessage(string expectedFriendlyMessage, string providedException)
         {
             var translator = new XmlErrorTranslator();
@@ -80,9 +81,9 @@
 
         private XElement GetTestXElement()
         {
-            return new XElement(XName.Get("TestField", "http://www.fakenamespace.com"))
+            return new XElement(XName.Get(TestField, "http://www.fakenamespace.com"))
             {
-                Value = "TestValue"
+                Value = TestValue
             };
         }
     }
