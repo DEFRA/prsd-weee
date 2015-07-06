@@ -227,6 +227,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\PCS\Views\MemberRegistration\AddOrAmendMembers.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Content\govuk\images\apple-touch-icon-120x120.png" />
     <Content Include="Content\govuk\images\apple-touch-icon-152x152.png" />
     <Content Include="Content\govuk\images\apple-touch-icon-60x60.png" />
@@ -508,7 +511,6 @@
     <Content Include="Views\Account\UserAccountActivationRequired.cshtml" />
     <Content Include="Views\Organisation\HoldingMessageForPending.cshtml" />
     <Content Include="Areas\PCS\Views\Home\ChooseActivity.cshtml" />
-    <Content Include="Areas\PCS\Views\MemberRegistration\AddOrAmendMembers.cshtml" />
     <Content Include="Areas\PCS\Views\MemberRegistration\ViewErrorsAndWarnings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -526,6 +528,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\Modules\ApiClientModule.cs" />
     <Compile Include="App_Start\Modules\EmailModule.cs" />
+    <Compile Include="App_Start\Modules\FileConverterModule.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\PCS\Controllers\MemberRegistrationController.cs" />
@@ -535,9 +538,11 @@
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\EmailTemplate.cs" />
     <Compile Include="Services\EmailTemplateService.cs" />
+    <Compile Include="Services\FileConverterService.cs" />
     <Compile Include="Services\IEmailService.cs" />
     <Compile Include="Services\IEmailTemplateService.cs" />
     <Compile Include="Areas\PCS\Controllers\HomeController.cs" />
+    <Compile Include="Services\IFileConverterService.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\PCS\PCSAreaRegistration.cs" />

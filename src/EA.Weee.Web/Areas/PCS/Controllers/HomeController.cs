@@ -2,11 +2,13 @@
 {
     using System;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Mvc;
-    using EA.Weee.Api.Client;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Web.Areas.PCS.ViewModels;
-    using EA.Weee.Web.Infrastructure;
+    using Api.Client;
+    using Infrastructure;
+    using Services;
+    using ViewModels;
+    using Weee.Requests.Organisations;
 
     [Authorize]
     public class HomeController : Controller
@@ -45,7 +47,7 @@
             {
                 if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManagePcsMembers)
                 {
-                    return RedirectToAction("ManagePCSMembers", new { id = viewModel.OrganisationId });
+                    return RedirectToAction("AddOrAmendMembers", "MemberRegistration", new { id = viewModel.OrganisationId });
                 }
                 if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManageOrganisationUsers)
                 {
