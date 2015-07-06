@@ -77,9 +77,14 @@
         }
 
         [HttpPost]
-        public async Task<ActionResult> ManageMembers(Guid id, HttpPostedFileBase file)
+        public async Task<ActionResult> ManageMembers(Guid id, ManageMembersViewModel model)
         {
-            var fileData = fileConverter.Convert(file);
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var fileData = fileConverter.Convert(model.File);
             using (var client = apiClient())
             {
                 var validationId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(id, fileData));

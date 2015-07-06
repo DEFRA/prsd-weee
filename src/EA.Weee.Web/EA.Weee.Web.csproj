@@ -527,6 +527,7 @@
     <Compile Include="App_Start\Modules\FileConverterModule.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\PCS\ViewModels\ManageMembersViewModel.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
@@ -538,6 +539,7 @@
     <Compile Include="Services\IEmailTemplateService.cs" />
     <Compile Include="Areas\PCS\Controllers\HomeController.cs" />
     <Compile Include="Services\IFileConverterService.cs" />
+    <Compile Include="Validators\FileTypeAttribute.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\PCS\PCSAreaRegistration.cs" />
