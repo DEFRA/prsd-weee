@@ -54,7 +54,7 @@
             {
                 var validationId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(id, fileData));
 
-                return RedirectToAction("ViewErrorsAndWarnings", "Home", new { area = "PCS", memberUploadId = validationId });
+                return RedirectToAction("ViewErrorsAndWarnings", "MemberRegistration", new { area = "PCS", memberUploadId = validationId });
             }
         }
 
