@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers
 {
     using Autofac;
+    using EA.Weee.RequestHandlers.PCS.MemberRegistration;
     using Prsd.Core.Autofac;
     using Prsd.Core.Decorators;
     using Prsd.Core.Mediator;
@@ -26,6 +27,8 @@
             builder.RegisterAssemblyTypes(this.GetType().Assembly)
                 .Where(t => t.Namespace.Contains("Mappings"))
                 .AsImplementedInterfaces();
+
+            builder.RegisterType<XmlErrorTranslator>().AsImplementedInterfaces();
         }
     }
 }
