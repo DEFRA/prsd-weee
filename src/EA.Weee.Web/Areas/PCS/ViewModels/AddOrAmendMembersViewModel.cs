@@ -7,7 +7,7 @@
     public class AddOrAmendMembersViewModel
     {
         [Required]
-        [FileType("text/xml")]
+        [HttpPostedFileType("text/xml")]
         public HttpPostedFileBase File { get; set; }
     }
 }

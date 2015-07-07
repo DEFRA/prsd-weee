@@ -6,11 +6,11 @@
     using System.Web;
 
     [AttributeUsage(AttributeTargets.Property)]
-    public class FileTypeAttribute : ValidationAttribute
+    public class HttpPostedFileTypeAttribute : ValidationAttribute
     {
         private readonly string[] allowedContentTypes;
 
-        public FileTypeAttribute(params string[] allowedContentTypes)
+        public HttpPostedFileTypeAttribute(params string[] allowedContentTypes)
         {
             this.allowedContentTypes = allowedContentTypes;
         }
