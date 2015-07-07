@@ -544,7 +544,7 @@
     <Compile Include="Services\IEmailTemplateService.cs" />
     <Compile Include="Areas\PCS\Controllers\HomeController.cs" />
     <Compile Include="Services\IFileConverterService.cs" />
-    <Compile Include="Validators\FileTypeAttribute.cs" />
+    <Compile Include="Validators\HttpPostedFileTypeAttribute.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\PCS\PCSAreaRegistration.cs" />
