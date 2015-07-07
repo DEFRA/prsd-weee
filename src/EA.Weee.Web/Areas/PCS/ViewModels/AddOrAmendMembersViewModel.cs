@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.Web;
-    using Validators;
+    using Prsd.Core.Validation;
 
     public class AddOrAmendMembersViewModel
     {
