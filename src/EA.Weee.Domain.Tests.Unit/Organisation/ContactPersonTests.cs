@@ -7,12 +7,15 @@
     public class ContactPersonTests
     {
         [Fact]
-        public void AddContact_OrganisationAlreadyHasContact_Throws()
+        public void AddContact_OrganisationAlreadyHasContact_UpdateContactDetails()
         {
             var organisation = GetTestOrganisation();
             var contact = GetTestContact();
             organisation.AddMainContactPerson(contact);
-            Assert.Throws<InvalidOperationException>(() => organisation.AddMainContactPerson(contact));
+            
+            Assert.Equal(organisation.Contact.FirstName, contact.FirstName);
+            Assert.Equal(organisation.Contact.LastName, contact.LastName);
+            Assert.Equal(organisation.Contact.Position, contact.Position);
         }
 
         [Fact]
