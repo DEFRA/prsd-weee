@@ -12,6 +12,7 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.ViewModels.PCS;
+    using ViewModels;
 
     public class MemberRegistrationController : Controller
     {
@@ -41,21 +42,19 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddOrAmendMembers(Guid id, HttpPostedFileBase file)
+        public async Task<ActionResult> AddOrAmendMembers(Guid id, AddOrAmendMembersViewModel model)
         {
-            if (file == null)
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Please select an XML file.");
-                return View();
+                return View(model);
             }
 
-            string xmlToValidate = fileConverter.Convert(file);
-
+            var fileData = fileConverter.Convert(model.File);
             using (var client = apiClient())
             {
-                var memberUploadId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(id, xmlToValidate));
+                var validationId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(id, fileData));
 
-                return RedirectToAction("ViewErrorsAndWarnings", new { memberUploadId = memberUploadId });
+                return RedirectToAction("ViewErrorsAndWarnings", "MemberRegistration", new { area = "PCS", memberUploadId = validationId });
             }
         }
 
@@ -68,14 +67,6 @@
 
                 return View(new MemberUploadResultViewModel { ErrorData = errors });
             }
-        }
-
-        private string FileToString(HttpPostedFileBase file)
-        {
-            BinaryReader b = new BinaryReader(file.InputStream);
-            byte[] binData = b.ReadBytes((int)file.InputStream.Length);
-
-            return Encoding.UTF8.GetString(binData);
         }
     }
 }

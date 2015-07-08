@@ -19,9 +19,12 @@
         
         private readonly WeeeContext context;
 
-        public ValidateXmlFileHandler(WeeeContext context)
+        private readonly IXmlErrorTranslator xmlErrorTranslator;
+
+        public ValidateXmlFileHandler(WeeeContext context, IXmlErrorTranslator xmlErrorTranslator)
         {
             this.context = context;
+            this.xmlErrorTranslator = xmlErrorTranslator;
         }
 
         public async Task<Guid> HandleAsync(ValidateXmlFile message)
@@ -30,7 +33,7 @@
 
             try
             {
-                var xmlDocument = XDocument.Parse(message.Data);
+                var xmlDocument = XDocument.Parse(message.Data, LoadOptions.SetLineInfo);
                 var schemas = new XmlSchemaSet();
                 var absoluteSchemaLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), SchemaLocation);
                 schemas.Add("http://www.environment-agency.gov.uk/WEEE/XMLSchema", absoluteSchemaLocation);
@@ -38,9 +41,13 @@
                 xmlDocument.Validate(
                     schemas,
                     (sender, args) =>
-                    {
-                        errors.Add(new MemberUploadError(ErrorLevel.Error, args.Exception.Message));
-                    },
+                        {
+                            var asXElement = sender as XElement;
+                            errors.Add(
+                                asXElement != null
+                                    ? new MemberUploadError(ErrorLevel.Error, xmlErrorTranslator.MakeFriendlyErrorMessage(asXElement, args.Exception.Message, args.Exception.LineNumber))
+                                    : new MemberUploadError(ErrorLevel.Error, args.Exception.Message));
+                        },
                     false);
             }
             catch (XmlException ex)
@@ -48,7 +55,7 @@
                 errors.Add(new MemberUploadError(ErrorLevel.Error, ex.Message));
             }
             
-            MemberUpload upload = new MemberUpload(message.OrganisationId, message.Data, errors);
+            var upload = new MemberUpload(message.OrganisationId, message.Data, errors);
 
             context.MemberUploads.Add(upload);
 

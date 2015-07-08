@@ -9,6 +9,7 @@
     using Services;
     using ViewModels;
     using Weee.Requests.Organisations;
+    using Weee.Requests.PCS.MemberRegistration;
 
     [Authorize]
     public class HomeController : Controller
