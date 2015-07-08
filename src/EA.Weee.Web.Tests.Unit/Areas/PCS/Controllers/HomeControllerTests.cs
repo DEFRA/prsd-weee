@@ -1,13 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.PCS.Controllers
 {
     using System;
-    using System.Web;
     using System.Web.Mvc;
     using Api.Client;
-    using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
-    using Prsd.Core.Mediator;
-    using Services;
+    using TestHelpers;
     using Web.Areas.PCS.Controllers;
     using Weee.Requests.Organisations;
     using Xunit;
@@ -15,7 +12,6 @@
     public class HomeControllerTests
     {
         private readonly IWeeeClient weeeClient;
-        private readonly IFileConverterService fileConverter;
 
         public HomeControllerTests()
         {
@@ -56,7 +52,7 @@
 
             Assert.IsType<ViewResult>(result);
         }
-        
+
         private HomeController HomeController()
         {
             var controller = new HomeController(() => weeeClient);

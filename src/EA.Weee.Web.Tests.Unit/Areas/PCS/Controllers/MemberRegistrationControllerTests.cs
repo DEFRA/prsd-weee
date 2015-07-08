@@ -9,13 +9,14 @@
     using Prsd.Core.Mediator;
     using Services;
     using Web.Areas.PCS.Controllers;
+    using Web.Areas.PCS.ViewModels;
     using Weee.Requests.Organisations;
     using Weee.Requests.PCS.MemberRegistration;
     using Xunit;
 
     public class MemberRegistrationControllerTests
     {
-         private readonly IWeeeClient weeeClient;
+        private readonly IWeeeClient weeeClient;
         private readonly IFileConverterService fileConverter;
 
         public MemberRegistrationControllerTests()
@@ -68,12 +69,22 @@
         }
 
         [Fact]
+        public async void PostAddOrAmendMembers_ModelIsInvalid_ReturnsView()
+        {
+            var controller = MemberRegistrationController();
+            controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
+
+            var result = await controller.AddOrAmendMembers(A<Guid>._, new AddOrAmendMembersViewModel());
+
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
         public async void PostAddOrAmendMembers_ConvertsFileToString()
         {
-            var postedFile = A.Fake<HttpPostedFileBase>();
             try
             {
-                await MemberRegistrationController().AddOrAmendMembers(A<Guid>._, postedFile);
+                await MemberRegistrationController().AddOrAmendMembers(A<Guid>._, new AddOrAmendMembersViewModel());
             }
             catch (Exception)
             {
@@ -89,7 +100,6 @@
             const string fileData = "myFileContent";
             var organisationId = Guid.NewGuid();
             var request = new ValidateXmlFile(A<Guid>._, A<string>._);
-            var postedFile = A.Fake<HttpPostedFileBase>();
 
             A.CallTo(() => fileConverter.Convert(A<HttpPostedFileBase>._))
                 .Returns(fileData);
@@ -99,7 +109,7 @@
 
             try
             {
-                await MemberRegistrationController().AddOrAmendMembers(organisationId, postedFile);
+                await MemberRegistrationController().AddOrAmendMembers(organisationId, new AddOrAmendMembersViewModel());
             }
             catch (Exception)
             {
@@ -117,15 +127,15 @@
         public async void PostAddOrAmendMembers_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
         {
             var validationId = Guid.NewGuid();
-            var postedFile = A.Fake<HttpPostedFileBase>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ValidateXmlFile>._))
                 .Returns(validationId);
 
-            var result = await MemberRegistrationController().AddOrAmendMembers(A<Guid>._, postedFile);
+            var result = await MemberRegistrationController().AddOrAmendMembers(A<Guid>._, new AddOrAmendMembersViewModel());
             var redirect = (RedirectToRouteResult)result;
 
             Assert.Equal("ViewErrorsAndWarnings", redirect.RouteValues["action"]);
+            Assert.Equal("MemberRegistration", redirect.RouteValues["controller"]);
             Assert.Equal(validationId, redirect.RouteValues["memberUploadId"]);
         }
     }
