@@ -331,7 +331,18 @@
                 {
                     throw new ArgumentException("No organisation found for supplied organisation Id", "id");
                 }
-                var model = new ContactPersonViewModel { OrganisationId = id };
+
+                ContactPersonViewModel model;
+                var contactPerson = await client.SendAsync(User.GetAccessToken(), new GetContactPersonByOrganisationId(id));
+                if (contactPerson.HasContact)
+                {
+                    model = new ContactPersonViewModel(contactPerson);
+                }
+                else
+                {
+                    model = new ContactPersonViewModel { OrganisationId = id };
+                }
+
                 return View(model);
             }
         }
