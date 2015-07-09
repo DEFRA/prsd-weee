@@ -13,6 +13,7 @@
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Requests.Shared;
+    using OrganisationStatus = Domain.OrganisationStatus;
     using OrganisationType = EA.Weee.Domain.OrganisationType;
 
     internal class FindMatchingOrganisationsHandler :

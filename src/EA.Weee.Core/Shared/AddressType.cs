@@ -2,9 +2,9 @@
 {
     public enum AddressType
     {
-        OrganistionAddress = 1,
+        OrganisationAddress = 1,
 
-        RegisteredorPPBAddress = 2,
+        RegisteredOrPPBAddress = 2,
 
         ServiceOfNotice = 3
     }

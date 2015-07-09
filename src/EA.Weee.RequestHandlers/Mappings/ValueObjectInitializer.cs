@@ -31,10 +31,10 @@
         {
             switch (addressType)
             {
-                case AddressType.OrganistionAddress:
+                case AddressType.OrganisationAddress:
                     return Domain.AddressType.OrganisationAddress;
 
-                case AddressType.RegisteredorPPBAddress:
+                case AddressType.RegisteredOrPPBAddress:
                     return Domain.AddressType.RegisteredOrPPBAddress;
 
                 case AddressType.ServiceOfNotice:
