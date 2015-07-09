@@ -580,7 +580,6 @@
     <Compile Include="ViewModels\OrganisationRegistration\OrganisationSummaryViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\AddressPrepopulateViewModel.cs" />
     <Compile Include="ViewModels\Organisation\OrganisationUserPendingViewModel.cs" />
-    <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeEnum.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
     <Compile Include="Areas\PCS\ViewModels\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\PCS\ViewModels\PcsAction.cs" />

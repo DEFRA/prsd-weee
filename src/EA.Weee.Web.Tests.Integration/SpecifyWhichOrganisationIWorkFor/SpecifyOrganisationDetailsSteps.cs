@@ -6,6 +6,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using Controllers;
+    using Core.Organisations;
     using Prsd.Core.Extensions;
     using Requests;
     using TechTalk.SpecFlow;
@@ -20,22 +21,22 @@
         [Given(@"I am a sole trader or individual")]
         public void GivenIAmASoleTraderOrIndividual()
         {
-            ScenarioContext.Current[typeof(OrganisationTypeEnum).Name] =
-                OrganisationType(OrganisationTypeEnum.SoleTrader);
+            ScenarioContext.Current[typeof(OrganisationType).Name] =
+                OrganisationType(Core.Organisations.OrganisationType.SoleTraderOrIndividual);
         }
 
         [Given(@"I am a partnership")]
         public void GivenIAmAPartnership()
         {
-            ScenarioContext.Current[typeof(OrganisationTypeEnum).Name] =
-                OrganisationType(OrganisationTypeEnum.Partnership);
+            ScenarioContext.Current[typeof(OrganisationType).Name] =
+                OrganisationType(Core.Organisations.OrganisationType.Partnership);
         }
 
         [Given(@"I am a registered company")]
         public void GivenIAmARegisteredCompany()
         {
-            ScenarioContext.Current[typeof(OrganisationTypeEnum).Name] =
-                OrganisationType(OrganisationTypeEnum.RegisteredCompany);
+            ScenarioContext.Current[typeof(OrganisationType).Name] =
+                OrganisationType(Core.Organisations.OrganisationType.RegisteredCompany);
         }
 
         [When(@"I submit details about my sole trader organisation")]
@@ -71,22 +72,22 @@
             var result = (RedirectToRouteResult)ScenarioContext.Current["result"];
 
             var organisationTypeViewModel =
-                ScenarioContext.Current.Get<OrganisationTypeViewModel>(typeof(OrganisationTypeEnum).Name);
+                ScenarioContext.Current.Get<OrganisationTypeViewModel>(typeof(OrganisationType).Name);
 
             var selectedOrganisationType = organisationTypeViewModel.OrganisationTypes.SelectedValue
-                .GetValueFromDisplayName<OrganisationTypeEnum>();
+                .GetValueFromDisplayName<OrganisationType>();
 
-            if (selectedOrganisationType == OrganisationTypeEnum.Partnership)
+            if (selectedOrganisationType == Core.Organisations.OrganisationType.Partnership)
             {
                 Assert.True(result.RouteValues.ContainsKey("tradingName"));
                 Assert.Equal(EA.Weee.Core.Organisations.OrganisationType.Partnership, result.RouteValues["type"]);
             }
-            else if (selectedOrganisationType == OrganisationTypeEnum.SoleTrader)
+            else if (selectedOrganisationType == Core.Organisations.OrganisationType.SoleTraderOrIndividual)
             {
                 Assert.True(result.RouteValues.ContainsKey("tradingName"));
                 Assert.Equal(EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual, result.RouteValues["type"]);
             }
-            else if (selectedOrganisationType == OrganisationTypeEnum.RegisteredCompany)
+            else if (selectedOrganisationType == Core.Organisations.OrganisationType.RegisteredCompany)
             {
                 Assert.True(result.RouteValues.ContainsKey("name"));
                 Assert.True(result.RouteValues.ContainsKey("tradingName"));
@@ -119,7 +120,7 @@
             return new OrganisationRegistrationController(() => new WeeeClient(ConfigurationManager.AppSettings["Weee.ApiUrl"]));
         }
 
-        private OrganisationTypeViewModel OrganisationType(OrganisationTypeEnum selectedOption)
+        private OrganisationTypeViewModel OrganisationType(OrganisationType selectedOption)
         {
             return new OrganisationTypeViewModel
             {
