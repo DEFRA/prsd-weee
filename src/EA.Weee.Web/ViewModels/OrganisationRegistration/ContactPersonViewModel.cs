@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using Core.Organisations;
     using Weee.Requests.Organisations;
 
     public class ContactPersonViewModel

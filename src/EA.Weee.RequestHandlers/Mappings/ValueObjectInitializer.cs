@@ -1,10 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using System;
+    using Core.Organisations;
+    using Core.Shared;
     using Domain;
     using Requests.Organisations;
     using Requests.Shared;
-    using AddressType = Requests.Shared.AddressType;
+    using AddressType = Core.Shared.AddressType;
   
     internal class ValueObjectInitializer
     {
