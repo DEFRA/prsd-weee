@@ -3,9 +3,10 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.NewUser;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
-    using EA.Weee.Requests.NewUser;
+    using Requests.NewUser;
 
     internal class UserByIdHandler : IRequestHandler<UserById, User>
     {

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Core.Shared;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Requests.Shared;
 

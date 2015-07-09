@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests.Validation
+﻿namespace EA.Weee.Core.Validation
 {
     using System;
     using System.ComponentModel.DataAnnotations;

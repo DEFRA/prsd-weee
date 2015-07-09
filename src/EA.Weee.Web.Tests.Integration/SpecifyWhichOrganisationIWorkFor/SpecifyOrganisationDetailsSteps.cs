@@ -79,19 +79,19 @@
             if (selectedOrganisationType == OrganisationTypeEnum.Partnership)
             {
                 Assert.True(result.RouteValues.ContainsKey("tradingName"));
-                Assert.Equal(EA.Weee.Requests.Organisations.OrganisationType.Partnership, result.RouteValues["type"]);
+                Assert.Equal(EA.Weee.Core.Organisations.OrganisationType.Partnership, result.RouteValues["type"]);
             }
             else if (selectedOrganisationType == OrganisationTypeEnum.SoleTrader)
             {
                 Assert.True(result.RouteValues.ContainsKey("tradingName"));
-                Assert.Equal(EA.Weee.Requests.Organisations.OrganisationType.SoleTraderOrIndividual, result.RouteValues["type"]);
+                Assert.Equal(EA.Weee.Core.Organisations.OrganisationType.SoleTraderOrIndividual, result.RouteValues["type"]);
             }
             else if (selectedOrganisationType == OrganisationTypeEnum.RegisteredCompany)
             {
                 Assert.True(result.RouteValues.ContainsKey("name"));
                 Assert.True(result.RouteValues.ContainsKey("tradingName"));
                 Assert.True(result.RouteValues.ContainsKey("companiesRegistrationNumber"));
-                Assert.Equal(EA.Weee.Requests.Organisations.OrganisationType.RegisteredCompany, result.RouteValues["type"]);
+                Assert.Equal(EA.Weee.Core.Organisations.OrganisationType.RegisteredCompany, result.RouteValues["type"]);
             }
             else
             {

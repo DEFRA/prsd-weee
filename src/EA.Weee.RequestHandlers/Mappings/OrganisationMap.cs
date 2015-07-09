@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using System;
+    using Core.Organisations;
+    using Core.Shared;
     using Domain;
     using Prsd.Core.Mapper;
     using Requests.Organisations;
     using Requests.Shared;
-    using OrganisationType = Requests.Organisations.OrganisationType;
+    using OrganisationType = Core.Organisations.OrganisationType;
 
     public class OrganisationMap : IMap<Organisation, OrganisationData>
     {
