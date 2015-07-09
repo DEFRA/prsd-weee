@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Requests.Tests.Unit.MemberRegistration
 {
     using System.Xml.Linq;
+    using Core.Helpers.Xml;
     using EA.Weee.RequestHandlers.PCS.MemberRegistration;
     using Xunit;
 
