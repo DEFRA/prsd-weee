@@ -4,6 +4,7 @@
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
+    using Core.Helpers.Xml;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.PCS.MemberRegistration;
