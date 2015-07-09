@@ -8,7 +8,7 @@
     using EA.Weee.DataAccess;
     using Requests.NewUser;
 
-    internal class UserByIdHandler : IRequestHandler<UserById, User>
+    internal class UserByIdHandler : IRequestHandler<UserById, UserData>
     {
         private readonly WeeeContext context;
 
@@ -17,9 +17,9 @@
             this.context = context;
         }
 
-        public async Task<User> HandleAsync(UserById query)
+        public async Task<UserData> HandleAsync(UserById query)
         {
-            return await context.Users.Select(u => new User
+            return await context.Users.Select(u => new UserData
             {
                 Email = u.Email,
                 FirstName = u.FirstName,
