@@ -56,7 +56,7 @@
     <Compile Include="CoreModule.cs" />
     <Compile Include="Helpers\Xml\IXmlErrorTranslator.cs" />
     <Compile Include="Helpers\Xml\XmlErrorTranslator.cs" />
-    <Compile Include="NewUser\User.cs" />
+    <Compile Include="NewUser\UserData.cs" />
     <Compile Include="Organisations\ContactData.cs" />
     <Compile Include="Organisations\OrganisationData.cs" />
     <Compile Include="Organisations\OrganisationSearchData.cs" />

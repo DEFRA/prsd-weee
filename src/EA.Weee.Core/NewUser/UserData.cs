@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Core.NewUser
 {
-    public class User
+    public class UserData
     {
         public string Id { get; set; }
 
