@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.PCS.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
     using Api.Client;
@@ -8,10 +10,12 @@
     using FakeItEasy;
     using Prsd.Core.Mediator;
     using Services;
+    using ViewModels.PCS;
     using Web.Areas.PCS.Controllers;
     using Web.Areas.PCS.ViewModels;
     using Weee.Requests.Organisations;
     using Weee.Requests.PCS.MemberRegistration;
+    using Weee.Requests.Shared;
     using Xunit;
 
     public class MemberRegistrationControllerTests
@@ -137,6 +141,73 @@
             Assert.Equal("ViewErrorsAndWarnings", redirect.RouteValues["action"]);
             Assert.Equal("MemberRegistration", redirect.RouteValues["controller"]);
             Assert.Equal(validationId, redirect.RouteValues["memberUploadId"]);
+        }
+
+        private const string XmlHasErrorsViewName = "XmlHasErrors";
+        private const string XmlHasNoErrorsViewName = "XmlHasNoErrors";
+
+        [Fact]
+        public async Task GetViewErrorsOrWarnings_NoErrors_ShowsAcceptedPage()
+        {
+            Assert.Equal(XmlHasNoErrorsViewName, await ViewAfterClientReturns(new List<MemberUploadErrorData> { }));
+        }
+
+        [Fact]
+        public async Task GetViewErrorsOrWarnings_ErrorsPresent_ShowsErrorPage()
+        {
+            Assert.Equal(XmlHasErrorsViewName, await ViewAfterClientReturns(new List<MemberUploadErrorData> { new MemberUploadErrorData { ErrorLevel = ErrorLevel.Error } }));
+        }
+
+        [Fact]
+        public async Task GetViewErrorsOrWarnings_WarningPresent_ShowsAcceptedPage()
+        {
+            Assert.Equal(XmlHasNoErrorsViewName, await ViewAfterClientReturns(new List<MemberUploadErrorData> { new MemberUploadErrorData { ErrorLevel = ErrorLevel.Warning } }));
+        }
+
+        [Fact]
+        public async Task GetViewErrorsOrWarnings_NoErrors_HasProvidedErrorData()
+        {
+            var errors = new List<MemberUploadErrorData>();
+
+            var providedErrors = await ErrorsAfterClientReturns(errors);
+
+            Assert.Equal(errors, providedErrors);
+        }
+
+        [Fact]
+        public async Task GetViewErrorsOrWarnings_ErrorsPresent_HasProvidedErrorData()
+        {
+            var errors = new List<MemberUploadErrorData>
+            {
+                new MemberUploadErrorData
+                {
+                    ErrorLevel = ErrorLevel.Error
+                }
+            };
+
+            var providedErrors = await ErrorsAfterClientReturns(errors);
+
+            Assert.Equal(errors, providedErrors);
+        }
+
+        private async Task<List<MemberUploadErrorData>> ErrorsAfterClientReturns(List<MemberUploadErrorData> memberUploadErrorDatas)
+        {
+            var result = await GetViewResult(memberUploadErrorDatas);
+
+            return ((MemberUploadResultViewModel)result.Model).ErrorData;
+        }
+
+        private async Task<string> ViewAfterClientReturns(List<MemberUploadErrorData> list)
+        {
+            return (await GetViewResult(list)).ViewName;
+        }
+
+        private async Task<ViewResult> GetViewResult(List<MemberUploadErrorData> memberUploadErrorDatas)
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
+                .Returns(memberUploadErrorDatas);
+
+            return await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
         }
     }
 }
