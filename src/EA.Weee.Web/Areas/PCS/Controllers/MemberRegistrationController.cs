@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web;
@@ -13,6 +14,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.ViewModels.PCS;
     using ViewModels;
+    using Weee.Requests.Shared;
 
     public class MemberRegistrationController : Controller
     {
@@ -65,7 +67,12 @@
             {
                 var errors = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(memberUploadId));
 
-                return View(new MemberUploadResultViewModel { ErrorData = errors });
+                if (errors.Any(e => e.ErrorLevel == ErrorLevel.Error))
+                {
+                    return View("XmlHasErrors", new MemberUploadResultViewModel { ErrorData = errors });
+                }
+
+                return View("XmlHasNoErrors", new MemberUploadResultViewModel { ErrorData = errors });
             }
         }
     }
