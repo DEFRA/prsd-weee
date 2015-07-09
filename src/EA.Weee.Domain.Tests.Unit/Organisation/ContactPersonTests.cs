@@ -9,6 +9,7 @@
         [Fact]
         public void AddContact_OrganisationAlreadyHasContact_UpdateContactDetails()
         {
+            //Changed as per update contact person details
             var organisation = GetTestOrganisation();
             var contact = GetTestContact();
             organisation.AddMainContactPerson(contact);
