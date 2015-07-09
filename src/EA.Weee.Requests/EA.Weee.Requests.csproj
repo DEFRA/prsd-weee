@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClaimTypes.cs" />
+    <Compile Include="Organisations\GetAddressByAddressType.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
     <Compile Include="PCS\MemberRegistration\GetMemberUploadData.cs" />
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />

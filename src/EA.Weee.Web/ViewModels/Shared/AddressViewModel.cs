@@ -16,10 +16,15 @@
         public OrganisationType OrganisationType { get; set; }
 
         public AddressData Address { get; set; }
-   
+
         public AddAddressToOrganisation ToAddRequest(AddressType type)
         {
             return new AddAddressToOrganisation(OrganisationId, type, Address);
+        }
+
+        public AddressViewModel(AddressData address)
+        {
+            Address = address;
         }
     }
 }
