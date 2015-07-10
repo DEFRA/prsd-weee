@@ -4,10 +4,8 @@
     using Core.Organisations;
     using Core.Shared;
     using Domain;
-    using Requests.Organisations;
-    using Requests.Shared;
-    using AddressType = Core.Shared.AddressType;
-  
+    using AddressType = Domain.AddressType;
+
     internal class ValueObjectInitializer
     {
         public static Contact CreateContact(ContactData contact)
@@ -27,18 +25,18 @@
                 address.Email);
         }
 
-        public static Domain.AddressType GetAddressType(AddressType addressType)
+        public static AddressType GetAddressType(Core.Shared.AddressType addressType)
         {
             switch (addressType)
             {
-                case AddressType.OrganisationAddress:
-                    return Domain.AddressType.OrganisationAddress;
+                case Core.Shared.AddressType.OrganisationAddress:
+                    return AddressType.OrganisationAddress;
 
-                case AddressType.RegisteredOrPPBAddress:
-                    return Domain.AddressType.RegisteredOrPPBAddress;
+                case Core.Shared.AddressType.RegisteredOrPPBAddress:
+                    return AddressType.RegisteredOrPPBAddress;
 
-                case AddressType.ServiceOfNotice:
-                    return Domain.AddressType.ServiceOfNoticeAddress;
+                case Core.Shared.AddressType.ServiceOfNotice:
+                    return AddressType.ServiceOfNoticeAddress;
 
                 default:
                     throw new ArgumentException(string.Format("Unknown organisation type: {0}", addressType),
