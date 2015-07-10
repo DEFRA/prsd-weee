@@ -77,6 +77,13 @@
             }
         }
 
+        [HttpPost]
+        public ActionResult SubmitXml(MemberUploadResultViewModel viewModel)
+        {
+            throw new NotImplementedException();
+            // return RedirectToAction("SuccessfulSubmission");
+        }
+
         [HttpGet]
         public ViewResult SuccessfulSubmission()
         {
