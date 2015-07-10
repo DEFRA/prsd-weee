@@ -21,10 +21,5 @@
         {
             return new AddAddressToOrganisation(OrganisationId, type, Address);
         }
-
-        public AddressViewModel(AddressData address)
-        {
-            Address = address;
-        }
     }
 }

@@ -10,7 +10,7 @@
     public class OrganisationMap : IMap<Organisation, OrganisationData>
     {
         private readonly IMap<Address, AddressData> addressMap;
-        private readonly IMap<Contact, ContactData> contactMap; 
+        private readonly IMap<Contact, ContactData> contactMap;
 
         public OrganisationMap(IMap<Address, AddressData> addressMap, IMap<Contact, ContactData> contactMap)
         {
@@ -46,7 +46,10 @@
                     : null,
                 OrganisationAddress = source.OrganisationAddress != null
                     ? addressMap.Map(source.OrganisationAddress)
-                    : null
+                    : null,
+                HasOrganisationAddress = source.HasOrganisationAddress,
+                HasBusinessAddress = source.HasBusinessAddress,
+                HasNotificationAddress = source.HasNotificationAddress
             };
         }
     }

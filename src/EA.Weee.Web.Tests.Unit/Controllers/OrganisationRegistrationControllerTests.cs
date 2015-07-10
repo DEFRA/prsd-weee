@@ -8,6 +8,7 @@
     using ViewModels.Shared;
     using Web.Controllers;
     using Weee.Requests.Organisations;
+    using Weee.Requests.Shared;
     using Xunit;
 
     public class OrganisationRegistrationControllerTests
@@ -94,6 +95,22 @@
 
             Assert.Equal("OrganisationRegistration", redirectToRouteResult.RouteValues["controller"]);
             Assert.Equal("ReviewOrganisationDetails", redirectToRouteResult.RouteValues["action"]);
+        }
+
+        [Fact]
+        public async void GetOrganisationAddress_ApiReturnsAddressData_ShouldReturnViewWithModel()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData());
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAddressByAddressType>._))
+                .Returns(new AddressData());
+
+            var result = await OrganisationRegistrationController().OrganisationAddress(A<Guid>._);
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<AddressViewModel>(model);
         }
 
         [Fact]

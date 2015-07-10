@@ -393,7 +393,7 @@
             using (var client = apiClient())
             {
                 var model = await GetAddressViewModel(id, client, false, AddressType.OrganistionAddress);
-                
+
                 return View(model);
             }
         }
@@ -582,27 +582,26 @@
                 OrganisationId = organisationId,
                 OrganisationType = organisation.OrganisationType,
             };
-
-            var address = await client.SendAsync(User.GetAccessToken(), new GetAddressByAddressType(organisationId, addressType));
+            
             if (addressType == AddressType.OrganistionAddress)
             {
-                if (address.HasOrganisationAddress)
+                if (organisation.HasOrganisationAddress)
                 {
-                    model.Address = address;
+                    model.Address = organisation.OrganisationAddress;
                 }
             }
             else if (addressType == AddressType.RegisteredorPPBAddress)
             {
-                if (address.HasBusinessAddress)
+                if (organisation.HasBusinessAddress)
                 {
-                    model.Address = address;
+                    model.Address = organisation.BusinessAddress;
                 }
             }
             else if (addressType == AddressType.ServiceOfNotice)
             {
-                if (address.HasNotificationAddress)
+                if (organisation.HasNotificationAddress)
                 {
-                    model.Address = address;
+                    model.Address = organisation.NotificationAddress;
                 }
             }
 

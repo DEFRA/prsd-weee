@@ -17,7 +17,7 @@
         [InlineData("Service of notice address", "Sole trader or individual")]
         [InlineData("Service of notice address", "Partnership")]
         [InlineData("Service of notice address", "Registered Company")]
-        public void AddAddressToOrganisation_AddressAlreadyExists_InvalidOperationShouldBeThrown(string addressType, string organisationType)
+        public void AddAddressToOrganisation_AddressAlreadyExists_UpdateAddressDetails(string addressType, string organisationType)
         {
             var organisation = ValidOrganisation(CastOrganisationType(organisationType));
             var validAddress = ValidAddress(addressType);

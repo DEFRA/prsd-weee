@@ -24,5 +24,11 @@
         public AddressData NotificationAddress { get; set; }
 
         public ContactData Contact { get; set; }
+
+        public bool HasOrganisationAddress { get; set; }
+
+        public bool HasBusinessAddress { get; set; }
+
+        public bool HasNotificationAddress { get; set; }
     }
 }
