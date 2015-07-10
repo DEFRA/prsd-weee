@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using Core.Shared;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.PCS.MemberRegistration;
