@@ -38,6 +38,28 @@
             return View(new OrganisationTypeViewModel());
         }
 
+        [HttpGet]
+        [ActionName("EditType")]
+        public async Task<ActionResult> Type(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var organisationExists =
+                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(organisationId));
+
+                if (!organisationExists)
+                {
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
+                }
+
+                var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
+
+                var model = new OrganisationTypeViewModel(organisation.OrganisationType);
+
+                return View("Type", model);
+            }
+        }
+
         [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult Type(OrganisationTypeViewModel model)

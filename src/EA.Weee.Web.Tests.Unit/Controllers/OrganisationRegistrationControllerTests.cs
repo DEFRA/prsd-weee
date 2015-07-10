@@ -6,6 +6,7 @@
     using Core.Organisations;
     using FakeItEasy;
     using ViewModels.OrganisationRegistration;
+    using ViewModels.OrganisationRegistration.Type;
     using ViewModels.Shared;
     using Web.Controllers;
     using Weee.Requests.Organisations;
@@ -142,6 +143,31 @@
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal("RegisteredOfficeAddress", redirectToRouteResult.RouteValues["action"]);
+        }
+
+        [Fact]
+        public async void GetEditType_OrganisationIdIsInvalid_ShouldThrowArgumentException()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(false);
+
+            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().Type(A<Guid>._));
+        }
+
+        [Fact]
+        public async void GetEditType_OrganisationIdIsValid_ShouldReturnOrganisationTypeViewModel()
+        {
+            var organisationId = Guid.NewGuid();
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData());
+
+            var result = await OrganisationRegistrationController().Type(organisationId);
+            var model = ((ViewResult)result).Model;
+
+            Assert.IsType<OrganisationTypeViewModel>(model);
         }
 
         private OrganisationRegistrationController OrganisationRegistrationController()

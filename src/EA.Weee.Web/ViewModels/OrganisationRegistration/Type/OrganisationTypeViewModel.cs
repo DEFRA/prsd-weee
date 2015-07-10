@@ -11,5 +11,10 @@
         {
             OrganisationTypes = RadioButtonStringCollectionViewModel.CreateFromEnum<OrganisationType>();
         }
+
+        public OrganisationTypeViewModel(OrganisationType organisationType)
+        {
+            OrganisationTypes = RadioButtonStringCollectionViewModel.CreateFromEnum<OrganisationType>(organisationType);
+        }
     }
 }
