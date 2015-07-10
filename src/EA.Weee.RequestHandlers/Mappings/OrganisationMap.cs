@@ -49,7 +49,10 @@
                     : null,
                 OrganisationAddress = source.OrganisationAddress != null
                     ? addressMap.Map(source.OrganisationAddress)
-                    : null
+                    : null,
+                HasOrganisationAddress = source.HasOrganisationAddress,
+                HasBusinessAddress = source.HasBusinessAddress,
+                HasNotificationAddress = source.HasNotificationAddress
             };
         }
     }
