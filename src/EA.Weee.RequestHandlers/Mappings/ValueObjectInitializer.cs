@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using System;
+    using Core.Organisations;
+    using Core.Shared;
     using Domain;
-    using Requests.Organisations;
-    using Requests.Shared;
-    using AddressType = Requests.Shared.AddressType;
-  
+    using AddressType = Domain.AddressType;
+
     internal class ValueObjectInitializer
     {
         public static Contact CreateContact(ContactData contact)
@@ -25,18 +25,18 @@
                 address.Email);
         }
 
-        public static Domain.AddressType GetAddressType(AddressType addressType)
+        public static AddressType GetAddressType(Core.Shared.AddressType addressType)
         {
             switch (addressType)
             {
-                case AddressType.OrganistionAddress:
-                    return Domain.AddressType.OrganisationAddress;
+                case Core.Shared.AddressType.OrganisationAddress:
+                    return AddressType.OrganisationAddress;
 
-                case AddressType.RegisteredorPPBAddress:
-                    return Domain.AddressType.RegisteredOrPPBAddress;
+                case Core.Shared.AddressType.RegisteredOrPPBAddress:
+                    return AddressType.RegisteredOrPPBAddress;
 
-                case AddressType.ServiceOfNotice:
-                    return Domain.AddressType.ServiceOfNoticeAddress;
+                case Core.Shared.AddressType.ServiceOfNotice:
+                    return AddressType.ServiceOfNoticeAddress;
 
                 default:
                     throw new ArgumentException(string.Format("Unknown organisation type: {0}", addressType),

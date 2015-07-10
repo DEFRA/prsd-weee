@@ -3,6 +3,7 @@
     using System;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.Organisations;
     using FakeItEasy;
     using ViewModels.OrganisationRegistration;
     using ViewModels.Shared;

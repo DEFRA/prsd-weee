@@ -7,6 +7,7 @@
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using System.Threading.Tasks;
+    using Core.Organisations;
 
     internal class GetContactPersonByOrganisationIdHandler : IRequestHandler<GetContactPersonByOrganisationId, ContactData>
     {

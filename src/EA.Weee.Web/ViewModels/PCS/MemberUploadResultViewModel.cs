@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using EA.Weee.Requests.Shared;
+    using Core.Shared;
 
     public class MemberUploadResultViewModel
     {
