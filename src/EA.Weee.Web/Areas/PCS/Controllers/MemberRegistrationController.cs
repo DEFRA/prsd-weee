@@ -78,6 +78,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult SubmitXml(MemberUploadResultViewModel viewModel)
         {
             throw new NotImplementedException();
