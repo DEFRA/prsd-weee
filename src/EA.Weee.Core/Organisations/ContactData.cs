@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests.Organisations
+﻿namespace EA.Weee.Core.Organisations
 {
     using System;
 
@@ -11,5 +11,9 @@
         public string LastName { get; set; }
 
         public string Position { get; set; }
+
+        public bool HasContact { get; set; }
+
+        public Guid OrganisationId { get; set; }
     }
 }

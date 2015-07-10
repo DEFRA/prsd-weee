@@ -33,9 +33,9 @@
 
             var memberUploadErrorDataList = await handler.HandleAsync(new GetMemberUploadData(memberUploads.First().Id));
 
-            Assert.True(memberUploadErrorDataList.Count(me => me.ErrorLevel == Shared.ErrorLevel.Warning) == 1);
-            Assert.True(memberUploadErrorDataList.Count(me => me.ErrorLevel == Shared.ErrorLevel.Error) == 2);
-            Assert.True(memberUploadErrorDataList.Count(me => me.ErrorLevel == Shared.ErrorLevel.Fatal) == 3);
+            Assert.True(memberUploadErrorDataList.Count(me => me.ErrorLevel == Core.Shared.ErrorLevel.Warning) == 1);
+            Assert.True(memberUploadErrorDataList.Count(me => me.ErrorLevel == Core.Shared.ErrorLevel.Error) == 2);
+            Assert.True(memberUploadErrorDataList.Count(me => me.ErrorLevel == Core.Shared.ErrorLevel.Fatal) == 3);
         }
 
         [Fact]

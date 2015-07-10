@@ -4,6 +4,7 @@
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
+    using Core.Helpers.Xml;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.PCS.MemberRegistration;
@@ -28,7 +29,7 @@
             A.CallTo(() => fakeContext.MemberUploads.Add(A<MemberUpload>._))
                 .Invokes((MemberUpload m) => addedMemberUpload = m);
 
-            var handler = new ValidateXmlFileHandler(fakeContext);
+            var handler = new ValidateXmlFileHandler(fakeContext, new XmlErrorTranslator());
 
             await handler.HandleAsync(new ValidateXmlFile(Guid.NewGuid(), validXml));
 
@@ -47,7 +48,7 @@
             A.CallTo(() => fakeContext.MemberUploads.Add(A<MemberUpload>._))
                 .Invokes((MemberUpload m) => addedMemberUpload = m);
 
-            var handler = new ValidateXmlFileHandler(fakeContext);
+            var handler = new ValidateXmlFileHandler(fakeContext, new XmlErrorTranslator());
 
             await handler.HandleAsync(new ValidateXmlFile(Guid.NewGuid(), invalidXml));
 
@@ -66,7 +67,7 @@
             A.CallTo(() => fakeContext.MemberUploads.Add(A<MemberUpload>._))
                 .Invokes((MemberUpload m) => addedMemberUpload = m);
 
-            var handler = new ValidateXmlFileHandler(fakeContext);
+            var handler = new ValidateXmlFileHandler(fakeContext, new XmlErrorTranslator());
 
             await handler.HandleAsync(new ValidateXmlFile(Guid.NewGuid(), invalidXml));
 
@@ -85,7 +86,7 @@
             A.CallTo(() => fakeContext.MemberUploads.Add(A<MemberUpload>._))
                 .Invokes((MemberUpload m) => addedMemberUpload = m);
 
-            var handler = new ValidateXmlFileHandler(fakeContext);
+            var handler = new ValidateXmlFileHandler(fakeContext, new XmlErrorTranslator());
 
             await handler.HandleAsync(new ValidateXmlFile(Guid.NewGuid(), invalidXml));
 

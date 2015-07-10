@@ -581,7 +581,6 @@
     <Compile Include="ViewModels\OrganisationRegistration\OrganisationSummaryViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\AddressPrepopulateViewModel.cs" />
     <Compile Include="ViewModels\Organisation\OrganisationUserPendingViewModel.cs" />
-    <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeEnum.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
     <Compile Include="Areas\PCS\ViewModels\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\PCS\ViewModels\PcsAction.cs" />
@@ -599,6 +598,10 @@
     <ProjectReference Include="..\EA.Weee.Api.Client\EA.Weee.Api.Client.csproj">
       <Project>{b772429d-709e-4978-b105-a54606acc29a}</Project>
       <Name>EA.Weee.Api.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
+      <Project>{75EFEE66-9358-4DE4-9A84-E7191EEC7DB8}</Project>
+      <Name>EA.Weee.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
       <Project>{87FBB5CC-A732-4363-A158-39DBF3707407}</Project>

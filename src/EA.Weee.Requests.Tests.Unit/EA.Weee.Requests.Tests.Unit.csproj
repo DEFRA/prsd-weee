@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MemberRegistration\XmlErrorTranslatorTests.cs" />
     <Compile Include="Organisations\GetOrganisationsByUserIdHandlerTest.cs" />
     <Compile Include="Helpers\DbContextHelper.cs" />
     <Compile Include="Helpers\ObjectInstantiator.cs" />
@@ -91,6 +92,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
+      <Project>{75efee66-9358-4de4-9a84-e7191eec7db8}</Project>
+      <Name>EA.Weee.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.DataAccess\EA.Weee.DataAccess.csproj">
       <Project>{46300373-D7AE-40AA-BF96-3FC3889825A4}</Project>
       <Name>EA.Weee.DataAccess</Name>
