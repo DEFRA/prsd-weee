@@ -438,6 +438,7 @@
     <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Bold.eot" />
     <Content Include="Areas\PCS\Views\_ViewStart.cshtml" />
     <Content Include="Areas\PCS\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\PCS\Views\MemberRegistration\SuccessfulSubmission.cshtml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
