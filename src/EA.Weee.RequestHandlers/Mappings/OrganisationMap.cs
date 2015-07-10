@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using System;
-    using Domain;
+    using Domain.Organisation;
     using Prsd.Core.Mapper;
     using Requests.Organisations;
     using Requests.Shared;
@@ -10,7 +10,7 @@
     public class OrganisationMap : IMap<Organisation, OrganisationData>
     {
         private readonly IMap<Address, AddressData> addressMap;
-        private readonly IMap<Contact, ContactData> contactMap; 
+        private readonly IMap<Contact, ContactData> contactMap;
 
         public OrganisationMap(IMap<Address, AddressData> addressMap, IMap<Contact, ContactData> contactMap)
         {

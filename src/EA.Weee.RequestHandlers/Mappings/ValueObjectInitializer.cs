@@ -2,6 +2,7 @@
 {
     using System;
     using Domain;
+    using Domain.Organisation;
     using Requests.Organisations;
     using Requests.Shared;
     using AddressType = Requests.Shared.AddressType;

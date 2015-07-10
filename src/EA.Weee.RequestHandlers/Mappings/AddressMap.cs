@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using Domain;
+    using Domain.Organisation;
     using Prsd.Core.Mapper;
     using Requests.Shared;
 
