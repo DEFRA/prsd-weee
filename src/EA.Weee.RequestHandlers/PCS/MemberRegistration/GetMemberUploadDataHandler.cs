@@ -5,13 +5,12 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Shared;
+    using DataAccess;
     using Domain.PCS;
-    using EA.Prsd.Core.Mapper;
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.Requests.PCS.MemberRegistration;
-    using EA.Weee.Requests.Shared;
+    using Prsd.Core.Mapper;
+    using Prsd.Core.Mediator;
+    using Requests.PCS.MemberRegistration;
 
     internal class GetMemberUploadDataHandler : IRequestHandler<GetMemberUploadData, List<MemberUploadErrorData>>
     {
@@ -19,7 +18,8 @@
 
         private readonly IMap<MemberUploadError, MemberUploadErrorData> memberUploadErrorMap;
 
-        public GetMemberUploadDataHandler(WeeeContext context, IMap<MemberUploadError, MemberUploadErrorData> memberUploadErrorMap)
+        public GetMemberUploadDataHandler(WeeeContext context,
+            IMap<MemberUploadError, MemberUploadErrorData> memberUploadErrorMap)
         {
             this.context = context;
             this.memberUploadErrorMap = memberUploadErrorMap;
@@ -31,7 +31,8 @@
 
             if (memberUpload == null)
             {
-                throw new ArgumentNullException(string.Format("Could not find a MemberUpload with id {0}", message.MemberUploadId));
+                throw new ArgumentNullException(string.Format("Could not find a MemberUpload with id {0}",
+                    message.MemberUploadId));
             }
 
             return memberUpload.Errors.Select(e => memberUploadErrorMap.Map(e)).ToList();

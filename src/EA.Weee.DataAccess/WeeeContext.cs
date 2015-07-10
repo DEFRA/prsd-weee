@@ -50,6 +50,7 @@
         public override int SaveChanges()
         {
             this.SetEntityId();
+            //this.DeleteRemovedRelationships();
             this.AuditChanges(userContext.UserId);
 
             return base.SaveChanges();
@@ -58,6 +59,7 @@
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
             this.SetEntityId();
+            //this.DeleteRemovedRelationships();
             this.AuditChanges(userContext.UserId);
 
             return base.SaveChangesAsync(cancellationToken);

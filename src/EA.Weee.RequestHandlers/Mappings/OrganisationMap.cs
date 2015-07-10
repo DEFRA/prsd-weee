@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using System;
+    using Core.Organisations;
+    using Core.Shared;
     using Domain.Organisation;
     using Prsd.Core.Mapper;
-    using Requests.Organisations;
-    using Requests.Shared;
-    using OrganisationType = Requests.Organisations.OrganisationType;
+    using OrganisationStatus = Core.Shared.OrganisationStatus;
+    using OrganisationType = Core.Organisations.OrganisationType;
 
     public class OrganisationMap : IMap<Organisation, OrganisationData>
     {
@@ -28,7 +29,9 @@
                 TradingName = source.TradingName,
 
                 // SQL doesn't allow nulls so no chance of null ref exception for enums
-                OrganisationStatus = (Status)Enum.Parse(typeof(Status), source.OrganisationStatus.Value.ToString()),
+                OrganisationStatus =
+                    (OrganisationStatus)
+                        Enum.Parse(typeof(OrganisationStatus), source.OrganisationStatus.Value.ToString()),
                 OrganisationType =
                     (OrganisationType)
                         Enum.Parse(typeof(OrganisationType),

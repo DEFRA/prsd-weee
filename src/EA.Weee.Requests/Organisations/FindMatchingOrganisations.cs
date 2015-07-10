@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Requests.Organisations
 {
+    using Core.Organisations;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mediator;
 

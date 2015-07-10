@@ -6,6 +6,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using Controllers;
+    using Core.Organisations;
     using Requests;
     using ViewModels.OrganisationRegistration.Type;
     using ViewModels.Shared;
@@ -18,21 +19,21 @@
         public void GivenISelectedTheSoleTraderOrIndividualOption()
         {
             ScenarioContext.Current[typeof(OrganisationTypeViewModel).Name] =
-                OrganisationType(OrganisationTypeEnum.SoleTrader);
+                OrganisationType(Core.Organisations.OrganisationType.SoleTraderOrIndividual);
         }
 
         [Given(@"I selected the partnership option")]
         public void GivenISelectedThePartnershipOption()
         {
             ScenarioContext.Current[typeof(OrganisationTypeViewModel).Name] =
-                OrganisationType(OrganisationTypeEnum.Partnership);
+                OrganisationType(Core.Organisations.OrganisationType.Partnership);
         }
 
         [Given(@"I selected the registered company option")]
         public void GivenISelectedTheRegisteredCompanyOption()
         {
             ScenarioContext.Current[typeof(OrganisationTypeViewModel).Name] =
-                OrganisationType(OrganisationTypeEnum.RegisteredCompany);
+                OrganisationType(Core.Organisations.OrganisationType.RegisteredCompany);
         }
 
         [When(@"I continue")]
@@ -83,7 +84,7 @@
             return new OrganisationRegistrationController(() => new WeeeClient(ConfigurationManager.AppSettings["Weee.ApiUrl"]));
         }
 
-        private OrganisationTypeViewModel OrganisationType(OrganisationTypeEnum selectedOption)
+        private OrganisationTypeViewModel OrganisationType(OrganisationType selectedOption)
         {
             return new OrganisationTypeViewModel
             {

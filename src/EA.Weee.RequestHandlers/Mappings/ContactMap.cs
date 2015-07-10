@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
+    using Core.Organisations;
     using Domain.Organisation;
     using Prsd.Core.Mapper;
-    using Requests.Organisations;
 
-    internal class ContactMap : IMap<Contact, ContactData>
+    internal class ContactMap : IMap<Contact, ContactData>, IMap<Organisation, ContactData>
     {
         public ContactData Map(Contact source)
         {
@@ -12,7 +12,28 @@
             {
                 FirstName = source.FirstName,
                 LastName = source.LastName,
-                Position = source.Position
+                Position = source.Position,
+                HasContact = true
+            };
+        }
+
+        public ContactData Map(Organisation source)
+        {
+            if (source.HasContact)
+            {
+                return new ContactData
+                {
+                    FirstName = source.Contact.FirstName,
+                    LastName = source.Contact.LastName,
+                    Position = source.Contact.Position,
+                    OrganisationId = source.Id,
+                    HasContact = true
+                };
+            }
+            return new ContactData
+            {
+                OrganisationId = source.Id,
+                HasContact = false
             };
         }
     }

@@ -78,7 +78,6 @@
     <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <Compile Include="Producer\Producer.cs" />
   </ItemGroup>

@@ -4,6 +4,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Organisations;
     using DataAccess;
     using Domain.Organisation;
     using Prsd.Core.Mapper;

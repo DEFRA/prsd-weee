@@ -3,6 +3,7 @@
     using System.Web.Http;
     using Autofac;
     using Autofac.Integration.WebApi;
+    using Core;
     using DataAccess;
     using DataAccess.Identity;
     using Identity;
@@ -28,6 +29,7 @@
             builder.RegisterAssemblyModules(typeof(Startup).Assembly);
             builder.RegisterAssemblyModules(typeof(AutofacMediator).Assembly);
             builder.RegisterModule(new RequestHandlerModule());
+            builder.RegisterModule(new CoreModule());
             builder.RegisterModule(new EntityFrameworkModule());
 
             // http://www.talksharp.com/configuring-autofac-to-work-with-the-aspnet-identity-framework-in-mvc-5
