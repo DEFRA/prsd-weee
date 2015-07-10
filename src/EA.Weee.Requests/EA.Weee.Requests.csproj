@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />
+    <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
     <Compile Include="PCS\MemberRegistration\GetMemberUploadData.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisation.cs" />
     <Compile Include="Organisations\GetOrganisationsByUserId.cs" />
