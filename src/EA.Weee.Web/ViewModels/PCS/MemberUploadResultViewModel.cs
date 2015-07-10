@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.ViewModels.PCS
 {
     using System.Collections.Generic;
-    using EA.Weee.Requests.Shared;
+    using Core.Shared;
 
     public class MemberUploadResultViewModel
     {

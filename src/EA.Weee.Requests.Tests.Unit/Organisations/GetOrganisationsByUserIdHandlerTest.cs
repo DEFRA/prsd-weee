@@ -12,7 +12,7 @@
     using RequestHandlers.Organisations;
     using Requests.Organisations;
     using Xunit;
-    using OrganisationUserStatus = Requests.Organisations.OrganisationUserStatus;
+    using OrganisationUserStatus = Core.Organisations.OrganisationUserStatus;
 
     public class GetOrganisationsByUserIdHandlerTest
     {
