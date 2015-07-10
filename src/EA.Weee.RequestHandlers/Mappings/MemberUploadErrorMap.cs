@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Domain;
-    using EA.Weee.Requests.Shared;
-    using ErrorLevel = EA.Weee.Requests.Shared.ErrorLevel;
+    using Domain.PCS;
+    using Prsd.Core.Mapper;
+    using Requests.Shared;
 
     public class MemberUploadErrorMap : IMap<MemberUploadError, MemberUploadErrorData>
     {

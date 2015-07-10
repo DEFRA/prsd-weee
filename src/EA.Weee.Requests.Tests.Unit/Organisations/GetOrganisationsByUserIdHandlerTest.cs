@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using DataAccess;
     using Domain;
+    using Domain.Organisation;
     using FakeItEasy;
     using Helpers;
     using RequestHandlers.Mappings;
@@ -92,9 +93,9 @@
         {
             return helper.GetAsyncEnabledDbSet(new[]
             {
-                orgUserHelper.GetOrganisationUser(userGuid, Domain.OrganisationUserStatus.Approved),
-                orgUserHelper.GetOrganisationUser(userGuid, Domain.OrganisationUserStatus.Pending),
-                orgUserHelper.GetOrganisationUser(userGuid, Domain.OrganisationUserStatus.Refused)
+                orgUserHelper.GetOrganisationUser(userGuid, Domain.Organisation.OrganisationUserStatus.Approved),
+                orgUserHelper.GetOrganisationUser(userGuid, Domain.Organisation.OrganisationUserStatus.Pending),
+                orgUserHelper.GetOrganisationUser(userGuid, Domain.Organisation.OrganisationUserStatus.Refused)
             });
         }
     }

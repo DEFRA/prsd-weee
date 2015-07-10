@@ -8,6 +8,7 @@
     using System.Xml;
     using System.Xml.Linq;
     using System.Xml.Schema;
+    using Domain.PCS;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;

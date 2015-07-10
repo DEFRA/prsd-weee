@@ -1,7 +1,6 @@
-﻿namespace EA.Weee.Domain
+﻿namespace EA.Weee.Domain.Organisation
 {
     using System;
-    using System.ComponentModel.DataAnnotations;
     using Prsd.Core;
     using Prsd.Core.Domain;
 
@@ -12,7 +11,7 @@
             Guard.ArgumentNotNullOrEmpty(() => firstName, firstName);
             Guard.ArgumentNotNullOrEmpty(() => lastName, lastName);
             Guard.ArgumentNotNullOrEmpty(() => position, position);
-         
+
             FirstName = firstName;
             LastName = lastName;
             Position = position;
@@ -33,7 +32,7 @@
             {
                 if (value != null && value.Length > 35)
                 {
-                  throw new InvalidOperationException(string.Format(("Position cannot be greater than 35 characters")));  
+                    throw new InvalidOperationException(string.Format(("Position cannot be greater than 35 characters")));
                 }
                 position = value;
             }

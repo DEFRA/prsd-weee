@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using Domain;
-    using EA.Weee.Requests.Organisations;
+    using Domain.Organisation;
     using Prsd.Core.Mapper;
-    using Requests;
+    using Requests.Organisations;
 
     internal class ContactMap : IMap<Contact, ContactData>
     {
