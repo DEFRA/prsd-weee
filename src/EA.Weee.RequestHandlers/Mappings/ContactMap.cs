@@ -36,7 +36,7 @@
                 return new ContactData
                 {
                     OrganisationId = source.Id,
-                    HasContact = true
+                    HasContact = false
                 };
             }
         }
