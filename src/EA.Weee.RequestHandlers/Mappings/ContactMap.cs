@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
+    using Core.Organisations;
     using Domain;
     using EA.Weee.Requests.Organisations;
     using Prsd.Core.Mapper;
@@ -36,7 +37,7 @@
                 return new ContactData
                 {
                     OrganisationId = source.Id,
-                    HasContact = true
+                    HasContact = false
                 };
             }
         }

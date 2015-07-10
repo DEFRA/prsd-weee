@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests.Organisations
+﻿namespace EA.Weee.Core.Organisations
 {
     using System;
     using Shared;
@@ -11,7 +11,7 @@
 
         public OrganisationType OrganisationType { get; set; }
 
-        public Status OrganisationStatus { get; set; }
+        public OrganisationStatus OrganisationStatus { get; set; }
 
         public string TradingName { get; set; }
 

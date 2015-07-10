@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration.Type
 {
+    using Core.Organisations;
     using Shared;
 
     public class OrganisationTypeViewModel
@@ -8,7 +9,7 @@
 
         public OrganisationTypeViewModel()
         {
-            OrganisationTypes = RadioButtonStringCollectionViewModel.CreateFromEnum<OrganisationTypeEnum>();
+            OrganisationTypes = RadioButtonStringCollectionViewModel.CreateFromEnum<OrganisationType>();
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.Web.ViewModels.Organisation
 {
-    using System;
     using System.Collections.Generic;
-    using Weee.Requests.Organisations;
+    using Core.Organisations;
 
     public class OrganisationUserPendingViewModel
     {

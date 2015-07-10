@@ -6,6 +6,8 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.Organisations;
+    using Core.Shared;
     using Infrastructure;
     using Prsd.Core.Extensions;
     using Prsd.Core.Web.ApiClient;
@@ -43,15 +45,15 @@
             if (ModelState.IsValid)
             {
                 var organisationType =
-                    model.OrganisationTypes.SelectedValue.GetValueFromDisplayName<OrganisationTypeEnum>();
+                    model.OrganisationTypes.SelectedValue.GetValueFromDisplayName<OrganisationType>();
 
                 switch (organisationType)
                 {
-                    case OrganisationTypeEnum.SoleTrader:
+                    case OrganisationType.SoleTraderOrIndividual:
                         return RedirectToAction("SoleTraderDetails", "OrganisationRegistration");
-                    case OrganisationTypeEnum.RegisteredCompany:
+                    case OrganisationType.RegisteredCompany:
                         return RedirectToAction("RegisteredCompanyDetails", "OrganisationRegistration");
-                    case OrganisationTypeEnum.Partnership:
+                    case OrganisationType.Partnership:
                         return RedirectToAction("PartnershipDetails", "OrganisationRegistration");
                 }
             }
@@ -392,7 +394,7 @@
         {
             using (var client = apiClient())
             {
-                var model = await GetAddressViewModel(id, client, false, AddressType.OrganistionAddress);
+                var model = await GetAddressViewModel(id, client, false, AddressType.OrganisationAddress);
 
                 return View(model);
             }
@@ -413,7 +415,7 @@
             {
                 using (var client = apiClient())
                 {
-                    await AddAddressToOrganisation(viewModel, AddressType.OrganistionAddress, client);
+                    await AddAddressToOrganisation(viewModel, AddressType.OrganisationAddress, client);
 
                     var isUkAddress = await client.SendAsync(
                         User.GetAccessToken(),
@@ -476,7 +478,7 @@
         {
             using (var client = apiClient())
             {
-                var model = await GetAddressViewModel(id, client, true, AddressType.RegisteredorPPBAddress);
+                var model = await GetAddressViewModel(id, client, true, AddressType.RegisteredOrPPBAddress);
                 return View(model);
             }
         }
@@ -496,7 +498,7 @@
             {
                 using (var client = apiClient())
                 {
-                    await AddAddressToOrganisation(viewModel, AddressType.RegisteredorPPBAddress, client);
+                    await AddAddressToOrganisation(viewModel, AddressType.RegisteredOrPPBAddress, client);
                     return RedirectToAction("ReviewOrganisationDetails", "OrganisationRegistration", new
                     {
                         id = viewModel.OrganisationId
@@ -583,14 +585,14 @@
                 OrganisationType = organisation.OrganisationType,
             };
             
-            if (addressType == AddressType.OrganistionAddress)
+            if (addressType == AddressType.OrganisationAddress)
             {
                 if (organisation.HasOrganisationAddress)
                 {
                     model.Address = organisation.OrganisationAddress;
                 }
             }
-            else if (addressType == AddressType.RegisteredorPPBAddress)
+            else if (addressType == AddressType.RegisteredOrPPBAddress)
             {
                 if (organisation.HasBusinessAddress)
                 {

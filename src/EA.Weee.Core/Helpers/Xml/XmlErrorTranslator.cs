@@ -1,10 +1,10 @@
-﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration
+﻿namespace EA.Weee.Core.Helpers.Xml
 {
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Xml.Linq;
 
-    internal class XmlErrorTranslator : IXmlErrorTranslator
+    public class XmlErrorTranslator : IXmlErrorTranslator
     {
         private const string GeneralConstraintFailurePattern =
             @"^The '[^']*' element is invalid - The value '[^']*' is invalid according to its datatype '[^']*' - The ([^']*) constraint failed.$";
