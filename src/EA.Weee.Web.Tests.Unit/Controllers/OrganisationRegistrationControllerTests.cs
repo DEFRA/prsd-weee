@@ -98,6 +98,19 @@
         }
 
         [Fact]
+        public async void GetOrganisationAddress_ApiReturnsOrganisationData_ShouldReturnViewWithModel()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData());
+
+            var result = await OrganisationRegistrationController().OrganisationAddress(A<Guid>._);
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<AddressViewModel>(model);
+        }
+
+        [Fact]
         public async void GetMainContactPerson_OrganisationIdIsInvalid_ShouldThrowArgumentException()
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
