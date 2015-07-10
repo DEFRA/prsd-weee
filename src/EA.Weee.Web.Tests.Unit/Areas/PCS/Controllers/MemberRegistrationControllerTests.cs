@@ -6,6 +6,7 @@
     using System.Web;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.Shared;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using Prsd.Core.Mediator;
