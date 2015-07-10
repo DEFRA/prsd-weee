@@ -59,6 +59,7 @@
             var countryElementId = "#Address\\.CountryId";
 
             if ($(countryElementId).hasClass("input-validation-error")) {
+                $(countryElementId).attr("name", "Address.CountryIds"); // Bug Fix - anchor doesn't work in IE if name is same as ID
                 var validationInput = $(countryElementId).next("input");
                 if (validationInput.length) {
                     $(countryElementId).removeAttr("id");
