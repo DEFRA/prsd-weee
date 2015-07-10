@@ -5,6 +5,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Organisations;
     using DataAccess;
     using Domain;
     using Prsd.Core.Domain;

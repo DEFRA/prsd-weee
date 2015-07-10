@@ -14,7 +14,7 @@
         public void AddMainContactPerson(Contact contactPerson)
         {
             Guard.ArgumentNotNull(() => contactPerson, contactPerson);
-            
+
             this.Contact = contactPerson;
         }
     }

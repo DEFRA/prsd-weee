@@ -13,7 +13,7 @@
             var organisation = GetTestOrganisation();
             var contact = GetTestContact();
             organisation.AddMainContactPerson(contact);
-
+            
             Assert.Equal(organisation.Contact.FirstName, contact.FirstName);
             Assert.Equal(organisation.Contact.LastName, contact.LastName);
             Assert.Equal(organisation.Contact.Position, contact.Position);

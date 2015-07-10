@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Requests.Organisations
 {
     using System;
+    using Core.Organisations;
     using Prsd.Core.Mediator;
     public class AddContactPersonToOrganisation : IRequest<Guid>
     {

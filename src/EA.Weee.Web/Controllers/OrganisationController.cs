@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.Organisations;
     using Infrastructure;
     using ViewModels.Organisation;
     using Weee.Requests.Organisations;

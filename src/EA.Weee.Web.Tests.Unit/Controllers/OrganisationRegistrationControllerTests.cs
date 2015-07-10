@@ -3,6 +3,7 @@
     using System;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.Organisations;
     using FakeItEasy;
     using ViewModels.OrganisationRegistration;
     using ViewModels.Shared;
@@ -98,13 +99,10 @@
         }
 
         [Fact]
-        public async void GetOrganisationAddress_ApiReturnsAddressData_ShouldReturnViewWithModel()
+        public async void GetOrganisationAddress_ApiReturnsOrganisationData_ShouldReturnViewWithModel()
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(new OrganisationData());
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAddressByAddressType>._))
-                .Returns(new AddressData());
 
             var result = await OrganisationRegistrationController().OrganisationAddress(A<Guid>._);
             var model = ((ViewResult)result).Model;
