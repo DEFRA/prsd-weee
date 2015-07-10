@@ -1,8 +1,8 @@
-﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration
+﻿namespace EA.Weee.Core.Helpers.Xml
 {
     using System.Xml.Linq;
 
-    internal interface IXmlErrorTranslator
+    public interface IXmlErrorTranslator
     {
         string MakeFriendlyErrorMessage(XElement sender, string message, int lineNumber);
     }
