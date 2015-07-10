@@ -48,14 +48,6 @@
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        public Guid OrganisationId { get; set; }
-
-        public bool HasOrganisationAddress { get; set; }
-
-        public bool HasBusinessAddress { get; set; }
-
-        public bool HasNotificationAddress { get; set; }
-
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (CountryId == Guid.Empty)

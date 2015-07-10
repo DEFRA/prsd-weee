@@ -9,7 +9,6 @@
     using ViewModels.Shared;
     using Web.Controllers;
     using Weee.Requests.Organisations;
-    using Weee.Requests.Shared;
     using Xunit;
 
     public class OrganisationRegistrationControllerTests
