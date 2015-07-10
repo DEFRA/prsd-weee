@@ -1,0 +1,30 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@{
+    ViewBag.Title = "Successful Submission";
+}
+
+@section main_content {
+    <header class="hgroup">
+        <div>
+            <h1 class="heading-large">You have successfully submitted your XML file</h1>
+        </div>
+    </header>
+
+    @using (Html.BeginForm("LogOff", "Account", new { Area = "" }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <p>If you have finished performing tasks you can <span id="log-off-link"><noscript><input type="submit" value="sign out"/></noscript></span> or proceed to perform more activities</p>
+    }
+
+    @using (Html.BeginForm("ChooseActivity", "Home", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <input type="submit" class="button" value="Perform another activity" />
+    }
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $("#log-off-link").html("<a href=\"#\" onclick=\"$(this).closest('form').submit();\">sign out</a>");
+    </script>
+}
