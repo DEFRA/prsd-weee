@@ -11,5 +11,9 @@
         public string LastName { get; set; }
 
         public string Position { get; set; }
+
+        public bool HasContact { get; set; }
+
+        public Guid OrganisationId { get; set; }
     }
 }
