@@ -29,23 +29,23 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> AddOrAmendMembers(Guid id)
+        public async Task<ViewResult> AddOrAmendMembers(Guid pcsId)
         {   
             using (var client = apiClient())
             {
-                var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
+                var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
                 if (orgExists)
                 {
                     return View();
                 }
             }
 
-            throw new InvalidOperationException(string.Format("'{0}' is not a valid organisation Id", id));
+            throw new InvalidOperationException(string.Format("'{0}' is not a valid organisation Id", pcsId));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddOrAmendMembers(Guid id, AddOrAmendMembersViewModel model)
+        public async Task<ActionResult> AddOrAmendMembers(Guid pcsId, AddOrAmendMembersViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -55,18 +55,18 @@
             var fileData = fileConverter.Convert(model.File);
             using (var client = apiClient())
             {
-                var validationId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(id, fileData));
+                var validationId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(pcsId, fileData));
 
                 return RedirectToAction("ViewErrorsAndWarnings", "MemberRegistration", new { area = "PCS", memberUploadId = validationId });
             }
         }
 
         [HttpGet]
-        public async Task<ViewResult> ViewErrorsAndWarnings(Guid id, Guid memberUploadId)
+        public async Task<ViewResult> ViewErrorsAndWarnings(Guid pcsId, Guid memberUploadId)
         {
             using (var client = apiClient())
             {
-                var errors = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(id, memberUploadId));
+                var errors = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId));
 
                 if (errors.Any(e => e.ErrorLevel == ErrorLevel.Error))
                 {
