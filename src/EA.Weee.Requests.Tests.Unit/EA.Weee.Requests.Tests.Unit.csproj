@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MemberRegistration\XmlErrorTranslatorTests.cs" />
     <Compile Include="Organisations\GetOrganisationsByUserIdHandlerTest.cs" />
     <Compile Include="Helpers\DbContextHelper.cs" />
     <Compile Include="Helpers\ObjectInstantiator.cs" />
