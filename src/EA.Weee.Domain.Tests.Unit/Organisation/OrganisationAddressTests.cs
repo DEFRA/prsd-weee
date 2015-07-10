@@ -36,8 +36,6 @@
             {
                 Assert.Equal(validAddress, organisation.NotificationAddress);
             }
-            // Already added address, should fail if we try again
-            //Assert.Throws<InvalidOperationException>(() => organisation.AddAddress(CastAddressType(addressType), ValidAddress(addressType))); 
         }
 
         [Theory]
