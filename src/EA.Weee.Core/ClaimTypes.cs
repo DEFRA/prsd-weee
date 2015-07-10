@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests
+﻿namespace EA.Weee.Core
 {
     public static class ClaimTypes
     {

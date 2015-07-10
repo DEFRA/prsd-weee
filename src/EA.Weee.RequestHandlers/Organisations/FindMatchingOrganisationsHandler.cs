@@ -5,12 +5,14 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Organisations;
+    using Core.Shared;
     using DataAccess;
     using Domain.Organisation;
     using Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
-    using Requests.Shared;
+    using OrganisationStatus = Domain.Organisation.OrganisationStatus;
     using OrganisationType = Domain.Organisation.OrganisationType;
 
     internal class FindMatchingOrganisationsHandler :
@@ -82,7 +84,7 @@
 
             // extract data fields we want to compare against query and clean them up
 
-            IEnumerable<Func<Organisation, string>> dataExtractors = GetDataExtractors();
+            var dataExtractors = GetDataExtractors();
             var organisationDataFieldsCollection = new List<OrganisationDataFields>();
 
             foreach (var possibleOrganisation in possibleOrganisations)

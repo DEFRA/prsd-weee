@@ -2,6 +2,7 @@
 {
     using System.Data.Entity;
     using System.Threading.Tasks;
+    using Core.Organisations;
     using DataAccess;
     using Domain.Organisation;
     using Prsd.Core.Mapper;
