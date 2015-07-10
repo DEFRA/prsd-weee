@@ -136,5 +136,20 @@
 
             OrganisationStatus = OrganisationStatus.Withdrawn;
         }
+
+        public bool HasOrganisationAddress
+        {
+            get { return OrganisationAddress != null; }
+        }
+
+        public bool HasBusinessAddress
+        {
+            get { return BusinessAddress != null; }
+        }
+
+        public bool HasNotificationAddress
+        {
+            get { return NotificationAddress != null; }
+        }
     }
 }
