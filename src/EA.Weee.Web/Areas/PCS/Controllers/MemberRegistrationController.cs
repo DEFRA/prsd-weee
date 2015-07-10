@@ -66,7 +66,7 @@
         {
             using (var client = apiClient())
             {
-                var errors = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(memberUploadId));
+                var errors = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(id, memberUploadId));
 
                 if (errors.Any(e => e.ErrorLevel == ErrorLevel.Error))
                 {

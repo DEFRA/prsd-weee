@@ -17,6 +17,8 @@
     {
         private readonly DbContextHelper helper = new DbContextHelper();
 
+        private readonly Guid pcsId = Guid.NewGuid();
+
         [Fact]
         public async Task GetMemberUploadDataHandler_WithSeveralErrors_MappedCorrectly()
         {
@@ -31,7 +33,7 @@
 
             var handler = new GetMemberUploadDataHandler(context, new MemberUploadErrorMap());
 
-            var memberUploadErrorDataList = await handler.HandleAsync(new GetMemberUploadData(memberUploads.First().Id));
+            var memberUploadErrorDataList = await handler.HandleAsync(new GetMemberUploadData(pcsId, memberUploads.First().Id));
 
             Assert.True(memberUploadErrorDataList.Count(me => me.ErrorLevel == Core.Shared.ErrorLevel.Warning) == 1);
             Assert.True(memberUploadErrorDataList.Count(me => me.ErrorLevel == Core.Shared.ErrorLevel.Error) == 2);
@@ -43,7 +45,7 @@
         {
             var memberUploads = helper.GetAsyncEnabledDbSet(new[]
             {
-                new MemberUpload(Guid.NewGuid(), "FAKE DATA"), 
+                new MemberUpload(pcsId, "FAKE DATA"), 
             });
 
             var context = A.Fake<WeeeContext>();
@@ -52,7 +54,7 @@
 
             var handler = new GetMemberUploadDataHandler(context, new MemberUploadErrorMap());
 
-            var memberUploadErrorDataList = await handler.HandleAsync(new GetMemberUploadData(memberUploads.First().Id));
+            var memberUploadErrorDataList = await handler.HandleAsync(new GetMemberUploadData(pcsId, memberUploads.First().Id));
 
             Assert.Empty(memberUploadErrorDataList);
         }
@@ -62,7 +64,7 @@
         {
             var memberUploads = helper.GetAsyncEnabledDbSet(new[]
             {
-                new MemberUpload(Guid.NewGuid(), "FAKE DATA"), 
+                new MemberUpload(pcsId, "FAKE DATA"), 
             });
 
             var context = A.Fake<WeeeContext>();
@@ -71,12 +73,31 @@
 
             var handler = new GetMemberUploadDataHandler(context, new MemberUploadErrorMap());
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await handler.HandleAsync(new GetMemberUploadData(Guid.NewGuid())));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await handler.HandleAsync(new GetMemberUploadData(pcsId, Guid.NewGuid())));
+        }
+
+        [Fact]
+        public async Task GetMemberUploadHandler_WrongPcsId_ArgumentException()
+        {
+            var someOtherPcsId = Guid.NewGuid();
+
+            var memberUploads = helper.GetAsyncEnabledDbSet(new[]
+            {
+                new MemberUpload(someOtherPcsId, "FAKE DATA"), 
+            });
+
+            var context = A.Fake<WeeeContext>();
+
+            A.CallTo(() => context.MemberUploads).Returns(memberUploads);
+
+            var handler = new GetMemberUploadDataHandler(context, new MemberUploadErrorMap());
+
+            await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(new GetMemberUploadData(Guid.NewGuid(), memberUploads.First().Id)));
         }
 
         private MemberUpload GetExampleMemberUpload()
         {
-            return new MemberUpload(Guid.NewGuid(), "FAKE DATA", new List<MemberUploadError>
+            return new MemberUpload(pcsId, "FAKE DATA", new List<MemberUploadError>
             {
                 new MemberUploadError(ErrorLevel.Warning, "FAKE WARNING"),
                 new MemberUploadError(ErrorLevel.Error, "FAKE ERROR"),
