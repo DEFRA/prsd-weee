@@ -68,5 +68,11 @@
                 return View(new MemberUploadResultViewModel { ErrorData = errors });
             }
         }
+
+        [HttpGet]
+        public ViewResult SuccessfulSubmission()
+        {
+            return View();
+        }
     }
 }
