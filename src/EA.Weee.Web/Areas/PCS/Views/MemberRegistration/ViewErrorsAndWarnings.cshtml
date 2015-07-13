@@ -31,19 +31,19 @@
         </div>
     </header>
 
-    @foreach (MemberUploadErrorData error in Model.ErrorData)
-    {
-        var errorClass = "panel-indent-info";
-        
-        if (error.ErrorLevel == ErrorLevel.Warning) { errorClass = "panel-indent-warning"; }
-        if (error.ErrorLevel == ErrorLevel.Error)   { errorClass = "panel-indent-danger"; }
-        
-        <div class="@errorClass">
-            <div class="alert alert-danger" role="alert">
-                <strong>@error.ErrorLevel.ToString(): </strong>@error.Description
-            </div>
-        </div>
-    }
+    <details class="error-details validation-summary">
+        <summary class="error-details-summary bold-small">
+            @Model.ErrorData.Count Error(s)
+        </summary>
+
+        <ul class="error-list">
+            @foreach (MemberUploadErrorData uploadError in Model.ErrorData)
+            {
+                <li class="field-validation-error">@uploadError.Description</li>
+            }
+        </ul>
+
+    </details>
 
     @if (Model.ErrorData == null || Model.ErrorData.Count == 0)
     {

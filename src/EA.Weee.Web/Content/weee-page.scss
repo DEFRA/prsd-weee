@@ -504,3 +504,25 @@ $palette: (
     vertical-align: middle;
     margin-right:20px;
 }
+
+.error-details {
+    border-left: 3px solid $error-colour;
+    padding: 10px 0 10px 10px;
+    background-color: #FEF7F7;   
+}
+
+.error-details-summary {
+    color: black;
+}
+
+.error-details-summary:hover {
+    color: #505050;
+}
+
+.error-list {
+    list-style-type: disc
+}
+
+.error-list li {
+    margin-left: 30px
+}
