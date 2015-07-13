@@ -22,20 +22,20 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ChooseActivity(Guid id)
+        public async Task<ActionResult> ChooseActivity(Guid pcsId)
         {
             var model = new ChooseActivityViewModel();
             using (var client = apiClient())
             {
                 var organisationExists =
-                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
+                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
 
                 if (!organisationExists)
                 {
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
 
-                model.OrganisationId = id;
+                model.OrganisationId = pcsId;
                 return View(model);
             }
         }
@@ -48,11 +48,11 @@
             {
                 if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManagePcsMembers)
                 {
-                    return RedirectToAction("AddOrAmendMembers", "MemberRegistration", new { id = viewModel.OrganisationId });
+                    return RedirectToAction("AddOrAmendMembers", "MemberRegistration", new { pcsId = viewModel.OrganisationId });
                 }
                 if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManageOrganisationUsers)
                 {
-                    return RedirectToAction("ManageOrganisationUsers", new { id = viewModel.OrganisationId });
+                    return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId });
                 }
             }
 

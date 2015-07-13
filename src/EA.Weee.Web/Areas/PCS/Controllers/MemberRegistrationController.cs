@@ -2,10 +2,12 @@
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using Core.Shared;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.PCS.MemberRegistration;
@@ -13,6 +15,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.ViewModels.PCS;
     using ViewModels;
+    using Weee.Requests.Shared;
 
     public class MemberRegistrationController : Controller
     {
@@ -26,23 +29,23 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> AddOrAmendMembers(Guid id)
+        public async Task<ViewResult> AddOrAmendMembers(Guid pcsId)
         {   
             using (var client = apiClient())
             {
-                var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
+                var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
                 if (orgExists)
                 {
                     return View();
                 }
             }
 
-            throw new InvalidOperationException(string.Format("'{0}' is not a valid organisation Id", id));
+            throw new InvalidOperationException(string.Format("'{0}' is not a valid organisation Id", pcsId));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddOrAmendMembers(Guid id, AddOrAmendMembersViewModel model)
+        public async Task<ActionResult> AddOrAmendMembers(Guid pcsId, AddOrAmendMembersViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -52,21 +55,40 @@
             var fileData = fileConverter.Convert(model.File);
             using (var client = apiClient())
             {
-                var validationId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(id, fileData));
+                var validationId = await client.SendAsync(User.GetAccessToken(), new ValidateXmlFile(pcsId, fileData));
 
                 return RedirectToAction("ViewErrorsAndWarnings", "MemberRegistration", new { area = "PCS", memberUploadId = validationId });
             }
         }
 
         [HttpGet]
-        public async Task<ViewResult> ViewErrorsAndWarnings(Guid id, Guid memberUploadId)
+        public async Task<ViewResult> ViewErrorsAndWarnings(Guid pcsId, Guid memberUploadId)
         {
             using (var client = apiClient())
             {
-                var errors = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(memberUploadId));
+                var errors = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId));
 
-                return View(new MemberUploadResultViewModel { ErrorData = errors });
+                if (errors.Any(e => e.ErrorLevel == ErrorLevel.Error))
+                {
+                    return View("XmlHasErrors", new MemberUploadResultViewModel { ErrorData = errors });
+                }
+
+                return View("XmlHasNoErrors", new MemberUploadResultViewModel { ErrorData = errors });
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SubmitXml(MemberUploadResultViewModel viewModel)
+        {
+            throw new NotImplementedException();
+            // return RedirectToAction("SuccessfulSubmission");
+        }
+
+        [HttpGet]
+        public ViewResult SuccessfulSubmission()
+        {
+            return View();
         }
     }
 }

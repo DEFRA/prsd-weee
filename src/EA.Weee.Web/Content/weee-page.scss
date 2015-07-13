@@ -483,6 +483,24 @@ $palette: (
     color: #2E8ACA;
 }
 
+.link-submit-log-off {
+    background: none;
+    border: none;
+    padding: 0;
+    color: white;
+    cursor: pointer;
+    font-family: "nta",Arial,sans-serif;
+    font-size: 16px;
+    line-height: 1.31579;
+    font-weight: 700;
+    text-transform: none;
+    text-decoration: none;
+}
+
+.link-submit-log-off:hover {
+    text-decoration: underline;
+}
+
 .text-area{
     height: 200px;
 }
@@ -503,4 +521,25 @@ $palette: (
 .important-image {
     vertical-align: middle;
     margin-right:20px;
+}
+
+.panel-indent-danger {
+    clear: both;
+    border-left: 4px solid red;
+    padding: 10px;
+    margin: 10px;
+}
+
+.panel-indent-warning {
+    clear: both;
+    border-left: 4px solid #ffd800;
+    padding: 10px;
+    margin: 10px;
+}
+
+.panel-indent-info {
+    clear: both;
+    border-left: 4px solid #4856A6;
+    padding: 10px;
+    margin: 10px;
 }

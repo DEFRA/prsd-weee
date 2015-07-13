@@ -3,6 +3,7 @@
     using System;
     using Prsd.Core.Mediator;
     using System.Collections.Generic;
+    using Core.Organisations;
 
     public class GetOrganisationsByUserId : IRequest<List<OrganisationUserData>>
     {

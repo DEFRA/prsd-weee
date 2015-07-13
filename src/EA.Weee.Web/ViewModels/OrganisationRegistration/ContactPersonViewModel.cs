@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using Core.Organisations;
     using Weee.Requests.Organisations;
 
     public class ContactPersonViewModel
@@ -29,12 +30,24 @@
         public AddContactPersonToOrganisation ToAddRequest()
         {
             var contact = new ContactData
-            {
+            {   
                 FirstName = FirstName,
                 LastName = LastName,
                 Position = Position
             };
             return new AddContactPersonToOrganisation(OrganisationId, contact);
+        }
+
+        public ContactPersonViewModel()
+        {
+        }
+
+        public ContactPersonViewModel(ContactData contactPerson)
+        {
+            OrganisationId = contactPerson.OrganisationId;
+            FirstName = contactPerson.FirstName;
+            LastName = contactPerson.LastName;
+            Position = contactPerson.Position;
         }
     }
 }
