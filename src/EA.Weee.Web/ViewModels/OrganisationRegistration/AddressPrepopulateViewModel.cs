@@ -2,8 +2,8 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Web.ViewModels.Shared;
+    using Core.Organisations;
+    using Shared;
 
     public class AddressPrepopulateViewModel
     {

@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests.Organisations
+﻿namespace EA.Weee.Core.Organisations
 {
     using System;
     using Shared;

@@ -4,13 +4,14 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Organisations;
     using DataAccess;
     using Domain;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Requests.Shared;
-    using OrganisationType = Requests.Organisations.OrganisationType;
+    using OrganisationType = Core.Organisations.OrganisationType;
 
     internal class OrganisationByIdHandler : IRequestHandler<GetOrganisationInfo, OrganisationData>
     {

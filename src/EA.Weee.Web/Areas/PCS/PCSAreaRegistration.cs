@@ -17,7 +17,7 @@
         {
             context.MapRoute(
                 name: "PCS_default",
-                url: "PCS/{id}/{controller}/{action}/{entityId}",
+                url: "PCS/{pcsId}/{controller}/{action}/{entityId}",
                 defaults: new { action = "Index", controller = "Home", entityId = UrlParameter.Optional },
                 namespaces: new[] { typeof(HomeController).Namespace });
         }

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Organisations
 {
     using System;
+    using Core.Shared;
     using Prsd.Core.Mediator;
-    using Shared;
 
     public class AddAddressToOrganisation : IRequest<Guid>
     {
