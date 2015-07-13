@@ -321,30 +321,4 @@ GO
 ALTER TABLE [Producer].[SICCode] CHECK CONSTRAINT [FK_SICCodeList_Producer]
 GO
 
-
-
-GO
-PRINT N'Altering [PCS].[MemberUpload]...';
-
-
-GO
-ALTER TABLE [PCS].[MemberUpload] 
-	ADD [ComplianceYear] [int] NOT NULL,
-		[PCSId] [uniqueidentifier] NULL,
-		[IsSubmitted] [bit] NOT Null;
-GO
-
-ALTER TABLE [PCS].[MemberUpload]  WITH CHECK ADD  CONSTRAINT [FK_MemberUpload_Scheme] FOREIGN KEY([PCSId])
-REFERENCES [PCS].[Scheme] ([Id])
-GO
-
-ALTER TABLE [PCS].[MemberUpload] CHECK CONSTRAINT [FK_MemberUpload_Scheme]
-GO
-
-GO
 PRINT N'Update complete.';
-
-
-GO
-PRINT N'Update complete.';
-GO
