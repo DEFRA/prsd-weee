@@ -136,7 +136,7 @@
                         new
                         {
                             area = "PCS",
-                            id = approvedOrganisationUsers.First().OrganisationId,                         
+                            pcsId = approvedOrganisationUsers.First().OrganisationId,                         
                         });
                 }
                 else if (inactiveOrganisationUsers.Count >= 1)

@@ -1,0 +1,58 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Shared
+@model EA.Weee.Web.ViewModels.PCS.MemberUploadResultViewModel
+@{
+    ViewBag.Title = "View any warnings";
+}
+
+@section main_content {
+    <header class="hgroup">
+        <div>
+            <h1 class="heading-large">Your file has passed our validation checks</h1>
+        </div>
+    </header>
+
+    @if (Model.ErrorData == null || Model.ErrorData.Count == 0)
+    {
+        <p>Your XML file contains no errors or warnings. You may submit the file as it is.</p>
+    }
+    else
+    {
+        int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
+        @:<p>Your XML file contains @numWarnings @(numWarnings == 1 ? "warning" : "warnings"). Warnings may be displayed where member details are incorrect or invalid.</p>
+        @:<p>You must review all the warnings. Make corrections to the XML file and re-upload it, or, where the changes are valid, you may choose to submit the file as it is.</p>
+    }
+
+    @foreach (MemberUploadErrorData error in Model.ErrorData)
+    {
+        var errorClass = "panel-indent-info";
+        
+        if (error.ErrorLevel == ErrorLevel.Warning) { errorClass = "panel-indent-warning"; }
+        if (error.ErrorLevel == ErrorLevel.Error)   { errorClass = "panel-indent-danger"; }
+        
+        <div class="@errorClass">
+            <div class="alert alert-danger" role="alert">
+                <strong>@error.ErrorLevel.ToString(): </strong>@error.Description
+            </div>
+        </div>
+    }
+
+    @using (Html.BeginForm("SubmitXml", "MemberRegistration", FormMethod.Post, new { area = "PCS", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Confirmation)">
+            @Html.Gds().ValidationMessageFor(m => m.Confirmation)
+            <label class="block-label" for="confirmation-check">
+                @Html.CheckBoxFor(m => m.Confirmation, new { id = "confirmation-check" })
+                @Html.DisplayNameFor(m => m.Confirmation)
+            </label>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Submit" class="button"/>
+        </div>
+
+        <p>Go back and @Html.ActionLink("upload a new file.","AddOrAmendMembers","MemberRegistration")</p>
+    }
+}

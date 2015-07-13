@@ -18,8 +18,7 @@
 
         private readonly IMap<MemberUploadError, MemberUploadErrorData> memberUploadErrorMap;
 
-        public GetMemberUploadDataHandler(WeeeContext context,
-            IMap<MemberUploadError, MemberUploadErrorData> memberUploadErrorMap)
+        public GetMemberUploadDataHandler(WeeeContext context, IMap<MemberUploadError, MemberUploadErrorData> memberUploadErrorMap)
         {
             this.context = context;
             this.memberUploadErrorMap = memberUploadErrorMap;
@@ -31,8 +30,12 @@
 
             if (memberUpload == null)
             {
-                throw new ArgumentNullException(string.Format("Could not find a MemberUpload with id {0}",
-                    message.MemberUploadId));
+                throw new ArgumentNullException(string.Format("Could not find a MemberUpload with id {0}", message.MemberUploadId));
+            }
+
+            if (memberUpload.OrganisationId != message.PcsId)
+            {
+                throw new ArgumentException(string.Format("Member upload {0} is not owned by PCS {1}", message.MemberUploadId, message.PcsId));
             }
 
             return memberUpload.Errors.Select(e => memberUploadErrorMap.Map(e)).ToList();

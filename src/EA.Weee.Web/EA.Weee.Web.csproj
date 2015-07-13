@@ -512,7 +512,7 @@
     <Content Include="Views\Account\UserAccountActivationRequired.cshtml" />
     <Content Include="Views\Organisation\HoldingMessageForPending.cshtml" />
     <Content Include="Areas\PCS\Views\Home\ChooseActivity.cshtml" />
-    <Content Include="Areas\PCS\Views\MemberRegistration\ViewErrorsAndWarnings.cshtml" />
+    <Content Include="Areas\PCS\Views\MemberRegistration\XmlHasNoErrors.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
