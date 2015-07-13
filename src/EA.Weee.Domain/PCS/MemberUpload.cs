@@ -8,17 +8,20 @@
     public class MemberUpload : Entity
     {
         public Guid OrganisationId { get; private set; }
+
         public virtual Organisation Organisation { get; private set; }
+
+        public virtual List<MemberUploadError> Errors { get; private set; }
 
         public string Data { get; private set; }
 
         //public int ComplianceYear { get; private set; }
 
-        public virtual List<MemberUploadError> Errors { get; private set; }
-
         //public virtual Scheme Scheme { get; private set; }
 
         //public bool IsSubmitted { get; private set; }
+
+       // public virtual List<Producer> Producers { get; private set; }
 
         public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors)
         {
