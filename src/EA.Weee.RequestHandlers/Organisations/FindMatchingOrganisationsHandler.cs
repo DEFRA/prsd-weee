@@ -83,9 +83,8 @@
                         o.OrganisationStatus == OrganisationStatus.Approved);
 
             // extract data fields we want to compare against query and clean them up
-
-            var dataExtractors = GetDataExtractors();
-            var organisationDataFieldsCollection = new List<OrganisationDataFields>();
+            IEnumerable<Func<Organisation, string>> dataExtractors = GetDataExtractors();
+            List<OrganisationDataFields> organisationDataFieldsCollection = new List<OrganisationDataFields>();
 
             foreach (var possibleOrganisation in possibleOrganisations)
             {

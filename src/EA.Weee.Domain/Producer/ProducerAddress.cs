@@ -4,9 +4,9 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
 
-    public class Address : Entity
+    public class ProducerAddress : Entity
     {
-        public Address(string primaryName, string secondaryName, string street, string town, string locality, string administrativeArea, 
+        public ProducerAddress(string primaryName, string secondaryName, string street, string town, string locality, string administrativeArea, 
             Country country, string postCode)
         {
             Country = country;
@@ -19,7 +19,7 @@
             PostCode = postCode;
         }
 
-        protected Address()
+        protected ProducerAddress()
         {
         }
 
