@@ -8,6 +8,19 @@
 
     public class Scheme : Entity
     {
+        public Scheme(Guid organisationId)
+        {
+            OrganisationId = organisationId;
+            ApprovalNumber = string.Empty;
+            Producers = new List<Producer>();
+        }
+
+        protected Scheme()
+        {
+        }
+
+        public Guid OrganisationId { get; private set; }
+
         public virtual Organisation Organisation { get; private set; }
 
         public string ApprovalNumber { get; private set; }

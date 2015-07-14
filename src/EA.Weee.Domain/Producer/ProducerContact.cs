@@ -16,6 +16,10 @@
             Mobile = mobile;
         }
 
+         protected ProducerContact()
+        {
+        }
+
         public string Title { get; private set; }
 
         public string ForeName { get; private set; }
