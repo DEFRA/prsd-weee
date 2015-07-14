@@ -16,11 +16,7 @@
         <p>If you have finished performing tasks you can <span id="log-off-link"><noscript><input type="submit" value="sign out"/></noscript></span> or proceed to perform more activities</p>
     }
 
-    @using (Html.BeginForm("ChooseActivity", "Home", FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        <input type="submit" class="button" value="Perform another activity" />
-    }
+    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
 }
 
 @section scripts {

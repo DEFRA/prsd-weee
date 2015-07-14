@@ -11,7 +11,6 @@
     using FakeItEasy;
     using Prsd.Core.Mediator;
     using Services;
-    using ViewModels.PCS;
     using Web.Areas.PCS.Controllers;
     using Web.Areas.PCS.ViewModels;
     using Weee.Requests.Organisations;
