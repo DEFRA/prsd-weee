@@ -4,6 +4,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.Organisation;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.Organisations;

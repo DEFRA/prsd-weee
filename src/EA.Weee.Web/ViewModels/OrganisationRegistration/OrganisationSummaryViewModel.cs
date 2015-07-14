@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration
 {
-    using System;
-    using Weee.Requests.Organisations;
+    using Core.Organisations;
 
     public class OrganisationSummaryViewModel
     {
