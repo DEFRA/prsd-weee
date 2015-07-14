@@ -1,18 +1,23 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Organisation
 {
     using System;
+    using Domain.Organisation;
     using Xunit;
-    using Organisation = Domain.Organisation;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class ContactPersonTests
     {
         [Fact]
-        public void AddContact_OrganisationAlreadyHasContact_Throws()
+        public void AddContact_OrganisationAlreadyHasContact_UpdateContactDetails()
         {
+            //Changed as per update contact person details
             var organisation = GetTestOrganisation();
             var contact = GetTestContact();
             organisation.AddMainContactPerson(contact);
-            Assert.Throws<InvalidOperationException>(() => organisation.AddMainContactPerson(contact));
+            
+            Assert.Equal(organisation.Contact.FirstName, contact.FirstName);
+            Assert.Equal(organisation.Contact.LastName, contact.LastName);
+            Assert.Equal(organisation.Contact.Position, contact.Position);
         }
 
         [Fact]

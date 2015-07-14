@@ -6,6 +6,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
+    using Core.Organisations;
     using FakeItEasy;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
@@ -49,12 +50,21 @@
         [Fact]
         public async void GetRedirectProcess_ApprovedOrganisationUserOne_ShouldRedirectToChooseActivity()
         {
+            var orgId = Guid.NewGuid();
+
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationsByUserId>._))
-                .Returns(new List<OrganisationUserData> { new OrganisationUserData() });
+                .Returns(new List<OrganisationUserData>
+                {
+                    new OrganisationUserData
+                    {
+                        OrganisationId = orgId
+                    }
+                });
 
             var result = await AccountController().RedirectProcess();
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
+            Assert.Equal(orgId, redirectToRouteResult.RouteValues["pcsId"]);
             Assert.Equal("ChooseActivity", redirectToRouteResult.RouteValues["action"]);
         }
 

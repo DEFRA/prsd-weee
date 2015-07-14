@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.Requests.NewUser
 {
     using System;
+    using Core.NewUser;
     using Prsd.Core.Mediator;
 
-    public class UserById : IRequest<User>
+    public class UserById : IRequest<UserData>
     {
         public readonly string Id;
 

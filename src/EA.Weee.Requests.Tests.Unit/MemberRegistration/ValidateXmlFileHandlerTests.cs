@@ -4,12 +4,14 @@
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.RequestHandlers.PCS.MemberRegistration;
-    using EA.Weee.Requests.PCS.MemberRegistration;
-    using EA.Weee.Requests.Tests.Unit.Helpers;
+    using Core.Helpers.Xml;
+    using DataAccess;
+    using Domain;
+    using Domain.PCS;
     using FakeItEasy;
+    using Helpers;
+    using PCS.MemberRegistration;
+    using RequestHandlers.PCS.MemberRegistration;
     using Xunit;
 
     public class ValidateXmlFileHandlerTests
@@ -19,7 +21,8 @@
         [Fact]
         public async Task Validation_ValidXml_NoErrors()
         {
-            var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-valid.xml");
+            var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\v3-valid.xml");
             var validXml = File.ReadAllText(new Uri(validXmlLocation).LocalPath);
 
             var fakeContext = SetupFakeWeeeContext();
@@ -28,7 +31,7 @@
             A.CallTo(() => fakeContext.MemberUploads.Add(A<MemberUpload>._))
                 .Invokes((MemberUpload m) => addedMemberUpload = m);
 
-            var handler = new ValidateXmlFileHandler(fakeContext);
+            var handler = new ValidateXmlFileHandler(fakeContext, new XmlErrorTranslator());
 
             await handler.HandleAsync(new ValidateXmlFile(Guid.NewGuid(), validXml));
 
@@ -38,7 +41,8 @@
         [Fact]
         public async Task Validation_NonSchemaXml_AddsError()
         {
-            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-slightly-invalid.xml");
+            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\v3-slightly-invalid.xml");
             var invalidXml = File.ReadAllText(new Uri(invalidXmlLocation).LocalPath);
 
             var fakeContext = SetupFakeWeeeContext();
@@ -47,7 +51,7 @@
             A.CallTo(() => fakeContext.MemberUploads.Add(A<MemberUpload>._))
                 .Invokes((MemberUpload m) => addedMemberUpload = m);
 
-            var handler = new ValidateXmlFileHandler(fakeContext);
+            var handler = new ValidateXmlFileHandler(fakeContext, new XmlErrorTranslator());
 
             await handler.HandleAsync(new ValidateXmlFile(Guid.NewGuid(), invalidXml));
 
@@ -57,7 +61,8 @@
         [Fact]
         public async Task Validation_CorruptXml_AddsError()
         {
-            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-badly-damaged.xml");
+            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\v3-badly-damaged.xml");
             var invalidXml = File.ReadAllText(new Uri(invalidXmlLocation).LocalPath);
 
             var fakeContext = SetupFakeWeeeContext();
@@ -66,7 +71,7 @@
             A.CallTo(() => fakeContext.MemberUploads.Add(A<MemberUpload>._))
                 .Invokes((MemberUpload m) => addedMemberUpload = m);
 
-            var handler = new ValidateXmlFileHandler(fakeContext);
+            var handler = new ValidateXmlFileHandler(fakeContext, new XmlErrorTranslator());
 
             await handler.HandleAsync(new ValidateXmlFile(Guid.NewGuid(), invalidXml));
 
@@ -76,7 +81,8 @@
         [Fact]
         public async Task Validation_NonXmlFile_AddsError()
         {
-            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\not-xml.xml");
+            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\not-xml.xml");
             var invalidXml = File.ReadAllText(new Uri(invalidXmlLocation).LocalPath);
 
             var fakeContext = SetupFakeWeeeContext();
@@ -85,7 +91,7 @@
             A.CallTo(() => fakeContext.MemberUploads.Add(A<MemberUpload>._))
                 .Invokes((MemberUpload m) => addedMemberUpload = m);
 
-            var handler = new ValidateXmlFileHandler(fakeContext);
+            var handler = new ValidateXmlFileHandler(fakeContext, new XmlErrorTranslator());
 
             await handler.HandleAsync(new ValidateXmlFile(Guid.NewGuid(), invalidXml));
 

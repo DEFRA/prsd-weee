@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Organisation
 {
     using System;
+    using Domain.Organisation;
     using Xunit;
-    using Organisation = Domain.Organisation;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class OrganisationTests
     {

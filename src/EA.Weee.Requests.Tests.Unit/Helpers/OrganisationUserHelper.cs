@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Requests.Tests.Unit.Helpers
 {
     using System;
+    using Domain.Organisation;
     using EA.Weee.Domain;
 
     internal class OrganisationUserHelper
