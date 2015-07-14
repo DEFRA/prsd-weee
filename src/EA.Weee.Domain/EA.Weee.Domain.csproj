@@ -47,7 +47,7 @@
   <ItemGroup>
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
-    <Compile Include="Producer\Address.cs" />
+    <Compile Include="Producer\ProducerAddress.cs" />
     <Compile Include="AnnualTurnOverBandType.cs" />
     <Compile Include="Producer\AuthorisedRepresentative.cs" />
     <Compile Include="Producer\BrandName.cs" />
@@ -55,7 +55,7 @@
     <Compile Include="Country.cs" />
     <Compile Include="Producer\Business.cs" />
     <Compile Include="Producer\Company.cs" />
-    <Compile Include="Producer\Contact.cs" />
+    <Compile Include="Producer\ProducerContact.cs" />
     <Compile Include="EEEPlacedOnMarketBandType.cs" />
     <Compile Include="ErrorLevel.cs" />
     <Compile Include="PCS\MemberUpload.cs" />

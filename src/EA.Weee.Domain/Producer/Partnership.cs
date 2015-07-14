@@ -5,7 +5,7 @@
 
     public class Partnership : Entity
     {
-        public Partnership(string name, Contact principalPlaceOfBusiness, List<Partner> partnersList)
+        public Partnership(string name, ProducerContact principalPlaceOfBusiness, List<Partner> partnersList)
         {
             PartnersList = partnersList;
             Name = name;
@@ -14,7 +14,7 @@
 
         public string Name { get; private set; }
 
-        public Contact PrincipalPlaceOfBusiness { get; private set; }
+        public ProducerContact PrincipalPlaceOfBusiness { get; private set; }
 
         public List<Partner> PartnersList { get; private set; } 
     }
