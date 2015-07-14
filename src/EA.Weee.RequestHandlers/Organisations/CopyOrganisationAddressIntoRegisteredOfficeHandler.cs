@@ -2,14 +2,15 @@
 {
     using System;
     using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.Requests.Organisations;
+    using DataAccess;
+    using Domain;
+    using Domain.Organisation;
+    using Prsd.Core.Mediator;
+    using Requests.Organisations;
 
-    internal class CopyOrganisationAddressIntoRegisteredOfficeHandler : IRequestHandler<CopyOrganisationAddressIntoRegisteredOffice, Guid>
+    internal class CopyOrganisationAddressIntoRegisteredOfficeHandler :
+        IRequestHandler<CopyOrganisationAddressIntoRegisteredOffice, Guid>
     {
         private readonly WeeeContext context;
 
@@ -24,7 +25,8 @@
 
             if (organisation == null)
             {
-                throw new ArgumentException(string.Format("Could not find an organisation with Id {0}", message.OrganisationId));
+                throw new ArgumentException(string.Format("Could not find an organisation with Id {0}",
+                    message.OrganisationId));
             }
 
             var oa = organisation.OrganisationAddress;

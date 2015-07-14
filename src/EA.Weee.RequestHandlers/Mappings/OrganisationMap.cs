@@ -3,17 +3,15 @@
     using System;
     using Core.Organisations;
     using Core.Shared;
-    using Domain;
+    using Domain.Organisation;
     using Prsd.Core.Mapper;
-    using Requests.Organisations;
-    using Requests.Shared;
     using OrganisationStatus = Core.Shared.OrganisationStatus;
     using OrganisationType = Core.Organisations.OrganisationType;
 
     public class OrganisationMap : IMap<Organisation, OrganisationData>
     {
         private readonly IMap<Address, AddressData> addressMap;
-        private readonly IMap<Contact, ContactData> contactMap; 
+        private readonly IMap<Contact, ContactData> contactMap;
 
         public OrganisationMap(IMap<Address, AddressData> addressMap, IMap<Contact, ContactData> contactMap)
         {
@@ -31,7 +29,9 @@
                 TradingName = source.TradingName,
 
                 // SQL doesn't allow nulls so no chance of null ref exception for enums
-                OrganisationStatus = (OrganisationStatus)Enum.Parse(typeof(OrganisationStatus), source.OrganisationStatus.Value.ToString()),
+                OrganisationStatus =
+                    (OrganisationStatus)
+                        Enum.Parse(typeof(OrganisationStatus), source.OrganisationStatus.Value.ToString()),
                 OrganisationType =
                     (OrganisationType)
                         Enum.Parse(typeof(OrganisationType),
@@ -49,7 +49,10 @@
                     : null,
                 OrganisationAddress = source.OrganisationAddress != null
                     ? addressMap.Map(source.OrganisationAddress)
-                    : null
+                    : null,
+                HasOrganisationAddress = source.HasOrganisationAddress,
+                HasBusinessAddress = source.HasBusinessAddress,
+                HasNotificationAddress = source.HasNotificationAddress
             };
         }
     }

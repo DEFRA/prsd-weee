@@ -4,6 +4,7 @@
     using System.Data.Entity;
     using System.Threading.Tasks;
     using DataAccess;
+    using Domain.Organisation;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
 
@@ -39,18 +40,18 @@
             return organisation.Id;
         }
 
-        public Domain.OrganisationType GetAddressType(Core.Organisations.OrganisationType orgType)
+        public OrganisationType GetAddressType(Core.Organisations.OrganisationType orgType)
         {
             switch (orgType)
             {
                 case Core.Organisations.OrganisationType.RegisteredCompany:
-                    return Domain.OrganisationType.RegisteredCompany;
+                    return OrganisationType.RegisteredCompany;
 
                 case Core.Organisations.OrganisationType.Partnership:
-                    return Domain.OrganisationType.Partnership;
+                    return OrganisationType.Partnership;
 
                 case Core.Organisations.OrganisationType.SoleTraderOrIndividual:
-                    return Domain.OrganisationType.SoleTraderOrIndividual;
+                    return OrganisationType.SoleTraderOrIndividual;
 
                 default:
                     throw new ArgumentException(string.Format("Unknown organisation type: {0}", orgType),

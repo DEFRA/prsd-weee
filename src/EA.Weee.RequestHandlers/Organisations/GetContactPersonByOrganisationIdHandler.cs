@@ -8,6 +8,7 @@
     using Requests.Organisations;
     using System.Threading.Tasks;
     using Core.Organisations;
+    using Domain.Organisation;
 
     internal class GetContactPersonByOrganisationIdHandler : IRequestHandler<GetContactPersonByOrganisationId, ContactData>
     {

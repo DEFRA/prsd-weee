@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Domain
+﻿namespace EA.Weee.Domain.Organisation
 {
     using System;
     using EA.Prsd.Core;
@@ -95,7 +95,7 @@
             else if (organisationType == OrganisationType.RegisteredCompany)
             {
                 Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
-                Guard.ArgumentNotNullOrEmpty(() => companyRegistrationNumber, companyRegistrationNumber);
+                Guard.ArgumentNotNullOrEmpty(() => companyRegNumber, companyRegNumber);
             }
 
             OrganisationType = organisationType;
@@ -159,6 +159,21 @@
             }
 
             OrganisationStatus = OrganisationStatus.Withdrawn;
+        }
+
+        public bool HasOrganisationAddress
+        {
+            get { return OrganisationAddress != null; }
+        }
+
+        public bool HasBusinessAddress
+        {
+            get { return BusinessAddress != null; }
+        }
+
+        public bool HasNotificationAddress
+        {
+            get { return NotificationAddress != null; }
         }
     }
 }

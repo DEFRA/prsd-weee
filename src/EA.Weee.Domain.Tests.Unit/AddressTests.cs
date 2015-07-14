@@ -3,7 +3,7 @@
     using System;
     using Helpers;
     using Xunit;
-    using Address = Domain.Address;
+    using Address = Domain.Organisation.Address;
 
     /// <summary>
     /// Throughout this class "NR" = not required, "R" = required

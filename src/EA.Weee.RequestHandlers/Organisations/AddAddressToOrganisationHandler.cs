@@ -2,10 +2,10 @@
 {
     using System;
     using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain;
+    using Domain.Organisation;
     using Mappings;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
@@ -50,7 +50,7 @@
             {
                 throw new InvalidOperationException(ex.Message);
             }
-            
+
             return GetAddressId(addresstype, organisation);
         }
 

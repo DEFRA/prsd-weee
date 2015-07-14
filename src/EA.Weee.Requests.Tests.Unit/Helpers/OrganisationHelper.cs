@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Requests.Tests.Unit.Helpers
 {
     using System;
+    using Domain.Organisation;
     using EA.Weee.Domain;
 
     internal class OrganisationHelper
@@ -10,15 +11,15 @@
             return GetOrganisationWithDetails(name, null, "1234567", OrganisationType.RegisteredCompany, OrganisationStatus.Approved);
         }
 
-        internal Organisation GetOrganisationWithDetails(string name, string tradingName, string companyRegistrationNumber, Domain.OrganisationType type, OrganisationStatus status)
+        internal Organisation GetOrganisationWithDetails(string name, string tradingName, string companyRegistrationNumber, OrganisationType type, OrganisationStatus status)
         {
             Organisation organisation;
 
-            if (type == Domain.OrganisationType.RegisteredCompany)
+            if (type == OrganisationType.RegisteredCompany)
             {
                 organisation = Organisation.CreateRegisteredCompany(name, companyRegistrationNumber, tradingName);
             }
-            else if (type == Domain.OrganisationType.Partnership)
+            else if (type == OrganisationType.Partnership)
             {
                 organisation = Organisation.CreatePartnership(tradingName);
             }

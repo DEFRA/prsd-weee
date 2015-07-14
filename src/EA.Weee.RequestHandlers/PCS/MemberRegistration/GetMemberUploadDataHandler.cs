@@ -6,12 +6,11 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Core.Shared;
-    using EA.Prsd.Core.Mapper;
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.Requests.PCS.MemberRegistration;
-    using EA.Weee.Requests.Shared;
+    using DataAccess;
+    using Domain.PCS;
+    using Prsd.Core.Mapper;
+    using Prsd.Core.Mediator;
+    using Requests.PCS.MemberRegistration;
 
     internal class GetMemberUploadDataHandler : IRequestHandler<GetMemberUploadData, List<MemberUploadErrorData>>
     {
@@ -32,6 +31,11 @@
             if (memberUpload == null)
             {
                 throw new ArgumentNullException(string.Format("Could not find a MemberUpload with id {0}", message.MemberUploadId));
+            }
+
+            if (memberUpload.OrganisationId != message.PcsId)
+            {
+                throw new ArgumentException(string.Format("Member upload {0} is not owned by PCS {1}", message.MemberUploadId, message.PcsId));
             }
 
             return memberUpload.Errors.Select(e => memberUploadErrorMap.Map(e)).ToList();
