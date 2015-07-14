@@ -6,12 +6,13 @@
     using Core.Organisations;
     using FakeItEasy;
     using ViewModels.OrganisationRegistration;
+    using ViewModels.OrganisationRegistration.Details;
     using ViewModels.OrganisationRegistration.Type;
     using ViewModels.Shared;
     using Web.Controllers;
     using Weee.Requests.Organisations;
     using Xunit;
-
+    
     public class OrganisationRegistrationControllerTests
     {
         private readonly IWeeeClient apiClient;
@@ -146,19 +147,19 @@
         }
 
         [Fact]
-        public async void GetEditType_OrganisationIdIsInvalid_ShouldThrowArgumentException()
+        public async void GetType_OrganisationIdIsInvalid_ShouldThrowArgumentException()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
                 .Returns(false);
 
             await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().Type(A<Guid>._));
         }
 
         [Fact]
-        public async void GetEditType_OrganisationIdIsValid_ShouldReturnOrganisationTypeViewModel()
+        public async void GetType_OrganisationIdIsValid_ShouldReturnOrganisationTypeViewModel()
         {
             var organisationId = Guid.NewGuid();
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
                 .Returns(true);
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
@@ -168,6 +169,132 @@
             var model = ((ViewResult)result).Model;
 
             Assert.IsType<OrganisationTypeViewModel>(model);
+        }
+
+        [Fact]
+        public async void PostType_SoleTraderDetailsSelectionWithoutOrganisationId_ShouldRedirectSoleTraderDetails()
+        {
+            var model = GetMockOrganisationTypeViewModel();
+
+            var result = await OrganisationRegistrationController().Type(model);
+            var redirectToRouteResult = ((RedirectToRouteResult)result);
+
+            Assert.Equal("SoleTraderDetails", redirectToRouteResult.RouteValues["action"]);
+        }
+
+        [Fact]
+        public async void PostType_SoleTraderDetailsSelectionWithOrganisationId_ShouldRedirectSoleTraderDetailsWithOrganisationTypeSameFlag()
+        {
+            var model = GetMockOrganisationTypeViewModel();
+            model.OrganisationId = Guid.NewGuid();
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
+               .Returns(true);
+
+            var orgData = new OrganisationData
+            {
+                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                Id = Guid.NewGuid()
+            };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(orgData);
+
+            var result = await OrganisationRegistrationController().Type(model);
+            var redirectToRouteResult = ((RedirectToRouteResult)result);
+
+            Assert.Equal("SoleTraderDetails", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(redirectToRouteResult.RouteValues["isOrganisationTypeSame"], true);
+        }
+
+        [Fact]
+        public async void GetSoleTraderDetails_WithoutOrganisationId_ShouldReturnsSoleTraderDetailsView()
+        {  
+            var result = await OrganisationRegistrationController().SoleTraderDetails();
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<SoleTraderDetailsViewModel>(model);
+        }
+
+        [Fact]
+        public async void GetSoleTraderDetails_InvalidOrganisationId_ShouldThrowArgumentException()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
+               .Returns(false);
+
+            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().SoleTraderDetails(A<Guid>._, true));
+        }
+
+        [Fact]
+        public async void GetSoleTraderDetails_WithValidOrganisationId_ShouldReturnsSoleTraderDetailsViewWithModel()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
+             .Returns(true);
+           
+            var orgData = new OrganisationData
+            {
+                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                Id = Guid.NewGuid(),
+                TradingName = "SFW Ltd."
+            };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(orgData);
+
+            var result = await OrganisationRegistrationController().SoleTraderDetails(orgData.Id, true);
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<SoleTraderDetailsViewModel>(model);
+            Assert.Equal(orgData.TradingName, ((SoleTraderDetailsViewModel)model).BusinessTradingName);
+        }
+
+        [Fact]
+        public async void GetRegisteredCompanyDetails_InvalidOrganisationId_ShouldThrowArgumentException()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
+               .Returns(false);
+
+            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().RegisteredCompanyDetails(A<Guid>._, true));
+        }
+
+        [Fact]
+        public async void GetRegisteredCompanyDetails_WithoutOrganisationId_ShouldReturnsRegisteredCompanyDetailsView()
+        {
+            var result = await OrganisationRegistrationController().RegisteredCompanyDetails();
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<RegisteredCompanyDetailsViewModel>(model);
+        }
+
+        [Fact]
+        public async void GetRegisteredCompanyDetails_WithValidOrganisationId_ShouldReturnsRegisteredCompanyDetailsViewWithModel()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
+             .Returns(true);
+
+            var orgData = new OrganisationData
+            {
+                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                Id = Guid.NewGuid(),
+                TradingName = "SFW Ltd.",
+                CompanyRegistrationNumber = "12345678",
+                Name = "SFW"
+            };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(orgData);
+
+            var result = await OrganisationRegistrationController().RegisteredCompanyDetails(orgData.Id, true);
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<RegisteredCompanyDetailsViewModel>(model);
+            Assert.Equal(orgData.TradingName, ((RegisteredCompanyDetailsViewModel)model).BusinessTradingName);
+            Assert.Equal(orgData.CompanyRegistrationNumber, ((RegisteredCompanyDetailsViewModel)model).CompaniesRegistrationNumber);
+            Assert.Equal(orgData.Name, ((RegisteredCompanyDetailsViewModel)model).CompanyName);
         }
 
         private OrganisationRegistrationController OrganisationRegistrationController()
@@ -185,6 +312,16 @@
             };
 
             return addressPrepopulateViewModel;
+        }
+
+        private OrganisationTypeViewModel GetMockOrganisationTypeViewModel()
+        {
+            var organisationTypeViewModel = new OrganisationTypeViewModel
+            {
+                OrganisationTypes = RadioButtonStringCollectionViewModel.CreateFromEnum<OrganisationType>(OrganisationType.SoleTraderOrIndividual)
+            };
+
+            return organisationTypeViewModel;
         }
 
         private OrganisationType CastOrganisationType(string organisationType)

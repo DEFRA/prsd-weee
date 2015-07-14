@@ -12,7 +12,7 @@
         {
             Guard.ArgumentNotNull(() => organisationType, organisationType);
             Guard.ArgumentNotNullOrEmpty(() => tradingName, tradingName);
-        
+
             OrganisationType = organisationType;
             TradingName = tradingName;
             OrganisationStatus = OrganisationStatus.Incomplete;
@@ -23,7 +23,7 @@
             Guard.ArgumentNotNull(() => organisationType, organisationType);
             Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
             Guard.ArgumentNotNullOrEmpty(() => companyRegistrationNumber, companyRegistrationNumber);
-          
+
             OrganisationType = organisationType;
             OrganisationStatus = OrganisationStatus.Incomplete;
             Name = companyName;
@@ -78,6 +78,30 @@
         public static Organisation CreateRegisteredCompany(string companyName, string companyRegistrationNumber, string tradingName = null)
         {
             return new Organisation(OrganisationType.RegisteredCompany, companyName, companyRegistrationNumber, tradingName);
+        }
+
+        public void UpdateOrganisationTypeDetails(string companyName, string companyRegNumber,
+            string tradingName, OrganisationType organisationType)
+        {
+            Guard.ArgumentNotNull(() => organisationType, organisationType);
+            if (organisationType == OrganisationType.SoleTraderOrIndividual)
+            {
+                Guard.ArgumentNotNullOrEmpty(() => tradingName, tradingName);
+            }
+            else if (organisationType == OrganisationType.Partnership)
+            {
+                Guard.ArgumentNotNullOrEmpty(() => tradingName, tradingName);
+            }
+            else if (organisationType == OrganisationType.RegisteredCompany)
+            {
+                Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
+                Guard.ArgumentNotNullOrEmpty(() => companyRegistrationNumber, companyRegistrationNumber);
+            }
+
+            OrganisationType = organisationType;
+            Name = companyName;
+            CompanyRegistrationNumber = companyRegNumber;
+            TradingName = tradingName;
         }
 
         public void CompleteRegistration()
