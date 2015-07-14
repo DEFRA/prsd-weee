@@ -41,10 +41,10 @@
             var notificationAddress = await MakeInternationalAddress("N");
 
             var organisation = Organisation.CreateRegisteredCompany(name, crn, tradingName);
-            organisation.AddMainContactPerson(contact);
-            organisation.AddAddress(AddressType.OrganisationAddress, organisationAddress);
-            organisation.AddAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
-            organisation.AddAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
+            organisation.AddOrUpdateMainContactPerson(contact);
+            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
+            organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
+            organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
 
             this.testOrganisationToCleanUp = organisation;
 
@@ -83,10 +83,10 @@
 
             var organisation = Organisation.CreateSoleTrader(tradingName);
 
-            organisation.AddMainContactPerson(contact);
-            organisation.AddAddress(AddressType.OrganisationAddress, organisationAddress);
-            organisation.AddAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
-            organisation.AddAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
+            organisation.AddOrUpdateMainContactPerson(contact);
+            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, organisationAddress);
+            organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
+            organisation.AddOrUpdateAddress(AddressType.ServiceOfNoticeAddress, notificationAddress);
 
             this.testOrganisationToCleanUp = organisation;
 

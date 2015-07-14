@@ -144,7 +144,7 @@
             }
         }
 
-        public Address Blit(Address otherAddress)
+        public Address OverwriteWhereNull(Address otherAddress)
         {
             if (otherAddress == null)
             {

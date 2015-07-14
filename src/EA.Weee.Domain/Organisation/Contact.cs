@@ -64,7 +64,7 @@
             }
         }
 
-        public Contact Blit(Contact otherContact)
+        public Contact OverwriteWhereNull(Contact otherContact)
         {
             if (otherContact == null)
             {

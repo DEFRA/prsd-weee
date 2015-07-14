@@ -5,7 +5,7 @@
 
     public partial class Organisation
     {
-        public void AddAddress(AddressType type, Address address)
+        public void AddOrUpdateAddress(AddressType type, Address address)
         {
             Guard.ArgumentNotNull(() => address, address);
             Guard.ArgumentNotNull(() => type, type);
@@ -13,12 +13,12 @@
             switch (type.DisplayName)
             {
                 case "Organisation address":
-                    OrganisationAddress = address.Blit(OrganisationAddress);
+                    OrganisationAddress = address.OverwriteWhereNull(OrganisationAddress);
                     break;
                 case "Registered or PPB address":
                     if (address.IsUkAddress())
                     {
-                        BusinessAddress = address.Blit(BusinessAddress);
+                        BusinessAddress = address.OverwriteWhereNull(BusinessAddress);
                     }
                     else
                     {
@@ -26,7 +26,7 @@
                     }
                     break;
                 case "Service of notice address":
-                    NotificationAddress = address.Blit(NotificationAddress);
+                    NotificationAddress = address.OverwriteWhereNull(NotificationAddress);
                     break;
             }
         }
