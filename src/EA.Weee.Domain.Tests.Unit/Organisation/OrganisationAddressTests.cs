@@ -2,8 +2,9 @@
 {
     using EA.Weee.Domain.Tests.Unit.Helpers;
     using System;
+    using Domain.Organisation;
     using Xunit;
-    using Organisation = Domain.Organisation;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class OrganisationAddressTests
     {
@@ -17,13 +18,25 @@
         [InlineData("Service of notice address", "Sole trader or individual")]
         [InlineData("Service of notice address", "Partnership")]
         [InlineData("Service of notice address", "Registered Company")]
-        public void AddAddressToOrganisation_AddressAlreadyExists_InvalidOperationShouldBeThrown(string addressType, string organisationType)
+        public void AddAddressToOrganisation_AddressAlreadyExists_UpdateAddressDetails(string addressType, string organisationType)
         {
             var organisation = ValidOrganisation(CastOrganisationType(organisationType));
-            organisation.AddAddress(CastAddressType(addressType), ValidAddress(addressType));
-
-            // Already added address, should fail if we try again
-            Assert.Throws<InvalidOperationException>(() => organisation.AddAddress(CastAddressType(addressType), ValidAddress(addressType))); 
+            var validAddress = ValidAddress(addressType);
+            var type = CastAddressType(addressType);
+            organisation.AddAddress(type, validAddress);
+            
+            if (type == AddressType.OrganisationAddress)
+            {
+                Assert.Equal(validAddress, organisation.OrganisationAddress);
+            }
+            else if (type == AddressType.RegisteredOrPPBAddress)
+            {
+                Assert.Equal(validAddress, organisation.BusinessAddress);
+            }
+            else if (type == AddressType.ServiceOfNoticeAddress)
+            {
+                Assert.Equal(validAddress, organisation.NotificationAddress);
+            }
         }
 
         [Theory]

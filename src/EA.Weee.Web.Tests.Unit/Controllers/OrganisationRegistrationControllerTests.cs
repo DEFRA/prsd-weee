@@ -3,6 +3,7 @@
     using System;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.Organisations;
     using FakeItEasy;
     using ViewModels.OrganisationRegistration;
     using ViewModels.Shared;
@@ -94,6 +95,19 @@
 
             Assert.Equal("OrganisationRegistration", redirectToRouteResult.RouteValues["controller"]);
             Assert.Equal("ReviewOrganisationDetails", redirectToRouteResult.RouteValues["action"]);
+        }
+
+        [Fact]
+        public async void GetOrganisationAddress_ApiReturnsOrganisationData_ShouldReturnViewWithModel()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData());
+
+            var result = await OrganisationRegistrationController().OrganisationAddress(A<Guid>._);
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<AddressViewModel>(model);
         }
 
         [Fact]
