@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers
 {
     using Autofac;
+    using FluentValidation;
+    using PCS.MemberRegistration.XmlValidation.BusinessValidation;
     using Prsd.Core.Autofac;
     using Prsd.Core.Decorators;
     using Prsd.Core.Mediator;
@@ -25,6 +27,11 @@
             // Register the map classes
             builder.RegisterAssemblyTypes(this.GetType().Assembly)
                 .Where(t => t.Namespace.Contains("Mappings"))
+                .AsImplementedInterfaces();
+
+            // Xml Validation
+            builder.RegisterAssemblyTypes(GetType().Assembly)
+                .Where(t => t.Namespace.Contains("XmlValidation"))
                 .AsImplementedInterfaces();
         }
     }
