@@ -63,5 +63,12 @@
                 lastname = value;
             }
         }
+
+        public void CopyValuesInto(Contact otherContact)
+        {
+            otherContact.FirstName = FirstName;
+            otherContact.LastName = LastName;
+            otherContact.Position = Position;
+        }
     }
 }

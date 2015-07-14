@@ -13,7 +13,14 @@
         {
             Guard.ArgumentNotNull(() => contactPerson, contactPerson);
 
-            Contact = contactPerson;
+            if (!HasContact)
+            {
+                Contact = contactPerson;
+            }
+            else
+            {
+                contactPerson.CopyValuesInto(Contact);
+            }
         }
     }
 }
