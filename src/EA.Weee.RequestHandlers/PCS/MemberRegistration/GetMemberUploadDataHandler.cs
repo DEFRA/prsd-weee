@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
-    using Domain;
+    using Domain.PCS;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.PCS.MemberRegistration;

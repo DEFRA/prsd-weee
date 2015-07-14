@@ -4,6 +4,7 @@
     using System.Linq;
     using BusinessValidation;
     using Domain;
+    using Domain.PCS;
     using Requests.PCS.MemberRegistration;
     using SchemaValidation;
 

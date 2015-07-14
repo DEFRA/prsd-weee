@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Domain
+﻿namespace EA.Weee.Domain.PCS
 {
     using System;
     using EA.Prsd.Core.Domain;

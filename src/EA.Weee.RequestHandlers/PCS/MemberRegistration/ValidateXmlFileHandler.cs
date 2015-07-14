@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using DataAccess;
     using Domain;
+    using Domain.PCS;
     using Prsd.Core.Mediator;
     using Requests.PCS.MemberRegistration;
     using XmlValidation;

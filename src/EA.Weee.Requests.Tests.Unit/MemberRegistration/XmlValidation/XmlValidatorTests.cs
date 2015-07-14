@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using Domain;
+    using Domain.PCS;
     using FakeItEasy;
     using PCS.MemberRegistration;
     using RequestHandlers.PCS.MemberRegistration.XmlValidation;

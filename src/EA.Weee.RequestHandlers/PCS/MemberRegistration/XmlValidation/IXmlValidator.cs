@@ -1,9 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration.XmlValidation
 {
     using System.Collections.Generic;
-    using System.Xml.Linq;
-    using Domain;
-    using FluentValidation;
+    using Domain.PCS;
     using Requests.PCS.MemberRegistration;
 
     public interface IXmlValidator

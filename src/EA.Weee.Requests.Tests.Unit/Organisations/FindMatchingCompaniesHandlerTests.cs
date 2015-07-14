@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using DataAccess;
     using Domain;
+    using Domain.Organisation;
     using FakeItEasy;
     using Helpers;
     using Prsd.Core;
@@ -179,10 +180,10 @@
         {
             var data = new[]
             {
-                orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", null, companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency", companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(null, "THE Environemnt Agency", companyRegistrationNumber, Domain.OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(null, "Environment Agency", companyRegistrationNumber, Domain.OrganisationType.Partnership, OrganisationStatus.Approved)
+                orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency", companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(null, "THE Environemnt Agency", companyRegistrationNumber, Domain.Organisation.OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(null, "Environment Agency", companyRegistrationNumber, Domain.Organisation.OrganisationType.Partnership, OrganisationStatus.Approved)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
@@ -208,10 +209,10 @@
 
             var data = new[]
             {
-                orgHelper.GetOrganisationWithDetails(IdenticalToQuery, null, companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(CloseToQuery, null, companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(QuiteDifferentToQuery, null, companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(CompletelyUnlikeQuery, null, companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved)
+                orgHelper.GetOrganisationWithDetails(IdenticalToQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(CloseToQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(QuiteDifferentToQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(CompletelyUnlikeQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
@@ -247,8 +248,8 @@
 
             var data = new[]
             {
-                orgHelper.GetOrganisationWithDetails(CompleteName,   null, companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(IncompleteName, null, companyRegistrationNumber, Domain.OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete)
+                orgHelper.GetOrganisationWithDetails(CompleteName,   null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(IncompleteName, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);

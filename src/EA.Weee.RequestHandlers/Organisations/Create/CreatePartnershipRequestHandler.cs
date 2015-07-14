@@ -3,8 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using DataAccess;
-    using Domain;
-    using Prsd.Core.Mapper;
+    using Domain.Organisation;
     using Prsd.Core.Mediator;
     using Requests.Organisations.Create;
 
