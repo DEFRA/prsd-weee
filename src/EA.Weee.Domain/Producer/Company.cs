@@ -4,7 +4,7 @@
 
     public class Company : Entity
     {
-        public Company(string name, string registrationNumber, Contact registeredOfficeAddress)
+        public Company(string name, string registrationNumber, ProducerContact registeredOfficeAddress)
         {
             Name = name;
             RegistrationNumber = registrationNumber;
@@ -15,6 +15,6 @@
 
         public string RegistrationNumber { get; private set; }
 
-        public Contact RegisteredOfficeAddress { get; private set; }
+        public ProducerContact RegisteredOfficeAddress { get; private set; }
     }
 }
