@@ -7,6 +7,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
+    using Core.Organisations;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
@@ -135,7 +136,7 @@
                         new
                         {
                             area = "PCS",
-                            id = approvedOrganisationUsers.First().OrganisationId,                         
+                            pcsId = approvedOrganisationUsers.First().OrganisationId,                         
                         });
                 }
                 else if (inactiveOrganisationUsers.Count >= 1)

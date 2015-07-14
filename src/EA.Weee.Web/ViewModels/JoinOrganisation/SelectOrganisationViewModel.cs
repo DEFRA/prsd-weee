@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using EA.Weee.Web.ViewModels.Shared;
-    using Weee.Requests.Organisations;
+    using Core.Organisations;
+    using Shared;
 
     public class SelectOrganisationViewModel
     {

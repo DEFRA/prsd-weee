@@ -1,21 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
-    using System;
     using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
+    using Core.Organisations;
     using DataAccess;
-    using Domain;
+    using Domain.Organisation;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
-    using Requests.Shared;
-    using OrganisationType = Requests.Organisations.OrganisationType;
 
     internal class OrganisationByIdHandler : IRequestHandler<GetOrganisationInfo, OrganisationData>
     {
         private readonly WeeeContext context;
-        private IMap<Organisation, OrganisationData> organisationMap;
+        private readonly IMap<Organisation, OrganisationData> organisationMap;
 
         public OrganisationByIdHandler(WeeeContext context, IMap<Organisation, OrganisationData> organisationMap)
         {

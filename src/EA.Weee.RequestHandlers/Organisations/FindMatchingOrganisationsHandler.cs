@@ -5,13 +5,15 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Organisations;
+    using Core.Shared;
     using DataAccess;
-    using Domain;
+    using Domain.Organisation;
     using Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
-    using Requests.Shared;
-    using OrganisationType = EA.Weee.Domain.OrganisationType;
+    using OrganisationStatus = Domain.Organisation.OrganisationStatus;
+    using OrganisationType = Domain.Organisation.OrganisationType;
 
     internal class FindMatchingOrganisationsHandler :
         IRequestHandler<FindMatchingOrganisations, OrganisationSearchDataResult>
@@ -60,8 +62,9 @@
 
         private IEnumerable<Func<Organisation, string>> GetDataExtractors()
         {
-            Func<Organisation, string> getName = ((o) => (o.Name != null ? o.Name.ToUpperInvariant() : string.Empty));
-            Func<Organisation, string> getTradingName = ((o) => (o.TradingName != null ? o.TradingName.ToUpperInvariant() : string.Empty));
+            Func<Organisation, string> getName = (o => (o.Name != null ? o.Name.ToUpperInvariant() : string.Empty));
+            Func<Organisation, string> getTradingName =
+                (o => (o.TradingName != null ? o.TradingName.ToUpperInvariant() : string.Empty));
 
             return new List<Func<Organisation, string>> { getName, getTradingName };
         }
@@ -74,10 +77,12 @@
             var permittedDistance = CalculateMaximumLevenshteinDistance(searchTerm);
 
             var possibleOrganisations = (await GetPossibleOrganisationNames(searchTerm))
-                .Where(o => o.OrganisationStatus == OrganisationStatus.Pending || o.OrganisationStatus == OrganisationStatus.Approved);
+                .Where(
+                    o =>
+                        o.OrganisationStatus == OrganisationStatus.Pending ||
+                        o.OrganisationStatus == OrganisationStatus.Approved);
 
             // extract data fields we want to compare against query and clean them up
-
             IEnumerable<Func<Organisation, string>> dataExtractors = GetDataExtractors();
             List<OrganisationDataFields> organisationDataFieldsCollection = new List<OrganisationDataFields>();
 
@@ -108,7 +113,7 @@
             {
                 var lowestDistance = int.MaxValue;
 
-                foreach (string dataField in organisationDataFields.GetDataFields())
+                foreach (var dataField in organisationDataFields.GetDataFields())
                 {
                     var distance = StringSearch.CalculateLevenshteinDistance(searchTerm, dataField);
                     if (distance < lowestDistance)
@@ -119,7 +124,8 @@
 
                 if (lowestDistance <= permittedDistance)
                 {
-                    matchingIdsWithDistance.Add(new KeyValuePair<Guid, int>(organisationDataFields.GetId(), lowestDistance));
+                    matchingIdsWithDistance.Add(new KeyValuePair<Guid, int>(organisationDataFields.GetId(),
+                        lowestDistance));
                 }
             }
 
@@ -149,7 +155,8 @@
 
             if (query.Paged)
             {
-                var pagedMatchingOrganisationsData = totalMatchingOrganisationsData.Skip((query.Page - 1) * query.OrganisationsPerPage)
+                var pagedMatchingOrganisationsData =
+                    totalMatchingOrganisationsData.Skip((query.Page - 1) * query.OrganisationsPerPage)
                         .Take(query.OrganisationsPerPage)
                         .ToList();
 
@@ -157,12 +164,9 @@
                     pagedMatchingOrganisationsData,
                     totalMatchingOrganisationsData.Count);
             }
-            else
-            {
-                return new OrganisationSearchDataResult(
-                    totalMatchingOrganisationsData,
-                    totalMatchingOrganisationsData.Count);
-            }
+            return new OrganisationSearchDataResult(
+                totalMatchingOrganisationsData,
+                totalMatchingOrganisationsData.Count);
         }
 
         private string PrepareQuery(FindMatchingOrganisations query)
@@ -203,9 +207,9 @@
 
             return await context.Organisations
                 .Where(o => (o.Name != null && o.Name.StartsWith(firstLetterOfSearchTerm))
-                         || (o.Name != null && o.Name.StartsWith("THE "))
-                         || (o.TradingName != null && o.TradingName.StartsWith(firstLetterOfSearchTerm))
-                         || (o.TradingName != null && o.TradingName.StartsWith("THE ")))
+                            || (o.Name != null && o.Name.StartsWith("THE "))
+                            || (o.TradingName != null && o.TradingName.StartsWith(firstLetterOfSearchTerm))
+                            || (o.TradingName != null && o.TradingName.StartsWith("THE ")))
                 .ToArrayAsync();
         }
 
