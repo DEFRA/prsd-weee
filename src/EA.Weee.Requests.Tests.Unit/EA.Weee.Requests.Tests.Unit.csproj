@@ -45,6 +45,9 @@
       <HintPath>..\packages\FakeItEasy.1.25.2\lib\net40\FakeItEasy.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.5.6.2.0\lib\Net45\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -70,6 +73,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MemberRegistration\XmlErrorTranslatorTests.cs" />
+    <Compile Include="MemberRegistration\XmlValidation\BusinessValidation\ProducerTypeValidatorTests.cs" />
+    <Compile Include="MemberRegistration\XmlValidation\XmlValidatorTests.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandlerTests.cs" />
     <Compile Include="Organisations\GetOrganisationsByUserIdHandlerTest.cs" />
     <Compile Include="Helpers\DbContextHelper.cs" />
@@ -81,7 +86,7 @@
     <Compile Include="Helpers\TestDbAsyncQueryProvider.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="MemberRegistration\GetMemberUploadDataHandlerTests.cs" />
-    <Compile Include="MemberRegistration\ValidateXmlFileHandlerTests.cs" />
+    <Compile Include="MemberRegistration\XmlValidation\SchemaValidation\SchemaValidatorTests.cs" />
     <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandlerTest.cs" />
     <Compile Include="Organisations\FindMatchingCompaniesHandlerTests.cs" />
     <Compile Include="Organisations\JoinOrganisationHandlerTests.cs" />

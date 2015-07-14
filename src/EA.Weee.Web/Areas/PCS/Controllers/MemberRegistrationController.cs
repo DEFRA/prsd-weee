@@ -70,19 +70,23 @@
 
                 if (errors.Any(e => e.ErrorLevel == ErrorLevel.Error))
                 {
-                    return View("XmlHasErrors", new MemberUploadResultViewModel { ErrorData = errors });
+                    return View("ViewErrorsAndWarnings", new MemberUploadResultViewModel { MemberUploadId = memberUploadId, ErrorData = errors });
                 }
 
-                return View("XmlHasNoErrors", new MemberUploadResultViewModel { ErrorData = errors });
+                return View("XmlHasNoErrors", new MemberUploadResultViewModel { MemberUploadId = memberUploadId, ErrorData = errors });
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitXml(MemberUploadResultViewModel viewModel)
+        public ActionResult SubmitXml(Guid pcsId, MemberUploadResultViewModel viewModel)
         {
-            throw new NotImplementedException();
-            // return RedirectToAction("SuccessfulSubmission");
+            using (var client = apiClient())
+            {
+                // TODO: insert request including check against submitting a member upload with errors or different PCS here...
+
+                return RedirectToAction("SuccessfulSubmission");
+            }
         }
 
         [HttpGet]
