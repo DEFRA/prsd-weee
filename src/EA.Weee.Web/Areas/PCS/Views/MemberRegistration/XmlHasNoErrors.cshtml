@@ -40,6 +40,7 @@
     @using (Html.BeginForm("SubmitXml", "MemberRegistration", FormMethod.Post, new { area = "PCS", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.MemberUploadId)
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Confirmation)">
             @Html.Gds().ValidationMessageFor(m => m.Confirmation)
