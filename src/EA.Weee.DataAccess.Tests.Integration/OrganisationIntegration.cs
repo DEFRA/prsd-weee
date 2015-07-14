@@ -32,7 +32,7 @@
 
             string name = "Test Name" + Guid.NewGuid();
             string tradingName = "Test Trading Name" + Guid.NewGuid();
-            string crn = new Random().Next(100000000).ToString();
+            string crn = "ABC12345";
             var status = OrganisationStatus.Incomplete;
             var type = OrganisationType.RegisteredCompany;
 
