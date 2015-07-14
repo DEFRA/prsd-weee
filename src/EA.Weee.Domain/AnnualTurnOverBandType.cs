@@ -4,8 +4,8 @@
 
     public class AnnualTurnOverBandType : Enumeration
     {
-        public static readonly AnnualTurnOverBandType Lessthanorequaltoonemillionpounds = new AnnualTurnOverBandType(1, "Less than or equal to one million pounds");
-        public static readonly AnnualTurnOverBandType Greaterthanonemillionpounds = new AnnualTurnOverBandType(2, "Greater than one million pounds");
+        public static readonly AnnualTurnOverBandType LessThanOrEqualToOneMillionPounds = new AnnualTurnOverBandType(1, "Less than or equal to one million pounds");
+        public static readonly AnnualTurnOverBandType GreaterThanOneMillionPounds = new AnnualTurnOverBandType(2, "Greater than one million pounds");
      
         protected AnnualTurnOverBandType()
         {

@@ -9,7 +9,7 @@
         {
             ToTable("MemberUploadError", "PCS");
 
-            HasRequired(m => m.MemberUpload)
+            HasRequired<MemberUpload>(m => m.MemberUpload)
                 .WithMany(m => m.Errors)
                 .HasForeignKey(m => m.MemberUploadId);
         }
