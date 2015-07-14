@@ -2,8 +2,9 @@
 {
     using EA.Weee.Domain.Tests.Unit.Helpers;
     using System;
+    using Domain.Organisation;
     using Xunit;
-    using Organisation = Domain.Organisation;
+    using Organisation = Domain.Organisation.Organisation;
 
     public class OrganisationAddressTests
     {

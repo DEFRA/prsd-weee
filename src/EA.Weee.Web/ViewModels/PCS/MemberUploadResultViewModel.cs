@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.ViewModels.PCS
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Core.Shared;
@@ -10,5 +11,7 @@
 
         [Display(Name = "I confirm that the information in the XML file is accurate.")]
         public bool Confirmation { get; set; }
+
+        public Guid MemberUploadId { get; set; }
     }
 }

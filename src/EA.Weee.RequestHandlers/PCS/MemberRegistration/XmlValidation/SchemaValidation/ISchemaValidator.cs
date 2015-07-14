@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration.XmlValidation.SchemaValidation
 {
     using System.Collections.Generic;
-    using System.Xml.Linq;
-    using Domain;
+    using Domain.PCS;
     using Requests.PCS.MemberRegistration;
 
     public interface ISchemaValidator

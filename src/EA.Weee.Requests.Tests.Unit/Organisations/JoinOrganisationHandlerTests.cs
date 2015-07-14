@@ -4,6 +4,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.Organisation;
     using EA.Prsd.Core.Domain;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
@@ -52,7 +53,7 @@
 
             await handler.HandleAsync(new JoinOrganisation(organisationWeWillJoin.Id));
 
-            Assert.Equal(EA.Weee.Domain.OrganisationUserStatus.Pending, addedOrganisationUser.UserStatus);
+            Assert.Equal(EA.Weee.Domain.Organisation.OrganisationUserStatus.Pending, addedOrganisationUser.UserStatus);
         }
 
         [Fact]

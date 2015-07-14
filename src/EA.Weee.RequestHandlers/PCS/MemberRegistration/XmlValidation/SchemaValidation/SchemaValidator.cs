@@ -9,6 +9,7 @@
     using System.Xml.Schema;
     using Core.Helpers.Xml;
     using Domain;
+    using Domain.PCS;
     using Requests.PCS.MemberRegistration;
 
     public class SchemaValidator : ISchemaValidator

@@ -1,0 +1,42 @@
+﻿@using EA.Weee.Core.Shared
+@model EA.Weee.Web.ViewModels.PCS.MemberUploadResultViewModel
+@{
+    ViewBag.Title = "View errors and warnings";
+}
+
+@section main_content {
+    <header class="hgroup">
+        <div>
+            <h1 class="heading-large">XML validation warnings / errors</h1>
+        </div>
+    </header>
+
+    @foreach (MemberUploadErrorData error in Model.ErrorData)
+    {
+        var errorClass = "panel-indent-info";
+
+        if (error.ErrorLevel == ErrorLevel.Warning)
+        {
+            errorClass = "panel-indent-warning";
+        }
+        if (error.ErrorLevel == ErrorLevel.Error)
+        {
+            errorClass = "panel-indent-danger";
+        }
+
+        <div class="@errorClass">
+            <div class="alert alert-danger" role="alert">
+                <strong>@error.ErrorLevel.ToString(): </strong>@error.Description
+            </div>
+        </div>
+    }
+
+    @if (Model.ErrorData == null || Model.ErrorData.Count == 0)
+    {
+        <div class="panel-indent-info">
+            <div class="alert alert-danger" role="alert">
+                <strong>INFO: </strong>No warnings or errors.
+            </div>
+        </div>
+    }
+}

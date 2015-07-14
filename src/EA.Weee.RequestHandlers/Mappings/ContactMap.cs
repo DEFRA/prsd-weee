@@ -1,10 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using Core.Organisations;
-    using Domain;
-    using EA.Weee.Requests.Organisations;
+    using Domain.Organisation;
     using Prsd.Core.Mapper;
-    using Requests;
 
     internal class ContactMap : IMap<Contact, ContactData>, IMap<Organisation, ContactData>
     {
@@ -32,14 +30,11 @@
                     HasContact = true
                 };
             }
-            else
+            return new ContactData
             {
-                return new ContactData
-                {
-                    OrganisationId = source.Id,
-                    HasContact = false
-                };
-            }
+                OrganisationId = source.Id,
+                HasContact = false
+            };
         }
     }
 }

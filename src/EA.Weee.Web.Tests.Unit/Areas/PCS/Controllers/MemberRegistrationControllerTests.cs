@@ -144,7 +144,7 @@
             Assert.Equal(validationId, redirect.RouteValues["memberUploadId"]);
         }
 
-        private const string XmlHasErrorsViewName = "XmlHasErrors";
+        private const string XmlHasErrorsViewName = "ViewErrorsAndWarnings";
         private const string XmlHasNoErrorsViewName = "XmlHasNoErrors";
 
         [Fact]

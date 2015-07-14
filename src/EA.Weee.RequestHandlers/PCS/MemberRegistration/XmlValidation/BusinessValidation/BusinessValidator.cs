@@ -6,6 +6,7 @@
     using System.Xml.Linq;
     using System.Xml.Serialization;
     using Domain;
+    using Domain.PCS;
     using FluentValidation;
     using Requests.PCS.MemberRegistration;
 
