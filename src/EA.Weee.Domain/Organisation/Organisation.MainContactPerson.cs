@@ -1,8 +1,6 @@
-﻿namespace EA.Weee.Domain
+﻿namespace EA.Weee.Domain.Organisation
 {
-    using EA.Prsd.Core;
-    using EA.Prsd.Core.Domain;
-    using System;
+    using Prsd.Core;
 
     public partial class Organisation
     {
@@ -15,7 +13,7 @@
         {
             Guard.ArgumentNotNull(() => contactPerson, contactPerson);
 
-            this.Contact = contactPerson;
+            Contact = contactPerson;
         }
     }
 }

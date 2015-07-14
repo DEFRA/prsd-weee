@@ -5,12 +5,13 @@
     using System.Reflection;
     using System.Threading.Tasks;
     using Core.Helpers.Xml;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.RequestHandlers.PCS.MemberRegistration;
-    using EA.Weee.Requests.PCS.MemberRegistration;
-    using EA.Weee.Requests.Tests.Unit.Helpers;
+    using DataAccess;
+    using Domain;
+    using Domain.PCS;
     using FakeItEasy;
+    using Helpers;
+    using PCS.MemberRegistration;
+    using RequestHandlers.PCS.MemberRegistration;
     using Xunit;
 
     public class ValidateXmlFileHandlerTests
@@ -20,7 +21,8 @@
         [Fact]
         public async Task Validation_ValidXml_NoErrors()
         {
-            var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-valid.xml");
+            var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\v3-valid.xml");
             var validXml = File.ReadAllText(new Uri(validXmlLocation).LocalPath);
 
             var fakeContext = SetupFakeWeeeContext();
@@ -39,7 +41,8 @@
         [Fact]
         public async Task Validation_NonSchemaXml_AddsError()
         {
-            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-slightly-invalid.xml");
+            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\v3-slightly-invalid.xml");
             var invalidXml = File.ReadAllText(new Uri(invalidXmlLocation).LocalPath);
 
             var fakeContext = SetupFakeWeeeContext();
@@ -58,7 +61,8 @@
         [Fact]
         public async Task Validation_CorruptXml_AddsError()
         {
-            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-badly-damaged.xml");
+            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\v3-badly-damaged.xml");
             var invalidXml = File.ReadAllText(new Uri(invalidXmlLocation).LocalPath);
 
             var fakeContext = SetupFakeWeeeContext();
@@ -77,7 +81,8 @@
         [Fact]
         public async Task Validation_NonXmlFile_AddsError()
         {
-            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\not-xml.xml");
+            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\not-xml.xml");
             var invalidXml = File.ReadAllText(new Uri(invalidXmlLocation).LocalPath);
 
             var fakeContext = SetupFakeWeeeContext();
