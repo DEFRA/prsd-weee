@@ -37,15 +37,15 @@
         <p>Errors are problems with the XML file structure and formatting that stop it being uploaded successfully</p>
         <p>You must review, amend and re-upload your file before you can proceed to the next step</p>
 
-        <details class="error-details validation-summary">
+        <details class="error-details">
             <summary class="error-details-summary bold-small">
                 @Model.ErrorData.Count Error(s)
             </summary>
 
             <ul class="error-list">
-                @foreach (MemberUploadErrorData uploadError in Model.ErrorData)
+                @foreach (var uploadError in Model.ErrorData)
                 {
-                    <li class="field-validation-error">@uploadError.Description</li>
+                    <li>@uploadError.Description</li>
                 }
             </ul>
 
