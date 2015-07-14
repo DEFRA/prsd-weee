@@ -2,10 +2,8 @@
 {
     using System;
     using Core.Organisations;
-    using Domain;
+    using Domain.Organisation;
     using Prsd.Core.Mapper;
-    using Requests.Organisations;
-    using Requests.Shared;
     using OrganisationUserStatus = Core.Organisations.OrganisationUserStatus;
 
     public class OrganisationUserMap : IMap<OrganisationUser, OrganisationUserData>

@@ -3,10 +3,8 @@
     using System;
     using Core.Organisations;
     using Core.Shared;
-    using Domain;
+    using Domain.Organisation;
     using Prsd.Core.Mapper;
-    using Requests.Organisations;
-    using Requests.Shared;
     using OrganisationStatus = Core.Shared.OrganisationStatus;
     using OrganisationType = Core.Organisations.OrganisationType;
 
@@ -31,7 +29,9 @@
                 TradingName = source.TradingName,
 
                 // SQL doesn't allow nulls so no chance of null ref exception for enums
-                OrganisationStatus = (OrganisationStatus)Enum.Parse(typeof(OrganisationStatus), source.OrganisationStatus.Value.ToString()),
+                OrganisationStatus =
+                    (OrganisationStatus)
+                        Enum.Parse(typeof(OrganisationStatus), source.OrganisationStatus.Value.ToString()),
                 OrganisationType =
                     (OrganisationType)
                         Enum.Parse(typeof(OrganisationType),

@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Domain;
+    using Domain.Organisation;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using Xunit;

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
     using System.Data.Entity.ModelConfiguration;
-    using EA.Weee.Domain;
+    using Domain.PCS;
 
     internal class MemberUploadErrorMapping : EntityTypeConfiguration<MemberUploadError>
     {
@@ -9,7 +9,7 @@
         {
             ToTable("MemberUploadError", "PCS");
 
-            HasRequired<MemberUpload>(m => m.MemberUpload)
+            HasRequired(m => m.MemberUpload)
                 .WithMany(m => m.Errors)
                 .HasForeignKey(m => m.MemberUploadId);
         }
