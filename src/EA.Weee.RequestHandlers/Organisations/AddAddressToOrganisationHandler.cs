@@ -41,7 +41,7 @@
 
             message.Address.CountryName = country.Name;
             var address = ValueObjectInitializer.CreateAddress(message.Address, country);
-            organisation.AddAddress(addresstype, address);
+            organisation.AddOrUpdateAddress(addresstype, address);
             try
             {
                 await db.SaveChangesAsync();

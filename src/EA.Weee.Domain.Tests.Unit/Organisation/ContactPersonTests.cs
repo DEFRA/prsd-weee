@@ -13,7 +13,7 @@
             //Changed as per update contact person details
             var organisation = GetTestOrganisation();
             var contact = GetTestContact();
-            organisation.AddMainContactPerson(contact);
+            organisation.AddOrUpdateMainContactPerson(contact);
 
             Assert.Same(contact, organisation.Contact);
             
@@ -28,10 +28,10 @@
             var organisation = GetTestOrganisation();
 
             var initialContact = GetTestContact();
-            organisation.AddMainContactPerson(initialContact);
+            organisation.AddOrUpdateMainContactPerson(initialContact);
 
             var updatedContact = new Contact("different firstname", "different lastname", "different position");
-            organisation.AddMainContactPerson(updatedContact);
+            organisation.AddOrUpdateMainContactPerson(updatedContact);
 
             Assert.Same(initialContact, organisation.Contact);
             Assert.NotSame(updatedContact, organisation.Contact);
