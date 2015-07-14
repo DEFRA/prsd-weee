@@ -22,6 +22,12 @@
             Scheme = scheme;
             CeaseToExist = ceaseToExist;
             TradingName = tradingName;
+            BrandNames = new List<BrandName>();
+            SICCodes = new List<SICCode>();
+        }
+
+         protected Producer()
+        {
         }
 
         public virtual Scheme Scheme { get; private set; }
@@ -46,7 +52,7 @@
 
         public virtual List<BrandName> BrandNames { get; private set; }
 
-        public virtual List<SICCode> SicCodes { get; private set; }
+        public virtual List<SICCode> SICCodes { get; private set; }
 
         public EEEPlacedOnMarketBandType EEEPlacedOnMarketBandType { get; private set; }
 

@@ -12,6 +12,10 @@
             PrincipalPlaceOfBusiness = principalPlaceOfBusiness;
         }
 
+        protected Partnership()
+        {
+        }
+
         public string Name { get; private set; }
 
         public ProducerContact PrincipalPlaceOfBusiness { get; private set; }

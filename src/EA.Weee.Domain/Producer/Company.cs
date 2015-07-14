@@ -11,6 +11,10 @@
             RegisteredOfficeAddress = registeredOfficeAddress;
         }
 
+         protected Company()
+        {
+        }
+
         public string Name { get; private set; }
 
         public string RegistrationNumber { get; private set; }
