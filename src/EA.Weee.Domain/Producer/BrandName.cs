@@ -9,6 +9,9 @@
             Name = name;
         }
 
+        protected BrandName()
+        {
+        }
         public string Name { get; private set; }
     }
 }

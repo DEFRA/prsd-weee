@@ -28,6 +28,8 @@
 
         public virtual DbSet<MemberUpload> MemberUploads { get; set; }
 
+        public virtual DbSet<Scheme> Schemes { get; set; }
+
         public WeeeContext(IUserContext userContext)
             : base("name=Weee.DefaultConnection")
         {
