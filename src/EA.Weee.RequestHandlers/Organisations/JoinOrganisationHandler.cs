@@ -3,11 +3,11 @@
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
-    using EA.Prsd.Core.Domain;
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.Requests.Organisations;
+    using DataAccess;
+    using Domain.Organisation;
+    using Prsd.Core.Domain;
+    using Prsd.Core.Mediator;
+    using Requests.Organisations;
 
     internal class JoinOrganisationHandler : IRequestHandler<JoinOrganisation, Guid>
     {
@@ -32,10 +32,12 @@
 
             if (await context.Organisations.FirstOrDefaultAsync(o => o.Id == message.OrganisationId) == null)
             {
-                throw new ArgumentException(string.Format("Could not find an organisation with id {0}", message.OrganisationId));
+                throw new ArgumentException(string.Format("Could not find an organisation with id {0}",
+                    message.OrganisationId));
             }
 
-            var organisationUser = new OrganisationUser(userId, message.OrganisationId, EA.Weee.Domain.OrganisationUserStatus.Pending);
+            var organisationUser = new OrganisationUser(userId, message.OrganisationId,
+                Domain.Organisation.OrganisationUserStatus.Pending);
 
             context.OrganisationUsers.Add(organisationUser);
 

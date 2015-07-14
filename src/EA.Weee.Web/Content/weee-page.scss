@@ -522,3 +522,24 @@ $palette: (
     vertical-align: middle;
     margin-right:20px;
 }
+
+.panel-indent-danger {
+    clear: both;
+    border-left: 4px solid red;
+    padding: 10px;
+    margin: 10px;
+}
+
+.panel-indent-warning {
+    clear: both;
+    border-left: 4px solid #ffd800;
+    padding: 10px;
+    margin: 10px;
+}
+
+.panel-indent-info {
+    clear: both;
+    border-left: 4px solid #4856A6;
+    padding: 10px;
+    margin: 10px;
+}

@@ -3,9 +3,9 @@
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Requests.Organisations;
+    using DataAccess;
+    using Prsd.Core.Mediator;
+    using Requests.Organisations;
 
     internal class IsUkOrganisationAddressHandler : IRequestHandler<IsUkOrganisationAddress, bool>
     {

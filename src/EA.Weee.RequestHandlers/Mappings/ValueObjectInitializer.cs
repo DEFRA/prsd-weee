@@ -4,6 +4,7 @@
     using Core.Organisations;
     using Core.Shared;
     using Domain;
+    using Domain.Organisation;
     using AddressType = Domain.AddressType;
 
     internal class ValueObjectInitializer
@@ -12,7 +13,7 @@
         {
             return new Contact(contact.FirstName, contact.LastName, contact.Position);
         }
-    
+
         public static Address CreateAddress(AddressData address, Country country)
         {
             return new Address(address.Address1,

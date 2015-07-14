@@ -4,14 +4,14 @@
     using System.Linq;
     using System.Threading.Tasks;
     using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
+    using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Tests.Unit.Helpers;
     using FakeItEasy;
     using Xunit;
     using OrganisationType = Core.Organisations.OrganisationType;
-
+    
     public class UpdateOrganisationTypeDetailsHandlerTests
     {
         private readonly DbContextHelper helper = new DbContextHelper();
@@ -38,7 +38,7 @@
             var orgInfo = organisations.FirstOrDefault();
 
             Assert.NotNull(orgInfo);
-            Assert.Equal(orgInfo.OrganisationType, Domain.OrganisationType.SoleTraderOrIndividual);
+            Assert.Equal(orgInfo.OrganisationType, Domain.Organisation.OrganisationType.SoleTraderOrIndividual);
             Assert.Equal(orgInfo.Name, companyName);
             Assert.Equal(orgInfo.TradingName, tradingName);
             Assert.Equal(orgInfo.CompanyRegistrationNumber, companyRegistrationNumber);

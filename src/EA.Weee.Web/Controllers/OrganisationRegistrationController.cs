@@ -544,7 +544,8 @@
         {
             using (var client = apiClient())
             {
-                var model = await GetAddressViewModel(id, client, false);
+                var model = await GetAddressViewModel(id, client, false, AddressType.OrganisationAddress);
+
                 return View(model);
             }
         }
@@ -627,7 +628,7 @@
         {
             using (var client = apiClient())
             {
-                var model = await GetAddressViewModel(id, client, true);
+                var model = await GetAddressViewModel(id, client, true, AddressType.RegisteredOrPPBAddress);
                 return View(model);
             }
         }
@@ -724,15 +725,38 @@
             return View("ReviewOrganisationDetails", model);
         }
 
-        private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly)
+        private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly, AddressType addressType)
         {
             // Check the organisation Id is valid
             var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
             var model = new AddressViewModel
             {
                 OrganisationId = organisationId,
-                OrganisationType = organisation.OrganisationType
+                OrganisationType = organisation.OrganisationType,
             };
+            
+            if (addressType == AddressType.OrganisationAddress)
+            {
+                if (organisation.HasOrganisationAddress)
+                {
+                    model.Address = organisation.OrganisationAddress;
+                }
+            }
+            else if (addressType == AddressType.RegisteredOrPPBAddress)
+            {
+                if (organisation.HasBusinessAddress)
+                {
+                    model.Address = organisation.BusinessAddress;
+                }
+            }
+            else if (addressType == AddressType.ServiceOfNotice)
+            {
+                if (organisation.HasNotificationAddress)
+                {
+                    model.Address = organisation.NotificationAddress;
+                }
+            }
+
             model.Address.Countries = await GetCountries(regionsOfUKOnly);
             return model;
         }
