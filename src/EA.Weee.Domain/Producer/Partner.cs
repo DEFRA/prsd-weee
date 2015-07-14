@@ -9,6 +9,10 @@
             Name = name;
         }
 
+         protected Partner()
+        {
+        }
+
         public string Name { get; private set; }
     }
 }

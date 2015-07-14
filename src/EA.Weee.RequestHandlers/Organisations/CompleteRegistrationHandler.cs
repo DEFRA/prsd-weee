@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.Organisation;
+    using Domain.PCS;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
@@ -43,7 +44,11 @@
 
             db.OrganisationUsers.Add(organisationUser);
             organisation.CompleteRegistration();
-
+            
+            //Created PCS created here until AATF/AE are impelemented
+            var scheme = new Scheme(message.OrganisationId);
+            db.Schemes.Add(scheme);
+           
             await db.SaveChangesAsync();
             return organisation.Id;
         }

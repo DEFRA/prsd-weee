@@ -13,6 +13,10 @@
             CorrespondenceForNoticesContact = correspondenceForNoticesContact;
         }
 
+         protected Business()
+        {
+        }
+
         public virtual ProducerContact CorrespondenceForNoticesContact { get; private set; }
 
         public virtual Company CompanyDetails { get; private set; }
