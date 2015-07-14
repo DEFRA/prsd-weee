@@ -13,12 +13,12 @@
             switch (type.DisplayName)
             {
                 case "Organisation address":
-                    OrganisationAddress = address;
+                    OrganisationAddress = address.Blit(OrganisationAddress);
                     break;
                 case "Registered or PPB address":
                     if (address.IsUkAddress())
                     {
-                        BusinessAddress = address;
+                        BusinessAddress = address.Blit(BusinessAddress);
                     }
                     else
                     {
@@ -26,7 +26,7 @@
                     }
                     break;
                 case "Service of notice address":
-                    NotificationAddress = address;
+                    NotificationAddress = address.Blit(NotificationAddress);
                     break;
             }
         }
