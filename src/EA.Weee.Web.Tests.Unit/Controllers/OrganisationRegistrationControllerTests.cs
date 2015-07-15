@@ -196,7 +196,7 @@
         }
 
         [Fact]
-        public async void PostType_SoleTraderDetailsSelectionWithOrganisationId_ShouldRedirectSoleTraderDetailsWithOrganisationTypeSameFlag()
+        public async void PostType_SoleTraderDetailsSelectionWithOrganisationId_ShouldRedirectSoleTraderDetails()
         {
             var model = GetMockOrganisationTypeViewModel();
             model.OrganisationId = Guid.NewGuid();
@@ -217,7 +217,6 @@
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal("SoleTraderDetails", redirectToRouteResult.RouteValues["action"]);
-            Assert.Equal(redirectToRouteResult.RouteValues["isOrganisationTypeSame"], true);
         }
 
         [Fact]
@@ -236,7 +235,7 @@
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
                .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().SoleTraderDetails(A<Guid>._, true));
+            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().SoleTraderDetails(A<Guid>._));
         }
 
         [Fact]
@@ -255,7 +254,7 @@
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(orgData);
 
-            var result = await OrganisationRegistrationController().SoleTraderDetails(orgData.Id, true);
+            var result = await OrganisationRegistrationController().SoleTraderDetails(orgData.Id);
             var model = ((ViewResult)result).Model;
 
             Assert.NotNull(model);
@@ -269,7 +268,7 @@
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
                .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().RegisteredCompanyDetails(A<Guid>._, true));
+            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().RegisteredCompanyDetails(A<Guid>._));
         }
 
         [Fact]
@@ -290,7 +289,7 @@
 
             var orgData = new OrganisationData
             {
-                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                OrganisationType = OrganisationType.RegisteredCompany,
                 Id = Guid.NewGuid(),
                 TradingName = "SFW Ltd.",
                 CompanyRegistrationNumber = "12345678",
@@ -300,7 +299,7 @@
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(orgData);
 
-            var result = await OrganisationRegistrationController().RegisteredCompanyDetails(orgData.Id, true);
+            var result = await OrganisationRegistrationController().RegisteredCompanyDetails(orgData.Id);
             var model = ((ViewResult)result).Model;
 
             Assert.NotNull(model);

@@ -19,15 +19,15 @@
 
         public async Task<Guid> HandleAsync(UpdateOrganisationTypeDetails message)
         {
-            if (await db.Organisations.FirstOrDefaultAsync(o => o.Id == message.OrganisationId) == null)
+            var organisation = await db.Organisations.SingleOrDefaultAsync(o => o.Id == message.OrganisationId);
+
+            if (organisation == null)
             {
                 throw new ArgumentException(string.Format("Could not find an organisation with id {0}",
                     message.OrganisationId));
             }
 
-            var organisation = await db.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
-
-            organisation.UpdateOrganisationTypeDetails(message.Name, message.CompaniesRegistrationNumber, message.TradingName, GetAddressType(message.OrganisationType));
+            organisation.UpdateOrganisationTypeDetails(message.Name, message.CompaniesRegistrationNumber, message.TradingName, GetOrganisationType(message.OrganisationType));
             try
             {
                 await db.SaveChangesAsync();
@@ -40,7 +40,7 @@
             return organisation.Id;
         }
 
-        public OrganisationType GetAddressType(Core.Organisations.OrganisationType orgType)
+        public OrganisationType GetOrganisationType(Core.Organisations.OrganisationType orgType)
         {
             switch (orgType)
             {
