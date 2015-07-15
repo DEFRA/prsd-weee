@@ -43,7 +43,7 @@
                 oa.Telephone,
                 oa.Email);
 
-            organisation.AddAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
+            organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
 
             await context.SaveChangesAsync();
 

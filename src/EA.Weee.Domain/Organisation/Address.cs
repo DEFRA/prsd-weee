@@ -146,5 +146,24 @@
                 throw new InvalidOperationException("Country not defined.");    
             }
         }
+
+        public Address OverwriteWhereNull(Address otherAddress)
+        {
+            if (otherAddress == null)
+            {
+                return this;
+            }
+
+            otherAddress.Address1 = Address1;
+            otherAddress.Address2 = Address2;
+            otherAddress.TownOrCity = TownOrCity;
+            otherAddress.CountyOrRegion = CountyOrRegion;
+            otherAddress.Postcode = Postcode;
+            otherAddress.Country = Country;
+            otherAddress.Telephone = Telephone;
+            otherAddress.Email = Email;
+
+            return otherAddress;
+        }
     }
 }

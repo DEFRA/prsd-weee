@@ -9,11 +9,11 @@
             get { return Contact != null; }
         }
 
-        public void AddMainContactPerson(Contact contactPerson)
+        public void AddOrUpdateMainContactPerson(Contact contactPerson)
         {
             Guard.ArgumentNotNull(() => contactPerson, contactPerson);
 
-            Contact = contactPerson;
+            Contact = contactPerson.OverwriteWhereNull(Contact);
         }
     }
 }
