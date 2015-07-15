@@ -13,11 +13,32 @@
             //Changed as per update contact person details
             var organisation = GetTestOrganisation();
             var contact = GetTestContact();
-            organisation.AddMainContactPerson(contact);
+            organisation.AddOrUpdateMainContactPerson(contact);
+
+            Assert.Same(contact, organisation.Contact);
             
             Assert.Equal(organisation.Contact.FirstName, contact.FirstName);
             Assert.Equal(organisation.Contact.LastName, contact.LastName);
             Assert.Equal(organisation.Contact.Position, contact.Position);
+        }
+
+        [Fact]
+        public void AddContact_OrganisationHasExistingContact_JustCopiesParameterObject()
+        {
+            var organisation = GetTestOrganisation();
+
+            var initialContact = GetTestContact();
+            organisation.AddOrUpdateMainContactPerson(initialContact);
+
+            var updatedContact = new Contact("different firstname", "different lastname", "different position");
+            organisation.AddOrUpdateMainContactPerson(updatedContact);
+
+            Assert.Same(initialContact, organisation.Contact);
+            Assert.NotSame(updatedContact, organisation.Contact);
+
+            Assert.Equal(organisation.Contact.FirstName, updatedContact.FirstName);
+            Assert.Equal(organisation.Contact.LastName, updatedContact.LastName);
+            Assert.Equal(organisation.Contact.Position, updatedContact.Position);
         }
 
         [Fact]

@@ -22,5 +22,7 @@
 
         [Required]
         public Guid? Selected { get; set; }
+
+        public Guid? OrganisationId { get; set; }
     }
 }

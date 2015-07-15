@@ -32,11 +32,11 @@
 
                 var ukregions = countries.Join(ukcompetentauthories, c => c.Id, u => u.Country.Id,
                     (c, u) => new CountryData { Id = c.Id, Name = c.Name });
-                return ukregions.ToList();
+                return ukregions.OrderBy(m => m.Name).ToList();
             }
             else
             {
-                return countries.Select(mapper.Map).ToArray();    
+                return countries.Select(mapper.Map).OrderBy(m => m.Name).ToArray();    
             }
         }
     }
