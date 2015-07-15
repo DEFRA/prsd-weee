@@ -1,42 +1,33 @@
-﻿@using EA.Weee.Core.Shared
-@model EA.Weee.Web.ViewModels.PCS.MemberUploadResultViewModel
+﻿@using EA.Weee.Requests.Shared
+@model EA.Weee.Web.Areas.PCS.ViewModels.MemberUploadResultViewModel
 @{
     ViewBag.Title = "View errors and warnings";
 }
 
 @section main_content {
+
     <header class="hgroup">
         <div>
-            <h1 class="heading-large">XML validation warnings / errors</h1>
+            <h1 class="heading-large">The XML contains @Model.ErrorData.Count Error(s)</h1>
         </div>
     </header>
 
-    @foreach (MemberUploadErrorData error in Model.ErrorData)
-    {
-        var errorClass = "panel-indent-info";
+    <p>Errors are problems with the XML file structure and formatting that stop it being uploaded successfully</p>
+    <p>You must review, amend and re-upload your file before you can proceed to the next step</p>
 
-        if (error.ErrorLevel == ErrorLevel.Warning)
-        {
-            errorClass = "panel-indent-warning";
-        }
-        if (error.ErrorLevel == ErrorLevel.Error)
-        {
-            errorClass = "panel-indent-danger";
-        }
+    <details class="error-details">
+        <summary class="error-details-summary bold-small">
+            @Model.ErrorData.Count Error(s)
+        </summary>
 
-        <div class="@errorClass">
-            <div class="alert alert-danger" role="alert">
-                <strong>@error.ErrorLevel.ToString(): </strong>@error.Description
-            </div>
-        </div>
-    }
+        <ul class="error-list">
+            @foreach (var uploadError in Model.ErrorData)
+            {
+                <li>@uploadError.Description</li>
+            }
+        </ul>
 
-    @if (Model.ErrorData == null || Model.ErrorData.Count == 0)
-    {
-        <div class="panel-indent-info">
-            <div class="alert alert-danger" role="alert">
-                <strong>INFO: </strong>No warnings or errors.
-            </div>
-        </div>
-    }
+    </details>
+    <br/>
+    <p>Go back and <a href="@Url.Action("AddOrAmendMembers", "MemberRegistration")">upload a new file</a></p>
 }
