@@ -51,6 +51,23 @@
             Assert.False(exists);
         }
 
+        [Fact]
+        public async Task VerifyOrganisationExistsAndIncompleteHandler_OrgDoesNotExists_ReturnsFalse()
+        {
+            var organisations = MakeOrganisation();
+            organisations.FirstOrDefault().OrganisationStatus = OrganisationStatus.Incomplete;
+
+            var context = A.Fake<WeeeContext>();
+
+            A.CallTo(() => context.Organisations).Returns(organisations);
+
+            var handler = new VerifyOrganisationExistsAndIncompleteHandler(context);
+
+            var exists = await handler.HandleAsync(new VerifyOrganisationExistsAndIncomplete(Guid.NewGuid()));
+
+            Assert.False(exists);
+        }
+
         private DbSet<Organisation> MakeOrganisation()
         {
             return helper.GetAsyncEnabledDbSet(new[]

@@ -63,6 +63,9 @@
         {
             if (ModelState.IsValid)
             {
+                var organisationType =
+                        model.OrganisationTypes.SelectedValue.GetValueFromDisplayName<OrganisationType>();
+
                 if (model.OrganisationId != null)
                 {
                     using (var client = apiClient())
@@ -75,29 +78,19 @@
                             throw new Exception("No organisation found for supplied organisation Id with Incomplete status");
                         }
 
-                        var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(model.OrganisationId.Value));
-
-                        var organisationType =
-                        model.OrganisationTypes.SelectedValue.GetValueFromDisplayName<OrganisationType>();
-
-                        var isOrganisationTypeSame = organisationType == organisation.OrganisationType;
-
                         switch (organisationType)
                         {
                             case OrganisationType.SoleTraderOrIndividual:
-                                return RedirectToAction("SoleTraderDetails", "OrganisationRegistration", new { organisationId = model.OrganisationId.Value, isOrganisationTypeSame = isOrganisationTypeSame });
+                                return RedirectToAction("SoleTraderDetails", "OrganisationRegistration", new { organisationId = model.OrganisationId.Value });
                             case OrganisationType.RegisteredCompany:
-                                return RedirectToAction("RegisteredCompanyDetails", "OrganisationRegistration", new { organisationId = model.OrganisationId.Value, isOrganisationTypeSame = isOrganisationTypeSame });
+                                return RedirectToAction("RegisteredCompanyDetails", "OrganisationRegistration", new { organisationId = model.OrganisationId.Value });
                             case OrganisationType.Partnership:
-                                return RedirectToAction("PartnershipDetails", "OrganisationRegistration", new { organisationId = model.OrganisationId.Value, isOrganisationTypeSame = isOrganisationTypeSame });
+                                return RedirectToAction("PartnershipDetails", "OrganisationRegistration", new { organisationId = model.OrganisationId.Value });
                         }
                     }
                 }
                 else
                 {
-                    var organisationType =
-                        model.OrganisationTypes.SelectedValue.GetValueFromDisplayName<OrganisationType>();
-
                     switch (organisationType)
                     {
                         case OrganisationType.SoleTraderOrIndividual:
@@ -114,9 +107,9 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> SoleTraderDetails(Guid? organisationId = null, bool isOrganisationTypeSame = false)
+        public async Task<ActionResult> SoleTraderDetails(Guid? organisationId = null)
         {
-            if (organisationId != null && isOrganisationTypeSame)
+            if (organisationId != null)
             {
                 using (var client = apiClient())
                 {
@@ -130,9 +123,17 @@
 
                     var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId.Value));
 
-                    var model = new SoleTraderDetailsViewModel { BusinessTradingName = organisation.TradingName, OrganisationId = organisationId.Value };
+                    if (organisation.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+                    {
+                        var model = new SoleTraderDetailsViewModel
+                        {
+                            BusinessTradingName = organisation.TradingName,
+                            OrganisationId = organisationId.Value
+                        };
 
-                    return View("SoleTraderDetails", model);
+                        return View("SoleTraderDetails", model);
+                    }
+                    return View(new SoleTraderDetailsViewModel());
                 }
             }
             return View(new SoleTraderDetailsViewModel());
@@ -164,9 +165,9 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> PartnershipDetails(Guid? organisationId = null, bool isOrganisationTypeSame = false)
+        public async Task<ActionResult> PartnershipDetails(Guid? organisationId = null)
         {
-            if (organisationId != null && isOrganisationTypeSame)
+            if (organisationId != null)
             {
                 using (var client = apiClient())
                 {
@@ -179,10 +180,17 @@
                     }
 
                     var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId.Value));
+                    if (organisation.OrganisationType == OrganisationType.Partnership)
+                    {
+                        var model = new PartnershipDetailsViewModel
+                        {
+                            BusinessTradingName = organisation.TradingName,
+                            OrganisationId = organisationId.Value
+                        };
 
-                    var model = new PartnershipDetailsViewModel { BusinessTradingName = organisation.TradingName, OrganisationId = organisationId.Value };
-
-                    return View("PartnershipDetails", model);
+                        return View("PartnershipDetails", model);
+                    }
+                    return View(new PartnershipDetailsViewModel());
                 }
             }
             return View(new PartnershipDetailsViewModel());
@@ -214,9 +222,9 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RegisteredCompanyDetails(Guid? organisationId = null, bool isOrganisationTypeSame = false)
+        public async Task<ActionResult> RegisteredCompanyDetails(Guid? organisationId = null)
         {
-            if (organisationId != null && isOrganisationTypeSame)
+            if (organisationId != null)
             {
                 using (var client = apiClient())
                 {
@@ -230,15 +238,19 @@
 
                     var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId.Value));
 
-                    var model = new RegisteredCompanyDetailsViewModel
+                    if (organisation.OrganisationType == OrganisationType.RegisteredCompany)
                     {
-                        BusinessTradingName = organisation.TradingName,
-                        CompanyName = organisation.Name,
-                        CompaniesRegistrationNumber = organisation.CompanyRegistrationNumber,
-                        OrganisationId = organisationId.Value
-                    };
+                        var model = new RegisteredCompanyDetailsViewModel
+                        {
+                            BusinessTradingName = organisation.TradingName,
+                            CompanyName = organisation.Name,
+                            CompaniesRegistrationNumber = organisation.CompanyRegistrationNumber,
+                            OrganisationId = organisationId.Value
+                        };
 
-                    return View("RegisteredCompanyDetails", model);
+                        return View("RegisteredCompanyDetails", model);
+                    }
+                    return View(new RegisteredCompanyDetailsViewModel());
                 }
             }
             return View(new RegisteredCompanyDetailsViewModel());
@@ -734,7 +746,7 @@
                 OrganisationId = organisationId,
                 OrganisationType = organisation.OrganisationType,
             };
-            
+
             if (addressType == AddressType.OrganisationAddress)
             {
                 if (organisation.HasOrganisationAddress)
