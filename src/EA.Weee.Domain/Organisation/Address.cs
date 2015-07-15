@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.Organisation
 {
     using System;
+    using System.Runtime.Remoting.Messaging;
     using Prsd.Core;
     using Prsd.Core.Domain;
 
@@ -34,6 +35,8 @@
         private string email;
 
         public virtual Country Country { get; protected set; }
+
+        public virtual Guid CountryId { get; private set; }
 
         public string Address1
         {

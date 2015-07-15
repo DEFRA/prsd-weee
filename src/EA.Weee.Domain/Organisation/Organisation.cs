@@ -59,11 +59,19 @@
 
         public virtual Address OrganisationAddress { get; private set; }
 
+        public virtual Guid? OrganisationAddressId { get; private set; }
+
         public virtual Address BusinessAddress { get; private set; }
+
+        public virtual Guid? BusinessAddressId { get; private set; }
 
         public virtual Address NotificationAddress { get; private set; }
 
+        public virtual Guid? NotificationAddressId { get; private set; }
+
         public virtual Contact Contact { get; private set; }
+
+        public virtual Guid? ContactId { get; private set; }
 
         public static Organisation CreateSoleTrader(string tradingName)
         {
