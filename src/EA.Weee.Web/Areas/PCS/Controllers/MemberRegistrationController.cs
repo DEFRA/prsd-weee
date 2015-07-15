@@ -13,7 +13,6 @@
     using EA.Weee.Requests.PCS.MemberRegistration;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
-    using EA.Weee.Web.ViewModels.PCS;
     using ViewModels;
     using Weee.Requests.Shared;
 

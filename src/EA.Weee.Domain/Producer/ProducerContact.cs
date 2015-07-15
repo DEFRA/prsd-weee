@@ -2,9 +2,9 @@
 {
     using Prsd.Core.Domain;
 
-    public class Contact : Entity
+    public class ProducerContact : Entity
     {
-        public Contact(string title, string forename, string surname, string telephone, string mobile, string fax, string email, Address address)
+        public ProducerContact(string title, string forename, string surname, string telephone, string mobile, string fax, string email, ProducerAddress address)
         {
             Title = title;
             ForeName = forename;
@@ -14,6 +14,10 @@
             Email = email;
             Address = address;
             Mobile = mobile;
+        }
+
+         protected ProducerContact()
+        {
         }
 
         public string Title { get; private set; }
@@ -30,6 +34,6 @@
 
         public string Email { get; private set; }
 
-        public virtual Address Address { get; private set; }
+        public virtual ProducerAddress Address { get; private set; }
     }
 }

@@ -592,7 +592,7 @@
     <Compile Include="ViewModels\Shared\AddressViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionOptionalViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
-    <Compile Include="ViewModels\PCS\MemberUploadResultViewModel.cs" />
+    <Compile Include="Areas\PCS\ViewModels\MemberUploadResultViewModel.cs" />
     <Compile Include="Views\Shared\ViewBase.cs" />
   </ItemGroup>
   <ItemGroup>

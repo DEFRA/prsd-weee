@@ -6,14 +6,18 @@
 
     public class Business : Entity
     {
-        public Business(Company companyDetails, Partnership partnership, Contact correspondenceForNoticesContact = null)
+        public Business(Company companyDetails, Partnership partnership, ProducerContact correspondenceForNoticesContact = null)
         {
             CompanyDetails = companyDetails;
             Partnership = partnership;
             CorrespondenceForNoticesContact = correspondenceForNoticesContact;
         }
 
-        public virtual Contact CorrespondenceForNoticesContact { get; private set; }
+         protected Business()
+        {
+        }
+
+        public virtual ProducerContact CorrespondenceForNoticesContact { get; private set; }
 
         public virtual Company CompanyDetails { get; private set; }
 
