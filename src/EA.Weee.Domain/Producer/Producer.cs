@@ -7,38 +7,60 @@
 
     public class Producer : Entity
     {
-        public Producer(MemberUpload memberUpload, Business producerBusiness,
+        public Producer(Guid schemeId, MemberUpload memberUpload, 
+            ProducerBusiness producerBusiness,
             AuthorisedRepresentative authorisedRepresentative,
-            DateTime lastSubmittedDate, decimal annualTurnover, bool vatRegistered, string registrationNumber,
-            Scheme scheme, DateTime ceaseToExist, string tradingName)
+            DateTime lastSubmittedDate, decimal annualTurnover, 
+            bool vatRegistered, string registrationNumber,
+            DateTime? ceaseToExist, string tradingName, 
+            EEEPlacedOnMarketBandType eeePlacedOnMarketBandType, 
+            SellingTechniqueType sellingTechniqueType, 
+            ObligationType obligationType, 
+            AnnualTurnOverBandType annualTurnOverBandType,
+            List<BrandName> brandnames, List<SICCode> codes)
         {
-            MemberUpload = memberUpload;
             ProducerBusiness = producerBusiness;
             AuthorisedRepresentative = authorisedRepresentative;
-            LastSubmittedDate = lastSubmittedDate;
+            
+            LastSubmitted = lastSubmittedDate;
+            
             AnnualTurnover = annualTurnover;
             VATRegistered = vatRegistered;
             RegistrationNumber = registrationNumber;
-            Scheme = scheme;
             CeaseToExist = ceaseToExist;
             TradingName = tradingName;
-            BrandNames = new List<BrandName>();
-            SICCodes = new List<SICCode>();
+            
+            EEEPlacedOnMarketBandType = eeePlacedOnMarketBandType.Value;
+            SellingTechniqueType = sellingTechniqueType.Value;
+            ObligationType = obligationType.Value;
+            AnnualTurnOverBandType = annualTurnOverBandType.Value;
+
+            BrandNames = brandnames;
+            SICCodes = codes;
+            SchemeId = schemeId;
+            this.MemberUpload = memberUpload;
         }
 
          protected Producer()
-        {
-        }
+         {
+         }
+
+        public virtual Guid SchemeId { get; private set; }
 
         public virtual Scheme Scheme { get; private set; }
 
+        public virtual Guid MemberUploadId { get; private set; }
+
         public virtual MemberUpload MemberUpload { get; private set; }
+
+        public virtual Guid? AuthorisedRepresentativeId { get; private set; }
 
         public virtual AuthorisedRepresentative AuthorisedRepresentative { get; private set; }
 
-        public virtual Business ProducerBusiness { get; private set; }
+        public virtual Guid ProducerBusinessId { get; private set; }
+        public virtual ProducerBusiness ProducerBusiness { get; private set; }
 
-        public DateTime LastSubmittedDate { get; private set; }
+        public DateTime LastSubmitted { get; private set; }
 
         public string RegistrationNumber { get; private set; }
 
@@ -48,16 +70,20 @@
 
         public decimal AnnualTurnover { get; private set; }
 
-        public DateTime CeaseToExist { get; private set; }
+        public DateTime? CeaseToExist { get; private set; }
 
         public virtual List<BrandName> BrandNames { get; private set; }
 
         public virtual List<SICCode> SICCodes { get; private set; }
 
-        public EEEPlacedOnMarketBandType EEEPlacedOnMarketBandType { get; private set; }
+        public int AnnualTurnOverBandType { get; private set; }
+     
+        public int EEEPlacedOnMarketBandType { get; private set; }
 
-        public ObligationType ObligationType { get; private set; }
+        public int ObligationType { get; private set; }
 
-        public SellingTechniqueType SellingTechniqueType { get; private set; }
+        public int SellingTechniqueType { get; private set; }
+
+        public int ChargeBandType { get; private set; }
     }
 }

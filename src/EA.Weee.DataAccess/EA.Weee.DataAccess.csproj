@@ -77,6 +77,11 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
     <Compile Include="Identity\WeeeIdentityContext.cs" />
+    <Compile Include="Mappings\ProducerAddressMapping.cs" />
+    <Compile Include="Mappings\ProducerAuthorisedRepresentativeMapping.cs" />
+    <Compile Include="Mappings\ProducerBrandNameMapping.cs" />
+    <Compile Include="Mappings\ProducerBusinessMapping.cs" />
+    <Compile Include="Mappings\ProducerContactMapping.cs" />
     <Compile Include="Mappings\ContactMapping.cs" />
     <Compile Include="Mappings\CountryMapping.cs" />
     <Compile Include="Mappings\ErrorLevelMapping.cs" />
@@ -87,6 +92,11 @@
     <Compile Include="Mappings\OrganisationTypeMapping.cs" />
     <Compile Include="Mappings\OrganisationUserMapping.cs" />
     <Compile Include="Mappings\OrganisationUserStatusMapping.cs" />
+    <Compile Include="Mappings\ProducerMapping.cs" />
+    <Compile Include="Mappings\ProducerCompany.cs" />
+    <Compile Include="Mappings\ProducerPartnerMapping.cs" />
+    <Compile Include="Mappings\ProducerPartnershipMapping.cs" />
+    <Compile Include="Mappings\ProducerSISCodeMapping.cs" />
     <Compile Include="Mappings\SchemeMapping.cs" />
     <Compile Include="RelationshipExtensions.cs" />
     <Compile Include="WeeeContext.cs" />

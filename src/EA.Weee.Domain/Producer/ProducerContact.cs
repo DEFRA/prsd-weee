@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
+    using System;
     using Prsd.Core.Domain;
 
     public class ProducerContact : Entity
@@ -9,7 +10,7 @@
             Title = title;
             ForeName = forename;
             SurName = surname;
-            Landline = telephone;
+            Telephone = telephone;
             Fax = fax;
             Email = email;
             Address = address;
@@ -26,7 +27,7 @@
 
         public string SurName { get; private set; }
 
-        public string Landline { get; private set; }
+        public string Telephone { get; private set; }
 
         public string Mobile { get; private set; }
 
@@ -34,6 +35,7 @@
 
         public string Email { get; private set; }
 
+        public virtual Guid AddressId { get; private set; }
         public virtual ProducerAddress Address { get; private set; }
     }
 }

@@ -55,6 +55,7 @@
     <Content Include="scripts\Update\Sprint8\20150701-152633-CorrectCountryList.sql" />
     <Content Include="scripts\Update\Sprint8\20150702-105353-AddMemberUploadTables.sql" />
     <Content Include="scripts\Update\Sprint9\20150710-1534-AddSchemeProducerTables.sql" />
+    <Content Include="scripts\Update\Sprint9\20150715-1632-UpdateProducerTables.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,26 +1,28 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
-    using System.Collections.Generic;
-    using System.Reflection;
+    using System;
     using Prsd.Core.Domain;
 
-    public class Business : Entity
+    public class ProducerBusiness : Entity
     {
-        public Business(Company companyDetails, Partnership partnership, ProducerContact correspondenceForNoticesContact = null)
+        public ProducerBusiness(Company companyDetails = null, Partnership partnership = null, ProducerContact correspondentForNoticesContact = null)
         {
             CompanyDetails = companyDetails;
             Partnership = partnership;
-            CorrespondenceForNoticesContact = correspondenceForNoticesContact;
+            CorrespondentForNoticesContact = correspondentForNoticesContact;
         }
 
-         protected Business()
+         protected ProducerBusiness()
         {
         }
 
-        public virtual ProducerContact CorrespondenceForNoticesContact { get; private set; }
+         public Guid? CorrespondentForNoticesContactId { get; private set; }
+        public virtual ProducerContact CorrespondentForNoticesContact { get; private set; }
 
+        public Guid? CompanyId { get; private set; }
         public virtual Company CompanyDetails { get; private set; }
 
+        public Guid? PartnershipId { get; private set; }
         public virtual Partnership Partnership { get; private set; }
     }
 }
