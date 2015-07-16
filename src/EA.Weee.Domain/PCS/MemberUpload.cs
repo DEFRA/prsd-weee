@@ -18,6 +18,8 @@
 
         public int ComplianceYear { get; private set; }
 
+        public Guid SchemeId { get; private set; }
+
         public virtual Scheme Scheme { get; private set; }
 
         public bool IsSubmitted { get; private set; }
@@ -31,11 +33,13 @@
             Errors = errors;
         }
 
-        public MemberUpload(Guid organisationId, string data)
+        public MemberUpload(Guid organisationId, string data, int complianceYear, bool isSubmitted)
         {
             OrganisationId = organisationId;
             Data = data;
             Errors = new List<MemberUploadError>();
+            ComplianceYear = complianceYear;
+            IsSubmitted = isSubmitted;
         }
 
         protected MemberUpload()
