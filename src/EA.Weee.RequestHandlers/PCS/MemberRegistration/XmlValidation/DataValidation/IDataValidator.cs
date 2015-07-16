@@ -1,9 +1,9 @@
-﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation
+﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration.XmlValidation.DataValidation
 {
     using System.Collections.Generic;
     using Domain.PCS;
 
-    public interface IBusinessValidator
+    public interface IDataValidator
     {
         IEnumerable<MemberUploadError> Validate(schemeType deserializedXml);
     }
