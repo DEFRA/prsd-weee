@@ -28,7 +28,12 @@
 
         public string ApprovalNumber { get; private set; }
 
-        private List<Producer> Producers { get; set; }
+        public void SetProducer(List<Producer> producerlist)
+        {
+            Producers = producerlist;
+        }
+
+        internal List<Producer> Producers { get; private set; }
 
         public List<Producer> GetProducersList(int complianceYear)
         {
@@ -109,7 +114,6 @@
 
                 sb.AppendLine();
             }
-
 
             return sb.ToString();
         }
