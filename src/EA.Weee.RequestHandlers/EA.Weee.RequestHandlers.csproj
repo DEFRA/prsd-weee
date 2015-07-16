@@ -91,6 +91,7 @@
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
     <Compile Include="PCS\MemberRegistration\GetMemberUploadDataHandler.cs" />
+    <Compile Include="PCS\MemberRegistration\IXmlConverter.cs" />
     <Compile Include="PCS\MemberRegistration\ValidateXmlFileHandler.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandler.cs" />
@@ -105,8 +106,11 @@
     <Compile Include="Organisations\JoinOrganisationHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandler.cs" />
+    <Compile Include="PCS\MemberRegistration\XmlConverter.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\BusinessValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\IBusinessValidator.cs" />
+    <Compile Include="PCS\MemberRegistration\XmlValidation\DataValidation\DataValidator.cs" />
+    <Compile Include="PCS\MemberRegistration\XmlValidation\DataValidation\IDataValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\IXmlValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\ProducerTypeValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\SchemeTypeValidator.cs" />
