@@ -1,6 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Shared
-@model EA.Weee.Web.ViewModels.PCS.MemberUploadResultViewModel
+@model EA.Weee.Web.Areas.PCS.ViewModels.MemberUploadResultViewModel
 @{
     ViewBag.Title = "View any warnings";
 }
@@ -41,14 +41,6 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.MemberUploadId)
-
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.Confirmation)">
-            @Html.Gds().ValidationMessageFor(m => m.Confirmation)
-            <label class="block-label" for="confirmation-check">
-                @Html.CheckBoxFor(m => m.Confirmation, new { id = "confirmation-check" })
-                @Html.DisplayNameFor(m => m.Confirmation)
-            </label>
-        </div>
 
         <div class="form-group">
             <input type="submit" value="Submit" class="button"/>

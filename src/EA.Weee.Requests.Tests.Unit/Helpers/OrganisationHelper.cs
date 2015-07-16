@@ -28,9 +28,9 @@
                 organisation = Organisation.CreateSoleTrader(tradingName);
             }
 
-            organisation.AddAddress(AddressType.OrganisationAddress, GetAddress());
+            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, GetAddress());
 
-            organisation.AddMainContactPerson(GetContact());
+            organisation.AddOrUpdateMainContactPerson(GetContact());
 
             if (status == OrganisationStatus.Pending)
             {

@@ -35,6 +35,8 @@
 
         public virtual Country Country { get; protected set; }
 
+        public virtual Guid CountryId { get; private set; }
+
         public string Address1
         {
             get { return address1; }
@@ -138,10 +140,26 @@
             {
                 return Country.Name.Contains("UK");
             }
-            else
+            throw new InvalidOperationException("Country not defined.");
+        }
+
+        public Address OverwriteWhereNull(Address otherAddress)
+        {
+            if (otherAddress == null)
             {
-                throw new InvalidOperationException("Country not defined.");    
+                return this;
             }
+
+            otherAddress.Address1 = Address1;
+            otherAddress.Address2 = Address2;
+            otherAddress.TownOrCity = TownOrCity;
+            otherAddress.CountyOrRegion = CountyOrRegion;
+            otherAddress.Postcode = Postcode;
+            otherAddress.Country = Country;
+            otherAddress.Telephone = Telephone;
+            otherAddress.Email = Email;
+
+            return otherAddress;
         }
     }
 }
