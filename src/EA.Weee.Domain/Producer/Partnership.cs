@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
+    using System;
     using System.Collections.Generic;
     using Prsd.Core.Domain;
 
@@ -18,7 +19,9 @@
 
         public string Name { get; private set; }
 
-        public ProducerContact PrincipalPlaceOfBusiness { get; private set; }
+        public virtual Guid PrincipalPlaceOfBusinessId { get; private set; }
+
+        public virtual ProducerContact PrincipalPlaceOfBusiness { get; private set; }
 
         public List<Partner> PartnersList { get; private set; } 
     }

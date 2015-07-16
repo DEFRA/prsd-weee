@@ -6,6 +6,7 @@
     using Domain;
     using Domain.Organisation;
     using Domain.PCS;
+    using Domain.Producer;
     using Prsd.Core.DataAccess.Extensions;
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
@@ -29,6 +30,8 @@
         public virtual DbSet<MemberUpload> MemberUploads { get; set; }
 
         public virtual DbSet<Scheme> Schemes { get; set; }
+
+        public virtual DbSet<Producer> Producers { get; set; }
 
         public WeeeContext(IUserContext userContext)
             : base("name=Weee.DefaultConnection")

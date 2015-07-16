@@ -4,9 +4,9 @@
 
     public class ObligationType : Enumeration
     {
-        public static readonly ObligationType B2B = new ObligationType(1, "B2B");
-        public static readonly ObligationType B2C = new ObligationType(2, "B2C");
-        public static readonly ObligationType Both = new ObligationType(3, "Both");
+        public static readonly ObligationType B2B = new ObligationType(0, "B2B");
+        public static readonly ObligationType B2C = new ObligationType(1, "B2C");
+        public static readonly ObligationType Both = new ObligationType(2, "Both");
 
         protected ObligationType()
         {
