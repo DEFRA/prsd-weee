@@ -23,7 +23,7 @@
             var organisation = ValidOrganisation(CastOrganisationType(organisationType));
             var validAddress = ValidAddress(addressType);
             var type = CastAddressType(addressType);
-            organisation.AddAddress(type, validAddress);
+            organisation.AddOrUpdateAddress(type, validAddress);
             
             if (type == AddressType.OrganisationAddress)
             {
@@ -53,7 +53,7 @@
         {
             var organisation = ValidOrganisation(CastOrganisationType(organisationType));
 
-            Assert.Throws<ArgumentNullException>(() => organisation.AddAddress(CastAddressType(addressType), null));
+            Assert.Throws<ArgumentNullException>(() => organisation.AddOrUpdateAddress(CastAddressType(addressType), null));
         }
 
         [Theory]
@@ -63,7 +63,7 @@
         public void AddAddressToOrganisation_AddressTypeIsNull_ArgumentNullExceptionShouldBeThrown(string organisationType)
         {
             var organisation = ValidOrganisation(CastOrganisationType(organisationType));
-            Assert.Throws<ArgumentNullException>(() => organisation.AddAddress(null, ValidAddress(null)));
+            Assert.Throws<ArgumentNullException>(() => organisation.AddOrUpdateAddress(null, ValidAddress(null)));
         }
 
         private Organisation ValidOrganisation(OrganisationType organisationType)

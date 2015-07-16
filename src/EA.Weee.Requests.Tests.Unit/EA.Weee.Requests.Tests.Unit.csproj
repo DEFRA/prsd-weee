@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="MemberRegistration\XmlErrorTranslatorTests.cs" />
     <Compile Include="MemberRegistration\XmlValidation\BusinessValidation\ProducerTypeValidatorTests.cs" />
+    <Compile Include="MemberRegistration\XmlValidation\BusinessValidation\SchemeTypeValidatorTests.cs" />
     <Compile Include="MemberRegistration\XmlValidation\XmlValidatorTests.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandlerTests.cs" />
     <Compile Include="Organisations\GetOrganisationsByUserIdHandlerTest.cs" />
@@ -90,6 +91,8 @@
     <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandlerTest.cs" />
     <Compile Include="Organisations\FindMatchingCompaniesHandlerTests.cs" />
     <Compile Include="Organisations\JoinOrganisationHandlerTests.cs" />
+	<Compile Include="Organisations\UpdateOrganisationTypeDetailsHandlerTests.cs" />
+	<Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandlerTests.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

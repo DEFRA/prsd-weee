@@ -12,7 +12,7 @@
         {
             Guard.ArgumentNotNull(() => organisationType, organisationType);
             Guard.ArgumentNotNullOrEmpty(() => tradingName, tradingName);
-        
+
             OrganisationType = organisationType;
             TradingName = tradingName;
             OrganisationStatus = OrganisationStatus.Incomplete;
@@ -23,7 +23,7 @@
             Guard.ArgumentNotNull(() => organisationType, organisationType);
             Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
             Guard.ArgumentNotNullOrEmpty(() => companyRegistrationNumber, companyRegistrationNumber);
-          
+
             OrganisationType = organisationType;
             OrganisationStatus = OrganisationStatus.Incomplete;
             Name = companyName;
@@ -59,11 +59,19 @@
 
         public virtual Address OrganisationAddress { get; private set; }
 
+        public virtual Guid? OrganisationAddressId { get; private set; }
+
         public virtual Address BusinessAddress { get; private set; }
+
+        public virtual Guid? BusinessAddressId { get; private set; }
 
         public virtual Address NotificationAddress { get; private set; }
 
+        public virtual Guid? NotificationAddressId { get; private set; }
+
         public virtual Contact Contact { get; private set; }
+
+        public virtual Guid? ContactId { get; private set; }
 
         public static Organisation CreateSoleTrader(string tradingName)
         {
@@ -78,6 +86,30 @@
         public static Organisation CreateRegisteredCompany(string companyName, string companyRegistrationNumber, string tradingName = null)
         {
             return new Organisation(OrganisationType.RegisteredCompany, companyName, companyRegistrationNumber, tradingName);
+        }
+
+        public void UpdateOrganisationTypeDetails(string companyName, string companyRegNumber,
+            string tradingName, OrganisationType organisationType)
+        {
+            Guard.ArgumentNotNull(() => organisationType, organisationType);
+            if (organisationType == OrganisationType.SoleTraderOrIndividual)
+            {
+                Guard.ArgumentNotNullOrEmpty(() => tradingName, tradingName);
+            }
+            else if (organisationType == OrganisationType.Partnership)
+            {
+                Guard.ArgumentNotNullOrEmpty(() => tradingName, tradingName);
+            }
+            else if (organisationType == OrganisationType.RegisteredCompany)
+            {
+                Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
+                Guard.ArgumentNotNullOrEmpty(() => companyRegNumber, companyRegNumber);
+            }
+
+            OrganisationType = organisationType;
+            Name = companyName;
+            CompanyRegistrationNumber = companyRegNumber;
+            TradingName = tradingName;
         }
 
         public void CompleteRegistration()

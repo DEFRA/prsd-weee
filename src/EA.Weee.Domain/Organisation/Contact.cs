@@ -63,5 +63,19 @@
                 lastname = value;
             }
         }
+
+        public Contact OverwriteWhereNull(Contact otherContact)
+        {
+            if (otherContact == null)
+            {
+                return this;
+            }
+
+            otherContact.FirstName = FirstName;
+            otherContact.LastName = LastName;
+            otherContact.Position = Position;
+
+            return otherContact;
+        }
     }
 }

@@ -43,7 +43,7 @@
 
             var model = ScenarioContext.Current.Get<OrganisationTypeViewModel>(typeof(OrganisationTypeViewModel).Name);
 
-            ScenarioContext.Current["Result"] = controller.Type(model);
+            ScenarioContext.Current["Result"] = controller.Type(model).Result;
         }
 
         [Then(@"I should be redirected to the sole trader or individual page")]

@@ -1,44 +1,33 @@
 ﻿@using EA.Weee.Requests.Shared
-@model EA.Weee.Web.ViewModels.PCS.MemberUploadResultViewModel
+@model EA.Weee.Web.Areas.PCS.ViewModels.MemberUploadResultViewModel
 @{
     ViewBag.Title = "View errors and warnings";
 }
 
 @section main_content {
 
-    @if (Model.ErrorData != null && Model.ErrorData.Count > 0)
-    {
-        <header class="hgroup">
-            <div>
-                <h1 class="heading-large">The XML contains @Model.ErrorData.Count Error(s)</h1>
-            </div>
-        </header>
+    <header class="hgroup">
+        <div>
+            <h1 class="heading-large">The XML file contains @Model.ErrorData.Count Error(s)</h1>
+        </div>
+    </header>
 
-        <p>Errors are problems with the XML file structure and formatting that stop it being uploaded successfully</p>
-        <p>You must review, amend and re-upload your file before you can proceed to the next step</p>
+    <p>Errors are problems with the XML file structure and formatting that stop it being uploaded successfully.</p>
+    <p>You must review, amend and re-upload your file before you can proceed to the next step.</p>
 
-        <details class="error-details">
-            <summary class="error-details-summary bold-small">
-                @Model.ErrorData.Count Error(s)
-            </summary>
-
+    <details class="error-details">
+        <summary class="error-details-summary bold-small">
+            @Model.ErrorData.Count Error(s)
+        </summary>
+        <div>
             <ul class="error-list">
                 @foreach (var uploadError in Model.ErrorData)
                 {
                     <li>@uploadError.Description</li>
                 }
             </ul>
-
-        </details>
-        <br/>
-        <p>Go back and <a href="@Url.Action("AddOrAmendMembers", "MemberRegistration")">upload a new file</a></p>
-    }
-    else
-    {   
-        <div class="panel-indent-info">
-            <div class="alert alert-danger" role="alert">
-                <strong>INFO: </strong>No warnings or errors.
-            </div>
-        </div>  
-    }
+        </div>
+    </details>
+    <br />
+    <p>Go back and <a href="@Url.Action("AddOrAmendMembers", "MemberRegistration")">upload a new file</a></p>
 }

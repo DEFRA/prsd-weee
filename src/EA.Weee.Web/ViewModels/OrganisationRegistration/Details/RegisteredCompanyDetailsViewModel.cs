@@ -6,6 +6,8 @@
 
     public class RegisteredCompanyDetailsViewModel
     {
+        public Guid? OrganisationId { get; set; }
+
         [Required]
         [DisplayName("Company name")]
         public string CompanyName { get; set; }
