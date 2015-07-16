@@ -26,35 +26,21 @@
             schemeType scheme = (schemeType)deserialzedXml;
             foreach (producerType producerData in scheme.producerList)
             {
-                List<BrandName> brandNames = new List<BrandName>();
-                foreach (string name in producerData.producerBrandNames)
-                {
-                    BrandName brand = new BrandName(name);
-                    brandNames.Add(brand);
-                }
-
-                List<SICCode> codes = new List<SICCode>();
-                foreach (string code in producerData.SICCodeList)
-                {
-                    SICCode siscode = new SICCode(code);
-                    codes.Add(siscode);
-                }
-
+                List<BrandName> brandNames = producerData.producerBrandNames.Select(name => new BrandName(name)).ToList();
+         
+                List<SICCode> codes = producerData.SICCodeList.Select(name => new SICCode(name)).ToList();
+         
                 ProducerBusiness producerBusiness = await SetProducerBusiness(producerData.producerBusiness, context);
 
                 AuthorisedRepresentative authorisedRepresentative = await SetAuthorisedRepresentative(producerData.authorisedRepresentative, context);
 
-                int value = (int)producerData.eeePlacedOnMarketBand;
-                EEEPlacedOnMarketBandType eeebandType = Enumeration.FromValue<EEEPlacedOnMarketBandType>(value);
+                EEEPlacedOnMarketBandType eeebandType = Enumeration.FromValue<EEEPlacedOnMarketBandType>((int)producerData.eeePlacedOnMarketBand);
           
-                value = (int)producerData.sellingTechnique;
-                SellingTechniqueType sellingTechniqueType = Enumeration.FromValue<SellingTechniqueType>(value);
+                SellingTechniqueType sellingTechniqueType = Enumeration.FromValue<SellingTechniqueType>((int)producerData.sellingTechnique);
         
-                value = (int)producerData.obligationType;
-                ObligationType obligationType = Enumeration.FromValue<ObligationType>(value);
+                ObligationType obligationType = Enumeration.FromValue<ObligationType>((int)producerData.obligationType);
 
-                value = (int)producerData.annualTurnoverBand;
-                AnnualTurnOverBandType annualturnoverType = Enumeration.FromValue<AnnualTurnOverBandType>(value);
+                AnnualTurnOverBandType annualturnoverType = Enumeration.FromValue<AnnualTurnOverBandType>((int)producerData.annualTurnoverBand);
 
                 DateTime? ceaseDate = null;
                 if (producerData.ceaseToExistDateSpecified)
@@ -85,14 +71,12 @@
             {
                 return null;
             }
-
-            List<ProducerContact> contacts = new List<ProducerContact>();
+            var contacts = new List<ProducerContact>();
             if (representative.overseasProducer.overseasContact != null)
             {
                 foreach (contactDetailsType detail in representative.overseasProducer.overseasContact)
                 {
-                    ProducerContact producerContact = await GetProducerContact(detail, context);
-                    contacts.Add(producerContact);
+                    contacts.Add(await GetProducerContact(detail, context));
                 }
             }
             AuthorisedRepresentative overSeasAuthorisedRepresentative = new AuthorisedRepresentative(representative.overseasProducer.overseasProducerName, contacts.FirstOrDefault());
@@ -114,29 +98,18 @@
             if (item.GetType() == typeof(companyType))
             {
                 companyType companyitem = (companyType)item;
-
-                ProducerContact registeredOfficeContact =
-                    await GetProducerContact(companyitem.registeredOffice.contactDetails, context);
-               
-                company = new Company(companyitem.companyName, companyitem.companyNumber, registeredOfficeContact);
+                company = new Company(companyitem.companyName, companyitem.companyNumber,
+                    await GetProducerContact(companyitem.registeredOffice.contactDetails, context));
             }
             else if (item.GetType() == typeof(partnershipType))
             {
                 partnershipType partnershipItem = (partnershipType)item;
                 string partnershipName = partnershipItem.partnershipName;
-
-                ProducerContact partnershipContact =
-                    await GetProducerContact(partnershipItem.principalPlaceOfBusiness.contactDetails, context);
-
-                List<Partner> partners = new List<Partner>();
+  
                 List<string> partnersList = partnershipItem.partnershipList.ToList();
-                foreach (string name in partnersList)
-                {
-                    Partner partner = new Partner(name);
-                    partners.Add(partner);
-                }
+                List<Partner> partners = partnersList.Select(name => new Partner(name)).ToList();
 
-                partnership = new Partnership(partnershipName, partnershipContact, partners);
+                partnership = new Partnership(partnershipName, await GetProducerContact(partnershipItem.principalPlaceOfBusiness.contactDetails, context), partners);
             }
             ProducerBusiness business = new ProducerBusiness(company, partnership, correspondentForNoticeContact);
             return business;
