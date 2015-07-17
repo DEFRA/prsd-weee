@@ -93,5 +93,16 @@
         {
             return View();
         }
+
+        [HttpGet]
+        public ActionResult GetProducerCSV()
+        {
+            using (var client = apiClient())
+            {
+                //var producerCSVData = client.SendAsync(User.GetAccessToken(), new GetProducerCSVByComplianceYear())
+                string csv = "Test, Test, Test";
+                return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", "Report123.csv");
+            }
+        }
     }
 }
