@@ -28,14 +28,19 @@
 
         public string ApprovalNumber { get; private set; }
 
-      
+        public virtual List<Producer> Producers { get; private set; }
+
+        public void SetProducers(List<Producer> producers)
+        {
+            Producers = producers;
+        }
 
         public List<Producer> GetProducersList(int complianceYear)
         {
             var producers = (from producer in Producers
                              where producer.MemberUpload.IsSubmitted && producer.MemberUpload.ComplianceYear == complianceYear
                              group producer by producer.RegistrationNumber into groups
-                             select groups.OrderByDescending(p => p.LastSubmittedDate).First()).ToList();
+                             select groups.OrderByDescending(p => p.LastSubmitted).First()).ToList();
 
             return producers;
         }
@@ -77,7 +82,7 @@
                 {
                     if (producer.ProducerBusiness.CompanyDetails != null)
                     {
-                        companiesHouseNumber = producer.ProducerBusiness.CompanyDetails.RegistrationNumber;
+                        companiesHouseNumber = producer.ProducerBusiness.CompanyDetails.CompanyNumber;
                     }
                 }
                 var chargeBand = "***";
@@ -129,12 +134,6 @@
                 value = value.Replace("\n", " ");
             }
             return value;
-        }
-        public virtual List<Producer> Producers { get; private set; }
-
-        public void SetProducers(List<Producer> producers)
-        {
-            Producers = producers;
         }
     }
 }

@@ -12,7 +12,7 @@
         public Guid OrganisationId { get; private set; }
 
         public Guid? SchemeId { get; private set; }
-        
+
         public virtual Organisation Organisation { get; private set; }
 
         public virtual Scheme Scheme { get; private set; }
@@ -43,6 +43,16 @@
             OrganisationId = organisationId;
             Data = data;
             Errors = new List<MemberUploadError>();
+        }
+
+        public void Submit()
+        {
+            if (IsSubmitted)
+            {
+                throw new InvalidOperationException("IsSubmitted status must be false to transition to true");
+            }
+
+            IsSubmitted = true;
         }
 
         protected MemberUpload()

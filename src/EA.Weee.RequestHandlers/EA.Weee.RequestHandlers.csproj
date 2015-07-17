@@ -83,6 +83,7 @@
     <Compile Include="Mappings\ContactMap.cs" />
     <Compile Include="Mappings\CountryMap.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
+    <Compile Include="Mappings\MemberUploadMap.cs" />
     <Compile Include="Mappings\OrganisationMap.cs" />
     <Compile Include="Mappings\OrganisationUserMap.cs" />
     <Compile Include="Mappings\UKCompetentAuthorityMap.cs" />
@@ -91,9 +92,10 @@
     <Compile Include="PCS\MemberRegistration\BuildProducerDataFromXml.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
+    <Compile Include="PCS\MemberRegistration\GetMemberUploadByIdHandler.cs" />
     <Compile Include="PCS\MemberRegistration\GetMemberUploadDataHandler.cs" />
     <Compile Include="PCS\MemberRegistration\IXmlConverter.cs" />
-    <Compile Include="PCS\MemberRegistration\GetProducerCSVByComplianceYearHandler.cs" />
+    <Compile Include="PCS\MemberRegistration\GetProducerCSVByMemberUploadIdHandler.cs" />
     <Compile Include="PCS\MemberRegistration\ValidateXmlFileHandler.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandler.cs" />

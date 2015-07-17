@@ -50,7 +50,7 @@
         {
             var memberUploadsWithNoErrors = new[]
             {
-                new MemberUpload(pcsId, "FAKE DATA", 2015, true), 
+                new MemberUpload(pcsId, "FAKE DATA"), 
             };
 
             var handler = GetPreparedHandler(memberUploadsWithNoErrors);
@@ -63,7 +63,7 @@
         [Fact]
         public async Task GetMemberUploadHandler_NonExistentMemberUpload_ArgumentNullException()
         {
-            var memberUploadsThatWontBeReturnedForRandomGuid = new[] { new MemberUpload(pcsId, "FAKE DATA", 2015, true), };
+            var memberUploadsThatWontBeReturnedForRandomGuid = new[] { new MemberUpload(pcsId, "FAKE DATA"), };
 
             var handler = GetPreparedHandler(memberUploadsThatWontBeReturnedForRandomGuid);
 
@@ -75,7 +75,7 @@
         {
             var someOtherPcsId = Guid.NewGuid();
 
-            var memberUploadsForSomeOtherPcs = new[] { new MemberUpload(someOtherPcsId, "FAKE DATA", 2015, true), };
+            var memberUploadsForSomeOtherPcs = new[] { new MemberUpload(someOtherPcsId, "FAKE DATA"), };
 
             var handler = GetPreparedHandler(memberUploadsForSomeOtherPcs);
 

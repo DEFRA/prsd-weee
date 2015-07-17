@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.PCS.Controllers
 {
     using System;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -84,24 +85,30 @@
             {
                 // TODO: insert request including check against submitting a member upload with errors or different PCS here...
 
-                return RedirectToAction("SuccessfulSubmission");
+                return RedirectToAction("SuccessfulSubmission", new { memberUploadId = viewModel.MemberUploadId });
             }
         }
 
         [HttpGet]
-        public ViewResult SuccessfulSubmission()
+        public ViewResult SuccessfulSubmission(Guid memberUploadId)
         {
+            ViewBag.MemberUploadId = memberUploadId;
             return View();
         }
 
         [HttpGet]
-        public ActionResult GetProducerCSV()
+        public async Task<ActionResult> GetProducerCSV(Guid memberUploadId)
         {
             using (var client = apiClient())
             {
-                //var producerCSVData = client.SendAsync(User.GetAccessToken(), new GetProducerCSVByComplianceYear())
-                string csv = "Test, Test, Test";
-                return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", "Report123.csv");
+                var producerCSVData = await client.SendAsync(User.GetAccessToken(),
+                    new GetProducerCSVByMemberUploadId(memberUploadId));
+
+                var memberUpload = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadById(memberUploadId));
+
+                var csvFileName = DateTime.Now.ToString(CultureInfo.InvariantCulture) + "-" + memberUpload.ComplianceYear.ToString() + ".csv";
+
+                return File(new System.Text.UTF8Encoding().GetBytes(producerCSVData), "text/csv", csvFileName);
             }
         }
     }
