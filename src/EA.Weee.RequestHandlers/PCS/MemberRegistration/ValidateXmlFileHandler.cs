@@ -54,14 +54,7 @@
             }
 
             context.MemberUploads.Add(upload);
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException(ex.Message);
-            }
+            await context.SaveChangesAsync();
             return upload.Id;
         }
     }
