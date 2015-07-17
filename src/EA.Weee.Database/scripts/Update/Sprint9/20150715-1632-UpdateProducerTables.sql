@@ -108,7 +108,7 @@ ALTER TABLE [PCS].[MemberUpload]
 		[IsSubmitted] [bit] NOT Null;
 GO
 
-ALTER TABLE [PCS].[MemberUpload]  WITH CHECK ADD  CONSTRAINT [FK_MemberUpload_Scheme] FOREIGN KEY([PCSId])
+ALTER TABLE [PCS].[MemberUpload]  WITH CHECK ADD  CONSTRAINT [FK_MemberUpload_Scheme] FOREIGN KEY([SchemeId])
 REFERENCES [PCS].[Scheme] ([Id])
 GO
 
