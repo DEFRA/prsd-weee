@@ -102,17 +102,112 @@ GO
 PRINT N'Altering [PCS].[MemberUpload]...';
 
 GO
-ALTER TABLE [PCS].[MemberUpload] 
-	ADD [ComplianceYear] [int] NOT NULL,
-		[SchemeId] [uniqueidentifier] NULL,
-		[IsSubmitted] [bit] NOT Null;
+PRINT N'Dropping FK_MemberUpload_Organisation...';
+
+
+GO
+ALTER TABLE [PCS].[MemberUpload] DROP CONSTRAINT [FK_MemberUpload_Organisation];
 GO
 
-ALTER TABLE [PCS].[MemberUpload]  WITH CHECK ADD  CONSTRAINT [FK_MemberUpload_Scheme] FOREIGN KEY([SchemeId])
-REFERENCES [PCS].[Scheme] ([Id])
+GO
+PRINT N'Dropping FK_MemberUploadError_MemberUpload...';
+
+GO
+ALTER TABLE [PCS].[MemberUploadError] DROP CONSTRAINT [FK_MemberUploadError_MemberUpload];
+GO
+
+GO
+PRINT N'Dropping FK_Producer_MemberUpload...';
+
+
+GO
+ALTER TABLE [Producer].[Producer] DROP CONSTRAINT [FK_Producer_MemberUpload];
+GO
+
+
+GO
+PRINT N'Starting rebuilding table [PCS].[MemberUpload]...';
+
+
+GO
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+
+SET XACT_ABORT ON;
+
+    CREATE TABLE [PCS].[tmp_ms_xx_MemberUpload](
+	[Id] [uniqueidentifier] NOT NULL,
+	[RowVersion] [timestamp] NOT NULL,
+	[OrganisationId] [uniqueidentifier] NOT NULL,
+		[SchemeId] [uniqueidentifier] NULL,
+	[Data] [nvarchar](max) NOT NULL,
+	[ComplianceYear] [int] NOT NULL,	
+	[IsSubmitted] [bit] NOT NULL,
+    CONSTRAINT [tmp_ms_xx_constraint_PK_MemberUpload_Id] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+IF EXISTS (SELECT TOP 1 1 
+           FROM   [PCS].[MemberUpload])
+    BEGIN
+        INSERT INTO [PCS].[tmp_ms_xx_MemberUpload] ([Id], [OrganisationId], [Data], [ComplianceYear], [IsSubmitted])
+        SELECT  [Id], 
+				[OrganisationId], 
+				[Data], 
+				2016,  
+				1				
+        FROM     [PCS].[MemberUpload]
+        ORDER BY [Id] ASC;
+    END
+
+DROP TABLE [PCS].[MemberUpload];
+
+EXECUTE sp_rename N'[PCS].[tmp_ms_xx_MemberUpload]', N'MemberUpload';
+
+EXECUTE sp_rename N'[PCS].[tmp_ms_xx_constraint_PK_MemberUpload_Id]', N'PK_MemberUpload_Id', N'OBJECT';
+
+COMMIT TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+
+
+GO
+PRINT N'Creating FK_MemberUpload_Organisation...';
+
+GO
+ALTER TABLE [PCS].[MemberUpload]  WITH CHECK ADD  CONSTRAINT [FK_MemberUpload_Organisation] FOREIGN KEY([OrganisationId]) REFERENCES [Organisation].[Organisation] ([Id])
+GO
+
+GO
+PRINT N'Creating FK_MemberUpload_Scheme...';
+
+ALTER TABLE [PCS].[MemberUpload]  WITH CHECK ADD  CONSTRAINT [FK_MemberUpload_Scheme] FOREIGN KEY([SchemeId]) REFERENCES [PCS].[Scheme] ([Id])
 GO
 
 ALTER TABLE [PCS].[MemberUpload] CHECK CONSTRAINT [FK_MemberUpload_Scheme]
 GO
+
+GO
+PRINT N'Creating FK_MemberUploadError_MemberUpload...';
+
+
+GO
+ALTER TABLE [PCS].[MemberUploadError] WITH NOCHECK
+    ADD CONSTRAINT [FK_MemberUploadError_MemberUpload] FOREIGN KEY ([MemberUploadId]) REFERENCES [PCS].[MemberUpload] ([Id]);
+
+
+GO
+PRINT N'Creating FK_Producer_MemberUpload...';
+
+ALTER TABLE [Producer].[Producer]  WITH CHECK ADD  CONSTRAINT [FK_Producer_MemberUpload] FOREIGN KEY([MemberUploadId]) REFERENCES [PCS].[MemberUpload] ([Id])
+GO
+
+
+ALTER TABLE [PCS].[MemberUpload] WITH CHECK CHECK CONSTRAINT [FK_MemberUpload_Organisation];
+
+ALTER TABLE [PCS].[MemberUploadError] WITH CHECK CHECK CONSTRAINT [FK_MemberUploadError_MemberUpload];
+
+ALTER TABLE [Producer].[Producer] WITH CHECK CHECK CONSTRAINT [FK_Producer_MemberUpload];
+
 PRINT N'Update complete.';
 GO
