@@ -5,9 +5,14 @@
     using Domain;
     using Domain.PCS;
     using FluentValidation;
+    using FluentValidation.Internal;
 
     public class BusinessValidator : IBusinessValidator
     {
+        public static string RegistrationNoRuleSet = "registrationNo";
+
+        public static string AuthorisedRepresentativeMustBeInUkRuleset = "authorisedRepresentativeMustBeInUk";
+
         public IEnumerable<MemberUploadError> Validate(schemeType deserializedXml)
         {
             var result = new SchemeTypeValidator().Validate(deserializedXml, new RulesetValidatorSelector("*"));
