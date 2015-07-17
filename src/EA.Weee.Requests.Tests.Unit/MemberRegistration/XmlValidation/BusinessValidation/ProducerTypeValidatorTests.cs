@@ -90,23 +90,7 @@
                 {
                     overseasProducer = new overseasProducerType()
                 },
-                producerBusiness =
-                    new producerBusinessType
-                    {
-                        Item =
-                            new partnershipType
-                            {
-                                principalPlaceOfBusiness =
-                                    new contactDetailsContainerType
-                                    {
-                                        contactDetails =
-                                            new contactDetailsType
-                                            {
-                                                address = new addressType { country = someUkCountry }
-                                            }
-                                    }
-                            }
-                    }
+                producerBusiness = MakeProducerBusinessTypeInCountry(someUkCountry)
             };
 
             var validationResult = new ProducerTypeValidator()
@@ -115,11 +99,12 @@
             Assert.True(validationResult.IsValid);
         }
 
-        [Theory]
-        [InlineData(countryType.TURKEY)]
-        public void AuthorisedRepresentativeOfficeCountryIsNotInUnitedKingdom_FailsValidation_AndIncludesTradingNameInMessage_AndErrorLevelIsError(countryType someNonUkCountry)
+        [Fact]
+        public void AuthorisedRepresentativeOfficeCountryIsNotInUnitedKingdom_FailsValidation_AndIncludesTradingNameInMessage_AndErrorLevelIsError()
         {
             const string ValidTradingName = "MyCompany";
+
+            const countryType SomeNonUkCountry = countryType.TURKEY;
 
             var producer = new producerType
             {
@@ -128,23 +113,7 @@
                 {
                     overseasProducer = new overseasProducerType()
                 },
-                producerBusiness =
-                    new producerBusinessType
-                    {
-                        Item =
-                            new partnershipType
-                            {
-                                principalPlaceOfBusiness =
-                                    new contactDetailsContainerType
-                                    {
-                                        contactDetails =
-                                            new contactDetailsType
-                                            {
-                                                address = new addressType { country = someNonUkCountry }
-                                            }
-                                    }
-                            }
-                    }
+                producerBusiness = MakeProducerBusinessTypeInCountry(SomeNonUkCountry)
             };
 
             var validationResult = new ProducerTypeValidator()
@@ -153,6 +122,23 @@
             Assert.False(validationResult.IsValid);
             Assert.Contains(ValidTradingName, validationResult.Errors.Single().ErrorMessage);
             Assert.Equal(ErrorLevel.Error, validationResult.Errors.Single().CustomState);
+        }
+
+        [Fact]
+        public void NotAnAuthorisedRepresentativeButIsInNonUkCountry_PassesValidation()
+        {
+            const countryType SomeNonUkCountry = countryType.TURKEY;
+
+            var producer = new producerType
+            {
+                authorisedRepresentative = new authorisedRepresentativeType { overseasProducer = null },
+                producerBusiness = MakeProducerBusinessTypeInCountry(SomeNonUkCountry)
+            };
+
+            var validationResult = new ProducerTypeValidator()
+                .Validate(producer, new RulesetValidatorSelector(BusinessValidator.AuthorisedRepresentativeMustBeInUkRuleset));
+
+            Assert.True(validationResult.IsValid);
         }
 
         [Fact]
@@ -169,6 +155,23 @@
                  new ProducerTypeValidator().Validate(
                     producer,
                     new RulesetValidatorSelector(BusinessValidator.AuthorisedRepresentativeMustBeInUkRuleset)));
+        }
+
+        private producerBusinessType MakeProducerBusinessTypeInCountry(countryType country)
+        {
+            return new producerBusinessType
+            {
+                Item =
+                    new partnershipType
+                    {
+                        principalPlaceOfBusiness =
+                            new contactDetailsContainerType
+                            {
+                                contactDetails =
+                                    new contactDetailsType { address = new addressType { country = country } }
+                            }
+                    }
+            };
         }
     }
 }
