@@ -91,6 +91,7 @@
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
     <Compile Include="PCS\MemberRegistration\GetMemberUploadDataHandler.cs" />
+    <Compile Include="PCS\MemberRegistration\GetProducerCSVByComplianceYearHandler.cs" />
     <Compile Include="PCS\MemberRegistration\ValidateXmlFileHandler.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandler.cs" />
