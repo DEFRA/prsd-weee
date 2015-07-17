@@ -20,7 +20,7 @@
                 tradingName = tradingName, 
                 status = statusType.A, 
                 registrationNo = registrationNumber
-            }, "registrationNo");
+            }, BusinessValidator.RegistrationNoRuleSet);
 
             Assert.False(validationResult.IsValid);
             Assert.Contains(tradingName, validationResult.Errors.Single().ErrorMessage);
@@ -38,7 +38,7 @@
                 tradingName = validTradingName, 
                 status = statusType.A, 
                 registrationNo = validRegistrationNumber
-            }, new RulesetValidatorSelector("registrationNo"));
+            }, new RulesetValidatorSelector(BusinessValidator.RegistrationNoRuleSet));
 
             Assert.True(validationResult.IsValid);
         }
@@ -54,7 +54,7 @@
                 tradingName = validTradingName, 
                 status = statusType.I, 
                 registrationNo = validRegistrationNumber
-            }, new RulesetValidatorSelector("registrationNo"));
+            }, new RulesetValidatorSelector(BusinessValidator.RegistrationNoRuleSet));
 
             Assert.False(validationResult.IsValid);
             Assert.Contains(validTradingName, validationResult.Errors.Single().ErrorMessage);
@@ -71,7 +71,7 @@
                 tradingName = tradingName, 
                 status = statusType.I, 
                 registrationNo = registrationNumber
-            }, new RulesetValidatorSelector("registrationNo"));
+            }, new RulesetValidatorSelector(BusinessValidator.RegistrationNoRuleSet));
 
             Assert.True(validationResult.IsValid);
         }
@@ -85,6 +85,10 @@
         {
             var producer = new producerType
             {
+                authorisedRepresentative = new authorisedRepresentativeType
+                {
+                    overseasProducer = new overseasProducerType()
+                },
                 producerBusiness =
                     new producerBusinessType
                     {
@@ -104,7 +108,8 @@
                     }
             };
 
-            var validationResult = new ProducerTypeValidator().Validate(producer, new RulesetValidatorSelector("authorisedRepresentative"));
+            var validationResult = new ProducerTypeValidator()
+                .Validate(producer, new RulesetValidatorSelector(BusinessValidator.AuthorisedRepresentativeMustBeInUkRuleset));
 
             Assert.True(validationResult.IsValid);
         }
@@ -113,11 +118,15 @@
         [InlineData(countryType.TURKEY)]
         public void OfficeCountryIsNotInUnitedKingdom_FailsValidation_AndIncludesTradingNameInMessage_AndErrorLevelIsError(countryType someNonUkCountry)
         {
-            const string validTradingName = "MyCompany";
+            const string ValidTradingName = "MyCompany";
 
             var producer = new producerType
             {
-                tradingName = validTradingName,
+                tradingName = ValidTradingName,
+                authorisedRepresentative = new authorisedRepresentativeType
+                {
+                    overseasProducer = new overseasProducerType()
+                },
                 producerBusiness =
                     new producerBusinessType
                     {
@@ -137,10 +146,11 @@
                     }
             };
 
-            var validationResult = new ProducerTypeValidator().Validate(producer, new RulesetValidatorSelector("authorisedRepresentative"));
+            var validationResult = new ProducerTypeValidator()
+                .Validate(producer, new RulesetValidatorSelector(BusinessValidator.AuthorisedRepresentativeMustBeInUkRuleset));
 
             Assert.False(validationResult.IsValid);
-            Assert.Contains(validTradingName, validationResult.Errors.Single().ErrorMessage);
+            Assert.Contains(ValidTradingName, validationResult.Errors.Single().ErrorMessage);
             Assert.Equal(ErrorLevel.Error, validationResult.Errors.Single().CustomState);
         }
     }
