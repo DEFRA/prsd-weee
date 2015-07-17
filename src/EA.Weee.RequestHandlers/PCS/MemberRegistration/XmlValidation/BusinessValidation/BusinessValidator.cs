@@ -10,7 +10,7 @@
     {
         public IEnumerable<MemberUploadError> Validate(schemeType deserializedXml)
         {
-            var result = ((IValidator<schemeType>)(new SchemeTypeValidator())).Validate(deserializedXml);
+            var result = new SchemeTypeValidator().Validate(deserializedXml, new RulesetValidatorSelector("*"));
             return result.Errors.Select(err => new MemberUploadError((ErrorLevel)err.CustomState, err.ErrorMessage));
         }
     }
