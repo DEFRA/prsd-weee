@@ -4,8 +4,9 @@
 
     public class SellingTechniqueType : Enumeration
     {
-        public static readonly SellingTechniqueType DirectSellingToEndUser = new SellingTechniqueType(1, "Direct Selling to End User");
-        public static readonly SellingTechniqueType IndirectSellingToEndUser = new SellingTechniqueType(2, "Indirect Selling to End User");
+        public static readonly SellingTechniqueType DirectSellingtoEndUser = new SellingTechniqueType(0, "Direct Selling to End User");
+        public static readonly SellingTechniqueType IndirectSellingtoEndUser = new SellingTechniqueType(1, "Indirect Selling to End User");
+        public static readonly SellingTechniqueType Both = new SellingTechniqueType(2, "Both");
 
         protected SellingTechniqueType()
         {

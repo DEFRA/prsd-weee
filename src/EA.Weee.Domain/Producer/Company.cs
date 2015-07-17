@@ -1,14 +1,15 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
+    using System;
     using Prsd.Core.Domain;
 
     public class Company : Entity
     {
-        public Company(string name, string registrationNumber, ProducerContact registeredOfficeAddress)
+        public Company(string name, string registrationNumber, ProducerContact registeredOfficeContact)
         {
             Name = name;
-            RegistrationNumber = registrationNumber;
-            RegisteredOfficeAddress = registeredOfficeAddress;
+            CompanyNumber = registrationNumber;
+            RegisteredOfficeContact = registeredOfficeContact;
         }
 
          protected Company()
@@ -17,8 +18,9 @@
 
         public string Name { get; private set; }
 
-        public string RegistrationNumber { get; private set; }
+        public string CompanyNumber { get; private set; }
 
-        public ProducerContact RegisteredOfficeAddress { get; private set; }
+        public virtual Guid RegisteredOfficeContactId { get; private set; }
+        public virtual ProducerContact RegisteredOfficeContact { get; private set; }
     }
 }

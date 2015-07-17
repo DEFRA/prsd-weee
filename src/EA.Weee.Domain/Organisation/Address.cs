@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Domain.Organisation
 {
     using System;
-    using System.Runtime.Remoting.Messaging;
     using Prsd.Core;
     using Prsd.Core.Domain;
 
@@ -141,10 +140,7 @@
             {
                 return Country.Name.Contains("UK");
             }
-            else
-            {
-                throw new InvalidOperationException("Country not defined.");    
-            }
+            throw new InvalidOperationException("Country not defined.");
         }
 
         public Address OverwriteWhereNull(Address otherAddress)

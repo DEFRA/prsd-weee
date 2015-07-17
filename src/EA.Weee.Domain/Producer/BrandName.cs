@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
+    using System;
     using Prsd.Core.Domain;
 
     public class BrandName : Entity
@@ -12,6 +13,11 @@
         protected BrandName()
         {
         }
+
         public string Name { get; private set; }
+
+        public virtual Guid ProducerId { get; private set; }
+
+        public virtual Producer Producer { get; private set; }
     }
 }

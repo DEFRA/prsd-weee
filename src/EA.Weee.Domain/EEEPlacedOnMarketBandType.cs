@@ -4,10 +4,10 @@
 
     public class EEEPlacedOnMarketBandType : Enumeration
     {
-        public static readonly EEEPlacedOnMarketBandType MoreThanOrEqualTo5TEEEPlacedOnMarket =
-            new EEEPlacedOnMarketBandType(1, "More than or equal to 5T EEE placed on market");
+        public static readonly EEEPlacedOnMarketBandType Morethanorequalto5TEEEplacedonmarket =
+            new EEEPlacedOnMarketBandType(0, "More than or equal to 5T EEE placed on market");
 
-        public static readonly EEEPlacedOnMarketBandType LessThan5TEEEPlacedOnMarket = new EEEPlacedOnMarketBandType(2,
+        public static readonly EEEPlacedOnMarketBandType Lessthan5TEEEplacedonmarket = new EEEPlacedOnMarketBandType(1,
             "Less than 5T EEE placed on market");
 
         public static readonly EEEPlacedOnMarketBandType Both = new EEEPlacedOnMarketBandType(2, "Both");
