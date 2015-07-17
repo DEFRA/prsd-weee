@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -58,7 +59,7 @@
                                     }
                                     else
                                     {
-                                        return false; // TODO: throw exception instead? how will that affect validation?
+                                        throw new ArgumentException(string.Format("{0}: producerBusinessItem must be of type companyType or partnershipType", pt.tradingName));
                                     }
 
                                     // abusing law of demeter here, but schema requires all these fields to be present and correct

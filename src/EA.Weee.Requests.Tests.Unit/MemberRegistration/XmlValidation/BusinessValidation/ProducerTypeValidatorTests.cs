@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Requests.Tests.Unit.MemberRegistration.XmlValidation.BusinessValidation
 {
+    using System;
     using System.Linq;
     using Domain;
     using FluentValidation;
@@ -81,7 +82,7 @@
         [InlineData(countryType.UKNORTHERNIRELAND)]
         [InlineData(countryType.UKSCOTLAND)]
         [InlineData(countryType.UKWALES)]
-        public void OfficeCountryIsInUnitedKingdom_PassesValidation(countryType someUkCountry)
+        public void AuthorisedRepresentativeOfficeCountryIsInUnitedKingdom_PassesValidation(countryType someUkCountry)
         {
             var producer = new producerType
             {
@@ -116,7 +117,7 @@
 
         [Theory]
         [InlineData(countryType.TURKEY)]
-        public void OfficeCountryIsNotInUnitedKingdom_FailsValidation_AndIncludesTradingNameInMessage_AndErrorLevelIsError(countryType someNonUkCountry)
+        public void AuthorisedRepresentativeOfficeCountryIsNotInUnitedKingdom_FailsValidation_AndIncludesTradingNameInMessage_AndErrorLevelIsError(countryType someNonUkCountry)
         {
             const string ValidTradingName = "MyCompany";
 
@@ -152,6 +153,22 @@
             Assert.False(validationResult.IsValid);
             Assert.Contains(ValidTradingName, validationResult.Errors.Single().ErrorMessage);
             Assert.Equal(ErrorLevel.Error, validationResult.Errors.Single().CustomState);
+        }
+
+        [Fact]
+        public void AuthorisedRepresentativeIsNotAValidBusinessType_ThrowsArgumentException()
+        {
+            var producer = new producerType
+            {
+                authorisedRepresentative =
+                    new authorisedRepresentativeType { overseasProducer = new overseasProducerType() },
+                producerBusiness = new producerBusinessType { Item = new object() }
+            };
+
+            Assert.Throws<ArgumentException>(() => 
+                 new ProducerTypeValidator().Validate(
+                    producer,
+                    new RulesetValidatorSelector(BusinessValidator.AuthorisedRepresentativeMustBeInUkRuleset)));
         }
     }
 }
