@@ -72,6 +72,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MemberRegistration\GetMemberUploadByIdHandlerTests.cs" />
+    <Compile Include="MemberRegistration\GetProducerCSVByMemberUploadIdHandlerTests.cs" />
     <Compile Include="MemberRegistration\XmlErrorTranslatorTests.cs" />
     <Compile Include="MemberRegistration\XmlValidation\BusinessValidation\ProducerTypeValidatorTests.cs" />
     <Compile Include="MemberRegistration\XmlValidation\BusinessValidation\SchemeTypeValidatorTests.cs" />
@@ -91,8 +93,8 @@
     <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandlerTest.cs" />
     <Compile Include="Organisations\FindMatchingCompaniesHandlerTests.cs" />
     <Compile Include="Organisations\JoinOrganisationHandlerTests.cs" />
-	<Compile Include="Organisations\UpdateOrganisationTypeDetailsHandlerTests.cs" />
-	<Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandlerTests.cs" />
+    <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandlerTests.cs" />
+    <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandlerTests.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

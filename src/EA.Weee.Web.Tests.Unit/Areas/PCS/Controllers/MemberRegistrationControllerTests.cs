@@ -190,6 +190,18 @@
             Assert.Equal(errors, providedErrors);
         }
 
+        [Fact]
+        public async void GetProducerCSV_ValidMemberUploadId_ReturnsCSVFile()
+        {
+            var testCSVData = "Test, Test, Test";
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerCSVByMemberUploadId>._))
+                .Returns(testCSVData);
+
+            var result = await MemberRegistrationController().GetProducerCSV(A<Guid>._);
+
+            Assert.IsType<FileContentResult>(result);
+        }
+
         private async Task<List<MemberUploadErrorData>> ErrorsAfterClientReturns(List<MemberUploadErrorData> memberUploadErrorDatas)
         {
             var result = await GetViewResult(memberUploadErrorDatas);
