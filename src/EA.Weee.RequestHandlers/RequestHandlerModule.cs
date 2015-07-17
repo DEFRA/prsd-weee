@@ -1,8 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers
 {
     using Autofac;
-    using FluentValidation;
-    using PCS.MemberRegistration.XmlValidation.BusinessValidation;
     using Prsd.Core.Autofac;
     using Prsd.Core.Decorators;
     using Prsd.Core.Mediator;
@@ -29,9 +27,9 @@
                 .Where(t => t.Namespace.Contains("Mappings"))
                 .AsImplementedInterfaces();
 
-            // Xml Validation
+            // Xml Upload
             builder.RegisterAssemblyTypes(GetType().Assembly)
-                .Where(t => t.Namespace.Contains("XmlValidation"))
+                .Where(t => t.Namespace.Contains("MemberRegistration"))
                 .AsImplementedInterfaces();
         }
     }

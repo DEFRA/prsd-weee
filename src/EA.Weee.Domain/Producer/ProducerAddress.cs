@@ -37,6 +37,8 @@
 
         public string PostCode { get; private set; }
 
+        public virtual Guid CountryId { get; private set; }
+
         public virtual Country Country { get; protected set; }
         
         public bool IsUkAddress()
