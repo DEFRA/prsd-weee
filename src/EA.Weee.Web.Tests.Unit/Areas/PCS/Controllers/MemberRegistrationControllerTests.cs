@@ -6,6 +6,7 @@
     using System.Web;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.PCS;
     using Core.Shared;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
@@ -193,7 +194,7 @@
         [Fact]
         public async void GetProducerCSV_ValidMemberUploadId_ReturnsCSVFile()
         {
-            var testCSVData = "Test, Test, Test";
+            var testCSVData = new ProducerCSVFileData { FileContent = "Test, Test, Test", FileName = "test.csv" };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerCSVByMemberUploadId>._))
                 .Returns(testCSVData);
 
