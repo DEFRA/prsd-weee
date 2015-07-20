@@ -92,8 +92,8 @@
         [HttpGet]
         public ViewResult SuccessfulSubmission(Guid memberUploadId)
         {
-            ViewBag.MemberUploadId = memberUploadId;
-            return View();
+            var model = new SuccessfulSubmissionViewModel { MemberUploadId = memberUploadId };
+            return View(model);
         }
 
         [HttpGet]
@@ -104,11 +104,7 @@
                 var producerCSVData = await client.SendAsync(User.GetAccessToken(),
                     new GetProducerCSVByMemberUploadId(memberUploadId));
 
-                var memberUpload = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadById(memberUploadId));
-
-                var csvFileName = DateTime.Now.ToString(CultureInfo.InvariantCulture) + "-" + memberUpload.ComplianceYear.ToString() + ".csv";
-
-                return File(new System.Text.UTF8Encoding().GetBytes(producerCSVData), "text/csv", csvFileName);
+                return File(new System.Text.UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", producerCSVData.FileName);
             }
         }
     }

@@ -2,12 +2,14 @@
 {
     using System;
     using System.Data.Entity;
+    using System.Globalization;
     using System.Threading.Tasks;
+    using Core.PCS;
     using DataAccess;
     using Prsd.Core.Mediator;
     using Requests.PCS.MemberRegistration;
 
-    internal class GetProducerCSVByMemberUploadIdHandler : IRequestHandler<GetProducerCSVByMemberUploadId, string>
+    internal class GetProducerCSVByMemberUploadIdHandler : IRequestHandler<GetProducerCSVByMemberUploadId, ProducerCSVFileData>
     {
         private readonly WeeeContext context;
 
@@ -16,7 +18,7 @@
             this.context = context;
         }
 
-        public async Task<string> HandleAsync(GetProducerCSVByMemberUploadId message)
+        public async Task<ProducerCSVFileData> HandleAsync(GetProducerCSVByMemberUploadId message)
         {
             var memberUpload = await context.MemberUploads.SingleOrDefaultAsync(o => o.Id == message.MemberUploadId);
 
@@ -27,8 +29,10 @@
             }
 
             var csvData = memberUpload.Scheme.GetProducerCSV(memberUpload.ComplianceYear);
+            var csvName = DateTime.Now.ToString(CultureInfo.InvariantCulture) + "-" + memberUpload.ComplianceYear.ToString() + ".csv";
+            var producerCSVFileData = new ProducerCSVFileData { FileContent = csvData, FileName = csvName };
 
-            return csvData;
+            return producerCSVFileData;
         }
     }
 }

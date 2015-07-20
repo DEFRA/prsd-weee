@@ -47,93 +47,23 @@
 
         public string GetProducerCSV(int complianceYear)
         {
+            var sb = new StringBuilder();
+
             var producers = GetProducersList(complianceYear);
 
-            string[] csvColumnHeaders =
-            {
-                "Producer Name", "PRN", "Companies house number", "Charge band", "Date registered",
-                "Authorised representative", "Overseas producer"
-            };
+            var csvColumnHeaders = Producer.GetCSVColumnHeaders();
 
-            StringBuilder sb = new StringBuilder();
-
-            for (var i = 0; i <= csvColumnHeaders.Length - 1; i++)
-            {
-                sb.Append(csvColumnHeaders[i]);
-
-                if (i < csvColumnHeaders.Length - 1)
-                {
-                    sb.Append(",");
-                }
-            }
+            sb.Append(csvColumnHeaders);
 
             sb.AppendLine();
 
             for (var i = 0; i <= producers.Count - 1; i++)
             {
                 var producer = producers[i];
-
-                var producerName = producer.TradingName;
-                var prn = string.IsNullOrEmpty(producer.RegistrationNumber)
-                    ? "WEE/********"
-                    : producer.RegistrationNumber;
-                var companiesHouseNumber = string.Empty;
-                if (producer.ProducerBusiness != null)
-                {
-                    if (producer.ProducerBusiness.CompanyDetails != null)
-                    {
-                        companiesHouseNumber = producer.ProducerBusiness.CompanyDetails.CompanyNumber;
-                    }
-                }
-                var chargeBand = "***";
-                var dateRegistered = DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                var authorisedRepresentative = producer.AuthorisedRepresentative == null ? "No" : "Yes";
-                var overseasProducer = producer.AuthorisedRepresentative == null
-                    ? string.Empty
-                    : producer.AuthorisedRepresentative.OverseasProducerName;
-
-                sb.Append(ReplaceSpecialCharacters(producerName));
-                sb.Append(",");
-
-                sb.Append(ReplaceSpecialCharacters(prn));
-                sb.Append(",");
-
-                sb.Append(ReplaceSpecialCharacters(companiesHouseNumber));
-                sb.Append(",");
-
-                sb.Append(ReplaceSpecialCharacters(chargeBand));
-                sb.Append(",");
-
-                sb.Append(ReplaceSpecialCharacters(dateRegistered));
-                sb.Append(",");
-
-                sb.Append(ReplaceSpecialCharacters(authorisedRepresentative));
-                sb.Append(",");
-
-                sb.Append(ReplaceSpecialCharacters(overseasProducer));
-
-                sb.AppendLine();
+                sb.Append(producer.ToCsvString(producer));
             }
 
             return sb.ToString();
-        }
-
-        private string ReplaceSpecialCharacters(string value)
-        {
-            if (value.Contains(","))
-            {
-                value = string.Concat("\"", value, "\"");
-            }
-
-            if (value.Contains("\r"))
-            {
-                value = value.Replace("\r", " ");
-            }
-            if (value.Contains("\n"))
-            {
-                value = value.Replace("\n", " ");
-            }
-            return value;
         }
     }
 }
