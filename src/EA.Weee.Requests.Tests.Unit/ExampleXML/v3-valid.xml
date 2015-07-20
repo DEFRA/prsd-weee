@@ -69,7 +69,7 @@
 								<town>Away</town>
 								<locality/>
 								<administrativeArea/>
-								<country>ANGUILLA</country>
+								<country>UK - ENGLAND</country>
 								<postCode>DS1 1DS</postCode>
 							</address>
 						</contactDetails>
@@ -79,28 +79,26 @@
 			<authorisedRepresentative>
 				<overseasProducer>
 					<overseasProducerName>The Forest Moon of Endor</overseasProducerName>
+					<overseasContact>
+						<title>Boss</title>
+						<forename>Soft</forename>
+						<surname>Paws</surname>
+						<phoneLandLine>0987654321</phoneLandLine>
+						<phoneMobile/>
+						<fax/>
+						<email>daboss@ewoktreetopresort.com</email>
+						<address>
+							<primaryName>Tree Top Resort</primaryName>
+							<secondaryName>Endor</secondaryName>
+							<streetName>A Galaxy</streetName>
+							<town>Far Far</town>
+							<locality>Away</locality>
+							<administrativeArea/>
+							<country>ANGUILLA</country>
+							<internationalPostCode>TTR -E-001</internationalPostCode>
+						</address>
+					</overseasContact>
 				</overseasProducer>
-				<!--<overseasContact>
-					<title>Boss</title>
-					<forename>Soft</forename>
-					<surname>Paws</surname>
-					<phoneLandLine>0987654321</phoneLandLine>
-					<phoneMobile/>
-					<fax/>
-					<email>daboss@ewoktreetopresort.com</email>
-					<address>
-						<primaryName>Tree Top Resort</primaryName>
-						<secondaryName>Endor</secondaryName>
-						<streetName>A Galaxy</streetName>
-						<town>Far Far</town>
-						<locality>Away</locality>
-						<administrativeArea/>
-						<country>
-							ANGUILLA
-						</country>
-						<internationalPostCode>TTR -E-001</internationalPostCode>
-					</address>
-				</overseasContact>-->
 			</authorisedRepresentative>
 			<ceaseToExistDate>2014-06-21</ceaseToExistDate>
 			<sellingTechnique>Both</sellingTechnique>
