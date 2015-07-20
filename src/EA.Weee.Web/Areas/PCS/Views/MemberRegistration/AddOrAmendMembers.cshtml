@@ -24,9 +24,7 @@
         @Html.Gds().ValidationSummary()
 
         <div id="file-upload-group" class="form-group @Html.Gds().FormGroupClass(m => m.File)">
-            <noscript>
-                <input type="file" name="file" id="file" accept=".xml" />
-            </noscript>
+            <input type="file" name="file" id="file" accept=".xml"/>
         </div>
 
         <div class="form-group">
@@ -34,39 +32,3 @@
         </div>
     }
 }
-
-@section scripts
-{
-    <script type="text/javascript">
-
-        // If JavaScript is enabled, use an upload link instead
-        $("#file-upload-group").append("<p>Browse for a <a href=\"\" id=\"file-upload-link\">file to upload</a><br/><em>- <span id=\"file-upload-name\">No file selected</span></em></p>");
-        $("#file-upload-group").append("<input type=\"file\" name=\"file\" id=\"file\" accept=\".xml\" class=\"hidden\"/>");
-
-        // Hook the upload link to a hidden file input
-        $(function() {
-            $("#file-upload-link").on("click", function(e) {
-                e.preventDefault();
-                $("#file").trigger("click");
-            });
-        });
-
-        // When the file input changes, display the name of the file
-        $("#file").change(function (e) {
-            var fullPath = this.value;
-            if (fullPath) {
-                var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
-                var filename = fullPath.substring(startIndex);
-                if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
-                    filename = filename.substring(1);
-                };
-                $("#file-upload-name").text(filename);
-            } else {
-                $("#file-upload-name").text("No file selected");
-            }
-        });
-    </script>
-}
-
-
-
