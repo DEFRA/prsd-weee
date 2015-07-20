@@ -12,9 +12,29 @@
             RegisteredOfficeContact = registeredOfficeContact;
         }
 
-         protected Company()
+        protected Company()
         {
         }
+
+         public override int GetHashCode()
+         {
+             return base.GetHashCode();
+         }
+
+         public override bool Equals(Object obj)
+         {
+             Company companyObj = obj as Company;
+             if (companyObj == null)
+             {
+                 return false;
+             }
+             else
+             {
+                 return Name.Equals(companyObj.Name)
+                        && CompanyNumber.Equals(companyObj.CompanyNumber)
+                        && RegisteredOfficeContact != null && RegisteredOfficeContact.Equals(companyObj.RegisteredOfficeContact);
+             }
+         }
 
         public string Name { get; private set; }
 

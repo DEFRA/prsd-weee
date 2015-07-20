@@ -58,8 +58,34 @@
                     obligationType,
                     annualturnoverType,
                     brandNames, codes);
+                
+                // modify producer data
+                switch (producerData.status)
+                {
+                    case statusType.A:
+                        // get the producers for scheme based on producer->prn and producer->lastsubmitted is latest date and memberupload ->IsSubmitted is true.
+                        var memberupload =
+                            await
+                                context.MemberUploads.Where(member => member.IsSubmitted && member.SchemeId == schemeId)
+                                    .ToListAsync();
+                        if (memberupload != null && memberupload.Count > 0)
+                        {
+                            var producerDb =
+                                memberupload.SelectMany(m => m.Producers)
+                                    .OrderByDescending(p => p.LastSubmitted)
+                                    .FirstOrDefault(p => p.RegistrationNumber == producerData.registrationNo);
+                            //Add only if producer not found in DB
+                            if (!producer.Equals(producerDb))
+                            {
+                                producers.Add(producer);
+                            }
+                        }
+                        break;
 
-                producers.Add(producer);
+                    case statusType.I:
+                        producers.Add(producer);
+                        break;
+                }
             }
 
             return producers;
