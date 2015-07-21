@@ -64,6 +64,8 @@
     <Compile Include="Organisations\OrganisationType.cs" />
     <Compile Include="Organisations\OrganisationUserData.cs" />
     <Compile Include="Organisations\OrganisationUserStatus.cs" />
+    <Compile Include="PCS\MemberUploadData.cs" />
+    <Compile Include="PCS\ProducerCSVFileData.cs" />
     <Compile Include="Shared\AddressData.cs" />
     <Compile Include="Shared\AddressType.cs" />
     <Compile Include="Shared\CompetentAuthority.cs" />
@@ -78,9 +80,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="PCS\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

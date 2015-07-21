@@ -535,6 +535,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\PCS\Controllers\MemberRegistrationController.cs" />
     <Compile Include="Areas\PCS\ViewModels\AddOrAmendMembersViewModel.cs" />
+    <Compile Include="Areas\PCS\ViewModels\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
