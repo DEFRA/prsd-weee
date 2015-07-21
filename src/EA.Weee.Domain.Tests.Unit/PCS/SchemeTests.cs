@@ -28,17 +28,18 @@
         }
 
         [Fact]
-        public void GetProducerListByComplianceYear_SchemeHasProducers_ReturnsSpecifiedComplianceYearProducers()
+        public void GetProducerListByComplianceYear_SchemeHasProducers_Returns2016ProducersUntilSpecifiedComplianceYearProducersImplemented()
         {
             var scheme = GetTestScheme();
             var producer = GetTestProducer("WEE/12345678");
             var anotherProducer = GetTestProducer("WEE/87654321");
+            var oneAnotherProducer = GetTestProducer("WEE/87555322");
 
             producer.MemberUpload.Submit();
             anotherProducer.MemberUpload.Submit();
 
-            scheme.SetProducers(new List<Producer> { producer, anotherProducer });
-            var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear;
+            scheme.SetProducers(new List<Producer> { producer, anotherProducer, oneAnotherProducer });
+            const int complianceYear = 2016;
             var producers = scheme.GetProducersList(complianceYear);
 
             Assert.NotNull(producers);
@@ -82,20 +83,21 @@
 
             Assert.NotNull(producers);
             Assert.Equal(1, producers.Count);
+            Assert.Equal(anotherProducer.LastSubmitted, producers.First().LastSubmitted);
         }
 
         [Fact]
         public void GetProducerCSVByComplianceYear_SchemeHasProducers_ReturnsProducersCSVstring()
         {
             var scheme = GetTestScheme();
-            
+
             var producer = GetTestProducer("WEE/12345678");
             producer.MemberUpload.Submit();
             producer.MemberUpload.SetProducers(new List<Producer> { producer });
             producer.SetScheme(scheme);
-            
+
             scheme.SetProducers(new List<Producer> { producer });
-            
+
             var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear;
             var csvData = scheme.GetProducerCSV(complianceYear);
 
@@ -127,6 +129,38 @@
             Assert.Equal(csvFieldValues[4], scheme.Producers.First().LastSubmitted.ToString(CultureInfo.CurrentCulture));
             Assert.Equal(csvFieldValues[5], "No");
             Assert.Equal(csvFieldValues[6], String.Empty);
+        }
+
+        [Fact]
+        public void GetProducerCSVByComplianceYear_SchemeHasProducerWithCompanyAndAuthorisedRepresentative_ReturnsProducersCSVWithCorrectFieldValues()
+        {
+            var scheme = GetTestScheme();
+            var country = new Country(Guid.NewGuid(), "Country name");
+            var producerAddress = new ProducerAddress("Primary name", "Secondary name", "Street", "Town", "Locality",
+                "Administrative area", country, "Postcode");
+            var producerContact = new ProducerContact("Mr.", "Firstname", "Lastname", "12345", "9898988", "43434433",
+                "test@test.com", producerAddress);
+            var authorisedRepresentative = new AuthorisedRepresentative("Name", producerContact);
+            var companyDetails = new Company("Test name", "Test registration number", producerContact);
+            var producer = GetTestProducer("WEE/12345678", "Test trading name", companyDetails, authorisedRepresentative);
+            producer.MemberUpload.Submit();
+            producer.MemberUpload.SetProducers(new List<Producer> { producer });
+            producer.SetScheme(scheme);
+
+            scheme.SetProducers(new List<Producer> { producer });
+
+            var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear;
+            var csvData = scheme.GetProducerCSV(complianceYear);
+
+            var csvFieldValues = ReadCSVLine(csvData, 1);
+
+            Assert.NotNull(csvData);
+            Assert.Equal(csvFieldValues[0], "Test trading name");
+            Assert.Equal(csvFieldValues[1], "WEE/12345678");
+            Assert.Equal(csvFieldValues[2], companyDetails.CompanyNumber);
+            Assert.Equal(csvFieldValues[4], scheme.Producers.First().LastSubmitted.ToString(CultureInfo.InvariantCulture));
+            Assert.Equal(csvFieldValues[5], "Yes");
+            Assert.Equal(csvFieldValues[6], authorisedRepresentative.OverseasProducerName);
         }
 
         private string[] ReadCSVLine(string csvData, int lineNumbeer)
