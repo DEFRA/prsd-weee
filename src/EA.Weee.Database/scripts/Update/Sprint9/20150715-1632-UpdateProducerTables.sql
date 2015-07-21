@@ -140,7 +140,7 @@ SET XACT_ABORT ON;
 	[Id] [uniqueidentifier] NOT NULL,
 	[RowVersion] [timestamp] NOT NULL,
 	[OrganisationId] [uniqueidentifier] NOT NULL,
-	[SchemeId] [uniqueidentifier] NULL,
+		[SchemeId] [uniqueidentifier] NULL,
 	[Data] [nvarchar](max) NOT NULL,
 	[ComplianceYear] [int] NOT NULL,	
 	[IsSubmitted] [bit] NOT NULL,
