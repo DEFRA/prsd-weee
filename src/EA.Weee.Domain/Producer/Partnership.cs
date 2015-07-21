@@ -29,10 +29,22 @@
             {
                 return false;
             }
+
+            var comparePrincipalPlaceOfBusiness = false;
+            if (PrincipalPlaceOfBusiness == null && partnershipObj.PrincipalPlaceOfBusiness == null)
+            {
+                comparePrincipalPlaceOfBusiness = true;
+            }
+            else
+            {
+                if (PrincipalPlaceOfBusiness != null && partnershipObj.PrincipalPlaceOfBusiness != null)
+                {
+                    comparePrincipalPlaceOfBusiness =
+                        PrincipalPlaceOfBusiness.Equals(partnershipObj.PrincipalPlaceOfBusiness);
+                }
+            }
             return Name.Equals(partnershipObj.Name)
-                   && PartnersList.Equals(partnershipObj.PartnersList)
-                   && PrincipalPlaceOfBusiness != null &&
-                   PrincipalPlaceOfBusiness.Equals(partnershipObj.PrincipalPlaceOfBusiness);
+                   && PartnersList.Equals(partnershipObj.PartnersList) && comparePrincipalPlaceOfBusiness;
         }
 
         public string Name { get; private set; }

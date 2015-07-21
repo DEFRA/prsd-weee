@@ -61,20 +61,34 @@
             {
                 return false;
             }
-            var compareAuthorisedRepresentative = true;
-            if (AuthorisedRepresentative != null)
+            var compareAuthorisedRepresentative = false;
+            if (AuthorisedRepresentative == null && producerObj.AuthorisedRepresentative == null)
             {
-                compareAuthorisedRepresentative =
-                    AuthorisedRepresentative.Equals(producerObj.AuthorisedRepresentative);
+                compareAuthorisedRepresentative = true;
+            }
+            else
+            {
+                if (AuthorisedRepresentative != null && producerObj.AuthorisedRepresentative != null)
+                {
+                    compareAuthorisedRepresentative =
+                        AuthorisedRepresentative.Equals(producerObj.AuthorisedRepresentative);
+                }
             }
 
             var compareProducerBusiness = false;
-            if (ProducerBusiness != null)
+            if (ProducerBusiness == null && producerObj.ProducerBusiness == null)
             {
-                compareProducerBusiness =
-                    ProducerBusiness.Equals(producerObj.ProducerBusiness);
+                compareProducerBusiness = true;
             }
-
+            else
+            {
+                if (ProducerBusiness != null && producerObj.ProducerBusiness != null)
+                {
+                    compareProducerBusiness =
+                        ProducerBusiness.Equals(producerObj.ProducerBusiness);
+                }
+            }
+           
             var compareBrandName = false;
             if (BrandNames.Count == producerObj.BrandNames.Count)
             {
