@@ -2,34 +2,37 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text;
     using PCS;
     using Prsd.Core.Domain;
 
     public class Producer : Entity
     {
-        public Producer(Guid schemeId, MemberUpload memberUpload, 
+        public Producer(Guid schemeId, MemberUpload memberUpload,
             ProducerBusiness producerBusiness,
             AuthorisedRepresentative authorisedRepresentative,
-            DateTime lastSubmittedDate, decimal annualTurnover, 
+            DateTime lastSubmittedDate, decimal annualTurnover,
             bool vatRegistered, string registrationNumber,
-            DateTime? ceaseToExist, string tradingName, 
-            EEEPlacedOnMarketBandType eeePlacedOnMarketBandType, 
-            SellingTechniqueType sellingTechniqueType, 
-            ObligationType obligationType, 
+            DateTime? ceaseToExist, string tradingName,
+            EEEPlacedOnMarketBandType eeePlacedOnMarketBandType,
+            SellingTechniqueType sellingTechniqueType,
+            ObligationType obligationType,
             AnnualTurnOverBandType annualTurnOverBandType,
             List<BrandName> brandnames, List<SICCode> codes)
         {
             ProducerBusiness = producerBusiness;
             AuthorisedRepresentative = authorisedRepresentative;
-            
+
             LastSubmitted = lastSubmittedDate;
-            
+
             AnnualTurnover = annualTurnover;
             VATRegistered = vatRegistered;
             RegistrationNumber = registrationNumber;
             CeaseToExist = ceaseToExist;
             TradingName = tradingName;
-            
+
             EEEPlacedOnMarketBandType = eeePlacedOnMarketBandType.Value;
             SellingTechniqueType = sellingTechniqueType.Value;
             ObligationType = obligationType.Value;
@@ -41,9 +44,9 @@
             this.MemberUpload = memberUpload;
         }
 
-         protected Producer()
-         {
-         }
+        protected Producer()
+        {
+        }
 
         public virtual Guid SchemeId { get; private set; }
 
@@ -77,7 +80,7 @@
         public virtual List<SICCode> SICCodes { get; private set; }
 
         public int AnnualTurnOverBandType { get; private set; }
-     
+
         public int EEEPlacedOnMarketBandType { get; private set; }
 
         public int ObligationType { get; private set; }
@@ -85,5 +88,103 @@
         public int SellingTechniqueType { get; private set; }
 
         public int ChargeBandType { get; private set; }
+
+        public void SetScheme(Scheme scheme)
+        {
+            Scheme = scheme;
+        }
+
+        private DateTime GetProducerRegistrationDate(string registrationNumber, int complianceYear)
+        {
+            return (from item in Scheme.Producers
+                    where item.MemberUpload.IsSubmitted && item.MemberUpload.ComplianceYear == complianceYear && item.RegistrationNumber == registrationNumber
+                    select item.LastSubmitted).ToList().OrderBy(ls => ls).First();
+        }
+
+        public static string GetCSVColumnHeaders()
+        {
+            string[] csvColumnHeaders =
+            {
+                "Producer Name", "PRN", "Companies house number", "Charge band", "Date registered",
+                "Authorised representative", "Overseas producer"
+            };
+
+            StringBuilder sb = new StringBuilder();
+
+            for (var i = 0; i <= csvColumnHeaders.Length - 1; i++)
+            {
+                sb.Append(csvColumnHeaders[i]);
+
+                if (i < csvColumnHeaders.Length - 1)
+                {
+                    sb.Append(",");
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public string ToCsvString(Producer producer)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var producerName = producer.TradingName;
+            var prn = string.IsNullOrEmpty(producer.RegistrationNumber)
+                ? "WEE/********"
+                : producer.RegistrationNumber;
+            var companiesHouseNumber = string.Empty;
+            if (producer.ProducerBusiness != null && producer.ProducerBusiness.CompanyDetails != null)
+            {
+                companiesHouseNumber = producer.ProducerBusiness.CompanyDetails.CompanyNumber;
+            }
+            var chargeBand = "***";
+            var dateRegistered = GetProducerRegistrationDate(producer.RegistrationNumber, producer.MemberUpload.ComplianceYear).ToString(CultureInfo.InvariantCulture);
+            var authorisedRepresentative = producer.AuthorisedRepresentative == null ? "No" : "Yes";
+            var overseasProducer = producer.AuthorisedRepresentative == null
+                ? string.Empty
+                : producer.AuthorisedRepresentative.OverseasProducerName;
+
+            sb.Append(ReplaceSpecialCharacters(producerName));
+            sb.Append(",");
+
+            sb.Append(ReplaceSpecialCharacters(prn));
+            sb.Append(",");
+
+            sb.Append(ReplaceSpecialCharacters(companiesHouseNumber));
+            sb.Append(",");
+
+            sb.Append(ReplaceSpecialCharacters(chargeBand));
+            sb.Append(",");
+
+            sb.Append(ReplaceSpecialCharacters(dateRegistered));
+            sb.Append(",");
+
+            sb.Append(ReplaceSpecialCharacters(authorisedRepresentative));
+            sb.Append(",");
+
+            sb.Append(ReplaceSpecialCharacters(overseasProducer));
+
+            sb.AppendLine();
+
+            return sb.ToString();
+        }
+
+        private string ReplaceSpecialCharacters(string value)
+        {
+            if (value.Contains(","))
+            {
+                value = string.Concat("\"", value, "\"");
+            }
+
+            if (value.Contains("\r"))
+            {
+                value = value.Replace("\r", " ");
+            }
+            if (value.Contains("\n"))
+            {
+                value = value.Replace("\n", " ");
+            }
+            return value;
+        }
     }
 }
