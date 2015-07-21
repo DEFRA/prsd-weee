@@ -28,12 +28,23 @@
              {
                  return false;
              }
+
+             var compareRegisteredOfficeContact = false;
+             if (RegisteredOfficeContact == null && companyObj.RegisteredOfficeContact == null)
+             {
+                 compareRegisteredOfficeContact = true;
+             }
              else
              {
-                 return Name.Equals(companyObj.Name)
-                        && CompanyNumber.Equals(companyObj.CompanyNumber)
-                        && RegisteredOfficeContact != null && RegisteredOfficeContact.Equals(companyObj.RegisteredOfficeContact);
+                 if (RegisteredOfficeContact != null && companyObj.RegisteredOfficeContact != null)
+                 {
+                     compareRegisteredOfficeContact =
+                         RegisteredOfficeContact.Equals(companyObj.RegisteredOfficeContact);
+                 }
              }
+
+             return Name.Equals(companyObj.Name)
+                    && CompanyNumber.Equals(companyObj.CompanyNumber) && compareRegisteredOfficeContact;
          }
 
         public string Name { get; private set; }

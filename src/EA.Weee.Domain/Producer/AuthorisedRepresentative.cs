@@ -23,13 +23,20 @@
             {
                 return false;
             }
-            var compareOverseasContact = true;
-            if (authorisedRepresentativeObj.OverseasContact != null)
-            {
-                compareOverseasContact =
-                    OverseasContact.Equals(authorisedRepresentativeObj.OverseasContact);
-            }
 
+            var compareOverseasContact = false;
+            if (OverseasContact == null && authorisedRepresentativeObj.OverseasContact == null)
+            {
+                compareOverseasContact = true;
+            }
+            else
+            {
+                if (OverseasContact != null && authorisedRepresentativeObj.OverseasContact != null)
+                {
+                    compareOverseasContact =
+                        OverseasContact.Equals(authorisedRepresentativeObj.OverseasContact);
+                }
+            }
             return OverseasProducerName.Equals(authorisedRepresentativeObj.OverseasProducerName) &&
                    compareOverseasContact;
         }

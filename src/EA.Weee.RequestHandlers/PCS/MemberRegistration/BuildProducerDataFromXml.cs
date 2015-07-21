@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Xml.Linq;
@@ -20,24 +19,23 @@
         public static async Task<List<Producer>> SetProducerData(Guid schemeId, MemberUpload memberUpload, WeeeContext context, string xmlData)
         {
             List<Producer> producers = new List<Producer>();
-
             var doc = XDocument.Parse(xmlData, LoadOptions.SetLineInfo);
             var deserialzedXml = new XmlSerializer(typeof(schemeType)).Deserialize(doc.CreateReader());
             schemeType scheme = (schemeType)deserialzedXml;
             foreach (producerType producerData in scheme.producerList)
             {
                 List<BrandName> brandNames = producerData.producerBrandNames.Select(name => new BrandName(name)).ToList();
-         
+
                 List<SICCode> codes = producerData.SICCodeList.Select(name => new SICCode(name)).ToList();
-         
+
                 ProducerBusiness producerBusiness = await SetProducerBusiness(producerData.producerBusiness, context);
 
                 AuthorisedRepresentative authorisedRepresentative = await SetAuthorisedRepresentative(producerData.authorisedRepresentative, context);
 
                 EEEPlacedOnMarketBandType eeebandType = Enumeration.FromValue<EEEPlacedOnMarketBandType>((int)producerData.eeePlacedOnMarketBand);
-          
+
                 SellingTechniqueType sellingTechniqueType = Enumeration.FromValue<SellingTechniqueType>((int)producerData.sellingTechnique);
-        
+
                 ObligationType obligationType = Enumeration.FromValue<ObligationType>((int)producerData.obligationType);
 
                 AnnualTurnOverBandType annualturnoverType = Enumeration.FromValue<AnnualTurnOverBandType>((int)producerData.annualTurnoverBand);
@@ -58,27 +56,23 @@
                     obligationType,
                     annualturnoverType,
                     brandNames, codes);
-                
+
                 // modify producer data
                 switch (producerData.status)
                 {
                     case statusType.A:
                         // get the producers for scheme based on producer->prn and producer->lastsubmitted is latest date and memberupload ->IsSubmitted is true.
-                        var memberupload =
-                            await
-                                context.MemberUploads.Where(member => member.IsSubmitted && member.SchemeId == schemeId)
-                                    .ToListAsync();
-                        if (memberupload != null && memberupload.Count > 0)
+                        var producerDb =
+                            context.MemberUploads.Where(member => member.IsSubmitted && member.SchemeId == schemeId)
+                                .SelectMany(p => p.Producers)
+                                .Where(p => p.RegistrationNumber == producerData.registrationNo)
+                                .OrderByDescending(p => p.LastSubmitted)
+                                .First();
+
+                        //Add only if producer not found in DB
+                        if (!producer.Equals(producerDb))
                         {
-                            var producerDb =
-                                memberupload.SelectMany(m => m.Producers)
-                                    .OrderByDescending(p => p.LastSubmitted)
-                                    .FirstOrDefault(p => p.RegistrationNumber == producerData.registrationNo);
-                            //Add only if producer not found in DB
-                            if (!producer.Equals(producerDb))
-                            {
-                                producers.Add(producer);
-                            }
+                            producers.Add(producer);
                         }
                         break;
 
@@ -131,7 +125,7 @@
             {
                 partnershipType partnershipItem = (partnershipType)item;
                 string partnershipName = partnershipItem.partnershipName;
-  
+
                 List<string> partnersList = partnershipItem.partnershipList.ToList();
                 List<Partner> partners = partnersList.Select(name => new Partner(name)).ToList();
 
@@ -143,11 +137,25 @@
 
         private static async Task<ProducerContact> GetProducerContact(contactDetailsType contactDetails, WeeeContext context)
         {
-            string countryName = Enum.GetName(typeof(countryType),
-                contactDetails.address.country);
-            var country =
-                await context.Countries.SingleAsync(c => c.Name == countryName);
+            var countrydetail = contactDetails.address.country;
+            var countryName = string.Empty;
+            var countryEnumType = typeof(countryType);
+            //Read the country name from xml attribute if defined
+            var countryFirstOrDefault = countryEnumType.GetMember(countrydetail.ToString()).FirstOrDefault();
+            if (countryFirstOrDefault != null)
+            {
+                var countryEnumAttribute = countryFirstOrDefault
+                    .GetCustomAttributes(false)
+                    .OfType<XmlEnumAttribute>()
+                    .FirstOrDefault();
+                countryName = countryEnumAttribute != null ? countryEnumAttribute.Name : countryFirstOrDefault.Name;
+            }
 
+            Country country = null;
+            if (!string.IsNullOrEmpty(countryName))
+            {
+                country = await context.Countries.SingleAsync(c => c.Name == countryName);
+            }
             ProducerAddress address =
                 new ProducerAddress(contactDetails.address.primaryName,
                     contactDetails.address.secondaryName,
