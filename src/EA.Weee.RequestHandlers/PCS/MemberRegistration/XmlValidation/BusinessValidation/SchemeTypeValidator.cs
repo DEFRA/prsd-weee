@@ -18,13 +18,16 @@
             RuleForEach(st => st.producerList)
                 .Must((st, producer) =>
                 {
-                    var isDuplicate = st.producerList
-                        .Any(p => p != producer && p.registrationNo == producer.registrationNo);
-
-                    if (isDuplicate && !duplicateRegistrationNumbers.Contains(producer.registrationNo))
+                    if (!string.IsNullOrEmpty(producer.registrationNo)) // Duplicate empty registration numbers should not be validated
                     {
-                        duplicateRegistrationNumbers.Add(producer.registrationNo);
-                        return false;
+                        var isDuplicate = st.producerList
+                            .Any(p => p != producer && p.registrationNo == producer.registrationNo);
+
+                        if (isDuplicate && !duplicateRegistrationNumbers.Contains(producer.registrationNo))
+                        {
+                            duplicateRegistrationNumbers.Add(producer.registrationNo);
+                            return false;
+                        }
                     }
 
                     return true;
