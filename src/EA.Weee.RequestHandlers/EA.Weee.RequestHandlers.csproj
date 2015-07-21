@@ -96,6 +96,7 @@
     <Compile Include="PCS\MemberRegistration\GetMemberUploadDataHandler.cs" />
     <Compile Include="PCS\MemberRegistration\IXmlConverter.cs" />
     <Compile Include="PCS\MemberRegistration\GetProducerCSVByMemberUploadIdHandler.cs" />
+    <Compile Include="PCS\MemberRegistration\MemberUploadSubmissionHandler.cs" />
     <Compile Include="PCS\MemberRegistration\ValidateXmlFileHandler.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandler.cs" />

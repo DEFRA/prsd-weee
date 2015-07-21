@@ -43,10 +43,7 @@
 
             Assert.NotNull(producers);
             Assert.Equal(2, producers.Count);
-            foreach (var item in producers)
-            {
-                Assert.Equal(item.MemberUpload.ComplianceYear, complianceYear);
-            }
+            Assert.False(producers.Any(item => item.MemberUpload.ComplianceYear != complianceYear));
         }
 
         [Fact]
@@ -66,10 +63,7 @@
 
             Assert.NotNull(producers);
             Assert.Equal(2, producers.Count);
-            foreach (var item in producers)
-            {
-                Assert.True(item.MemberUpload.IsSubmitted);
-            }
+            Assert.True(producers.Any(item => item.MemberUpload.IsSubmitted));
         }
 
         [Fact]
@@ -94,10 +88,14 @@
         public void GetProducerCSVByComplianceYear_SchemeHasProducers_ReturnsProducersCSVstring()
         {
             var scheme = GetTestScheme();
+            
             var producer = GetTestProducer("WEE/12345678");
             producer.MemberUpload.Submit();
             producer.MemberUpload.SetProducers(new List<Producer> { producer });
+            producer.SetScheme(scheme);
+            
             scheme.SetProducers(new List<Producer> { producer });
+            
             var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear;
             var csvData = scheme.GetProducerCSV(complianceYear);
 
@@ -109,10 +107,14 @@
         public void GetProducerCSVByComplianceYear_SchemeHasProducerWithCompanyAndAuthorisedRepresentativeNull_ReturnsProducersCSVWithCorrectFieldValues()
         {
             var scheme = GetTestScheme();
+
             var producer = GetTestProducer("WEE/12345678", "Test trading name", null, null);
             producer.MemberUpload.Submit();
             producer.MemberUpload.SetProducers(new List<Producer> { producer });
+            producer.SetScheme(scheme);
+
             scheme.SetProducers(new List<Producer> { producer });
+
             var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear;
             var csvData = scheme.GetProducerCSV(complianceYear);
 

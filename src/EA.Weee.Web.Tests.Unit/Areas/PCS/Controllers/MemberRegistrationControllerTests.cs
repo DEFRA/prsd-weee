@@ -203,6 +203,21 @@
             Assert.IsType<FileContentResult>(result);
         }
 
+        [Fact]
+        public async void PostSubmitXml_ValidMemberUploadId_ReturnsSuccessfulSubmissionView()
+        {
+            var memberUploadId = Guid.NewGuid();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<MemberUploadSubmission>._))
+                .Returns(memberUploadId);
+
+            var result = await MemberRegistrationController().SubmitXml(A<Guid>._, new MemberUploadResultViewModel { ErrorData = new List<MemberUploadErrorData>(), MemberUploadId = memberUploadId });
+
+            var redirect = (RedirectToRouteResult)result;
+
+            Assert.Equal("SuccessfulSubmission", redirect.RouteValues["action"]);
+            Assert.Equal(memberUploadId, redirect.RouteValues["memberUploadId"]);
+        }
+
         private async Task<List<MemberUploadErrorData>> ErrorsAfterClientReturns(List<MemberUploadErrorData> memberUploadErrorDatas)
         {
             var result = await GetViewResult(memberUploadErrorDatas);
