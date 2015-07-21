@@ -89,13 +89,16 @@
 
         public int ChargeBandType { get; private set; }
 
+        public void SetScheme(Scheme scheme)
+        {
+            Scheme = scheme;
+        }
+
         private DateTime GetProducerRegistrationDate(string registrationNumber, int complianceYear)
         {
-            var producer = (from item in MemberUpload.Producers
-                            where item.MemberUpload.IsSubmitted && item.MemberUpload.ComplianceYear == complianceYear && item.RegistrationNumber == registrationNumber
-                            select item).ToList().OrderBy(p => p.LastSubmitted).First();
-
-            return producer.LastSubmitted;
+            return (from item in Scheme.Producers
+                    where item.MemberUpload.IsSubmitted && item.MemberUpload.ComplianceYear == complianceYear && item.RegistrationNumber == registrationNumber
+                    select item.LastSubmitted).ToList().OrderBy(ls => ls).First();
         }
 
         public static string GetCSVColumnHeaders()
