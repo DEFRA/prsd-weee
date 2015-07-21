@@ -124,7 +124,7 @@
             Assert.Equal(csvFieldValues[0], "Test trading name");
             Assert.Equal(csvFieldValues[1], "WEE/12345678");
             Assert.Equal(csvFieldValues[2], String.Empty);
-            Assert.Equal(csvFieldValues[4], scheme.Producers.First().LastSubmitted.ToString(CultureInfo.InvariantCulture));
+            Assert.Equal(csvFieldValues[4], scheme.Producers.First().LastSubmitted.ToString(CultureInfo.CurrentCulture));
             Assert.Equal(csvFieldValues[5], "No");
             Assert.Equal(csvFieldValues[6], String.Empty);
         }
