@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Text;
     using PCS;
     using Prsd.Core.Domain;
-    using System.Text;
 
     public class Producer : Entity
     {

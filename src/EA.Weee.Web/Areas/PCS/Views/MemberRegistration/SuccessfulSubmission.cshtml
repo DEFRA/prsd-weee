@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@model EA.Weee.Web.Areas.PCS.ViewModels.SuccessfulSubmissionViewModel
 @{
     ViewBag.Title = "Successful Submission";
 }
@@ -13,7 +14,8 @@
     @using (Html.BeginForm("LogOff", "Account", new { Area = "" }, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        <p>If you have finished performing tasks you can <span id="log-off-link"><noscript><input type="submit" value="sign out"/></noscript></span> or proceed to perform more activities</p>
+        <p>You can now <a href="@Url.Action("GetProducerCSV", "MemberRegistration", new { memberUploadId = @Model.MemberUploadId })">download a CSV file</a> containing your registered scheme members.</p>
+        <p>If you have finished performing tasks you can <span id="log-off-link"><noscript><input type="submit" value="sign out" /></noscript></span> or proceed to perform more activities</p>
     }
 
     @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })

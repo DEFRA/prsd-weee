@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.PCS.Controllers
 {
     using System;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -78,20 +79,35 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitXml(Guid pcsId, MemberUploadResultViewModel viewModel)
+        public async Task<ActionResult> SubmitXml(Guid pcsId, MemberUploadResultViewModel viewModel)
         {
             using (var client = apiClient())
             {
                 // TODO: insert request including check against submitting a member upload with errors or different PCS here...
 
-                return RedirectToAction("SuccessfulSubmission");
+                await client.SendAsync(User.GetAccessToken(), new MemberUploadSubmission(viewModel.MemberUploadId));
+
+                return RedirectToAction("SuccessfulSubmission", new { memberUploadId = viewModel.MemberUploadId });
             }
         }
 
         [HttpGet]
-        public ViewResult SuccessfulSubmission()
+        public ViewResult SuccessfulSubmission(Guid memberUploadId)
         {
-            return View();
+            var model = new SuccessfulSubmissionViewModel { MemberUploadId = memberUploadId };
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetProducerCSV(Guid memberUploadId)
+        {
+            using (var client = apiClient())
+            {
+                var producerCSVData = await client.SendAsync(User.GetAccessToken(),
+                    new GetProducerCSVByMemberUploadId(memberUploadId));
+
+                return File(new System.Text.UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", producerCSVData.FileName);
+            }
         }
     }
 }

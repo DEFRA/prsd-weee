@@ -49,6 +49,9 @@
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetails.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
+    <Compile Include="PCS\MemberRegistration\GetMemberUploadById.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PCS\MemberRegistration\GetMemberUploadData.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisation.cs" />
     <Compile Include="Organisations\GetOrganisationsByUserId.cs" />
@@ -62,6 +65,8 @@
     <Compile Include="Organisations\Create\CreatePartnershipRequest.cs" />
     <Compile Include="Organisations\Create\CreateSoleTraderRequest.cs" />
     <Compile Include="Organisations\GetOrganisationInfo.cs" />
+    <Compile Include="PCS\MemberRegistration\GetProducerCSVByMemberUploadId.cs" />
+    <Compile Include="PCS\MemberRegistration\MemberUploadSubmission.cs" />
     <Compile Include="Shared\GetCountries.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorities.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations.cs" />

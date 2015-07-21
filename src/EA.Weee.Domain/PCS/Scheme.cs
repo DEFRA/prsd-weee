@@ -3,6 +3,9 @@
     using Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text;
     using Organisation;
     using Producer;
 
@@ -30,6 +33,37 @@
         public void SetProducers(List<Producer> producers)
         {
             Producers = producers;
+        }
+
+        public List<Producer> GetProducersList(int complianceYear)
+        {
+            var producers = (from producer in Producers
+                             where producer.MemberUpload.IsSubmitted && producer.MemberUpload.ComplianceYear == complianceYear
+                             group producer by producer.RegistrationNumber into groups
+                             select groups.OrderByDescending(p => p.LastSubmitted).First()).ToList();
+
+            return producers;
+        }
+
+        public string GetProducerCSV(int complianceYear)
+        {
+            var sb = new StringBuilder();
+
+            var producers = GetProducersList(complianceYear);
+
+            var csvColumnHeaders = Producer.GetCSVColumnHeaders();
+
+            sb.Append(csvColumnHeaders);
+
+            sb.AppendLine();
+
+            for (var i = 0; i <= producers.Count - 1; i++)
+            {
+                var producer = producers[i];
+                sb.Append(producer.ToCsvString(producer));
+            }
+
+            return sb.ToString();
         }
     }
 }
