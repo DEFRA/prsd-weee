@@ -31,22 +31,43 @@
                 return false;
             }
             var isCorrespondentContactSame = false;
-            if (producerBusinessObj.CorrespondentForNoticesContact != null)
+            if (CorrespondentForNoticesContact == null && producerBusinessObj.CorrespondentForNoticesContact == null)
             {
-                isCorrespondentContactSame =
-                    CorrespondentForNoticesContact.Equals(producerBusinessObj.CorrespondentForNoticesContact);
+                isCorrespondentContactSame = true;
+            }
+            else
+            {
+                if (CorrespondentForNoticesContact != null && producerBusinessObj.CorrespondentForNoticesContact != null)
+                {
+                    isCorrespondentContactSame =
+                        CorrespondentForNoticesContact.Equals(producerBusinessObj.CorrespondentForNoticesContact);
+                }
             }
 
-            var compareCompany = true;
-            var comparePartnership = true;
-            if (CompanyDetails != null || Partnership != null)
+            //compare company details
+            var compareCompany = false;
+            if (CompanyDetails == null && producerBusinessObj.CompanyDetails == null)
             {
-                if (CompanyDetails != null)
+                compareCompany = true;
+            }
+            else
+            {
+                if (CompanyDetails != null && producerBusinessObj.CorrespondentForNoticesContact != null)
                 {
                     compareCompany = CompanyDetails.Equals(producerBusinessObj.CompanyDetails);
                 }
+            }
+            
+            //compare partnership details
+            var comparePartnership = false;
 
-                if (Partnership != null)
+            if (Partnership == null && producerBusinessObj.Partnership == null)
+            {
+                comparePartnership = true;
+            }
+            else
+            {
+                if (Partnership != null && producerBusinessObj.Partnership != null)
                 {
                     comparePartnership = Partnership.Equals(producerBusinessObj.Partnership);
                 }
