@@ -6,7 +6,7 @@
 =   
 =   APPLICATION: Waste Electronic and Electrical Equipment Regulations 2006
 =   MODULE: Scheme/Producer Registration (2008 onwards)
-=   FILE: XSD Schema - Producer Registration v3.0.xsd
+=   FILE: XSD Schema - Producer Registration v3.06.xsd
 =   DESCRIPTION: Schema to validate WEEE Scheme and Producer Registration
 =   
 ================================================================================
@@ -19,19 +19,21 @@
 =   25/08/2007      Jacqui Spencer       2.0        Initial release of 2008 producer registration schema.
 =   08/02/2008      Colin McDonald       2.1        Amended Phone number to allow foreign numbers,
 =                                                   remove registered address and phone number of company.
-=   07/03/2008      Jim King             2.2        Removed the Address Elements from schemeBusinessType
-=   24/04/2014      Shawkat/SFW Ltd      2.3        Added [Authorised Representative] Block for overseas producer details
+=   07/03/2008      Jim King             2.2        Removed the Address Elements from schemeBusinessType.
+=   24/04/2014      Shawkat/SFW Ltd      2.3        Added [Authorised Representative] Block for overseas producer details.
 =   12/09/2014      PJC/UCD Solutions    3.0        Simplified authorisedRepresentativeType for overseas producer details,
-=                                                   amended 3.0 draft changes for ceaseToExistDate and sellingTechnique
-=	19/05/2015		RickP/SFW Ltd		 3.01		Amended casing convention inconsistencies for all new elements 
-													added since version 2.2 (current live version)
-=	21/05/2015		RickP/SFW Ltd		 3.02		Reverted ChargeBandType back to annualTurnoverBand and separated waste produce 
-													into a separate element.
-=	29/06/2015		OwenH/SFW Ltd		 3.03		Renamed wasteProduceBandType to eeePlacedOnMarketBandType, extended
-													email TLD length limit to 63 per standard, removed textType and producerWeightType
-=	01/07/2015		OwenH/SFW Ltd		 3.04		Updated compliance year minimum to 2016, producerList to minimum occurrence of 1,
-													country list to match PRSD WEEE system, country mandatory in address types,
-													removed postTown from address types
+=                                                   amended 3.0 draft changes for ceaseToExistDate and sellingTechnique.
+=   19/05/2015      RickP/SFW Ltd        3.01       Amended casing convention inconsistencies for all new elements 
+=                                                   added since version 2.2 (current live version).
+=   21/05/2015      RickP/SFW Ltd        3.02       Reverted ChargeBandType back to annualTurnoverBand and separated waste produce 
+=                                                   into a separate element.
+=   29/06/2015      OwenH/SFW Ltd        3.03       Renamed wasteProduceBandType to eeePlacedOnMarketBandType, extended
+=                                                   email TLD length limit to 63 per standard, removed textType and producerWeightType.
+=   01/07/2015      OwenH/SFW Ltd        3.04       Updated compliance year minimum to 2016, producerList to minimum occurrence of 1,
+=                                                   country list to match PRSD WEEE system, country mandatory in address types,
+=                                                   removed postTown from address types.
+=   06/07/2015      OwenH/SFW Ltd        3.05       Removed unbounded maxOccurs constraint from overseasContact on overseasProducerType.
+=   15/07/2015      OwenH/SFW Ltd        3.06       Removed unused billingAddressType.
 ================================================================================
 -->
 	<xs:element name="scheme" type="schemeType">
@@ -41,7 +43,7 @@
 	</xs:element>
 	<xs:complexType name="schemeType">
 		<xs:sequence>
-			<xs:element name="XSDVersion" default="3.04">
+			<xs:element name="XSDVersion" default="3.06">
 				<xs:simpleType>
 					<xs:restriction base="XSDVersionType"/>
 				</xs:simpleType>
@@ -55,8 +57,8 @@
 	</xs:complexType>
 	<xs:simpleType name="XSDVersionType">
 		<xs:restriction base="xs:decimal">
-			<xs:minInclusive value="3.04"/>
-			<xs:maxInclusive value="3.04"/>
+			<xs:minInclusive value="3.06"/>
+			<xs:maxInclusive value="3.06"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="approvalNoType">
@@ -174,7 +176,7 @@
 	<xs:complexType name="overseasProducerType">
 		<xs:sequence>
 			<xs:element name="overseasProducerName" type="tradingNameType"/>
-			<xs:element name="overseasContact" type="contactDetailsType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="overseasContact" type="contactDetailsType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="producerBrandNameType">
@@ -329,13 +331,6 @@
 	<xs:simpleType name="postCodeType">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="[A-Z]{1,2}[0-9R][0-9A-Z]? [0-9][A-Z]{2}"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="billingAddressType">
-		<xs:restriction base="xs:token">
-			<xs:enumeration value="Correspondent for Approvals"/>
-			<xs:enumeration value="Principal Place of Business"/>
-			<xs:enumeration value="Registered Office"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="sellingTechniqueType">
