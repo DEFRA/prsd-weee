@@ -10,17 +10,22 @@
 
     public class Producer : Entity
     {
-        public Producer(Guid schemeId, MemberUpload memberUpload,
+        public Producer(Guid schemeId,
+            MemberUpload memberUpload,
             ProducerBusiness producerBusiness,
             AuthorisedRepresentative authorisedRepresentative,
-            DateTime lastSubmittedDate, decimal annualTurnover,
-            bool vatRegistered, string registrationNumber,
-            DateTime? ceaseToExist, string tradingName,
+            DateTime lastSubmittedDate,
+            decimal annualTurnover,
+            bool vatRegistered,
+            string registrationNumber,
+            DateTime? ceaseToExist,
+            string tradingName,
             EEEPlacedOnMarketBandType eeePlacedOnMarketBandType,
             SellingTechniqueType sellingTechniqueType,
             ObligationType obligationType,
             AnnualTurnOverBandType annualTurnOverBandType,
-            List<BrandName> brandnames, List<SICCode> codes)
+            List<BrandName> brandnames,
+            List<SICCode> codes)
         {
             ProducerBusiness = producerBusiness;
             AuthorisedRepresentative = authorisedRepresentative;
