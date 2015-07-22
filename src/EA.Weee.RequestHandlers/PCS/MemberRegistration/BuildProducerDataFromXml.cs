@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Xml.Linq;
     using System.Xml.Serialization;
@@ -46,10 +47,21 @@
                     ceaseDate = producerData.ceaseToExistDate;
                 }
 
-                Producer producer = new Producer(schemeId, memberUpload, producerBusiness,
+                string producerRegistrationNo = producerData.registrationNo;
+                if (producerData.status == statusType.I)
+                {
+                    producerRegistrationNo = GenerateUniquePRN();
+                }
+
+                Producer producer = new Producer(schemeId,
+                    memberUpload,
+                    producerBusiness,
                     authorisedRepresentative,
-                    SystemTime.UtcNow, (decimal)producerData.annualTurnover, producerData.VATRegistered,
-                    producerData.registrationNo, ceaseDate,
+                    SystemTime.UtcNow,
+                    (decimal)producerData.annualTurnover,
+                    producerData.VATRegistered,
+                    producerRegistrationNo,
+                    ceaseDate,
                     producerData.tradingName,
                     eeebandType,
                     sellingTechniqueType,
@@ -61,7 +73,8 @@
                 switch (producerData.status)
                 {
                     case statusType.A:
-                        // get the producers for scheme based on producer->prn and producer->lastsubmitted is latest date and memberupload ->IsSubmitted is true.
+                        // get the producers for scheme based on producer->prn and producer->lastsubmitted
+                       // is latest date and memberupload ->IsSubmitted is true.
                         var producerDb =
                             context.MemberUploads.Where(member => member.IsSubmitted && member.SchemeId == schemeId)
                                 .SelectMany(p => p.Producers)
@@ -99,7 +112,8 @@
                     contacts.Add(await GetProducerContact(detail, context));
                 }
             }
-            AuthorisedRepresentative overSeasAuthorisedRepresentative = new AuthorisedRepresentative(representative.overseasProducer.overseasProducerName, contacts.FirstOrDefault());
+            AuthorisedRepresentative overSeasAuthorisedRepresentative = 
+                new AuthorisedRepresentative(representative.overseasProducer.overseasProducerName, contacts.FirstOrDefault());
             return overSeasAuthorisedRepresentative;
         }
 
@@ -129,7 +143,8 @@
                 List<string> partnersList = partnershipItem.partnershipList.ToList();
                 List<Partner> partners = partnersList.Select(name => new Partner(name)).ToList();
 
-                partnership = new Partnership(partnershipName, await GetProducerContact(partnershipItem.principalPlaceOfBusiness.contactDetails, context), partners);
+                partnership = new Partnership(partnershipName, await GetProducerContact(
+                    partnershipItem.principalPlaceOfBusiness.contactDetails, context), partners);
             }
             ProducerBusiness business = new ProducerBusiness(company, partnership, correspondentForNoticeContact);
             return business;
@@ -175,6 +190,27 @@
                     contactDetails.email, address);
 
             return contact;
+        }
+
+        private static string GenerateUniquePRN()
+        {
+            //TODO: Replace temporary code with actual PRN generation ensuring no duplicates
+            StringBuilder prnBuilder = new StringBuilder();
+            prnBuilder.Append("WEE/");
+            prnBuilder.Append(GetRandomLetters(2));
+            prnBuilder.Append(DateTime.UtcNow.ToString("mmff"));
+            prnBuilder.Append(GetRandomLetters(2));
+            return prnBuilder.ToString();
+        }
+
+        private static string GetRandomLetters(int length)
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var random = new Random();
+            return new string(
+                Enumerable.Repeat(chars, 2)
+                          .Select(s => s[random.Next(s.Length)])
+                          .ToArray());
         }
     }
 }
