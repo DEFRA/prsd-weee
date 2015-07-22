@@ -33,27 +33,20 @@
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
             var upload = new MemberUpload(message.OrganisationId, message.Data, memberUploadErrors.ToList(), scheme.Id);
 
+             var producers = new List<Producer>();
             //Build producers domain object if there are no errors during validation of xml file.
             if (!memberUploadErrors.Any())
             {
-                var producers = new List<Producer>();
-                try
-                {
-                    producers = await BuildProducerDataFromXml.SetProducerData(scheme.Id, upload, context, message.Data);
-                }
-                catch (Exception)
-                {
-                    throw new InvalidOperationException("Error when extracting producer data from XML.");
-                }
-                if (producers.Count > 0)
-                {
-                    upload.SetProducers(producers);
-                    scheme.SetProducers(producers);
-                    context.Producers.AddRange(producers);
-                }
+                producers = await BuildProducerDataFromXml.SetProducerData(scheme.Id, upload, context, message.Data);
             }
 
             context.MemberUploads.Add(upload);
+
+            if (producers.Count > 0)
+            {
+                context.Producers.AddRange(producers);
+            }
+            
             await context.SaveChangesAsync();
             return upload.Id;
         }
