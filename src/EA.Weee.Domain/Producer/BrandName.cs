@@ -14,6 +14,21 @@
         {
         }
 
+        public override bool Equals(object obj)
+        {
+            var brandObj = obj as BrandName;
+            if (brandObj == null)
+            {
+                return false;
+            }
+            return Name.Equals(brandObj.Name);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public string Name { get; private set; }
 
         public virtual Guid ProducerId { get; private set; }

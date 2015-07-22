@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Diagnostics;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Xml.Linq;
     using System.Xml.Serialization;
@@ -20,24 +20,23 @@
         public static async Task<List<Producer>> SetProducerData(Guid schemeId, MemberUpload memberUpload, WeeeContext context, string xmlData)
         {
             List<Producer> producers = new List<Producer>();
-
             var doc = XDocument.Parse(xmlData, LoadOptions.SetLineInfo);
             var deserialzedXml = new XmlSerializer(typeof(schemeType)).Deserialize(doc.CreateReader());
             schemeType scheme = (schemeType)deserialzedXml;
             foreach (producerType producerData in scheme.producerList)
             {
                 List<BrandName> brandNames = producerData.producerBrandNames.Select(name => new BrandName(name)).ToList();
-         
+
                 List<SICCode> codes = producerData.SICCodeList.Select(name => new SICCode(name)).ToList();
-         
+
                 ProducerBusiness producerBusiness = await SetProducerBusiness(producerData.producerBusiness, context);
 
                 AuthorisedRepresentative authorisedRepresentative = await SetAuthorisedRepresentative(producerData.authorisedRepresentative, context);
 
                 EEEPlacedOnMarketBandType eeebandType = Enumeration.FromValue<EEEPlacedOnMarketBandType>((int)producerData.eeePlacedOnMarketBand);
-          
+
                 SellingTechniqueType sellingTechniqueType = Enumeration.FromValue<SellingTechniqueType>((int)producerData.sellingTechnique);
-        
+
                 ObligationType obligationType = Enumeration.FromValue<ObligationType>((int)producerData.obligationType);
 
                 AnnualTurnOverBandType annualturnoverType = Enumeration.FromValue<AnnualTurnOverBandType>((int)producerData.annualTurnoverBand);
@@ -48,10 +47,21 @@
                     ceaseDate = producerData.ceaseToExistDate;
                 }
 
-                Producer producer = new Producer(schemeId, memberUpload, producerBusiness,
+                string producerRegistrationNo = producerData.registrationNo;
+                if (producerData.status == statusType.I)
+                {
+                    producerRegistrationNo = GenerateUniquePRN();
+                }
+
+                Producer producer = new Producer(schemeId,
+                    memberUpload,
+                    producerBusiness,
                     authorisedRepresentative,
-                    SystemTime.UtcNow, (decimal)producerData.annualTurnover, producerData.VATRegistered,
-                    producerData.registrationNo, ceaseDate,
+                    SystemTime.UtcNow,
+                    (decimal)producerData.annualTurnover,
+                    producerData.VATRegistered,
+                    producerRegistrationNo,
+                    ceaseDate,
                     producerData.tradingName,
                     eeebandType,
                     sellingTechniqueType,
@@ -59,7 +69,30 @@
                     annualturnoverType,
                     brandNames, codes);
 
-                producers.Add(producer);
+                // modify producer data
+                switch (producerData.status)
+                {
+                    case statusType.A:
+                        // get the producers for scheme based on producer->prn and producer->lastsubmitted
+                       // is latest date and memberupload ->IsSubmitted is true.
+                        var producerDb =
+                            context.MemberUploads.Where(member => member.IsSubmitted && member.SchemeId == schemeId)
+                                .SelectMany(p => p.Producers)
+                                .Where(p => p.RegistrationNumber == producerData.registrationNo)
+                                .OrderByDescending(p => p.LastSubmitted)
+                                .First();
+
+                        //Add only if producer not found in DB
+                        if (!producer.Equals(producerDb))
+                        {
+                            producers.Add(producer);
+                        }
+                        break;
+
+                    case statusType.I:
+                        producers.Add(producer);
+                        break;
+                }
             }
 
             return producers;
@@ -74,12 +107,10 @@
             var contacts = new List<ProducerContact>();
             if (representative.overseasProducer.overseasContact != null)
             {
-                foreach (contactDetailsType detail in representative.overseasProducer.overseasContact)
-                {
-                    contacts.Add(await GetProducerContact(detail, context));
-                }
+                contacts.Add(await GetProducerContact(representative.overseasProducer.overseasContact, context));
             }
-            AuthorisedRepresentative overSeasAuthorisedRepresentative = new AuthorisedRepresentative(representative.overseasProducer.overseasProducerName, contacts.FirstOrDefault());
+            AuthorisedRepresentative overSeasAuthorisedRepresentative = 
+                new AuthorisedRepresentative(representative.overseasProducer.overseasProducerName, contacts.FirstOrDefault());
             return overSeasAuthorisedRepresentative;
         }
 
@@ -105,11 +136,12 @@
             {
                 partnershipType partnershipItem = (partnershipType)item;
                 string partnershipName = partnershipItem.partnershipName;
-  
+
                 List<string> partnersList = partnershipItem.partnershipList.ToList();
                 List<Partner> partners = partnersList.Select(name => new Partner(name)).ToList();
 
-                partnership = new Partnership(partnershipName, await GetProducerContact(partnershipItem.principalPlaceOfBusiness.contactDetails, context), partners);
+                partnership = new Partnership(partnershipName, await GetProducerContact(
+                    partnershipItem.principalPlaceOfBusiness.contactDetails, context), partners);
             }
             ProducerBusiness business = new ProducerBusiness(company, partnership, correspondentForNoticeContact);
             return business;
@@ -117,11 +149,25 @@
 
         private static async Task<ProducerContact> GetProducerContact(contactDetailsType contactDetails, WeeeContext context)
         {
-            string countryName = Enum.GetName(typeof(countryType),
-                contactDetails.address.country);
-            var country =
-                await context.Countries.SingleAsync(c => c.Name == countryName);
+            var countrydetail = contactDetails.address.country;
+            var countryName = string.Empty;
+            var countryEnumType = typeof(countryType);
+            //Read the country name from xml attribute if defined
+            var countryFirstOrDefault = countryEnumType.GetMember(countrydetail.ToString()).FirstOrDefault();
+            if (countryFirstOrDefault != null)
+            {
+                var countryEnumAttribute = countryFirstOrDefault
+                    .GetCustomAttributes(false)
+                    .OfType<XmlEnumAttribute>()
+                    .FirstOrDefault();
+                countryName = countryEnumAttribute != null ? countryEnumAttribute.Name : countryFirstOrDefault.Name;
+            }
 
+            Country country = null;
+            if (!string.IsNullOrEmpty(countryName))
+            {
+                country = await context.Countries.SingleAsync(c => c.Name == countryName);
+            }
             ProducerAddress address =
                 new ProducerAddress(contactDetails.address.primaryName,
                     contactDetails.address.secondaryName,
@@ -141,6 +187,27 @@
                     contactDetails.email, address);
 
             return contact;
+        }
+
+        private static string GenerateUniquePRN()
+        {
+            //TODO: Replace temporary code with actual PRN generation ensuring no duplicates
+            StringBuilder prnBuilder = new StringBuilder();
+            prnBuilder.Append("WEE/");
+            prnBuilder.Append(GetRandomLetters(2));
+            prnBuilder.Append(DateTime.UtcNow.ToString("mmff"));
+            prnBuilder.Append(GetRandomLetters(2));
+            return prnBuilder.ToString();
+        }
+
+        private static string GetRandomLetters(int length)
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var random = new Random();
+            return new string(
+                Enumerable.Repeat(chars, 2)
+                          .Select(s => s[random.Next(s.Length)])
+                          .ToArray());
         }
     }
 }

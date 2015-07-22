@@ -15,7 +15,7 @@
             const string registrationNumber = "ABC12345";
             var xml = new schemeType
             {
-                producerList = Producers(registrationNumber, registrationNumber).ToArray()
+                producerList = Producers(registrationNumber, registrationNumber)
             };
 
             var result = new SchemeTypeValidator().Validate(xml);
@@ -23,6 +23,19 @@
             Assert.False(result.IsValid);
             Assert.Contains(registrationNumber, result.Errors.Single().ErrorMessage);
             Assert.Equal(ErrorLevel.Error, result.Errors.Single().CustomState);
+        }
+
+        [Fact]
+        public void SetOfEmptyRegistrationNumbers_ValidationSucceeds()
+        {
+            var xml = new schemeType
+            {
+                producerList = Producers(string.Empty, string.Empty)
+            };
+
+            var result = new SchemeTypeValidator().Validate(xml);
+
+            Assert.True(result.IsValid);
         }
 
         [Fact]

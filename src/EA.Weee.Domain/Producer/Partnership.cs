@@ -17,12 +17,42 @@
         {
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            var partnershipObj = obj as Partnership;
+            if (partnershipObj == null)
+            {
+                return false;
+            }
+
+            var comparePrincipalPlaceOfBusiness = false;
+            if (PrincipalPlaceOfBusiness == null && partnershipObj.PrincipalPlaceOfBusiness == null)
+            {
+                comparePrincipalPlaceOfBusiness = true;
+            }
+            else
+            {
+                if (PrincipalPlaceOfBusiness != null && partnershipObj.PrincipalPlaceOfBusiness != null)
+                {
+                    comparePrincipalPlaceOfBusiness =
+                        PrincipalPlaceOfBusiness.Equals(partnershipObj.PrincipalPlaceOfBusiness);
+                }
+            }
+            return Name.Equals(partnershipObj.Name)
+                   && PartnersList.Equals(partnershipObj.PartnersList) && comparePrincipalPlaceOfBusiness;
+        }
+
         public string Name { get; private set; }
 
         public virtual Guid PrincipalPlaceOfBusinessId { get; private set; }
 
         public virtual ProducerContact PrincipalPlaceOfBusiness { get; private set; }
 
-        public List<Partner> PartnersList { get; private set; } 
+        public List<Partner> PartnersList { get; private set; }
     }
 }

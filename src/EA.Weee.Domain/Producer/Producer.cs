@@ -10,17 +10,22 @@
 
     public class Producer : Entity
     {
-        public Producer(Guid schemeId, MemberUpload memberUpload,
+        public Producer(Guid schemeId,
+            MemberUpload memberUpload,
             ProducerBusiness producerBusiness,
             AuthorisedRepresentative authorisedRepresentative,
-            DateTime lastSubmittedDate, decimal annualTurnover,
-            bool vatRegistered, string registrationNumber,
-            DateTime? ceaseToExist, string tradingName,
+            DateTime lastSubmittedDate,
+            decimal annualTurnover,
+            bool vatRegistered,
+            string registrationNumber,
+            DateTime? ceaseToExist,
+            string tradingName,
             EEEPlacedOnMarketBandType eeePlacedOnMarketBandType,
             SellingTechniqueType sellingTechniqueType,
             ObligationType obligationType,
             AnnualTurnOverBandType annualTurnOverBandType,
-            List<BrandName> brandnames, List<SICCode> codes)
+            List<BrandName> brandnames,
+            List<SICCode> codes)
         {
             ProducerBusiness = producerBusiness;
             AuthorisedRepresentative = authorisedRepresentative;
@@ -41,11 +46,80 @@
             BrandNames = brandnames;
             SICCodes = codes;
             SchemeId = schemeId;
-            this.MemberUpload = memberUpload;
+            MemberUpload = memberUpload;
         }
 
         protected Producer()
         {
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            var producerObj = obj as Producer;
+
+            if (producerObj == null)
+            {
+                return false;
+            }
+            var compareAuthorisedRepresentative = false;
+            if (AuthorisedRepresentative == null && producerObj.AuthorisedRepresentative == null)
+            {
+                compareAuthorisedRepresentative = true;
+            }
+            else
+            {
+                if (AuthorisedRepresentative != null && producerObj.AuthorisedRepresentative != null)
+                {
+                    compareAuthorisedRepresentative =
+                        AuthorisedRepresentative.Equals(producerObj.AuthorisedRepresentative);
+                }
+            }
+
+            var compareProducerBusiness = false;
+            if (ProducerBusiness == null && producerObj.ProducerBusiness == null)
+            {
+                compareProducerBusiness = true;
+            }
+            else
+            {
+                if (ProducerBusiness != null && producerObj.ProducerBusiness != null)
+                {
+                    compareProducerBusiness =
+                        ProducerBusiness.Equals(producerObj.ProducerBusiness);
+                }
+            }
+           
+            var compareBrandName = false;
+            if (BrandNames.Count == producerObj.BrandNames.Count)
+            {
+                BrandNames.Sort();
+                producerObj.BrandNames.Sort();
+                compareBrandName = BrandNames.SequenceEqual(producerObj.BrandNames);
+            }
+
+            var compareSICCodes = false;
+            if (SICCodes.Count == producerObj.SICCodes.Count)
+            {
+                SICCodes.Sort();
+                producerObj.SICCodes.Sort();
+                compareSICCodes = SICCodes.SequenceEqual(producerObj.SICCodes);
+            }
+
+            return RegistrationNumber.Equals(producerObj.RegistrationNumber)
+                   && TradingName.Equals(producerObj.TradingName)
+                   && VATRegistered.Equals(producerObj.VATRegistered)
+                   && AnnualTurnover.Equals(producerObj.AnnualTurnover)
+                   && ObligationType.Equals(producerObj.ObligationType)
+                   && AnnualTurnOverBandType.Equals(producerObj.AnnualTurnOverBandType)
+                   && SellingTechniqueType.Equals(producerObj.SellingTechniqueType)
+                   && EEEPlacedOnMarketBandType.Equals(producerObj.EEEPlacedOnMarketBandType)
+                   &&
+                   compareBrandName && compareSICCodes && compareAuthorisedRepresentative && compareProducerBusiness;
         }
 
         public virtual Guid SchemeId { get; private set; }
@@ -61,6 +135,7 @@
         public virtual AuthorisedRepresentative AuthorisedRepresentative { get; private set; }
 
         public virtual Guid ProducerBusinessId { get; private set; }
+
         public virtual ProducerBusiness ProducerBusiness { get; private set; }
 
         public DateTime LastSubmitted { get; private set; }
@@ -138,7 +213,7 @@
                 companiesHouseNumber = producer.ProducerBusiness.CompanyDetails.CompanyNumber;
             }
             var chargeBand = "***";
-            var dateRegistered = GetProducerRegistrationDate(producer.RegistrationNumber, producer.MemberUpload.ComplianceYear).ToString(CultureInfo.InvariantCulture);
+            var dateRegistered = GetProducerRegistrationDate(producer.RegistrationNumber, producer.MemberUpload.ComplianceYear).ToString(CultureInfo.CurrentCulture);
             var authorisedRepresentative = producer.AuthorisedRepresentative == null ? "No" : "Yes";
             var overseasProducer = producer.AuthorisedRepresentative == null
                 ? string.Empty
