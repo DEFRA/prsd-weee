@@ -2,16 +2,17 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using DataAccess;
     using Domain;
     using FluentValidation;
 
     public class SchemeTypeValidator : AbstractValidator<schemeType>
     {
-        public SchemeTypeValidator(IValidationContext context)
+        public SchemeTypeValidator(WeeeContext context)
         {
             RuleFor(st => st.producerList)
                 .SetCollectionValidator(new ProducerTypeValidator(context));
-
+       
             var duplicateRegistrationNumbers = new List<string>();
             RuleForEach(st => st.producerList)
                 .Must((st, producer) =>

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using DataAccess;
     using Domain;
     using FluentValidation;
 
@@ -16,7 +17,7 @@
             countryType.UKSCOTLAND, countryType.UKWALES
         };
 
-        public ProducerTypeValidator(IValidationContext context)
+        public ProducerTypeValidator(WeeeContext context)
         {
             RuleSet(
                 BusinessValidator.RegistrationNoRuleSet,

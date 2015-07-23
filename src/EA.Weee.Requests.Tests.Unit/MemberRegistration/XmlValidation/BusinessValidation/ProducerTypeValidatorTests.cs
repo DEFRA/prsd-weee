@@ -6,25 +6,15 @@
     using Domain;
     using Domain.PCS;
     using Domain.Producer;
-    using FakeItEasy;
     using FluentValidation;
     using FluentValidation.Internal;
-    using FluentValidation.Results;
-    using Prsd.Core.Domain;
     using RequestHandlers;
-    using RequestHandlers.PCS.MemberRegistration.XmlValidation;
     using RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation;
     using Xunit;
+    using ValidationContext = XmlValidation.ValidationContext;
 
     public class ProducerTypeValidatorTests
     {
-        private readonly IValidationContext context;
-
-        public ProducerTypeValidatorTests()
-        {
-            context = A.Fake<IValidationContext>();
-        }
-
         [Theory]
         [InlineData(null, "TestCompany")]
         [InlineData("", "TestCompany")]
@@ -181,9 +171,7 @@
                 status = statusType.A
             };
 
-            A.CallTo(() => context.Producers).Returns(new List<Producer> { Producer(prn) });
-
-            var result = ProducerTypeValidator()
+            var result = ProducerTypeValidator(new List<Producer> { Producer(prn) }, new List<MigratedProducer>())
                 .Validate(producer, new RulesetValidatorSelector(BusinessValidator.DataValidationRuleSet));
 
             Assert.True(result.IsValid);
@@ -199,9 +187,7 @@
                 status = statusType.A
             };
 
-            A.CallTo(() => context.Producers).Returns(new List<Producer> { Producer("ABC12346") });
-
-            var result = ProducerTypeValidator()
+            var result = ProducerTypeValidator(new List<Producer> { Producer("ABC12346") }, new List<MigratedProducer>())
                 .Validate(producer, new RulesetValidatorSelector(BusinessValidator.DataValidationRuleSet));
 
             Assert.False(result.IsValid);
@@ -224,9 +210,7 @@
                 tradingName = tradingName
             };
 
-            A.CallTo(() => context.Producers).Returns(new List<Producer> { Producer("ABC12346") });
-
-            var result = ProducerTypeValidator()
+            var result = ProducerTypeValidator(new List<Producer> { Producer("ABC12346") }, new List<MigratedProducer>())
                 .Validate(producer, new RulesetValidatorSelector(BusinessValidator.DataValidationRuleSet));
 
             Assert.Contains(brandName, result.Errors.Single().ErrorMessage);
@@ -244,9 +228,7 @@
                 tradingName = tradingName
             };
 
-            A.CallTo(() => context.Producers).Returns(new List<Producer> { Producer("ABC12346") });
-
-            var result = ProducerTypeValidator()
+            var result = ProducerTypeValidator(new List<Producer> { Producer("ABC12346") }, new List<MigratedProducer>())
                 .Validate(producer, new RulesetValidatorSelector(BusinessValidator.DataValidationRuleSet));
 
             Assert.Contains(tradingName, result.Errors.Single().ErrorMessage);
@@ -254,7 +236,13 @@
 
         private ProducerTypeValidator ProducerTypeValidator()
         {
-            return new ProducerTypeValidator(context);
+            return new ProducerTypeValidator(ValidationContext.Create(new List<Producer>(), new List<MigratedProducer>()));
+        }
+
+        private ProducerTypeValidator ProducerTypeValidator(IEnumerable<Producer> producers,
+            IEnumerable<MigratedProducer> migratedProducers)
+        {
+            return new ProducerTypeValidator(ValidationContext.Create(producers, migratedProducers));
         }
 
         private producerBusinessType MakeProducerBusinessTypeInCountry(countryType country)

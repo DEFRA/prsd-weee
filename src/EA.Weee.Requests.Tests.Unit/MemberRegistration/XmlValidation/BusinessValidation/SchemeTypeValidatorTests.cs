@@ -1,23 +1,17 @@
 ﻿namespace EA.Weee.Requests.Tests.Unit.MemberRegistration.XmlValidation.BusinessValidation
 {
+    using System.Collections.Generic;
     using System.Linq;
+    using DataAccess;
     using Domain;
+    using Domain.Producer;
     using FakeItEasy;
-    using Prsd.Core.Domain;
     using RequestHandlers;
-    using RequestHandlers.PCS.MemberRegistration.XmlValidation;
     using RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation;
     using Xunit;
 
     public class SchemeTypeValidatorTests
     {
-        private readonly IValidationContext validationContext;
-
-        public SchemeTypeValidatorTests()
-        {
-            validationContext = A.Fake<IValidationContext>();
-        }
-
         [Fact]
         public void SetOfDuplicateRegistrationNumbers_ValidationFails_IncludesRegistraionNumberInMessage_AndErrorLevelIsError()
         {
@@ -82,7 +76,7 @@
 
         private SchemeTypeValidator SchemeTypeValidator()
         {
-            return new SchemeTypeValidator(validationContext);
+            return new SchemeTypeValidator(ValidationContext.Create(new List<Producer>(), new List<MigratedProducer>()));
         }
 
         private producerType[] Producers(params string[] regstrationNumbers)
