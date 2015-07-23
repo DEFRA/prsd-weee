@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using DataAccess;
     using Domain;
     using Domain.PCS;
     using FluentValidation;
@@ -9,7 +10,7 @@
 
     public class BusinessValidator : IBusinessValidator
     {
-        private readonly IValidationContext context;
+        private readonly WeeeContext context;
 
         public static string RegistrationNoRuleSet = "registrationNo";
 
@@ -17,7 +18,7 @@
 
         public static string DataValidationRuleSet = "dataValidation";
 
-        public BusinessValidator(IValidationContext context)
+        public BusinessValidator(WeeeContext context)
         {
             this.context = context;
         }
