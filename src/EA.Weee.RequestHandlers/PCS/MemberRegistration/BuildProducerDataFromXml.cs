@@ -107,10 +107,7 @@
             var contacts = new List<ProducerContact>();
             if (representative.overseasProducer.overseasContact != null)
             {
-                foreach (contactDetailsType detail in representative.overseasProducer.overseasContact)
-                {
-                    contacts.Add(await GetProducerContact(detail, context));
-                }
+                contacts.Add(await GetProducerContact(representative.overseasProducer.overseasContact, context));
             }
             AuthorisedRepresentative overSeasAuthorisedRepresentative = 
                 new AuthorisedRepresentative(representative.overseasProducer.overseasProducerName, contacts.FirstOrDefault());
