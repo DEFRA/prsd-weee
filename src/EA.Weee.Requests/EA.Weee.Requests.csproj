@@ -67,6 +67,7 @@
     <Compile Include="Organisations\GetOrganisationInfo.cs" />
     <Compile Include="PCS\MemberRegistration\GetProducerCSVByMemberUploadId.cs" />
     <Compile Include="PCS\MemberRegistration\MemberUploadSubmission.cs" />
+    <Compile Include="PCS\MemberUploadTesting\GeneratePcsXml.cs" />
     <Compile Include="Shared\GetCountries.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorities.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations.cs" />
