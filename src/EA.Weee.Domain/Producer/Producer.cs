@@ -180,7 +180,7 @@
         {
             string[] csvColumnHeaders =
             {
-                "Organisation Name", "Trading Name", "PRN", "Companies house number", "Charge band", "Date registered",
+                "Organisation Name", "Trading Name", "PRN", "Companies house number", "Charge band", "Date & Time (GMT) Registered",
                 "Authorised representative", "Overseas producer"
             };
 
@@ -225,7 +225,7 @@
                 companiesHouseNumber = producer.ProducerBusiness.CompanyDetails.CompanyNumber;
             }
             var chargeBand = "***";
-            var dateRegistered = string.Format("{0:dd/MM/yyyy}", GetProducerRegistrationDate(producer.RegistrationNumber, producer.MemberUpload.ComplianceYear));
+            var dateRegistered = GetProducerRegistrationDate(producer.RegistrationNumber, producer.MemberUpload.ComplianceYear).ToString(CultureInfo.InvariantCulture);
             var authorisedRepresentative = producer.AuthorisedRepresentative == null ? "No" : "Yes";
             var overseasProducer = producer.AuthorisedRepresentative == null
                 ? string.Empty
