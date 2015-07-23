@@ -149,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="GenerateSchemaCs.ps1" />
     <None Include="packages.config" />
     <None Include="v3schema.xsd">
       <SubType>Designer</SubType>
