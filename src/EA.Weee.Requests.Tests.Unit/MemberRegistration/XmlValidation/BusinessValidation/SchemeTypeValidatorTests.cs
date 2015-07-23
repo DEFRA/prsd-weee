@@ -1,14 +1,23 @@
 ﻿namespace EA.Weee.Requests.Tests.Unit.MemberRegistration.XmlValidation.BusinessValidation
 {
-    using System.Collections.Generic;
     using System.Linq;
     using Domain;
+    using FakeItEasy;
+    using Prsd.Core.Domain;
     using RequestHandlers;
+    using RequestHandlers.PCS.MemberRegistration.XmlValidation;
     using RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation;
     using Xunit;
 
     public class SchemeTypeValidatorTests
     {
+        private readonly IValidationContext validationContext;
+
+        public SchemeTypeValidatorTests()
+        {
+            validationContext = A.Fake<IValidationContext>();
+        }
+
         [Fact]
         public void SetOfDuplicateRegistrationNumbers_ValidationFails_IncludesRegistraionNumberInMessage_AndErrorLevelIsError()
         {
@@ -18,7 +27,7 @@
                 producerList = Producers(registrationNumber, registrationNumber)
             };
 
-            var result = new SchemeTypeValidator().Validate(xml);
+            var result = SchemeTypeValidator().Validate(xml);
 
             Assert.False(result.IsValid);
             Assert.Contains(registrationNumber, result.Errors.Single().ErrorMessage);
@@ -33,7 +42,7 @@
                 producerList = Producers(string.Empty, string.Empty)
             };
 
-            var result = new SchemeTypeValidator().Validate(xml);
+            var result = SchemeTypeValidator().Validate(xml);
 
             Assert.True(result.IsValid);
         }
@@ -48,7 +57,7 @@
                 producerList = Producers(firstRegistrationNumber, firstRegistrationNumber, secondRegistrationNumber, secondRegistrationNumber)
             };
 
-            var result = new SchemeTypeValidator().Validate(xml);
+            var result = SchemeTypeValidator().Validate(xml);
 
             Assert.False(result.IsValid);
 
@@ -66,9 +75,14 @@
                 producerList = Producers("ABC12345", "XYZ54321").ToArray()
             };
 
-            var result = new SchemeTypeValidator().Validate(xml);
+            var result = SchemeTypeValidator().Validate(xml);
 
             Assert.True(result.IsValid);
+        }
+
+        private SchemeTypeValidator SchemeTypeValidator()
+        {
+            return new SchemeTypeValidator(validationContext);
         }
 
         private producerType[] Producers(params string[] regstrationNumbers)

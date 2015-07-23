@@ -114,8 +114,8 @@
     <Compile Include="PCS\MemberRegistration\XmlConverter.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\BusinessValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\IBusinessValidator.cs" />
-    <Compile Include="PCS\MemberRegistration\XmlValidation\DataValidation\DataValidator.cs" />
-    <Compile Include="PCS\MemberRegistration\XmlValidation\DataValidation\IDataValidator.cs" />
+    <Compile Include="PCS\MemberRegistration\XmlValidation\IValidationContext.cs" />
+    <Compile Include="PCS\MemberRegistration\XmlValidation\ValidationContext.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\IXmlValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\ProducerTypeValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\SchemeTypeValidator.cs" />

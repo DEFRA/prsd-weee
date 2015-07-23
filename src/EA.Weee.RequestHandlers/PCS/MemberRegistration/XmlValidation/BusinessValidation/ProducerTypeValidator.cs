@@ -16,7 +16,7 @@
             countryType.UKSCOTLAND, countryType.UKWALES
         };
 
-        public ProducerTypeValidator()
+        public ProducerTypeValidator(IValidationContext context)
         {
             RuleSet(
                 BusinessValidator.RegistrationNoRuleSet,
@@ -71,6 +71,31 @@
                                 "{0} is an authorised representative but has a country in their address which is outside of the UK. An authorised representative must be based in the UK. In order to register or amend this producer please check they are an authorised representative and are based in the UK.",
                                 (pt, item) => pt.tradingName);
                     });
+
+            RuleSet(BusinessValidator.DataValidationRuleSet,
+                () =>
+                {
+                    var validProducerRegistrationNumbers = context.Producers
+                        .Select(p => p.RegistrationNumber)
+                        .Concat(context.MigratedProducers.Select(mp => mp.ProducerRegistrationNumber))
+                        .Select(prn => prn.ToLowerInvariant());
+
+                    RuleFor(p => p.registrationNo)
+                        .Must((p, prn) => validProducerRegistrationNumbers.Contains(prn.ToLowerInvariant()))
+                        .When(p => p.status == statusType.A)
+                        .WithState(p => ErrorLevel.Error)
+                        .WithMessage(
+                            "{0} {1} has a producer registration number in the xml which is not recognised. In order to register or amend this producer please enter the correct producer registration number for the producer.",
+                            (p, prn) =>
+                            {
+                                var producerName = p.producerBrandNames != null
+                                    ? p.producerBrandNames.FirstOrDefault()
+                                    : null;
+                                producerName = producerName ?? p.tradingName;
+                                return producerName;
+                            },
+                            (p, prn) => prn);
+                });
         }
     }
 }
