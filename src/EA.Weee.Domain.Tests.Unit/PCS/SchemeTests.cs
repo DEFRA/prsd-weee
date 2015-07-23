@@ -133,7 +133,7 @@
             Assert.Equal(csvFieldValues[1], "Test trading name");
             Assert.Equal(csvFieldValues[2], "WEE/12345678");
             Assert.Equal(csvFieldValues[3], String.Empty);
-            Assert.Equal(csvFieldValues[5], string.Format("{0:MM/dd/yyyy}", scheme.Producers.First().LastSubmitted));
+            Assert.Equal(csvFieldValues[5], string.Format("{0:dd/MM/yyyy}", scheme.Producers.First().LastSubmitted));
             Assert.Equal(csvFieldValues[6], "No");
             Assert.Equal(csvFieldValues[7], string.Empty);
         }
@@ -167,7 +167,7 @@
             Assert.Equal(csvFieldValues[1], "Test trading name");
             Assert.Equal(csvFieldValues[2], "WEE/12345678");
             Assert.Equal(csvFieldValues[3], companyDetails.CompanyNumber);
-            Assert.Equal(csvFieldValues[5], string.Format("{0:MM/dd/yyyy}", scheme.Producers.First().LastSubmitted));
+            Assert.Equal(csvFieldValues[5], string.Format("{0:dd/MM/yyyy}", scheme.Producers.First().LastSubmitted));
             Assert.Equal(csvFieldValues[6], "Yes");
             Assert.Equal(csvFieldValues[7], authorisedRepresentative.OverseasProducerName);
         }
