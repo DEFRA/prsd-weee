@@ -2,7 +2,6 @@
 {
     using System;
     using System.Data.Entity;
-    using System.Globalization;
     using System.Threading.Tasks;
     using Core.PCS;
     using DataAccess;
@@ -29,7 +28,7 @@
             }
 
             var csvData = memberUpload.Scheme.GetProducerCSV(memberUpload.ComplianceYear);
-            var csvName = DateTime.Now.ToString(CultureInfo.InvariantCulture) + "-" + memberUpload.ComplianceYear.ToString() + ".csv";
+            var csvName = string.Format("{0:yyyy_MM_dd}", DateTime.Now) + " - " + memberUpload.ComplianceYear.ToString() + ".csv";
             var producerCSVFileData = new ProducerCSVFileData { FileContent = csvData, FileName = csvName };
 
             return producerCSVFileData;

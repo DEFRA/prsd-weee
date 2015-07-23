@@ -93,7 +93,7 @@
                         ProducerBusiness.Equals(producerObj.ProducerBusiness);
                 }
             }
-           
+
             var compareBrandName = false;
             if (BrandNames.Count == producerObj.BrandNames.Count)
             {
@@ -180,7 +180,7 @@
         {
             string[] csvColumnHeaders =
             {
-                "Producer Name", "PRN", "Companies house number", "Charge band", "Date registered",
+                "Organisation Name", "Trading Name", "PRN", "Companies house number", "Charge band", "Date & Time (GMT) Registered",
                 "Authorised representative", "Overseas producer"
             };
 
@@ -203,7 +203,19 @@
         {
             StringBuilder sb = new StringBuilder();
 
-            var producerName = producer.TradingName;
+            var orgName = string.Empty;
+            if (producer.ProducerBusiness.CompanyDetails != null &&
+                producer.ProducerBusiness.CompanyDetails.Name != null)
+            {
+                orgName = producer.ProducerBusiness.CompanyDetails.Name;
+            }
+            else if (producer.ProducerBusiness.Partnership != null &&
+                     producer.ProducerBusiness.Partnership.Name != null)
+            {
+                orgName = producer.ProducerBusiness.Partnership.Name;
+            }
+
+            var tradingName = producer.TradingName;
             var prn = string.IsNullOrEmpty(producer.RegistrationNumber)
                 ? "WEE/********"
                 : producer.RegistrationNumber;
@@ -213,13 +225,16 @@
                 companiesHouseNumber = producer.ProducerBusiness.CompanyDetails.CompanyNumber;
             }
             var chargeBand = "***";
-            var dateRegistered = GetProducerRegistrationDate(producer.RegistrationNumber, producer.MemberUpload.ComplianceYear).ToString(CultureInfo.CurrentCulture);
+            var dateRegistered = GetProducerRegistrationDate(producer.RegistrationNumber, producer.MemberUpload.ComplianceYear).ToString(CultureInfo.InvariantCulture);
             var authorisedRepresentative = producer.AuthorisedRepresentative == null ? "No" : "Yes";
             var overseasProducer = producer.AuthorisedRepresentative == null
                 ? string.Empty
                 : producer.AuthorisedRepresentative.OverseasProducerName;
 
-            sb.Append(ReplaceSpecialCharacters(producerName));
+            sb.Append(ReplaceSpecialCharacters(orgName));
+            sb.Append(",");
+
+            sb.Append(ReplaceSpecialCharacters(tradingName));
             sb.Append(",");
 
             sb.Append(ReplaceSpecialCharacters(prn));
