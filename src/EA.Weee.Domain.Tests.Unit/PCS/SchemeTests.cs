@@ -110,7 +110,14 @@
         {
             var scheme = GetTestScheme();
 
-            var producer = GetTestProducer("WEE/12345678", "Test trading name", null, null);
+            var country = new Country(Guid.NewGuid(), "Country name");
+            var producerAddress = new ProducerAddress("Primary name", "Secondary name", "Street", "Town", "Locality",
+                "Administrative area", country, "Postcode");
+            var producerContact = new ProducerContact("Mr.", "Firstname", "Lastname", "12345", "9898988", "43434433",
+                "test@test.com", producerAddress);
+            var partnership = new Partnership("Test partnership Name", producerContact, new List<Partner>());
+
+            var producer = GetTestProducer("WEE/12345678", "Test trading name", null, partnership, null);
             producer.MemberUpload.Submit();
             producer.MemberUpload.SetProducers(new List<Producer> { producer });
             producer.SetScheme(scheme);
@@ -123,12 +130,13 @@
             var csvFieldValues = ReadCSVLine(csvData, 1);
 
             Assert.NotNull(csvData);
-            Assert.Equal(csvFieldValues[0], "Test trading name");
-            Assert.Equal(csvFieldValues[1], "WEE/12345678");
-            Assert.Equal(csvFieldValues[2], String.Empty);
-            Assert.Equal(csvFieldValues[4], scheme.Producers.First().LastSubmitted.ToString(CultureInfo.CurrentCulture));
-            Assert.Equal(csvFieldValues[5], "No");
-            Assert.Equal(csvFieldValues[6], String.Empty);
+            Assert.Equal(csvFieldValues[0], "Test partnership Name");
+            Assert.Equal(csvFieldValues[1], "Test trading name");
+            Assert.Equal(csvFieldValues[2], "WEE/12345678");
+            Assert.Equal(csvFieldValues[3], String.Empty);
+            Assert.Equal(csvFieldValues[5], scheme.Producers.First().LastSubmitted.ToString(CultureInfo.InvariantCulture));
+            Assert.Equal(csvFieldValues[6], "No");
+            Assert.Equal(csvFieldValues[7], string.Empty);
         }
 
         [Fact]
@@ -141,8 +149,9 @@
             var producerContact = new ProducerContact("Mr.", "Firstname", "Lastname", "12345", "9898988", "43434433",
                 "test@test.com", producerAddress);
             var authorisedRepresentative = new AuthorisedRepresentative("Name", producerContact);
-            var companyDetails = new Company("Test name", "Test registration number", producerContact);
-            var producer = GetTestProducer("WEE/12345678", "Test trading name", companyDetails, authorisedRepresentative);
+            var companyDetails = new Company("Test company name", "Test registration number", producerContact);
+            
+            var producer = GetTestProducer("WEE/12345678", "Test trading name", companyDetails, null, authorisedRepresentative);
             producer.MemberUpload.Submit();
             producer.MemberUpload.SetProducers(new List<Producer> { producer });
             producer.SetScheme(scheme);
@@ -155,12 +164,13 @@
             var csvFieldValues = ReadCSVLine(csvData, 1);
 
             Assert.NotNull(csvData);
-            Assert.Equal(csvFieldValues[0], "Test trading name");
-            Assert.Equal(csvFieldValues[1], "WEE/12345678");
-            Assert.Equal(csvFieldValues[2], companyDetails.CompanyNumber);
-            Assert.Equal(csvFieldValues[4], scheme.Producers.First().LastSubmitted.ToString(CultureInfo.CurrentCulture));
-            Assert.Equal(csvFieldValues[5], "Yes");
-            Assert.Equal(csvFieldValues[6], authorisedRepresentative.OverseasProducerName);
+            Assert.Equal(csvFieldValues[0], "Test company name");
+            Assert.Equal(csvFieldValues[1], "Test trading name");
+            Assert.Equal(csvFieldValues[2], "WEE/12345678");
+            Assert.Equal(csvFieldValues[3], companyDetails.CompanyNumber);
+            Assert.Equal(csvFieldValues[5], scheme.Producers.First().LastSubmitted.ToString(CultureInfo.InvariantCulture));
+            Assert.Equal(csvFieldValues[6], "Yes");
+            Assert.Equal(csvFieldValues[7], authorisedRepresentative.OverseasProducerName);
         }
 
         private string[] ReadCSVLine(string csvData, int lineNumbeer)
@@ -188,7 +198,7 @@
                 "test@test.com", producerAddress);
             var companyDetails = new Company("Test name", "Test registration number", producerContact);
             var partnership = new Partnership("Name", producerContact, new List<Partner>());
-            var business = new ProducerBusiness(companyDetails, partnership, producerContact);
+            var business = new ProducerBusiness(companyDetails, null, producerContact);
             var authorisedRepresentative = new AuthorisedRepresentative("Name", producerContact);
 
             var producer = new Producer(Guid.NewGuid(), memberUpload, business, authorisedRepresentative, DateTime.Now, 1000000000, true,
@@ -198,7 +208,7 @@
             return producer;
         }
 
-        private static Producer GetTestProducer(string prn, string tradingName, Company companyDetails, AuthorisedRepresentative authorisedRepresentative)
+        private static Producer GetTestProducer(string prn, string tradingName, Company companyDetails, Partnership partnership, AuthorisedRepresentative authorisedRepresentative)
         {
             var memberUpload = new MemberUpload(Guid.NewGuid(), "Test Data", new List<MemberUploadError>());
             var country = new Country(Guid.NewGuid(), "Country name");
@@ -206,7 +216,7 @@
                 "Administrative area", country, "Postcode");
             var producerContact = new ProducerContact("Mr.", "Firstname", "Lastname", "12345", "9898988", "43434433",
                 "test@test.com", producerAddress);
-            var partnership = new Partnership("Name", producerContact, new List<Partner>());
+            
             var business = new ProducerBusiness(companyDetails, partnership, producerContact);
 
             var producer = new Producer(Guid.NewGuid(), memberUpload, business, authorisedRepresentative, DateTime.Now, 1000000000, true,
