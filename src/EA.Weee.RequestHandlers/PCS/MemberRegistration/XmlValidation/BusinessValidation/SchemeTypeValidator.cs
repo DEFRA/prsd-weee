@@ -1,18 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Domain;
     using FluentValidation;
-    using FluentValidation.Validators;
 
     public class SchemeTypeValidator : AbstractValidator<schemeType>
     {
-        public SchemeTypeValidator()
+        public SchemeTypeValidator(IValidationContext context)
         {
             RuleFor(st => st.producerList)
-                .SetCollectionValidator(new ProducerTypeValidator());
+                .SetCollectionValidator(new ProducerTypeValidator(context));
 
             var duplicateRegistrationNumbers = new List<string>();
             RuleForEach(st => st.producerList)

@@ -9,13 +9,22 @@
 
     public class BusinessValidator : IBusinessValidator
     {
+        private readonly IValidationContext context;
+
         public static string RegistrationNoRuleSet = "registrationNo";
 
         public static string AuthorisedRepresentativeMustBeInUkRuleset = "authorisedRepresentativeMustBeInUk";
 
+        public static string DataValidationRuleSet = "dataValidation";
+
+        public BusinessValidator(IValidationContext context)
+        {
+            this.context = context;
+        }
+
         public IEnumerable<MemberUploadError> Validate(schemeType deserializedXml)
         {
-            var result = new SchemeTypeValidator().Validate(deserializedXml, new RulesetValidatorSelector("*"));
+            var result = new SchemeTypeValidator(context).Validate(deserializedXml, new RulesetValidatorSelector("*"));
             return result.Errors.Select(err => new MemberUploadError((ErrorLevel)err.CustomState, err.ErrorMessage));
         }
     }
