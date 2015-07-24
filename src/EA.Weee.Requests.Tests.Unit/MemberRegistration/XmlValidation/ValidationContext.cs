@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using DataAccess;
+    using Domain.PCS;
     using Domain.Producer;
     using FakeItEasy;
     using Helpers;
@@ -9,6 +10,16 @@
     public class ValidationContext
     {
         private readonly WeeeContext context;
+
+        private ValidationContext(Scheme scheme)
+        {
+            context = A.Fake<WeeeContext>();
+            var contextHelper = new DbContextHelper();
+
+            A.CallTo(() => context.Producers).Returns(contextHelper.GetAsyncEnabledDbSet(scheme.Producers));
+            A.CallTo(() => context.MigratedProducers)
+                .Returns(contextHelper.GetAsyncEnabledDbSet(new List<MigratedProducer>()));
+        }
 
         private ValidationContext(IEnumerable<Producer> producers, IEnumerable<MigratedProducer> migratedProducers)
         {
@@ -22,6 +33,12 @@
         public static WeeeContext Create(IEnumerable<Producer> producers, IEnumerable<MigratedProducer> migratedProducers)
         {
             var validationContext = new ValidationContext(producers, migratedProducers);
+            return validationContext.context;
+        }
+
+        public static WeeeContext Create(Scheme scheme)
+        {
+            var validationContext = new ValidationContext(scheme);
             return validationContext.context;
         }
     }
