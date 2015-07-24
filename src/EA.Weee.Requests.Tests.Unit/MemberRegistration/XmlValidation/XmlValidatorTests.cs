@@ -31,13 +31,13 @@
         [Fact]
         public void SchemaValidatorHasErrors_ShouldNotCallBusinessValidator_AndShouldNotCallDataValidator()
         {
-            A.CallTo(() => schemaValidator.Validate(A<ValidateXmlFile>._))
+            A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
                 .Returns(new List<MemberUploadError>
                 {
                     new MemberUploadError(ErrorLevel.Error, "An error occurred")
                 });
 
-            XmlValidator().Validate(A<ValidateXmlFile>._);
+            XmlValidator().Validate(A<ProcessXMLFile>._);
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._))
                 .MustNotHaveHappened();
@@ -49,7 +49,7 @@
         [Fact]
         public void SchemaValidatorHasNoErrors_ButBusinessValidatorDoes_ShouldNotCallDataValidator()
         {
-            A.CallTo(() => schemaValidator.Validate(A<ValidateXmlFile>._))
+            A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
                 .Returns(new List<MemberUploadError>());
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._))
@@ -58,7 +58,7 @@
                                 new MemberUploadError(ErrorLevel.Error, "An error occurred")
                             });
 
-            XmlValidator().Validate(A<ValidateXmlFile>._);
+            XmlValidator().Validate(A<ProcessXMLFile>._);
 
             A.CallTo(() => dataValidator.Validate(A<schemeType>._))
                 .MustNotHaveHappened();
@@ -67,13 +67,13 @@
         [Fact]
         public void SchemaValidatorHasNoErrors_AndBusinessValidatorHasNoErrors_ShouldCallDataValidator()
         {
-            A.CallTo(() => schemaValidator.Validate(A<ValidateXmlFile>._))
+            A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
                 .Returns(new List<MemberUploadError>());
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._))
                 .Returns(new List<MemberUploadError>());
 
-            XmlValidator().Validate(A<ValidateXmlFile>._);
+            XmlValidator().Validate(A<ProcessXMLFile>._);
 
             A.CallTo(() => dataValidator.Validate(A<schemeType>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
