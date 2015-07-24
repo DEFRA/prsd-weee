@@ -32,7 +32,7 @@
             }
             else
             {
-                throw new InvalidOperationException("Emails cannot be sent to multiple email addresses. Whitelist is set up to parse a single address.");
+                throw new InvalidOperationException("Emails cannot currently be sent to multiple email addresses. Email rules checker is set up to parse a single address.");
             }
 
             if (!string.IsNullOrWhiteSpace(configurationService.CurrentConfiguration.SendEmail)
