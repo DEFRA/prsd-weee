@@ -79,6 +79,7 @@
                     var validProducerRegistrationNumbers = context.Producers
                         .Select(p => p.RegistrationNumber)
                         .Concat(context.MigratedProducers.Select(mp => mp.ProducerRegistrationNumber))
+                        .ToList() // Cannot perform string operations until EntityFramework enumerable is transfered to list
                         .Select(prn => prn.ToLowerInvariant());
 
                     RuleFor(p => p.registrationNo)
