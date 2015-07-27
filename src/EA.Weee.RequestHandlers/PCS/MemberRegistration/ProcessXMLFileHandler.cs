@@ -12,19 +12,19 @@
     using Requests.PCS.MemberRegistration;
     using XmlValidation;
 
-    internal class ValidateXmlFileHandler : IRequestHandler<ValidateXmlFile, Guid>
+    internal class ProcessXMLFileHandler : IRequestHandler<ProcessXMLFile, Guid>
     {
         private readonly WeeeContext context;
 
         private readonly IXmlValidator xmlValidator;
 
-        public ValidateXmlFileHandler(WeeeContext context, IXmlValidator xmlValidator)
+        public ProcessXMLFileHandler(WeeeContext context, IXmlValidator xmlValidator)
         {
             this.context = context;
             this.xmlValidator = xmlValidator;
         }
 
-        public async Task<Guid> HandleAsync(ValidateXmlFile message)
+        public async Task<Guid> HandleAsync(ProcessXMLFile message)
         {
             var errors = xmlValidator.Validate(message);
 
