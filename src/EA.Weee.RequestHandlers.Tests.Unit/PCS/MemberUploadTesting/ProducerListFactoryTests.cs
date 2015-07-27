@@ -280,7 +280,7 @@
         }
 
         [Fact]
-        [TestProperty("Area", "PCS Member Upload Testing")]
+        [Trait("Area", "PCS Member Upload Testing")]
         public async void CreateProducerList_With3ExistingProducers_Creates3Producers()
         {
             // Arrange
