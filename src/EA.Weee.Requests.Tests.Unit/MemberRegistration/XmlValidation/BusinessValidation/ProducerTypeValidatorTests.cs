@@ -197,41 +197,56 @@
         }
 
         [Fact]
-        public void ProducerHasPrnNumberThatDoesNotExistAndBrandNameAndTradingName_ReturnsBrandNameInErrorMessage()
+        public void ProducerHasPrnNumberThatDoesNotExistAndProducerIsPartnership_ReturnsPartnerNameInErrorMessage()
         {
             const string prn = "ABC12345";
-            const string brandName = "My Brand Name";
             const string tradingName = "My Trading Name";
+            const string partnershipName = "Partnership Name";
+
             var producer = new producerType()
             {
                 registrationNo = prn,
                 status = statusType.A,
-                producerBrandNames = new[] { brandName },
+                producerBusiness = new producerBusinessType
+                {
+                    Item = new partnershipType
+                    {
+                        partnershipName = partnershipName
+                    }
+                },
                 tradingName = tradingName
             };
 
             var result = ProducerTypeValidator(new List<Producer> { Producer("ABC12346") }, new List<MigratedProducer>())
                 .Validate(producer, new RulesetValidatorSelector(BusinessValidator.DataValidationRuleSet));
 
-            Assert.Contains(brandName, result.Errors.Single().ErrorMessage);
+            Assert.Contains(partnershipName, result.Errors.Single().ErrorMessage);
         }
 
         [Fact]
-        public void ProducerHasPrnNumberThatDoesNotExistAndTradingNameButNoBrandName_ReturnsTradingNameInErrorMessage()
+        public void ProducerHasPrnNumberThatDoesNotExistAndProducerIsCompany_ReturnsCompanyNameInErrorMessage()
         {
             const string prn = "ABC12345";
             const string tradingName = "My Trading Name";
-            var producer = new producerType()
+            const string companyName = "Company Name";
+            var producer = new producerType
             {
                 registrationNo = prn,
                 status = statusType.A,
+                producerBusiness = new producerBusinessType
+                {
+                    Item = new companyType
+                    {
+                        companyName = companyName
+                    }
+                },
                 tradingName = tradingName
             };
 
             var result = ProducerTypeValidator(new List<Producer> { Producer("ABC12346") }, new List<MigratedProducer>())
                 .Validate(producer, new RulesetValidatorSelector(BusinessValidator.DataValidationRuleSet));
 
-            Assert.Contains(tradingName, result.Errors.Single().ErrorMessage);
+            Assert.Contains(companyName, result.Errors.Single().ErrorMessage);
         }
 
         private ProducerTypeValidator ProducerTypeValidator()

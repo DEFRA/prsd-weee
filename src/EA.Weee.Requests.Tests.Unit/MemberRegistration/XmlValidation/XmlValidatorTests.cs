@@ -28,30 +28,33 @@
         [Fact]
         public void SchemaValidatorHasErrors_ShouldNotCallBusinessValidator()
         {
-            A.CallTo(() => schemaValidator.Validate(A<ValidateXmlFile>._))
+            A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
                 .Returns(new List<MemberUploadError>
                 {
                     new MemberUploadError(ErrorLevel.Error, "An error occurred")
                 });
 
-            XmlValidator().Validate(A<ValidateXmlFile>._);
+            XmlValidator().Validate(A<ProcessXMLFile>._);
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._))
                 .MustNotHaveHappened();
         }
 
         [Fact]
-        public void SchemaValidatorHasNoErrors_AndBusinessValidatorHasNoErrors_ShouldReturnNoErrors()
+        public void SchemaValidatorHasNoErrors_AndBusinessValidatorDoes_ShouldReturnErrors()
         {
-            A.CallTo(() => schemaValidator.Validate(A<ValidateXmlFile>._))
+            A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
                 .Returns(new List<MemberUploadError>());
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._))
-                .Returns(new List<MemberUploadError>());
+                .Returns(new List<MemberUploadError>
+                            {
+                                new MemberUploadError(ErrorLevel.Error, "An error occurred")
+                            });
 
-            var result = XmlValidator().Validate(A<ValidateXmlFile>._);
+            var result = XmlValidator().Validate(A<ProcessXMLFile>._);
 
-            Assert.Empty(result);
+            Assert.NotEmpty(result);
         }
 
         private XmlValidator XmlValidator()
