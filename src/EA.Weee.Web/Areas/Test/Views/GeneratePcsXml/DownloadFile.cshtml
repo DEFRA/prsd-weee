@@ -20,7 +20,9 @@
 
         @Html.HiddenFor(model => model.OrganisationID);
         @Html.HiddenFor(model => model.SchemaVersion);
+        @Html.HiddenFor(model => model.ComplianceYear);
         @Html.HiddenFor(model => model.NumberOfNewProducers);
+        @Html.HiddenFor(model => model.NumberOfExistingProducers);
 
         <p>If your file does not download automatically, use the button below.</p>
 

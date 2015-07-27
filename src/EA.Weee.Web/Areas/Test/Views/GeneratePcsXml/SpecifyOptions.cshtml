@@ -26,10 +26,22 @@
             @Html.EnumDropDownListFor(model => model.SchemaVersion)
         </div>
 
+        <div class="form-group" @Html.Gds().FormGroupClass(m => m.ComplianceYear)>
+            @Html.Gds().LabelFor(model => model.ComplianceYear)
+            @Html.Gds().ValidationMessageFor(mode => Model.ComplianceYear)
+            @Html.Gds().TextBoxFor(model => model.ComplianceYear)
+        </div>
+
         <div class="form-group" @Html.Gds().FormGroupClass(m => m.NumberOfNewProducers)>
             @Html.Gds().LabelFor(model => model.NumberOfNewProducers)
             @Html.Gds().ValidationMessageFor(mode => Model.NumberOfNewProducers)
             @Html.Gds().TextBoxFor(model => model.NumberOfNewProducers)
+        </div>
+
+        <div class="form-group" @Html.Gds().FormGroupClass(m => m.NumberOfExistingProducers)>
+            @Html.Gds().LabelFor(model => model.NumberOfExistingProducers)
+            @Html.Gds().ValidationMessageFor(mode => Model.NumberOfExistingProducers)
+            @Html.Gds().TextBoxFor(model => model.NumberOfExistingProducers)
         </div>
 
         <div class="form-group">

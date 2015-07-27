@@ -86,7 +86,7 @@
         {
             if (!await CheckOrganisationExists(viewModel.OrganisationID))
             {
-                RedirectToAction("SelectOrganisation");
+                return RedirectToAction("SelectOrganisation");
             }
 
             if (!ModelState.IsValid)
@@ -103,19 +103,24 @@
         {
             if (!await CheckOrganisationExists(viewModel.OrganisationID))
             {
-                RedirectToAction("SelectOrganisation");
+                return RedirectToAction("SelectOrganisation");
             }
 
             if (!ModelState.IsValid)
             {
-                return View("SpecifyOptions", viewModel);
+                return RedirectToAction("SpecifyOptions", new { viewModel.OrganisationID });
             }
 
-            ProducerListSettings settings = new ProducerListSettings(
-                viewModel.SchemaVersion,
-                viewModel.NumberOfNewProducers);
+            ProducerListSettings settings = new ProducerListSettings()
+            {
+                OrganisationID = viewModel.OrganisationID,
+                SchemaVersion = viewModel.SchemaVersion,
+                ComplianceYear = viewModel.ComplianceYear,
+                NumberOfNewProducers = viewModel.NumberOfNewProducers,
+                NumberOfExistingProducers = viewModel.NumberOfExistingProducers
+            };
 
-            GeneratedXmlFile xmlFile = await GenerateXml(settings);
+            PcsXmlFile xmlFile = await GenerateXml(settings);
 
             ContentDisposition cd = new ContentDisposition
             {
@@ -144,13 +149,13 @@
             }
         }
 
-        private async Task<GeneratedXmlFile> GenerateXml(ProducerListSettings settings)
+        private async Task<PcsXmlFile> GenerateXml(ProducerListSettings settings)
         {
             using (IWeeeClient client = apiClient())
             {
                 return await client.SendAsync(
                     User.GetAccessToken(),
-                    new GeneratePcsXml(settings));
+                    new GeneratePcsXmlFile(settings));
             }
         }
     }
