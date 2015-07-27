@@ -539,6 +539,12 @@
     <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
+    <Compile Include="Services\EmailRules\RuleAction.cs" />
+    <Compile Include="Services\EmailRules\RuleChecker.cs" />
+    <Compile Include="Services\EmailRules\RuleElement.cs" />
+    <Compile Include="Services\EmailRules\RuleElementCollection.cs" />
+    <Compile Include="Services\EmailRules\RulesSection.cs" />
+    <Compile Include="Services\EmailRules\RuleType.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\EmailTemplate.cs" />
     <Compile Include="Services\EmailTemplateService.cs" />

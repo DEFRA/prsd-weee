@@ -104,13 +104,13 @@
         {
             const string fileData = "myFileContent";
             var organisationId = Guid.NewGuid();
-            var request = new ValidateXmlFile(A<Guid>._, A<string>._);
+            var request = new ProcessXMLFile(A<Guid>._, A<string>._);
 
             A.CallTo(() => fileConverter.Convert(A<HttpPostedFileBase>._))
                 .Returns(fileData);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ValidateXmlFile>._))
-                .Invokes((string token, IRequest<Guid> req) => request = (ValidateXmlFile)req);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessXMLFile>._))
+                .Invokes((string token, IRequest<Guid> req) => request = (ProcessXMLFile)req);
 
             try
             {
@@ -120,7 +120,7 @@
             {
             }
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ValidateXmlFile>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessXMLFile>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.NotNull(request);
@@ -133,7 +133,7 @@
         {
             var validationId = Guid.NewGuid();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ValidateXmlFile>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessXMLFile>._))
                 .Returns(validationId);
 
             var result = await MemberRegistrationController().AddOrAmendMembers(A<Guid>._, new AddOrAmendMembersViewModel());
