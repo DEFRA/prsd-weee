@@ -3,11 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using DataAccess;
     using Domain;
     using Domain.PCS;
     using Domain.Producer;
-    using FakeItEasy;
     using FluentValidation;
     using FluentValidation.Internal;
     using RequestHandlers;
@@ -114,6 +112,7 @@
             Assert.False(result.IsValid);
             Assert.Contains(registrationNumber, result.Errors.Single().ErrorMessage);
             Assert.Contains(existingObligationType.ToString(), result.Errors.Single().ErrorMessage);
+            Assert.Equal(ErrorLevel.Error, result.Errors.Single().CustomState);
         }
 
         [Theory]
