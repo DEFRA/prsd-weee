@@ -113,6 +113,7 @@
     <Compile Include="Organisations\VerifyOrganisationExistsHandler.cs" />
     <Compile Include="PCS\MemberRegistration\XmlConverter.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\BusinessValidator.cs" />
+    <Compile Include="PCS\MemberRegistration\XmlValidation\Extensions\DeserializedXmlExtensions.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\IBusinessValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\IXmlValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\ProducerTypeValidator.cs" />
