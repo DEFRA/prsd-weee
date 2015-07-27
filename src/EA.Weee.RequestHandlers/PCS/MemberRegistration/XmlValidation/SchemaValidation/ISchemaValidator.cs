@@ -6,6 +6,6 @@
 
     public interface ISchemaValidator
     {
-        IEnumerable<MemberUploadError> Validate(ValidateXmlFile message);
+        IEnumerable<MemberUploadError> Validate(ProcessXMLFile message);
     }
 }
