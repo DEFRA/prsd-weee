@@ -88,16 +88,29 @@
                         .WithState(p => ErrorLevel.Error)
                         .WithMessage(
                             "{0} {1} has a producer registration number in the xml which is not recognised. In order to register or amend this producer please enter the correct producer registration number for the producer.",
-                            (p, prn) =>
-                            {
-                                var producerName = p.producerBrandNames != null
-                                    ? p.producerBrandNames.FirstOrDefault()
-                                    : null;
-                                producerName = producerName ?? p.tradingName;
-                                return producerName;
-                            },
+                            (p, prn) => GetProducerName(p),
                             (p, prn) => prn);
                 });
+        }
+
+        private string GetProducerName(producerType producer)
+        {
+            if (producer.producerBusiness != null && producer.producerBusiness.Item != null)
+            {
+                var producerItem = producer.producerBusiness.Item;
+
+                if (producerItem.GetType() == typeof(companyType))
+                {
+                    return ((companyType)producerItem).companyName ?? producer.tradingName;
+                }
+
+                if (producerItem.GetType() == typeof(partnershipType))
+                {
+                    return ((partnershipType)producerItem).partnershipName ?? producer.tradingName;
+                }
+            }
+
+            return producer.tradingName;
         }
     }
 }
