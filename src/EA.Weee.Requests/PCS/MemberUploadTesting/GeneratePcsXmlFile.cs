@@ -8,11 +8,11 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class GeneratePcsXml : IRequest<GeneratedXmlFile>
+    public class GeneratePcsXmlFile : IRequest<PcsXmlFile>
     {
         public ProducerListSettings Settings { get; private set; }
 
-        public GeneratePcsXml(ProducerListSettings settings)
+        public GeneratePcsXmlFile(ProducerListSettings settings)
         {
             Settings = settings;
         }

@@ -1,19 +1,22 @@
-﻿using EA.Weee.Core.PCS.MemberUploadTesting;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Xunit;
-
-namespace EA.Weee.Core.Tests.Unit.PCS.MemberUploadTesting
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.PCS.MemberUploadTesting
 {
-    public class XmlGenerator306Tests
+    using EA.Weee.Core.PCS.MemberUploadTesting;
+    using EA.Weee.RequestHandlers.PCS.MemberUploadTesting;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Xml.Linq;
+    using Xunit;
+
+    public class XmlGeneratorTests
     {
         [Fact]
-        public void XmlGenerator306_WithValidEmptyProducerList_ReturnsCorrectXml()
+        [Trait("Area", "PCS Member Upload Testing")]
+        public void XmlGenerator_WithValidEmptyProducerList_ReturnsCorrectXml()
         {
             // Arrange
             ProducerList producerList = new ProducerList();
@@ -25,15 +28,15 @@ namespace EA.Weee.Core.Tests.Unit.PCS.MemberUploadTesting
             producerList.SchemeBusiness.Company.CompanyNumber = "Company Number";
             producerList.TradingName = "Trading Name";
 
-            XmlGenerator306 xmlGenerator = new XmlGenerator306();
+            XmlGenerator xmlGenerator = new XmlGenerator();
 
             // Act
-            XDocument xDocument = xmlGenerator.GenerateXml(producerList);
+            XDocument xmlDocument = xmlGenerator.GenerateXml(producerList);
 
             string actual;
             using (MemoryStream stream = new MemoryStream())
             {
-                xDocument.Save(stream);
+                xmlDocument.Save(stream);
                 stream.Position = 0;
                 using (TextReader tr = new StreamReader(stream))
                 {
@@ -58,7 +61,7 @@ namespace EA.Weee.Core.Tests.Unit.PCS.MemberUploadTesting
   <producerList />
 </scheme>";
 
-            Assert.Equal(expected, actual);
+            Xunit.Assert.Equal(expected, actual);
         }
     }
 }

@@ -39,7 +39,17 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
         public static Producer Create(ProducerSettings settings)
         {
             Producer producer = new Producer();
-            producer.Status = ProducerStatus.Insert;
+
+            if (settings.IsNew)
+            {
+                producer.Status = ProducerStatus.Insert;
+            }
+            else
+            {
+                producer.Status = ProducerStatus.Amend;
+                producer.RegistrationNumber = settings.RegistrationNumber;
+            }
+
             producer.TradingName = RandomHelper.CreateRandomString("Trading Name ", 1, 255);
 
             int numberOfSICCodes = RandomHelper.R.Next(1, 5);

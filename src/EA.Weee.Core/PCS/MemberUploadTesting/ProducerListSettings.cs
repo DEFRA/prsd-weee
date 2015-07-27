@@ -8,14 +8,14 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
 {
     public class ProducerListSettings : ISchemeBusinessSettings
     {
-        public SchemaVersion SchemaVersion { get; private set; }
+        public Guid OrganisationID { get; set; }
+
+        public SchemaVersion SchemaVersion { get; set; }
+
+        public int ComplianceYear { get; set; }
 
         public int NumberOfNewProducers { get; set; }
 
-        public ProducerListSettings(SchemaVersion schemaVersion, int numberOfNewProducers)
-        {
-            SchemaVersion = schemaVersion;
-            NumberOfNewProducers = numberOfNewProducers;
-        }
+        public int NumberOfExistingProducers { get; set; }
     }
 }

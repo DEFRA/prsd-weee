@@ -8,11 +8,10 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
 {
     public class ProducerSettings : IProducerBusinessSettings, IAuthorizedRepresentativeSettings
     {
-        public SchemaVersion SchemaVersion { get; private set; }
+        public SchemaVersion SchemaVersion { get; set; }
 
-        public ProducerSettings(SchemaVersion schemaVersion)
-        {
-            SchemaVersion = schemaVersion;
-        }
+        public bool IsNew { get; set; }
+
+        public string RegistrationNumber { get; set; }
     }
 }

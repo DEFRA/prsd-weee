@@ -72,7 +72,6 @@
     <Compile Include="PCS\MemberUploadTesting\ContactDetails.cs" />
     <Compile Include="PCS\MemberUploadTesting\CorrespondentForNotices.cs" />
     <Compile Include="PCS\MemberUploadTesting\EEEPlacedOnMarketBand.cs" />
-    <Compile Include="PCS\MemberUploadTesting\GeneratedXmlFile.cs" />
     <Compile Include="PCS\MemberUploadTesting\IAddressSettings.cs" />
     <Compile Include="PCS\MemberUploadTesting\IAuthorizedRepresentativeSettings.cs" />
     <Compile Include="PCS\MemberUploadTesting\ICompanySettings.cs" />
@@ -83,7 +82,6 @@
     <Compile Include="PCS\MemberUploadTesting\IProducerBusinessSettings.cs" />
     <Compile Include="PCS\MemberUploadTesting\ISchemeBusinessSettings.cs" />
     <Compile Include="PCS\MemberUploadTesting\ISettings.cs" />
-    <Compile Include="PCS\MemberUploadTesting\IXmlGenerator.cs" />
     <Compile Include="PCS\MemberUploadTesting\ObligationType.cs" />
     <Compile Include="PCS\MemberUploadTesting\OverseasProducer.cs" />
     <Compile Include="PCS\MemberUploadTesting\Partnership.cs" />
@@ -99,8 +97,6 @@
     <Compile Include="PCS\MemberUploadTesting\SchemeCompany.cs" />
     <Compile Include="PCS\MemberUploadTesting\SchemePartnership.cs" />
     <Compile Include="PCS\MemberUploadTesting\SellingTechnique.cs" />
-    <Compile Include="PCS\MemberUploadTesting\XmlGenerator306.cs" />
-    <Compile Include="PCS\MemberUploadTesting\XmlGeneratorFactory.cs" />
     <Compile Include="PCS\ProducerCSVFileData.cs" />
     <Compile Include="Shared\AddressData.cs" />
     <Compile Include="Shared\AddressType.cs" />
