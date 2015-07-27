@@ -1,13 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration
 {
     using System;
+    using System.CodeDom;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Xml.Linq;
     using System.Xml.Serialization;
+    using Core.Helpers.PrnGeneration;
     using DataAccess;
     using Domain;
     using Domain.PCS;
@@ -50,31 +53,32 @@
                 string producerRegistrationNo = producerData.registrationNo;
                 if (producerData.status == statusType.I)
                 {
-                    producerRegistrationNo = GenerateUniquePRN();
+                    producerRegistrationNo = await ComputeNextPrn(context);
                 }
 
-                Producer producer = new Producer(schemeId,
-                    memberUpload,
-                    producerBusiness,
-                    authorisedRepresentative,
-                    SystemTime.UtcNow,
-                    (decimal)producerData.annualTurnover,
-                    producerData.VATRegistered,
-                    producerRegistrationNo,
-                    ceaseDate,
-                    producerData.tradingName,
-                    eeebandType,
-                    sellingTechniqueType,
-                    obligationType,
-                    annualturnoverType,
+                Producer producer = new Producer(schemeId, 
+                    memberUpload, 
+                    producerBusiness, 
+                    authorisedRepresentative, 
+                    SystemTime.UtcNow, 
+                    (decimal)producerData.annualTurnover, 
+                    producerData.VATRegistered, 
+                    producerRegistrationNo, 
+                    ceaseDate, 
+                    producerData.tradingName, 
+                    eeebandType, 
+                    sellingTechniqueType, 
+                    obligationType, 
+                    annualturnoverType, 
                     brandNames, codes);
 
                 // modify producer data
                 switch (producerData.status)
                 {
                     case statusType.A:
+
                         // get the producers for scheme based on producer->prn and producer->lastsubmitted
-                       // is latest date and memberupload ->IsSubmitted is true.
+                        // is latest date and memberupload ->IsSubmitted is true.
                         var producerDb =
                             context.MemberUploads.Where(member => member.IsSubmitted && member.SchemeId == schemeId)
                                 .SelectMany(p => p.Producers)
@@ -96,6 +100,27 @@
             }
 
             return producers;
+        }
+
+        private static async Task<string> ComputeNextPrn(WeeeContext context, int remainingRetries = 5)
+        {
+            try
+            {
+                uint lastSeed = (uint)context.SystemData.Select(sd => sd.LatestPrnSeed).First();
+                string prn = new PrnHelper(new QuadraticResidueHelper()).ComputePrnFromSeed(ref lastSeed);
+                context.SystemData.First().LatestPrnSeed = lastSeed;
+                await context.SaveChangesAsync();
+                return prn;
+            }
+            catch (OptimisticConcurrencyException e)
+            {
+                if (remainingRetries > 0)
+                {
+                    return ComputeNextPrn(context, remainingRetries - 1).Result;
+                }
+
+                throw;
+            }
         }
 
         private static async Task<AuthorisedRepresentative> SetAuthorisedRepresentative(authorisedRepresentativeType representative, WeeeContext context)
@@ -129,7 +154,7 @@
             if (item.GetType() == typeof(companyType))
             {
                 companyType companyitem = (companyType)item;
-                company = new Company(companyitem.companyName, companyitem.companyNumber,
+                company = new Company(companyitem.companyName, companyitem.companyNumber, 
                     await GetProducerContact(companyitem.registeredOffice.contactDetails, context));
             }
             else if (item.GetType() == typeof(partnershipType))
@@ -152,14 +177,13 @@
             var countrydetail = contactDetails.address.country;
             var countryName = string.Empty;
             var countryEnumType = typeof(countryType);
+
             //Read the country name from xml attribute if defined
             var countryFirstOrDefault = countryEnumType.GetMember(countrydetail.ToString()).FirstOrDefault();
             if (countryFirstOrDefault != null)
             {
-                var countryEnumAttribute = countryFirstOrDefault
-                    .GetCustomAttributes(false)
-                    .OfType<XmlEnumAttribute>()
-                    .FirstOrDefault();
+                var countryEnumAttribute =
+                    countryFirstOrDefault.GetCustomAttributes(false).OfType<XmlEnumAttribute>().FirstOrDefault();
                 countryName = countryEnumAttribute != null ? countryEnumAttribute.Name : countryFirstOrDefault.Name;
             }
 
@@ -168,23 +192,25 @@
             {
                 country = await context.Countries.SingleAsync(c => c.Name == countryName);
             }
-            ProducerAddress address =
-                new ProducerAddress(contactDetails.address.primaryName,
-                    contactDetails.address.secondaryName,
-                    contactDetails.address.streetName,
-                    contactDetails.address.town,
-                    contactDetails.address.locality,
-                    contactDetails.address.administrativeArea,
-                    country, contactDetails.address.Item);
+            ProducerAddress address = new ProducerAddress(
+                contactDetails.address.primaryName, 
+                contactDetails.address.secondaryName, 
+                contactDetails.address.streetName, 
+                contactDetails.address.town, 
+                contactDetails.address.locality, 
+                contactDetails.address.administrativeArea, 
+                country, 
+                contactDetails.address.Item);
 
-            ProducerContact contact =
-                new ProducerContact(contactDetails.title,
-                    contactDetails.forename,
-                    contactDetails.surname,
-                    contactDetails.phoneLandLine,
-                    contactDetails.phoneMobile,
-                    contactDetails.fax,
-                    contactDetails.email, address);
+            ProducerContact contact = new ProducerContact(
+                contactDetails.title, 
+                contactDetails.forename, 
+                contactDetails.surname, 
+                contactDetails.phoneLandLine, 
+                contactDetails.phoneMobile, 
+                contactDetails.fax, 
+                contactDetails.email, 
+                address);
 
             return contact;
         }
