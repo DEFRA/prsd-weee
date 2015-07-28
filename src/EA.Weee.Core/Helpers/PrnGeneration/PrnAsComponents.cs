@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.Core.Helpers.PrnGeneration
 {
     using System;
+    using System.Text;
 
-    public class PrnSeedHelper
+    public class PrnAsComponents
     {
         public ushort Number;
 
@@ -14,7 +15,7 @@
 
         public char FourthLetter;
 
-        public PrnSeedHelper(uint seed)
+        public PrnAsComponents(uint seed)
         {
             Number = NumberComponentOfSeed(seed);
             FirstLetter = (char)(LetterComponentOfSeed(seed, 0xF0000000, 28) + 'A');
@@ -23,6 +24,17 @@
             FourthLetter = (char)(LetterComponentOfSeed(seed, 0x000F0000, 16) + 'M');
 
             PutComponentsInCorrectRanges();
+        }
+
+        public override string ToString()
+        {
+            return new StringBuilder("WEE/")
+                        .Append(FirstLetter)
+                        .Append(SecondLetter)
+                        .Append(Number.ToString("D4"))
+                        .Append(ThirdLetter)
+                        .Append(FourthLetter)
+                        .ToString();
         }
 
         public uint ToSeedValue()

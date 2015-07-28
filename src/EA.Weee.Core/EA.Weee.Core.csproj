@@ -56,7 +56,7 @@
     <Compile Include="CoreModule.cs" />
     <Compile Include="Helpers\PrnGeneration\IPrnHelper.cs" />
     <Compile Include="Helpers\PrnGeneration\IQuadraticResidueHelper.cs" />
-    <Compile Include="Helpers\PrnGeneration\PrnFromSeed.cs" />
+    <Compile Include="Helpers\PrnGeneration\PrnAsComponents.cs" />
     <Compile Include="Helpers\PrnGeneration\PrnHelper.cs" />
     <Compile Include="Helpers\PrnGeneration\QuadraticResidueHelper.cs" />
     <Compile Include="Helpers\Xml\IXmlErrorTranslator.cs" />
