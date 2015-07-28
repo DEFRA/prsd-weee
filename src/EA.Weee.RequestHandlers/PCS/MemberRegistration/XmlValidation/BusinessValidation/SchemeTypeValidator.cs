@@ -52,24 +52,27 @@
                 RuleForEach(st => st.producerList)
                     .Must((st, producer) =>
                     {
-                        var existingProducer = producers
-                            .FirstOrDefault(p => p.MemberUpload.ComplianceYear == int.Parse(st.complianceYear)
-                                                 && p.RegistrationNumber == producer.registrationNo
-                                                 &&
-                                                 (Enumeration.FromValue<ObligationType>(p.ObligationType) ==
-                                                  producer.obligationType.ToDomainObligationType()
-                                                  ||
-                                                  Enumeration.FromValue<ObligationType>(p.ObligationType) ==
-                                                  ObligationType.Both
-                                                  || producer.obligationType == obligationTypeType.Both));
-
-                        if (existingProducer != null)
+                        if (!string.IsNullOrEmpty(producer.registrationNo))
                         {
-                            // Map the existing obligation type to the producer so we can use it in the error message
-                            producer.obligationType =
-                                Enumeration.FromValue<ObligationType>(existingProducer.ObligationType)
-                                    .ToDeserializedXmlObligationType();
-                            return false;
+                            var existingProducer = producers
+                                .FirstOrDefault(p => p.MemberUpload.ComplianceYear == int.Parse(st.complianceYear)
+                                                     && p.RegistrationNumber == producer.registrationNo
+                                                     &&
+                                                     (Enumeration.FromValue<ObligationType>(p.ObligationType) ==
+                                                      producer.obligationType.ToDomainObligationType()
+                                                      ||
+                                                      Enumeration.FromValue<ObligationType>(p.ObligationType) ==
+                                                      ObligationType.Both
+                                                      || producer.obligationType == obligationTypeType.Both));
+
+                            if (existingProducer != null)
+                            {
+                                // Map the existing obligation type to the producer so we can use it in the error message
+                                producer.obligationType =
+                                    Enumeration.FromValue<ObligationType>(existingProducer.ObligationType)
+                                        .ToDeserializedXmlObligationType();
+                                return false;
+                            }
                         }
 
                         return true;
