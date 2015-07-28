@@ -541,7 +541,6 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
-    <Compile Include="Areas\Admin\DataAnnotations\InternalEmailAddressAttribute.cs" />
     <Compile Include="Areas\Admin\ViewModels\InternalUserCreationViewModel.cs" />
     <Compile Include="Areas\PCS\Controllers\MemberRegistrationController.cs" />
     <Compile Include="Areas\PCS\ViewModels\AddOrAmendMembersViewModel.cs" />

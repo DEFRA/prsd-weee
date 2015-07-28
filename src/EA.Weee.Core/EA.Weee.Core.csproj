@@ -76,6 +76,7 @@
     <Compile Include="Shared\UKCompetentAuthorityData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
+    <Compile Include="Validation\InternalEmailAddressAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
