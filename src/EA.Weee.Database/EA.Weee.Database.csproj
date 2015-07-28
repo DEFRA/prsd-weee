@@ -59,6 +59,7 @@
     <Content Include="scripts\Update\Sprint8\20150702-105353-AddMemberUploadTables.sql" />
     <Content Include="scripts\Update\Sprint9\20150710-1534-AddSchemeProducerTables.sql" />
     <Content Include="scripts\Update\Sprint9\20150715-1632-UpdateProducerTables.sql" />
+    <Content Include="scripts\Update\Sprint9\20150723-1419-MigratedProducers.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

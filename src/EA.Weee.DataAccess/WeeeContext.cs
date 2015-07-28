@@ -33,6 +33,8 @@
 
         public virtual DbSet<Producer> Producers { get; set; }
 
+        public virtual DbSet<MigratedProducer> MigratedProducers { get; set; }
+
         public WeeeContext(IUserContext userContext)
             : base("name=Weee.DefaultConnection")
         {
