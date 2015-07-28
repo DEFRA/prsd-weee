@@ -98,7 +98,17 @@
                         if (producerDb == null)
                         {
                             //check in migrated producers list
-                            producers.Add(producer);
+                            var migratedProducers =
+                                context.MigratedProducers.FirstOrDefault(m => m.ProducerRegistrationNumber == producerRegistrationNo);
+
+                            if (migratedProducers == null)
+                            {
+                                throw new InvalidOperationException(string.Format("PRN: {0} does not exists in current data set and in migrated data set.", producerRegistrationNo));
+                            }
+                            else
+                            {
+                                producers.Add(producer);
+                            }
                         }
                         else if (!producer.Equals(producerDb))
                         {

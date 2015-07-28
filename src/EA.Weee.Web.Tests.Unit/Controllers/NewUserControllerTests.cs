@@ -1,18 +1,37 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Api.Client.Actions;
+    using Api.Client.Entities;
+    using FakeItEasy;
+    using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
+    using Services;
     using ViewModels.NewUser;
     using Web.Controllers;
     using Xunit;
 
     public class NewUserControllerTests
     {
+        private readonly IOAuthClient oathClient;
+        private readonly IWeeeClient weeeClient;
+        private readonly IAuthenticationManager authenticationManager;
+        private readonly IEmailService emailService;
+
+        public NewUserControllerTests()
+        {
+            oathClient = A.Fake<IOAuthClient>();
+            weeeClient = A.Fake<IWeeeClient>();
+            authenticationManager = A.Fake<IAuthenticationManager>();
+            emailService = A.Fake<IEmailService>();
+        }
+
         [Fact]
         public async Task NewUser_NameNotProvided_ValidationError()
         {
@@ -57,6 +76,36 @@
             var result = await newUserController.UserCreation(userCreationViewModel) as ViewResult;
 
             Assert.False(result.ViewData.ModelState.IsValid);
+        }
+
+        [Fact]
+        public async Task HttpPost_NewUser_IsValid_OnlyRoleShouldBeExternalUser()
+        {
+            var userCreationViewModel = GetValidUserCreationViewModel();
+            var newUser = A.Fake<INewUser>();
+
+            var userCreationData = new UserCreationData();
+            A.CallTo(() => newUser.CreateUserAsync(A<UserCreationData>._))
+                .Invokes((UserCreationData u) => userCreationData = u)
+                .Returns(Task.FromResult(A<string>._));
+
+            A.CallTo(() => weeeClient.NewUser).Returns(newUser);
+
+            try
+            {
+                await NewUserController().UserCreation(userCreationViewModel);
+            }
+            catch (Exception)
+            {
+            }
+
+            Assert.Single(userCreationData.Roles);
+            Assert.Equal(UserRole.ExternalUser, userCreationData.Roles.Single());
+        }
+
+        private NewUserController NewUserController()
+        {
+            return new NewUserController(() => oathClient, () => weeeClient, authenticationManager, emailService);
         }
 
         private static NewUserController GetMockNewUserController(object viewModel)

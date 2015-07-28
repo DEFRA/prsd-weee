@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using DataAccess;
     using Domain;
+    using Extensions;
     using FluentValidation;
 
     public class ProducerTypeValidator : AbstractValidator<producerType>
@@ -16,7 +18,7 @@
             countryType.UKSCOTLAND, countryType.UKWALES
         };
 
-        public ProducerTypeValidator()
+        public ProducerTypeValidator(WeeeContext context)
         {
             RuleSet(
                 BusinessValidator.RegistrationNoRuleSet,
@@ -71,6 +73,25 @@
                                 "{0} is an authorised representative but has a country in their address which is outside of the UK. An authorised representative must be based in the UK. In order to register or amend this producer please check they are an authorised representative and are based in the UK.",
                                 (pt, item) => pt.tradingName);
                     });
+
+            RuleSet(BusinessValidator.DataValidationRuleSet,
+                () =>
+                {
+                    var validProducerRegistrationNumbers = context.Producers
+                        .Select(p => p.RegistrationNumber)
+                        .Concat(context.MigratedProducers.Select(mp => mp.ProducerRegistrationNumber))
+                        .ToList() // Cannot perform string operations until EntityFramework enumerable is transfered to list
+                        .Select(prn => prn.ToLowerInvariant());
+
+                    RuleFor(p => p.registrationNo)
+                        .Must((p, prn) => validProducerRegistrationNumbers.Contains(prn.ToLowerInvariant()))
+                        .When(p => p.status == statusType.A)
+                        .WithState(p => ErrorLevel.Error)
+                        .WithMessage(
+                            "{0} {1} has a producer registration number in the xml which is not recognised. In order to register or amend this producer please enter the correct producer registration number for the producer.",
+                            (p, prn) => p.GetProducerName(),
+                            (p, prn) => prn);
+                });
         }
     }
 }
