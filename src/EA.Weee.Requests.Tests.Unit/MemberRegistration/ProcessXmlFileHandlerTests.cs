@@ -17,10 +17,10 @@
     using RequestHandlers.PCS.MemberRegistration.XmlValidation;
     using Xunit;
 
-    public class ProcessXmlFileHandlerTests
+    public class ProcessXMLFileHandlerTests
     {
         private readonly DbContextHelper helper = new DbContextHelper();
-        private readonly ProcessXmlFileHandler handler;
+        private readonly ProcessXMLFileHandler handler;
         private readonly IGenerateFromXml generator;
         private readonly WeeeContext context;
         private readonly DbSet<Scheme> schemesDbSet;
@@ -28,9 +28,9 @@
         private readonly DbSet<MemberUpload> memberUploadsDbSet;
         private readonly IXmlValidator xmlValidator;
         private static readonly Guid organisationId = Guid.NewGuid();
-        private static readonly ProcessXmlFile Message = new ProcessXmlFile(organisationId, "anydata");
+        private static readonly ProcessXMLFile Message = new ProcessXMLFile(organisationId, "anydata");
 
-        public ProcessXmlFileHandlerTests()
+        public ProcessXMLFileHandlerTests()
         {
             memberUploadsDbSet = A.Fake<DbSet<MemberUpload>>();
             producersDbSet = A.Fake<DbSet<Producer>>();
@@ -48,7 +48,7 @@
 
             generator = A.Fake<IGenerateFromXml>();
             xmlValidator = A.Fake<IXmlValidator>();
-            handler = new ProcessXmlFileHandler(context, xmlValidator, generator);
+            handler = new ProcessXMLFileHandler(context, xmlValidator, generator);
         }
 
         [Fact]

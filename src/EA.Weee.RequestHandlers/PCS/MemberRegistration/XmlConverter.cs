@@ -6,7 +6,7 @@
 
     public class XmlConverter : IXmlConverter
     {
-        public schemeType Convert(ProcessXmlFile message)
+        public schemeType Convert(ProcessXMLFile message)
         {
             var doc = XDocument.Parse(message.Data, LoadOptions.SetLineInfo);
             return (schemeType)new XmlSerializer(typeof(schemeType)).Deserialize(doc.CreateReader());
