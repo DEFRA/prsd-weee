@@ -1,13 +1,17 @@
 ﻿namespace EA.Weee.Requests.Tests.Unit.MemberRegistration.XmlValidation.BusinessValidation
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Domain;
+    using Domain.PCS;
+    using Domain.Producer;
     using FluentValidation;
     using FluentValidation.Internal;
     using RequestHandlers;
     using RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation;
     using Xunit;
+    using ValidationContext = XmlValidation.ValidationContext;
 
     public class ProducerTypeValidatorTests
     {
@@ -16,12 +20,12 @@
         [InlineData("", "TestCompany")]
         public void Amendment_RegistrationNumberIsNullOrEmpty_FailsValidation_AndIncludesTradingNameInMessage_AndErrorLevelIsError(string registrationNumber, string tradingName)
         {
-            var validationResult = new ProducerTypeValidator().Validate(new producerType
+            var validationResult = ProducerTypeValidator().Validate(new producerType
             {
                 tradingName = tradingName, 
                 status = statusType.A, 
                 registrationNo = registrationNumber
-            }, BusinessValidator.RegistrationNoRuleSet);
+            }, new RulesetValidatorSelector(BusinessValidator.RegistrationNoRuleSet));
 
             Assert.False(validationResult.IsValid);
             Assert.Contains(tradingName, validationResult.Errors.Single().ErrorMessage);
@@ -34,7 +38,7 @@
             const string validRegistrationNumber = "ABC12345";
             const string validTradingName = "MyCompany";
 
-            var validationResult = new ProducerTypeValidator().Validate(new producerType
+            var validationResult = ProducerTypeValidator().Validate(new producerType
             {
                 tradingName = validTradingName, 
                 status = statusType.A, 
@@ -50,7 +54,7 @@
             const string validRegistrationNumber = "ABC12345";
             const string validTradingName = "MyCompany";
 
-            var validationResult = new ProducerTypeValidator().Validate(new producerType
+            var validationResult = ProducerTypeValidator().Validate(new producerType
             {
                 tradingName = validTradingName, 
                 status = statusType.I, 
@@ -67,7 +71,7 @@
         [InlineData("", "TestCompany")]
         public void Insert_RegistrationNumberIsNullOrEmpty_PassesValidation(string registrationNumber, string tradingName)
         {
-            var validationResult = new ProducerTypeValidator().Validate(new producerType
+            var validationResult = ProducerTypeValidator().Validate(new producerType
             {
                 tradingName = tradingName, 
                 status = statusType.I, 
@@ -93,7 +97,7 @@
                 producerBusiness = MakeProducerBusinessTypeInCountry(someUkCountry)
             };
 
-            var validationResult = new ProducerTypeValidator()
+            var validationResult = ProducerTypeValidator()
                 .Validate(producer, new RulesetValidatorSelector(BusinessValidator.AuthorisedRepresentativeMustBeInUkRuleset));
 
             Assert.True(validationResult.IsValid);
@@ -116,7 +120,7 @@
                 producerBusiness = MakeProducerBusinessTypeInCountry(SomeNonUkCountry)
             };
 
-            var validationResult = new ProducerTypeValidator()
+            var validationResult = ProducerTypeValidator()
                 .Validate(producer, new RulesetValidatorSelector(BusinessValidator.AuthorisedRepresentativeMustBeInUkRuleset));
 
             Assert.False(validationResult.IsValid);
@@ -135,7 +139,7 @@
                 producerBusiness = MakeProducerBusinessTypeInCountry(SomeNonUkCountry)
             };
 
-            var validationResult = new ProducerTypeValidator()
+            var validationResult = ProducerTypeValidator()
                 .Validate(producer, new RulesetValidatorSelector(BusinessValidator.AuthorisedRepresentativeMustBeInUkRuleset));
 
             Assert.True(validationResult.IsValid);
@@ -152,9 +156,108 @@
             };
 
             Assert.Throws<ArgumentException>(() => 
-                 new ProducerTypeValidator().Validate(
+                 ProducerTypeValidator().Validate(
                     producer,
                     new RulesetValidatorSelector(BusinessValidator.AuthorisedRepresentativeMustBeInUkRuleset)));
+        }
+
+        [Fact]
+        public void ProducerHasPrnNumberThatDoesExist_ValidationSucceeds()
+        {
+            const string prn = "ABC12345";
+            var producer = new producerType()
+            {
+                registrationNo = prn,
+                status = statusType.A
+            };
+
+            var result = ProducerTypeValidator(new List<Producer> { Producer(prn) }, new List<MigratedProducer>())
+                .Validate(producer, new RulesetValidatorSelector(BusinessValidator.DataValidationRuleSet));
+
+            Assert.True(result.IsValid);
+        }
+
+        [Fact]
+        public void ProducerHasPrnNumberThatDoesNotExist_IsInvalid_IncludesPrnInMessage_AndErrorLevelIsError()
+        {
+            const string prn = "ABC12345";
+            var producer = new producerType()
+            {
+                registrationNo = prn,
+                status = statusType.A
+            };
+
+            var result = ProducerTypeValidator(new List<Producer> { Producer("ABC12346") }, new List<MigratedProducer>())
+                .Validate(producer, new RulesetValidatorSelector(BusinessValidator.DataValidationRuleSet));
+
+            Assert.False(result.IsValid);
+
+            Assert.Contains(prn, result.Errors.Single().ErrorMessage);
+            Assert.Equal(ErrorLevel.Error, result.Errors.Single().CustomState);
+        }
+
+        [Fact]
+        public void ProducerHasPrnNumberThatDoesNotExistAndProducerIsPartnership_ReturnsPartnerNameInErrorMessage()
+        {
+            const string prn = "ABC12345";
+            const string tradingName = "My Trading Name";
+            const string partnershipName = "Partnership Name";
+
+            var producer = new producerType()
+            {
+                registrationNo = prn,
+                status = statusType.A,
+                producerBusiness = new producerBusinessType
+                {
+                    Item = new partnershipType
+                    {
+                        partnershipName = partnershipName
+                    }
+                },
+                tradingName = tradingName
+            };
+
+            var result = ProducerTypeValidator(new List<Producer> { Producer("ABC12346") }, new List<MigratedProducer>())
+                .Validate(producer, new RulesetValidatorSelector(BusinessValidator.DataValidationRuleSet));
+
+            Assert.Contains(partnershipName, result.Errors.Single().ErrorMessage);
+        }
+
+        [Fact]
+        public void ProducerHasPrnNumberThatDoesNotExistAndProducerIsCompany_ReturnsCompanyNameInErrorMessage()
+        {
+            const string prn = "ABC12345";
+            const string tradingName = "My Trading Name";
+            const string companyName = "Company Name";
+            var producer = new producerType
+            {
+                registrationNo = prn,
+                status = statusType.A,
+                producerBusiness = new producerBusinessType
+                {
+                    Item = new companyType
+                    {
+                        companyName = companyName
+                    }
+                },
+                tradingName = tradingName
+            };
+
+            var result = ProducerTypeValidator(new List<Producer> { Producer("ABC12346") }, new List<MigratedProducer>())
+                .Validate(producer, new RulesetValidatorSelector(BusinessValidator.DataValidationRuleSet));
+
+            Assert.Contains(companyName, result.Errors.Single().ErrorMessage);
+        }
+
+        private ProducerTypeValidator ProducerTypeValidator()
+        {
+            return new ProducerTypeValidator(ValidationContext.Create(new List<Producer>(), new List<MigratedProducer>()));
+        }
+
+        private ProducerTypeValidator ProducerTypeValidator(IEnumerable<Producer> producers,
+            IEnumerable<MigratedProducer> migratedProducers)
+        {
+            return new ProducerTypeValidator(ValidationContext.Create(producers, migratedProducers));
         }
 
         private producerBusinessType MakeProducerBusinessTypeInCountry(countryType country)
@@ -172,6 +275,26 @@
                             }
                     }
             };
+        }
+
+        private Producer Producer(string prn, params string[] brandNames)
+        {
+            return new Producer(Guid.NewGuid(), 
+                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>"), 
+                new ProducerBusiness(), 
+                new AuthorisedRepresentative("authrep"),
+                DateTime.Now,
+                decimal.Zero,
+                true,
+                prn,
+                null,
+                "trading name",
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                ObligationType.B2B,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                brandNames.Select(bn => new BrandName(bn)).ToList(),
+                new List<SICCode>());
         }
     }
 }
