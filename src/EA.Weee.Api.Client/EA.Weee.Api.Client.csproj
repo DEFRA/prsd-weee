@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="Actions\NewUser.cs" />
     <Compile Include="Actions\INewUser.cs" />
+    <Compile Include="Entities\UserRole.cs" />
     <Compile Include="Entities\UserCreationData.cs" />
     <Compile Include="Entities\ActivatedUserAccountData.cs" />
     <Compile Include="IWeeeClient.cs" />

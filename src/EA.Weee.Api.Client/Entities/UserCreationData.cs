@@ -4,6 +4,9 @@
 
     public class UserCreationData
     {
+        [MinLength(1, ErrorMessage = "A new user must be given at least 1 role")]
+        public UserRole[] Roles { get; set; }
+
         [Required]
         [StringLength(50)]
         [DataType(DataType.Text)]
