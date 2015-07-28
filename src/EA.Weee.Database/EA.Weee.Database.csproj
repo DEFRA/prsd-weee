@@ -60,6 +60,7 @@
     <Content Include="scripts\Update\Sprint9\20150710-1534-AddSchemeProducerTables.sql" />
     <Content Include="scripts\Update\Sprint9\20150715-1632-UpdateProducerTables.sql" />
     <Content Include="scripts\Update\Sprint9\20150723-1419-MigratedProducers.sql" />
+    <Content Include="scripts\Update\Sprint9\20150728-1216-SystemDataTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
