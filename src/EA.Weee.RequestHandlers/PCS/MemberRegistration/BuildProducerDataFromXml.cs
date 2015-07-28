@@ -26,6 +26,10 @@
             var doc = XDocument.Parse(xmlData, LoadOptions.SetLineInfo);
             var deserialzedXml = new XmlSerializer(typeof(schemeType)).Deserialize(doc.CreateReader());
             schemeType scheme = (schemeType)deserialzedXml;
+
+            int numberOfPrnsNeeded = scheme.producerList.Count(p => p.status == statusType.I);
+            Queue<string> generatedPrns = await ComputePrns(context, numberOfPrnsNeeded);
+
             foreach (producerType producerData in scheme.producerList)
             {
                 List<BrandName> brandNames = producerData.producerBrandNames.Select(name => new BrandName(name)).ToList();
@@ -53,7 +57,7 @@
                 string producerRegistrationNo = producerData.registrationNo;
                 if (producerData.status == statusType.I)
                 {
-                    producerRegistrationNo = await ComputeNextPrn(context);
+                    producerRegistrationNo = generatedPrns.Dequeue();
                 }
 
                 Producer producer = new Producer(schemeId, 
@@ -102,24 +106,35 @@
             return producers;
         }
 
-        private static async Task<string> ComputeNextPrn(WeeeContext context, int remainingRetries = 5)
+        private static async Task<Queue<string>> ComputePrns(WeeeContext context, int numberOfPrnsNeeded)
         {
+            var prnHelper = new PrnHelper(new QuadraticResidueHelper());
+
             try
             {
-                uint lastSeed = (uint)context.SystemData.Select(sd => sd.LatestPrnSeed).First();
-                string prn = new PrnHelper(new QuadraticResidueHelper()).ComputePrnFromSeed(ref lastSeed);
-                context.SystemData.First().LatestPrnSeed = lastSeed;
+                IList<PrnAsComponents> generatedPrns = new List<PrnAsComponents>();
+
+                // to avoid concurrency issues, we want to read the latest seed, 'reserve' some PRNs (figuring
+                // out the resulting final seed as we go), and write the final seed back as quickly as possible
+                uint originalLatestSeed = (uint)context.SystemData.Select(sd => sd.LatestPrnSeed).First();
+
+                uint currentSeed = originalLatestSeed;
+                for (int ii = 0; ii < numberOfPrnsNeeded; ii++)
+                {
+                    var prnFromSeed = new PrnAsComponents(currentSeed + 1);
+                    generatedPrns.Add(prnFromSeed);
+                    currentSeed = prnFromSeed.ToSeedValue();
+                }
+
+                context.SystemData.First().LatestPrnSeed = currentSeed;
                 await context.SaveChangesAsync();
-                return prn;
+
+                // now we're done with the fairly time sensitive database read/write, we can 'randomise' the results
+                return new Queue<string>(generatedPrns.Select(p => prnHelper.CreateUniqueRandomVersionOfPrn(p)));
             }
             catch (OptimisticConcurrencyException e)
             {
-                if (remainingRetries > 0)
-                {
-                    return ComputeNextPrn(context, remainingRetries - 1).Result;
-                }
-
-                throw;
+                return ComputePrns(context, numberOfPrnsNeeded).Result;
             }
         }
 

@@ -2,6 +2,6 @@
 {
     public interface IPrnHelper
     {
-        string ComputePrnFromSeed(ref uint seed);
+        string CreateUniqueRandomVersionOfPrn(PrnAsComponents prnAsComponents);
     }
 }

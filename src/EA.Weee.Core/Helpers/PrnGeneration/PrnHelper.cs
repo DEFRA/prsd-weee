@@ -11,25 +11,15 @@
             this.quadraticResidueHelper = quadraticResidueHelper;
         }
 
-        /// <summary>
-        /// Takes a non-negative integer, generates a unique pseudorandom PRN based on
-        /// that integer, and returns the next integer that can be used to generate
-        /// the next PRN. Technical details are in QuadraticResidueHelper.cs.
-        /// </summary>
-        /// <param name="seed"></param>
-        /// <returns></returns>
-        public string ComputePrnFromSeed(ref uint seed)
+        public string CreateUniqueRandomVersionOfPrn(PrnAsComponents prnAsComponents)
         {
-            // generate a plain unrandomised PRN from the seed, e.g. '1' => 'AA0001AA', '3' => 'AA0003AA'
-            PrnSeedHelper prnSeedHelper = new PrnSeedHelper(seed + 1);
-
-            int firstLetterOrdinal = prnSeedHelper.FirstLetter - 'A';
-            int secondLetterOrdinal = prnSeedHelper.SecondLetter - 'A';
-            int thirdLetterOrdinal = prnSeedHelper.ThirdLetter - 'M';
-            int fourthLetterOrdinal = prnSeedHelper.FourthLetter - 'M';
+            int firstLetterOrdinal = prnAsComponents.FirstLetter - 'A';
+            int secondLetterOrdinal = prnAsComponents.SecondLetter - 'A';
+            int thirdLetterOrdinal = prnAsComponents.ThirdLetter - 'M';
+            int fourthLetterOrdinal = prnAsComponents.FourthLetter - 'M';
 
             // use quadratic residue to get a nice unique pseudorandomised version
-            int randomisedNumber = quadraticResidueHelper.ForFourDigitNumber(prnSeedHelper.Number);
+            int randomisedNumber = quadraticResidueHelper.ForFourDigitNumber(prnAsComponents.Number);
             char randomisedFirstLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(firstLetterOrdinal) + 'A');
             char randomisedSecondLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(secondLetterOrdinal) + 'A');
             char randomisedThirdLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(thirdLetterOrdinal) + 'M');
@@ -57,17 +47,13 @@
             }
 
             // all done, toss the pseudorandomised PRN back out along with the next seed value
-            var prn = new StringBuilder("WEE/")
+            return new StringBuilder("WEE/")
                 .Append(randomisedFirstLetter)
                 .Append(randomisedSecondLetter)
                 .Append(randomisedNumber.ToString("D4"))
                 .Append(randomisedThirdLetter)
                 .Append(randomisedFourthLetter)
                 .ToString();
-
-            seed = prnSeedHelper.ToSeedValue();
-
-            return prn;
         }
     }
 }
