@@ -94,6 +94,7 @@
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
     <Compile Include="PCS\MemberRegistration\GetMemberUploadByIdHandler.cs" />
     <Compile Include="PCS\MemberRegistration\GetMemberUploadDataHandler.cs" />
+    <Compile Include="PCS\MemberRegistration\IXmlChargeBandCalculator.cs" />
     <Compile Include="PCS\MemberRegistration\IXmlConverter.cs" />
     <Compile Include="PCS\MemberRegistration\GetProducerCSVByMemberUploadIdHandler.cs" />
     <Compile Include="PCS\MemberRegistration\MemberUploadSubmissionHandler.cs" />
@@ -111,6 +112,8 @@
     <Compile Include="Organisations\JoinOrganisationHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandler.cs" />
+    <Compile Include="PCS\MemberRegistration\ProducerChargeBandCalculator.cs" />
+    <Compile Include="PCS\MemberRegistration\XmlChargeBandCalculator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlConverter.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\BusinessValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\IBusinessValidator.cs" />
