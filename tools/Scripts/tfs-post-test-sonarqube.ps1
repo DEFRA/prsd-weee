@@ -1,0 +1,1 @@
+& C:\SonarCube\SonarQube.MSBuild.Runner-0.9\SonarQube.MSBuild.Runner.exe

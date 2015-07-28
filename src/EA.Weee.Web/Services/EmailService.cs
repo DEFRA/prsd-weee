@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.Web.Services
 {
     using System;
+    using System.Linq;
     using System.Net.Mail;
     using System.Net.Mime;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web;
+    using EmailRules;
 
     public class EmailService : IEmailService
     {
@@ -21,9 +23,21 @@
         public async Task<bool> SendAsync(MailMessage message)
         {
             var client = new SmtpClient();
+            var emailRuleChecker = new RuleChecker();
+            var toAddress = string.Empty;
+
+            if (message.To.Count == 1 && !message.To.Single().Address.Contains(","))
+            {
+                toAddress = message.To.Single().Address;
+            }
+            else
+            {
+                throw new InvalidOperationException("Emails cannot currently be sent to multiple email addresses. Email rules checker is set up to parse a single address.");
+            }
 
             if (!string.IsNullOrWhiteSpace(configurationService.CurrentConfiguration.SendEmail)
-                && configurationService.CurrentConfiguration.SendEmail.Equals("true", StringComparison.InvariantCultureIgnoreCase))
+                && configurationService.CurrentConfiguration.SendEmail.Equals("true", StringComparison.InvariantCultureIgnoreCase)
+                && emailRuleChecker.CheckEmailAddress(toAddress) == RuleAction.Allow)
             {
                 try
                 {
@@ -33,7 +47,7 @@
                 {
                     throw new InvalidOperationException(ex.Message);
                 }
-                
+
                 return true;
             }
 

@@ -9,7 +9,6 @@
     using RequestHandlers.PCS.MemberRegistration;
     using RequestHandlers.PCS.MemberRegistration.XmlValidation;
     using RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation;
-    using RequestHandlers.PCS.MemberRegistration.XmlValidation.DataValidation;
     using RequestHandlers.PCS.MemberRegistration.XmlValidation.SchemaValidation;
     using Xunit;
 
@@ -17,19 +16,17 @@
     {
         private readonly ISchemaValidator schemaValidator;
         private readonly IBusinessValidator businessValidator;
-        private readonly IDataValidator dataValidator;
         private readonly IXmlConverter xmlConverter;
 
         public XmlValidatorTests()
         {
             schemaValidator = A.Fake<ISchemaValidator>();
             businessValidator = A.Fake<IBusinessValidator>();
-            dataValidator = A.Fake<IDataValidator>();
             xmlConverter = A.Fake<IXmlConverter>();
         }
 
         [Fact]
-        public void SchemaValidatorHasErrors_ShouldNotCallBusinessValidator_AndShouldNotCallDataValidator()
+        public void SchemaValidatorHasErrors_ShouldNotCallBusinessValidator()
         {
             A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
                 .Returns(new List<MemberUploadError>
@@ -41,13 +38,10 @@
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._))
                 .MustNotHaveHappened();
-
-            A.CallTo(() => dataValidator.Validate(A<schemeType>._))
-                .MustNotHaveHappened();
         }
 
         [Fact]
-        public void SchemaValidatorHasNoErrors_ButBusinessValidatorDoes_ShouldNotCallDataValidator()
+        public void SchemaValidatorHasNoErrors_AndBusinessValidatorDoes_ShouldReturnErrors()
         {
             A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
                 .Returns(new List<MemberUploadError>());
@@ -58,30 +52,14 @@
                                 new MemberUploadError(ErrorLevel.Error, "An error occurred")
                             });
 
-            XmlValidator().Validate(A<ProcessXMLFile>._);
+            var result = XmlValidator().Validate(A<ProcessXMLFile>._);
 
-            A.CallTo(() => dataValidator.Validate(A<schemeType>._))
-                .MustNotHaveHappened();
-        }
-
-        [Fact]
-        public void SchemaValidatorHasNoErrors_AndBusinessValidatorHasNoErrors_ShouldCallDataValidator()
-        {
-            A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
-                .Returns(new List<MemberUploadError>());
-
-            A.CallTo(() => businessValidator.Validate(A<schemeType>._))
-                .Returns(new List<MemberUploadError>());
-
-            XmlValidator().Validate(A<ProcessXMLFile>._);
-
-            A.CallTo(() => dataValidator.Validate(A<schemeType>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            Assert.NotEmpty(result);
         }
 
         private XmlValidator XmlValidator()
         {
-            return new XmlValidator(schemaValidator, xmlConverter, businessValidator, dataValidator);
+            return new XmlValidator(schemaValidator, xmlConverter, businessValidator);
         }
     }
 }

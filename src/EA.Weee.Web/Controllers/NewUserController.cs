@@ -126,7 +126,11 @@
                         FirstName = model.Name,
                         Surname = model.Surname,
                         Password = model.Password,
-                        ConfirmPassword = model.ConfirmPassword
+                        ConfirmPassword = model.ConfirmPassword,
+                        Roles = new[]
+                        {
+                            UserRole.ExternalUser
+                        }
                     };
 
                     try
