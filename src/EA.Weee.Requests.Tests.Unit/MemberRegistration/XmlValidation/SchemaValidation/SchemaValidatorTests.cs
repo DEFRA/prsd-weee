@@ -26,7 +26,7 @@
             var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-valid.xml");
             var validXml = File.ReadAllText(new Uri(validXmlLocation).LocalPath);
 
-            var errors = SchemaValidator().Validate(new ValidateXmlFile(A<Guid>._, validXml));
+            var errors = SchemaValidator().Validate(new ProcessXmlFile(A<Guid>._, validXml));
 
             Assert.Empty(errors);
         }
@@ -37,7 +37,7 @@
             var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-slightly-invalid.xml");
             var invalidXml = File.ReadAllText(new Uri(invalidXmlLocation).LocalPath);
 
-            var errors = SchemaValidator().Validate(new ValidateXmlFile(A<Guid>._, invalidXml));
+            var errors = SchemaValidator().Validate(new ProcessXmlFile(A<Guid>._, invalidXml));
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -48,7 +48,7 @@
             var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-badly-damaged.xml");
             var invalidXml = File.ReadAllText(new Uri(invalidXmlLocation).LocalPath);
 
-            var errors = SchemaValidator().Validate(new ValidateXmlFile(A<Guid>._, invalidXml));
+            var errors = SchemaValidator().Validate(new ProcessXmlFile(A<Guid>._, invalidXml));
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -59,7 +59,7 @@
             var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\not-xml.xml");
             var invalidXml = File.ReadAllText(new Uri(invalidXmlLocation).LocalPath);
 
-            var errors = SchemaValidator().Validate(new ValidateXmlFile(A<Guid>._, invalidXml));
+            var errors = SchemaValidator().Validate(new ProcessXmlFile(A<Guid>._, invalidXml));
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }

@@ -23,7 +23,7 @@
             this.xmlConverter = xmlConverter;
         }
 
-        public IEnumerable<MemberUploadError> Validate(ValidateXmlFile message)
+        public IEnumerable<MemberUploadError> Validate(ProcessXmlFile message)
         {
             // Validate against the schema
             var errors = schemaValidator.Validate(message);        

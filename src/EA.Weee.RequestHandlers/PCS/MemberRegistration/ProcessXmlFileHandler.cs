@@ -8,23 +8,27 @@
     using DataAccess;
     using Domain.PCS;
     using Domain.Producer;
+    using GenerateProducerObjects;
     using Prsd.Core.Mediator;
     using Requests.PCS.MemberRegistration;
     using XmlValidation;
 
-    internal class ValidateXmlFileHandler : IRequestHandler<ValidateXmlFile, Guid>
+    internal class ProcessXmlFileHandler : IRequestHandler<ProcessXmlFile, Guid>
     {
         private readonly WeeeContext context;
 
         private readonly IXmlValidator xmlValidator;
 
-        public ValidateXmlFileHandler(WeeeContext context, IXmlValidator xmlValidator)
+        private readonly IGenerateFromXml generateFromXml;
+
+        public ProcessXmlFileHandler(WeeeContext context, IXmlValidator xmlValidator, IGenerateFromXml generateFromXml)
         {
             this.context = context;
             this.xmlValidator = xmlValidator;
+            this.generateFromXml = generateFromXml;
         }
 
-        public async Task<Guid> HandleAsync(ValidateXmlFile message)
+        public async Task<Guid> HandleAsync(ProcessXmlFile message)
         {
             var errors = xmlValidator.Validate(message);
 
@@ -32,21 +36,18 @@
 
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
             var upload = new MemberUpload(message.OrganisationId, message.Data, memberUploadErrors.ToList(), scheme.Id);
-
-             var producers = new List<Producer>();
+            
             //Build producers domain object if there are no errors during validation of xml file.
             if (!memberUploadErrors.Any())
             {
-                producers = await BuildProducerDataFromXml.SetProducerData(scheme.Id, upload, context, message.Data);
-            }
-
-            context.MemberUploads.Add(upload);
-
-            if (producers.Count > 0)
-            {
+                var producers = await generateFromXml.Generate(message, upload);
+                context.MemberUploads.Add(upload); 
                 context.Producers.AddRange(producers);
             }
-            
+            else
+            {
+                context.MemberUploads.Add(upload); 
+            }
             await context.SaveChangesAsync();
             return upload.Id;
         }
