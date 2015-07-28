@@ -4,6 +4,6 @@
 
     public interface IXmlConverter
     {
-        schemeType Convert(ProcessXmlFile message);
+        schemeType Convert(ProcessXMLFile message);
     }
 }

@@ -8,6 +8,6 @@
 
     public interface IGenerateFromXml
     {
-        Task<IEnumerable<Producer>> Generate(ProcessXmlFile messageXmlFile, MemberUpload memberUpload);
+        Task<IEnumerable<Producer>> Generate(ProcessXMLFile messageXmlFile, MemberUpload memberUpload);
     }
 }

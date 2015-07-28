@@ -6,6 +6,6 @@
 
     public interface IXmlValidator
     {
-        IEnumerable<MemberUploadError> Validate(ProcessXmlFile message);
+        IEnumerable<MemberUploadError> Validate(ProcessXMLFile message);
     }
 }

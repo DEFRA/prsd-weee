@@ -51,7 +51,7 @@
             var fileData = fileConverter.Convert(model.File);
             using (var client = apiClient())
             {
-                var validationId = await client.SendAsync(User.GetAccessToken(), new ProcessXmlFile(pcsId, fileData));
+                var validationId = await client.SendAsync(User.GetAccessToken(), new ProcessXMLFile(pcsId, fileData));
 
                 return RedirectToAction("ViewErrorsAndWarnings", "MemberRegistration",
                     new { area = "PCS", memberUploadId = validationId });

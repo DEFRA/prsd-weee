@@ -26,7 +26,7 @@
             this.context = context;
         }
 
-        public async Task<IEnumerable<Producer>> Generate(ProcessXmlFile messageXmlFile, MemberUpload memberUpload)
+        public async Task<IEnumerable<Producer>> Generate(ProcessXMLFile messageXmlFile, MemberUpload memberUpload)
         {
             var deserializedXml = xmlConverter.Convert(messageXmlFile);
             Guid schemeId = memberUpload.SchemeId.GetValueOrDefault();
@@ -92,12 +92,15 @@
                         var producerDb =
                             context.MemberUploads.Where(member => member.IsSubmitted && member.SchemeId == schemeId)
                                 .SelectMany(p => p.Producers)
-                                .Where(p => p.RegistrationNumber == producerData.registrationNo)
+                                .Where(p => p.RegistrationNumber == producerRegistrationNo)
                                 .OrderByDescending(p => p.LastSubmitted)
                                 .First();
-
-                        //Add only if producer not found in DB
-                        if (!producer.Equals(producerDb))
+                        if (producerDb == null)
+                        {
+                            //check in migrated producers list
+                            producers.Add(producer);
+                        }
+                        else if (!producer.Equals(producerDb))
                         {
                             producers.Add(producer);
                         }

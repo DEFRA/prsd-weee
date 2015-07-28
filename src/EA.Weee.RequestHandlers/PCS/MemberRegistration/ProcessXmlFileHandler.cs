@@ -13,7 +13,7 @@
     using Requests.PCS.MemberRegistration;
     using XmlValidation;
 
-    internal class ProcessXmlFileHandler : IRequestHandler<ProcessXmlFile, Guid>
+    internal class ProcessXMLFileHandler : IRequestHandler<ProcessXMLFile, Guid>
     {
         private readonly WeeeContext context;
 
@@ -21,14 +21,14 @@
 
         private readonly IGenerateFromXml generateFromXml;
 
-        public ProcessXmlFileHandler(WeeeContext context, IXmlValidator xmlValidator, IGenerateFromXml generateFromXml)
+        public ProcessXMLFileHandler(WeeeContext context, IXmlValidator xmlValidator, IGenerateFromXml generateFromXml)
         {
             this.context = context;
             this.xmlValidator = xmlValidator;
             this.generateFromXml = generateFromXml;
         }
 
-        public async Task<Guid> HandleAsync(ProcessXmlFile message)
+        public async Task<Guid> HandleAsync(ProcessXMLFile message)
         {
             var errors = xmlValidator.Validate(message);
 
