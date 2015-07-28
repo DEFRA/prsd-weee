@@ -94,7 +94,7 @@
                                 .SelectMany(p => p.Producers)
                                 .Where(p => p.RegistrationNumber == producerRegistrationNo)
                                 .OrderByDescending(p => p.LastSubmitted)
-                                .First();
+                                .FirstOrDefault();
                         if (producerDb == null)
                         {
                             //check in migrated producers list
