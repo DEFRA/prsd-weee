@@ -11,6 +11,7 @@
     using Prsd.Core.Mediator;
     using Requests.PCS.MemberRegistration;
     using XmlValidation;
+    using EA.Weee.Domain;
 
     internal class ProcessXMLFileHandler : IRequestHandler<ProcessXMLFile, Guid>
     {
@@ -18,10 +19,13 @@
 
         private readonly IXmlValidator xmlValidator;
 
-        public ProcessXMLFileHandler(WeeeContext context, IXmlValidator xmlValidator)
+        private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
+
+        public ProcessXMLFileHandler(WeeeContext context, IXmlValidator xmlValidator, IXmlChargeBandCalculator xmlChargeBandCalculator)
         {
             this.context = context;
             this.xmlValidator = xmlValidator;
+            this.xmlChargeBandCalculator = xmlChargeBandCalculator;
         }
 
         public async Task<Guid> HandleAsync(ProcessXMLFile message)
@@ -30,10 +34,12 @@
 
             var memberUploadErrors = errors as IList<MemberUploadError> ?? errors.ToList();
 
-            var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-            var upload = new MemberUpload(message.OrganisationId, message.Data, memberUploadErrors.ToList(), scheme.Id);
+            var totalCharges = xmlChargeBandCalculator.Calculate(message);
 
-             var producers = new List<Producer>();
+            var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
+            var upload = new MemberUpload(message.OrganisationId, message.Data, memberUploadErrors.ToList(), totalCharges, scheme.Id);
+
+            var producers = new List<Producer>();
             //Build producers domain object if there are no errors during validation of xml file.
             if (!memberUploadErrors.Any())
             {
@@ -46,7 +52,7 @@
             {
                 context.Producers.AddRange(producers);
             }
-            
+
             await context.SaveChangesAsync();
             return upload.Id;
         }

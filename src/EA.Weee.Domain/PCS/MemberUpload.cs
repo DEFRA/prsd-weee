@@ -27,13 +27,16 @@
 
         public virtual List<Producer> Producers { get; private set; }
 
-        public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors, Guid? schemeId = null)
+        public decimal TotalCharges { get; private set; }
+
+        public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors, decimal totalCharges, Guid? schemeId = null)
         {
             OrganisationId = organisationId;
             SchemeId = schemeId.GetValueOrDefault();
             Data = data;
             Errors = errors;
             IsSubmitted = false;
+            TotalCharges = totalCharges;
             //TODO: Needs doing properly
             ComplianceYear = SystemTime.UtcNow.Year + 1;
         }
