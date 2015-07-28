@@ -22,7 +22,7 @@
             this.xmlErrorTranslator = xmlErrorTranslator;
         }
 
-        public IEnumerable<MemberUploadError> Validate(ValidateXmlFile message)
+        public IEnumerable<MemberUploadError> Validate(ProcessXmlFile message)
         {
             var errors = new List<MemberUploadError>();
 
