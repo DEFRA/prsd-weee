@@ -32,7 +32,7 @@
             var deserializedXml = xmlConverter.Convert(message);
 
             // Validate against the deserialized XML
-            errors = businessValidator.Validate(deserializedXml);            
+            errors = businessValidator.Validate(deserializedXml, message.OrganisationId);            
             return errors;
         }
     }

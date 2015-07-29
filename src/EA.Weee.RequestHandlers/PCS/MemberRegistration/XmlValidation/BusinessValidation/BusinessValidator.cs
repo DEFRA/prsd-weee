@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using DataAccess;
@@ -23,9 +24,9 @@
             this.context = context;
         }
 
-        public IEnumerable<MemberUploadError> Validate(schemeType deserializedXml)
+        public IEnumerable<MemberUploadError> Validate(schemeType deserializedXml, Guid pcsId)
         {
-            var result = new SchemeTypeValidator(context).Validate(deserializedXml, new RulesetValidatorSelector("*"));
+            var result = new SchemeTypeValidator(context, pcsId).Validate(deserializedXml, new RulesetValidatorSelector("*"));
             return result.Errors.Select(err => new MemberUploadError((ErrorLevel)err.CustomState, err.ErrorMessage));
         }
     }
