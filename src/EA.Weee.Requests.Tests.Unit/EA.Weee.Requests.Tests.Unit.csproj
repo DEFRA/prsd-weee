@@ -78,6 +78,7 @@
     <Compile Include="MemberRegistration\XmlErrorTranslatorTests.cs" />
     <Compile Include="MemberRegistration\XmlValidation\BusinessValidation\ProducerTypeValidatorTests.cs" />
     <Compile Include="MemberRegistration\XmlValidation\BusinessValidation\SchemeTypeValidatorTests.cs" />
+    <Compile Include="MemberRegistration\XmlValidation\FakeProducer.cs" />
     <Compile Include="MemberRegistration\XmlValidation\ValidationContext.cs" />
     <Compile Include="MemberRegistration\XmlValidation\XmlValidatorTests.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandlerTests.cs" />
