@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -14,10 +15,11 @@
     using Domain.Producer;
     using Prsd.Core;
     using Prsd.Core.Domain;
+    using XmlValidation.Extensions;
 
     public static class BuildProducerDataFromXml
     {
-        public static async Task<List<Producer>> SetProducerData(Guid schemeId, MemberUpload memberUpload, WeeeContext context, string xmlData)
+        public static async Task<List<Producer>> SetProducerData(Guid schemeId, MemberUpload memberUpload, WeeeContext context, string xmlData, Hashtable producerCharges)
         {
             List<Producer> producers = new List<Producer>();
             var doc = XDocument.Parse(xmlData, LoadOptions.SetLineInfo);
@@ -25,6 +27,10 @@
             schemeType scheme = (schemeType)deserialzedXml;
             foreach (producerType producerData in scheme.producerList)
             {
+                var producerName = producerData.GetProducerName();
+
+                var producerChargeBandType = ((ProducerCharge)producerCharges[producerName]).ChargeBandType;
+
                 List<BrandName> brandNames = producerData.producerBrandNames.Select(name => new BrandName(name)).ToList();
 
                 List<SICCode> codes = producerData.SICCodeList.Select(name => new SICCode(name)).ToList();
@@ -67,14 +73,16 @@
                     sellingTechniqueType,
                     obligationType,
                     annualturnoverType,
-                    brandNames, codes);
+                    brandNames, 
+                    codes,
+                    producerChargeBandType);
 
                 // modify producer data
                 switch (producerData.status)
                 {
                     case statusType.A:
                         // get the producers for scheme based on producer->prn and producer->lastsubmitted
-                       // is latest date and memberupload ->IsSubmitted is true.
+                        // is latest date and memberupload ->IsSubmitted is true.
                         var producerDb =
                             context.MemberUploads.Where(member => member.IsSubmitted && member.SchemeId == schemeId)
                                 .SelectMany(p => p.Producers)
@@ -109,7 +117,7 @@
             {
                 contacts.Add(await GetProducerContact(representative.overseasProducer.overseasContact, context));
             }
-            AuthorisedRepresentative overSeasAuthorisedRepresentative = 
+            AuthorisedRepresentative overSeasAuthorisedRepresentative =
                 new AuthorisedRepresentative(representative.overseasProducer.overseasProducerName, contacts.FirstOrDefault());
             return overSeasAuthorisedRepresentative;
         }
