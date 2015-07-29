@@ -89,9 +89,10 @@
     <Compile Include="Mappings\UKCompetentAuthorityMap.cs" />
     <Compile Include="Mappings\ValueObjectInitializer.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandler.cs" />
-    <Compile Include="PCS\MemberRegistration\BuildProducerDataFromXml.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
+    <Compile Include="PCS\MemberRegistration\GenerateProducerObjects\GenerateProducerObjectsFromXml.cs" />
+    <Compile Include="PCS\MemberRegistration\GenerateProducerObjects\IGenerateProducerFromXml.cs" />
     <Compile Include="PCS\MemberRegistration\GetMemberUploadByIdHandler.cs" />
     <Compile Include="PCS\MemberRegistration\GetMemberUploadDataHandler.cs" />
     <Compile Include="PCS\MemberRegistration\IXmlConverter.cs" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="GenerateSchemaCs.ps1" />
     <None Include="packages.config" />
     <None Include="v3schema.xsd">
       <SubType>Designer</SubType>
