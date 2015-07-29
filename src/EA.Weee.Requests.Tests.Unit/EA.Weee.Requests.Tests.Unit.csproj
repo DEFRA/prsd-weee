@@ -76,6 +76,7 @@
     <Compile Include="MemberRegistration\GetProducerCSVByMemberUploadIdHandlerTests.cs" />
     <Compile Include="MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
     <Compile Include="MemberRegistration\ProcessXMLFileHandlerTests.cs" />
+    <Compile Include="MemberRegistration\XmlConverterTests.cs" />
     <Compile Include="MemberRegistration\XmlErrorTranslatorTests.cs" />
     <Compile Include="MemberRegistration\XmlValidation\BusinessValidation\ProducerTypeValidatorTests.cs" />
     <Compile Include="MemberRegistration\XmlValidation\BusinessValidation\SchemeTypeValidatorTests.cs" />
