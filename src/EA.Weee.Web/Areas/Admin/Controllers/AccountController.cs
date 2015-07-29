@@ -5,6 +5,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
+    using Core;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
@@ -62,7 +63,8 @@
             {
                 using (var client = apiClient())
                 {
-                    await client.NewUser.CreateUserAsync(userCreationData);
+                    var userId = await client.NewUser.CreateUserAsync(userCreationData);
+
                     await SendEmail(userCreationData.Email, userCreationData.Password, client, userId);
 
                     var signInResponse = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
