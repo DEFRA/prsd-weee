@@ -1,69 +1,58 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
     using Domain;
-    using PCS;
-    using Prsd.Core.Domain;
     using RequestHandlers;
 
     public class ProducerChargeBandCalculator
     {
-        public decimal CalculateCharge(producerType[] producers)
+        public ProducerCharge CalculateCharge(producerType producer)
         {
-            var totalCharges = 0;
-            foreach (var producer in producers)
-            {
-                if (producer.status == statusType.I)
-                {
-                    var chargeBand = string.Empty;
+            var producerCharge = new ProducerCharge();
 
-                    if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
+            if (producer.status == statusType.I)
+            {
+                if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
+                {
+                    producerCharge.ChargeBandType = ChargeBandType.E;
+                    producerCharge.ChargeAmount = 30;
+                }
+                else
+                {
+                    if (producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
+                        && producer.VATRegistered
+                        && producer.eeePlacedOnMarketBand ==
+                        eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                     {
-                        chargeBand = "E";
-                        totalCharges = totalCharges + 30;
+                        producerCharge.ChargeBandType = ChargeBandType.A;
+                        producerCharge.ChargeAmount = 445;
                     }
-                    else
+                    else if (producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
+                             && producer.VATRegistered
+                             && producer.eeePlacedOnMarketBand ==
+                             eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                     {
-                        if (producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
-                            && producer.VATRegistered
-                            && producer.eeePlacedOnMarketBand ==
-                            eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
-                        {
-                            chargeBand = "A";
-                            totalCharges = totalCharges + 445;
-                        }
-                        else if (producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
-                                 && producer.VATRegistered
-                                 && producer.eeePlacedOnMarketBand ==
-                                 eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
-                        {
-                            chargeBand = "B";
-                            totalCharges = totalCharges + 210;
-                        }
-                        else if (producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
-                                 && producer.VATRegistered == false
-                                 && producer.eeePlacedOnMarketBand ==
-                                 eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
-                        {
-                            chargeBand = "D";
-                            totalCharges = totalCharges + 30;
-                        }
-                        else if (producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
-                                 && producer.VATRegistered == false
-                                 && producer.eeePlacedOnMarketBand ==
-                                 eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
-                        {
-                            chargeBand = "C";
-                            totalCharges = totalCharges + 30;
-                        }
+                        producerCharge.ChargeBandType = ChargeBandType.B;
+                        producerCharge.ChargeAmount = 210;
+                    }
+                    else if (producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
+                             && producer.VATRegistered == false
+                             && producer.eeePlacedOnMarketBand ==
+                             eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                    {
+                        producerCharge.ChargeBandType = ChargeBandType.D;
+                        producerCharge.ChargeAmount = 30;
+                    }
+                    else if (producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
+                             && producer.VATRegistered == false
+                             && producer.eeePlacedOnMarketBand ==
+                             eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                    {
+                        producerCharge.ChargeBandType = ChargeBandType.C;
+                        producerCharge.ChargeAmount = 30;
                     }
                 }
             }
-            return totalCharges;
+            return producerCharge;
         }
     }
 }

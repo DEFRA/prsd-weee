@@ -121,6 +121,7 @@
     <Compile Include="PCS\MemberRegistration\XmlValidation\IXmlValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\ProducerTypeValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\SchemeTypeValidator.cs" />
+    <Compile Include="PCS\MemberRegistration\ProducerCharge.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\SchemaValidation\ISchemaValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\XmlValidator.cs" />

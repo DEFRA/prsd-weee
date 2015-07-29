@@ -25,7 +25,8 @@
             ObligationType obligationType,
             AnnualTurnOverBandType annualTurnOverBandType,
             List<BrandName> brandnames,
-            List<SICCode> codes)
+            List<SICCode> codes,
+            ChargeBandType chargeBandType)
         {
             ProducerBusiness = producerBusiness;
             AuthorisedRepresentative = authorisedRepresentative;
@@ -47,6 +48,8 @@
             SICCodes = codes;
             SchemeId = schemeId;
             MemberUpload = memberUpload;
+
+            ChargeBandType = chargeBandType.Value;
         }
 
         protected Producer()

@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -34,7 +35,18 @@
 
             var memberUploadErrors = errors as IList<MemberUploadError> ?? errors.ToList();
 
-            var totalCharges = xmlChargeBandCalculator.Calculate(message);
+            if (xmlChargeBandCalculator.ErrorsAndWarnings.Count > 0)
+            {
+                ((List<MemberUploadError>)memberUploadErrors).AddRange(xmlChargeBandCalculator.ErrorsAndWarnings);
+            }
+
+            var producerCharges = xmlChargeBandCalculator.Calculate(message);
+
+            decimal totalCharges = 0;
+            foreach (DictionaryEntry producerCharge in producerCharges)
+            {
+                totalCharges = totalCharges + ((ProducerCharge)producerCharge.Value).ChargeAmount;
+            }
 
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
             var upload = new MemberUpload(message.OrganisationId, message.Data, memberUploadErrors.ToList(), totalCharges, scheme.Id);
@@ -43,7 +55,7 @@
             //Build producers domain object if there are no errors during validation of xml file.
             if (!memberUploadErrors.Any())
             {
-                producers = await BuildProducerDataFromXml.SetProducerData(scheme.Id, upload, context, message.Data);
+                producers = await BuildProducerDataFromXml.SetProducerData(scheme.Id, upload, context, message.Data, producerCharges);
             }
 
             context.MemberUploads.Add(upload);
