@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core.Tests.Validation
+﻿namespace EA.Weee.Core.Tests.Unit.Validation
 {
     using Core.Validation;
     using Xunit;
