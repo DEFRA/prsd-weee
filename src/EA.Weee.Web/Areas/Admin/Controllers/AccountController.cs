@@ -3,21 +3,27 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using System.Web.Routing;
     using Api.Client;
     using Api.Client.Entities;
+    using Core;
     using Infrastructure;
+    using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
+    using Prsd.Core.Web.OAuth;
     using ViewModels;
 
     public class AccountController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly Func<IOAuthClient> oauthClient;
+        private readonly IAuthenticationManager authenticationManager;
 
-        public AccountController(Func<IWeeeClient> apiClient)
+        public AccountController(Func<IWeeeClient> apiClient, Func<IOAuthClient> oauthClient, IAuthenticationManager authenticationManager)
         {
             this.apiClient = apiClient;
+            this.oauthClient = oauthClient;
+            this.authenticationManager = authenticationManager;
         }
 
         [HttpGet]
@@ -44,9 +50,9 @@
                 Surname = model.Surname,
                 Password = model.Password,
                 ConfirmPassword = model.ConfirmPassword,
-                Roles = new[]
+                Claims = new[]
                 {
-                    UserRole.InternalUser
+                    Claims.CanAccessInternalArea
                 }
             };
 
@@ -54,7 +60,10 @@
             {
                 using (var client = apiClient())
                 {
-                    await client.NewUser.CreateUserAsync(userCreationData);               
+                    await client.NewUser.CreateUserAsync(userCreationData);
+                    var signInResponse = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
+
+                    authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
                 }
 
                 return RedirectToAction("UserAccountActivationRequired", "Account", new { area = "Admin" });

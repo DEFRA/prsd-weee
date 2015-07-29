@@ -156,7 +156,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Areas\Admin\Controllers\AccountControllerTests.cs" />
-    <Compile Include="Areas\Admin\DataAnnotations\InternalEmailAddressAttributeTests.cs" />
     <Compile Include="Areas\PCS\Controllers\HomeControllerTests.cs" />
     <Compile Include="Areas\PCS\Controllers\MemberRegistrationControllerTests.cs" />
     <Compile Include="Controllers\AccountControllerTest.cs" />
@@ -197,7 +196,9 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Areas\Admin\DataAnnotations\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
