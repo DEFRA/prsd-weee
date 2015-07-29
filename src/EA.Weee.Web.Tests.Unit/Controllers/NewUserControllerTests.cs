@@ -101,7 +101,7 @@
             }
 
             Assert.Single(userCreationData.Claims);
-            Assert.Equal(Claims.CanAccessExternalUser, userCreationData.Claims.Single());
+            Assert.Equal(Claims.CanAccessExternalArea, userCreationData.Claims.Single());
         }
 
         private NewUserController NewUserController()

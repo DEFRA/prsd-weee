@@ -130,7 +130,7 @@
                         ConfirmPassword = model.ConfirmPassword,
                         Claims = new[]
                         {
-                            Claims.CanAccessExternalUser
+                            Claims.CanAccessExternalArea
                         }
                     };
 
