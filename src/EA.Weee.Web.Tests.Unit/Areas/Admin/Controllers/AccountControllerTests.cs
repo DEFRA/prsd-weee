@@ -97,7 +97,7 @@
 
             Assert.Equal("UserAccountActivationRequired", redirectValues["action"]);
             Assert.Equal("Account", redirectValues["controller"]);
-            Assert.Equal(string.Empty, redirectValues["area"]);
+            Assert.Equal("Admin", redirectValues["area"]);
         }
 
         [Fact]
