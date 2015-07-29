@@ -12,7 +12,6 @@
     using Prsd.Core.Mediator;
     using Requests.PCS.MemberRegistration;
     using XmlValidation;
-    using EA.Weee.Domain;
 
     internal class ProcessXMLFileHandler : IRequestHandler<ProcessXMLFile, Guid>
     {
@@ -35,12 +34,12 @@
 
             var memberUploadErrors = errors as IList<MemberUploadError> ?? errors.ToList();
 
+            var producerCharges = xmlChargeBandCalculator.Calculate(message);
+
             if (xmlChargeBandCalculator.ErrorsAndWarnings.Count > 0)
             {
                 ((List<MemberUploadError>)memberUploadErrors).AddRange(xmlChargeBandCalculator.ErrorsAndWarnings);
             }
-
-            var producerCharges = xmlChargeBandCalculator.Calculate(message);
 
             decimal totalCharges = 0;
             foreach (DictionaryEntry producerCharge in producerCharges)

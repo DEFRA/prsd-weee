@@ -57,6 +57,7 @@
     <Compile Include="Country.cs" />
     <Compile Include="Producer\Business.cs" />
     <Compile Include="Producer\Company.cs" />
+    <Compile Include="Producer\ProducerChargeBand.cs" />
     <Compile Include="Producer\ProducerContact.cs" />
     <Compile Include="EEEPlacedOnMarketBandType.cs" />
     <Compile Include="ErrorLevel.cs" />
