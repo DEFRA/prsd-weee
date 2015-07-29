@@ -67,13 +67,15 @@
     <Compile Include="Organisations\GetOrganisationInfo.cs" />
     <Compile Include="PCS\MemberRegistration\GetProducerCSVByMemberUploadId.cs" />
     <Compile Include="PCS\MemberRegistration\MemberUploadSubmission.cs" />
+    <Compile Include="PCS\MemberRegistration\ProcessXMLFile.cs" />
+    <Compile Include="PCS\MemberUploadTesting\PcsXmlFile.cs" />
+    <Compile Include="PCS\MemberUploadTesting\GeneratePcsXmlFile.cs" />
     <Compile Include="Shared\GetCountries.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorities.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations.cs" />
     <Compile Include="Organisations\OrganisationSearchById.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NewUser\UserById.cs" />
-    <Compile Include="PCS\MemberRegistration\ProcessXMLFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
