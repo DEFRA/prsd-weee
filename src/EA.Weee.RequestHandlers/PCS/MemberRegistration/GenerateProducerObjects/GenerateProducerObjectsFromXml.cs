@@ -28,7 +28,7 @@
 
         public async Task<IEnumerable<Producer>> Generate(ProcessXMLFile messageXmlFile, MemberUpload memberUpload)
         {
-            var deserializedXml = xmlConverter.Convert(messageXmlFile);
+            var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
             Guid schemeId = memberUpload.SchemeId.GetValueOrDefault();
             var producers = await SetProducerData(deserializedXml, schemeId, memberUpload);
             return producers;
