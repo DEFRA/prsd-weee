@@ -35,6 +35,8 @@
 
         public virtual DbSet<MigratedProducer> MigratedProducers { get; set; }
 
+        public virtual DbSet<ProducerChargeBand> ProducerChargeBands { get; set; }
+
         public WeeeContext(IUserContext userContext)
             : base("name=Weee.DefaultConnection")
         {

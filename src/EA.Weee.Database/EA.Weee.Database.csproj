@@ -65,6 +65,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="schema_compare.ps1" />
+    <None Include="scripts\Update\Sprint9\20150729-122655-UpdateMemberUploadAndAddChargeBand.sql" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />

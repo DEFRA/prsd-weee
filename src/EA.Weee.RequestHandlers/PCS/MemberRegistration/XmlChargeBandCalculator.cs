@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Xml.Linq;
     using System.Xml.Serialization;
+    using DataAccess;
     using Domain;
     using Domain.PCS;
     using Requests.PCS.MemberRegistration;

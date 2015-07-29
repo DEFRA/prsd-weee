@@ -2,6 +2,7 @@
 {
     using System.Collections;
     using System.Collections.Generic;
+    using DataAccess;
     using Domain.PCS;
     using Requests.PCS.MemberRegistration;
 

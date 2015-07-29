@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration
 {
+    using System.Linq;
+    using DataAccess;
     using Domain;
     using RequestHandlers;
 
@@ -14,7 +16,7 @@
                 if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
                 {
                     producerCharge.ChargeBandType = ChargeBandType.E;
-                    producerCharge.ChargeAmount = 30;
+                    //producerCharge.ChargeAmount = GetProducerChargeAmount(context, ChargeBandType.E);
                 }
                 else
                 {
@@ -24,7 +26,7 @@
                         eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                     {
                         producerCharge.ChargeBandType = ChargeBandType.A;
-                        producerCharge.ChargeAmount = 445;
+                        //producerCharge.ChargeAmount = GetProducerChargeAmount(context, ChargeBandType.A);
                     }
                     else if (producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
                              && producer.VATRegistered
@@ -32,7 +34,7 @@
                              eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                     {
                         producerCharge.ChargeBandType = ChargeBandType.B;
-                        producerCharge.ChargeAmount = 210;
+                        //producerCharge.ChargeAmount = GetProducerChargeAmount(context, ChargeBandType.B);
                     }
                     else if (producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
                              && producer.VATRegistered == false
@@ -40,7 +42,7 @@
                              eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                     {
                         producerCharge.ChargeBandType = ChargeBandType.D;
-                        producerCharge.ChargeAmount = 30;
+                        //producerCharge.ChargeAmount = GetProducerChargeAmount(context, ChargeBandType.D);
                     }
                     else if (producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
                              && producer.VATRegistered == false
@@ -48,11 +50,16 @@
                              eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                     {
                         producerCharge.ChargeBandType = ChargeBandType.C;
-                        producerCharge.ChargeAmount = 30;
+                        //producerCharge.ChargeAmount = GetProducerChargeAmount(context, ChargeBandType.C);
                     }
                 }
             }
             return producerCharge;
+        }
+
+        public decimal GetProducerChargeAmount(WeeeContext context, ChargeBandType chargeBandType)
+        {
+            return context.ProducerChargeBands.Single(pc => pc.Name == chargeBandType.DisplayName).Amount;
         }
     }
 }
