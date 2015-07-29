@@ -6,7 +6,7 @@
     using System.Linq;
     using FakeItEasy;
 
-    internal class DbContextHelper
+    public class DbContextHelper
     {
         public DbSet<T> GetFakeDbSet<T>(IEnumerable<T> data) where T : class
         {

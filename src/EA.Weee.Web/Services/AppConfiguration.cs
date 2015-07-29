@@ -24,5 +24,12 @@
 
         [DefaultValue("false")]
         public string TruncateEmailAfterPlus { get; set; }
+
+        /// <summary>
+        /// This value determines whether then "Test" area is accessible.
+        /// The value should be false for production environments.
+        /// </summary>
+        [DefaultValue(false)]
+        public bool EnableTestArea { get; set; }
     }
 }
