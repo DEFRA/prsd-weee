@@ -143,7 +143,7 @@
 
         public DateTime LastSubmitted { get; private set; }
 
-        public string RegistrationNumber { get; private set; }
+        public virtual string RegistrationNumber { get; private set; }
 
         public string TradingName { get; private set; }
 
