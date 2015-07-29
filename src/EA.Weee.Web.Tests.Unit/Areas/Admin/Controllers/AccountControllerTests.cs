@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using System;
     using System.Linq;
     using System.Net;
     using System.Security.Claims;
+    using System.Security.Policy;
     using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Web;
@@ -131,11 +133,27 @@
 
         private AccountController AccountController()
         {
+            var request = GetFakeRequest();
+
             var context = A.Fake<HttpContextBase>();
+            A.CallTo(() => context.Request).Returns(request);
+
             var controller = new AccountController(() => apiClient, authenticationManager, emailService, () => oauthClient);
             controller.ControllerContext = new ControllerContext(context, new RouteData(), controller);
 
+            controller.Url = new UrlHelper(new RequestContext(controller.HttpContext, new RouteData()));
+
             return controller;
+        }
+
+        private HttpRequestBase GetFakeRequest()
+        {
+            var request = A.Fake<HttpRequestBase>();
+            var url = new Uri("https://fakeurl.com");
+
+            A.CallTo(() => request.Url).Returns(url);
+
+            return request;
         }
     }
 }
