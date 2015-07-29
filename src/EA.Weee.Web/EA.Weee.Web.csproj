@@ -445,6 +445,12 @@
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\Account\Create.cshtml" />
+    <Content Include="Areas\Test\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Test\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Test\Views\web.config" />
+    <Content Include="Areas\Test\Views\GeneratePcsXml\SelectOrganisation.cshtml" />
+    <Content Include="Areas\Test\Views\GeneratePcsXml\SpecifyOptions.cshtml" />
+    <Content Include="Areas\Test\Views\GeneratePcsXml\DownloadFile.cshtml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
@@ -548,6 +554,12 @@
     <Compile Include="Areas\PCS\Controllers\MemberRegistrationController.cs" />
     <Compile Include="Areas\PCS\ViewModels\AddOrAmendMembersViewModel.cs" />
     <Compile Include="Areas\PCS\ViewModels\SuccessfulSubmissionViewModel.cs" />
+    <Compile Include="Areas\Test\Controllers\GeneratePcsXmlController.cs" />
+    <Compile Include="Areas\Test\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Test\TestAreaRegistration.cs" />
+    <Compile Include="Areas\Test\ViewModels\GeneratePcsXmlOptionsViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\HomeViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\SelectOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
