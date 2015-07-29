@@ -9,6 +9,7 @@
     using Api.Client;
     using Api.Client.Actions;
     using Api.Client.Entities;
+    using Core;
     using FakeItEasy;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
@@ -79,7 +80,7 @@
         }
 
         [Fact]
-        public async Task HttpPost_NewUser_IsValid_OnlyRoleShouldBeExternalUser()
+        public async Task HttpPost_NewUser_IsValid_OnlyClaimShouldBeExternalAccess()
         {
             var userCreationViewModel = GetValidUserCreationViewModel();
             var newUser = A.Fake<INewUser>();
@@ -99,8 +100,8 @@
             {
             }
 
-            Assert.Single(userCreationData.Roles);
-            Assert.Equal(UserRole.ExternalUser, userCreationData.Roles.Single());
+            Assert.Single(userCreationData.Claims);
+            Assert.Equal(Claims.CanAccessExternalUser, userCreationData.Claims.Single());
         }
 
         private NewUserController NewUserController()
