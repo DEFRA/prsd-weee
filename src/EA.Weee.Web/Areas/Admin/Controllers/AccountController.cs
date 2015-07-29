@@ -6,6 +6,7 @@
     using System.Web.Routing;
     using Api.Client;
     using Api.Client.Entities;
+    using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using ViewModels;
@@ -56,7 +57,7 @@
                     await client.NewUser.CreateUserAsync(userCreationData);               
                 }
 
-                return RedirectToAction("UserAccountActivationRequired", "Account", new { area = string.Empty });
+                return RedirectToAction("UserAccountActivationRequired", "Account", new { area = "Admin" });
             }
             catch (ApiBadRequestException ex)
             {
@@ -69,6 +70,31 @@
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult UserAccountActivationRequired()
+        {
+            var email = User.GetEmailAddress();
+            if (!string.IsNullOrEmpty(email))
+            {
+                ViewBag.UserEmailAddress = User.GetEmailAddress();
+            }
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UserAccountActivationRequired(FormCollection model)
+        {
+            var email = User.GetEmailAddress();
+            if (!string.IsNullOrEmpty(email))
+            {
+                ViewBag.UserEmailAddress = User.GetEmailAddress();
+            }
+            //TODO Resend activation email
+
+            return RedirectToAction("UserAccountActivationRequired", "Account", new { area = "Admin" });
         }
     }
 }
