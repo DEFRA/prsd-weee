@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Admin.DataAnnotations
+﻿namespace EA.Weee.Core.Validation
 {
     using System;
     using System.ComponentModel.DataAnnotations;

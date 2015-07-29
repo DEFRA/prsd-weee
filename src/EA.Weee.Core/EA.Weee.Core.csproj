@@ -52,7 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClaimTypes.cs" />
+    <Compile Include="Claims.cs" />
     <Compile Include="CoreModule.cs" />
     <Compile Include="Helpers\Xml\IXmlErrorTranslator.cs" />
     <Compile Include="Helpers\Xml\XmlErrorTranslator.cs" />
@@ -108,6 +108,7 @@
     <Compile Include="Shared\UKCompetentAuthorityData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
+    <Compile Include="Validation\InternalEmailAddressAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
