@@ -52,7 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClaimTypes.cs" />
+    <Compile Include="Claims.cs" />
     <Compile Include="CoreModule.cs" />
     <Compile Include="Helpers\Xml\IXmlErrorTranslator.cs" />
     <Compile Include="Helpers\Xml\XmlErrorTranslator.cs" />

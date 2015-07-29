@@ -1,14 +1,11 @@
 ﻿namespace EA.Weee.Api.Client.Entities
 {
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using Core.Validation;
 
     public class UserCreationData
     {
-        [MinLength(1, ErrorMessage = "A new user must be given at least 1 role")]
-        public UserRole[] Roles { get; set; }
+        [MinLength(1, ErrorMessage = "A new user must be given at least 1 claim")]
+        public string[] Claims { get; set; }
 
         [Required]
         [StringLength(50)]
