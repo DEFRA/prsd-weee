@@ -2,6 +2,7 @@
 {
     using System;
     using System.IdentityModel.Claims;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
@@ -43,7 +44,7 @@
                 UserName = model.Email,
                 Email = model.Email,
                 FirstName = model.FirstName,
-                Surname = model.Surname
+                Surname = model.Surname,
             };
 
             foreach (var claim in model.Claims)
