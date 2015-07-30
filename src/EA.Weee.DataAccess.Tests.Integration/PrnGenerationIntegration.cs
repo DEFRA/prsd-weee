@@ -16,6 +16,8 @@
     using Prsd.Core.Domain;
     using RequestHandlers;
     using RequestHandlers.PCS.MemberRegistration;
+    using RequestHandlers.PCS.MemberRegistration.GenerateProducerObjects;
+    using Requests.PCS.MemberRegistration;
     using Xunit;
 
     public class PrnGenerationIntegration
@@ -36,17 +38,20 @@
         {
             // arrange
             var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-valid-many-insertions.xml");
-            var validXml = File.ReadAllText(new Uri(validXmlLocation).LocalPath);
+            var validXmlString = File.ReadAllText(new Uri(validXmlLocation).LocalPath);
+            var validXmlBytes = File.ReadAllBytes(new Uri(validXmlLocation).LocalPath);
 
             var orgAndMemberUpload = SetUpContext();
             var org = orgAndMemberUpload.Item1;
             var memberUpload = orgAndMemberUpload.Item2;
 
+            ProcessXMLFile message = new ProcessXMLFile(org.Id, validXmlBytes);
+
             long initialSeed = GetCurrentSeed();
-            long expectedSeed = ExpectedSeedAfterThisXml(validXml, initialSeed);
+            long expectedSeed = ExpectedSeedAfterThisXml(validXmlString, initialSeed);
 
             // act
-            List<Producer> producers = await BuildProducerDataFromXml.SetProducerData(org.Id, memberUpload, context, validXml);
+            IEnumerable<Producer> producers = await new GenerateProducerObjectsFromXml(new XmlConverter(), context).Generate(message, memberUpload);
 
             // assert
             long newSeed = GetCurrentSeed();

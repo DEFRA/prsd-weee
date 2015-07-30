@@ -92,6 +92,10 @@
       <Project>{575A5355-B008-422A-B9B6-535CA2B5CC26}</Project>
       <Name>EA.Weee.RequestHandlers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
+      <Project>{87FBB5CC-A732-4363-A158-39DBF3707407}</Project>
+      <Name>EA.Weee.Requests</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
