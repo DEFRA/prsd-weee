@@ -230,7 +230,7 @@
         private Producer Producer(ObligationType obligationType, string prn, params string[] brandNames)
         {
             return new Producer(Guid.NewGuid(),
-                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>()),
+                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>(), 0),
                 new ProducerBusiness(),
                 new AuthorisedRepresentative("authrep"),
                 DateTime.Now,
@@ -244,7 +244,8 @@
                 obligationType,
                 AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 brandNames.Select(bn => new BrandName(bn)).ToList(),
-                new List<SICCode>());
+                new List<SICCode>(),
+                ChargeBandType.A);
         }
 
         private ObligationType MapObligationType(obligationTypeType obligationType)

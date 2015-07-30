@@ -1,7 +1,7 @@
-namespace EA.Weee.Requests.PCS.MemberRegistration
+﻿namespace EA.Weee.Requests.PCS.MemberRegistration
 {
     using System;
-    using EA.Prsd.Core.Mediator;
+    using Prsd.Core.Mediator;
 
     public class ProcessXMLFile : IRequest<Guid>
     {
