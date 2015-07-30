@@ -549,6 +549,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
+    <Compile Include="Areas\Admin\Controllers\Base\AdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\ViewModels\InternalUserCreationViewModel.cs" />
     <Compile Include="Areas\PCS\Controllers\MemberRegistrationController.cs" />
@@ -560,6 +561,7 @@
     <Compile Include="Areas\Test\ViewModels\GeneratePcsXmlOptionsViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\SelectOrganisationViewModel.cs" />
+    <Compile Include="Controllers\Base\ExternalSiteController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Filters\AuthorizeClaimsAttribute.cs" />
     <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
