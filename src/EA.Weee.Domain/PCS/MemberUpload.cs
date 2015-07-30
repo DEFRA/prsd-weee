@@ -21,7 +21,7 @@
 
         public string Data { get; private set; }
 
-        public int ComplianceYear { get; private set; }
+        public virtual int ComplianceYear { get; private set; }
 
         public virtual bool IsSubmitted { get; private set; }
 
