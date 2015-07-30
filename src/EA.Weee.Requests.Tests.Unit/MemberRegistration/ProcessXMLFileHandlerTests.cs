@@ -41,8 +41,8 @@
                 FakeSchemeData()
             };
 
-           schemesDbSet = helper.GetAsyncEnabledDbSet(schemes);
-            
+            schemesDbSet = helper.GetAsyncEnabledDbSet(schemes);
+
             context = A.Fake<WeeeContext>();
             A.CallTo(() => context.Schemes).Returns(schemesDbSet);
             A.CallTo(() => context.Producers).Returns(producersDbSet);
@@ -69,10 +69,32 @@
         }
 
         [Fact]
+        public async void ProcessXmlfile_ParsesXMLFile_CalculateXMLChargeBand()
+        {
+            await handler.HandleAsync(Message);
+
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(Message)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
         public async void ProcessXmlfile_InvalidXmlfile_NotGenerateProducerObjects()
         {
             IEnumerable<MemberUploadError> errors = new[] { new MemberUploadError(ErrorLevel.Error, "any description") };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
+            await handler.HandleAsync(Message);
+
+            A.CallTo(producersDbSet).WithAnyArguments().MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async void ProcessXmlfile_XmlfileWithSameProducerName_NotGenerateProducerObjects()
+        {
+            List<MemberUploadError> errors = new List<MemberUploadError>
+            {
+                new MemberUploadError(ErrorLevel.Error, "any description")
+            };
+            A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
+
             await handler.HandleAsync(Message);
 
             A.CallTo(producersDbSet).WithAnyArguments().MustNotHaveHappened();
@@ -91,7 +113,7 @@
             return new Producer(Guid.NewGuid(), FakeMemberUploadData(), null, null, SystemTime.UtcNow, 0, true,
                 string.Empty, null, tradingName, EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
                 SellingTechniqueType.Both, ObligationType.Both,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), ChargeBandType.A);
+                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), ChargeBandType.E);
         }
 
         public static MemberUpload FakeMemberUploadData()

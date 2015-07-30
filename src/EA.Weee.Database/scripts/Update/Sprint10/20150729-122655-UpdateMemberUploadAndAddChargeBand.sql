@@ -89,6 +89,7 @@ CREATE TABLE [Producer].[ProducerChargeBand] (
     [Id]     UNIQUEIDENTIFIER NOT NULL,
     [Name]   NVARCHAR (10)    NOT NULL,
     [Amount] DECIMAL (18, 2)  NOT NULL,
+	[RowVersion] ROWVERSION       NOT NULL,
     CONSTRAINT [PK_ProducerChargeBand] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
