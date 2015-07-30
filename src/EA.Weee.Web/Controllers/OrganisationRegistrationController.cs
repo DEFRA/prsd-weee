@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Base;
     using Core.Organisations;
     using Core.Shared;
     using Infrastructure;
@@ -23,7 +24,7 @@
     using Weee.Requests.Shared;
 
     [Authorize]
-    public class OrganisationRegistrationController : Controller
+    public class OrganisationRegistrationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
 
