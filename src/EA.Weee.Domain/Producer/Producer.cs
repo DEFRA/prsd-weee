@@ -178,7 +178,7 @@
         /// A filtered index in the database has been provided to ensure that such queries
         /// are efficient at including only current producers.
         /// </summary>
-        public bool IsCurrentForComplianceYear { get; private set; }
+        public virtual bool IsCurrentForComplianceYear { get; private set; }
 
         public void SetScheme(Scheme scheme)
         {
