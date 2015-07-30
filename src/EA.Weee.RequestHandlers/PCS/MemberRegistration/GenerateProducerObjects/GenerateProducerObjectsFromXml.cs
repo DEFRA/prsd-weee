@@ -81,7 +81,9 @@
                     sellingTechniqueType,
                     obligationType,
                     annualturnoverType,
-                    brandNames, codes);
+                    brandNames,
+                    codes,
+                    true);
 
                 // modify producer data
                 switch (producerData.status)
