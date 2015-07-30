@@ -32,7 +32,7 @@
         }
 
         [Fact]
-        public async Task HappyPath()
+        public async Task HappyPath_ManyUniquePrnsGeneratedAndSeedUpdatedToExpectedValue()
         {
             // arrange
             var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-valid-many-insertions.xml");

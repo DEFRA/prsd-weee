@@ -106,6 +106,17 @@
             return producers;
         }
 
+        /// <summary>
+        /// Generates unique, pseudorandom PRNs with minimal database interaction.
+        /// Works by:
+        /// a) uniquely mapping each unsigned integer to another pseudorandom unsigned integer
+        /// b) uniquely mapping each unsigned integer to a specific PRN
+        /// Combining those two mappings, and using a sequential seed, we can obtain pseudorandom PRNs
+        /// with assurance that we will not repeat ourselves for a very, very long time.
+        /// </summary>
+        /// <param name="context">The database context</param>
+        /// <param name="numberOfPrnsNeeded">A non-negative integer</param>
+        /// <returns></returns>
         private static async Task<Queue<string>> ComputePrns(WeeeContext context, int numberOfPrnsNeeded)
         {
             var prnHelper = new PrnHelper(new QuadraticResidueHelper());
@@ -126,10 +137,13 @@
                     currentSeed = prnFromSeed.ToSeedValue();
                 }
 
+                // we write back the next acceptable seed to the database, for next time
+                // since there are some mathematical constraints on the acceptable values
                 context.SystemData.First().LatestPrnSeed = currentSeed;
                 await context.SaveChangesAsync();
 
-                // now we're done with the fairly time sensitive database read/write, we can 'randomise' the results
+                // now we're done with the fairly time sensitive database read/write,
+                // we can 'randomise' the results at our leisure
                 return new Queue<string>(generatedPrns.Select(p => prnHelper.CreateUniqueRandomVersionOfPrn(p)));
             }
             catch (OptimisticConcurrencyException e)
@@ -228,27 +242,6 @@
                 address);
 
             return contact;
-        }
-
-        private static string GenerateUniquePRN()
-        {
-            //TODO: Replace temporary code with actual PRN generation ensuring no duplicates
-            StringBuilder prnBuilder = new StringBuilder();
-            prnBuilder.Append("WEE/");
-            prnBuilder.Append(GetRandomLetters(2));
-            prnBuilder.Append(DateTime.UtcNow.ToString("mmff"));
-            prnBuilder.Append(GetRandomLetters(2));
-            return prnBuilder.ToString();
-        }
-
-        private static string GetRandomLetters(int length)
-        {
-            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            var random = new Random();
-            return new string(
-                Enumerable.Repeat(chars, 2)
-                          .Select(s => s[random.Next(s.Length)])
-                          .ToArray());
         }
     }
 }
