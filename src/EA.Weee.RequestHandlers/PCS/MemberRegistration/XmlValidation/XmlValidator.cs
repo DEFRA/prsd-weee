@@ -29,7 +29,7 @@
                 return errors;
             }
             
-            var deserializedXml = xmlConverter.Convert(message);
+            var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(message));
 
             // Validate against the deserialized XML
             errors = businessValidator.Validate(deserializedXml, message.OrganisationId);            
