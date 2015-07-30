@@ -35,7 +35,7 @@
                     new MemberUploadError(ErrorLevel.Error, "An error occurred")
                 });
 
-            XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<string>._));
+            XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._))
                 .MustNotHaveHappened();
@@ -53,7 +53,7 @@
                                 new MemberUploadError(ErrorLevel.Error, "An error occurred")
                             });
 
-            var result = XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<string>._));
+            var result = XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
 
             Assert.NotEmpty(result);
         }

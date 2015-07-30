@@ -7,9 +7,9 @@
     {
         public Guid OrganisationId { get; private set; }
 
-        public string Data { get; private set; }
+        public byte[] Data { get; private set; }
 
-        public ProcessXMLFile(Guid organisationId, string data)
+        public ProcessXMLFile(Guid organisationId, byte[] data)
         {
             OrganisationId = organisationId;
             Data = data;
