@@ -19,7 +19,7 @@ using System.Web.Mvc;
         public SchemaVersion SchemaVersion { get; set; }
 
         [Required]
-        [Range(2000, 2099, ErrorMessage = "The compliance year must be a year in the 21st century.")]
+        [Range(2016, 2099, ErrorMessage = "The compliance year must be between 2016 and 2099.")]
         [DisplayName("Compliance Year")]
         public int ComplianceYear { get; set; }
 
@@ -39,8 +39,20 @@ using System.Web.Mvc;
             Array schemaVersions = Enum.GetValues(typeof(SchemaVersion));
             SchemaVersion = (SchemaVersion)schemaVersions.GetValue(schemaVersions.Length - 1);
 
-            // Default to the current year.
-            ComplianceYear = DateTime.UtcNow.Year;
+            // If acceptable, default to the current year.
+            int year = DateTime.UtcNow.Year;
+            
+            if (year < 2016)
+            {
+                year = 2016;
+            }
+
+            if (year > 2099)
+            {
+                year = 2099;
+            }
+
+            ComplianceYear = year;
         }
     }
 }
