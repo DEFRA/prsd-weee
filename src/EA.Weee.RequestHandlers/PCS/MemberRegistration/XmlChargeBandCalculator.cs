@@ -41,11 +41,14 @@
                     }
                     else
                     {
-                        this.ErrorsAndWarnings.Add(new MemberUploadError
-                            (ErrorLevel.Error,
-                                string.Format(
-                                    "We are unable to check for warnings associated with the charge band of the producer {0} until the duplicate name has been fixed.",
-                                    producerName)));
+                        ErrorsAndWarnings = new List<MemberUploadError>
+                        {
+                            new MemberUploadError
+                                (ErrorLevel.Error,
+                                    string.Format(
+                                        "We are unable to check for warnings associated with the charge band of the producer {0} until the duplicate name has been fixed.",
+                                        producerName))
+                        };
                     }
                 }
             }

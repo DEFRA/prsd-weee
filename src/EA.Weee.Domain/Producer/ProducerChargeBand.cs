@@ -11,5 +11,11 @@
         protected ProducerChargeBand()
         {
         }
+
+        public ProducerChargeBand(string name, decimal amount)
+        {
+            Name = name;
+            Amount = amount;
+        }
     }
 }
