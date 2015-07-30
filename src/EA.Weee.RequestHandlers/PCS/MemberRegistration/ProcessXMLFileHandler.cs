@@ -9,6 +9,7 @@
     using DataAccess;
     using Domain.PCS;
     using Domain.Producer;
+    using GenerateProducerObjects;
     using Prsd.Core.Mediator;
     using Requests.PCS.MemberRegistration;
     using XmlValidation;
@@ -19,15 +20,17 @@
 
         private readonly IXmlValidator xmlValidator;
 
+        private readonly IGenerateFromXml generateFromXml;
+
         private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
 
-        public ProcessXMLFileHandler(WeeeContext context, IXmlValidator xmlValidator, IXmlChargeBandCalculator xmlChargeBandCalculator)
+        public ProcessXMLFileHandler(WeeeContext context, IXmlValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlChargeBandCalculator xmlChargeBandCalculator)
         {
             this.context = context;
             this.xmlValidator = xmlValidator;
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
+            this.generateFromXml = generateFromXml;
         }
-
         public async Task<Guid> HandleAsync(ProcessXMLFile message)
         {
             var errors = xmlValidator.Validate(message);
@@ -36,7 +39,7 @@
 
             var producerCharges = xmlChargeBandCalculator.Calculate(message);
 
-            if (xmlChargeBandCalculator.ErrorsAndWarnings.Count > 0)
+            if (xmlChargeBandCalculator.ErrorsAndWarnings != null && xmlChargeBandCalculator.ErrorsAndWarnings.Count > 0)
             {
                 ((List<MemberUploadError>)memberUploadErrors).AddRange(xmlChargeBandCalculator.ErrorsAndWarnings);
             }
@@ -50,20 +53,17 @@
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
             var upload = new MemberUpload(message.OrganisationId, message.Data, memberUploadErrors.ToList(), totalCharges, scheme.Id);
 
-            var producers = new List<Producer>();
             //Build producers domain object if there are no errors during validation of xml file.
             if (!memberUploadErrors.Any())
             {
-                producers = await BuildProducerDataFromXml.SetProducerData(scheme.Id, upload, context, message.Data, producerCharges);
-            }
-
-            context.MemberUploads.Add(upload);
-
-            if (producers.Count > 0)
-            {
+                var producers = await generateFromXml.Generate(message, upload, producerCharges);
+                context.MemberUploads.Add(upload);
                 context.Producers.AddRange(producers);
             }
-
+            else
+            {
+                context.MemberUploads.Add(upload);
+            }
             await context.SaveChangesAsync();
             return upload.Id;
         }

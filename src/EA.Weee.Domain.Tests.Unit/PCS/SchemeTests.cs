@@ -190,7 +190,7 @@
 
         private static Producer GetTestProducer(string prn)
         {
-            var memberUpload = new MemberUpload(Guid.NewGuid(), "Test Data", new List<MemberUploadError>());
+            var memberUpload = new MemberUpload(Guid.NewGuid(), "Test Data", new List<MemberUploadError>(), 0);
             var country = new Country(Guid.NewGuid(), "Country name");
             var producerAddress = new ProducerAddress("Primary name", "Secondary name", "Street", "Town", "Locality",
                 "Administrative area", country, "Postcode");
@@ -203,14 +203,14 @@
 
             var producer = new Producer(Guid.NewGuid(), memberUpload, business, authorisedRepresentative, DateTime.Now, 1000000000, true,
                 prn, DateTime.Now.AddDays(10), "Trading name", EEEPlacedOnMarketBandType.Both, SellingTechniqueType.Both, ObligationType.Both,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>());
+                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), ChargeBandType.A);
 
             return producer;
         }
 
         private static Producer GetTestProducer(string prn, string tradingName, Company companyDetails, Partnership partnership, AuthorisedRepresentative authorisedRepresentative)
         {
-            var memberUpload = new MemberUpload(Guid.NewGuid(), "Test Data", new List<MemberUploadError>());
+            var memberUpload = new MemberUpload(Guid.NewGuid(), "Test Data", new List<MemberUploadError>(), 0);
             var country = new Country(Guid.NewGuid(), "Country name");
             var producerAddress = new ProducerAddress("Primary name", "Secondary name", "Street", "Town", "Locality",
                 "Administrative area", country, "Postcode");
@@ -221,7 +221,7 @@
 
             var producer = new Producer(Guid.NewGuid(), memberUpload, business, authorisedRepresentative, DateTime.Now, 1000000000, true,
                 prn, DateTime.Now.AddDays(10), tradingName, EEEPlacedOnMarketBandType.Both, SellingTechniqueType.Both, ObligationType.Both,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>());
+                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), ChargeBandType.A);
 
             return producer;
         }

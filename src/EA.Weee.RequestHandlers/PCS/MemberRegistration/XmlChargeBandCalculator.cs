@@ -13,6 +13,12 @@
 
     public class XmlChargeBandCalculator : IXmlChargeBandCalculator
     {
+        private readonly WeeeContext context;
+
+        public XmlChargeBandCalculator(WeeeContext context)
+        {
+            this.context = context;
+        }
         public List<MemberUploadError> ErrorsAndWarnings { get; set; }
 
         public Hashtable Calculate(ProcessXMLFile message)
@@ -26,7 +32,7 @@
             foreach (var producer in schemeType.producerList)
             {
                 var producerName = producer.GetProducerName();
-                var producerCharge = producerChargeBandCalculator.CalculateCharge(producer);
+                var producerCharge = producerChargeBandCalculator.CalculateCharge(producer, context);
                 if (producerCharge != null)
                 {
                     if (!producerCharges.ContainsKey(producerName))
