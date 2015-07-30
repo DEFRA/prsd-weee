@@ -16,10 +16,12 @@
     {
         private const string SchemaLocation = @"v3schema.xsd";
         private readonly IXmlErrorTranslator xmlErrorTranslator;
+        private readonly IXmlConverter xmlConverter;
 
-        public SchemaValidator(IXmlErrorTranslator xmlErrorTranslator)
+        public SchemaValidator(IXmlErrorTranslator xmlErrorTranslator, IXmlConverter xmlConverter)
         {
             this.xmlErrorTranslator = xmlErrorTranslator;
+            this.xmlConverter = xmlConverter;
         }
 
         public IEnumerable<MemberUploadError> Validate(ProcessXMLFile message)
@@ -29,7 +31,7 @@
             try
             {
                 // Validate against the schema
-                var source = XDocument.Parse(message.Data, LoadOptions.SetLineInfo);
+                var source = xmlConverter.Convert(message);
                 var schemas = new XmlSchemaSet();
                 var absoluteSchemaLocation =
                     Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), SchemaLocation);

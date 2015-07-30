@@ -41,7 +41,7 @@
 
         public OrganisationStatus OrganisationStatus { get; set; }
 
-        public string TradingName { get; private set; }
+        public virtual string TradingName { get; private set; }
 
         public string CompanyRegistrationNumber
         {

@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration
+﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration.GenerateProducerObjects
 {
     using System;
     using System.CodeDom;
@@ -8,7 +8,6 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using System.Xml.Linq;
     using System.Xml.Serialization;
     using Core.Helpers.PrnGeneration;
     using DataAccess;
@@ -17,15 +16,30 @@
     using Domain.Producer;
     using Prsd.Core;
     using Prsd.Core.Domain;
+    using Requests.PCS.MemberRegistration;
 
-    public static class BuildProducerDataFromXml
+    public class GenerateProducerObjectsFromXml : IGenerateFromXml
     {
-        public static async Task<List<Producer>> SetProducerData(Guid schemeId, MemberUpload memberUpload, WeeeContext context, string xmlData)
+        private readonly IXmlConverter xmlConverter;
+        private readonly WeeeContext context;
+
+        public GenerateProducerObjectsFromXml(IXmlConverter xmlConverter, WeeeContext context)
+        {
+            this.xmlConverter = xmlConverter;
+            this.context = context;
+        }
+
+        public async Task<IEnumerable<Producer>> Generate(ProcessXMLFile messageXmlFile, MemberUpload memberUpload)
+        {
+            var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
+            Guid schemeId = memberUpload.SchemeId.GetValueOrDefault();
+            var producers = await SetProducerData(deserializedXml, schemeId, memberUpload);
+            return producers;
+        }
+
+        private async Task<IEnumerable<Producer>> SetProducerData(schemeType scheme, Guid schemeId, MemberUpload memberUpload)
         {
             List<Producer> producers = new List<Producer>();
-            var doc = XDocument.Parse(xmlData, LoadOptions.SetLineInfo);
-            var deserialzedXml = new XmlSerializer(typeof(schemeType)).Deserialize(doc.CreateReader());
-            schemeType scheme = (schemeType)deserialzedXml;
 
             int numberOfPrnsNeeded = scheme.producerList.Count(p => p.status == statusType.I);
             Queue<string> generatedPrns = await ComputePrns(context, numberOfPrnsNeeded);
@@ -36,9 +50,9 @@
 
                 List<SICCode> codes = producerData.SICCodeList.Select(name => new SICCode(name)).ToList();
 
-                ProducerBusiness producerBusiness = await SetProducerBusiness(producerData.producerBusiness, context);
+                ProducerBusiness producerBusiness = await SetProducerBusiness(producerData.producerBusiness);
 
-                AuthorisedRepresentative authorisedRepresentative = await SetAuthorisedRepresentative(producerData.authorisedRepresentative, context);
+                AuthorisedRepresentative authorisedRepresentative = await SetAuthorisedRepresentative(producerData.authorisedRepresentative);
 
                 EEEPlacedOnMarketBandType eeebandType = Enumeration.FromValue<EEEPlacedOnMarketBandType>((int)producerData.eeePlacedOnMarketBand);
 
@@ -86,12 +100,25 @@
                         var producerDb =
                             context.MemberUploads.Where(member => member.IsSubmitted && member.SchemeId == schemeId)
                                 .SelectMany(p => p.Producers)
-                                .Where(p => p.RegistrationNumber == producerData.registrationNo)
+                                .Where(p => p.RegistrationNumber == producerRegistrationNo)
                                 .OrderByDescending(p => p.LastSubmitted)
-                                .First();
+                                .FirstOrDefault();
+                        if (producerDb == null)
+                        {
+                            //check in migrated producers list
+                            var migratedProducers =
+                                context.MigratedProducers.FirstOrDefault(m => m.ProducerRegistrationNumber == producerRegistrationNo);
 
-                        //Add only if producer not found in DB
-                        if (!producer.Equals(producerDb))
+                            if (migratedProducers == null)
+                            {
+                                throw new InvalidOperationException(string.Format("PRN: {0} does not exists in current data set and in migrated data set.", producerRegistrationNo));
+                            }
+                            else
+                            {
+                                producers.Add(producer);
+                            }
+                        }
+                        else if (!producer.Equals(producerDb))
                         {
                             producers.Add(producer);
                         }
@@ -152,7 +179,7 @@
             }
         }
 
-        private static async Task<AuthorisedRepresentative> SetAuthorisedRepresentative(authorisedRepresentativeType representative, WeeeContext context)
+        private async Task<AuthorisedRepresentative> SetAuthorisedRepresentative(authorisedRepresentativeType representative)
         {
             if (representative.overseasProducer == null)
             {
@@ -161,21 +188,21 @@
             var contacts = new List<ProducerContact>();
             if (representative.overseasProducer.overseasContact != null)
             {
-                contacts.Add(await GetProducerContact(representative.overseasProducer.overseasContact, context));
+                contacts.Add(await GetProducerContact(representative.overseasProducer.overseasContact));
             }
-            AuthorisedRepresentative overSeasAuthorisedRepresentative = 
+            AuthorisedRepresentative overSeasAuthorisedRepresentative =
                 new AuthorisedRepresentative(representative.overseasProducer.overseasProducerName, contacts.FirstOrDefault());
             return overSeasAuthorisedRepresentative;
         }
 
-        private static async Task<ProducerBusiness> SetProducerBusiness(producerBusinessType producerBusiness, WeeeContext context)
+        private async Task<ProducerBusiness> SetProducerBusiness(producerBusinessType producerBusiness)
         {
             object item = producerBusiness.Item;
             ProducerContact correspondentForNoticeContact = null;
             if (producerBusiness.correspondentForNotices.contactDetails != null)
             {
                 correspondentForNoticeContact =
-                    await GetProducerContact(producerBusiness.correspondentForNotices.contactDetails, context);
+                    await GetProducerContact(producerBusiness.correspondentForNotices.contactDetails);
             }
 
             Company company = null;
@@ -183,8 +210,8 @@
             if (item.GetType() == typeof(companyType))
             {
                 companyType companyitem = (companyType)item;
-                company = new Company(companyitem.companyName, companyitem.companyNumber, 
-                    await GetProducerContact(companyitem.registeredOffice.contactDetails, context));
+                ProducerContact contact = await GetProducerContact(companyitem.registeredOffice.contactDetails);
+                company = new Company(companyitem.companyName, companyitem.companyNumber, contact);
             }
             else if (item.GetType() == typeof(partnershipType))
             {
@@ -193,34 +220,16 @@
 
                 List<string> partnersList = partnershipItem.partnershipList.ToList();
                 List<Partner> partners = partnersList.Select(name => new Partner(name)).ToList();
-
-                partnership = new Partnership(partnershipName, await GetProducerContact(
-                    partnershipItem.principalPlaceOfBusiness.contactDetails, context), partners);
+                ProducerContact contact = await GetProducerContact(partnershipItem.principalPlaceOfBusiness.contactDetails);
+                partnership = new Partnership(partnershipName, contact, partners);
             }
             ProducerBusiness business = new ProducerBusiness(company, partnership, correspondentForNoticeContact);
             return business;
         }
 
-        private static async Task<ProducerContact> GetProducerContact(contactDetailsType contactDetails, WeeeContext context)
+        private async Task<ProducerContact> GetProducerContact(contactDetailsType contactDetails)
         {
-            var countrydetail = contactDetails.address.country;
-            var countryName = string.Empty;
-            var countryEnumType = typeof(countryType);
-
-            //Read the country name from xml attribute if defined
-            var countryFirstOrDefault = countryEnumType.GetMember(countrydetail.ToString()).FirstOrDefault();
-            if (countryFirstOrDefault != null)
-            {
-                var countryEnumAttribute =
-                    countryFirstOrDefault.GetCustomAttributes(false).OfType<XmlEnumAttribute>().FirstOrDefault();
-                countryName = countryEnumAttribute != null ? countryEnumAttribute.Name : countryFirstOrDefault.Name;
-            }
-
-            Country country = null;
-            if (!string.IsNullOrEmpty(countryName))
-            {
-                country = await context.Countries.SingleAsync(c => c.Name == countryName);
-            }
+            var country = await GetCountry(contactDetails);
             ProducerAddress address = new ProducerAddress(
                 contactDetails.address.primaryName, 
                 contactDetails.address.secondaryName, 
@@ -242,6 +251,52 @@
                 address);
 
             return contact;
+        }
+
+        private async Task<Country> GetCountry(contactDetailsType contactDetails)
+        {
+            var countrydetail = contactDetails.address.country;
+            var countryName = string.Empty;
+            var countryEnumType = typeof(countryType);
+
+            //Read the country name from xml attribute if defined
+            var countryFirstOrDefault = countryEnumType.GetMember(countrydetail.ToString()).FirstOrDefault();
+            if (countryFirstOrDefault != null)
+            {
+                var countryEnumAttribute = countryFirstOrDefault
+                    .GetCustomAttributes(false)
+                    .OfType<XmlEnumAttribute>()
+                    .FirstOrDefault();
+                countryName = countryEnumAttribute != null ? countryEnumAttribute.Name : countryFirstOrDefault.Name;
+            }
+
+            Country country = null;
+            if (!string.IsNullOrEmpty(countryName))
+            {
+                country = await context.Countries.SingleAsync(c => c.Name == countryName);
+            }
+            return country;
+        }
+
+        private static string GenerateUniquePRN()
+        {
+            //TODO: Replace temporary code with actual PRN generation ensuring no duplicates
+            StringBuilder prnBuilder = new StringBuilder();
+            prnBuilder.Append("WEE/");
+            prnBuilder.Append(GetRandomLetters(2));
+            prnBuilder.Append(DateTime.UtcNow.ToString("mmff"));
+            prnBuilder.Append(GetRandomLetters(2));
+            return prnBuilder.ToString();
+        }
+
+        private static string GetRandomLetters(int length)
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var random = new Random();
+            return new string(
+                Enumerable.Repeat(chars, 2)
+                          .Select(s => s[random.Next(s.Length)])
+                          .ToArray());
         }
     }
 }

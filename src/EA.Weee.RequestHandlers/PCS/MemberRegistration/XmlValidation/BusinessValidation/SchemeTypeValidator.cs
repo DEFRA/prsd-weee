@@ -1,19 +1,20 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using DataAccess;
-    using Domain;
-    using Extensions;
-    using FluentValidation;
-    using Prsd.Core.Domain;
+    using System;
+using System.Collections.Generic;
+using System.Linq;
+using DataAccess;
+using Domain;
+using Extensions;
+using FluentValidation;
+using Prsd.Core.Domain;
 
     public class SchemeTypeValidator : AbstractValidator<schemeType>
     {
         public const string NonDataValidation = "NonDataValidation";
         public const string DataValidation = "DataValidation";
 
-        public SchemeTypeValidator(WeeeContext context)
+        public SchemeTypeValidator(WeeeContext context, Guid organisationId)
         {
             RuleSet(NonDataValidation, () =>
             {
@@ -46,30 +47,34 @@
             RuleSet(DataValidation, () =>
             {
                 var producers = context.Producers
-                    .Where(p => p.MemberUpload != null)
+                    .Where(p => p.MemberUpload != null
+                    && p.Scheme.OrganisationId != organisationId)
                     .ToList();
 
                 RuleForEach(st => st.producerList)
                     .Must((st, producer) =>
                     {
-                        var existingProducer = producers
-                            .FirstOrDefault(p => p.MemberUpload.ComplianceYear == int.Parse(st.complianceYear)
-                                                 && p.RegistrationNumber == producer.registrationNo
-                                                 &&
-                                                 (Enumeration.FromValue<ObligationType>(p.ObligationType) ==
-                                                  producer.obligationType.ToDomainObligationType()
-                                                  ||
-                                                  Enumeration.FromValue<ObligationType>(p.ObligationType) ==
-                                                  ObligationType.Both
-                                                  || producer.obligationType == obligationTypeType.Both));
-
-                        if (existingProducer != null)
+                        if (!string.IsNullOrEmpty(producer.registrationNo))
                         {
-                            // Map the existing obligation type to the producer so we can use it in the error message
-                            producer.obligationType =
-                                Enumeration.FromValue<ObligationType>(existingProducer.ObligationType)
-                                    .ToDeserializedXmlObligationType();
-                            return false;
+                            var existingProducer = producers
+                                .FirstOrDefault(p => p.MemberUpload.ComplianceYear == int.Parse(st.complianceYear)
+                                                     && p.RegistrationNumber == producer.registrationNo
+                                                     &&
+                                                     (Enumeration.FromValue<ObligationType>(p.ObligationType) ==
+                                                      producer.obligationType.ToDomainObligationType()
+                                                      ||
+                                                      Enumeration.FromValue<ObligationType>(p.ObligationType) ==
+                                                      ObligationType.Both
+                                                      || producer.obligationType == obligationTypeType.Both));
+
+                            if (existingProducer != null)
+                            {
+                                // Map the existing obligation type to the producer so we can use it in the error message
+                                producer.obligationType =
+                                    Enumeration.FromValue<ObligationType>(existingProducer.ObligationType)
+                                        .ToDeserializedXmlObligationType();
+                                return false;
+                            }
                         }
 
                         return true;

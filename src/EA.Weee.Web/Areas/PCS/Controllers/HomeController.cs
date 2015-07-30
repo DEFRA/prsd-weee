@@ -2,17 +2,15 @@
 {
     using System;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Mvc;
     using Api.Client;
     using Infrastructure;
-    using Services;
     using ViewModels;
+    using Web.Controllers.Base;
     using Weee.Requests.Organisations;
-    using Weee.Requests.PCS.MemberRegistration;
 
     [Authorize]
-    public class HomeController : Controller
+    public class HomeController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
 
