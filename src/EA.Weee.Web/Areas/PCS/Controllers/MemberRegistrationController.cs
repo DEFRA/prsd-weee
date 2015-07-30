@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.PCS.Controllers
 {
     using System;
-    using System.Globalization;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -10,10 +10,11 @@
     using Infrastructure;
     using Services;
     using ViewModels;
+    using Web.Controllers.Base;
     using Weee.Requests.Organisations;
     using Weee.Requests.PCS.MemberRegistration;
 
-    public class MemberRegistrationController : Controller
+    public class MemberRegistrationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IFileConverterService fileConverter;
@@ -106,7 +107,7 @@
                 var producerCSVData = await client.SendAsync(User.GetAccessToken(),
                     new GetProducerCSVByMemberUploadId(memberUploadId));
 
-                return File(new System.Text.UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", producerCSVData.FileName);
+                return File(new UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", producerCSVData.FileName);
             }
         }
     }

@@ -102,9 +102,9 @@
         [Fact]
         public async void PostAddOrAmendMembers_FileIsConvertedSuccessfully_ValidateRequestSentWithConvertedFileDataAndOrganisationId()
         {
-            const string fileData = "myFileContent";
+            var fileData = new byte[1];
             var organisationId = Guid.NewGuid();
-            var request = new ProcessXMLFile(A<Guid>._, A<string>._);
+            var request = new ProcessXMLFile(A<Guid>._, A<byte[]>._);
 
             A.CallTo(() => fileConverter.Convert(A<HttpPostedFileBase>._))
                 .Returns(fileData);
