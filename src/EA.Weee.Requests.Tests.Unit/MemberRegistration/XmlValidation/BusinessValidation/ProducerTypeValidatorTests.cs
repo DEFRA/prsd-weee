@@ -294,7 +294,8 @@
                 ObligationType.B2B,
                 AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 brandNames.Select(bn => new BrandName(bn)).ToList(),
-                new List<SICCode>());
+                new List<SICCode>(),
+                true);
         }
     }
 }
