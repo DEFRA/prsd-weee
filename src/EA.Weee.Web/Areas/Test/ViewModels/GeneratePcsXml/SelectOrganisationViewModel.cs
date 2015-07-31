@@ -10,8 +10,8 @@
     public class SelectOrganisationViewModel
     {
         [Required]
-        [DisplayName("Company Name")]
-        public string CompanyName { get; set; }
+        [DisplayName("Organisation Name")]
+        public string OrganisationName { get; set; }
 
         public IList<OrganisationSearchData> MatchingOrganisations { get; set; }
 
