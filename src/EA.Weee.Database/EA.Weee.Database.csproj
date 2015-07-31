@@ -59,6 +59,7 @@
     <Content Include="scripts\Update\Sprint10\20150721-1638-MigratedProducers.sql" />
     <Content Include="scripts\Update\Sprint10\20150723-1006-UpdateProducerTables.sql" />
     <Content Include="scripts\Update\Sprint10\20150723-1419-MigratedProducers.sql" />
+    <Content Include="scripts\Update\Sprint10\20150730-1253-UpdateClaimsForExternalUsers.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
