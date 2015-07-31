@@ -73,7 +73,7 @@
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
     <Content Include="scripts\Update\placeholder.txt" />
-    <Content Include="scripts\Update\Sprint0-IWS\20150526-164637-IntialiseFromIws.sql" />
+    <Content Include="scripts\Update\Sprint00-IWS\20150526-164637-IntialiseFromIws.sql" />
     <Content Include="scripts\Update\Sprint06-WEEE\20150603-161233-UpdateOrganisationTable.sql" />
     <Content Include="scripts\Update\Sprint06-WEEE\20150604-093607-AddContactTable.sql" />
     <Content Include="scripts\Update\Sprint06-WEEE\20150604-100316-AddContactTableRowVersion.sql" />

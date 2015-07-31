@@ -102,7 +102,7 @@
                 }
             };
 
-            var existingProducer = Producer(MapObligationType(existingObligationType), registrationNumber);
+            var existingProducer = FakeProducer.Create(MapObligationType(existingObligationType), registrationNumber);
             var existingScheme = new Scheme(Guid.NewGuid());
             existingScheme.Producers.Add(existingProducer);
 
@@ -135,7 +135,7 @@
                 }
             };
 
-            var existingProducer = Producer(MapObligationType(existingObligationType), registrationNumber);
+            var existingProducer = FakeProducer.Create(MapObligationType(existingObligationType), registrationNumber);
             var existingScheme = new Scheme(Guid.NewGuid());
             existingScheme.Producers.Add(existingProducer);
 
@@ -169,11 +169,41 @@
                 }
             };
 
-            var existingProducer = Producer(MapObligationType(existingObligationType), registrationNumber);
+            var existingProducer = FakeProducer.Create(MapObligationType(existingObligationType), registrationNumber);
             var existingScheme = new Scheme(Guid.NewGuid());
             existingScheme.Producers.Add(existingProducer);
 
             var result = SchemeTypeValidator(existingScheme)
+                .Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.DataValidation));
+
+            Assert.True(result.IsValid);
+        }
+
+        [Fact]
+        public void ProducerRegisteredForSameComplianceYearAndObligationTypeButPartOfSameScheme_ValidationSucceeds()
+        {
+            const string complianceYear = "2016";
+            const string registrationNumber = "ABC12345";
+            var organisationId = Guid.NewGuid();
+            const obligationTypeType obligationType = obligationTypeType.B2B;
+            var xml = new schemeType()
+            {
+                complianceYear = complianceYear,
+                producerList = new[]
+                {
+                    new producerType
+                    {
+                        obligationType = obligationType,
+                        registrationNo = registrationNumber
+                    }
+                }
+            };
+
+            var existingProducer = FakeProducer.Create(MapObligationType(obligationType), registrationNumber, organisationId);
+            var existingScheme = new Scheme(organisationId);
+            existingScheme.Producers.Add(existingProducer);
+
+            var result = SchemeTypeValidator(existingScheme, organisationId)
                 .Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.DataValidation));
 
             Assert.True(result.IsValid);
@@ -198,7 +228,7 @@
                 }
             };
 
-            var existingProducer = Producer(MapObligationType(obligationTypeType.B2B), registrationNumber);
+            var existingProducer = FakeProducer.Create(MapObligationType(obligationTypeType.B2B), registrationNumber);
             var existingScheme = new Scheme(Guid.NewGuid());
             existingScheme.Producers.Add(existingProducer);
 
@@ -208,14 +238,14 @@
             Assert.True(result.IsValid);
         }
 
-        private IValidator<schemeType> SchemeTypeValidator()
+        private IValidator<schemeType> SchemeTypeValidator(Guid? existingOrganisationId = null, Guid? organisationId = null)
         {
-            return SchemeTypeValidator(new Scheme(Guid.NewGuid()));
+            return SchemeTypeValidator(new Scheme(existingOrganisationId ?? Guid.NewGuid()), organisationId);
         }
 
-        private IValidator<schemeType> SchemeTypeValidator(Scheme scheme)
+        private IValidator<schemeType> SchemeTypeValidator(Scheme scheme, Guid? organisationId = null)
         {
-            return new SchemeTypeValidator(ValidationContext.Create(scheme));
+            return new SchemeTypeValidator(ValidationContext.Create(scheme), organisationId ?? Guid.NewGuid());
         }
 
         private producerType[] Producers(params string[] regstrationNumbers)

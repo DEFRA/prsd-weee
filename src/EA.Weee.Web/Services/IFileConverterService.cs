@@ -4,6 +4,6 @@
 
     public interface IFileConverterService
     {
-        string Convert(HttpPostedFileBase file);
+        byte[] Convert(HttpPostedFileBase file);
     }
 }

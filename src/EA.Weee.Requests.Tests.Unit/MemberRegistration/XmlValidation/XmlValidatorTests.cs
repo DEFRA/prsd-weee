@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Requests.Tests.Unit.MemberRegistration.XmlValidation
 {
+    using System;
     using System.Collections.Generic;
     using Domain;
     using Domain.PCS;
@@ -34,9 +35,9 @@
                     new MemberUploadError(ErrorLevel.Error, "An error occurred")
                 });
 
-            XmlValidator().Validate(A<ProcessXMLFile>._);
+            XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
 
-            A.CallTo(() => businessValidator.Validate(A<schemeType>._))
+            A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._))
                 .MustNotHaveHappened();
         }
 
@@ -46,13 +47,13 @@
             A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
                 .Returns(new List<MemberUploadError>());
 
-            A.CallTo(() => businessValidator.Validate(A<schemeType>._))
+            A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._))
                 .Returns(new List<MemberUploadError>
                             {
                                 new MemberUploadError(ErrorLevel.Error, "An error occurred")
                             });
 
-            var result = XmlValidator().Validate(A<ProcessXMLFile>._);
+            var result = XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
 
             Assert.NotEmpty(result);
         }

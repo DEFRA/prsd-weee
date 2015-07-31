@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using DataAccess.Identity;
     using Microsoft.AspNet.Identity;
@@ -65,6 +66,19 @@
             SetEmailConfirmedIfRequired(user);
 
             return await base.CreateAsync(user);
+        }
+
+        public override async Task<IList<Claim>> GetClaimsAsync(string userId)
+        {
+            var claims = await base.GetClaimsAsync(userId);
+
+            var user = await Store.FindByIdAsync(userId);
+            foreach (var claim in user.Claims)
+            {
+                claims.Add(new Claim(claim.ClaimType, claim.ClaimValue));
+            }
+
+            return claims;
         }
 
         private void SetEmailConfirmedIfRequired(ApplicationUser user)
