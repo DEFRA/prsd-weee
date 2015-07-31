@@ -562,9 +562,9 @@
     <Compile Include="Areas\Test\Controllers\GeneratePcsXmlController.cs" />
     <Compile Include="Areas\Test\Controllers\HomeController.cs" />
     <Compile Include="Areas\Test\TestAreaRegistration.cs" />
-    <Compile Include="Areas\Test\ViewModels\GeneratePcsXmlOptionsViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SpecifyOptionsViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\HomeViewModel.cs" />
-    <Compile Include="Areas\Test\ViewModels\SelectOrganisationViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SelectOrganisationViewModel.cs" />
     <Compile Include="Controllers\Base\ExternalSiteController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Filters\AuthorizeClaimsAttribute.cs" />

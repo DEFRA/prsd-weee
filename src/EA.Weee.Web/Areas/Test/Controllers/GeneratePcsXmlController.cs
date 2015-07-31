@@ -6,6 +6,7 @@
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.PCS.MemberUploadTesting;
     using EA.Weee.Web.Areas.Test.ViewModels;
+    using EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.ViewModels.Shared;
     using System;
@@ -72,7 +73,7 @@
                 return RedirectToAction("SelectOrganisation");
             }
 
-            GeneratePcsXmlOptionsViewModel viewModel = new GeneratePcsXmlOptionsViewModel()
+            SpecifyOptionsViewModel viewModel = new SpecifyOptionsViewModel()
             {
                 OrganisationID = organisationID
             };
@@ -82,7 +83,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SpecifyOptions(GeneratePcsXmlOptionsViewModel viewModel)
+        public async Task<ActionResult> SpecifyOptions(SpecifyOptionsViewModel viewModel)
         {
             if (!await CheckOrganisationExists(viewModel.OrganisationID))
             {
@@ -99,7 +100,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DownloadFile(GeneratePcsXmlOptionsViewModel viewModel)
+        public async Task<ActionResult> DownloadFile(SpecifyOptionsViewModel viewModel)
         {
             if (!await CheckOrganisationExists(viewModel.OrganisationID))
             {
@@ -117,7 +118,9 @@
                 SchemaVersion = viewModel.SchemaVersion,
                 ComplianceYear = viewModel.ComplianceYear,
                 NumberOfNewProducers = viewModel.NumberOfNewProducers,
-                NumberOfExistingProducers = viewModel.NumberOfExistingProducers
+                NumberOfExistingProducers = viewModel.NumberOfExistingProducers,
+                IncludeMalformedSchema = viewModel.IncludeMalformedSchema,
+                IncludeUnexpectedFooElement = viewModel.IncludeUnexpectedFooElement,
             };
 
             PcsXmlFile xmlFile = await GenerateXml(settings);
