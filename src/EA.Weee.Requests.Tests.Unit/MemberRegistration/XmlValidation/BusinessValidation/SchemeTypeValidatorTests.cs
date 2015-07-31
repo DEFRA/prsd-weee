@@ -25,7 +25,7 @@
             const string registrationNumber = "ABC12345";
             var xml = new schemeType
             {
-                producerList = Producers(registrationNumber, registrationNumber)
+                producerList = ProducersWithRegistrationNumbers(registrationNumber, registrationNumber)
             };
 
             var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation));
@@ -40,7 +40,7 @@
         {
             var xml = new schemeType
             {
-                producerList = Producers(string.Empty, string.Empty)
+                producerList = ProducersWithRegistrationNumbers(string.Empty, string.Empty)
             };
 
             var result = SchemeTypeValidator().Validate(xml);
@@ -55,7 +55,7 @@
             const string secondRegistrationNumber = "XYZ54321";
             var xml = new schemeType
             {
-                producerList = Producers(firstRegistrationNumber, firstRegistrationNumber, secondRegistrationNumber, secondRegistrationNumber)
+                producerList = ProducersWithRegistrationNumbers(firstRegistrationNumber, firstRegistrationNumber, secondRegistrationNumber, secondRegistrationNumber)
             };
 
             var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation));
@@ -73,7 +73,56 @@
         {
             var xml = new schemeType
             {
-                producerList = Producers("ABC12345", "XYZ54321").ToArray()
+                producerList = ProducersWithRegistrationNumbers("ABC12345", "XYZ54321").ToArray()
+            };
+
+            var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation));
+
+            Assert.True(result.IsValid);
+        }
+
+        [Fact]
+        public void SetOfDuplicateProducerNames_ValidationFails_IncludesProducerNameInMessage_AndErrorLevelIsError()
+        {
+            const string producerName = "Producer Name";
+            var xml = new schemeType
+            {
+                producerList = ProducersWithProducerNames(producerName, producerName)
+            };
+
+            var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation));
+
+            Assert.False(result.IsValid);
+            Assert.Contains(producerName, result.Errors.Single().ErrorMessage);
+            Assert.Equal(ErrorLevel.Error, result.Errors.Single().CustomState);
+        }
+
+        [Fact]
+        public void TwoSetsOfDuplicateProducerNames_ValidationFails_IncludesBothProducerNamesInMessages()
+        {
+            const string firstProducerName = "First Producer Name";
+            const string secondProducerName = "Second Producer Name";
+            var xml = new schemeType
+            {
+                producerList = ProducersWithProducerNames(firstProducerName, firstProducerName, secondProducerName, secondProducerName)
+            };
+
+            var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation));
+
+            Assert.False(result.IsValid);
+
+            var aggregatedErrorMessages = result.Errors.Select(err => err.ErrorMessage).Aggregate((curr, next) => curr + ", " + next);
+
+            Assert.Contains(firstProducerName, aggregatedErrorMessages);
+            Assert.Contains(secondProducerName, aggregatedErrorMessages);
+        }
+
+        [Fact]
+        public void TwoProducersWithDifferentProducerNames_ValidationSucceeds()
+        {
+            var xml = new schemeType
+            {
+                producerList = ProducersWithProducerNames("First Producer Name", "Second Producer Name")
             };
 
             var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation));
@@ -252,12 +301,34 @@
             return new SchemeTypeValidator(ValidationContext.Create(scheme), organisationId ?? Guid.NewGuid());
         }
        
-        private producerType[] Producers(params string[] regstrationNumbers)
+        private producerType[] ProducersWithRegistrationNumbers(params string[] regstrationNumbers)
         {
             return regstrationNumbers.Select(r => new producerType
             {
                 status = statusType.A,
-                registrationNo = r
+                registrationNo = r,
+                producerBusiness = new producerBusinessType
+                {
+                    Item = new partnershipType
+                    {
+                        partnershipName = Guid.NewGuid().ToString()
+                    }
+                }
+            }).ToArray();
+        }
+
+        private producerType[] ProducersWithProducerNames(params string[] producerNames)
+        {
+            return producerNames.Select(n => new producerType
+            {
+                status = statusType.I,
+                producerBusiness = new producerBusinessType
+                {
+                    Item = new partnershipType
+                    {
+                        partnershipName = n
+                    }
+                }
             }).ToArray();
         }
 
