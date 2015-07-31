@@ -29,7 +29,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> SelectOrganisation(string companyName, int page = 1)
+        public async Task<ActionResult> SelectOrganisation(string organisationName, int page = 1)
         {
             if (page < 1)
             {
@@ -38,13 +38,13 @@
 
             SelectOrganisationViewModel viewModel;
 
-            if (string.IsNullOrEmpty(companyName))
+            if (string.IsNullOrEmpty(organisationName))
             {
                 viewModel = new SelectOrganisationViewModel();
             }
             else
             {
-                var results = await FetchOrganisations(companyName, page);
+                var results = await FetchOrganisations(organisationName, page);
 
                 PagingViewModel pager = PagingViewModel.FromValues(
                     results.TotalMatchingOrganisations,
@@ -52,11 +52,11 @@
                     page,
                     "SelectOrganisation",
                     "GeneratePcsXml",
-                    new { companyName });
+                    new { companyName = organisationName });
                 
                 viewModel = new SelectOrganisationViewModel()
                 {
-                    CompanyName = companyName,
+                    OrganisationName = organisationName,
                     MatchingOrganisations = results.Results,
                     PagingViewModel = pager,
                 };
