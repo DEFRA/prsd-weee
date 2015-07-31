@@ -75,6 +75,7 @@
     <Compile Include="MemberRegistration\GetMemberUploadByIdHandlerTests.cs" />
     <Compile Include="MemberRegistration\GetProducerCSVByMemberUploadIdHandlerTests.cs" />
     <Compile Include="MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
+    <Compile Include="PrnGeneration\PrnHelperTests.cs" />
     <Compile Include="MemberRegistration\ProcessXMLFileHandlerTests.cs" />
     <Compile Include="MemberRegistration\XmlConverterTests.cs" />
     <Compile Include="MemberRegistration\XmlErrorTranslatorTests.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandlerTests.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandlerTests.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandlerTests.cs" />
+    <Compile Include="PrnGeneration\QuadraticResidueTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -34,6 +34,8 @@
 
         public virtual DbSet<Producer> Producers { get; set; }
 
+        public virtual DbSet<SystemData> SystemData { get; set; }
+
         public virtual DbSet<MigratedProducer> MigratedProducers { get; set; }
 
         public WeeeContext(IUserContext userContext)
