@@ -61,6 +61,9 @@
     <Content Include="scripts\Update\Sprint10\20150723-1419-MigratedProducers.sql" />
     <Content Include="scripts\Update\Sprint10\20150730-1253-UpdateClaimsForExternalUsers.sql" />
     <Content Include="scripts\Update\Sprint9\20150728-1216-SystemDataTable.sql" />
+    <Content Include="scripts\Update\Sprint10\20150730-1942-AddIsCurrentForComplianceYear.sql" />
+    <Content Include="scripts\Update\Sprint10\20150730-1953-AddIndexForProducerIsCurrent.sql" />
+    <Content Include="scripts\Update\Sprint10\20150730-1956-AddSppRefreshProducerIsCurrent.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

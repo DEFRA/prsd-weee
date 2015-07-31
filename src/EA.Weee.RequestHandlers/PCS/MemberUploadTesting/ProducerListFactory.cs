@@ -59,11 +59,10 @@
 
             int numberOfExistingProducersToInclude = listSettings.NumberOfExistingProducers;
 
-            // TODO: Ensure only database records representing "current" producers are returned.
-            // Checking "IsSubmitted" here isn't sufficient as each producer may have several updates.
             List<string> registrationNumbers = await context
                 .Producers
-                .Where(p => p.MemberUpload.IsSubmitted)
+                .Where(p => p.IsCurrentForComplianceYear)
+                .Where(p => p.MemberUpload.ComplianceYear == listSettings.ComplianceYear)
                 .Where(p => p.Scheme.OrganisationId == listSettings.OrganisationID)
                 .Select(p => p.RegistrationNumber)
                 .Take(numberOfExistingProducersToInclude)

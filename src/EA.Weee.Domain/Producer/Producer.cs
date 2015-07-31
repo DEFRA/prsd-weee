@@ -25,7 +25,8 @@
             ObligationType obligationType,
             AnnualTurnOverBandType annualTurnOverBandType,
             List<BrandName> brandnames,
-            List<SICCode> codes)
+            List<SICCode> codes,
+            bool isCurrentForComplianceYear)
         {
             ProducerBusiness = producerBusiness;
             AuthorisedRepresentative = authorisedRepresentative;
@@ -47,6 +48,8 @@
             SICCodes = codes;
             SchemeId = schemeId;
             MemberUpload = memberUpload;
+
+            IsCurrentForComplianceYear = isCurrentForComplianceYear;
         }
 
         protected Producer()
@@ -163,6 +166,19 @@
         public int SellingTechniqueType { get; private set; }
 
         public int ChargeBandType { get; private set; }
+
+        /// <summary>
+        /// Indicates whether this data is current. I.e. no data has been submitted
+        /// for a producer with the same registration number, scheme and compliance year
+        /// since this data was submitted.
+        /// 
+        /// If results are filtered by this property, the results are guarenteed to
+        /// be unique accross registration number, scheme and compliance year.
+        /// 
+        /// A filtered index in the database has been provided to ensure that such queries
+        /// are efficient at including only current producers.
+        /// </summary>
+        public virtual bool IsCurrentForComplianceYear { get; private set; }
 
         public void SetScheme(Scheme scheme)
         {
