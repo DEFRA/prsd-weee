@@ -42,6 +42,25 @@ using Prsd.Core.Domain;
                     .WithState(st => ErrorLevel.Error)
                     .WithMessage("The Registration Number '{0}' appears more than once in the uploaded XML file",
                         (st, producer) => producer.registrationNo);
+
+                var duplicateProducerNames = new List<string>();
+                RuleForEach(st => st.producerList)
+                    .Must((st, producer) =>
+                {
+                    var isDuplicate = st.producerList
+                        .Any(p => p != producer && p.GetProducerName() == producer.GetProducerName());
+
+                    if (isDuplicate && !duplicateProducerNames.Contains(producer.GetProducerName()))
+                    {
+                        duplicateProducerNames.Add(producer.GetProducerName());
+                        return false;
+                    }
+
+                    return true;
+                })
+                .WithState(st => ErrorLevel.Error)
+                .WithMessage("The Producer Name '{0}' appears more than once in the uploaded XML file",
+                    (st, producer) => producer.GetProducerName());
             });
 
             RuleSet(DataValidation, () =>
