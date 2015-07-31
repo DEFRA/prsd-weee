@@ -147,6 +147,9 @@ ALTER TABLE [PCS].[MemberUploadError] WITH CHECK CHECK CONSTRAINT [FK_MemberUplo
 ALTER TABLE [PCS].[MemberUpload] WITH CHECK CHECK CONSTRAINT [FK_MemberUpload_Scheme];
 
 GO
+PRINT N'Adding records for producerChargeBand...';
+
+GO
 INSERT INTO [EA.Weee].[Producer].[ProducerChargeBand] ([Id], [Name], [Amount]) VALUES(NEWID(), 'A', 445)
 
 INSERT INTO [EA.Weee].[Producer].[ProducerChargeBand] ([Id], [Name], [Amount]) VALUES(NEWID(), 'B', 210)
