@@ -55,7 +55,16 @@
 
             var response = await httpClient.PostAsJsonAsync("Send", apiRequest).ConfigureAwait(false);
 
-            var result = await response.CreateResponseAsync<TResult>().ConfigureAwait(false);
+            TResult result;
+            try
+            {
+                result = await response.CreateResponseAsync<TResult>().ConfigureAwait(false);
+            }
+            catch (ApiException ex)
+            {
+                string message = string.Format("{0}: {1}", ex.Message, ex.ErrorData.ExceptionMessage);
+                throw new Exception(message);
+            }
 
             return result;
         }
