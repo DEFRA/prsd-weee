@@ -22,7 +22,8 @@
         private readonly IAuthenticationManager authenticationManager;
         private readonly IEmailService emailService;
 
-        public AccountController(Func<IWeeeClient> apiClient, Func<IOAuthClient> oauthClient, IAuthenticationManager authenticationManager, IEmailService emailService)
+        public AccountController(Func<IWeeeClient> apiClient, Func<IOAuthClient> oauthClient,
+            IAuthenticationManager authenticationManager, IEmailService emailService)
         {
             this.apiClient = apiClient;
             this.oauthClient = oauthClient;
@@ -64,10 +65,15 @@
             {
                 using (var client = apiClient())
                 {
-                    await client.NewUser.CreateUserAsync(userCreationData);
-                    var signInResponse = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
-
-                    authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
+                    var userId = await client.NewUser.CreateUserAsync(userCreationData);
+                    bool emailSent = await SendEmail(userCreationData.Email, userCreationData.Password, userId);
+                    if (!emailSent)
+                    {
+                        ViewBag.Errors = new[]
+                        {
+                            "Email is currently unavailable at this time, please try again later."
+                        };
+                    }
                 }
 
                 return RedirectToAction("UserAccountActivationRequired", "Account", new { area = "Admin" });
@@ -83,6 +89,13 @@
             }
 
             return View(model);
+        }
+
+        public async Task<bool> SendEmail(string email, string password, string userId)
+        {
+            var signInResponse = await oauthClient().GetAccessTokenAsync(email, password);
+            authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
+            return await Send(email, userId, signInResponse.AccessToken);
         }
 
         [HttpGet]
@@ -107,28 +120,19 @@
             }
             try
             {
-                using (var client = apiClient())
+                //Resend activation email
+                bool emailSent = await Send(email, User.GetUserId(), User.GetAccessToken());
+                if (!emailSent)
                 {
-                    //Resend activation email
-                    string activationToken = await client.NewUser.GetUserAccountActivationTokenAsync(User.GetAccessToken());
-                    string verificationBaseUrl = Url.Action("ActivateUserAccount", "Account", new { area = "Admin" });
-                    string userid = User.GetUserId();
-                    MailMessage activationEmail = emailService.GenerateUserAccountActivationMessage(verificationBaseUrl, activationToken, userid, email);
-                    bool emailSent = await emailService.SendAsync(activationEmail);
-                    if (!emailSent)
+                    ViewBag.Errors = new[]
                     {
-                        ViewBag.Errors = new[]
-                            {
-                                "Email is currently unavailable at this time, please try again later."
-                            };
-                        return RedirectToAction("UserAccountActivationRequired", "Account", new { area = "Admin" });
-                    }
+                        "Email is currently unavailable at this time, please try again later."
+                    };
                 }
             }
             catch (SmtpException)
             {
                 ViewBag.Errors = new[] { "The activation email was not sent, please try again later." };
-                return RedirectToAction("UserAccountActivationRequired", "Account", new { area = "Admin" });
             }
 
             return RedirectToAction("UserAccountActivationRequired", "Account", new { area = "Admin" });
@@ -155,6 +159,22 @@
             }
 
             return View();
+        }
+
+        private async Task<bool> Send(string email, string userId, string accessToken)
+        {
+            using (var client = apiClient())
+            {
+                var activationCode = await client.NewUser.GetUserAccountActivationTokenAsync(accessToken);
+
+                if (Request.Url != null)
+                {
+                    var baseUrl = Url.Action("ActivateUserAccount", "Account", new { area = "Admin" }, Request.Url.Scheme);
+                    var activationEmail = emailService.GenerateUserAccountActivationMessage(baseUrl, activationCode, userId, email);
+                    return await emailService.SendAsync(activationEmail);
+                }
+            }
+            return false;
         }
     }
 }

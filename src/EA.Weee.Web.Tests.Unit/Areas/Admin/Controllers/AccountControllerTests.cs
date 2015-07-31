@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using System;
     using System.Linq;
     using System.Net;
+    using System.Net.Mail;
     using System.Security.Claims;
-    using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
@@ -50,6 +51,21 @@
             Assert.Equal(model, ((ViewResult)(result)).Model);
         }
 
+        public async void HttpPost_UserAccountActivationRequired_IfUserResendsActivationEmail_ShouldSendActivationEmail()
+        {
+            var newUser = A.Fake<INewUser>();
+            A.CallTo(() => apiClient.NewUser).Returns(newUser);
+
+            A.CallTo(
+                () =>
+                    emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
+                .Returns(new MailMessage());
+
+            await AccountController().UserAccountActivationRequired(A<FormCollection>._);
+
+            A.CallTo(() => emailService.SendAsync(A<MailMessage>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
         [Fact] public async void HttpPost_Create_ModelIsValid_ShouldIncludeUserDetails_AndOnlyClaimShouldBeInternalAccess()
         {
             var model = ValidModel();
@@ -61,9 +77,7 @@
                 .Returns(Task.FromResult(A<string>._));
 
             A.CallTo(() => apiClient.NewUser).Returns(newUser);
-            A.CallTo(() => oauthClient.GetAccessTokenAsync(A<string>._, A<string>._))
-                .Returns(A.Fake<TokenResponse>());
-
+      
             await AccountController().Create(model);
 
             Assert.Equal(model.Name, userCreationData.FirstName);
@@ -130,11 +144,27 @@
 
         private AccountController AccountController()
         {
+            var request = GetFakeRequest();
+
             var context = A.Fake<HttpContextBase>();
+            A.CallTo(() => context.Request).Returns(request);
+
             var controller = new AccountController(() => apiClient, () => oauthClient, authenticationManager, emailService);
             controller.ControllerContext = new ControllerContext(context, new RouteData(), controller);
 
+            controller.Url = new UrlHelper(new RequestContext(controller.HttpContext, new RouteData()));
+
             return controller;
+        }
+
+        private HttpRequestBase GetFakeRequest()
+        {
+            var request = A.Fake<HttpRequestBase>();
+            var url = new Uri("https://fakeurl.com");
+
+            A.CallTo(() => request.Url).Returns(url);
+
+            return request;
         }
     }
 }
