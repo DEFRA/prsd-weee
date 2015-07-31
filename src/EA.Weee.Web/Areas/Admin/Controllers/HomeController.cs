@@ -1,11 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System.Web.Mvc;
-    using Core;
-    using Filters;
+    using Base;
 
-    [AuthorizeClaims(Claims.CanAccessInternalArea)]
-    public class HomeController : Controller
+    public class HomeController : AdminController
     {
         // GET: Admin/Home
         public ActionResult Index()
