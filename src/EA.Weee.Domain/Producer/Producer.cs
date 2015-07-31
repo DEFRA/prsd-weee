@@ -225,7 +225,7 @@
                 companiesHouseNumber = producer.ProducerBusiness.CompanyDetails.CompanyNumber;
             }
             var chargeBand = "***";
-            var dateRegistered = GetProducerRegistrationDate(producer.RegistrationNumber, producer.MemberUpload.ComplianceYear).ToString(CultureInfo.InvariantCulture);
+            var dateRegistered = String.Format("{0:dd/MM/yyyy HH:mm:ss}", GetProducerRegistrationDate(producer.RegistrationNumber, producer.MemberUpload.ComplianceYear));
             var authorisedRepresentative = producer.AuthorisedRepresentative == null ? "No" : "Yes";
             var overseasProducer = producer.AuthorisedRepresentative == null
                 ? string.Empty
