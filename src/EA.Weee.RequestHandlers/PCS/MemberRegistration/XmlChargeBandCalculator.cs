@@ -25,9 +25,6 @@
 
         public Hashtable Calculate(ProcessXMLFile message)
         {
-            //var doc = XDocument.Parse(message.Data, LoadOptions.SetLineInfo);
-            //schemeType schemeType = (schemeType)new XmlSerializer(typeof(schemeType)).Deserialize(doc.CreateReader());
-
             schemeType schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
 
             var producerChargeBandCalculator = new ProducerChargeBandCalculator();

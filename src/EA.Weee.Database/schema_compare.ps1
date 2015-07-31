@@ -6,7 +6,7 @@ param
 
 $databaseName = "EA.Weee"
 $base_dir = resolve-path .
-$databaseScripts = "E:\Repos\weee\src\EA.Weee.Database"
+$databaseScripts = "$base_dir\"
 $SqlPackage = "C:\Program Files (x86)\Microsoft SQL Server\120\DAC\bin\SqlPackage.exe"
 $AliaSQL = "$databaseScripts\scripts\AliaSQL.exe"
 $databaseName_Original = "$databaseName" + "_Original"
