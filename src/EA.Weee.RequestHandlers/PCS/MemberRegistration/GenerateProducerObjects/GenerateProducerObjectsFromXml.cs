@@ -1,12 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration.GenerateProducerObjects
 {
     using System;
+    using System.CodeDom;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Xml.Serialization;
+    using Core.Helpers.PrnGeneration;
     using DataAccess;
     using Domain;
     using Domain.PCS;
@@ -37,6 +40,10 @@
         private async Task<IEnumerable<Producer>> SetProducerData(schemeType scheme, Guid schemeId, MemberUpload memberUpload)
         {
             List<Producer> producers = new List<Producer>();
+
+            int numberOfPrnsNeeded = scheme.producerList.Count(p => p.status == statusType.I);
+            Queue<string> generatedPrns = await ComputePrns(context, numberOfPrnsNeeded);
+
             foreach (producerType producerData in scheme.producerList)
             {
                 List<BrandName> brandNames = producerData.producerBrandNames.Select(name => new BrandName(name)).ToList();
@@ -64,23 +71,23 @@
                 string producerRegistrationNo = producerData.registrationNo;
                 if (producerData.status == statusType.I)
                 {
-                    producerRegistrationNo = GenerateUniquePRN();
+                    producerRegistrationNo = generatedPrns.Dequeue();
                 }
 
-                Producer producer = new Producer(schemeId,
-                    memberUpload,
-                    producerBusiness,
-                    authorisedRepresentative,
-                    SystemTime.UtcNow,
-                    (decimal)producerData.annualTurnover,
-                    producerData.VATRegistered,
-                    producerRegistrationNo,
-                    ceaseDate,
-                    producerData.tradingName,
-                    eeebandType,
-                    sellingTechniqueType,
-                    obligationType,
-                    annualturnoverType,
+                Producer producer = new Producer(schemeId, 
+                    memberUpload, 
+                    producerBusiness, 
+                    authorisedRepresentative, 
+                    SystemTime.UtcNow, 
+                    (decimal)producerData.annualTurnover, 
+                    producerData.VATRegistered, 
+                    producerRegistrationNo, 
+                    ceaseDate, 
+                    producerData.tradingName, 
+                    eeebandType, 
+                    sellingTechniqueType, 
+                    obligationType, 
+                    annualturnoverType, 
                     brandNames,
                     codes,
                     true);
@@ -89,6 +96,7 @@
                 switch (producerData.status)
                 {
                     case statusType.A:
+
                         // get the producers for scheme based on producer->prn and producer->lastsubmitted
                         // is latest date and memberupload ->IsSubmitted is true.
                         var producerDb =
@@ -145,6 +153,52 @@
             return producers;
         }
 
+        /// <summary>
+        /// Generates unique, pseudorandom PRNs with minimal database interaction.
+        /// Works by:
+        /// a) uniquely mapping each unsigned integer to another pseudorandom unsigned integer
+        /// b) uniquely mapping each unsigned integer to a specific PRN
+        /// Combining those two mappings, and using a sequential seed, we can obtain pseudorandom PRNs
+        /// with assurance that we will not repeat ourselves for a very, very long time.
+        /// </summary>
+        /// <param name="context">The database context</param>
+        /// <param name="numberOfPrnsNeeded">A non-negative integer</param>
+        /// <returns></returns>
+        private static async Task<Queue<string>> ComputePrns(WeeeContext context, int numberOfPrnsNeeded)
+        {
+            var prnHelper = new PrnHelper(new QuadraticResidueHelper());
+
+            try
+            {
+                IList<PrnAsComponents> generatedPrns = new List<PrnAsComponents>();
+
+                // to avoid concurrency issues, we want to read the latest seed, 'reserve' some PRNs (figuring
+                // out the resulting final seed as we go), and write the final seed back as quickly as possible
+                uint originalLatestSeed = (uint)context.SystemData.Select(sd => sd.LatestPrnSeed).First();
+
+                uint currentSeed = originalLatestSeed;
+                for (int ii = 0; ii < numberOfPrnsNeeded; ii++)
+                {
+                    var prnFromSeed = new PrnAsComponents(currentSeed + 1);
+                    generatedPrns.Add(prnFromSeed);
+                    currentSeed = prnFromSeed.ToSeedValue();
+                }
+
+                // we write back the next acceptable seed to the database, for next time
+                // since there are some mathematical constraints on the acceptable values
+                context.SystemData.First().LatestPrnSeed = currentSeed;
+                await context.SaveChangesAsync();
+
+                // now we're done with the fairly time sensitive database read/write,
+                // we can 'randomise' the results at our leisure
+                return new Queue<string>(generatedPrns.Select(p => prnHelper.CreateUniqueRandomVersionOfPrn(p)));
+            }
+            catch (OptimisticConcurrencyException e)
+            {
+                return ComputePrns(context, numberOfPrnsNeeded).Result;
+            }
+        }
+
         private async Task<AuthorisedRepresentative> SetAuthorisedRepresentative(authorisedRepresentativeType representative)
         {
             if (representative.overseasProducer == null)
@@ -196,23 +250,25 @@
         private async Task<ProducerContact> GetProducerContact(contactDetailsType contactDetails)
         {
             var country = await GetCountry(contactDetails);
-            ProducerAddress address =
-                new ProducerAddress(contactDetails.address.primaryName,
-                    contactDetails.address.secondaryName,
-                    contactDetails.address.streetName,
-                    contactDetails.address.town,
-                    contactDetails.address.locality,
-                    contactDetails.address.administrativeArea,
-                    country, contactDetails.address.Item);
+            ProducerAddress address = new ProducerAddress(
+                contactDetails.address.primaryName, 
+                contactDetails.address.secondaryName, 
+                contactDetails.address.streetName, 
+                contactDetails.address.town, 
+                contactDetails.address.locality, 
+                contactDetails.address.administrativeArea, 
+                country, 
+                contactDetails.address.Item);
 
-            ProducerContact contact =
-                new ProducerContact(contactDetails.title,
-                    contactDetails.forename,
-                    contactDetails.surname,
-                    contactDetails.phoneLandLine,
-                    contactDetails.phoneMobile,
-                    contactDetails.fax,
-                    contactDetails.email, address);
+            ProducerContact contact = new ProducerContact(
+                contactDetails.title, 
+                contactDetails.forename, 
+                contactDetails.surname, 
+                contactDetails.phoneLandLine, 
+                contactDetails.phoneMobile, 
+                contactDetails.fax, 
+                contactDetails.email, 
+                address);
 
             return contact;
         }
