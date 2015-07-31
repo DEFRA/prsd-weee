@@ -14,12 +14,13 @@
 
     @if (Model.ErrorData == null || Model.ErrorData.Count == 0)
     {
-        <div class="highlighted-event" style="margin: 0">
-            <p>The producer registration charges for new members is</p>
-            <p>
+        <div class="highlight-section">
+            <p class="highlight-section-text">The producer registration charges for new members is</p>
+            <p class="highlight-section-amount">
                 <em>£@Model.TotalCharges.ToString("N2")</em>
             </p>
         </div>
+
         <p>Your XML file contains no errors or warnings. You may submit the file as it is.</p>
     }
     else
