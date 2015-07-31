@@ -16,15 +16,15 @@
     internal class ProcessXMLFileHandler : IRequestHandler<ProcessXMLFile, Guid>
     {
         private readonly WeeeContext context;
-
         private readonly IXmlValidator xmlValidator;
-
+        private readonly IXmlConverter xmlConverter;
         private readonly IGenerateFromXml generateFromXml;
 
-        public ProcessXMLFileHandler(WeeeContext context, IXmlValidator xmlValidator, IGenerateFromXml generateFromXml)
+        public ProcessXMLFileHandler(WeeeContext context, IXmlValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter)
         {
             this.context = context;
             this.xmlValidator = xmlValidator;
+            this.xmlConverter = xmlConverter;
             this.generateFromXml = generateFromXml;
         }
         public async Task<Guid> HandleAsync(ProcessXMLFile message)
@@ -34,7 +34,7 @@
             var memberUploadErrors = errors as IList<MemberUploadError> ?? errors.ToList();
 
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-            var upload = new MemberUpload(message.OrganisationId, message.Data, memberUploadErrors.ToList(), scheme.Id);
+            var upload = new MemberUpload(message.OrganisationId, xmlConverter.Convert(message).ToString(), memberUploadErrors.ToList(), scheme.Id);
 
             //Build producers domain object if there are no errors during validation of xml file.
             if (!memberUploadErrors.Any())
