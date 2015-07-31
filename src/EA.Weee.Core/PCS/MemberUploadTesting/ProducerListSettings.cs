@@ -21,5 +21,7 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
         public bool IncludeMalformedSchema { get; set; }
 
         public bool IncludeUnexpectedFooElement { get; set; }
+
+        public bool IgnoreStringLengthConditions { get; set; }
     }
 }

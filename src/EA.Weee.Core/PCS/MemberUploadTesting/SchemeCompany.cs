@@ -15,8 +15,16 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
         {
             SchemeCompany schemeCompany = new SchemeCompany();
 
-            schemeCompany.CompanyName = RandomHelper.CreateRandomString(string.Empty, 1, 255);
-            schemeCompany.CompanyNumber = RandomHelper.CreateRandomStringOfNumbers(8, 8);
+            if (!settings.IgnoreStringLengthConditions)
+            {
+                schemeCompany.CompanyName = RandomHelper.CreateRandomString(string.Empty, 1, 255);
+                schemeCompany.CompanyNumber = RandomHelper.CreateRandomStringOfNumbers(8, 8);
+            }
+            else
+            {
+                schemeCompany.CompanyName = RandomHelper.CreateRandomString(string.Empty, 0, 1000);
+                schemeCompany.CompanyNumber = RandomHelper.CreateRandomStringOfNumbers(0, 1000);
+            }
 
             return schemeCompany;
         }

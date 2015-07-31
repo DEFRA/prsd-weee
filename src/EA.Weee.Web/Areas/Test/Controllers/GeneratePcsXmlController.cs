@@ -121,6 +121,7 @@
                 NumberOfExistingProducers = viewModel.NumberOfExistingProducers,
                 IncludeMalformedSchema = viewModel.IncludeMalformedSchema,
                 IncludeUnexpectedFooElement = viewModel.IncludeUnexpectedFooElement,
+                IgnoreStringLengthConditions = viewModel.IgnoreStringLengthConditions,
             };
 
             PcsXmlFile xmlFile = await GenerateXml(settings);
