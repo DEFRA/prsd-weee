@@ -1,6 +1,6 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.DataAnnotations
+﻿namespace EA.Weee.Core.Tests.Unit.Validation
 {
-    using Web.Areas.Admin.DataAnnotations;
+    using Core.Validation;
     using Xunit;
 
     public class InternalEmailAddressAttributeTests

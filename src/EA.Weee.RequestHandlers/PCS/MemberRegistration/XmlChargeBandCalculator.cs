@@ -14,17 +14,21 @@
     public class XmlChargeBandCalculator : IXmlChargeBandCalculator
     {
         private readonly WeeeContext context;
+        private readonly IXmlConverter xmlConverter;
 
-        public XmlChargeBandCalculator(WeeeContext context)
+        public XmlChargeBandCalculator(WeeeContext context, IXmlConverter xmlConverter)
         {
             this.context = context;
+            this.xmlConverter = xmlConverter;
         }
         public List<MemberUploadError> ErrorsAndWarnings { get; set; }
 
         public Hashtable Calculate(ProcessXMLFile message)
         {
-            var doc = XDocument.Parse(message.Data, LoadOptions.SetLineInfo);
-            schemeType schemeType = (schemeType)new XmlSerializer(typeof(schemeType)).Deserialize(doc.CreateReader());
+            //var doc = XDocument.Parse(message.Data, LoadOptions.SetLineInfo);
+            //schemeType schemeType = (schemeType)new XmlSerializer(typeof(schemeType)).Deserialize(doc.CreateReader());
+
+            schemeType schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
 
             var producerChargeBandCalculator = new ProducerChargeBandCalculator();
             var producerCharges = new Hashtable();

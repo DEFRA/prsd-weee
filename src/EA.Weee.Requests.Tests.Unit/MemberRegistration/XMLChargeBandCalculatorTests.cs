@@ -7,6 +7,8 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
+    using System.Xml.Linq;
     using Core.Helpers.Xml;
     using DataAccess;
     using Domain;
@@ -24,6 +26,7 @@
         private readonly DbContextHelper helper = new DbContextHelper();
         private readonly WeeeContext context;
         private readonly DbSet<ProducerChargeBand> producerChargeBandDbSet;
+        private readonly IXmlConverter xmlConverter;
 
         private readonly Guid pcsId = Guid.NewGuid();
 
@@ -39,6 +42,7 @@
             });
 
             context = A.Fake<WeeeContext>();
+            xmlConverter = A.Fake<IXmlConverter>();
 
             A.CallTo(() => context.ProducerChargeBands).Returns(producerChargeBandDbSet);
         }
@@ -46,10 +50,10 @@
         [Fact]
         public void XMLChargeBandCalculator_ValidXml_NoErrors()
         {
-            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context);
+            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter());
             var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-valid.xml");
-            var validXml = File.ReadAllText(new Uri(validXmlLocation).LocalPath);
-
+            var validXml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(validXmlLocation).LocalPath));
+            
             xmlChargeBandCalculator.Calculate(new ProcessXMLFile(A<Guid>._, validXml));
 
             Assert.Null(xmlChargeBandCalculator.ErrorsAndWarnings);
@@ -58,11 +62,11 @@
         [Fact]
         public void XMLChargeBandCalculator_XmlWithSameProducerName_AddsError()
         {
-            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context);
-            var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-same-producer-name.xml");
-            var validXml = File.ReadAllText(new Uri(validXmlLocation).LocalPath);
+            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter());
+            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-same-producer-name.xml");
+            var invalidXml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(invalidXmlLocation).LocalPath));
 
-            xmlChargeBandCalculator.Calculate(new ProcessXMLFile(A<Guid>._, validXml));
+            xmlChargeBandCalculator.Calculate(new ProcessXMLFile(A<Guid>._, invalidXml));
 
             Assert.NotEmpty(xmlChargeBandCalculator.ErrorsAndWarnings);
         }
@@ -70,9 +74,9 @@
         [Fact]
         public void XMLChargeBandCalculator_ValidXmlForChargeBand_GivesCorrectChargeBand()
         {
-            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context);
+            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter());
             var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-valid-ChargeBand.xml");
-            var validXml = File.ReadAllText(new Uri(validXmlLocation).LocalPath);
+            var validXml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(validXmlLocation).LocalPath));
 
             var producerCharges = xmlChargeBandCalculator.Calculate(new ProcessXMLFile(A<Guid>._, validXml));
 
