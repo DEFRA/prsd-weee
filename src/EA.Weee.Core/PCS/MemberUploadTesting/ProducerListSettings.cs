@@ -17,5 +17,9 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
         public int NumberOfNewProducers { get; set; }
 
         public int NumberOfExistingProducers { get; set; }
+
+        public bool IncludeMalformedSchema { get; set; }
+
+        public bool IncludeUnexpectedFooElement { get; set; }
     }
 }
