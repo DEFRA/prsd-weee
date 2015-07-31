@@ -16,6 +16,7 @@
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.OAuth;
+    using Services;
     using Thinktecture.IdentityModel.Client;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels;
@@ -26,12 +27,14 @@
         private readonly IWeeeClient apiClient;
         private readonly IOAuthClient oauthClient;
         private readonly IAuthenticationManager authenticationManager;
+        private readonly IEmailService emailService;
 
         public AccountControllerTests()
         {
             apiClient = A.Fake<IWeeeClient>();
             oauthClient = A.Fake<IOAuthClient>();
             authenticationManager = A.Fake<IAuthenticationManager>();
+            emailService = A.Fake<IEmailService>();
         }
 
         [Fact]
@@ -128,7 +131,7 @@
         private AccountController AccountController()
         {
             var context = A.Fake<HttpContextBase>();
-            var controller = new AccountController(() => apiClient, () => oauthClient, authenticationManager);
+            var controller = new AccountController(() => apiClient, () => oauthClient, authenticationManager, emailService);
             controller.ControllerContext = new ControllerContext(context, new RouteData(), controller);
 
             return controller;
