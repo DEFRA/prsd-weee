@@ -16,8 +16,17 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
         {
             Company company = new Company();
 
-            company.CompanyName = RandomHelper.CreateRandomString(string.Empty, 1, 50); //255?
-            company.CompanyNumber = RandomHelper.CreateRandomStringOfNumbers(8, 8);
+            if (!settings.IgnoreStringLengthConditions)
+            {
+                company.CompanyName = RandomHelper.CreateRandomString(string.Empty, 1, 50); //255?
+                company.CompanyNumber = RandomHelper.CreateRandomStringOfNumbers(8, 8);
+            }
+            else
+            {
+                company.CompanyName = RandomHelper.CreateRandomString(string.Empty, 0, 1000);
+                company.CompanyNumber = RandomHelper.CreateRandomStringOfNumbers(0, 1000);
+            }
+
             company.RegisteredOffice = ContactDetails.Create(settings);
 
             return company;

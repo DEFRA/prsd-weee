@@ -20,7 +20,14 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
         {
             OverseasProducer overseasProducer = new OverseasProducer();
 
-            overseasProducer.OverseasProducerName = RandomHelper.CreateRandomString(string.Empty, 0, 50); // 70?
+            if (!settings.IgnoreStringLengthConditions)
+            {
+                overseasProducer.OverseasProducerName = RandomHelper.CreateRandomString(string.Empty, 0, 50); // 70?
+            }
+            else
+            {
+                overseasProducer.OverseasProducerName = RandomHelper.CreateRandomString(string.Empty, 0, 1000);
+            }
 
             if (RandomHelper.OneIn(2))
             {

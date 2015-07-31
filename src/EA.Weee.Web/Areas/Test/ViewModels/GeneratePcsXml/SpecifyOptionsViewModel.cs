@@ -36,8 +36,11 @@ using System.Web.Mvc;
         [DisplayName("Include badly-formed root element")]
         public bool IncludeMalformedSchema { get; set; }
 
-        [DisplayName("Include unexpeted <foo/> element")]
+        [DisplayName("Include unexpeted &lt;foo/&gt; element")]
         public bool IncludeUnexpectedFooElement { get; set; }
+
+        [DisplayName("Ignore string length conditions for all producers")]
+        public bool IgnoreStringLengthConditions { get; set; }
 
         public SpecifyOptionsViewModel()
         {
