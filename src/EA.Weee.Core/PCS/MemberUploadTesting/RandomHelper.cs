@@ -19,6 +19,18 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
             return (T)values.GetValue(R.Next(values.Length));
         }
 
+        /// <summary>
+        /// Generates a random string of characters, optionally starting with a specific prefix.
+        /// A quadratic distribution will be used to determine the string length as the mean
+        /// length of strings is usually much less than half of the allowed maximum.
+        /// The string will not start or end with white space.
+        /// </summary>
+        /// <param name="prefix">Optionally specifies the first few characters of the string.
+        /// This allows the string to be identified amidst other randomly generated strings.</param>
+        /// <param name="minLength">The minimum length of the string.</param>
+        /// <param name="maxLength">The maximum length of the string.</param>
+        /// <param name="includeSpaces">When set to true, spaces will be randomly included.</param>
+        /// <returns></returns>
         public static string CreateRandomString(string prefix, int minLength, int maxLength, bool includeSpaces = true)
         {
             string result = prefix;
@@ -27,9 +39,9 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
             double weight = Math.Sqrt(R.NextDouble());
             int length = minLength + (int)(weight * (maxLength - minLength));
 
-            while (result.Length < length)
+            while (result.Trim().Length < length)
             {
-                if (includeSpaces && R.Next(6) == 0)
+                if (includeSpaces && result.Length > 0 && R.Next(6) == 0)
                 {
                     result += ' ';
                 }
@@ -39,7 +51,7 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
                 }
             }
 
-            return result;
+            return result.Trim();
         }
 
         public static readonly Random R = new Random();
