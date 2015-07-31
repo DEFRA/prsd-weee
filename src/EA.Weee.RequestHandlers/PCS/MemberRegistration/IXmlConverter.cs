@@ -1,9 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration
 {
+    using System.Xml.Linq;
     using Requests.PCS.MemberRegistration;
 
     public interface IXmlConverter
     {
-        schemeType Convert(ProcessXMLFile message);
+        XDocument Convert(ProcessXMLFile message);
+
+        schemeType Deserialize(XDocument xdoc);
     }
 }

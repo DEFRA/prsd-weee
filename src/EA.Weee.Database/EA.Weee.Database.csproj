@@ -59,6 +59,7 @@
     <Content Include="scripts\Update\Sprint10\20150721-1638-MigratedProducers.sql" />
     <Content Include="scripts\Update\Sprint10\20150723-1006-UpdateProducerTables.sql" />
     <Content Include="scripts\Update\Sprint10\20150723-1419-MigratedProducers.sql" />
+    <Content Include="scripts\Update\Sprint10\20150730-1253-UpdateClaimsForExternalUsers.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -72,7 +73,7 @@
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
     <Content Include="scripts\Update\placeholder.txt" />
-    <Content Include="scripts\Update\Sprint0-IWS\20150526-164637-IntialiseFromIws.sql" />
+    <Content Include="scripts\Update\Sprint00-IWS\20150526-164637-IntialiseFromIws.sql" />
     <Content Include="scripts\Update\Sprint06-WEEE\20150603-161233-UpdateOrganisationTable.sql" />
     <Content Include="scripts\Update\Sprint06-WEEE\20150604-093607-AddContactTable.sql" />
     <Content Include="scripts\Update\Sprint06-WEEE\20150604-100316-AddContactTableRowVersion.sql" />

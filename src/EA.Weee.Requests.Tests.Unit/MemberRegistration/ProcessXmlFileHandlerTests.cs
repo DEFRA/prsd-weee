@@ -27,13 +27,15 @@
         private readonly DbSet<Producer> producersDbSet;
         private readonly DbSet<MemberUpload> memberUploadsDbSet;
         private readonly IXmlValidator xmlValidator;
+        private readonly IXmlConverter xmlConverter;
         private static readonly Guid organisationId = Guid.NewGuid();
-        private static readonly ProcessXMLFile Message = new ProcessXMLFile(organisationId, "anydata");
+        private static readonly ProcessXMLFile Message = new ProcessXMLFile(organisationId, new byte[1]);
 
         public ProcessXMLFileHandlerTests()
         {
             memberUploadsDbSet = A.Fake<DbSet<MemberUpload>>();
             producersDbSet = A.Fake<DbSet<Producer>>();
+            xmlConverter = A.Fake<IXmlConverter>();
             var schemes = new Scheme[]
             {
                 FakeSchemeData()
@@ -48,7 +50,7 @@
 
             generator = A.Fake<IGenerateFromXml>();
             xmlValidator = A.Fake<IXmlValidator>();
-            handler = new ProcessXMLFileHandler(context, xmlValidator, generator);
+            handler = new ProcessXMLFileHandler(context, xmlValidator, generator, xmlConverter);
         }
 
         [Fact]
