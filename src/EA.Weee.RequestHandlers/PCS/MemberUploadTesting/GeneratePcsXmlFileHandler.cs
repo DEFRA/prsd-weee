@@ -31,16 +31,32 @@
         {
             ProducerList producerList = await producerListFactory.CreateAsync(message.Settings);
 
-            XDocument xml = xmlGenerator.GenerateXml(producerList);
+            XDocument xml = xmlGenerator.GenerateXml(producerList, message.Settings);
 
             string fileName = string.Format("PCS Member Upload XML - {0:yyyy MM dd HH mm ss}.xml", SystemTime.UtcNow);
 
             byte[] data;
-            
-            using (MemoryStream stream = new MemoryStream())
+
+            if (message.Settings.IncludeMalformedSchema)
             {
-                xml.Save(stream);
-                data = stream.ToArray();
+                string badXml;
+                using (StringWriter stringWriter = new StringWriter())
+                {
+                    using (BrokenXmlWriter xmlWriter = new BrokenXmlWriter(stringWriter, "scheme"))
+                    {
+                        xml.Save(xmlWriter);
+                    }
+                    badXml = stringWriter.ToString();
+                }
+                data = Encoding.UTF8.GetBytes(badXml);
+            }
+            else
+            {
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    xml.Save(stream);
+                    data = stream.ToArray();
+                }
             }
 
             PcsXmlFile file = new PcsXmlFile(fileName, data);

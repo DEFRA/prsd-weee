@@ -126,6 +126,7 @@
     <Compile Include="PCS\MemberRegistration\XmlValidation\SchemaValidation\ISchemaValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\XmlValidator.cs" />
+    <Compile Include="PCS\MemberUploadTesting\BrokenXmlWriter.cs" />
     <Compile Include="PCS\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
     <Compile Include="PCS\MemberUploadTesting\IProducerListFactory.cs" />
     <Compile Include="PCS\MemberUploadTesting\IXmlGenerator.cs" />

@@ -1,5 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@model EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXmlOptionsViewModel
+@model EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml.SpecifyOptionsViewModel
 
 @{
     ViewBag.Title = "Download File";
@@ -23,6 +23,8 @@
         @Html.HiddenFor(model => model.ComplianceYear);
         @Html.HiddenFor(model => model.NumberOfNewProducers);
         @Html.HiddenFor(model => model.NumberOfExistingProducers);
+        @Html.HiddenFor(model => model.IncludeMalformedSchema);
+        @Html.HiddenFor(model => model.IncludeUnexpectedFooElement);
 
         <p>If your file does not download automatically, use the button below.</p>
 

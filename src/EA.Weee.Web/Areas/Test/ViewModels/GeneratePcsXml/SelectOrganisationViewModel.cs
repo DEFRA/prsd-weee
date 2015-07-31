@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Test.ViewModels
+﻿namespace EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml
 {
     using Core.Organisations;
     using EA.Weee.Web.ViewModels.Shared;
