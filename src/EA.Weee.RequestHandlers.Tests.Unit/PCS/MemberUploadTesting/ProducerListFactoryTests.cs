@@ -36,34 +36,43 @@
 
             Domain.Producer.Producer producer1 = A.Fake<Domain.Producer.Producer>();
             A.CallTo(() => producer1.RegistrationNumber).Returns("Test Registration Number 1");
+            A.CallTo(() => producer1.IsCurrentForComplianceYear).Returns(true);
 
             Domain.Producer.Producer producer2 = A.Fake<Domain.Producer.Producer>();
             A.CallTo(() => producer2.RegistrationNumber).Returns("Test Registration Number 2");
+            A.CallTo(() => producer2.IsCurrentForComplianceYear).Returns(true);
 
             Domain.Producer.Producer producer3 = A.Fake<Domain.Producer.Producer>();
             A.CallTo(() => producer3.RegistrationNumber).Returns("Test Registration Number 3");
+            A.CallTo(() => producer3.IsCurrentForComplianceYear).Returns(true);
 
             Domain.Producer.Producer producer4 = A.Fake<Domain.Producer.Producer>();
             A.CallTo(() => producer4.RegistrationNumber).Returns("Test Registration Number 4");
+            A.CallTo(() => producer4.IsCurrentForComplianceYear).Returns(true);
 
             Domain.Producer.Producer producer5 = A.Fake<Domain.Producer.Producer>();
             A.CallTo(() => producer5.RegistrationNumber).Returns("Test Registration Number 5");
+            A.CallTo(() => producer5.IsCurrentForComplianceYear).Returns(false);
 
             Domain.Producer.Producer producer6 = A.Fake<Domain.Producer.Producer>();
-            A.CallTo(() => producer1.RegistrationNumber).Returns("Test Registration Number 6");
+            A.CallTo(() => producer6.RegistrationNumber).Returns("Test Registration Number 6");
+            A.CallTo(() => producer6.IsCurrentForComplianceYear).Returns(true);
 
             Domain.Producer.Producer producer7 = A.Fake<Domain.Producer.Producer>();
-            A.CallTo(() => producer2.RegistrationNumber).Returns("Test Registration Number 7");
+            A.CallTo(() => producer7.RegistrationNumber).Returns("Test Registration Number 7");
+            A.CallTo(() => producer7.IsCurrentForComplianceYear).Returns(true);
 
             Domain.Producer.Producer producer8 = A.Fake<Domain.Producer.Producer>();
-            A.CallTo(() => producer3.RegistrationNumber).Returns("Test Registration Number 8");
+            A.CallTo(() => producer8.RegistrationNumber).Returns("Test Registration Number 8");
+            A.CallTo(() => producer8.IsCurrentForComplianceYear).Returns(true);
 
             Domain.Producer.Producer producer9 = A.Fake<Domain.Producer.Producer>();
-            A.CallTo(() => producer4.RegistrationNumber).Returns("Test Registration Number 9");
+            A.CallTo(() => producer9.RegistrationNumber).Returns("Test Registration Number 9");
+            A.CallTo(() => producer9.IsCurrentForComplianceYear).Returns(true);
 
             Domain.Producer.Producer producer10 = A.Fake<Domain.Producer.Producer>();
-            A.CallTo(() => producer5.RegistrationNumber).Returns("Test Registration Number 10");
-            A.CallTo(() => producer1.MemberUpload).Returns(memberUploadUnsubmitted);
+            A.CallTo(() => producer10.RegistrationNumber).Returns("Test Registration Number 10");
+            A.CallTo(() => producer10.IsCurrentForComplianceYear).Returns(false);
 
             Organisation organisation1 = A.Fake<Organisation>();
             A.CallTo(() => organisation1.TradingName).Returns("Test Trading Name 1");
