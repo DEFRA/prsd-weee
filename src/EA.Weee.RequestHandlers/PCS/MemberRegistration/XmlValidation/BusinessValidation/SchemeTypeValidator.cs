@@ -48,7 +48,7 @@ using Prsd.Core.Domain;
             {
                 var producers = context.Producers
                     .Where(p => p.MemberUpload != null
-                    && p.Scheme.OrganisationId != organisationId)
+                    && p.Scheme.OrganisationId != organisationId && p.IsCurrentForComplianceYear)
                     .ToList();
 
                 RuleForEach(st => st.producerList)

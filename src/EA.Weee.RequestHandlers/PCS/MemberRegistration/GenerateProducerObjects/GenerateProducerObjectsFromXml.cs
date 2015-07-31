@@ -105,7 +105,25 @@
 
                             if (migratedProducers == null)
                             {
-                                throw new InvalidOperationException(string.Format("PRN: {0} does not exists in current data set and in migrated data set.", producerRegistrationNo));
+                                //check for producer in another scheme member uploads
+                                var anotherSchemeProducerDb =
+                                    context.MemberUploads.Where(
+                                        member => member.IsSubmitted && member.SchemeId != schemeId)
+                                        .SelectMany(p => p.Producers)
+                                        .Where(p => p.RegistrationNumber == producerRegistrationNo)
+                                        .OrderByDescending(p => p.LastSubmitted)
+                                        .FirstOrDefault();
+                                if (anotherSchemeProducerDb == null)
+                                {
+                                    throw new InvalidOperationException(
+                                        string.Format(
+                                            "PRN: {0} does not exists in current data set.",
+                                            producerRegistrationNo));
+                                }
+                                else
+                                {
+                                    producers.Add(producer);
+                                }
                             }
                             else
                             {
