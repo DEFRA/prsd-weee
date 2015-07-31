@@ -4,8 +4,6 @@
     using System.Linq;
     using System.Net;
     using System.Security.Claims;
-    using System.Security.Policy;
-    using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
@@ -23,7 +21,6 @@
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels;
     using Xunit;
-    using EmailService = Api.Identity.EmailService;
 
     public class AccountControllerTests
     {
@@ -107,6 +104,30 @@
         }
 
         [Fact]
+        public async void HttpPost_Create_ModelIsValid_ShouldSendEmail()
+        {
+            var model = ValidModel();
+
+            await AccountController().Create(model);
+
+            A.CallTo(() => emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void HttpPost_Create_ModelIsInvalid_ShouldNotSendEmail()
+        {
+            var model = ValidModel();
+            var controller = AccountController();
+            controller.ModelState.AddModelError("Key", "Something went wrong :(");
+
+            await controller.Create(model);
+
+            A.CallTo(() => emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
         public async void HttpPost_Create_ModelIsValid_ApiThrowsException_ShouldNotCatch()
         {
             var model = ValidModel();
@@ -123,10 +144,10 @@
         {
             return new InternalUserCreationViewModel
             {
-                ConfirmPassword = "Password*99",
-                Password = "Password*99",
-                Email = "test@environment-agency.gov.uk",
-                Name = "test",
+                ConfirmPassword = "Password*99", 
+                Password = "Password*99", 
+                Email = "test@environment-agency.gov.uk", 
+                Name = "test", 
                 Surname = "name"
             };
         }
