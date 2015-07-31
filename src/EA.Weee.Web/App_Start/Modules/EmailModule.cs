@@ -9,6 +9,7 @@
         {
             builder.RegisterType<EmailTemplateService>().As<IEmailTemplateService>();
             builder.RegisterType<EmailService>().As<IEmailService>();
+            builder.RegisterType<SmtpClientProxy>().As<ISmtpClient>();
         }
     }
 }
