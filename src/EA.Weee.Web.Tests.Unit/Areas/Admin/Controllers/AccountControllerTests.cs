@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using System;
     using System.Linq;
     using System.Net;
     using System.Security.Claims;
-    using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
@@ -16,6 +16,7 @@
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.OAuth;
+    using Services;
     using Thinktecture.IdentityModel.Client;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels;
@@ -26,12 +27,14 @@
         private readonly IWeeeClient apiClient;
         private readonly IOAuthClient oauthClient;
         private readonly IAuthenticationManager authenticationManager;
+        private readonly IEmailService emailService;
 
         public AccountControllerTests()
         {
             apiClient = A.Fake<IWeeeClient>();
             oauthClient = A.Fake<IOAuthClient>();
             authenticationManager = A.Fake<IAuthenticationManager>();
+            emailService = A.Fake<IEmailService>();
         }
 
         [Fact]
@@ -101,6 +104,30 @@
         }
 
         [Fact]
+        public async void HttpPost_Create_ModelIsValid_ShouldSendEmail()
+        {
+            var model = ValidModel();
+
+            await AccountController().Create(model);
+
+            A.CallTo(() => emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void HttpPost_Create_ModelIsInvalid_ShouldNotSendEmail()
+        {
+            var model = ValidModel();
+            var controller = AccountController();
+            controller.ModelState.AddModelError("Key", "Something went wrong :(");
+
+            await controller.Create(model);
+
+            A.CallTo(() => emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
         public async void HttpPost_Create_ModelIsValid_ApiThrowsException_ShouldNotCatch()
         {
             var model = ValidModel();
@@ -117,21 +144,37 @@
         {
             return new InternalUserCreationViewModel
             {
-                ConfirmPassword = "Password*99",
-                Password = "Password*99",
-                Email = "test@environment-agency.gov.uk",
-                Name = "test",
+                ConfirmPassword = "Password*99", 
+                Password = "Password*99", 
+                Email = "test@environment-agency.gov.uk", 
+                Name = "test", 
                 Surname = "name"
             };
         }
 
         private AccountController AccountController()
         {
+            var request = GetFakeRequest();
+
             var context = A.Fake<HttpContextBase>();
-            var controller = new AccountController(() => apiClient, () => oauthClient, authenticationManager);
+            A.CallTo(() => context.Request).Returns(request);
+
+            var controller = new AccountController(() => apiClient, authenticationManager, emailService, () => oauthClient);
             controller.ControllerContext = new ControllerContext(context, new RouteData(), controller);
 
+            controller.Url = new UrlHelper(new RequestContext(controller.HttpContext, new RouteData()));
+
             return controller;
+        }
+
+        private HttpRequestBase GetFakeRequest()
+        {
+            var request = A.Fake<HttpRequestBase>();
+            var url = new Uri("https://fakeurl.com");
+
+            A.CallTo(() => request.Url).Returns(url);
+
+            return request;
         }
     }
 }

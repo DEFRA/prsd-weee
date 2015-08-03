@@ -1,20 +1,14 @@
 ﻿namespace EA.Weee.Api.Controllers
 {
-    using System;
-    using System.IdentityModel.Claims;
-    using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using AutoMapper.Internal;
-    using Client;
     using Client.Entities;
-    using Core;
     using DataAccess.Identity;
     using Identity;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Prsd.Core.Domain;
-    using ClaimTypes = Prsd.Core.Web.ClaimTypes;
 
     [RoutePrefix("api/NewUser")]
     public class NewUserController : ApiController
@@ -40,18 +34,18 @@
 
             var user = new ApplicationUser
             {
-                UserName = model.Email,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                Surname = model.Surname
+                UserName = model.Email, 
+                Email = model.Email, 
+                FirstName = model.FirstName, 
+                Surname = model.Surname, 
             };
 
             foreach (var claim in model.Claims)
             {
                 user.Claims.Add(new IdentityUserClaim
                 {
-                    ClaimType = System.Security.Claims.ClaimTypes.AuthenticationMethod, 
-                    ClaimValue = claim,
+                    ClaimType = ClaimTypes.AuthenticationMethod, 
+                    ClaimValue = claim, 
                     UserId = user.Id
                 });
             }
