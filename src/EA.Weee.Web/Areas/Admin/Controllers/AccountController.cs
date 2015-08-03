@@ -134,7 +134,7 @@
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult> ActivateAdminAccount(Guid id, string code)
+        public async Task<ActionResult> ActivateUserAccount(Guid id, string code)
         {
             using (var client = apiClient())
             {
@@ -163,7 +163,7 @@
 
                 if (Request.Url != null)
                 {
-                    var baseUrl = Url.Action("ActivateAdminAccount", "Account", new { area = "Admin" }, Request.Url.Scheme);
+                    var baseUrl = Url.Action("ActivateUserAccount", "Account", new { area = "Admin" }, Request.Url.Scheme);
                     var activationEmail = emailService.GenerateUserAccountActivationMessage(baseUrl, activationCode, userId, email);
                     return await emailService.SendAsync(activationEmail);
                 }
