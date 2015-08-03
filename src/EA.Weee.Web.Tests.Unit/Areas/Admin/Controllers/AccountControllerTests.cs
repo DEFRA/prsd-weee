@@ -61,7 +61,7 @@
                     emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
                 .Returns(new MailMessage());
 
-            await AccountController().UserAccountActivationRequired(A<FormCollection>._);
+            await AccountController().AdminAccountActivationRequired(A<FormCollection>._);
 
             A.CallTo(() => emailService.SendAsync(A<MailMessage>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -112,7 +112,7 @@
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("UserAccountActivationRequired", redirectValues["action"]);
+            Assert.Equal("AdminAccountActivationRequired", redirectValues["action"]);
             Assert.Equal("Account", redirectValues["controller"]);
             Assert.Equal("Admin", redirectValues["area"]);
         }
