@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EA.Weee.Core.PCS.MemberUploadTesting
+﻿namespace EA.Weee.Core.PCS.MemberUploadTesting
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// A producer that has been created for the purposes of writing to
     /// an XML file that will be used for testing the PCS member upload

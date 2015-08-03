@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EA.Weee.Core.PCS.MemberUploadTesting
+﻿namespace EA.Weee.Core.PCS.MemberUploadTesting
 {
     public class CorrespondentForNotices
     {
@@ -12,7 +6,6 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
 
         public CorrespondentForNotices()
         {
-
         }
 
         public static CorrespondentForNotices Create(ICorrespondentForNoticesSettings settings)
