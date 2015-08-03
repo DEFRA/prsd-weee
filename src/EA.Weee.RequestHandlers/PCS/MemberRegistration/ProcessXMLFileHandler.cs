@@ -35,18 +35,14 @@
         {
             var errors = xmlValidator.Validate(message);
 
-            var memberUploadErrors = errors as IList<MemberUploadError> ?? errors.ToList();
+            List<MemberUploadError> memberUploadErrors = errors as List<MemberUploadError> ?? errors.ToList();
 
             Hashtable producerCharges = new Hashtable();
 
             if (!errors.Any(e => e.ErrorType == MemberUploadErrorType.Schema))
             {
                 producerCharges = xmlChargeBandCalculator.Calculate(message);
-
-                if (xmlChargeBandCalculator.ErrorsAndWarnings != null && xmlChargeBandCalculator.ErrorsAndWarnings.Count > 0)
-                {
-                    ((List<MemberUploadError>)memberUploadErrors).AddRange(xmlChargeBandCalculator.ErrorsAndWarnings);
-                }
+                memberUploadErrors.AddRange(xmlChargeBandCalculator.ErrorsAndWarnings);
             }
 
             decimal totalCharges = 0;
