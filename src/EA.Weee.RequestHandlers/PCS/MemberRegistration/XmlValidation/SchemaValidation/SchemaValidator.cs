@@ -43,15 +43,15 @@
                         var asXElement = sender as XElement;
                         errors.Add(
                             asXElement != null
-                                ? new MemberUploadError(ErrorLevel.Error,
+                                ? new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema,
                                     xmlErrorTranslator.MakeFriendlyErrorMessage(asXElement, args.Exception.Message,
                                         args.Exception.LineNumber))
-                                : new MemberUploadError(ErrorLevel.Error, args.Exception.Message));
+                                : new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, args.Exception.Message));
                     });
             }
             catch (XmlException ex)
             {
-                errors.Add(new MemberUploadError(ErrorLevel.Error, ex.Message));
+                errors.Add(new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, ex.Message));
             }
 
             return errors;

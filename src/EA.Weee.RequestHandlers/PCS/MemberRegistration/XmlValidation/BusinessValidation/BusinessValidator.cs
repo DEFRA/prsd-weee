@@ -27,7 +27,7 @@
         public IEnumerable<MemberUploadError> Validate(schemeType deserializedXml, Guid pcsId)
         {
             var result = new SchemeTypeValidator(context, pcsId).Validate(deserializedXml, new RulesetValidatorSelector("*"));
-            return result.Errors.Select(err => new MemberUploadError((ErrorLevel)err.CustomState, err.ErrorMessage));
+            return result.Errors.Select(err => new MemberUploadError((ErrorLevel)err.CustomState, MemberUploadErrorType.Business, err.ErrorMessage));
         }
     }
 }
