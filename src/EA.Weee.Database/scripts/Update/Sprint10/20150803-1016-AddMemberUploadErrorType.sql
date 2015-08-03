@@ -36,9 +36,10 @@ CREATE TABLE [PCS].[tmp_ms_xx_MemberUploadError] (
 IF EXISTS (SELECT TOP 1 1 
            FROM   [PCS].[MemberUploadError])
     BEGIN
-        INSERT INTO [PCS].[tmp_ms_xx_MemberUploadError] ([Id], [ErrorLevel], [Description], [MemberUploadId])
+        INSERT INTO [PCS].[tmp_ms_xx_MemberUploadError] ([Id], [ErrorLevel], [ErrorType], [Description], [MemberUploadId])
         SELECT   [Id],
                  [ErrorLevel],
+                 1,
                  [Description],
                  [MemberUploadId]
         FROM     [PCS].[MemberUploadError]
