@@ -96,7 +96,7 @@
             {
                 await NewUserController().UserCreation(userCreationViewModel);
             }
-            catch (Exception)
+            catch (NullReferenceException)
             {
             }
 

@@ -13,17 +13,19 @@
     {
         private readonly ConfigurationService configurationService;
         private readonly IEmailTemplateService templateService;
+        private readonly ISmtpClient smtpClient;
+        private readonly IRuleChecker emailRuleChecker;
 
-        public EmailService(ConfigurationService configurationService, IEmailTemplateService templateService)
+        public EmailService(ConfigurationService configurationService, IEmailTemplateService templateService, ISmtpClient smtpClient, IRuleChecker emailRuleChecker)
         {
             this.templateService = templateService;
             this.configurationService = configurationService;
+            this.smtpClient = smtpClient;
+            this.emailRuleChecker = emailRuleChecker;
         }
 
-        public async Task<bool> SendAsync(MailMessage message)
+        public virtual async Task<bool> SendAsync(MailMessage message)
         {
-            var client = new SmtpClient();
-            var emailRuleChecker = new RuleChecker();
             var toAddress = string.Empty;
 
             if (message.To.Count == 1 && !message.To.Single().Address.Contains(","))
@@ -41,7 +43,7 @@
             {
                 try
                 {
-                    await client.SendMailAsync(message);
+                    await smtpClient.SendMailAsync(message);
                 }
                 catch (Exception ex)
                 {

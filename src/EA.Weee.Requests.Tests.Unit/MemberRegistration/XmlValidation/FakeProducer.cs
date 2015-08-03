@@ -78,5 +78,28 @@
         {
             get { return new Scheme(schemeOrganisationId); }
         }
+
+        public static FakeProducer Create(ObligationType obligationType, string prn, bool iscurrentcomplainceYear, 
+          Guid? schemeOrganisationId = null,  params string[] brandNames)
+        {
+            return new FakeProducer(schemeOrganisationId ?? Guid.NewGuid(),
+                Guid.NewGuid(),
+                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>()),
+                new ProducerBusiness(),
+                new AuthorisedRepresentative("authrep"),
+                DateTime.Now,
+                decimal.Zero,
+                true,
+                prn,
+                null,
+                "trading name",
+                Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                Domain.SellingTechniqueType.Both,
+                obligationType,
+                Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                brandNames.Select(bn => new BrandName(bn)).ToList(),
+                new List<SICCode>(),
+                iscurrentcomplainceYear);
+        }
     }
 }

@@ -3,11 +3,15 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using DataAccess;
     using Domain;
+    using Domain.Organisation;
     using Domain.PCS;
     using Domain.Producer;
+    using FakeItEasy;
     using FluentValidation;
     using FluentValidation.Internal;
+    using Helpers;
     using RequestHandlers;
     using RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation;
     using Xunit;
@@ -208,7 +212,7 @@
 
             Assert.True(result.IsValid);
         }
-
+        
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -247,7 +251,7 @@
         {
             return new SchemeTypeValidator(ValidationContext.Create(scheme), organisationId ?? Guid.NewGuid());
         }
-
+       
         private producerType[] Producers(params string[] regstrationNumbers)
         {
             return regstrationNumbers.Select(r => new producerType
@@ -291,6 +295,142 @@
                 default:
                     return ObligationType.Both;
             }
+        }
+
+        [Theory]
+        [InlineData(obligationTypeType.B2B)]
+        [InlineData(obligationTypeType.B2C)]
+        public void
+            ProducerRegisteredforAnotherSchemeforDifferentObligationTypeForDifferentComplianceYear_ValidationSucceeds(obligationTypeType obligationType)
+        {
+            WeeeContext weeeContext = CreateFakeDatabase();
+            var xml = new schemeType()
+            {
+                complianceYear = "2016",
+                producerList = new[]
+                {
+                    new producerType
+                    {
+                        obligationType = obligationType,
+                        registrationNo = "ABC"
+                    }
+                }
+            };
+
+            Guid orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
+            Scheme scheme = weeeContext.Schemes.FirstOrDefault(s => s.OrganisationId == orgId);
+            var result = SchemeTypeValidator(scheme, orgId).Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.DataValidation));
+
+            if (obligationType == obligationTypeType.B2B)
+            {
+               Assert.True(result.IsValid);
+            }
+            else
+            {
+                Assert.False(result.IsValid);
+            }
+        }
+
+        private readonly DbContextHelper dbContextHelper = new DbContextHelper();
+
+        /// <summary>
+        /// Sets up a faked WeeeContext with 2 schemes 
+        /// </summary>
+        /// <returns></returns>
+        private WeeeContext CreateFakeDatabase()
+        {
+            MemberUpload memberUpload1 = A.Fake<MemberUpload>();
+            A.CallTo(() => memberUpload1.OrganisationId).Returns(new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B"));
+            A.CallTo(() => memberUpload1.ComplianceYear).Returns(2016);
+            A.CallTo(() => memberUpload1.IsSubmitted).Returns(true);
+
+            MemberUpload memberUpload2 = A.Fake<MemberUpload>();
+            A.CallTo(() => memberUpload2.OrganisationId).Returns(new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B"));
+            A.CallTo(() => memberUpload2.ComplianceYear).Returns(2017);
+            A.CallTo(() => memberUpload2.IsSubmitted).Returns(true);
+
+           Producer producer1 = FakeProducer.Create(MapObligationType(obligationTypeType.B2B), "ABC", false);
+      
+            Producer producer2 = FakeProducer.Create(MapObligationType(obligationTypeType.B2C), "ABC", true);
+      
+            Organisation organisation1 = A.Fake<Organisation>();
+            A.CallTo(() => organisation1.TradingName).Returns("Test Trading Name 1");
+
+            Organisation organisation2 = A.Fake<Organisation>();
+            A.CallTo(() => organisation2.TradingName).Returns("Test Trading Name 2");
+
+            Scheme scheme1 = A.Fake<Scheme>();
+            A.CallTo(() => scheme1.OrganisationId).Returns(new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B"));
+            A.CallTo(() => scheme1.ApprovalNumber).Returns("Test Approval Number 1");
+
+            Scheme scheme2 = A.Fake<Scheme>();
+            A.CallTo(() => scheme2.OrganisationId).Returns(new Guid("A99F0A92-E08D-47F0-9758-82F02DB816FA"));
+            A.CallTo(() => scheme2.ApprovalNumber).Returns("Test Approval Number 2");
+
+            // Wire up scheme to organisations (1-way).
+            A.CallTo(() => scheme1.Organisation).Returns(organisation1);
+            A.CallTo(() => scheme2.Organisation).Returns(organisation2);
+
+            // Wire up member uploads to organisations (1-way)
+            A.CallTo(() => memberUpload1.Organisation).Returns(organisation1);
+            A.CallTo(() => memberUpload2.Organisation).Returns(organisation1);
+            //A.CallTo(() => memberUpload3.Organisation).Returns(organisation2);
+
+            // Wire up member uploads to schemes (1-way)
+            A.CallTo(() => memberUpload1.Scheme).Returns(scheme1);
+            A.CallTo(() => memberUpload2.Scheme).Returns(scheme1);
+            //A.CallTo(() => memberUpload3.Scheme).Returns(scheme2);
+
+            // Wire up producers and schemes (2-way).
+            A.CallTo(() => scheme1.Producers).Returns(new List<Producer>()
+            {
+                producer1,
+                producer2
+            });
+
+           // Wire up producers and member uploads (2-way).
+            A.CallTo(() => memberUpload1.Producers).Returns(new List<Producer>()
+                {
+                    producer1
+                });
+
+            A.CallTo(() => memberUpload2.Producers).Returns(new List<Producer>()
+                {
+                    producer2
+                });
+
+            // Wire up everything to the context (1-way).
+            WeeeContext weeeContext = A.Fake<WeeeContext>();
+
+            var schemesDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<Scheme>()
+                {
+                    scheme1,
+                    scheme2 
+                });
+            A.CallTo(() => weeeContext.Schemes).Returns(schemesDbSet);
+
+            var producersDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<Producer>()
+                {
+                    producer1,
+                    producer2
+                });
+            A.CallTo(() => weeeContext.Producers).Returns(producersDbSet);
+
+            var organisationDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<Organisation>()
+                {
+                    organisation1,
+                    organisation2
+                });
+            A.CallTo(() => weeeContext.Organisations).Returns(organisationDbSet);
+
+            var memberUploadDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<MemberUpload>()
+                {
+                    memberUpload1,
+                    memberUpload2
+                });
+            A.CallTo(() => weeeContext.MemberUploads).Returns(memberUploadDbSet);
+
+            return weeeContext;
         }
     }
 }
