@@ -150,15 +150,15 @@ GO
 PRINT N'Adding records for producerChargeBand...';
 
 GO
-INSERT INTO [EA.Weee].[Producer].[ProducerChargeBand] ([Id], [Name], [Amount]) VALUES(NEWID(), 'A', 445)
+INSERT INTO [Producer].[ProducerChargeBand] ([Id], [Name], [Amount]) VALUES(NEWID(), 'A', 445)
 
-INSERT INTO [EA.Weee].[Producer].[ProducerChargeBand] ([Id], [Name], [Amount]) VALUES(NEWID(), 'B', 210)
+INSERT INTO [Producer].[ProducerChargeBand] ([Id], [Name], [Amount]) VALUES(NEWID(), 'B', 210)
 
-INSERT INTO [EA.Weee].[Producer].[ProducerChargeBand] ([Id], [Name], [Amount]) VALUES(NEWID(), 'C', 30)
+INSERT INTO [Producer].[ProducerChargeBand] ([Id], [Name], [Amount]) VALUES(NEWID(), 'C', 30)
 
-INSERT INTO [EA.Weee].[Producer].[ProducerChargeBand] ([Id], [Name], [Amount]) VALUES(NEWID(), 'D', 30)
+INSERT INTO [Producer].[ProducerChargeBand] ([Id], [Name], [Amount]) VALUES(NEWID(), 'D', 30)
 
-INSERT INTO [EA.Weee].[Producer].[ProducerChargeBand] ([Id], [Name], [Amount]) VALUES(NEWID(), 'E', 30)
+INSERT INTO [Producer].[ProducerChargeBand] ([Id], [Name], [Amount]) VALUES(NEWID(), 'E', 30)
 
 GO
 PRINT N'Update complete.';
