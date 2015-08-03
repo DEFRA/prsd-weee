@@ -66,6 +66,7 @@
     <Content Include="scripts\Update\Sprint10\20150730-1953-AddIndexForProducerIsCurrent.sql" />
     <Content Include="scripts\Update\Sprint10\20150730-1956-AddSppRefreshProducerIsCurrent.sql" />
     <Content Include="scripts\Update\Sprint10\20150731-1309-PopulateSystemData.sql" />
+    <Content Include="scripts\Update\Sprint10\20150803-1016-AddMemberUploadErrorType.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

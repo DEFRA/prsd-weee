@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Test.ViewModels
+﻿namespace EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml
 {
     using EA.Weee.Core.PCS.MemberUploadTesting;
     using System;
@@ -9,7 +9,7 @@
     using System.Web;
 using System.Web.Mvc;
 
-    public class GeneratePcsXmlOptionsViewModel
+    public class SpecifyOptionsViewModel
     {
         [Required]
         public Guid OrganisationID { get; set; }
@@ -33,7 +33,16 @@ using System.Web.Mvc;
         [DisplayName("Number of existing producers")]
         public int NumberOfExistingProducers { get; set; }
 
-        public GeneratePcsXmlOptionsViewModel()
+        [DisplayName("Include badly-formed root element")]
+        public bool IncludeMalformedSchema { get; set; }
+
+        [DisplayName("Include unexpeted &lt;foo/&gt; element")]
+        public bool IncludeUnexpectedFooElement { get; set; }
+
+        [DisplayName("Ignore string length conditions for all producers")]
+        public bool IgnoreStringLengthConditions { get; set; }
+
+        public SpecifyOptionsViewModel()
         {
             // Default to the latest schema version.
             Array schemaVersions = Enum.GetValues(typeof(SchemaVersion));
