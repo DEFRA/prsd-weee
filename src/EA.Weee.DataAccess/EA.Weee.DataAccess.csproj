@@ -100,6 +100,7 @@
     <Compile Include="Mappings\ProducerPartnershipMapping.cs" />
     <Compile Include="Mappings\ProducerSISCodeMapping.cs" />
     <Compile Include="Mappings\SchemeMapping.cs" />
+    <Compile Include="Mappings\SystemDataMapping.cs" />
     <Compile Include="RelationshipExtensions.cs" />
     <Compile Include="WeeeContext.cs" />
     <Compile Include="Mappings\AddressMapping.cs" />
