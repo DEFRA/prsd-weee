@@ -10,11 +10,15 @@
     {
         public XDocument Convert(ProcessXMLFile message)
         {
+            return XDocument.Parse(XmlToUtf8String(message), LoadOptions.SetLineInfo);          
+        }
+
+        public string XmlToUtf8String(ProcessXMLFile message)
+        {
             var data = message.Data;
             data = RemoveUtf8Bom(data);
 
-            var xml = Encoding.UTF8.GetString(data);
-            return XDocument.Parse(xml, LoadOptions.SetLineInfo);          
+            return Encoding.UTF8.GetString(data);
         }
 
         public schemeType Deserialize(XDocument xdoc)

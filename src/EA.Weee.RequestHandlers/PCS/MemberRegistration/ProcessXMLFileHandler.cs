@@ -8,7 +8,6 @@
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.PCS;
-    using Domain.Producer;
     using GenerateProducerObjects;
     using Prsd.Core.Mediator;
     using Requests.PCS.MemberRegistration;
@@ -31,17 +30,23 @@
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
             this.generateFromXml = generateFromXml;
         }
+
         public async Task<Guid> HandleAsync(ProcessXMLFile message)
         {
             var errors = xmlValidator.Validate(message);
 
             var memberUploadErrors = errors as IList<MemberUploadError> ?? errors.ToList();
 
-            var producerCharges = xmlChargeBandCalculator.Calculate(message);
+            Hashtable producerCharges = new Hashtable();
 
-            if (xmlChargeBandCalculator.ErrorsAndWarnings != null && xmlChargeBandCalculator.ErrorsAndWarnings.Count > 0)
+            if (!errors.Any(e => e.ErrorType == MemberUploadErrorType.Schema))
             {
-                ((List<MemberUploadError>)memberUploadErrors).AddRange(xmlChargeBandCalculator.ErrorsAndWarnings);
+                producerCharges = xmlChargeBandCalculator.Calculate(message);
+
+                if (xmlChargeBandCalculator.ErrorsAndWarnings != null && xmlChargeBandCalculator.ErrorsAndWarnings.Count > 0)
+                {
+                    ((List<MemberUploadError>)memberUploadErrors).AddRange(xmlChargeBandCalculator.ErrorsAndWarnings);
+                }
             }
 
             decimal totalCharges = 0;
@@ -51,7 +56,7 @@
             }
 
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-            var upload = new MemberUpload(message.OrganisationId, xmlConverter.Convert(message).ToString(), memberUploadErrors.ToList(), totalCharges, scheme.Id);
+            var upload = new MemberUpload(message.OrganisationId, xmlConverter.XmlToUtf8String(message), memberUploadErrors.ToList(), totalCharges, scheme.Id);
 
             //Build producers domain object if there are no errors during validation of xml file.
             if (!memberUploadErrors.Any())
