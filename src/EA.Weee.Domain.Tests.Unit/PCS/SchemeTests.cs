@@ -1,12 +1,13 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.PCS
 {
+    using Domain.PCS;
+    using FakeItEasy;
+    using Producer;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using Domain.PCS;
-    using Producer;
     using Xunit;
 
     public class SchemeTests
@@ -27,63 +28,129 @@
             Assert.Equal(1, producers.Count);
         }
 
+        /// <summary>
+        /// This test ensures that only producers included in submitted member uploads
+        /// for the specified year are returned by Scheme.GetProcucersList(int).
+        /// </summary>
         [Fact]
-        public void GetProducerListByComplianceYear_SchemeHasProducers_Returns2016ProducersUntilSpecifiedComplianceYearProducersImplemented()
+        public void GetProducerListByComplianceYear_SchemeHasProducers_ReturnsOnlyProducersForTheSpecifiedYear()
         {
-            var scheme = GetTestScheme();
-            var producer = GetTestProducer("WEE/12345678");
-            var anotherProducer = GetTestProducer("WEE/87654321");
-            var oneAnotherProducer = GetTestProducer("WEE/87555322");
+            // Arrange
+            MemberUpload memberUpload2015 = A.Fake<MemberUpload>();
+            A.CallTo(() => memberUpload2015.ComplianceYear).Returns(2015);
+            A.CallTo(() => memberUpload2015.IsSubmitted).Returns(true);
 
-            producer.MemberUpload.Submit();
-            anotherProducer.MemberUpload.Submit();
+            MemberUpload memberUpload2016 = A.Fake<MemberUpload>();
+            A.CallTo(() => memberUpload2016.ComplianceYear).Returns(2016);
+            A.CallTo(() => memberUpload2016.IsSubmitted).Returns(true);
 
-            scheme.SetProducers(new List<Producer> { producer, anotherProducer, oneAnotherProducer });
-            const int complianceYear = 2016;
-            var producers = scheme.GetProducersList(complianceYear);
+            Producer producer1 = A.Fake<Producer>();
+            A.CallTo(() => producer1.MemberUpload).Returns(memberUpload2015);
+            A.CallTo(() => producer1.IsCurrentForComplianceYear).Returns(true);
 
+            Producer producer2 = A.Fake<Producer>();
+            A.CallTo(() => producer2.MemberUpload).Returns(memberUpload2016);
+            A.CallTo(() => producer2.IsCurrentForComplianceYear).Returns(true);
+
+            Producer producer3 = A.Fake<Producer>();
+            A.CallTo(() => producer3.MemberUpload).Returns(memberUpload2016);
+            A.CallTo(() => producer3.IsCurrentForComplianceYear).Returns(true);
+
+            Guid organisationId = new Guid("5F60A794-1DB6-44E9-B66E-A5C8CBEEAF1A");
+
+            Scheme scheme = new Scheme(organisationId);
+            scheme.SetProducers(new List<Producer> { producer1, producer2, producer3 });
+
+            // Act
+            List<Producer> producers = scheme.GetProducersList(2016);
+
+            // Assert
             Assert.NotNull(producers);
             Assert.Equal(2, producers.Count);
-            Assert.False(producers.Any(item => item.MemberUpload.ComplianceYear != complianceYear));
+            Assert.False(producers.Any(item => item.MemberUpload.ComplianceYear != 2016));
         }
 
+        /// <summary>
+        /// This test ensures that only producers in member uploads which have been submitted
+        /// are returned by Scheme.GetProcucersList(int).
+        /// </summary>
         [Fact]
         public void GetProducerListByComplianceYear_SchemeHasProducers_ReturnsOnlySubmittedProducers()
         {
-            var scheme = GetTestScheme();
-            var producer = GetTestProducer("WEE/12345678");
-            var anotherProducer = GetTestProducer("WEE/87654321");
-            var oneAnotherProducer = GetTestProducer("WEE/54545454");
+            // Arrange
+            MemberUpload memberUploadSubmitted = A.Fake<MemberUpload>();
+            A.CallTo(() => memberUploadSubmitted.ComplianceYear).Returns(2016);
+            A.CallTo(() => memberUploadSubmitted.IsSubmitted).Returns(true);
 
-            producer.MemberUpload.Submit();
-            anotherProducer.MemberUpload.Submit();
+            MemberUpload memberUploadUnsubmitted = A.Fake<MemberUpload>();
+            A.CallTo(() => memberUploadUnsubmitted.ComplianceYear).Returns(2016);
+            A.CallTo(() => memberUploadUnsubmitted.IsSubmitted).Returns(false);
 
-            scheme.SetProducers(new List<Producer> { producer, anotherProducer, oneAnotherProducer });
-            var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear;
-            var producers = scheme.GetProducersList(complianceYear);
+            Producer producer1 = A.Fake<Producer>();
+            A.CallTo(() => producer1.MemberUpload).Returns(memberUploadSubmitted);
+            A.CallTo(() => producer1.IsCurrentForComplianceYear).Returns(true);
 
+            Producer producer2 = A.Fake<Producer>();
+            A.CallTo(() => producer2.MemberUpload).Returns(memberUploadSubmitted);
+            A.CallTo(() => producer2.IsCurrentForComplianceYear).Returns(true);
+
+            Producer producer3 = A.Fake<Producer>();
+            A.CallTo(() => producer3.MemberUpload).Returns(memberUploadUnsubmitted);
+            A.CallTo(() => producer3.IsCurrentForComplianceYear).Returns(false); // Must be false for an unsubmitted producer.
+
+            Guid organisationId = new Guid("5F60A794-1DB6-44E9-B66E-A5C8CBEEAF1A");
+
+            Scheme scheme = new Scheme(organisationId);
+            scheme.SetProducers(new List<Producer> { producer1, producer2, producer3 });
+
+            // Act
+            List<Producer> producers = scheme.GetProducersList(2016);
+
+            // Assert
             Assert.NotNull(producers);
             Assert.Equal(2, producers.Count);
             Assert.True(producers.Any(item => item.MemberUpload.IsSubmitted));
         }
 
+        /// <summary>
+        /// This test ensures that only the "current" version of a producer is returned by
+        /// Scheme.GetProcucersList(int) if the producer has been included on more than one
+        /// submitted member upload.
+        /// </summary>
         [Fact]
         public void GetProducerListByComplianceYear_SchemeHasProducersWithSamePRN_ReturnsOnlyLatestProducer()
         {
-            var scheme = GetTestScheme();
-            var producer = GetTestProducer("WEE/12345678");
-            var anotherProducer = GetTestProducer("WEE/12345678");
+            // Arrange
+            MemberUpload memberUpload1 = A.Fake<MemberUpload>();
+            A.CallTo(() => memberUpload1.ComplianceYear).Returns(2016);
+            A.CallTo(() => memberUpload1.IsSubmitted).Returns(true);
 
-            producer.MemberUpload.Submit();
-            anotherProducer.MemberUpload.Submit();
+            MemberUpload memberUpload2 = A.Fake<MemberUpload>();
+            A.CallTo(() => memberUpload2.ComplianceYear).Returns(2016);
+            A.CallTo(() => memberUpload2.IsSubmitted).Returns(true);
 
-            scheme.SetProducers(new List<Producer> { producer, anotherProducer });
-            var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear;
-            var producers = scheme.GetProducersList(complianceYear);
+            Producer producer1 = A.Fake<Producer>();
+            A.CallTo(() => producer1.RegistrationNumber).Returns("PRN1");
+            A.CallTo(() => producer1.MemberUpload).Returns(memberUpload1);
+            A.CallTo(() => producer1.IsCurrentForComplianceYear).Returns(false);
 
+            Producer producer2 = A.Fake<Producer>();
+            A.CallTo(() => producer2.RegistrationNumber).Returns("PRN1");
+            A.CallTo(() => producer2.MemberUpload).Returns(memberUpload2);
+            A.CallTo(() => producer2.IsCurrentForComplianceYear).Returns(true);
+
+            Guid organisationId = new Guid("5F60A794-1DB6-44E9-B66E-A5C8CBEEAF1A");
+
+            Scheme scheme = new Scheme(organisationId);
+            scheme.SetProducers(new List<Producer> { producer1, producer2 });
+
+            // Act
+            List<Producer> producers = scheme.GetProducersList(2016);
+
+            // Assert
             Assert.NotNull(producers);
             Assert.Equal(1, producers.Count);
-            Assert.Equal(anotherProducer.LastSubmitted, producers.First().LastSubmitted);
+            Assert.Equal(producers.Single(), producer2);
         }
 
         [Fact]
@@ -203,7 +270,7 @@
 
             var producer = new Producer(Guid.NewGuid(), memberUpload, business, authorisedRepresentative, DateTime.Now, 1000000000, true,
                 prn, DateTime.Now.AddDays(10), "Trading name", EEEPlacedOnMarketBandType.Both, SellingTechniqueType.Both, ObligationType.Both,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), ChargeBandType.A);
+                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), true, ChargeBandType.A);
 
             return producer;
         }
@@ -221,7 +288,7 @@
 
             var producer = new Producer(Guid.NewGuid(), memberUpload, business, authorisedRepresentative, DateTime.Now, 1000000000, true,
                 prn, DateTime.Now.AddDays(10), tradingName, EEEPlacedOnMarketBandType.Both, SellingTechniqueType.Both, ObligationType.Both,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), ChargeBandType.A);
+                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), true, ChargeBandType.A);
 
             return producer;
         }

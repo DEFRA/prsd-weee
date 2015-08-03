@@ -36,12 +36,10 @@
 
         public List<Producer> GetProducersList(int complianceYear)
         {
-            var producers = (from producer in Producers
-                             where producer.MemberUpload.IsSubmitted && producer.MemberUpload.ComplianceYear == complianceYear
-                             group producer by producer.RegistrationNumber into groups
-                             select groups.OrderByDescending(p => p.LastSubmitted).First()).ToList();
-
-            return producers;
+            return Producers
+                .Where(p => p.IsCurrentForComplianceYear)
+                .Where(p => p.MemberUpload.ComplianceYear == complianceYear)
+                .ToList();
         }
 
         public string GetProducerCSV(int complianceYear)

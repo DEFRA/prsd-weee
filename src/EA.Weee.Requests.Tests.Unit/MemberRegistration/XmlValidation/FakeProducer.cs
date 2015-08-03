@@ -27,7 +27,8 @@
             ObligationType obligationType,
             AnnualTurnOverBandType annualTurnOverBandType,
             List<BrandName> brandNames,
-            List<SICCode> codes) 
+            List<SICCode> codes,
+            bool isCurrentForComplianceYear) 
             : base(schemeId, 
             memberUpload, 
             producerBusiness, 
@@ -44,6 +45,7 @@
             annualTurnOverBandType, 
             brandNames, 
             codes,
+            isCurrentForComplianceYear,
             Domain.ChargeBandType.E)
         {
             this.schemeOrganisationId = schemeOrganisationId;
@@ -68,7 +70,8 @@
                 obligationType,
                 Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 brandNames.Select(bn => new BrandName(bn)).ToList(),
-                new List<SICCode>());
+                new List<SICCode>(),
+                true);
         }
 
         public override Scheme Scheme

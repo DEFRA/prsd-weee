@@ -27,13 +27,13 @@
         {
             schemeType schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
 
-            var producerChargeBandCalculator = new ProducerChargeBandCalculator();
+            var producerChargeBandCalculator = new ProducerChargeBandCalculator(context);
             var producerCharges = new Hashtable();
 
             foreach (var producer in schemeType.producerList)
             {
                 var producerName = producer.GetProducerName();
-                var producerCharge = producerChargeBandCalculator.CalculateCharge(producer, context);
+                var producerCharge = producerChargeBandCalculator.CalculateCharge(producer);
                 if (producerCharge != null)
                 {
                     if (!producerCharges.ContainsKey(producerName))
