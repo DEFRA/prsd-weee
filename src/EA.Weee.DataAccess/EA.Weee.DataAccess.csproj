@@ -77,11 +77,13 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
     <Compile Include="Identity\WeeeIdentityContext.cs" />
+    <Compile Include="Mappings\MemberUploadErrorTypeMapping.cs" />
     <Compile Include="Mappings\MigratedProducerMapping.cs" />
     <Compile Include="Mappings\ProducerAddressMapping.cs" />
     <Compile Include="Mappings\ProducerAuthorisedRepresentativeMapping.cs" />
     <Compile Include="Mappings\ProducerBrandNameMapping.cs" />
     <Compile Include="Mappings\ProducerBusinessMapping.cs" />
+    <Compile Include="Mappings\ProducerChargeBandMapping.cs" />
     <Compile Include="Mappings\ProducerContactMapping.cs" />
     <Compile Include="Mappings\ContactMapping.cs" />
     <Compile Include="Mappings\CountryMapping.cs" />

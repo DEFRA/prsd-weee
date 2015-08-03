@@ -295,7 +295,8 @@
                 AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 brandNames.Select(bn => new BrandName(bn)).ToList(),
                 new List<SICCode>(),
-                true);
+                true,
+                ChargeBandType.A);
         }
     }
 }

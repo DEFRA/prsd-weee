@@ -59,12 +59,14 @@
     <Content Include="scripts\Update\Sprint10\20150721-1638-MigratedProducers.sql" />
     <Content Include="scripts\Update\Sprint10\20150723-1006-UpdateProducerTables.sql" />
     <Content Include="scripts\Update\Sprint10\20150723-1419-MigratedProducers.sql" />
+    <Content Include="scripts\Update\Sprint10\20150729-122655-UpdateMemberUploadAndAddChargeBand.sql" />
     <Content Include="scripts\Update\Sprint10\20150730-1253-UpdateClaimsForExternalUsers.sql" />
     <Content Include="scripts\Update\Sprint09\20150728-1216-SystemDataTable.sql" />
     <Content Include="scripts\Update\Sprint10\20150730-1942-AddIsCurrentForComplianceYear.sql" />
     <Content Include="scripts\Update\Sprint10\20150730-1953-AddIndexForProducerIsCurrent.sql" />
     <Content Include="scripts\Update\Sprint10\20150730-1956-AddSppRefreshProducerIsCurrent.sql" />
     <Content Include="scripts\Update\Sprint10\20150731-1309-PopulateSystemData.sql" />
+    <Content Include="scripts\Update\Sprint10\20150803-1016-AddMemberUploadErrorType.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

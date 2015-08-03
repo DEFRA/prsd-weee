@@ -95,6 +95,7 @@
     <Compile Include="PCS\MemberRegistration\GenerateProducerObjects\IGenerateProducerFromXml.cs" />
     <Compile Include="PCS\MemberRegistration\GetMemberUploadByIdHandler.cs" />
     <Compile Include="PCS\MemberRegistration\GetMemberUploadDataHandler.cs" />
+    <Compile Include="PCS\MemberRegistration\IXmlChargeBandCalculator.cs" />
     <Compile Include="PCS\MemberRegistration\IXmlConverter.cs" />
     <Compile Include="PCS\MemberRegistration\GetProducerCSVByMemberUploadIdHandler.cs" />
     <Compile Include="PCS\MemberRegistration\MemberUploadSubmissionHandler.cs" />
@@ -112,6 +113,8 @@
     <Compile Include="Organisations\JoinOrganisationHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandler.cs" />
+    <Compile Include="PCS\MemberRegistration\ProducerChargeBandCalculator.cs" />
+    <Compile Include="PCS\MemberRegistration\XmlChargeBandCalculator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlConverter.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\BusinessValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\Extensions\DeserializedXmlExtensions.cs" />
@@ -119,9 +122,11 @@
     <Compile Include="PCS\MemberRegistration\XmlValidation\IXmlValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\ProducerTypeValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\SchemeTypeValidator.cs" />
+    <Compile Include="PCS\MemberRegistration\ProducerCharge.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\SchemaValidation\ISchemaValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\XmlValidator.cs" />
+    <Compile Include="PCS\MemberUploadTesting\BrokenXmlWriter.cs" />
     <Compile Include="PCS\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
     <Compile Include="PCS\MemberUploadTesting\IProducerListFactory.cs" />
     <Compile Include="PCS\MemberUploadTesting\IXmlGenerator.cs" />

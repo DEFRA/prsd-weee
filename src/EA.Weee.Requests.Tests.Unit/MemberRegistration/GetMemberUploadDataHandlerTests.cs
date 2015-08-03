@@ -27,13 +27,13 @@
             {
                 new MemberUpload(pcsId, "FAKE DATA", new List<MemberUploadError>
                 {
-                    new MemberUploadError(ErrorLevel.Warning, "FAKE WARNING"),
-                    new MemberUploadError(ErrorLevel.Error, "FAKE ERROR"),
-                    new MemberUploadError(ErrorLevel.Error, "FAKE ERROR"),
-                    new MemberUploadError(ErrorLevel.Fatal, "FAKE FATAL"),
-                    new MemberUploadError(ErrorLevel.Fatal, "FAKE FATAL"),
-                    new MemberUploadError(ErrorLevel.Fatal, "FAKE FATAL"),
-                }),
+                    new MemberUploadError(ErrorLevel.Warning, MemberUploadErrorType.Schema, "FAKE WARNING"),
+                    new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "FAKE ERROR"),
+                    new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "FAKE ERROR"),
+                    new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL"),
+                    new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Schema, "FAKE FATAL"),
+                    new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL"),
+                }, 0),
             };
 
             var handler = GetPreparedHandler(memberUploadsWithSeveralErrors);

@@ -67,14 +67,16 @@
                 var errors =
                     await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId));
 
+                var memberUpload = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadById(memberUploadId));
+
                 if (errors.Any(e => e.ErrorLevel == ErrorLevel.Error))
                 {
                     return View("ViewErrorsAndWarnings",
-                        new MemberUploadResultViewModel { MemberUploadId = memberUploadId, ErrorData = errors });
+                        new MemberUploadResultViewModel { MemberUploadId = memberUploadId, ErrorData = errors, TotalCharges = memberUpload.TotalCharges });
                 }
 
                 return View("XmlHasNoErrors",
-                    new MemberUploadResultViewModel { MemberUploadId = memberUploadId, ErrorData = errors });
+                    new MemberUploadResultViewModel { MemberUploadId = memberUploadId, ErrorData = errors, TotalCharges = memberUpload.TotalCharges });
             }
         }
 
