@@ -21,7 +21,7 @@
         private readonly IAuthenticationManager authenticationManager;
         private readonly Func<IOAuthClient> oauthClient;
         private readonly IEmailService emailService;
-
+  
         public AccountController(Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager, IEmailService emailService, Func<IOAuthClient> oauthClient)
         {
             this.apiClient = apiClient;
@@ -77,7 +77,7 @@
                     }
                 }
 
-                return RedirectToAction("UserAccountActivationRequired", "Account", new { area = "Admin" });
+                return RedirectToAction("AdminAccountActivationRequired", "Account", new { area = "Admin" });
             }
             catch (ApiBadRequestException ex)
             {
@@ -93,7 +93,7 @@
         }
      
         [HttpGet]
-        public ActionResult UserAccountActivationRequired()
+        public ActionResult AdminAccountActivationRequired()
         {
             var email = User.GetEmailAddress();
             if (!string.IsNullOrEmpty(email))
@@ -105,7 +105,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UserAccountActivationRequired(FormCollection model)
+        public async Task<ActionResult> AdminAccountActivationRequired(FormCollection model)
         {
             var email = User.GetEmailAddress();
             if (!string.IsNullOrEmpty(email))
@@ -129,12 +129,12 @@
                 ViewBag.Errors = new[] { "The activation email was not sent, please try again later." };
             }
 
-            return RedirectToAction("UserAccountActivationRequired", "Account", new { area = "Admin" });
+            return RedirectToAction("AdminAccountActivationRequired", "Account", new { area = "Admin" });
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult> ActivateUserAccount(Guid id, string code)
+        public async Task<ActionResult> ActivateAdminAccount(Guid id, string code)
         {
             using (var client = apiClient())
             {
@@ -148,7 +148,7 @@
 
                 if (!result)
                 {
-                    return RedirectToAction("UserAccountActivationRequired", "Account", new { area = "Admin" });
+                    return RedirectToAction("AdminAccountActivationRequired", "Account", new { area = "Admin" });
                 }
             }
 
@@ -163,7 +163,7 @@
 
                 if (Request.Url != null)
                 {
-                    var baseUrl = Url.Action("ActivateUserAccount", "Account", new { area = "Admin" }, Request.Url.Scheme);
+                    var baseUrl = Url.Action("ActivateAdminAccount", "Account", new { area = "Admin" }, Request.Url.Scheme);
                     var activationEmail = emailService.GenerateUserAccountActivationMessage(baseUrl, activationCode, userId, email);
                     return await emailService.SendAsync(activationEmail);
                 }
