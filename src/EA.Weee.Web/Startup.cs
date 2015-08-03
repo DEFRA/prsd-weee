@@ -22,7 +22,7 @@ namespace EA.Weee.Web
 
             var builder = new ContainerBuilder();
             builder.Register(c => configuration).As<ConfigurationService>().SingleInstance();
-            builder.Register(c => configuration.CurrentConfiguration).As<AppConfiguration>().SingleInstance();
+            builder.Register(c => configuration.CurrentConfiguration).As<IAppConfiguration>().SingleInstance();
             builder.Register(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
 
             var container = AutofacBootstrapper.Initialize(builder);

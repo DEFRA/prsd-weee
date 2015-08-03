@@ -9,5 +9,7 @@
         public List<MemberUploadErrorData> ErrorData { get; set; }
 
         public Guid MemberUploadId { get; set; }
+
+        public decimal TotalCharges { get; set; }
     }
 }

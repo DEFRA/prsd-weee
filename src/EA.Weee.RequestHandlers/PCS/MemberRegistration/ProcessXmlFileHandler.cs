@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -20,11 +21,14 @@
         private readonly IXmlConverter xmlConverter;
         private readonly IGenerateFromXml generateFromXml;
 
-        public ProcessXMLFileHandler(WeeeContext context, IXmlValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter)
+        private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
+
+        public ProcessXMLFileHandler(WeeeContext context, IXmlValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, IXmlChargeBandCalculator xmlChargeBandCalculator)
         {
             this.context = context;
             this.xmlValidator = xmlValidator;
             this.xmlConverter = xmlConverter;
+            this.xmlChargeBandCalculator = xmlChargeBandCalculator;
             this.generateFromXml = generateFromXml;
         }
         public async Task<Guid> HandleAsync(ProcessXMLFile message)
@@ -33,13 +37,26 @@
 
             var memberUploadErrors = errors as IList<MemberUploadError> ?? errors.ToList();
 
+            var producerCharges = xmlChargeBandCalculator.Calculate(message);
+
+            if (xmlChargeBandCalculator.ErrorsAndWarnings != null && xmlChargeBandCalculator.ErrorsAndWarnings.Count > 0)
+            {
+                ((List<MemberUploadError>)memberUploadErrors).AddRange(xmlChargeBandCalculator.ErrorsAndWarnings);
+            }
+
+            decimal totalCharges = 0;
+            foreach (DictionaryEntry producerCharge in producerCharges)
+            {
+                totalCharges = totalCharges + ((ProducerCharge)producerCharge.Value).ChargeAmount;
+            }
+
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-            var upload = new MemberUpload(message.OrganisationId, xmlConverter.Convert(message).ToString(), memberUploadErrors.ToList(), scheme.Id);
+            var upload = new MemberUpload(message.OrganisationId, xmlConverter.Convert(message).ToString(), memberUploadErrors.ToList(), totalCharges, scheme.Id);
 
             //Build producers domain object if there are no errors during validation of xml file.
             if (!memberUploadErrors.Any())
             {
-                var producers = await generateFromXml.Generate(message, upload);
+                var producers = await generateFromXml.Generate(message, upload, producerCharges);
                 context.MemberUploads.Add(upload);
                 context.Producers.AddRange(producers);
             }

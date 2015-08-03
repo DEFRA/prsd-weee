@@ -33,7 +33,7 @@
                     new MemberUploadError(ErrorLevel.Fatal, "FAKE FATAL"),
                     new MemberUploadError(ErrorLevel.Fatal, "FAKE FATAL"),
                     new MemberUploadError(ErrorLevel.Fatal, "FAKE FATAL"),
-                }),
+                }, 0),
             };
 
             var handler = GetPreparedHandler(memberUploadsWithSeveralErrors);

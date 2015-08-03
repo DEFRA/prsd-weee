@@ -118,6 +118,30 @@
         }
 
         [Fact]
+        public async void HttpPost_Create_ModelIsValid_ShouldSendEmail()
+        {
+            var model = ValidModel();
+
+            await AccountController().Create(model);
+
+            A.CallTo(() => emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void HttpPost_Create_ModelIsInvalid_ShouldNotSendEmail()
+        {
+            var model = ValidModel();
+            var controller = AccountController();
+            controller.ModelState.AddModelError("Key", "Something went wrong :(");
+
+            await controller.Create(model);
+
+            A.CallTo(() => emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
         public async void HttpPost_Create_ModelIsValid_ApiThrowsException_ShouldNotCatch()
         {
             var model = ValidModel();
@@ -134,10 +158,10 @@
         {
             return new InternalUserCreationViewModel
             {
-                ConfirmPassword = "Password*99",
-                Password = "Password*99",
-                Email = "test@environment-agency.gov.uk",
-                Name = "test",
+                ConfirmPassword = "Password*99", 
+                Password = "Password*99", 
+                Email = "test@environment-agency.gov.uk", 
+                Name = "test", 
                 Surname = "name"
             };
         }
@@ -149,7 +173,7 @@
             var context = A.Fake<HttpContextBase>();
             A.CallTo(() => context.Request).Returns(request);
 
-            var controller = new AccountController(() => apiClient, () => oauthClient, authenticationManager, emailService);
+            var controller = new AccountController(() => apiClient, authenticationManager, emailService, () => oauthClient);
             controller.ControllerContext = new ControllerContext(context, new RouteData(), controller);
 
             controller.Url = new UrlHelper(new RequestContext(controller.HttpContext, new RouteData()));
