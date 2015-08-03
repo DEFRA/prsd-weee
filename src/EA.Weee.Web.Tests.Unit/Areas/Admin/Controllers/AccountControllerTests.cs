@@ -62,7 +62,10 @@
                 .Returns(Task.FromResult(A<string>._));
 
             A.CallTo(() => apiClient.NewUser).Returns(newUser);
-      
+
+            A.CallTo(() => oauthClient.GetAccessTokenAsync(A<string>._, A<string>._))
+                      .Returns(A.Fake<TokenResponse>());
+
             await AccountController().Create(model);
 
             Assert.Equal(model.Name, userCreationData.FirstName);
