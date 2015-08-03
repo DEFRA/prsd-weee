@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation
 {
     using System;
-using System.Collections.Generic;
-using System.Linq;
-using DataAccess;
-using Domain;
-using Extensions;
-using FluentValidation;
-using Prsd.Core.Domain;
+    using System.Collections.Generic;
+    using System.Linq;
+    using DataAccess;
+    using Domain;
+    using Extensions;
+    using FluentValidation;
+    using Prsd.Core.Domain;
 
     public class SchemeTypeValidator : AbstractValidator<schemeType>
     {
