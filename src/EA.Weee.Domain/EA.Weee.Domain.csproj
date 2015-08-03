@@ -45,8 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChargeBandType.cs" />
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
+    <Compile Include="PCS\MemberUploadErrorType.cs" />
     <Compile Include="Producer\MigratedProducer.cs" />
     <Compile Include="Producer\ProducerAddress.cs" />
     <Compile Include="AnnualTurnOverBandType.cs" />
@@ -56,6 +58,7 @@
     <Compile Include="Country.cs" />
     <Compile Include="Producer\Business.cs" />
     <Compile Include="Producer\Company.cs" />
+    <Compile Include="Producer\ProducerChargeBand.cs" />
     <Compile Include="Producer\ProducerContact.cs" />
     <Compile Include="EEEPlacedOnMarketBandType.cs" />
     <Compile Include="ErrorLevel.cs" />

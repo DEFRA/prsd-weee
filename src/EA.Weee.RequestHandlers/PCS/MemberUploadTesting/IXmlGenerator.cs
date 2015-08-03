@@ -14,6 +14,6 @@
     /// </summary>
     public interface IXmlGenerator
     {
-        XDocument GenerateXml(ProducerList producerList);
+        XDocument GenerateXml(ProducerList producerList, ProducerListSettings settings);
     }
 }

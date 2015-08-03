@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration.GenerateProducerObjects
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.PCS;
@@ -8,6 +9,6 @@
 
     public interface IGenerateFromXml
     {
-        Task<IEnumerable<Producer>> Generate(ProcessXMLFile messageXmlFile, MemberUpload memberUpload);
+        Task<IEnumerable<Producer>> Generate(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Hashtable producerCharges);
     }
 }

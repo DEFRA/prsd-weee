@@ -2,12 +2,14 @@
 {
     using System;
     using System.CodeDom;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Xml.Linq;
     using System.Xml.Serialization;
     using Core.Helpers.PrnGeneration;
     using DataAccess;
@@ -17,6 +19,7 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Requests.PCS.MemberRegistration;
+    using XmlValidation.Extensions;
 
     public class GenerateProducerObjectsFromXml : IGenerateFromXml
     {
@@ -29,15 +32,15 @@
             this.context = context;
         }
 
-        public async Task<IEnumerable<Producer>> Generate(ProcessXMLFile messageXmlFile, MemberUpload memberUpload)
+        public async Task<IEnumerable<Producer>> Generate(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Hashtable producerCharges)
         {
             var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
             Guid schemeId = memberUpload.SchemeId.GetValueOrDefault();
-            var producers = await SetProducerData(deserializedXml, schemeId, memberUpload);
+            var producers = await SetProducerData(deserializedXml, schemeId, memberUpload, producerCharges);
             return producers;
         }
 
-        private async Task<IEnumerable<Producer>> SetProducerData(schemeType scheme, Guid schemeId, MemberUpload memberUpload)
+        private async Task<IEnumerable<Producer>> SetProducerData(schemeType scheme, Guid schemeId, MemberUpload memberUpload, Hashtable producerCharges)
         {
             List<Producer> producers = new List<Producer>();
 
@@ -46,6 +49,18 @@
 
             foreach (producerType producerData in scheme.producerList)
             {
+                var producerName = producerData.GetProducerName();
+
+                if (producerCharges == null)
+                {
+                    throw new ApplicationException("No charges have been supplied");
+                }
+                if (producerCharges[producerName] == null)
+                {
+                    throw new ApplicationException(string.Format("No charges have been supplied for the {0}.", producerName));
+                }
+                var producerChargeBandType = ((ProducerCharge)producerCharges[producerName]).ChargeBandType;
+
                 List<BrandName> brandNames = producerData.producerBrandNames.Select(name => new BrandName(name)).ToList();
 
                 List<SICCode> codes = producerData.SICCodeList.Select(name => new SICCode(name)).ToList();
@@ -74,23 +89,24 @@
                     producerRegistrationNo = generatedPrns.Dequeue();
                 }
 
-                Producer producer = new Producer(schemeId, 
-                    memberUpload, 
-                    producerBusiness, 
-                    authorisedRepresentative, 
-                    SystemTime.UtcNow, 
-                    (decimal)producerData.annualTurnover, 
-                    producerData.VATRegistered, 
-                    producerRegistrationNo, 
-                    ceaseDate, 
-                    producerData.tradingName, 
-                    eeebandType, 
-                    sellingTechniqueType, 
-                    obligationType, 
-                    annualturnoverType, 
+                Producer producer = new Producer(schemeId,
+                    memberUpload,
+                    producerBusiness,
+                    authorisedRepresentative,
+                    SystemTime.UtcNow,
+                    (decimal)producerData.annualTurnover,
+                    producerData.VATRegistered,
+                    producerRegistrationNo,
+                    ceaseDate,
+                    producerData.tradingName,
+                    eeebandType,
+                    sellingTechniqueType,
+                    obligationType,
+                    annualturnoverType,
                     brandNames,
                     codes,
-                    true);
+                    true,
+                    producerChargeBandType);
 
                 // modify producer data
                 switch (producerData.status)
@@ -251,23 +267,23 @@
         {
             var country = await GetCountry(contactDetails);
             ProducerAddress address = new ProducerAddress(
-                contactDetails.address.primaryName, 
-                contactDetails.address.secondaryName, 
-                contactDetails.address.streetName, 
-                contactDetails.address.town, 
-                contactDetails.address.locality, 
-                contactDetails.address.administrativeArea, 
-                country, 
+                contactDetails.address.primaryName,
+                    contactDetails.address.secondaryName,
+                    contactDetails.address.streetName,
+                    contactDetails.address.town,
+                    contactDetails.address.locality,
+                    contactDetails.address.administrativeArea,
+                country,
                 contactDetails.address.Item);
 
             ProducerContact contact = new ProducerContact(
-                contactDetails.title, 
-                contactDetails.forename, 
-                contactDetails.surname, 
-                contactDetails.phoneLandLine, 
-                contactDetails.phoneMobile, 
-                contactDetails.fax, 
-                contactDetails.email, 
+                contactDetails.title,
+                    contactDetails.forename,
+                    contactDetails.surname,
+                    contactDetails.phoneLandLine,
+                    contactDetails.phoneMobile,
+                    contactDetails.fax,
+                contactDetails.email,
                 address);
 
             return contact;

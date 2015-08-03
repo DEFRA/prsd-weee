@@ -227,6 +227,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\Admin\Views\Emails\ActivateUserAccount.txt" />
     <Content Include="Areas\PCS\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -451,7 +452,9 @@
     <Content Include="Areas\Test\Views\GeneratePcsXml\SelectOrganisation.cshtml" />
     <Content Include="Areas\Test\Views\GeneratePcsXml\SpecifyOptions.cshtml" />
     <Content Include="Areas\Test\Views\GeneratePcsXml\DownloadFile.cshtml" />
-    <Content Include="Areas\Admin\Views\Account\UserAccountActivationRequired.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\AdminAccountActivationRequired.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\ActivateUserAccount.cshtml" />
+    <Content Include="Areas\Admin\Views\Emails\ActivateUserAccount.cshtml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
@@ -562,9 +565,9 @@
     <Compile Include="Areas\Test\Controllers\GeneratePcsXmlController.cs" />
     <Compile Include="Areas\Test\Controllers\HomeController.cs" />
     <Compile Include="Areas\Test\TestAreaRegistration.cs" />
-    <Compile Include="Areas\Test\ViewModels\GeneratePcsXmlOptionsViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SpecifyOptionsViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\HomeViewModel.cs" />
-    <Compile Include="Areas\Test\ViewModels\SelectOrganisationViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SelectOrganisationViewModel.cs" />
     <Compile Include="Controllers\Base\ExternalSiteController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Filters\AuthorizeClaimsAttribute.cs" />

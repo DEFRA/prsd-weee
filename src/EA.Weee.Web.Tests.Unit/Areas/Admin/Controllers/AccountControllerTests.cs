@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Net;
+    using System.Net.Mail;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web;
@@ -61,8 +62,9 @@
                 .Returns(Task.FromResult(A<string>._));
 
             A.CallTo(() => apiClient.NewUser).Returns(newUser);
+
             A.CallTo(() => oauthClient.GetAccessTokenAsync(A<string>._, A<string>._))
-                .Returns(A.Fake<TokenResponse>());
+                      .Returns(A.Fake<TokenResponse>());
 
             await AccountController().Create(model);
 
@@ -98,7 +100,7 @@
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("UserAccountActivationRequired", redirectValues["action"]);
+            Assert.Equal("AdminAccountActivationRequired", redirectValues["action"]);
             Assert.Equal("Account", redirectValues["controller"]);
             Assert.Equal("Admin", redirectValues["area"]);
         }
@@ -138,6 +140,54 @@
             A.CallTo(() => apiClient.NewUser).Returns(newUser);
 
             await Assert.ThrowsAnyAsync<ApiException>(() => AccountController().Create(model));
+        }
+
+        [Fact]
+        public async void HttpPost_AdminAccountActivationRequired_IfUserResendsActivationEmail_ShouldSendActivationEmail()
+        {
+            var newUser = A.Fake<INewUser>();
+            var controller = AccountController();
+
+            var fakeUrlHelper = A.Fake<UrlHelper>();
+            controller.Url = fakeUrlHelper;
+            string route = "/Admin/Account/ActivateUserAccount";
+            A.CallTo(() => fakeUrlHelper.Action(A<string>.Ignored, A<string>.Ignored)).Returns(route);
+
+            A.CallTo(() => apiClient.NewUser).Returns(newUser);
+
+            A.CallTo(
+                () =>
+                    emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
+                .Returns(new MailMessage());
+
+            await controller.AdminAccountActivationRequired(A<FormCollection>._);
+
+            A.CallTo(() => emailService.SendAsync(A<MailMessage>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void AdminAccount_IfNotActivated_ShouldRedirectToAdminAccountActivationRequired()
+        {
+            Guid id = Guid.NewGuid();
+            string code =
+                "LZHQ5TGVPA6FtUb6AmSssW6o8GpGtkMzRJTP4%2bhK9CGitEafOHBRGriU%2b7ruHbAq85Btymlnu1ewPxkIZGE17v98a21EPTaCNE1N2QlD%2b5FDgwULWlC28SS%2fKpFRIEXD9RaaYjSS6%2bfyvyexihUGKskaqaTB4%2f%2b4bRcZ%2fniu%2bqCNT%2fSY6ziGbvkNRX9oM%2fXW";
+
+            A.CallTo(() => apiClient.NewUser.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code }))
+               .Returns(false);
+
+            var result = await AccountController().ActivateUserAccount(id, code);
+            var redirectToRouteResult = ((RedirectToRouteResult)result);
+
+            Assert.Equal("AdminAccountActivationRequired", redirectToRouteResult.RouteValues["action"]);
+        }
+
+        [Fact]
+        public async void AdminAccount_ActiveUserAccount_ActivatesTheAccount()
+        {
+            await AccountController().ActivateUserAccount(A<Guid>._, A<string>._);
+
+            A.CallTo(() => apiClient.NewUser.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         private InternalUserCreationViewModel ValidModel()
