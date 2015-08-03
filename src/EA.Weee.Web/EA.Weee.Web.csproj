@@ -486,7 +486,9 @@
     <Content Include="Scripts\vendor\jquery-1.11.0.min.js" />
     <Content Include="Scripts\vendor\modernizr.custom.77028.js" />
     <Content Include="Scripts\vendor\prism.js" />
-    <Content Include="Views\Emails\ActivateUserAccount.txt" />
+    <Content Include="Views\Emails\ActivateUserAccount.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
     <Content Include="Scripts\jquery-2.1.3.min.map" />
     <Content Include="Views\_ViewStart.cshtml" />
@@ -521,7 +523,9 @@
     <Content Include="Views\OrganisationRegistration\JoinOrganisationConfirmation.cshtml" />
     <Content Include="Views\OrganisationRegistration\ReviewOrganisationDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddressPrepopulate.cshtml" />
-    <Content Include="Views\Emails\ActivateUserAccount.cshtml" />
+    <Content Include="Views\Emails\ActivateUserAccount.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\Account\ActivateUserAccount.cshtml" />
     <Content Include="Views\Account\UserAccountActivationRequired.cshtml" />
     <Content Include="Views\Organisation\HoldingMessageForPending.cshtml" />
@@ -567,6 +571,7 @@
     <Compile Include="Filters\AuthorizeClaimsAttribute.cs" />
     <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
+    <Compile Include="Services\EmailRules\IRuleChecker.cs" />
     <Compile Include="Services\EmailRules\RuleAction.cs" />
     <Compile Include="Services\EmailRules\RuleChecker.cs" />
     <Compile Include="Services\EmailRules\RuleElement.cs" />
@@ -577,10 +582,13 @@
     <Compile Include="Services\EmailTemplate.cs" />
     <Compile Include="Services\EmailTemplateService.cs" />
     <Compile Include="Services\FileConverterService.cs" />
+    <Compile Include="Services\IAppConfiguration.cs" />
     <Compile Include="Services\IEmailService.cs" />
     <Compile Include="Services\IEmailTemplateService.cs" />
     <Compile Include="Areas\PCS\Controllers\HomeController.cs" />
     <Compile Include="Services\IFileConverterService.cs" />
+    <Compile Include="Services\ISmtpClient.cs" />
+    <Compile Include="Services\SmtpClientProxy.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\PCS\PCSAreaRegistration.cs" />

@@ -18,12 +18,11 @@
     public class AccountController : Controller
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly Func<IOAuthClient> oauthClient;
         private readonly IAuthenticationManager authenticationManager;
+        private readonly Func<IOAuthClient> oauthClient;
         private readonly IEmailService emailService;
 
-        public AccountController(Func<IWeeeClient> apiClient, Func<IOAuthClient> oauthClient,
-            IAuthenticationManager authenticationManager, IEmailService emailService)
+        public AccountController(Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager, IEmailService emailService, Func<IOAuthClient> oauthClient)
         {
             this.apiClient = apiClient;
             this.oauthClient = oauthClient;
@@ -50,11 +49,11 @@
 
             var userCreationData = new UserCreationData
             {
-                Email = model.Email,
-                FirstName = model.Name,
-                Surname = model.Surname,
-                Password = model.Password,
-                ConfirmPassword = model.ConfirmPassword,
+                Email = model.Email, 
+                FirstName = model.Name, 
+                Surname = model.Surname, 
+                Password = model.Password, 
+                ConfirmPassword = model.ConfirmPassword, 
                 Claims = new[]
                 {
                     Claims.CanAccessInternalArea
@@ -66,7 +65,9 @@
                 using (var client = apiClient())
                 {
                     var userId = await client.NewUser.CreateUserAsync(userCreationData);
-                    bool emailSent = await SendEmail(userCreationData.Email, userCreationData.Password, userId);
+                    var signInResponse = await oauthClient().GetAccessTokenAsync(userCreationData.Email, userCreationData.Password);
+                    authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
+                    bool emailSent = await Send(userCreationData.Email, userId, signInResponse.AccessToken);
                     if (!emailSent)
                     {
                         ViewBag.Errors = new[]
@@ -90,14 +91,7 @@
 
             return View(model);
         }
-
-        public async Task<bool> SendEmail(string email, string password, string userId)
-        {
-            var signInResponse = await oauthClient().GetAccessTokenAsync(email, password);
-            authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
-            return await Send(email, userId, signInResponse.AccessToken);
-        }
-
+     
         [HttpGet]
         public ActionResult UserAccountActivationRequired()
         {
