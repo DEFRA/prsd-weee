@@ -14,6 +14,13 @@
 
     @if (Model.ErrorData == null || Model.ErrorData.Count == 0)
     {
+        <div class="highlight-section">
+            <p class="highlight-section-text">The producer registration charges for new members is</p>
+            <p class="highlight-section-amount">
+                £@Model.TotalCharges.ToString("N2")
+            </p>
+        </div>
+
         <p>Your XML file contains no errors or warnings. You may submit the file as it is.</p>
     }
     else
@@ -26,10 +33,10 @@
     @foreach (MemberUploadErrorData error in Model.ErrorData)
     {
         var errorClass = "panel-indent-info";
-        
+
         if (error.ErrorLevel == ErrorLevel.Warning) { errorClass = "panel-indent-warning"; }
-        if (error.ErrorLevel == ErrorLevel.Error)   { errorClass = "panel-indent-danger"; }
-        
+        if (error.ErrorLevel == ErrorLevel.Error) { errorClass = "panel-indent-danger"; }
+
         <div class="@errorClass">
             <div class="alert alert-danger" role="alert">
                 <strong>@error.ErrorLevel.ToString(): </strong>@error.Description
@@ -43,9 +50,9 @@
         @Html.HiddenFor(m => m.MemberUploadId)
 
         <div class="form-group">
-            <input type="submit" value="Submit" class="button"/>
+            <input type="submit" value="Submit" class="button" />
         </div>
 
-        <p>Go back and @Html.ActionLink("upload a new file.","AddOrAmendMembers","MemberRegistration")</p>
+        <p>Go back and @Html.ActionLink("upload a new file.", "AddOrAmendMembers", "MemberRegistration")</p>
     }
 }

@@ -8,6 +8,7 @@
 #global-header-bar {
     @extend %site-width-container;
 }
+
 #global-header-bar .inner-block {
     padding: 0;
 }
@@ -61,7 +62,6 @@
     border: 1px solid $grey-2;
     margin-top: $gutter-half;
     margin-bottom: $gutter*1.5;
-
     padding-top: $gutter;
     padding-right: $gutter-half;
     padding-bottom: $gutter-half;
@@ -76,57 +76,52 @@
 
     &:before {
         content: "EXAMPLE";
-
         position: absolute;
         top: 0;
         left: 0;
-
         padding: em(4) em(15) em(4) em(15);
 
         @include core-14;
         background: $grey-2;
         color: white;
     }
-
     // Blue text for heading sizes
     .highlight {
         font-style: normal;
         color: $hm-government;
     }
-
     // Fix grid layout within example boxes for IE7 and below
     // where box-sizing isn't supported: http://caniuse.com/#search=box-sizing
     @mixin example-box-column($width) {
         width: (($site-width - $gutter) * $width) - $gutter;
     }
 
-    @include ie-lte(7){
-
+    @include ie-lte(7) {
         // Set example box width to 900px (removing left and right padding)
         $example-box-width: $site-width - ($gutter * 2);
         width: $example-box-width;
-
         // Recalculate grid column widths
         .column-quarter {
             @include example-box-column( 1/4 );
         }
+
         .column-half {
             @include example-box-column( 1/2 );
         }
+
         .column-third {
             @include example-box-column( 1/3 );
         }
+
         .column-two-thirds {
             @include example-box-column( 2/3 );
         }
-        
-               // Scale images to fit grid columns
+        // Scale images to fit grid columns
         img {
             width: 100%;
         }
     }
-
-    }
+}
 
 
 // 1. Layout
@@ -137,9 +132,11 @@
     background: file-url("examples/grid.png") 0 0 repeat;
     margin-bottom: 0;
     height: 30px;
+
     @include media(tablet) {
         height: 60px;
     }
+
     overflow: hidden;
     text-indent: -999em;
 }
@@ -157,39 +154,27 @@
     width: 60px;
     height: 60px;
     @include border-radius(100%);
+
     @include media(mobile) {
         clear: both;
         float: left;
         margin-right: $gutter-half;
         margin-bottom: $gutter-half;
     }
+
     @include media(tablet) {
         margin: 0 auto $gutter-half auto;
     }
 }
 
 // Sass list for colour palette
-$palette: ( 
-    ("purple", $purple), 
-    ("mauve", $mauve), 
-    ("fuschia", $fuschia), 
-    ("pink", $pink), 
-    ("baby-pink", $baby-pink), 
-    ("red", $red),
-     ("mellow-red", $mellow-red), 
-    ("orange", $orange), 
-    ("brown", $brown), 
-    ("yellow", $yellow),
-     ("green", $green), 
-    ("grass-green", $grass-green), 
-    ("turquoise", $turquoise), 
-    ("light-blue", $light-blue)
- );
+$palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pink", $pink), ("baby-pink", $baby-pink), ("red", $red), ("mellow-red", $mellow-red), ("orange", $orange), ("brown", $brown), ("yellow", $yellow), ("green", $green), ("grass-green", $grass-green), ("turquoise", $turquoise), ("light-blue", $light-blue) );
 
 @mixin color-swatches {
     @each $color in $palette {
         $color-name: nth($color, 1);
         $color-var: nth($color, 2);
+
         .swatch-#{$color-name} {
             background-color: $color-var;
         }
@@ -307,14 +292,17 @@ $palette: (
 
     ul {
         padding-bottom: $gutter-half;
+
         @include media(mobile) {
             min-height: 50px;
             padding-top: 10px;
         }
     }
+
     li {
         @include core-16;
     }
+
     b {
         font-weight: bold;
         text-transform: uppercase;
@@ -347,7 +335,7 @@ $palette: (
 // 6. Forms
 // ==========================================================================
 
-.progress-indicator {    
+.progress-indicator {
     font-family: $NTA-Light;
     font-size: 16px;
     line-height: 1.25;
@@ -420,12 +408,12 @@ $palette: (
             width: auto;
             padding: 3px 12px;
 
-            a{
+            a {
                 @include core-16();
             }
         }
 
-        li:first-child{
+        li:first-child {
             font-weight: 600;
         }
 
@@ -448,23 +436,23 @@ $palette: (
     }
 }
 
-.return-link{
+.return-link {
     margin-top: $gutter;
 }
 
-.table-divider{
+.table-divider {
     color: $border-colour;
 }
 
-.validation-summary-errors{
+.validation-summary-errors {
 }
 
-.field-validation-valid{
-    padding-bottom:0;
-    padding-top:0;
+.field-validation-valid {
+    padding-bottom: 0;
+    padding-top: 0;
 }
 
-.link-submit{
+.link-submit {
     background: none;
     border: none;
     padding: 0;
@@ -479,7 +467,7 @@ $palette: (
     text-decoration: underline;
 }
 
-.link-submit:hover{
+.link-submit:hover {
     color: #2E8ACA;
 }
 
@@ -501,26 +489,26 @@ $palette: (
     text-decoration: underline;
 }
 
-.text-area{
+.text-area {
     height: 200px;
 }
 
-.full-width{
+.full-width {
     width: $full-width;
 }
 
-.grid-view:last-child{
+.grid-view:last-child {
     float: none;
     margin-bottom: 10px;
 }
 
-.two-thirds{
+.two-thirds {
     width: $two-thirds;
 }
 
 .important-image {
     vertical-align: middle;
-    margin-right:20px;
+    margin-right: 20px;
 }
 
 .panel-indent-danger {
@@ -547,7 +535,7 @@ $palette: (
 .error-details {
     border-left: 3px solid $error-colour;
     padding: 10px 0 10px 10px;
-    background-color: #FEF7F7;   
+    background-color: #FEF7F7;
 }
 
 .error-details-summary {
@@ -564,4 +552,34 @@ $palette: (
 .error-list li {
     margin-left: 30px;
     margin-bottom: 30px;
+}
+
+.highlight-section {
+    width: 615px;
+    height: 130px;
+    background-color: #30a197;
+}
+
+.highlight-section-text {
+    padding-top: 15px;
+    height: 30px;
+    font-size: 19px;
+    color: #FFFFFF;
+    text-align: center;
+    font-family: 'Arial Bold', 'Arial';
+    font-weight: 700;
+    font-style: normal;
+    line-height: normal;
+}
+
+.highlight-section-amount {
+    white-space: nowrap;
+    height: 57px;
+    font-size: 48px;
+    color: #FFFFFF;
+    font-family: 'Arial Bold', 'Arial';
+    font-weight: 700;
+    font-style: normal;
+    line-height: normal;
+    text-align: center;
 }
