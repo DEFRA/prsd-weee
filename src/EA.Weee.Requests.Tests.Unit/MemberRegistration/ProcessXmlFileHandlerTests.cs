@@ -32,7 +32,7 @@
         private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
         private static readonly Guid organisationId = Guid.NewGuid();
         private static readonly ProcessXMLFile Message = new ProcessXMLFile(organisationId, new byte[1]);
-
+        
         public ProcessXMLFileHandlerTests()
         {
             memberUploadsDbSet = A.Fake<DbSet<MemberUpload>>();

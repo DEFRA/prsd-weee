@@ -19,7 +19,6 @@
         private readonly IXmlValidator xmlValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IGenerateFromXml generateFromXml;
-
         private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
 
         public ProcessXMLFileHandler(WeeeContext context, IXmlValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, IXmlChargeBandCalculator xmlChargeBandCalculator)
