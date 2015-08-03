@@ -35,7 +35,7 @@
         [Fact]
         public async Task GetProducerCSVByMemberUploadIdHandler_InvalidMemberUploadId_ArgumentException()
         {
-            var memberUploads = new[] { new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), Guid.NewGuid()) };
+            var memberUploads = new[] { new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, Guid.NewGuid()) };
 
             var handler = GetPreparedHandler(memberUploads);
 

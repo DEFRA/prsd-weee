@@ -261,6 +261,28 @@
             }).ToArray();
         }
 
+        private Producer Producer(ObligationType obligationType, string prn, params string[] brandNames)
+        {
+            return new Producer(Guid.NewGuid(),
+                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>(), 0),
+                new ProducerBusiness(),
+                new AuthorisedRepresentative("authrep"),
+                DateTime.Now,
+                decimal.Zero,
+                true,
+                prn,
+                null,
+                "trading name",
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                obligationType,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                brandNames.Select(bn => new BrandName(bn)).ToList(),
+                new List<SICCode>(),
+                true,
+                ChargeBandType.A);
+        }
+
         private ObligationType MapObligationType(obligationTypeType obligationType)
         {
             switch (obligationType)
