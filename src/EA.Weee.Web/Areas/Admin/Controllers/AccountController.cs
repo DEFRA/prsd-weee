@@ -12,6 +12,7 @@
     using Prsd.Core.Web.Mvc.Extensions;
     using Prsd.Core.Web.OAuth;
     using Services;
+    using Thinktecture.IdentityModel.Client;
     using ViewModels;
 
     public class AccountController : Controller
@@ -48,11 +49,11 @@
 
             var userCreationData = new UserCreationData
             {
-                Email = model.Email, 
-                FirstName = model.Name, 
-                Surname = model.Surname, 
-                Password = model.Password, 
-                ConfirmPassword = model.ConfirmPassword, 
+                Email = model.Email,
+                FirstName = model.Name,
+                Surname = model.Surname,
+                Password = model.Password,
+                ConfirmPassword = model.ConfirmPassword,
                 Claims = new[]
                 {
                     Claims.CanAccessInternalArea
@@ -120,6 +121,71 @@
             //TODO Resend activation email
 
             return RedirectToAction("UserAccountActivationRequired", "Account", new { area = "Admin" });
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Login(string returnUrl)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToLocal(returnUrl);
+            }
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Login(InternalLoginViewModel model, string returnUrl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var response = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
+            if (response.AccessToken != null)
+            {
+                authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = model.RememberMe },
+                    response.GenerateUserIdentity());
+                return RedirectToLocal(returnUrl);
+            }
+
+            ModelState.AddModelError(string.Empty, ParseLoginError(response.Error));
+
+            return View(model);
+        }
+
+        private ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            return RedirectToAction("Login", "Account", new { area = "Admin" });
+        }
+
+        private string ParseLoginError(string error)
+        {
+            switch (error)
+            {
+                case OAuth2Constants.Errors.AccessDenied:
+                    return "Access denied";
+                case OAuth2Constants.Errors.InvalidGrant:
+                    return "Invalid credentials";
+                case OAuth2Constants.Errors.Error:
+                case OAuth2Constants.Errors.InvalidClient:
+                case OAuth2Constants.Errors.InvalidRequest:
+                case OAuth2Constants.Errors.InvalidScope:
+                case OAuth2Constants.Errors.UnauthorizedClient:
+                case OAuth2Constants.Errors.UnsupportedGrantType:
+                case OAuth2Constants.Errors.UnsupportedResponseType:
+                default:
+                    return "Internal error";
+            }
         }
     }
 }
