@@ -25,12 +25,25 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
         {
             Address address = new Address();
 
-            address.PrimaryName = RandomHelper.CreateRandomString(string.Empty, 1, 100);
-            address.SecondaryName = RandomHelper.CreateRandomString(string.Empty, 0, 100);
-            address.StreetName = RandomHelper.CreateRandomString(string.Empty, 0, 50); //100?
-            address.Town = RandomHelper.CreateRandomString(string.Empty, 0, 30);
-            address.Locality = RandomHelper.CreateRandomString(string.Empty, 0, 35);
-            address.AdministrativeArea = RandomHelper.CreateRandomString(string.Empty, 0, 30);
+            if (!settings.IgnoreStringLengthConditions)
+            {
+                address.PrimaryName = RandomHelper.CreateRandomString(string.Empty, 1, 100);
+                address.SecondaryName = RandomHelper.CreateRandomString(string.Empty, 0, 100);
+                address.StreetName = RandomHelper.CreateRandomString(string.Empty, 0, 50); //100?
+                address.Town = RandomHelper.CreateRandomString(string.Empty, 0, 30);
+                address.Locality = RandomHelper.CreateRandomString(string.Empty, 0, 35);
+                address.AdministrativeArea = RandomHelper.CreateRandomString(string.Empty, 0, 30);
+            }
+            else
+            {
+                address.PrimaryName = RandomHelper.CreateRandomString(string.Empty, 0, 1000);
+                address.SecondaryName = RandomHelper.CreateRandomString(string.Empty, 0, 1000);
+                address.StreetName = RandomHelper.CreateRandomString(string.Empty, 0, 1000);
+                address.Town = RandomHelper.CreateRandomString(string.Empty, 0, 1000);
+                address.Locality = RandomHelper.CreateRandomString(string.Empty, 0, 1000);
+                address.AdministrativeArea = RandomHelper.CreateRandomString(string.Empty, 0, 1000);
+            }
+                
             address.Country = "UK - ENGLAND";
             address.PostCode = "GU22 7UY";
 

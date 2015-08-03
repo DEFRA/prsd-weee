@@ -22,12 +22,26 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
         {
             Partnership partnership = new Partnership();
 
-            partnership.PartnershipName = RandomHelper.CreateRandomString(string.Empty, 1, 255);
+            if (!settings.IgnoreStringLengthConditions)
+            {
+                partnership.PartnershipName = RandomHelper.CreateRandomString(string.Empty, 1, 255);
+            }
+            else
+            {
+                partnership.PartnershipName = RandomHelper.CreateRandomString(string.Empty, 0, 1000);
+            }
 
             int numberOfParterships = RandomHelper.R.Next(1, 5);
             for (int index = 0; index < numberOfParterships; ++index)
             {
-                partnership.PartnershipList.Add(RandomHelper.CreateRandomString(string.Empty, 1, 70));
+                if (!settings.IgnoreStringLengthConditions)
+                {
+                    partnership.PartnershipList.Add(RandomHelper.CreateRandomString(string.Empty, 1, 70));
+                }
+                else
+                {
+                    partnership.PartnershipList.Add(RandomHelper.CreateRandomString(string.Empty, 0, 1000));
+                }
             }
 
             partnership.PrincipalPlaceOfBusiness = ContactDetails.Create(settings);

@@ -10,7 +10,7 @@
     /// The list of rules are implemented in the "rules" section of the configuration file.
     /// Rules are matched in the order they are defined so the most specific rules should be implemented first.
     /// </summary>
-    public class RuleChecker
+    public class RuleChecker : IRuleChecker
     {
         private Dictionary<string, Regex> regularExpressions = new Dictionary<string, Regex>();
 
