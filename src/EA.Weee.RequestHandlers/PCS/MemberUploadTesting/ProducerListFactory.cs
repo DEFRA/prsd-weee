@@ -55,6 +55,7 @@
 
                 producerSettings.SchemaVersion = listSettings.SchemaVersion;
                 producerSettings.IsNew = true;
+                producerSettings.IgnoreStringLengthConditions = listSettings.IgnoreStringLengthConditions;
 
                 Producer producer = Producer.Create(producerSettings);
 
@@ -86,6 +87,7 @@
                 producerSettings.SchemaVersion = listSettings.SchemaVersion;
                 producerSettings.IsNew = false;
                 producerSettings.RegistrationNumber = registrationNumbers[index];
+                producerSettings.IgnoreStringLengthConditions = listSettings.IgnoreStringLengthConditions;
 
                 Producer producer = Producer.Create(producerSettings);
 
