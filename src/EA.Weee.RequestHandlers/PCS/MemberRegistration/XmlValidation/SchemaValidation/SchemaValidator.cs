@@ -32,6 +32,13 @@
 
             try
             {
+                //check if the xml is not blank before doing any validations
+                if (message.Data != null && message.Data.Length == 0)
+                {
+                    errors.Add(new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "Xml file is blank"));
+                    return errors;
+                }
+
                 // Validate against the schema
                 var source = xmlConverter.Convert(message);
                 var schemas = new XmlSchemaSet();
@@ -64,7 +71,6 @@
             {
                 errors.Add(new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, ex.Message));
             }
-
             return errors;
         }
     }
