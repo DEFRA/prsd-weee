@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EA.Weee.Core.PCS.MemberUploadTesting
+﻿namespace EA.Weee.Core.PCS.MemberUploadTesting
 {
     public class OverseasProducer
     {
@@ -13,7 +7,6 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
 
         public OverseasProducer()
         {
-
         }
 
         internal static OverseasProducer Create(IOverseasProducerSettings settings)
