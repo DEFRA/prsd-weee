@@ -243,7 +243,7 @@
             {
                 companiesHouseNumber = producer.ProducerBusiness.CompanyDetails.CompanyNumber;
             }
-            var chargeBand = "***";
+            var chargeBand = Enumeration.FromValue<ChargeBandType>(producer.ChargeBandType).DisplayName;
             var dateRegistered = string.Format("{0:dd/MM/yyyy HH:mm:ss}", GetProducerRegistrationDate(producer.RegistrationNumber, producer.MemberUpload.ComplianceYear));
             var authorisedRepresentative = producer.AuthorisedRepresentative == null ? "No" : "Yes";
             var overseasProducer = producer.AuthorisedRepresentative == null

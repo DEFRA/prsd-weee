@@ -183,8 +183,9 @@
             var producerContact = new ProducerContact("Mr.", "Firstname", "Lastname", "12345", "9898988", "43434433",
                 "test@test.com", producerAddress);
             var partnership = new Partnership("Test partnership Name", producerContact, new List<Partner>());
+            var chargeBandType = ChargeBandType.A;
 
-            var producer = GetTestProducer("WEE/12345678", "Test trading name", null, partnership, null);
+            var producer = GetTestProducer("WEE/12345678", "Test trading name", null, partnership, null, chargeBandType);
             producer.MemberUpload.Submit();
             producer.MemberUpload.SetProducers(new List<Producer> { producer });
             producer.SetScheme(scheme);
@@ -201,6 +202,7 @@
             Assert.Equal(csvFieldValues[1], "Test trading name");
             Assert.Equal(csvFieldValues[2], "WEE/12345678");
             Assert.Equal(csvFieldValues[3], String.Empty);
+            Assert.Equal(csvFieldValues[4], chargeBandType.DisplayName);
             Assert.Equal(csvFieldValues[5], string.Format("{0:dd/MM/yyyy HH:mm:ss}", scheme.Producers.First().LastSubmitted));
             Assert.Equal(csvFieldValues[6], "No");
             Assert.Equal(csvFieldValues[7], string.Empty);
@@ -217,8 +219,9 @@
                 "test@test.com", producerAddress);
             var authorisedRepresentative = new AuthorisedRepresentative("Name", producerContact);
             var companyDetails = new Company("Test company name", "Test registration number", producerContact);
-            
-            var producer = GetTestProducer("WEE/12345678", "Test trading name", companyDetails, null, authorisedRepresentative);
+            var chargeBandType = ChargeBandType.B;
+
+            var producer = GetTestProducer("WEE/12345678", "Test trading name", companyDetails, null, authorisedRepresentative, chargeBandType);
             producer.MemberUpload.Submit();
             producer.MemberUpload.SetProducers(new List<Producer> { producer });
             producer.SetScheme(scheme);
@@ -235,6 +238,7 @@
             Assert.Equal(csvFieldValues[1], "Test trading name");
             Assert.Equal(csvFieldValues[2], "WEE/12345678");
             Assert.Equal(csvFieldValues[3], companyDetails.CompanyNumber);
+            Assert.Equal(csvFieldValues[4], chargeBandType.DisplayName);
             Assert.Equal(csvFieldValues[5], string.Format("{0:dd/MM/yyyy HH:mm:ss}", scheme.Producers.First().LastSubmitted));
             Assert.Equal(csvFieldValues[6], "Yes");
             Assert.Equal(csvFieldValues[7], authorisedRepresentative.OverseasProducerName);
@@ -275,7 +279,7 @@
             return producer;
         }
 
-        private static Producer GetTestProducer(string prn, string tradingName, Company companyDetails, Partnership partnership, AuthorisedRepresentative authorisedRepresentative)
+        private static Producer GetTestProducer(string prn, string tradingName, Company companyDetails, Partnership partnership, AuthorisedRepresentative authorisedRepresentative, ChargeBandType chargeBand)
         {
             var memberUpload = new MemberUpload(Guid.NewGuid(), "Test Data", new List<MemberUploadError>(), 0);
             var country = new Country(Guid.NewGuid(), "Country name");
@@ -288,7 +292,7 @@
 
             var producer = new Producer(Guid.NewGuid(), memberUpload, business, authorisedRepresentative, DateTime.Now, 1000000000, true,
                 prn, DateTime.Now.AddDays(10), tradingName, EEEPlacedOnMarketBandType.Both, SellingTechniqueType.Both, ObligationType.Both,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), true, ChargeBandType.A);
+                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), true, chargeBand);
 
             return producer;
         }
