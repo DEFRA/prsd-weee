@@ -41,6 +41,20 @@
         }
 
         [Fact]
+        public void SchemaValidation_IncorrectNamespace_AddsError()
+        {
+            var wrongNamespaceXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-wrong-namespace.xml");
+            var wrongNamespaceXml = File.ReadAllText(new Uri(wrongNamespaceXmlLocation).LocalPath);
+
+            A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
+                .Returns(XDocument.Parse(wrongNamespaceXml));
+
+            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
+
+            Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
+        }
+
+        [Fact]
         public void SchemaValidation_NonSchemaXml_AddsError()
         {
             var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-slightly-invalid.xml");
@@ -55,12 +69,23 @@
         }
 
         [Fact]
-        public void SchemaValidation_CorruptOrEmptyXml_AddsError()
+        public void SchemaValidation_Corrupt_AddsError()
         {
             A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
                 .Throws<XmlException>();
 
             var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
+
+            Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
+        }
+
+        [Fact]
+        public void SchemaValidation_EmptyXml_AddsError()
+        {
+            A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._)).MustNotHaveHappened();
+
+            byte[] xmlData = new byte[0];
+            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, xmlData));
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
