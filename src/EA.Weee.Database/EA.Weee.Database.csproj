@@ -7,8 +7,8 @@
     <ProjectGuid>{756BF689-A8AB-4CA7-869C-7ED95D7AA80B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EA.Iws.Database</RootNamespace>
-    <AssemblyName>EA.Iws.Database</AssemblyName>
+    <RootNamespace>EA.Weee.Database</RootNamespace>
+    <AssemblyName>EA.Weee.Database</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
