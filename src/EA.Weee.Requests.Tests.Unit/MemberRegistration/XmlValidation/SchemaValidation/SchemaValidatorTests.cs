@@ -55,12 +55,23 @@
         }
 
         [Fact]
-        public void SchemaValidation_CorruptOrEmptyXml_AddsError()
+        public void SchemaValidation_Corrupt_AddsError()
         {
             A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
                 .Throws<XmlException>();
 
             var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
+
+            Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
+        }
+
+        [Fact]
+        public void SchemaValidation_EmptyXml_AddsError()
+        {
+            A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._)).MustNotHaveHappened();
+
+            byte[] xmlData = new byte[0];
+            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, xmlData));
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
