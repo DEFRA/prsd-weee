@@ -29,6 +29,12 @@
         private byte[] RemoveUtf8Bom(byte[] data)
         {
             var utf8Bom = Encoding.UTF8.GetPreamble();
+
+            if (data.Length < utf8Bom.Length)
+            {
+                return data;
+            }
+
             if (utf8Bom.Where((t, i) => data[i] != t).Any())
             {
                 return data;

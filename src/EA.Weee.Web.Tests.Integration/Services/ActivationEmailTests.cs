@@ -14,6 +14,7 @@
     using FakeItEasy;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
+    using Prsd.Core.Web.OpenId;
     using Web.Services;
     using Xunit;
 
@@ -24,6 +25,7 @@
         private readonly ISmtpClient fakeSmtpClient;
         private readonly Func<IOAuthClient> fakeOauthClient;
         private readonly IRuleSectionChecker fakeRuleChecker;
+        private readonly Func<IUserInfoClient> fakeUserInfoClient;
 
         private readonly IEmailService realEmailService;
 
@@ -39,6 +41,7 @@
             fakeSmtpClient = A.Fake<ISmtpClient>();
             fakeOauthClient = A.Fake<Func<IOAuthClient>>();
             fakeRuleChecker = A.Fake<IRuleSectionChecker>();
+            fakeUserInfoClient = A.Fake<Func<IUserInfoClient>>();
             A.CallTo(() => fakeRuleChecker.CheckEmailAddress(A<string>._)).Returns(RuleAction.Allow);
 
             realEmailService = new EmailService(SetupFakeConfigurationService(), new EmailTemplateService(), fakeSmtpClient, fakeRuleChecker);
@@ -118,9 +121,11 @@
                 fakeApiClient,
                 fakeAuthenticationManager,
                 realEmailService,
-                fakeOauthClient)
+                fakeOauthClient,
+                fakeUserInfoClient)
             {
-                ControllerContext = controllerContext, Url = urlHelper
+                ControllerContext = controllerContext,
+                Url = urlHelper
             };
 
             return internalAccountController;
