@@ -34,7 +34,7 @@
         [Fact]
         public async Task MemberUploadSubmissionHandler_InvalidMemberUploadId_ArgumentNullException()
         {
-            var memberUploads = new[] { new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), Guid.NewGuid()), };
+            var memberUploads = new[] { new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, Guid.NewGuid()), };
 
             var handler = GetPreparedHandler(memberUploads);
 
@@ -44,7 +44,7 @@
         [Fact]
         public async Task MemberUploadSubmissionHandler_ValidMemberUploadId_ReturnsSubmittedMemberUploadId()
         {
-            var memberUploads = new[] { new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), Guid.NewGuid()), };
+            var memberUploads = new[] { new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, Guid.NewGuid()), };
 
             var handler = GetPreparedHandler(memberUploads);
 

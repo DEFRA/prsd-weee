@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using System;
     using System.Linq;
     using System.Net;
+    using System.Net.Mail;
     using System.Security.Claims;
-    using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
@@ -16,6 +17,7 @@
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.OAuth;
+    using Services;
     using Thinktecture.IdentityModel.Client;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels;
@@ -26,12 +28,14 @@
         private readonly IWeeeClient apiClient;
         private readonly IOAuthClient oauthClient;
         private readonly IAuthenticationManager authenticationManager;
+        private readonly IEmailService emailService;
 
         public AccountControllerTests()
         {
             apiClient = A.Fake<IWeeeClient>();
             oauthClient = A.Fake<IOAuthClient>();
             authenticationManager = A.Fake<IAuthenticationManager>();
+            emailService = A.Fake<IEmailService>();
         }
 
         [Fact]
@@ -58,8 +62,9 @@
                 .Returns(Task.FromResult(A<string>._));
 
             A.CallTo(() => apiClient.NewUser).Returns(newUser);
+
             A.CallTo(() => oauthClient.GetAccessTokenAsync(A<string>._, A<string>._))
-                .Returns(A.Fake<TokenResponse>());
+                      .Returns(A.Fake<TokenResponse>());
 
             await AccountController().Create(model);
 
@@ -95,9 +100,33 @@
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("UserAccountActivationRequired", redirectValues["action"]);
+            Assert.Equal("AdminAccountActivationRequired", redirectValues["action"]);
             Assert.Equal("Account", redirectValues["controller"]);
             Assert.Equal("Admin", redirectValues["area"]);
+        }
+
+        [Fact]
+        public async void HttpPost_Create_ModelIsValid_ShouldSendEmail()
+        {
+            var model = ValidModel();
+
+            await AccountController().Create(model);
+
+            A.CallTo(() => emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void HttpPost_Create_ModelIsInvalid_ShouldNotSendEmail()
+        {
+            var model = ValidModel();
+            var controller = AccountController();
+            controller.ModelState.AddModelError("Key", "Something went wrong :(");
+
+            await controller.Create(model);
+
+            A.CallTo(() => emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
+                .MustNotHaveHappened();
         }
 
         [Fact]
@@ -113,25 +142,89 @@
             await Assert.ThrowsAnyAsync<ApiException>(() => AccountController().Create(model));
         }
 
+        [Fact]
+        public async void HttpPost_AdminAccountActivationRequired_IfUserResendsActivationEmail_ShouldSendActivationEmail()
+        {
+            var newUser = A.Fake<INewUser>();
+            var controller = AccountController();
+
+            var fakeUrlHelper = A.Fake<UrlHelper>();
+            controller.Url = fakeUrlHelper;
+            string route = "/Admin/Account/ActivateUserAccount";
+            A.CallTo(() => fakeUrlHelper.Action(A<string>.Ignored, A<string>.Ignored)).Returns(route);
+
+            A.CallTo(() => apiClient.NewUser).Returns(newUser);
+
+            A.CallTo(
+                () =>
+                    emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
+                .Returns(new MailMessage());
+
+            await controller.AdminAccountActivationRequired(A<FormCollection>._);
+
+            A.CallTo(() => emailService.SendAsync(A<MailMessage>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void AdminAccount_IfNotActivated_ShouldRedirectToAdminAccountActivationRequired()
+        {
+            Guid id = Guid.NewGuid();
+            string code =
+                "LZHQ5TGVPA6FtUb6AmSssW6o8GpGtkMzRJTP4%2bhK9CGitEafOHBRGriU%2b7ruHbAq85Btymlnu1ewPxkIZGE17v98a21EPTaCNE1N2QlD%2b5FDgwULWlC28SS%2fKpFRIEXD9RaaYjSS6%2bfyvyexihUGKskaqaTB4%2f%2b4bRcZ%2fniu%2bqCNT%2fSY6ziGbvkNRX9oM%2fXW";
+
+            A.CallTo(() => apiClient.NewUser.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code }))
+               .Returns(false);
+
+            var result = await AccountController().ActivateUserAccount(id, code);
+            var redirectToRouteResult = ((RedirectToRouteResult)result);
+
+            Assert.Equal("AdminAccountActivationRequired", redirectToRouteResult.RouteValues["action"]);
+        }
+
+        [Fact]
+        public async void AdminAccount_ActiveUserAccount_ActivatesTheAccount()
+        {
+            await AccountController().ActivateUserAccount(A<Guid>._, A<string>._);
+
+            A.CallTo(() => apiClient.NewUser.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
         private InternalUserCreationViewModel ValidModel()
         {
             return new InternalUserCreationViewModel
             {
-                ConfirmPassword = "Password*99",
-                Password = "Password*99",
-                Email = "test@environment-agency.gov.uk",
-                Name = "test",
+                ConfirmPassword = "Password*99", 
+                Password = "Password*99", 
+                Email = "test@environment-agency.gov.uk", 
+                Name = "test", 
                 Surname = "name"
             };
         }
 
         private AccountController AccountController()
         {
+            var request = GetFakeRequest();
+
             var context = A.Fake<HttpContextBase>();
-            var controller = new AccountController(() => apiClient, () => oauthClient, authenticationManager);
+            A.CallTo(() => context.Request).Returns(request);
+
+            var controller = new AccountController(() => apiClient, authenticationManager, emailService, () => oauthClient);
             controller.ControllerContext = new ControllerContext(context, new RouteData(), controller);
 
+            controller.Url = new UrlHelper(new RequestContext(controller.HttpContext, new RouteData()));
+
             return controller;
+        }
+
+        private HttpRequestBase GetFakeRequest()
+        {
+            var request = A.Fake<HttpRequestBase>();
+            var url = new Uri("https://fakeurl.com");
+
+            A.CallTo(() => request.Url).Returns(url);
+
+            return request;
         }
     }
 }

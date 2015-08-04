@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Test.ViewModels
+﻿namespace EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml
 {
     using Core.Organisations;
     using EA.Weee.Web.ViewModels.Shared;
@@ -10,8 +10,8 @@
     public class SelectOrganisationViewModel
     {
         [Required]
-        [DisplayName("Company Name")]
-        public string CompanyName { get; set; }
+        [DisplayName("Organisation Name")]
+        public string OrganisationName { get; set; }
 
         public IList<OrganisationSearchData> MatchingOrganisations { get; set; }
 

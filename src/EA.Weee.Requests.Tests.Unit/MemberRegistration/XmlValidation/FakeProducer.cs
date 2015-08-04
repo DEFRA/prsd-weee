@@ -27,7 +27,8 @@
             ObligationType obligationType,
             AnnualTurnOverBandType annualTurnOverBandType,
             List<BrandName> brandNames,
-            List<SICCode> codes) 
+            List<SICCode> codes,
+            bool isCurrentForComplianceYear) 
             : base(schemeId, 
             memberUpload, 
             producerBusiness, 
@@ -43,7 +44,9 @@
             obligationType, 
             annualTurnOverBandType, 
             brandNames, 
-            codes)
+            codes,
+            isCurrentForComplianceYear,
+            Domain.ChargeBandType.E)
         {
             this.schemeOrganisationId = schemeOrganisationId;
         }
@@ -53,7 +56,7 @@
         {
             return new FakeProducer(schemeOrganisationId ?? Guid.NewGuid(),
                 Guid.NewGuid(),
-                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>()),
+                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>(), 0),
                 new ProducerBusiness(),
                 new AuthorisedRepresentative("authrep"),
                 DateTime.Now,
@@ -67,12 +70,36 @@
                 obligationType,
                 Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 brandNames.Select(bn => new BrandName(bn)).ToList(),
-                new List<SICCode>());
+                new List<SICCode>(),
+                true);
         }
 
         public override Scheme Scheme
         {
             get { return new Scheme(schemeOrganisationId); }
+        }
+
+        public static FakeProducer Create(ObligationType obligationType, string prn, bool iscurrentcomplainceYear, 
+          Guid? schemeOrganisationId = null,  params string[] brandNames)
+        {
+            return new FakeProducer(schemeOrganisationId ?? Guid.NewGuid(),
+                Guid.NewGuid(),
+                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>(), 0),
+                new ProducerBusiness(),
+                new AuthorisedRepresentative("authrep"),
+                DateTime.Now,
+                decimal.Zero,
+                true,
+                prn,
+                null,
+                "trading name",
+                Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                Domain.SellingTechniqueType.Both,
+                obligationType,
+                Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                brandNames.Select(bn => new BrandName(bn)).ToList(),
+                new List<SICCode>(),
+                iscurrentcomplainceYear);
         }
     }
 }

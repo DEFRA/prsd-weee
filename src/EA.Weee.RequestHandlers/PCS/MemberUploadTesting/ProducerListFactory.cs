@@ -8,6 +8,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -39,10 +40,13 @@
 
             SchemeInfo schemeInfo = await FetchSchemeInfo(listSettings.OrganisationID);
 
+            string approvalNumber = SanitizeApprovalNumber(schemeInfo.ApprovalNumber);
+            string tradingName = SanitizeTradingName(schemeInfo.TradingName);
+
             producerList.SchemaVersion = listSettings.SchemaVersion;
-            producerList.ApprovalNumber = schemeInfo.ApprovalNumber;
+            producerList.ApprovalNumber = approvalNumber;
             producerList.ComplianceYear = listSettings.ComplianceYear;
-            producerList.TradingName = schemeInfo.TradingName;
+            producerList.TradingName = tradingName;
             producerList.SchemeBusiness = SchemeBusiness.Create(listSettings);
 
             for (int index = 0; index < listSettings.NumberOfNewProducers; ++index)
@@ -51,6 +55,7 @@
 
                 producerSettings.SchemaVersion = listSettings.SchemaVersion;
                 producerSettings.IsNew = true;
+                producerSettings.IgnoreStringLengthConditions = listSettings.IgnoreStringLengthConditions;
 
                 Producer producer = Producer.Create(producerSettings);
 
@@ -59,11 +64,10 @@
 
             int numberOfExistingProducersToInclude = listSettings.NumberOfExistingProducers;
 
-            // TODO: Ensure only database records representing "current" producers are returned.
-            // Checking "IsSubmitted" here isn't sufficient as each producer may have several updates.
             List<string> registrationNumbers = await context
                 .Producers
-                .Where(p => p.MemberUpload.IsSubmitted)
+                .Where(p => p.IsCurrentForComplianceYear)
+                .Where(p => p.MemberUpload.ComplianceYear == listSettings.ComplianceYear)
                 .Where(p => p.Scheme.OrganisationId == listSettings.OrganisationID)
                 .Select(p => p.RegistrationNumber)
                 .Take(numberOfExistingProducersToInclude)
@@ -83,6 +87,7 @@
                 producerSettings.SchemaVersion = listSettings.SchemaVersion;
                 producerSettings.IsNew = false;
                 producerSettings.RegistrationNumber = registrationNumbers[index];
+                producerSettings.IgnoreStringLengthConditions = listSettings.IgnoreStringLengthConditions;
 
                 Producer producer = Producer.Create(producerSettings);
 
@@ -90,6 +95,37 @@
             }
 
             return producerList;
+        }
+
+        private static string SanitizeTradingName(string tradingName)
+        {
+            if (tradingName == null)
+            {
+                return string.Empty;
+            }
+
+            if (tradingName.Length > 2048)
+            {
+                return tradingName.Substring(0, 2048);
+            }
+            else
+            {
+                return tradingName;
+            }
+        }
+
+        private static string SanitizeApprovalNumber(string approvalNumber)
+        {
+            Regex regex = new Regex("(WEE/)[A-Z]{2}[0-9]{4}[A-Z]{2}(/SCH)");
+
+            if (!regex.IsMatch(approvalNumber))
+            {
+                return "WEE/ZZ9999ZZ/SCH";
+            }
+            else
+            {
+                return approvalNumber;
+            }
         }
 
         private async Task<SchemeInfo> FetchSchemeInfo(Guid organisationId)

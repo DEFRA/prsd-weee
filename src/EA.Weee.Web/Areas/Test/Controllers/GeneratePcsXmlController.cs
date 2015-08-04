@@ -6,6 +6,7 @@
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.PCS.MemberUploadTesting;
     using EA.Weee.Web.Areas.Test.ViewModels;
+    using EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.ViewModels.Shared;
     using System;
@@ -28,7 +29,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> SelectOrganisation(string companyName, int page = 1)
+        public async Task<ActionResult> SelectOrganisation(string organisationName, int page = 1)
         {
             if (page < 1)
             {
@@ -37,13 +38,13 @@
 
             SelectOrganisationViewModel viewModel;
 
-            if (string.IsNullOrEmpty(companyName))
+            if (string.IsNullOrEmpty(organisationName))
             {
                 viewModel = new SelectOrganisationViewModel();
             }
             else
             {
-                var results = await FetchOrganisations(companyName, page);
+                var results = await FetchOrganisations(organisationName, page);
 
                 PagingViewModel pager = PagingViewModel.FromValues(
                     results.TotalMatchingOrganisations,
@@ -51,11 +52,11 @@
                     page,
                     "SelectOrganisation",
                     "GeneratePcsXml",
-                    new { companyName });
+                    new { companyName = organisationName });
                 
                 viewModel = new SelectOrganisationViewModel()
                 {
-                    CompanyName = companyName,
+                    OrganisationName = organisationName,
                     MatchingOrganisations = results.Results,
                     PagingViewModel = pager,
                 };
@@ -72,7 +73,7 @@
                 return RedirectToAction("SelectOrganisation");
             }
 
-            GeneratePcsXmlOptionsViewModel viewModel = new GeneratePcsXmlOptionsViewModel()
+            SpecifyOptionsViewModel viewModel = new SpecifyOptionsViewModel()
             {
                 OrganisationID = organisationID
             };
@@ -82,7 +83,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SpecifyOptions(GeneratePcsXmlOptionsViewModel viewModel)
+        public async Task<ActionResult> SpecifyOptions(SpecifyOptionsViewModel viewModel)
         {
             if (!await CheckOrganisationExists(viewModel.OrganisationID))
             {
@@ -99,7 +100,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DownloadFile(GeneratePcsXmlOptionsViewModel viewModel)
+        public async Task<ActionResult> DownloadFile(SpecifyOptionsViewModel viewModel)
         {
             if (!await CheckOrganisationExists(viewModel.OrganisationID))
             {
@@ -117,7 +118,10 @@
                 SchemaVersion = viewModel.SchemaVersion,
                 ComplianceYear = viewModel.ComplianceYear,
                 NumberOfNewProducers = viewModel.NumberOfNewProducers,
-                NumberOfExistingProducers = viewModel.NumberOfExistingProducers
+                NumberOfExistingProducers = viewModel.NumberOfExistingProducers,
+                IncludeMalformedSchema = viewModel.IncludeMalformedSchema,
+                IncludeUnexpectedFooElement = viewModel.IncludeUnexpectedFooElement,
+                IgnoreStringLengthConditions = viewModel.IgnoreStringLengthConditions,
             };
 
             PcsXmlFile xmlFile = await GenerateXml(settings);

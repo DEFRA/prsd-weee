@@ -32,7 +32,7 @@
             A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
                 .Returns(new List<MemberUploadError>
                 {
-                    new MemberUploadError(ErrorLevel.Error, "An error occurred")
+                    new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "An error occurred")
                 });
 
             XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
@@ -50,7 +50,7 @@
             A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._))
                 .Returns(new List<MemberUploadError>
                             {
-                                new MemberUploadError(ErrorLevel.Error, "An error occurred")
+                                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "An error occurred")
                             });
 
             var result = XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));

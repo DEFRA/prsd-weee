@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Requests.Tests.Unit.MemberRegistration
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Threading.Tasks;
@@ -28,9 +29,10 @@
         private readonly DbSet<MemberUpload> memberUploadsDbSet;
         private readonly IXmlValidator xmlValidator;
         private readonly IXmlConverter xmlConverter;
+        private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
         private static readonly Guid organisationId = Guid.NewGuid();
         private static readonly ProcessXMLFile Message = new ProcessXMLFile(organisationId, new byte[1]);
-
+        
         public ProcessXMLFileHandlerTests()
         {
             memberUploadsDbSet = A.Fake<DbSet<MemberUpload>>();
@@ -50,7 +52,8 @@
 
             generator = A.Fake<IGenerateFromXml>();
             xmlValidator = A.Fake<IXmlValidator>();
-            handler = new ProcessXMLFileHandler(context, xmlValidator, generator, xmlConverter);
+            xmlChargeBandCalculator = A.Fake<IXmlChargeBandCalculator>();
+            handler = new ProcessXMLFileHandler(context, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator);
         }
 
         [Fact]
@@ -58,7 +61,7 @@
         {
             IEnumerable<Producer> generatedProducers = new[] { TestProducer("ForestMoonOfEndor") };
 
-            A.CallTo(() => generator.Generate(Message, A<MemberUpload>.Ignored))
+            A.CallTo(() => generator.Generate(Message, A<MemberUpload>.Ignored, A<Hashtable>.Ignored))
                 .Returns(Task.FromResult(generatedProducers));
 
             await handler.HandleAsync(Message);
@@ -68,10 +71,63 @@
         }
 
         [Fact]
+        public async void ProcessXmlfile_ParsesXMLFile_CalculateXMLChargeBand()
+        {
+            await handler.HandleAsync(Message);
+
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(Message)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void ProcessXmlfile_SchemaErrors_DoesntTryToCalculateChargesOrConvertXml()
+        {
+            IEnumerable<MemberUploadError> errors = new[] { new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "any description") };
+            A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
+            await handler.HandleAsync(Message);
+
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(Message)).MustNotHaveHappened();
+            A.CallTo(() => xmlConverter.Convert(Message)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async void ProcessXmlfile_BusinessErrors_TriesToCalculateCharges()
+        {
+            IEnumerable<MemberUploadError> errors = new[] { new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description") };
+            A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
+            await handler.HandleAsync(Message);
+
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(Message)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void ProcessXmlfile_NoErrors_TriesToCalculateCharges()
+        {
+            IEnumerable<MemberUploadError> errors = new List<MemberUploadError>();
+            A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
+            await handler.HandleAsync(Message);
+
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(Message)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
         public async void ProcessXmlfile_InvalidXmlfile_NotGenerateProducerObjects()
         {
-            IEnumerable<MemberUploadError> errors = new[] { new MemberUploadError(ErrorLevel.Error, "any description") };
+            IEnumerable<MemberUploadError> errors = new[] { new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "any description") };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
+            await handler.HandleAsync(Message);
+
+            A.CallTo(producersDbSet).WithAnyArguments().MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async void ProcessXmlfile_XmlfileWithSameProducerName_NotGenerateProducerObjects()
+        {
+            List<MemberUploadError> errors = new List<MemberUploadError>
+            {
+                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
+            };
+            A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
+
             await handler.HandleAsync(Message);
 
             A.CallTo(producersDbSet).WithAnyArguments().MustNotHaveHappened();
@@ -90,7 +146,8 @@
             return new Producer(Guid.NewGuid(), FakeMemberUploadData(), null, null, SystemTime.UtcNow, 0, true,
                 string.Empty, null, tradingName, EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
                 SellingTechniqueType.Both, ObligationType.Both,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>());
+                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(),
+                true, ChargeBandType.E);
         }
 
         public static MemberUpload FakeMemberUploadData()
