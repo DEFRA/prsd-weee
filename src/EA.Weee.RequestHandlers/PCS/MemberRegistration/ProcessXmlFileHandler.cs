@@ -35,29 +35,25 @@
             var errors = xmlValidator.Validate(message);
 
             var memberUploadErrors = errors as IList<MemberUploadError> ?? errors.ToList();
-
-            Hashtable producerCharges = new Hashtable();
-
-            if (!errors.Any(e => e.ErrorType == MemberUploadErrorType.Schema))
+            
+            //calcuate charge band for producers if no schema errors
+            Hashtable producerCharges = null;
+            decimal totalCharges = 0;
+            
+            if (memberUploadErrors.All(e => e.ErrorType != MemberUploadErrorType.Schema))
             {
-                producerCharges = xmlChargeBandCalculator.Calculate(message);
-
+                producerCharges = ProducerCharges(message, ref totalCharges);
                 if (xmlChargeBandCalculator.ErrorsAndWarnings != null && xmlChargeBandCalculator.ErrorsAndWarnings.Count > 0)
                 {
                     ((List<MemberUploadError>)memberUploadErrors).AddRange(xmlChargeBandCalculator.ErrorsAndWarnings);
                 }
             }
 
-            decimal totalCharges = 0;
-            foreach (DictionaryEntry producerCharge in producerCharges)
-            {
-                totalCharges = totalCharges + ((ProducerCharge)producerCharge.Value).ChargeAmount;
-            }
-
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-            var upload = new MemberUpload(message.OrganisationId, xmlConverter.XmlToUtf8String(message), memberUploadErrors.ToList(), totalCharges, scheme.Id);
+            string data = message.Data.Length > 0 ? xmlConverter.XmlToUtf8String(message) : String.Empty;
+            var upload = new MemberUpload(message.OrganisationId, data, memberUploadErrors.ToList(), totalCharges, scheme.Id);
 
-            //Build producers domain object if there are no errors during validation of xml file.
+            //Build producers domain object if there are no errors(schema or business during validation of xml file.
             if (!memberUploadErrors.Any())
             {
                 var producers = await generateFromXml.Generate(message, upload, producerCharges);
@@ -70,6 +66,16 @@
             }
             await context.SaveChangesAsync();
             return upload.Id;
+        }
+
+        private Hashtable ProducerCharges(ProcessXMLFile message, ref decimal totalCharges)
+        {
+            var producerCharges = xmlChargeBandCalculator.Calculate(message);
+              
+                totalCharges = producerCharges.Cast<DictionaryEntry>()
+                    .Aggregate(totalCharges,
+                        (current, producerCharge) => current + ((ProducerCharge)producerCharge.Value).ChargeAmount);
+            return producerCharges;
         }
     }
 }

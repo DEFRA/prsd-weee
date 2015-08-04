@@ -2,7 +2,7 @@
 {
     using System.Collections.Specialized;
     using System.Configuration;
-    using Configuration.InternalConfiguration;
+    using EmailRules;
 
     public class ConfigurationManagerWrapper : IConfigurationManagerWrapper
     {
@@ -11,9 +11,9 @@
             get { return ConfigurationManager.AppSettings; }
         }
 
-        public InternalConfigurationSection InternalConfiguration
+        public RulesSection InternalEmailRules
         {
-            get { return (InternalConfigurationSection)ConfigurationManager.GetSection("internalConfiguration"); }
+            get { return (RulesSection)ConfigurationManager.GetSection("internalEmailRules"); }
         }
     }
 }

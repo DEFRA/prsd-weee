@@ -1,16 +1,16 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Validation
 {
     using Configuration;
-    using Configuration.InternalConfiguration;
+    using Configuration.EmailRules;
     using Core.Validation;
     using FakeItEasy;
     using Xunit;
 
-    public class InternalEmailAddressAttributeTests
+    public class RulesCheckerTests
     {
         private readonly IConfigurationManagerWrapper configurationManagerWrapper;
 
-        public InternalEmailAddressAttributeTests()
+        public RulesCheckerTests()
         {
             configurationManagerWrapper = A.Fake<IConfigurationManagerWrapper>();
         }
@@ -51,24 +51,29 @@
         {
             var validEmailSuffixes = new[]
             {
-                "@environment-agency.gov.uk",
-                "@environment-agency.gov.uk",
-                "@cyfoethnaturiolcymru.gov.uk",
-                "@naturalresourceswales.gov.uk",
-                "@sepa.org.uk",
-                "@doeni.gov.uk"
+                "^.*@environment-agency.gov.uk$",
+                "^.*@cyfoethnaturiolcymru.gov.uk$",
+                "^.*@naturalresourceswales.gov.uk$",
+                "^.*@doeni.gov.uk$",
+                "^.*@sepa.org.uk$"
             };
 
-            var internalConfig = new InternalConfigurationSection();
+            var internalConfig = new RulesSection
+            {
+                DefaultAction = RuleAction.Deny
+            };
+
             foreach (var validEmailSuffix in validEmailSuffixes)
             {
-                internalConfig.AllowedEmailSuffixes.Add(new AllowedEmailSuffixElement
+                internalConfig.Rules.Add(new RuleElement
                 {
-                    Value = validEmailSuffix
+                    Type = RuleType.RegEx,
+                    Value = validEmailSuffix,
+                    Action = RuleAction.Allow
                 });
             }
 
-            A.CallTo(() => configurationManagerWrapper.InternalConfiguration)
+            A.CallTo(() => configurationManagerWrapper.InternalEmailRules)
                 .Returns(internalConfig);
 
             return new InternalEmailAddressAttribute { Configuration = configurationManagerWrapper };

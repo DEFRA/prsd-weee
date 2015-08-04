@@ -86,6 +86,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Claims.cs" />
+    <Compile Include="Configuration\EmailRules\IRuleChecker.cs" />
+    <Compile Include="Configuration\EmailRules\IRuleSectionChecker.cs" />
+    <Compile Include="Configuration\EmailRules\RuleAction.cs" />
+    <Compile Include="Configuration\EmailRules\RuleChecker.cs" />
+    <Compile Include="Configuration\EmailRules\RuleSectionChecker.cs" />
+    <Compile Include="Configuration\EmailRules\RuleElement.cs" />
+    <Compile Include="Configuration\EmailRules\RuleElementCollection.cs" />
+    <Compile Include="Configuration\EmailRules\RulesSection.cs" />
+    <Compile Include="Configuration\EmailRules\RuleType.cs" />
     <Compile Include="Configuration\IConfigurationManagerWrapper.cs" />
     <Compile Include="CoreModule.cs" />
     <Compile Include="Helpers\PrnGeneration\IPrnHelper.cs" />
@@ -138,9 +147,6 @@
     <Compile Include="PCS\MemberUploadTesting\SellingTechnique.cs" />
     <Compile Include="PCS\ProducerCSVFileData.cs" />
     <Compile Include="Configuration\ConfigurationManagerWrapper.cs" />
-    <Compile Include="Configuration\InternalConfiguration\AllowedEmailSuffixElement.cs" />
-    <Compile Include="Configuration\InternalConfiguration\InternalConfigurationSection.cs" />
-    <Compile Include="Configuration\InternalConfiguration\AllowedEmailSuffixesElementCollection.cs" />
     <Compile Include="Shared\AddressData.cs" />
     <Compile Include="Shared\AddressType.cs" />
     <Compile Include="Shared\CommonRegexPatterns.cs" />

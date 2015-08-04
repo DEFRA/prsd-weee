@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Core.Configuration
 {
     using System.Collections.Specialized;
-    using InternalConfiguration;
+    using EmailRules;
 
     public interface IConfigurationManagerWrapper
     {
         NameValueCollection AppSettings { get; }
 
-        InternalConfigurationSection InternalConfiguration { get; }
+        RulesSection InternalEmailRules { get; }
     }
 }
