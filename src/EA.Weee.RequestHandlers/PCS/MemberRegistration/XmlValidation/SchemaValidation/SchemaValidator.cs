@@ -15,6 +15,8 @@
     public class SchemaValidator : ISchemaValidator
     {
         private const string SchemaLocation = @"v3schema.xsd";
+        private const string SchemaNamespace = @"http://www.environment-agency.gov.uk/WEEE/XMLSchema";
+
         private readonly IXmlErrorTranslator xmlErrorTranslator;
         private readonly IXmlConverter xmlConverter;
 
@@ -42,7 +44,16 @@
                 var schemas = new XmlSchemaSet();
                 var absoluteSchemaLocation =
                     Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), SchemaLocation);
-                schemas.Add("http://www.environment-agency.gov.uk/WEEE/XMLSchema", absoluteSchemaLocation);
+                schemas.Add(SchemaNamespace, absoluteSchemaLocation);
+
+                string sourceNamespace = source.Root.GetDefaultNamespace().NamespaceName;
+                if (sourceNamespace != SchemaNamespace)
+                {
+                    errors.Add(new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema,
+                        string.Format("The namespace of the provided XML file ({0}) doesn't match the namespace of the WEEE schema ({1}).", sourceNamespace, SchemaNamespace)));
+                    return errors;
+                }
+
                 source.Validate(
                     schemas,
                     (sender, args) =>
