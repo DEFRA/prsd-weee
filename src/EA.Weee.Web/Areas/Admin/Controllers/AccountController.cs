@@ -1,19 +1,23 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
+    using Base;
     using Core;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Prsd.Core.Web.OAuth;
+    using Prsd.Core.Web.OpenId;
     using Services;
     using Thinktecture.IdentityModel.Client;
     using ViewModels;
+    using UserInfoClient = Thinktecture.IdentityModel.Client.UserInfoClient;
 
     public class AccountController : Controller
     {
@@ -21,13 +25,15 @@
         private readonly IAuthenticationManager authenticationManager;
         private readonly IEmailService emailService;
         private readonly Func<IOAuthClient> oauthClient;
+        private readonly Func<IUserInfoClient> userInfoClient;
 
-        public AccountController(Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager, IEmailService emailService, Func<IOAuthClient> oauthClient)
+        public AccountController(Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager, IEmailService emailService, Func<IOAuthClient> oauthClient, Func<IUserInfoClient> userInfoClient)
         {
             this.apiClient = apiClient;
             this.oauthClient = oauthClient;
             this.authenticationManager = authenticationManager;
             this.emailService = emailService;
+            this.userInfoClient = userInfoClient;
         }
 
         [HttpGet]
@@ -132,7 +138,7 @@
                 return RedirectToLocal(returnUrl);
             }
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View("Login");
         }
 
         [HttpPost]
@@ -146,16 +152,21 @@
             }
 
             var response = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
+
             if (response.AccessToken != null)
             {
-                authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = model.RememberMe },
-                    response.GenerateUserIdentity());
-                return RedirectToLocal(returnUrl);
+                var isInternalUser = await IsInternalUser(response.AccessToken);
+                if (isInternalUser)
+                {
+                    authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = model.RememberMe },
+                        response.GenerateUserIdentity());
+                    return RedirectToLocal(returnUrl);
+                }
             }
 
             ModelState.AddModelError(string.Empty, ParseLoginError(response.Error));
 
-            return View(model);
+            return View("Login", model);
         }
 
         private ActionResult RedirectToLocal(string returnUrl)
@@ -165,7 +176,16 @@
                 return Redirect(returnUrl);
             }
 
-            return RedirectToAction("Login", "Account", new { area = "Admin" });
+            return RedirectToAction("Home", "Account", new { area = "Admin" });
+        }
+
+        private async Task<bool> IsInternalUser(string accessToken)
+        {
+            var userInfo = await userInfoClient().GetUserInfoAsync(accessToken);
+
+            return userInfo.Claims.Any(p => p.Item2 == Claims.CanAccessInternalArea);
+
+            //return userInfo.Claims.Any(p => p.Item1 == ClaimTypes.Role && p.Item2 == "internal");
         }
 
         private string ParseLoginError(string error)
