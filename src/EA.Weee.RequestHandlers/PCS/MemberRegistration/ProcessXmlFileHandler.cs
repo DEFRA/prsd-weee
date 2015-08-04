@@ -47,8 +47,7 @@
             }
 
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-            string data = message.Data.Length > 0 ? xmlConverter.XmlToUtf8String(message) : String.Empty;
-            var upload = new MemberUpload(message.OrganisationId, data, memberUploadErrors.ToList(), totalCharges, scheme.Id);
+            var upload = new MemberUpload(message.OrganisationId, xmlConverter.XmlToUtf8String(message), memberUploadErrors.ToList(), totalCharges, scheme.Id);
 
             //Build producers domain object if there are no errors(schema or business during validation of xml file.
             if (!memberUploadErrors.Any())
