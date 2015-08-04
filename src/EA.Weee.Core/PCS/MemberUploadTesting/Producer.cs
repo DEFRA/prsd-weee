@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EA.Weee.Core.PCS.MemberUploadTesting
+﻿namespace EA.Weee.Core.PCS.MemberUploadTesting
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// A producer that has been created for the purposes of writing to
     /// an XML file that will be used for testing the PCS member upload
@@ -50,12 +47,26 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
                 producer.RegistrationNumber = settings.RegistrationNumber;
             }
 
-            producer.TradingName = RandomHelper.CreateRandomString("Trading Name ", 1, 255);
+            if (!settings.IgnoreStringLengthConditions)
+            {
+                producer.TradingName = RandomHelper.CreateRandomString("Trading Name ", 1, 255);
+            }
+            else
+            {
+                producer.TradingName = RandomHelper.CreateRandomString("Trading Name ", 0, 1000);
+            }
 
             int numberOfSICCodes = RandomHelper.R.Next(1, 5);
             for (int index = 0; index < numberOfSICCodes; ++index)
             {
-                producer.SICCodes.Add(RandomHelper.CreateRandomString("SIC", 8, 8, false));
+                if (!settings.IgnoreStringLengthConditions)
+                {
+                    producer.SICCodes.Add(RandomHelper.CreateRandomString("SIC", 8, 8, false));
+                }
+                else
+                {
+                    producer.SICCodes.Add(RandomHelper.CreateRandomString("SIC", 0, 1000, false));
+                }
             }
 
             producer.VATRegistered = RandomHelper.OneIn(2);
@@ -74,7 +85,14 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
             int numberOfBrandNames = RandomHelper.R.Next(1, 5);
             for (int index = 0; index < numberOfBrandNames; ++index)
             {
-                producer.BrandNames.Add(RandomHelper.CreateRandomString("Brand ", 1, 10)); //255?
+                if (!settings.IgnoreStringLengthConditions)
+                {
+                    producer.BrandNames.Add(RandomHelper.CreateRandomString("Brand ", 1, 10)); //255?
+                }
+                else
+                {
+                    producer.BrandNames.Add(RandomHelper.CreateRandomString("Brand ", 0, 1000)); //255?
+                }
             }
 
             producer.ProducerBusiness = ProducerBusiness.Create(settings);

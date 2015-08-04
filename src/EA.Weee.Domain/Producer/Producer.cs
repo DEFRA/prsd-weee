@@ -25,7 +25,9 @@
             ObligationType obligationType,
             AnnualTurnOverBandType annualTurnOverBandType,
             List<BrandName> brandnames,
-            List<SICCode> codes)
+            List<SICCode> codes,
+            bool isCurrentForComplianceYear,
+            ChargeBandType chargeBandType)
         {
             ProducerBusiness = producerBusiness;
             AuthorisedRepresentative = authorisedRepresentative;
@@ -47,6 +49,10 @@
             SICCodes = codes;
             SchemeId = schemeId;
             MemberUpload = memberUpload;
+
+            IsCurrentForComplianceYear = isCurrentForComplianceYear;
+
+            ChargeBandType = chargeBandType.Value;
         }
 
         protected Producer()
@@ -164,6 +170,19 @@
 
         public int ChargeBandType { get; private set; }
 
+        /// <summary>
+        /// Indicates whether this data is current. I.e. no data has been submitted
+        /// for a producer with the same registration number, scheme and compliance year
+        /// since this data was submitted.
+        /// 
+        /// If results are filtered by this property, the results are guarenteed to
+        /// be unique accross registration number, scheme and compliance year.
+        /// 
+        /// A filtered index in the database has been provided to ensure that such queries
+        /// are efficient at including only current producers.
+        /// </summary>
+        public virtual bool IsCurrentForComplianceYear { get; private set; }
+
         public void SetScheme(Scheme scheme)
         {
             Scheme = scheme;
@@ -225,7 +244,7 @@
                 companiesHouseNumber = producer.ProducerBusiness.CompanyDetails.CompanyNumber;
             }
             var chargeBand = "***";
-            var dateRegistered = GetProducerRegistrationDate(producer.RegistrationNumber, producer.MemberUpload.ComplianceYear).ToString(CultureInfo.InvariantCulture);
+            var dateRegistered = string.Format("{0:dd/MM/yyyy HH:mm:ss}", GetProducerRegistrationDate(producer.RegistrationNumber, producer.MemberUpload.ComplianceYear));
             var authorisedRepresentative = producer.AuthorisedRepresentative == null ? "No" : "Yes";
             var overseasProducer = producer.AuthorisedRepresentative == null
                 ? string.Empty

@@ -22,9 +22,10 @@
     {
         private static readonly XNamespace ns = "http://www.environment-agency.gov.uk/WEEE/XMLSchema";
 
-        public XDocument GenerateXml(ProducerList producerList)
+        public XDocument GenerateXml(ProducerList producerList, ProducerListSettings settings)
         {
             Guard.ArgumentNotNull(() => producerList, producerList);
+            Guard.ArgumentNotNull(() => settings, settings);
 
             XDocument xmlDoc = new XDocument();
 
@@ -32,6 +33,15 @@
 
             XElement xmlScheme = new XElement(ns + "scheme");
             xmlDoc.Add(xmlScheme);
+
+            // If we are creating an XML document that is deliberately invalid,
+            // let's include a <foo/> element inside of the root element.
+            if (settings.IncludeUnexpectedFooElement)
+            {
+                XElement xmlFoo = new XElement(ns + "foo");
+                xmlScheme.Add(xmlFoo);
+            }
+
             PopulateScheme(producerList, xmlScheme);
 
             return xmlDoc;

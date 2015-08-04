@@ -1,12 +1,7 @@
-﻿using EA.Prsd.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EA.Weee.Core.PCS.MemberUploadTesting
+﻿namespace EA.Weee.Core.PCS.MemberUploadTesting
 {
+    using System.Collections.Generic;
+
     public class ProducerList
     {
         public SchemaVersion SchemaVersion { get; set; }

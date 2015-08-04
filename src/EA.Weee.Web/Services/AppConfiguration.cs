@@ -2,7 +2,7 @@
 {
     using System.ComponentModel;
 
-    public class AppConfiguration
+    public class AppConfiguration : IAppConfiguration
     {
         [DefaultValue("Development")]
         public string Environment { get; set; }
