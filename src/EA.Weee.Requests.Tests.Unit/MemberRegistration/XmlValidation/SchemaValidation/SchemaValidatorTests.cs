@@ -41,6 +41,20 @@
         }
 
         [Fact]
+        public void SchemaValidation_IncorrectNamespace_AddsError()
+        {
+            var wrongNamespaceXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-wrong-namespace.xml");
+            var wrongNamespaceXml = File.ReadAllText(new Uri(wrongNamespaceXmlLocation).LocalPath);
+
+            A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
+                .Returns(XDocument.Parse(wrongNamespaceXml));
+
+            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
+
+            Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
+        }
+
+        [Fact]
         public void SchemaValidation_NonSchemaXml_AddsError()
         {
             var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-slightly-invalid.xml");

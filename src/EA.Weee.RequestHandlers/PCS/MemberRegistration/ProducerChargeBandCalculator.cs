@@ -65,6 +65,12 @@
                     }
                 }
             }
+            else
+            {
+                //TODO: Need to be changed for Producer status A. This is just for time being to avoid error on upload xml.
+                producerCharge.ChargeBandType = ChargeBandType.E;
+                producerCharge.ChargeAmount = 0;
+            }
             return producerCharge;
         }
 
