@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation
 {
     using System;
-using System.Collections.Generic;
-using System.Linq;
-using DataAccess;
-using Domain;
-using Extensions;
-using FluentValidation;
-using Prsd.Core.Domain;
+    using System.Collections.Generic;
+    using System.Linq;
+    using DataAccess;
+    using Domain;
+    using Extensions;
+    using FluentValidation;
+    using Prsd.Core.Domain;
 
     public class SchemeTypeValidator : AbstractValidator<schemeType>
     {
@@ -42,6 +42,31 @@ using Prsd.Core.Domain;
                     .WithState(st => ErrorLevel.Error)
                     .WithMessage("The Registration Number '{0}' appears more than once in the uploaded XML file",
                         (st, producer) => producer.registrationNo);
+
+                var duplicateProducerNames = new List<string>();
+                RuleForEach(st => st.producerList)
+                    .Must((st, producer) =>
+                {
+                    if (string.IsNullOrEmpty(producer.GetProducerName()))
+                    {
+                        throw new ArgumentException(
+                            string.Format("{0}: producer must have a producer name, should have been caught in schema", producer.tradingName));
+                    }
+
+                    var isDuplicate = st.producerList
+                        .Any(p => p != producer && p.GetProducerName() == producer.GetProducerName());
+
+                    if (isDuplicate && !duplicateProducerNames.Contains(producer.GetProducerName()))
+                    {
+                        duplicateProducerNames.Add(producer.GetProducerName());
+                        return false;
+                    }
+
+                    return true;
+                })
+                .WithState(st => ErrorLevel.Error)
+                .WithMessage("The Producer Name '{0}' appears more than once in the uploaded XML file",
+                    (st, producer) => producer.GetProducerName());
             });
 
             RuleSet(DataValidation, () =>

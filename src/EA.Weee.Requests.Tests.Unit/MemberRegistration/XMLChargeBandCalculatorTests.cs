@@ -56,7 +56,7 @@
 
             xmlChargeBandCalculator.Calculate(new ProcessXMLFile(A<Guid>._, validXml));
 
-            Assert.Null(xmlChargeBandCalculator.ErrorsAndWarnings);
+            Assert.Empty(xmlChargeBandCalculator.ErrorsAndWarnings);
         }
 
         [Fact]
