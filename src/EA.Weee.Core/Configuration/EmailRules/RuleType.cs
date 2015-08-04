@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Services.EmailRules
+﻿namespace EA.Weee.Core.Configuration.EmailRules
 {
     public enum RuleType
     {

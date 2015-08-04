@@ -1,28 +1,30 @@
-﻿namespace EA.Weee.Core.Configuration.InternalConfiguration
+﻿namespace EA.Weee.Core.Configuration.EmailRules
 {
     using System.Configuration;
 
-    public class AllowedEmailSuffixesElementCollection : ConfigurationElementCollection
+    public class RuleElementCollection : ConfigurationElementCollection
     {
         protected override ConfigurationElement CreateNewElement()
         {
-            return new AllowedEmailSuffixElement();
+            return new RuleElement();
         }
 
         protected override object GetElementKey(ConfigurationElement element)
         {
-            var myElement = element as AllowedEmailSuffixElement;
+            RuleElement myElement = element as RuleElement;
             if (myElement == null)
             {
                 return null;
             }
 
-            return myElement.Value.GetHashCode();
+            return myElement.Action.GetHashCode()
+                ^ myElement.Type.GetHashCode()
+                ^ myElement.Value.GetHashCode();
         }
 
-        public AllowedEmailSuffixElement this[int index]
+        public RuleElement this[int index]
         {
-            get { return (AllowedEmailSuffixElement)BaseGet(index); }
+            get { return (RuleElement)BaseGet(index); }
             set
             {
                 if (BaseGet(index) != null)
@@ -33,7 +35,7 @@
             }
         }
 
-        public void Add(AllowedEmailSuffixElement element)
+        public void Add(RuleElement element)
         {
             BaseAdd(element);
         }
