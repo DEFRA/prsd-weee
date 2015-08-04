@@ -17,6 +17,7 @@
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.OAuth;
+    using Prsd.Core.Web.OpenId;
     using Services;
     using Thinktecture.IdentityModel.Client;
     using Web.Areas.Admin.Controllers;
@@ -29,6 +30,7 @@
         private readonly IOAuthClient oauthClient;
         private readonly IAuthenticationManager authenticationManager;
         private readonly IEmailService emailService;
+        private readonly IUserInfoClient userInfoClient;
 
         public AccountControllerTests()
         {
@@ -36,6 +38,7 @@
             oauthClient = A.Fake<IOAuthClient>();
             authenticationManager = A.Fake<IAuthenticationManager>();
             emailService = A.Fake<IEmailService>();
+            userInfoClient = A.Fake<IUserInfoClient>();
         }
 
         [Fact]
@@ -51,7 +54,8 @@
             Assert.Equal(model, ((ViewResult)(result)).Model);
         }
 
-        [Fact] public async void HttpPost_Create_ModelIsValid_ShouldIncludeUserDetails_AndOnlyClaimShouldBeInternalAccess()
+        [Fact]
+        public async void HttpPost_Create_ModelIsValid_ShouldIncludeUserDetails_AndOnlyClaimShouldBeInternalAccess()
         {
             var model = ValidModel();
             var newUser = A.Fake<INewUser>();
@@ -64,7 +68,7 @@
             A.CallTo(() => apiClient.NewUser).Returns(newUser);
 
             A.CallTo(() => oauthClient.GetAccessTokenAsync(A<string>._, A<string>._))
-                      .Returns(A.Fake<TokenResponse>());
+                .Returns(A.Fake<TokenResponse>());
 
             await AccountController().Create(model);
 
@@ -143,6 +147,34 @@
         }
 
         [Fact]
+        public void HttpGet_Login_ShouldReturnsLoginView()
+        {
+            var controller = AccountController();
+            var result = controller.Login("AnyUrl");
+            var viewResult = ((ViewResult)result);
+            Assert.Equal("Login", viewResult.ViewName);
+        }
+
+        [Fact]
+        public async void HttpPost_Login_ModelIsInvalid_ShouldRedirectViewWithModel()
+        {
+            var controller = AccountController();
+            controller.ModelState.AddModelError("Key", "Any error");
+
+            var model = new InternalLoginViewModel
+            {
+                Email = "test@sepa.org.uk",
+                Password = "Test123***",
+                RememberMe = false
+            };
+            var result = await controller.Login(model, "AnyUrl");
+
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(model, ((ViewResult)(result)).Model);
+            Assert.False(controller.ModelState.IsValid);
+        }
+
+        [Fact]
         public async void HttpPost_AdminAccountActivationRequired_IfUserResendsActivationEmail_ShouldSendActivationEmail()
         {
             var newUser = A.Fake<INewUser>();
@@ -190,6 +222,81 @@
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
+        [Fact]
+        public async void HttpPost_Login_ModelIsValidAndUserInfoResponseClaimToCanAccessInternalArea_ShouldRequestTokenOnce_AndShouldGetUserInfoOnce_AndShouldRedirectToHomePage()
+        {
+            var model = new InternalLoginViewModel
+            {
+                Email = "test@sepa.org.uk",
+                Password = "Test123***",
+                RememberMe = false
+            };
+
+            var controller = AccountController();
+
+            A.CallTo(() => oauthClient.GetAccessTokenAsync(A<string>._, A<string>._))
+                .Returns(A.Fake<TokenResponse>());
+
+            var userInfoResponse = new UserInfoResponse(HttpStatusCode.Accepted, string.Empty)
+            {
+                Claims = new[] { new Tuple<string, string>(string.Empty, Claims.CanAccessInternalArea) }
+            };
+
+            A.CallTo(() => userInfoClient.GetUserInfoAsync(A<string>._))
+                .Returns(userInfoResponse);
+
+            var result = await controller.Login(model, "AnyUrl");
+
+            A.CallTo(() => oauthClient.GetAccessTokenAsync(model.Email, model.Password))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => userInfoClient.GetUserInfoAsync(A<string>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            var redirectValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Index", redirectValues["action"]);
+            Assert.Equal("Home", redirectValues["controller"]);
+            Assert.Equal("Admin", redirectValues["area"]);
+        }
+
+        [Fact]
+        public async void HttpPost_Login_ModelIsValidAndUserInfoResponseClaimToCanAccessExternalArea_ShouldRequestTokenOnce_AndShouldGetUserInfoOnce_AndShouldReturnLoginView()
+        {
+            var model = new InternalLoginViewModel
+            {
+                Email = "test@sepa.org.uk",
+                Password = "Test123***",
+                RememberMe = false
+            };
+
+            var controller = AccountController();
+
+            A.CallTo(() => oauthClient.GetAccessTokenAsync(A<string>._, A<string>._))
+                .Returns(A.Fake<TokenResponse>());
+
+            var userInfoResponse = new UserInfoResponse(HttpStatusCode.Accepted, string.Empty)
+            {
+                Claims = new[] { new Tuple<string, string>(string.Empty, Claims.CanAccessExternalArea) }
+            };
+
+            A.CallTo(() => userInfoClient.GetUserInfoAsync(A<string>._))
+                .Returns(userInfoResponse);
+
+            var result = await controller.Login(model, "AnyUrl");
+
+            A.CallTo(() => oauthClient.GetAccessTokenAsync(model.Email, model.Password))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => userInfoClient.GetUserInfoAsync(A<string>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            var viewResult = ((ViewResult)result);
+
+            Assert.Equal("Login", viewResult.ViewName);
+            Assert.False(controller.ModelState.IsValid);
+        }
+
         private InternalUserCreationViewModel ValidModel()
         {
             return new InternalUserCreationViewModel
@@ -209,7 +316,7 @@
             var context = A.Fake<HttpContextBase>();
             A.CallTo(() => context.Request).Returns(request);
 
-            var controller = new AccountController(() => apiClient, authenticationManager, emailService, () => oauthClient);
+            var controller = new AccountController(() => apiClient, authenticationManager, emailService, () => oauthClient, () => userInfoClient);
             controller.ControllerContext = new ControllerContext(context, new RouteData(), controller);
 
             controller.Url = new UrlHelper(new RequestContext(controller.HttpContext, new RouteData()));

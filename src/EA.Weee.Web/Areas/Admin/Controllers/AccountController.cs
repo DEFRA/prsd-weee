@@ -1,19 +1,24 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System;
+    using System.Linq;
     using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
+    using Base;
     using Core;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Prsd.Core.Web.OAuth;
+    using Prsd.Core.Web.OpenId;
     using Services;
+    using Thinktecture.IdentityModel.Client;
     using ViewModels;
+    using UserInfoClient = Thinktecture.IdentityModel.Client.UserInfoClient;
 
     public class AccountController : Controller
     {
@@ -21,13 +26,15 @@
         private readonly IAuthenticationManager authenticationManager;
         private readonly Func<IOAuthClient> oauthClient;
         private readonly IEmailService emailService;
-  
-        public AccountController(Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager, IEmailService emailService, Func<IOAuthClient> oauthClient)
+        private readonly Func<IUserInfoClient> userInfoClient;
+
+        public AccountController(Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager, IEmailService emailService, Func<IOAuthClient> oauthClient, Func<IUserInfoClient> userInfoClient)
         {
             this.apiClient = apiClient;
             this.oauthClient = oauthClient;
             this.authenticationManager = authenticationManager;
             this.emailService = emailService;
+            this.userInfoClient = userInfoClient;
         }
 
         [HttpGet]
@@ -49,11 +56,11 @@
 
             var userCreationData = new UserCreationData
             {
-                Email = model.Email, 
-                FirstName = model.Name, 
-                Surname = model.Surname, 
-                Password = model.Password, 
-                ConfirmPassword = model.ConfirmPassword, 
+                Email = model.Email,
+                FirstName = model.Name,
+                Surname = model.Surname,
+                Password = model.Password,
+                ConfirmPassword = model.ConfirmPassword,
                 Claims = new[]
                 {
                     Claims.CanAccessInternalArea
@@ -95,7 +102,7 @@
 
             return View(model);
         }
-     
+
         [HttpGet]
         public ActionResult AdminAccountActivationRequired()
         {
@@ -173,6 +180,85 @@
                 }
             }
             return false;
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Login(string returnUrl)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToLocal(returnUrl);
+            }
+            ViewBag.ReturnUrl = returnUrl;
+            return View("Login");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Login(InternalLoginViewModel model, string returnUrl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var response = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
+
+            if (response.AccessToken != null)
+            {
+                var isInternalUser = await IsInternalUser(response.AccessToken);
+                if (isInternalUser)
+                {
+                    authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = model.RememberMe },
+                        response.GenerateUserIdentity());
+                    return RedirectToLocal(returnUrl);
+                }
+                ModelState.AddModelError(string.Empty, "Invalid login details");
+                return View("Login", model);
+            }
+
+            ModelState.AddModelError(string.Empty, ParseLoginError(response.Error));
+
+            return View("Login", model);
+        }
+
+        private ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            
+            return RedirectToAction("Index", "Home", new { area = "Admin" });
+        }
+
+        private async Task<bool> IsInternalUser(string accessToken)
+        {
+            var userInfo = await userInfoClient().GetUserInfoAsync(accessToken);
+
+            return userInfo.Claims.Any(p => p.Item2 == Claims.CanAccessInternalArea);
+        }
+
+        private string ParseLoginError(string error)
+        {
+            switch (error)
+            {
+                case OAuth2Constants.Errors.AccessDenied:
+                    return "Access denied";
+                case OAuth2Constants.Errors.InvalidGrant:
+                    return "Invalid credentials";
+                case OAuth2Constants.Errors.Error:
+                case OAuth2Constants.Errors.InvalidClient:
+                case OAuth2Constants.Errors.InvalidRequest:
+                case OAuth2Constants.Errors.InvalidScope:
+                case OAuth2Constants.Errors.UnauthorizedClient:
+                case OAuth2Constants.Errors.UnsupportedGrantType:
+                case OAuth2Constants.Errors.UnsupportedResponseType:
+                default:
+                    return "Internal error";
+            }
         }
     }
 }
