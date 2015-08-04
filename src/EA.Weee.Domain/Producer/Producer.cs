@@ -235,9 +235,7 @@
             }
 
             var tradingName = producer.TradingName;
-            var prn = string.IsNullOrEmpty(producer.RegistrationNumber)
-                ? "WEE/********"
-                : producer.RegistrationNumber;
+            var prn = producer.RegistrationNumber;
             var companiesHouseNumber = string.Empty;
             if (producer.ProducerBusiness != null && producer.ProducerBusiness.CompanyDetails != null)
             {
