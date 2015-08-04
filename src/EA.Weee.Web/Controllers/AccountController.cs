@@ -73,7 +73,7 @@
                         response.GenerateUserIdentity());
                     return RedirectToLocal(returnUrl);
                 }
-                ModelState.AddModelError(string.Empty, ParseLoginError(response.Error));
+                ModelState.AddModelError(string.Empty, "Invalid login details");
                 return View(model);
             }
 
