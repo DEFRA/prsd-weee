@@ -230,8 +230,8 @@
             {
                 return Redirect(returnUrl);
             }
-
-            return RedirectToAction("Home", "Account", new { area = "Admin" });
+            
+            return RedirectToAction("Index", "Home", new { area = "Admin" });
         }
 
         private async Task<bool> IsInternalUser(string accessToken)

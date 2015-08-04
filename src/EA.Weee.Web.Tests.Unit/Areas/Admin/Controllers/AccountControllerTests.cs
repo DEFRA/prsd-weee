@@ -255,8 +255,8 @@
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("Home", redirectValues["action"]);
-            Assert.Equal("Account", redirectValues["controller"]);
+            Assert.Equal("Index", redirectValues["action"]);
+            Assert.Equal("Home", redirectValues["controller"]);
             Assert.Equal("Admin", redirectValues["area"]);
         }
 
