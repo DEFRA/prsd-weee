@@ -88,6 +88,10 @@
                     throw;
                 }
             }
+            catch (SmtpException)
+            {
+                ViewBag.Errors = new[] { "The activation email was not sent, please try again later." };
+            }
 
             return View(model);
         }
