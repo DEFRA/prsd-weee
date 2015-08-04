@@ -12,9 +12,7 @@
         public void ConfigureAuth(IAppBuilder app, IAppConfiguration config)
         {
             app.UseCookieAuthentication(new PrsdCookieAuthenticationOptions(
-                authenticationType: Constants.WeeeAuthType,
-                apiUrl: config.ApiUrl,
-                apiSecret: config.ApiSecret)
+                authenticationType: Constants.WeeeAuthType)
             {
                 LoginPath = new PathString("/Account/Login")
             });
