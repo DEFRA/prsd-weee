@@ -47,6 +47,12 @@
                 RuleForEach(st => st.producerList)
                     .Must((st, producer) =>
                 {
+                    if (string.IsNullOrEmpty(producer.GetProducerName()))
+                    {
+                        throw new ArgumentException(
+                            string.Format("{0}: producer must have a producer name, should have been caught in schema", producer.tradingName));
+                    }
+
                     var isDuplicate = st.producerList
                         .Any(p => p != producer && p.GetProducerName() == producer.GetProducerName());
 

@@ -82,6 +82,32 @@
         }
 
         [Fact]
+        public void ProducerWithoutProducerName_ThrowsArgumentException()
+        {
+            const string producerName = null;
+            var xml = new schemeType
+            {
+                producerList = ProducersWithProducerNames(producerName)
+            };
+
+            Assert.Throws<ArgumentException>(() => SchemeTypeValidator()
+                .Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation)));
+        }
+
+        [Fact]
+        public void ProducerWithEmptyProducerName_ThrowsArgumentException()
+        {
+            string producerName = string.Empty;
+            var xml = new schemeType
+            {
+                producerList = ProducersWithProducerNames(producerName)
+            };
+
+            Assert.Throws<ArgumentException>(() => SchemeTypeValidator()
+                .Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation)));
+        }
+
+        [Fact]
         public void SetOfDuplicateProducerNames_ValidationFails_IncludesProducerNameInMessage_AndErrorLevelIsError()
         {
             const string producerName = "Producer Name";
