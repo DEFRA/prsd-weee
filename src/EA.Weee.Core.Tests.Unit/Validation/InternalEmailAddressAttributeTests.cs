@@ -6,11 +6,11 @@
     using FakeItEasy;
     using Xunit;
 
-    public class RulesCheckerTests
+    public class InternalEmailAddressAttributeTests
     {
         private readonly IConfigurationManagerWrapper configurationManagerWrapper;
 
-        public RulesCheckerTests()
+        public InternalEmailAddressAttributeTests()
         {
             configurationManagerWrapper = A.Fake<IConfigurationManagerWrapper>();
         }
