@@ -2,6 +2,7 @@
 {
     using EA.Weee.Core.PCS.MemberUploadTesting;
     using EA.Weee.RequestHandlers.PCS.MemberUploadTesting;
+    using FakeItEasy;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
@@ -19,6 +20,8 @@
         public void XmlGenerator_WithValidEmptyProducerList_ReturnsCorrectXml()
         {
             // Arrange
+            ProducerListSettings settings = A.Fake<ProducerListSettings>();
+
             ProducerList producerList = new ProducerList();
             producerList.ApprovalNumber = "Approval Number";
             producerList.ComplianceYear = 2015;
@@ -31,7 +34,7 @@
             XmlGenerator xmlGenerator = new XmlGenerator();
 
             // Act
-            XDocument xmlDocument = xmlGenerator.GenerateXml(producerList);
+            XDocument xmlDocument = xmlGenerator.GenerateXml(producerList, settings);
 
             string actual;
             using (MemoryStream stream = new MemoryStream())

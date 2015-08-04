@@ -42,13 +42,13 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15188.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EA.Prsd.Core, Version=1.0.15211.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15188-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15211-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15188.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15211.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15188-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15211-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -126,6 +126,7 @@
     <Compile Include="PCS\MemberRegistration\XmlValidation\SchemaValidation\ISchemaValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidator.cs" />
     <Compile Include="PCS\MemberRegistration\XmlValidation\XmlValidator.cs" />
+    <Compile Include="PCS\MemberUploadTesting\BrokenXmlWriter.cs" />
     <Compile Include="PCS\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
     <Compile Include="PCS\MemberUploadTesting\IProducerListFactory.cs" />
     <Compile Include="PCS\MemberUploadTesting\IXmlGenerator.cs" />

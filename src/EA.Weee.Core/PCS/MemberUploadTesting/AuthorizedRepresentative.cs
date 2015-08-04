@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EA.Weee.Core.PCS.MemberUploadTesting
+﻿namespace EA.Weee.Core.PCS.MemberUploadTesting
 {
     public class AuthorizedRepresentative
     {
@@ -12,7 +6,6 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
 
         public AuthorizedRepresentative()
         {
-
         }
 
         public static AuthorizedRepresentative Create(IAuthorizedRepresentativeSettings settings)

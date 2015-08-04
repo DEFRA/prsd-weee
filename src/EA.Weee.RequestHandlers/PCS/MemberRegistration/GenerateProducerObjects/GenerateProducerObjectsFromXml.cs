@@ -209,7 +209,7 @@
                 // we can 'randomise' the results at our leisure
                 return new Queue<string>(generatedPrns.Select(p => prnHelper.CreateUniqueRandomVersionOfPrn(p)));
             }
-            catch (OptimisticConcurrencyException e)
+            catch (OptimisticConcurrencyException)
             {
                 return ComputePrns(context, numberOfPrnsNeeded).Result;
             }

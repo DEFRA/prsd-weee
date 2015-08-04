@@ -8,10 +8,13 @@ namespace EA.Weee.Database
 
     internal class Program
     {
+        private static readonly string DatabaseName = GetDatabaseName();
+        private static readonly string DbServer = GetDatabaseServer();
+
         private static void Main()
         {
             Console.Title = "AliaSQL Database Migrations Visual Studio Runner";
-
+            
             var currentDirectory = new DirectoryInfo(Environment.CurrentDirectory);
             var parentDirectory = currentDirectory.Parent.Parent.FullName;
             var scriptspath = parentDirectory + "\\Scripts\\";
@@ -24,8 +27,7 @@ namespace EA.Weee.Database
                 if (!string.IsNullOrEmpty(keySelection))
                 {
                     Console.WriteLine();
-                    var cmdArguments = string.Format("{0} {1} {2} \"{3}", keySelection, DbServer, DatabaseName,
-                        scriptspath);
+                    var cmdArguments = string.Format("{0} {1} {2} \"{3}", keySelection, DbServer, DatabaseName, scriptspath); 
                     p.StartInfo.FileName = deployerpath;
                     p.StartInfo.Arguments = cmdArguments;
                     p.StartInfo.UseShellExecute = false;
@@ -61,7 +63,7 @@ namespace EA.Weee.Database
         }
 
         /// <summary>
-        ///     returns project name and removes the word ".database."
+        /// returns project name and removes the word ".database."
         /// </summary>
         /// <returns></returns>
         private static string GetDatabaseName()
@@ -72,7 +74,7 @@ namespace EA.Weee.Database
             {
                 var projectname = Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location);
 
-                databasename = projectname.Replace("Database.", string.Empty).Replace(".Database", string.Empty).Replace("Database", string.Empty);
+                databasename = projectname.Replace("Database.", String.Empty).Replace(".Database", String.Empty).Replace("Database", String.Empty);
             }
             return databasename;
         }
@@ -114,8 +116,5 @@ namespace EA.Weee.Database
                     return string.Empty;
             }
         }
-
-        private static readonly string DatabaseName = GetDatabaseName();
-        private static readonly string DbServer = GetDatabaseServer();
     }
 }

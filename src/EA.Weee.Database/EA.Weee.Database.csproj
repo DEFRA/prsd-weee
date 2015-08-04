@@ -46,6 +46,11 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="scripts\AliaSQL.exe" />
+    <Content Include="scripts\Create\placeholder.txt" />
+    <Content Include="scripts\Everytime\placeholder.txt" />
+    <Content Include="scripts\TestData\placeholder.txt" />
+    <Content Include="scripts\Update\placeholder.txt" />
     <Content Include="scripts\Update\Sprint07\20150619-1126-InsertCompetentAuthorityData.sql" />
     <Content Include="scripts\Update\Sprint07\20150619-1017-InsertCountryData.sql" />
     <Content Include="scripts\Update\Sprint07\20150619-1023-UpdateCATable-AddCountryId.sql" />
@@ -66,6 +71,7 @@
     <Content Include="scripts\Update\Sprint10\20150730-1953-AddIndexForProducerIsCurrent.sql" />
     <Content Include="scripts\Update\Sprint10\20150730-1956-AddSppRefreshProducerIsCurrent.sql" />
     <Content Include="scripts\Update\Sprint10\20150731-1309-PopulateSystemData.sql" />
+    <Content Include="scripts\Update\Sprint10\20150803-1016-AddMemberUploadErrorType.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -74,11 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />
-    <Content Include="scripts\AliaSQL.exe" />
-    <Content Include="scripts\Create\placeholder.txt" />
-    <Content Include="scripts\Everytime\placeholder.txt" />
-    <Content Include="scripts\TestData\placeholder.txt" />
-    <Content Include="scripts\Update\placeholder.txt" />
     <Content Include="scripts\Update\Sprint00-IWS\20150526-164637-IntialiseFromIws.sql" />
     <Content Include="scripts\Update\Sprint06-WEEE\20150603-161233-UpdateOrganisationTable.sql" />
     <Content Include="scripts\Update\Sprint06-WEEE\20150604-093607-AddContactTable.sql" />
