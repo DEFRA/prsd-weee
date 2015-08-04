@@ -7,10 +7,12 @@
     using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
+    using Core;
     using Core.Organisations;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
+    using Prsd.Core.Web.OpenId;
     using Services;
     using Thinktecture.IdentityModel.Client;
     using ViewModels.Account;
@@ -24,16 +26,19 @@
         private readonly IAuthenticationManager authenticationManager;
         private readonly IEmailService emailService;
         private readonly Func<IOAuthClient> oauthClient;
+        private readonly Func<IUserInfoClient> userInfoClient;
 
         public AccountController(Func<IOAuthClient> oauthClient,
             IAuthenticationManager authenticationManager,
             Func<IWeeeClient> apiClient,
-            IEmailService emailService)
+            IEmailService emailService,
+            Func<IUserInfoClient> userInfoClient)
         {
             this.oauthClient = oauthClient;
             this.apiClient = apiClient;
             this.authenticationManager = authenticationManager;
             this.emailService = emailService;
+            this.userInfoClient = userInfoClient;
         }
 
         [HttpGet]
@@ -61,9 +66,15 @@
             var response = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
             if (response.AccessToken != null)
             {
-                authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = model.RememberMe },
-                    response.GenerateUserIdentity());
-                return RedirectToLocal(returnUrl);
+                var isExternalUser = await IsExternalUser(response.AccessToken);
+                if (isExternalUser)
+                {
+                    authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = model.RememberMe },
+                        response.GenerateUserIdentity());
+                    return RedirectToLocal(returnUrl);
+                }
+                ModelState.AddModelError(string.Empty, ParseLoginError(response.Error));
+                return View(model);
             }
 
             ModelState.AddModelError(string.Empty, ParseLoginError(response.Error));
@@ -89,6 +100,13 @@
                 default:
                     return "Internal error";
             }
+        }
+
+        private async Task<bool> IsExternalUser(string accessToken)
+        {
+            var userInfo = await userInfoClient().GetUserInfoAsync(accessToken);
+
+            return userInfo.Claims.Any(p => p.Item2 == Claims.CanAccessExternalArea);
         }
 
         // POST: /Account/LogOff
@@ -136,7 +154,7 @@
                         new
                         {
                             area = "PCS",
-                            pcsId = approvedOrganisationUsers.First().OrganisationId,                         
+                            pcsId = approvedOrganisationUsers.First().OrganisationId,
                         });
                 }
                 else if (inactiveOrganisationUsers.Count >= 1)
@@ -145,9 +163,9 @@
                 }
                 else
                 {
-                return RedirectToAction("Type", "OrganisationRegistration");
+                    return RedirectToAction("Type", "OrganisationRegistration");
+                }
             }
-        }
         }
 
         [HttpGet]

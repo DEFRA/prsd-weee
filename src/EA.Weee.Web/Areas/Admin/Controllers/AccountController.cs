@@ -56,11 +56,11 @@
 
             var userCreationData = new UserCreationData
             {
-                Email = model.Email, 
-                FirstName = model.Name, 
-                Surname = model.Surname, 
-                Password = model.Password, 
-                ConfirmPassword = model.ConfirmPassword, 
+                Email = model.Email,
+                FirstName = model.Name,
+                Surname = model.Surname,
+                Password = model.Password,
+                ConfirmPassword = model.ConfirmPassword,
                 Claims = new[]
                 {
                     Claims.CanAccessInternalArea
@@ -215,6 +215,8 @@
                         response.GenerateUserIdentity());
                     return RedirectToLocal(returnUrl);
                 }
+                ModelState.AddModelError(string.Empty, "Invalid login details");
+                return View("Login", model);
             }
 
             ModelState.AddModelError(string.Empty, ParseLoginError(response.Error));
@@ -237,8 +239,6 @@
             var userInfo = await userInfoClient().GetUserInfoAsync(accessToken);
 
             return userInfo.Claims.Any(p => p.Item2 == Claims.CanAccessInternalArea);
-
-            //return userInfo.Claims.Any(p => p.Item1 == ClaimTypes.Role && p.Item2 == "internal");
         }
 
         private string ParseLoginError(string error)
