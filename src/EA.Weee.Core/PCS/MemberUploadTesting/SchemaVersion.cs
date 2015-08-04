@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-
-namespace EA.Weee.Core.PCS.MemberUploadTesting
+﻿namespace EA.Weee.Core.PCS.MemberUploadTesting
 {
+    using System.ComponentModel.DataAnnotations;
+
     public enum SchemaVersion
     {
         [Display(Name = "3.04")]

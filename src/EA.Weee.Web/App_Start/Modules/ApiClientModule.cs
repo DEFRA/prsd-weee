@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Modules
 {
-    using System.Configuration;
     using Api.Client;
     using Autofac;
     using Prsd.Core.Web.OAuth;

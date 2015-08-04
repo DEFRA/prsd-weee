@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EA.Weee.Core.PCS.MemberUploadTesting
+﻿namespace EA.Weee.Core.PCS.MemberUploadTesting
 {
+    using System;
+
     public class ProducerListSettings : ISchemeBusinessSettings
     {
         public Guid OrganisationID { get; set; }
@@ -17,5 +13,11 @@ namespace EA.Weee.Core.PCS.MemberUploadTesting
         public int NumberOfNewProducers { get; set; }
 
         public int NumberOfExistingProducers { get; set; }
+
+        public bool IncludeMalformedSchema { get; set; }
+
+        public bool IncludeUnexpectedFooElement { get; set; }
+
+        public bool IgnoreStringLengthConditions { get; set; }
     }
 }

@@ -41,15 +41,7 @@
                 && configurationService.CurrentConfiguration.SendEmail.Equals("true", StringComparison.InvariantCultureIgnoreCase)
                 && emailRuleChecker.CheckEmailAddress(toAddress) == RuleAction.Allow)
             {
-                try
-                {
-                    await smtpClient.SendMailAsync(message);
-                }
-                catch (Exception ex)
-                {
-                    throw new InvalidOperationException(ex.Message);
-                }
-
+                await smtpClient.SendMailAsync(message);
                 return true;
             }
 

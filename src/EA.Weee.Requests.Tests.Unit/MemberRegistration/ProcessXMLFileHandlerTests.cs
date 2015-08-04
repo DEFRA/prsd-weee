@@ -32,7 +32,7 @@
         private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
         private static readonly Guid organisationId = Guid.NewGuid();
         private static readonly ProcessXMLFile Message = new ProcessXMLFile(organisationId, new byte[1]);
-
+        
         public ProcessXMLFileHandlerTests()
         {
             memberUploadsDbSet = A.Fake<DbSet<MemberUpload>>();
@@ -79,9 +79,40 @@
         }
 
         [Fact]
+        public async void ProcessXmlfile_SchemaErrors_DoesntTryToCalculateChargesOrConvertXml()
+        {
+            IEnumerable<MemberUploadError> errors = new[] { new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "any description") };
+            A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
+            await handler.HandleAsync(Message);
+
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(Message)).MustNotHaveHappened();
+            A.CallTo(() => xmlConverter.Convert(Message)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async void ProcessXmlfile_BusinessErrors_TriesToCalculateCharges()
+        {
+            IEnumerable<MemberUploadError> errors = new[] { new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description") };
+            A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
+            await handler.HandleAsync(Message);
+
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(Message)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void ProcessXmlfile_NoErrors_TriesToCalculateCharges()
+        {
+            IEnumerable<MemberUploadError> errors = new List<MemberUploadError>();
+            A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
+            await handler.HandleAsync(Message);
+
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(Message)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
         public async void ProcessXmlfile_InvalidXmlfile_NotGenerateProducerObjects()
         {
-            IEnumerable<MemberUploadError> errors = new[] { new MemberUploadError(ErrorLevel.Error, "any description") };
+            IEnumerable<MemberUploadError> errors = new[] { new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "any description") };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
 
@@ -93,7 +124,7 @@
         {
             List<MemberUploadError> errors = new List<MemberUploadError>
             {
-                new MemberUploadError(ErrorLevel.Error, "any description")
+                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
             };
             A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
 

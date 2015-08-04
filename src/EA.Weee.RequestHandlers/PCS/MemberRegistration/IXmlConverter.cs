@@ -7,6 +7,8 @@
     {
         XDocument Convert(ProcessXMLFile message);
 
+        string XmlToUtf8String(ProcessXMLFile message);
+
         schemeType Deserialize(XDocument xdoc);
     }
 }
