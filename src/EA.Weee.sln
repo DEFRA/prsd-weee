@@ -47,8 +47,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Core", "EA.Weee.Cor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Core.Tests.Unit", "EA.Weee.Core.Tests.Unit\EA.Weee.Core.Tests.Unit.csproj", "{10930E82-4985-4F92-8C5A-65D15F0176BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.RequestHandlers.Tests.Unit", "EA.Weee.RequestHandlers.Tests.Unit\EA.Weee.RequestHandlers.Tests.Unit.csproj", "{93EDE601-792F-4009-AFF5-A98C2D8C5B72}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -185,14 +183,6 @@ Global
 		{10930E82-4985-4F92-8C5A-65D15F0176BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{10930E82-4985-4F92-8C5A-65D15F0176BE}.Release|x64.ActiveCfg = Release|Any CPU
 		{10930E82-4985-4F92-8C5A-65D15F0176BE}.Release|x64.Build.0 = Release|Any CPU
-		{93EDE601-792F-4009-AFF5-A98C2D8C5B72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{93EDE601-792F-4009-AFF5-A98C2D8C5B72}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{93EDE601-792F-4009-AFF5-A98C2D8C5B72}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{93EDE601-792F-4009-AFF5-A98C2D8C5B72}.Debug|x64.Build.0 = Debug|Any CPU
-		{93EDE601-792F-4009-AFF5-A98C2D8C5B72}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{93EDE601-792F-4009-AFF5-A98C2D8C5B72}.Release|Any CPU.Build.0 = Release|Any CPU
-		{93EDE601-792F-4009-AFF5-A98C2D8C5B72}.Release|x64.ActiveCfg = Release|Any CPU
-		{93EDE601-792F-4009-AFF5-A98C2D8C5B72}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -214,6 +204,5 @@ Global
 		{CFC16DE7-D068-4998-9090-A79E2D031212} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
 		{75EFEE66-9358-4DE4-9A84-E7191EEC7DB8} = {731A0B88-5E29-4223-82DF-DBAA113AFEF3}
 		{10930E82-4985-4F92-8C5A-65D15F0176BE} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
-		{93EDE601-792F-4009-AFF5-A98C2D8C5B72} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
 	EndGlobalSection
 EndGlobal
