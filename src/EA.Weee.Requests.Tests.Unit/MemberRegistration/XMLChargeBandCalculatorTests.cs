@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests.Tests.Unit
+﻿namespace EA.Weee.Requests.Tests.Unit.MemberRegistration
 {
     using System;
     using System.Data.Entity;
@@ -19,10 +19,7 @@
         private readonly DbContextHelper helper = new DbContextHelper();
         private readonly WeeeContext context;
         private readonly DbSet<ProducerChargeBand> producerChargeBandDbSet;
-        private readonly IXmlConverter xmlConverter;
-
-        private readonly Guid pcsId = Guid.NewGuid();
-
+     
         public XMLChargeBandCalculatorTests()
         {
             producerChargeBandDbSet = helper.GetAsyncEnabledDbSet(new[]
@@ -35,8 +32,7 @@
             });
 
             context = A.Fake<WeeeContext>();
-            xmlConverter = A.Fake<IXmlConverter>();
-
+     
             A.CallTo(() => context.ProducerChargeBands).Returns(producerChargeBandDbSet);
         }
 
