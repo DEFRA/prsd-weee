@@ -20,7 +20,8 @@
     public class SchemeTypeValidatorTests
     {
         [Fact]
-        public void SetOfDuplicateRegistrationNumbers_ValidationFails_IncludesRegistraionNumberInMessage_AndErrorLevelIsError()
+        public void
+            SetOfDuplicateRegistrationNumbers_ValidationFails_IncludesRegistraionNumberInMessage_AndErrorLevelIsError()
         {
             const string registrationNumber = "ABC12345";
             var xml = new schemeType
@@ -28,7 +29,11 @@
                 producerList = ProducersWithRegistrationNumbers(registrationNumber, registrationNumber)
             };
 
-            var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation));
+            var result = SchemeTypeValidator()
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .NonDataValidation));
 
             Assert.False(result.IsValid);
             Assert.Contains(registrationNumber, result.Errors.Single().ErrorMessage);
@@ -55,14 +60,21 @@
             const string secondRegistrationNumber = "XYZ54321";
             var xml = new schemeType
             {
-                producerList = ProducersWithRegistrationNumbers(firstRegistrationNumber, firstRegistrationNumber, secondRegistrationNumber, secondRegistrationNumber)
+                producerList =
+                    ProducersWithRegistrationNumbers(firstRegistrationNumber, firstRegistrationNumber,
+                        secondRegistrationNumber, secondRegistrationNumber)
             };
 
-            var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation));
+            var result = SchemeTypeValidator()
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .NonDataValidation));
 
             Assert.False(result.IsValid);
 
-            var aggregatedErrorMessages = result.Errors.Select(err => err.ErrorMessage).Aggregate((curr, next) => curr + ", " + next);
+            var aggregatedErrorMessages =
+                result.Errors.Select(err => err.ErrorMessage).Aggregate((curr, next) => curr + ", " + next);
 
             Assert.Contains(firstRegistrationNumber, aggregatedErrorMessages);
             Assert.Contains(secondRegistrationNumber, aggregatedErrorMessages);
@@ -76,7 +88,11 @@
                 producerList = ProducersWithRegistrationNumbers("ABC12345", "XYZ54321").ToArray()
             };
 
-            var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation));
+            var result = SchemeTypeValidator()
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .NonDataValidation));
 
             Assert.True(result.IsValid);
         }
@@ -91,20 +107,26 @@
             };
 
             Assert.Throws<ArgumentException>(() => SchemeTypeValidator()
-                .Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation)));
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .NonDataValidation)));
         }
 
         [Fact]
         public void ProducerWithEmptyProducerName_ThrowsArgumentException()
         {
-            string producerName = string.Empty;
+            var producerName = string.Empty;
             var xml = new schemeType
             {
                 producerList = ProducersWithProducerNames(producerName)
             };
 
             Assert.Throws<ArgumentException>(() => SchemeTypeValidator()
-                .Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation)));
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .NonDataValidation)));
         }
 
         [Fact]
@@ -116,7 +138,11 @@
                 producerList = ProducersWithProducerNames(producerName, producerName)
             };
 
-            var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation));
+            var result = SchemeTypeValidator()
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .NonDataValidation));
 
             Assert.False(result.IsValid);
             Assert.Contains(producerName, result.Errors.Single().ErrorMessage);
@@ -130,14 +156,21 @@
             const string secondProducerName = "Second Producer Name";
             var xml = new schemeType
             {
-                producerList = ProducersWithProducerNames(firstProducerName, firstProducerName, secondProducerName, secondProducerName)
+                producerList =
+                    ProducersWithProducerNames(firstProducerName, firstProducerName, secondProducerName,
+                        secondProducerName)
             };
 
-            var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation));
+            var result = SchemeTypeValidator()
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .NonDataValidation));
 
             Assert.False(result.IsValid);
 
-            var aggregatedErrorMessages = result.Errors.Select(err => err.ErrorMessage).Aggregate((curr, next) => curr + ", " + next);
+            var aggregatedErrorMessages =
+                result.Errors.Select(err => err.ErrorMessage).Aggregate((curr, next) => curr + ", " + next);
 
             Assert.Contains(firstProducerName, aggregatedErrorMessages);
             Assert.Contains(secondProducerName, aggregatedErrorMessages);
@@ -151,7 +184,11 @@
                 producerList = ProducersWithProducerNames("First Producer Name", "Second Producer Name")
             };
 
-            var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.NonDataValidation));
+            var result = SchemeTypeValidator()
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .NonDataValidation));
 
             Assert.True(result.IsValid);
         }
@@ -163,7 +200,9 @@
         [InlineData(obligationTypeType.Both, obligationTypeType.B2B)]
         [InlineData(obligationTypeType.B2B, obligationTypeType.Both)]
         [InlineData(obligationTypeType.B2C, obligationTypeType.Both)]
-        public void ProducerAlreadyRegisteredForSameComplianceYearAndObligationType_ValidationFails_AndMessageIncludesPrnAndObligationType_AndErrorLevelIsError(obligationTypeType existingObligationType, obligationTypeType xmlObligationType)
+        public void
+            ProducerAlreadyRegisteredForSameComplianceYearAndObligationType_ValidationFails_AndMessageIncludesPrnAndObligationType_AndErrorLevelIsError
+            (obligationTypeType existingObligationType, obligationTypeType xmlObligationType)
         {
             const string complianceYear = "2016";
             const string registrationNumber = "ABC12345";
@@ -186,7 +225,10 @@
             existingScheme.Producers.Add(existingProducer);
 
             var result = SchemeTypeValidator(existingScheme)
-                .Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.DataValidation));
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .DataValidation));
 
             Assert.False(result.IsValid);
             Assert.Contains(registrationNumber, result.Errors.Single().ErrorMessage);
@@ -197,11 +239,12 @@
         [Theory]
         [InlineData(obligationTypeType.B2B, obligationTypeType.B2C)]
         [InlineData(obligationTypeType.B2C, obligationTypeType.B2B)]
-        public void ProducerAlreadyRegisteredForSameComplianceYearButObligationTypeDiffers_ValidationSucceeds(obligationTypeType existingObligationType, obligationTypeType xmlObligationType)
+        public void ProducerAlreadyRegisteredForSameComplianceYearButObligationTypeDiffers_ValidationSucceeds(
+            obligationTypeType existingObligationType, obligationTypeType xmlObligationType)
         {
             const string complianceYear = "2016";
             const string registrationNumber = "ABC12345";
-            var xml = new schemeType()
+            var xml = new schemeType
             {
                 complianceYear = complianceYear,
                 producerList = new[]
@@ -219,7 +262,10 @@
             existingScheme.Producers.Add(existingProducer);
 
             var result = SchemeTypeValidator(existingScheme)
-                .Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.DataValidation));
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .DataValidation));
 
             Assert.True(result.IsValid);
         }
@@ -231,11 +277,12 @@
         [InlineData(obligationTypeType.Both, obligationTypeType.B2B)]
         [InlineData(obligationTypeType.B2B, obligationTypeType.Both)]
         [InlineData(obligationTypeType.B2C, obligationTypeType.Both)]
-        public void ProducerRegisteredForDifferentComplianceYearButObligationTypeMatches_ValidationSucceeds(obligationTypeType existingObligationType, obligationTypeType xmlObligationType)
+        public void ProducerRegisteredForDifferentComplianceYearButObligationTypeMatches_ValidationSucceeds(
+            obligationTypeType existingObligationType, obligationTypeType xmlObligationType)
         {
             const string complianceYear = "2015";
             const string registrationNumber = "ABC12345";
-            var xml = new schemeType()
+            var xml = new schemeType
             {
                 complianceYear = complianceYear,
                 producerList = new[]
@@ -253,7 +300,10 @@
             existingScheme.Producers.Add(existingProducer);
 
             var result = SchemeTypeValidator(existingScheme)
-                .Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.DataValidation));
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .DataValidation));
 
             Assert.True(result.IsValid);
         }
@@ -265,7 +315,7 @@
             const string registrationNumber = "ABC12345";
             var organisationId = Guid.NewGuid();
             const obligationTypeType obligationType = obligationTypeType.B2B;
-            var xml = new schemeType()
+            var xml = new schemeType
             {
                 complianceYear = complianceYear,
                 producerList = new[]
@@ -278,23 +328,29 @@
                 }
             };
 
-            var existingProducer = FakeProducer.Create(MapObligationType(obligationType), registrationNumber, organisationId);
+            var existingProducer = FakeProducer.Create(MapObligationType(obligationType), registrationNumber,
+                organisationId);
             var existingScheme = new Scheme(organisationId);
             existingScheme.Producers.Add(existingProducer);
 
             var result = SchemeTypeValidator(existingScheme, organisationId)
-                .Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.DataValidation));
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .DataValidation));
 
             Assert.True(result.IsValid);
         }
-        
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void ProducerRegisteredMatchesComplianceYearAndObligationType_ButRegistrationNumberIsNullOrEmpty_ValidationSucceeds(string registrationNumber)
+        public void
+            ProducerRegisteredMatchesComplianceYearAndObligationType_ButRegistrationNumberIsNullOrEmpty_ValidationSucceeds
+            (string registrationNumber)
         {
             const string complianceYear = "2016";
-            var xml = new schemeType()
+            var xml = new schemeType
             {
                 complianceYear = complianceYear,
                 producerList = new[]
@@ -312,12 +368,16 @@
             existingScheme.Producers.Add(existingProducer);
 
             var result = SchemeTypeValidator(existingScheme)
-                .Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.DataValidation));
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .DataValidation));
 
             Assert.True(result.IsValid);
         }
 
-        private IValidator<schemeType> SchemeTypeValidator(Guid? existingOrganisationId = null, Guid? organisationId = null)
+        private IValidator<schemeType> SchemeTypeValidator(Guid? existingOrganisationId = null,
+            Guid? organisationId = null)
         {
             return SchemeTypeValidator(new Scheme(existingOrganisationId ?? Guid.NewGuid()), organisationId);
         }
@@ -326,7 +386,7 @@
         {
             return new SchemeTypeValidator(ValidationContext.Create(scheme), organisationId ?? Guid.NewGuid());
         }
-       
+
         private producerType[] ProducersWithRegistrationNumbers(params string[] regstrationNumbers)
         {
             return regstrationNumbers.Select(r => new producerType
@@ -398,10 +458,11 @@
         [InlineData(obligationTypeType.B2B)]
         [InlineData(obligationTypeType.B2C)]
         public void
-            ProducerRegisteredforAnotherSchemeforDifferentObligationTypeForDifferentComplianceYear_ValidationSucceeds(obligationTypeType obligationType)
+            ProducerRegisteredforAnotherSchemeforDifferentObligationTypeForDifferentComplianceYear_ValidationSucceeds(
+            obligationTypeType obligationType)
         {
-            WeeeContext weeeContext = CreateFakeDatabase();
-            var xml = new schemeType()
+            var weeeContext = CreateFakeDatabase();
+            var xml = new schemeType
             {
                 complianceYear = "2016",
                 producerList = new[]
@@ -414,13 +475,17 @@
                 }
             };
 
-            Guid orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
-            Scheme scheme = weeeContext.Schemes.FirstOrDefault(s => s.OrganisationId == orgId);
-            var result = SchemeTypeValidator(scheme, orgId).Validate(xml, new RulesetValidatorSelector(RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator.DataValidation));
+            var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
+            var scheme = weeeContext.Schemes.FirstOrDefault(s => s.OrganisationId == orgId);
+            var result = SchemeTypeValidator(scheme, orgId)
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.PCS.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .DataValidation));
 
             if (obligationType == obligationTypeType.B2B)
             {
-               Assert.True(result.IsValid);
+                Assert.True(result.IsValid);
             }
             else
             {
@@ -431,36 +496,36 @@
         private readonly DbContextHelper dbContextHelper = new DbContextHelper();
 
         /// <summary>
-        /// Sets up a faked WeeeContext with 2 schemes 
+        ///     Sets up a faked WeeeContext with 2 schemes
         /// </summary>
         /// <returns></returns>
         private WeeeContext CreateFakeDatabase()
         {
-            MemberUpload memberUpload1 = A.Fake<MemberUpload>();
+            var memberUpload1 = A.Fake<MemberUpload>();
             A.CallTo(() => memberUpload1.OrganisationId).Returns(new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B"));
             A.CallTo(() => memberUpload1.ComplianceYear).Returns(2016);
             A.CallTo(() => memberUpload1.IsSubmitted).Returns(true);
 
-            MemberUpload memberUpload2 = A.Fake<MemberUpload>();
+            var memberUpload2 = A.Fake<MemberUpload>();
             A.CallTo(() => memberUpload2.OrganisationId).Returns(new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B"));
             A.CallTo(() => memberUpload2.ComplianceYear).Returns(2017);
             A.CallTo(() => memberUpload2.IsSubmitted).Returns(true);
 
-           Producer producer1 = FakeProducer.Create(MapObligationType(obligationTypeType.B2B), "ABC", false);
-      
+            Producer producer1 = FakeProducer.Create(MapObligationType(obligationTypeType.B2B), "ABC", false);
+
             Producer producer2 = FakeProducer.Create(MapObligationType(obligationTypeType.B2C), "ABC", true);
-      
-            Organisation organisation1 = A.Fake<Organisation>();
+
+            var organisation1 = A.Fake<Organisation>();
             A.CallTo(() => organisation1.TradingName).Returns("Test Trading Name 1");
 
-            Organisation organisation2 = A.Fake<Organisation>();
+            var organisation2 = A.Fake<Organisation>();
             A.CallTo(() => organisation2.TradingName).Returns("Test Trading Name 2");
 
-            Scheme scheme1 = A.Fake<Scheme>();
+            var scheme1 = A.Fake<Scheme>();
             A.CallTo(() => scheme1.OrganisationId).Returns(new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B"));
             A.CallTo(() => scheme1.ApprovalNumber).Returns("Test Approval Number 1");
 
-            Scheme scheme2 = A.Fake<Scheme>();
+            var scheme2 = A.Fake<Scheme>();
             A.CallTo(() => scheme2.OrganisationId).Returns(new Guid("A99F0A92-E08D-47F0-9758-82F02DB816FA"));
             A.CallTo(() => scheme2.ApprovalNumber).Returns("Test Approval Number 2");
 
@@ -479,52 +544,52 @@
             //A.CallTo(() => memberUpload3.Scheme).Returns(scheme2);
 
             // Wire up producers and schemes (2-way).
-            A.CallTo(() => scheme1.Producers).Returns(new List<Producer>()
+            A.CallTo(() => scheme1.Producers).Returns(new List<Producer>
             {
                 producer1,
                 producer2
             });
 
-           // Wire up producers and member uploads (2-way).
-            A.CallTo(() => memberUpload1.Producers).Returns(new List<Producer>()
-                {
-                    producer1
-                });
+            // Wire up producers and member uploads (2-way).
+            A.CallTo(() => memberUpload1.Producers).Returns(new List<Producer>
+            {
+                producer1
+            });
 
-            A.CallTo(() => memberUpload2.Producers).Returns(new List<Producer>()
-                {
-                    producer2
-                });
+            A.CallTo(() => memberUpload2.Producers).Returns(new List<Producer>
+            {
+                producer2
+            });
 
             // Wire up everything to the context (1-way).
-            WeeeContext weeeContext = A.Fake<WeeeContext>();
+            var weeeContext = A.Fake<WeeeContext>();
 
-            var schemesDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<Scheme>()
-                {
-                    scheme1,
-                    scheme2 
-                });
+            var schemesDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<Scheme>
+            {
+                scheme1,
+                scheme2
+            });
             A.CallTo(() => weeeContext.Schemes).Returns(schemesDbSet);
 
-            var producersDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<Producer>()
-                {
-                    producer1,
-                    producer2
-                });
+            var producersDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<Producer>
+            {
+                producer1,
+                producer2
+            });
             A.CallTo(() => weeeContext.Producers).Returns(producersDbSet);
 
-            var organisationDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<Organisation>()
-                {
-                    organisation1,
-                    organisation2
-                });
+            var organisationDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<Organisation>
+            {
+                organisation1,
+                organisation2
+            });
             A.CallTo(() => weeeContext.Organisations).Returns(organisationDbSet);
 
-            var memberUploadDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<MemberUpload>()
-                {
-                    memberUpload1,
-                    memberUpload2
-                });
+            var memberUploadDbSet = dbContextHelper.GetAsyncEnabledDbSet(new List<MemberUpload>
+            {
+                memberUpload1,
+                memberUpload2
+            });
             A.CallTo(() => weeeContext.MemberUploads).Returns(memberUploadDbSet);
 
             return weeeContext;

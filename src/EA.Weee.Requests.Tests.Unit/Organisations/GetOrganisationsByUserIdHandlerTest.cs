@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
-    using Domain;
     using Domain.Organisation;
     using FakeItEasy;
     using Helpers;
@@ -36,7 +35,10 @@
 
             var handler = new GetOrganisationsByUserIdHandler(context, orgUsermapper);
 
-            var orgUsers = await handler.HandleAsync(new GetOrganisationsByUserId(userId.ToString(), new[] { (int)OrganisationUserStatus.Approved }));
+            var orgUsers =
+                await
+                    handler.HandleAsync(new GetOrganisationsByUserId(userId.ToString(),
+                        new[] { (int)OrganisationUserStatus.Approved }));
             var organisationUserInfo = orgUsers.FirstOrDefault();
 
             Assert.NotNull(organisationUserInfo);
@@ -45,7 +47,9 @@
         }
 
         [Fact]
-        public async Task GetOrganisationsByUserIdHandler_RequestPendingAndRefusedStatus_ReturnsPendingAndRefusedOrganisationUsersOnly()
+        public async Task
+            GetOrganisationsByUserIdHandler_RequestPendingAndRefusedStatus_ReturnsPendingAndRefusedOrganisationUsersOnly
+            ()
         {
             var organisationUsers = MakeOrganisationUser(userId);
 
@@ -59,12 +63,16 @@
 
             var handler = new GetOrganisationsByUserIdHandler(context, orgUsermapper);
 
-            var orgUsers = await handler.HandleAsync(new GetOrganisationsByUserId(userId.ToString(), new[] { (int)OrganisationUserStatus.Pending, (int)OrganisationUserStatus.Refused }));
+            var orgUsers =
+                await
+                    handler.HandleAsync(new GetOrganisationsByUserId(userId.ToString(),
+                        new[] { (int)OrganisationUserStatus.Pending, (int)OrganisationUserStatus.Refused }));
             var organisationUserInfo = orgUsers.FirstOrDefault();
 
             Assert.NotNull(organisationUserInfo);
             Assert.Equal(2, orgUsers.Count);
-            Assert.True(organisationUserInfo.OrganisationUserStatus == OrganisationUserStatus.Pending || organisationUserInfo.OrganisationUserStatus == OrganisationUserStatus.Refused);
+            Assert.True(organisationUserInfo.OrganisationUserStatus == OrganisationUserStatus.Pending ||
+                        organisationUserInfo.OrganisationUserStatus == OrganisationUserStatus.Refused);
         }
 
         [Fact]
@@ -82,7 +90,7 @@
 
             var handler = new GetOrganisationsByUserIdHandler(context, orgUsermapper);
 
-            var orgUsers = await handler.HandleAsync(new GetOrganisationsByUserId(userId.ToString(), new int[] {}));
+            var orgUsers = await handler.HandleAsync(new GetOrganisationsByUserId(userId.ToString(), new int[] { }));
             var organisationUserInfo = orgUsers.FirstOrDefault();
 
             Assert.NotNull(organisationUserInfo);

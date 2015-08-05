@@ -1,12 +1,9 @@
 ﻿namespace EA.Weee.Requests.Tests.Unit.Organisations
 {
-    using System;
     using System.Collections.Generic;
-    using System.Configuration;
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
-    using Domain;
     using Domain.Organisation;
     using FakeItEasy;
     using Helpers;
@@ -18,7 +15,7 @@
     public class FindMatchingCompaniesHandlerTests
     {
         private readonly string companyRegistrationNumber = "AB123456";
-     
+
         private readonly DbContextHelper helper = new DbContextHelper();
 
         private readonly OrganisationHelper orgHelper = new OrganisationHelper();
@@ -162,7 +159,8 @@
             };
 
             var organisations =
-                helper.GetAsyncEnabledDbSet(namesWithDistances.Select(n => orgHelper.GetOrganisationWithName(n.Key)).ToArray());
+                helper.GetAsyncEnabledDbSet(
+                    namesWithDistances.Select(n => orgHelper.GetOrganisationWithName(n.Key)).ToArray());
 
             var context = A.Fake<WeeeContext>();
 
@@ -172,7 +170,8 @@
 
             var results = await handler.HandleAsync(new FindMatchingOrganisations(searchTerm));
 
-            Assert.Equal(namesWithDistances.OrderBy(n => n.Value).Select(n => n.Key), results.Results.Select(r => r.DisplayName));
+            Assert.Equal(namesWithDistances.OrderBy(n => n.Value).Select(n => n.Key),
+                results.Results.Select(r => r.DisplayName));
         }
 
         [Fact]
@@ -180,10 +179,14 @@
         {
             var data = new[]
             {
-                orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency", companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(null, "THE Environemnt Agency", companyRegistrationNumber, Domain.Organisation.OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(null, "Environment Agency", companyRegistrationNumber, Domain.Organisation.OrganisationType.Partnership, OrganisationStatus.Approved)
+                orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", null, companyRegistrationNumber,
+                    OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency",
+                    companyRegistrationNumber, OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(null, "THE Environemnt Agency", companyRegistrationNumber,
+                    OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(null, "Environment Agency", companyRegistrationNumber,
+                    OrganisationType.Partnership, OrganisationStatus.Approved)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
@@ -209,10 +212,14 @@
 
             var data = new[]
             {
-                orgHelper.GetOrganisationWithDetails(IdenticalToQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(CloseToQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(QuiteDifferentToQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(CompletelyUnlikeQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved)
+                orgHelper.GetOrganisationWithDetails(IdenticalToQuery, null, companyRegistrationNumber,
+                    OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(CloseToQuery, null, companyRegistrationNumber,
+                    OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(QuiteDifferentToQuery, null, companyRegistrationNumber,
+                    OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(CompletelyUnlikeQuery, null, companyRegistrationNumber,
+                    OrganisationType.RegisteredCompany, OrganisationStatus.Approved)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
@@ -227,10 +234,12 @@
 
             var firstPage = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency", 1, PageSize));
             var secondPage = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency", 2, PageSize));
-            var thirdEmptyPage = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency", 3, PageSize));
+            var thirdEmptyPage =
+                await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency", 3, PageSize));
 
             Assert.Equal(PageSize, firstPage.Results.Count());
-            Assert.Equal(PageSize - 1, secondPage.Results.Count()); // we aren't expecting to see the one named CompletelyUnlikeQuery
+            Assert.Equal(PageSize - 1, secondPage.Results.Count());
+                // we aren't expecting to see the one named CompletelyUnlikeQuery
             Assert.Equal(0, thirdEmptyPage.Results.Count());
 
             // handler sorts by distance
@@ -243,13 +252,15 @@
         [Fact]
         public async Task FindMatchingOrganisationsHandler_SearchMightIncludeIncompleteOrgs_OnlyShowComplete()
         {
-            const string CompleteName   = "Environment Agency 1";
+            const string CompleteName = "Environment Agency 1";
             const string IncompleteName = "Environment Agency 2";
 
             var data = new[]
             {
-                orgHelper.GetOrganisationWithDetails(CompleteName,   null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(IncompleteName, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete)
+                orgHelper.GetOrganisationWithDetails(CompleteName, null, companyRegistrationNumber,
+                    OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(IncompleteName, null, companyRegistrationNumber,
+                    OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);

@@ -3,15 +3,15 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain.Organisation;
-    using EA.Weee.RequestHandlers.Organisations;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Requests.Tests.Unit.Helpers;
+    using DataAccess;
+    using Domain.Organisation;
     using FakeItEasy;
+    using Helpers;
+    using RequestHandlers.Organisations;
+    using Requests.Organisations;
     using Xunit;
     using OrganisationType = Core.Organisations.OrganisationType;
-    
+
     public class UpdateOrganisationTypeDetailsHandlerTests
     {
         private readonly DbContextHelper helper = new DbContextHelper();
@@ -33,7 +33,9 @@
             const string companyName = "company name";
             const string companyRegistrationNumber = "12345678";
 
-            await handler.HandleAsync(new UpdateOrganisationTypeDetails(organisations.FirstOrDefault().Id, OrganisationType.SoleTraderOrIndividual, companyName, tradingName, companyRegistrationNumber));
+            await
+                handler.HandleAsync(new UpdateOrganisationTypeDetails(organisations.FirstOrDefault().Id,
+                    OrganisationType.SoleTraderOrIndividual, companyName, tradingName, companyRegistrationNumber));
 
             var orgInfo = organisations.FirstOrDefault();
 
@@ -48,7 +50,7 @@
         {
             return helper.GetAsyncEnabledDbSet(new[]
             {
-                orgHelper.GetOrganisationWithName("SFW Ltd"),
+                orgHelper.GetOrganisationWithName("SFW Ltd")
             });
         }
     }

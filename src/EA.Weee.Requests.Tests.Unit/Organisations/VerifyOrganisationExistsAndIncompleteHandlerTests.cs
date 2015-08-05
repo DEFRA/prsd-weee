@@ -4,12 +4,12 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain.Organisation;
-    using EA.Weee.RequestHandlers.Organisations;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Requests.Tests.Unit.Helpers;
+    using DataAccess;
+    using Domain.Organisation;
     using FakeItEasy;
+    using Helpers;
+    using RequestHandlers.Organisations;
+    using Requests.Organisations;
     using Xunit;
 
     public class VerifyOrganisationExistsAndIncompleteHandlerTests
@@ -30,7 +30,8 @@
 
             var handler = new VerifyOrganisationExistsAndIncompleteHandler(context);
 
-            var exists = await handler.HandleAsync(new VerifyOrganisationExistsAndIncomplete(organisations.FirstOrDefault().Id));
+            var exists =
+                await handler.HandleAsync(new VerifyOrganisationExistsAndIncomplete(organisations.FirstOrDefault().Id));
 
             Assert.True(exists);
         }
@@ -39,14 +40,15 @@
         public async Task VerifyOrganisationExistsAndIncompleteHandler_OrgExistsAndApproved_ReturnsFalse()
         {
             var organisations = MakeOrganisation();
-            
+
             var context = A.Fake<WeeeContext>();
 
             A.CallTo(() => context.Organisations).Returns(organisations);
 
             var handler = new VerifyOrganisationExistsAndIncompleteHandler(context);
 
-            var exists = await handler.HandleAsync(new VerifyOrganisationExistsAndIncomplete(organisations.FirstOrDefault().Id));
+            var exists =
+                await handler.HandleAsync(new VerifyOrganisationExistsAndIncomplete(organisations.FirstOrDefault().Id));
 
             Assert.False(exists);
         }
@@ -72,7 +74,7 @@
         {
             return helper.GetAsyncEnabledDbSet(new[]
             {
-                orgHelper.GetOrganisationWithName("SFW Ltd"),
+                orgHelper.GetOrganisationWithName("SFW Ltd")
             });
         }
     }

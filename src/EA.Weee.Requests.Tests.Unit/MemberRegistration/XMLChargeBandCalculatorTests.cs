@@ -1,24 +1,17 @@
 ﻿namespace EA.Weee.Requests.Tests.Unit
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Data.Entity;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
     using System.Text;
-    using System.Xml.Linq;
-    using Core.Helpers.Xml;
     using DataAccess;
     using Domain;
-    using Domain.PCS;
     using Domain.Producer;
     using FakeItEasy;
     using Helpers;
     using PCS.MemberRegistration;
     using RequestHandlers.PCS.MemberRegistration;
-    using RequestHandlers.PCS.MemberRegistration.XmlValidation.SchemaValidation;
     using Xunit;
 
     public class XMLChargeBandCalculatorTests
@@ -32,13 +25,13 @@
 
         public XMLChargeBandCalculatorTests()
         {
-            producerChargeBandDbSet = helper.GetAsyncEnabledDbSet(new[] 
-            { 
-                new ProducerChargeBand("A", 445), 
-                new ProducerChargeBand("B", 210), 
-                new ProducerChargeBand("C", 30), 
-                new ProducerChargeBand("D", 30), 
-                new ProducerChargeBand("E", 30) 
+            producerChargeBandDbSet = helper.GetAsyncEnabledDbSet(new[]
+            {
+                new ProducerChargeBand("A", 445),
+                new ProducerChargeBand("B", 210),
+                new ProducerChargeBand("C", 30),
+                new ProducerChargeBand("D", 30),
+                new ProducerChargeBand("E", 30)
             });
 
             context = A.Fake<WeeeContext>();
@@ -50,8 +43,9 @@
         [Fact]
         public void XMLChargeBandCalculator_ValidXml_NoErrors()
         {
-            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter());
-            var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-valid.xml");
+            var xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter());
+            var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\v3-valid.xml");
             var validXml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(validXmlLocation).LocalPath));
 
             xmlChargeBandCalculator.Calculate(new ProcessXMLFile(A<Guid>._, validXml));
@@ -62,8 +56,9 @@
         [Fact]
         public void XMLChargeBandCalculator_XmlWithSameProducerName_AddsError()
         {
-            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter());
-            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-same-producer-name.xml");
+            var xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter());
+            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\v3-same-producer-name.xml");
             var invalidXml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(invalidXmlLocation).LocalPath));
 
             xmlChargeBandCalculator.Calculate(new ProcessXMLFile(A<Guid>._, invalidXml));
@@ -74,8 +69,9 @@
         [Fact]
         public void XMLChargeBandCalculator_ValidXmlForChargeBand_GivesCorrectChargeBand()
         {
-            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter());
-            var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-valid-ChargeBand.xml");
+            var xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter());
+            var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\v3-valid-ChargeBand.xml");
             var validXml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(validXmlLocation).LocalPath));
 
             var producerCharges = xmlChargeBandCalculator.Calculate(new ProcessXMLFile(A<Guid>._, validXml));

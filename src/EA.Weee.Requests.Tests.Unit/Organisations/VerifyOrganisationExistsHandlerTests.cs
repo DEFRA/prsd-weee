@@ -4,13 +4,12 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using DataAccess;
     using Domain.Organisation;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.RequestHandlers.Organisations;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Requests.Tests.Unit.Helpers;
     using FakeItEasy;
+    using Helpers;
+    using RequestHandlers.Organisations;
+    using Requests.Organisations;
     using Xunit;
 
     public class VerifyOrganisationExistsHandlerTests
@@ -55,7 +54,7 @@
         {
             return helper.GetAsyncEnabledDbSet(new[]
             {
-                orgHelper.GetOrganisationWithName("SFW Ltd"),
+                orgHelper.GetOrganisationWithName("SFW Ltd")
             });
         }
     }
