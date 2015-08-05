@@ -2,17 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
+    using DataAccess;
     using Domain.PCS;
-    using Domain.Producer;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.RequestHandlers.Mappings;
-    using EA.Weee.RequestHandlers.PCS.MemberRegistration;
-    using EA.Weee.Requests.PCS.MemberRegistration;
-    using EA.Weee.Requests.Tests.Unit.Helpers;
     using FakeItEasy;
+    using Helpers;
+    using PCS.MemberRegistration;
+    using RequestHandlers.PCS.MemberRegistration;
     using Xunit;
 
     public class GetProducerCSVByMemberUploadIdHandlerTests
@@ -35,11 +31,16 @@
         [Fact]
         public async Task GetProducerCSVByMemberUploadIdHandler_InvalidMemberUploadId_ArgumentException()
         {
-            var memberUploads = new[] { new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, Guid.NewGuid()) };
+            var memberUploads = new[]
+            {
+                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, Guid.NewGuid())
+            };
 
             var handler = GetPreparedHandler(memberUploads);
 
-            await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(new GetProducerCSVByMemberUploadId(Guid.NewGuid())));
+            await
+                Assert.ThrowsAsync<ArgumentException>(
+                    async () => await handler.HandleAsync(new GetProducerCSVByMemberUploadId(Guid.NewGuid())));
         }
     }
 }

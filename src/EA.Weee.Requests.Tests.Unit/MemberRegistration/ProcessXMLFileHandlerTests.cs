@@ -32,19 +32,19 @@
         private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
         private static readonly Guid organisationId = Guid.NewGuid();
         private static readonly ProcessXMLFile Message = new ProcessXMLFile(organisationId, new byte[1]);
-        
+
         public ProcessXMLFileHandlerTests()
         {
             memberUploadsDbSet = A.Fake<DbSet<MemberUpload>>();
             producersDbSet = A.Fake<DbSet<Producer>>();
             xmlConverter = A.Fake<IXmlConverter>();
-            var schemes = new Scheme[]
+            var schemes = new[]
             {
                 FakeSchemeData()
             };
 
-           schemesDbSet = helper.GetAsyncEnabledDbSet(schemes);
-            
+            schemesDbSet = helper.GetAsyncEnabledDbSet(schemes);
+
             context = A.Fake<WeeeContext>();
             A.CallTo(() => context.Schemes).Returns(schemesDbSet);
             A.CallTo(() => context.Producers).Returns(producersDbSet);
@@ -81,7 +81,10 @@
         [Fact]
         public async void ProcessXmlfile_SchemaErrors_DoesntTryToCalculateChargesOrConvertXml()
         {
-            IEnumerable<MemberUploadError> errors = new[] { new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "any description") };
+            IEnumerable<MemberUploadError> errors = new[]
+            {
+                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "any description")
+            };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
 
@@ -92,7 +95,10 @@
         [Fact]
         public async void ProcessXmlfile_BusinessErrors_TriesToCalculateCharges()
         {
-            IEnumerable<MemberUploadError> errors = new[] { new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description") };
+            IEnumerable<MemberUploadError> errors = new[]
+            {
+                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
+            };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
 
@@ -112,7 +118,10 @@
         [Fact]
         public async void ProcessXmlfile_InvalidXmlfile_NotGenerateProducerObjects()
         {
-            IEnumerable<MemberUploadError> errors = new[] { new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "any description") };
+            IEnumerable<MemberUploadError> errors = new[]
+            {
+                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "any description")
+            };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
 
@@ -122,7 +131,7 @@
         [Fact]
         public async void ProcessXmlfile_XmlfileWithSameProducerName_NotGenerateProducerObjects()
         {
-            List<MemberUploadError> errors = new List<MemberUploadError>
+            var errors = new List<MemberUploadError>
             {
                 new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
             };
@@ -136,7 +145,6 @@
         [Fact]
         public async void ProcessXmlfile_SavesMemberUpload()
         {
-            var memberUpload = FakeMemberUploadData();
             var id = await handler.HandleAsync(Message);
             Assert.NotNull(id);
         }

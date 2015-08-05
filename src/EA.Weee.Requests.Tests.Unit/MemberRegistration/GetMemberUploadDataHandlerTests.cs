@@ -4,14 +4,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using DataAccess;
+    using Domain;
     using Domain.PCS;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.RequestHandlers.Mappings;
-    using EA.Weee.RequestHandlers.PCS.MemberRegistration;
-    using EA.Weee.Requests.PCS.MemberRegistration;
-    using EA.Weee.Requests.Tests.Unit.Helpers;
     using FakeItEasy;
+    using Helpers;
+    using PCS.MemberRegistration;
+    using RequestHandlers.Mappings;
+    using RequestHandlers.PCS.MemberRegistration;
     using Xunit;
 
     public class GetMemberUploadDataHandlerTests
@@ -32,13 +32,14 @@
                     new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "FAKE ERROR"),
                     new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL"),
                     new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Schema, "FAKE FATAL"),
-                    new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL"),
-                }, 0),
+                    new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL")
+                }, 0)
             };
 
             var handler = GetPreparedHandler(memberUploadsWithSeveralErrors);
 
-            var memberUploadErrorDataList = await handler.HandleAsync(new GetMemberUploadData(pcsId, memberUploadsWithSeveralErrors.First().Id));
+            var memberUploadErrorDataList =
+                await handler.HandleAsync(new GetMemberUploadData(pcsId, memberUploadsWithSeveralErrors.First().Id));
 
             Assert.True(memberUploadErrorDataList.Count(me => me.ErrorLevel == Core.Shared.ErrorLevel.Warning) == 1);
             Assert.True(memberUploadErrorDataList.Count(me => me.ErrorLevel == Core.Shared.ErrorLevel.Error) == 2);
@@ -50,12 +51,13 @@
         {
             var memberUploadsWithNoErrors = new[]
             {
-                new MemberUpload(pcsId, "FAKE DATA"), 
+                new MemberUpload(pcsId, "FAKE DATA")
             };
 
             var handler = GetPreparedHandler(memberUploadsWithNoErrors);
 
-            var memberUploadErrorDataList = await handler.HandleAsync(new GetMemberUploadData(pcsId, memberUploadsWithNoErrors.First().Id));
+            var memberUploadErrorDataList =
+                await handler.HandleAsync(new GetMemberUploadData(pcsId, memberUploadsWithNoErrors.First().Id));
 
             Assert.Empty(memberUploadErrorDataList);
         }
@@ -63,11 +65,13 @@
         [Fact]
         public async Task GetMemberUploadHandler_NonExistentMemberUpload_ArgumentNullException()
         {
-            var memberUploadsThatWontBeReturnedForRandomGuid = new[] { new MemberUpload(pcsId, "FAKE DATA"), };
+            var memberUploadsThatWontBeReturnedForRandomGuid = new[] { new MemberUpload(pcsId, "FAKE DATA") };
 
             var handler = GetPreparedHandler(memberUploadsThatWontBeReturnedForRandomGuid);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await handler.HandleAsync(new GetMemberUploadData(pcsId, Guid.NewGuid())));
+            await
+                Assert.ThrowsAsync<ArgumentNullException>(
+                    async () => await handler.HandleAsync(new GetMemberUploadData(pcsId, Guid.NewGuid())));
         }
 
         [Fact]
@@ -75,11 +79,11 @@
         {
             var someOtherPcsId = Guid.NewGuid();
 
-            var memberUploadsForSomeOtherPcs = new[] { new MemberUpload(someOtherPcsId, "FAKE DATA"), };
+            var memberUploadsForSomeOtherPcs = new[] { new MemberUpload(someOtherPcsId, "FAKE DATA") };
 
             var handler = GetPreparedHandler(memberUploadsForSomeOtherPcs);
 
-            await Assert.ThrowsAsync<ArgumentException>(async () => 
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
                 await handler.HandleAsync(new GetMemberUploadData(pcsId, memberUploadsForSomeOtherPcs.First().Id)));
         }
 

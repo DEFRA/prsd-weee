@@ -1,11 +1,9 @@
 ﻿namespace EA.Weee.Requests.Tests.Unit.Organisations
 {
-    using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
-    using Domain;
     using Domain.Organisation;
     using FakeItEasy;
     using Helpers;
@@ -31,7 +29,8 @@
 
             var handler = new GetContactPersonByOrganisationIdHandler(context, contactMapper);
 
-            var contactPerson = await handler.HandleAsync(new GetContactPersonByOrganisationId(organisations.FirstOrDefault().Id));
+            var contactPerson =
+                await handler.HandleAsync(new GetContactPersonByOrganisationId(organisations.FirstOrDefault().Id));
 
             Assert.NotNull(contactPerson);
             Assert.Equal(organisations.FirstOrDefault().Contact.FirstName, contactPerson.FirstName);
@@ -43,7 +42,7 @@
         {
             return helper.GetAsyncEnabledDbSet(new[]
             {
-                orgHelper.GetOrganisationWithName("SFW Ltd"),
+                orgHelper.GetOrganisationWithName("SFW Ltd")
             });
         }
     }

@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Requests.Tests.Unit.MemberRegistration.XmlValidation.SchemaValidation
 {
     using System;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -29,7 +28,8 @@
         [Fact]
         public void SchemaValidation_ValidXml_NoErrors()
         {
-            var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-valid.xml");
+            var validXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\v3-valid.xml");
             var validXml = File.ReadAllText(new Uri(validXmlLocation).LocalPath);
 
             A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
@@ -43,7 +43,8 @@
         [Fact]
         public void SchemaValidation_IncorrectNamespace_AddsError()
         {
-            var wrongNamespaceXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-wrong-namespace.xml");
+            var wrongNamespaceXmlLocation = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-wrong-namespace.xml");
             var wrongNamespaceXml = File.ReadAllText(new Uri(wrongNamespaceXmlLocation).LocalPath);
 
             A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
@@ -57,7 +58,8 @@
         [Fact]
         public void SchemaValidation_NonSchemaXml_AddsError()
         {
-            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-slightly-invalid.xml");
+            var invalidXmlLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\v3-slightly-invalid.xml");
             var invalidXml = File.ReadAllText(new Uri(invalidXmlLocation).LocalPath);
 
             A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
@@ -84,7 +86,7 @@
         {
             A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._)).MustNotHaveHappened();
 
-            byte[] xmlData = new byte[0];
+            var xmlData = new byte[0];
             var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, xmlData));
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));

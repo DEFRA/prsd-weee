@@ -4,14 +4,14 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using DataAccess;
+    using Domain;
     using Domain.Organisation;
-    using EA.Prsd.Core.Domain;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.RequestHandlers.Organisations;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Requests.Tests.Unit.Helpers;
     using FakeItEasy;
+    using Helpers;
+    using Prsd.Core.Domain;
+    using RequestHandlers.Organisations;
+    using Requests.Organisations;
     using Xunit;
 
     public class JoinOrganisationHandlerTests
@@ -53,7 +53,7 @@
 
             await handler.HandleAsync(new JoinOrganisation(organisationWeWillJoin.Id));
 
-            Assert.Equal(EA.Weee.Domain.Organisation.OrganisationUserStatus.Pending, addedOrganisationUser.UserStatus);
+            Assert.Equal(OrganisationUserStatus.Pending, addedOrganisationUser.UserStatus);
         }
 
         [Fact]
@@ -67,7 +67,9 @@
 
             var handler = new JoinOrganisationHandler(context, userContext);
 
-            await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(new JoinOrganisation(Guid.NewGuid())));
+            await
+                Assert.ThrowsAsync<ArgumentException>(
+                    async () => await handler.HandleAsync(new JoinOrganisation(Guid.NewGuid())));
         }
 
         [Fact]
@@ -78,7 +80,9 @@
 
             var handler = new JoinOrganisationHandler(context, userContext);
 
-            await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(new JoinOrganisation(Guid.NewGuid())));
+            await
+                Assert.ThrowsAsync<ArgumentException>(
+                    async () => await handler.HandleAsync(new JoinOrganisation(Guid.NewGuid())));
         }
 
         private WeeeContext SetupFakeWeeeContext()
@@ -109,7 +113,7 @@
         {
             return helper.GetAsyncEnabledDbSet(new[]
             {
-                orgHelper.GetOrganisationWithName("SFW Ltd"),
+                orgHelper.GetOrganisationWithName("SFW Ltd")
             });
         }
 
