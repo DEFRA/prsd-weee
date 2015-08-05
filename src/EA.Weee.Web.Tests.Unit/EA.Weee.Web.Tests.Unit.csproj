@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Areas\Admin\Controllers\AccountControllerTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\HomeControllerTests.cs" />
     <Compile Include="Areas\PCS\Controllers\HomeControllerTests.cs" />
     <Compile Include="Areas\PCS\Controllers\MemberRegistrationControllerTests.cs" />
     <Compile Include="Controllers\AccountControllerTest.cs" />
