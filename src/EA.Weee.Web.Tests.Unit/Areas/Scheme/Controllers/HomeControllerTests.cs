@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.PCS.Controllers
+﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
     using System;
     using System.Web.Mvc;
