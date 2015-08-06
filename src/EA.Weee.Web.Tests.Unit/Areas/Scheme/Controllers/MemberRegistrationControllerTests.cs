@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Tests.Unit.Areas.PCS.Controllers
+﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -8,15 +8,14 @@
     using Api.Client;
     using Core.Scheme;
     using Core.Shared;
-    using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using Prsd.Core.Mediator;
     using Services;
+    using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme.MemberRegistration;
-    using Weee.Requests.Shared;
     using Xunit;
 
     public class MemberRegistrationControllerTests
