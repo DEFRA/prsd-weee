@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Api.IdSrv
 {
     using DataAccess.Identity;
+    using EA.Prsd.Core.Domain;
+    using EA.Weee.DataAccess;
     using Identity;
     using Microsoft.AspNet.Identity;
     using Microsoft.Owin.Security.DataProtection;
@@ -28,6 +30,8 @@
                 Mode = RegistrationMode.InstancePerHttpRequest
             });
             factory.Register(new Registration<ConfigurationService> { Mode = RegistrationMode.InstancePerHttpRequest });
+            factory.Register(new Registration<IUserContext, UserContext> { Mode = RegistrationMode.InstancePerHttpRequest });
+            factory.Register(new Registration<WeeeContext> { Mode = RegistrationMode.InstancePerHttpRequest });
         }
     }
 }
