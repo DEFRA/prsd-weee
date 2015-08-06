@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Globalization;
     using System.Linq;
     using System.Text;
     using Prsd.Core.Domain;
@@ -171,7 +169,6 @@
 
         public int ChargeBandType { get; private set; }
 
-        [NotMapped]
         public string OrganisationName { get; set; }
 
         /// <summary>
