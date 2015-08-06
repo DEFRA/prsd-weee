@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using Core.PCS;
-    using Domain.PCS;
+    using Core.Scheme;
+    using Domain.Scheme;
     using Prsd.Core.Mapper;
 
     public class MemberUploadMap : IMap<MemberUpload, MemberUploadData>

@@ -5,7 +5,7 @@
     using Api.Client;
     using FakeItEasy;
     using TestHelpers;
-    using Web.Areas.PCS.Controllers;
+    using Web.Areas.Scheme.Controllers;
     using Weee.Requests.Organisations;
     using Xunit;
 
