@@ -475,6 +475,7 @@
     <Content Include="Content\govuk_toolkit\stylesheets\_shims.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\_typography.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\_url-helpers.scss" />
+    <Content Include="Areas\Admin\Views\Home\ChooseActivity.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
@@ -562,6 +563,8 @@
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
     <Compile Include="Areas\Admin\Controllers\Base\AdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\InternalUserActivity.cs" />
+    <Compile Include="Areas\Admin\ViewModels\InternalUserActivityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\InternalUserCreationViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\InternalLoginViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\MemberRegistrationController.cs" />
