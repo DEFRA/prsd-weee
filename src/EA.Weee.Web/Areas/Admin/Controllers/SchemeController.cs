@@ -24,7 +24,7 @@
             using (var client = apiClient())
             {
                 var schemes = await client.SendAsync(User.GetAccessToken(), new GetPcses());
-                return View(new ManageSchemesViewModel{ Schemes = schemes });
+                return View(new ManageSchemesViewModel { Schemes = schemes });
             }
         }
 
