@@ -31,14 +31,14 @@
         [HttpPost]
         public async Task<ActionResult> ManageSchemes(ManageSchemesViewModel viewModel)
         {
-            // verify here that the user is allowed to look at the supplied PCS?
-
             return RedirectToAction("ManageScheme", new { schemeId = viewModel.Selected });
         }
 
         [HttpGet]
         public async Task<ViewResult> ManageScheme(Guid schemeId)
         {
+            // verify here that the user is allowed to look at the supplied PCS
+
             throw new NotImplementedException();
         }
     }
