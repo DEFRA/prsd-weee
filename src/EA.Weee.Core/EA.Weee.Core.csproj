@@ -97,6 +97,7 @@
     <Compile Include="Configuration\EmailRules\RuleType.cs" />
     <Compile Include="Configuration\IConfigurationManagerWrapper.cs" />
     <Compile Include="CoreModule.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\PrnGeneration\IPrnHelper.cs" />
     <Compile Include="Helpers\PrnGeneration\IQuadraticResidueHelper.cs" />
     <Compile Include="Helpers\PrnGeneration\PrnAsComponents.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Organisations\OrganisationType.cs" />
     <Compile Include="Organisations\OrganisationUserData.cs" />
     <Compile Include="Organisations\OrganisationUserStatus.cs" />
+    <Compile Include="PCS\LatestMemberUploadSummary.cs" />
     <Compile Include="PCS\MemberUploadData.cs" />
     <Compile Include="PCS\MemberUploadTesting\Address.cs" />
     <Compile Include="PCS\MemberUploadTesting\AnnualTurnoverBand.cs" />
