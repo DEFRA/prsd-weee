@@ -1,0 +1,25 @@
+﻿@using EA.Weee.Core.Helpers
+@model EA.Weee.Web.Areas.PCS.ViewModels.SummaryViewModel
+@{
+    ViewBag.Title = "Summary";
+}
+
+@section main_content {
+    <header class="hgroup">
+        <div>
+            <h1 class="heading-large">Would you like to view, add or amend PCS members?</h1>
+        </div>
+    </header>
+
+    <div>
+        <h2 class="bold-small">Files available for download</h2>
+    </div>
+    <hr/>
+    <div class="form-group">
+    <a href="">Overview of current members.csv</a><span style="color: #6f777b">@(" (approx. " + Model.EstimatedCsvFileSizeInKilobytes.ToStringWithXSignificantFigures(3) + "kb)")</span>
+</div>
+
+    <div class="form-group">
+        @Html.ActionLink("Add or amend", "AddOrAmendMembers", "MemberRegistration", new { @area = "PCS" }, new { @class = "button" })
+    </div>
+}

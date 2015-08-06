@@ -144,6 +144,55 @@
             Assert.Equal(validationId, redirect.RouteValues["memberUploadId"]);
         }
 
+        [Fact]
+        public async void GetSummary_GetsSummaryOfLatestMemberUpload()
+        {
+            try
+            {
+                await MemberRegistrationController().Summary(A<Guid>._);
+            }
+            catch (Exception)
+            {
+            }
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadSummary>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void GetSummary_HasNoUploadForThisScheme_RedirectsToAddOrAmendMembersPage()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadSummary>._))
+                .Returns(new LatestMemberUploadSummary
+                {
+                    MemberUploadId = null
+                });
+
+            var result = await MemberRegistrationController().Summary(A<Guid>._);
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("AddOrAmendMembers", routeValues["action"]);
+            Assert.Equal("MemberRegistration", routeValues["controller"]);
+        }
+
+        [Fact]
+        public async void GetSummary_HasUploadForThisScheme_ReturnsViewWithSummaryModel()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadSummary>._))
+                .Returns(new LatestMemberUploadSummary
+                {
+                    MemberUploadId = Guid.NewGuid()
+                });
+
+            var result = await MemberRegistrationController().Summary(A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.IsType<SummaryViewModel>(((ViewResult)result).Model);
+        }
+
         private const string XmlHasErrorsViewName = "ViewErrorsAndWarnings";
         private const string XmlHasNoErrorsViewName = "XmlHasNoErrors";
 

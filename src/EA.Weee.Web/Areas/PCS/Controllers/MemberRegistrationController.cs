@@ -60,6 +60,22 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> Summary(Guid pcsId)
+        {
+            using (var client = apiClient())
+            {
+                var summary = await client.SendAsync(User.GetAccessToken(), new GetLatestMemberUploadSummary(pcsId));
+
+                if (summary.MemberUploadId.HasValue)
+                {
+                    return View(SummaryViewModel.Create(summary.NumberOfProducers, summary.MemberUploadId.Value));
+                }
+            }
+
+            return RedirectToAction("AddOrAmendMembers", "MemberRegistration");
+        }
+
+        [HttpGet]
         public async Task<ViewResult> ViewErrorsAndWarnings(Guid pcsId, Guid memberUploadId)
         {
             using (var client = apiClient())
