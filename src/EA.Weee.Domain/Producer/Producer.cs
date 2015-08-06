@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -169,6 +170,9 @@
         public int SellingTechniqueType { get; private set; }
 
         public int ChargeBandType { get; private set; }
+
+        [NotMapped]
+        public string OrganisationName { get; set; }
 
         /// <summary>
         /// Indicates whether this data is current. I.e. no data has been submitted
