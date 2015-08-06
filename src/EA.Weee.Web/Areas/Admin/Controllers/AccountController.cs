@@ -231,7 +231,7 @@
                 return Redirect(returnUrl);
             }
             
-            return RedirectToAction("Index", "Home", new { area = "Admin" });
+            return RedirectToAction("ChooseActivity", "Home", new { area = "Admin" });
         }
 
         private async Task<bool> IsInternalUser(string accessToken)
