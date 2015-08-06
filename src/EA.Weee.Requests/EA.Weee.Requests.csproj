@@ -49,6 +49,7 @@
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetails.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
+    <Compile Include="PCS\GetPcses.cs" />
     <Compile Include="PCS\MemberRegistration\GetMemberUploadById.cs">
       <SubType>Code</SubType>
     </Compile>

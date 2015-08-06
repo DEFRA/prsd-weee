@@ -180,10 +180,10 @@
         {
             var data = new[]
             {
-                orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency", companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(null, "THE Environemnt Agency", companyRegistrationNumber, Domain.Organisation.OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(null, "Environment Agency", companyRegistrationNumber, Domain.Organisation.OrganisationType.Partnership, OrganisationStatus.Approved)
+                orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
+                orgHelper.GetOrganisationWithDetails("THE  Environemnt Agency", "THE Evironemnt Agency", companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
+                orgHelper.GetOrganisationWithDetails(null, "THE Environemnt Agency", companyRegistrationNumber, Domain.Organisation.OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Complete),
+                orgHelper.GetOrganisationWithDetails(null, "Environment Agency", companyRegistrationNumber, Domain.Organisation.OrganisationType.Partnership, OrganisationStatus.Complete)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
@@ -209,10 +209,10 @@
 
             var data = new[]
             {
-                orgHelper.GetOrganisationWithDetails(IdenticalToQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(CloseToQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(QuiteDifferentToQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
-                orgHelper.GetOrganisationWithDetails(CompletelyUnlikeQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved)
+                orgHelper.GetOrganisationWithDetails(IdenticalToQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
+                orgHelper.GetOrganisationWithDetails(CloseToQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
+                orgHelper.GetOrganisationWithDetails(QuiteDifferentToQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
+                orgHelper.GetOrganisationWithDetails(CompletelyUnlikeQuery, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Complete)
             };
 
             var organisations = helper.GetAsyncEnabledDbSet(data);
@@ -248,7 +248,7 @@
 
             var data = new[]
             {
-                orgHelper.GetOrganisationWithDetails(CompleteName,   null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Approved),
+                orgHelper.GetOrganisationWithDetails(CompleteName,   null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
                 orgHelper.GetOrganisationWithDetails(IncompleteName, null, companyRegistrationNumber, Domain.Organisation.OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete)
             };
 

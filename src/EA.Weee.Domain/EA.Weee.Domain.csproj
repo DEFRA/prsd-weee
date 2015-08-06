@@ -48,6 +48,7 @@
     <Compile Include="ChargeBandType.cs" />
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
+    <Compile Include="Organisation\PcsStatus.cs" />
     <Compile Include="PCS\MemberUploadErrorType.cs" />
     <Compile Include="Producer\MigratedProducer.cs" />
     <Compile Include="Producer\ProducerAddress.cs" />
