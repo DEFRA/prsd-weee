@@ -25,11 +25,11 @@
 
         public async Task<List<PcsData>> HandleAsync(GetPcses message)
         {
-            var schemes = context.Schemes
-                .Where(s => s.Organisation.OrganisationStatus == OrganisationStatus.Complete)
-                .OrderBy(s => s.Organisation.Name);
-
-            return await schemes.Select(s => pcsMap.Map(s)).ToListAsync();
+            var schemes = await context.Schemes
+                .Where(s => s.Organisation.OrganisationStatus.Value == OrganisationStatus.Complete.Value)
+                .OrderBy(s => s.Organisation.Name).ToListAsync();
+             
+            return schemes.Select(s => pcsMap.Map(s)).ToList();
         }
     }
 }

@@ -28,6 +28,11 @@
                 return View(model);
             }
 
+            if (model.InternalUserActivityOptions.SelectedValue == InternalUserActivity.ManageScheme)
+            {
+                return RedirectToAction("ManageSchemes", "Scheme");
+            }
+
             throw new InvalidOperationException("Follow on feature is not yet implemented");
         }
     }

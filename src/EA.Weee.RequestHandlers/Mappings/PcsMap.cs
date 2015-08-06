@@ -2,9 +2,10 @@
 {
     using System;
     using Core.PCS;
-    using Core.Shared;
+    using Domain.Organisation;
     using Domain.PCS;
     using Prsd.Core.Mapper;
+    using PcsStatus = Core.Shared.PcsStatus;
 
     public class PcsMap : IMap<Scheme, PcsData>
     {
@@ -12,7 +13,10 @@
         {
             return new PcsData
             {
-                Name = source.Organisation.Name,
+                Id = source.Id,
+                Name = source.Organisation.OrganisationType.Value == OrganisationType.RegisteredCompany.Value
+                    ? source.Organisation.Name
+                    : source.Organisation.TradingName,
                 PcsStatus =
                     (PcsStatus)
                         Enum.Parse(typeof(PcsStatus), source.PcsStatus.Value.ToString())
