@@ -79,6 +79,7 @@
     <Compile Include="Identity\WeeeIdentityContext.cs" />
     <Compile Include="Mappings\MemberUploadErrorTypeMapping.cs" />
     <Compile Include="Mappings\MigratedProducerMapping.cs" />
+    <Compile Include="Mappings\PcsStatusMapping.cs" />
     <Compile Include="Mappings\ProducerAddressMapping.cs" />
     <Compile Include="Mappings\ProducerAuthorisedRepresentativeMapping.cs" />
     <Compile Include="Mappings\ProducerBrandNameMapping.cs" />
