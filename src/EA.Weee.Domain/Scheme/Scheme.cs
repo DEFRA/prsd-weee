@@ -51,6 +51,22 @@
 
             var producers = GetProducersList(complianceYear);
 
+            foreach (var item in producers)
+            {
+                if (item.ProducerBusiness.CompanyDetails != null &&
+               item.ProducerBusiness.CompanyDetails.Name != null)
+                {
+                    item.OrganisationName = item.ProducerBusiness.CompanyDetails.Name;
+                }
+                else if (item.ProducerBusiness.Partnership != null &&
+                         item.ProducerBusiness.Partnership.Name != null)
+                {
+                    item.OrganisationName = item.ProducerBusiness.Partnership.Name;
+                }
+            }
+
+            producers = producers.OrderBy(p => p.OrganisationName).ToList();
+
             var csvColumnHeaders = Producer.GetCSVColumnHeaders();
 
             sb.Append(csvColumnHeaders);
