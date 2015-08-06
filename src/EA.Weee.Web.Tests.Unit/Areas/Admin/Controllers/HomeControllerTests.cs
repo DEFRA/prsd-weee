@@ -17,7 +17,7 @@
         }
 
         [Fact]
-        public async void HttpPost_ChooseActivity_ModelIsInvalid_ShouldRedirectViewWithError()
+        public void HttpPost_ChooseActivity_ModelIsInvalid_ShouldRedirectViewWithError()
         {
             var controller = new HomeController();
             controller.ModelState.AddModelError("Key", "Any error");
