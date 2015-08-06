@@ -33,7 +33,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Web", "EA.Weee.Web\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Api.Tests.Unit", "EA.Weee.Api.Tests.Unit\EA.Weee.Api.Tests.Unit.csproj", "{C412684B-4659-4F79-8509-751F57D2CFFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Requests.Tests.Unit", "EA.Weee.Requests.Tests.Unit\EA.Weee.Requests.Tests.Unit.csproj", "{BD4A4188-DE05-44EB-A470-42AC15D61CD1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.RequestHandlers.Tests.Unit", "EA.Weee.RequestHandlers.Tests.Unit\EA.Weee.RequestHandlers.Tests.Unit.csproj", "{BD4A4188-DE05-44EB-A470-42AC15D61CD1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.DataAccess.Tests.Integration", "EA.Weee.DataAccess.Tests.Integration\EA.Weee.DataAccess.Tests.Integration.csproj", "{CD836184-27A3-4696-8AC7-1FC8AF06493C}"
 EndProject

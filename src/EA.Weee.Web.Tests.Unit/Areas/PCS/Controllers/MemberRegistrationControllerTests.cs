@@ -6,16 +6,16 @@
     using System.Web;
     using System.Web.Mvc;
     using Api.Client;
-    using Core.PCS;
+    using Core.Scheme;
     using Core.Shared;
     using EA.Weee.Web.Tests.Unit.TestHelpers;
     using FakeItEasy;
     using Prsd.Core.Mediator;
     using Services;
-    using Web.Areas.PCS.Controllers;
-    using Web.Areas.PCS.ViewModels;
+    using Web.Areas.Scheme.Controllers;
+    using Web.Areas.Scheme.ViewModels;
     using Weee.Requests.Organisations;
-    using Weee.Requests.PCS.MemberRegistration;
+    using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Shared;
     using Xunit;
 

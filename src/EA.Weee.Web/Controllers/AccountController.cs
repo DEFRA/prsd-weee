@@ -153,7 +153,7 @@
                     return RedirectToAction("ChooseActivity", "Home",
                         new
                         {
-                            area = "PCS",
+                            area = "Scheme",
                             pcsId = approvedOrganisationUsers.First().OrganisationId,
                         });
                 }
