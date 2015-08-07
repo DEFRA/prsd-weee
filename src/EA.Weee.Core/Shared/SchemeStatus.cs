@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    public enum PcsStatus
+    public enum SchemeStatus
     {
         [Display(Name = "Incomplete")]
         Incomplete = 1, 

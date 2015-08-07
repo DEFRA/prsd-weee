@@ -13,7 +13,7 @@
         public Scheme(Guid organisationId)
         {
             OrganisationId = organisationId;
-            PcsStatus = PcsStatus.Incomplete;
+            SchemeStatus = SchemeStatus.Incomplete;
             ApprovalNumber = string.Empty;
             Producers = new List<Producer>();
         }
@@ -26,7 +26,7 @@
 
         public virtual Organisation Organisation { get; private set; }
 
-        public virtual PcsStatus PcsStatus { get; private set; }
+        public virtual SchemeStatus SchemeStatus { get; private set; }
 
         public virtual string ApprovalNumber { get; private set; }
 

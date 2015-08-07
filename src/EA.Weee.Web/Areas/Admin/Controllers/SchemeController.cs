@@ -23,7 +23,7 @@
         {
             using (var client = apiClient())
             {
-                var schemes = await client.SendAsync(User.GetAccessToken(), new GetPcses());
+                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemes());
                 return View(new ManageSchemesViewModel { Schemes = schemes });
             }
         }
@@ -37,7 +37,7 @@
         [HttpGet]
         public async Task<ViewResult> ManageScheme(Guid schemeId)
         {
-            // verify here that the user is allowed to look at the supplied PCS
+            // verify here that the user is allowed to look at the supplied scheme
 
             throw new NotImplementedException();
         }

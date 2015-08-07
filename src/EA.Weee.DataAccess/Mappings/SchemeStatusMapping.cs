@@ -3,12 +3,12 @@
     using System.Data.Entity.ModelConfiguration;
     using Domain.Organisation;
 
-    internal class PcsStatusMapping : ComplexTypeConfiguration<PcsStatus>
+    internal class SchemeStatusMapping : ComplexTypeConfiguration<SchemeStatus>
     {
-        public PcsStatusMapping()
+        public SchemeStatusMapping()
         {
             Ignore(x => x.DisplayName);
-            Property(x => x.Value).HasColumnName("PCSStatus");
+            Property(x => x.Value).HasColumnName("SchemeStatus");
         }
     }
 }

@@ -4,7 +4,7 @@
     using Core.PCS;
     using Prsd.Core.Mediator;
 
-    public class GetPcses : IRequest<List<PcsData>>
+    public class GetSchemes : IRequest<List<SchemeData>>
     {
     }
 }

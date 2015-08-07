@@ -3,10 +3,10 @@
     using System;
     using Shared;
 
-    public class PcsData
+    public class SchemeData
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public PcsStatus PcsStatus { get; set; }
+        public SchemeStatus SchemeStatus { get; set; }
     }
 }
