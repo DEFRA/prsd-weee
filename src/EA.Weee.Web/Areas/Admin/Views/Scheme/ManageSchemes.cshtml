@@ -4,31 +4,6 @@
     ViewBag.Title = "Manage schemes";
 }
 
-<!--
-<style>
-    div.status-Pending {
-        background-color: #8888FF;
-        padding: 2px 2px 0px 2px;
-        text-align: center;
-        font-weight: bold;
-    }
-
-    div.status-Approved {
-        background-color: #88FF88;
-        padding: 2px 2px 0px 2px;
-        text-align: center;
-        font-weight: bold;
-    }
-
-    div.status-Refused {
-        background-color: #FF8888;
-        padding: 2px 2px 0px 2px;
-        text-align: center;
-        font-weight: bold;
-    }
-</style>
--->
-
 @section main_content {
     <header class="hgroup">
         <h1 class="heading-large">
@@ -56,11 +31,6 @@
                     <tr>
                         <td>@scheme.Name</td>
                         <td>@scheme.SchemeStatus</td>
-                        <!--
-                        <td>
-                            <div class="status-@scheme.SchemeStatus">@scheme.SchemeStatus.ToString().ToUpperInvariant()</div>
-                        </td>
-                        -->
                         <td>@Html.RadioButtonFor(m => m.Selected, @scheme.Id)</td>
                     </tr>
                 }
