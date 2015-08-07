@@ -1,10 +1,10 @@
-﻿namespace EA.Weee.RequestHandlers.PCS
+﻿namespace EA.Weee.RequestHandlers.Scheme
 {
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.PCS;
+    using Core.Scheme;
     using DataAccess;
     using Domain.Organisation;
     using Domain.Scheme;
