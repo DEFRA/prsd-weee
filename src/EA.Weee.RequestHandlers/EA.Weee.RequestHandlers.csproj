@@ -86,6 +86,7 @@
     <Compile Include="Mappings\MemberUploadMap.cs" />
     <Compile Include="Mappings\OrganisationMap.cs" />
     <Compile Include="Mappings\OrganisationUserMap.cs" />
+    <Compile Include="Mappings\SchemeMap.cs" />
     <Compile Include="Mappings\UKCompetentAuthorityMap.cs" />
     <Compile Include="Mappings\ValueObjectInitializer.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandler.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Scheme\MemberRegistration\GetProducerCSVByMemberUploadIdHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandler.cs" />
+    <Compile Include="Scheme\GetSchemesHandler.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandler.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandler.cs" />

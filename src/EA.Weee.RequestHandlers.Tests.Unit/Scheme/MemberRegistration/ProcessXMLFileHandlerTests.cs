@@ -14,8 +14,6 @@
     using Prsd.Core;
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration;
-    using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
-    using RequestHandlers.Scheme.MemberRegistration.XmlValidation;
     using Requests.Scheme.MemberRegistration;
     using Xunit;
 
