@@ -539,12 +539,19 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
     border-left: 3px solid $mellow-red;
     padding-top: 5px;
     padding-bottom: 5px;
-    margin-left: -3px;
+    padding-left: 3px;
 }
 
-.error-list {
+.error-details-summary:hover {
+    color: $black;
+}
+
+.error-list-container {
+    width: 100%;
     background-color: $mellow-red-25;
     padding-bottom: 10px;
+    border-left: 3px solid $mellow-red-25;
+    padding-left: 3px;
 }
 
 .error-list-item {
@@ -556,18 +563,16 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 .highlight-section {
     width: 615px;
     height: 130px;
-    background-color: #30a197;
+    background-color: $turquoise;
 }
 
 .highlight-section-text {
     padding-top: 15px;
     height: 30px;
     font-size: 19px;
-    color: #FFFFFF;
+    color: $white;
     text-align: center;
-    font-family: 'Arial Bold', 'Arial';
     font-weight: 700;
-    font-style: normal;
     line-height: normal;
 }
 
@@ -575,10 +580,8 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
     white-space: nowrap;
     height: 57px;
     font-size: 48px;
-    color: #FFFFFF;
-    font-family: 'Arial Bold', 'Arial';
+    color: $white;
     font-weight: 700;
-    font-style: normal;
     line-height: normal;
     text-align: center;
 }

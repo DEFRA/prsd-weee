@@ -19,8 +19,8 @@
         <summary class="error-details-summary bold-small">
             @Model.ErrorData.Count Error(s)
         </summary>
-        <div>
-            <ul class="error-list">
+        <div class="error-list-container">
+            <ul>
                 @foreach (var uploadError in Model.ErrorData)
                 {
                     <li class="error-list-item font-xsmall">@uploadError.Description</li>
