@@ -21,6 +21,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ChooseActivity(InternalUserActivityViewModel model)
         {
             if (!ModelState.IsValid)
