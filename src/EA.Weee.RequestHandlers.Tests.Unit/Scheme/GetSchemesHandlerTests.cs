@@ -2,13 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Core.PCS;
+    using Core.Scheme;
     using DataAccess;
     using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.Mappings;
-    using RequestHandlers.PCS;
+    using RequestHandlers.Scheme;
     using RequestHandlers.Tests.Unit.Helpers;
     using Requests.Scheme;
     using Xunit;

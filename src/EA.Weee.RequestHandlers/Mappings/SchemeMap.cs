@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using System;
-    using Core.PCS;
+    using Core.Scheme;
     using Domain.Organisation;
     using Domain.Scheme;
     using Prsd.Core.Mapper;
