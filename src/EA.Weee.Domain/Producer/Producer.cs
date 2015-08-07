@@ -14,7 +14,7 @@
             MemberUpload memberUpload,
             ProducerBusiness producerBusiness,
             AuthorisedRepresentative authorisedRepresentative,
-            DateTime lastSubmittedDate,
+            DateTime updatedDate,
             decimal annualTurnover,
             bool vatRegistered,
             string registrationNumber,
@@ -32,7 +32,7 @@
             ProducerBusiness = producerBusiness;
             AuthorisedRepresentative = authorisedRepresentative;
 
-            LastSubmitted = lastSubmittedDate;
+            UpdatedDate = updatedDate;
 
             AnnualTurnover = annualTurnover;
             VATRegistered = vatRegistered;
@@ -144,7 +144,7 @@
 
         public virtual ProducerBusiness ProducerBusiness { get; private set; }
 
-        public DateTime LastSubmitted { get; private set; }
+        public DateTime UpdatedDate { get; private set; }
 
         public virtual string RegistrationNumber { get; private set; }
 
@@ -192,14 +192,20 @@
         {
             return (from item in Scheme.Producers
                     where item.MemberUpload.IsSubmitted && item.MemberUpload.ComplianceYear == complianceYear && item.RegistrationNumber == registrationNumber
-                    select item.LastSubmitted).ToList().OrderBy(ls => ls).First();
+                    select item.UpdatedDate).ToList().OrderBy(ls => ls).First();
         }
 
         public static string GetCSVColumnHeaders()
         {
             string[] csvColumnHeaders =
             {
-                "Organisation Name", "Trading Name", "PRN", "Companies house number", "Charge band", "Date & Time (GMT) Registered",
+                "Organisation Name", 
+                "Trading Name", 
+                "PRN", 
+                "Companies house number", 
+                "Charge band", 
+                "Date & Time (GMT) Registered", 
+                "Date & Time (GMT) Last Updated",
                 "Authorised representative", "Overseas producer"
             };
 
@@ -242,7 +248,13 @@
                 companiesHouseNumber = producer.ProducerBusiness.CompanyDetails.CompanyNumber;
             }
             var chargeBand = Enumeration.FromValue<ChargeBandType>(producer.ChargeBandType).DisplayName;
-            var dateRegistered = string.Format("{0:dd/MM/yyyy HH:mm:ss}", GetProducerRegistrationDate(producer.RegistrationNumber, producer.MemberUpload.ComplianceYear));
+            var dateRegistered = string.Format("{0:dd/MM/yyyy HH:mm:ss}", GetProducerRegistrationDate(producer.RegistrationNumber,
+                producer.MemberUpload.ComplianceYear));
+            var dateAmended = string.Format("{0:dd/MM/yyyy HH:mm:ss}", producer.UpdatedDate);
+            if (dateRegistered == dateAmended)
+            {
+                dateAmended = string.Empty;
+            }
             var authorisedRepresentative = producer.AuthorisedRepresentative == null ? "No" : "Yes";
             var overseasProducer = producer.AuthorisedRepresentative == null
                 ? string.Empty
@@ -264,6 +276,9 @@
             sb.Append(",");
 
             sb.Append(ReplaceSpecialCharacters(dateRegistered));
+            sb.Append(",");
+
+            sb.Append(ReplaceSpecialCharacters(dateAmended));
             sb.Append(",");
 
             sb.Append(ReplaceSpecialCharacters(authorisedRepresentative));
