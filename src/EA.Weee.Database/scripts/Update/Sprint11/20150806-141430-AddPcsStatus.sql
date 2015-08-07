@@ -49,7 +49,7 @@ IF EXISTS (SELECT TOP 1 1
     BEGIN
         INSERT INTO [PCS].[tmp_ms_xx_Scheme] ([Id], [PCSStatus], [ApprovalNumber], [OrganisationId])
         SELECT   [Id],
-                2, /* pending */
+                 1, /* pending */
                  [ApprovalNumber],
                  [OrganisationId]
         FROM     [PCS].[Scheme]

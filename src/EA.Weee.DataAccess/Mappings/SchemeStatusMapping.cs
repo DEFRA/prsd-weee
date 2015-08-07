@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
     using System.Data.Entity.ModelConfiguration;
-    using Domain.Organisation;
+    using Domain.Scheme;
 
     internal class SchemeStatusMapping : ComplexTypeConfiguration<SchemeStatus>
     {
