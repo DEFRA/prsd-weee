@@ -1,16 +1,16 @@
-﻿namespace EA.Weee.Requests.Tests.Unit.Scheme
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Core.PCS;
     using DataAccess;
     using Domain.Organisation;
-    using Domain.PCS;
+    using Domain.Scheme;
     using FakeItEasy;
-    using Helpers;
-    using PCS;
     using RequestHandlers.Mappings;
     using RequestHandlers.PCS;
+    using RequestHandlers.Tests.Unit.Helpers;
+    using Requests.Scheme;
     using Xunit;
 
     public class GetSchemesHandlerTests
