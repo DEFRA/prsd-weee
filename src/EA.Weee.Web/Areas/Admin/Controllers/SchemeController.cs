@@ -7,7 +7,7 @@
     using Base;
     using Infrastructure;
     using ViewModels;
-    using Weee.Requests.PCS;
+    using Weee.Requests.Scheme;
 
     public class SchemeController : AdminController
     {

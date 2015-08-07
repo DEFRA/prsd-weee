@@ -3,7 +3,7 @@
     using System;
     using Core.PCS;
     using Domain.Organisation;
-    using Domain.PCS;
+    using Domain.Scheme;
     using Prsd.Core.Mapper;
     using SchemeStatus = Core.Shared.SchemeStatus;
 

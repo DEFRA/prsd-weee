@@ -49,8 +49,8 @@
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetails.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
-    <Compile Include="Scheme\MemberRegistration\GetMemberUploadById.cs">
-    <Compile Include="Scheme\GetSchemes.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetMemberUploadById.cs" />
+    <Compile Include="Scheme\GetSchemes.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadData.cs" />

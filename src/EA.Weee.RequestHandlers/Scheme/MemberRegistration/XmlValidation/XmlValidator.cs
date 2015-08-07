@@ -2,11 +2,9 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using BusinessValidation;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
-    using SchemaValidation;
 
     public class XmlValidator : IXmlValidator
     {
