@@ -1,10 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
     using Base;
+    using Core.Scheme;
     using Infrastructure;
     using ViewModels;
     using Weee.Requests.Scheme;
@@ -21,17 +23,27 @@
         [HttpGet]
         public async Task<ViewResult> ManageSchemes()
         {
-            using (var client = apiClient())
-            {
-                var schemes = await client.SendAsync(User.GetAccessToken(), new GetSchemes());
-                return View(new ManageSchemesViewModel { Schemes = schemes });
-            }
+            return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
         }
 
         [HttpPost]
-        public ActionResult ManageSchemes(ManageSchemesViewModel viewModel)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ManageSchemes(ManageSchemesViewModel viewModel)
         {
-            return RedirectToAction("ManageScheme", new { schemeId = viewModel.Selected });
+            if (!ModelState.IsValid)
+            {
+                return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
+            }
+
+            return RedirectToAction("ManageScheme", new { schemeId = viewModel.Selected.Value });
+        }
+
+        private async Task<List<SchemeData>> GetSchemes()
+        {
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), new GetSchemes());
+            }
         }
 
         [HttpGet]
