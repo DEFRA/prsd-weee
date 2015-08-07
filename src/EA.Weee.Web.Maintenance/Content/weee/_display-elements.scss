@@ -1,0 +1,135 @@
+﻿@import "colours";
+@import "weee-typography";
+
+.gov-border {
+    margin-top: em(8, 3);
+    border-top: 10px solid $link-colour;
+
+    h2 {
+        margin-top: em(3, 5);
+        margin-bottom: em(3, 5);
+    }
+
+    .heading-small {
+        margin-top: 0;
+        margin-bottom: em(3, 5);
+    }
+
+    h6 {
+        color: $secondary-text-colour;
+    }
+
+    h6:first-child {
+        margin-top: em(4,5);
+    }
+}
+
+.record-action-section {
+    margin-top: em(8, 3);
+
+    h3 {
+        margin-top: em(4, 5);
+        margin-bottom: em(3, 5);
+    }
+
+    ul li {
+        margin-top: em(3, 7);
+    }
+}
+
+.large-space-top {
+    margin-top: 2.5em;
+}
+
+.toggle {
+    font-weight: bold;
+}
+
+.toggle-cell {
+    cursor: pointer;
+}
+
+.toggle-row {
+    background-color: #EEE;
+}
+
+.toggle-row:hover {
+    background-color: #AAA;
+}
+
+.accessibly-hidden {
+    position: absolute;
+    left: -999em;
+}
+
+.colored-header-bar {
+    width: 100%;
+    margin: 0 0;
+    height: 10px;
+    background-color: $govuk_blue;
+    margin-bottom: 16px;
+}
+
+#orange {
+    background-color: $orange;
+}
+
+#turquoise {
+    background-color: $turquoise;
+}
+
+.section-bottom {
+    margin-top: 30px;
+}
+
+.formatted-block-table-header {
+    border: none;
+    font-weight: normal;
+    text-decoration: underline;
+    font-size: 16px;
+    color: $grey-1;
+    margin-right: 5px;
+}
+
+.formatted-block-table-header:last-child {
+    margin-right: 0;
+}
+
+.formatted-block-table-cell {
+    background-color: #C9E7E5;
+    height: 61px;
+    margin-right: 25px;
+    line-height: 61px;
+    padding-left: 10px;
+}
+
+.formatted-block-table-body td {
+    border: none;
+    font-size: 19px;
+    width: 33%;
+}
+
+.formatted-block-table-body td {
+    padding-right: 0;
+}
+
+.formatted-block-table-body td:last-child .formatted-block-table-cell {
+    margin-right: 0;
+    background: none;
+}
+
+.formatted-block-table-body td:first-child .formatted-block-table-cell {
+    border-left: 10px solid $turquoise;
+    font-weight: bold;
+}
+
+@media all and (max-width: 700px) {
+    .formatted-block-table-cell {
+        line-height: 30px;
+        font-size: 12px;
+    }
+}
+h2 + hr{
+    margin-top: -10px;
+    margin-bottom: 25px;
+}
