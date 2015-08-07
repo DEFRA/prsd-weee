@@ -6,11 +6,11 @@ using Xunit;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("EA.Weee.Requests.Tests.Unit")]
+[assembly: AssemblyTitle("EA.Weee.RequestHandlers.Tests.Unit")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("EA.Weee.Requests.Tests.Unit")]
+[assembly: AssemblyProduct("EA.Weee.RequestHandlers.Tests.Unit")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
