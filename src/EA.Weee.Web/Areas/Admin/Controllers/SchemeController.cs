@@ -29,13 +29,13 @@
         }
 
         [HttpPost]
-        public async Task<ActionResult> ManageSchemes(ManageSchemesViewModel viewModel)
+        public ActionResult ManageSchemes(ManageSchemesViewModel viewModel)
         {
             return RedirectToAction("ManageScheme", new { schemeId = viewModel.Selected });
         }
 
         [HttpGet]
-        public async Task<ViewResult> ManageScheme(Guid schemeId)
+        public ViewResult ManageScheme(Guid schemeId)
         {
             // verify here that the user is allowed to look at the supplied scheme
 

@@ -13,7 +13,7 @@
         public Scheme(Guid organisationId)
         {
             OrganisationId = organisationId;
-            SchemeStatus = SchemeStatus.Incomplete;
+            SchemeStatus = SchemeStatus.Pending;
             ApprovalNumber = string.Empty;
             Producers = new List<Producer>();
         }
