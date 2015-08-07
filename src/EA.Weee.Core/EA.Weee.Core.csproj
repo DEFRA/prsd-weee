@@ -145,7 +145,7 @@
     <Compile Include="PCS\MemberUploadTesting\SchemeCompany.cs" />
     <Compile Include="PCS\MemberUploadTesting\SchemePartnership.cs" />
     <Compile Include="PCS\MemberUploadTesting\SellingTechnique.cs" />
-    <Compile Include="PCS\PcsData.cs" />
+    <Compile Include="PCS\SchemeData.cs" />
     <Compile Include="PCS\ProducerCSVFileData.cs" />
     <Compile Include="Configuration\ConfigurationManagerWrapper.cs" />
     <Compile Include="Shared\AddressData.cs" />
@@ -156,7 +156,7 @@
     <Compile Include="Shared\ErrorLevel.cs" />
     <Compile Include="Shared\MemberUploadErrorData.cs" />
     <Compile Include="Shared\OrganisationStatus.cs" />
-    <Compile Include="Shared\PcsStatus.cs" />
+    <Compile Include="Shared\SchemeStatus.cs" />
     <Compile Include="Shared\UKCompetentAuthorityData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
