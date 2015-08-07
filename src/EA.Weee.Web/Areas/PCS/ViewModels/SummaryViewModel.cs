@@ -1,19 +1,24 @@
 ﻿namespace EA.Weee.Web.Areas.PCS.ViewModels
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Core.PCS;
 
     public class SummaryViewModel
     {
-        public double EstimatedCsvFileSizeInKilobytes { get; private set; }
+        public IEnumerable<LatestMemberUploadViewModel> LatestMemberUploads { get; set; }
 
-        public Guid MemberUploadId { get; private set; }
-
-        public static SummaryViewModel Create(double estimatedCsvFileSizeInKilobytes, Guid memberUploadId)
+        public static SummaryViewModel Create(IEnumerable<LatestMemberUpload> latestMemberUploads)
         {
             return new SummaryViewModel
             {
-                EstimatedCsvFileSizeInKilobytes = estimatedCsvFileSizeInKilobytes,
-                MemberUploadId = memberUploadId
+                LatestMemberUploads = latestMemberUploads.Select(lmu => new LatestMemberUploadViewModel
+                {
+                    ComplianceYear = lmu.ComplianceYear,
+                    CsvFileSizeEstimate = lmu.CsvFileSizeEstimate,
+                    UploadId = lmu.UploadId
+                })
             };
         }
     }

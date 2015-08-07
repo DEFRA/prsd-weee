@@ -113,7 +113,8 @@
     <Compile Include="Organisations\OrganisationType.cs" />
     <Compile Include="Organisations\OrganisationUserData.cs" />
     <Compile Include="Organisations\OrganisationUserStatus.cs" />
-    <Compile Include="PCS\LatestMemberUploadSummary.cs" />
+    <Compile Include="PCS\LatestMemberUpload.cs" />
+    <Compile Include="PCS\LatestMemberUploadsSummary.cs" />
     <Compile Include="PCS\MemberUploadData.cs" />
     <Compile Include="PCS\MemberUploadTesting\Address.cs" />
     <Compile Include="PCS\MemberUploadTesting\AnnualTurnoverBand.cs" />

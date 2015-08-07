@@ -160,13 +160,10 @@
         }
 
         [Fact]
-        public async void GetSummary_HasNoUploadForThisScheme_RedirectsToAddOrAmendMembersPage()
+        public async void GetSummary_HasNoUploads_RedirectsToAddOrAmendMembersPage()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadSummary>._))
-                .Returns(new LatestMemberUploadSummary
-                {
-                    MemberUploadId = null
-                });
+                .Returns(new LatestMemberUploadsSummary());
 
             var result = await MemberRegistrationController().Summary(A<Guid>._);
 
@@ -182,9 +179,17 @@
         public async void GetSummary_HasUploadForThisScheme_ReturnsViewWithSummaryModel()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadSummary>._))
-                .Returns(new LatestMemberUploadSummary
+                .Returns(new LatestMemberUploadsSummary
                 {
-                    MemberUploadId = Guid.NewGuid()
+                    LatestMemberUploads = new List<LatestMemberUpload>
+                    {
+                        new LatestMemberUpload
+                        {
+                            ComplianceYear = 2016,
+                            CsvFileSizeEstimate = 150.00,
+                            UploadId = Guid.NewGuid()
+                        }
+                    }
                 });
 
             var result = await MemberRegistrationController().Summary(A<Guid>._);

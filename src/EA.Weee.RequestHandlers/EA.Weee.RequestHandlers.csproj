@@ -82,6 +82,7 @@
     <Compile Include="Mappings\AddressMap.cs" />
     <Compile Include="Mappings\ContactMap.cs" />
     <Compile Include="Mappings\CountryMap.cs" />
+    <Compile Include="Mappings\LatestMemberUploadSummaryMap.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\MemberUploadMap.cs" />
     <Compile Include="Mappings\OrganisationMap.cs" />
