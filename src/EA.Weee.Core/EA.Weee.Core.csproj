@@ -146,6 +146,7 @@
     <Compile Include="Scheme\MemberUploadTesting\SchemePartnership.cs" />
     <Compile Include="Scheme\MemberUploadTesting\SellingTechnique.cs" />
     <Compile Include="Scheme\ProducerCSVFileData.cs" />
+    <Compile Include="Scheme\SchemeData.cs" />
     <Compile Include="Configuration\ConfigurationManagerWrapper.cs" />
     <Compile Include="Shared\AddressData.cs" />
     <Compile Include="Shared\AddressType.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="Shared\ErrorLevel.cs" />
     <Compile Include="Shared\MemberUploadErrorData.cs" />
     <Compile Include="Shared\OrganisationStatus.cs" />
+    <Compile Include="Shared\SchemeStatus.cs" />
     <Compile Include="Shared\UKCompetentAuthorityData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
