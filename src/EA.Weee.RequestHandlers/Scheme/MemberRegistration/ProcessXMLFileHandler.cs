@@ -44,7 +44,6 @@
             if (memberUploadErrors.All(e => e.ErrorType != MemberUploadErrorType.Schema))
             {
                 producerCharges = ProducerCharges(message, ref totalCharges);
-                memberUploadErrors.AddRange(xmlChargeBandCalculator.ErrorsAndWarnings);
             }
 
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
@@ -61,7 +60,15 @@
             {
                 context.MemberUploads.Add(upload);
             }
-            await context.SaveChangesAsync();
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+            
             return upload.Id;
         }
 
