@@ -126,7 +126,7 @@
             {
                 new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
             };
-            A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
+            A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
 
             await handler.HandleAsync(Message);
 

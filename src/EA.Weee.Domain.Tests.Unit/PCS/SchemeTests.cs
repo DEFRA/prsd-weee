@@ -203,9 +203,9 @@
             Assert.Equal(csvFieldValues[2], "WEE/12345678");
             Assert.Equal(csvFieldValues[3], String.Empty);
             Assert.Equal(csvFieldValues[4], chargeBandType.DisplayName);
-            Assert.Equal(csvFieldValues[5], string.Format("{0:dd/MM/yyyy HH:mm:ss}", scheme.Producers.First().LastSubmitted));
-            Assert.Equal(csvFieldValues[6], "No");
-            Assert.Equal(csvFieldValues[7], string.Empty);
+            Assert.Equal(csvFieldValues[5], string.Format("{0:dd/MM/yyyy HH:mm:ss}", scheme.Producers.First().UpdatedDate));
+            Assert.Equal(csvFieldValues[7], "No");
+            Assert.Equal(csvFieldValues[8], string.Empty);
         }
 
         [Fact]
@@ -239,9 +239,9 @@
             Assert.Equal(csvFieldValues[2], "WEE/12345678");
             Assert.Equal(csvFieldValues[3], companyDetails.CompanyNumber);
             Assert.Equal(csvFieldValues[4], chargeBandType.DisplayName);
-            Assert.Equal(csvFieldValues[5], string.Format("{0:dd/MM/yyyy HH:mm:ss}", scheme.Producers.First().LastSubmitted));
-            Assert.Equal(csvFieldValues[6], "Yes");
-            Assert.Equal(csvFieldValues[7], authorisedRepresentative.OverseasProducerName);
+            Assert.Equal(csvFieldValues[5], string.Format("{0:dd/MM/yyyy HH:mm:ss}", scheme.Producers.First().UpdatedDate));
+            Assert.Equal(csvFieldValues[7], "Yes");
+            Assert.Equal(csvFieldValues[8], authorisedRepresentative.OverseasProducerName);
         }
 
         private string[] ReadCSVLine(string csvData, int lineNumbeer)
