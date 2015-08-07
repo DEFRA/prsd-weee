@@ -8,7 +8,7 @@ GO
 -- Description:	Updates the [IsCurrentForComplianceYear] column
 --				for all rows in [Producer].[Producer].
 -- =============================================
-CREATE PROCEDURE [Producer].[sppRefreshProducerIsCurrent]
+ALTER PROCEDURE [Producer].[sppRefreshProducerIsCurrent]
 AS
 BEGIN
 	SET NOCOUNT ON;
