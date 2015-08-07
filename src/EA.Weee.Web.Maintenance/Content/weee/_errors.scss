@@ -1,0 +1,22 @@
+﻿@import "colours";
+@import "weee-typography";
+
+.form-group-error {
+    border-left: 3px solid $error-colour;
+    padding: 10px 0 10px 10px;
+    background-color: #FEF7F7;
+}
+
+.field-validation-error{
+    color: $error-colour;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.validation-summary{
+    background-color:#FEF7F7;
+
+    ul li{
+        margin-bottom: 7px;
+    }
+}
