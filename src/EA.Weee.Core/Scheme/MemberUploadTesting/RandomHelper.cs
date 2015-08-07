@@ -29,25 +29,34 @@
         /// <returns></returns>
         public static string CreateRandomString(string prefix, int minLength, int maxLength, bool includeSpaces = true)
         {
-            string result = prefix;
-
             // Get a length between min and max, weighted towards the shorter end.
             double weight = Math.Sqrt(R.NextDouble());
             int length = minLength + (int)(weight * (maxLength - minLength));
 
-            while (result.Trim().Length < length)
+            string result = string.Empty;
+
+            if (length > prefix.Length)
             {
-                if (includeSpaces && result.Length > 0 && R.Next(6) == 0)
+                result += prefix;
+
+                for (int index = prefix.Length; index < length; ++index)
                 {
-                    result += ' ';
-                }
-                else
-                {
-                    result += (char)R.Next(65, 90);
+                    if (includeSpaces && index != 0 && index != (length - 1) && R.Next(6) == 0)
+                    {
+                        result += ' ';
+                    }
+                    else
+                    {
+                        result += (char)R.Next(65, 90);
+                    }
                 }
             }
+            else
+            {
+                result += prefix.Substring(0, length);
+            }
 
-            return result.Trim();
+            return result;
         }
 
         public static readonly Random R = new Random();
