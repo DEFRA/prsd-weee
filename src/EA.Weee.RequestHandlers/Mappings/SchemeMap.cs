@@ -5,21 +5,21 @@
     using Domain.Organisation;
     using Domain.PCS;
     using Prsd.Core.Mapper;
-    using PcsStatus = Core.Shared.PcsStatus;
+    using SchemeStatus = Core.Shared.SchemeStatus;
 
-    public class PcsMap : IMap<Scheme, PcsData>
+    public class SchemeMap : IMap<Scheme, SchemeData>
     {
-        public PcsData Map(Scheme source)
+        public SchemeData Map(Scheme source)
         {
-            return new PcsData
+            return new SchemeData
             {
                 Id = source.Id,
                 Name = source.Organisation.OrganisationType.Value == OrganisationType.RegisteredCompany.Value
                     ? source.Organisation.Name
                     : source.Organisation.TradingName,
-                PcsStatus =
-                    (PcsStatus)
-                        Enum.Parse(typeof(PcsStatus), source.PcsStatus.Value.ToString())
+                SchemeStatus =
+                    (SchemeStatus)
+                        Enum.Parse(typeof(SchemeStatus), source.SchemeStatus.Value.ToString())
             };
         }
     }

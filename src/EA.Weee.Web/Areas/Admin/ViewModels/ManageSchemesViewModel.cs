@@ -6,7 +6,7 @@
 
     public class ManageSchemesViewModel
     {
-        public List<PcsData> Schemes { get; set; }
+        public List<SchemeData> Schemes { get; set; }
 
         public Guid Selected { get; set; }
     }

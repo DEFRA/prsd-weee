@@ -12,24 +12,24 @@
     using Prsd.Core.Mediator;
     using Requests.PCS;
 
-    internal class GetPcsesHandler : IRequestHandler<GetPcses, List<PcsData>>
+    internal class GetSchemesHandler : IRequestHandler<GetSchemes, List<SchemeData>>
     {
         private readonly WeeeContext context;
-        private readonly IMap<Scheme, PcsData> pcsMap;
+        private readonly IMap<Scheme, SchemeData> schemeMap;
 
-        public GetPcsesHandler(WeeeContext context, IMap<Scheme, PcsData> pcsMap)
+        public GetSchemesHandler(WeeeContext context, IMap<Scheme, SchemeData> schemeMap)
         {
             this.context = context;
-            this.pcsMap = pcsMap;
+            this.schemeMap = schemeMap;
         }
 
-        public async Task<List<PcsData>> HandleAsync(GetPcses message)
+        public async Task<List<SchemeData>> HandleAsync(GetSchemes message)
         {
             var schemes = await context.Schemes
                 .Where(s => s.Organisation.OrganisationStatus.Value == OrganisationStatus.Complete.Value)
                 .OrderBy(s => s.Organisation.Name).ToListAsync();
              
-            return schemes.Select(s => pcsMap.Map(s)).ToList();
+            return schemes.Select(s => schemeMap.Map(s)).ToList();
         }
     }
 }
