@@ -66,9 +66,9 @@
             {
                 var summary = await client.SendAsync(User.GetAccessToken(), new GetLatestMemberUploadSummary(pcsId));
 
-                if (summary.MemberUploadId.HasValue)
+                if (summary.LatestMemberUploads.Any())
                 {
-                    return View(SummaryViewModel.Create(summary.NumberOfProducers, summary.MemberUploadId.Value));
+                    return View(SummaryViewModel.Create(summary.LatestMemberUploads));
                 }
             }
 
@@ -118,14 +118,14 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetProducerCSV(Guid memberUploadId)
+        public async Task<ActionResult> GetProducerCSV(Guid memberUploadId, string fileName = null)
         {
             using (var client = apiClient())
             {
                 var producerCSVData = await client.SendAsync(User.GetAccessToken(),
                     new GetProducerCSVByMemberUploadId(memberUploadId));
 
-                return File(new UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", producerCSVData.FileName);
+                return File(new UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", fileName ?? producerCSVData.FileName);
             }
         }
     }

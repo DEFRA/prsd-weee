@@ -4,7 +4,7 @@
     using Core.PCS;
     using Prsd.Core.Mediator;
 
-    public class GetLatestMemberUploadSummary : IRequest<LatestMemberUploadSummary>
+    public class GetLatestMemberUploadSummary : IRequest<LatestMemberUploadsSummary>
     {
         public Guid PcsId { get; private set; }
 

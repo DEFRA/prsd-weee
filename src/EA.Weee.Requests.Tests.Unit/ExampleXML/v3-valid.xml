@@ -143,7 +143,220 @@
 					</contactDetails>
 				</correspondentForNotices>
 				<partnership>
-					<partnershipName>Tom and Jerry</partnershipName>
+					<partnershipName>Tom and Jerry 1</partnershipName>
+					<partnershipList>
+						<partner>Tom</partner>
+						<partner>Jerry</partner>
+					</partnershipList>
+					<principalPlaceOfBusiness>
+						<contactDetails>
+							<title>Mr</title>
+							<forename>Tom</forename>
+							<surname>Cat</surname>
+							<phoneLandLine>1234567890</phoneLandLine>
+							<phoneMobile/>
+							<fax/>
+							<email>tom@cat.com</email>
+							<address>
+								<primaryName>The House</primaryName>
+								<secondaryName/>
+								<streetName/>
+								<town/>
+								<locality/>
+								<administrativeArea/>
+								<country>ANGUILLA</country>
+								<postCode>H1 1HH</postCode>
+							</address>
+						</contactDetails>
+					</principalPlaceOfBusiness>
+				</partnership>
+			</producerBusiness>
+			<authorisedRepresentative/>
+			<sellingTechnique>Direct Selling to End User</sellingTechnique>
+		</producer>
+<producer>
+<status>I</status>
+			<registrationNo/>
+			<tradingName>Test 3</tradingName>
+			<SICCodeList>
+				<SICCode>-</SICCode>
+			</SICCodeList>
+			<VATRegistered>false</VATRegistered>
+			<annualTurnover>12345</annualTurnover>
+			<annualTurnoverBand>Less than or equal to one million pounds</annualTurnoverBand>
+			<eeePlacedOnMarketBand>Less than 5T EEE placed on market</eeePlacedOnMarketBand>
+			<obligationType>B2C</obligationType>
+			<producerBrandNames>
+				<brandname>A</brandname>
+				<brandname>B</brandname>
+				<brandname>1</brandname>
+			</producerBrandNames>
+			<producerBusiness>
+				<correspondentForNotices>
+					<contactDetails>
+						<title>Mr</title>
+						<forename>Tom</forename>
+						<surname>Cat</surname>
+						<phoneLandLine>1234567890</phoneLandLine>
+						<phoneMobile/>
+						<fax/>
+						<email>tom@cat.com</email>
+						<address>
+							<primaryName>The House</primaryName>
+							<secondaryName/>
+							<streetName/>
+							<town/>
+							<locality/>
+							<administrativeArea/>
+							<country>ANGUILLA</country>
+							<postCode>H1 1HH</postCode>
+						</address>
+					</contactDetails>
+				</correspondentForNotices>
+				<partnership>
+					<partnershipName>Tom and Jerry 2</partnershipName>
+					<partnershipList>
+						<partner>Tom</partner>
+						<partner>Jerry</partner>
+					</partnershipList>
+					<principalPlaceOfBusiness>
+						<contactDetails>
+							<title>Mr</title>
+							<forename>Tom</forename>
+							<surname>Cat</surname>
+							<phoneLandLine>1234567890</phoneLandLine>
+							<phoneMobile/>
+							<fax/>
+							<email>tom@cat.com</email>
+							<address>
+								<primaryName>The House</primaryName>
+								<secondaryName/>
+								<streetName/>
+								<town/>
+								<locality/>
+								<administrativeArea/>
+								<country>ANGUILLA</country>
+								<postCode>H1 1HH</postCode>
+							</address>
+						</contactDetails>
+					</principalPlaceOfBusiness>
+				</partnership>
+			</producerBusiness>
+			<authorisedRepresentative/>
+			<sellingTechnique>Direct Selling to End User</sellingTechnique>
+		</producer>
+<producer>
+<status>I</status>
+			<registrationNo/>
+			<tradingName>Test 4</tradingName>
+			<SICCodeList>
+				<SICCode>-</SICCode>
+			</SICCodeList>
+			<VATRegistered>false</VATRegistered>
+			<annualTurnover>12345</annualTurnover>
+			<annualTurnoverBand>Less than or equal to one million pounds</annualTurnoverBand>
+			<eeePlacedOnMarketBand>Less than 5T EEE placed on market</eeePlacedOnMarketBand>
+			<obligationType>B2C</obligationType>
+			<producerBrandNames>
+				<brandname>A</brandname>
+				<brandname>B</brandname>
+				<brandname>1</brandname>
+			</producerBrandNames>
+			<producerBusiness>
+				<correspondentForNotices>
+					<contactDetails>
+						<title>Mr</title>
+						<forename>Tom</forename>
+						<surname>Cat</surname>
+						<phoneLandLine>1234567890</phoneLandLine>
+						<phoneMobile/>
+						<fax/>
+						<email>tom@cat.com</email>
+						<address>
+							<primaryName>The House</primaryName>
+							<secondaryName/>
+							<streetName/>
+							<town/>
+							<locality/>
+							<administrativeArea/>
+							<country>ANGUILLA</country>
+							<postCode>H1 1HH</postCode>
+						</address>
+					</contactDetails>
+				</correspondentForNotices>
+				<partnership>
+					<partnershipName>Tom and Jerry 3</partnershipName>
+					<partnershipList>
+						<partner>Tom</partner>
+						<partner>Jerry</partner>
+					</partnershipList>
+					<principalPlaceOfBusiness>
+						<contactDetails>
+							<title>Mr</title>
+							<forename>Tom</forename>
+							<surname>Cat</surname>
+							<phoneLandLine>1234567890</phoneLandLine>
+							<phoneMobile/>
+							<fax/>
+							<email>tom@cat.com</email>
+							<address>
+								<primaryName>The House</primaryName>
+								<secondaryName/>
+								<streetName/>
+								<town/>
+								<locality/>
+								<administrativeArea/>
+								<country>ANGUILLA</country>
+								<postCode>H1 1HH</postCode>
+							</address>
+						</contactDetails>
+					</principalPlaceOfBusiness>
+				</partnership>
+			</producerBusiness>
+			<authorisedRepresentative/>
+			<sellingTechnique>Direct Selling to End User</sellingTechnique>
+		</producer>
+<producer>
+<status>I</status>
+			<registrationNo/>
+			<tradingName>Test 5</tradingName>
+			<SICCodeList>
+				<SICCode>-</SICCode>
+			</SICCodeList>
+			<VATRegistered>false</VATRegistered>
+			<annualTurnover>12345</annualTurnover>
+			<annualTurnoverBand>Less than or equal to one million pounds</annualTurnoverBand>
+			<eeePlacedOnMarketBand>Less than 5T EEE placed on market</eeePlacedOnMarketBand>
+			<obligationType>B2C</obligationType>
+			<producerBrandNames>
+				<brandname>A</brandname>
+				<brandname>B</brandname>
+				<brandname>1</brandname>
+			</producerBrandNames>
+			<producerBusiness>
+				<correspondentForNotices>
+					<contactDetails>
+						<title>Mr</title>
+						<forename>Tom</forename>
+						<surname>Cat</surname>
+						<phoneLandLine>1234567890</phoneLandLine>
+						<phoneMobile/>
+						<fax/>
+						<email>tom@cat.com</email>
+						<address>
+							<primaryName>The House</primaryName>
+							<secondaryName/>
+							<streetName/>
+							<town/>
+							<locality/>
+							<administrativeArea/>
+							<country>ANGUILLA</country>
+							<postCode>H1 1HH</postCode>
+						</address>
+					</contactDetails>
+				</correspondentForNotices>
+				<partnership>
+					<partnershipName>Tom and Jerry 4</partnershipName>
 					<partnershipList>
 						<partner>Tom</partner>
 						<partner>Jerry</partner>

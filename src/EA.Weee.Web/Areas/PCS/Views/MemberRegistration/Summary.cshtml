@@ -16,8 +16,13 @@
     </div>
     <hr/>
     <div class="form-group">
-    <a href="">Overview of current members.csv</a><span style="color: #6f777b">@(" (approx. " + Model.EstimatedCsvFileSizeInKilobytes.ToStringWithXSignificantFigures(3) + "kb)")</span>
-</div>
+        @foreach (var latestUploadSummary in Model.LatestMemberUploads)
+        {
+            var csvFileName = "Overview of current members " + latestUploadSummary.ComplianceYear + ".csv";
+            <a href="@Url.Action("GetProducerCSV", "MemberRegistration", new { memberUploadId = latestUploadSummary.UploadId, fileName = csvFileName })">@(csvFileName)</a><span style="color: #6f777b">@(" (approx. " + latestUploadSummary.ScaledCsvFileSize + latestUploadSummary.ScaledCsvFileSizeSuffix))</span>
+            <br/>
+        }
+    </div>
 
     <div class="form-group">
         @Html.ActionLink("Add or amend", "AddOrAmendMembers", "MemberRegistration", new { @area = "PCS" }, new { @class = "button" })

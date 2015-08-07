@@ -567,6 +567,7 @@
     <Compile Include="Areas\Admin\ViewModels\InternalLoginViewModel.cs" />
     <Compile Include="Areas\PCS\Controllers\MemberRegistrationController.cs" />
     <Compile Include="Areas\PCS\ViewModels\AddOrAmendMembersViewModel.cs" />
+    <Compile Include="Areas\PCS\ViewModels\LatestMemberUploadViewModel.cs" />
     <Compile Include="Areas\PCS\ViewModels\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\PCS\ViewModels\SummaryViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\GeneratePcsXmlController.cs" />
