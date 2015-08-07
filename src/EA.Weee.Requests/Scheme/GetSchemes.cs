@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests.PCS
+﻿namespace EA.Weee.Requests.Scheme
 {
     using System.Collections.Generic;
     using Core.PCS;

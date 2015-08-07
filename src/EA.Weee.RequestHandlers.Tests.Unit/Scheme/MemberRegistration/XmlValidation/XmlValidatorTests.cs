@@ -5,12 +5,8 @@
     using Domain;
     using Domain.Scheme;
     using FakeItEasy;
-    using RequestHandlers;
     using RequestHandlers.Scheme.Interfaces;
-    using RequestHandlers.Scheme.MemberRegistration;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation;
-    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation;
-    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.SchemaValidation;
     using Requests.Scheme.MemberRegistration;
     using Xunit;
 

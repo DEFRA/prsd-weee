@@ -7,10 +7,10 @@
     using Core.PCS;
     using DataAccess;
     using Domain.Organisation;
-    using Domain.PCS;
+    using Domain.Scheme;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
-    using Requests.PCS;
+    using Requests.Scheme;
 
     internal class GetSchemesHandler : IRequestHandler<GetSchemes, List<SchemeData>>
     {
