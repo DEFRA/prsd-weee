@@ -27,9 +27,11 @@
         {
             var schemes = await context.Schemes
                 .Where(s => s.Organisation.OrganisationStatus.Value == OrganisationStatus.Complete.Value)
-                .OrderBy(s => s.Organisation.Name).ToListAsync();
+                .ToListAsync();
              
-            return schemes.Select(s => schemeMap.Map(s)).ToList();
+            return schemes.Select(s => schemeMap.Map(s))
+                .OrderBy(sd => sd.Name)
+                .ToList();
         }
     }
 }
