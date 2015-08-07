@@ -1,0 +1,53 @@
+﻿namespace EA.Weee.Web.Areas.PCS.ViewModels
+{
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Web.Mvc;
+    using Core.PCS.MemberUploadTesting;
+    using Core.Shared;
+    using Prsd.Core.Helpers;
+
+    public class SchemeViewModel
+    {
+        public SchemeViewModel()
+        {
+            ObligationTypeSelectList = new SelectList(EnumHelper.GetValues(typeof(ObligationType)), "Key", "Value");
+        }
+
+        // (WEE/)[A-Z]{2}[0-9]{4}[A-Z]{2}(/SCH))
+
+        [Required(ErrorMessage = "Approval number is required.")]
+        [RegularExpression(@"WEE/([A-Z]{2}[0-9]{4}[A-Z]{2})/SCH?",
+            ErrorMessage = "Approval number must be a given format WEE/AB1234CD/SCH.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Approval number")]
+        public string ApprovalNumber { get; set; }
+
+        [Required(ErrorMessage = "Scheme name is required.")]
+        [StringLength(70)]
+        [DataType(DataType.Text)]
+        [Display(Name = "Scheme name")]
+        public string SchemeName { get; set; }
+
+        [StringLength(50)]
+        [DataType(DataType.Text)]
+        [Display(Name = "IBIS customer reference")]
+        public string IbisCustomerReference { get; set; }
+
+        [Required(ErrorMessage = "Obligation type is required.")]
+        [Display(Name = "Obligation type")]
+        public ObligationType ObligationType { get; set; }
+
+        [Required(ErrorMessage = "Authorising authority is required.")]
+        [Display(Name = "Authorising authority")]
+        public Guid CompetentAuthorityId { get; set; }
+
+        [Display(Name = "Authorising authority")]
+        public string CompetentAuthorityName { get; set; }
+
+        public IEnumerable<UKCompetentAuthorityData> CompetentAuthorities { get; set; }
+
+        public IEnumerable<SelectListItem> ObligationTypeSelectList { get; set; }
+    }
+}
