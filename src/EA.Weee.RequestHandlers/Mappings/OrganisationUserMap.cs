@@ -4,7 +4,7 @@
     using Core.Organisations;
     using Domain.Organisation;
     using Prsd.Core.Mapper;
-    using OrganisationUserStatus = Core.Organisations.OrganisationUserStatus;
+    using OrganisationUserStatus = Core.Shared.UserStatus;
 
     public class OrganisationUserMap : IMap<OrganisationUser, OrganisationUserData>
     {
@@ -25,7 +25,7 @@
                 OrganisationUserStatus =
                     (OrganisationUserStatus)
                         Enum.Parse(typeof(OrganisationUserStatus),
-                            source.UserStatus.Value.ToString()),
+                            source.OrganisationUserStatus.Value.ToString()),
 
                 // Use existing mappers to map addresses and contact
                 Organisation = source.Organisation != null

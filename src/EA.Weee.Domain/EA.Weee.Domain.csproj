@@ -72,7 +72,7 @@
     <Compile Include="Organisation\OrganisationStatus.cs" />
     <Compile Include="Organisation\OrganisationType.cs" />
     <Compile Include="Organisation\OrganisationUser.cs" />
-    <Compile Include="Organisation\OrganisationUserStatus.cs" />
+    <Compile Include="UserStatus.cs" />
     <Compile Include="Producer\Partner.cs" />
     <Compile Include="Scheme\Scheme.cs" />
     <Compile Include="Producer\Partnership.cs" />
