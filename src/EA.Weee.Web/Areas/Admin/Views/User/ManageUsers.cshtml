@@ -1,0 +1,53 @@
+﻿@using EA.Weee.Core.Admin
+@model EA.Weee.Web.Areas.Admin.ViewModels.ManageUsersViewModel
+@{
+    ViewBag.Title = "Choose Users";
+}
+
+<header class="hgroup">
+    <h1 class="heading-large">
+        Choose a user
+    </h1>
+</header>
+
+@using (Html.BeginForm(actionName: "ManageUsers", controllerName: "User", method: FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationMessageFor(m => m.SelectedUserId)
+    <table class="form-group">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Organisation</th>
+                <th>Status</th>
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach(UserSearchData user in Model.Users)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => user.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => user.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => user.OrganisationName)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => user.Status)
+                </td>
+                <td>
+                    @Html.RadioButtonFor(m => m.SelectedUserId, user.Id)
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div class="form-group">
+        <button class="button" type="submit">Continue</button>
+    </div>
+}
