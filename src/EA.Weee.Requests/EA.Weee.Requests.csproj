@@ -72,6 +72,7 @@
     <Compile Include="Scheme\MemberUploadTesting\PcsXmlFile.cs" />
     <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFile.cs" />
     <Compile Include="Scheme\UpdateSchemeInformation.cs" />
+    <Compile Include="Scheme\VerifySchemeNameExists.cs" />
     <Compile Include="Shared\GetCountries.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorities.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations.cs" />

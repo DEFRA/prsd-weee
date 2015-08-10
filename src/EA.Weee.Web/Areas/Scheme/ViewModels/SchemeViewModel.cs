@@ -28,7 +28,7 @@
         [Display(Name = "Scheme name")]
         public string SchemeName { get; set; }
 
-        [StringLength(50)]
+        [StringLength(10)]
         [DataType(DataType.Text)]
         [Display(Name = "IBIS customer reference")]
         public string IbisCustomerReference { get; set; }
@@ -47,5 +47,7 @@
         public IEnumerable<UKCompetentAuthorityData> CompetentAuthorities { get; set; }
 
         public IEnumerable<SelectListItem> ObligationTypeSelectList { get; set; }
+
+        public Guid SchemeId { get; set; }
     }
 }

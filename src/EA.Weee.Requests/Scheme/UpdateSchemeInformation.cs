@@ -6,10 +6,11 @@
 
     public class UpdateSchemeInformation : IRequest<Guid>
     {
-        public UpdateSchemeInformation(Guid schemeId, string schemeName, string ibisCustomerReference, ObligationType obligationType, Guid competentAuthorityId)
+        public UpdateSchemeInformation(Guid schemeId, string schemeName, string approvalNumber, string ibisCustomerReference, ObligationType obligationType, Guid competentAuthorityId)
         {
             SchemeId = schemeId;
             SchemeName = schemeName;
+            ApprovalNumber = approvalNumber;
             IbisCustomerReference = ibisCustomerReference;
             ObligationType = obligationType;
             CompetentAuthorityId = competentAuthorityId;
@@ -18,6 +19,8 @@
         public Guid SchemeId { get; set; }
 
         public string SchemeName { get; set; }
+
+        public string ApprovalNumber { get; set; }
 
         public string IbisCustomerReference { get; set; }
 
