@@ -142,6 +142,18 @@
         }
 
         [Fact]
+        public async void ProcessXmlfile_HasNoValidationErrors_HasProducerChargeCalculationErrors_ThrowsException()
+        {
+            var errors = new List<MemberUploadError>
+            {
+                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
+            };
+            A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
+
+            await Assert.ThrowsAsync<ApplicationException>(async () => await handler.HandleAsync(Message));
+        }
+
+        [Fact]
         public async void ProcessXmlfile_SavesMemberUpload()
         {
             var id = await handler.HandleAsync(Message);
