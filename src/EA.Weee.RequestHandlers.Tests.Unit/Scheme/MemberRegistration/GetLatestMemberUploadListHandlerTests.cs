@@ -102,7 +102,7 @@
         {
             memberUploadRowVersion++;
 
-            var upload = new MemberUpload(pcsId, "<xml>somexml</xml>", new List<MemberUploadError>(), 0)
+            var upload = new MemberUpload(pcsId, "<xml>somexml</xml>", new List<MemberUploadError>(), 0, 2016)
             {
                 RowVersion = memberUploadRowVersion.ToByteArray(),
             };

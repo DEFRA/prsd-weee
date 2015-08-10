@@ -1,4 +1,5 @@
-﻿@using EA.Weee.Core.Helpers
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.SummaryViewModel
 @{
     ViewBag.Title = "Summary";
@@ -25,6 +26,6 @@
     </div>
 
     <div class="form-group">
-        @Html.ActionLink("Add or amend", "AddOrAmendMembers", "MemberRegistration", new { @area = "PCS" }, new { @class = "button" })
+        @Html.ActionLink("Add or amend", "AddOrAmendMembers", "MemberRegistration", new { @class = "button" })
     </div>
 }
