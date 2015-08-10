@@ -1,5 +1,7 @@
 ﻿@model EA.Weee.Web.Maintenance.ViewModels.MaintenanceViewModel
 
+<p hidden="hidden">Maintenance mode: @System.Configuration.ConfigurationManager.AppSettings["Weee.MaintenanceMode"]</p>
+
 @section main_content {
 
     <header class="hgroup">
@@ -7,6 +9,5 @@
             <h1 class="heading-large">Sorry, the WEEE service is unavailable</h1>
         </div>
     </header>
-    <p class="text">Our service will be available again shortly. If you have an urgent query, please contact the Environment Agency (England) helpline on 03708 506 506</p>
-
+    <p class="text">Our service will be available again shortly. If you have an urgent query, please contact the Environment Agency (England) helpline on <br>03708 506 506</p>
 }
