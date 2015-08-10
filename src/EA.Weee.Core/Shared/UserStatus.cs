@@ -1,8 +1,8 @@
-﻿namespace EA.Weee.Core.Organisations
+﻿namespace EA.Weee.Core.Shared
 {
     using System.ComponentModel.DataAnnotations;
 
-    public enum OrganisationUserStatus
+    public enum UserStatus
     {
         [Display(Name = "Pending")]
         Pending = 1,

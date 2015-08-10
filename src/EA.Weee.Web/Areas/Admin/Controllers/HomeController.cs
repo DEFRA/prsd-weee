@@ -7,12 +7,6 @@
 
     public class HomeController : AdminController
     {
-        // GET: Admin/Home
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         [HttpGet]
         public ActionResult ChooseActivity()
         {
@@ -21,6 +15,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ChooseActivity(InternalUserActivityViewModel model)
         {
             if (!ModelState.IsValid)
@@ -28,7 +23,11 @@
                 return View(model);
             }
 
-            throw new InvalidOperationException("Follow on feature is not yet implemented");
+            if (model.InternalUserActivityOptions.SelectedValue == InternalUserActivity.ManageUsers)
+            {
+                return RedirectToAction("ManageUsers", "User");    
+            }
+            return View(model);
         }
     }
 }
