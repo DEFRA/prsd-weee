@@ -1,19 +1,18 @@
-﻿namespace EA.Weee.Domain.Scheme
+﻿namespace EA.Weee.Domain.PCS
 {
+    using Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using Organisation;
     using Producer;
-    using Prsd.Core.Domain;
 
     public class Scheme : Entity
     {
         public Scheme(Guid organisationId)
         {
             OrganisationId = organisationId;
-            SchemeStatus = SchemeStatus.Pending;
             ApprovalNumber = string.Empty;
             Producers = new List<Producer>();
         }
@@ -25,8 +24,6 @@
         public virtual Guid OrganisationId { get; private set; }
 
         public virtual Organisation Organisation { get; private set; }
-
-        public virtual SchemeStatus SchemeStatus { get; private set; }
 
         public virtual string ApprovalNumber { get; private set; }
 
