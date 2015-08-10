@@ -33,7 +33,7 @@
         {
             var memberUploads = new[]
             {
-                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, Guid.NewGuid())
+                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid())
             };
 
             var handler = GetPreparedHandler(memberUploads);

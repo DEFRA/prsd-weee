@@ -71,7 +71,7 @@
             }
 
             // act
-            IEnumerable<Producer> producers = await new GenerateProducerObjectsFromXml(new XmlConverter(), context).Generate(message, memberUpload, producerCharges);
+            IEnumerable<Producer> producers = await new GenerateFromXml(new XmlConverter(), context).GenerateProducers(message, memberUpload, producerCharges);
 
             // assert
             long newSeed = GetCurrentSeed();

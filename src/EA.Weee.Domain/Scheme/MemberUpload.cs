@@ -29,16 +29,17 @@
 
         public decimal TotalCharges { get; private set; }
 
-        public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors, decimal totalCharges, Guid? schemeId = null)
+        public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors, decimal totalCharges, int complianceYear, Guid? schemeId = null)
         {
+            Guard.ArgumentNotDefaultValue(() => complianceYear, complianceYear);
+
             OrganisationId = organisationId;
             SchemeId = schemeId.GetValueOrDefault();
             Data = data;
             Errors = errors;
             IsSubmitted = false;
             TotalCharges = totalCharges;
-            //TODO: Needs doing properly
-            ComplianceYear = SystemTime.UtcNow.Year + 1;
+            ComplianceYear = complianceYear;
         }
 
         public MemberUpload(Guid organisationId, string data)
