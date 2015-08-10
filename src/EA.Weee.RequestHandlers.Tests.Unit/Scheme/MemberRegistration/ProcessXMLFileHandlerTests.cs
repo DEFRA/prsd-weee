@@ -60,7 +60,7 @@
         {
             IEnumerable<Producer> generatedProducers = new[] { TestProducer("ForestMoonOfEndor") };
 
-            A.CallTo(() => generator.Generate(Message, A<MemberUpload>.Ignored, A<Hashtable>.Ignored))
+            A.CallTo(() => generator.GenerateProducers(Message, A<MemberUpload>.Ignored, A<Hashtable>.Ignored))
                 .Returns(Task.FromResult(generatedProducers));
 
             await handler.HandleAsync(Message);

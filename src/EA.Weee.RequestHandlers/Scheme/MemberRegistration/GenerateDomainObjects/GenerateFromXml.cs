@@ -20,23 +20,31 @@
     using Requests.Scheme.MemberRegistration;
     using XmlValidation.Extensions;
 
-    public class GenerateProducerObjectsFromXml : IGenerateFromXml
+    public class GenerateFromXml : IGenerateFromXml
     {
         private readonly IXmlConverter xmlConverter;
         private readonly WeeeContext context;
 
-        public GenerateProducerObjectsFromXml(IXmlConverter xmlConverter, WeeeContext context)
+        public GenerateFromXml(IXmlConverter xmlConverter, WeeeContext context)
         {
             this.xmlConverter = xmlConverter;
             this.context = context;
         }
 
-        public async Task<IEnumerable<Producer>> Generate(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Hashtable producerCharges)
+        public async Task<IEnumerable<Producer>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Hashtable producerCharges)
         {
             var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
             Guid schemeId = memberUpload.SchemeId.GetValueOrDefault();
             var producers = await SetProducerData(deserializedXml, schemeId, memberUpload, producerCharges);
             return producers;
+        }
+
+        public MemberUpload GenerateMemberUpload(ProcessXMLFile messageXmlFile, List<MemberUploadError> errors, decimal totalCharges, Guid? schemeId)
+        {
+            var xml = xmlConverter.XmlToUtf8String(messageXmlFile);
+            var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
+
+            return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), schemeId);
         }
 
         private async Task<IEnumerable<Producer>> SetProducerData(schemeType scheme, Guid schemeId, MemberUpload memberUpload, Hashtable producerCharges)
