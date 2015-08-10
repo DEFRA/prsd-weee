@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin
 {
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Controllers;
+    using LowercaseDashedRouting;
 
     public class AdminAreaRegistration : AreaRegistration 
     {
@@ -15,11 +17,12 @@
 
         public override void RegisterArea(AreaRegistrationContext context) 
         {
-            context.MapRoute(
-                name: "Admin_default",
-                url: "Admin/{controller}/{action}/{id}",
-                defaults: new { action = "Index", controller = "Home", id = UrlParameter.Optional },
-                namespaces: new[] { typeof(HomeController).Namespace });
+            context.Routes.LowercaseUrls = true;
+            string url = "Admin/{controller}/{action}/{id}";
+            RouteValueDictionary routeValueDictionary = new RouteValueDictionary(new { controller = "Home", action = "Index", id = UrlParameter.Optional });
+            string[] namespaces = new[] { typeof(HomeController).Namespace };
+            LowercaseDashedRoute dashedRoute = new LowercaseDashedRoute(url, routeValueDictionary, new DashedRouteHandler(), this, context, namespaces);
+            context.Routes.Add(dashedRoute);
         }
     }
 }

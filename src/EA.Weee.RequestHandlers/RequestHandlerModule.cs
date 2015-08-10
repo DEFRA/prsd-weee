@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers
 {
     using Autofac;
-    using EA.Weee.RequestHandlers.PCS.MemberUploadTesting;
     using Prsd.Core.Autofac;
     using Prsd.Core.Decorators;
     using Prsd.Core.Mediator;
+    using Scheme.MemberUploadTesting;
 
     public class RequestHandlerModule : Module
     {

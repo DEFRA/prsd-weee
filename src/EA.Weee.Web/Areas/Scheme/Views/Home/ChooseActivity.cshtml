@@ -1,0 +1,32 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ChooseActivityViewModel
+@{
+    ViewBag.Title = "Choose Activity";
+}
+
+@section main_content
+{   
+    <header class="hgroup">
+        <h1 class="heading-large">
+            What would you like to do?
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "ChooseActivity", controllerName: "Home", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.OrganisationId)
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.ActivityOptions.SelectedValue)" id="ActivityOptions">
+            @Html.EditorFor(m => m.ActivityOptions)
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="button" value="Continue" />
+        </div>
+
+        <a href="@Url.Action("Type", "OrganisationRegistration", new {area = ""})">Create or join another organisation</a>
+    }
+}
+
+
