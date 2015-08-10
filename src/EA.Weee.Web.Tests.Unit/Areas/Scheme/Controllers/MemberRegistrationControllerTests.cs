@@ -226,7 +226,7 @@
         {
             var controller = MemberRegistrationController();
 
-            var viewResult = await controller.EditScheme();
+            var viewResult = await controller.EditScheme(Guid.NewGuid());
 
             Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
         }

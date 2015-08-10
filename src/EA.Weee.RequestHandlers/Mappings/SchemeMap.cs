@@ -2,6 +2,7 @@
 {
     using System;
     using Core.Scheme;
+    using Core.Scheme.MemberUploadTesting;
     using Domain.Organisation;
     using Domain.Scheme;
     using Prsd.Core.Mapper;
@@ -19,7 +20,11 @@
                     : source.Organisation.TradingName,
                 SchemeStatus =
                     (SchemeStatus)
-                        Enum.Parse(typeof(SchemeStatus), source.SchemeStatus.Value.ToString())
+                        Enum.Parse(typeof(SchemeStatus), source.SchemeStatus.Value.ToString()),
+                SchemeName = source.SchemeName,
+                IbisCustomerReference = source.IbisCustomerReference,
+                ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), source.ObligationType.Value.ToString()),
+                CompetentAuthorityId = source.CompetentAuthorityId
             };
         }
     }

@@ -13,7 +13,7 @@
 {
     @Html.AntiForgeryToken()
     @Html.Gds().ValidationSummary()
-
+    @Html.HiddenFor(m => m.SchemeId)
     <div class="grid-row">
         <div class="column-half">
             <div class="form-group @Html.Gds().FormGroupClass(m => m.SchemeName)">
@@ -24,7 +24,7 @@
             <div class="form-group @Html.Gds().FormGroupClass(m => m.IbisCustomerReference)">
                 @Html.Gds().LabelFor(m => m.IbisCustomerReference)
                 @Html.Gds().ValidationMessageFor(m => m.IbisCustomerReference)
-                @Html.Gds().TextBoxFor(m => m.IbisCustomerReference, new { @maxlength = "50" })
+                @Html.Gds().TextBoxFor(m => m.IbisCustomerReference, new { @maxlength = "10" })
             </div>
             <div class="form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
                 @Html.Gds().LabelFor(m => m.CompetentAuthorityId)

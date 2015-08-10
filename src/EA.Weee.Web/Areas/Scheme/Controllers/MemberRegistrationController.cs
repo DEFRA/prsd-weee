@@ -13,6 +13,7 @@
     using ViewModels;
     using Web.Controllers.Base;
     using Weee.Requests.Organisations;
+    using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Shared;
 
@@ -116,9 +117,10 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditScheme()
+        public async Task<ActionResult> EditScheme(Guid schemeId)
         {
             var model = new SchemeViewModel { CompetentAuthorities = await GetCompetentAuthorities() };
+            model.SchemeId = schemeId;
             return View("EditScheme", model);
         }
 
@@ -130,8 +132,29 @@
             {
                 return View("EditScheme", model);
             }
-            //TODO : Need to save data
-            return View("EditScheme", model);
+
+            using (var client = apiClient())
+            {
+                var schemeNameExists = await
+                    client.SendAsync(User.GetAccessToken(),
+                        new VerifySchemeNameExists(model.SchemeName));
+
+                if (schemeNameExists)
+                {
+                    ModelState.AddModelError(string.Empty, "Scheme name already exists.");
+                    return View("EditScheme", model);
+                }
+                else
+                {
+                    await
+                        client.SendAsync(User.GetAccessToken(),
+                            new UpdateSchemeInformation(model.SchemeId, model.SchemeName, model.ApprovalNumber,
+                                model.IbisCustomerReference,
+                                model.ObligationType, model.CompetentAuthorityId));
+
+                    return View("EditScheme", model);
+                }
+            }
         }
 
         private async Task<IEnumerable<UKCompetentAuthorityData>> GetCompetentAuthorities()

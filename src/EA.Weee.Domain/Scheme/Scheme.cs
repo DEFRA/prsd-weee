@@ -41,12 +41,14 @@
 
         public Guid CompetentAuthorityId { get; private set; }
 
-        public void UpdateScheme(string schemeName, string ibisCustomerReference, ObligationType obligationType, Guid competentAuthorityId)
+        public void UpdateScheme(string schemeName, string approvalNumber, string ibisCustomerReference, ObligationType obligationType, Guid competentAuthorityId)
         {
             Guard.ArgumentNotNullOrEmpty(() => schemeName, schemeName);
             Guard.ArgumentNotNull(() => obligationType, obligationType);
+            Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
 
             SchemeName = schemeName;
+            ApprovalNumber = approvalNumber;
             IbisCustomerReference = ibisCustomerReference;
             ObligationType = obligationType;
             CompetentAuthorityId = competentAuthorityId;

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices.ComTypes;
     using System.Text.RegularExpressions;
     using Domain.Scheme;
     using FakeItEasy;
@@ -243,6 +244,25 @@
             Assert.Equal(csvFieldValues[7], authorisedRepresentative.OverseasProducerName);
         }
 
+        [Fact]
+        public void UpdateSchemeInformation_SchemeWithBasicInformation_ReturnsUpdatedSchemeInformation()
+        {
+            var scheme = GetTestScheme();
+            const string schemeName = "WEE/AB1234CD/SCH";
+            const string approvalNumber = "Approval number";
+            const string ibisCustomerReference = "Any value";
+            var obligationType = ObligationType.B2B;
+            var competentAuthorityId = Guid.NewGuid();
+
+            scheme.UpdateScheme(schemeName, approvalNumber, ibisCustomerReference, obligationType, competentAuthorityId);
+
+            Assert.Equal(scheme.SchemeName, schemeName);
+            Assert.Equal(scheme.ApprovalNumber, approvalNumber);
+            Assert.Equal(scheme.IbisCustomerReference, ibisCustomerReference);
+            Assert.Equal(scheme.ObligationType, obligationType);
+            Assert.Equal(scheme.CompetentAuthorityId, competentAuthorityId);
+        }
+
         private string[] ReadCSVLine(string csvData, int lineNumbeer)
         {
             var csvLines = Regex.Split(csvData, "\r\n");
@@ -286,7 +306,7 @@
                 "Administrative area", country, "Postcode");
             var producerContact = new ProducerContact("Mr.", "Firstname", "Lastname", "12345", "9898988", "43434433",
                 "test@test.com", producerAddress);
-            
+
             var business = new ProducerBusiness(companyDetails, partnership, producerContact);
 
             var producer = new Producer(Guid.NewGuid(), memberUpload, business, authorisedRepresentative, DateTime.Now, 1000000000, true,

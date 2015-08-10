@@ -27,7 +27,7 @@
                     message.SchemeId));
             }
 
-            scheme.UpdateScheme(message.SchemeName, message.IbisCustomerReference, GetObligationType(message.ObligationType), message.CompetentAuthorityId);
+            scheme.UpdateScheme(message.SchemeName, message.ApprovalNumber, message.IbisCustomerReference, GetObligationType(message.ObligationType), message.CompetentAuthorityId);
 
             try
             {
