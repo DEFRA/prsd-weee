@@ -49,10 +49,12 @@
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetails.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
-    <Compile Include="PCS\MemberRegistration\GetMemberUploadById.cs">
+    <Compile Include="Scheme\MemberRegistration\GetLatestMemberUploadList.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetMemberUploadById.cs" />
+    <Compile Include="Scheme\GetSchemes.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PCS\MemberRegistration\GetMemberUploadData.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetMemberUploadData.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisation.cs" />
     <Compile Include="Organisations\GetOrganisationsByUserId.cs" />
     <Compile Include="Organisations\IsUkOrganisationAddress.cs" />
@@ -65,11 +67,11 @@
     <Compile Include="Organisations\Create\CreatePartnershipRequest.cs" />
     <Compile Include="Organisations\Create\CreateSoleTraderRequest.cs" />
     <Compile Include="Organisations\GetOrganisationInfo.cs" />
-    <Compile Include="PCS\MemberRegistration\GetProducerCSVByMemberUploadId.cs" />
-    <Compile Include="PCS\MemberRegistration\MemberUploadSubmission.cs" />
-    <Compile Include="PCS\MemberRegistration\ProcessXMLFile.cs" />
-    <Compile Include="PCS\MemberUploadTesting\PcsXmlFile.cs" />
-    <Compile Include="PCS\MemberUploadTesting\GeneratePcsXmlFile.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetProducerCSVByMemberUploadId.cs" />
+    <Compile Include="Scheme\MemberRegistration\MemberUploadSubmission.cs" />
+    <Compile Include="Scheme\MemberRegistration\ProcessXMLFile.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\PcsXmlFile.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFile.cs" />
     <Compile Include="Shared\GetCountries.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorities.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations.cs" />

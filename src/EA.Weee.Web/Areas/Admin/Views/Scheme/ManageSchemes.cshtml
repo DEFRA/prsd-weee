@@ -1,0 +1,45 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.ManageSchemesViewModel
+@{
+    ViewBag.Title = "Manage schemes";
+}
+
+@section main_content {
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Which scheme would you like to manage?
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "ManageSchemes", controllerName: "Scheme", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        
+        <div class="form-group">
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Select</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var scheme in Model.Schemes)
+                {
+                    <tr>
+                        <td>@scheme.Name</td>
+                        <td>@scheme.SchemeStatus</td>
+                        <td>@Html.RadioButtonFor(m => m.Selected, @scheme.Id)</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="button" value="Continue"/>
+        </div>
+    }
+}
