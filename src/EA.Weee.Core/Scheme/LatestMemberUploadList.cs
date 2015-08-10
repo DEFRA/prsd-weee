@@ -1,6 +1,5 @@
-﻿namespace EA.Weee.Core.PCS
+﻿namespace EA.Weee.Core.Scheme
 {
-    using System;
     using System.Collections.Generic;
 
     public class LatestMemberUploadList
