@@ -47,36 +47,15 @@
 
         public string GetProducerCSV(int complianceYear)
         {
-            var sb = new StringBuilder();
-
-            var producers = GetProducersList(complianceYear);
-
-            foreach (var item in producers)
-            {
-                if (item.ProducerBusiness.CompanyDetails != null &&
-               item.ProducerBusiness.CompanyDetails.Name != null)
-                {
-                    item.OrganisationName = item.ProducerBusiness.CompanyDetails.Name;
-                }
-                else if (item.ProducerBusiness.Partnership != null &&
-                         item.ProducerBusiness.Partnership.Name != null)
-                {
-                    item.OrganisationName = item.ProducerBusiness.Partnership.Name;
-                }
-            }
-
+            List<Producer> producers = GetProducersList(complianceYear);
             producers = producers.OrderBy(p => p.OrganisationName).ToList();
 
-            var csvColumnHeaders = Producer.GetCSVColumnHeaders();
-
-            sb.Append(csvColumnHeaders);
-
+            StringBuilder sb = new StringBuilder();
+            sb.Append(Producer.GetCSVColumnHeaders());
             sb.AppendLine();
-
-            for (var i = 0; i <= producers.Count - 1; i++)
+            foreach (Producer producer in producers)
             {
-                var producer = producers[i];
-                sb.Append(producer.ToCsvString(producer));
+                sb.Append(producer.ToCsvString());
             }
 
             return sb.ToString();
