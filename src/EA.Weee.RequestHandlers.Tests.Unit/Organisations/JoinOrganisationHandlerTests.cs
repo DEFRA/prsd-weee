@@ -53,7 +53,7 @@
 
             await handler.HandleAsync(new JoinOrganisation(organisationWeWillJoin.Id));
 
-            Assert.Equal(OrganisationUserStatus.Pending, addedOrganisationUser.UserStatus);
+            Assert.Equal(UserStatus.Pending, addedOrganisationUser.OrganisationUserStatus);
         }
 
         [Fact]

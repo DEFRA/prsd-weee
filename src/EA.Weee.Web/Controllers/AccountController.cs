@@ -9,6 +9,7 @@
     using Api.Client.Entities;
     using Core;
     using Core.Organisations;
+    using Core.Shared;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
@@ -136,7 +137,7 @@
                 var approvedOrganisationUsers = await
                     client.SendAsync(
                         User.GetAccessToken(),
-                        new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)OrganisationUserStatus.Approved }));
+                        new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)UserStatus.Approved }));
 
                 var inactiveOrganisationUsers = await
                     client.SendAsync(
@@ -144,8 +145,8 @@
                         new GetOrganisationsByUserId(User.GetUserId(),
                             new[]
                             {
-                                (int)OrganisationUserStatus.Pending, (int)OrganisationUserStatus.Refused,
-                                (int)OrganisationUserStatus.Inactive
+                                (int)UserStatus.Pending, (int)UserStatus.Refused,
+                                (int)UserStatus.Inactive
                             }));
 
                 if (approvedOrganisationUsers.Count >= 1)

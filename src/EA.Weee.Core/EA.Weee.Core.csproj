@@ -106,13 +106,14 @@
     <Compile Include="Helpers\Xml\IXmlErrorTranslator.cs" />
     <Compile Include="Helpers\Xml\XmlErrorTranslator.cs" />
     <Compile Include="NewUser\UserData.cs" />
+    <Compile Include="Admin\UserSearchData.cs" />
     <Compile Include="Organisations\ContactData.cs" />
     <Compile Include="Organisations\OrganisationData.cs" />
     <Compile Include="Organisations\OrganisationSearchData.cs" />
     <Compile Include="Organisations\OrganisationSearchDataResult.cs" />
     <Compile Include="Organisations\OrganisationType.cs" />
     <Compile Include="Organisations\OrganisationUserData.cs" />
-    <Compile Include="Organisations\OrganisationUserStatus.cs" />
+   <Compile Include="Shared\UserStatus.cs" />
     <Compile Include="Scheme\LatestMemberUpload.cs" />
     <Compile Include="Scheme\LatestMemberUploadList.cs" />
     <Compile Include="Scheme\MemberUploadData.cs" />
