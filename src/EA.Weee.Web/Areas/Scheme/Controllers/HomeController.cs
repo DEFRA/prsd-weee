@@ -46,7 +46,7 @@
             {
                 if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManagePcsMembers)
                 {
-                    return RedirectToAction("AddOrAmendMembers", "MemberRegistration", new { pcsId = viewModel.OrganisationId });
+                    return RedirectToAction("Summary", "MemberRegistration", new { pcsId = viewModel.OrganisationId });
                 }
                 if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManageOrganisationUsers)
                 {

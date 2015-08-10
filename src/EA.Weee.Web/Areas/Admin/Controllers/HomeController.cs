@@ -22,11 +22,16 @@
             {
                 return View(model);
             }
-
             if (model.InternalUserActivityOptions.SelectedValue == InternalUserActivity.ManageUsers)
             {
                 return RedirectToAction("ManageUsers", "User");    
             }
+
+            if (model.InternalUserActivityOptions.SelectedValue == InternalUserActivity.ManageScheme)
+            {
+                return RedirectToAction("ManageSchemes", "Scheme");
+            }
+
             return View(model);
         }
     }

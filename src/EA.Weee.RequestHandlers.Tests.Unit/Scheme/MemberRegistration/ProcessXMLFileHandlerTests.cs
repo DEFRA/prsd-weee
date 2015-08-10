@@ -14,8 +14,6 @@
     using Prsd.Core;
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration;
-    using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
-    using RequestHandlers.Scheme.MemberRegistration.XmlValidation;
     using Requests.Scheme.MemberRegistration;
     using Xunit;
 
@@ -136,11 +134,23 @@
             {
                 new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
             };
-            A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
+            A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
 
             await handler.HandleAsync(Message);
 
             A.CallTo(producersDbSet).WithAnyArguments().MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async void ProcessXmlfile_HasNoValidationErrors_HasProducerChargeCalculationErrors_ThrowsException()
+        {
+            var errors = new List<MemberUploadError>
+            {
+                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
+            };
+            A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
+
+            await Assert.ThrowsAsync<ApplicationException>(async () => await handler.HandleAsync(Message));
         }
 
         [Fact]
