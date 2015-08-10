@@ -12,15 +12,15 @@
     using Core.Helpers.PrnGeneration;
     using Domain;
     using Domain.Organisation;
-    using Domain.PCS;
     using Domain.Producer;
+    using Domain.Scheme;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers;
-    using RequestHandlers.PCS.MemberRegistration;
-    using RequestHandlers.PCS.MemberRegistration.GenerateProducerObjects;
-    using RequestHandlers.PCS.MemberRegistration.XmlValidation.Extensions;
-    using Requests.PCS.MemberRegistration;
+    using RequestHandlers.Scheme.MemberRegistration;
+    using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
+    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.Extensions;
+    using Requests.Scheme.MemberRegistration;
     using Xunit;
 
     public class PrnGenerationIntegration

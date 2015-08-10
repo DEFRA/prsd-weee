@@ -72,8 +72,8 @@
     <Compile Include="Organisation\ContactPersonTests.cs" />
     <Compile Include="Organisation\OrganisationAddressTests.cs" />
     <Compile Include="Organisation\OrganisationTests.cs" />
-    <Compile Include="PCS\MemberUploadTests.cs" />
-    <Compile Include="PCS\SchemeTests.cs" />
+    <Compile Include="Scheme\MemberUploadTests.cs" />
+    <Compile Include="Scheme\SchemeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
