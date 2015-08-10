@@ -6,7 +6,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{93EDE601-792F-4009-AFF5-A98C2D8C5B72}</ProjectGuid>
+    <ProjectGuid>{BD4A4188-DE05-44EB-A470-42AC15D61CD1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EA.Weee.RequestHandlers.Tests.Unit</RootNamespace>
