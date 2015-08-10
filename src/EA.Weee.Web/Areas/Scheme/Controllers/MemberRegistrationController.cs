@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -13,6 +14,7 @@
     using Web.Controllers.Base;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme.MemberRegistration;
+    using Weee.Requests.Shared;
 
     public class MemberRegistrationController : ExternalSiteController
     {
@@ -110,6 +112,33 @@
                     new GetProducerCSVByMemberUploadId(memberUploadId));
 
                 return File(new UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", producerCSVData.FileName);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> EditScheme()
+        {
+            var model = new SchemeViewModel { CompetentAuthorities = await GetCompetentAuthorities() };
+            return View("EditScheme", model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditScheme(SchemeViewModel model)
+        {
+            model.CompetentAuthorities = await GetCompetentAuthorities();
+            if (!ModelState.IsValid)
+            {
+                return View("EditScheme", model);
+            }
+            //TODO : Need to save data
+            return View("EditScheme", model);
+        }
+
+        private async Task<IEnumerable<UKCompetentAuthorityData>> GetCompetentAuthorities()
+        {
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
             }
         }
     }

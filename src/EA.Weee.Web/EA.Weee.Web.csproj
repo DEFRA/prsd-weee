@@ -477,6 +477,7 @@
     <Content Include="Content\govuk_toolkit\stylesheets\_url-helpers.scss" />
     <Content Include="Areas\Admin\Views\Home\ChooseActivity.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\ManageSchemes.cshtml" />
+    <Content Include="Areas\Scheme\Views\MemberRegistration\EditScheme.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
@@ -573,6 +574,7 @@
     <Compile Include="Areas\Scheme\Controllers\MemberRegistrationController.cs" />
     <Compile Include="Areas\Scheme\ViewModels\AddOrAmendMembersViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SuccessfulSubmissionViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\SchemeViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\GeneratePcsXmlController.cs" />
     <Compile Include="Areas\Test\Controllers\HomeController.cs" />
     <Compile Include="Areas\Test\TestAreaRegistration.cs" />
