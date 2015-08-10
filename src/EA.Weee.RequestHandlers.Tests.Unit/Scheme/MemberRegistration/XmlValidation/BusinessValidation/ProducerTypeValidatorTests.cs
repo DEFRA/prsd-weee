@@ -249,6 +249,24 @@
             Assert.Contains(companyName, result.Errors.Single().ErrorMessage);
         }
 
+        [Fact]
+        public void ProducerHasEmptyPrnNumberDuringAmendment_DataValidationSucceeds()
+        {
+            // amendments /should/ have PRNs, but this is handled in other rules with more relevant description
+            // throwing this validation error here will just confuse the user
+
+            var producer = new producerType
+            {
+                registrationNo = string.Empty,
+                status = statusType.A
+            };
+
+            var result = ProducerTypeValidator(new List<Producer> { Producer("ABC12346") }, new List<MigratedProducer>())
+                .Validate(producer, new RulesetValidatorSelector(BusinessValidator.DataValidationRuleSet));
+
+            Assert.Empty(result.Errors);
+        }
+
         private ProducerTypeValidator ProducerTypeValidator()
         {
             return new ProducerTypeValidator(ValidationContext.Create(new List<Producer>(), new List<MigratedProducer>()));
