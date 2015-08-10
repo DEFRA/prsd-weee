@@ -64,7 +64,7 @@
         {
             using (var client = apiClient())
             {
-                var summary = await client.SendAsync(User.GetAccessToken(), new GetLatestMemberUploadSummary(pcsId));
+                var summary = await client.SendAsync(User.GetAccessToken(), new GetLatestMemberUploadList(pcsId));
 
                 if (summary.LatestMemberUploads.Any())
                 {

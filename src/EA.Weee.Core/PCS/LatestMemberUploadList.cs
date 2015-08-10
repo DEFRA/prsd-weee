@@ -3,11 +3,11 @@
     using System;
     using System.Collections.Generic;
 
-    public class LatestMemberUploadsSummary
+    public class LatestMemberUploadList
     {
         public IEnumerable<LatestMemberUpload> LatestMemberUploads { get; set; }
 
-        public LatestMemberUploadsSummary()
+        public LatestMemberUploadList()
         {
             LatestMemberUploads = new List<LatestMemberUpload>();
         }

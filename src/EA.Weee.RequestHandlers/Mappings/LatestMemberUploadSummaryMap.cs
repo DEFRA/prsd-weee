@@ -8,11 +8,11 @@
     using Domain.Producer;
     using Prsd.Core.Mapper;
 
-    public class LatestMemberUploadSummaryMap : IMap<IEnumerable<MemberUpload>, LatestMemberUploadsSummary>
+    public class LatestMemberUploadSummaryMap : IMap<IEnumerable<MemberUpload>, LatestMemberUploadList>
     {
-        public LatestMemberUploadsSummary Map(IEnumerable<MemberUpload> source)
+        public LatestMemberUploadList Map(IEnumerable<MemberUpload> source)
         {
-            return new LatestMemberUploadsSummary
+            return new LatestMemberUploadList
             {
                 LatestMemberUploads =
                     source.Select(mu => new LatestMemberUpload
