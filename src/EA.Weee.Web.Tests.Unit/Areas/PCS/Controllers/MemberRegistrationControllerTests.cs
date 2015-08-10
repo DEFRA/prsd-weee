@@ -147,23 +147,17 @@
         [Fact]
         public async void GetSummary_GetsSummaryOfLatestMemberUpload()
         {
-            try
-            {
-                await MemberRegistrationController().Summary(A<Guid>._);
-            }
-            catch (Exception)
-            {
-            }
+            await MemberRegistrationController().Summary(A<Guid>._);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadSummary>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadList>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public async void GetSummary_HasNoUploads_RedirectsToAddOrAmendMembersPage()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadSummary>._))
-                .Returns(new LatestMemberUploadsSummary());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadList>._))
+                .Returns(new LatestMemberUploadList());
 
             var result = await MemberRegistrationController().Summary(A<Guid>._);
 
@@ -178,8 +172,8 @@
         [Fact]
         public async void GetSummary_HasUploadForThisScheme_ReturnsViewWithSummaryModel()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadSummary>._))
-                .Returns(new LatestMemberUploadsSummary
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadList>._))
+                .Returns(new LatestMemberUploadList
                 {
                     LatestMemberUploads = new List<LatestMemberUpload>
                     {

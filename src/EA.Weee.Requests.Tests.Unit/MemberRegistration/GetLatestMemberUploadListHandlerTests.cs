@@ -13,19 +13,19 @@
     using RequestHandlers.PCS.MemberRegistration;
     using Xunit;
 
-    public class GetLatestMemberUploadSummaryHanlderTests
+    public class GetLatestMemberUploadListHandlerTests
     {
         private readonly WeeeContext weeeContext;
         private readonly DbContextHelper weeeContextHelper;
-        private readonly IMap<IEnumerable<MemberUpload>, LatestMemberUploadsSummary> mapper;
+        private readonly IMap<IEnumerable<MemberUpload>, LatestMemberUploadList> mapper;
 
         private long memberUploadRowVersion;
 
-        public GetLatestMemberUploadSummaryHanlderTests()
+        public GetLatestMemberUploadListHandlerTests()
         {
             weeeContext = A.Fake<WeeeContext>();
             weeeContextHelper = new DbContextHelper();
-            mapper = A.Fake<IMap<IEnumerable<MemberUpload>, LatestMemberUploadsSummary>>();
+            mapper = A.Fake<IMap<IEnumerable<MemberUpload>, LatestMemberUploadList>>();
 
             memberUploadRowVersion = 0;
         }
@@ -43,7 +43,7 @@
             A.CallTo(() => mapper.Map(A<IEnumerable<MemberUpload>>._))
                 .Invokes((IEnumerable<MemberUpload> u) => returnedMemberUploads = u);
 
-            await GetLatestMemberUploadSummaryHandler().HandleAsync(new GetLatestMemberUploadSummary(pcsId));
+            await GetLatestMemberUploadSummaryHandler().HandleAsync(new GetLatestMemberUploadList(pcsId));
 
             Assert.Empty(returnedMemberUploads);
         }
@@ -64,7 +64,7 @@
             A.CallTo(() => mapper.Map(A<IEnumerable<MemberUpload>>._))
                 .Invokes((IEnumerable<MemberUpload> u) => returnedMemberUploads = u);
 
-            await GetLatestMemberUploadSummaryHandler().HandleAsync(new GetLatestMemberUploadSummary(pcsId));
+            await GetLatestMemberUploadSummaryHandler().HandleAsync(new GetLatestMemberUploadList(pcsId));
 
             Assert.Equal(1, returnedMemberUploads.Count());
         }
@@ -86,15 +86,15 @@
             A.CallTo(() => mapper.Map(A<IEnumerable<MemberUpload>>._))
                 .Invokes((IEnumerable<MemberUpload> u) => returnedMemberUploads = u);
 
-            await GetLatestMemberUploadSummaryHandler().HandleAsync(new GetLatestMemberUploadSummary(pcsId));
+            await GetLatestMemberUploadSummaryHandler().HandleAsync(new GetLatestMemberUploadList(pcsId));
 
             Assert.Equal(1, returnedMemberUploads.Count());
             Assert.Equal(memberUploadRowVersion.ToByteArray(), returnedMemberUploads.Single().RowVersion);
         }
 
-        private GetLatestMemberUploadSummaryHandler GetLatestMemberUploadSummaryHandler()
+        private GetLatestMemberUploadListHandler GetLatestMemberUploadSummaryHandler()
         {
-            return new GetLatestMemberUploadSummaryHandler(weeeContext, mapper);
+            return new GetLatestMemberUploadListHandler(weeeContext, mapper);
         }
 
         private MemberUpload ValidMemberUpload(Guid pcsId)
