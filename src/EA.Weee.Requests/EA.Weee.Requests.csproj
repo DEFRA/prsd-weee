@@ -68,6 +68,7 @@
     <Compile Include="Organisations\Create\CreateSoleTraderRequest.cs" />
     <Compile Include="Organisations\GetOrganisationInfo.cs" />
     <Compile Include="Scheme\MemberRegistration\GetProducerCSVByMemberUploadId.cs" />
+    <Compile Include="Scheme\GetSchemeStatus.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmission.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFile.cs" />
     <Compile Include="Scheme\MemberUploadTesting\PcsXmlFile.cs" />
