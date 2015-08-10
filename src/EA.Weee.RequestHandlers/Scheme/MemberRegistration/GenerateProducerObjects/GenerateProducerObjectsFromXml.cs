@@ -118,7 +118,7 @@
                             context.MemberUploads.Where(member => member.IsSubmitted && member.SchemeId == schemeId)
                                 .SelectMany(p => p.Producers)
                                 .Where(p => p.RegistrationNumber == producerRegistrationNo)
-                                .OrderByDescending(p => p.LastSubmitted)
+                                .OrderByDescending(p => p.UpdatedDate)
                                 .FirstOrDefault();
                         if (producerDb == null)
                         {
@@ -134,7 +134,7 @@
                                         member => member.IsSubmitted && member.SchemeId != schemeId)
                                         .SelectMany(p => p.Producers)
                                         .Where(p => p.RegistrationNumber == producerRegistrationNo)
-                                        .OrderByDescending(p => p.LastSubmitted)
+                                        .OrderByDescending(p => p.UpdatedDate)
                                         .FirstOrDefault();
                                 if (anotherSchemeProducerDb == null)
                                 {

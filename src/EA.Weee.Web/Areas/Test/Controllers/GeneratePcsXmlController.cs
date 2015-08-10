@@ -1,20 +1,16 @@
 ﻿namespace EA.Weee.Web.Areas.Test.Controllers
 {
-    using EA.Weee.Api.Client;
-    using EA.Weee.Core.Organisations;
-    using EA.Weee.Requests.Organisations;
-    using EA.Weee.Web.Areas.Test.ViewModels;
-    using EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml;
-    using EA.Weee.Web.Infrastructure;
-    using EA.Weee.Web.ViewModels.Shared;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Net.Mime;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Mvc;
+    using Api.Client;
+    using Core.Organisations;
     using Core.Scheme.MemberUploadTesting;
+    using Infrastructure;
+    using ViewModels.GeneratePcsXml;
+    using Web.ViewModels.Shared;
+    using Weee.Requests.Organisations;
     using Weee.Requests.Scheme.MemberUploadTesting;
 
     [Authorize]
@@ -47,18 +43,18 @@
                 var results = await FetchOrganisations(organisationName, page);
 
                 PagingViewModel pager = PagingViewModel.FromValues(
-                    results.TotalMatchingOrganisations,
-                    pageSize,
-                    page,
-                    "SelectOrganisation",
-                    "GeneratePcsXml",
+                    results.TotalMatchingOrganisations, 
+                    pageSize, 
+                    page, 
+                    "SelectOrganisation", 
+                    "GeneratePcsXml", 
                     new { companyName = organisationName });
                 
                 viewModel = new SelectOrganisationViewModel()
                 {
-                    OrganisationName = organisationName,
-                    MatchingOrganisations = results.Results,
-                    PagingViewModel = pager,
+                    OrganisationName = organisationName, 
+                    MatchingOrganisations = results.Results, 
+                    PagingViewModel = pager, 
                 };
             }
             
@@ -114,22 +110,22 @@
 
             ProducerListSettings settings = new ProducerListSettings()
             {
-                OrganisationID = viewModel.OrganisationID,
-                SchemaVersion = viewModel.SchemaVersion,
-                ComplianceYear = viewModel.ComplianceYear,
-                NumberOfNewProducers = viewModel.NumberOfNewProducers,
-                NumberOfExistingProducers = viewModel.NumberOfExistingProducers,
-                IncludeMalformedSchema = viewModel.IncludeMalformedSchema,
-                IncludeUnexpectedFooElement = viewModel.IncludeUnexpectedFooElement,
-                IgnoreStringLengthConditions = viewModel.IgnoreStringLengthConditions,
+                OrganisationID = viewModel.OrganisationID, 
+                SchemaVersion = viewModel.SchemaVersion, 
+                ComplianceYear = viewModel.ComplianceYear, 
+                NumberOfNewProducers = viewModel.NumberOfNewProducers, 
+                NumberOfExistingProducers = viewModel.NumberOfExistingProducers, 
+                IncludeMalformedSchema = viewModel.IncludeMalformedSchema, 
+                IncludeUnexpectedFooElement = viewModel.IncludeUnexpectedFooElement, 
+                IgnoreStringLengthConditions = viewModel.IgnoreStringLengthConditions, 
             };
 
             PcsXmlFile xmlFile = await GenerateXml(settings);
 
             ContentDisposition cd = new ContentDisposition
             {
-                FileName = xmlFile.FileName,
-                Inline = false,
+                FileName = xmlFile.FileName, 
+                Inline = false, 
             };
 
             Response.AppendHeader("Content-Disposition", cd.ToString());
@@ -158,7 +154,7 @@
             using (IWeeeClient client = apiClient())
             {
                 return await client.SendAsync(
-                    User.GetAccessToken(),
+                    User.GetAccessToken(), 
                     new GeneratePcsXmlFile(settings));
             }
         }

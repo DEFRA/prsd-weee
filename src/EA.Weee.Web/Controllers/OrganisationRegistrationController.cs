@@ -58,8 +58,8 @@
             return View(new OrganisationTypeViewModel());
         }
 
-        [ValidateAntiForgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Type(OrganisationTypeViewModel model)
         {
             if (ModelState.IsValid)
@@ -140,8 +140,8 @@
             return View(new SoleTraderDetailsViewModel());
         }
 
-        [ValidateAntiForgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult SoleTraderDetails(SoleTraderDetailsViewModel model)
         {
             if (ModelState.IsValid)
@@ -197,8 +197,8 @@
             return View(new PartnershipDetailsViewModel());
         }
 
-        [ValidateAntiForgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult PartnershipDetails(PartnershipDetailsViewModel model)
         {
             if (ModelState.IsValid)
@@ -257,8 +257,8 @@
             return View(new RegisteredCompanyDetailsViewModel());
         }
 
-        [ValidateAntiForgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult RegisteredCompanyDetails(RegisteredCompanyDetailsViewModel model)
         {
             if (ModelState.IsValid)
@@ -612,6 +612,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisteredOfficeAddressPrepopulate(AddressPrepopulateViewModel viewModel)
         {
             if (ModelState.IsValid)

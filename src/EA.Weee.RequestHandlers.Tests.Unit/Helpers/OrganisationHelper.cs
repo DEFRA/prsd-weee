@@ -8,7 +8,7 @@
     {
         internal Organisation GetOrganisationWithName(string name)
         {
-            return GetOrganisationWithDetails(name, null, "1234567", OrganisationType.RegisteredCompany, OrganisationStatus.Approved);
+            return GetOrganisationWithDetails(name, null, "1234567", OrganisationType.RegisteredCompany, OrganisationStatus.Complete);
         }
 
         internal Organisation GetOrganisationWithDetails(string name, string tradingName, string companyRegistrationNumber, OrganisationType type, OrganisationStatus status)
@@ -32,15 +32,9 @@
 
             organisation.AddOrUpdateMainContactPerson(GetContact());
 
-            if (status == OrganisationStatus.Pending)
+            if (status == OrganisationStatus.Complete)
             {
                 organisation.CompleteRegistration();
-            }
-
-            if (status == OrganisationStatus.Approved)
-            {
-                organisation.CompleteRegistration();
-                organisation.ToApproved();
             }
 
             var properties = typeof(Organisation).GetProperties();
