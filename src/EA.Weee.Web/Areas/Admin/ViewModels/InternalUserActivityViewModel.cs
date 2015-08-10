@@ -11,7 +11,7 @@
 
         public InternalUserActivityViewModel()
         {
-            var collection = new List<string> { InternalUserActivity.ManageUsers };
+            var collection = new List<string> { InternalUserActivity.ManageScheme, InternalUserActivity.ManageUsers };
             InternalUserActivityOptions = new RadioButtonStringCollectionViewModel(collection);
         }
     }
