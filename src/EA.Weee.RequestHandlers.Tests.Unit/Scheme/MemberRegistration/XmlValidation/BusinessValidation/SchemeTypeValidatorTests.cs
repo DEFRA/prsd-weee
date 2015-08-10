@@ -421,7 +421,7 @@
         private Producer Producer(ObligationType obligationType, string prn, params string[] brandNames)
         {
             return new Producer(Guid.NewGuid(),
-                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>(), 0),
+                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>(), 2016, 0),
                 new ProducerBusiness(),
                 new AuthorisedRepresentative("authrep"),
                 DateTime.Now,
