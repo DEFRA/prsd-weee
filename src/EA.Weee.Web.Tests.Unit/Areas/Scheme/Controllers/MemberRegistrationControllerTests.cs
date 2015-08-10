@@ -249,19 +249,19 @@
         [InlineData("WEE/891234CD/SCH")]
         [InlineData("WEE/AB1DF4CD/SCH")]
         [InlineData("WEE/AB123482/SCH")]
-        public async void PostEditScheme_ModelWithInCorrectApprovalNumber_ReturnsViewWithError(string approvalNumber)
+        public async void PostEditScheme_ModelWithInCorrectApprovalNumber_ReturnsViewWithError(string schemeName)
         {
             var controller = MemberRegistrationController();
             var model = new SchemeViewModel
             {
-                ApprovalNumber = approvalNumber,
+                ApprovalNumber = "Any value",
                 CompetentAuthorities = new List<UKCompetentAuthorityData>(),
                 CompetentAuthorityId = new Guid(),
                 CompetentAuthorityName = "Any name",
                 IbisCustomerReference = "Any value",
                 ObligationType = ObligationType.B2B,
                 ObligationTypeSelectList = new List<SelectListItem>(),
-                SchemeName = "Any value"
+                SchemeName = schemeName
             };
 
             var context = new ValidationContext(model, null, null);
@@ -277,19 +277,19 @@
         [Theory]
         [InlineData("WEE/AB1234CD/SCH")]
         [InlineData("WEE/DE8562FG/SCH")]
-        public async void PostEditScheme_ModelWithCorrectApprovalNumber_ReturnsView(string approvalNumber)
+        public async void PostEditScheme_ModelWithCorrectApprovalNumber_ReturnsView(string schemeName)
         {
             var controller = MemberRegistrationController();
             var model = new SchemeViewModel
             {
-                ApprovalNumber = approvalNumber,
+                ApprovalNumber = "Any value",
                 CompetentAuthorities = new List<UKCompetentAuthorityData>(),
                 CompetentAuthorityId = new Guid(),
                 CompetentAuthorityName = "Any name",
                 IbisCustomerReference = "Any value",
                 ObligationType = ObligationType.B2B,
                 ObligationTypeSelectList = new List<SelectListItem>(),
-                SchemeName = "Any value"
+                SchemeName = schemeName
             };
 
             var context = new ValidationContext(model, null, null);
