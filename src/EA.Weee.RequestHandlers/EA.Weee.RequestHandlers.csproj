@@ -140,6 +140,7 @@
     <Compile Include="RequestHandlerModule.cs" />
     <Compile Include="Shared\GetCountriesHandler.cs" />
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
+    <Compile Include="Users\GetAllUsersHandler.cs" />
     <Compile Include="Users\UserByIdHandler.cs" />
     <Compile Include="v3schema.cs" />
   </ItemGroup>

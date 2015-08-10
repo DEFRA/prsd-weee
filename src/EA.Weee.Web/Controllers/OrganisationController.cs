@@ -6,6 +6,7 @@
     using Api.Client;
     using Base;
     using Core.Organisations;
+    using Core.Shared;
     using Infrastructure;
     using ViewModels.Organisation;
     using Weee.Requests.Organisations;
@@ -29,7 +30,7 @@
                 var pendingOrganisationUsers = await
                  client.SendAsync(
                      User.GetAccessToken(),
-                     new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)OrganisationUserStatus.Pending, (int)OrganisationUserStatus.Refused, (int)OrganisationUserStatus.Inactive }));
+                     new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)UserStatus.Pending, (int)UserStatus.Refused, (int)UserStatus.Inactive }));
 
                 model.OrganisationUserData = pendingOrganisationUsers;
             }
