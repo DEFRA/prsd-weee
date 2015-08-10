@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
+    using Domain;
     using Domain.Scheme;
     using GenerateProducerObjects;
     using Interfaces;
@@ -44,6 +45,13 @@
             if (memberUploadErrors.All(e => e.ErrorType != MemberUploadErrorType.Schema))
             {
                 producerCharges = ProducerCharges(message, ref totalCharges);
+                if (xmlChargeBandCalculator.ErrorsAndWarnings.Any(e => e.ErrorLevel == ErrorLevel.Error)
+                    && memberUploadErrors.All(e => e.ErrorLevel != ErrorLevel.Error))
+                {
+                    throw new ApplicationException(String.Format(
+                        "Upload for Organisation '{0}' has no validation errors, but does have producer charge calculation errors which are not currently being enforced",
+                        message.OrganisationId));
+                }
             }
 
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
