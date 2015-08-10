@@ -79,6 +79,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="schema_compare.ps1" />
+    <None Include="scripts\Update\Sprint11\20150810-143307-UpdateSchemeTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />
