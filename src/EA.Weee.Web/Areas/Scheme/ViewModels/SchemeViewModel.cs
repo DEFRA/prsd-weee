@@ -15,17 +15,15 @@
             ObligationTypeSelectList = new SelectList(EnumHelper.GetValues(typeof(ObligationType)), "Key", "Value");
         }
 
-        // (WEE/)[A-Z]{2}[0-9]{4}[A-Z]{2}(/SCH))
-
         [Required(ErrorMessage = "Approval number is required.")]
-        [RegularExpression(@"WEE/([A-Z]{2}[0-9]{4}[A-Z]{2})/SCH?",
-            ErrorMessage = "Approval number must be a given format WEE/AB1234CD/SCH.")]
+        [StringLength(70)]
         [DataType(DataType.Text)]
         [Display(Name = "Approval number")]
         public string ApprovalNumber { get; set; }
 
         [Required(ErrorMessage = "Scheme name is required.")]
-        [StringLength(70)]
+        [RegularExpression(@"WEE/([A-Z]{2}[0-9]{4}[A-Z]{2})/SCH?",
+            ErrorMessage = "Scheme name is not in correct format.")]
         [DataType(DataType.Text)]
         [Display(Name = "Scheme name")]
         public string SchemeName { get; set; }
