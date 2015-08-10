@@ -3,12 +3,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Core.PCS;
-    using Domain.PCS;
-    using Domain.Producer;
+    using Core.Scheme;
+    using Domain.Scheme;
     using Prsd.Core.Mapper;
 
-    public class LatestMemberUploadSummaryMap : IMap<IEnumerable<MemberUpload>, LatestMemberUploadList>
+    public class LatestMemberUploadListMap : IMap<IEnumerable<MemberUpload>, LatestMemberUploadList>
     {
         public LatestMemberUploadList Map(IEnumerable<MemberUpload> source)
         {
