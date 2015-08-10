@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using Core.Shared;
-    using Domain.PCS;
+    using Domain.Scheme;
     using Prsd.Core.Mapper;
 
     public class MemberUploadErrorMap : IMap<MemberUploadError, MemberUploadErrorData>
