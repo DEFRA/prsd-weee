@@ -2,9 +2,7 @@
 {
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.PCS.MemberUploadTesting;
     using EA.Weee.Requests.Organisations;
-    using EA.Weee.Requests.PCS.MemberUploadTesting;
     using EA.Weee.Web.Areas.Test.ViewModels;
     using EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml;
     using EA.Weee.Web.Infrastructure;
@@ -16,6 +14,8 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using Core.Scheme.MemberUploadTesting;
+    using Weee.Requests.Scheme.MemberUploadTesting;
 
     [Authorize]
     public class GeneratePcsXmlController : Controller
