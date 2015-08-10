@@ -49,14 +49,17 @@
             {
                 return RedirectToLocal(returnUrl);
             }
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
+
+            return View(new LoginViewModel
+            {
+                ReturnUrl = returnUrl
+            });
         }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -71,7 +74,7 @@
                 {
                     authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = model.RememberMe },
                         response.GenerateUserIdentity());
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToLocal(model.ReturnUrl);
                 }
                 ModelState.AddModelError(string.Empty, "Invalid login details");
                 return View(model);
