@@ -139,7 +139,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestHandlerModule.cs" />
     <Compile Include="Scheme\UpdateSchemeInformationHandler.cs" />
-    <Compile Include="Scheme\VerifySchemeNameExistsHandler.cs" />
+    <Compile Include="Scheme\VerifyApprovalNumberExistsHandler.cs" />
     <Compile Include="Shared\GetCountriesHandler.cs" />
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
     <Compile Include="Users\GetAllUsersHandler.cs" />

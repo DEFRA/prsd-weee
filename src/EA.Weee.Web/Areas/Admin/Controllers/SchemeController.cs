@@ -70,11 +70,11 @@
             {
                 var schemeNameExists = await
                     client.SendAsync(User.GetAccessToken(),
-                        new VerifySchemeNameExists(model.SchemeName));
+                        new VerifyApprovalNumberExists(model.ApprovalNumber));
 
                 if (schemeNameExists)
                 {
-                    ModelState.AddModelError(string.Empty, "Scheme name already exists.");
+                    ModelState.AddModelError(string.Empty, "Approval number already exists.");
                     return View("EditScheme", model);
                 }
                 else

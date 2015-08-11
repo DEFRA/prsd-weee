@@ -11,7 +11,6 @@
     using FakeItEasy;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels;
-    using Web.Areas.Scheme.Controllers;
     using Xunit;
 
     public class SchemeControllerTests

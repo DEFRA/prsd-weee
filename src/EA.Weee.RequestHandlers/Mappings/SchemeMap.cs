@@ -11,7 +11,7 @@
     public class SchemeMap : IMap<Scheme, SchemeData>
     {
         public SchemeData Map(Scheme source)
-        {
+        {   
             return new SchemeData
             {
                 Id = source.Id,
@@ -23,7 +23,7 @@
                         Enum.Parse(typeof(SchemeStatus), source.SchemeStatus.Value.ToString()),
                 SchemeName = source.SchemeName,
                 IbisCustomerReference = source.IbisCustomerReference,
-                ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), source.ObligationType.Value.ToString()),
+                //ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), source.ObligationType.Value.ToString()),
                 CompetentAuthorityId = source.CompetentAuthorityId
             };
         }

@@ -12,12 +12,12 @@
     using Xunit;
     using ObligationType = Domain.ObligationType;
 
-    public class VerifySchemeNameExistsHandlerTests
+    public class VerifyApprovalNumberExistsHandlerTests
     {
         private readonly DbContextHelper helper = new DbContextHelper();
 
         [Fact]
-        public async Task VerifySchemeNameExistsHandler_SchemeNameNotExists_ReturnsFalse()
+        public async Task VerifyApprovalNumberExistsHandler_ApprovalNumberNotExists_ReturnsFalse()
         {
             var schemes = MakeScheme();
 
@@ -25,17 +25,17 @@
 
             A.CallTo(() => context.Schemes).Returns(schemes);
 
-            var handler = new VerifySchemeNameExistsHandler(context);
+            var handler = new VerifyApprovalNumberExistsHandler(context);
 
-            const string schemeName = "WEE/AB4444CD/SCH";
+            const string approvalNumber = "WEE/AB4444CD/SCH";
 
-            var schemeNameExists = await handler.HandleAsync(new VerifySchemeNameExists(schemeName));
+            var approvalNumberExists = await handler.HandleAsync(new VerifyApprovalNumberExists(approvalNumber));
 
-            Assert.False(schemeNameExists);
+            Assert.False(approvalNumberExists);
         }
 
         [Fact]
-        public async Task VerifySchemeNameExistsHandler_SchemeNameExists_ReturnsTrue()
+        public async Task VerifyApprovalNumberExistsHandler_ApprovalNumberExists_ReturnsTrue()
         {
             var schemes = MakeScheme();
 
@@ -43,13 +43,13 @@
 
             A.CallTo(() => context.Schemes).Returns(schemes);
 
-            var handler = new VerifySchemeNameExistsHandler(context);
+            var handler = new VerifyApprovalNumberExistsHandler(context);
 
-            const string schemeName = "WEE/AB1234CD/SCH";
+            const string approvalNumber = "WEE/AB1234CD/SCH";
 
-            var schemeNameExists = await handler.HandleAsync(new VerifySchemeNameExists(schemeName));
+            var approvalNumberExists = await handler.HandleAsync(new VerifyApprovalNumberExists(approvalNumber));
 
-            Assert.True(schemeNameExists);
+            Assert.True(approvalNumberExists);
         }
 
         private DbSet<Scheme> MakeScheme()
@@ -63,7 +63,7 @@
         private static Scheme CreateScheme()
         {
             var scheme = new Scheme(Guid.NewGuid());
-            scheme.UpdateScheme("WEE/AB1234CD/SCH", "Any value", "Any value", ObligationType.B2B, Guid.NewGuid());
+            scheme.UpdateScheme("Any value", "WEE/AB1234CD/SCH", "Any value", ObligationType.B2B, Guid.NewGuid());
             return scheme;
         }
     }
