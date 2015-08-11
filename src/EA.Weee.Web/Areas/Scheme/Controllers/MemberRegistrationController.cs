@@ -9,6 +9,7 @@
     using Api.Client;
     using Core.Shared;
     using Infrastructure;
+    using PCS.ViewModels;
     using Services;
     using ViewModels;
     using Web.Controllers.Base;
@@ -62,6 +63,22 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> Summary(Guid pcsId)
+        {
+            using (var client = apiClient())
+            {
+                var summary = await client.SendAsync(User.GetAccessToken(), new GetLatestMemberUploadList(pcsId));
+
+                if (summary.LatestMemberUploads.Any())
+                {
+                    return View(SummaryViewModel.Create(summary.LatestMemberUploads));
+                }
+            }
+
+            return RedirectToAction("AddOrAmendMembers", "MemberRegistration");
+        }
+
+        [HttpGet]
         public async Task<ViewResult> ViewErrorsAndWarnings(Guid pcsId, Guid memberUploadId)
         {
             using (var client = apiClient())
@@ -104,14 +121,14 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetProducerCSV(Guid memberUploadId)
+        public async Task<ActionResult> GetProducerCSV(Guid memberUploadId, string fileName = null)
         {
             using (var client = apiClient())
             {
                 var producerCSVData = await client.SendAsync(User.GetAccessToken(),
                     new GetProducerCSVByMemberUploadId(memberUploadId));
 
-                return File(new UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", producerCSVData.FileName);
+                return File(new UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", fileName ?? producerCSVData.FileName);
             }
         }
 

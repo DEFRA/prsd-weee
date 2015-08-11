@@ -33,7 +33,7 @@
                     new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL"),
                     new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Schema, "FAKE FATAL"),
                     new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL")
-                }, 0)
+                }, 0, 2016)
             };
 
             var handler = GetPreparedHandler(memberUploadsWithSeveralErrors);

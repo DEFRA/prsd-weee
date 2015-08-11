@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
+    using Domain;
     using Domain.Scheme;
     using GenerateProducerObjects;
     using Interfaces;
@@ -44,16 +45,22 @@
             if (memberUploadErrors.All(e => e.ErrorType != MemberUploadErrorType.Schema))
             {
                 producerCharges = ProducerCharges(message, ref totalCharges);
-                memberUploadErrors.AddRange(xmlChargeBandCalculator.ErrorsAndWarnings);
+                if (xmlChargeBandCalculator.ErrorsAndWarnings.Any(e => e.ErrorLevel == ErrorLevel.Error)
+                    && memberUploadErrors.All(e => e.ErrorLevel != ErrorLevel.Error))
+                {
+                    throw new ApplicationException(String.Format(
+                        "Upload for Organisation '{0}' has no validation errors, but does have producer charge calculation errors which are not currently being enforced",
+                        message.OrganisationId));
+                }
             }
 
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-            var upload = new MemberUpload(message.OrganisationId, xmlConverter.XmlToUtf8String(message), memberUploadErrors.ToList(), totalCharges, scheme.Id);
+            var upload = generateFromXml.GenerateMemberUpload(message, memberUploadErrors, totalCharges, scheme.Id);
 
             //Build producers domain object if there are no errors(schema or business during validation of xml file.
             if (!memberUploadErrors.Any())
             {
-                var producers = await generateFromXml.Generate(message, upload, producerCharges);
+                var producers = await generateFromXml.GenerateProducers(message, upload, producerCharges);
                 context.MemberUploads.Add(upload);
                 context.Producers.AddRange(producers);
             }
