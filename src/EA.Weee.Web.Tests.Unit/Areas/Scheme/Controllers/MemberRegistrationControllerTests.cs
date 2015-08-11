@@ -2,15 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
     using Api.Client;
     using Core.Scheme;
-    using Core.Scheme;
-    using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
     using FakeItEasy;
     using Prsd.Core.Mediator;
@@ -267,87 +263,6 @@
 
             Assert.Equal("SuccessfulSubmission", redirect.RouteValues["action"]);
             Assert.Equal(memberUploadId, redirect.RouteValues["memberUploadId"]);
-        }
-
-        [Fact]
-        public async void GetEditScheme_ModelWithNoError_ReturnsView()
-        {
-            var controller = MemberRegistrationController();
-
-            var viewResult = await controller.EditScheme();
-
-            Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
-        }
-
-        [Fact]
-        public async void PostEditScheme_ModelWithError_ReturnsViewWithError()
-        {
-            var controller = MemberRegistrationController();
-            controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
-            var viewResult = await controller.EditScheme(new SchemeViewModel());
-
-            Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
-            Assert.False(controller.ModelState.IsValid);
-        }
-
-        [Theory]
-        [InlineData("Wee/AB1234CD/SCH")]
-        [InlineData("WEE/AB1234CD/sch")]
-        [InlineData("WEE/AB1234CD/123")]
-        [InlineData("WEE/891234CD/SCH")]
-        [InlineData("WEE/AB1DF4CD/SCH")]
-        [InlineData("WEE/AB123482/SCH")]
-        public async void PostEditScheme_ModelWithInCorrectApprovalNumber_ReturnsViewWithError(string schemeName)
-        {
-            var controller = MemberRegistrationController();
-            var model = new SchemeViewModel
-            {
-                ApprovalNumber = "Any value",
-                CompetentAuthorities = new List<UKCompetentAuthorityData>(),
-                CompetentAuthorityId = new Guid(),
-                CompetentAuthorityName = "Any name",
-                IbisCustomerReference = "Any value",
-                ObligationType = ObligationType.B2B,
-                ObligationTypeSelectList = new List<SelectListItem>(),
-                SchemeName = schemeName
-            };
-
-            var context = new ValidationContext(model, null, null);
-            var results = new List<ValidationResult>();
-            var isModelStateValid = Validator.TryValidateObject(model, context, results, true);
-
-            var viewResult = await controller.EditScheme(model);
-
-            Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
-            Assert.False(isModelStateValid);
-        }
-
-        [Theory]
-        [InlineData("WEE/AB1234CD/SCH")]
-        [InlineData("WEE/DE8562FG/SCH")]
-        public async void PostEditScheme_ModelWithCorrectApprovalNumber_ReturnsView(string schemeName)
-        {
-            var controller = MemberRegistrationController();
-            var model = new SchemeViewModel
-            {
-                ApprovalNumber = "Any value",
-                CompetentAuthorities = new List<UKCompetentAuthorityData>(),
-                CompetentAuthorityId = new Guid(),
-                CompetentAuthorityName = "Any name",
-                IbisCustomerReference = "Any value",
-                ObligationType = ObligationType.B2B,
-                ObligationTypeSelectList = new List<SelectListItem>(),
-                SchemeName = schemeName
-            };
-
-            var context = new ValidationContext(model, null, null);
-            var results = new List<ValidationResult>();
-            var isModelStateValid = Validator.TryValidateObject(model, context, results, true);
-
-            var viewResult = await controller.EditScheme(model);
-
-            Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
-            Assert.True(isModelStateValid);
         }
 
         private async Task<List<MemberUploadErrorData>> ErrorsAfterClientReturns(List<MemberUploadErrorData> memberUploadErrorDatas)
