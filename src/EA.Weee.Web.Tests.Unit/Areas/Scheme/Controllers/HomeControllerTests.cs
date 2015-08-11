@@ -5,9 +5,9 @@
     using Api.Client;
     using FakeItEasy;
     using TestHelpers;
-    using ViewModels.Shared;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
+    using Web.ViewModels.Shared;
     using Weee.Requests.Organisations;
     using Xunit;
 
