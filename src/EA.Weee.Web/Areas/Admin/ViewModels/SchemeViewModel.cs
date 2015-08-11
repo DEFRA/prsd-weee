@@ -22,6 +22,8 @@
         [Display(Name = "Approval number")]
         public string ApprovalNumber { get; set; }
 
+        public string OldApprovalNumber { get; set; }
+
         [Required(ErrorMessage = "Scheme name is required.")]
         [StringLength(70)]
         [DataType(DataType.Text)]

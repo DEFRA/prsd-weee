@@ -50,6 +50,7 @@
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetails.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
+    <Compile Include="Scheme\GetSchemeById.cs" />
     <Compile Include="Scheme\MemberRegistration\GetLatestMemberUploadList.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadById.cs" />
     <Compile Include="Scheme\GetSchemes.cs">
