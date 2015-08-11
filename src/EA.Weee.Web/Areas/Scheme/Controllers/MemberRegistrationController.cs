@@ -12,6 +12,7 @@
     using ViewModels;
     using Web.Controllers.Base;
     using Weee.Requests.Organisations;
+    using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
 
     public class MemberRegistrationController : ExternalSiteController
@@ -23,6 +24,25 @@
         {
             this.apiClient = apiClient;
             this.fileConverter = fileConverter;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> AuthorizationRequired(Guid pcsId)
+        {
+            using (var client = apiClient())
+            {
+                var status = await client.SendAsync(User.GetAccessToken(), new GetSchemeStatus(pcsId));
+
+                if (status == SchemeStatus.Approved)
+                {
+                    return RedirectToAction("Summary", "MemberRegistration");
+                }
+
+                return View(new AuthorizationRequiredViewModel
+                {
+                    Status = status
+                });
+            }
         }
 
         [HttpGet]
