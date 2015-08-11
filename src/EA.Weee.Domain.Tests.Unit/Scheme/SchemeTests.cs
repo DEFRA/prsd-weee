@@ -5,8 +5,8 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using Domain.Scheme;
+    using EA.Weee.Domain.Producer;
     using FakeItEasy;
-    using Producer;
     using Xunit;
 
     public class SchemeTests
