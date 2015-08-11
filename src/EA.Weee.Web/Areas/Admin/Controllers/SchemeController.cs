@@ -7,6 +7,7 @@
     using Api.Client;
     using Base;
     using Core.Scheme;
+    using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
     using Infrastructure;
     using ViewModels;
@@ -51,9 +52,24 @@
         [HttpGet]
         public async Task<ActionResult> EditScheme(Guid schemeId)
         {
-            var model = new SchemeViewModel { CompetentAuthorities = await GetCompetentAuthorities() };
-            model.SchemeId = schemeId;
-            return View("EditScheme", model);
+            using (var client = apiClient())
+            {
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+
+                var model = new SchemeViewModel
+                {
+                    CompetentAuthorities = await GetCompetentAuthorities(),
+                    SchemeId = schemeId,
+                    ApprovalNumber = scheme.ApprovalName,
+                    OldApprovalNumber = scheme.ApprovalName,
+                    IbisCustomerReference = scheme.IbisCustomerReference,
+                    CompetentAuthorityId = scheme.CompetentAuthorityId ?? Guid.Empty,
+                    SchemeName = scheme.SchemeName,
+                    ObligationType = scheme.ObligationType ?? ObligationType.B2B
+                };
+
+                return View("EditScheme", model);
+            }
         }
 
         [HttpPost]
@@ -68,25 +84,26 @@
 
             using (var client = apiClient())
             {
-                var schemeNameExists = await
-                    client.SendAsync(User.GetAccessToken(),
-                        new VerifyApprovalNumberExists(model.ApprovalNumber));
-
-                if (schemeNameExists)
+                if (model.OldApprovalNumber != model.ApprovalNumber)
                 {
-                    ModelState.AddModelError(string.Empty, "Approval number already exists.");
-                    return View("EditScheme", model);
-                }
-                else
-                {
-                    await
+                    var approvalNumberExists = await
                         client.SendAsync(User.GetAccessToken(),
-                            new UpdateSchemeInformation(model.SchemeId, model.SchemeName, model.ApprovalNumber,
-                                model.IbisCustomerReference,
-                                model.ObligationType, model.CompetentAuthorityId));
+                            new VerifyApprovalNumberExists(model.ApprovalNumber));
 
-                    return View("EditScheme", model);
+                    if (approvalNumberExists)
+                    {
+                        ModelState.AddModelError(string.Empty, "Approval number already exists.");
+                        return View("EditScheme", model);
+                    }
                 }
+
+                await
+                    client.SendAsync(User.GetAccessToken(),
+                        new UpdateSchemeInformation(model.SchemeId, model.SchemeName, model.ApprovalNumber,
+                            model.IbisCustomerReference,
+                            model.ObligationType, model.CompetentAuthorityId));
+
+                return View("EditScheme", model);
             }
         }
         private async Task<IEnumerable<UKCompetentAuthorityData>> GetCompetentAuthorities()

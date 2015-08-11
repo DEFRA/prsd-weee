@@ -22,8 +22,9 @@
                     (SchemeStatus)
                         Enum.Parse(typeof(SchemeStatus), source.SchemeStatus.Value.ToString()),
                 SchemeName = source.SchemeName,
+                ApprovalName = source.ApprovalNumber,
                 IbisCustomerReference = source.IbisCustomerReference,
-                //ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), source.ObligationType.Value.ToString()),
+                ObligationType = source.ObligationType != null ? (ObligationType)Enum.Parse(typeof(ObligationType), source.ObligationType.Value.ToString()) : ObligationType.NotSet,
                 CompetentAuthorityId = source.CompetentAuthorityId
             };
         }

@@ -44,9 +44,9 @@
         public void UpdateScheme(string schemeName, string approvalNumber, string ibisCustomerReference, ObligationType obligationType, Guid competentAuthorityId)
         {
             Guard.ArgumentNotNullOrEmpty(() => schemeName, schemeName);
-            Guard.ArgumentNotNull(() => obligationType, obligationType);
             Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
-
+            Guard.ArgumentNotNull(() => obligationType, obligationType);
+            
             SchemeName = schemeName;
             ApprovalNumber = approvalNumber;
             IbisCustomerReference = ibisCustomerReference;
