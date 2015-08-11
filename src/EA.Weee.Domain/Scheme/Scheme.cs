@@ -39,7 +39,7 @@
 
         public ObligationType ObligationType { get; private set; }
 
-        public Guid CompetentAuthorityId { get; private set; }
+        public Guid? CompetentAuthorityId { get; private set; }
 
         public void UpdateScheme(string schemeName, string approvalNumber, string ibisCustomerReference, ObligationType obligationType, Guid competentAuthorityId)
         {
