@@ -7,12 +7,6 @@
 
     public class HomeController : AdminController
     {
-        // GET: Admin/Home
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         [HttpGet]
         public ActionResult ChooseActivity()
         {
@@ -28,13 +22,17 @@
             {
                 return View(model);
             }
+            if (model.InternalUserActivityOptions.SelectedValue == InternalUserActivity.ManageUsers)
+            {
+                return RedirectToAction("ManageUsers", "User");    
+            }
 
             if (model.InternalUserActivityOptions.SelectedValue == InternalUserActivity.ManageScheme)
             {
                 return RedirectToAction("ManageSchemes", "Scheme");
             }
 
-            throw new InvalidOperationException("Follow on feature is not yet implemented");
+            return View(model);
         }
     }
 }

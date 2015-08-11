@@ -4,6 +4,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Shared;
     using DataAccess;
     using Domain.Organisation;
     using FakeItEasy;
@@ -12,7 +13,6 @@
     using RequestHandlers.Organisations;
     using Requests.Organisations;
     using Xunit;
-    using OrganisationUserStatus = Core.Organisations.OrganisationUserStatus;
 
     public class GetOrganisationsByUserIdHandlerTest
     {
@@ -38,12 +38,12 @@
             var orgUsers =
                 await
                     handler.HandleAsync(new GetOrganisationsByUserId(userId.ToString(),
-                        new[] { (int)OrganisationUserStatus.Approved }));
+                        new[] { (int)UserStatus.Approved }));
             var organisationUserInfo = orgUsers.FirstOrDefault();
 
             Assert.NotNull(organisationUserInfo);
             Assert.Equal(1, orgUsers.Count);
-            Assert.Equal(organisationUserInfo.OrganisationUserStatus, OrganisationUserStatus.Approved);
+            Assert.Equal(organisationUserInfo.OrganisationUserStatus, UserStatus.Approved);
         }
 
         [Fact]
@@ -66,13 +66,13 @@
             var orgUsers =
                 await
                     handler.HandleAsync(new GetOrganisationsByUserId(userId.ToString(),
-                        new[] { (int)OrganisationUserStatus.Pending, (int)OrganisationUserStatus.Refused }));
+                        new[] { (int)UserStatus.Pending, (int)UserStatus.Refused }));
             var organisationUserInfo = orgUsers.FirstOrDefault();
 
             Assert.NotNull(organisationUserInfo);
             Assert.Equal(2, orgUsers.Count);
-            Assert.True(organisationUserInfo.OrganisationUserStatus == OrganisationUserStatus.Pending ||
-                        organisationUserInfo.OrganisationUserStatus == OrganisationUserStatus.Refused);
+            Assert.True(organisationUserInfo.OrganisationUserStatus == UserStatus.Pending ||
+                        organisationUserInfo.OrganisationUserStatus == UserStatus.Refused);
         }
 
         [Fact]
@@ -101,9 +101,9 @@
         {
             return helper.GetAsyncEnabledDbSet(new[]
             {
-                orgUserHelper.GetOrganisationUser(userGuid, Domain.Organisation.OrganisationUserStatus.Approved),
-                orgUserHelper.GetOrganisationUser(userGuid, Domain.Organisation.OrganisationUserStatus.Pending),
-                orgUserHelper.GetOrganisationUser(userGuid, Domain.Organisation.OrganisationUserStatus.Refused)
+                orgUserHelper.GetOrganisationUser(userGuid, Domain.UserStatus.Approved),
+                orgUserHelper.GetOrganisationUser(userGuid, Domain.UserStatus.Pending),
+                orgUserHelper.GetOrganisationUser(userGuid, Domain.UserStatus.Refused)
             });
         }
     }

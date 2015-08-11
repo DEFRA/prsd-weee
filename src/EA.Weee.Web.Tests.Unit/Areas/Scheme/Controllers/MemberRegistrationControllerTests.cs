@@ -147,6 +147,54 @@
             Assert.Equal(validationId, redirect.RouteValues["memberUploadId"]);
         }
 
+        [Fact]
+        public async void GetSummary_GetsSummaryOfLatestMemberUpload()
+        {
+            await MemberRegistrationController().Summary(A<Guid>._);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadList>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void GetSummary_HasNoUploads_RedirectsToAddOrAmendMembersPage()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadList>._))
+                .Returns(new LatestMemberUploadList());
+
+            var result = await MemberRegistrationController().Summary(A<Guid>._);
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("AddOrAmendMembers", routeValues["action"]);
+            Assert.Equal("MemberRegistration", routeValues["controller"]);
+        }
+
+        [Fact]
+        public async void GetSummary_HasUploadForThisScheme_ReturnsViewWithSummaryModel()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadList>._))
+                .Returns(new LatestMemberUploadList
+                {
+                    LatestMemberUploads = new List<LatestMemberUpload>
+                    {
+                        new LatestMemberUpload
+                        {
+                            ComplianceYear = 2016,
+                            CsvFileSizeEstimate = 150.00,
+                            UploadId = Guid.NewGuid()
+                        }
+                    }
+                });
+
+            var result = await MemberRegistrationController().Summary(A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.IsType<SummaryViewModel>(((ViewResult)result).Model);
+        }
+
         private const string XmlHasErrorsViewName = "ViewErrorsAndWarnings";
         private const string XmlHasNoErrorsViewName = "XmlHasNoErrors";
 
