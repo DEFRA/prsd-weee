@@ -7,9 +7,11 @@
     using Api.Client;
     using Base;
     using Core.Scheme;
+    using Core.Shared;
     using Infrastructure;
     using ViewModels;
     using Weee.Requests.Scheme;
+    using Weee.Requests.Shared;
 
     public class SchemeController : AdminController
     {
@@ -35,7 +37,7 @@
                 return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
             }
 
-            return RedirectToAction("ManageScheme", new { schemeId = viewModel.Selected.Value });
+            return RedirectToAction("EditScheme", new { schemeId = viewModel.Selected.Value });
         }
 
         private async Task<List<SchemeData>> GetSchemes()
@@ -47,11 +49,31 @@
         }
 
         [HttpGet]
-        public ViewResult ManageScheme(Guid schemeId)
+        public async Task<ActionResult> EditScheme(Guid schemeId)
         {
-            // verify here that the user is allowed to look at the supplied scheme
+            var model = new SchemeViewModel { CompetentAuthorities = await GetCompetentAuthorities() };
+            return View("EditScheme", model);
+        }
 
-            throw new NotImplementedException();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditScheme(SchemeViewModel model)
+        {
+            model.CompetentAuthorities = await GetCompetentAuthorities();
+            if (!ModelState.IsValid)
+            {
+                return View("EditScheme", model);
+            }
+            //TODO : Need to save data
+            return View("EditScheme", model);
+        }
+
+        private async Task<IEnumerable<UKCompetentAuthorityData>> GetCompetentAuthorities()
+        {
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
+            }
         }
     }
 }

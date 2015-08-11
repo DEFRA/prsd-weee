@@ -479,6 +479,7 @@
     <Content Include="Areas\Admin\Views\Scheme\ManageSchemes.cshtml" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\Summary.cshtml" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\AuthorizationRequired.cshtml" />
+    <Content Include="Areas\Admin\Views\Scheme\EditScheme.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
@@ -580,6 +581,7 @@
     <Compile Include="Areas\Scheme\ViewModels\AuthorizationRequiredViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SummaryViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\SchemeViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\GeneratePcsXmlController.cs" />
     <Compile Include="Areas\Test\Controllers\HomeController.cs" />
     <Compile Include="Areas\Test\TestAreaRegistration.cs" />
