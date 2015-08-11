@@ -37,7 +37,7 @@
             }
 
             var organisationUser = new OrganisationUser(userId, message.OrganisationId,
-                Domain.Organisation.OrganisationUserStatus.Pending);
+                Domain.UserStatus.Pending);
 
             context.OrganisationUsers.Add(organisationUser);
 

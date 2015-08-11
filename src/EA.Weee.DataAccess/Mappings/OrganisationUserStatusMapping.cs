@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
     using System.Data.Entity.ModelConfiguration;
-    using Domain.Organisation;
-
-    internal class OrganisationUserStatusMapping : ComplexTypeConfiguration<OrganisationUserStatus>
+    using Domain;
+ 
+    internal class OrganisationUserStatusMapping : ComplexTypeConfiguration<UserStatus>
     {
         public OrganisationUserStatusMapping()
         {

@@ -8,8 +8,17 @@
     <header class="hgroup">
         <h1 class="heading-large">Account not required</h1>
     </header>
-    <p>
-        You do not require a user account at this time. If you require further information call the Environment Agency (England) helpline on 03708 506 506.
-    </p>
-}
+    @using (Html.BeginForm(actionName: "RedirectToHomePage", controllerName: "NewUser", method: FormMethod.Post))
+    {
+        <p>
+            Based on the information you've given us, you don't need an account for the WEEE online service.
+        </p>
+        <p>
+            If you need more information on this, call the Environment Agency (England) helpline on 03708 506 506.
+        </p>
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+    }
+    }
 

@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -15,7 +14,6 @@
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
-    using Weee.Requests.Shared;
 
     public class MemberRegistrationController : ExternalSiteController
     {
@@ -63,6 +61,22 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> Summary(Guid pcsId)
+        {
+            using (var client = apiClient())
+            {
+                var summary = await client.SendAsync(User.GetAccessToken(), new GetLatestMemberUploadList(pcsId));
+
+                if (summary.LatestMemberUploads.Any())
+                {
+                    return View(SummaryViewModel.Create(summary.LatestMemberUploads));
+                }
+            }
+
+            return RedirectToAction("AddOrAmendMembers", "MemberRegistration");
+        }
+
+        [HttpGet]
         public async Task<ViewResult> ViewErrorsAndWarnings(Guid pcsId, Guid memberUploadId)
         {
             using (var client = apiClient())
@@ -105,7 +119,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetProducerCSV(Guid memberUploadId)
+        public async Task<ActionResult> GetProducerCSV(Guid memberUploadId, string fileName = null)
         {
             using (var client = apiClient())
             {
@@ -113,55 +127,6 @@
                     new GetProducerCSVByMemberUploadId(memberUploadId));
 
                 return File(new UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", producerCSVData.FileName);
-            }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> EditScheme(Guid schemeId)
-        {
-            var model = new SchemeViewModel { CompetentAuthorities = await GetCompetentAuthorities() };
-            model.SchemeId = schemeId;
-            return View("EditScheme", model);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> EditScheme(SchemeViewModel model)
-        {
-            model.CompetentAuthorities = await GetCompetentAuthorities();
-            if (!ModelState.IsValid)
-            {
-                return View("EditScheme", model);
-            }
-
-            using (var client = apiClient())
-            {
-                var schemeNameExists = await
-                    client.SendAsync(User.GetAccessToken(),
-                        new VerifySchemeNameExists(model.SchemeName));
-
-                if (schemeNameExists)
-                {
-                    ModelState.AddModelError(string.Empty, "Scheme name already exists.");
-                    return View("EditScheme", model);
-                }
-                else
-                {
-                    await
-                        client.SendAsync(User.GetAccessToken(),
-                            new UpdateSchemeInformation(model.SchemeId, model.SchemeName, model.ApprovalNumber,
-                                model.IbisCustomerReference,
-                                model.ObligationType, model.CompetentAuthorityId));
-
-                    return View("EditScheme", model);
-                }
-            }
-        }
-
-        private async Task<IEnumerable<UKCompetentAuthorityData>> GetCompetentAuthorities()
-        {
-            using (var client = apiClient())
-            {
-                return await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
             }
         }
     }

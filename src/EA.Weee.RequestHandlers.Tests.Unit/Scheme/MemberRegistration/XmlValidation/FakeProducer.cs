@@ -56,7 +56,7 @@
         {
             return new FakeProducer(schemeOrganisationId ?? Guid.NewGuid(),
                 Guid.NewGuid(),
-                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>(), 0),
+                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>(), 0, 2016),
                 new ProducerBusiness(),
                 new AuthorisedRepresentative("authrep"),
                 DateTime.Now,
@@ -84,7 +84,7 @@
         {
             return new FakeProducer(schemeOrganisationId ?? Guid.NewGuid(),
                 Guid.NewGuid(),
-                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>(), 0),
+                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>(), 0, 2016),
                 new ProducerBusiness(),
                 new AuthorisedRepresentative("authrep"),
                 DateTime.Now,
