@@ -1,0 +1,49 @@
+﻿@using EA.Weee.Core.Shared
+@model EA.Weee.Web.Areas.Scheme.ViewModels.AuthorizationRequiredViewModel
+@{
+    ViewBag.Title = "Authorization Required";
+}
+
+@section main_content {
+
+    @switch (Model.Status)
+    {
+
+
+        case SchemeStatus.Pending:
+            <div class="form-group">
+                <header class="hgroup">
+                    <div>
+                        <h1 class="heading-large">Scheme awaiting authorisation</h1>
+                    </div>
+                </header>
+                <hr/>
+                <p>Scheme authorisation - Pending</p>
+                <p class="form-hint">Once your authorisation is approved, you will be able to manage members here.</p>
+                <hr/>
+            </div>
+            break;
+
+        case SchemeStatus.Rejected:
+            <div class="form-group">
+                <header class="hgroup">
+                    <div>
+                        <h1 class="heading-large">Scheme authorisation refused</h1>
+                    </div>
+                </header>
+                <hr/>
+                <p>Scheme authorisation - Refused</p>
+                <p class="form-hint">Unfortunately, your request for access has been refused. Please contact your authorising authority for more information.</p>
+                <hr/>
+            </div>
+            break;
+    }
+
+    <div class="form-group">
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @area = "Scheme" }, new { @class = "button" })
+    </div>
+
+    <div class="form-group">
+        @Html.ActionLink("Join or create another organisation", "Type", "OrganisationRegistration", new { @area = "" })
+    </div>
+}

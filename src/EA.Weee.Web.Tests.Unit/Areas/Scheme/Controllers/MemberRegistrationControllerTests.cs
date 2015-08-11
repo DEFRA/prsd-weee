@@ -15,6 +15,7 @@
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
     using Weee.Requests.Organisations;
+    using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
     using Xunit;
 
@@ -35,6 +36,61 @@
             new HttpContextMocker().AttachToController(controller);
 
             return controller;
+        }
+
+        [Fact]
+        public async void GetAuthorizationRequired_ChecksStatusOfScheme()
+        {
+            await MemberRegistrationController().AuthorizationRequired(A<Guid>._);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void GetAuthorizationRequired_SchemeIsPendingApproval_ReturnsViewWithPendingStatus()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .Returns(SchemeStatus.Pending);
+
+            var result = await MemberRegistrationController().AuthorizationRequired(A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+
+            var view = ((AuthorizationRequiredViewModel)((ViewResult)result).Model);
+
+            Assert.Equal(SchemeStatus.Pending, view.Status);
+        }
+
+        [Fact]
+        public async void GetAuthorizationRequired_SchemeIsRejected_ReturnsViewWithRejectedStatus()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .Returns(SchemeStatus.Rejected);
+
+            var result = await MemberRegistrationController().AuthorizationRequired(A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+
+            var view = ((AuthorizationRequiredViewModel)((ViewResult)result).Model);
+
+            Assert.Equal(SchemeStatus.Rejected, view.Status);
+        }
+
+        [Fact]
+        public async void GetAuthorizationRequired_SchemeIsApproved_RedirectsToPcsMemberSummary()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .Returns(SchemeStatus.Approved);
+
+            var result = await MemberRegistrationController().AuthorizationRequired(A<Guid>._);
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Summary", routeValues["action"]);
+            Assert.Equal("MemberRegistration", routeValues["controller"]);
         }
 
         [Fact]

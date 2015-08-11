@@ -85,7 +85,7 @@
 
                     RuleFor(p => p.registrationNo)
                         .Must((p, prn) => validProducerRegistrationNumbers.Contains(prn.ToLowerInvariant()))
-                        .When(p => p.status == statusType.A)
+                        .When(p => p.status == statusType.A && !string.IsNullOrEmpty(p.registrationNo))
                         .WithState(p => ErrorLevel.Error)
                         .WithMessage(
                             "{0} {1} has a producer registration number in the xml which is not recognised. In order to register or amend this producer please enter the correct producer registration number for the producer.",
