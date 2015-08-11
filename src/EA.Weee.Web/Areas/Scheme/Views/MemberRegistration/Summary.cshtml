@@ -1,0 +1,31 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.SummaryViewModel
+@{
+    ViewBag.Title = "Summary";
+}
+
+@section main_content {
+    <header class="hgroup">
+        <div>
+            <h1 class="heading-large">Would you like to view, add or amend PCS members?</h1>
+        </div>
+    </header>
+
+    <div>
+        <h2 class="bold-small">Files available for download</h2>
+    </div>
+    <hr/>
+    <div class="form-group">
+        @foreach (var latestUploadSummary in Model.LatestMemberUploads)
+        {
+            var csvFileName = "Overview of current members " + latestUploadSummary.ComplianceYear + ".csv";
+            <a href="@Url.Action("GetProducerCSV", "MemberRegistration", new { memberUploadId = latestUploadSummary.UploadId, fileName = csvFileName })">@(csvFileName)</a><span style="color: #6f777b">@(" (approx. " + latestUploadSummary.ScaledCsvFileSize + latestUploadSummary.ScaledCsvFileSizeSuffix))</span>
+            <br/>
+        }
+    </div>
+
+    <div class="form-group">
+        @Html.ActionLink("Add or amend", "AddOrAmendMembers", "MemberRegistration", new { @area = "Scheme" }, new { @class = "button" })
+    </div>
+}

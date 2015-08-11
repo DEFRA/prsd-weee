@@ -60,7 +60,7 @@
         {
             IEnumerable<Producer> generatedProducers = new[] { TestProducer("ForestMoonOfEndor") };
 
-            A.CallTo(() => generator.Generate(Message, A<MemberUpload>.Ignored, A<Hashtable>.Ignored))
+            A.CallTo(() => generator.GenerateProducers(Message, A<MemberUpload>.Ignored, A<Hashtable>.Ignored))
                 .Returns(Task.FromResult(generatedProducers));
 
             await handler.HandleAsync(Message);
@@ -134,11 +134,23 @@
             {
                 new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
             };
-            A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
+            A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
 
             await handler.HandleAsync(Message);
 
             A.CallTo(producersDbSet).WithAnyArguments().MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async void ProcessXmlfile_HasNoValidationErrors_HasProducerChargeCalculationErrors_ThrowsException()
+        {
+            var errors = new List<MemberUploadError>
+            {
+                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
+            };
+            A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
+
+            await Assert.ThrowsAsync<ApplicationException>(async () => await handler.HandleAsync(Message));
         }
 
         [Fact]

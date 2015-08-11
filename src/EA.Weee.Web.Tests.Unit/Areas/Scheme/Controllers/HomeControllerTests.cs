@@ -5,7 +5,9 @@
     using Api.Client;
     using FakeItEasy;
     using TestHelpers;
+    using ViewModels.Shared;
     using Web.Areas.Scheme.Controllers;
+    using Web.Areas.Scheme.ViewModels;
     using Weee.Requests.Organisations;
     using Xunit;
 
@@ -51,6 +53,43 @@
             var result = await HomeController().ChooseActivity(A<Guid>._);
 
             Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public void PostChooseActivity_ManagePcsMembers_RedirectsToMemberRegistrationSummary()
+        {
+            var result = HomeController().ChooseActivity(new ChooseActivityViewModel
+            {
+                ActivityOptions = new RadioButtonStringCollectionViewModel
+                {
+                    SelectedValue = PcsAction.ManagePcsMembers
+                }
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Summary", routeValues["action"]);
+            Assert.Equal("MemberRegistration", routeValues["controller"]);
+        }
+
+        [Fact]
+        public void PostChooseActivity_ManageOrganisationUsers_RedirectsToOrganisationUsersManagement()
+        {
+            var result = HomeController().ChooseActivity(new ChooseActivityViewModel
+            {
+                ActivityOptions = new RadioButtonStringCollectionViewModel
+                {
+                    SelectedValue = PcsAction.ManageOrganisationUsers
+                }
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ManageOrganisationUsers", routeValues["action"]);
         }
 
         private HomeController HomeController()

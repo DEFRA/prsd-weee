@@ -45,10 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\GetAllUsers.cs" />
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetails.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetLatestMemberUploadList.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadById.cs" />
     <Compile Include="Scheme\GetSchemes.cs">
       <SubType>Code</SubType>
