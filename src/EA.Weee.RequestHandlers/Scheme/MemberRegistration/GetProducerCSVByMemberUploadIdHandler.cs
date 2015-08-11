@@ -27,7 +27,13 @@
                     message.MemberUploadId));
             }
 
-            var csvData = memberUpload.Scheme.GetProducerCSV(memberUpload.ComplianceYear);
+            if (!memberUpload.ComplianceYear.HasValue)
+            {
+                throw new ArgumentException(string.Format("Member upload with id {0} has no compliance year and should not be available for CSV download",
+                    message.MemberUploadId));
+            }
+
+            var csvData = memberUpload.Scheme.GetProducerCSV(memberUpload.ComplianceYear.Value);
             var csvName = string.Format("{0:yyyy_MM_dd}", DateTime.Now) + " - " + memberUpload.ComplianceYear.ToString() + ".csv";
             var producerCSVFileData = new ProducerCSVFileData { FileContent = csvData, FileName = csvName };
 

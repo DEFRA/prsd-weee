@@ -16,6 +16,8 @@
     {
         private readonly DbContextHelper dbContextHelper = new DbContextHelper();
 
+        private const int ExampleComplianceYear = 2015;
+
         /// <summary>
         /// Sets up a faked WeeeContext with 2 schemes each with 4 submitted producers and 1 unsubmitted producer.
         /// </summary>
@@ -25,6 +27,7 @@
             MemberUpload memberUploadSubmitted = A.Fake<MemberUpload>();
             A.CallTo(() => memberUploadSubmitted.OrganisationId).Returns(new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B"));
             A.CallTo(() => memberUploadSubmitted.IsSubmitted).Returns(true);
+            A.CallTo(() => memberUploadSubmitted.ComplianceYear).Returns(ExampleComplianceYear);
 
             MemberUpload memberUploadUnsubmitted = A.Fake<MemberUpload>();
             A.CallTo(() => memberUploadUnsubmitted.OrganisationId).Returns(new Guid("7A6C4AD4-A357-4458-8528-0D0F52859689"));
@@ -296,7 +299,8 @@
             ProducerListSettings listSettings = new ProducerListSettings()
             {
                 OrganisationID = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B"),
-                NumberOfExistingProducers = 3
+                NumberOfExistingProducers = 3,
+                ComplianceYear = ExampleComplianceYear
             };
 
             // Act
@@ -318,7 +322,8 @@
             ProducerListSettings listSettings = new ProducerListSettings()
             {
                 OrganisationID = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B"),
-                NumberOfExistingProducers = 5
+                NumberOfExistingProducers = 5,
+                ComplianceYear = ExampleComplianceYear
             };
 
             // Act
@@ -341,7 +346,8 @@
             {
                 OrganisationID = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B"),
                 NumberOfNewProducers = 1,
-                NumberOfExistingProducers = 1
+                NumberOfExistingProducers = 1,
+                ComplianceYear = ExampleComplianceYear
             };
 
             // Act
