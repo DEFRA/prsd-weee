@@ -3,7 +3,7 @@
     using System;
     using Prsd.Core.Domain;
 
-    public class ProducerContact : Entity
+    public class ProducerContact : Entity, IEquatable<ProducerContact>
     {
         public ProducerContact(string title, string forename, string surname, string telephone, string mobile,
             string fax, string email, ProducerAddress address)
@@ -26,22 +26,27 @@
         {
             return base.GetHashCode();
         }
-        
+
         public override bool Equals(object obj)
         {
-            var contactObj = obj as ProducerContact;
-            if (contactObj == null)
+            return Equals(obj as ProducerContact);
+        }
+
+        public virtual bool Equals(ProducerContact other)
+        {
+            if (other == null)
             {
                 return false;
             }
-            return Title.Equals(contactObj.Title)
-                   && ForeName.Equals(contactObj.ForeName)
-                   && SurName.Equals(contactObj.SurName)
-                   && Telephone.Equals(contactObj.Telephone)
-                   && Mobile.Equals(contactObj.Mobile)
-                   && Fax.Equals(contactObj.Fax)
-                   && Email.Equals(contactObj.Email)
-                   && (Address != null && Address.Equals(contactObj.Address));
+
+            return Title == other.Title
+                   && ForeName == other.ForeName
+                   && SurName == other.SurName
+                   && Telephone == other.Telephone
+                   && Mobile == other.Mobile
+                   && Fax == other.Fax
+                   && Email == other.Email
+                   && object.Equals(Address, other.Address);
         }
 
         public string Title { get; private set; }
