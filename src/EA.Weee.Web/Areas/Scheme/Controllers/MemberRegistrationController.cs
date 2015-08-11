@@ -27,6 +27,25 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> AuthorizationRequired(Guid pcsId)
+        {
+            using (var client = apiClient())
+            {
+                var status = await client.SendAsync(User.GetAccessToken(), new GetSchemeStatus(pcsId));
+
+                if (status == SchemeStatus.Approved)
+                {
+                    return RedirectToAction("Summary", "MemberRegistration");
+                }
+
+                return View(new AuthorizationRequiredViewModel
+                {
+                    Status = status
+                });
+            }
+        }
+
+        [HttpGet]
         public async Task<ViewResult> AddOrAmendMembers(Guid pcsId)
         {
             using (var client = apiClient())
