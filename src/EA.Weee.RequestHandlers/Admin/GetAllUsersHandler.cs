@@ -1,18 +1,14 @@
-﻿namespace EA.Weee.RequestHandlers.Users
+﻿namespace EA.Weee.RequestHandlers.Admin
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin;
-    using Core.Organisations;
     using DataAccess;
-    using Domain.Organisation;
-    using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Admin;
-    using OrganisationUserStatus = Core.Shared.UserStatus;
+    using userStatus = Core.Shared.UserStatus;
 
     public class GetAllUsersHandler : IRequestHandler<GetAllUsers, List<UserSearchData>>
     {
@@ -34,14 +30,26 @@
                             FirstName = u.FirstName,
                             Id = u.Id,
                             LastName = u.Surname,
-                            OrganisationName = ou.Organisation.TradingName,
-                            Status = (OrganisationUserStatus)ou.OrganisationUserStatus.Value
+                            OrganisationName = ou.Organisation.Name ?? ou.Organisation.TradingName,
+                            Status = (userStatus)ou.UserStatus.Value
                         }).ToListAsync();
             
             users.AddRange(organisationsUsers.Select(user => user).ToList());
 
-            //TODO internal admin users
-          
+            //internal admin users
+            var competentAuthorityUsers = await(from u in context.Users
+                                                 join cu in context.CompetentAuthorityUsers on u.Id equals cu.UserId
+                                                 select new UserSearchData
+                                                 {
+                                                     Email = u.Email,
+                                                     FirstName = u.FirstName,
+                                                     Id = u.Id,
+                                                     LastName = u.Surname,
+                                                     OrganisationName = cu.CompetentAuthority.Abbreviation,
+                                                     Status = (userStatus)cu.UserStatus.Value
+                                                 }).ToListAsync();
+
+            users.AddRange(competentAuthorityUsers.Select(interaluser => interaluser).ToList());
             return users.OrderBy(u => u.FullName).ToList();
         }
     }

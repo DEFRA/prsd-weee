@@ -85,6 +85,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\CompetentAuthorityUserData.cs" />
     <Compile Include="Claims.cs" />
     <Compile Include="Configuration\EmailRules\IRuleChecker.cs" />
     <Compile Include="Configuration\EmailRules\IRuleSectionChecker.cs" />
@@ -113,7 +114,7 @@
     <Compile Include="Organisations\OrganisationSearchDataResult.cs" />
     <Compile Include="Organisations\OrganisationType.cs" />
     <Compile Include="Organisations\OrganisationUserData.cs" />
-   <Compile Include="Shared\UserStatus.cs" />
+    <Compile Include="Shared\UserStatus.cs" />
     <Compile Include="Scheme\LatestMemberUpload.cs" />
     <Compile Include="Scheme\LatestMemberUploadList.cs" />
     <Compile Include="Scheme\MemberUploadData.cs" />
