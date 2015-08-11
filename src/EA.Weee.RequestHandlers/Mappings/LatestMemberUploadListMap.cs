@@ -16,9 +16,9 @@
                 LatestMemberUploads =
                     source.Select(mu => new LatestMemberUpload
                     {
-                        ComplianceYear = mu.ComplianceYear,
+                        ComplianceYear = mu.ComplianceYear.Value,
                         UploadId = mu.Id,
-                        CsvFileSizeEstimate = Encoding.UTF8.GetByteCount(mu.Scheme.GetProducerCSV(mu.ComplianceYear))      
+                        CsvFileSizeEstimate = Encoding.UTF8.GetByteCount(mu.Scheme.GetProducerCSV(mu.ComplianceYear.Value))      
                     })
             };
         }
