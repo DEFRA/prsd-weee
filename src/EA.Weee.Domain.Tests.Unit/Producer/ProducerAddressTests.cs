@@ -141,17 +141,13 @@
             private string locality = "Locality";
             private string administrativeArea = "AdministrativeArea";
             private string postCode = "PostCode";
+            private Country country = new AlwaysEqualCountry();
 
             private ProducerAddresstBuilder()
             {
             }
 
             private ProducerAddress Build()
-            {
-                return Build(new AlwaysEqualCountry());
-            }
-
-            private ProducerAddress Build(Country country)
             {
                 return new ProducerAddress(
                     primaryName,
@@ -228,8 +224,9 @@
             public static ProducerAddress WithCountry(Country country)
             {
                 var builder = new ProducerAddresstBuilder();
+                builder.country = country;
 
-                return builder.Build(country);
+                return builder.Build();
             }
         }
     }

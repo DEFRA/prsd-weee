@@ -90,17 +90,13 @@
         private class AuthorisedRepresentativeBuilder
         {
             private string name = "name";
+            private ProducerContact contact = new AlwaysEqualProducerContact();
 
             private AuthorisedRepresentativeBuilder()
             {
             }
 
             private AuthorisedRepresentative Build()
-            {
-                return Build(new AlwaysEqualProducerContact());
-            }
-
-            private AuthorisedRepresentative Build(ProducerContact contact)
             {
                 AuthorisedRepresentative authorisedRepresentative;
 
@@ -132,8 +128,9 @@
             public static AuthorisedRepresentative WithProducerContact(ProducerContact contact)
             {
                 var builder = new AuthorisedRepresentativeBuilder();
+                builder.contact = contact;
 
-                return builder.Build(contact);
+                return builder.Build();
             }
         }
     }
