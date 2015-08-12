@@ -103,7 +103,7 @@
                             model.IbisCustomerReference,
                             model.ObligationType.Value, model.CompetentAuthorityId));
 
-                return View("EditScheme", model);
+                return RedirectToAction("ManageSchemes");
             }
         }
         private async Task<IEnumerable<UKCompetentAuthorityData>> GetCompetentAuthorities()
