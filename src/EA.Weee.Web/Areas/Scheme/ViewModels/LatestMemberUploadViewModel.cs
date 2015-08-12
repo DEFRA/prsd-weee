@@ -45,7 +45,8 @@
             get
             {
                 var scale = Array.IndexOf(fileSizeSuffixes, ScaledCsvFileSizeSuffix);
-                return (CsvFileSizeEstimate / (1024 ^ scale)).ToStringWithXSignificantFigures(1);
+                var scaledSize = CsvFileSizeEstimate / Math.Pow(1024, scale);
+                return scaledSize.ToStringWithXSignificantFigures(1);
             }
         }
     }
