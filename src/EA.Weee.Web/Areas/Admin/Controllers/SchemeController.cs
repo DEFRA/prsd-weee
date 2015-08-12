@@ -81,6 +81,11 @@
                 return RedirectToAction("ConfirmRejection", "Scheme", new { id });
             }
 
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             using (var client = apiClient())
             {
                 if (model.OldApprovalNumber != model.ApprovalNumber)
