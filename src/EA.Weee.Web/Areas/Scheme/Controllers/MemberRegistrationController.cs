@@ -145,7 +145,7 @@
                 var producerCSVData = await client.SendAsync(User.GetAccessToken(),
                     new GetProducerCSVByMemberUploadId(memberUploadId));
 
-                return File(new UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", fileName ?? producerCSVData.FileName);
+                return File(new UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", producerCSVData.FileName);
             }
         }
     }

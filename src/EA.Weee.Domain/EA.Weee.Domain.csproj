@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChargeBandType.cs" />
+    <Compile Include="ObligationType.cs" />
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
     <Compile Include="Scheme\MemberUploadErrorType.cs" />
@@ -65,7 +66,6 @@
     <Compile Include="ErrorLevel.cs" />
     <Compile Include="Scheme\MemberUpload.cs" />
     <Compile Include="Scheme\MemberUploadError.cs" />
-    <Compile Include="ObligationType.cs" />
     <Compile Include="Organisation\Organisation.cs" />
     <Compile Include="Organisation\Organisation.Address.cs" />
     <Compile Include="Organisation\Organisation.MainContactPerson.cs" />

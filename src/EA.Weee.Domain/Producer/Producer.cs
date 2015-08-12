@@ -41,7 +41,7 @@
 
             EEEPlacedOnMarketBandType = eeePlacedOnMarketBandType.Value;
             SellingTechniqueType = sellingTechniqueType.Value;
-            ObligationType = obligationType.Value;
+            ObligationType = (int)obligationType;
             AnnualTurnOverBandType = annualTurnOverBandType.Value;
 
             BrandNames = brandnames;
