@@ -190,7 +190,7 @@
 
             var chargeBand = Enumeration.FromValue<ChargeBandType>(ChargeBandType).DisplayName;
 
-            var dateRegistered = string.Format("{0:dd/MM/yyyy HH:mm:ss}", GetProducerRegistrationDate(RegistrationNumber, MemberUpload.ComplianceYear));
+            var dateRegistered = string.Format("{0:dd/MM/yyyy HH:mm:ss}", GetProducerRegistrationDate(RegistrationNumber, MemberUpload.ComplianceYear.Value));
 
             var dateAmended = string.Format("{0:dd/MM/yyyy HH:mm:ss}", UpdatedDate);
             if (dateRegistered == dateAmended)

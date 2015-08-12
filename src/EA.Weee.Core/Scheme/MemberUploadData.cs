@@ -6,7 +6,7 @@
     {
         public Guid Id { get; set; }
 
-        public int ComplianceYear { get; set; }
+        public int? ComplianceYear { get; set; }
 
         public bool IsSubmitted { get; set; }
 
