@@ -8,5 +8,11 @@
         public Guid Id { get; set; }
         public string Name { get; set; }
         public SchemeStatus SchemeStatus { get; set; }
+        public string SchemeName { get; set; }
+        public string ApprovalName { get; set; }
+        public string IbisCustomerReference { get; set; }
+        public EA.Weee.Core.Shared.ObligationType? ObligationType { get; set; }
+        public Guid? CompetentAuthorityId { get; set; }
+        public UKCompetentAuthorityData CompetentAuthority { get; set; }
     }
 }

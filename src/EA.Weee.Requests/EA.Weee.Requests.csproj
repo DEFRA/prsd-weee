@@ -51,6 +51,7 @@
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetails.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
+    <Compile Include="Scheme\GetSchemeById.cs" />
     <Compile Include="Scheme\MemberRegistration\GetLatestMemberUploadList.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadById.cs" />
     <Compile Include="Scheme\GetSchemes.cs">
@@ -75,6 +76,8 @@
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFile.cs" />
     <Compile Include="Scheme\MemberUploadTesting\PcsXmlFile.cs" />
     <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFile.cs" />
+    <Compile Include="Scheme\UpdateSchemeInformation.cs" />
+    <Compile Include="Scheme\VerifyApprovalNumberExists.cs" />
     <Compile Include="Shared\GetCountries.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorities.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations.cs" />

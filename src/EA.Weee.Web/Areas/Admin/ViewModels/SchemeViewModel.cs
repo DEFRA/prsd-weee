@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
-    using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
     using Prsd.Core.Helpers;
 
@@ -22,6 +21,8 @@
         [Display(Name = "Approval number")]
         public string ApprovalNumber { get; set; }
 
+        public string OldApprovalNumber { get; set; }
+
         [Required(ErrorMessage = "Scheme name is required.")]
         [StringLength(70)]
         [DataType(DataType.Text)]
@@ -35,7 +36,7 @@
 
         [Required(ErrorMessage = "Obligation type is required.")]
         [Display(Name = "Obligation type")]
-        public ObligationType ObligationType { get; set; }
+        public ObligationType? ObligationType { get; set; }
 
         [Required(ErrorMessage = "Authorising authority is required.")]
         [Display(Name = "Authorising authority")]
@@ -47,5 +48,7 @@
         public IEnumerable<UKCompetentAuthorityData> CompetentAuthorities { get; set; }
 
         public IEnumerable<SelectListItem> ObligationTypeSelectList { get; set; }
+
+        public Guid SchemeId { get; set; }
     }
 }
