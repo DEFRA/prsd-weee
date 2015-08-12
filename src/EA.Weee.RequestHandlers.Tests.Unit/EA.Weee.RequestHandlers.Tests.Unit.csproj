@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Scheme\GetSchemesHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandlerTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\GenerateFromXmlTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GetLatestMemberUploadListHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadByIdHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GetProducerCSVByMemberUploadIdHandlerTests.cs" />
