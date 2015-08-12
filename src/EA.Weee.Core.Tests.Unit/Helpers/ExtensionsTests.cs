@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Helpers
 {
+    using System;
     using Core.Helpers;
     using Xunit;
 
@@ -15,6 +16,25 @@
         public void DoubleTo3SignificantFigures_ReturnsExpectedString(double input, string expectedOutput)
         {
             Assert.Equal(expectedOutput, input.ToStringWithXSignificantFigures(3));
+        }
+
+        [Fact]
+        public void DomainEnumerationToCoreEnumeration_ReturnsExpectedValues()
+        {
+            Assert.Equal(CoreEnumeration.Something, DomainEnumeration.Something.ToCoreEnumeration<CoreEnumeration>());
+            Assert.Equal(CoreEnumeration.SomethingElse, DomainEnumeration.SomethingElse.ToCoreEnumeration<CoreEnumeration>());
+        }
+
+        [Fact]
+        public void DomainEnumerationToAnInvalidType_ThrowsInvalidOperationException()
+        {
+            Assert.Throws<InvalidOperationException>(() => DomainEnumeration.Something.ToCoreEnumeration<string>()); // String is not an enum
+        }
+
+        [Fact]
+        public void CoreEnumerationToDomainEnumeration_ReturnsExpectedValues()
+        {
+            Assert.Equal(DomainEnumeration.Something, CoreEnumeration.Something.ToDomainEnumeration<DomainEnumeration>());
         }
     }
 }
