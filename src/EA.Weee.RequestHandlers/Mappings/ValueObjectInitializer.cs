@@ -6,6 +6,7 @@
     using Domain;
     using Domain.Organisation;
     using AddressType = Domain.AddressType;
+    using ObligationType = Domain.ObligationType;
 
     internal class ValueObjectInitializer
     {
@@ -42,6 +43,25 @@
                 default:
                     throw new ArgumentException(string.Format("Unknown organisation type: {0}", addressType),
                         "addressType");
+            }
+        }
+
+        public static ObligationType GetObligationType(Core.Shared.ObligationType obligationType)
+        {
+            switch (obligationType)
+            {
+                case Core.Shared.ObligationType.B2B:
+                    return ObligationType.B2B;
+
+                case Core.Shared.ObligationType.B2C:
+                    return ObligationType.B2C;
+
+                case Core.Shared.ObligationType.Both:
+                    return ObligationType.Both;
+
+                default:
+                    throw new ArgumentException(string.Format("Unknown obligation type: {0}", obligationType),
+                        "obligationType");
             }
         }
     }

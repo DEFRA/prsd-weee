@@ -6,7 +6,6 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
-    using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
     using FakeItEasy;
     using Web.Areas.Admin.Controllers;
@@ -17,14 +16,11 @@
     public class SchemeControllerTests
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly IWeeeClient weeeFakeClient;
 
         public SchemeControllerTests()
         {
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
             apiClient = () => weeeClient;
-
-            weeeFakeClient = A.Fake<IWeeeClient>();
         }
 
         [Fact]

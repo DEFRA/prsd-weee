@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Core.Scheme
 {
     using System;
-    using MemberUploadTesting;
     using Shared;
 
     public class SchemeData
@@ -12,7 +11,8 @@
         public string SchemeName { get; set; }
         public string ApprovalName { get; set; }
         public string IbisCustomerReference { get; set; }
-        public ObligationType? ObligationType { get; set; }
+        public EA.Weee.Core.Shared.ObligationType? ObligationType { get; set; }
         public Guid? CompetentAuthorityId { get; set; }
+        public UKCompetentAuthorityData CompetentAuthority { get; set; }
     }
 }

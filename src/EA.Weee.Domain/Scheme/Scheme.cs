@@ -37,16 +37,17 @@
 
         public string IbisCustomerReference { get; private set; }
 
-        public ObligationType ObligationType { get; private set; }
+        public ObligationType? ObligationType { get; private set; }
 
         public Guid? CompetentAuthorityId { get; private set; }
 
-        public void UpdateScheme(string schemeName, string approvalNumber, string ibisCustomerReference, ObligationType obligationType, Guid competentAuthorityId)
+        public virtual UKCompetentAuthority CompetentAuthority { get; private set; }
+
+        public void UpdateScheme(string schemeName, string approvalNumber, string ibisCustomerReference, ObligationType? obligationType, Guid competentAuthorityId)
         {
             Guard.ArgumentNotNullOrEmpty(() => schemeName, schemeName);
             Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
-            Guard.ArgumentNotNull(() => obligationType, obligationType);
-            
+
             SchemeName = schemeName;
             ApprovalNumber = approvalNumber;
             IbisCustomerReference = ibisCustomerReference;

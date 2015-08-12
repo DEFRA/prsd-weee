@@ -3,10 +3,7 @@
     using System.ComponentModel.DataAnnotations;
 
     public enum ObligationType
-    {
-        [Display(Name = "")]
-        NotSet = 0,
-
+    {  
         [Display(Name = "B2B")]
         B2B = 1,
 

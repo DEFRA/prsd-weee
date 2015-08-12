@@ -4,7 +4,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.Scheme.MemberUploadTesting;
+    using Core.Shared;
     using DataAccess;
     using Domain.Scheme;
     using FakeItEasy;
