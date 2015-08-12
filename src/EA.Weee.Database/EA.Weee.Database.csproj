@@ -78,6 +78,7 @@
     <Content Include="scripts\Update\Sprint11\20150806-1632-UpdateProducerTable.sql" />
     <Content Include="scripts\Update\Sprint11\20150811-1039-AddCompetentAuthorityUserTable.sql" />
     <Content Include="scripts\Update\Sprint11\20150811-1557-UpdateOrganisationUserTable.sql" />
+    <Content Include="scripts\Update\Sprint11\20150811-151242-NullableComplianceYear.sql" />
     <Content Include="scripts\Update\Sprint11\20150812-0937-UpdateDataInCompetentAuthorityUserTable.sql" />
   </ItemGroup>
   <ItemGroup>
