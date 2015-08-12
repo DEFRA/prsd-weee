@@ -25,9 +25,11 @@
                 throw new ArgumentNullException(string.Format("Could not find a MemberUpload with id {0}", message.MemberUploadId));
             }
 
-            memberUpload.Submit();
-
-            await context.SaveChangesAsync();
+            if (!memberUpload.IsSubmitted)
+            {
+                memberUpload.Submit();
+                await context.SaveChangesAsync();
+            }
 
             return memberUpload.Id;
         }
