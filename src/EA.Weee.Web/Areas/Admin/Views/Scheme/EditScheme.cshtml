@@ -25,7 +25,8 @@
 
     @Html.AntiForgeryToken()
     @Html.Gds().ValidationSummary()
-
+    @Html.HiddenFor(m => m.SchemeId)
+    @Html.HiddenFor(m => m.OldApprovalNumber)
     <div class="grid-row">
         <div class="column-half">
             <div class="form-group @Html.Gds().FormGroupClass(m => m.SchemeName)">

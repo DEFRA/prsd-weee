@@ -81,6 +81,30 @@
         }
 
         [Fact]
+        public async void PostEditScheme_OldApprovalNumberAndApprovalNumberNotMatch_MustVerifyApprovalNumberExists()
+        {
+            var controller = SchemeController();
+
+            var scheme = new SchemeViewModel
+            {
+                OldApprovalNumber = "WEE/AD1234DC/SCH",
+                ApprovalNumber = "WEE/ZZ3456EE/SCH",
+                SchemeName = "Any value",
+                ObligationType = ObligationType.B2B,
+                CompetentAuthorityId = Guid.NewGuid(),
+                IbisCustomerReference = "Any value"
+            };
+
+            await controller.EditScheme(Guid.NewGuid(), scheme);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyApprovalNumberExists>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeInformation>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
         public async void PostEditScheme_ModelWithError_ButSchemeIsRejected_RedirectsToRejectionConfirmation_WithSchemeId()
         {
             var controller = SchemeController();

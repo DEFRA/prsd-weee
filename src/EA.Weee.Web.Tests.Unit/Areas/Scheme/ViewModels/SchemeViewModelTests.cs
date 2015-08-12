@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
-    using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
     using Web.Areas.Admin.ViewModels;
     using Xunit;

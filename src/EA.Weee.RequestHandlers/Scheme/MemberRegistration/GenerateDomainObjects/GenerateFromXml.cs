@@ -15,6 +15,7 @@
     using Domain.Producer;
     using Domain.Scheme;
     using Interfaces;
+    using Mappings;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Requests.Scheme.MemberRegistration;
@@ -86,7 +87,7 @@
 
                 SellingTechniqueType sellingTechniqueType = Enumeration.FromValue<SellingTechniqueType>((int)producerData.sellingTechnique);
 
-                ObligationType obligationType = Enumeration.FromValue<ObligationType>((int)producerData.obligationType);
+                ObligationType obligationType = producerData.obligationType.ToDomainObligationType(); // Enumeration.FromValue<ObligationType>((int)producerData.obligationType);
 
                 AnnualTurnOverBandType annualturnoverType = Enumeration.FromValue<AnnualTurnOverBandType>((int)producerData.annualTurnoverBand);
 

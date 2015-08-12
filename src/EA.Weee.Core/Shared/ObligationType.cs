@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Domain
+﻿namespace EA.Weee.Core.Shared
 {
     using System.ComponentModel.DataAnnotations;
 

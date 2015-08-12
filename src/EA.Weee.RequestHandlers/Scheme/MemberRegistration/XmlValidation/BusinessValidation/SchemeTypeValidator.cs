@@ -85,10 +85,10 @@
                                 .FirstOrDefault(p => p.MemberUpload.ComplianceYear == int.Parse(st.complianceYear)
                                                      && p.RegistrationNumber == producer.registrationNo
                                                      &&
-                                                     (Enumeration.FromValue<ObligationType>(p.ObligationType) ==
+                                                     ((Domain.ObligationType)p.ObligationType ==
                                                       producer.obligationType.ToDomainObligationType()
                                                       ||
-                                                      Enumeration.FromValue<ObligationType>(p.ObligationType) ==
+                                                      (Domain.ObligationType)p.ObligationType ==
                                                       ObligationType.Both
                                                       || producer.obligationType == obligationTypeType.Both));
 
@@ -96,8 +96,8 @@
                             {
                                 // Map the existing obligation type to the producer so we can use it in the error message
                                 producer.obligationType =
-                                    Enumeration.FromValue<ObligationType>(existingProducer.ObligationType)
-                                        .ToDeserializedXmlObligationType();
+                                    DeserializedXmlExtensions.ToDeserializedXmlObligationType(
+                                        (Domain.ObligationType)existingProducer.ObligationType);
                                 return false;
                             }
                         }
