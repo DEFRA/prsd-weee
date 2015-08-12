@@ -4,13 +4,25 @@
     ViewBag.Title = "Edit Scheme";
 }
 
-<header class="hgroup">
-    <h1 class="heading-large">
-        Edit Scheme
-    </h1>
-</header>
-@using (Html.BeginForm("EditScheme", "Scheme"))
+@using (Html.BeginForm())
 {
+    <div class="heading-large" style="padding-bottom:2%">
+        <header class="hgroup">
+            <h1 style="position: absolute; font-weight:bold">
+                Edit Scheme
+            </h1>
+        </header>
+
+        <div class="grid-row">
+            <div class="column-third" style="float: right">
+                <div class="@Html.Gds().FormGroupClass(m => m.Status)">
+                    @Html.Gds().ValidationMessageFor(m => m.Status)
+                    @Html.Gds().DropDownListFor(m => m.Status, Model.StatusSelectList, new { onchange = "document.forms[1].submit()" })
+                </div>
+            </div>
+        </div>
+    </div>
+
     @Html.AntiForgeryToken()
     @Html.Gds().ValidationSummary()
 

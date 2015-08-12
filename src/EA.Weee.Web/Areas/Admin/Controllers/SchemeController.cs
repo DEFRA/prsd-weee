@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Api.Client;
     using Base;
     using Core.Scheme;
@@ -37,7 +38,7 @@
                 return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
             }
 
-            return RedirectToAction("EditScheme", new { schemeId = viewModel.Selected.Value });
+            return RedirectToAction("EditScheme", new { id = viewModel.Selected.Value });
         }
 
         private async Task<List<SchemeData>> GetSchemes()
@@ -49,23 +50,31 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditScheme(Guid schemeId)
+        public async Task<ActionResult> EditScheme(Guid id)
         {
-            var model = new SchemeViewModel { CompetentAuthorities = await GetCompetentAuthorities() };
+            var model = new SchemeViewModel
+            {
+                CompetentAuthorities = await GetCompetentAuthorities()
+            };
             return View("EditScheme", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditScheme(SchemeViewModel model)
+        public async Task<ActionResult> EditScheme(Guid id, SchemeViewModel model)
         {
-            model.CompetentAuthorities = await GetCompetentAuthorities();
-            if (!ModelState.IsValid)
+            if (model.Status == SchemeStatus.Rejected)
             {
-                return View("EditScheme", model);
+                return RedirectToAction("ConfirmRejection", "Scheme", new { id });
             }
-            //TODO : Need to save data
-            return View("EditScheme", model);
+
+            if (ModelState.IsValid)
+            {
+                // TODO: Save data
+            }
+
+            model.CompetentAuthorities = await GetCompetentAuthorities(); // Bind data
+            return View(model);
         }
 
         private async Task<IEnumerable<UKCompetentAuthorityData>> GetCompetentAuthorities()
@@ -74,6 +83,21 @@
             {
                 return await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
             }
+        }
+
+        [HttpGet]
+        public ActionResult ConfirmRejection(Guid id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ConfirmRejection(Guid id, ConfirmRejectionViewModel model)
+        {
+            // TODO: An API Call to change the status to rejected
+            await Task.Run(() => { });
+
+            return RedirectToAction("ManageSchemes", "Scheme");
         }
     }
 }
