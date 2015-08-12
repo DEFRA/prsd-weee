@@ -97,7 +97,7 @@
             var context = new ValidationContext(model, null, null);
             var results = new List<ValidationResult>();
             var isModelStateValid = Validator.TryValidateObject(model, context, results, true);
-
+            A.CallTo(() => apiClient().SendAsync(A<string>._, A<VerifyApprovalNumberExists>._)).Returns(true);
             var viewResult = await controller.EditScheme(model);
 
             Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
@@ -125,10 +125,9 @@
             var context = new ValidationContext(model, null, null);
             var results = new List<ValidationResult>();
             var isModelStateValid = Validator.TryValidateObject(model, context, results, true);
-
-            var viewResult = await controller.EditScheme(model);
-
-            Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
+            A.CallTo(() => apiClient().SendAsync(A<string>._, A<VerifyApprovalNumberExists>._)).Returns(true);
+            var result = await controller.EditScheme(model);
+            Assert.Equal("EditScheme", ((ViewResult)result).ViewName);
             Assert.True(isModelStateValid);
         }
 
