@@ -14,6 +14,7 @@
             ObligationTypeSelectList = new SelectList(EnumHelper.GetValues(typeof(ObligationType)), "Key", "Value");
             StatusSelectList = new SelectList(EnumHelper.GetValues(typeof(SchemeStatus)), "Key", "Value");
             Status = SchemeStatus.Pending;
+            IsUnchangeableStatus = false;
         }
 
         [Required(ErrorMessage = "Approval number is required.")]
@@ -50,6 +51,8 @@
         [Required(ErrorMessage = "Status is required")]
         [Display(Name = "Status")]
         public SchemeStatus Status { get; set; }
+
+        public bool IsUnchangeableStatus { get; set; }
 
         public IEnumerable<UKCompetentAuthorityData> CompetentAuthorities { get; set; }
 

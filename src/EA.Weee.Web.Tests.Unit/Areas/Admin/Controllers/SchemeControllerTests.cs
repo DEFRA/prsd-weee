@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.Scheme;
     using Core.Shared;
     using FakeItEasy;
     using Prsd.Core.Mediator;
@@ -50,7 +51,7 @@
         }
 
         [Fact]
-        public async void GetEditScheme_ModelWithNoError_ReturnsView_WithManageSchemeModel()
+        public async void GetEditScheme_ReturnsView_WithManageSchemeModel()
         {
             var schemeId = Guid.NewGuid();
 
@@ -62,6 +63,23 @@
             var model = ((ViewResult)result).Model;
 
             Assert.IsType<SchemeViewModel>(model);
+        }
+
+        [Theory]
+        [InlineData(SchemeStatus.Approved)]
+        [InlineData(SchemeStatus.Rejected)]
+        public async void GetEditScheme_StatusIsRejectedOrApproved_StatusIsUnchangable(SchemeStatus status)
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
+                .Returns(new SchemeData
+                {
+                    SchemeStatus = status
+                });
+
+            var result = await SchemeController().EditScheme(Guid.NewGuid());
+            var model = (SchemeViewModel)((ViewResult)result).Model;
+
+            Assert.Equal(true, model.IsUnchangeableStatus);
         }
 
         [Theory]

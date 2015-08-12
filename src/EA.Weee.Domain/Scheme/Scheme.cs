@@ -62,6 +62,13 @@
 
         public void SetStatus(SchemeStatus status)
         {
+            if ((SchemeStatus == SchemeStatus.Approved && status != SchemeStatus.Approved)
+                || (SchemeStatus == SchemeStatus.Rejected && status != SchemeStatus.Rejected))
+            {
+                throw new InvalidOperationException(
+                    string.Format("Scheme cannot transition scheme status '{0}' to '{1}'", SchemeStatus, status));
+            }
+
             SchemeStatus = status;
         }
 
