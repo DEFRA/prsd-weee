@@ -1,26 +1,35 @@
 ﻿namespace EA.Weee.Api.Identity
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
     using DataAccess.Identity;
+    using EA.Weee.Core;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.DataAccess;
+    using EA.Weee.Domain.Organisation;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security.DataProtection;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
 
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
         private readonly ConfigurationService configurationService;
+        private readonly WeeeContext context;
 
         public ApplicationUserManager(IUserStore<ApplicationUser> store,
             IDataProtectionProvider dataProtectionProvider,
-            ConfigurationService configurationService)
+            ConfigurationService configurationService,
+            WeeeContext context)
             : base(store)
         {
             this.configurationService = configurationService;
+            this.context = context;
+
             UserValidator = new UserValidator<ApplicationUser>(this)
             {
                 AllowOnlyAlphanumericUserNames = false,
@@ -76,6 +85,29 @@
             foreach (var claim in user.Claims)
             {
                 claims.Add(new Claim(claim.ClaimType, claim.ClaimValue));
+            }
+
+            // Load WEEE-specific claims representing access to organisations.
+            List<Guid> organisationIds = await context.OrganisationUsers
+                            .Where(ou => ou.UserId == userId)
+                            .Where(ou => ou.OrganisationUserStatus.Value == (int)UserStatus.Approved)
+                            .Select(ou => ou.OrganisationId)
+                            .ToListAsync();
+
+            foreach (Guid organisationId in organisationIds)
+            {
+                claims.Add(new Claim(WeeeClaimTypes.OrganisationAccess, organisationId.ToString()));
+            }
+
+            // Load WEEE-specific claims representing access to schemes. 
+            List<Guid> schemeIds = await context.Schemes
+                .Where(s => organisationIds.Contains(s.OrganisationId))
+                .Select(s => s.Id)
+                .ToListAsync();
+
+            foreach (Guid schemeId in schemeIds)
+            {
+                claims.Add(new Claim(WeeeClaimTypes.SchemeAccess, schemeId.ToString()));
             }
 
             return claims;
