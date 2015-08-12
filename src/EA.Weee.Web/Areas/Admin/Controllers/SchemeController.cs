@@ -65,7 +65,9 @@
                     IbisCustomerReference = scheme.IbisCustomerReference,
                     CompetentAuthorityId = scheme.CompetentAuthorityId ?? Guid.Empty,
                     SchemeName = scheme.SchemeName,
-                    ObligationType = scheme.ObligationType
+                    ObligationType = scheme.ObligationType,
+                    Status = scheme.SchemeStatus,
+                    IsUnchangeableStatus = scheme.SchemeStatus == SchemeStatus.Approved || scheme.SchemeStatus == SchemeStatus.Rejected
                 };
 
                 return View("EditScheme", model);
@@ -83,6 +85,7 @@
 
             if (!ModelState.IsValid)
             {
+                model.CompetentAuthorities = await GetCompetentAuthorities();
                 return View(model);
             }
 
@@ -105,7 +108,7 @@
                     client.SendAsync(User.GetAccessToken(),
                         new UpdateSchemeInformation(id, model.SchemeName, model.ApprovalNumber,
                             model.IbisCustomerReference,
-                            model.ObligationType.Value, model.CompetentAuthorityId));
+                            model.ObligationType.Value, model.CompetentAuthorityId, model.Status));
 
                 return RedirectToAction("ManageSchemes");
             }
