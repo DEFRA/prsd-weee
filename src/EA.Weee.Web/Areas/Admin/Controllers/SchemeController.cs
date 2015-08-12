@@ -65,7 +65,7 @@
                     IbisCustomerReference = scheme.IbisCustomerReference,
                     CompetentAuthorityId = scheme.CompetentAuthorityId ?? Guid.Empty,
                     SchemeName = scheme.SchemeName,
-                    ObligationType = scheme.ObligationType ?? ObligationType.B2B
+                    ObligationType = scheme.ObligationType
                 };
 
                 return View("EditScheme", model);
@@ -101,7 +101,7 @@
                     client.SendAsync(User.GetAccessToken(),
                         new UpdateSchemeInformation(model.SchemeId, model.SchemeName, model.ApprovalNumber,
                             model.IbisCustomerReference,
-                            model.ObligationType, model.CompetentAuthorityId));
+                            model.ObligationType.Value, model.CompetentAuthorityId));
 
                 return View("EditScheme", model);
             }

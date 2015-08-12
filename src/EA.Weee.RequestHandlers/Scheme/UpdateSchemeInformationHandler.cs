@@ -2,10 +2,10 @@
 {
     using System;
     using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain;
+    using Mappings;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
 
@@ -28,7 +28,9 @@
                     message.SchemeId));
             }
 
-            scheme.UpdateScheme(message.SchemeName, message.ApprovalNumber, message.IbisCustomerReference, GetObligationType(message.ObligationType), message.CompetentAuthorityId);
+            var obligationType = ValueObjectInitializer.GetObligationType(message.ObligationType);
+
+            scheme.UpdateScheme(message.SchemeName, message.ApprovalNumber, message.IbisCustomerReference, obligationType, message.CompetentAuthorityId);
 
             try
             {
@@ -40,25 +42,6 @@
             }
 
             return scheme.Id;
-        }
-
-        public ObligationType GetObligationType(Core.Scheme.MemberUploadTesting.ObligationType obligationType)
-        {
-            switch (obligationType)
-            {
-                case Core.Scheme.MemberUploadTesting.ObligationType.B2B:
-                    return ObligationType.B2B;
-
-                case Core.Scheme.MemberUploadTesting.ObligationType.B2C:
-                    return ObligationType.B2C;
-
-                case Core.Scheme.MemberUploadTesting.ObligationType.Both:
-                    return ObligationType.Both;
-
-                default:
-                    throw new ArgumentException(string.Format("Unknown obligation type: {0}", obligationType),
-                        "obligationType");
-            }
         }
     }
 }

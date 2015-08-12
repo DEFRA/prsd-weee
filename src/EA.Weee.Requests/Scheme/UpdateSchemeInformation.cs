@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Requests.Scheme
 {
     using System;
-    using Core.Scheme.MemberUploadTesting;
+    using Core.Shared;
     using Prsd.Core.Mediator;
 
     public class UpdateSchemeInformation : IRequest<Guid>
