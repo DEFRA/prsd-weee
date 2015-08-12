@@ -6,12 +6,11 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
-    using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
     using FakeItEasy;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels;
-    using Web.Areas.Scheme.Controllers;
+    using Weee.Requests.Scheme;
     using Xunit;
 
     public class SchemeControllerTests
@@ -131,6 +130,30 @@
 
             Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
             Assert.True(isModelStateValid);
+        }
+
+        [Fact]
+        public async void PostEditScheme_OldApprovalNumberAndApprovalNumberNotMatch_MustVerifyApprovalNumberExists()
+        {
+            var controller = new SchemeController(apiClient);
+
+            var scheme = new SchemeViewModel
+            {
+                OldApprovalNumber = "WEE/AD1234DC/SCH",
+                ApprovalNumber = "WEE/ZZ3456EE/SCH",
+                SchemeName = "Any value",
+                ObligationType = ObligationType.B2B,
+                CompetentAuthorityId = Guid.NewGuid(),
+                IbisCustomerReference = "Any value"
+            };
+
+            await controller.EditScheme(scheme);
+
+            A.CallTo(() => apiClient.Invoke().SendAsync(A<string>._, A<VerifyApprovalNumberExists>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => apiClient.Invoke().SendAsync(A<string>._, A<UpdateSchemeInformation>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

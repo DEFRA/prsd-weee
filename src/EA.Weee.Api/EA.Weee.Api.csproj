@@ -207,6 +207,10 @@
       <HintPath>..\packages\Thinktecture.IdentityModel.Core.1.4.0\lib\net45\Thinktecture.IdentityModel.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Thinktecture.IdentityModel.Owin.ClaimsTransformation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Thinktecture.IdentityModel.Owin.ClaimsTransformation.1.0.1\lib\net45\Thinktecture.IdentityModel.Owin.ClaimsTransformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Thinktecture.IdentityServer3, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Thinktecture.IdentityServer3.1.6.2\lib\net45\Thinktecture.IdentityServer3.dll</HintPath>

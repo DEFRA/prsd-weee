@@ -7,6 +7,7 @@
     using Api.Client;
     using Base;
     using Core.Scheme;
+    using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
     using Infrastructure;
     using ViewModels;
@@ -51,8 +52,24 @@
         [HttpGet]
         public async Task<ActionResult> EditScheme(Guid schemeId)
         {
-            var model = new SchemeViewModel { CompetentAuthorities = await GetCompetentAuthorities() };
-            return View("EditScheme", model);
+            using (var client = apiClient())
+            {
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+
+                var model = new SchemeViewModel
+                {
+                    CompetentAuthorities = await GetCompetentAuthorities(),
+                    SchemeId = schemeId,
+                    ApprovalNumber = scheme.ApprovalName,
+                    OldApprovalNumber = scheme.ApprovalName,
+                    IbisCustomerReference = scheme.IbisCustomerReference,
+                    CompetentAuthorityId = scheme.CompetentAuthorityId ?? Guid.Empty,
+                    SchemeName = scheme.SchemeName,
+                    ObligationType = scheme.ObligationType
+                };
+
+                return View("EditScheme", model);
+            }
         }
 
         [HttpPost]
@@ -64,10 +81,31 @@
             {
                 return View("EditScheme", model);
             }
-            //TODO : Need to save data
-            return View("EditScheme", model);
-        }
 
+            using (var client = apiClient())
+            {
+                if (model.OldApprovalNumber != model.ApprovalNumber)
+                {
+                    var approvalNumberExists = await
+                        client.SendAsync(User.GetAccessToken(),
+                            new VerifyApprovalNumberExists(model.ApprovalNumber));
+
+                    if (approvalNumberExists)
+                    {
+                        ModelState.AddModelError(string.Empty, "Approval number already exists.");
+                        return View("EditScheme", model);
+                    }
+                }
+
+                await
+                    client.SendAsync(User.GetAccessToken(),
+                        new UpdateSchemeInformation(model.SchemeId, model.SchemeName, model.ApprovalNumber,
+                            model.IbisCustomerReference,
+                            model.ObligationType.Value, model.CompetentAuthorityId));
+
+                return RedirectToAction("ManageSchemes");
+            }
+        }
         private async Task<IEnumerable<UKCompetentAuthorityData>> GetCompetentAuthorities()
         {
             using (var client = apiClient())

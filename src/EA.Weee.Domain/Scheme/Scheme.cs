@@ -6,6 +6,7 @@
     using System.Text;
     using Organisation;
     using Producer;
+    using Prsd.Core;
     using Prsd.Core.Domain;
 
     public class Scheme : Entity
@@ -31,6 +32,28 @@
         public virtual string ApprovalNumber { get; private set; }
 
         public virtual List<Producer> Producers { get; private set; }
+
+        public string SchemeName { get; private set; }
+
+        public string IbisCustomerReference { get; private set; }
+
+        public ObligationType? ObligationType { get; private set; }
+
+        public Guid? CompetentAuthorityId { get; private set; }
+
+        public virtual UKCompetentAuthority CompetentAuthority { get; private set; }
+
+        public void UpdateScheme(string schemeName, string approvalNumber, string ibisCustomerReference, ObligationType? obligationType, Guid competentAuthorityId)
+        {
+            Guard.ArgumentNotNullOrEmpty(() => schemeName, schemeName);
+            Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
+
+            SchemeName = schemeName;
+            ApprovalNumber = approvalNumber;
+            IbisCustomerReference = ibisCustomerReference;
+            ObligationType = obligationType;
+            CompetentAuthorityId = competentAuthorityId;
+        }
 
         public void SetProducers(List<Producer> producers)
         {

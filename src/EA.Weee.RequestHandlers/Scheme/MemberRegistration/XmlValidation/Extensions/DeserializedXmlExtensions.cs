@@ -38,7 +38,7 @@
             }
         }
 
-        public static obligationTypeType ToDeserializedXmlObligationType(this ObligationType obligationType)
+        public static obligationTypeType ToDeserializedXmlObligationType(ObligationType obligationType)
         {
             if (obligationType == ObligationType.B2B)
             {

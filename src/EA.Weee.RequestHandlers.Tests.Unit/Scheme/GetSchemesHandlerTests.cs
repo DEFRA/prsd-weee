@@ -69,7 +69,7 @@
         private async Task<List<SchemeData>> RunHandler(params Scheme[] schemes)
         {
             var context = MakeContextWithSchemes(schemes);
-            var handler = new GetSchemesHandler(context, new SchemeMap());
+            var handler = new GetSchemesHandler(context, new SchemeMap(new UKCompetentAuthorityMap()));
             return await handler.HandleAsync(new GetSchemes());
         }
 
