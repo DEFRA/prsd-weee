@@ -42,10 +42,16 @@
 
         public MemberUpload GenerateMemberUpload(ProcessXMLFile messageXmlFile, List<MemberUploadError> errors, decimal totalCharges, Guid? schemeId)
         {
-            var xml = xmlConverter.XmlToUtf8String(messageXmlFile);
-            var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
-
-            return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), schemeId);
+            if (errors != null && errors.Any(e => e.ErrorType == MemberUploadErrorType.Schema))
+            {
+                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile), errors, totalCharges, null, schemeId);
+            }
+            else
+            {
+                var xml = xmlConverter.XmlToUtf8String(messageXmlFile);
+                var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
+                return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), schemeId);
+            }
         }
 
         private async Task<IEnumerable<Producer>> SetProducerData(schemeType scheme, Guid schemeId, MemberUpload memberUpload, Hashtable producerCharges)
