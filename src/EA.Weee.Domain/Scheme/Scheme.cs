@@ -37,6 +37,11 @@
             Producers = producers;
         }
 
+        public void SetStatus(SchemeStatus status)
+        {
+            SchemeStatus = status;
+        }
+
         public List<Producer> GetProducersList(int complianceYear)
         {
             return Producers

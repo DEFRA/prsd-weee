@@ -6,25 +6,26 @@
     using Api.Client;
     using Core.Shared;
     using FakeItEasy;
+    using Prsd.Core.Mediator;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels;
+    using Weee.Requests.Scheme;
     using Xunit;
 
     public class SchemeControllerTests
     {
-        private readonly Func<IWeeeClient> apiClient;
+        private readonly IWeeeClient weeeClient;
 
         public SchemeControllerTests()
         {
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            apiClient = () => weeeClient;
+            weeeClient = A.Fake<IWeeeClient>();
         }
 
         [Fact]
         public async Task ManageSchemesPost_AllGood_ReturnsManageSchemeRedirect()
         {
             var selectedGuid = Guid.NewGuid();
-            var controller = new SchemeController(apiClient);
+            var controller = SchemeController();
 
             var result = await controller.ManageSchemes(new ManageSchemesViewModel { Selected = selectedGuid });
 
@@ -39,7 +40,7 @@
         [Fact]
         public async Task ManageSchemesPost_ModelError_ReturnsView()
         {
-            var controller = new SchemeController(apiClient);
+            var controller = SchemeController();
             controller.ModelState.AddModelError(string.Empty, "Some error");
 
             var result = await controller.ManageSchemes(new ManageSchemesViewModel());
@@ -53,7 +54,7 @@
         {
             var schemeId = Guid.NewGuid();
 
-            var controller = new SchemeController(apiClient);
+            var controller = SchemeController();
 
             var result = await controller.EditScheme(schemeId);
 
@@ -68,7 +69,7 @@
         [InlineData(SchemeStatus.Pending)]
         public async void PostEditScheme_ModelWithError_AndSchemeIsNotRejected_ReturnsView(SchemeStatus status)
         {
-            var controller = new SchemeController(apiClient);
+            var controller = SchemeController();
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
             var schemeId = Guid.NewGuid();
             var result = await controller.EditScheme(schemeId, new SchemeViewModel
@@ -82,7 +83,7 @@
         [Fact]
         public async void PostEditScheme_ModelWithError_ButSchemeIsRejected_RedirectsToRejectionConfirmation_WithSchemeId()
         {
-            var controller = new SchemeController(apiClient);
+            var controller = SchemeController();
             var schemeId = Guid.NewGuid();
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
             var result = await controller.EditScheme(schemeId, new SchemeViewModel
@@ -102,7 +103,7 @@
         [Fact]
         public async void PostEditScheme_ModelWithNoError_ButSchemeIsRejected_RedirectsToRejectionConfirmation_WithSchemeId()
         {
-            var controller = new SchemeController(apiClient);
+            var controller = SchemeController();
             var schemeId = Guid.NewGuid();
             var result = await controller.EditScheme(schemeId, new SchemeViewModel
             {
@@ -119,10 +120,19 @@
         }
 
         [Fact]
-        public async void HttpPost_ConfirmRejection_RedirectsToManageSchemes()
+        public async void HttpPost_ConfirmRejection_SendsSetStatusRequest_WithRejectedStatus_AndRedirectsToManageSchemes()
         {
+            var status = SchemeStatus.Pending;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
+                .Invokes((string t, IRequest<Guid> s) => status = ((SetSchemeStatus)s).Status)
+                .Returns(Guid.NewGuid());
+
             var result = await SchemeController().ConfirmRejection(Guid.NewGuid(), new ConfirmRejectionViewModel());
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+            Assert.Equal(SchemeStatus.Rejected, status);
             Assert.IsType<RedirectToRouteResult>(result);
 
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
@@ -133,7 +143,7 @@
 
         private SchemeController SchemeController()
         {
-            return new SchemeController(apiClient);
+            return new SchemeController(() => weeeClient);
         }
     }
 }

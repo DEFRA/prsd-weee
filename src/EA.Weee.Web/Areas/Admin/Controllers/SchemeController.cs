@@ -94,8 +94,10 @@
         [HttpPost]
         public async Task<ActionResult> ConfirmRejection(Guid id, ConfirmRejectionViewModel model)
         {
-            // TODO: An API Call to change the status to rejected
-            await Task.Run(() => { });
+            using (var client = apiClient())
+            {
+                await client.SendAsync(User.GetAccessToken(), new SetSchemeStatus(id, SchemeStatus.Rejected));
+            }
 
             return RedirectToAction("ManageSchemes", "Scheme");
         }
