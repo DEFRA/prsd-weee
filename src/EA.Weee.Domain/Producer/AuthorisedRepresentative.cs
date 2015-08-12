@@ -15,7 +15,7 @@
         {
         }
 
-        public bool Equals(AuthorisedRepresentative other)
+        public virtual bool Equals(AuthorisedRepresentative other)
         {
             if (other == null)
             {

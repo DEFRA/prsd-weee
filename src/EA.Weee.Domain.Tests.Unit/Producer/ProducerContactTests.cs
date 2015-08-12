@@ -141,17 +141,13 @@
             private string mobile = "07896000000";
             private string fax = "07896999999";
             private string email = "test@mail.co.uk";
+            private ProducerAddress address = new AlwaysEqualProducerAddress();
 
             private ProducerContactBuilder()
             {
             }
 
             private ProducerContact Build()
-            {
-                return Build(new AlwaysEqualProducerAddress());
-            }
-
-            private ProducerContact Build(ProducerAddress address)
             {
                 return new ProducerContact(title,
                                  forename,
@@ -227,8 +223,9 @@
             public static ProducerContact WithProducerAddress(ProducerAddress address)
             {
                 var builder = new ProducerContactBuilder();
+                builder.address = address;
 
-                return builder.Build(address);
+                return builder.Build();
             }
         }
     }
