@@ -79,7 +79,7 @@
         [InlineData("WEE/891234CD/SCH")]
         [InlineData("WEE/AB1DF4CD/SCH")]
         [InlineData("WEE/AB123482/SCH")]
-        public async void PostEditScheme_ModelWithInCorrectApprovalNumber_ReturnsViewWithError(string approvalNumber)
+        public async void PostEditScheme_ModelWithInCorrectApprovalNumber_ReturnsError(string approvalNumber)
         {
             var controller = new SchemeController(apiClient);
             var model = new SchemeViewModel
@@ -98,9 +98,6 @@
             var results = new List<ValidationResult>();
             var isModelStateValid = Validator.TryValidateObject(model, context, results, true);
 
-            var viewResult = await controller.EditScheme(model);
-
-            Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
             Assert.False(isModelStateValid);
         }
 
@@ -128,7 +125,8 @@
 
             var viewResult = await controller.EditScheme(model);
 
-            Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
+            var redirectValues = ((RedirectToRouteResult)viewResult).RouteValues;
+            Assert.Equal("ManageSchemes", redirectValues["action"]);
             Assert.True(isModelStateValid);
         }
 
