@@ -20,7 +20,7 @@
             var producer = GetTestProducer("WEE/12345678");
             producer.MemberUpload.Submit();
             scheme.SetProducers(new List<Producer> { producer });
-            var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear;
+            var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear.Value;
             var producers = scheme.GetProducersList(complianceYear);
 
             Assert.NotNull(producers);
@@ -164,7 +164,7 @@
 
             scheme.SetProducers(new List<Producer> { producer });
 
-            var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear;
+            var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear.Value;
             var csvData = scheme.GetProducerCSV(complianceYear);
 
             Assert.NotNull(csvData);
@@ -191,7 +191,7 @@
 
             scheme.SetProducers(new List<Producer> { producer });
 
-            var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear;
+            var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear.Value;
             var csvData = scheme.GetProducerCSV(complianceYear);
 
             var csvFieldValues = ReadCSVLine(csvData, 1);
@@ -227,7 +227,7 @@
 
             scheme.SetProducers(new List<Producer> { producer });
 
-            var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear;
+            var complianceYear = scheme.Producers.First().MemberUpload.ComplianceYear.Value;
             var csvData = scheme.GetProducerCSV(complianceYear);
 
             var csvFieldValues = ReadCSVLine(csvData, 1);

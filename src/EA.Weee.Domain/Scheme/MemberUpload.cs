@@ -21,7 +21,7 @@
 
         public string Data { get; private set; }
 
-        public virtual int ComplianceYear { get; private set; }
+        public virtual int? ComplianceYear { get; private set; }
 
         public virtual bool IsSubmitted { get; private set; }
 
@@ -29,10 +29,8 @@
 
         public decimal TotalCharges { get; private set; }
 
-        public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors, decimal totalCharges, int complianceYear, Guid? schemeId = null)
+        public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors, decimal totalCharges, int? complianceYear, Guid? schemeId = null)
         {
-            Guard.ArgumentNotDefaultValue(() => complianceYear, complianceYear);
-
             OrganisationId = organisationId;
             SchemeId = schemeId.GetValueOrDefault();
             Data = data;
