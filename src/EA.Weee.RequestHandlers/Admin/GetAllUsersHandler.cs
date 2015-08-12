@@ -21,36 +21,51 @@
 
         public async Task<List<UserSearchData>> HandleAsync(GetAllUsers message)
         {
-            List<UserSearchData> users = new List<UserSearchData>();
-            var organisationsUsers = await(from u in context.Users
-                        join ou in context.OrganisationUsers on u.Id equals ou.UserId
-                        select new UserSearchData
-                        {
-                            Email = u.Email,
-                            FirstName = u.FirstName,
-                            Id = u.Id,
-                            LastName = u.Surname,
-                            OrganisationName = ou.Organisation.Name ?? ou.Organisation.TradingName,
-                            Status = (userStatus)ou.UserStatus.Value
-                        }).ToListAsync();
-            
+            var users = new List<UserSearchData>();
+            // organisation users
+            var organisationsUsers = await GetOrganisationUsers();
             users.AddRange(organisationsUsers.Select(user => user).ToList());
 
-            //internal admin users
-            var competentAuthorityUsers = await(from u in context.Users
-                                                 join cu in context.CompetentAuthorityUsers on u.Id equals cu.UserId
-                                                 select new UserSearchData
-                                                 {
-                                                     Email = u.Email,
-                                                     FirstName = u.FirstName,
-                                                     Id = u.Id,
-                                                     LastName = u.Surname,
-                                                     OrganisationName = cu.CompetentAuthority.Abbreviation,
-                                                     Status = (userStatus)cu.UserStatus.Value
-                                                 }).ToListAsync();
-
+            //internal users
+            var competentAuthorityUsers = await GetCompetentAuthorityUsers();
             users.AddRange(competentAuthorityUsers.Select(interaluser => interaluser).ToList());
             return users.OrderBy(u => u.FullName).ToList();
+        }
+
+        private async Task<List<UserSearchData>> GetCompetentAuthorityUsers()
+        {
+            var competentAuthorityUsers = await(from u in context.Users
+                join cu in context.CompetentAuthorityUsers on u.Id equals cu.UserId into caUsers
+                from caUser in caUsers
+                join ca in context.UKCompetentAuthorities on caUser.CompetentAuthorityId equals ca.Id
+                select new UserSearchData
+                {
+                    Email = u.Email,
+                    FirstName = u.FirstName,
+                    Id = u.Id,
+                    LastName = u.Surname,
+                    OrganisationName = ca.Abbreviation,
+                    Status = (userStatus)caUser.UserStatus.Value
+                }).ToListAsync();
+            return competentAuthorityUsers;
+        }
+
+        private async Task<List<UserSearchData>> GetOrganisationUsers()
+        {
+            var organisationsUsers = await(from u in context.Users
+                join ou in context.OrganisationUsers on u.Id equals ou.UserId into idOrgUsers
+                from orgUser in idOrgUsers
+                join org in context.Organisations on orgUser.OrganisationId equals org.Id
+                select new UserSearchData
+                {
+                    Email = u.Email,
+                    FirstName = u.FirstName,
+                    Id = u.Id,
+                    LastName = u.Surname,
+                    OrganisationName = org.Name ?? org.TradingName,
+                    Status = (userStatus)orgUser.UserStatus.Value
+                }).ToListAsync();
+            return organisationsUsers;
         }
     }
 }
