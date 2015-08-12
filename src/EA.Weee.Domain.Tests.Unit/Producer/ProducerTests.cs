@@ -82,15 +82,6 @@
         }
 
         [Fact]
-        public void Producer_EqualsProducerDifferentIsCurrentForComplianceYear_ReturnsFalse()
-        {
-            var producer = ProducerBuilder.NewProducer;
-            var producer2 = ProducerBuilder.WithIsCurrentForComplianceYear(false);
-
-            Assert.NotEqual(producer, producer2);
-        }
-
-        [Fact]
         public void Producer_EqualsProducerDifferentObligationType_ReturnsFalse()
         {
             var producer = ProducerBuilder.NewProducer;
@@ -122,15 +113,6 @@
         {
             var producer = ProducerBuilder.NewProducer;
             var producer2 = ProducerBuilder.WithEEEPlacedOnMarketBandType(new CustomEEEPlacedOnMarketBandType(1000));
-
-            Assert.NotEqual(producer, producer2);
-        }
-
-        [Fact]
-        public void Producer_EqualsProducerDifferentChargeBandType_ReturnsFalse()
-        {
-            var producer = ProducerBuilder.NewProducer;
-            var producer2 = ProducerBuilder.WithChargeBandType(new CustomChargeBandType(1000));
 
             Assert.NotEqual(producer, producer2);
         }
@@ -343,14 +325,6 @@
                 return builder.Build();
             }
 
-            public static Producer WithIsCurrentForComplianceYear(bool isCurrentForComplianceYear)
-            {
-                var builder = new ProducerBuilder();
-                builder.isCurrentForComplianceYear = isCurrentForComplianceYear;
-
-                return builder.Build();
-            }
-
             public static Producer WithObligationType(ObligationType obligationType)
             {
                 var builder = new ProducerBuilder();
@@ -379,14 +353,6 @@
             {
                 var builder = new ProducerBuilder();
                 builder.eeePlacedOnMarketBandType = eeePlacedOnMarketBandType;
-
-                return builder.Build();
-            }
-
-            public static Producer WithChargeBandType(ChargeBandType chargeBandType)
-            {
-                var builder = new ProducerBuilder();
-                builder.chargeBandType = chargeBandType;
 
                 return builder.Build();
             }
