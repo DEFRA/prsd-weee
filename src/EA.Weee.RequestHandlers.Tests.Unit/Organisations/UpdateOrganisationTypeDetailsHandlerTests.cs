@@ -1,14 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
 {
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain.Organisation;
+    using EA.Weee.Core.Security;
     using FakeItEasy;
     using Helpers;
     using RequestHandlers.Organisations;
     using Requests.Organisations;
+    using System;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
     using OrganisationType = Core.Organisations.OrganisationType;
 
@@ -27,7 +29,11 @@
 
             A.CallTo(() => context.Organisations).Returns(organisations);
 
-            var handler = new UpdateOrganisationTypeDetailsHandler(context);
+            IWeeeAuthorization authorization = new AuthorizationBuilder()
+                .AllowOrganisationAccess()
+                .Build();
+
+            var handler = new UpdateOrganisationTypeDetailsHandler(context, authorization);
 
             const string tradingName = "trading name";
             const string companyName = "company name";

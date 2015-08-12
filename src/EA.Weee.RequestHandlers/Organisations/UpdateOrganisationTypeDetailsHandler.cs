@@ -1,24 +1,29 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
+    using DataAccess;
+    using Domain.Organisation;
+    using EA.Weee.Core.Security;
+    using Prsd.Core.Mediator;
+    using Requests.Organisations;
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
-    using DataAccess;
-    using Domain.Organisation;
-    using Prsd.Core.Mediator;
-    using Requests.Organisations;
 
     internal class UpdateOrganisationTypeDetailsHandler : IRequestHandler<UpdateOrganisationTypeDetails, Guid>
     {
         private readonly WeeeContext db;
+        private readonly IWeeeAuthorization authorization;
 
-        public UpdateOrganisationTypeDetailsHandler(WeeeContext context)
+        public UpdateOrganisationTypeDetailsHandler(WeeeContext context, IWeeeAuthorization authorization)
         {
             db = context;
+            this.authorization = authorization;
         }
 
         public async Task<Guid> HandleAsync(UpdateOrganisationTypeDetails message)
         {
+            authorization.EnsureOrganisationAccess(message.OrganisationId);
+
             var organisation = await db.Organisations.SingleOrDefaultAsync(o => o.Id == message.OrganisationId);
 
             if (organisation == null)

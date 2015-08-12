@@ -2,6 +2,7 @@
 {
     using Autofac;
     using Configuration.EmailRules;
+    using EA.Weee.Core.Security;
 
     public class CoreModule : Module
     {
@@ -15,6 +16,10 @@
             builder.RegisterAssemblyTypes(this.GetType().Assembly)
                 .Where(t => t.Namespace.Contains("Helpers"))
                 .AsImplementedInterfaces();
+
+            builder.RegisterType<WeeeAuthorization>()
+                .As<IWeeeAuthorization>()
+                .InstancePerRequest();
         }
     }
 }
