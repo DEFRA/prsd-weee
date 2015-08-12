@@ -1,26 +1,31 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain;
     using Domain.Organisation;
+    using EA.Weee.Core.Security;
     using Mappings;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
 
     internal class AddAddressToOrganisationHandler : IRequestHandler<AddAddressToOrganisation, Guid>
     {
         private readonly WeeeContext db;
+        private readonly IWeeeAuthorization authorization;
 
-        public AddAddressToOrganisationHandler(WeeeContext context)
+        public AddAddressToOrganisationHandler(WeeeContext context, IWeeeAuthorization authorization)
         {
             db = context;
+            this.authorization = authorization;
         }
 
         public async Task<Guid> HandleAsync(AddAddressToOrganisation message)
         {
+            authorization.EnsureOrganisationAccess(message.OrganisationId);
+
             var addresstype = ValueObjectInitializer.GetAddressType(message.TypeOfAddress);
 
             if (await db.Organisations.FirstOrDefaultAsync(o => o.Id == message.OrganisationId) == null)
