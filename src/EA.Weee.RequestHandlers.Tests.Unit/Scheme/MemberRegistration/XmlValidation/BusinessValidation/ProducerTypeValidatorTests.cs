@@ -10,6 +10,7 @@
     using FluentValidation.Internal;
     using RequestHandlers;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation;
+    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.Extensions;
     using Xunit;
     using ValidationContext = XmlValidation.ValidationContext;
 
@@ -20,15 +21,17 @@
         [InlineData("", "TestCompany")]
         public void Amendment_RegistrationNumberIsNullOrEmpty_FailsValidation_AndIncludesTradingNameInMessage_AndErrorLevelIsError(string registrationNumber, string tradingName)
         {
-            var validationResult = ProducerTypeValidator().Validate(new producerType
+            var producer = new producerType
             {
-                tradingName = tradingName, 
-                status = statusType.A, 
+                tradingName = tradingName,
+                status = statusType.A,
                 registrationNo = registrationNumber
-            }, new RulesetValidatorSelector(BusinessValidator.RegistrationNoRuleSet));
+            };
+
+            var validationResult = ProducerTypeValidator().Validate(producer, new RulesetValidatorSelector(BusinessValidator.RegistrationNoRuleSet));
 
             Assert.False(validationResult.IsValid);
-            Assert.Contains(tradingName, validationResult.Errors.Single().ErrorMessage);
+            Assert.Contains(producer.GetProducerName(), validationResult.Errors.Single().ErrorMessage);
             Assert.Equal(ErrorLevel.Error, validationResult.Errors.Single().CustomState);
         }
 
@@ -38,12 +41,14 @@
             const string validRegistrationNumber = "ABC12345";
             const string validTradingName = "MyCompany";
 
-            var validationResult = ProducerTypeValidator().Validate(new producerType
+            var producer = new producerType
             {
-                tradingName = validTradingName, 
-                status = statusType.A, 
+                tradingName = validTradingName,
+                status = statusType.A,
                 registrationNo = validRegistrationNumber
-            }, new RulesetValidatorSelector(BusinessValidator.RegistrationNoRuleSet));
+            };
+
+            var validationResult = ProducerTypeValidator().Validate(producer, new RulesetValidatorSelector(BusinessValidator.RegistrationNoRuleSet));
 
             Assert.True(validationResult.IsValid);
         }
@@ -54,15 +59,17 @@
             const string validRegistrationNumber = "ABC12345";
             const string validTradingName = "MyCompany";
 
-            var validationResult = ProducerTypeValidator().Validate(new producerType
+            var producer = new producerType
             {
                 tradingName = validTradingName, 
                 status = statusType.I, 
                 registrationNo = validRegistrationNumber
-            }, new RulesetValidatorSelector(BusinessValidator.RegistrationNoRuleSet));
+            };
+
+            var validationResult = ProducerTypeValidator().Validate(producer, new RulesetValidatorSelector(BusinessValidator.RegistrationNoRuleSet));
 
             Assert.False(validationResult.IsValid);
-            Assert.Contains(validTradingName, validationResult.Errors.Single().ErrorMessage);
+            Assert.Contains(producer.GetProducerName(), validationResult.Errors.Single().ErrorMessage);
             Assert.Equal(ErrorLevel.Error, validationResult.Errors.Single().CustomState);
         }
 
@@ -71,12 +78,14 @@
         [InlineData("", "TestCompany")]
         public void Insert_RegistrationNumberIsNullOrEmpty_PassesValidation(string registrationNumber, string tradingName)
         {
-            var validationResult = ProducerTypeValidator().Validate(new producerType
+            var producer = new producerType
             {
                 tradingName = tradingName, 
                 status = statusType.I, 
                 registrationNo = registrationNumber
-            }, new RulesetValidatorSelector(BusinessValidator.RegistrationNoRuleSet));
+            };
+
+            var validationResult = ProducerTypeValidator().Validate(producer, new RulesetValidatorSelector(BusinessValidator.RegistrationNoRuleSet));
 
             Assert.True(validationResult.IsValid);
         }
@@ -124,7 +133,7 @@
                 .Validate(producer, new RulesetValidatorSelector(BusinessValidator.AuthorisedRepresentativeMustBeInUkRuleset));
 
             Assert.False(validationResult.IsValid);
-            Assert.Contains(ValidTradingName, validationResult.Errors.Single().ErrorMessage);
+            Assert.Contains(producer.GetProducerName(), validationResult.Errors.Single().ErrorMessage);
             Assert.Equal(ErrorLevel.Error, validationResult.Errors.Single().CustomState);
         }
 
@@ -220,7 +229,7 @@
             var result = ProducerTypeValidator(new List<Producer> { Producer("ABC12346") }, new List<MigratedProducer>())
                 .Validate(producer, new RulesetValidatorSelector(BusinessValidator.DataValidationRuleSet));
 
-            Assert.Contains(partnershipName, result.Errors.Single().ErrorMessage);
+            Assert.Contains(producer.GetProducerName(), result.Errors.Single().ErrorMessage);
         }
 
         [Fact]
@@ -246,7 +255,7 @@
             var result = ProducerTypeValidator(new List<Producer> { Producer("ABC12346") }, new List<MigratedProducer>())
                 .Validate(producer, new RulesetValidatorSelector(BusinessValidator.DataValidationRuleSet));
 
-            Assert.Contains(companyName, result.Errors.Single().ErrorMessage);
+            Assert.Contains(producer.GetProducerName(), result.Errors.Single().ErrorMessage);
         }
 
         [Fact]
