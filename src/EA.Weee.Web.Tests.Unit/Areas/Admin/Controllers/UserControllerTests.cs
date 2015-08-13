@@ -34,17 +34,5 @@
             Assert.Equal("EditUser", redirectValues["action"]);
             Assert.Equal(selectedGuid, redirectValues["userId"]);
         }
-
-        [Fact]
-        public async Task ManageUsersPost_ModelError_ReturnsView()
-        {
-            var controller = new UserController(apiClient);
-            controller.ModelState.AddModelError(string.Empty, "Some error");
-
-            var result = await controller.ManageUsers(new ManageUsersViewModel());
-
-            Assert.NotNull(result);
-            Assert.IsType<ViewResult>(result);
-        }
     }
 }

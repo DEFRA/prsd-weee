@@ -34,7 +34,7 @@
                     await
                         context.OrganisationUsers.Where(
                             ou =>
-                                query.OrganisationUserStatus.Contains(ou.OrganisationUserStatus.Value) && ou.UserId == query.UserId)
+                                query.OrganisationUserStatus.Contains(ou.UserStatus.Value) && ou.UserId == query.UserId)
                             .ToListAsync();
             }
             else

@@ -18,6 +18,7 @@
     using Services;
     using Thinktecture.IdentityModel.Client;
     using ViewModels;
+    using Weee.Requests.Admin;
     using UserInfoClient = Thinktecture.IdentityModel.Client.UserInfoClient;
 
     public class AccountController : Controller
@@ -74,6 +75,7 @@
                     var userId = await client.NewUser.CreateUserAsync(userCreationData);
                     var signInResponse = await oauthClient().GetAccessTokenAsync(userCreationData.Email, userCreationData.Password);
                     authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
+                    var competentUserId = await client.SendAsync(signInResponse.AccessToken, new AddCompetentAuthorityUser(userId));
                     bool emailSent = await Send(userCreationData.Email, userId, signInResponse.AccessToken);
                     if (!emailSent)
                     {
