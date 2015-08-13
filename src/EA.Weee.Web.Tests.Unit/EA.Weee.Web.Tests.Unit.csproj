@@ -164,6 +164,7 @@
     <Compile Include="Areas\Scheme\ViewModels\LatestMemberUploadViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SchemeViewModelTests.cs" />
     <Compile Include="Controllers\AccountControllerTest.cs" />
+    <Compile Include="Controllers\ControllerTests.cs" />
     <Compile Include="Controllers\OrganisationRegistrationControllerTests.cs" />
     <Compile Include="Requests\RequestCreatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

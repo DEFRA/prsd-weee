@@ -15,8 +15,7 @@
     <AssemblyName>EA.Weee.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>
-    </IISExpressSSLPort>
+    <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
@@ -480,6 +479,8 @@
     <Content Include="Areas\Scheme\Views\MemberRegistration\Summary.cshtml" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\AuthorizationRequired.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\EditScheme.cshtml" />
+    <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\ConfirmRejection.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
@@ -705,7 +706,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52657</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:52655/</IISUrl>
+          <IISUrl>https://localhost:44300/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

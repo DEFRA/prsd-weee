@@ -5,6 +5,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Domain;
+    using Domain.Admin;
     using Domain.Organisation;
     using Domain.Producer;
     using Domain.Scheme;
@@ -39,6 +40,8 @@
         public virtual DbSet<MigratedProducer> MigratedProducers { get; set; }
 
         public virtual DbSet<ProducerChargeBand> ProducerChargeBands { get; set; }
+
+        public virtual DbSet<CompetentAuthorityUser> CompetentAuthorityUsers { get; set; }
 
         public WeeeContext(IUserContext userContext)
             : base("name=Weee.DefaultConnection")
