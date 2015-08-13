@@ -1,8 +1,6 @@
-﻿namespace EA.Weee.Web.Areas.PCS.ViewModels
+﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.Helpers;
 
     public class LatestMemberUploadViewModel

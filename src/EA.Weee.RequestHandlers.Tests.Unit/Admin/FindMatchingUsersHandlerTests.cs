@@ -16,7 +16,7 @@
     using Requests.Shared;
     using Xunit;
 
-    public class GetAllUsersHandlerTests
+    public class FindMatchingUsersHandlerTests
     {
         private readonly DbContextHelper helper = new DbContextHelper();
         
@@ -33,7 +33,7 @@
         private static readonly FindMatchingUsers Message = new FindMatchingUsers();
         private readonly OrganisationHelper orgHelper = new OrganisationHelper();
         
-        public GetAllUsersHandlerTests()
+        public FindMatchingUsersHandlerTests()
         {
             UsersDbSet = A.Fake<DbSet<User>>();
             OrganisationDbSet = A.Fake<DbSet<Organisation>>();
@@ -88,7 +88,7 @@
         }
 
         [Fact]
-        public async void GetAllUsersHandler_ReturnsAllUsers()
+        public async void FindMatchingUsersHandler_ReturnsAllUsers()
         {
             UserSearchDataResult users = await handler.HandleAsync(Message);
             Assert.NotEmpty(users.Results);

@@ -3,7 +3,7 @@
     using System;
     using Prsd.Core.Domain;
 
-    public class Company : Entity
+    public class Company : Entity, IEquatable<Company>
     {
         public Company(string name, string registrationNumber, ProducerContact registeredOfficeContact)
         {
@@ -21,30 +21,21 @@
              return base.GetHashCode();
          }
 
-         public override bool Equals(Object obj)
+         public virtual bool Equals(Company other)
          {
-             Company companyObj = obj as Company;
-             if (companyObj == null)
+             if (other == null)
              {
                  return false;
              }
 
-             var compareRegisteredOfficeContact = false;
-             if (RegisteredOfficeContact == null && companyObj.RegisteredOfficeContact == null)
-             {
-                 compareRegisteredOfficeContact = true;
-             }
-             else
-             {
-                 if (RegisteredOfficeContact != null && companyObj.RegisteredOfficeContact != null)
-                 {
-                     compareRegisteredOfficeContact =
-                         RegisteredOfficeContact.Equals(companyObj.RegisteredOfficeContact);
-                 }
-             }
+             return Name == other.Name &&
+                    CompanyNumber == other.CompanyNumber &&
+                    object.Equals(RegisteredOfficeContact, other.RegisteredOfficeContact);
+         }
 
-             return Name.Equals(companyObj.Name)
-                    && CompanyNumber.Equals(companyObj.CompanyNumber) && compareRegisteredOfficeContact;
+         public override bool Equals(Object obj)
+         {
+             return Equals(obj as Company);
          }
 
         public string Name { get; private set; }

@@ -482,6 +482,7 @@
     <Content Include="Areas\Admin\Views\Scheme\EditScheme.cshtml" />
     <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Scheme\ConfirmRejection.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
@@ -571,6 +572,7 @@
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ConfirmRejectionViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\InternalUserActivity.cs" />
     <Compile Include="Areas\Admin\ViewModels\InternalUserActivityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\InternalUserCreationViewModel.cs" />
@@ -593,7 +595,9 @@
     <Compile Include="Controllers\Base\ExternalSiteController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Filters\AuthorizeClaimsAttribute.cs" />
+    <Compile Include="Infrastructure\AreaRegistrationContextExtensions.cs" />
     <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
+    <Compile Include="Infrastructure\RouteCollectionExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\EmailTemplate.cs" />

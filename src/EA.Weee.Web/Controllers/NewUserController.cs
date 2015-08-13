@@ -114,6 +114,7 @@
 
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public ActionResult RedirectToHomePage()
         {
             return RedirectToAction("LandingPage", "Home");

@@ -17,7 +17,7 @@
     public class UserController : AdminController
     {
           private readonly Func<IWeeeClient> apiClient;
-
+          const int UsersPerPage = 25;
           public UserController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
@@ -27,6 +27,10 @@
         [HttpGet]
         public async Task<ActionResult> ManageUsers(int page = 1)
         {
+            if (page < 1)
+            {
+                page = 1;
+            }
             PagingViewModel fallbackPagingViewModel = new PagingViewModel("User", "ManageUsers");
             ManageUsersViewModel fallbackManageUsersViewModel = BuildManageUsersViewModel(new List<UserSearchData>(),
                 fallbackPagingViewModel);
@@ -34,12 +38,10 @@
             {
                 try
                 {
-                    const int usersPerPage = 2;
-
-                    var usersSearchResultData = await client.SendAsync(User.GetAccessToken(), new FindMatchingUsers(page, usersPerPage));
+                    var usersSearchResultData = await client.SendAsync(User.GetAccessToken(), new FindMatchingUsers(page, UsersPerPage));
 
                     PagingViewModel pagingViewModel =
-                        PagingViewModel.FromValues(usersSearchResultData.UsersCount, usersPerPage, page,
+                        PagingViewModel.FromValues(usersSearchResultData.UsersCount, UsersPerPage, page,
                             "ManageUsers", "User");
 
                     return View(BuildManageUsersViewModel(usersSearchResultData.Results, pagingViewModel));
@@ -64,17 +66,23 @@
                 UsersPagingViewModel = pagingViewModel
             };
         }
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageUsers(ManageUsersViewModel model, int page = 1)
         {
+            if (page < 1)
+            {
+                page = 1;
+            }
+
             if (!ModelState.IsValid)
             {
                 using (var client = apiClient())
                 {
-                    const int usersPerPage = 2;
-                    var usersSearchResultData = await client.SendAsync(User.GetAccessToken(), new FindMatchingUsers(page, usersPerPage));
-                   
-                    var pagingViewModel = PagingViewModel.FromValues(usersSearchResultData.UsersCount, 2, 1, "ManageUsers", "User");
+                    var usersSearchResultData = await client.SendAsync(User.GetAccessToken(), new FindMatchingUsers(page, UsersPerPage));
+
+                    var pagingViewModel = PagingViewModel.FromValues(usersSearchResultData.UsersCount, UsersPerPage, page, "ManageUsers", "User");
                     
                     return View(BuildManageUsersViewModel(usersSearchResultData.Results, pagingViewModel));
                 }

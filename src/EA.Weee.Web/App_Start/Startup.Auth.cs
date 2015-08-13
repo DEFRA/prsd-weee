@@ -5,6 +5,7 @@
     using Owin;
     using Prsd.Core.Web.Mvc.Owin;
     using Services;
+    using System;
 
     public partial class Startup
     {
@@ -13,7 +14,9 @@
         {
             app.UseCookieAuthentication(new PrsdCookieAuthenticationOptions(authenticationType: Constants.WeeeAuthType)
             {
-                LoginPath = new PathString("/Account/Login")
+                LoginPath = new PathString("/Account/Login"),
+                SlidingExpiration = true,
+                ExpireTimeSpan = TimeSpan.FromMinutes(20)
             });
         }
     }
