@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using System;
+    using Core.NewUser;
     using Core.Organisations;
+    using Domain;
     using Domain.Organisation;
     using Prsd.Core.Mapper;
     using OrganisationUserStatus = Core.Shared.UserStatus;
@@ -10,9 +12,12 @@
     {
         private readonly IMap<Organisation, OrganisationData> organisationMap;
 
-        public OrganisationUserMap(IMap<Organisation, OrganisationData> organisationMap)
+        private readonly IMap<User, UserData> userMap;
+
+        public OrganisationUserMap(IMap<Organisation, OrganisationData> organisationMap, IMap<User, UserData> userMap)
         {
             this.organisationMap = organisationMap;
+            this.userMap = userMap;
         }
 
         public OrganisationUserData Map(OrganisationUser source)
@@ -30,7 +35,9 @@
                 // Use existing mappers to map addresses and contact
                 Organisation = source.Organisation != null
                     ? organisationMap.Map(source.Organisation)
-                    : null
+                    : null,
+
+                User = source.User != null ? userMap.Map(source.User) : null
             };
         }
     }

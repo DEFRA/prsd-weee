@@ -1,13 +1,17 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
     using Infrastructure;
     using ViewModels;
     using Web.Controllers.Base;
+    using Web.ViewModels.Shared;
     using Weee.Requests.Organisations;
+    using Weee.Requests.Users;
 
     [Authorize]
     public class HomeController : ExternalSiteController
@@ -55,6 +59,47 @@
             }
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ManageOrganisationUsers(Guid pcsId)
+        {
+            var model = new OrganisationUsersViewModel();
+
+            using (var client = apiClient())
+            {
+                var orgUsers = await client.SendAsync(User.GetAccessToken(),
+                    new GetUsersByOrganisationId(pcsId));
+
+                var orgUsersKeyValuePairs =
+                    orgUsers.Select(
+                        ou =>
+                            new KeyValuePair<string, Guid>(
+                                ou.User.FirstName + " " + ou.User.Surname + " - ( " +
+                                ou.OrganisationUserStatus.ToString() + " )", new Guid(ou.UserId)));
+
+                var orgUserRadioButtons = new StringGuidRadioButtons(orgUsersKeyValuePairs);
+
+                if (model.OrganisationUsers != null)
+                {
+                    orgUserRadioButtons.SelectedValue = model.OrganisationUsers.SelectedValue;
+                }
+
+                model.OrganisationUsers = orgUserRadioButtons;
+            }
+
+            return View("ManageOrganisationUsers", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ManageOrganisationUsers(OrganisationUsersViewModel model)
+        {   
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            return View(model);
         }
     }
 }

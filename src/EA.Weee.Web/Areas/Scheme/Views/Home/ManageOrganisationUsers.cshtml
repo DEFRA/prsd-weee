@@ -1,0 +1,26 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.OrganisationUsersViewModel
+@{
+    ViewBag.Title = "Manage Organisation Users";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">Which user would you like to manage?</h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "ManageOrganisationUsers", controllerName: "Home", method: FormMethod.Post))
+    {
+        @Html.Gds().ValidationSummary()
+        @Html.AntiForgeryToken()
+
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.OrganisationUsers.Selected)" id="OrganisationUsers">
+        @Html.Gds().ValidationMessageFor(m => m.OrganisationUsers.SelectedValue)
+        @Html.EditorFor(m => m.OrganisationUsers)
+    </div>
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+    }
+}
