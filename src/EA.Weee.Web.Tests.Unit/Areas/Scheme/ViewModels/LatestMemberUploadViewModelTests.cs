@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.ViewModels
 {
-    using Web.Areas.PCS.ViewModels;
+    using Web.Areas.Scheme.ViewModels;
     using Xunit;
 
     public class LatestMemberUploadViewModelTests
@@ -12,7 +12,7 @@
         [InlineData(102400, "0.1", "Mb")]
         [InlineData(104857599, "100", "Mb")]
         [InlineData(104857600, "0.1", "Gb")]
-        public void Test1(double fileSizeInBytes, string expectedRoundedValue, string expectedSuffix)
+        public void SizeInBytes_IsFormattedAsExpected(double fileSizeInBytes, string expectedRoundedValue, string expectedSuffix)
         {
             var model = new LatestMemberUploadViewModel
             {

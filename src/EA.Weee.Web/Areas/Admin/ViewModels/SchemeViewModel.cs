@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
-    using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
     using Prsd.Core.Helpers;
 
@@ -13,6 +12,9 @@
         public SchemeViewModel()
         {
             ObligationTypeSelectList = new SelectList(EnumHelper.GetValues(typeof(ObligationType)), "Key", "Value");
+            StatusSelectList = new SelectList(EnumHelper.GetValues(typeof(SchemeStatus)), "Key", "Value");
+            Status = SchemeStatus.Pending;
+            IsUnchangeableStatus = false;
         }
 
         [Required(ErrorMessage = "Approval number is required.")]
@@ -21,6 +23,8 @@
         [DataType(DataType.Text)]
         [Display(Name = "Approval number")]
         public string ApprovalNumber { get; set; }
+
+        public string OldApprovalNumber { get; set; }
 
         [Required(ErrorMessage = "Scheme name is required.")]
         [StringLength(70)]
@@ -35,7 +39,7 @@
 
         [Required(ErrorMessage = "Obligation type is required.")]
         [Display(Name = "Obligation type")]
-        public ObligationType ObligationType { get; set; }
+        public ObligationType? ObligationType { get; set; }
 
         [Required(ErrorMessage = "Authorising authority is required.")]
         [Display(Name = "Authorising authority")]
@@ -44,8 +48,16 @@
         [Display(Name = "Authorising authority")]
         public string CompetentAuthorityName { get; set; }
 
+        [Required(ErrorMessage = "Status is required")]
+        [Display(Name = "Status")]
+        public SchemeStatus Status { get; set; }
+
+        public bool IsUnchangeableStatus { get; set; }
+
         public IEnumerable<UKCompetentAuthorityData> CompetentAuthorities { get; set; }
 
         public IEnumerable<SelectListItem> ObligationTypeSelectList { get; set; }
+
+        public IEnumerable<SelectListItem> StatusSelectList { get; set; }
     }
 }
