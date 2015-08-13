@@ -2,19 +2,19 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Text;
-    using PCS;
+    using EA.Weee.Domain;
     using Prsd.Core.Domain;
+    using Scheme;
 
-    public class Producer : Entity
+    public class Producer : Entity, IEquatable<Producer>
     {
         public Producer(Guid schemeId,
             MemberUpload memberUpload,
             ProducerBusiness producerBusiness,
             AuthorisedRepresentative authorisedRepresentative,
-            DateTime lastSubmittedDate,
+            DateTime updatedDate,
             decimal annualTurnover,
             bool vatRegistered,
             string registrationNumber,
@@ -26,12 +26,13 @@
             AnnualTurnOverBandType annualTurnOverBandType,
             List<BrandName> brandnames,
             List<SICCode> codes,
-            bool isCurrentForComplianceYear)
+            bool isCurrentForComplianceYear,
+            ChargeBandType chargeBandType)
         {
             ProducerBusiness = producerBusiness;
             AuthorisedRepresentative = authorisedRepresentative;
 
-            LastSubmitted = lastSubmittedDate;
+            UpdatedDate = updatedDate;
 
             AnnualTurnover = annualTurnover;
             VATRegistered = vatRegistered;
@@ -41,7 +42,7 @@
 
             EEEPlacedOnMarketBandType = eeePlacedOnMarketBandType.Value;
             SellingTechniqueType = sellingTechniqueType.Value;
-            ObligationType = obligationType.Value;
+            ObligationType = (int)obligationType;
             AnnualTurnOverBandType = annualTurnOverBandType.Value;
 
             BrandNames = brandnames;
@@ -50,79 +51,12 @@
             MemberUpload = memberUpload;
 
             IsCurrentForComplianceYear = isCurrentForComplianceYear;
+
+            ChargeBandType = chargeBandType.Value;
         }
 
         protected Producer()
         {
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        public override bool Equals(object obj)
-        {
-            var producerObj = obj as Producer;
-
-            if (producerObj == null)
-            {
-                return false;
-            }
-            var compareAuthorisedRepresentative = false;
-            if (AuthorisedRepresentative == null && producerObj.AuthorisedRepresentative == null)
-            {
-                compareAuthorisedRepresentative = true;
-            }
-            else
-            {
-                if (AuthorisedRepresentative != null && producerObj.AuthorisedRepresentative != null)
-                {
-                    compareAuthorisedRepresentative =
-                        AuthorisedRepresentative.Equals(producerObj.AuthorisedRepresentative);
-                }
-            }
-
-            var compareProducerBusiness = false;
-            if (ProducerBusiness == null && producerObj.ProducerBusiness == null)
-            {
-                compareProducerBusiness = true;
-            }
-            else
-            {
-                if (ProducerBusiness != null && producerObj.ProducerBusiness != null)
-                {
-                    compareProducerBusiness =
-                        ProducerBusiness.Equals(producerObj.ProducerBusiness);
-                }
-            }
-
-            var compareBrandName = false;
-            if (BrandNames.Count == producerObj.BrandNames.Count)
-            {
-                BrandNames.Sort();
-                producerObj.BrandNames.Sort();
-                compareBrandName = BrandNames.SequenceEqual(producerObj.BrandNames);
-            }
-
-            var compareSICCodes = false;
-            if (SICCodes.Count == producerObj.SICCodes.Count)
-            {
-                SICCodes.Sort();
-                producerObj.SICCodes.Sort();
-                compareSICCodes = SICCodes.SequenceEqual(producerObj.SICCodes);
-            }
-
-            return RegistrationNumber.Equals(producerObj.RegistrationNumber)
-                   && TradingName.Equals(producerObj.TradingName)
-                   && VATRegistered.Equals(producerObj.VATRegistered)
-                   && AnnualTurnover.Equals(producerObj.AnnualTurnover)
-                   && ObligationType.Equals(producerObj.ObligationType)
-                   && AnnualTurnOverBandType.Equals(producerObj.AnnualTurnOverBandType)
-                   && SellingTechniqueType.Equals(producerObj.SellingTechniqueType)
-                   && EEEPlacedOnMarketBandType.Equals(producerObj.EEEPlacedOnMarketBandType)
-                   &&
-                   compareBrandName && compareSICCodes && compareAuthorisedRepresentative && compareProducerBusiness;
         }
 
         public virtual Guid SchemeId { get; private set; }
@@ -141,7 +75,7 @@
 
         public virtual ProducerBusiness ProducerBusiness { get; private set; }
 
-        public DateTime LastSubmitted { get; private set; }
+        public DateTime UpdatedDate { get; private set; }
 
         public virtual string RegistrationNumber { get; private set; }
 
@@ -167,6 +101,32 @@
 
         public int ChargeBandType { get; private set; }
 
+        private string OrgName { get; set; }
+
+        public string OrganisationName
+        {
+            get
+            {
+                if (OrgName != null)
+                {
+                    return OrgName;
+                }
+                if (ProducerBusiness != null)
+                {
+                    if (ProducerBusiness.CompanyDetails != null && ProducerBusiness.CompanyDetails.Name != null)
+                    {
+                        OrgName = ProducerBusiness.CompanyDetails.Name;
+                    }
+                    else if (ProducerBusiness.Partnership != null && ProducerBusiness.Partnership.Name != null)
+                    {
+                        OrgName = ProducerBusiness.Partnership.Name;
+                    }
+                    return OrgName;
+                }
+                return null;
+            }
+        }
+
         /// <summary>
         /// Indicates whether this data is current. I.e. no data has been submitted
         /// for a producer with the same registration number, scheme and compliance year
@@ -189,14 +149,20 @@
         {
             return (from item in Scheme.Producers
                     where item.MemberUpload.IsSubmitted && item.MemberUpload.ComplianceYear == complianceYear && item.RegistrationNumber == registrationNumber
-                    select item.LastSubmitted).ToList().OrderBy(ls => ls).First();
+                    select item.UpdatedDate).ToList().OrderBy(ls => ls).First();
         }
 
         public static string GetCSVColumnHeaders()
         {
             string[] csvColumnHeaders =
             {
-                "Organisation Name", "Trading Name", "PRN", "Companies house number", "Charge band", "Date & Time (GMT) Registered",
+                "Organisation Name", 
+                "Trading Name", 
+                "PRN", 
+                "Companies house number", 
+                "Charge band", 
+                "Date & Time (GMT) Registered", 
+                "Date & Time (GMT) Last Updated",
                 "Authorised representative", "Overseas producer"
             };
 
@@ -215,45 +181,37 @@
             return sb.ToString();
         }
 
-        public string ToCsvString(Producer producer)
+        public string ToCsvString()
         {
             StringBuilder sb = new StringBuilder();
 
-            var orgName = string.Empty;
-            if (producer.ProducerBusiness.CompanyDetails != null &&
-                producer.ProducerBusiness.CompanyDetails.Name != null)
+            var companiesHouseNumber = ProducerBusiness != null && ProducerBusiness.CompanyDetails != null
+                ? ProducerBusiness.CompanyDetails.CompanyNumber
+                : string.Empty;
+
+            var chargeBand = Enumeration.FromValue<ChargeBandType>(ChargeBandType).DisplayName;
+
+            var dateRegistered = string.Format("{0:dd/MM/yyyy HH:mm:ss}", GetProducerRegistrationDate(RegistrationNumber, MemberUpload.ComplianceYear.Value));
+
+            var dateAmended = string.Format("{0:dd/MM/yyyy HH:mm:ss}", UpdatedDate);
+            if (dateRegistered == dateAmended)
             {
-                orgName = producer.ProducerBusiness.CompanyDetails.Name;
-            }
-            else if (producer.ProducerBusiness.Partnership != null &&
-                     producer.ProducerBusiness.Partnership.Name != null)
-            {
-                orgName = producer.ProducerBusiness.Partnership.Name;
+                dateAmended = string.Empty;
             }
 
-            var tradingName = producer.TradingName;
-            var prn = string.IsNullOrEmpty(producer.RegistrationNumber)
-                ? "WEE/********"
-                : producer.RegistrationNumber;
-            var companiesHouseNumber = string.Empty;
-            if (producer.ProducerBusiness != null && producer.ProducerBusiness.CompanyDetails != null)
-            {
-                companiesHouseNumber = producer.ProducerBusiness.CompanyDetails.CompanyNumber;
-            }
-            var chargeBand = "***";
-            var dateRegistered = GetProducerRegistrationDate(producer.RegistrationNumber, producer.MemberUpload.ComplianceYear).ToString(CultureInfo.InvariantCulture);
-            var authorisedRepresentative = producer.AuthorisedRepresentative == null ? "No" : "Yes";
-            var overseasProducer = producer.AuthorisedRepresentative == null
+            var authorisedRepresentative = AuthorisedRepresentative == null ? "No" : "Yes";
+
+            var overseasProducer = AuthorisedRepresentative == null
                 ? string.Empty
-                : producer.AuthorisedRepresentative.OverseasProducerName;
+                : AuthorisedRepresentative.OverseasProducerName;
 
-            sb.Append(ReplaceSpecialCharacters(orgName));
+            sb.Append(ReplaceSpecialCharacters(OrganisationName));
             sb.Append(",");
 
-            sb.Append(ReplaceSpecialCharacters(tradingName));
+            sb.Append(ReplaceSpecialCharacters(TradingName));
             sb.Append(",");
 
-            sb.Append(ReplaceSpecialCharacters(prn));
+            sb.Append(ReplaceSpecialCharacters(RegistrationNumber));
             sb.Append(",");
 
             sb.Append(ReplaceSpecialCharacters(companiesHouseNumber));
@@ -263,6 +221,9 @@
             sb.Append(",");
 
             sb.Append(ReplaceSpecialCharacters(dateRegistered));
+            sb.Append(",");
+
+            sb.Append(ReplaceSpecialCharacters(dateAmended));
             sb.Append(",");
 
             sb.Append(ReplaceSpecialCharacters(authorisedRepresentative));
@@ -291,6 +252,37 @@
                 value = value.Replace("\n", " ");
             }
             return value;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public bool Equals(Producer other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return RegistrationNumber == other.RegistrationNumber &&
+                   TradingName == other.TradingName &&
+                   VATRegistered == other.VATRegistered &&
+                   AnnualTurnover == other.AnnualTurnover &&
+                   ObligationType == other.ObligationType &&
+                   AnnualTurnOverBandType == other.AnnualTurnOverBandType &&
+                   SellingTechniqueType == other.SellingTechniqueType &&
+                   EEEPlacedOnMarketBandType == other.EEEPlacedOnMarketBandType &&
+                   object.Equals(AuthorisedRepresentative, other.AuthorisedRepresentative) &&
+                   object.Equals(ProducerBusiness, other.ProducerBusiness) &&
+                   BrandNames.ElementsEqual(other.BrandNames) &&
+                   SICCodes.ElementsEqual(other.SICCodes);
+        }
+        
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Producer);
         }
     }
 }

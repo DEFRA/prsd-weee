@@ -1,0 +1,27 @@
+﻿@model EA.Weee.Web.Areas.Scheme.ViewModels.SuccessfulSubmissionViewModel
+@{
+    ViewBag.Title = "Successful Submission";
+}
+
+@section main_content {
+    <header class="hgroup">
+        <div>
+            <h1 class="heading-large">You have successfully submitted your XML file</h1>
+        </div>
+    </header>
+
+    @using (Html.BeginForm("LogOff", "Account", new { Area = "" }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <p>You can now <a href="@Url.Action("GetProducerCSV", "MemberRegistration", new { memberUploadId = @Model.MemberUploadId })">download a CSV file</a> containing your registered scheme members.</p>
+        <p>If you have finished performing tasks you can <span id="log-off-link"><noscript><input type="submit" value="log off" /></noscript></span> or proceed to perform more activities</p>
+    }
+
+    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $("#log-off-link").html("<a href=\"#\" onclick=\"$(this).closest('form').submit();\">log off</a>");
+    </script>
+}

@@ -3,25 +3,39 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using Configuration;
+    using Configuration.EmailRules;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class InternalEmailAddressAttribute : ValidationAttribute
     {
-        private readonly string[] emailSuffixWhitelist = 
+        private readonly IRuleChecker ruleChecker;
+        public IConfigurationManagerWrapper Configuration { get; set; }
+
+        public InternalEmailAddressAttribute()
         {
-            "@environment-agency.gov.uk",
-            "@cyfoethnaturiolcymru.gov.uk",
-            "@naturalresourceswales.gov.uk",
-            "@sepa.org.uk",
-            "@doeni.gov.uk"
-        };
+            Configuration = new ConfigurationManagerWrapper();
+            ruleChecker = new RuleChecker();
+        }
 
         public override bool IsValid(object value)
         {
+            var emailRules = Configuration.InternalEmailRules.Rules
+                .Cast<RuleElement>();
+
             if (value != null
                 && value.ToString() != string.Empty
                 && new EmailAddressAttribute().IsValid(value)
-                && !emailSuffixWhitelist.Any(suff => value.ToString().ToLowerInvariant().EndsWith(suff)))
+                && emailRules.All(r =>
+                {
+                    var action = ruleChecker.Check(r, value.ToString());
+                    if (action == null || action == RuleAction.Deny)
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }))
             {
                 return false;
             }

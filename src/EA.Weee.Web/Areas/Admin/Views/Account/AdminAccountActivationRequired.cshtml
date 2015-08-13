@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "Admin Account activation required";
+}
+
+@if (ViewBag.Errors != null && ((string[])ViewBag.Errors).Length > 0)
+{
+    <div class="validation-summary" style="margin-top: 25px">
+        <h2 class="heading-small">An error occurred.</h2>
+        <ul>
+            @foreach (var error in (string[])ViewBag.Errors)
+            {
+                <li>@Html.Raw(error)</li>
+            }
+        </ul>
+    </div>
+}
+
+<h2 class="heading-large">Activate your user account</h2>
+<p>
+    In order to use this service you must activate your user account.
+</p>
+@if (String.IsNullOrEmpty(ViewBag.UserEmailAddress))
+{
+    <p>We have sent you an activation email. You need to use the link in the email to activate your user account. Check your email inbox or junk folder.</p>
+}
+else
+{
+    <p>We have sent your activation email to @ViewBag.UserEmailAddress. You need to use the link in the email to activate your user account. Check your email inbox or junk folder.</p>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <p>
+        If you have not received the email you can
+        <button class="link-submit" type="submit">request another activation email.</button>
+    </p>
+}

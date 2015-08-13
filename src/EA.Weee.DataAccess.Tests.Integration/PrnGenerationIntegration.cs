@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -9,15 +10,17 @@
     using System.Xml.Linq;
     using System.Xml.Serialization;
     using Core.Helpers.PrnGeneration;
+    using Domain;
     using Domain.Organisation;
-    using Domain.PCS;
     using Domain.Producer;
+    using Domain.Scheme;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers;
-    using RequestHandlers.PCS.MemberRegistration;
-    using RequestHandlers.PCS.MemberRegistration.GenerateProducerObjects;
-    using Requests.PCS.MemberRegistration;
+    using RequestHandlers.Scheme.MemberRegistration;
+    using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
+    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.Extensions;
+    using Requests.Scheme.MemberRegistration;
     using Xunit;
 
     public class PrnGenerationIntegration
@@ -50,8 +53,25 @@
             long initialSeed = GetCurrentSeed();
             long expectedSeed = ExpectedSeedAfterThisXml(validXmlString, initialSeed);
 
+            XmlConverter xmlConverter = new XmlConverter();
+            var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
+
+            var producerCharges = new Hashtable();
+            var anyCharge = 30;
+            var anyChargeBand = ChargeBandType.E;
+
+            foreach (var producerData in schemeType.producerList)
+            {
+                var producerName = producerData.GetProducerName();
+                if (!producerCharges.ContainsKey(producerName))
+                {
+                    producerCharges.Add(producerName,
+                        new ProducerCharge { ChargeAmount = anyCharge, ChargeBandType = anyChargeBand });
+                }
+            }
+
             // act
-            IEnumerable<Producer> producers = await new GenerateProducerObjectsFromXml(new XmlConverter(), context).Generate(message, memberUpload);
+            IEnumerable<Producer> producers = await new GenerateFromXml(new XmlConverter(), context).GenerateProducers(message, memberUpload, producerCharges);
 
             // assert
             long newSeed = GetCurrentSeed();

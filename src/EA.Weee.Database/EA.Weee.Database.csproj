@@ -7,8 +7,8 @@
     <ProjectGuid>{756BF689-A8AB-4CA7-869C-7ED95D7AA80B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EA.Iws.Database</RootNamespace>
-    <AssemblyName>EA.Iws.Database</AssemblyName>
+    <RootNamespace>EA.Weee.Database</RootNamespace>
+    <AssemblyName>EA.Weee.Database</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -46,6 +46,11 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="scripts\AliaSQL.exe" />
+    <Content Include="scripts\Create\placeholder.txt" />
+    <Content Include="scripts\Everytime\placeholder.txt" />
+    <Content Include="scripts\TestData\placeholder.txt" />
+    <Content Include="scripts\Update\placeholder.txt" />
     <Content Include="scripts\Update\Sprint07\20150619-1126-InsertCompetentAuthorityData.sql" />
     <Content Include="scripts\Update\Sprint07\20150619-1017-InsertCountryData.sql" />
     <Content Include="scripts\Update\Sprint07\20150619-1023-UpdateCATable-AddCountryId.sql" />
@@ -59,12 +64,23 @@
     <Content Include="scripts\Update\Sprint10\20150721-1638-MigratedProducers.sql" />
     <Content Include="scripts\Update\Sprint10\20150723-1006-UpdateProducerTables.sql" />
     <Content Include="scripts\Update\Sprint10\20150723-1419-MigratedProducers.sql" />
+    <Content Include="scripts\Update\Sprint10\20150729-122655-UpdateMemberUploadAndAddChargeBand.sql" />
     <Content Include="scripts\Update\Sprint10\20150730-1253-UpdateClaimsForExternalUsers.sql" />
     <Content Include="scripts\Update\Sprint09\20150728-1216-SystemDataTable.sql" />
     <Content Include="scripts\Update\Sprint10\20150730-1942-AddIsCurrentForComplianceYear.sql" />
     <Content Include="scripts\Update\Sprint10\20150730-1953-AddIndexForProducerIsCurrent.sql" />
     <Content Include="scripts\Update\Sprint10\20150730-1956-AddSppRefreshProducerIsCurrent.sql" />
     <Content Include="scripts\Update\Sprint10\20150731-1309-PopulateSystemData.sql" />
+    <Content Include="scripts\Update\Sprint10\20150803-1016-AddMemberUploadErrorType.sql" />
+    <Content Include="scripts\Update\Sprint11\20150806-141430-AddPcsStatus.sql" />
+    <Content Include="scripts\Update\Sprint11\20150807-093358-ChangeToSchemeStatus.sql" />
+    <Content Include="scripts\Update\Sprint11\20150807-1202-UpdateSppRefreshProducerIsCurrent.sql" />
+    <Content Include="scripts\Update\Sprint11\20150806-1632-UpdateProducerTable.sql" />
+    <Content Include="scripts\Update\Sprint11\20150811-1039-AddCompetentAuthorityUserTable.sql" />
+    <Content Include="scripts\Update\Sprint11\20150811-1557-UpdateOrganisationUserTable.sql" />
+    <Content Include="scripts\Update\Sprint11\20150811-151242-NullableComplianceYear.sql" />
+    <Content Include="scripts\Update\Sprint11\20150812-0937-UpdateDataInCompetentAuthorityUserTable.sql" />
+    <Content Include="scripts\Update\Sprint11\20150811-162438-UpdateSchemeTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -73,11 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />
-    <Content Include="scripts\AliaSQL.exe" />
-    <Content Include="scripts\Create\placeholder.txt" />
-    <Content Include="scripts\Everytime\placeholder.txt" />
-    <Content Include="scripts\TestData\placeholder.txt" />
-    <Content Include="scripts\Update\placeholder.txt" />
     <Content Include="scripts\Update\Sprint00-IWS\20150526-164637-IntialiseFromIws.sql" />
     <Content Include="scripts\Update\Sprint06-WEEE\20150603-161233-UpdateOrganisationTable.sql" />
     <Content Include="scripts\Update\Sprint06-WEEE\20150604-093607-AddContactTable.sql" />

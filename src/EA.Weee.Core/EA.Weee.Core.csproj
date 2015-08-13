@@ -11,6 +11,7 @@
     <AssemblyName>EA.Weee.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>d672c622</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,17 +35,49 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15188.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15188-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="Autofac.Integration.Mvc">
+      <HintPath>..\packages\Autofac.Mvc5.3.3.4\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15188.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EA.Prsd.Core, Version=1.0.15211.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15188-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15211-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15211.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15211-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,8 +85,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\CompetentAuthorityUserData.cs" />
+    <Compile Include="Admin\UserSearchDataResult.cs" />
     <Compile Include="Claims.cs" />
+    <Compile Include="Configuration\EmailRules\IRuleChecker.cs" />
+    <Compile Include="Configuration\EmailRules\IRuleSectionChecker.cs" />
+    <Compile Include="Configuration\EmailRules\RuleAction.cs" />
+    <Compile Include="Configuration\EmailRules\RuleChecker.cs" />
+    <Compile Include="Configuration\EmailRules\RuleSectionChecker.cs" />
+    <Compile Include="Configuration\EmailRules\RuleElement.cs" />
+    <Compile Include="Configuration\EmailRules\RuleElementCollection.cs" />
+    <Compile Include="Configuration\EmailRules\RulesSection.cs" />
+    <Compile Include="Configuration\EmailRules\RuleType.cs" />
+    <Compile Include="Configuration\IConfigurationManagerWrapper.cs" />
     <Compile Include="CoreModule.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\PrnGeneration\IPrnHelper.cs" />
     <Compile Include="Helpers\PrnGeneration\IQuadraticResidueHelper.cs" />
     <Compile Include="Helpers\PrnGeneration\PrnAsComponents.cs" />
@@ -62,47 +108,54 @@
     <Compile Include="Helpers\Xml\IXmlErrorTranslator.cs" />
     <Compile Include="Helpers\Xml\XmlErrorTranslator.cs" />
     <Compile Include="NewUser\UserData.cs" />
+    <Compile Include="Admin\UserSearchData.cs" />
     <Compile Include="Organisations\ContactData.cs" />
     <Compile Include="Organisations\OrganisationData.cs" />
     <Compile Include="Organisations\OrganisationSearchData.cs" />
     <Compile Include="Organisations\OrganisationSearchDataResult.cs" />
     <Compile Include="Organisations\OrganisationType.cs" />
     <Compile Include="Organisations\OrganisationUserData.cs" />
-    <Compile Include="Organisations\OrganisationUserStatus.cs" />
-    <Compile Include="PCS\MemberUploadData.cs" />
-    <Compile Include="PCS\MemberUploadTesting\Address.cs" />
-    <Compile Include="PCS\MemberUploadTesting\AnnualTurnoverBand.cs" />
-    <Compile Include="PCS\MemberUploadTesting\AuthorizedRepresentative.cs" />
-    <Compile Include="PCS\MemberUploadTesting\Company.cs" />
-    <Compile Include="PCS\MemberUploadTesting\ContactDetails.cs" />
-    <Compile Include="PCS\MemberUploadTesting\CorrespondentForNotices.cs" />
-    <Compile Include="PCS\MemberUploadTesting\EEEPlacedOnMarketBand.cs" />
-    <Compile Include="PCS\MemberUploadTesting\IAddressSettings.cs" />
-    <Compile Include="PCS\MemberUploadTesting\IAuthorizedRepresentativeSettings.cs" />
-    <Compile Include="PCS\MemberUploadTesting\ICompanySettings.cs" />
-    <Compile Include="PCS\MemberUploadTesting\IContactDetailsSettings.cs" />
-    <Compile Include="PCS\MemberUploadTesting\ICorrespondentForNoticesSettings.cs" />
-    <Compile Include="PCS\MemberUploadTesting\IOverseasProducerSettings.cs" />
-    <Compile Include="PCS\MemberUploadTesting\IPartnershipSettings.cs" />
-    <Compile Include="PCS\MemberUploadTesting\IProducerBusinessSettings.cs" />
-    <Compile Include="PCS\MemberUploadTesting\ISchemeBusinessSettings.cs" />
-    <Compile Include="PCS\MemberUploadTesting\ISettings.cs" />
-    <Compile Include="PCS\MemberUploadTesting\ObligationType.cs" />
-    <Compile Include="PCS\MemberUploadTesting\OverseasProducer.cs" />
-    <Compile Include="PCS\MemberUploadTesting\Partnership.cs" />
-    <Compile Include="PCS\MemberUploadTesting\Producer.cs" />
-    <Compile Include="PCS\MemberUploadTesting\ProducerBusiness.cs" />
-    <Compile Include="PCS\MemberUploadTesting\ProducerList.cs" />
-    <Compile Include="PCS\MemberUploadTesting\ProducerListSettings.cs" />
-    <Compile Include="PCS\MemberUploadTesting\ProducerSettings.cs" />
-    <Compile Include="PCS\MemberUploadTesting\ProducerStatus.cs" />
-    <Compile Include="PCS\MemberUploadTesting\RandomHelper.cs" />
-    <Compile Include="PCS\MemberUploadTesting\SchemaVersion.cs" />
-    <Compile Include="PCS\MemberUploadTesting\SchemeBusiness.cs" />
-    <Compile Include="PCS\MemberUploadTesting\SchemeCompany.cs" />
-    <Compile Include="PCS\MemberUploadTesting\SchemePartnership.cs" />
-    <Compile Include="PCS\MemberUploadTesting\SellingTechnique.cs" />
-    <Compile Include="PCS\ProducerCSVFileData.cs" />
+    <Compile Include="Shared\ObligationType.cs" />
+    <Compile Include="Scheme\LatestMemberUpload.cs" />
+    <Compile Include="Scheme\LatestMemberUploadList.cs" />
+    <Compile Include="Scheme\MemberUploadData.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\Address.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\AnnualTurnoverBand.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\AuthorizedRepresentative.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\Company.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ContactDetails.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\CorrespondentForNotices.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\EEEPlacedOnMarketBand.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IAddressSettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IAuthorizedRepresentativeSettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ICompanySettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IContactDetailsSettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ICorrespondentForNoticesSettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IOverseasProducerSettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IPartnershipSettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IProducerBusinessSettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ISchemeBusinessSettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ISettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ObligationType.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\OverseasProducer.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\Partnership.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\Producer.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerBusiness.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerList.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerListSettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerSettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerStatus.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\RandomHelper.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\SchemaVersion.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\SchemeBusiness.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\SchemeCompany.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\SchemePartnership.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\SellingTechnique.cs" />
+    <Compile Include="Scheme\ProducerCSVFileData.cs" />
+    <Compile Include="Scheme\SchemeData.cs" />
+    <Compile Include="Configuration\ConfigurationManagerWrapper.cs" />
+    <Compile Include="Security\IWeeeAuthorization.cs" />
+    <Compile Include="Security\WeeeAuthorization.cs" />
     <Compile Include="Shared\AddressData.cs" />
     <Compile Include="Shared\AddressType.cs" />
     <Compile Include="Shared\CommonRegexPatterns.cs" />
@@ -111,15 +164,28 @@
     <Compile Include="Shared\ErrorLevel.cs" />
     <Compile Include="Shared\MemberUploadErrorData.cs" />
     <Compile Include="Shared\OrganisationStatus.cs" />
+    <Compile Include="Shared\SchemeStatus.cs" />
     <Compile Include="Shared\UKCompetentAuthorityData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\UserStatus.cs" />
     <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
     <Compile Include="Validation\InternalEmailAddressAttribute.cs" />
+    <Compile Include="WeeeClaimTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets'))" />
+    <Error Condition="!Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets'))" />
+  </Target>
+  <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

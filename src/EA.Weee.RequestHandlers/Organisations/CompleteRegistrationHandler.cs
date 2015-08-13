@@ -4,12 +4,12 @@
     using System.Data.Entity;
     using System.Threading.Tasks;
     using DataAccess;
+    using Domain;
     using Domain.Organisation;
-    using Domain.PCS;
+    using Domain.Scheme;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
-    using OrganisationUserStatus = Domain.Organisation.OrganisationUserStatus;
 
     internal class CompleteRegistrationHandler : IRequestHandler<CompleteRegistration, Guid>
     {
@@ -38,7 +38,7 @@
                     message.OrganisationId));
             }
 
-            var organisationUser = new OrganisationUser(userId, message.OrganisationId, OrganisationUserStatus.Approved);
+            var organisationUser = new OrganisationUser(userId, message.OrganisationId, UserStatus.Approved);
 
             var organisation = await db.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
 

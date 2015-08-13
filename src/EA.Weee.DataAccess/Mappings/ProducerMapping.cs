@@ -8,6 +8,7 @@
         public ProducerMapping()
         {
             ToTable("Producer", "Producer");
+            Ignore(p => p.OrganisationName);
         }
     }
 }
