@@ -4,6 +4,33 @@
     ViewBag.Title = "Manage schemes";
 }
 
+<style>
+    table.prsd-table {
+        border-collapse: separate;
+        border-spacing: 5px;
+    }
+
+    table.prsd-table th, table.prsd-table td {
+        padding-left: 10px;
+    }
+        
+    table.prsd-table th {
+        background-color: #ddd;
+    }
+
+    table.prsd-table td {
+        background-color: #f8f8f8;
+    }
+
+    table.prsd-table td {
+        width: 100%;
+    }
+
+    table.prsd-table td + td {
+        width: auto;
+    }
+</style>
+
 @section main_content {
     <header class="hgroup">
         <h1 class="heading-large">
@@ -17,7 +44,7 @@
         @Html.Gds().ValidationSummary()
         
         <div class="form-group">
-            <table>
+            <table class="prsd-table">
                 <thead>
                 <tr>
                     <th>Name</th>
@@ -30,7 +57,7 @@
                 {
                     <tr>
                         <td>@scheme.Name</td>
-                        <td>@scheme.SchemeStatus</td>
+                        <td class="prsd-table-highlight">@scheme.SchemeStatus</td>
                         <td>@Html.RadioButtonFor(m => m.Selected, @scheme.Id)</td>
                     </tr>
                 }
