@@ -19,7 +19,7 @@
         [Theory]
         [InlineData(null, "TestCompany")]
         [InlineData("", "TestCompany")]
-        public void Amendment_RegistrationNumberIsNullOrEmpty_FailsValidation_AndIncludesTradingNameInMessage_AndErrorLevelIsError(string registrationNumber, string tradingName)
+        public void Amendment_RegistrationNumberIsNullOrEmpty_FailsValidation_AndIncludesProducerNameInMessage_AndErrorLevelIsError(string registrationNumber, string tradingName)
         {
             var producer = new producerType
             {
@@ -54,7 +54,7 @@
         }
 
         [Fact]
-        public void Insert_RegistrationNumberIsNotNullOrEmpty_FailsValidation_AndIncludesTradingNameInMessage_AndErrorLevelIsError()
+        public void Insert_RegistrationNumberIsNotNullOrEmpty_FailsValidation_AndIncludesProducerNameInMessage_AndErrorLevelIsError()
         {
             const string validRegistrationNumber = "ABC12345";
             const string validTradingName = "MyCompany";
@@ -113,7 +113,7 @@
         }
 
         [Fact]
-        public void AuthorisedRepresentativeOfficeCountryIsNotInUnitedKingdom_FailsValidation_AndIncludesTradingNameInMessage_AndErrorLevelIsError()
+        public void AuthorisedRepresentativeOfficeCountryIsNotInUnitedKingdom_FailsValidation_AndIncludesProducerNameInMessage_AndErrorLevelIsError()
         {
             const string ValidTradingName = "MyCompany";
 
@@ -206,10 +206,9 @@
         }
 
         [Fact]
-        public void ProducerHasPrnNumberThatDoesNotExistAndProducerIsPartnership_ReturnsPartnerNameInErrorMessage()
+        public void ProducerHasPrnNumberThatDoesNotExistAndProducerIsPartnership_ReturnsProducerNameInErrorMessage()
         {
             const string prn = "ABC12345";
-            const string tradingName = "My Trading Name";
             const string partnershipName = "Partnership Name";
 
             var producer = new producerType()
@@ -223,7 +222,6 @@
                         partnershipName = partnershipName
                     }
                 },
-                tradingName = tradingName
             };
 
             var result = ProducerTypeValidator(new List<Producer> { Producer("ABC12346") }, new List<MigratedProducer>())
@@ -233,10 +231,9 @@
         }
 
         [Fact]
-        public void ProducerHasPrnNumberThatDoesNotExistAndProducerIsCompany_ReturnsCompanyNameInErrorMessage()
+        public void ProducerHasPrnNumberThatDoesNotExistAndProducerIsCompany_ReturnsProducerNameInErrorMessage()
         {
             const string prn = "ABC12345";
-            const string tradingName = "My Trading Name";
             const string companyName = "Company Name";
             var producer = new producerType
             {
@@ -249,7 +246,6 @@
                         companyName = companyName
                     }
                 },
-                tradingName = tradingName
             };
 
             var result = ProducerTypeValidator(new List<Producer> { Producer("ABC12346") }, new List<MigratedProducer>())
