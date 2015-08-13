@@ -84,8 +84,8 @@
         [Fact]
         public void Producer_EqualsProducerDifferentObligationType_ReturnsFalse()
         {
-            var producer = ProducerBuilder.NewProducer;
-            var producer2 = ProducerBuilder.WithObligationType(new CustomObligationType(1000));
+            var producer = ProducerBuilder.WithObligationType(ObligationType.B2B);
+            var producer2 = ProducerBuilder.WithObligationType(ObligationType.B2C);
 
             Assert.NotEqual(producer, producer2);
         }
@@ -199,14 +199,6 @@
             }
         }
 
-        private class CustomObligationType : ObligationType
-        {
-            public CustomObligationType(int value)
-            {
-                Value = value;
-            }
-        }
-
         private class CustomAnnualTurnOverBandType : AnnualTurnOverBandType
         {
             public CustomAnnualTurnOverBandType(int value)
@@ -239,7 +231,7 @@
             private decimal annualTurnover = 0;
             private bool isCurrentForComplianceYear = true;
 
-            private ObligationType obligationType = new CustomObligationType(0);
+            private ObligationType obligationType = ObligationType.B2B;
             private AnnualTurnOverBandType annualTurnOverBandType = new CustomAnnualTurnOverBandType(0);
             private SellingTechniqueType sellingTechniqueType = new CustomSellingTechniqueType(0);
             private EEEPlacedOnMarketBandType eeePlacedOnMarketBandType = new CustomEEEPlacedOnMarketBandType(0);
