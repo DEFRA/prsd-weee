@@ -10,29 +10,36 @@
     using Requests.Admin;
     using userStatus = Core.Shared.UserStatus;
 
-    public class GetAllUsersHandler : IRequestHandler<GetAllUsers, List<UserSearchData>>
+    internal class FindMatchingUsersHandler : IRequestHandler<FindMatchingUsers, UserSearchDataResult>
     {
           private readonly WeeeContext context;
    
-          public GetAllUsersHandler(WeeeContext context)
+          public FindMatchingUsersHandler(WeeeContext context)
             {
                 this.context = context;
             }
 
-        public async Task<List<UserSearchData>> HandleAsync(GetAllUsers message)
+        public async Task<UserSearchDataResult> HandleAsync(FindMatchingUsers query)
         {
-            var users = new List<UserSearchData>();
-            // organisation users
             var organisationsUsers = await GetOrganisationUsers();
-            users.AddRange(organisationsUsers.Select(user => user).ToList());
-
+      
             //internal users
             var competentAuthorityUsers = await GetCompetentAuthorityUsers();
-            users.AddRange(competentAuthorityUsers.Select(interaluser => interaluser).ToList());
-            return users.OrderBy(u => u.FullName).ToList();
+            var totalUsersData = organisationsUsers.Concat(competentAuthorityUsers).OrderBy(u => u.FullName).ToList();
+               if (query.Paged)
+                {
+                    var pagedMatchingUsersData =
+                        totalUsersData.Skip((query.Page - 1) * query.UsersPerPage)
+                            .Take(query.UsersPerPage)
+                            .ToList();
+
+                    return new UserSearchDataResult(pagedMatchingUsersData, totalUsersData.Count);
+                }
+      
+            return new UserSearchDataResult(totalUsersData, totalUsersData.Count);
         }
 
-        private async Task<List<UserSearchData>> GetCompetentAuthorityUsers()
+        private async Task<UserSearchData[]> GetCompetentAuthorityUsers()
         {
             var competentAuthorityUsers = await(from u in context.Users
                 join cu in context.CompetentAuthorityUsers on u.Id equals cu.UserId into caUsers
@@ -46,11 +53,11 @@
                     LastName = u.Surname,
                     OrganisationName = ca.Abbreviation,
                     Status = (userStatus)caUser.UserStatus.Value
-                }).ToListAsync();
+                }).ToArrayAsync();
             return competentAuthorityUsers;
         }
 
-        private async Task<List<UserSearchData>> GetOrganisationUsers()
+        private async Task<UserSearchData[]> GetOrganisationUsers()
         {
             var organisationsUsers = await(from u in context.Users
                 join ou in context.OrganisationUsers on u.Id equals ou.UserId into idOrgUsers
@@ -64,7 +71,7 @@
                     LastName = u.Surname,
                     OrganisationName = org.Name ?? org.TradingName,
                     Status = (userStatus)orgUser.UserStatus.Value
-                }).ToListAsync();
+                }).ToArrayAsync();
             return organisationsUsers;
         }
     }

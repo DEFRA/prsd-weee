@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin\GetAllUsers.cs" />
+    <Compile Include="Admin\FindMatchingUsers.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUser.cs" />
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />

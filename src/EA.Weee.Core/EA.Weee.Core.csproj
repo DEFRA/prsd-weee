@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
+    <Compile Include="Admin\UserSearchDataResult.cs" />
     <Compile Include="Claims.cs" />
     <Compile Include="Configuration\EmailRules\IRuleChecker.cs" />
     <Compile Include="Configuration\EmailRules\IRuleSectionChecker.cs" />

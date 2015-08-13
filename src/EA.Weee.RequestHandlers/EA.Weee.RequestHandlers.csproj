@@ -147,7 +147,7 @@
     <Compile Include="Scheme\VerifyApprovalNumberExistsHandler.cs" />
     <Compile Include="Shared\GetCountriesHandler.cs" />
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
-    <Compile Include="Admin\GetAllUsersHandler.cs" />
+    <Compile Include="Admin\FindMatchingUsersHandler.cs" />
     <Compile Include="Users\UserByIdHandler.cs" />
     <Compile Include="v3schema.cs" />
   </ItemGroup>
