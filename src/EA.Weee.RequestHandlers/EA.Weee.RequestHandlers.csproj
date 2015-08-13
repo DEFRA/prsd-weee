@@ -145,6 +145,7 @@
     <Compile Include="RequestHandlerModule.cs" />
     <Compile Include="Scheme\UpdateSchemeInformationHandler.cs" />
     <Compile Include="Scheme\VerifyApprovalNumberExistsHandler.cs" />
+    <Compile Include="Scheme\SetSchemeStatusHandler.cs" />
     <Compile Include="Shared\GetCountriesHandler.cs" />
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
     <Compile Include="Admin\FindMatchingUsersHandler.cs" />

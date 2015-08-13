@@ -3,7 +3,7 @@
     using System;
     using Prsd.Core.Domain;
 
-    public class SICCode : Entity
+    public class SICCode : Entity, IEquatable<SICCode>
     {
         public SICCode(string name)
         {
@@ -19,14 +19,19 @@
             return base.GetHashCode();
         }
 
-        public override bool Equals(object obj)
+        public bool Equals(SICCode other)
         {
-            var sicCodeObj = obj as SICCode;
-            if (sicCodeObj == null)
+            if (other == null)
             {
                 return false;
             }
-            return Name.Equals(sicCodeObj.Name);
+
+            return Name == other.Name;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as SICCode);
         }
 
         public string Name { get; private set; }
