@@ -3,7 +3,7 @@
     using System;
     using Prsd.Core.Domain;
 
-    public class BrandName : Entity
+    public class BrandName : Entity, IEquatable<BrandName>
     {
         public BrandName(string name)
         {
@@ -14,14 +14,19 @@
         {
         }
 
-        public override bool Equals(object obj)
+        public virtual bool Equals(BrandName other)
         {
-            var brandObj = obj as BrandName;
-            if (brandObj == null)
+            if (other == null)
             {
                 return false;
             }
-            return Name.Equals(brandObj.Name);
+
+            return Name == other.Name;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as BrandName);
         }
 
         public override int GetHashCode()
