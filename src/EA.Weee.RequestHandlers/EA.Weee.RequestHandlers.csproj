@@ -79,7 +79,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
     <Compile Include="Mappings\AddressMap.cs" />
+    <Compile Include="Mappings\CompetentAuthorityUserMap.cs" />
     <Compile Include="Mappings\ContactMap.cs" />
     <Compile Include="Mappings\CountryMap.cs" />
     <Compile Include="Mappings\LatestMemberUploadListMap.cs" />
@@ -146,7 +148,7 @@
     <Compile Include="Scheme\SetSchemeStatusHandler.cs" />
     <Compile Include="Shared\GetCountriesHandler.cs" />
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
-    <Compile Include="Users\GetAllUsersHandler.cs" />
+    <Compile Include="Admin\FindMatchingUsersHandler.cs" />
     <Compile Include="Users\UserByIdHandler.cs" />
     <Compile Include="v3schema.cs" />
   </ItemGroup>
