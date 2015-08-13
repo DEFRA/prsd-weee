@@ -59,5 +59,23 @@
             Assert.NotNull(memberUploadId);
             Assert.Equal(memberUploadId, memberUploads.First().Id);
         }
+
+        [Fact]
+        public async Task MemberUploadSubmissionHandler_ValidMemberUploadIdAlreadySubmitted_ReturnsAlreadySubmittedMemberUploadId()
+        {
+            var memberUpload = new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid());
+
+            memberUpload.Submit();
+
+            var handler = GetPreparedHandler(new[]
+            {
+                memberUpload
+            });
+
+            var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(memberUpload.Id));
+
+            Assert.NotNull(memberUploadId);
+            Assert.Equal(memberUploadId, memberUpload.Id);
+        }
     }
 }

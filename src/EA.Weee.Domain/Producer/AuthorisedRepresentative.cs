@@ -3,7 +3,7 @@
     using System;
     using Prsd.Core.Domain;
 
-    public class AuthorisedRepresentative : Entity
+    public class AuthorisedRepresentative : Entity, IEquatable<AuthorisedRepresentative>
     {
         public AuthorisedRepresentative(string name, ProducerContact overseasContact = null)
         {
@@ -15,30 +15,20 @@
         {
         }
 
-        public override bool Equals(object obj)
+        public virtual bool Equals(AuthorisedRepresentative other)
         {
-            var authorisedRepresentativeObj = obj as AuthorisedRepresentative;
-
-            if (authorisedRepresentativeObj == null)
+            if (other == null)
             {
                 return false;
             }
 
-            var compareOverseasContact = false;
-            if (OverseasContact == null && authorisedRepresentativeObj.OverseasContact == null)
-            {
-                compareOverseasContact = true;
-            }
-            else
-            {
-                if (OverseasContact != null && authorisedRepresentativeObj.OverseasContact != null)
-                {
-                    compareOverseasContact =
-                        OverseasContact.Equals(authorisedRepresentativeObj.OverseasContact);
-                }
-            }
-            return OverseasProducerName.Equals(authorisedRepresentativeObj.OverseasProducerName) &&
-                   compareOverseasContact;
+            return OverseasProducerName == other.OverseasProducerName &&
+                   object.Equals(OverseasContact, other.OverseasContact);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as AuthorisedRepresentative);
         }
 
         public override int GetHashCode()

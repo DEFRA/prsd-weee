@@ -6,7 +6,7 @@
 
     public class UpdateSchemeInformation : IRequest<Guid>
     {
-        public UpdateSchemeInformation(Guid schemeId, string schemeName, string approvalNumber, string ibisCustomerReference, ObligationType obligationType, Guid competentAuthorityId)
+        public UpdateSchemeInformation(Guid schemeId, string schemeName, string approvalNumber, string ibisCustomerReference, ObligationType obligationType, Guid competentAuthorityId, SchemeStatus status)
         {
             SchemeId = schemeId;
             SchemeName = schemeName;
@@ -14,6 +14,7 @@
             IbisCustomerReference = ibisCustomerReference;
             ObligationType = obligationType;
             CompetentAuthorityId = competentAuthorityId;
+            Status = status;
         }
 
         public Guid SchemeId { get; set; }
@@ -27,5 +28,7 @@
         public ObligationType ObligationType { get; set; }
 
         public Guid CompetentAuthorityId { get; set; }
+
+        public SchemeStatus Status { get; set; }
     }
 }
