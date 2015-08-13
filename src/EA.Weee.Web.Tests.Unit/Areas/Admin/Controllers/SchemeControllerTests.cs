@@ -1,34 +1,32 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
-    using Core.Scheme.MemberUploadTesting;
+    using Core.Scheme;
     using Core.Shared;
     using FakeItEasy;
+    using Prsd.Core.Mediator;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels;
-    using Web.Areas.Scheme.Controllers;
+    using Weee.Requests.Scheme;
     using Xunit;
 
     public class SchemeControllerTests
     {
-        private readonly Func<IWeeeClient> apiClient;
+        private readonly IWeeeClient weeeClient;
 
         public SchemeControllerTests()
         {
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            apiClient = () => weeeClient;
+            weeeClient = A.Fake<IWeeeClient>();
         }
 
         [Fact]
         public async Task ManageSchemesPost_AllGood_ReturnsManageSchemeRedirect()
         {
             var selectedGuid = Guid.NewGuid();
-            var controller = new SchemeController(apiClient);
+            var controller = SchemeController();
 
             var result = await controller.ManageSchemes(new ManageSchemesViewModel { Selected = selectedGuid });
 
@@ -37,13 +35,13 @@
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
             Assert.Equal("EditScheme", redirectValues["action"]);
-            Assert.Equal(selectedGuid, redirectValues["schemeId"]);
+            Assert.Equal(selectedGuid, redirectValues["id"]);
         }
 
         [Fact]
         public async Task ManageSchemesPost_ModelError_ReturnsView()
         {
-            var controller = new SchemeController(apiClient);
+            var controller = SchemeController();
             controller.ModelState.AddModelError(string.Empty, "Some error");
 
             var result = await controller.ManageSchemes(new ManageSchemesViewModel());
@@ -53,84 +51,141 @@
         }
 
         [Fact]
-        public async void GetEditScheme_ModelWithNoError_ReturnsView()
+        public async void GetEditScheme_ReturnsView_WithManageSchemeModel()
         {
-            var controller = new SchemeController(apiClient);
+            var schemeId = Guid.NewGuid();
 
-            var viewResult = await controller.EditScheme(Guid.NewGuid());
+            var controller = SchemeController();
 
-            Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
+            var result = await controller.EditScheme(schemeId);
+
+            Assert.IsType<ViewResult>(result);
+            var model = ((ViewResult)result).Model;
+
+            Assert.IsType<SchemeViewModel>(model);
+        }
+
+        [Theory]
+        [InlineData(SchemeStatus.Approved)]
+        [InlineData(SchemeStatus.Rejected)]
+        public async void GetEditScheme_StatusIsRejectedOrApproved_StatusIsUnchangable(SchemeStatus status)
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
+                .Returns(new SchemeData
+                {
+                    SchemeStatus = status
+                });
+
+            var result = await SchemeController().EditScheme(Guid.NewGuid());
+            var model = (SchemeViewModel)((ViewResult)result).Model;
+
+            Assert.Equal(true, model.IsUnchangeableStatus);
+        }
+
+        [Theory]
+        [InlineData(SchemeStatus.Approved)]
+        [InlineData(SchemeStatus.Pending)]
+        public async void PostEditScheme_ModelWithError_AndSchemeIsNotRejected_ReturnsView(SchemeStatus status)
+        {
+            var controller = SchemeController();
+            controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
+            var schemeId = Guid.NewGuid();
+            var result = await controller.EditScheme(schemeId, new SchemeViewModel
+            {
+                Status = status,
+            });
+
+            Assert.IsType<ViewResult>(result);
         }
 
         [Fact]
-        public async void PostEditScheme_ModelWithError_ReturnsViewWithError()
+        public async void PostEditScheme_OldApprovalNumberAndApprovalNumberNotMatch_MustVerifyApprovalNumberExists()
         {
-            var controller = new SchemeController(apiClient);
+            var controller = SchemeController();
+
+            var scheme = new SchemeViewModel
+            {
+                OldApprovalNumber = "WEE/AD1234DC/SCH",
+                ApprovalNumber = "WEE/ZZ3456EE/SCH",
+                SchemeName = "Any value",
+                ObligationType = ObligationType.B2B,
+                CompetentAuthorityId = Guid.NewGuid(),
+                IbisCustomerReference = "Any value"
+            };
+
+            await controller.EditScheme(Guid.NewGuid(), scheme);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyApprovalNumberExists>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeInformation>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void PostEditScheme_ModelWithError_ButSchemeIsRejected_RedirectsToRejectionConfirmation_WithSchemeId()
+        {
+            var controller = SchemeController();
+            var schemeId = Guid.NewGuid();
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
-            var viewResult = await controller.EditScheme(new SchemeViewModel());
+            var result = await controller.EditScheme(schemeId, new SchemeViewModel
+            {
+                Status = SchemeStatus.Rejected,
+            });
 
-            Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
-            Assert.False(controller.ModelState.IsValid);
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ConfirmRejection", routeValues["action"]);
+            Assert.Equal("Scheme", routeValues["controller"]);
+            Assert.Equal(schemeId, routeValues["id"]);
         }
 
-        [Theory]
-        [InlineData("Wee/AB1234CD/SCH")]
-        [InlineData("WEE/AB1234CD/sch")]
-        [InlineData("WEE/AB1234CD/123")]
-        [InlineData("WEE/891234CD/SCH")]
-        [InlineData("WEE/AB1DF4CD/SCH")]
-        [InlineData("WEE/AB123482/SCH")]
-        public async void PostEditScheme_ModelWithInCorrectApprovalNumber_ReturnsViewWithError(string approvalNumber)
+        [Fact]
+        public async void PostEditScheme_ModelWithNoError_ButSchemeIsRejected_RedirectsToRejectionConfirmation_WithSchemeId()
         {
-            var controller = new SchemeController(apiClient);
-            var model = new SchemeViewModel
+            var controller = SchemeController();
+            var schemeId = Guid.NewGuid();
+            var result = await controller.EditScheme(schemeId, new SchemeViewModel
             {
-                ApprovalNumber = approvalNumber,
-                CompetentAuthorities = new List<UKCompetentAuthorityData>(),
-                CompetentAuthorityId = new Guid(),
-                CompetentAuthorityName = "Any name",
-                IbisCustomerReference = "Any value",
-                ObligationType = ObligationType.B2B,
-                ObligationTypeSelectList = new List<SelectListItem>(),
-                SchemeName = "Any value"
-            };
+                Status = SchemeStatus.Rejected,
+            });
 
-            var context = new ValidationContext(model, null, null);
-            var results = new List<ValidationResult>();
-            var isModelStateValid = Validator.TryValidateObject(model, context, results, true);
+            Assert.IsType<RedirectToRouteResult>(result);
 
-            var viewResult = await controller.EditScheme(model);
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
-            Assert.False(isModelStateValid);
+            Assert.Equal("ConfirmRejection", routeValues["action"]);
+            Assert.Equal("Scheme", routeValues["controller"]);
+            Assert.Equal(schemeId, routeValues["id"]);
         }
 
-        [Theory]
-        [InlineData("WEE/AB1234CD/SCH")]
-        [InlineData("WEE/DE8562FG/SCH")]
-        public async void PostEditScheme_ModelWithCorrectApprovalNumber_ReturnsView(string approvalNumber)
+        [Fact]
+        public async void HttpPost_ConfirmRejection_SendsSetStatusRequest_WithRejectedStatus_AndRedirectsToManageSchemes()
         {
-            var controller = new SchemeController(apiClient);
-            var model = new SchemeViewModel
-            {
-                ApprovalNumber = approvalNumber,
-                CompetentAuthorities = new List<UKCompetentAuthorityData>(),
-                CompetentAuthorityId = new Guid(),
-                CompetentAuthorityName = "Any name",
-                IbisCustomerReference = "Any value",
-                ObligationType = ObligationType.B2B,
-                ObligationTypeSelectList = new List<SelectListItem>(),
-                SchemeName = "Any value"
-            };
+            var status = SchemeStatus.Pending;
 
-            var context = new ValidationContext(model, null, null);
-            var results = new List<ValidationResult>();
-            var isModelStateValid = Validator.TryValidateObject(model, context, results, true);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
+                .Invokes((string t, IRequest<Guid> s) => status = ((SetSchemeStatus)s).Status)
+                .Returns(Guid.NewGuid());
 
-            var viewResult = await controller.EditScheme(model);
+            var result = await SchemeController().ConfirmRejection(Guid.NewGuid(), new ConfirmRejectionViewModel());
 
-            Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
-            Assert.True(isModelStateValid);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+            Assert.Equal(SchemeStatus.Rejected, status);
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ManageSchemes", routeValues["action"]);
+            Assert.Equal("Scheme", routeValues["controller"]);
+        }
+
+        private SchemeController SchemeController()
+        {
+            return new SchemeController(() => weeeClient);
         }
     }
 }
