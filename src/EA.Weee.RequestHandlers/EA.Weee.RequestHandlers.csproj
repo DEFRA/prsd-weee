@@ -42,13 +42,13 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15188.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EA.Prsd.Core, Version=1.0.15211.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15188-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15211-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15188.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15211.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15188-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15211-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -79,26 +79,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
     <Compile Include="Mappings\AddressMap.cs" />
+    <Compile Include="Mappings\CompetentAuthorityUserMap.cs" />
     <Compile Include="Mappings\ContactMap.cs" />
     <Compile Include="Mappings\CountryMap.cs" />
+    <Compile Include="Mappings\LatestMemberUploadListMap.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\MemberUploadMap.cs" />
     <Compile Include="Mappings\OrganisationMap.cs" />
     <Compile Include="Mappings\OrganisationUserMap.cs" />
+    <Compile Include="Mappings\SchemeMap.cs" />
+    <Compile Include="Mappings\SchemeStatusMap.cs" />
     <Compile Include="Mappings\UKCompetentAuthorityMap.cs" />
     <Compile Include="Mappings\ValueObjectInitializer.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandler.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
-    <Compile Include="PCS\MemberRegistration\GenerateProducerObjects\GenerateProducerObjectsFromXml.cs" />
-    <Compile Include="PCS\MemberRegistration\GenerateProducerObjects\IGenerateProducerFromXml.cs" />
-    <Compile Include="PCS\MemberRegistration\GetMemberUploadByIdHandler.cs" />
-    <Compile Include="PCS\MemberRegistration\GetMemberUploadDataHandler.cs" />
-    <Compile Include="PCS\MemberRegistration\IXmlConverter.cs" />
-    <Compile Include="PCS\MemberRegistration\GetProducerCSVByMemberUploadIdHandler.cs" />
-    <Compile Include="PCS\MemberRegistration\MemberUploadSubmissionHandler.cs" />
-    <Compile Include="PCS\MemberRegistration\ProcessXMLFileHandler.cs" />
+    <Compile Include="Scheme\GetSchemeByIdHandler.cs" />
+    <Compile Include="Scheme\GetSchemeStatusHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXml.cs" />
+    <Compile Include="Scheme\Interfaces\IGenerateFromXml.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetLatestMemberUploadListHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetMemberUploadByIdHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetMemberUploadDataHandler.cs" />
+    <Compile Include="Scheme\Interfaces\IXmlChargeBandCalculator.cs" />
+    <Compile Include="Scheme\Interfaces\IXmlConverter.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetProducerCSVByMemberUploadIdHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandler.cs" />
+    <Compile Include="Scheme\GetSchemesHandler.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandler.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandler.cs" />
@@ -112,25 +122,33 @@
     <Compile Include="Organisations\JoinOrganisationHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandler.cs" />
-    <Compile Include="PCS\MemberRegistration\XmlConverter.cs" />
-    <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\BusinessValidator.cs" />
-    <Compile Include="PCS\MemberRegistration\XmlValidation\Extensions\DeserializedXmlExtensions.cs" />
-    <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\IBusinessValidator.cs" />
-    <Compile Include="PCS\MemberRegistration\XmlValidation\IXmlValidator.cs" />
-    <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\ProducerTypeValidator.cs" />
-    <Compile Include="PCS\MemberRegistration\XmlValidation\BusinessValidation\SchemeTypeValidator.cs" />
-    <Compile Include="PCS\MemberRegistration\XmlValidation\SchemaValidation\ISchemaValidator.cs" />
-    <Compile Include="PCS\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidator.cs" />
-    <Compile Include="PCS\MemberRegistration\XmlValidation\XmlValidator.cs" />
-    <Compile Include="PCS\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
-    <Compile Include="PCS\MemberUploadTesting\IProducerListFactory.cs" />
-    <Compile Include="PCS\MemberUploadTesting\IXmlGenerator.cs" />
-    <Compile Include="PCS\MemberUploadTesting\ProducerListFactory.cs" />
-    <Compile Include="PCS\MemberUploadTesting\XmlGenerator.cs" />
+    <Compile Include="Scheme\MemberRegistration\ProducerChargeBandCalculator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlChargeBandCalculator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlConverter.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\BusinessValidator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\Extensions\DeserializedXmlExtensions.cs" />
+    <Compile Include="Scheme\Interfaces\IBusinessValidator.cs" />
+    <Compile Include="Scheme\Interfaces\IXmlValidator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\ProducerTypeValidator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\SchemeTypeValidator.cs" />
+    <Compile Include="Scheme\MemberRegistration\ProducerCharge.cs" />
+    <Compile Include="Scheme\Interfaces\ISchemaValidator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\XmlValidator.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IProducerListFactory.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IXmlGenerator.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerListFactory.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestHandlerModule.cs" />
+    <Compile Include="Scheme\UpdateSchemeInformationHandler.cs" />
+    <Compile Include="Scheme\VerifyApprovalNumberExistsHandler.cs" />
+    <Compile Include="Scheme\SetSchemeStatusHandler.cs" />
     <Compile Include="Shared\GetCountriesHandler.cs" />
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
+    <Compile Include="Admin\FindMatchingUsersHandler.cs" />
     <Compile Include="Users\UserByIdHandler.cs" />
     <Compile Include="v3schema.cs" />
   </ItemGroup>

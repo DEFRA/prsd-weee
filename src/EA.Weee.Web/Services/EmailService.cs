@@ -7,21 +7,21 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web;
-    using EmailRules;
+    using Core.Configuration.EmailRules;
 
     public class EmailService : IEmailService
     {
         private readonly ConfigurationService configurationService;
         private readonly IEmailTemplateService templateService;
         private readonly ISmtpClient smtpClient;
-        private readonly IRuleChecker emailRuleChecker;
+        private readonly IRuleSectionChecker emailSectionRuleChecker;
 
-        public EmailService(ConfigurationService configurationService, IEmailTemplateService templateService, ISmtpClient smtpClient, IRuleChecker emailRuleChecker)
+        public EmailService(ConfigurationService configurationService, IEmailTemplateService templateService, ISmtpClient smtpClient, IRuleSectionChecker emailSectionRuleChecker)
         {
             this.templateService = templateService;
             this.configurationService = configurationService;
             this.smtpClient = smtpClient;
-            this.emailRuleChecker = emailRuleChecker;
+            this.emailSectionRuleChecker = emailSectionRuleChecker;
         }
 
         public virtual async Task<bool> SendAsync(MailMessage message)
@@ -39,17 +39,9 @@
 
             if (!string.IsNullOrWhiteSpace(configurationService.CurrentConfiguration.SendEmail)
                 && configurationService.CurrentConfiguration.SendEmail.Equals("true", StringComparison.InvariantCultureIgnoreCase)
-                && emailRuleChecker.CheckEmailAddress(toAddress) == RuleAction.Allow)
+                && emailSectionRuleChecker.CheckEmailAddress(toAddress) == RuleAction.Allow)
             {
-                try
-                {
-                    await smtpClient.SendMailAsync(message);
-                }
-                catch (Exception ex)
-                {
-                    throw new InvalidOperationException(ex.Message);
-                }
-
+                await smtpClient.SendMailAsync(message);
                 return true;
             }
 

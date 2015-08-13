@@ -1,20 +1,16 @@
 ﻿namespace EA.Weee.Domain
 {
-    using EA.Prsd.Core.Domain;
+    using System.ComponentModel.DataAnnotations;
 
-    public class ObligationType : Enumeration
+    public enum ObligationType
     {
-        public static readonly ObligationType B2B = new ObligationType(0, "B2B");
-        public static readonly ObligationType B2C = new ObligationType(1, "B2C");
-        public static readonly ObligationType Both = new ObligationType(2, "Both");
+        [Display(Name = "B2B")]
+        B2B = 1,
 
-        protected ObligationType()
-        {
-        }
+        [Display(Name = "B2C")]
+        B2C = 2,
 
-        private ObligationType(int value, string displayName)
-            : base(value, displayName)
-        {
-        }
+        [Display(Name = "Both")]
+        Both = 3
     }
 }

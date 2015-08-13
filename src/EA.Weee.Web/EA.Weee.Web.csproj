@@ -15,8 +15,7 @@
     <AssemblyName>EA.Weee.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>
-    </IISExpressSSLPort>
+    <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
@@ -70,16 +69,16 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15188.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EA.Prsd.Core, Version=1.0.15211.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15188-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15211-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15188.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15211.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15188-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15211-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Core.Web.Mvc">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15188-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15211-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
@@ -91,16 +90,19 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="LibSass.x64, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\libsassnet.x64.3.0.1.1\lib\net40\LibSass.x64.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\libsassnet.x64.3.2.5\lib\net40\LibSass.x64.dll</HintPath>
     </Reference>
-    <Reference Include="libsassnet, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\libsassnet.x64.3.0.1.1\lib\net40\libsassnet.dll</HintPath>
+    <Reference Include="libsassnet">
+      <HintPath>..\packages\libsassnet.x64.3.2.5\lib\net40\libsassnet.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="libsassnet.Web, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\libsassnet.Web.x64.1.9\lib\net40\libsassnet.Web.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\libsassnet.Web.x64.2.1.3.1\lib\net40\libsassnet.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="LowercaseDashedRouting">
+      <HintPath>..\packages\LowercaseDashedRouteExt.1.2\lib\net40\LowercaseDashedRouting.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -131,9 +133,9 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -144,9 +146,9 @@
     </Reference>
     <Reference Include="System.Collections" />
     <Reference Include="System.IdentityModel" />
-    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20511.1437, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.205111437\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20622.1351, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.206221351\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
     <Reference Include="System.Linq" />
     <Reference Include="System.Net.Http" />
@@ -227,7 +229,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\PCS\Views\MemberRegistration\AddOrAmendMembers.cshtml">
+    <Content Include="Areas\Admin\Views\Emails\ActivateUserAccount.txt" />
+    <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
     </Content>
     <Content Include="Content\govuk\images\apple-touch-icon-120x120.png" />
@@ -415,20 +418,7 @@
     <Content Include="Content\service-design-manual\helpers\_breadcrumbs.scss" />
     <Content Include="Content\service-design-manual\helpers\_page-header.scss" />
     <Content Include="Content\service-design-manual\styleguide\_colours.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_media-player.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_url-helpers.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_typography.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_shims.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_measurements.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_grid_layout.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_font_stack.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_device-pixels.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_css3.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_conditionals.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_colours.scss" />
-    <Content Include="Areas\PCS\Views\web.config" />
+    <Content Include="Areas\Scheme\Views\web.config" />
     <Content Include="Content\weee\_pagination.scss" />
     <Content Include="Content\jquery-autocomplete.scss" />
     <Content Include="Content\weee\_summary.scss" />
@@ -436,12 +426,11 @@
     <Content Include="Content\govuk\stylesheets\fonts\GDSTransportWebsite.eot" />
     <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Light.eot" />
     <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Bold.eot" />
-    <Content Include="Areas\PCS\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\PCS\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\PCS\Views\MemberRegistration\SuccessfulSubmission.cshtml" />
-    <Content Include="Areas\PCS\Views\MemberRegistration\ViewErrorsAndWarnings.cshtml" />
+    <Content Include="Areas\Scheme\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Scheme\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Scheme\Views\MemberRegistration\SuccessfulSubmission.cshtml" />
+    <Content Include="Areas\Scheme\Views\MemberRegistration\ViewErrorsAndWarnings.cshtml" />
     <Content Include="Areas\Admin\Views\web.config" />
-    <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\Account\Create.cshtml" />
@@ -451,8 +440,10 @@
     <Content Include="Areas\Test\Views\GeneratePcsXml\SelectOrganisation.cshtml" />
     <Content Include="Areas\Test\Views\GeneratePcsXml\SpecifyOptions.cshtml" />
     <Content Include="Areas\Test\Views\GeneratePcsXml\DownloadFile.cshtml" />
-    <Content Include="Areas\Admin\Views\Account\UserAccountActivationRequired.cshtml" />
-    <None Include="Scripts\jquery-2.1.3.intellisense.js" />
+    <Content Include="Areas\Admin\Views\Account\AdminAccountActivationRequired.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\ActivateUserAccount.cshtml" />
+    <Content Include="Areas\Admin\Views\Emails\ActivateUserAccount.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\Login.cshtml" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
     <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
@@ -469,13 +460,37 @@
     <Content Include="Scripts\govuk_toolkit\stageprompt.js" />
     <Content Include="Scripts\govuk_toolkit\vendor\jquery\jquery.player.min.js" />
     <Content Include="Scripts\govuk_toolkit\vendor\polyfills\bind.js" />
-    <Content Include="Scripts\jquery-2.1.3.js" />
-    <Content Include="Scripts\jquery-2.1.3.min.js" />
+    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_media-player.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_colours.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_conditionals.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_css3.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_device-pixels.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_font_stack.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_grid_layout.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_measurements.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_shims.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_typography.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_url-helpers.scss" />
+    <Content Include="Areas\Admin\Views\Home\ChooseActivity.cshtml" />
+    <Content Include="Areas\Admin\Views\User\ManageUsers.cshtml" />
+    <Content Include="Areas\Admin\Views\Scheme\ManageSchemes.cshtml" />
+    <Content Include="Areas\Scheme\Views\MemberRegistration\Summary.cshtml" />
+    <Content Include="Areas\Scheme\Views\MemberRegistration\AuthorizationRequired.cshtml" />
+    <Content Include="Areas\Admin\Views\Scheme\EditScheme.cshtml" />
+    <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Scheme\ConfirmRejection.cshtml" />
+    <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="Scripts\jquery-2.1.4.js" />
+    <Content Include="Scripts\jquery-2.1.4.min.js" />
     <Content Include="Scripts\jquery-ui-1.11.4.js" />
     <Content Include="Scripts\jquery-ui-1.11.4.min.js" />
     <Content Include="Scripts\jquery.select-to-autocomplete.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery-2.1.4.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -489,7 +504,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
-    <Content Include="Scripts\jquery-2.1.3.min.map" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Web.config" />
@@ -528,8 +542,8 @@
     <Content Include="Views\Account\ActivateUserAccount.cshtml" />
     <Content Include="Views\Account\UserAccountActivationRequired.cshtml" />
     <Content Include="Views\Organisation\HoldingMessageForPending.cshtml" />
-    <Content Include="Areas\PCS\Views\Home\ChooseActivity.cshtml" />
-    <Content Include="Areas\PCS\Views\MemberRegistration\XmlHasNoErrors.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\ChooseActivity.cshtml" />
+    <Content Include="Areas\Scheme\Views\MemberRegistration\XmlHasNoErrors.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -555,28 +569,35 @@
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
     <Compile Include="Areas\Admin\Controllers\Base\AdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SchemeController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ConfirmRejectionViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\InternalUserActivity.cs" />
+    <Compile Include="Areas\Admin\ViewModels\InternalUserActivityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\InternalUserCreationViewModel.cs" />
-    <Compile Include="Areas\PCS\Controllers\MemberRegistrationController.cs" />
-    <Compile Include="Areas\PCS\ViewModels\AddOrAmendMembersViewModel.cs" />
-    <Compile Include="Areas\PCS\ViewModels\SuccessfulSubmissionViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\InternalLoginViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ManageUsersViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ManageSchemesViewModel.cs" />
+    <Compile Include="Areas\Scheme\Controllers\MemberRegistrationController.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\AddOrAmendMembersViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\LatestMemberUploadViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\AuthorizationRequiredViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\SuccessfulSubmissionViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\SummaryViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\SchemeViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\GeneratePcsXmlController.cs" />
     <Compile Include="Areas\Test\Controllers\HomeController.cs" />
     <Compile Include="Areas\Test\TestAreaRegistration.cs" />
-    <Compile Include="Areas\Test\ViewModels\GeneratePcsXmlOptionsViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SpecifyOptionsViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\HomeViewModel.cs" />
-    <Compile Include="Areas\Test\ViewModels\SelectOrganisationViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SelectOrganisationViewModel.cs" />
     <Compile Include="Controllers\Base\ExternalSiteController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Filters\AuthorizeClaimsAttribute.cs" />
+    <Compile Include="Infrastructure\AreaRegistrationContextExtensions.cs" />
     <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
+    <Compile Include="Infrastructure\RouteCollectionExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
-    <Compile Include="Services\EmailRules\IRuleChecker.cs" />
-    <Compile Include="Services\EmailRules\RuleAction.cs" />
-    <Compile Include="Services\EmailRules\RuleChecker.cs" />
-    <Compile Include="Services\EmailRules\RuleElement.cs" />
-    <Compile Include="Services\EmailRules\RuleElementCollection.cs" />
-    <Compile Include="Services\EmailRules\RulesSection.cs" />
-    <Compile Include="Services\EmailRules\RuleType.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\EmailTemplate.cs" />
     <Compile Include="Services\EmailTemplateService.cs" />
@@ -584,13 +605,13 @@
     <Compile Include="Services\IAppConfiguration.cs" />
     <Compile Include="Services\IEmailService.cs" />
     <Compile Include="Services\IEmailTemplateService.cs" />
-    <Compile Include="Areas\PCS\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Scheme\Controllers\HomeController.cs" />
     <Compile Include="Services\IFileConverterService.cs" />
     <Compile Include="Services\ISmtpClient.cs" />
     <Compile Include="Services\SmtpClientProxy.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
-    <Compile Include="Areas\PCS\PCSAreaRegistration.cs" />
+    <Compile Include="Areas\Scheme\SchemeAreaRegistration.cs" />
     <Compile Include="Infrastructure\TokenResponseExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -625,8 +646,8 @@
     <Compile Include="ViewModels\OrganisationRegistration\AddressPrepopulateViewModel.cs" />
     <Compile Include="ViewModels\Organisation\OrganisationUserPendingViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
-    <Compile Include="Areas\PCS\ViewModels\ChooseActivityViewModel.cs" />
-    <Compile Include="Areas\PCS\ViewModels\PcsAction.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ChooseActivityViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\PcsAction.cs" />
     <Compile Include="ViewModels\Shared\PagingViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
@@ -634,7 +655,7 @@
     <Compile Include="ViewModels\Shared\AddressViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionOptionalViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
-    <Compile Include="Areas\PCS\ViewModels\MemberUploadResultViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\MemberUploadResultViewModel.cs" />
     <Compile Include="Views\Shared\ViewBase.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -685,7 +706,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52657</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:52655/</IISUrl>
+          <IISUrl>https://localhost:44300/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

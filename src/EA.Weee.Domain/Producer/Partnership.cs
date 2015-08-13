@@ -2,9 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using EA.Weee.Domain;
     using Prsd.Core.Domain;
 
-    public class Partnership : Entity
+    public class Partnership : Entity, IEquatable<Partnership>
     {
         public Partnership(string name, ProducerContact principalPlaceOfBusiness, List<Partner> partnersList)
         {
@@ -22,29 +24,21 @@
             return base.GetHashCode();
         }
 
-        public override bool Equals(object obj)
+        public virtual bool Equals(Partnership other)
         {
-            var partnershipObj = obj as Partnership;
-            if (partnershipObj == null)
+            if (other == null)
             {
                 return false;
             }
 
-            var comparePrincipalPlaceOfBusiness = false;
-            if (PrincipalPlaceOfBusiness == null && partnershipObj.PrincipalPlaceOfBusiness == null)
-            {
-                comparePrincipalPlaceOfBusiness = true;
-            }
-            else
-            {
-                if (PrincipalPlaceOfBusiness != null && partnershipObj.PrincipalPlaceOfBusiness != null)
-                {
-                    comparePrincipalPlaceOfBusiness =
-                        PrincipalPlaceOfBusiness.Equals(partnershipObj.PrincipalPlaceOfBusiness);
-                }
-            }
-            return Name.Equals(partnershipObj.Name)
-                   && PartnersList.Equals(partnershipObj.PartnersList) && comparePrincipalPlaceOfBusiness;
+            return Name == other.Name &&
+                   object.Equals(PrincipalPlaceOfBusiness, other.PrincipalPlaceOfBusiness) &&
+                   PartnersList.ElementsEqual(other.PartnersList);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Partnership);
         }
 
         public string Name { get; private set; }

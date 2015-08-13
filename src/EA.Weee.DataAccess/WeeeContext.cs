@@ -5,9 +5,10 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Domain;
+    using Domain.Admin;
     using Domain.Organisation;
-    using Domain.PCS;
     using Domain.Producer;
+    using Domain.Scheme;
     using Prsd.Core.DataAccess.Extensions;
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
@@ -37,6 +38,10 @@
         public virtual DbSet<SystemData> SystemData { get; set; }
 
         public virtual DbSet<MigratedProducer> MigratedProducers { get; set; }
+
+        public virtual DbSet<ProducerChargeBand> ProducerChargeBands { get; set; }
+
+        public virtual DbSet<CompetentAuthorityUser> CompetentAuthorityUsers { get; set; }
 
         public WeeeContext(IUserContext userContext)
             : base("name=Weee.DefaultConnection")

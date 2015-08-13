@@ -9,7 +9,7 @@
 
         public Guid OrganisationId { get; private set; }
 
-        public OrganisationUserStatus UserStatus { get; private set; }
+        public UserStatus UserStatus { get; private set; }
 
         public virtual Organisation Organisation { get; private set; }
 
@@ -17,7 +17,7 @@
         {
         }
 
-        public OrganisationUser(Guid userId, Guid organisationId, OrganisationUserStatus userStatus)
+        public OrganisationUser(Guid userId, Guid organisationId, UserStatus userStatus)
         {
             UserId = userId.ToString();
             OrganisationId = organisationId;

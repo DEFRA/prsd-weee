@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Modules
 {
     using Autofac;
+    using Core.Configuration.EmailRules;
     using Services;
-    using Services.EmailRules;
 
     public class EmailModule : Module
     {
@@ -11,6 +11,7 @@
             builder.RegisterType<EmailTemplateService>().As<IEmailTemplateService>();
             builder.RegisterType<EmailService>().As<IEmailService>();
             builder.RegisterType<SmtpClientProxy>().As<ISmtpClient>();
+            builder.RegisterType<RuleSectionChecker>().As<IRuleSectionChecker>();
             builder.RegisterType<RuleChecker>().As<IRuleChecker>();
         }
     }

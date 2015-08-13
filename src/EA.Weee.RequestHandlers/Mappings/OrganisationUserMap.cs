@@ -4,7 +4,7 @@
     using Core.Organisations;
     using Domain.Organisation;
     using Prsd.Core.Mapper;
-    using OrganisationUserStatus = Core.Organisations.OrganisationUserStatus;
+    using OrganisationUserStatus = Core.Shared.UserStatus;
 
     public class OrganisationUserMap : IMap<OrganisationUser, OrganisationUserData>
     {
@@ -22,7 +22,7 @@
                 Id = source.Id,
                 UserId = source.UserId,
                 OrganisationId = source.OrganisationId,
-                OrganisationUserStatus =
+                UserStatus =
                     (OrganisationUserStatus)
                         Enum.Parse(typeof(OrganisationUserStatus),
                             source.UserStatus.Value.ToString()),

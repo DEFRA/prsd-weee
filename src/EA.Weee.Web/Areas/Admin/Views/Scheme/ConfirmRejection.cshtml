@@ -1,0 +1,25 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.ConfirmRejectionViewModel
+@{
+    ViewBag.Title = "Edit Scheme";
+}
+
+@section main_content {
+    <header class="hgroup">
+        <div>
+            <h1 class="heading-large">Edit Scheme</h1>
+        </div>
+    </header>
+
+    <div class="form-group">
+        <p>Are you sure you want to reject this PCS scheme? Please note that this change, once saved, cannot be undone.</p>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        <div class="form-group">
+            <input type="submit" value="Save and continue" class="button" />
+        </div>
+    }
+}

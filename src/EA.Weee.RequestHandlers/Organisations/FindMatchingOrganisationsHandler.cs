@@ -79,8 +79,7 @@
             var possibleOrganisations = (await GetPossibleOrganisationNames(searchTerm))
                 .Where(
                     o =>
-                        o.OrganisationStatus == OrganisationStatus.Pending ||
-                        o.OrganisationStatus == OrganisationStatus.Approved);
+                        o.OrganisationStatus == OrganisationStatus.Complete);
 
             // extract data fields we want to compare against query and clean them up
             IEnumerable<Func<Organisation, string>> dataExtractors = GetDataExtractors();

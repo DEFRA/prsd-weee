@@ -3,7 +3,7 @@
     using System;
     using Prsd.Core.Domain;
 
-    public class Partner : Entity
+    public class Partner : Entity, IEquatable<Partner>
     {
         public Partner(string name)
         {
@@ -19,14 +19,19 @@
             return base.GetHashCode();
         }
 
-        public override bool Equals(object obj)
+        public bool Equals(Partner other)
         {
-            var partnerObj = obj as Partner;
-            if (partnerObj == null)
+            if (other == null)
             {
                 return false;
             }
-            return Name.Equals(partnerObj.Name);
+
+            return Name == other.Name;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Partner);
         }
 
         public string Name { get; private set; }

@@ -7,10 +7,13 @@
     using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
+    using Core;
     using Core.Organisations;
+    using Core.Shared;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
+    using Prsd.Core.Web.OpenId;
     using Services;
     using Thinktecture.IdentityModel.Client;
     using ViewModels.Account;
@@ -24,16 +27,19 @@
         private readonly IAuthenticationManager authenticationManager;
         private readonly IEmailService emailService;
         private readonly Func<IOAuthClient> oauthClient;
+        private readonly Func<IUserInfoClient> userInfoClient;
 
         public AccountController(Func<IOAuthClient> oauthClient,
             IAuthenticationManager authenticationManager,
             Func<IWeeeClient> apiClient,
-            IEmailService emailService)
+            IEmailService emailService,
+            Func<IUserInfoClient> userInfoClient)
         {
             this.oauthClient = oauthClient;
             this.apiClient = apiClient;
             this.authenticationManager = authenticationManager;
             this.emailService = emailService;
+            this.userInfoClient = userInfoClient;
         }
 
         [HttpGet]
@@ -44,14 +50,17 @@
             {
                 return RedirectToLocal(returnUrl);
             }
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
+
+            return View(new LoginViewModel
+            {
+                ReturnUrl = returnUrl
+            });
         }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -61,9 +70,15 @@
             var response = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
             if (response.AccessToken != null)
             {
-                authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = model.RememberMe },
-                    response.GenerateUserIdentity());
-                return RedirectToLocal(returnUrl);
+                var isExternalUser = await IsExternalUser(response.AccessToken);
+                if (isExternalUser)
+                {
+                    authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = model.RememberMe },
+                        response.GenerateUserIdentity());
+                    return RedirectToLocal(model.ReturnUrl);
+                }
+                ModelState.AddModelError(string.Empty, "Invalid login details");
+                return View(model);
             }
 
             ModelState.AddModelError(string.Empty, ParseLoginError(response.Error));
@@ -89,6 +104,13 @@
                 default:
                     return "Internal error";
             }
+        }
+
+        private async Task<bool> IsExternalUser(string accessToken)
+        {
+            var userInfo = await userInfoClient().GetUserInfoAsync(accessToken);
+
+            return userInfo.Claims.Any(p => p.Item2 == Claims.CanAccessExternalArea);
         }
 
         // POST: /Account/LogOff
@@ -118,7 +140,7 @@
                 var approvedOrganisationUsers = await
                     client.SendAsync(
                         User.GetAccessToken(),
-                        new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)OrganisationUserStatus.Approved }));
+                        new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)UserStatus.Approved }));
 
                 var inactiveOrganisationUsers = await
                     client.SendAsync(
@@ -126,8 +148,8 @@
                         new GetOrganisationsByUserId(User.GetUserId(),
                             new[]
                             {
-                                (int)OrganisationUserStatus.Pending, (int)OrganisationUserStatus.Refused,
-                                (int)OrganisationUserStatus.Inactive
+                                (int)UserStatus.Pending, (int)UserStatus.Refused,
+                                (int)UserStatus.Inactive
                             }));
 
                 if (approvedOrganisationUsers.Count >= 1)
@@ -135,8 +157,8 @@
                     return RedirectToAction("ChooseActivity", "Home",
                         new
                         {
-                            area = "PCS",
-                            pcsId = approvedOrganisationUsers.First().OrganisationId,                         
+                            area = "Scheme",
+                            pcsId = approvedOrganisationUsers.First().OrganisationId,
                         });
                 }
                 else if (inactiveOrganisationUsers.Count >= 1)
@@ -145,9 +167,9 @@
                 }
                 else
                 {
-                return RedirectToAction("Type", "OrganisationRegistration");
+                    return RedirectToAction("Type", "OrganisationRegistration");
+                }
             }
-        }
         }
 
         [HttpGet]

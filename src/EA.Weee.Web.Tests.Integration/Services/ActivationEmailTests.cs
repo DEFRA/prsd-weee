@@ -10,11 +10,12 @@
     using Api.Client.Actions;
     using Areas.Admin.Controllers;
     using Areas.Admin.ViewModels;
+    using Core.Configuration.EmailRules;
     using FakeItEasy;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
+    using Prsd.Core.Web.OpenId;
     using Web.Services;
-    using Web.Services.EmailRules;
     using Xunit;
 
     public class ActivationEmailTests
@@ -23,7 +24,8 @@
         private readonly IAuthenticationManager fakeAuthenticationManager;
         private readonly ISmtpClient fakeSmtpClient;
         private readonly Func<IOAuthClient> fakeOauthClient;
-        private readonly IRuleChecker fakeRuleChecker;
+        private readonly IRuleSectionChecker fakeRuleChecker;
+        private readonly Func<IUserInfoClient> fakeUserInfoClient;
 
         private readonly IEmailService realEmailService;
 
@@ -38,7 +40,8 @@
             fakeAuthenticationManager = A.Fake<IAuthenticationManager>();
             fakeSmtpClient = A.Fake<ISmtpClient>();
             fakeOauthClient = A.Fake<Func<IOAuthClient>>();
-            fakeRuleChecker = A.Fake<IRuleChecker>();
+            fakeRuleChecker = A.Fake<IRuleSectionChecker>();
+            fakeUserInfoClient = A.Fake<Func<IUserInfoClient>>();
             A.CallTo(() => fakeRuleChecker.CheckEmailAddress(A<string>._)).Returns(RuleAction.Allow);
 
             realEmailService = new EmailService(SetupFakeConfigurationService(), new EmailTemplateService(), fakeSmtpClient, fakeRuleChecker);
@@ -118,9 +121,11 @@
                 fakeApiClient,
                 fakeAuthenticationManager,
                 realEmailService,
-                fakeOauthClient)
+                fakeOauthClient,
+                fakeUserInfoClient)
             {
-                ControllerContext = controllerContext, Url = urlHelper
+                ControllerContext = controllerContext,
+                Url = urlHelper
             };
 
             return internalAccountController;
