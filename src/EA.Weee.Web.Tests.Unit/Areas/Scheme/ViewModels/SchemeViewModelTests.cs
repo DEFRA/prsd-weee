@@ -32,7 +32,7 @@
         [Theory]
         [InlineData("WEE/AB1234CD/SCH")]
         [InlineData("WEE/DE8562FG/SCH")]
-        public async void ModelWithCorrectApprovalNumber_IsValid(string approvalNumber)
+        public void ModelWithCorrectApprovalNumber_IsValid(string approvalNumber)
         {
             var model = ValidSchemeViewModel();
             model.ApprovalNumber = approvalNumber;
