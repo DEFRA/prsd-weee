@@ -28,6 +28,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageUsers(ManageUsersViewModel model)
         {
             if (!ModelState.IsValid)
