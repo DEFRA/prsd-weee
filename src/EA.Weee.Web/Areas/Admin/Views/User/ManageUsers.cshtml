@@ -16,13 +16,13 @@
     @Html.ValidationMessageFor(m => m.SelectedUserId)
     <table class="form-group">
         <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Organisation</th>
-                <th>Status</th>
-                <th>Select</th>
-            </tr>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Organisation</th>
+            <th>Status</th>
+            <th>Select</th>
+        </tr>
         </thead>
         <tbody>
         @foreach(UserSearchData user in Model.Users)
@@ -47,6 +47,11 @@
         }
         </tbody>
     </table>
+    if (Model.Users != null && Model.Users.Count > 0)
+    {
+        <br />
+        @Html.Partial("_WeeePaging", Model.UsersPagingViewModel)
+    }
     <div class="form-group">
         <button class="button" type="submit">Continue</button>
     </div>

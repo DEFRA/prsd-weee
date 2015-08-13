@@ -8,9 +8,9 @@
 
     public class ManageUsersViewModel
     {
-        public List<UserSearchData> Users { get; set; }
+        public IList<UserSearchData> Users { get; set; }
        
-        public PagingViewModel PagingViewModel { get; set; }
+        public PagingViewModel UsersPagingViewModel { get; set; }
 
         public Guid? SelectedUserId { get; set; }
     }
