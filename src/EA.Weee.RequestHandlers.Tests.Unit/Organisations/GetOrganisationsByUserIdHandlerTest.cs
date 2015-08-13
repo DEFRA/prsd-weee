@@ -28,8 +28,9 @@
             var context = A.Fake<WeeeContext>();
             var addressMapper = new AddressMap();
             var contactMapper = new ContactMap();
+            var userMapper = new UserMap();
             var orgMapper = new OrganisationMap(addressMapper, contactMapper);
-            var orgUsermapper = new OrganisationUserMap(orgMapper);
+            var orgUsermapper = new OrganisationUserMap(orgMapper, userMapper);
 
             A.CallTo(() => context.OrganisationUsers).Returns(organisationUsers);
 
@@ -56,8 +57,9 @@
             var context = A.Fake<WeeeContext>();
             var addressMapper = new AddressMap();
             var contactMapper = new ContactMap();
+            var userMapper = new UserMap();
             var orgMapper = new OrganisationMap(addressMapper, contactMapper);
-            var orgUsermapper = new OrganisationUserMap(orgMapper);
+            var orgUsermapper = new OrganisationUserMap(orgMapper, userMapper);
 
             A.CallTo(() => context.OrganisationUsers).Returns(organisationUsers);
 
@@ -83,8 +85,9 @@
             var context = A.Fake<WeeeContext>();
             var addressMapper = new AddressMap();
             var contactMapper = new ContactMap();
+            var userMapper = new UserMap();
             var orgMapper = new OrganisationMap(addressMapper, contactMapper);
-            var orgUsermapper = new OrganisationUserMap(orgMapper);
+            var orgUsermapper = new OrganisationUserMap(orgMapper, userMapper);
 
             A.CallTo(() => context.OrganisationUsers).Returns(organisationUsers);
 
