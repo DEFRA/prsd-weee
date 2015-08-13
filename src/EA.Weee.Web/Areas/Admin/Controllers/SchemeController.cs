@@ -128,6 +128,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ConfirmRejection(Guid id, ConfirmRejectionViewModel model)
         {
             using (var client = apiClient())
