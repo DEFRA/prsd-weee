@@ -12,6 +12,9 @@
         public SchemeViewModel()
         {
             ObligationTypeSelectList = new SelectList(EnumHelper.GetValues(typeof(ObligationType)), "Key", "Value");
+            StatusSelectList = new SelectList(EnumHelper.GetValues(typeof(SchemeStatus)), "Key", "Value");
+            Status = SchemeStatus.Pending;
+            IsUnchangeableStatus = false;
         }
 
         [Required(ErrorMessage = "Approval number is required.")]
@@ -45,10 +48,16 @@
         [Display(Name = "Authorising authority")]
         public string CompetentAuthorityName { get; set; }
 
+        [Required(ErrorMessage = "Status is required")]
+        [Display(Name = "Status")]
+        public SchemeStatus Status { get; set; }
+
+        public bool IsUnchangeableStatus { get; set; }
+
         public IEnumerable<UKCompetentAuthorityData> CompetentAuthorities { get; set; }
 
         public IEnumerable<SelectListItem> ObligationTypeSelectList { get; set; }
 
-        public Guid SchemeId { get; set; }
+        public IEnumerable<SelectListItem> StatusSelectList { get; set; }
     }
 }

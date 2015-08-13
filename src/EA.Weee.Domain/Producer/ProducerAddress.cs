@@ -3,7 +3,7 @@
     using System;
     using Prsd.Core.Domain;
 
-    public class ProducerAddress : Entity
+    public class ProducerAddress : Entity, IEquatable<ProducerAddress>
     {
         public ProducerAddress(string primaryName, string secondaryName, string street, string town, string locality,
             string administrativeArea,
@@ -30,18 +30,24 @@
 
         public override bool Equals(object obj)
         {
-            var addressObj = obj as ProducerAddress;
-            if (addressObj == null)
+            return Equals(obj as ProducerAddress);
+        }
+
+        public virtual bool Equals(ProducerAddress other)
+        {
+            if (other == null)
             {
                 return false;
             }
-            return PrimaryName.Equals(addressObj.PrimaryName)
-                   && SecondaryName.Equals(addressObj.SecondaryName)
-                   && Street.Equals(addressObj.Street)
-                   && Town.Equals(addressObj.Town)
-                   && Locality.Equals(addressObj.Locality)
-                   && AdministrativeArea.Equals(addressObj.AdministrativeArea)
-                   && Country.Name.Equals(addressObj.Country.Name);
+
+            return PrimaryName == other.PrimaryName
+                   && SecondaryName == other.SecondaryName
+                   && Street == other.Street
+                   && Town == other.Town
+                   && Locality == other.Locality
+                   && AdministrativeArea == other.AdministrativeArea
+                   && PostCode == other.PostCode
+                   && object.Equals(Country, other.Country);
         }
 
         public string PrimaryName { get; private set; }

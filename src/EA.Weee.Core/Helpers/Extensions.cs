@@ -2,6 +2,8 @@
 {
     using System;
     using System.Globalization;
+    using System.Linq;
+    using Prsd.Core.Domain;
 
     public static class Extensions
     {
@@ -38,6 +40,36 @@
             result[7] = (byte)(value);
 
             return result;
+        }
+
+        public static TCoreEnumeration ToCoreEnumeration<TCoreEnumeration>(
+            this Enumeration domainEnumeration)
+        {
+            if (typeof(TCoreEnumeration).IsSubclassOf(typeof(Enum)))
+            {
+                var coreEnumValues = Enum.GetValues(typeof(TCoreEnumeration)).Cast<TCoreEnumeration>();
+
+                return coreEnumValues
+                    .SingleOrDefault(v => Convert.ToInt32(v) == domainEnumeration.Value);
+            }
+
+            throw new InvalidOperationException(string.Format("The type '{0}' is not an enum",
+                typeof(TCoreEnumeration).Name));
+        }
+
+        public static TDomainEnumeration ToDomainEnumeration<TDomainEnumeration>(
+            this object coreEnumeration) where TDomainEnumeration : Enumeration
+        {
+            if (coreEnumeration is Enum)
+            {
+                var enumValue = Convert.ToInt32(coreEnumeration);
+
+                return Enumeration.GetAll<TDomainEnumeration>()
+                    .SingleOrDefault(v => v.Value == enumValue);
+            }
+
+            throw new InvalidOperationException(string.Format("The type '{0}' is not an enum",
+                coreEnumeration.GetType().Name));
         }
     }
 }

@@ -65,6 +65,8 @@
     <Compile Include="AddressTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CountryTests.cs" />
+    <Compile Include="ExtensionMethodsTests.cs" />
     <Compile Include="Helpers\UKCompetentAuthorityFactory.cs" />
     <Compile Include="Helpers\CountryFactory.cs" />
     <Compile Include="Helpers\EntityHelper.cs" />
@@ -72,6 +74,16 @@
     <Compile Include="Organisation\ContactPersonTests.cs" />
     <Compile Include="Organisation\OrganisationAddressTests.cs" />
     <Compile Include="Organisation\OrganisationTests.cs" />
+    <Compile Include="Producer\AuthorisedRepresentativeTests.cs" />
+    <Compile Include="Producer\BrandNameTests.cs" />
+    <Compile Include="Producer\CompanyTests.cs" />
+    <Compile Include="Producer\PartnershipTests.cs" />
+    <Compile Include="Producer\PartnerTests.cs" />
+    <Compile Include="Producer\ProducerAddressTests.cs" />
+    <Compile Include="Producer\ProducerBusinessTests.cs" />
+    <Compile Include="Producer\ProducerContactTests.cs" />
+    <Compile Include="Producer\ProducerTests.cs" />
+    <Compile Include="Producer\SICCodeTests.cs" />
     <Compile Include="Scheme\MemberUploadTests.cs" />
     <Compile Include="Scheme\SchemeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

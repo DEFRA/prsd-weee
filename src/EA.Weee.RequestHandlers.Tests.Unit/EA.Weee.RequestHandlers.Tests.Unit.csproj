@@ -108,6 +108,7 @@
     <Compile Include="Scheme\MemberRegistration\XMLChargeBandCalculatorTests.cs" />
     <Compile Include="Scheme\UpdateSchemeInformationHandlerTests.cs" />
     <Compile Include="Scheme\VerifyApprovalNumberExistsHandlerTests.cs" />
+    <Compile Include="Scheme\SetSchemeStatusHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

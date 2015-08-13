@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Api.Client;
     using Base;
     using Core.Scheme;
@@ -38,7 +39,7 @@
                 return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
             }
 
-            return RedirectToAction("EditScheme", new { schemeId = viewModel.Selected.Value });
+            return RedirectToAction("EditScheme", new { id = viewModel.Selected.Value });
         }
 
         private async Task<List<SchemeData>> GetSchemes()
@@ -50,22 +51,23 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditScheme(Guid schemeId)
+        public async Task<ActionResult> EditScheme(Guid id)
         {
             using (var client = apiClient())
             {
-                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(id));
 
                 var model = new SchemeViewModel
                 {
                     CompetentAuthorities = await GetCompetentAuthorities(),
-                    SchemeId = schemeId,
                     ApprovalNumber = scheme.ApprovalName,
                     OldApprovalNumber = scheme.ApprovalName,
                     IbisCustomerReference = scheme.IbisCustomerReference,
                     CompetentAuthorityId = scheme.CompetentAuthorityId ?? Guid.Empty,
                     SchemeName = scheme.SchemeName,
-                    ObligationType = scheme.ObligationType
+                    ObligationType = scheme.ObligationType,
+                    Status = scheme.SchemeStatus,
+                    IsUnchangeableStatus = scheme.SchemeStatus == SchemeStatus.Approved || scheme.SchemeStatus == SchemeStatus.Rejected
                 };
 
                 return View("EditScheme", model);
@@ -74,12 +76,17 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditScheme(SchemeViewModel model)
+        public async Task<ActionResult> EditScheme(Guid id, SchemeViewModel model)
         {
-            model.CompetentAuthorities = await GetCompetentAuthorities();
+            if (model.Status == SchemeStatus.Rejected)
+            {
+                return RedirectToAction("ConfirmRejection", "Scheme", new { id });
+            }
+
             if (!ModelState.IsValid)
             {
-                return View("EditScheme", model);
+                model.CompetentAuthorities = await GetCompetentAuthorities();
+                return View(model);
             }
 
             using (var client = apiClient())
@@ -99,9 +106,9 @@
 
                 await
                     client.SendAsync(User.GetAccessToken(),
-                        new UpdateSchemeInformation(model.SchemeId, model.SchemeName, model.ApprovalNumber,
+                        new UpdateSchemeInformation(id, model.SchemeName, model.ApprovalNumber,
                             model.IbisCustomerReference,
-                            model.ObligationType.Value, model.CompetentAuthorityId));
+                            model.ObligationType.Value, model.CompetentAuthorityId, model.Status));
 
                 return RedirectToAction("ManageSchemes");
             }
@@ -112,6 +119,23 @@
             {
                 return await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
             }
+        }
+
+        [HttpGet]
+        public ActionResult ConfirmRejection(Guid id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ConfirmRejection(Guid id, ConfirmRejectionViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                await client.SendAsync(User.GetAccessToken(), new SetSchemeStatus(id, SchemeStatus.Rejected));
+            }
+
+            return RedirectToAction("ManageSchemes", "Scheme");
         }
     }
 }
