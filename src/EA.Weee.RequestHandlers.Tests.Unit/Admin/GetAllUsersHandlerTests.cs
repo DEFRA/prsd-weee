@@ -29,8 +29,8 @@
         public static Guid UserId = Guid.NewGuid();
         public static Organisation FakeOrganisation;
         private readonly WeeeContext context;
-        private readonly GetAllUsersHandler handler;
-        private static readonly GetAllUsers Message = new GetAllUsers();
+        private readonly FindMatchingUsersHandler handler;
+        private static readonly FindMatchingUsers Message = new FindMatchingUsers();
         private readonly OrganisationHelper orgHelper = new OrganisationHelper();
         
         public GetAllUsersHandlerTests()
@@ -84,14 +84,14 @@
             A.CallTo(() => context.UKCompetentAuthorities).Returns(UKCompetentAuthoritiesDbSet);
             A.CallTo(() => context.CompetentAuthorityUsers).Returns(CompetentAuthorityUsersDbSet);
 
-            handler = new GetAllUsersHandler(context);
+            handler = new FindMatchingUsersHandler(context);
         }
 
         [Fact]
         public async void GetAllUsersHandler_ReturnsAllUsers()
         {
-            List<UserSearchData> users = await handler.HandleAsync(Message);
-            Assert.NotEmpty(users);
+            UserSearchDataResult users = await handler.HandleAsync(Message);
+            Assert.NotEmpty(users.Results);
         }
 
         private static User FakeUserData()
