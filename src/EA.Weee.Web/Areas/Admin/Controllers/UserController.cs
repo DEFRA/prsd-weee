@@ -17,7 +17,7 @@
     public class UserController : AdminController
     {
           private readonly Func<IWeeeClient> apiClient;
-          const int UsersPerPage = 25;
+          private const int UsersPerPage = 25;
           public UserController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
