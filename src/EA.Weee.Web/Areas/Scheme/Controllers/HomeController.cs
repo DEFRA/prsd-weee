@@ -68,33 +68,38 @@
 
             using (var client = apiClient())
             {
+                var organisationExists =
+                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
+
+                if (!organisationExists)
+                {
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "pcsId");
+                }
+
                 var orgUsers = await client.SendAsync(User.GetAccessToken(),
                     new GetUsersByOrganisationId(pcsId));
+
+                var loggedInUserId = User.GetUserId();
+
+                orgUsers = orgUsers.Where(ou => ou.UserId != loggedInUserId).ToList();
 
                 var orgUsersKeyValuePairs =
                     orgUsers.Select(
                         ou =>
                             new KeyValuePair<string, Guid>(
-                                ou.User.FirstName + " " + ou.User.Surname + " - ( " +
-                                ou.OrganisationUserStatus.ToString() + " )", new Guid(ou.UserId)));
+                                ou.User.FirstName + " " + ou.User.Surname + " - (" +
+                                ou.OrganisationUserStatus.ToString() + ")", new Guid(ou.UserId)));
 
                 var orgUserRadioButtons = new StringGuidRadioButtons(orgUsersKeyValuePairs);
-
-                if (model.OrganisationUsers != null)
-                {
-                    orgUserRadioButtons.SelectedValue = model.OrganisationUsers.SelectedValue;
-                }
-
                 model.OrganisationUsers = orgUserRadioButtons;
             }
-
             return View("ManageOrganisationUsers", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ManageOrganisationUsers(OrganisationUsersViewModel model)
-        {   
+        {
             if (!ModelState.IsValid)
             {
                 return View(model);
