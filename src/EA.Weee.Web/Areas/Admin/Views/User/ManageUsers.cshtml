@@ -1,4 +1,5 @@
 ﻿@using EA.Weee.Core.Admin
+@using EA.Weee.Web.Infrastructure.Paging
 @model EA.Weee.Web.Areas.Admin.ViewModels.ManageUsersViewModel
 @{
     ViewBag.Title = "Choose Users";
@@ -49,7 +50,16 @@
     </table>
 
     <br/>
-    @Html.Partial("_WeeePaging", Model.Users);
+    if (@Model.Users.PageCount > 1)
+    {
+        <br />
+        <span style="display: inline-block">Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</span>
+        <div class="pager">
+            @Html.Pager(Model.Users.PageSize, Model.Users.PageNumber, Model.Users.TotalItemCount)
+
+        </div>
+    }
+    @*@Html.Partial("_WeeePaging", Model.Users);*@
     <div class="form-group">
         <button class="button" type="submit">Continue</button>
     </div>
