@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{0B57A119-CD64-4296-A23D-02A0E3024245}"
 EndProject
@@ -185,12 +185,14 @@ Global
 		{10930E82-4985-4F92-8C5A-65D15F0176BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{10930E82-4985-4F92-8C5A-65D15F0176BE}.Release|x64.ActiveCfg = Release|Any CPU
 		{10930E82-4985-4F92-8C5A-65D15F0176BE}.Release|x64.Build.0 = Release|Any CPU
-		{7953D271-37A7-45BF-8220-FE1A65B40254}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7953D271-37A7-45BF-8220-FE1A65B40254}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7953D271-37A7-45BF-8220-FE1A65B40254}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{7953D271-37A7-45BF-8220-FE1A65B40254}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7953D271-37A7-45BF-8220-FE1A65B40254}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7953D271-37A7-45BF-8220-FE1A65B40254}.Release|x64.ActiveCfg = Release|Any CPU
+		{7953D271-37A7-45BF-8220-FE1A65B40254}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{7953D271-37A7-45BF-8220-FE1A65B40254}.Debug|Any CPU.Build.0 = Debug|x64
+		{7953D271-37A7-45BF-8220-FE1A65B40254}.Debug|x64.ActiveCfg = Debug|x64
+		{7953D271-37A7-45BF-8220-FE1A65B40254}.Debug|x64.Build.0 = Debug|x64
+		{7953D271-37A7-45BF-8220-FE1A65B40254}.Release|Any CPU.ActiveCfg = Release|x64
+		{7953D271-37A7-45BF-8220-FE1A65B40254}.Release|Any CPU.Build.0 = Release|x64
+		{7953D271-37A7-45BF-8220-FE1A65B40254}.Release|x64.ActiveCfg = Release|x64
+		{7953D271-37A7-45BF-8220-FE1A65B40254}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
