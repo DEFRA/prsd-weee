@@ -15,7 +15,6 @@
                 LatestMemberUploads = latestMemberUploads.Select(lmu => new LatestMemberUploadViewModel
                 {
                     ComplianceYear = lmu.ComplianceYear,
-                    CsvFileSizeEstimate = lmu.CsvFileSizeEstimate,
                     UploadId = lmu.UploadId
                 })
             };
