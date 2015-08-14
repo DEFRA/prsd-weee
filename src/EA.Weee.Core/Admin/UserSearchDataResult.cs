@@ -1,7 +1,8 @@
 ﻿namespace EA.Weee.Core.Admin
 {
     using System.Collections.Generic;
-    
+    using Shared.Paging;
+
     public class UserSearchDataResult
     {
         public IList<UserSearchData> Results { get; private set; }
@@ -11,6 +12,11 @@
         {
             Results = results;
             UsersCount = usersCount;
+        }
+
+        protected UserSearchDataResult()
+        {
+            Results = new PagedList<UserSearchData>();
         }
     }
 }

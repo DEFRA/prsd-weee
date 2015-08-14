@@ -596,7 +596,15 @@
     <Compile Include="Filters\AuthorizeClaimsAttribute.cs" />
     <Compile Include="Infrastructure\AreaRegistrationContextExtensions.cs" />
     <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
+    <Compile Include="Infrastructure\Paging\GenericPager.cs" />
+    <Compile Include="Infrastructure\Paging\GenericPagerOptionsBuilder.cs" />
+    <Compile Include="Infrastructure\Paging\Pager.cs" />
+    <Compile Include="Infrastructure\Paging\PagerOptionsBuilder.cs" />
+    <Compile Include="Infrastructure\Paging\PagerOptions.cs" />
+    <Compile Include="Infrastructure\Paging\PaginationLink.cs" />
+    <Compile Include="Infrastructure\Paging\PagerExtension.cs" />
     <Compile Include="Infrastructure\RouteCollectionExtensions.cs" />
+    <Compile Include="Infrastructure\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\EmailTemplate.cs" />
@@ -648,6 +656,7 @@
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\PcsAction.cs" />
+    <Compile Include="ViewModels\Shared\PaginationModel.cs" />
     <Compile Include="ViewModels\Shared\PagingViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
