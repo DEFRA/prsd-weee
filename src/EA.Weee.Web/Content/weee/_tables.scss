@@ -34,3 +34,20 @@ table {
     text-align: right;
   }
 }
+
+table.prsd-table {
+    border-collapse: separate;
+    border-spacing: 5px;
+
+    th, td {
+        padding-left: 10px;
+    }
+
+    th {
+        background-color: $panel-colour;
+    }
+
+    td {
+        background-color: $highlight-colour;
+    }
+}

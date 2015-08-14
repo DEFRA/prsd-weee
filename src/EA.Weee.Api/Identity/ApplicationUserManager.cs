@@ -90,7 +90,7 @@
             // Load WEEE-specific claims representing access to organisations.
             List<Guid> organisationIds = await context.OrganisationUsers
                             .Where(ou => ou.UserId == userId)
-                            .Where(ou => ou.OrganisationUserStatus.Value == (int)UserStatus.Approved)
+                            .Where(ou => ou.UserStatus.Value == (int)UserStatus.Approved)
                             .Select(ou => ou.OrganisationId)
                             .ToListAsync();
 

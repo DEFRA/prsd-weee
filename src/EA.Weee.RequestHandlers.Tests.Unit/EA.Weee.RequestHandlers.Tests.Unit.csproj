@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Helpers\AuthorizationBuilder.cs" />
     <Compile Include="Scheme\GetSchemesHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandlerTests.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Scheme\MemberRegistration\XMLChargeBandCalculatorTests.cs" />
     <Compile Include="Scheme\UpdateSchemeInformationHandlerTests.cs" />
     <Compile Include="Scheme\VerifyApprovalNumberExistsHandlerTests.cs" />
+    <Compile Include="Scheme\SetSchemeStatusHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -167,9 +169,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Admin\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

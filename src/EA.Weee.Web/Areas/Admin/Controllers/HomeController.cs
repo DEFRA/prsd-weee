@@ -7,6 +7,12 @@
 
     public class HomeController : AdminController
     {
+        // GET: Admin/Home
+        public ActionResult Index()
+        {
+            return View();
+        }
+
         [HttpGet]
         public ActionResult ChooseActivity()
         {

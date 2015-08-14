@@ -14,5 +14,12 @@
         protected UKCompetentAuthority()
         {
         }
+
+        public UKCompetentAuthority(string name, string abbreviation, Country country)
+        {
+            Name = name;
+            Abbreviation = abbreviation;
+            Country = country;
+        }
     }
 }
