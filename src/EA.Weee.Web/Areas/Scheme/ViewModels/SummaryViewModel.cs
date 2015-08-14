@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core.Scheme;
-    using PCS.ViewModels;
 
     public class SummaryViewModel
     {
