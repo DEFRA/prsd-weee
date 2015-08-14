@@ -161,7 +161,6 @@
     <Compile Include="Areas\Admin\Controllers\SchemeControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\MemberRegistrationControllerTests.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\LatestMemberUploadViewModelTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SchemeViewModelTests.cs" />
     <Compile Include="Controllers\AccountControllerTest.cs" />
     <Compile Include="Controllers\ControllerTests.cs" />

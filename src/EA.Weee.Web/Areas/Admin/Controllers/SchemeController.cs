@@ -83,9 +83,10 @@
                 return RedirectToAction("ConfirmRejection", "Scheme", new { id });
             }
 
+            model.CompetentAuthorities = await GetCompetentAuthorities();
+
             if (!ModelState.IsValid)
-            {
-                model.CompetentAuthorities = await GetCompetentAuthorities();
+            {   
                 return View(model);
             }
 
