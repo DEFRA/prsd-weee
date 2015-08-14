@@ -20,7 +20,7 @@
         @foreach (var latestUploadSummary in Model.LatestMemberUploads)
         {
             var csvFileName = "Overview of current members " + latestUploadSummary.ComplianceYear + ".csv";
-            <a href="@Url.Action("GetProducerCSV", "MemberRegistration", new { memberUploadId = latestUploadSummary.UploadId, fileName = csvFileName })">@(csvFileName)</a><span style="color: #6f777b">@(" (approx. " + latestUploadSummary.ScaledCsvFileSize + latestUploadSummary.ScaledCsvFileSizeSuffix))</span>
+            <a href="@Url.Action("GetProducerCSV", "MemberRegistration", new { memberUploadId = latestUploadSummary.UploadId, fileName = csvFileName })">@(csvFileName)</a><span style="color: #6f777b"> (less than 500KB).</span>
             <br/>
         }
     </div>
