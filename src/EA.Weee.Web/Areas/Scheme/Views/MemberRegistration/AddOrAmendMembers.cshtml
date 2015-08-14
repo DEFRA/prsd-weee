@@ -18,7 +18,24 @@
     </p>
     <hr />
 
-    @using (Html.BeginForm("AddOrAmendMembers", "MemberRegistration", FormMethod.Post, new { area = "Scheme", enctype = "multipart/form-data" }))
+    <script type="text/javascript">
+        function disableSubmitButton() {
+
+            $("#submitButton")
+                .prop('disabled', true)
+                .prop('value', 'Uploading...');
+
+            setTimeout(function () {
+                $("#processingTimeMessage")
+                    .fadeIn("slow");
+            }, 5000);
+
+            return true;
+        }
+    </script>
+
+
+    @using (Html.BeginForm("AddOrAmendMembers", "MemberRegistration", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return disableSubmitButton()" }))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
@@ -28,7 +45,12 @@
         </div>
 
         <div class="form-group">
-            <input type="submit" value="Upload" class="button" />
+            <input id="submitButton" type="submit" value="Upload" class="button" aria-live="off"/>
         </div>
     }
+
+    <p class="bold-small" style="display:none;" id="processingTimeMessage" aria-live="polite">
+        <img src="~/Content/weee/images/spinner.gif" alt="Spinning graphic" class="important-image" />
+        Uploading your file may take a few minutes
+    </p>
 }
