@@ -25,7 +25,7 @@
         </tr>
         </thead>
         <tbody>
-        @foreach(UserSearchData user in Model.Users)
+        @foreach (UserSearchData user in Model.Users)
         {
             <tr>
                 <td>
@@ -47,11 +47,9 @@
         }
         </tbody>
     </table>
-    if (Model.Users != null && Model.Users.Count > 0)
-    {
-        <br />
-        @Html.Partial("_WeeePaging", Model.UsersPagingViewModel)
-    }
+
+    <br/>
+    @Html.Partial("_WeeePaging", Model.Users);
     <div class="form-group">
         <button class="button" type="submit">Continue</button>
     </div>
