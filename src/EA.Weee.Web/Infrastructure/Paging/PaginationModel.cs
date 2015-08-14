@@ -1,7 +1,6 @@
-﻿namespace EA.Weee.Web.ViewModels.Shared
+﻿namespace EA.Weee.Web.Infrastructure.Paging
 {
     using System.Collections.Generic;
-    using Infrastructure.Paging;
 
     public class PaginationModel
     {

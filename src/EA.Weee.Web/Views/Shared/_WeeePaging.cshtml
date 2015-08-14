@@ -1,7 +1,6 @@
-﻿@using EA.Weee.Web.Infrastructure.Paging
-@model EA.Weee.Core.Shared.Paging.IPagedList
+﻿@model EA.Weee.Web.ViewModels.Shared.PagingViewModel
 
-@*<ul class="previous-next-navigation">
+<ul class="previous-next-navigation">
     @if (Model.PreviousPage >= 1)
     {
         <li class="previous">
@@ -21,13 +20,4 @@
             </a>
         </li>
     }
-</ul>*@
-@if (@Model.PageCount > 1)
-{
-    <br />
-    <span style="display: inline-block">Showing @Model.ItemStart - @Model.ItemEnd of @Model.TotalItemCount</span>
-    <div class="pager">
-        @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount)
-
-    </div>
-}
+</ul>
