@@ -4,6 +4,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Helpers;
     using Core.Shared;
     using DataAccess;
     using Domain.Scheme;
@@ -32,10 +33,11 @@
             const string approvalNumber = "Approval number";
             const string ibisCustomerReference = "Any value";
             var obligationType = ObligationType.B2B;
+            var status = Core.Shared.SchemeStatus.Approved;
             var competentAuthorityId = Guid.NewGuid();
 
             await
-                handler.HandleAsync(new UpdateSchemeInformation(schemes.FirstOrDefault().Id, schemeName, approvalNumber, ibisCustomerReference, obligationType, competentAuthorityId));
+                handler.HandleAsync(new UpdateSchemeInformation(schemes.FirstOrDefault().Id, schemeName, approvalNumber, ibisCustomerReference, obligationType, competentAuthorityId, status));
 
             var schemeInfo = schemes.FirstOrDefault();
 
@@ -45,6 +47,7 @@
             Assert.Equal(schemeInfo.SchemeName, schemeName);
             Assert.Equal(schemeInfo.IbisCustomerReference, ibisCustomerReference);
             Assert.Equal(schemeInfo.CompetentAuthorityId, competentAuthorityId);
+            Assert.Equal(status.ToDomainEnumeration<Domain.Scheme.SchemeStatus>(), schemeInfo.SchemeStatus);
         }
 
         private DbSet<Scheme> MakeScheme()

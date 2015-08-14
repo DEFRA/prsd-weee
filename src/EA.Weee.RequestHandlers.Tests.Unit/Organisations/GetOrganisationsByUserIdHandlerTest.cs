@@ -44,7 +44,7 @@
 
             Assert.NotNull(organisationUserInfo);
             Assert.Equal(1, orgUsers.Count);
-            Assert.Equal(organisationUserInfo.OrganisationUserStatus, UserStatus.Approved);
+            Assert.Equal(organisationUserInfo.UserStatus, UserStatus.Approved);
         }
 
         [Fact]
@@ -73,8 +73,8 @@
 
             Assert.NotNull(organisationUserInfo);
             Assert.Equal(2, orgUsers.Count);
-            Assert.True(organisationUserInfo.OrganisationUserStatus == UserStatus.Pending ||
-                        organisationUserInfo.OrganisationUserStatus == UserStatus.Refused);
+            Assert.True(organisationUserInfo.UserStatus == UserStatus.Pending ||
+                        organisationUserInfo.UserStatus == UserStatus.Refused);
         }
 
         [Fact]

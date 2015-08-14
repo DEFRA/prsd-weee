@@ -14,7 +14,7 @@
 
         public Guid OrganisationId { get; set; }
 
-        public UserStatus OrganisationUserStatus { get; set; }
+        public UserStatus UserStatus { get; set; }
 
         public OrganisationData Organisation { get; set; }
     }

@@ -23,6 +23,12 @@
             this.apiClient = apiClient;
         }
 
+        // GET: Scheme/Home
+        public ActionResult Index()
+        {
+            return View();
+        }
+
         [HttpGet]
         public async Task<ActionResult> ChooseActivity(Guid pcsId)
         {
@@ -88,7 +94,7 @@
                         ou =>
                             new KeyValuePair<string, Guid>(
                                 ou.User.FirstName + " " + ou.User.Surname + " - (" +
-                                ou.OrganisationUserStatus.ToString() + ")", new Guid(ou.UserId)));
+                                ou.UserStatus.ToString() + ")", new Guid(ou.UserId)));
 
                 var orgUserRadioButtons = new StringGuidRadioButtons(orgUsersKeyValuePairs);
                 model.OrganisationUsers = orgUserRadioButtons;

@@ -77,6 +77,7 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
     <Compile Include="Identity\WeeeIdentityContext.cs" />
+    <Compile Include="Mappings\CompetentAuthorityUserMapping.cs" />
     <Compile Include="Mappings\MemberUploadErrorTypeMapping.cs" />
     <Compile Include="Mappings\MigratedProducerMapping.cs" />
     <Compile Include="Mappings\SchemeStatusMapping.cs" />
@@ -95,7 +96,7 @@
     <Compile Include="Mappings\OrganisationStatusMapping.cs" />
     <Compile Include="Mappings\OrganisationTypeMapping.cs" />
     <Compile Include="Mappings\OrganisationUserMapping.cs" />
-    <Compile Include="Mappings\OrganisationUserStatusMapping.cs" />
+    <Compile Include="Mappings\UserStatusMapping.cs" />
     <Compile Include="Mappings\ProducerMapping.cs" />
     <Compile Include="Mappings\ProducerCompany.cs" />
     <Compile Include="Mappings\ProducerPartnerMapping.cs" />
