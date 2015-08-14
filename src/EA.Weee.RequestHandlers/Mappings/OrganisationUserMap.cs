@@ -22,10 +22,10 @@
                 Id = source.Id,
                 UserId = source.UserId,
                 OrganisationId = source.OrganisationId,
-                OrganisationUserStatus =
+                UserStatus =
                     (OrganisationUserStatus)
                         Enum.Parse(typeof(OrganisationUserStatus),
-                            source.OrganisationUserStatus.Value.ToString()),
+                            source.UserStatus.Value.ToString()),
 
                 // Use existing mappers to map addresses and contact
                 Organisation = source.Organisation != null

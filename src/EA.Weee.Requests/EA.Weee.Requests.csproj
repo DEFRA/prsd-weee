@@ -45,7 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin\GetAllUsers.cs" />
+    <Compile Include="Admin\FindMatchingUsers.cs" />
+    <Compile Include="Admin\AddCompetentAuthorityUser.cs" />
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetails.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFile.cs" />
     <Compile Include="Scheme\UpdateSchemeInformation.cs" />
     <Compile Include="Scheme\VerifyApprovalNumberExists.cs" />
+    <Compile Include="Scheme\SetSchemeStatus.cs" />
     <Compile Include="Shared\GetCountries.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorities.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations.cs" />

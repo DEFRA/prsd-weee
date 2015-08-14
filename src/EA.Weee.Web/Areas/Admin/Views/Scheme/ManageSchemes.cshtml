@@ -17,7 +17,7 @@
         @Html.Gds().ValidationSummary()
         
         <div class="form-group">
-            <table>
+            <table class="prsd-table">
                 <thead>
                 <tr>
                     <th>Name</th>
@@ -29,7 +29,7 @@
                 @foreach (var scheme in Model.Schemes)
                 {
                     <tr>
-                        <td>@scheme.Name</td>
+                        <td width="100%">@scheme.Name</td>
                         <td>@scheme.SchemeStatus</td>
                         <td>@Html.RadioButtonFor(m => m.Selected, @scheme.Id)</td>
                     </tr>

@@ -561,27 +561,21 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 }
 
 .highlight-section {
-    width: 615px;
-    height: 130px;
     background-color: $turquoise;
+    text-align: center;
 }
 
 .highlight-section-text {
     padding-top: 15px;
-    height: 30px;
+    padding-bottom: 15px;
     font-size: 19px;
     color: $white;
-    text-align: center;
     font-weight: 700;
-    line-height: normal;
 }
 
 .highlight-section-amount {
     white-space: nowrap;
-    height: 57px;
     font-size: 48px;
     color: $white;
     font-weight: 700;
-    line-height: normal;
-    text-align: center;
 }
