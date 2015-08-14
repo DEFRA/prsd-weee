@@ -1,26 +1,21 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Base;
     using System.Web.Mvc;
     using Api.Client;
-    using Core.Admin;
     using Core.Shared.Paging;
     using Infrastructure;
-    using Infrastructure.Paging;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using ViewModels;
-    using Web.ViewModels.Shared;
     using Weee.Requests.Admin;
 
     public class UserController : AdminController
     {
           private readonly Func<IWeeeClient> apiClient;
-          private const int DefaultPageSize = 2;
+          private const int DefaultPageSize = 25;
           public UserController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
