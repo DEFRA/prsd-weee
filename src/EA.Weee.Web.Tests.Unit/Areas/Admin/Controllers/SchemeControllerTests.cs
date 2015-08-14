@@ -99,8 +99,8 @@
             var isModelStateValid = Validator.TryValidateObject(model, context, results, true);
 
             var viewResult = await controller.EditScheme(model);
-
-            Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
+            var redirectValues = ((RedirectToRouteResult)viewResult).RouteValues;
+            Assert.Equal("ManageSchemes", redirectValues["action"]);
             Assert.False(isModelStateValid);
         }
 
@@ -127,8 +127,8 @@
             var isModelStateValid = Validator.TryValidateObject(model, context, results, true);
 
             var viewResult = await controller.EditScheme(model);
-
-            Assert.Equal("EditScheme", ((ViewResult)viewResult).ViewName);
+            var redirectValues = ((RedirectToRouteResult)viewResult).RouteValues;
+            Assert.Equal("ManageSchemes", redirectValues["action"]);
             Assert.True(isModelStateValid);
         }
 

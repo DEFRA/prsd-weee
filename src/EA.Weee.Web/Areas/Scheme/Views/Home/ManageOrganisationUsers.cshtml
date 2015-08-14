@@ -15,8 +15,8 @@
         @Html.Gds().ValidationSummary()
         @Html.AntiForgeryToken()
 
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.OrganisationUsers.Selected)" id="OrganisationUsers">
-        @Html.Gds().ValidationMessageFor(m => m.OrganisationUsers.SelectedValue)
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.OrganisationUsers.Selected)">
+        @Html.Gds().ValidationMessageFor(m => m.OrganisationUsers.Selected)
         @Html.EditorFor(m => m.OrganisationUsers)
     </div>
         <div class="form-group">

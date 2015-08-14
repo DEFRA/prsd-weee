@@ -24,15 +24,7 @@
         }
 
         public async Task<List<OrganisationUserData>> HandleAsync(GetUsersByOrganisationId query)
-        {
-            var organisation = await context.Organisations.SingleOrDefaultAsync(o => o.Id == query.OrganisationId);
-
-            if (organisation == null)
-            {
-                throw new ArgumentException(string.Format("Could not find an organisation with id {0}",
-                    query.OrganisationId));
-            }
-
+        {   
             var organisationUsers =
                 await context.OrganisationUsers.Where(ou => ou.OrganisationId == query.OrganisationId).ToListAsync();
 
