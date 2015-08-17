@@ -2,8 +2,7 @@
 {
     using Controllers;
     using System.Web.Mvc;
-    using System.Web.Routing;
-    using LowercaseDashedRouting;
+    using Infrastructure;
 
     public class SchemeAreaRegistration : AreaRegistration 
     {
@@ -17,12 +16,11 @@
 
         public override void RegisterArea(AreaRegistrationContext context)
         {
-            context.Routes.LowercaseUrls = true;
-            string url = "Scheme/{pcsId}/{controller}/{action}/{entityId}";
-            RouteValueDictionary routeValueDictionary = new RouteValueDictionary(new { action = "Index", controller = "Home", entityId = UrlParameter.Optional });
-            string[] namespaces = new[] { typeof(HomeController).Namespace };
-            LowercaseDashedRoute dashedRoute = new LowercaseDashedRoute(url, routeValueDictionary, new DashedRouteHandler(), this, context, namespaces);
-            context.Routes.Add(dashedRoute);
+            context.MapLowercaseDashedRoute(
+                name: "Scheme_default",
+                url: "Scheme/{pcsId}/{controller}/{action}/{entityId}",
+                defaults: new { action = "Index", controller = "Home", entityId = UrlParameter.Optional },
+                namespaces: new[] { typeof(HomeController).Namespace });
         }
     }
 }
