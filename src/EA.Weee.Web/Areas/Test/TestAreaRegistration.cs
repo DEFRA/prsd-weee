@@ -1,13 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Test
 {
-    using EA.Weee.Web.Areas.Test.Controllers;
-    using EA.Weee.Web.Services;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
     using System.Web.Mvc;
-
+    using Controllers;
+    using Infrastructure;
+    using Services;
+    
     /// <summary>
     /// Registration for the "Test" area.
     /// 
@@ -35,7 +32,7 @@
         {
             if (testAreaEnabled)
             {
-                context.MapRoute(
+                context.MapLowercaseDashedRoute(
                     name: "Test_default",
                     url: "Test/{controller}/{action}/{entityId}",
                     defaults: new { action = "Index", controller = "Home", entityId = UrlParameter.Optional },
