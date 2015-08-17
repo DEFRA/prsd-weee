@@ -9,6 +9,7 @@
     using Base;
     using Core.Organisations;
     using Core.Shared;
+    using Core.Shared.Paging;
     using Infrastructure;
     using Prsd.Core.Extensions;
     using Prsd.Core.Web.ApiClient;
@@ -290,13 +291,9 @@
         public async Task<ActionResult> SelectOrganisation(string name, string tradingName,
             string companiesRegistrationNumber, OrganisationType type, Guid? organisationId = null, int page = 1)
         {
-            var routeValues = new { name, tradingName, companiesRegistrationNumber, type };
-
-            var fallbackPagingViewModel = new PagingViewModel("SelectOrganisation", "OrganisationRegistration",
-                routeValues);
             var fallbackSelectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName,
                 companiesRegistrationNumber, type, organisationId,
-                new List<OrganisationSearchData>(), fallbackPagingViewModel);
+                new PagedList<OrganisationSearchData>());
 
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(tradingName))
             {
@@ -310,19 +307,16 @@
                 {
                     const int OrganisationsPerPage = 4;
                     // would rather bake this into the db query but not really feasible
-
                     var organisationSearchResultData =
                         await
                             client.SendAsync(User.GetAccessToken(),
                                 new FindMatchingOrganisations(name ?? tradingName, page, OrganisationsPerPage));
 
-                    var pagingViewModel =
-                        PagingViewModel.FromValues(organisationSearchResultData.TotalMatchingOrganisations,
-                            OrganisationsPerPage,
-                            page, "SelectOrganisation", "OrganisationRegistration", routeValues);
-
-                    return View(BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type, organisationId,
-                        organisationSearchResultData.Results, pagingViewModel));
+                    var model = BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
+                        organisationId,
+                        organisationSearchResultData.Results.ToPagedList(page - 1, OrganisationsPerPage,
+                            organisationSearchResultData.TotalMatchingOrganisations));
+                    return View(model);
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -338,7 +332,7 @@
 
         private SelectOrganisationViewModel BuildSelectOrganisationViewModel(string name, string tradingName,
             string companiesRegistrationNumber, OrganisationType type, Guid? organisationId,
-            IList<OrganisationSearchData> matchingOrganisations, PagingViewModel pagingViewModel)
+            IPagedList<OrganisationSearchData> matchingOrganisations)
         {
             return new SelectOrganisationViewModel
             {
@@ -347,7 +341,6 @@
                 CompaniesRegistrationNumber = companiesRegistrationNumber,
                 Type = type,
                 MatchingOrganisations = matchingOrganisations,
-                PagingViewModel = pagingViewModel,
                 OrganisationId = organisationId
             };
         }
