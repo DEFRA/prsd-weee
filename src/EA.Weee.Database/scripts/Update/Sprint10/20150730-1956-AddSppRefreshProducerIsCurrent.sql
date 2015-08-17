@@ -3,7 +3,7 @@ PRINT N'Creating [Producer].[sppRefreshProducerIsCurrent]...';
 
 GO
 -- =============================================
--- Author:		Graham Alexander-Thomson; gt@main.sfwltd.co.uk
+-- Author:		Graham Alexander-Thomson;
 -- Create date: 2015-07-30T18:21:00+08:00
 -- Description:	Updates the [IsCurrentForComplianceYear] column
 --				for all rows in [Producer].[Producer].
