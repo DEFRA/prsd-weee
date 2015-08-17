@@ -327,26 +327,5 @@
             }
             return country;
         }
-
-        private static string GenerateUniquePRN()
-        {
-            //TODO: Replace temporary code with actual PRN generation ensuring no duplicates
-            StringBuilder prnBuilder = new StringBuilder();
-            prnBuilder.Append("WEE/");
-            prnBuilder.Append(GetRandomLetters(2));
-            prnBuilder.Append(DateTime.UtcNow.ToString("mmff"));
-            prnBuilder.Append(GetRandomLetters(2));
-            return prnBuilder.ToString();
-        }
-
-        private static string GetRandomLetters(int length)
-        {
-            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            var random = new Random();
-            return new string(
-                Enumerable.Repeat(chars, 2)
-                          .Select(s => s[random.Next(s.Length)])
-                          .ToArray());
-        }
     }
 }
