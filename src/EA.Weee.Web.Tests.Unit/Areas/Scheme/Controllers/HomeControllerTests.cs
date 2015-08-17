@@ -6,6 +6,8 @@
     using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.Scheme;
     using FakeItEasy;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
@@ -60,9 +62,11 @@
         }
 
         [Fact]
-        public void PostChooseActivity_ManagePcsMembers_RedirectsToMemberRegistrationSummary()
+        public async void PostChooseActivity_ManagePcsMembersApprovedStatus_RedirectsToMemberRegistrationSummary()
         {
-            var result = HomeController().ChooseActivity(new ChooseActivityViewModel
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Approved);
+
+            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
                 ActivityOptions = new RadioButtonStringCollectionViewModel
                 {
@@ -79,9 +83,51 @@
         }
 
         [Fact]
-        public void PostChooseActivity_ManageOrganisationUsers_RedirectsToOrganisationUsersManagement()
+        public async void PostChooseActivity_ManagePcsMembersPendingStatus_RedirectsToAuthorisationRequired()
         {
-            var result = HomeController().ChooseActivity(new ChooseActivityViewModel
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Pending);
+
+            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
+            {
+                ActivityOptions = new RadioButtonStringCollectionViewModel
+                {
+                    SelectedValue = PcsAction.ManagePcsMembers
+                }
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("AuthorizationRequired", routeValues["action"]);
+            Assert.Equal("MemberRegistration", routeValues["controller"]);
+        }
+
+        [Fact]
+        public async void PostChooseActivity_ManagePcsMembersRejectedStatus_RedirectsToAuthorisationRequired()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Rejected);
+
+            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
+            {
+                ActivityOptions = new RadioButtonStringCollectionViewModel
+                {
+                    SelectedValue = PcsAction.ManagePcsMembers
+                }
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("AuthorizationRequired", routeValues["action"]);
+            Assert.Equal("MemberRegistration", routeValues["controller"]);
+        }
+
+        [Fact]
+        public async void PostChooseActivity_ManageOrganisationUsers_RedirectsToOrganisationUsersManagement()
+        {
+            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
                 ActivityOptions = new RadioButtonStringCollectionViewModel
                 {
