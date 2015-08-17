@@ -44,8 +44,8 @@
         {
             var organisations = helper.GetAsyncEnabledDbSet(new[]
             {
-                orgHelper.GetOrganisationWithName("SFW Ltd"),
-                orgHelper.GetOrganisationWithName("swf"),
+                orgHelper.GetOrganisationWithName("Test Ltd"),
+                orgHelper.GetOrganisationWithName("tset"),
                 orgHelper.GetOrganisationWithName("mfw"),
                 orgHelper.GetOrganisationWithName("mfi Kitchens and Showrooms Ltd"),
                 orgHelper.GetOrganisationWithName("SEPA England"),
@@ -58,7 +58,7 @@
 
             var handler = new FindMatchingOrganisationsHandler(context);
 
-            var strings = await handler.HandleAsync(new FindMatchingOrganisations("sfw"));
+            var strings = await handler.HandleAsync(new FindMatchingOrganisations("Test"));
 
             Assert.Equal(1, strings.Results.Count());
         }
@@ -68,8 +68,8 @@
         {
             var organisations = helper.GetAsyncEnabledDbSet(new[]
             {
-                orgHelper.GetOrganisationWithName("SFW Ltd"),
-                orgHelper.GetOrganisationWithName("SFW  Limited")
+                orgHelper.GetOrganisationWithName("TEST Ltd"),
+                orgHelper.GetOrganisationWithName("TEST  Limited")
             });
 
             var context = A.Fake<WeeeContext>();
@@ -78,7 +78,7 @@
 
             var handler = new FindMatchingOrganisationsHandler(context);
 
-            var strings = await handler.HandleAsync(new FindMatchingOrganisations("sfw"));
+            var strings = await handler.HandleAsync(new FindMatchingOrganisations("test"));
 
             Assert.Equal(2, strings.Results.Count());
         }
