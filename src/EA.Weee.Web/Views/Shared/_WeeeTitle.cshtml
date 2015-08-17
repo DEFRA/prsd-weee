@@ -1,0 +1,18 @@
+﻿@if (User.Identity.IsAuthenticated)
+{
+    <div class="username-title-display font-xsmall">
+        <ul>
+            <li>
+                <div class="text-secondary">Signed in as: <span class="username-format">@ViewBag.Name</span></div>
+            </li>
+            <li>
+                @using (Html.BeginForm("LogOff", "Account", routeValues: new { area = string.Empty }, method: FormMethod.Post, htmlAttributes: new { id = "logoutForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button class="link-submit" id="link-sign-out" type="submit">Sign out</button>
+                }
+            </li>
+        </ul>
+    </div>
+    <div class="account-link-banner"></div>
+}
