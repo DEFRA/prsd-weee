@@ -92,6 +92,7 @@
     <Compile Include="Mappings\SchemeMap.cs" />
     <Compile Include="Mappings\SchemeStatusMap.cs" />
     <Compile Include="Mappings\UKCompetentAuthorityMap.cs" />
+    <Compile Include="Mappings\UserMap.cs" />
     <Compile Include="Mappings\ValueObjectInitializer.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandler.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Scheme\SetSchemeStatusHandler.cs" />
     <Compile Include="Shared\GetCountriesHandler.cs" />
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
+    <Compile Include="Users\GetUsersByOrganisationIdHandler.cs" />
     <Compile Include="Admin\FindMatchingUsersHandler.cs" />
     <Compile Include="Users\UserByIdHandler.cs" />
     <Compile Include="v3schema.cs" />

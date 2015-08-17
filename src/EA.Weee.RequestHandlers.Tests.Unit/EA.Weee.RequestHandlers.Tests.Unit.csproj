@@ -110,6 +110,7 @@
     <Compile Include="Scheme\UpdateSchemeInformationHandlerTests.cs" />
     <Compile Include="Scheme\VerifyApprovalNumberExistsHandlerTests.cs" />
     <Compile Include="Scheme\SetSchemeStatusHandlerTests.cs" />
+    <Compile Include="Users\GetUsersByOrganisationIdHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

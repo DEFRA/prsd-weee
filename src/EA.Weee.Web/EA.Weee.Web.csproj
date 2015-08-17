@@ -544,6 +544,8 @@
     <Content Include="Views\Organisation\HoldingMessageForPending.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ChooseActivity.cshtml" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\XmlHasNoErrors.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\StringGuidRadioButtons.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\ManageOrganisationUsers.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -648,12 +650,16 @@
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\PcsAction.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\OrganisationUsersViewModel.cs" />
+    <Compile Include="ViewModels\Shared\KeyValueRadioButtons.cs" />
     <Compile Include="ViewModels\Shared\PagingViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
+    <Compile Include="ViewModels\Shared\RadioButtonPair.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionBaseViewModel.cs" />
     <Compile Include="ViewModels\Shared\AddressViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionOptionalViewModel.cs" />
+    <Compile Include="ViewModels\Shared\StringGuidRadioButtons.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\MemberUploadResultViewModel.cs" />
     <Compile Include="Views\Shared\ViewBase.cs" />
