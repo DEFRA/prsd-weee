@@ -164,6 +164,11 @@
     <Compile Include="Shared\ErrorLevel.cs" />
     <Compile Include="Shared\MemberUploadErrorData.cs" />
     <Compile Include="Shared\OrganisationStatus.cs" />
+    <Compile Include="Shared\Paging\IPagedList.cs" />
+    <Compile Include="Shared\Paging\PagedList.cs" />
+    <Compile Include="Shared\Paging\PagingExtension.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Shared\SchemeStatus.cs" />
     <Compile Include="Shared\UKCompetentAuthorityData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

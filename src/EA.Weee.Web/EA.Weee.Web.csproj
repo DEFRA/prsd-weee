@@ -383,6 +383,7 @@
     <Content Include="Content\govuk_toolkit\images\player-icon-play.png" />
     <Content Include="Content\govuk_toolkit\images\player-icon-rewind.png" />
     <Content Include="Content\govuk_toolkit\images\player-icon-volume.png" />
+    <Content Include="Content\weee\images\spinner.gif" />
     <Content Include="Global.asax" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>
@@ -546,6 +547,11 @@
     <Content Include="Areas\Scheme\Views\MemberRegistration\XmlHasNoErrors.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\StringGuidRadioButtons.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ManageOrganisationUsers.cshtml" />
+    <Content Include="Views\Errors\CookieError.cshtml" />
+    <Content Include="Views\Errors\InternalError.cshtml" />
+    <Content Include="Views\Errors\NotFound.cshtml" />
+    <Content Include="Views\Errors\AccessDenied.cshtml" />
+    <Content Include="Views\Errors\Error.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -594,11 +600,21 @@
     <Compile Include="Areas\Test\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SelectOrganisationViewModel.cs" />
     <Compile Include="Controllers\Base\ExternalSiteController.cs" />
+    <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Filters\AuthorizeClaimsAttribute.cs" />
+    <Compile Include="Infrastructure\AntiForgeryErrorFilter.cs" />
     <Compile Include="Infrastructure\AreaRegistrationContextExtensions.cs" />
     <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
+    <Compile Include="Infrastructure\Paging\GenericPager.cs" />
+    <Compile Include="Infrastructure\Paging\GenericPagerOptionsBuilder.cs" />
+    <Compile Include="Infrastructure\Paging\Pager.cs" />
+    <Compile Include="Infrastructure\Paging\PagerOptionsBuilder.cs" />
+    <Compile Include="Infrastructure\Paging\PagerOptions.cs" />
+    <Compile Include="Infrastructure\Paging\PaginationLink.cs" />
+    <Compile Include="Infrastructure\Paging\PagerExtension.cs" />
     <Compile Include="Infrastructure\RouteCollectionExtensions.cs" />
+    <Compile Include="Infrastructure\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\EmailTemplate.cs" />
@@ -650,6 +666,7 @@
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ChooseActivityViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\PcsAction.cs" />
+    <Compile Include="Infrastructure\Paging\PaginationModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\OrganisationUsersViewModel.cs" />
     <Compile Include="ViewModels\Shared\KeyValueRadioButtons.cs" />
     <Compile Include="ViewModels\Shared\PagingViewModel.cs" />
