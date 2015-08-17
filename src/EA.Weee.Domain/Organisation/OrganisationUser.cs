@@ -13,6 +13,8 @@
 
         public virtual Organisation Organisation { get; private set; }
 
+        public virtual User User { get; private set; }
+
         protected OrganisationUser()
         {
         }

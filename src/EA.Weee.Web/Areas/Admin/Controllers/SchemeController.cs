@@ -100,7 +100,7 @@
 
                     if (approvalNumberExists)
                     {
-                        ModelState.AddModelError(string.Empty, "Approval number already exists.");
+                        ModelState.AddModelError("ApprovalNumber", "Approval number already exists.");
                         return View("EditScheme", model);
                     }
                 }
