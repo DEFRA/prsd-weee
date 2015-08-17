@@ -546,6 +546,11 @@
     <Content Include="Areas\Scheme\Views\MemberRegistration\XmlHasNoErrors.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\StringGuidRadioButtons.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ManageOrganisationUsers.cshtml" />
+    <Content Include="Views\Errors\CookieError.cshtml" />
+    <Content Include="Views\Errors\InternalError.cshtml" />
+    <Content Include="Views\Errors\NotFound.cshtml" />
+    <Content Include="Views\Errors\AccessDenied.cshtml" />
+    <Content Include="Views\Errors\Error.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -595,8 +600,10 @@
     <Compile Include="Areas\Test\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SelectOrganisationViewModel.cs" />
     <Compile Include="Controllers\Base\ExternalSiteController.cs" />
+    <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Filters\AuthorizeClaimsAttribute.cs" />
+    <Compile Include="Infrastructure\AntiForgeryErrorFilter.cs" />
     <Compile Include="Infrastructure\AreaRegistrationContextExtensions.cs" />
     <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
     <Compile Include="Infrastructure\RouteCollectionExtensions.cs" />
