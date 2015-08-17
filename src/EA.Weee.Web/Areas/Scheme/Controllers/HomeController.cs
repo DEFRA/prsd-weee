@@ -6,6 +6,8 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.Scheme;
     using Infrastructure;
     using ViewModels;
     using Web.Controllers.Base;
@@ -50,13 +52,25 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ChooseActivity(ChooseActivityViewModel viewModel)
+        public async Task<ActionResult> ChooseActivity(ChooseActivityViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManagePcsMembers)
                 {
-                    return RedirectToAction("Summary", "MemberRegistration", new { pcsId = viewModel.OrganisationId });
+                    using (var client = apiClient())
+                    {
+                        var status = await client.SendAsync(User.GetAccessToken(), new GetSchemeStatus(viewModel.OrganisationId));
+
+                        if (status == SchemeStatus.Approved)
+                        {
+                            return RedirectToAction("Summary", "MemberRegistration", new { pcsId = viewModel.OrganisationId });
+                        }
+                        else
+                        {
+                            return RedirectToAction("AuthorizationRequired", "MemberRegistration", new { pcsId = viewModel.OrganisationId });
+                        }
+                    }
                 }
                 if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManageOrganisationUsers)
                 {
