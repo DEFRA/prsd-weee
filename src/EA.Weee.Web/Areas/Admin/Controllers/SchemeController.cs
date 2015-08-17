@@ -86,7 +86,7 @@
             model.CompetentAuthorities = await GetCompetentAuthorities();
 
             if (!ModelState.IsValid)
-            {   
+            {
                 return View(model);
             }
 
@@ -114,6 +114,7 @@
                 return RedirectToAction("ManageSchemes");
             }
         }
+
         private async Task<IEnumerable<UKCompetentAuthorityData>> GetCompetentAuthorities()
         {
             using (var client = apiClient())
@@ -125,18 +126,32 @@
         [HttpGet]
         public ActionResult ConfirmRejection(Guid id)
         {
-            return View();
+            var model = new ConfirmRejectionViewModel();
+            model.SchemeId = id;
+            return View("ConfirmRejection", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ConfirmRejection(Guid id, ConfirmRejectionViewModel model)
+        public async Task<ActionResult> ConfirmRejection(ConfirmRejectionViewModel model)
         {
-            using (var client = apiClient())
+            if (!ModelState.IsValid)
             {
-                await client.SendAsync(User.GetAccessToken(), new SetSchemeStatus(id, SchemeStatus.Rejected));
+                return View(model);
             }
 
+            if (model.ConfirmRejectionOptions.SelectedValue == ConfirmSchemeRejection.No)
+            {
+                return RedirectToAction("EditScheme", "Scheme", new { id = model.SchemeId });
+            }
+
+            if (model.ConfirmRejectionOptions.SelectedValue == ConfirmSchemeRejection.Yes)
+            {
+                using (var client = apiClient())
+                {
+                    await client.SendAsync(User.GetAccessToken(), new SetSchemeStatus(model.SchemeId, SchemeStatus.Rejected));
+                }
+            }
             return RedirectToAction("ManageSchemes", "Scheme");
         }
     }
