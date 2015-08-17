@@ -18,6 +18,8 @@
 
     @using (Html.BeginForm())
     {
+        @Html.AntiForgeryToken()
+        
         <div class="form-group">
             <input type="submit" value="Save and continue" class="button" />
         </div>
