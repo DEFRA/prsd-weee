@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin;
+    using Core.Shared.Paging;
     using DataAccess;
     using Prsd.Core.Mediator;
     using Requests.Admin;
@@ -26,16 +27,14 @@
             //internal users
             var competentAuthorityUsers = await GetCompetentAuthorityUsers();
             var totalUsersData = organisationsUsers.Concat(competentAuthorityUsers).OrderBy(u => u.FullName).ToList();
-               if (query.Paged)
-                {
-                    var pagedMatchingUsersData =
-                        totalUsersData.Skip((query.Page - 1) * query.UsersPerPage)
-                            .Take(query.UsersPerPage)
-                            .ToList();
-
-                    return new UserSearchDataResult(pagedMatchingUsersData, totalUsersData.Count);
-                }
-      
+            if (query.Paged)
+            {
+               IList<UserSearchData> pagedMatchingUsersData =
+                    totalUsersData.Skip((query.Page - 1) * query.UsersPerPage)
+                        .Take(query.UsersPerPage)
+                        .ToList();
+               return new UserSearchDataResult(pagedMatchingUsersData, totalUsersData.Count);
+            }
             return new UserSearchDataResult(totalUsersData, totalUsersData.Count);
         }
 
