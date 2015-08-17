@@ -6,24 +6,21 @@
 
 @section main_content
 {
-    <header class="hgroup">
-        <h1 class="heading-large">
-            Register or update member details
-        </h1>
-    </header>
-
-    <p class="form-hint">To register or update your members' details, upload and submit an xml file</p>
-    <p class="bold-small">
-        <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image" />Your XML file must use the version 3.06 Schema
-    </p>
-    <hr />
-
     <script type="text/javascript">
         function disableSubmitButton() {
 
+            $("#title")
+                .html('Checking your file for errors');
+
+            $("#preSubmissionContent")
+                .hide();
+
             $("#submitButton")
                 .prop('disabled', true)
-                .prop('value', 'Uploading...');
+                .prop('value', 'Checking file for errors...');
+
+            $("#spinner")
+                .show();
 
             setTimeout(function () {
                 $("#processingTimeMessage")
@@ -34,23 +31,44 @@
         }
     </script>
 
-
     @using (Html.BeginForm("AddOrAmendMembers", "MemberRegistration", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return disableSubmitButton()" }))
     {
-        @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
+        <header class="hgroup">
+            <h1 id="title" class="heading-large" aria-live="off">
+                Register or update member details
+            </h1>
+        </header>
+        
+        <div id="preSubmissionContent">
 
-        <div id="file-upload-group" class="form-group @Html.Gds().FormGroupClass(m => m.File)">
-            <input type="file" name="file" id="file" accept=".xml"/>
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+
+            <p class="form-hint">To register or update your members' details, upload and submit an xml file</p>
+            <p class="bold-small">
+                <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image" />Your XML file must use the version 3.06 Schema
+            </p>
+            <hr />
+
+            <div id="file-upload-group" class="form-group @Html.Gds().FormGroupClass(m => m.File)">
+                <input type="file" name="file" id="file" accept=".xml" />
+            </div>
+
         </div>
 
         <div class="form-group">
-            <input id="submitButton" type="submit" value="Upload" class="button" aria-live="off"/>
+            <input id="submitButton" type="submit" value="Check file for errors" class="button" aria-live="off" />
+            <img id="spinner" style="display:none;" src="~/Content/weee/images/spinner.gif" alt="Spinning graphic" class="important-image" />
         </div>
     }
 
+    <noscript>
+        <p class="bold-small">
+            It may take a minute or two to check your file for errors, so please bear with us.
+        </p>
+    </noscript>
+    
     <p class="bold-small" style="display:none;" id="processingTimeMessage" aria-live="polite">
-        <img src="~/Content/weee/images/spinner.gif" alt="Spinning graphic" class="important-image" />
-        Uploading your file may take a few minutes
+        It may take a minute or two to check your file for errors, so please bear with us.
     </p>
 }
