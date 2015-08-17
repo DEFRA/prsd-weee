@@ -15,52 +15,53 @@
 {
     @Html.AntiForgeryToken()
     @Html.ValidationMessageFor(m => m.SelectedUserId)
-    <table class="form-group">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Organisation</th>
-            <th>Status</th>
-            <th>Select</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (UserSearchData user in Model.Users)
-        {
+    <div class="form-group">
+        <table class="prsd-table">
+            <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(m => user.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => user.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => user.OrganisationName)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => user.Status)
-                </td>
-                <td>
-                    @Html.RadioButtonFor(m => m.SelectedUserId, user.Id)
-                </td>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Organisation</th>
+                <th>Status</th>
+                <th>Select</th>
             </tr>
-        }
-        </tbody>
-    </table>
-
-    <br/>
-    if (@Model.Users.PageCount > 1)
-    {
+            </thead>
+            <tbody>
+            @foreach (UserSearchData user in Model.Users)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(m => user.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => user.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => user.OrganisationName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => user.Status)
+                    </td>
+                    <td>
+                        @Html.RadioButtonFor(m => m.SelectedUserId, user.Id)
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+        <br />
+        if (@Model.Users.PageCount > 1)
+        {
         <br />
         <span style="display: inline-block">Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</span>
         <div class="pager">
             @Html.Pager(Model.Users.PageSize, Model.Users.PageNumber, Model.Users.TotalItemCount)
 
         </div>
-    }
-    @*@Html.Partial("_WeeePaging", Model.Users);*@
-    <div class="form-group">
-        <button class="button" type="submit">Continue</button>
-    </div>
-}
+        }
+        @*@Html.Partial("_WeeePaging", Model.Users);*@
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+        }
