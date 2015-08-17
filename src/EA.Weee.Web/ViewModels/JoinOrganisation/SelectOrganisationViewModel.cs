@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.Web.ViewModels.JoinOrganisation
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Core.Organisations;
-    using Shared;
-
+    using Core.Shared.Paging;
+ 
     public class SelectOrganisationViewModel
     {
         public string Name { get; set; }
@@ -16,9 +15,7 @@
 
         public OrganisationType Type { get; set; }
 
-        public IList<OrganisationSearchData> MatchingOrganisations { get; set; }
-
-        public PagingViewModel PagingViewModel { get; set; }
+        public IPagedList<OrganisationSearchData> MatchingOrganisations { get; set; }
 
         [Required]
         public Guid? Selected { get; set; }
