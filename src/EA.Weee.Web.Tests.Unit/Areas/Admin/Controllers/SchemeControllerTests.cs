@@ -144,6 +144,32 @@
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
         }
+
+        [Fact]
+        public async void PostEditScheme_OldApprovalNumberAndApprovalNumberAreSame_ReturnToManageScheme()
+        {
+            var controller = SchemeController();
+
+            var scheme = new SchemeViewModel
+            {
+                OldApprovalNumber = "WEE/AD1234DC/SCH",
+                ApprovalNumber = "WEE/AD1234DC/SCH",
+                SchemeName = "Any value",
+                ObligationType = ObligationType.B2B,
+                CompetentAuthorityId = Guid.NewGuid(),
+                IbisCustomerReference = "Any value"
+            };
+
+            var result = await controller.EditScheme(Guid.NewGuid(), scheme);
+
+            Assert.IsType<RedirectToRouteResult>(result);
+            Assert.True(controller.ModelState.IsValid);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ManageSchemes", routeValues["action"]);
+        }
+
         [Fact]
         public async void PostEditScheme_ModelWithError_ButSchemeIsRejected_RedirectsToRejectionConfirmation_WithSchemeId()
         {
