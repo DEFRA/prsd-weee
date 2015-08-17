@@ -37,7 +37,6 @@
                     var usersSearchResultData = await client.SendAsync(User.GetAccessToken(), new FindMatchingUsers(page, DefaultPageSize));
                     ManageUsersViewModel model = new ManageUsersViewModel();
                     model.Users = usersSearchResultData.Results.ToPagedList(page - 1, DefaultPageSize, usersSearchResultData.UsersCount);
-                    //model.Users = usersSearchResultData.Results;
                     return View(model);
                 }
                 catch (ApiBadRequestException ex)
@@ -67,7 +66,6 @@
                 {
                     var usersSearchResultData = await client.SendAsync(User.GetAccessToken(), new FindMatchingUsers(page, DefaultPageSize));
                     model.Users = usersSearchResultData.Results.ToPagedList(page - 1, DefaultPageSize, usersSearchResultData.UsersCount);
-                    //model.Users = usersSearchResultData.Results;
                     return View();
                 }
             }

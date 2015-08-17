@@ -33,10 +33,8 @@
                     totalUsersData.Skip((query.Page - 1) * query.UsersPerPage)
                         .Take(query.UsersPerPage)
                         .ToList();
-                //IPagedList<UserSearchData> pagedList = pagedMatchingUsersData.ToPagedList(query.Page, query.UsersPerPage, totalUsersData.Count);
                return new UserSearchDataResult(pagedMatchingUsersData, totalUsersData.Count);
             }
-            //(totalUsersData.ToPagedList(1, 1, totalUsersData.Count)
             return new UserSearchDataResult(totalUsersData, totalUsersData.Count);
         }
 
