@@ -17,9 +17,12 @@
 
         public async Task<bool> HandleAsync(VerifyApprovalNumberExists message)
         {
-            var isExists = await db.Schemes.AnyAsync(o => o.ApprovalNumber == message.ApprovalNumber);
+            return await ApprovalNumberExists(message.ApprovalNumber);
+        }
 
-            return isExists;
+        internal async Task<bool> ApprovalNumberExists(string approvalNumber)
+        {
+            return await db.Schemes.AnyAsync(o => o.ApprovalNumber == approvalNumber);
         }
     }
 }
