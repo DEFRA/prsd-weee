@@ -91,7 +91,6 @@
       <Project>{75efee66-9358-4de4-9a84-e7191eec7db8}</Project>
       <Name>EA.Weee.Core</Name>
     </ProjectReference>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Choose>
