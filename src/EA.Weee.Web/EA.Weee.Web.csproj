@@ -531,7 +531,6 @@
     <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\Type.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddress.cshtml" />
-    <Content Include="Views\Shared\_WeeePaging.cshtml" />
     <Content Include="Views\OrganisationRegistration\OrganisationAddress.cshtml" />
     <Content Include="Views\OrganisationRegistration\JoinOrganisation.cshtml" />
     <Content Include="Views\OrganisationRegistration\JoinOrganisationConfirmation.cshtml" />
@@ -670,7 +669,6 @@
     <Compile Include="Infrastructure\Paging\PaginationModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\OrganisationUsersViewModel.cs" />
     <Compile Include="ViewModels\Shared\KeyValueRadioButtons.cs" />
-    <Compile Include="ViewModels\Shared\PagingViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonPair.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
