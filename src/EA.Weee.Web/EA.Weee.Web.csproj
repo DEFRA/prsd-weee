@@ -580,6 +580,7 @@
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeController.cs" />
     <Compile Include="Areas\Admin\ViewModels\ConfirmRejectionViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\ConfirmSchemeRejection.cs" />
     <Compile Include="Areas\Admin\ViewModels\InternalUserActivity.cs" />
     <Compile Include="Areas\Admin\ViewModels\InternalUserActivityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\InternalUserCreationViewModel.cs" />
