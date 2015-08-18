@@ -2,19 +2,10 @@
 {
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
-    using EA.Prsd.Core.Security;
-    using EA.Weee.Core;    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using EA.Weee.Core;
+    using System;
     using System.Security;
     using System.Security.Claims;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Core;
-    using DataAccess;
-    using Domain;
-    using Prsd.Core;
-    using Prsd.Core.Domain;
 
     /// <summary>
     /// Provides evaluation of claims-based authorisation for WEEE resources.
