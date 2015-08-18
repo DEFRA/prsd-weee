@@ -30,6 +30,15 @@
                     message.SchemeId));
             }
 
+            if (scheme.ApprovalNumber != message.ApprovalNumber)
+            {
+                var isExists = await db.Schemes.AnyAsync(o => o.ApprovalNumber == message.ApprovalNumber);
+                if (isExists)
+                {
+                    throw new Exception(string.Format("Approval number {0} already exists.", message.ApprovalNumber));
+                }
+            }
+
             var obligationType = ValueObjectInitializer.GetObligationType(message.ObligationType);
 
             scheme.UpdateScheme(message.SchemeName, message.ApprovalNumber, message.IbisCustomerReference, obligationType, message.CompetentAuthorityId);
