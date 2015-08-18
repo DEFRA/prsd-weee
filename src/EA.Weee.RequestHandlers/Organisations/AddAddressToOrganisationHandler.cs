@@ -24,7 +24,7 @@
 
         public async Task<Guid> HandleAsync(AddAddressToOrganisation message)
         {
-            // authorization.EnsureOrganisationAccess(message.OrganisationId);
+            authorization.EnsureOrganisationAccess(message.OrganisationId);
 
             var addresstype = ValueObjectInitializer.GetAddressType(message.TypeOfAddress);
 
