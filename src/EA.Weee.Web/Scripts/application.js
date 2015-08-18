@@ -143,7 +143,7 @@ $(document).ready(function () {
     }
 
     // Bind the disabling behaviour to all buttons.
-    $('input[submit], button').bind('click', function() {
+    $('input[type=submit], button').bind('click', function() {
         return disableButtonFor1Second($(this));
     });
 });
