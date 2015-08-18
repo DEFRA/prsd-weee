@@ -248,7 +248,7 @@
             {
                 OrganisationType = OrganisationType.SoleTraderOrIndividual,
                 Id = Guid.NewGuid(),
-                TradingName = "SFW Ltd."
+                TradingName = "TEST Ltd."
             };
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
@@ -291,9 +291,9 @@
             {
                 OrganisationType = OrganisationType.RegisteredCompany,
                 Id = Guid.NewGuid(),
-                TradingName = "SFW Ltd.",
+                TradingName = "TEST Ltd.",
                 CompanyRegistrationNumber = "12345678",
-                Name = "SFW"
+                Name = "TEST"
             };
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))

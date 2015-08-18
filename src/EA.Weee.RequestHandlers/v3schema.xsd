@@ -20,20 +20,20 @@
 =   08/02/2008      Colin McDonald       2.1        Amended Phone number to allow foreign numbers,
 =                                                   remove registered address and phone number of company.
 =   07/03/2008      Jim King             2.2        Removed the Address Elements from schemeBusinessType.
-=   24/04/2014      Shawkat/SFW Ltd      2.3        Added [Authorised Representative] Block for overseas producer details.
+=   24/04/2014      Shawkat              2.3        Added [Authorised Representative] Block for overseas producer details.
 =   12/09/2014      PJC/UCD Solutions    3.0        Simplified authorisedRepresentativeType for overseas producer details,
 =                                                   amended 3.0 draft changes for ceaseToExistDate and sellingTechnique.
-=   19/05/2015      RickP/SFW Ltd        3.01       Amended casing convention inconsistencies for all new elements 
+=   19/05/2015      Rick P               3.01       Amended casing convention inconsistencies for all new elements 
 =                                                   added since version 2.2 (current live version).
-=   21/05/2015      RickP/SFW Ltd        3.02       Reverted ChargeBandType back to annualTurnoverBand and separated waste produce 
+=   21/05/2015      Rick P               3.02       Reverted ChargeBandType back to annualTurnoverBand and separated waste produce 
 =                                                   into a separate element.
-=   29/06/2015      OwenH/SFW Ltd        3.03       Renamed wasteProduceBandType to eeePlacedOnMarketBandType, extended
+=   29/06/2015      Owen H               3.03       Renamed wasteProduceBandType to eeePlacedOnMarketBandType, extended
 =                                                   email TLD length limit to 63 per standard, removed textType and producerWeightType.
-=   01/07/2015      OwenH/SFW Ltd        3.04       Updated compliance year minimum to 2016, producerList to minimum occurrence of 1,
+=   01/07/2015      Owen H               3.04       Updated compliance year minimum to 2016, producerList to minimum occurrence of 1,
 =                                                   country list to match PRSD WEEE system, country mandatory in address types,
 =                                                   removed postTown from address types.
-=   06/07/2015      OwenH/SFW Ltd        3.05       Removed unbounded maxOccurs constraint from overseasContact on overseasProducerType.
-=   15/07/2015      OwenH/SFW Ltd        3.06       Removed unused billingAddressType.
+=   06/07/2015      Owen H               3.05       Removed unbounded maxOccurs constraint from overseasContact on overseasProducerType.
+=   15/07/2015      Owen H               3.06       Removed unused billingAddressType.
 ================================================================================
 -->
 	<xs:element name="scheme" type="schemeType">

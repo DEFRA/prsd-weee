@@ -8,6 +8,7 @@
     using Core.Shared;
     using FakeItEasy;
     using Prsd.Core.Mediator;
+    using ViewModels.Shared;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels;
     using Weee.Requests.Scheme;
@@ -210,7 +211,7 @@
         }
 
         [Fact]
-        public async void HttpPost_ConfirmRejection_SendsSetStatusRequest_WithRejectedStatus_AndRedirectsToManageSchemes()
+        public async void HttpPost_ConfirmRejectionWithYesOption_SendsSetStatusRequest_WithRejectedStatus_AndRedirectsToManageSchemes()
         {
             var status = SchemeStatus.Pending;
 
@@ -218,7 +219,15 @@
                 .Invokes((string t, IRequest<Guid> s) => status = ((SetSchemeStatus)s).Status)
                 .Returns(Guid.NewGuid());
 
-            var result = await SchemeController().ConfirmRejection(Guid.NewGuid(), new ConfirmRejectionViewModel());
+            var result = await SchemeController().ConfirmRejection(new ConfirmRejectionViewModel
+            {
+                SchemeId = Guid.NewGuid(),
+                ConfirmRejectionOptions = new RadioButtonStringCollectionViewModel
+                {
+                    PossibleValues = new[] { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No },
+                    SelectedValue = ConfirmSchemeRejectionOptions.Yes
+                }
+            });
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -228,6 +237,27 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("ManageSchemes", routeValues["action"]);
+            Assert.Equal("Scheme", routeValues["controller"]);
+        }
+
+        [Fact]
+        public async void HttpPost_ConfirmRejectionWithNoOption_AndRedirectsToEditScheme()
+        {
+            var result = await SchemeController().ConfirmRejection(new ConfirmRejectionViewModel
+            {
+                SchemeId = Guid.NewGuid(),
+                ConfirmRejectionOptions = new RadioButtonStringCollectionViewModel
+                {
+                    PossibleValues = new[] { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No },
+                    SelectedValue = ConfirmSchemeRejectionOptions.No
+                }
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("EditScheme", routeValues["action"]);
             Assert.Equal("Scheme", routeValues["controller"]);
         }
 
