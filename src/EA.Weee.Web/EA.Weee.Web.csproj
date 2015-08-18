@@ -428,12 +428,10 @@
     <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Light.eot" />
     <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Bold.eot" />
     <Content Include="Areas\Scheme\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Scheme\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\SuccessfulSubmission.cshtml" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\ViewErrorsAndWarnings.cshtml" />
     <Content Include="Areas\Admin\Views\web.config" />
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\Account\Create.cshtml" />
     <Content Include="Areas\Test\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Test\Views\Home\Index.cshtml" />
@@ -552,6 +550,7 @@
     <Content Include="Views\Errors\NotFound.cshtml" />
     <Content Include="Views\Errors\AccessDenied.cshtml" />
     <Content Include="Views\Errors\Error.cshtml" />
+    <Content Include="Views\Shared\_WeeeTitle.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
