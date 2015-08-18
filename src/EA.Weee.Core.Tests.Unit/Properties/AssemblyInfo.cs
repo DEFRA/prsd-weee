@@ -9,9 +9,9 @@ using Xunit;
 [assembly: AssemblyTitle("EA.Weee.Core.Tests.Unit")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SFW Ltd")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("EA.Weee.Core.Tests.Unit")]
-[assembly: AssemblyCopyright("Copyright © SFW Ltd 2015")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
