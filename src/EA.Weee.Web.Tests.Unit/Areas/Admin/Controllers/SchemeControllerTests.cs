@@ -224,8 +224,8 @@
                 SchemeId = Guid.NewGuid(),
                 ConfirmRejectionOptions = new RadioButtonStringCollectionViewModel
                 {
-                    PossibleValues = new[] { ConfirmSchemeRejection.Yes, ConfirmSchemeRejection.No },
-                    SelectedValue = ConfirmSchemeRejection.Yes
+                    PossibleValues = new[] { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No },
+                    SelectedValue = ConfirmSchemeRejectionOptions.Yes
                 }
             });
 
@@ -248,8 +248,8 @@
                 SchemeId = Guid.NewGuid(),
                 ConfirmRejectionOptions = new RadioButtonStringCollectionViewModel
                 {
-                    PossibleValues = new[] { ConfirmSchemeRejection.Yes, ConfirmSchemeRejection.No },
-                    SelectedValue = ConfirmSchemeRejection.No
+                    PossibleValues = new[] { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No },
+                    SelectedValue = ConfirmSchemeRejectionOptions.No
                 }
             });
 

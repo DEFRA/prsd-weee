@@ -140,12 +140,12 @@
                 return View(model);
             }
 
-            if (model.ConfirmRejectionOptions.SelectedValue == ConfirmSchemeRejection.No)
+            if (model.ConfirmRejectionOptions.SelectedValue == ConfirmSchemeRejectionOptions.No)
             {
                 return RedirectToAction("EditScheme", "Scheme", new { id = model.SchemeId });
             }
 
-            if (model.ConfirmRejectionOptions.SelectedValue == ConfirmSchemeRejection.Yes)
+            if (model.ConfirmRejectionOptions.SelectedValue == ConfirmSchemeRejectionOptions.Yes)
             {
                 using (var client = apiClient())
                 {

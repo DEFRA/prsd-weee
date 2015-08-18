@@ -14,7 +14,7 @@
 
         public ConfirmRejectionViewModel()
         {
-            var collection = new List<string> { ConfirmSchemeRejection.Yes, ConfirmSchemeRejection.No };
+            var collection = new List<string> { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No };
             ConfirmRejectionOptions = new RadioButtonStringCollectionViewModel(collection);
         }
     }
