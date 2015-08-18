@@ -2,12 +2,12 @@
 {
     using DataAccess;
     using Domain.Organisation;
-    using EA.Weee.Core.Security;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
+    using Security;
 
     internal class UpdateOrganisationTypeDetailsHandler : IRequestHandler<UpdateOrganisationTypeDetails, Guid>
     {

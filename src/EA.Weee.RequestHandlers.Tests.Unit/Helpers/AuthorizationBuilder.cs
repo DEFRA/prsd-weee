@@ -1,13 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Helpers
 {
-    using EA.Weee.Core.Security;
     using FakeItEasy;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
-    using System.Text;
-    using System.Threading.Tasks;
+    using RequestHandlers.Security;
 
     /// <summary>
     /// This helper class creates a fake instance of an IWeeeAutorization
