@@ -44,6 +44,6 @@
     </div>
 
     <div class="form-group">
-        @Html.ActionLink("Join or create another organisation", "Type", "OrganisationRegistration", new { @area = "" })
+        <a href="@Url.Action("Type", "OrganisationRegistration", new {area = ""})">Create or join another organisation</a>
     </div>
 }
