@@ -1,67 +1,70 @@
-﻿@using EA.Weee.Core.Admin
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Admin
 @using EA.Weee.Web.Infrastructure.Paging
 @model EA.Weee.Web.Areas.Admin.ViewModels.ManageUsersViewModel
 @{
     ViewBag.Title = "Choose Users";
 }
 
-<header class="hgroup">
-    <h1 class="heading-large">
-        Choose a user
-    </h1>
-</header>
+@section main_content {
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Choose a user
+        </h1>
+    </header>
 
-@using (Html.BeginForm(actionName: "ManageUsers", controllerName: "User", method: FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationMessageFor(m => m.SelectedUserId)
-    <div class="form-group">
-        <table class="prsd-table">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Organisation</th>
-                <th>Status</th>
-                <th>Select</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (UserSearchData user in Model.Users)
-            {
+    @using (Html.BeginForm(actionName: "ManageUsers", controllerName: "User", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        <div class="form-group">
+            <table class="prsd-table">
+                <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(m => user.FullName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(m => user.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(m => user.OrganisationName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(m => user.Status)
-                    </td>
-                    <td>
-                        @Html.RadioButtonFor(m => m.SelectedUserId, user.Id)
-                    </td>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Organisation</th>
+                    <th>Status</th>
+                    <th>Select</th>
                 </tr>
-            }
-            </tbody>
-        </table>
-    </div>
-        <br />
+                </thead>
+                <tbody>
+                @foreach (UserSearchData user in Model.Users)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(m => user.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => user.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => user.OrganisationName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => user.Status)
+                        </td>
+                        <td>
+                            @Html.RadioButtonFor(m => m.SelectedUserId, @user.Id)
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <br/>
         if (@Model.Users.PageCount > 1)
         {
-        <br />
-        <span style="display: inline-block">Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</span>
-        <div class="pager">
-            @Html.Pager(Model.Users.PageSize, Model.Users.PageNumber, Model.Users.TotalItemCount)
+            <br/>
+            <span style="display: inline-block">Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</span>
+            <div class="pager">
+                @Html.Pager(Model.Users.PageSize, Model.Users.PageNumber, Model.Users.TotalItemCount)
 
-        </div>
+            </div>
         }
         @*@Html.Partial("_WeeePaging", Model.Users);*@
         <div class="form-group">
             <button class="button" type="submit">Continue</button>
         </div>
-        }
+    }
+}
