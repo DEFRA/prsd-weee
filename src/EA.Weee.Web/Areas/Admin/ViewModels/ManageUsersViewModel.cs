@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Core.Admin;
     using Core.Shared.Paging;

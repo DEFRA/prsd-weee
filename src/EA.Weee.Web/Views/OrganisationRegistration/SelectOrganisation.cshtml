@@ -12,7 +12,6 @@
             Choose to join an existing organisation, or add a new one
         </h1>
     </header>
-
     @if (Model.MatchingOrganisations != null && Model.MatchingOrganisations.TotalItemCount > 0)
     {
         <p class="lede">We have found some organisations that match the information you have provided. Select your organisation or add it, if it is not listed.</p>
@@ -67,22 +66,26 @@
                 i++;
             }
         }
-        <br/>
-        if (@Model.MatchingOrganisations.TotalItemCount > 1)
-        {
-            <span style="display: inline-block">Showing @Model.MatchingOrganisations.ItemStart - @Model.MatchingOrganisations.ItemEnd of @Model.MatchingOrganisations.TotalItemCount</span>
+        <div>
+            @if (@Model.MatchingOrganisations.PageCount > 1)
+            {
+            <br />
+            <p style="float:left">Showing @Model.MatchingOrganisations.ItemStart - @Model.MatchingOrganisations.ItemEnd of @Model.MatchingOrganisations.TotalItemCount</p>
             <div class="pager">
-                @Html.Pager(Model.MatchingOrganisations.PageSize, Model.MatchingOrganisations.PageNumber, Model.MatchingOrganisations.TotalItemCount)
+
+                @Html.Pager(Model.MatchingOrganisations.PageSize, Model.MatchingOrganisations.PageNumber, Model.MatchingOrganisations.TotalItemCount).Options(o => o.RouteValues(@Model))
+
             </div>
-        }
+            <br />
+            }
+        </div>
     }
     else
     {
         <p>We haven't found any organisations that match your search criteria. If you are expecting to see your organisation, you can go back and search again, otherwise you can add a new one.</p>
     }
-
+    <br/>
     <hr />
-
     <p>Organisation not listed?</p>
 
     @using (Html.BeginForm(actionName: "CreateOrganisation", controllerName: "OrganisationRegistration", method: FormMethod.Post))

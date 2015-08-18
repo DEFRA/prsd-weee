@@ -7,6 +7,7 @@
     using Api.Client;
     using Core.Organisations;
     using Core.Scheme.MemberUploadTesting;
+    using Core.Shared.Paging;
     using Infrastructure;
     using ViewModels.GeneratePcsXml;
     using Web.ViewModels.Shared;
@@ -41,20 +42,13 @@
             else
             {
                 var results = await FetchOrganisations(organisationName, page);
+                var matchingOrganistionList = results.Results.ToPagedList(page - 1, pageSize,
+                    results.TotalMatchingOrganisations);
 
-                PagingViewModel pager = PagingViewModel.FromValues(
-                    results.TotalMatchingOrganisations, 
-                    pageSize, 
-                    page, 
-                    "SelectOrganisation", 
-                    "GeneratePcsXml", 
-                    new { companyName = organisationName });
-                
                 viewModel = new SelectOrganisationViewModel()
                 {
-                    OrganisationName = organisationName, 
-                    MatchingOrganisations = results.Results, 
-                    PagingViewModel = pager, 
+                    OrganisationName = organisationName,
+                    MatchingOrganisations = matchingOrganistionList
                 };
             }
             
