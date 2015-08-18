@@ -147,6 +147,8 @@
     <Compile Include="Scheme\UpdateSchemeInformationHandler.cs" />
     <Compile Include="Scheme\VerifyApprovalNumberExistsHandler.cs" />
     <Compile Include="Scheme\SetSchemeStatusHandler.cs" />
+    <Compile Include="Security\IWeeeAuthorization.cs" />
+    <Compile Include="Security\WeeeAuthorization.cs" />
     <Compile Include="Shared\GetCountriesHandler.cs" />
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
     <Compile Include="Users\GetUsersByOrganisationIdHandler.cs" />

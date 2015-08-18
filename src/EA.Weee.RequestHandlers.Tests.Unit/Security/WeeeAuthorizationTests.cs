@@ -1,15 +1,20 @@
-﻿namespace EA.Weee.Core.Tests.Unit.Security
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Security
 {
-    using EA.Prsd.Core.Domain;
-    using EA.Weee.Core.Security;
-    using FakeItEasy;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
+    using System.Linq;    using System.Security;
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
+    using Core;
+    using DataAccess;
+    using Domain;
+    using Domain.Organisation;
+    using Domain.Scheme;
+    using FakeItEasy;
+    using Prsd.Core.Domain;
+    using RequestHandlers.Security;
+    using TestsHelpers;
     using Xunit;
 
     public class WeeeAuthorizationTests

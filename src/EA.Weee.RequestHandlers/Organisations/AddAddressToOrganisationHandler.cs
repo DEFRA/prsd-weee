@@ -3,13 +3,13 @@
     using DataAccess;
     using Domain;
     using Domain.Organisation;
-    using EA.Weee.Core.Security;
     using Mappings;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
+    using Security;
 
     internal class AddAddressToOrganisationHandler : IRequestHandler<AddAddressToOrganisation, Guid>
     {
