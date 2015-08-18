@@ -579,3 +579,13 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
     color: $white;
     font-weight: 700;
 }
+
+.username-title-display {
+    text-align: right;
+    padding: 5px;
+
+    .username-format {
+        font-weight: bold;
+        color: $black;
+    }
+}
