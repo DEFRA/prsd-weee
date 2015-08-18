@@ -28,7 +28,7 @@
                 contactDetails.PhoneLandLine = RandomHelper.CreateRandomStringOfNumbers(10, 35);
                 contactDetails.PhoneMobile = RandomHelper.CreateRandomStringOfNumbers(10, 35);
                 contactDetails.Fax = RandomHelper.CreateRandomStringOfNumbers(10, 35);
-                contactDetails.Email = RandomHelper.CreateRandomString("WEEE_", 10, 15, false) + "@sfwltd.co.uk";
+                contactDetails.Email = RandomHelper.CreateRandomString("WEEE_", 10, 15, false) + "@environment-agency.gov.uk";
             }
             else
             {
@@ -38,7 +38,7 @@
                 contactDetails.PhoneLandLine = RandomHelper.CreateRandomStringOfNumbers(0, 1000);
                 contactDetails.PhoneMobile = RandomHelper.CreateRandomStringOfNumbers(0, 1000);
                 contactDetails.Fax = RandomHelper.CreateRandomStringOfNumbers(0, 1000);
-                contactDetails.Email = RandomHelper.CreateRandomString("WEEE_", 0, 1000, false) + "@sfwltd.co.uk";
+                contactDetails.Email = RandomHelper.CreateRandomString("WEEE_", 0, 1000, false) + "@environment-agency.gov.uk";
             }
 
             contactDetails.Address = Address.Create(settings);

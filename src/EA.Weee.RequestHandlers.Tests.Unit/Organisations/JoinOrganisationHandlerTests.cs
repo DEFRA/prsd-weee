@@ -113,7 +113,7 @@
         {
             return helper.GetAsyncEnabledDbSet(new[]
             {
-                orgHelper.GetOrganisationWithName("SFW Ltd")
+                orgHelper.GetOrganisationWithName("TEST Ltd")
             });
         }
 
