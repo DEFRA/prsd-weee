@@ -13,7 +13,7 @@
     @using (Html.BeginForm("LogOff", "Account", new { Area = "" }, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        <p>You can now <a href="@Url.Action("GetProducerCSV", "MemberRegistration", new { memberUploadId = @Model.MemberUploadId })">download a CSV file</a> containing your registered scheme members.</p>
+        <p>You can now <a href="@Url.Action("GetProducerCSV", "MemberRegistration", new { pcsId = @Model.PcsId, memberUploadId = @Model.MemberUploadId })">download a CSV file</a> containing your registered scheme members.</p>
         <p>If you have finished performing tasks you can <span id="log-off-link"><noscript><input type="submit" value="log off" /></noscript></span> or proceed to perform more activities</p>
     }
 
