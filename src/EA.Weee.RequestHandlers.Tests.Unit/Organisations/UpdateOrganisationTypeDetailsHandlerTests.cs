@@ -1,16 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
 {
-    using DataAccess;
-    using Domain.Organisation;
-    using EA.Weee.Core.Security;
-    using FakeItEasy;
-    using Helpers;
-    using RequestHandlers.Organisations;
-    using Requests.Organisations;
-    using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using DataAccess;
+    using Domain.Organisation;
+    using FakeItEasy;
+    using Helpers;
+    using RequestHandlers.Organisations;
+    using RequestHandlers.Security;
+    using Requests.Organisations;
     using Xunit;
     using OrganisationType = Core.Organisations.OrganisationType;
 

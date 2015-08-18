@@ -1,11 +1,6 @@
-﻿namespace EA.Weee.Core.Security
+﻿namespace EA.Weee.RequestHandlers.Security
 {
-    using EA.Prsd.Core.Security;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Provides evaluation of claims-based authorisation for WEEE resources.
