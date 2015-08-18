@@ -66,7 +66,7 @@
                 {
                     var usersSearchResultData = await client.SendAsync(User.GetAccessToken(), new FindMatchingUsers(page, DefaultPageSize));
                     model.Users = usersSearchResultData.Results.ToPagedList(page - 1, DefaultPageSize, usersSearchResultData.UsersCount);
-                    return View();
+                    return View(model);
                 }
             }
             return RedirectToAction("EditUser", "User", new { userId = model.SelectedUserId});
