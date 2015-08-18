@@ -1,10 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Security
 {
     using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Security;
     using System.Security.Claims;
     using Core;
+    using DataAccess;
+    using Domain;
+    using Domain.Organisation;
     using FakeItEasy;
+    using Helpers;
     using Prsd.Core.Domain;
     using RequestHandlers.Security;
     using Xunit;
@@ -16,11 +22,13 @@
         public void EnsureCanAccessInternalArea_ThrowsSecurityException_WhenUserHasNoClaims()
         {
             // Arrange
+            WeeeContext weeeContext = A.Fake<WeeeContext>();
+
             ClaimsPrincipal principal = new ClaimsPrincipal();
             IUserContext userContext = A.Fake<IUserContext>();
             A.CallTo(() => userContext.Principal).Returns(principal);
-            
-            WeeeAuthorization authorization = new WeeeAuthorization(userContext);
+
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act
             Action action = () => authorization.EnsureCanAccessInternalArea();
@@ -34,11 +42,13 @@
         public void CheckCanAccessInternalArea_ReturnsFalse_WhenUserHasNoClaims()
         {
             // Arrange
+            WeeeContext weeeContext = A.Fake<WeeeContext>();
+
             ClaimsPrincipal principal = new ClaimsPrincipal();
             IUserContext userContext = A.Fake<IUserContext>();
             A.CallTo(() => userContext.Principal).Returns(principal);
 
-            WeeeAuthorization authorization = new WeeeAuthorization(userContext);
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act
             bool result = authorization.CheckCanAccessInternalArea();
@@ -52,6 +62,8 @@
         public void CheckCanAccessInternalArea_ReturnsTrue_WhenUserHasRequiredClaim()
         {
             // Arrange
+            WeeeContext weeeContext = A.Fake<WeeeContext>();
+
             ClaimsIdentity identity = new ClaimsIdentity();
             identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea));
             
@@ -59,7 +71,7 @@
             IUserContext userContext = A.Fake<IUserContext>();
             A.CallTo(() => userContext.Principal).Returns(principal);
 
-            WeeeAuthorization authorization = new WeeeAuthorization(userContext);
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act
             bool result = authorization.CheckCanAccessInternalArea();
@@ -73,11 +85,13 @@
         public void EnsureCanAccessExternalArea_ThrowsSecurityException_WhenUserHasNoClaims()
         {
             // Arrange
+            WeeeContext weeeContext = A.Fake<WeeeContext>();
+
             ClaimsPrincipal principal = new ClaimsPrincipal();
             IUserContext userContext = A.Fake<IUserContext>();
             A.CallTo(() => userContext.Principal).Returns(principal);
 
-            WeeeAuthorization authorization = new WeeeAuthorization(userContext);
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act
             Action action = () => authorization.EnsureCanAccessExternalArea();
@@ -91,11 +105,13 @@
         public void CheckCanAccessExternalArea_ReturnsFalse_WhenUserHasNoClaims()
         {
             // Arrange
+            WeeeContext weeeContext = A.Fake<WeeeContext>();
+
             ClaimsPrincipal principal = new ClaimsPrincipal();
             IUserContext userContext = A.Fake<IUserContext>();
             A.CallTo(() => userContext.Principal).Returns(principal);
 
-            WeeeAuthorization authorization = new WeeeAuthorization(userContext);
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act
             bool result = authorization.CheckCanAccessExternalArea();
@@ -109,6 +125,8 @@
         public void CheckCanAccessExternalArea_ReturnsTrue_WhenUserHasRequiredClaim()
         {
             // Arrange
+            WeeeContext weeeContext = A.Fake<WeeeContext>();
+
             ClaimsIdentity identity = new ClaimsIdentity();
             identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, Claims.CanAccessExternalArea));
 
@@ -116,7 +134,7 @@
             IUserContext userContext = A.Fake<IUserContext>();
             A.CallTo(() => userContext.Principal).Returns(principal);
 
-            WeeeAuthorization authorization = new WeeeAuthorization(userContext);
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act
             bool result = authorization.CheckCanAccessExternalArea();
@@ -131,12 +149,14 @@
         {
             // Arrange
             Guid organisationID = new Guid("5F3069F4-EDA3-43A3-BDD8-726028CDABB0");
+            Guid userId = Guid.NewGuid();
 
-            ClaimsPrincipal principal = new ClaimsPrincipal();
+            WeeeContext weeeContext = MakeFakeWeeeContext();
+
             IUserContext userContext = A.Fake<IUserContext>();
-            A.CallTo(() => userContext.Principal).Returns(principal);
+            A.CallTo(() => userContext.UserId).Returns(userId);
 
-            WeeeAuthorization authorization = new WeeeAuthorization(userContext);
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act
             Action action = () => authorization.EnsureOrganisationAccess(organisationID);
@@ -151,12 +171,14 @@
         {
             // Arrange
             Guid organisationID = new Guid("5F3069F4-EDA3-43A3-BDD8-726028CDABB0");
+            Guid userId = Guid.NewGuid();
 
-            ClaimsPrincipal principal = new ClaimsPrincipal();
+            WeeeContext weeeContext = MakeFakeWeeeContext();
+
             IUserContext userContext = A.Fake<IUserContext>();
-            A.CallTo(() => userContext.Principal).Returns(principal);
+            A.CallTo(() => userContext.UserId).Returns(userId);
 
-            WeeeAuthorization authorization = new WeeeAuthorization(userContext);
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act
             bool result = authorization.CheckOrganisationAccess(organisationID);
@@ -171,15 +193,16 @@
         {
             // Arrange
             Guid organisationID = new Guid("5F3069F4-EDA3-43A3-BDD8-726028CDABB0");
+            Guid userId = Guid.NewGuid();
 
-            ClaimsIdentity identity = new ClaimsIdentity();
-            identity.AddClaim(new Claim(WeeeClaimTypes.OrganisationAccess, organisationID.ToString()));
+            WeeeContext weeeContext =
+                MakeFakeWeeeContext(
+                    new List<OrganisationUser> { new OrganisationUser(userId, organisationID, UserStatus.Approved) });
 
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
             IUserContext userContext = A.Fake<IUserContext>();
-            A.CallTo(() => userContext.Principal).Returns(principal);
+            A.CallTo(() => userContext.UserId).Returns(userId);
 
-            WeeeAuthorization authorization = new WeeeAuthorization(userContext);
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act
             bool result = authorization.CheckOrganisationAccess(organisationID);
@@ -194,12 +217,14 @@
         {
             // Arrange
             Guid schemeID = new Guid("5F3069F4-EDA3-43A3-BDD8-726028CDABB0");
+            Guid userId = Guid.NewGuid();
 
-            ClaimsPrincipal principal = new ClaimsPrincipal();
+            WeeeContext weeeContext = MakeFakeWeeeContext();
+
             IUserContext userContext = A.Fake<IUserContext>();
-            A.CallTo(() => userContext.Principal).Returns(principal);
+            A.CallTo(() => userContext.UserId).Returns(userId);
 
-            WeeeAuthorization authorization = new WeeeAuthorization(userContext);
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act
             Action action = () => authorization.EnsureSchemeAccess(schemeID);
@@ -214,12 +239,14 @@
         {
             // Arrange
             Guid schemeID = new Guid("5F3069F4-EDA3-43A3-BDD8-726028CDABB0");
+            Guid userId = Guid.NewGuid();
 
-            ClaimsPrincipal principal = new ClaimsPrincipal();
+            WeeeContext weeeContext = MakeFakeWeeeContext();
+
             IUserContext userContext = A.Fake<IUserContext>();
-            A.CallTo(() => userContext.Principal).Returns(principal);
+            A.CallTo(() => userContext.UserId).Returns(userId);
 
-            WeeeAuthorization authorization = new WeeeAuthorization(userContext);
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act
             bool result = authorization.CheckSchemeAccess(schemeID);
@@ -233,22 +260,40 @@
         public void CheckSchemeAccess_ReturnsTrue_WhenUserHasRequiredClaims()
         {
             // Arrange
+            Guid organisationID = Guid.NewGuid();
+            Guid userId = Guid.NewGuid();
             Guid schemeID = new Guid("5F3069F4-EDA3-43A3-BDD8-726028CDABB0");
+            Domain.Scheme.Scheme scheme = new Domain.Scheme.Scheme(organisationID);
+            typeof(Entity).GetProperty("Id").SetValue(scheme, schemeID); // <- sad but necessary
 
-            ClaimsIdentity identity = new ClaimsIdentity();
-            identity.AddClaim(new Claim(WeeeClaimTypes.SchemeAccess, schemeID.ToString()));
+            WeeeContext weeeContext =
+                MakeFakeWeeeContext(
+                    new List<OrganisationUser> { new OrganisationUser(userId, organisationID, UserStatus.Approved) },
+                    new List<Domain.Scheme.Scheme> { scheme });
 
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
             IUserContext userContext = A.Fake<IUserContext>();
-            A.CallTo(() => userContext.Principal).Returns(principal);
+            A.CallTo(() => userContext.UserId).Returns(userId);
 
-            WeeeAuthorization authorization = new WeeeAuthorization(userContext);
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act
             bool result = authorization.CheckSchemeAccess(schemeID);
 
             // Assert
             Assert.Equal(true, result);
+        }
+
+        private WeeeContext MakeFakeWeeeContext(List<OrganisationUser> organisationUsers = null, List<Domain.Scheme.Scheme> schemes = null)
+        {
+            organisationUsers = organisationUsers ?? new List<OrganisationUser>();
+            schemes = schemes ?? new List<Domain.Scheme.Scheme>();
+
+            var dbHelper = new DbContextHelper();
+            WeeeContext weeeContext = A.Fake<WeeeContext>();
+            A.CallTo(() => weeeContext.OrganisationUsers).Returns(dbHelper.GetAsyncEnabledDbSet(organisationUsers));
+            A.CallTo(() => weeeContext.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(schemes));
+
+            return weeeContext;
         }
     }
 }
