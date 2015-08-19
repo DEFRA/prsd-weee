@@ -23,6 +23,11 @@
                 .AsClosedTypesOf(typeof(IRequest<>))
                 .AsImplementedInterfaces();
 
+            // Register data access types
+            builder.RegisterAssemblyTypes(this.GetType().Assembly)
+                .Where(t => t.Name.Contains("DataAccess"))
+                .AsImplementedInterfaces();
+
             // Register the map classes
             builder.RegisterAssemblyTypes(this.GetType().Assembly)
                 .Where(t => t.Namespace.Contains("Mappings"))
