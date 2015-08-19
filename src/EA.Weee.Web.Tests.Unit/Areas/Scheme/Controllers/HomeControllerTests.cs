@@ -62,6 +62,54 @@
         }
 
         [Fact]
+        public async void GetChooseActivity_DoNotHaveOrganisationUser_ReturnsViewWithOnlyOneOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+               .Returns(true);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUsersByOrganisationId>._))
+               .Returns(new List<OrganisationUserData>());
+
+            var result = await HomeController().ChooseActivity(A<Guid>._);
+
+            var model = (ChooseActivityViewModel)((ViewResult)result).Model;
+
+            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 1);
+
+            Assert.False(model.ActivityOptions.PossibleValues.Contains(PcsAction.ManageOrganisationUsers));
+
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public async void GetChooseActivity_HaveOrganisationUser_ReturnsViewWithTwoOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+               .Returns(true);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUsersByOrganisationId>._))
+               .Returns(new List<OrganisationUserData>
+               {
+                   new OrganisationUserData
+                   {
+                       UserId = Guid.NewGuid().ToString()
+                   },
+                   new OrganisationUserData
+                   {
+                       UserId = Guid.NewGuid().ToString()
+                   }
+               });
+
+            var result = await HomeController().ChooseActivity(A<Guid>._);
+
+            var model = (ChooseActivityViewModel)((ViewResult)result).Model;
+
+            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 2);
+
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
         public async void PostChooseActivity_ManagePcsMembersApprovedStatus_RedirectsToMemberRegistrationSummary()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Approved);
