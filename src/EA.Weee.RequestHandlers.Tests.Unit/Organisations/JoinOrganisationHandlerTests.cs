@@ -3,6 +3,7 @@
     using System;
     using System.Data.Entity;
     using System.Linq;
+    using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain;
@@ -11,6 +12,7 @@
     using Helpers;
     using Prsd.Core.Domain;
     using RequestHandlers.Organisations;
+    using RequestHandlers.Security;
     using Requests.Organisations;
     using Xunit;
 
@@ -22,13 +24,26 @@
 
         private readonly Guid userGuid = Guid.NewGuid();
 
+        private readonly IWeeeAuthorization permissiveAuthorization =
+            new AuthorizationBuilder().AllowExternalAreaAccess().Build();
+
+        [Fact]
+        public async Task NotExternalUser_ThrowsSecurityException()
+        {
+            var denyingAuthorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
+
+            var handler = new JoinOrganisationHandler(denyingAuthorization, A<WeeeContext>._, A<IUserContext>._);
+
+            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(A<JoinOrganisation>._));
+        }
+
         [Fact]
         public async Task JoinOrganisationHandler_HappyPath_ReturnsOrganisationGuid()
         {
             var context = SetupFakeWeeeContext();
             var userContext = SetupFakeUserContext();
 
-            var handler = new JoinOrganisationHandler(context, userContext);
+            var handler = new JoinOrganisationHandler(permissiveAuthorization, context, userContext);
 
             var organisationWeWillJoin = await context.Organisations.FirstOrDefaultAsync();
 
@@ -47,7 +62,7 @@
             A.CallTo(() => context.OrganisationUsers.Add(A<OrganisationUser>._))
                 .Invokes((OrganisationUser ou) => addedOrganisationUser = ou);
 
-            var handler = new JoinOrganisationHandler(context, userContext);
+            var handler = new JoinOrganisationHandler(permissiveAuthorization, context, userContext);
 
             var organisationWeWillJoin = context.Organisations.FirstOrDefault();
 
@@ -65,7 +80,7 @@
             var guidThatDoesntExistInDatabase = Guid.NewGuid();
             A.CallTo(() => userContext.UserId).Returns(guidThatDoesntExistInDatabase);
 
-            var handler = new JoinOrganisationHandler(context, userContext);
+            var handler = new JoinOrganisationHandler(permissiveAuthorization, context, userContext);
 
             await
                 Assert.ThrowsAsync<ArgumentException>(
@@ -78,7 +93,7 @@
             var context = SetupFakeWeeeContext();
             var userContext = SetupFakeUserContext();
 
-            var handler = new JoinOrganisationHandler(context, userContext);
+            var handler = new JoinOrganisationHandler(permissiveAuthorization, context, userContext);
 
             await
                 Assert.ThrowsAsync<ArgumentException>(
