@@ -22,7 +22,7 @@
 
         public async Task<Guid> HandleAsync(UpdateSchemeInformation message)
         {
-            var scheme = await db.Schemes.SingleOrDefaultAsync(o => o.Id == message.SchemeId);
+            var scheme = await db.Schemes.FirstOrDefaultAsync(o => o.Id == message.SchemeId);
 
             if (scheme == null)
             {
