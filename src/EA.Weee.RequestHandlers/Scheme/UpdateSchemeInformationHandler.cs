@@ -1,27 +1,32 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme
 {
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using Core.Helpers;
     using DataAccess;
     using Domain;
     using Domain.Scheme;
+    using EA.Weee.RequestHandlers.Security;
     using Mappings;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
 
     internal class UpdateSchemeInformationHandler : IRequestHandler<UpdateSchemeInformation, Guid>
     {
         private readonly WeeeContext db;
+        private readonly IWeeeAuthorization authorization;
 
-        public UpdateSchemeInformationHandler(WeeeContext context)
+        public UpdateSchemeInformationHandler(WeeeContext context, IWeeeAuthorization authorization)
         {
             db = context;
+            this.authorization = authorization;
         }
 
         public async Task<Guid> HandleAsync(UpdateSchemeInformation message)
         {
+            authorization.EnsureCanAccessInternalArea();
+
             var scheme = await db.Schemes.FirstOrDefaultAsync(o => o.Id == message.SchemeId);
 
             if (scheme == null)
@@ -32,7 +37,7 @@
 
             if (scheme.ApprovalNumber != message.ApprovalNumber)
             {
-                var verifyApprovalNumberExistsHandler = new VerifyApprovalNumberExistsHandler(db);
+                var verifyApprovalNumberExistsHandler = new VerifyApprovalNumberExistsHandler(db, authorization);
                 var isExists = await verifyApprovalNumberExistsHandler.ApprovalNumberExists(message.ApprovalNumber);
                 if (isExists)
                 {
