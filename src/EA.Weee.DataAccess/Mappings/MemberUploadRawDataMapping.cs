@@ -3,12 +3,10 @@
     using System.Data.Entity.ModelConfiguration;
     using Domain.Scheme;
 
-    internal class MemberUploadMapping : EntityTypeConfiguration<MemberUpload>
+    internal class MemberUploadRawDataMapping : EntityTypeConfiguration<MemberUploadRawData>
     {
-        public MemberUploadMapping()
+        public MemberUploadRawDataMapping()
         {
-            HasRequired(e => e.RawData).WithRequiredPrincipal();
-
             ToTable("MemberUpload", "PCS");
         }
     }
