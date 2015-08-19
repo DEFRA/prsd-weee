@@ -1,127 +1,157 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
     using Core.Admin;
     using DataAccess;
     using Domain;
     using Domain.Admin;
     using Domain.Organisation;
+    using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using Helpers;
     using RequestHandlers.Admin;
     using Requests.Admin;
     using Requests.Shared;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class FindMatchingUsersHandlerTests
     {
-        private readonly DbContextHelper helper = new DbContextHelper();
-        
-        public DbSet<User> UsersDbSet { get; set; }
-        public DbSet<Organisation> OrganisationDbSet { get; set; }
-        public DbSet<OrganisationUser> OrganisationUsersDbSet { get; set; }
-        public DbSet<UKCompetentAuthority> UKCompetentAuthoritiesDbSet { get; set; }
-        public DbSet<CompetentAuthorityUser> CompetentAuthorityUsersDbSet { get; set; }
-
-        public static Guid UserId = Guid.NewGuid();
-        public static Organisation FakeOrganisation;
-        private readonly WeeeContext context;
-        private readonly FindMatchingUsersHandler handler;
-        private static readonly FindMatchingUsers Message = new FindMatchingUsers();
-        private readonly OrganisationHelper orgHelper = new OrganisationHelper();
-        
-        public FindMatchingUsersHandlerTests()
-        {
-            UsersDbSet = A.Fake<DbSet<User>>();
-            OrganisationDbSet = A.Fake<DbSet<Organisation>>();
-
-            var users = new[]
-            {
-                FakeUserData()
-            };
-
-            UsersDbSet = helper.GetAsyncEnabledDbSet(users);
-
-            var organisations = new[]
-            {
-                FakeOrganisationData()
-            };
-
-            OrganisationDbSet = helper.GetAsyncEnabledDbSet(organisations);
-            FakeOrganisation = organisations[0];
-            var organisationUsers = new[]
-            {
-                FakeOrganisationUserData()
-            };
-
-            OrganisationUsersDbSet = helper.GetAsyncEnabledDbSet(organisationUsers);
-
-            UKCompetentAuthoritiesDbSet = A.Fake<DbSet<UKCompetentAuthority>>();
-            CompetentAuthorityUsersDbSet = A.Fake<DbSet<CompetentAuthorityUser>>();
-
-            var competentAuthorites = new[]
-            {
-                FakeCompetentAuthorityData()
-            };
-
-            UKCompetentAuthoritiesDbSet = helper.GetAsyncEnabledDbSet(competentAuthorites);
-
-            var competentAuthorityUsers = new[]
-            {
-                FakeCompetentAuthorityUser()
-            };
-
-            CompetentAuthorityUsersDbSet = helper.GetAsyncEnabledDbSet(competentAuthorityUsers);
-
-            context = A.Fake<WeeeContext>();
-            
-            A.CallTo(() => context.Users).Returns(UsersDbSet);
-            A.CallTo(() => context.Organisations).Returns(OrganisationDbSet);
-            A.CallTo(() => context.OrganisationUsers).Returns(OrganisationUsersDbSet);
-            A.CallTo(() => context.UKCompetentAuthorities).Returns(UKCompetentAuthoritiesDbSet);
-            A.CallTo(() => context.CompetentAuthorityUsers).Returns(CompetentAuthorityUsersDbSet);
-
-            handler = new FindMatchingUsersHandler(context);
-        }
-
+        /// <summary>
+        /// This test ensures that a non-internal user cannot execute requests to find matching users.
+        /// </summary>
         [Fact]
-        public async void FindMatchingUsersHandler_ReturnsAllUsers()
+        [Trait("Authorization", "Internal")]
+        public async void FindMatchingUsersHandler_WithUnauthorizedUser_ThrowSecurityException()
         {
-            UserSearchDataResult users = await handler.HandleAsync(Message);
-            Assert.NotEmpty(users.Results);
+            // Arrage
+            IFindMatchingUsersDataAccess dataAccess = A.Fake<IFindMatchingUsersDataAccess>();
+            A.CallTo(() => dataAccess.GetOrganisationUsers()).Returns(new UserSearchData[5]);
+            A.CallTo(() => dataAccess.GetCompetentAuthorityUsers()).Returns(new UserSearchData[5]);
+
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithNoRights();
+            
+            FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
+            
+            FindMatchingUsers request = new FindMatchingUsers();
+
+            // Act
+            Func<Task<UserSearchDataResult>> action = () => handler.HandleAsync(request);
+
+            // Assert
+            await Assert.ThrowsAsync<SecurityException>(action);
         }
 
-        private static User FakeUserData()
+        /// <summary>
+        /// This test ensures that an internal user can execute requests to find maatching users.
+        /// </summary>
+        [Fact]
+        [Trait("Authorization", "Internal")]
+        public async void FindMatchingUsersHandler_WithInternalUser_DoesntThrowException()
         {
-            return new User(UserId.ToString(), "FirstName", "Surname", "test@co.uk");
+            // Arrage
+            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess();
+
+            IWeeeAuthorization authorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .Build();
+
+            FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
+
+            FindMatchingUsers request = new FindMatchingUsers();
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            // no exception
         }
 
-        private Organisation FakeOrganisationData()
+        /// <summary>
+        /// This test ensures that the results are correctly paged.
+        /// </summary>
+        [Fact]
+        public async void FindMatchingUsersHandler_RequestingSpecificPage_ReturnsCorrectNumberOfResults()
         {
-            Organisation organisation = orgHelper.GetOrganisationWithDetails("Test", "TestTradingName", "12345678",
-                OrganisationType.SoleTraderOrIndividual, OrganisationStatus.Complete);
-            return organisation;
+            // Arrage
+
+            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess();
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
+
+            FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
+
+            FindMatchingUsers request = new FindMatchingUsers(2, 3); // Page 2, where each page has 3 resutls.
+
+            // Act
+            var response = await handler.HandleAsync(request);
+
+            // Assert - Check that there are 10 users in total.
+            Assert.NotNull(response);
+            Assert.Equal(10, response.UsersCount);
+
+            // Assert - We asked for page 2 with 3 results, so check that only 3 results are returned.
+            Assert.NotNull(response.Results);
+            Assert.Equal(3, response.Results.Count);
         }
 
-        private CompetentAuthorityUser FakeCompetentAuthorityUser()
+        /// <summary>
+        /// This test ensures that the results are correctly sorted before being returned.
+        /// </summary>
+        [Fact]
+        public async void FindMatchingUsersHandler_RequestingAllResults_ReturnsResultsSortedByFullName()
         {
-            CompetentAuthorityUser user = new CompetentAuthorityUser(UserId.ToString(), new Guid(), UserStatus.Pending);
-            return user;
+            // Arrage
+            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess();
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
+
+            FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
+
+            FindMatchingUsers request = new FindMatchingUsers(); // Request all users.
+
+            // Act
+            var response = await handler.HandleAsync(request);
+
+            // Check the first and last results have the correct IDs.
+            Assert.NotNull(response);
+            Assert.Equal("AGF GUI", response.Results.First().FullName);
+            Assert.Equal("YGR FTW", response.Results.Last().FullName);
         }
 
-        private UKCompetentAuthority FakeCompetentAuthorityData()
+        /// <summary>
+        /// Creates a fake data access that returns 5 organisation users and 5 competent authority users.
+        /// </summary>
+        /// <returns></returns>
+        private IFindMatchingUsersDataAccess CreateFakeDataAccess()
         {
-            UKCompetentAuthority competentAuthority = new UKCompetentAuthority("Environment Agency", "EA", new Country(new Guid(), "UK - England"));
-            return competentAuthority;
-        }
+            IFindMatchingUsersDataAccess dataAccess = A.Fake<IFindMatchingUsersDataAccess>();
 
-        private OrganisationUser FakeOrganisationUserData()
-        {
-            OrganisationUser orgUser = new OrganisationUser(UserId, FakeOrganisation.Id, UserStatus.Approved);
-            return orgUser;
+            List<UserSearchData> organisationUsers = new List<UserSearchData>()
+                {
+                    new UserSearchData() { Id = "User 1", FirstName = "XGF", LastName = "RYH" },
+                    new UserSearchData() { Id = "User 2", FirstName = "RHY", LastName = "EGJ" },
+                    new UserSearchData() { Id = "User 3", FirstName = "GDR", LastName = "FDV" },
+                    new UserSearchData() { Id = "User 4", FirstName = "JUK", LastName = "EEE" },
+                    new UserSearchData() { Id = "User 5", FirstName = "HBN", LastName = "UTL" },
+                };
+
+            A.CallTo(() => dataAccess.GetOrganisationUsers()).Returns(organisationUsers.ToArray());
+
+            List<UserSearchData> competentAuthorityUsers = new List<UserSearchData>()
+                {
+                    new UserSearchData() { Id = "User 6", FirstName = "AGF", LastName = "GUI" },
+                    new UserSearchData() { Id = "User 7", FirstName = "HTF", LastName = "HBG" },
+                    new UserSearchData() { Id = "User 8", FirstName = "VFE", LastName = "RDE" },
+                    new UserSearchData() { Id = "User 9", FirstName = "TED", LastName = "SWR" },
+                    new UserSearchData() { Id = "User 10", FirstName = "YGR", LastName = "FTW" },
+                };
+
+            A.CallTo(() => dataAccess.GetCompetentAuthorityUsers()).Returns(competentAuthorityUsers.ToArray());
+
+            return dataAccess;
         }
     }
 }
