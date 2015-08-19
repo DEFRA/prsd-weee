@@ -79,6 +79,7 @@
     <Compile Include="Identity\WeeeIdentityContext.cs" />
     <Compile Include="Mappings\CompetentAuthorityUserMapping.cs" />
     <Compile Include="Mappings\MemberUploadErrorTypeMapping.cs" />
+    <Compile Include="Mappings\MemberUploadRawDataMapping.cs" />
     <Compile Include="Mappings\MigratedProducerMapping.cs" />
     <Compile Include="Mappings\SchemeStatusMapping.cs" />
     <Compile Include="Mappings\ProducerAddressMapping.cs" />
