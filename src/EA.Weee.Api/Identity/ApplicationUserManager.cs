@@ -87,6 +87,8 @@
                 claims.Add(new Claim(claim.ClaimType, claim.ClaimValue));
             }
 
+            claims.Add(new Claim(ClaimTypes.Name, string.Format("{0} {1}", user.FirstName, user.Surname)));
+
             // Load WEEE-specific claims representing access to organisations.
             List<Guid> organisationIds = await context.OrganisationUsers
                             .Where(ou => ou.UserId == userId)

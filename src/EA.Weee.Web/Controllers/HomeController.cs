@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
+    using System.Linq;
+    using System.Security.Claims;
     using System.Web.Mvc;
     using ViewModels.Shared;
 
@@ -42,6 +44,14 @@
             }
 
             return RedirectToAction("Login", "Account");
+        }
+
+        [AllowAnonymous]
+        public ActionResult _WeeeTitle()
+        {
+            ViewBag.Name = User.Identity.Name;
+
+            return PartialView();
         }
     }
 }

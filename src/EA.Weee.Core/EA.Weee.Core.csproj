@@ -154,8 +154,6 @@
     <Compile Include="Scheme\ProducerCSVFileData.cs" />
     <Compile Include="Scheme\SchemeData.cs" />
     <Compile Include="Configuration\ConfigurationManagerWrapper.cs" />
-    <Compile Include="Security\IWeeeAuthorization.cs" />
-    <Compile Include="Security\WeeeAuthorization.cs" />
     <Compile Include="Shared\AddressData.cs" />
     <Compile Include="Shared\AddressType.cs" />
     <Compile Include="Shared\CommonRegexPatterns.cs" />

@@ -2,12 +2,12 @@
 {
     using DataAccess;
     using Domain.Organisation;
-    using EA.Weee.Core.Security;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
+    using Security;
 
     internal class UpdateOrganisationTypeDetailsHandler : IRequestHandler<UpdateOrganisationTypeDetails, Guid>
     {
@@ -22,7 +22,7 @@
 
         public async Task<Guid> HandleAsync(UpdateOrganisationTypeDetails message)
         {
-            // authorization.EnsureOrganisationAccess(message.OrganisationId);
+            authorization.EnsureOrganisationAccess(message.OrganisationId);
 
             var organisation = await db.Organisations.SingleOrDefaultAsync(o => o.Id == message.OrganisationId);
 
