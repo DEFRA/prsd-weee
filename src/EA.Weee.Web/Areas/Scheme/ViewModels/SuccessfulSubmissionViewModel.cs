@@ -4,6 +4,8 @@
 
     public class SuccessfulSubmissionViewModel
     {
+        public Guid PcsId { get; set; }
+
         public Guid MemberUploadId { get; set; }
     }
 }

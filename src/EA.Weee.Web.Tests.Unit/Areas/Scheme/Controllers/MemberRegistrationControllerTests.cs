@@ -38,6 +38,14 @@
             return controller;
         }
 
+        private FakeMemberRegistrationController BuildFakeMemberRegistrationController()
+        {
+            var controller = new FakeMemberRegistrationController(weeeClient, fileConverter);
+            new HttpContextMocker().AttachToController(controller);
+
+            return controller;
+        }
+
         [Fact]
         public async void GetAuthorizationRequired_ChecksStatusOfScheme()
         {
@@ -301,7 +309,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerCSVByMemberUploadId>._))
                 .Returns(testCSVData);
 
-            var result = await MemberRegistrationController().GetProducerCSV(A<Guid>._);
+            var result = await MemberRegistrationController().GetProducerCSV(A<Guid>._, A<Guid>._);
 
             Assert.IsType<FileContentResult>(result);
         }
@@ -319,6 +327,81 @@
 
             Assert.Equal("SuccessfulSubmission", redirect.RouteValues["action"]);
             Assert.Equal(memberUploadId, redirect.RouteValues["memberUploadId"]);
+        }
+
+        [Fact]
+        public void OnActionExecuting_ActionAuthorizationRequired_DoesNotCheckPcsId()
+        {
+            var fakeController = BuildFakeMemberRegistrationController();
+            var fakeActionParameters = ActionExecutingContextHelper.FakeActionParameters();
+            var fakeActionDescriptor = ActionExecutingContextHelper.FakeActionDescriptorWithActionName("AuthorizationRequired");
+
+            ActionExecutingContext context = new ActionExecutingContext();
+            context.ActionParameters = fakeActionParameters;
+            context.ActionDescriptor = fakeActionDescriptor;
+
+            fakeController.InvokeOnActionExecuting(context);
+
+            A.CallTo(() => fakeActionDescriptor.ActionName).MustHaveHappened(Repeated.Exactly.Once);
+
+            object dummyObject;
+            A.CallTo(() => fakeActionParameters.TryGetValue(A<string>._, out dummyObject)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public void OnActionExecuting_NotActionAuthorizationRequiredNoPcs_ThrowsInvalidOperationException()
+        {
+            var fakeController = BuildFakeMemberRegistrationController();
+            var fakeActionParameters = ActionExecutingContextHelper.FakeActionParameters(false, A.Dummy<Guid>());
+
+            ActionExecutingContext context = new ActionExecutingContext();
+            context.ActionParameters = fakeActionParameters;
+            context.ActionDescriptor = ActionExecutingContextHelper.FakeActionDescriptorWithActionName("TestAction");
+
+            Assert.Throws(typeof(InvalidOperationException), () => fakeController.InvokeOnActionExecuting(context));
+        }
+
+        [Fact]
+        public void OnActionExecuting_NotActionAuthorizationRequiredNotApprovedPcs_ResultsToAuthorizationRequired()
+        {
+            var pcsId = Guid.NewGuid();
+            var fakeController = BuildFakeMemberRegistrationController();
+            var fakeActionParameters = ActionExecutingContextHelper.FakeActionParameters(true, pcsId);
+
+            ActionExecutingContext context = new ActionExecutingContext();
+            context.ActionParameters = fakeActionParameters;
+            context.ActionDescriptor = ActionExecutingContextHelper.FakeActionDescriptorWithActionName("TestAction");
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .Returns(SchemeStatus.Pending);
+
+            fakeController.InvokeOnActionExecuting(context);
+
+            var redirect = (RedirectToRouteResult)context.Result;
+
+            Assert.Equal("AuthorizationRequired", redirect.RouteValues["action"]);
+            Assert.Equal(pcsId, redirect.RouteValues["pcsId"]);
+        }
+
+        [Fact]
+        public void OnActionExecuting_NotActionAuthorizationRequiredApprovedPcs_ResultsToNoRedirection()
+        {
+            var fakeController = BuildFakeMemberRegistrationController();
+            var fakeActionParameters = ActionExecutingContextHelper.FakeActionParameters(true, A.Dummy<Guid>());
+
+            ActionExecutingContext context = new ActionExecutingContext();
+            context.ActionParameters = fakeActionParameters;
+            context.ActionDescriptor = ActionExecutingContextHelper.FakeActionDescriptorWithActionName("TestAction");
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .Returns(SchemeStatus.Approved);
+
+            fakeController.InvokeOnActionExecuting(context);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .MustHaveHappened();
+
+            Assert.Null(context.Result);
         }
 
         private async Task<List<MemberUploadErrorData>> ErrorsAfterClientReturns(List<MemberUploadErrorData> memberUploadErrorDatas)
@@ -339,6 +422,50 @@
                 .Returns(memberUploadErrorDatas);
 
             return await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
+        }
+
+        private class FakeMemberRegistrationController : MemberRegistrationController
+        {
+            public IWeeeClient ApiClient { get; private set; }
+
+            public FakeMemberRegistrationController(IWeeeClient apiClient, IFileConverterService fileConverter)
+                : base(() => apiClient, fileConverter)
+            {
+                ApiClient = apiClient;
+            }
+
+            public void InvokeOnActionExecuting(ActionExecutingContext filterContext)
+            {
+                OnActionExecuting(filterContext);
+            }
+        }
+
+        private class ActionExecutingContextHelper
+        {
+            public static ActionDescriptor FakeActionDescriptorWithActionName(string actionName)
+            {
+                var fakeActionDescriptor = A.Fake<ActionDescriptor>();
+                A.CallTo(() => fakeActionDescriptor.ActionName).Returns(actionName);
+
+                return fakeActionDescriptor;
+            }
+
+            public static IDictionary<string, object> FakeActionParameters()
+            {
+                return A.Fake<IDictionary<string, object>>();
+            }
+
+            public static IDictionary<string, object> FakeActionParameters(bool retrievalResult, Guid outValue)
+            {
+                var fakeActionParameters = FakeActionParameters();
+
+                object dummyObject;
+                A.CallTo(() => fakeActionParameters.TryGetValue(A<string>._, out dummyObject))
+                    .Returns(retrievalResult)
+                    .AssignsOutAndRefParameters(outValue);
+
+                return fakeActionParameters;
+            }
         }
     }
 }

@@ -126,19 +126,19 @@
 
                 await client.SendAsync(User.GetAccessToken(), new MemberUploadSubmission(viewModel.MemberUploadId));
 
-                return RedirectToAction("SuccessfulSubmission", new { memberUploadId = viewModel.MemberUploadId });
+                return RedirectToAction("SuccessfulSubmission", new { pcsId = pcsId, memberUploadId = viewModel.MemberUploadId });
             }
         }
 
         [HttpGet]
-        public ViewResult SuccessfulSubmission(Guid memberUploadId)
+        public ViewResult SuccessfulSubmission(Guid pcsId, Guid memberUploadId)
         {
-            var model = new SuccessfulSubmissionViewModel { MemberUploadId = memberUploadId };
+            var model = new SuccessfulSubmissionViewModel { PcsId = pcsId, MemberUploadId = memberUploadId };
             return View(model);
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetProducerCSV(Guid memberUploadId, string fileName = null)
+        public async Task<ActionResult> GetProducerCSV(Guid pcsId, Guid memberUploadId, string fileName = null)
         {
             using (var client = apiClient())
             {
@@ -146,6 +146,44 @@
                     new GetProducerCSVByMemberUploadId(memberUploadId));
 
                 return File(new UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", producerCSVData.FileName);
+            }
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (filterContext.ActionDescriptor.ActionName == "AuthorizationRequired")
+            {
+                base.OnActionExecuting(filterContext);
+            }
+            else
+            {
+                object pcsIdObject;
+                if (filterContext.ActionParameters.TryGetValue("pcsId", out pcsIdObject))
+                {
+                    SchemeStatus status;
+                    Guid pcsId = (Guid)pcsIdObject;
+
+                    using (var client = apiClient())
+                    {
+                        var schemeStatusTask = Task<SchemeStatus>.Run(() => client.SendAsync(User.GetAccessToken(), new GetSchemeStatus(pcsId)));
+                        schemeStatusTask.Wait();
+
+                        status = schemeStatusTask.Result;
+                    }
+
+                    if (status != SchemeStatus.Approved)
+                    {
+                        filterContext.Result = RedirectToAction("AuthorizationRequired", new { pcsID = pcsId });
+                    }
+                    else
+                    {
+                        base.OnActionExecuting(filterContext);
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException("The PCS ID could not be retrieved.");
+                }
             }
         }
     }
