@@ -60,7 +60,7 @@
         {
             string authorityName = string.Empty;
             string internalusersMode = ConfigurationManager.AppSettings["Weee.InternalUsersMode"];
-            if (internalusersMode.Equals("true"))
+            if (internalusersMode != null && internalusersMode.Equals("true"))
             {
                 return "EA";
             }
