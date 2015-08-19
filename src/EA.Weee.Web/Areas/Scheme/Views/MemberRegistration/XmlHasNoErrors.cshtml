@@ -15,11 +15,11 @@
     @if (Model.ErrorData == null || Model.ErrorData.Count == 0)
     {
         <div class="highlight-section">
-            <div class="highlight-section-text">The registration charge for this uploaded XML file will be:</div>
+            <div class="highlight-section-text">Based on the information provided in your xml, your charges are:</div>
             <div class="highlight-section-amount">
                 £@Model.TotalCharges.ToString("N2")
             </div>
-            <div class="highlight-section-text">Once you submit your XML file, we will add this to your invoice which you will receive in due course.</div>
+            <div class="highlight-section-text">We will add this to your invoice.</div>
         </div>
 
         <p>Your XML file contains no errors or warnings. You may submit the file as it is.</p>
