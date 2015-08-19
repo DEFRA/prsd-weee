@@ -1,18 +1,19 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
+    using Core.Helpers;
+    using Core.Shared;
+    using DataAccess;
+    using Domain.Scheme;
+    using EA.Weee.RequestHandlers.Security;
+    using FakeItEasy;
+    using Helpers;
+    using RequestHandlers.Scheme;
+    using Requests.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.Helpers;
-    using Core.Shared;
-    using DataAccess;
-    using Domain.Scheme;
-    using FakeItEasy;
-    using Helpers;
-    using RequestHandlers.Scheme;
-    using Requests.Scheme;
     using Xunit;
     using ObligationType = Domain.ObligationType;
 
@@ -29,7 +30,9 @@
 
             A.CallTo(() => context.Schemes).Returns(schemes);
 
-            var handler = new UpdateSchemeInformationHandler(context);
+            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowEverything().Build();
+
+            var handler = new UpdateSchemeInformationHandler(context, authorization);
 
             const string schemeName = "Scheme name";
             const string approvalNumber = "WEE/AB8888CD/SCH";
@@ -61,7 +64,9 @@
 
             A.CallTo(() => context.Schemes).Returns(schemes);
 
-            var handler = new UpdateSchemeInformationHandler(context);
+            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowEverything().Build();
+
+            var handler = new UpdateSchemeInformationHandler(context, authorization);
 
             const string schemeName = "Scheme name";
             const string approvalNumber = "WEE/AB1234CD/SCH";
