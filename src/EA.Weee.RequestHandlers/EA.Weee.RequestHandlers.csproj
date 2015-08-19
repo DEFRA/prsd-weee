@@ -81,6 +81,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
+    <Compile Include="Admin\FindMatchingUsersDataAccess.cs" />
+    <Compile Include="Admin\IFindMatchingUsersDataAccess.cs" />
     <Compile Include="Mappings\AddressMap.cs" />
     <Compile Include="Mappings\CompetentAuthorityUserMap.cs" />
     <Compile Include="Mappings\ContactMap.cs" />
