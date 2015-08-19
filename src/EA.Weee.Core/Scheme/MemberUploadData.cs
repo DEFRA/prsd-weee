@@ -14,8 +14,6 @@
 
         public Guid OrganisationId { get; set; }
 
-        public string Data { get; set; }
-
         public decimal TotalCharges { get; set; }
     }
 }

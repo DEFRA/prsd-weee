@@ -19,8 +19,6 @@
 
         public virtual List<MemberUploadError> Errors { get; private set; }
 
-        public string Data { get; private set; }
-
         public virtual int? ComplianceYear { get; private set; }
 
         public virtual bool IsSubmitted { get; private set; }
@@ -29,22 +27,24 @@
 
         public decimal TotalCharges { get; private set; }
 
+        public virtual MemberUploadRawData RawData { get; set; }
+
         public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors, decimal totalCharges, int? complianceYear, Guid? schemeId = null)
         {
             OrganisationId = organisationId;
             SchemeId = schemeId.GetValueOrDefault();
-            Data = data;
             Errors = errors;
             IsSubmitted = false;
             TotalCharges = totalCharges;
             ComplianceYear = complianceYear;
+            RawData = new MemberUploadRawData() { Data = data };
         }
 
         public MemberUpload(Guid organisationId, string data)
         {
             OrganisationId = organisationId;
-            Data = data;
             Errors = new List<MemberUploadError>();
+            RawData = new MemberUploadRawData() { Data = data };
         }
 
         public void Submit()
