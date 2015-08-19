@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -13,11 +14,12 @@
     using RequestHandlers.Scheme;
     using Requests.Scheme;
     using Xunit;
+    using ObligationType = Domain.ObligationType;
 
     public class UpdateSchemeInformationHandlerTests
     {
         private readonly DbContextHelper helper = new DbContextHelper();
-
+        
         [Fact]
         public async Task UpdateSchemeInformationHandler_UpdateSchemeKeyInformation_ReturnsUpdatedScheme()
         {
@@ -29,15 +31,15 @@
 
             var handler = new UpdateSchemeInformationHandler(context);
 
-            const string schemeName = "WEE/AB1234CD/SCH";
-            const string approvalNumber = "Approval number";
+            const string schemeName = "Scheme name";
+            const string approvalNumber = "WEE/AB8888CD/SCH";
             const string ibisCustomerReference = "Any value";
-            var obligationType = ObligationType.B2B;
+            var obligationType = EA.Weee.Core.Shared.ObligationType.B2B;
             var status = Core.Shared.SchemeStatus.Approved;
             var competentAuthorityId = Guid.NewGuid();
 
             await
-                handler.HandleAsync(new UpdateSchemeInformation(schemes.FirstOrDefault().Id, schemeName, approvalNumber, ibisCustomerReference, obligationType, competentAuthorityId, status));
+                handler.HandleAsync(new UpdateSchemeInformation(schemes.First().Id, schemeName, approvalNumber, ibisCustomerReference, obligationType, competentAuthorityId, status));
 
             var schemeInfo = schemes.FirstOrDefault();
 
@@ -50,12 +52,44 @@
             Assert.Equal(status.ToDomainEnumeration<Domain.Scheme.SchemeStatus>(), schemeInfo.SchemeStatus);
         }
 
+        [Fact]
+        public async Task UpdateSchemeInformationHandler_UpdateSchemeKeyInformation_ApprovalNumberAlreadyExists_ThrowException()
+        {
+            var schemes = MakeScheme();
+
+            var context = A.Fake<WeeeContext>();
+
+            A.CallTo(() => context.Schemes).Returns(schemes);
+
+            var handler = new UpdateSchemeInformationHandler(context);
+
+            const string schemeName = "Scheme name";
+            const string approvalNumber = "WEE/AB1234CD/SCH";
+            const string ibisCustomerReference = "Any value";
+            var obligationType = EA.Weee.Core.Shared.ObligationType.B2B;
+            var status = Core.Shared.SchemeStatus.Approved;
+            var competentAuthorityId = Guid.NewGuid();
+
+            await
+                Assert.ThrowsAsync<Exception>(
+                    async () => await handler.HandleAsync(new UpdateSchemeInformation(schemes.First().Id, schemeName, approvalNumber,
+                    ibisCustomerReference, obligationType, competentAuthorityId, status)));
+        }
+
         private DbSet<Scheme> MakeScheme()
         {
-            return helper.GetAsyncEnabledDbSet(new[]
+            return helper.GetAsyncEnabledDbSet(new List<Scheme>
             {
-                new Scheme(Guid.NewGuid())
+                new Scheme(Guid.NewGuid()),
+                CreateScheme()
             });
+        }
+
+        private static Scheme CreateScheme()
+        {
+            var scheme = new Scheme(Guid.NewGuid());
+            scheme.UpdateScheme("Any value", "WEE/AB1234CD/SCH", "Any value", ObligationType.B2B, Guid.NewGuid());
+            return scheme;
         }
     }
 }

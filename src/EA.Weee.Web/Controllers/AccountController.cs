@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Net.Mail;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
     using Core;
@@ -15,6 +10,12 @@
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Services;
+    using System;
+    using System.Linq;
+    using System.Net.Mail;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Thinktecture.IdentityModel.Client;
     using ViewModels.Account;
     using ViewModels.OrganisationRegistration;
@@ -118,8 +119,21 @@
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            // I'm not happy about this code. I provided the IWeeeAuthorization interface
+            // to avoid having to do exactly this...
+            bool canAccessInternalArea = ((ClaimsIdentity)User.Identity).HasClaim(
+                ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea);
+
             authenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
+
+            if (canAccessInternalArea)
+            {
+                return RedirectToAction("Login", "Account", new { Area = "admin" });
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         private ActionResult RedirectToLocal(string returnUrl)

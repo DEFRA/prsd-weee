@@ -131,4 +131,19 @@ $(document).ready(function () {
     toggleContent.showHideRadioToggledContent();
     toggleContent.showHideCheckboxToggledContent();
 
+    // Generic double-click prevention script (used by every button)
+    function disableButtonFor1Second(button) {
+        if (button.data('disabledCount') == null) button.data('disabledCount', 0)
+        var isDisabled = button.data('disabledCount') > 0;
+        button.data('disabledCount', button.data('disabledCount') + 1);
+        setTimeout(function () {
+            button.data('disabledCount', button.data('disabledCount') - 1);
+        }, 1000);
+        return !isDisabled;
+    }
+
+    // Bind the disabling behaviour to all buttons.
+    $('input[type=submit], button').bind('click', function() {
+        return disableButtonFor1Second($(this));
+    });
 });
