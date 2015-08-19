@@ -1,28 +1,30 @@
-﻿namespace EA.Weee.Core.Security
+﻿namespace EA.Weee.RequestHandlers.Security
 {
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
-    using EA.Prsd.Core.Security;
     using EA.Weee.Core;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Security;
     using System.Security.Claims;
-    using System.Text;
-    using System.Threading.Tasks;
+    using DataAccess;
+    using Domain;
 
     /// <summary>
     /// Provides evaluation of claims-based authorisation for WEEE resources.
     /// </summary>
     public class WeeeAuthorization : IWeeeAuthorization
     {
+        private readonly WeeeContext context;
+
         private readonly IUserContext userContext;
 
-        public WeeeAuthorization(IUserContext userContext)
+        public WeeeAuthorization(WeeeContext context, IUserContext userContext)
         {
+            Guard.ArgumentNotNull(() => context, context);
             Guard.ArgumentNotNull(() => userContext, userContext);
 
+            this.context = context;
             this.userContext = userContext;
         }
 
@@ -98,9 +100,13 @@
         /// </summary>
         public bool CheckOrganisationAccess(Guid organisationId)
         {
-            Claim claim = new Claim(WeeeClaimTypes.OrganisationAccess, organisationId.ToString());
+            var userId = userContext.UserId.ToString();
 
-            return HasClaim(claim);
+            return
+                context.OrganisationUsers.Any(
+                    ou => ou.OrganisationId == organisationId
+                       && ou.UserId == userId
+                       && ou.UserStatus.Value == UserStatus.Approved.Value);
         }
 
         /// <summary>
@@ -127,9 +133,20 @@
         /// </summary>
         public bool CheckSchemeAccess(Guid schemeId)
         {
-            Claim claim = new Claim(WeeeClaimTypes.SchemeAccess, schemeId.ToString());
+            var organisationId = context.Schemes.Where(s => s.Id == schemeId).Select(s => s.OrganisationId).FirstOrDefault();
 
-            return HasClaim(claim);
+            if (organisationId == Guid.Empty)
+            {
+                return false;
+            }
+
+            var userId = userContext.UserId.ToString();
+
+            return
+                context.OrganisationUsers.Any(
+                    ou => ou.OrganisationId == organisationId
+                       && ou.UserId == userId
+                       && ou.UserStatus.Value == UserStatus.Approved.Value);
         }
 
         private bool HasClaim(Claim claim)

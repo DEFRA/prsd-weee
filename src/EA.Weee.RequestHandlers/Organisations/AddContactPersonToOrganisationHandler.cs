@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
     using DataAccess;
-    using EA.Weee.Core.Security;
     using Mappings;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
+    using Security;
 
     internal class AddContactPersonToOrganisationHandler : IRequestHandler<AddContactPersonToOrganisation, Guid>
     {
@@ -22,7 +22,7 @@
 
         public async Task<Guid> HandleAsync(AddContactPersonToOrganisation message)
         {
-            // authorization.EnsureOrganisationAccess(message.OrganisationId);
+            authorization.EnsureOrganisationAccess(message.OrganisationId);
 
             var contactPerson = ValueObjectInitializer.CreateContact(message.ContactPerson);
             var organisation = await db.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
