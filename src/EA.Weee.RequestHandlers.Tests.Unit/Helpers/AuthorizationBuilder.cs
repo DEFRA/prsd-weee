@@ -19,11 +19,39 @@
     /// </example>
     internal class AuthorizationBuilder
     {
+        public static IWeeeAuthorization CreateUserWithAllRights()
+        {
+            return new AuthorizationBuilder().AllowEverything().Build();
+        }
+
+        public static IWeeeAuthorization CreateUserWithNoRights()
+        {
+            return new AuthorizationBuilder().DenyEverything().Build();
+        }
+
         private IWeeeAuthorization fake;
 
         public AuthorizationBuilder()
         {
             fake = A.Fake<IWeeeAuthorization>();
+        }
+
+        public AuthorizationBuilder AllowEverything()
+        {
+            AllowInternalAreaAccess();
+            AllowExternalAreaAccess();
+            AllowOrganisationAccess();
+            AllowSchemeAccess();
+            return this;
+        }
+
+        public AuthorizationBuilder DenyEverything()
+        {
+            DenyInternalAreaAccess();
+            DenyExternalAreaAccess();
+            DenyOrganisationAccess();
+            DenySchemeAccess();
+            return this;
         }
 
         public AuthorizationBuilder AllowInternalAreaAccess()
