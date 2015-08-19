@@ -1,16 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Core.Scheme;
     using DataAccess;
     using Domain.Organisation;
     using Domain.Scheme;
+    using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using RequestHandlers.Mappings;
     using RequestHandlers.Scheme;
     using RequestHandlers.Tests.Unit.Helpers;
     using Requests.Scheme;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetSchemesHandlerTests
@@ -69,7 +70,9 @@
         private async Task<List<SchemeData>> RunHandler(params Scheme[] schemes)
         {
             var context = MakeContextWithSchemes(schemes);
-            var handler = new GetSchemesHandler(context, new SchemeMap(new UKCompetentAuthorityMap()));
+            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowEverything().Build();
+
+            var handler = new GetSchemesHandler(context, new SchemeMap(new UKCompetentAuthorityMap()), authorization);
             return await handler.HandleAsync(new GetSchemes());
         }
 

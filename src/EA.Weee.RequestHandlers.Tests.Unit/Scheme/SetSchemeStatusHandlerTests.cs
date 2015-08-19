@@ -1,15 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.Helpers;
     using DataAccess;
     using Domain.Scheme;
+    using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using Helpers;
     using RequestHandlers.Scheme;
     using Requests.Scheme;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Xunit;
     using SchemeStatus = Core.Shared.SchemeStatus;
 
@@ -58,7 +59,9 @@
 
         private SetSchemeStatusHandler SetSchemeStatusHandler()
         {
-            return new SetSchemeStatusHandler(context);
+            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowEverything().Build();
+
+            return new SetSchemeStatusHandler(context, authorization);
         }
     }
 }
