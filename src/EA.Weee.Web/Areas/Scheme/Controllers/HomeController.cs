@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
     using Infrastructure;
@@ -43,6 +44,13 @@
                 if (!organisationExists)
                 {
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
+                }
+
+                var orgUsers = await GetOrganisationUsers(pcsId);
+
+                if (orgUsers.Count == 0)
+                {
+                    model.ActivityOptions.PossibleValues.Remove(PcsAction.ManageOrganisationUsers);
                 }
 
                 model.OrganisationId = pcsId;
@@ -96,12 +104,7 @@
                     throw new ArgumentException("No organisation found for supplied organisation Id", "pcsId");
                 }
 
-                var orgUsers = await client.SendAsync(User.GetAccessToken(),
-                    new GetUsersByOrganisationId(pcsId));
-
-                var loggedInUserId = User.GetUserId();
-
-                orgUsers = orgUsers.Where(ou => ou.UserId != loggedInUserId).ToList();
+                var orgUsers = await GetOrganisationUsers(pcsId);
 
                 var orgUsersKeyValuePairs =
                     orgUsers.Select(
@@ -125,6 +128,19 @@
                 return View(model);
             }
             return View(model);
+        }
+
+        private async Task<List<OrganisationUserData>> GetOrganisationUsers(Guid pcsId)
+        {
+            using (var client = apiClient())
+            {
+                var orgUsers = await client.SendAsync(User.GetAccessToken(),
+                    new GetUsersByOrganisationId(pcsId));
+
+                var loggedInUserId = User.GetUserId();
+
+                return orgUsers.Where(ou => ou.UserId != loggedInUserId).ToList();
+            }
         }
     }
 }
