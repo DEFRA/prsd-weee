@@ -19,8 +19,13 @@
     {
         private readonly WeeeContext context = A.Fake<WeeeContext>();
         private readonly DbContextHelper helper = new DbContextHelper();
-        private readonly IWeeeAuthorization permissiveAuthorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-        private readonly IWeeeAuthorization denyingAuthorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+
+        private readonly IWeeeAuthorization permissiveAuthorization =
+            AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
+
+        private readonly IWeeeAuthorization denyingAuthorization =
+            AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
+
         private readonly Guid orgId = Guid.NewGuid();
 
         [Fact]

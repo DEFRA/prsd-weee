@@ -22,7 +22,7 @@
         [Fact]
         public async Task GetContactPersonByOrganisationIdHandler_NotOrganisationUser_ThrowsSecurityException()
         {
-            var authorization = AuthorizationBuilder.CreateUserWithNoRights();
+            var authorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
             var handler = new GetContactPersonByOrganisationIdHandler(authorization, A<WeeeContext>._, new ContactMap());
             var message = new GetContactPersonByOrganisationId(Guid.NewGuid());
@@ -42,7 +42,7 @@
 
             A.CallTo(() => context.Organisations).Returns(organisations);
 
-            var authorization = AuthorizationBuilder.CreateUserWithAllRights();
+            var authorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
 
             var handler = new GetContactPersonByOrganisationIdHandler(authorization, context, contactMapper);
 

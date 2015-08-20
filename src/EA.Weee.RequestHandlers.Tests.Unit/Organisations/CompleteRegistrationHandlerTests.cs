@@ -20,10 +20,10 @@
         private readonly DbContextHelper dbHelper = new DbContextHelper();
 
         private readonly IWeeeAuthorization permissiveAuthorization =
-            new AuthorizationBuilder().AllowOrganisationAccess().Build();
+            AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
 
         private readonly IWeeeAuthorization denyingAuthorization =
-            new AuthorizationBuilder().DenyOrganisationAccess().Build();
+            AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
         [Fact]
         public async Task CompleteRegistrationHandler_NotOrganisationUser_ThrowsSecurityException()
