@@ -6,18 +6,23 @@
     using DataAccess;
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
+    using Security;
 
     internal class MemberUploadSubmissionHandler : IRequestHandler<MemberUploadSubmission, Guid>
     {
+        private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
 
-        public MemberUploadSubmissionHandler(WeeeContext context)
+        public MemberUploadSubmissionHandler(IWeeeAuthorization authorization, WeeeContext context)
         {
+            this.authorization = authorization;
             this.context = context;
         }
 
         public async Task<Guid> HandleAsync(MemberUploadSubmission message)
         {
+            authorization.EnsureOrganisationAccess(message.OrganisationId);
+
             var memberUpload = await context.MemberUploads.SingleOrDefaultAsync(m => m.Id == message.MemberUploadId);
 
             if (memberUpload == null)

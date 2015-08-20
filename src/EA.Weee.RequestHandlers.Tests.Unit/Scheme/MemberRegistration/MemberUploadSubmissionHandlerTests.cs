@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.Scheme;
@@ -26,7 +27,18 @@
 
             A.CallTo(() => context.MemberUploads).Returns(memberUploadsDbSet);
 
-            return new MemberUploadSubmissionHandler(context);
+            return new MemberUploadSubmissionHandler(AuthorizationBuilder.CreateUserWithAllRights(), context);
+        }
+
+        [Fact]
+        public async Task MemberUploadSubmissionHandler_NotOrganisationUser_ThrowsSecurityException()
+        {
+            var denyingAuthorization = AuthorizationBuilder.CreateUserWithNoRights();
+
+            var handler = new MemberUploadSubmissionHandler(denyingAuthorization, A<WeeeContext>._);
+            var message = new MemberUploadSubmission(Guid.NewGuid(), Guid.NewGuid());
+
+            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
         }
 
         [Fact]
@@ -41,7 +53,7 @@
 
             await
                 Assert.ThrowsAsync<ArgumentNullException>(
-                    async () => await handler.HandleAsync(new MemberUploadSubmission(Guid.NewGuid())));
+                    async () => await handler.HandleAsync(new MemberUploadSubmission(Guid.NewGuid(), Guid.NewGuid())));
         }
 
         [Fact]
@@ -54,7 +66,7 @@
 
             var handler = GetPreparedHandler(memberUploads);
 
-            var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(memberUploads.First().Id));
+            var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(Guid.NewGuid(), memberUploads.First().Id));
 
             Assert.NotNull(memberUploadId);
             Assert.Equal(memberUploadId, memberUploads.First().Id);
@@ -72,7 +84,7 @@
                 memberUpload
             });
 
-            var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(memberUpload.Id));
+            var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(Guid.NewGuid(), memberUpload.Id));
 
             Assert.NotNull(memberUploadId);
             Assert.Equal(memberUploadId, memberUpload.Id);
