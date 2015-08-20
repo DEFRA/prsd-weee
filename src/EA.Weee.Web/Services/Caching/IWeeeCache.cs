@@ -8,8 +8,10 @@
 
     public interface IWeeeCache
     {
-        Cache<Guid, string> UserNames { get; }
-        
-        Cache<Guid, string> OrganisationNames { get; }
+        Task<string> FetchUserName(Guid userId);
+
+        Task<string> FetchOrganisationName(Guid organisationId);
+
+        Task<string> FetchSchemeName(Guid schemeId);
     }
 }
