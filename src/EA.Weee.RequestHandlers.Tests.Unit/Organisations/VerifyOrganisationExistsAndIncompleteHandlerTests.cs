@@ -3,20 +3,34 @@
     using System;
     using System.Data.Entity;
     using System.Linq;
+    using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.Organisation;
     using FakeItEasy;
     using Helpers;
     using RequestHandlers.Organisations;
+    using RequestHandlers.Security;
     using Requests.Organisations;
     using Xunit;
 
     public class VerifyOrganisationExistsAndIncompleteHandlerTests
     {
         private readonly DbContextHelper helper = new DbContextHelper();
-
         private readonly OrganisationHelper orgHelper = new OrganisationHelper();
+
+        private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserWithAllRights();
+
+        [Fact]
+        public async Task NotOrganisationUser_ThrowsSecurityException()
+        {
+            var authorization = AuthorizationBuilder.CreateUserWithNoRights();
+
+            var handler = new VerifyOrganisationExistsAndIncompleteHandler(authorization, A<WeeeContext>._);
+            var message = new VerifyOrganisationExistsAndIncomplete(Guid.NewGuid());
+
+            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
+        }
 
         [Fact]
         public async Task VerifyOrganisationExistsAndIncompleteHandler_OrgExistsAndIncomplete_ReturnsTrue()
@@ -28,7 +42,7 @@
 
             A.CallTo(() => context.Organisations).Returns(organisations);
 
-            var handler = new VerifyOrganisationExistsAndIncompleteHandler(context);
+            var handler = new VerifyOrganisationExistsAndIncompleteHandler(permissiveAuthorization, context);
 
             var exists =
                 await handler.HandleAsync(new VerifyOrganisationExistsAndIncomplete(organisations.FirstOrDefault().Id));
@@ -45,7 +59,7 @@
 
             A.CallTo(() => context.Organisations).Returns(organisations);
 
-            var handler = new VerifyOrganisationExistsAndIncompleteHandler(context);
+            var handler = new VerifyOrganisationExistsAndIncompleteHandler(permissiveAuthorization, context);
 
             var exists =
                 await handler.HandleAsync(new VerifyOrganisationExistsAndIncomplete(organisations.FirstOrDefault().Id));
@@ -63,7 +77,7 @@
 
             A.CallTo(() => context.Organisations).Returns(organisations);
 
-            var handler = new VerifyOrganisationExistsAndIncompleteHandler(context);
+            var handler = new VerifyOrganisationExistsAndIncompleteHandler(permissiveAuthorization, context);
 
             var exists = await handler.HandleAsync(new VerifyOrganisationExistsAndIncomplete(Guid.NewGuid()));
 
