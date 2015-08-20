@@ -31,9 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EA.Prsd.Core">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.15211-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15225.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EA.Prsd.Core.1.0.15225-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -88,6 +88,7 @@
     <Compile Include="Users\GetUsersByOrganisationId.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
