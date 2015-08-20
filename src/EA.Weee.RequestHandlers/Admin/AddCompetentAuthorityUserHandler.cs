@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
     using System;
+    using System.Configuration;
     using System.Data.Entity;
     using System.Threading.Tasks;
     using DataAccess;
@@ -58,6 +59,12 @@
         private string AuthorityName(string email)
         {
             string authorityName = string.Empty;
+            string internalusersMode = ConfigurationManager.AppSettings["Weee.InternalUsersMode"];
+            if (internalusersMode != null && internalusersMode.Equals("true"))
+            {
+                return "EA";
+            }
+
             switch (email)
             {
                 case "environment-agency.gov.uk":

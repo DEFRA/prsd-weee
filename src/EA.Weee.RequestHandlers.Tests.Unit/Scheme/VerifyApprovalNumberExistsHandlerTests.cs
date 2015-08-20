@@ -1,14 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain.Scheme;
+    using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using Helpers;
     using RequestHandlers.Scheme;
     using Requests.Scheme;
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
     using Xunit;
     using ObligationType = Domain.ObligationType;
 
@@ -19,18 +20,23 @@
         [Fact]
         public async Task VerifyApprovalNumberExistsHandler_ApprovalNumberNotExists_ReturnsFalse()
         {
+            // Arrange
             var schemes = MakeScheme();
 
             var context = A.Fake<WeeeContext>();
 
             A.CallTo(() => context.Schemes).Returns(schemes);
 
-            var handler = new VerifyApprovalNumberExistsHandler(context);
+            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowEverything().Build();
+
+            var handler = new VerifyApprovalNumberExistsHandler(context, authorization);
 
             const string approvalNumber = "WEE/AB4444CD/SCH";
 
+            // Act
             var approvalNumberExists = await handler.HandleAsync(new VerifyApprovalNumberExists(approvalNumber));
 
+            // Assert
             Assert.False(approvalNumberExists);
         }
 
@@ -43,7 +49,9 @@
 
             A.CallTo(() => context.Schemes).Returns(schemes);
 
-            var handler = new VerifyApprovalNumberExistsHandler(context);
+            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowEverything().Build();
+
+            var handler = new VerifyApprovalNumberExistsHandler(context, authorization);
 
             const string approvalNumber = "WEE/AB1234CD/SCH";
 

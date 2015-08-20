@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EA.Prsd.Core">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.15211-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.1.0.15225-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -67,6 +67,10 @@
   <ItemGroup>
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Helpers\AuthorizationBuilder.cs" />
+    <Compile Include="Organisations\Create\CreateOrganisationRequestHandlerTestsBase.cs" />
+    <Compile Include="Organisations\Create\CreatePartnershipRequestHandlerTests.cs" />
+    <Compile Include="Organisations\Create\CreateRegisteredCompanyRequestHandlerTests.cs" />
+    <Compile Include="Organisations\Create\CreateSoleTraderRequestHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemesHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateFromXmlTests.cs" />
