@@ -46,6 +46,12 @@
                             .ToListAsync();
             }
 
+            if (query.OrganisationStatus != null &&
+                query.OrganisationStatus.Length > 0)
+            {
+                organisationUsers = organisationUsers.Where(ou => query.OrganisationStatus.Contains(ou.Organisation.OrganisationStatus.Value)).ToList();
+            }
+
             var organisationUserData = organisationUsers.Select(item => organisationUserMap.Map(item)).ToList();
 
             return organisationUserData;
