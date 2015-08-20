@@ -9,5 +9,7 @@
     public interface IWeeeCache
     {
         Cache<Guid, string> UserNames { get; }
+        
+        Cache<Guid, string> OrganisationNames { get; }
     }
 }
