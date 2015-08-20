@@ -37,9 +37,9 @@
 
         public string Name { get; private set; }
 
-        public OrganisationType OrganisationType { get; private set; }
+        public virtual OrganisationType OrganisationType { get; private set; }
 
-        public OrganisationStatus OrganisationStatus { get; set; }
+        public virtual OrganisationStatus OrganisationStatus { get; set; }
 
         public virtual string TradingName { get; private set; }
 

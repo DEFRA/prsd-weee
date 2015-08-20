@@ -7,6 +7,6 @@
         [Display(Name = "Incomplete")]
         Incomplete = 1,
         [Display(Name = "Complete")]
-        Pending = 2,
+        Complete = 2,
     }
 }
