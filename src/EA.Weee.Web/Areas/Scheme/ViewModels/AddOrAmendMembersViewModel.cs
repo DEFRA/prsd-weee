@@ -6,7 +6,7 @@
 
     public class AddOrAmendMembersViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "You must choose a file")]
         [HttpPostedFileType("text/xml")]
         public HttpPostedFileBase File { get; set; }
     }
