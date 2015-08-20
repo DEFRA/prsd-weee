@@ -1,6 +1,11 @@
 ﻿@{
-    bool showBreadcrumb = (ViewBag.BreadcrumbInternalActivity != null) || (ViewBag.BreadcrumbExternalActivity != null);
+    bool showBreadcrumb =
+           (ViewBag.BreadcrumbInternalActivity != null)
+        || (ViewBag.BreadcrumbExternalActivity != null)
+        || (ViewBag.BreadcrumbOrganisation != null);
+        
     bool showIdentity = User.Identity.IsAuthenticated;
+    
     bool showTitle = showBreadcrumb || showIdentity;
 
     int columnCount = (showBreadcrumb ? 1 : 0) + (showIdentity ? 1 : 0);
@@ -53,7 +58,7 @@
                 @if (ViewBag.BreadcrumbExternalActivity != null)
                 {
                 <li>
-                    <a href="@Url.Action("Index", "Home", new { Area = "" })">Activity</a>: @ViewBag.BreadcrumbExternalActivity
+                    <a href="@Url.Action("ChooseActivity", "Home", new { Area = "scheme" })">Activity</a>: @ViewBag.BreadcrumbExternalActivity
                 </li>
                 }
             </ul>
