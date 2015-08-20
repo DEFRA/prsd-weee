@@ -11,7 +11,6 @@
     using Helpers;
     using Mappings;
     using RequestHandlers.Scheme.MemberRegistration;
-    using RequestHandlers.Security;
     using Requests.Scheme.MemberRegistration;
     using Xunit;
 
@@ -38,7 +37,7 @@
             var authorization = AuthorizationBuilder.CreateUserWithNoRights();
 
             var handler = new GetMemberUploadByIdHandler(authorization, A<WeeeContext>._, A<MemberUploadMap>._);
-            var message = new GetMemberUploadById(Guid.NewGuid());
+            var message = new GetMemberUploadById(Guid.NewGuid(), Guid.NewGuid());
 
             await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
         }
@@ -55,7 +54,7 @@
 
             await
                 Assert.ThrowsAsync<ArgumentNullException>(
-                    async () => await handler.HandleAsync(new GetMemberUploadById(Guid.NewGuid())));
+                    async () => await handler.HandleAsync(new GetMemberUploadById(Guid.NewGuid(), Guid.NewGuid())));
         }
 
         [Fact]
@@ -68,7 +67,7 @@
 
             var handler = GetPreparedHandler(memberUploads);
 
-            var memberUpload = await handler.HandleAsync(new GetMemberUploadById(memberUploads.First().Id));
+            var memberUpload = await handler.HandleAsync(new GetMemberUploadById(Guid.NewGuid(), memberUploads.First().Id));
 
             Assert.NotNull(memberUpload);
         }
