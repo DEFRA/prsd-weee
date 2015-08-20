@@ -118,7 +118,7 @@
 
             var orgUsers = await handler.HandleAsync(new GetOrganisationsByUserId(userId.ToString(),
                 new int[] { },
-                new int[] { (int)Core.Shared.OrganisationStatus.Pending }));
+                new int[] { (int)Core.Shared.OrganisationStatus.Complete }));
 
             Assert.Equal(2, orgUsers.Count);
             Assert.True(orgUsers.First().UserStatus == UserStatus.Approved);
@@ -167,7 +167,7 @@
 
             var orgUsers = await handler.HandleAsync(new GetOrganisationsByUserId(userId.ToString(),
                 new int[] { (int)UserStatus.Refused },
-                new int[] { (int)Core.Shared.OrganisationStatus.Pending }));
+                new int[] { (int)Core.Shared.OrganisationStatus.Complete }));
 
             Assert.Equal(1, orgUsers.Count);
             Assert.True(orgUsers.First().UserStatus == UserStatus.Refused);
