@@ -30,7 +30,7 @@
 
             A.CallTo(() => context.Schemes).Returns(schemes);
 
-            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowEverything().Build();
+            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
 
             var handler = new UpdateSchemeInformationHandler(context, authorization);
 
@@ -64,7 +64,7 @@
 
             A.CallTo(() => context.Schemes).Returns(schemes);
 
-            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowEverything().Build();
+            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
 
             var handler = new UpdateSchemeInformationHandler(context, authorization);
 

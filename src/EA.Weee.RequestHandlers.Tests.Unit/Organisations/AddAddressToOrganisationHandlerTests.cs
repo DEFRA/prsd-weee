@@ -18,8 +18,12 @@
 
     public class AddAddressToOrganisationHandlerTests
     {
-        private readonly IWeeeAuthorization permissiveAuthorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-        private readonly IWeeeAuthorization denyingAuthorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+        private readonly IWeeeAuthorization permissiveAuthorization =
+            AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
+
+        private readonly IWeeeAuthorization denyingAuthorization =
+            AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
+
         private readonly DbContextHelper dbHelper = new DbContextHelper();
 
         [Fact]

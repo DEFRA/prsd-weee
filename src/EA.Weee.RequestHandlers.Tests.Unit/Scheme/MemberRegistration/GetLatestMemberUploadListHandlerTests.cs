@@ -24,7 +24,7 @@
         private readonly DbContextHelper weeeContextHelper;
         private readonly IMap<IEnumerable<MemberUpload>, LatestMemberUploadList> mapper;
 
-        private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserWithAllRights();
+        private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
 
         private long memberUploadRowVersion;
 
@@ -40,7 +40,7 @@
         [Fact]
         public async Task GetLatestMemberUploadListHandler_NotOrganisationUser_ThrowsSecurityException()
         {
-            var denyingAuthorization = AuthorizationBuilder.CreateUserWithNoRights();
+            var denyingAuthorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
             var handler = new GetLatestMemberUploadListHandler(denyingAuthorization, A<WeeeContext>._, A<LatestMemberUploadListMap>._);
             var message = new GetLatestMemberUploadList(Guid.NewGuid());

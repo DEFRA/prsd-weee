@@ -29,6 +29,16 @@
             return new AuthorizationBuilder().DenyEverything().Build();
         }
 
+        public static IWeeeAuthorization CreateUserAllowedToAccessOrganisation()
+        {
+            return new AuthorizationBuilder().AllowOrganisationAccess().Build();
+        }
+
+        public static IWeeeAuthorization CreateUserDeniedFromAccessingOrganisation()
+        {
+            return new AuthorizationBuilder().DenyOrganisationAccess().Build();
+        }
+
         private IWeeeAuthorization fake;
 
         public AuthorizationBuilder()
