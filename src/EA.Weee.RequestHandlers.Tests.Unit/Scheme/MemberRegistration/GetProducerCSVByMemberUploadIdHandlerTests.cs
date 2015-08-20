@@ -27,7 +27,7 @@
 
             A.CallTo(() => context.MemberUploads).Returns(memberUploadsDbSet);
 
-            return new GetProducerCSVByMemberUploadIdHandler(AuthorizationBuilder.CreateUserWithAllRights(), context);
+            return new GetProducerCSVByMemberUploadIdHandler(AuthorizationBuilder.CreateUserAllowedToAccessOrganisation(), context);
         }
 
         [Fact]
@@ -47,7 +47,7 @@
         [Fact]
         public async Task GetProducerCSVByMemberUploadIdHandler_NotOrganisationUser_ThrowsSecurityException()
         {
-            var denyingAuthorization = AuthorizationBuilder.CreateUserWithNoRights();
+            var denyingAuthorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
             var handler = new GetProducerCSVByMemberUploadIdHandler(denyingAuthorization, A<WeeeContext>._);
             var message = new GetProducerCSVByMemberUploadId(Guid.NewGuid(), Guid.NewGuid());

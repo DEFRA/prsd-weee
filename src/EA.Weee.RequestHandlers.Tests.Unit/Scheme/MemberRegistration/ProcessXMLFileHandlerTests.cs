@@ -21,8 +21,8 @@
 
     public class ProcessXMLFileHandlerTests
     {
-        private readonly IWeeeAuthorization permissiveAuthorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-        private readonly IWeeeAuthorization denyingAuthorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+        private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
+        private readonly IWeeeAuthorization denyingAuthorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
         private readonly DbContextHelper helper = new DbContextHelper();
         private readonly ProcessXMLFileHandler handler;
         private readonly IGenerateFromXml generator;

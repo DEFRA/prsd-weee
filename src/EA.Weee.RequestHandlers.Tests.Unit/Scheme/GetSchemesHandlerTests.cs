@@ -70,7 +70,7 @@
         private async Task<List<SchemeData>> RunHandler(params Scheme[] schemes)
         {
             var context = MakeContextWithSchemes(schemes);
-            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowEverything().Build();
+            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
 
             var handler = new GetSchemesHandler(context, new SchemeMap(new UKCompetentAuthorityMap()), authorization);
             return await handler.HandleAsync(new GetSchemes());
