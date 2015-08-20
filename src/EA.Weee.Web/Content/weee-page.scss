@@ -581,3 +581,12 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
         color: $black;
     }
 }
+
+.breadcrumb-title-display {
+    padding: 5px;
+
+    .username-format {
+        font-weight: bold;
+        color: $black;
+    }
+}
