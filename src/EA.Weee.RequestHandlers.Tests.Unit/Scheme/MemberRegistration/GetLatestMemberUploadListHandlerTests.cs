@@ -3,14 +3,18 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Core.Helpers;
     using Core.Scheme;
     using DataAccess;
     using Domain.Scheme;
     using FakeItEasy;
     using Helpers;
+    using Mappings;
     using Prsd.Core.Mapper;
     using RequestHandlers.Scheme.MemberRegistration;
+    using RequestHandlers.Security;
     using Requests.Scheme.MemberRegistration;
     using Xunit;
 
@@ -19,6 +23,8 @@
         private readonly WeeeContext weeeContext;
         private readonly DbContextHelper weeeContextHelper;
         private readonly IMap<IEnumerable<MemberUpload>, LatestMemberUploadList> mapper;
+
+        private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserWithAllRights();
 
         private long memberUploadRowVersion;
 
@@ -29,6 +35,17 @@
             mapper = A.Fake<IMap<IEnumerable<MemberUpload>, LatestMemberUploadList>>();
 
             memberUploadRowVersion = 0;
+        }
+
+        [Fact]
+        public async Task NotOrganisationUser_ThrowsSecurityException()
+        {
+            var denyingAuthorization = AuthorizationBuilder.CreateUserWithNoRights();
+
+            var handler = new GetLatestMemberUploadListHandler(denyingAuthorization, A<WeeeContext>._, A<LatestMemberUploadListMap>._);
+            var message = new GetLatestMemberUploadList(Guid.NewGuid());
+
+            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
         }
 
         [Fact]
@@ -95,7 +112,7 @@
 
         private GetLatestMemberUploadListHandler GetLatestMemberUploadSummaryHandler()
         {
-            return new GetLatestMemberUploadListHandler(weeeContext, mapper);
+            return new GetLatestMemberUploadListHandler(permissiveAuthorization, weeeContext, mapper);
         }
 
         private MemberUpload ValidMemberUpload(Guid pcsId)

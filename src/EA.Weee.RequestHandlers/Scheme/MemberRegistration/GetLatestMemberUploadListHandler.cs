@@ -11,20 +11,25 @@
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
+    using Security;
 
     public class GetLatestMemberUploadListHandler : IRequestHandler<GetLatestMemberUploadList, LatestMemberUploadList>
     {
+        private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
         private readonly IMap<IEnumerable<MemberUpload>, LatestMemberUploadList> mapper;
 
-        public GetLatestMemberUploadListHandler(WeeeContext context, IMap<IEnumerable<MemberUpload>, LatestMemberUploadList> mapper)
+        public GetLatestMemberUploadListHandler(IWeeeAuthorization authorization, WeeeContext context, IMap<IEnumerable<MemberUpload>, LatestMemberUploadList> mapper)
         {
+            this.authorization = authorization;
             this.context = context;
             this.mapper = mapper;
         }
 
         public async Task<LatestMemberUploadList> HandleAsync(GetLatestMemberUploadList message)
         {
+            authorization.EnsureOrganisationAccess(message.PcsId);
+
             var latestMemberUploads = await context.MemberUploads
                 .Where(mu => mu.OrganisationId == message.PcsId && mu.IsSubmitted)
                 .ToListAsync();
