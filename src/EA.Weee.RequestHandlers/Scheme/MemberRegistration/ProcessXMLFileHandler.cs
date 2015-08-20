@@ -9,6 +9,7 @@
     using DataAccess;
     using Domain;
     using Domain.Scheme;
+    using EA.Weee.RequestHandlers.Security;
     using GenerateProducerObjects;
     using Interfaces;
     using Prsd.Core.Mediator;
@@ -18,14 +19,16 @@
     internal class ProcessXMLFileHandler : IRequestHandler<ProcessXMLFile, Guid>
     {
         private readonly WeeeContext context;
+        private readonly IWeeeAuthorization authorization;
         private readonly IXmlValidator xmlValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IGenerateFromXml generateFromXml;
         private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
 
-        public ProcessXMLFileHandler(WeeeContext context, IXmlValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, IXmlChargeBandCalculator xmlChargeBandCalculator)
+        public ProcessXMLFileHandler(WeeeContext context, IWeeeAuthorization authorization, IXmlValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, IXmlChargeBandCalculator xmlChargeBandCalculator)
         {
             this.context = context;
+            this.authorization = authorization;
             this.xmlValidator = xmlValidator;
             this.xmlConverter = xmlConverter;
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
@@ -34,11 +37,13 @@
 
         public async Task<Guid> HandleAsync(ProcessXMLFile message)
         {
+            authorization.EnsureOrganisationAccess(message.OrganisationId);
+
             var errors = xmlValidator.Validate(message);
 
             List<MemberUploadError> memberUploadErrors = errors as List<MemberUploadError> ?? errors.ToList();
             
-            //calcuate charge band for producers if no schema errors
+            //calculate charge band for producers if no schema errors
             Hashtable producerCharges = null;
             decimal totalCharges = 0;
             

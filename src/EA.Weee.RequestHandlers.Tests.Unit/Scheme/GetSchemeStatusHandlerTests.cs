@@ -2,9 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Security;
     using System.Threading;
     using DataAccess;
     using Domain.Scheme;
+    using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using Helpers;
     using Mappings;
@@ -18,6 +20,8 @@
     {
         private readonly DbContextHelper contextHelper;
         private readonly WeeeContext context;
+        private readonly IWeeeAuthorization permissiveAuthorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
+        private readonly IWeeeAuthorization denyingAuthorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
         private readonly IMap<Domain.Scheme.SchemeStatus, SchemeStatus> mapper;
 
         public GetSchemeStatusHandlerTests()
@@ -25,6 +29,16 @@
             contextHelper = new DbContextHelper();
             context = A.Fake<WeeeContext>();
             mapper = A.Fake<IMap<Domain.Scheme.SchemeStatus, SchemeStatus>>();
+        }
+
+        [Fact]
+        public async void NotOrganisationUser_ThrowsSecurityException()
+        {
+            var handler = new GetSchemeStatusHandler(context, denyingAuthorization, mapper);
+
+            await
+                Assert.ThrowsAsync<SecurityException>(
+                    async () => await handler.HandleAsync(new GetSchemeStatus(Guid.NewGuid())));
         }
 
         [Fact]
@@ -60,7 +74,7 @@
 
         private GetSchemeStatusHandler GetSchemeStatusHandler()
         {
-            return new GetSchemeStatusHandler(context, mapper);
+            return new GetSchemeStatusHandler(context, permissiveAuthorization, mapper);
         }
     }
 }
