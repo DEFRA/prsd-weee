@@ -38,7 +38,7 @@
         }
 
         [Fact]
-        public async Task NotOrganisationUser_ThrowsSecurityException()
+        public async Task GetLatestMemberUploadListHandler_NotOrganisationUser_ThrowsSecurityException()
         {
             var denyingAuthorization = AuthorizationBuilder.CreateUserWithNoRights();
 
@@ -49,7 +49,7 @@
         }
 
         [Fact]
-        public async void MemberUploadDoesNotExistForPcs_ReturnsEmptyListOfMemberUploadSummaries()
+        public async void GetLatestMemberUploadListHandler_MemberUploadDoesNotExistForPcs_ReturnsEmptyListOfMemberUploadSummaries()
         {
             var pcsId = Guid.NewGuid();
 
@@ -67,7 +67,7 @@
         }
 
         [Fact]
-        public async void MemberUploadExistsForPcs_ReturnsMemberUpload()
+        public async void GetLatestMemberUploadListHandler_MemberUploadExistsForPcs_ReturnsMemberUpload()
         {
             var pcsId = Guid.NewGuid();
 
@@ -88,7 +88,7 @@
         }
 
         [Fact]
-        public async void MultipleMemberUploadsExistsForSameComplianceYear_ReturnsLatest()
+        public async void GetLatestMemberUploadListHandler_MultipleMemberUploadsExistsForSameComplianceYear_ReturnsLatest()
         {
             var pcsId = Guid.NewGuid();
 

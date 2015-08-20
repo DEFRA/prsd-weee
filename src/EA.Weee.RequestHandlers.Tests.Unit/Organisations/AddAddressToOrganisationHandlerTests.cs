@@ -23,7 +23,7 @@
         private readonly DbContextHelper dbHelper = new DbContextHelper();
 
         [Fact]
-        public async Task NotOrganisationUser_ThrowsSecurityException()
+        public async Task AddAddressToOrganisationHandler_NotOrganisationUser_ThrowsSecurityException()
         {
             var context = GetPreparedContext();
 
@@ -36,7 +36,7 @@
         }
 
         [Fact]
-        public async Task NoSuchOrganisation_ThrowsArgumentException()
+        public async Task AddAddressToOrganisationHandler_NoSuchOrganisation_ThrowsArgumentException()
         {
             var context = GetPreparedContext();
 
@@ -52,7 +52,7 @@
         }
 
         [Fact]
-        public async Task NoSuchCountry_ThrowsArgumentException()
+        public async Task AddAddressToOrganisationHandler_NoSuchCountry_ThrowsArgumentException()
         {
             var organisationId = Guid.NewGuid();
 
@@ -70,7 +70,7 @@
         }
 
         [Fact]
-        public async Task HappyPath_AddsAddressWithCorrectCountryName()
+        public async Task AddAddressToOrganisationHandler_HappyPath_AddsAddressWithCorrectCountryName()
         {
             var organisationId = Guid.NewGuid();
             var organisation = GetOrganisationWithId(organisationId);

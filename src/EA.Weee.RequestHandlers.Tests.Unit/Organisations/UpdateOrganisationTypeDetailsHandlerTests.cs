@@ -23,7 +23,7 @@
         private readonly OrganisationHelper orgHelper = new OrganisationHelper();
 
         [Fact]
-        public async Task NotOrganisationUser_ThrowsSecurityException()
+        public async Task UpdateOrganisationTypeDetailsHandler_NotOrganisationUser_ThrowsSecurityException()
         {
             var authorization = AuthorizationBuilder.CreateUserWithNoRights();
 
@@ -34,7 +34,7 @@
         }
 
         [Fact]
-        public async Task NoSuchOrganisation_ThrowsArgumentException()
+        public async Task UpdateOrganisationTypeDetailsHandler_NoSuchOrganisation_ThrowsArgumentException()
         {
             WeeeContext context = A.Fake<WeeeContext>();
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>()));

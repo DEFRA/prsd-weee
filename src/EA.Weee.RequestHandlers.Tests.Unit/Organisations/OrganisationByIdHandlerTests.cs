@@ -20,7 +20,7 @@
         private readonly DbContextHelper dbHelper = new DbContextHelper();
 
         [Fact]
-        public async Task NotOrganisationUser_ThrowsSecurityException()
+        public async Task OrganisationByIdHandler_NotOrganisationUser_ThrowsSecurityException()
         {
             var authorization = AuthorizationBuilder.CreateUserWithNoRights();
 
@@ -31,7 +31,7 @@
         }
 
         [Fact]
-        public async Task NoSuchOrganisation_ThrowsArgumentException()
+        public async Task OrganisationByIdHandler_NoSuchOrganisation_ThrowsArgumentException()
         {
             var authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
@@ -50,7 +50,7 @@
         }
 
         [Fact]
-        public async Task HappyPath_ReturnsOrganisationFromId()
+        public async Task OrganisationByIdHandler_HappyPath_ReturnsOrganisationFromId()
         {
             var authorization = AuthorizationBuilder.CreateUserWithAllRights();
 

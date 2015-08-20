@@ -9,21 +9,25 @@
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
+    using Security;
 
     internal class GetMemberUploadByIdHandler : IRequestHandler<GetMemberUploadById, MemberUploadData>
     {
+        private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
-
         private readonly IMap<MemberUpload, MemberUploadData> memberUploadMap;
 
-        public GetMemberUploadByIdHandler(WeeeContext context, IMap<MemberUpload, MemberUploadData> memberUploadMap)
+        public GetMemberUploadByIdHandler(IWeeeAuthorization authorization, WeeeContext context, IMap<MemberUpload, MemberUploadData> memberUploadMap)
         {
+            this.authorization = authorization;
             this.context = context;
             this.memberUploadMap = memberUploadMap;
         }
 
         public async Task<MemberUploadData> HandleAsync(GetMemberUploadById message)
         {
+            authorization.EnsureOrganisationAccess(message.MemberUploadId);
+
             var memberUpload = await context.MemberUploads.SingleOrDefaultAsync(m => m.Id == message.MemberUploadId);
 
             if (memberUpload == null)

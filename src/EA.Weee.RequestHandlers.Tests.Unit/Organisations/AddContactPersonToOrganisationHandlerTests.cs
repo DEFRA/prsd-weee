@@ -22,7 +22,7 @@
         private readonly IWeeeAuthorization denyingAuthorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
 
         [Fact]
-        public async Task NotOrganisationUser_ThrowsSecurityException()
+        public async Task AddContactPersonToOrganisationHandler_NotOrganisationUser_ThrowsSecurityException()
         {
             var handler = new AddContactPersonToOrganisationHandler(A.Fake<WeeeContext>(), denyingAuthorization);
             var message = new AddContactPersonToOrganisation(A<Guid>._, A<ContactData>._);
@@ -33,7 +33,7 @@
         }
 
         [Fact]
-        public async Task HappyPath_AddsContactPerson()
+        public async Task AddContactPersonToOrganisationHandler_HappyPath_AddsContactPerson()
         {
             var organisationId = Guid.NewGuid();
             var organisation = GetOrganisationWithId(organisationId);
