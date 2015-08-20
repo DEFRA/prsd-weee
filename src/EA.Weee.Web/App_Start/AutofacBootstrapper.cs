@@ -2,6 +2,7 @@
 {
     using Autofac;
     using Autofac.Integration.Mvc;
+    using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Modules;
     using Requests.Base;
@@ -38,6 +39,9 @@
             // Register caching
             builder.RegisterType<InMemoryCacheProvider>().As<ICacheProvider>();
             builder.RegisterType<WeeeCache>().As<IWeeeCache>();
+
+            // Breadcrumb
+            builder.RegisterType<BreadcrumbService>().InstancePerRequest();
 
             return builder.Build();
         }

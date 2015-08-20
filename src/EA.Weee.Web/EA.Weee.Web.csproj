@@ -621,6 +621,7 @@
     <Compile Include="Infrastructure\RouteCollectionExtensions.cs" />
     <Compile Include="Infrastructure\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
+    <Compile Include="Services\BreadcrumbService.cs" />
     <Compile Include="Services\Caching\Cache.cs" />
     <Compile Include="Services\Caching\CacheResult.cs" />
     <Compile Include="Services\Caching\ICacheProvider.cs" />
