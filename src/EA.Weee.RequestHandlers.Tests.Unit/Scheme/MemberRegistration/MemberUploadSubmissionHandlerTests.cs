@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.Scheme;
@@ -26,7 +27,18 @@
 
             A.CallTo(() => context.MemberUploads).Returns(memberUploadsDbSet);
 
-            return new MemberUploadSubmissionHandler(context);
+            return new MemberUploadSubmissionHandler(AuthorizationBuilder.CreateUserWithAllRights(), context);
+        }
+
+        [Fact]
+        public async Task MemberUploadSubmissionHandler_NotOrganisationUser_ThrowsSecurityException()
+        {
+            var denyingAuthorization = AuthorizationBuilder.CreateUserWithNoRights();
+
+            var handler = new MemberUploadSubmissionHandler(denyingAuthorization, A<WeeeContext>._);
+            var message = new MemberUploadSubmission(Guid.NewGuid(), Guid.NewGuid());
+
+            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
         }
 
         [Fact]
@@ -41,7 +53,27 @@
 
             await
                 Assert.ThrowsAsync<ArgumentNullException>(
-                    async () => await handler.HandleAsync(new MemberUploadSubmission(Guid.NewGuid())));
+                    async () => await handler.HandleAsync(new MemberUploadSubmission(Guid.NewGuid(), Guid.NewGuid())));
+        }
+
+        [Fact]
+        public async Task MemberUploadSubmissionHandler_MemberUploadNotOwnedByOrg_ThrowsArgumentException()
+        {
+            var memberUploads = new[]
+            {
+                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid())
+            };
+
+            var otherPcsId = Guid.NewGuid();
+
+            var handler = GetPreparedHandler(memberUploads);
+            var message = new MemberUploadSubmission(otherPcsId, memberUploads.First().Id);
+
+            var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));
+
+            Assert.True(exception.Message.ToUpperInvariant().Contains("MEMBER UPLOAD"));
+            Assert.True(exception.Message.Contains(otherPcsId.ToString()));
+            Assert.True(exception.Message.Contains(memberUploads.First().Id.ToString()));
         }
 
         [Fact]
@@ -54,7 +86,7 @@
 
             var handler = GetPreparedHandler(memberUploads);
 
-            var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(memberUploads.First().Id));
+            var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(pcsId, memberUploads.First().Id));
 
             Assert.NotNull(memberUploadId);
             Assert.Equal(memberUploadId, memberUploads.First().Id);
@@ -72,7 +104,7 @@
                 memberUpload
             });
 
-            var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(memberUpload.Id));
+            var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(pcsId, memberUpload.Id));
 
             Assert.NotNull(memberUploadId);
             Assert.Equal(memberUploadId, memberUpload.Id);

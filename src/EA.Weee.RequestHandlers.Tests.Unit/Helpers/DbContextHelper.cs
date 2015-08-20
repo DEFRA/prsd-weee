@@ -1,10 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Helpers
 {
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using FakeItEasy;
+    using Prsd.Core.Domain;
 
     public class DbContextHelper
     {
@@ -40,6 +42,12 @@
             A.CallTo(() => ((IQueryable<T>)dbSet).GetEnumerator()).Returns(queryable.GetEnumerator());
 
             return dbSet;
+        }
+
+        public T SetId<T>(T entity, Guid id) where T : Entity
+        {
+            typeof(Entity).GetProperty("Id").SetValue(entity, id);
+            return entity;
         }
     }
 }

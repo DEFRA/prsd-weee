@@ -2,10 +2,12 @@
 {
     using System;
     using System.Data.Entity;
+    using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain;
     using Domain.Organisation;
+    using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using Helpers;
     using Mappings;
@@ -15,19 +17,30 @@
 
     public class GetUsersByOrganisationIdHandlerTests
     {
+        private readonly WeeeContext context = A.Fake<WeeeContext>();
         private readonly DbContextHelper helper = new DbContextHelper();
+        private readonly IWeeeAuthorization permissiveAuthorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
+        private readonly IWeeeAuthorization denyingAuthorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
         private readonly Guid orgId = Guid.NewGuid();
+
+        [Fact]
+        public async void NotOrganisationUser_ThrowsSecurityException()
+        {
+            var handler = new GetUsersByOrganisationIdHandler(context, denyingAuthorization, new OrganisationUserMap(new OrganisationMap(new AddressMap(), new ContactMap()), new UserMap()));
+
+            await
+                Assert.ThrowsAsync<SecurityException>(
+                    async () => await handler.HandleAsync(new GetUsersByOrganisationId(Guid.NewGuid())));
+        }
 
         [Fact]
         public async Task GetUsersByOrganisationIdHandler_ApprovalNumberNotExists_ReturnsFalse()
         {
             var orgUsers = MakeOrganisationUsers();
 
-            var context = A.Fake<WeeeContext>();
-
             A.CallTo(() => context.OrganisationUsers).Returns(orgUsers);
 
-            var handler = new GetUsersByOrganisationIdHandler(context, new OrganisationUserMap(new OrganisationMap(new AddressMap(), new ContactMap()), new UserMap()));
+            var handler = new GetUsersByOrganisationIdHandler(context, permissiveAuthorization, new OrganisationUserMap(new OrganisationMap(new AddressMap(), new ContactMap()), new UserMap()));
 
             var organisationUsers = await handler.HandleAsync(new GetUsersByOrganisationId(orgId));
 

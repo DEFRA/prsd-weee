@@ -67,10 +67,14 @@
   <ItemGroup>
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Helpers\AuthorizationBuilder.cs" />
+    <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
+    <Compile Include="Organisations\AddContactPersonToOrganisationHandlerTests.cs" />
+    <Compile Include="Organisations\CompleteRegistrationHandlerTests.cs" />
     <Compile Include="Organisations\Create\CreateOrganisationRequestHandlerTestsBase.cs" />
     <Compile Include="Organisations\Create\CreatePartnershipRequestHandlerTests.cs" />
     <Compile Include="Organisations\Create\CreateRegisteredCompanyRequestHandlerTests.cs" />
     <Compile Include="Organisations\Create\CreateSoleTraderRequestHandlerTests.cs" />
+    <Compile Include="Organisations\OrganisationByIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemesHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateFromXmlTests.cs" />
@@ -102,7 +106,7 @@
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadDataHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidatorTests.cs" />
-    <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandlerTest.cs" />
+    <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandlerTests.cs" />
     <Compile Include="Organisations\FindMatchingCompaniesHandlerTests.cs" />
     <Compile Include="Organisations\JoinOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandlerTests.cs" />
