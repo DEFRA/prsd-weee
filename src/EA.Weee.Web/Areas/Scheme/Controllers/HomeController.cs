@@ -110,7 +110,7 @@
                     orgUsers.Select(
                         ou =>
                             new KeyValuePair<string, Guid>(
-                                ou.User.FirstName + " " + ou.User.Surname + " - (" +
+                                ou.User.FirstName + " " + ou.User.Surname + " (" +
                                 ou.UserStatus.ToString() + ")", new Guid(ou.UserId)));
 
                 var orgUserRadioButtons = new StringGuidRadioButtons(orgUsersKeyValuePairs);
