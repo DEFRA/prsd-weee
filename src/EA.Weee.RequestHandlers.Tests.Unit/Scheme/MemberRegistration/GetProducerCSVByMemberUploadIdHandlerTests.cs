@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
@@ -27,6 +28,20 @@
             A.CallTo(() => context.MemberUploads).Returns(memberUploadsDbSet);
 
             return new GetProducerCSVByMemberUploadIdHandler(AuthorizationBuilder.CreateUserWithAllRights(), context);
+        }
+
+        [Fact]
+        public async Task GetProducerCSVByMemberUploadIdHandler_MemberUploadNotOwnedByOrg_ThrowsArgumentException()
+        {
+            var memberUploads = new[]
+            {
+                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid())
+            };
+            var handler = GetPreparedHandler(memberUploads);
+
+            var message = new GetProducerCSVByMemberUploadId(Guid.NewGuid(), memberUploads.First().Id);
+
+            await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));
         }
 
         [Fact]

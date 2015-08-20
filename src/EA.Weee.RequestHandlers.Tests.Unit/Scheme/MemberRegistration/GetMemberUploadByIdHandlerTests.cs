@@ -58,6 +58,26 @@
         }
 
         [Fact]
+        public async Task GetMemberUploadByIdHandler_MemberUploadNotOwnedByOrganisation_ThrowsArgumentException()
+        {
+            var memberUploads = new[]
+            {
+                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid())
+            };
+
+            var otherPcsId = Guid.NewGuid();
+
+            var handler = GetPreparedHandler(memberUploads);
+            var message = new GetMemberUploadById(otherPcsId, memberUploads.First().Id);
+
+            var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));
+
+            Assert.True(exception.Message.ToUpperInvariant().Contains("MEMBER UPLOAD"));
+            Assert.True(exception.Message.Contains(otherPcsId.ToString()));
+            Assert.True(exception.Message.Contains(memberUploads.First().Id.ToString()));
+        }
+
+        [Fact]
         public async Task GetMemberUploadByIdHandler_ValidMemberUploadId_ReturnsMemberUpload()
         {
             var memberUploads = new[]
@@ -67,7 +87,7 @@
 
             var handler = GetPreparedHandler(memberUploads);
 
-            var memberUpload = await handler.HandleAsync(new GetMemberUploadById(Guid.NewGuid(), memberUploads.First().Id));
+            var memberUpload = await handler.HandleAsync(new GetMemberUploadById(pcsId, memberUploads.First().Id));
 
             Assert.NotNull(memberUpload);
         }

@@ -57,6 +57,26 @@
         }
 
         [Fact]
+        public async Task MemberUploadSubmissionHandler_MemberUploadNotOwnedByOrg_ThrowsArgumentException()
+        {
+            var memberUploads = new[]
+            {
+                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid())
+            };
+
+            var otherPcsId = Guid.NewGuid();
+
+            var handler = GetPreparedHandler(memberUploads);
+            var message = new MemberUploadSubmission(otherPcsId, memberUploads.First().Id);
+
+            var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));
+
+            Assert.True(exception.Message.ToUpperInvariant().Contains("MEMBER UPLOAD"));
+            Assert.True(exception.Message.Contains(otherPcsId.ToString()));
+            Assert.True(exception.Message.Contains(memberUploads.First().Id.ToString()));
+        }
+
+        [Fact]
         public async Task MemberUploadSubmissionHandler_ValidMemberUploadId_ReturnsSubmittedMemberUploadId()
         {
             var memberUploads = new[]
@@ -66,7 +86,7 @@
 
             var handler = GetPreparedHandler(memberUploads);
 
-            var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(Guid.NewGuid(), memberUploads.First().Id));
+            var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(pcsId, memberUploads.First().Id));
 
             Assert.NotNull(memberUploadId);
             Assert.Equal(memberUploadId, memberUploads.First().Id);
@@ -84,7 +104,7 @@
                 memberUpload
             });
 
-            var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(Guid.NewGuid(), memberUpload.Id));
+            var memberUploadId = await handler.HandleAsync(new MemberUploadSubmission(pcsId, memberUpload.Id));
 
             Assert.NotNull(memberUploadId);
             Assert.Equal(memberUploadId, memberUpload.Id);
