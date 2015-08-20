@@ -7,26 +7,30 @@
     using Core.Organisations;
     using DataAccess;
     using Domain.Organisation;
+    using Prsd.Core.Domain;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
 
-    internal class GetOrganisationsByUserIdHandler :
-        IRequestHandler<GetOrganisationsByUserId, List<OrganisationUserData>>
+    internal class GetUserOrganisationsByStatusHandler :
+        IRequestHandler<GetUserOrganisationsByStatus, List<OrganisationUserData>>
     {
         private readonly WeeeContext context;
+        private readonly IUserContext userContext;
         private readonly IMap<OrganisationUser, OrganisationUserData> organisationUserMap;
 
-        public GetOrganisationsByUserIdHandler(WeeeContext context,
+        public GetUserOrganisationsByStatusHandler(WeeeContext context, IUserContext userContext,
             IMap<OrganisationUser, OrganisationUserData> organisationUserMap)
         {
             this.context = context;
+            this.userContext = userContext;
             this.organisationUserMap = organisationUserMap;
         }
 
-        public async Task<List<OrganisationUserData>> HandleAsync(GetOrganisationsByUserId query)
+        public async Task<List<OrganisationUserData>> HandleAsync(GetUserOrganisationsByStatus query)
         {
             var organisationUsers = new List<OrganisationUser>();
+            string userId = userContext.UserId.ToString();
 
             if (query.OrganisationUserStatus.Length > 0)
             {
@@ -34,7 +38,7 @@
                     await
                         context.OrganisationUsers.Where(
                             ou =>
-                                query.OrganisationUserStatus.Contains(ou.UserStatus.Value) && ou.UserId == query.UserId)
+                                query.OrganisationUserStatus.Contains(ou.UserStatus.Value) && ou.UserId == userId)
                             .ToListAsync();
             }
             else
@@ -42,7 +46,7 @@
                 organisationUsers =
                     await
                         context.OrganisationUsers.Where(
-                            ou => ou.UserId == query.UserId)
+                            ou => ou.UserId == userId)
                             .ToListAsync();
             }
 
