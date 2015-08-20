@@ -34,7 +34,7 @@
 
         [StringLength(10)]
         [DataType(DataType.Text)]
-        [Display(Name = "IBIS customer reference")]
+        [Display(Name = "Billing reference")]
         public string IbisCustomerReference { get; set; }
 
         [Required(ErrorMessage = "Obligation type is required.")]
