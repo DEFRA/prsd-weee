@@ -6,10 +6,12 @@
 
     public class GetProducerCSVByMemberUploadId : IRequest<ProducerCSVFileData>
     {
+        public Guid OrganisationId { get; private set; }
         public Guid MemberUploadId { get; private set; }
 
-        public GetProducerCSVByMemberUploadId(Guid memberUploadId)
+        public GetProducerCSVByMemberUploadId(Guid organisationId, Guid memberUploadId)
         {
+            OrganisationId = organisationId;
             MemberUploadId = memberUploadId;
         }
     }

@@ -143,7 +143,7 @@
             using (var client = apiClient())
             {
                 var producerCSVData = await client.SendAsync(User.GetAccessToken(),
-                    new GetProducerCSVByMemberUploadId(memberUploadId));
+                    new GetProducerCSVByMemberUploadId(pcsId, memberUploadId));
 
                 return File(new UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", producerCSVData.FileName);
             }

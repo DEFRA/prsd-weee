@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.Scheme;
@@ -25,7 +26,18 @@
 
             A.CallTo(() => context.MemberUploads).Returns(memberUploadsDbSet);
 
-            return new GetProducerCSVByMemberUploadIdHandler(context);
+            return new GetProducerCSVByMemberUploadIdHandler(AuthorizationBuilder.CreateUserWithAllRights(), context);
+        }
+
+        [Fact]
+        public async Task GetProducerCSVByMemberUploadIdHandler_NotOrganisationUser_ThrowsSecurityException()
+        {
+            var denyingAuthorization = AuthorizationBuilder.CreateUserWithNoRights();
+
+            var handler = new GetProducerCSVByMemberUploadIdHandler(denyingAuthorization, A<WeeeContext>._);
+            var message = new GetProducerCSVByMemberUploadId(Guid.NewGuid(), Guid.NewGuid());
+
+            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
         }
 
         [Fact]
@@ -40,7 +52,7 @@
 
             await
                 Assert.ThrowsAsync<ArgumentException>(
-                    async () => await handler.HandleAsync(new GetProducerCSVByMemberUploadId(Guid.NewGuid())));
+                    async () => await handler.HandleAsync(new GetProducerCSVByMemberUploadId(Guid.NewGuid(), Guid.NewGuid())));
         }
     }
 }
