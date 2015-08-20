@@ -4,11 +4,13 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain;
     using Domain.Producer;
     using Domain.Scheme;
+    using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using Helpers;
     using Prsd.Core;
@@ -19,6 +21,8 @@
 
     public class ProcessXMLFileHandlerTests
     {
+        private readonly IWeeeAuthorization permissiveAuthorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
+        private readonly IWeeeAuthorization denyingAuthorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
         private readonly DbContextHelper helper = new DbContextHelper();
         private readonly ProcessXMLFileHandler handler;
         private readonly IGenerateFromXml generator;
@@ -52,7 +56,17 @@
             generator = A.Fake<IGenerateFromXml>();
             xmlValidator = A.Fake<IXmlValidator>();
             xmlChargeBandCalculator = A.Fake<IXmlChargeBandCalculator>();
-            handler = new ProcessXMLFileHandler(context, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator);
+            handler = new ProcessXMLFileHandler(context, permissiveAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator);
+        }
+
+        [Fact]
+        public async void NotOrganisationUser_ThrowsSecurityException()
+        {
+            var authorisationDeniedHandler = new ProcessXMLFileHandler(context, denyingAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator);
+
+            await
+                Assert.ThrowsAsync<SecurityException>(
+                    async () => await authorisationDeniedHandler.HandleAsync(Message));
         }
 
         [Fact]
