@@ -156,7 +156,7 @@
                         User.GetAccessToken(),
                         new GetOrganisationsByUserId(User.GetUserId(),
                             new[] { (int)UserStatus.Approved }, 
-                            new int[] { (int)OrganisationStatus.Pending })); // OrganisationStatus.Pending represents a "Complete" organisation
+                            new int[] { (int)OrganisationStatus.Complete }));
 
                 var inactiveOrganisationUsers = await
                     client.SendAsync(
