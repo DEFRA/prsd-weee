@@ -44,7 +44,7 @@
             return dbSet;
         }
 
-        public Entity SetId(Entity entity, Guid id)
+        public T SetId<T>(T entity, Guid id) where T : Entity
         {
             typeof(Entity).GetProperty("Id").SetValue(entity, id);
             return entity;
