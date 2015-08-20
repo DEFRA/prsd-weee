@@ -3,12 +3,19 @@
     using System;
     using System.Data.Entity;
     using DataAccess;
+    using Domain;
     using Domain.Organisation;
     using FakeItEasy;
+    using Helpers;
     using Prsd.Core.Domain;
+    using RequestHandlers.Security;
+    using Xunit;
 
     public class CreateOrganisationRequestHandlerTestsBase
     {
+        protected IWeeeAuthorization permissiveAuthorization = new AuthorizationBuilder().AllowExternalAreaAccess().Build();
+        protected IWeeeAuthorization denyingAuthorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
+
         protected Organisation addedOrganisation;
         protected Guid addedOrganisationId;
         protected OrganisationUser addedOrganisationUser;
@@ -32,6 +39,24 @@
             A.CallTo(() => context.OrganisationUsers).Returns(organisationUsers);
 
             return context;
+        }
+
+        protected IUserContext GetPreparedUserContext()
+        {
+            var userId = Guid.NewGuid();
+            var userContext = A.Fake<IUserContext>();
+            A.CallTo(() => userContext.UserId).Returns(userId);
+            return userContext;
+        }
+
+        protected void DoSharedAssertions(string tradingName)
+        {
+            Assert.NotNull(addedOrganisation);
+            Assert.NotNull(addedOrganisationUser);
+            Assert.NotEqual(Guid.Empty, addedOrganisationId);
+            Assert.Equal(tradingName, addedOrganisation.TradingName);
+            Assert.Equal(addedOrganisationId, addedOrganisationUser.OrganisationId);
+            Assert.Equal(UserStatus.Approved, addedOrganisationUser.UserStatus);
         }
 
         private void AddId(Entity entity, Guid id)
