@@ -3,14 +3,18 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Core.Helpers;
     using Core.Scheme;
     using DataAccess;
     using Domain.Scheme;
     using FakeItEasy;
     using Helpers;
+    using Mappings;
     using Prsd.Core.Mapper;
     using RequestHandlers.Scheme.MemberRegistration;
+    using RequestHandlers.Security;
     using Requests.Scheme.MemberRegistration;
     using Xunit;
 
@@ -19,6 +23,8 @@
         private readonly WeeeContext weeeContext;
         private readonly DbContextHelper weeeContextHelper;
         private readonly IMap<IEnumerable<MemberUpload>, LatestMemberUploadList> mapper;
+
+        private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserWithAllRights();
 
         private long memberUploadRowVersion;
 
@@ -32,7 +38,18 @@
         }
 
         [Fact]
-        public async void MemberUploadDoesNotExistForPcs_ReturnsEmptyListOfMemberUploadSummaries()
+        public async Task GetLatestMemberUploadListHandler_NotOrganisationUser_ThrowsSecurityException()
+        {
+            var denyingAuthorization = AuthorizationBuilder.CreateUserWithNoRights();
+
+            var handler = new GetLatestMemberUploadListHandler(denyingAuthorization, A<WeeeContext>._, A<LatestMemberUploadListMap>._);
+            var message = new GetLatestMemberUploadList(Guid.NewGuid());
+
+            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
+        }
+
+        [Fact]
+        public async void GetLatestMemberUploadListHandler_MemberUploadDoesNotExistForPcs_ReturnsEmptyListOfMemberUploadSummaries()
         {
             var pcsId = Guid.NewGuid();
 
@@ -50,7 +67,7 @@
         }
 
         [Fact]
-        public async void MemberUploadExistsForPcs_ReturnsMemberUpload()
+        public async void GetLatestMemberUploadListHandler_MemberUploadExistsForPcs_ReturnsMemberUpload()
         {
             var pcsId = Guid.NewGuid();
 
@@ -71,7 +88,7 @@
         }
 
         [Fact]
-        public async void MultipleMemberUploadsExistsForSameComplianceYear_ReturnsLatest()
+        public async void GetLatestMemberUploadListHandler_MultipleMemberUploadsExistsForSameComplianceYear_ReturnsLatest()
         {
             var pcsId = Guid.NewGuid();
 
@@ -95,7 +112,7 @@
 
         private GetLatestMemberUploadListHandler GetLatestMemberUploadSummaryHandler()
         {
-            return new GetLatestMemberUploadListHandler(weeeContext, mapper);
+            return new GetLatestMemberUploadListHandler(permissiveAuthorization, weeeContext, mapper);
         }
 
         private MemberUpload ValidMemberUpload(Guid pcsId)

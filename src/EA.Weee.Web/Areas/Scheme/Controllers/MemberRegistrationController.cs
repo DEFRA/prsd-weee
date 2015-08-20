@@ -103,7 +103,7 @@
                 var errors =
                     await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId));
 
-                var memberUpload = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadById(memberUploadId));
+                var memberUpload = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadById(pcsId, memberUploadId));
 
                 if (errors.Any(e => e.ErrorLevel == ErrorLevel.Error))
                 {
@@ -124,7 +124,7 @@
             {
                 // TODO: insert request including check against submitting a member upload with errors or different PCS here...
 
-                await client.SendAsync(User.GetAccessToken(), new MemberUploadSubmission(viewModel.MemberUploadId));
+                await client.SendAsync(User.GetAccessToken(), new MemberUploadSubmission(pcsId, viewModel.MemberUploadId));
 
                 return RedirectToAction("SuccessfulSubmission", new { pcsId = pcsId, memberUploadId = viewModel.MemberUploadId });
             }
@@ -143,7 +143,7 @@
             using (var client = apiClient())
             {
                 var producerCSVData = await client.SendAsync(User.GetAccessToken(),
-                    new GetProducerCSVByMemberUploadId(memberUploadId));
+                    new GetProducerCSVByMemberUploadId(pcsId, memberUploadId));
 
                 return File(new UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", producerCSVData.FileName);
             }

@@ -3,13 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain;
     using Domain.Scheme;
     using FakeItEasy;
     using Helpers;
-    using RequestHandlers.Mappings;
+    using Mappings;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
     using Xunit;
@@ -19,6 +20,17 @@
         private readonly DbContextHelper helper = new DbContextHelper();
 
         private readonly Guid pcsId = Guid.NewGuid();
+
+        [Fact]
+        public async Task GetMemberUploadDataHandler_NotOrganisationUser_ThrowsSecurityException()
+        {
+            var denyingAuthorization = AuthorizationBuilder.CreateUserWithNoRights();
+
+            var handler = new GetMemberUploadDataHandler(denyingAuthorization, A<WeeeContext>._, A<MemberUploadErrorMap>._);
+            var message = new GetMemberUploadData(Guid.NewGuid(), Guid.NewGuid());
+
+            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
+        }
 
         [Fact]
         public async Task GetMemberUploadDataHandler_WithSeveralErrors_MappedCorrectly()
@@ -95,7 +107,7 @@
 
             A.CallTo(() => context.MemberUploads).Returns(memberUploadsDbSet);
 
-            return new GetMemberUploadDataHandler(context, new MemberUploadErrorMap());
+            return new GetMemberUploadDataHandler(AuthorizationBuilder.CreateUserWithAllRights(), context, new MemberUploadErrorMap());
         }
     }
 }

@@ -1,13 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
 {
+    using System;
     using System.Data.Entity;
     using System.Linq;
+    using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.Organisation;
     using FakeItEasy;
     using Helpers;
-    using RequestHandlers.Mappings;
+    using Mappings;
     using RequestHandlers.Organisations;
     using Requests.Organisations;
     using Xunit;
@@ -16,6 +18,19 @@
     {
         private readonly DbContextHelper helper = new DbContextHelper();
         private readonly OrganisationHelper orgHelper = new OrganisationHelper();
+
+        [Fact]
+        public async Task GetContactPersonByOrganisationIdHandler_NotOrganisationUser_ThrowsSecurityException()
+        {
+            var authorization = AuthorizationBuilder.CreateUserWithNoRights();
+
+            var handler = new GetContactPersonByOrganisationIdHandler(authorization, A<WeeeContext>._, new ContactMap());
+            var message = new GetContactPersonByOrganisationId(Guid.NewGuid());
+
+            await
+                Assert.ThrowsAsync<SecurityException>(
+                    async () => await handler.HandleAsync(message));
+        }
 
         [Fact]
         public async Task GetContactPersonByOrganisationIdHandler_RequestContactPerson_ReturnsContactPerson()
@@ -27,7 +42,9 @@
 
             A.CallTo(() => context.Organisations).Returns(organisations);
 
-            var handler = new GetContactPersonByOrganisationIdHandler(context, contactMapper);
+            var authorization = AuthorizationBuilder.CreateUserWithAllRights();
+
+            var handler = new GetContactPersonByOrganisationIdHandler(authorization, context, contactMapper);
 
             var contactPerson =
                 await handler.HandleAsync(new GetContactPersonByOrganisationId(organisations.FirstOrDefault().Id));
