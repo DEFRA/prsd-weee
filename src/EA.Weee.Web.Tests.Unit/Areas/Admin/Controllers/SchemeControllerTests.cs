@@ -1,13 +1,15 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Core.Scheme;
     using Core.Shared;
+    using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using Prsd.Core.Mediator;
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.Shared;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels;
@@ -263,7 +265,7 @@
 
         private SchemeController SchemeController()
         {
-            return new SchemeController(() => weeeClient);
+            return new SchemeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
         }
     }
 }
