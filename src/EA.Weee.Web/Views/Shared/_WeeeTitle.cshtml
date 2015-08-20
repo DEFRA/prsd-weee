@@ -2,14 +2,31 @@
     bool showBreadcrumb = (ViewBag.BreadcrumbInternalActivity != null) || (ViewBag.BreadcrumbExternalActivity != null);
     bool showIdentity = User.Identity.IsAuthenticated;
     bool showTitle = showBreadcrumb || showIdentity;
+
+    int columnCount = (showBreadcrumb ? 1 : 0) + (showIdentity ? 1 : 0);
+    
+    string columnClass;
+    switch (columnCount)
+    {
+        default:
+        case 0:
+        case 1:
+            columnClass = "column-whole";
+            break;
+            
+        case 2:
+            columnClass = "column-half";
+            break;
+    }
 }
 
 @if (showTitle)
 {
 <div class="grid-row">
-    <div class="column-half">
-        @if (showBreadcrumb)
-        {
+
+    @if (showBreadcrumb)
+    {
+    <div class="@columnClass">
         <div class="breadcrumb-title-display font-xsmall">
             <ul>
                 @if (ViewBag.BreadcrumbInternalActivity != null)
@@ -34,11 +51,12 @@
                 }
             </ul>
         </div>
-        }
     </div>
-    <div class="column-half">
-        @if (showIdentity)
-        {
+    }
+    
+    @if (showIdentity)
+    {
+    <div class="@columnClass">
         <div class="username-title-display font-xsmall">
             <ul>
                 <li>
@@ -53,8 +71,9 @@
                 </li>
             </ul>
         </div>
-        }
     </div>
+    }
+    
 </div>
 
 <div class="account-link-banner"></div>
