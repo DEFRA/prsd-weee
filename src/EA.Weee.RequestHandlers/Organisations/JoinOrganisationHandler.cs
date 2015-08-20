@@ -8,21 +8,25 @@
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
+    using Security;
 
     internal class JoinOrganisationHandler : IRequestHandler<JoinOrganisation, Guid>
     {
+        private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
-
         private readonly IUserContext userContext;
 
-        public JoinOrganisationHandler(WeeeContext context, IUserContext userContext)
+        public JoinOrganisationHandler(IWeeeAuthorization authorization, WeeeContext context, IUserContext userContext)
         {
+            this.authorization = authorization;
             this.context = context;
             this.userContext = userContext;
         }
 
         public async Task<Guid> HandleAsync(JoinOrganisation message)
         {
+            authorization.EnsureCanAccessExternalArea();
+
             var userId = userContext.UserId;
 
             if (await context.Users.FirstOrDefaultAsync(u => u.Id == userId.ToString()) == null)
