@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.ViewModels.NewUser
 {
     using System.ComponentModel.DataAnnotations;
+    using Prsd.Core.Validation;
 
     public class UserCreationViewModel
     {
@@ -32,5 +33,8 @@
         [Display(Name = "Re-type password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [MustBeTrue(ErrorMessage = "Please confirm that you have read the terms and conditions")]
+        public bool TermsAndConditions { get; set; }
     }
 }
