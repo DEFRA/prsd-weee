@@ -22,7 +22,7 @@
         [Fact]
         public async Task OrganisationByIdHandler_NotOrganisationUser_ThrowsSecurityException()
         {
-            var authorization = AuthorizationBuilder.CreateUserWithNoRights();
+            var authorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
             var handler = new OrganisationByIdHandler(authorization, A<WeeeContext>._, A<OrganisationMap>._);
             var message = new GetOrganisationInfo(Guid.NewGuid());
@@ -33,7 +33,7 @@
         [Fact]
         public async Task OrganisationByIdHandler_NoSuchOrganisation_ThrowsArgumentException()
         {
-            var authorization = AuthorizationBuilder.CreateUserWithAllRights();
+            var authorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
 
             var organisationId = Guid.NewGuid();
             var context = A.Fake<WeeeContext>();
@@ -52,7 +52,7 @@
         [Fact]
         public async Task OrganisationByIdHandler_HappyPath_ReturnsOrganisationFromId()
         {
-            var authorization = AuthorizationBuilder.CreateUserWithAllRights();
+            var authorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
 
             var organisationId = Guid.NewGuid();
             var context = A.Fake<WeeeContext>();

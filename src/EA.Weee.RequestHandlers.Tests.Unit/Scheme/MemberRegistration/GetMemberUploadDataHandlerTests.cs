@@ -24,7 +24,7 @@
         [Fact]
         public async Task GetMemberUploadDataHandler_NotOrganisationUser_ThrowsSecurityException()
         {
-            var denyingAuthorization = AuthorizationBuilder.CreateUserWithNoRights();
+            var denyingAuthorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
             var handler = new GetMemberUploadDataHandler(denyingAuthorization, A<WeeeContext>._, A<MemberUploadErrorMap>._);
             var message = new GetMemberUploadData(Guid.NewGuid(), Guid.NewGuid());
@@ -107,7 +107,7 @@
 
             A.CallTo(() => context.MemberUploads).Returns(memberUploadsDbSet);
 
-            return new GetMemberUploadDataHandler(AuthorizationBuilder.CreateUserWithAllRights(), context, new MemberUploadErrorMap());
+            return new GetMemberUploadDataHandler(AuthorizationBuilder.CreateUserAllowedToAccessOrganisation(), context, new MemberUploadErrorMap());
         }
     }
 }

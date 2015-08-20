@@ -3,15 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Security;
-    using System.Threading;
     using DataAccess;
     using Domain.Scheme;
-    using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using Helpers;
-    using Mappings;
     using Prsd.Core.Mapper;
     using RequestHandlers.Scheme;
+    using RequestHandlers.Security;
     using Requests.Scheme;
     using Xunit;
     using SchemeStatus = Core.Shared.SchemeStatus;
@@ -20,8 +18,13 @@
     {
         private readonly DbContextHelper contextHelper;
         private readonly WeeeContext context;
-        private readonly IWeeeAuthorization permissiveAuthorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();
-        private readonly IWeeeAuthorization denyingAuthorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+
+        private readonly IWeeeAuthorization permissiveAuthorization =
+            AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
+
+        private readonly IWeeeAuthorization denyingAuthorization =
+            AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
+
         private readonly IMap<Domain.Scheme.SchemeStatus, SchemeStatus> mapper;
 
         public GetSchemeStatusHandlerTests()
