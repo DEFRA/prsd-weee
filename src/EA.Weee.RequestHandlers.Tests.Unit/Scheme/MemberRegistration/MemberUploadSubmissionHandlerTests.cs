@@ -27,13 +27,13 @@
 
             A.CallTo(() => context.MemberUploads).Returns(memberUploadsDbSet);
 
-            return new MemberUploadSubmissionHandler(AuthorizationBuilder.CreateUserWithAllRights(), context);
+            return new MemberUploadSubmissionHandler(AuthorizationBuilder.CreateUserAllowedToAccessOrganisation(), context);
         }
 
         [Fact]
         public async Task MemberUploadSubmissionHandler_NotOrganisationUser_ThrowsSecurityException()
         {
-            var denyingAuthorization = AuthorizationBuilder.CreateUserWithNoRights();
+            var denyingAuthorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
             var handler = new MemberUploadSubmissionHandler(denyingAuthorization, A<WeeeContext>._);
             var message = new MemberUploadSubmission(Guid.NewGuid(), Guid.NewGuid());

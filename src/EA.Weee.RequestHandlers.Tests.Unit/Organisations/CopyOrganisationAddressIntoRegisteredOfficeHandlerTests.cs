@@ -21,10 +21,10 @@
         private readonly OrganisationHelper orgHelper = new OrganisationHelper();
 
         private readonly IWeeeAuthorization permissiveAuthorization =
-            new AuthorizationBuilder().AllowOrganisationAccess().Build();
+            AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
 
         private readonly IWeeeAuthorization denyingAuthorization =
-            new AuthorizationBuilder().DenyOrganisationAccess().Build();
+            AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
         [Fact]
         public async Task CopyOrganisationAddressIntoRegisteredOfficeHandler_NotOrganisationUser_ThrowsSecurityException()

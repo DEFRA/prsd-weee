@@ -25,7 +25,7 @@
         [Fact]
         public async Task UpdateOrganisationTypeDetailsHandler_NotOrganisationUser_ThrowsSecurityException()
         {
-            var authorization = AuthorizationBuilder.CreateUserWithNoRights();
+            var authorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
             var handler = new UpdateOrganisationTypeDetailsHandler(A<WeeeContext>._, authorization);
             var message = new UpdateOrganisationTypeDetails(Guid.NewGuid(), OrganisationType.RegisteredCompany, A<string>._, A<string>._, A<string>._);
@@ -39,7 +39,7 @@
             WeeeContext context = A.Fake<WeeeContext>();
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>()));
 
-            var authorization = AuthorizationBuilder.CreateUserWithAllRights();
+            var authorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
 
             var handler = new UpdateOrganisationTypeDetailsHandler(context, authorization);
             var message = new UpdateOrganisationTypeDetails(Guid.NewGuid(), OrganisationType.RegisteredCompany, A<string>._, A<string>._, A<string>._);
@@ -60,9 +60,7 @@
 
             A.CallTo(() => context.Organisations).Returns(organisations);
 
-            IWeeeAuthorization authorization = new AuthorizationBuilder()
-                .AllowOrganisationAccess()
-                .Build();
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
 
             var handler = new UpdateOrganisationTypeDetailsHandler(context, authorization);
 

@@ -19,12 +19,12 @@
         private readonly DbContextHelper helper = new DbContextHelper();
         private readonly OrganisationHelper orgHelper = new OrganisationHelper();
 
-        private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserWithAllRights();
+        private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
 
         [Fact]
         public async Task VerifyOrganisationExistsAndIncompleteHandler_NotOrganisationUser_ThrowsSecurityException()
         {
-            var authorization = AuthorizationBuilder.CreateUserWithNoRights();
+            var authorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
             var handler = new VerifyOrganisationExistsAndIncompleteHandler(authorization, A<WeeeContext>._);
             var message = new VerifyOrganisationExistsAndIncomplete(Guid.NewGuid());
