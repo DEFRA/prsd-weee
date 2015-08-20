@@ -103,7 +103,7 @@
                 var errors =
                     await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId));
 
-                var memberUpload = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadById(memberUploadId));
+                var memberUpload = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadById(pcsId, memberUploadId));
 
                 if (errors.Any(e => e.ErrorLevel == ErrorLevel.Error))
                 {
