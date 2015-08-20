@@ -80,6 +80,20 @@
         }
 
         [Fact]
+        public async Task NewUser_TermsAndConditionsNotChecked_ValidationError()
+        {
+            var userCreationViewModel = GetValidUserCreationViewModel();
+
+            userCreationViewModel.TermsAndConditions = false;
+
+            var newUserController = GetMockNewUserController(userCreationViewModel);
+
+            var result = await newUserController.UserCreation(userCreationViewModel) as ViewResult;
+
+            Assert.False(result.ViewData.ModelState.IsValid);
+        }
+
+        [Fact]
         public async Task HttpPost_NewUser_IsValid_OnlyClaimShouldBeExternalAccess()
         {
             var userCreationViewModel = GetValidUserCreationViewModel();
@@ -138,6 +152,7 @@
                 ConfirmPassword = validPassword,
                 Name = validName,
                 Surname = validSurname,
+                TermsAndConditions = true
             };
 
             return validuserCreationViewModel;

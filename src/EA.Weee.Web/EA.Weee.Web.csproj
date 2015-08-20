@@ -550,6 +550,7 @@
     <Content Include="Views\Errors\AccessDenied.cshtml" />
     <Content Include="Views\Errors\Error.cshtml" />
     <Content Include="Views\Shared\_WeeeTitle.cshtml" />
+    <Content Include="Views\NewUser\TermsAndConditions.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

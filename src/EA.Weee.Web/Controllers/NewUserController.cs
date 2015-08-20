@@ -165,6 +165,13 @@
             return View(model);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult TermsAndConditions()
+        {
+            return View();
+        }
+
         public async Task<bool> SendEmail(string email, string password, IWeeeClient client, string userId)
         {
             var signInResponse = await oauthClient().GetAccessTokenAsync(email, password);
