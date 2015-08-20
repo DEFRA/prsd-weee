@@ -151,33 +151,33 @@
         {
             using (var client = apiClient())
             {
-                var approvedOrganisationUsers = await
+                var accessibleOrganisations = await
                     client.SendAsync(
                         User.GetAccessToken(),
-                        new GetOrganisationsByUserId(User.GetUserId(),
+                        new GetUserOrganisationsByStatus(
                             new[] { (int)UserStatus.Approved }, 
                             new int[] { (int)OrganisationStatus.Complete }));
 
-                var inactiveOrganisationUsers = await
+                var inaccessibleOrganisations = await
                     client.SendAsync(
                         User.GetAccessToken(),
-                        new GetOrganisationsByUserId(User.GetUserId(),
+                        new GetUserOrganisationsByStatus(
                             new[]
                             {
                                 (int)UserStatus.Pending, (int)UserStatus.Refused,
                                 (int)UserStatus.Inactive
                             }));
 
-                if (approvedOrganisationUsers.Count >= 1)
+                if (accessibleOrganisations.Count >= 1)
                 {
                     return RedirectToAction("ChooseActivity", "Home",
                         new
                         {
                             area = "Scheme",
-                            pcsId = approvedOrganisationUsers.First().OrganisationId,
+                            pcsId = accessibleOrganisations.First().OrganisationId,
                         });
                 }
-                else if (inactiveOrganisationUsers.Count >= 1)
+                else if (inaccessibleOrganisations.Count >= 1)
                 {
                     return RedirectToAction("HoldingMessageForPending", "Organisation");
                 }
