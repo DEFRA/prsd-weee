@@ -12,10 +12,5 @@
         {
             Id = id;
         }
-
-        public UserById(Guid id)
-        {
-            Id = id.ToString();
-        }
     }
 }
