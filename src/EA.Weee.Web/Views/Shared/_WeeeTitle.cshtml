@@ -43,6 +43,13 @@
                 </li>
                 }
 
+                @if (ViewBag.BreadcrumbUser != null)
+                {
+                <li>
+                    User: @ViewBag.BreadcrumbUser
+                </li>
+                }
+
                 @if (ViewBag.BreadcrumbExternalActivity != null)
                 {
                 <li>
