@@ -67,6 +67,8 @@
   <ItemGroup>
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Helpers\AuthorizationBuilder.cs" />
+    <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
+    <Compile Include="Organisations\AddContactPersonToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\Create\CreateOrganisationRequestHandlerTestsBase.cs" />
     <Compile Include="Organisations\Create\CreatePartnershipRequestHandlerTests.cs" />
     <Compile Include="Organisations\Create\CreateRegisteredCompanyRequestHandlerTests.cs" />
