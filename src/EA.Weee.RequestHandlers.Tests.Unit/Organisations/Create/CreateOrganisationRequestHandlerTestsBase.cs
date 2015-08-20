@@ -16,6 +16,8 @@
         protected IWeeeAuthorization permissiveAuthorization = new AuthorizationBuilder().AllowExternalAreaAccess().Build();
         protected IWeeeAuthorization denyingAuthorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 
+        private readonly DbContextHelper dbHelper = new DbContextHelper();
+
         protected Organisation addedOrganisation;
         protected Guid addedOrganisationId;
         protected OrganisationUser addedOrganisationUser;
@@ -29,7 +31,7 @@
             {
                 addedOrganisation = o;
                 addedOrganisationId = Guid.NewGuid();
-                AddId(o, addedOrganisationId);
+                dbHelper.SetId(o, addedOrganisationId);
             });
 
             var organisationUsers = A.Fake<DbSet<OrganisationUser>>();
@@ -57,11 +59,6 @@
             Assert.Equal(tradingName, addedOrganisation.TradingName);
             Assert.Equal(addedOrganisationId, addedOrganisationUser.OrganisationId);
             Assert.Equal(UserStatus.Approved, addedOrganisationUser.UserStatus);
-        }
-
-        private void AddId(Entity entity, Guid id)
-        {
-            typeof(Entity).GetProperty("Id").SetValue(entity, id);
         }
     }
 }
