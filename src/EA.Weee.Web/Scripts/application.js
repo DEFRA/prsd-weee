@@ -146,4 +146,24 @@ $(document).ready(function () {
     $('input[type=submit], button').bind('click', function() {
         return disableButtonFor1Second($(this));
     });
+
+    // There is a bug with jQuery UI autocomplete whereby the content
+    // of the drop-down list becomes detached from the text-field when
+    // the window is resized. A simple fix for this is to hide the
+    // content if the window is resized. It will be re-positioned the
+    // next time it is displayed.
+    // See: http://stackoverflow.com/questions/8037483/repositioning-jquery-ui-autocomplete-on-browser-resize
+    $(window).resize(function () {
+        $('.ui-autocomplete').css('display', 'none');
+    });
+
+    // There is a bug with jQuery UI autocomplete whereby the content
+    // of the drop-down list has the incorrect width. a fix for this
+    // is to override the implementation of "_resizeMenu" to correctly
+    // identify the parent element of the list.
+    // See: http://stackoverflow.com/questions/5643767/jquery-ui-autocomplete-width-not-set-correctly
+    jQuery.ui.autocomplete.prototype._resizeMenu = function () {
+        var ul = this.menu.element;
+        ul.outerWidth(this.element.outerWidth());
+    }
 });
