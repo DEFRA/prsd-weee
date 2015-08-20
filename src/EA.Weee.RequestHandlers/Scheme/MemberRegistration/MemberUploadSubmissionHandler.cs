@@ -30,6 +30,11 @@
                 throw new ArgumentNullException(string.Format("Could not find a MemberUpload with id {0}", message.MemberUploadId));
             }
 
+            if (memberUpload.OrganisationId != message.OrganisationId)
+            {
+                throw new ArgumentException(string.Format("Member upload {0} is not owned by PCS {1}", message.MemberUploadId, message.OrganisationId));
+            }
+
             if (!memberUpload.IsSubmitted)
             {
                 memberUpload.Submit();
