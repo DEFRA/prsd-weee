@@ -7,18 +7,23 @@
     using DataAccess;
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
+    using Security;
 
     internal class GetProducerCSVByMemberUploadIdHandler : IRequestHandler<GetProducerCSVByMemberUploadId, ProducerCSVFileData>
     {
+        private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
 
-        public GetProducerCSVByMemberUploadIdHandler(WeeeContext context)
+        public GetProducerCSVByMemberUploadIdHandler(IWeeeAuthorization authorization, WeeeContext context)
         {
+            this.authorization = authorization;
             this.context = context;
         }
 
         public async Task<ProducerCSVFileData> HandleAsync(GetProducerCSVByMemberUploadId message)
         {
+            authorization.EnsureOrganisationAccess(message.OrganisationId);
+
             var memberUpload = await context.MemberUploads.SingleOrDefaultAsync(o => o.Id == message.MemberUploadId);
 
             if (memberUpload == null)
