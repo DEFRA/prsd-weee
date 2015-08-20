@@ -581,3 +581,14 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
         color: $black;
     }
 }
+
+/*
+	Items shown by jQuery UI autocomplete that are too long will be truncated with an ellipsis.
+	See: http://stackoverflow.com/questions/17459422/jquery-autocomplete-no-word-wrap
+*/
+.ui-autocomplete .ui-menu-item {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}  
