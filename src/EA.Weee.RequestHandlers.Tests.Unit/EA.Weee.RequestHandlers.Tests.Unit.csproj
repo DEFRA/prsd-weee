@@ -105,7 +105,7 @@
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadDataHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidatorTests.cs" />
-    <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandlerTest.cs" />
+    <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandlerTests.cs" />
     <Compile Include="Organisations\FindMatchingCompaniesHandlerTests.cs" />
     <Compile Include="Organisations\JoinOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandlerTests.cs" />
