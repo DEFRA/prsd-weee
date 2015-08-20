@@ -22,7 +22,7 @@
         private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserWithAllRights();
 
         [Fact]
-        public async Task NotOrganisationUser_ThrowsSecurityException()
+        public async Task VerifyOrganisationExistsAndIncompleteHandler_NotOrganisationUser_ThrowsSecurityException()
         {
             var authorization = AuthorizationBuilder.CreateUserWithNoRights();
 

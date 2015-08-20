@@ -27,7 +27,7 @@
             new AuthorizationBuilder().DenyOrganisationAccess().Build();
 
         [Fact]
-        public async Task NotOrganisationUser_ThrowsSecurityException()
+        public async Task CopyOrganisationAddressIntoRegisteredOfficeHandler_NotOrganisationUser_ThrowsSecurityException()
         {
             var handler = new CopyOrganisationAddressIntoRegisteredOfficeHandler(denyingAuthorization, A<WeeeContext>._);
             var message = new CopyOrganisationAddressIntoRegisteredOffice(Guid.NewGuid());
@@ -36,7 +36,7 @@
         }
 
         [Fact]
-        public async Task NoSuchOrganisation_ThrowsArgumentException()
+        public async Task CopyOrganisationAddressIntoRegisteredOfficeHandler_NoSuchOrganisation_ThrowsArgumentException()
         {
             var organisationId = Guid.NewGuid();
 

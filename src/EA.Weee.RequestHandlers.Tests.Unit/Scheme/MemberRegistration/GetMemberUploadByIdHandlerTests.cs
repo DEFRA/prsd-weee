@@ -3,13 +3,15 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.Scheme;
     using FakeItEasy;
     using Helpers;
-    using RequestHandlers.Mappings;
+    using Mappings;
     using RequestHandlers.Scheme.MemberRegistration;
+    using RequestHandlers.Security;
     using Requests.Scheme.MemberRegistration;
     using Xunit;
 
@@ -27,7 +29,18 @@
 
             A.CallTo(() => context.MemberUploads).Returns(memberUploadsDbSet);
 
-            return new GetMemberUploadByIdHandler(context, new MemberUploadMap());
+            return new GetMemberUploadByIdHandler(AuthorizationBuilder.CreateUserWithAllRights(), context, new MemberUploadMap());
+        }
+
+        [Fact]
+        public async Task GetMemberUploadByIdHandler_NotOrganisationUser_ThrowsSecurityException()
+        {
+            var authorization = AuthorizationBuilder.CreateUserWithNoRights();
+
+            var handler = new GetMemberUploadByIdHandler(authorization, A<WeeeContext>._, A<MemberUploadMap>._);
+            var message = new GetMemberUploadById(Guid.NewGuid());
+
+            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
         }
 
         [Fact]

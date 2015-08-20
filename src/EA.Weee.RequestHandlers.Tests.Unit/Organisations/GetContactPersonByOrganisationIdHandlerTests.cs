@@ -20,7 +20,7 @@
         private readonly OrganisationHelper orgHelper = new OrganisationHelper();
 
         [Fact]
-        public async Task NotOrganisationUser_ThrowsSecurityException()
+        public async Task GetContactPersonByOrganisationIdHandler_NotOrganisationUser_ThrowsSecurityException()
         {
             var authorization = AuthorizationBuilder.CreateUserWithNoRights();
 

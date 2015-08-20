@@ -26,7 +26,7 @@
             new AuthorizationBuilder().DenyOrganisationAccess().Build();
 
         [Fact]
-        public async Task NotOrganisationUser_ThrowsSecurityException()
+        public async Task CompleteRegistrationHandler_NotOrganisationUser_ThrowsSecurityException()
         {
             var handler = new CompleteRegistrationHandler(denyingAuthorization, A<WeeeContext>._, A<IUserContext>._);
             var message = new CompleteRegistration(Guid.NewGuid());
@@ -36,7 +36,7 @@
         }
 
         [Fact]
-        public async Task NoSuchOrganisation_ThrowsArgumentException()
+        public async Task CompleteRegistrationHandler_NoSuchOrganisation_ThrowsArgumentException()
         {
             var context = A.Fake<WeeeContext>();
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>()));
@@ -53,7 +53,7 @@
         }
 
         [Fact]
-        public async Task HappyPath_OrganisationCompleteAndSchemeAdded()
+        public async Task CompleteRegistrationHandler_HappyPath_OrganisationCompleteAndSchemeAdded()
         {
             var context = A.Fake<WeeeContext>();
 
