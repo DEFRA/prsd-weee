@@ -1,10 +1,12 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using Api.Client;
+    using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
+    using FakeItEasy;
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using FakeItEasy;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels;
     using Xunit;
@@ -23,7 +25,7 @@
         public async Task ManageUsersPost_ReturnsEditUserRedirect()
         {
             var selectedGuid = Guid.NewGuid();
-            var controller = new UserController(apiClient);
+            var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
 
             var result = await controller.ManageUsers(new ManageUsersViewModel { SelectedUserId = selectedGuid });
 
