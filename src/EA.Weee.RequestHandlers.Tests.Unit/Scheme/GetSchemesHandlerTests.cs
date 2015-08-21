@@ -4,102 +4,120 @@
     using DataAccess;
     using Domain.Organisation;
     using Domain.Scheme;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using RequestHandlers.Mappings;
     using RequestHandlers.Scheme;
     using RequestHandlers.Tests.Unit.Helpers;
     using Requests.Scheme;
+    using System;
     using System.Collections.Generic;
+    using System.Security;
     using System.Threading.Tasks;
     using Xunit;
 
     public class GetSchemesHandlerTests
     {
-        private readonly DbContextHelper helper = new DbContextHelper();
-        private readonly OrganisationHelper orgHelper = new OrganisationHelper();
-
+        /// <summary>
+        /// This test ensures that an authorized user can execute requests to get scheme data
+        /// if they provide a valid scheme ID.
+        /// </summary>
         [Fact]
-        public async Task GetSchemesHandler_OnlyIncompleteOrganisations_EmptyListReturned()
+        public async void GetSchemesHandlerTest_HappyPath_ReturnsSchemeDatasOrderedByName()
         {
-            const string IncompleteOrganisationName = "A";
+            // Arrage
+            IGetSchemesDataAccess dataAccess = CreateFakeDataAccess();
 
-            var incompleteScheme = MakeFakeSchemeWithOrganisationDetails(IncompleteOrganisationName, OrganisationStatus.Incomplete);
+            IWeeeAuthorization authorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .Build();
 
-            var result = await RunHandler(incompleteScheme);
+            IMap<Scheme, SchemeData> schemeMap = CreateFakeSchemeMap();
 
-            Assert.Empty(result);
+            GetSchemesHandler handler = new GetSchemesHandler(dataAccess, schemeMap, authorization);
+
+            GetSchemes request = new GetSchemes();
+
+            // Act
+            List<SchemeData> results = await handler.HandleAsync(request);
+
+            // Assert
+            Assert.Collection(
+                results,
+                (element1) => Assert.Equal(schemeData2, element1),
+                (element2) => Assert.Equal(schemeData1, element2),
+                (element3) => Assert.Equal(schemeData3, element3));
         }
 
+        /// <summary>
+        /// This test ensures that a non-internal user cannot execute requests to get scheme data.
+        /// </summary>
         [Fact]
-        public async Task GetSchemesHandler_TwoCompleteOrganisationAndOneIncompleteOrganisation_TwoCompleteSchemesReturned()
+        [Trait("Authorization", "Internal")]
+        public async void GetSchemesHandler_WithUnauthorizedUser_ThrowsSecurityException()
         {
-            const string IncompleteOrganisationName = "A";
-            const string CompleteOrganisationOneName = "B";
-            const string CompleteOrganisationTwoName = "C";
+            IGetSchemesDataAccess dataAccess = CreateFakeDataAccess();
 
-            var incompleteScheme = MakeFakeSchemeWithOrganisationDetails(IncompleteOrganisationName, OrganisationStatus.Incomplete);
-            var completeSchemeOne = MakeFakeSchemeWithOrganisationDetails(CompleteOrganisationOneName, OrganisationStatus.Complete);
-            var completeSchemeTwo = MakeFakeSchemeWithOrganisationDetails(CompleteOrganisationTwoName, OrganisationStatus.Complete);
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithNoRights();
 
-            var result = await RunHandler(incompleteScheme, completeSchemeOne, completeSchemeTwo);
+            IMap<Scheme, SchemeData> schemeMap = CreateFakeSchemeMap();
 
-            Assert.Equal(2, result.Count);
-            Assert.True(result.Exists(sd => sd.Name == CompleteOrganisationOneName));
-            Assert.True(result.Exists(sd => sd.Name == CompleteOrganisationTwoName));
+            GetSchemesHandler handler = new GetSchemesHandler(dataAccess, schemeMap, authorization);
+
+            GetSchemes request = new GetSchemes();
+
+            // Act
+            Func<Task<List<SchemeData>>> action = () => handler.HandleAsync(request);
+
+            // Assert
+            await Assert.ThrowsAsync<SecurityException>(action);
         }
 
-        [Fact]
-        public async Task GetSchemesHandler_ResultsOrderedByNameAscending()
+        private Domain.Scheme.Scheme scheme1;
+        private Domain.Scheme.Scheme scheme2;
+        private Domain.Scheme.Scheme scheme3;
+
+        private IGetSchemesDataAccess CreateFakeDataAccess()
         {
-            const string FirstPositionName = "A";
-            const string SecondPositionName = "B";
-            const string ThirdPositionName = "C";
+            IGetSchemesDataAccess dataAccess = A.Fake<IGetSchemesDataAccess>();
+            
+            scheme1 = A.Fake<Domain.Scheme.Scheme>();
+            scheme2 = A.Fake<Domain.Scheme.Scheme>();
+            scheme3 = A.Fake<Domain.Scheme.Scheme>();
 
-            var firstScheme = MakeFakeSchemeWithOrganisationDetails(FirstPositionName, OrganisationStatus.Complete);
-            var secondScheme = MakeFakeSchemeWithOrganisationDetails(SecondPositionName, OrganisationStatus.Complete);
-            var thirdScheme = MakeFakeSchemeWithOrganisationDetails(ThirdPositionName, OrganisationStatus.Complete);
+            var results = new List<Domain.Scheme.Scheme>()
+            { 
+                scheme1,
+                scheme2,
+                scheme3
+            };
 
-            var result = await RunHandler(thirdScheme, firstScheme, secondScheme); // different order
-
-            Assert.Equal(FirstPositionName, result[0].Name);
-            Assert.Equal(SecondPositionName, result[1].Name);
-            Assert.Equal(ThirdPositionName, result[2].Name);
+            A.CallTo(() => dataAccess.GetCompleteSchemes()).Returns(results);
+            return dataAccess;
         }
 
-        private async Task<List<SchemeData>> RunHandler(params Scheme[] schemes)
-        {
-            var context = MakeContextWithSchemes(schemes);
-            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
+        private SchemeData schemeData1;
+        private SchemeData schemeData2;
+        private SchemeData schemeData3;
 
-            var handler = new GetSchemesHandler(context, new SchemeMap(new UKCompetentAuthorityMap()), authorization);
-            return await handler.HandleAsync(new GetSchemes());
-        }
-
-        private Scheme MakeFakeSchemeWithOrganisationDetails(string name, OrganisationStatus status)
+        private IMap<Scheme, SchemeData> CreateFakeSchemeMap()
         {
-            var scheme = A.Fake<Scheme>();
-            var organisation = MakeOrganisationWithDetails(name, status);
-            A.CallTo(() => scheme.Organisation).Returns(organisation);
-            return scheme;
-        }
+            IMap<Scheme, SchemeData> schemeMap = A.Fake<IMap<EA.Weee.Domain.Scheme.Scheme, SchemeData>>();
 
-        private Organisation MakeOrganisationWithDetails(string name, OrganisationStatus status)
-        {
-            return orgHelper.GetOrganisationWithDetails(
-                name,
-                name,
-                "12345678",
-                OrganisationType.SoleTraderOrIndividual,
-                status);
-        }
+            schemeData1 = A.Fake<SchemeData>();
+            schemeData1.Name = "MCH";
+            A.CallTo(() => schemeMap.Map(scheme1)).Returns(schemeData1);
 
-        private WeeeContext MakeContextWithSchemes(params Scheme[] schemes)
-        {
-            var context = A.Fake<WeeeContext>();
-            var schemesDbSet = helper.GetAsyncEnabledDbSet(schemes);
-            A.CallTo(() => context.Schemes).Returns(schemesDbSet);
-            return context;
+            schemeData2 = A.Fake<SchemeData>();
+            schemeData2.Name = "ARB";
+            A.CallTo(() => schemeMap.Map(scheme2)).Returns(schemeData2);
+
+            schemeData3 = A.Fake<SchemeData>();
+            schemeData3.Name = "ZRS";
+            A.CallTo(() => schemeMap.Map(scheme3)).Returns(schemeData3);
+
+            return schemeMap;
         }
     }
 }
