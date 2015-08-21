@@ -39,10 +39,10 @@
             @Html.Gds().ValidationMessageFor(m => m.ConfirmPassword)
             @Html.Gds().PasswordFor(m => m.ConfirmPassword)
         </div>
-        <p>@Html.ActionLink("Read full terms and conditions of use", "TermsAndConditions", "NewUser", new { rel = "external", target = "_blank" })</p>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.TermsAndConditions)">
             <fieldset>
                 <div>@Html.Gds().ValidationMessageFor(m => m.TermsAndConditions)</div>
+                <p>@Html.ActionLink("Read full terms and conditions of use", "TermsAndConditions", "NewUser", new { rel = "external", target = "_blank" })</p>
                 <label class="block-label" for="TermsAndConditions">
                     @Html.CheckBoxFor(m => m.TermsAndConditions, new { @id = "TermsAndConditions" })
                     Accept terms and conditions of use
