@@ -156,6 +156,7 @@
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
     <Compile Include="Users\GetUsersByOrganisationIdHandler.cs" />
     <Compile Include="Admin\FindMatchingUsersHandler.cs" />
+    <Compile Include="Users\GetUserDataHandler.cs" />
     <Compile Include="v3schema.cs" />
   </ItemGroup>
   <ItemGroup>
