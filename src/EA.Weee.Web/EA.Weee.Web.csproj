@@ -554,6 +554,7 @@
     <Content Include="Views\Errors\Error.cshtml" />
     <Content Include="Views\Shared\_WeeeTitle.cshtml" />
     <Content Include="Views\NewUser\TermsAndConditions.cshtml" />
+    <Content Include="Views\Home\Robots.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
