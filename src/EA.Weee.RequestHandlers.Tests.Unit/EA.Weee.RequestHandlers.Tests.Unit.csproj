@@ -95,7 +95,7 @@
     <Compile Include="Scheme\MemberRegistration\XmlValidation\ValidationContext.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\XmlValidatorTests.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandlerTests.cs" />
-    <Compile Include="Organisations\GetOrganisationsByUserIdHandlerTest.cs" />
+    <Compile Include="Organisations\GetUserOrganisationsByStatusHandlerTests.cs" />
     <Compile Include="Helpers\DbContextHelper.cs" />
     <Compile Include="Helpers\ObjectInstantiator.cs" />
     <Compile Include="Helpers\OrganisationHelper.cs" />
@@ -119,6 +119,7 @@
     <Compile Include="Scheme\VerifyApprovalNumberExistsHandlerTests.cs" />
     <Compile Include="Scheme\SetSchemeStatusHandlerTests.cs" />
     <Compile Include="Security\WeeeAuthorizationTests.cs" />
+    <Compile Include="Users\GetUserDataHandlerTests.cs" />
     <Compile Include="Users\GetUsersByOrganisationIdHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -121,7 +121,7 @@
     <Compile Include="Organisations\Create\CreateSoleTraderRequestHandler.cs" />
     <Compile Include="Organisations\Create\CreatePartnershipRequestHandler.cs" />
     <Compile Include="Organisations\FindMatchingOrganisationsHandler.cs" />
-    <Compile Include="Organisations\GetOrganisationsByUserIdHandler.cs" />
+    <Compile Include="Organisations\GetUserOrganisationsByStatusHandler.cs" />
     <Compile Include="Organisations\IsUkOrganisationAddressHandler.cs" />
     <Compile Include="Organisations\JoinOrganisationHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
@@ -156,7 +156,7 @@
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
     <Compile Include="Users\GetUsersByOrganisationIdHandler.cs" />
     <Compile Include="Admin\FindMatchingUsersHandler.cs" />
-    <Compile Include="Users\UserByIdHandler.cs" />
+    <Compile Include="Users\GetUserDataHandler.cs" />
     <Compile Include="v3schema.cs" />
   </ItemGroup>
   <ItemGroup>
