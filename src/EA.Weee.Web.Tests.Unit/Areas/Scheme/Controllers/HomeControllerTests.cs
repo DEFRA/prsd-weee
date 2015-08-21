@@ -1,14 +1,17 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
+    using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -218,7 +221,7 @@
         }
 
         [Fact]
-        public void PostManageOrganisationUsers_ModalStateValid_ReturnsView()
+        public async void PostManageOrganisationUsers_ModalStateValid_ReturnsView()
         {
             var model = new OrganisationUsersViewModel
             {
@@ -236,7 +239,7 @@
             var results = new List<ValidationResult>();
             var isModelStateValid = Validator.TryValidateObject(model, context, results, true);
 
-            var result = HomeController().ManageOrganisationUsers(model);
+            var result = await HomeController().ManageOrganisationUsers(A<Guid>._, model);
 
             Assert.IsType<ViewResult>(result);
             Assert.True(isModelStateValid);
@@ -244,7 +247,7 @@
 
         private HomeController HomeController()
         {
-            var controller = new HomeController(() => weeeClient);
+            var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
             new HttpContextMocker().AttachToController(controller);
 
             return controller;

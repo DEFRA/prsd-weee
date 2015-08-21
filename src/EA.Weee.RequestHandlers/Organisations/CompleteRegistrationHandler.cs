@@ -4,39 +4,42 @@
     using System.Data.Entity;
     using System.Threading.Tasks;
     using DataAccess;
-    using Domain;
-    using Domain.Organisation;
     using Domain.Scheme;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
+    using Security;
 
     internal class CompleteRegistrationHandler : IRequestHandler<CompleteRegistration, Guid>
     {
-        private readonly WeeeContext db;
-
-        public CompleteRegistrationHandler(WeeeContext context)
+        private readonly IWeeeAuthorization authorization;
+        private readonly WeeeContext context;
+  
+        public CompleteRegistrationHandler(IWeeeAuthorization authorization, WeeeContext context)
         {
-            db = context;
+            this.authorization = authorization;
+            this.context = context;
         }
 
         public async Task<Guid> HandleAsync(CompleteRegistration message)
         {
-            if (await db.Organisations.FirstOrDefaultAsync(o => o.Id == message.OrganisationId) == null)
+            authorization.EnsureOrganisationAccess(message.OrganisationId);
+
+            if (await context.Organisations.FirstOrDefaultAsync(o => o.Id == message.OrganisationId) == null)
             {
                 throw new ArgumentException(string.Format("Could not find an organisation with id {0}",
                     message.OrganisationId));
             }
 
-            var organisation = await db.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
+            var organisation = await context.Organisations.SingleAsync(o => o.Id == message.OrganisationId);
 
             organisation.CompleteRegistration();
             
             //Created PCS created here until AATF/AE are impelemented
             var scheme = new Scheme(message.OrganisationId);
-            db.Schemes.Add(scheme);
+            context.Schemes.Add(scheme);
            
-            await db.SaveChangesAsync();
+            await context.SaveChangesAsync();
             return organisation.Id;
         }
     }

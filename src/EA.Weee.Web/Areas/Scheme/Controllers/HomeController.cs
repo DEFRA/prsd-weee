@@ -1,15 +1,17 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
+    using Api.Client;
+    using Core.Organisations;
+    using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.Scheme;
+    using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
+    using Infrastructure;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Core.Organisations;
-    using EA.Weee.Core.Shared;
-    using EA.Weee.Requests.Scheme;
-    using Infrastructure;
     using ViewModels;
     using Web.Controllers.Base;
     using Web.ViewModels.Shared;
@@ -20,10 +22,14 @@
     public class HomeController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IWeeeCache cache;
+        private readonly BreadcrumbService breadcrumb;
 
-        public HomeController(Func<IWeeeClient> apiClient)
+        public HomeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb)
         {
             this.apiClient = apiClient;
+            this.cache = cache;
+            this.breadcrumb = breadcrumb;
         }
 
         // GET: Scheme/Home
@@ -54,6 +60,7 @@
                 }
 
                 model.OrganisationId = pcsId;
+                await SetBreadcrumb(pcsId, null);
                 return View(model);
             }
         }
@@ -86,6 +93,7 @@
                 }
             }
 
+            await SetBreadcrumb(viewModel.OrganisationId, null);
             return View(viewModel);
         }
 
@@ -116,13 +124,17 @@
                 var orgUserRadioButtons = new StringGuidRadioButtons(orgUsersKeyValuePairs);
                 model.OrganisationUsers = orgUserRadioButtons;
             }
+
+            await SetBreadcrumb(pcsId, "Manage users");
             return View("ManageOrganisationUsers", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ManageOrganisationUsers(OrganisationUsersViewModel model)
+        public async Task<ActionResult> ManageOrganisationUsers(Guid pcsId, OrganisationUsersViewModel model)
         {
+            await SetBreadcrumb(pcsId, "Manage users");
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -141,6 +153,12 @@
 
                 return orgUsers.Where(ou => ou.UserId != loggedInUserId).ToList();
             }
+        }
+
+        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        {
+            breadcrumb.Organsiation = await cache.FetchOrganisationName(organisationId);
+            breadcrumb.ExternalActivity = activity;
         }
     }
 }

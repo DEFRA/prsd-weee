@@ -1,16 +1,17 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
+    using Api.Client;
+    using Core.Scheme;
+    using Core.Shared;
+    using EA.Weee.Web.Services.Caching;
+    using FakeItEasy;
+    using Prsd.Core.Mediator;
+    using Services;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using Api.Client;
-    using Core.Scheme;
-    using Core.Shared;
-    using FakeItEasy;
-    using Prsd.Core.Mediator;
-    using Services;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -32,7 +33,12 @@
 
         private MemberRegistrationController MemberRegistrationController()
         {
-            var controller = new MemberRegistrationController(() => weeeClient, fileConverter);
+            var controller = new MemberRegistrationController(
+                () => weeeClient,
+                fileConverter,
+                A.Fake<IWeeeCache>(),
+                A.Fake<BreadcrumbService>());
+
             new HttpContextMocker().AttachToController(controller);
 
             return controller;
@@ -40,7 +46,12 @@
 
         private FakeMemberRegistrationController BuildFakeMemberRegistrationController()
         {
-            var controller = new FakeMemberRegistrationController(weeeClient, fileConverter);
+            var controller = new FakeMemberRegistrationController
+                (weeeClient,
+                fileConverter,           
+                A.Fake<IWeeeCache>(),
+                A.Fake<BreadcrumbService>());
+
             new HttpContextMocker().AttachToController(controller);
 
             return controller;
@@ -428,8 +439,8 @@
         {
             public IWeeeClient ApiClient { get; private set; }
 
-            public FakeMemberRegistrationController(IWeeeClient apiClient, IFileConverterService fileConverter)
-                : base(() => apiClient, fileConverter)
+            public FakeMemberRegistrationController(IWeeeClient apiClient, IFileConverterService fileConverter, IWeeeCache cache, BreadcrumbService breadcrumb)
+                : base(() => apiClient, fileConverter, cache, breadcrumb)
             {
                 ApiClient = apiClient;
             }

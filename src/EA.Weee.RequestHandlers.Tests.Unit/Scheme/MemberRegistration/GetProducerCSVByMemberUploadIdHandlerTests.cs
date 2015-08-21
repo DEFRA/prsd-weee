@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.Scheme;
@@ -25,7 +27,32 @@
 
             A.CallTo(() => context.MemberUploads).Returns(memberUploadsDbSet);
 
-            return new GetProducerCSVByMemberUploadIdHandler(context);
+            return new GetProducerCSVByMemberUploadIdHandler(AuthorizationBuilder.CreateUserAllowedToAccessOrganisation(), context);
+        }
+
+        [Fact]
+        public async Task GetProducerCSVByMemberUploadIdHandler_MemberUploadNotOwnedByOrg_ThrowsArgumentException()
+        {
+            var memberUploads = new[]
+            {
+                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid())
+            };
+            var handler = GetPreparedHandler(memberUploads);
+
+            var message = new GetProducerCSVByMemberUploadId(Guid.NewGuid(), memberUploads.First().Id);
+
+            await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));
+        }
+
+        [Fact]
+        public async Task GetProducerCSVByMemberUploadIdHandler_NotOrganisationUser_ThrowsSecurityException()
+        {
+            var denyingAuthorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
+
+            var handler = new GetProducerCSVByMemberUploadIdHandler(denyingAuthorization, A<WeeeContext>._);
+            var message = new GetProducerCSVByMemberUploadId(Guid.NewGuid(), Guid.NewGuid());
+
+            await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
         }
 
         [Fact]
@@ -40,7 +67,7 @@
 
             await
                 Assert.ThrowsAsync<ArgumentException>(
-                    async () => await handler.HandleAsync(new GetProducerCSVByMemberUploadId(Guid.NewGuid())));
+                    async () => await handler.HandleAsync(new GetProducerCSVByMemberUploadId(Guid.NewGuid(), Guid.NewGuid())));
         }
     }
 }

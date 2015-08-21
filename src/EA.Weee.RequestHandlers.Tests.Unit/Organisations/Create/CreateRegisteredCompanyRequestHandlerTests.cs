@@ -13,7 +13,7 @@
     public class CreateRegisteredCompanyRequestHandlerTests : CreateOrganisationRequestHandlerTestsBase
     {
         [Fact]
-        public async Task NotExternalUser_ThrowsSecurityException()
+        public async Task CreateRegisteredCompanyRequestHandler_NotExternalUser_ThrowsSecurityException()
         {
             var handler = new CreateRegisteredCompanyRequestHandler(denyingAuthorization, A<WeeeContext>._, A<IUserContext>._);
 
@@ -21,7 +21,7 @@
         }
 
         [Fact]
-        public async Task HappyPath_CreatesPartnershipAndApprovedOrganisationUser()
+        public async Task CreateRegisteredCompanyRequestHandler_HappyPath_CreatesPartnershipAndApprovedOrganisationUser()
         {
             var context = GetPreparedContext();
             var userContext = GetPreparedUserContext();

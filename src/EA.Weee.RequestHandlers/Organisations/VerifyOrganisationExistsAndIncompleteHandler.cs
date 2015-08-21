@@ -2,22 +2,27 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
+    using DataAccess;
     using Domain.Organisation;
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Requests.Organisations;
-    
+    using Prsd.Core.Mediator;
+    using Requests.Organisations;
+    using Security;
+
     internal class VerifyOrganisationExistsAndIncompleteHandler : IRequestHandler<VerifyOrganisationExistsAndIncomplete, bool>
     {
+        private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
 
-        public VerifyOrganisationExistsAndIncompleteHandler(WeeeContext context)
+        public VerifyOrganisationExistsAndIncompleteHandler(IWeeeAuthorization authorization, WeeeContext context)
         {
+            this.authorization = authorization;
             this.context = context;
         }
 
         public Task<bool> HandleAsync(VerifyOrganisationExistsAndIncomplete message)
         {
+            authorization.EnsureOrganisationAccess(message.OrganisationId);
+
             var organisationExistsAndIncomplete = context.Organisations.FirstOrDefault(o => o.Id == message.OrganisationId && o.OrganisationStatus.Value == OrganisationStatus.Incomplete.Value) != null;
 
             return Task.FromResult(organisationExistsAndIncomplete);

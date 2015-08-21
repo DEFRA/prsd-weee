@@ -28,7 +28,7 @@
             new AuthorizationBuilder().AllowExternalAreaAccess().Build();
 
         [Fact]
-        public async Task NotExternalUser_ThrowsSecurityException()
+        public async Task JoinOrganisationHandler_NotExternalUser_ThrowsSecurityException()
         {
             var denyingAuthorization = new AuthorizationBuilder().DenyExternalAreaAccess().Build();
 

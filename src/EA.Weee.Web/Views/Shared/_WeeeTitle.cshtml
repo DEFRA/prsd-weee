@@ -1,18 +1,92 @@
-﻿@if (User.Identity.IsAuthenticated)
+﻿@{
+    bool showBreadcrumb =
+           (ViewBag.BreadcrumbInternalActivity != null)
+        || (ViewBag.BreadcrumbExternalActivity != null)
+        || (ViewBag.BreadcrumbOrganisation != null);
+        
+    bool showIdentity = User.Identity.IsAuthenticated;
+    
+    bool showTitle = showBreadcrumb || showIdentity;
+
+    int columnCount = (showBreadcrumb ? 1 : 0) + (showIdentity ? 1 : 0);
+    
+    string columnClass;
+    switch (columnCount)
+    {
+        default:
+        case 0:
+        case 1:
+            columnClass = "column-whole";
+            break;
+            
+        case 2:
+            columnClass = "column-half";
+            break;
+    }
+}
+
+@if (showTitle)
 {
-    <div class="username-title-display font-xsmall">
-        <ul>
-            <li>
-                <div class="text-secondary">Signed in as: <span class="username-format">@ViewBag.Name</span></div>
-            </li>
-            <li>
-                @using (Html.BeginForm("LogOff", "Account", routeValues: new { area = string.Empty }, method: FormMethod.Post, htmlAttributes: new { id = "logoutForm" }))
+<div class="grid-row">
+
+    @if (showBreadcrumb)
+    {
+    <div class="@columnClass">
+        <div class="breadcrumb-title-display font-xsmall">
+            <ul>
+                @if (ViewBag.BreadcrumbInternalActivity != null)
                 {
-                    @Html.AntiForgeryToken()
-                    <button class="link-submit" id="link-sign-out" type="submit">Sign out</button>
+                <li>
+                    <a href="@Url.Action("ChooseActivity", "Home", new { Area = "admin" })">Activity</a>: @ViewBag.BreadcrumbInternalActivity
+                </li>
                 }
-            </li>
-        </ul>
+                
+                @if (ViewBag.BreadcrumbOrganisation != null)
+                {
+                <li>
+                    Organisation: @ViewBag.BreadcrumbOrganisation
+                </li>
+                }
+
+                @if (ViewBag.BreadcrumbUser != null)
+                {
+                <li>
+                    User: @ViewBag.BreadcrumbUser
+                </li>
+                }
+
+                @if (ViewBag.BreadcrumbExternalActivity != null)
+                {
+                <li>
+                    <a href="@Url.Action("ChooseActivity", "Home", new { Area = "scheme" })">Activity</a>: @ViewBag.BreadcrumbExternalActivity
+                </li>
+                }
+            </ul>
+        </div>
     </div>
-    <div class="account-link-banner"></div>
+    }
+    
+    @if (showIdentity)
+    {
+    <div class="@columnClass">
+        <div class="username-title-display font-xsmall">
+            <ul>
+                <li>
+                    <div class="text-secondary">Signed in as: <span class="username-format">@ViewBag.Name</span></div>
+                </li>
+                <li>
+                    @using (Html.BeginForm("LogOff", "Account", routeValues: new { area = string.Empty }, method: FormMethod.Post, htmlAttributes: new { id = "logoutForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button class="link-submit" id="link-sign-out" type="submit">Sign out</button>
+                    }
+                </li>
+            </ul>
+        </div>
+    </div>
+    }
+    
+</div>
+
+<div class="account-link-banner"></div>
 }

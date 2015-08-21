@@ -1,14 +1,15 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
+    using Api.Client;
+    using Core.Shared;
+    using EA.Weee.Web.Services.Caching;
+    using Infrastructure;
+    using Services;
     using System;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Core.Shared;
-    using Infrastructure;
-    using Services;
     using ViewModels;
     using Web.Controllers.Base;
     using Weee.Requests.Organisations;
@@ -19,11 +20,19 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IFileConverterService fileConverter;
+        private readonly IWeeeCache cache;
+        private readonly BreadcrumbService breadcrumb;
 
-        public MemberRegistrationController(Func<IWeeeClient> apiClient, IFileConverterService fileConverter)
+        public MemberRegistrationController(
+            Func<IWeeeClient> apiClient,
+            IFileConverterService fileConverter,
+            IWeeeCache cache,
+            BreadcrumbService breadcrumb)
         {
             this.apiClient = apiClient;
             this.fileConverter = fileConverter;
+            this.cache = cache;
+            this.breadcrumb = breadcrumb;
         }
 
         [HttpGet]
@@ -38,6 +47,7 @@
                     return RedirectToAction("Summary", "MemberRegistration");
                 }
 
+                await SetBreadcrumb(pcsId, "Manage scheme");
                 return View(new AuthorizationRequiredViewModel
                 {
                     Status = status
@@ -53,6 +63,7 @@
                 var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
                 if (orgExists)
                 {
+                    await SetBreadcrumb(pcsId, "Manage scheme");
                     return View();
                 }
             }
@@ -66,6 +77,7 @@
         {
             if (!ModelState.IsValid)
             {
+                await SetBreadcrumb(pcsId, "Manage scheme");
                 return View(model);
             }
 
@@ -88,6 +100,7 @@
 
                 if (summary.LatestMemberUploads.Any())
                 {
+                    await SetBreadcrumb(pcsId, "Manage scheme");
                     return View(SummaryViewModel.Create(summary.LatestMemberUploads));
                 }
             }
@@ -103,14 +116,16 @@
                 var errors =
                     await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId));
 
-                var memberUpload = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadById(memberUploadId));
+                var memberUpload = await client.SendAsync(User.GetAccessToken(), new GetMemberUploadById(pcsId, memberUploadId));
 
                 if (errors.Any(e => e.ErrorLevel == ErrorLevel.Error))
                 {
+                    await SetBreadcrumb(pcsId, "Manage scheme");
                     return View("ViewErrorsAndWarnings",
                         new MemberUploadResultViewModel { MemberUploadId = memberUploadId, ErrorData = errors, TotalCharges = memberUpload.TotalCharges });
                 }
 
+                await SetBreadcrumb(pcsId, "Manage scheme");
                 return View("XmlHasNoErrors",
                     new MemberUploadResultViewModel { MemberUploadId = memberUploadId, ErrorData = errors, TotalCharges = memberUpload.TotalCharges });
             }
@@ -124,16 +139,18 @@
             {
                 // TODO: insert request including check against submitting a member upload with errors or different PCS here...
 
-                await client.SendAsync(User.GetAccessToken(), new MemberUploadSubmission(viewModel.MemberUploadId));
+                await client.SendAsync(User.GetAccessToken(), new MemberUploadSubmission(pcsId, viewModel.MemberUploadId));
 
                 return RedirectToAction("SuccessfulSubmission", new { pcsId = pcsId, memberUploadId = viewModel.MemberUploadId });
             }
         }
 
         [HttpGet]
-        public ViewResult SuccessfulSubmission(Guid pcsId, Guid memberUploadId)
+        public async Task<ViewResult> SuccessfulSubmission(Guid pcsId, Guid memberUploadId)
         {
             var model = new SuccessfulSubmissionViewModel { PcsId = pcsId, MemberUploadId = memberUploadId };
+
+            await SetBreadcrumb(pcsId, "Manage scheme");
             return View(model);
         }
 
@@ -143,7 +160,7 @@
             using (var client = apiClient())
             {
                 var producerCSVData = await client.SendAsync(User.GetAccessToken(),
-                    new GetProducerCSVByMemberUploadId(memberUploadId));
+                    new GetProducerCSVByMemberUploadId(pcsId, memberUploadId));
 
                 return File(new UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", producerCSVData.FileName);
             }
@@ -185,6 +202,12 @@
                     throw new InvalidOperationException("The PCS ID could not be retrieved.");
                 }
             }
+        }
+
+        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        {
+            breadcrumb.Organsiation = await cache.FetchOrganisationName(organisationId);
+            breadcrumb.ExternalActivity = activity;
         }
     }
 }

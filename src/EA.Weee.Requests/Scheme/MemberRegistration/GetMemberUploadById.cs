@@ -6,10 +6,12 @@
 
     public class GetMemberUploadById : IRequest<MemberUploadData>
     {
+        public Guid OrganisationId { get; private set; }
         public Guid MemberUploadId { get; private set; }
 
-        public GetMemberUploadById(Guid memberUploadId)
+        public GetMemberUploadById(Guid organisationId, Guid memberUploadId)
         {
+            OrganisationId = organisationId;
             MemberUploadId = memberUploadId;
         }
     }

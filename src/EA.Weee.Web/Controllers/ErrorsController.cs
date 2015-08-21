@@ -16,5 +16,11 @@
         {
             return View();
         }
+
+        [HttpGet]
+        public ActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

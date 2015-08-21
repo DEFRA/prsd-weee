@@ -1,16 +1,18 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using System.Web.Routing;
     using Api.Client;
     using Base;
     using Core.Scheme;
     using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
+    using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
     using Infrastructure;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+    using System.Web.Routing;
     using ViewModels;
     using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
@@ -18,15 +20,20 @@
     public class SchemeController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IWeeeCache cache;
+        private readonly BreadcrumbService breadcrumb;
 
-        public SchemeController(Func<IWeeeClient> apiClient)
+        public SchemeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb)
         {
             this.apiClient = apiClient;
+            this.cache = cache;
+            this.breadcrumb = breadcrumb;
         }
 
         [HttpGet]
         public async Task<ViewResult> ManageSchemes()
         {
+            await SetBreadcrumb(null);
             return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
         }
 
@@ -36,6 +43,7 @@
         {
             if (!ModelState.IsValid)
             {
+                await SetBreadcrumb(null);
                 return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
             }
 
@@ -70,6 +78,7 @@
                     IsUnchangeableStatus = scheme.SchemeStatus == SchemeStatus.Approved || scheme.SchemeStatus == SchemeStatus.Rejected
                 };
 
+                await SetBreadcrumb(id);
                 return View("EditScheme", model);
             }
         }
@@ -87,6 +96,7 @@
 
             if (!ModelState.IsValid)
             {
+                await SetBreadcrumb(id);
                 return View(model);
             }
 
@@ -101,6 +111,7 @@
                     if (approvalNumberExists)
                     {
                         ModelState.AddModelError("ApprovalNumber", "Approval number already exists.");
+                        await SetBreadcrumb(id);
                         return View("EditScheme", model);
                     }
                 }
@@ -124,10 +135,11 @@
         }
 
         [HttpGet]
-        public ActionResult ConfirmRejection(Guid id)
+        public async Task<ActionResult> ConfirmRejection(Guid id)
         {
             var model = new ConfirmRejectionViewModel();
             model.SchemeId = id;
+            await SetBreadcrumb(id);
             return View("ConfirmRejection", model);
         }
 
@@ -137,6 +149,7 @@
         {
             if (!ModelState.IsValid)
             {
+                await SetBreadcrumb(model.SchemeId);
                 return View(model);
             }
 
@@ -153,6 +166,16 @@
                 }
             }
             return RedirectToAction("ManageSchemes", "Scheme");
+        }
+
+        private async Task SetBreadcrumb(Guid? schemeId)
+        {
+            breadcrumb.InternalActivity = "Manage schemes";
+
+            if (schemeId.HasValue)
+            {
+                breadcrumb.Organsiation = await cache.FetchSchemeName(schemeId.Value);
+            }
         }
     }
 }

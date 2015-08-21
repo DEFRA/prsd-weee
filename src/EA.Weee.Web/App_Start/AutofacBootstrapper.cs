@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.Web
 {
-    using System.Linq;
-    using System.Reflection;
     using Autofac;
     using Autofac.Integration.Mvc;
+    using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
     using Modules;
     using Requests.Base;
+    using System.Linq;
+    using System.Reflection;
 
     public class AutofacBootstrapper
     {
@@ -33,6 +35,13 @@
             // Register request creators
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
                 .AsClosedTypesOf(typeof(IRequestCreator<,>));
+
+            // Register caching
+            builder.RegisterType<InMemoryCacheProvider>().As<ICacheProvider>();
+            builder.RegisterType<WeeeCache>().As<IWeeeCache>();
+
+            // Breadcrumb
+            builder.RegisterType<BreadcrumbService>().InstancePerRequest();
 
             return builder.Build();
         }
