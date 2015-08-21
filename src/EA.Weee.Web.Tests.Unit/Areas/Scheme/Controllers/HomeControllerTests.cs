@@ -10,6 +10,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
@@ -220,7 +221,7 @@
         }
 
         [Fact]
-        public void PostManageOrganisationUsers_ModalStateValid_ReturnsView()
+        public async void PostManageOrganisationUsers_ModalStateValid_ReturnsView()
         {
             var model = new OrganisationUsersViewModel
             {
@@ -238,7 +239,7 @@
             var results = new List<ValidationResult>();
             var isModelStateValid = Validator.TryValidateObject(model, context, results, true);
 
-            var result = HomeController().ManageOrganisationUsers(A<Guid>._, model);
+            var result = await HomeController().ManageOrganisationUsers(A<Guid>._, model);
 
             Assert.IsType<ViewResult>(result);
             Assert.True(isModelStateValid);
