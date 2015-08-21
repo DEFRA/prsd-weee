@@ -6,6 +6,8 @@
         Sign in to your account
     </h1>
 
+    <p class="form-hint">This area is reserved for the use of environmental agency staff only.</p>
+
     @using (Html.BeginForm("Login", "Account", new { ReturnUrl = Request.QueryString["ReturnUrl"] }))
     {
         @Html.AntiForgeryToken()
