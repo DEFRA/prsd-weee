@@ -110,6 +110,29 @@
                         (st, producer) => producer.GetProducerName(),
                         (st, producer) => producer.registrationNo,
                         (st, producer) => producer.obligationType.ToString());
+
+                var currentProducers = context.Producers.Where(p => p.IsCurrentForComplianceYear);
+
+                RuleForEach(st => st.producerList)
+                    .Must((st, producer) =>
+                    {
+                        if (producer.status == statusType.A)
+                        {
+                            var matchingProducer = currentProducers.FirstOrDefault(p => p.RegistrationNumber == producer.registrationNo);
+                            if (matchingProducer != null &&
+                                matchingProducer.OrganisationName != producer.GetProducerName())
+                            {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    })
+                    .WithState(st => ErrorLevel.Warning)
+                    .WithMessage(
+                     "The name of the producer with registration number {0} will be amended to {1}.",
+                     (st, producer) => producer.registrationNo,
+                     (st, procucer) => procucer.GetProducerName());
             });
         }
     }

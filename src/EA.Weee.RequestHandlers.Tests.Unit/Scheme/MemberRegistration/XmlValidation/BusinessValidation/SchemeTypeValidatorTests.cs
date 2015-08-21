@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using DataAccess;
     using Domain;
@@ -491,6 +492,65 @@
             {
                 Assert.False(result.IsValid);
             }
+        }
+
+        [Fact]
+        public void ProducerAlreadyRegisteredSameScheme_AmendWithDifferentProducerName_ProducesWarnings()
+        {
+            string registrationNumber = "ABCD";
+            var weeeContext = A.Fake<WeeeContext>();
+
+            var fakeScheme = A.Fake<Scheme>();
+            A.CallTo(() => fakeScheme.OrganisationId).Returns(A.Dummy<Guid>());
+
+            var fakeProducer = A.Fake<Producer>();
+            A.CallTo(() => fakeProducer.MemberUploadId).Returns(A.Dummy<Guid>());
+            A.CallTo(() => fakeProducer.IsCurrentForComplianceYear).Returns(true);
+            A.CallTo(() => fakeProducer.OrganisationName).Returns("old name");
+            A.CallTo(() => fakeProducer.RegistrationNumber).Returns(registrationNumber);
+            A.CallTo(() => fakeProducer.Scheme).Returns(fakeScheme);
+
+            var producers = dbContextHelper.GetFakeDbSet(
+                new List<Producer>()
+                {
+                    fakeProducer
+                });
+
+            A.CallTo(() => weeeContext.Producers).Returns(producers);
+            A.CallTo(() => weeeContext.MigratedProducers).Returns(dbContextHelper.GetFakeDbSet(new List<MigratedProducer>()));
+
+            var xml = new schemeType
+            {
+                complianceYear = "2016",
+                producerList =
+                new producerType[]
+                {
+                    new producerType()
+                    {
+                        status = statusType.A,
+                        registrationNo = registrationNumber,
+                        producerBusiness = new producerBusinessType()
+                        {
+                           Item = new partnershipType
+                           {
+                              partnershipName = "New name"
+                           }
+                       }
+                    }
+                }
+            };
+
+            var validator = new SchemeTypeValidator(weeeContext, A.Dummy<Guid>());
+            var result = validator
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .DataValidation));
+
+            Assert.Equal(1, result.Errors.Count);
+            Assert.False(result.IsValid);
+            Assert.Contains(registrationNumber, result.Errors.Single().ErrorMessage);
+            Assert.Equal(ErrorLevel.Warning, result.Errors.Single().CustomState);
         }
 
         private readonly DbContextHelper dbContextHelper = new DbContextHelper();

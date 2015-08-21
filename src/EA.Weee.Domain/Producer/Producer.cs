@@ -103,7 +103,7 @@
 
         private string OrgName { get; set; }
 
-        public string OrganisationName
+        public virtual string OrganisationName
         {
             get
             {
