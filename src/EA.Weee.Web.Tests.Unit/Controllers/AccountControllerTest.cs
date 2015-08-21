@@ -41,7 +41,7 @@
         [Fact]
         public async void GetRedirectProcess_NoOrganisationUsers_ShouldRedirectToType()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationsByUserId>._))
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
                 .Returns(new List<OrganisationUserData>());
 
             var result = await AccountController().RedirectProcess();
@@ -55,7 +55,7 @@
         {
             var orgId = Guid.NewGuid();
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationsByUserId>._))
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
                 .Returns(new List<OrganisationUserData>
                 {
                     new OrganisationUserData

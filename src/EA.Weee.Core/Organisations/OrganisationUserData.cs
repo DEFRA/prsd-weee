@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Core.Organisations
 {
     using System;
-    using NewUser;
     using Shared;
+    using Users;
 
     public class OrganisationUserData
     {
