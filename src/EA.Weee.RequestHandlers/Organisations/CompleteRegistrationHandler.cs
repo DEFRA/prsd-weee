@@ -15,12 +15,9 @@
     {
         private readonly WeeeContext db;
 
-        private readonly IUserContext userContext;
-
-        public CompleteRegistrationHandler(WeeeContext context, IUserContext userContext)
+        public CompleteRegistrationHandler(WeeeContext context)
         {
             db = context;
-            this.userContext = userContext;
         }
 
         public async Task<Guid> HandleAsync(CompleteRegistration message)

@@ -1,13 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
-    using EA.Weee.Core.Admin;
-    using EA.Weee.Core.Shared;
-    using EA.Weee.DataAccess;
-    using System;
-    using System.Collections.Generic;
+    using Core.Admin;
+    using Core.Shared;
+    using DataAccess;
     using System.Data.Entity;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class FindMatchingUsersDataAccess : IFindMatchingUsersDataAccess
