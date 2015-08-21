@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core.NewUser
+﻿namespace EA.Weee.Core.Users
 {
     public class UserData
     {

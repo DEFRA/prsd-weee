@@ -5,17 +5,14 @@
     using System.Collections.Generic;
     using Core.Organisations;
 
-    public class GetOrganisationsByUserId : IRequest<List<OrganisationUserData>>
+    public class GetUserOrganisationsByStatus : IRequest<List<OrganisationUserData>>
     {
-        public string UserId { get; set; }
-
         public int[] OrganisationStatus { get; set; }
 
         public int[] OrganisationUserStatus { get; set; }
 
-        public GetOrganisationsByUserId(string userId, int[] organisationUserStatus, int[] organisationStatus = null)
+        public GetUserOrganisationsByStatus(int[] organisationUserStatus, int[] organisationStatus = null)
         {
-            UserId = userId;
             OrganisationUserStatus = organisationUserStatus;
             OrganisationStatus = organisationStatus;
         }
