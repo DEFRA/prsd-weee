@@ -1,17 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
     using Core.Admin;
-    using Core.Shared.Paging;
-    using DataAccess;
-    using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mediator;
     using Requests.Admin;
+    using Security;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using UserStatus = Core.Shared.UserStatus;
-
+ 
     internal class FindMatchingUsersHandler : IRequestHandler<FindMatchingUsers, UserSearchDataResult>
     {
         private readonly IWeeeAuthorization authorization;
