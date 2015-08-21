@@ -34,7 +34,7 @@
                 var pendingOrganisationUsers = await
                  client.SendAsync(
                      User.GetAccessToken(),
-                     new GetOrganisationsByUserId(User.GetUserId(), new[] { (int)UserStatus.Pending, (int)UserStatus.Refused, (int)UserStatus.Inactive }));
+                     new GetUserOrganisationsByStatus(new[] { (int)UserStatus.Pending, (int)UserStatus.Refused, (int)UserStatus.Inactive }));
 
                 model.OrganisationUserData = pendingOrganisationUsers;
             }
