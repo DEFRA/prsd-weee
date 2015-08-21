@@ -7,24 +7,34 @@
     using DataAccess;
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
+    using Security;
 
     internal class GetProducerCSVByMemberUploadIdHandler : IRequestHandler<GetProducerCSVByMemberUploadId, ProducerCSVFileData>
     {
+        private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
 
-        public GetProducerCSVByMemberUploadIdHandler(WeeeContext context)
+        public GetProducerCSVByMemberUploadIdHandler(IWeeeAuthorization authorization, WeeeContext context)
         {
+            this.authorization = authorization;
             this.context = context;
         }
 
         public async Task<ProducerCSVFileData> HandleAsync(GetProducerCSVByMemberUploadId message)
         {
+            authorization.EnsureOrganisationAccess(message.OrganisationId);
+
             var memberUpload = await context.MemberUploads.SingleOrDefaultAsync(o => o.Id == message.MemberUploadId);
 
             if (memberUpload == null)
             {
                 throw new ArgumentException(string.Format("Could not find member upload with id {0}",
                     message.MemberUploadId));
+            }
+
+            if (memberUpload.OrganisationId != message.OrganisationId)
+            {
+                throw new ArgumentException(string.Format("Member upload {0} is not owned by PCS {1}", message.MemberUploadId, message.OrganisationId));
             }
 
             if (!memberUpload.ComplianceYear.HasValue)

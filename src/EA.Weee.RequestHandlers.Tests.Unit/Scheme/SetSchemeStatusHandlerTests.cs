@@ -59,7 +59,7 @@
 
         private SetSchemeStatusHandler SetSchemeStatusHandler()
         {
-            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowEverything().Build();
+            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
 
             return new SetSchemeStatusHandler(context, authorization);
         }

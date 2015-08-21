@@ -9,12 +9,15 @@
     {
         public string UserId { get; set; }
 
+        public int[] OrganisationStatus { get; set; }
+
         public int[] OrganisationUserStatus { get; set; }
 
-        public GetOrganisationsByUserId(string userId, int[] organisationUserStatus)
+        public GetOrganisationsByUserId(string userId, int[] organisationUserStatus, int[] organisationStatus = null)
         {
             UserId = userId;
             OrganisationUserStatus = organisationUserStatus;
+            OrganisationStatus = organisationStatus;
         }
     }
 }
