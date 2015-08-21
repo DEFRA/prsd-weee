@@ -10,7 +10,7 @@
     </header>
     <p class="form-hint">Details for the main contact person for your organisation.</p>
 
-    @using (Html.BeginForm(actionName: "MainContactPerson", controllerName: "OrganisationRegistration", method: FormMethod.Post))
+    @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
@@ -31,7 +31,6 @@
             @Html.Gds().ValidationMessageFor(m => m.Position)
             @Html.Gds().TextBoxFor(m => m.Position, new { @maxlength = "35" })
         </div>
-
       
         <div class="form-group">
             <button class="button" type="submit">Continue</button>
