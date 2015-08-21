@@ -11,6 +11,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
     using SchemeStatus = Core.Shared.SchemeStatus;
 
@@ -23,6 +25,29 @@
         {
             context = A.Fake<WeeeContext>();
             dbContextHelper = new DbContextHelper();
+        }
+
+        /// <summary>
+        /// This test ensures that a non-internal user cannot execute requests to set a scheme's status.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        [Trait("Authorization", "Internal")]
+        public async Task SetSchemeStatusHandler_WithUnauthorizedUser_ThrowsSecurityException()
+        {
+            // Arrange
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithNoRights();
+
+            SetSchemeStatusHandler handler = new SetSchemeStatusHandler(context, authorization);
+
+            Guid schemeId = new Guid("3C367528-AE93-427F-A4C5-E23F0D317633");
+            SetSchemeStatus request = new SetSchemeStatus(schemeId, SchemeStatus.Approved);
+
+            // Act
+            Func<Task<Guid>> action = () => handler.HandleAsync(request);
+
+            // Assert
+            await Assert.ThrowsAsync<SecurityException>(action);
         }
 
         [Fact]
