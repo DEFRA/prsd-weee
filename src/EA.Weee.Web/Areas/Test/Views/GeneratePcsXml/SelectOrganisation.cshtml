@@ -17,8 +17,6 @@
 
     @using (Html.BeginForm("SelectOrganisation", "GeneratePcsXml", FormMethod.Get))
     {
-        @Html.AntiForgeryToken()
-
         <p>Search for and select the PCS that will be used for the test file.</p>
 
         @Html.ValidationSummary()
