@@ -18,13 +18,15 @@
 
         public Task Add(string cache, string key, object value, TimeSpan duration)
         {
-            string fullKey = GetFullKey(cache, key);
+            if (value != null)
+            {
+                string fullKey = GetFullKey(cache, key);
 
-            CacheItemPolicy policy = new CacheItemPolicy();
-            policy.SlidingExpiration = duration;
+                CacheItemPolicy policy = new CacheItemPolicy();
+                policy.SlidingExpiration = duration;
 
-            memoryCache.Add(fullKey, value, policy);
-
+                memoryCache.Add(fullKey, value, policy);
+            }
             return Task.FromResult<object>(null);
         }
 
