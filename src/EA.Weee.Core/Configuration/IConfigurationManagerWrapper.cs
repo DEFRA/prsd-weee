@@ -8,5 +8,9 @@
         NameValueCollection AppSettings { get; }
 
         RulesSection InternalEmailRules { get; }
+
+       string GetKeyValue(string key);
+
+        bool HasKey(string key);
     }
 }
