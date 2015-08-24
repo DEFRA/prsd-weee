@@ -15,7 +15,7 @@ namespace EA.Weee.Web.Maintenance
 
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
+                url: "{*url}",
                 defaults: new { controller = "Maintenance", action = "Maintenance", id = UrlParameter.Optional }
             );
         }
