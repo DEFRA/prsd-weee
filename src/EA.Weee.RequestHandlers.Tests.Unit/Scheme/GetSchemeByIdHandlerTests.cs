@@ -54,9 +54,11 @@
         /// <summary>
         /// This test ensures that a non-internal user cannot execute requests to get scheme data.
         /// </summary>
-        [Fact]
+        [Theory]
         [Trait("Authorization", "Internal")]
-        public async void GetSchemeByIdHandler_WithUnauthorizedUser_ThrowsSecurityException()
+        [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
+        [InlineData(AuthorizationBuilder.UserType.External)]
+        public async void GetSchemeByIdHandler_WithNonInternalUser_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
         {
             // Arrage
             Guid schemeId = new Guid("AC9116BC-5732-4F80-9AED-A6E2A0C4C1F1");
@@ -65,7 +67,7 @@
             Domain.Scheme.Scheme scheme = A.Fake<Domain.Scheme.Scheme>();
             A.CallTo(() => dataAccess.GetSchemeOrDefault(schemeId)).Returns(scheme);
             
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithNoRights();
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
             
             var schemeMap = A.Fake<IMap<EA.Weee.Domain.Scheme.Scheme, SchemeData>>();
             SchemeData schemeData = A.Fake<SchemeData>();

@@ -53,13 +53,15 @@
         /// <summary>
         /// This test ensures that a non-internal user cannot execute requests to get scheme data.
         /// </summary>
-        [Fact]
+        [Theory]
         [Trait("Authorization", "Internal")]
-        public async void GetSchemesHandler_WithUnauthorizedUser_ThrowsSecurityException()
+        [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
+        [InlineData(AuthorizationBuilder.UserType.External)]
+        public async void GetSchemesHandler_WithNonInternalUser_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
         {
             IGetSchemesDataAccess dataAccess = CreateFakeDataAccess();
 
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithNoRights();
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
 
             IMap<Scheme, SchemeData> schemeMap = CreateFakeSchemeMap();
 
