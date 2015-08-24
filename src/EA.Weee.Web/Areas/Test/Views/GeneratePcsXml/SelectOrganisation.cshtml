@@ -76,7 +76,7 @@
 
                 </div>
 
-                if (!isNewRow || i == Model.MatchingOrganisations.TotalItemCount - 1)
+                if (!isNewRow || i == Model.MatchingOrganisations.Count() - 1)
                 {
                     @:</div>
                 }
@@ -86,7 +86,7 @@
                 @if (@Model.MatchingOrganisations.PageCount > 1)
             {
                     <br />
-                    <p style="float:left">Showing @Model.MatchingOrganisations.ItemStart - @Model.MatchingOrganisations.ItemEnd of @Model.MatchingOrganisations.TotalItemCount</p>
+                    <span style="display: inline-block">Showing @Model.MatchingOrganisations.ItemStart - @Model.MatchingOrganisations.ItemEnd of @Model.MatchingOrganisations.TotalItemCount</span>
                     <div class="pager">
 
                         @Html.Pager(Model.MatchingOrganisations.PageSize, Model.MatchingOrganisations.PageNumber, Model.MatchingOrganisations.TotalItemCount).Options(o => o.RouteValues(@Model))
@@ -94,7 +94,7 @@
                     </div>
                     <br />
             }
-            </div>
+</div>
         }
         else
         {
