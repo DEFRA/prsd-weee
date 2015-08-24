@@ -23,13 +23,15 @@
         /// numbers.
         /// </summary>
         /// <returns></returns>
-        [Fact]
+        [Theory]
         [Trait("Authorization", "Internal")]
-        public async Task VerifyApprovalNumberExistsHandler_WithUnauthorizedUser_ThrowsSecurityException()
+        [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
+        [InlineData(AuthorizationBuilder.UserType.External)]
+        public async Task VerifyApprovalNumberExistsHandler_WithNonInternalUser_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
         {
             // Arrange
             WeeeContext context = A.Fake<WeeeContext>();
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithNoRights();
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
 
             VerifyApprovalNumberExistsHandler handler = new VerifyApprovalNumberExistsHandler(context, authorization);
 

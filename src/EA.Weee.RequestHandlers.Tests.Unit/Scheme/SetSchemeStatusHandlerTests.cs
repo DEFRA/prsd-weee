@@ -31,12 +31,14 @@
         /// This test ensures that a non-internal user cannot execute requests to set a scheme's status.
         /// </summary>
         /// <returns></returns>
-        [Fact]
+        [Theory]
         [Trait("Authorization", "Internal")]
-        public async Task SetSchemeStatusHandler_WithUnauthorizedUser_ThrowsSecurityException()
+        [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
+        [InlineData(AuthorizationBuilder.UserType.External)]
+        public async Task SetSchemeStatusHandler_WithNonInternalUser_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
         {
             // Arrange
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithNoRights();
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
 
             SetSchemeStatusHandler handler = new SetSchemeStatusHandler(context, authorization);
 
