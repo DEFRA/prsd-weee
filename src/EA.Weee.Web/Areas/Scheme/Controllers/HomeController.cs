@@ -34,12 +34,6 @@
             this.breadcrumb = breadcrumb;
         }
 
-        // GET: Scheme/Home
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         [HttpGet]
         public async Task<ActionResult> ChooseActivity(Guid pcsId)
         {

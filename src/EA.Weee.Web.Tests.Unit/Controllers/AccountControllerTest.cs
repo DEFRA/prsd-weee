@@ -38,38 +38,38 @@
             return new AccountController(() => oauthClient, authenticationManager, () => apiClient, emailService, () => userInfoClient);
         }
 
-        [Fact]
-        public async void GetRedirectProcess_NoOrganisationUsers_ShouldRedirectToType()
-        {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
-                .Returns(new List<OrganisationUserData>());
+        //[Fact]
+        //public async void GetRedirectProcess_NoOrganisationUsers_ShouldRedirectToType()
+        //{
+        //    A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
+        //        .Returns(new List<OrganisationUserData>());
 
-            var result = await AccountController().RedirectProcess();
-            var redirectToRouteResult = ((RedirectToRouteResult)result);
+        //    var result = await AccountController().RedirectProcess();
+        //    var redirectToRouteResult = ((RedirectToRouteResult)result);
 
-            Assert.Equal("Type", redirectToRouteResult.RouteValues["action"]);
-        }
+        //    Assert.Equal("Type", redirectToRouteResult.RouteValues["action"]);
+        //}
 
-        [Fact]
-        public async void GetRedirectProcess_ApprovedOrganisationUserOne_ShouldRedirectToChooseActivity()
-        {
-            var orgId = Guid.NewGuid();
+        //[Fact]
+        //public async void GetRedirectProcess_ApprovedOrganisationUserOne_ShouldRedirectToChooseActivity()
+        //{
+        //    var orgId = Guid.NewGuid();
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
-                .Returns(new List<OrganisationUserData>
-                {
-                    new OrganisationUserData
-                    {
-                        OrganisationId = orgId
-                    }
-                });
+        //    A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
+        //        .Returns(new List<OrganisationUserData>
+        //        {
+        //            new OrganisationUserData
+        //            {
+        //                OrganisationId = orgId
+        //            }
+        //        });
 
-            var result = await AccountController().RedirectProcess();
-            var redirectToRouteResult = ((RedirectToRouteResult)result);
+        //    var result = await AccountController().RedirectProcess();
+        //    var redirectToRouteResult = ((RedirectToRouteResult)result);
 
-            Assert.Equal(orgId, redirectToRouteResult.RouteValues["pcsId"]);
-            Assert.Equal("ChooseActivity", redirectToRouteResult.RouteValues["action"]);
-        }
+        //    Assert.Equal(orgId, redirectToRouteResult.RouteValues["pcsId"]);
+        //    Assert.Equal("ChooseActivity", redirectToRouteResult.RouteValues["action"]);
+        //}
 
         [Fact]
         public async void UserAccount_IfNotActivated_ShouldRedirectToUserAccountActivationRequired()

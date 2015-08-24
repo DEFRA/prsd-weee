@@ -22,8 +22,7 @@
         {
             if (User.Identity.IsAuthenticated)
             {
-                //TODO : Aunthenticated user home page to perfrom different activities
-                return RedirectToAction("Type", "OrganisationRegistration");
+                return RedirectToRoute("SelectOrganisation");
             }
 
             return View("Index");

@@ -1,0 +1,47 @@
+﻿@using System.Collections.Generic
+@using EA.Weee.Core.Organisations
+@model EA.Weee.Web.ViewModels.Organisation.YourOrganisationsViewModel
+@{
+    ViewBag.Title = "Your organisations";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Which organisation would you like to perform activities for?
+        </h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.AccessibleOrganisations.Selected)">
+            @Html.Gds().ValidationMessageFor(m => m.AccessibleOrganisations.Selected)
+            @Html.EditorFor(m => m.AccessibleOrganisations)
+        </div>
+
+        <div class="form-group">
+            <button class="button" type="submit">Perform activities</button>
+        </div>
+            }
+}
+
+@section related_content
+{
+    @{
+        // It's ok if the ViewBag property isn't defined here. The partial view can load the
+        // required data if we don't already have it available.
+        var inaccessibleOrganisations = ViewBag.InaccessibleOrganisations as IEnumerable<OrganisationUserData>;
+        bool alreadyLoaded = (inaccessibleOrganisations != null);
+        Html.RenderAction("_Pending", new { alreadyLoaded, inaccessibleOrganisations });
+    }
+
+    <div class="related-section">
+        <h2 class="related-section-title">
+            If your organisation is not listed
+        </h2>
+        <a href="@Url.Action("Type", "OrganisationRegistration")">Create or join another organisation</a>
+    </div>
+}
