@@ -149,6 +149,10 @@
 // 2. Typography
 // ==========================================================================
 
+.related-section-title {
+	font-weight: 700;
+	font-size: 19px;
+}
 
 // 3. Colour
 // ==========================================================================
@@ -384,6 +388,23 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 // Beta
 .phase-banner-beta {
     @include phase-banner($state: beta);
+}
+
+// Related Content
+// ==========================================================================
+
+.related {
+	border-top: 10px solid $govuk-blue;
+	margin-top: 1.6em;
+
+	.related-section {
+		padding-right: 1em;
+	
+		.related-section-title {
+			margin-top: 0.5em;
+			margin-bottom: 0.5em;
+		}
+	}
 }
 
 // Custom

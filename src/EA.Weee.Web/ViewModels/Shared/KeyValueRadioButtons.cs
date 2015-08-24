@@ -16,6 +16,7 @@
         /// </summary>
         public KeyValueRadioButtons()
         {
+            PossibleValues = new List<RadioButtonPair<TKey, TValue>>();
         }
 
         /// <summary>

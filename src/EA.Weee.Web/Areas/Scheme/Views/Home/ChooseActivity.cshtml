@@ -24,9 +24,11 @@
         <div class="form-group">
             <input type="submit" class="button" value="Continue" />
         </div>
-
-        <a href="@Url.Action("Type", "OrganisationRegistration", new {area = ""})">Create or join another organisation</a>
     }
+
+    <div class="form-group">
+        <a href="@Url.RouteUrl("SelectOrganisation")">Select another organisation</a>
+    </div>
 }
 
 
