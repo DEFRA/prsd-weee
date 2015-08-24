@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
     using System;
-    using System.Configuration;
     using System.Data.Entity;
     using System.Threading.Tasks;
+    using Core.Configuration;
     using DataAccess;
     using Domain;
     using Domain.Admin;
@@ -14,12 +14,12 @@
     public class AddCompetentAuthorityUserHandler : IRequestHandler<AddCompetentAuthorityUser, Guid>
     {
         private readonly WeeeContext context;
-        private readonly IUserContext userContext;
+        public IConfigurationManagerWrapper Configuration { get; set; }
 
-        public AddCompetentAuthorityUserHandler(WeeeContext dbContext, IUserContext userContext)
+        public AddCompetentAuthorityUserHandler(WeeeContext dbContext)
         {
             context = dbContext;
-            this.userContext = userContext;
+            Configuration = new ConfigurationManagerWrapper();
         }
 
         public async Task<Guid> HandleAsync(AddCompetentAuthorityUser message)
@@ -39,27 +39,20 @@
                 await context.UKCompetentAuthorities.FirstOrDefaultAsync(c => c.Abbreviation == authorityName);
             if (competentAuthority == null)
             {
-                throw new ArgumentException(string.Format("Could not find the competent authority with name: {0}", authorityName));
+                throw new InvalidOperationException(string.Format("Could not find the competent authority with name: {0}", authorityName));
             }
 
             CompetentAuthorityUser competentAuthorityUser = new CompetentAuthorityUser(user.Id, competentAuthority.Id, UserStatus.Pending);
             context.CompetentAuthorityUsers.Add(competentAuthorityUser);
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException(ex.Message);
-            }
             
+            await context.SaveChangesAsync();
             return competentAuthorityUser.Id;
         }
 
         private string AuthorityName(string email)
         {
             string authorityName = string.Empty;
-            string internalusersMode = ConfigurationManager.AppSettings["Weee.InternalUsersMode"];
+            string internalusersMode = Configuration.HasKey("Weee.InternalUsersMode") ? Configuration.GetKeyValue("Weee.InternalUsersMode") : null;
             if (internalusersMode != null && internalusersMode.Equals("true"))
             {
                 return "EA";
