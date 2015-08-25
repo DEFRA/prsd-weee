@@ -26,15 +26,26 @@
 
             if (producer.status == statusType.A)
             {
-                var chargeBandHistoryThisYear =
+                var chargeBandHistoryValuesThisYear =
                     context.Producers.Where(p => p.RegistrationNumber == producer.registrationNo
                         && p.MemberUpload.ComplianceYear == complianceYear
                         && p.MemberUpload.IsSubmitted)
                         .Select(p => p.ChargeBandType)
                         .ToList();
 
+                if (chargeBandHistoryValuesThisYear.Count == 0)
+                {
+                    throw new ArgumentException(
+                        string.Format(
+                            "Expected at least one previous submitted producer record for producer {0} and compliance year {1}, but found zero",
+                            producer.registrationNo, complianceYear));
+                }
+
+                var chargeBandHistoryThisYear =
+                    chargeBandHistoryValuesThisYear.Select(cbv => GetChargeBandEnumeration(cbv));
+
                 var highestChargeThisYear =
-                    chargeBandHistoryThisYear.Select(c => GetChargeAmount(GetChargeBand(c)))
+                    chargeBandHistoryThisYear.Select(c => GetChargeAmount(c))
                         .Max(charge => charge);
 
                 producerCharge.ChargeAmount = Math.Max(0, producerCharge.ChargeAmount - highestChargeThisYear);
@@ -92,7 +103,7 @@
             return producerCharge;
         }
 
-        private ChargeBandType GetChargeBand(int value)
+        private ChargeBandType GetChargeBandEnumeration(int value)
         {
             return Enumeration.FromValue<ChargeBandType>(value);
         }
