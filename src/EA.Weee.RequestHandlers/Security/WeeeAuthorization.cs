@@ -106,7 +106,7 @@
                 context.OrganisationUsers.Any(
                     ou => ou.OrganisationId == organisationId
                        && ou.UserId == userId
-                       && ou.UserStatus.Value == UserStatus.Approved.Value);
+                       && ou.UserStatus.Value == UserStatus.Active.Value);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@
                 context.OrganisationUsers.Any(
                     ou => ou.OrganisationId == organisationId
                        && ou.UserId == userId
-                       && ou.UserStatus.Value == UserStatus.Approved.Value);
+                       && ou.UserStatus.Value == UserStatus.Active.Value);
         }
 
         private bool HasClaim(Claim claim)
