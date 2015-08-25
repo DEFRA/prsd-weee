@@ -15,7 +15,11 @@
         {
             context = A.Fake<WeeeContext>();
             var contextHelper = new DbContextHelper();
-
+            var schemesDbSet = contextHelper.GetAsyncEnabledDbSet(new List<Scheme>
+            {
+               scheme
+            });
+            A.CallTo(() => context.Schemes).Returns(schemesDbSet);
             A.CallTo(() => context.Producers).Returns(contextHelper.GetAsyncEnabledDbSet(scheme.Producers));
             A.CallTo(() => context.MigratedProducers)
                 .Returns(contextHelper.GetAsyncEnabledDbSet(new List<MigratedProducer>()));
