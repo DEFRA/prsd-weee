@@ -13,27 +13,31 @@
 
     internal class GetSchemeByIdHandler : IRequestHandler<GetSchemeById, SchemeData>
     {
-        private readonly WeeeContext context;
+        private readonly IGetSchemeByIdDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
 
         private readonly IMap<Scheme, SchemeData> schemeMap;
 
-        public GetSchemeByIdHandler(WeeeContext context, IMap<Scheme, SchemeData> schemeMap, IWeeeAuthorization authorization)
+        public GetSchemeByIdHandler(
+            IGetSchemeByIdDataAccess dataAccess,
+            IMap<Scheme, SchemeData> schemeMap,
+            IWeeeAuthorization authorization)
         {
-            this.context = context;
+            this.dataAccess = dataAccess;
             this.schemeMap = schemeMap;
             this.authorization = authorization;
         }
 
-        public async Task<SchemeData> HandleAsync(GetSchemeById message)
+        public async Task<SchemeData> HandleAsync(GetSchemeById request)
         {
             authorization.EnsureCanAccessInternalArea();
 
-            var scheme = await context.Schemes.SingleOrDefaultAsync(m => m.Id == message.SchemeId);
+            var scheme = await dataAccess.GetSchemeOrDefault(request.SchemeId);
 
             if (scheme == null)
             {
-                throw new ArgumentNullException(string.Format("Could not find a Scheme with id {0}", message.SchemeId));
+                string message = string.Format("No scheme was found with id \"{0}\".", request.SchemeId);
+                throw new ArgumentException(message);
             }
 
             return schemeMap.Map(scheme);

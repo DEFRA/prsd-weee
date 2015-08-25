@@ -13,6 +13,7 @@
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
+    using System.Security;
     using System.Threading.Tasks;
     using Xunit;
     using ObligationType = Domain.ObligationType;
@@ -20,7 +21,40 @@
     public class UpdateSchemeInformationHandlerTests
     {
         private readonly DbContextHelper helper = new DbContextHelper();
-        
+
+        /// <summary>
+        /// This test ensures that a non-internal user cannot execute requests to update
+        /// a scheme's information.
+        /// </summary>
+        /// <returns></returns>
+        [Theory]
+        [Trait("Authorization", "Internal")]
+        [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
+        [InlineData(AuthorizationBuilder.UserType.External)]
+        public async Task UpdateSchemeInformationHandler_WithNonInternalUser_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
+        {
+            // Arrange
+            WeeeContext context = A.Fake<WeeeContext>();
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
+
+            UpdateSchemeInformationHandler handler = new UpdateSchemeInformationHandler(context, authorization);
+
+            UpdateSchemeInformation request = new UpdateSchemeInformation(
+                new Guid("3C367528-AE93-427F-A4C5-E23F0D317633"),
+                "New scheme name",
+                "New approval name",
+                "New IBIS customer reference",
+                Core.Shared.ObligationType.B2B,
+                new Guid("{291F9DE0-2600-481C-9C66-5ACB4033668C}"),
+                Core.Shared.SchemeStatus.Approved);
+
+            // Act
+            Func<Task<Guid>> action = () => handler.HandleAsync(request);
+
+            // Assert
+            await Assert.ThrowsAsync<SecurityException>(action);
+        }
+
         [Fact]
         public async Task UpdateSchemeInformationHandler_UpdateSchemeKeyInformation_ReturnsUpdatedScheme()
         {
