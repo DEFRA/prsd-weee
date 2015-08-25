@@ -33,7 +33,7 @@
 
             await db.SaveChangesAsync();
 
-            var organisationUser = new OrganisationUser(userContext.UserId, organisation.Id, UserStatus.Approved);
+            var organisationUser = new OrganisationUser(userContext.UserId, organisation.Id, UserStatus.Active);
             db.OrganisationUsers.Add(organisationUser);
 
             await db.SaveChangesAsync();

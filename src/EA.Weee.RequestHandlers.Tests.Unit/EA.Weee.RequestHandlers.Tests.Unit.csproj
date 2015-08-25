@@ -121,8 +121,10 @@
     <Compile Include="Scheme\VerifyApprovalNumberExistsHandlerTests.cs" />
     <Compile Include="Scheme\SetSchemeStatusHandlerTests.cs" />
     <Compile Include="Security\WeeeAuthorizationTests.cs" />
+    <Compile Include="Users\GetOrganisationUserHandlerTests.cs" />
     <Compile Include="Users\GetUserDataHandlerTests.cs" />
     <Compile Include="Users\GetUsersByOrganisationIdHandlerTests.cs" />
+    <Compile Include="Users\UpdateOrganisationUserStatusHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
