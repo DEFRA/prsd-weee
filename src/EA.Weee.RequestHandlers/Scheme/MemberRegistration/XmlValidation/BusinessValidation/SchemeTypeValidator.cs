@@ -2,11 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using DataAccess;
     using Domain;
-    using Domain.Scheme;
     using Extensions;
     using FluentValidation;
   
@@ -26,9 +24,7 @@
                         .NotEmpty()
                         .Matches(scheme.ApprovalNumber)
                         .WithState(st => ErrorLevel.Error)
-                        .WithMessage(
-                            "The compliance scheme approval number in the xml '{0}' does not match your compliance scheme approval number",
-                            st => st.approvalNo);
+                        .WithMessage("The approval number for your compliance scheme doesn’t match with the PCS that you selected. Please make sure that you’re entering the right compliance scheme approval number.");
                 }
             });
 
@@ -127,21 +123,51 @@
                         (st, producer) => producer.registrationNo,
                         (st, producer) => producer.obligationType.ToString());
 
-                var currentProducers = context.Producers.Where(p => p.IsCurrentForComplianceYear);
-
+                //Producer Name change warning
+                var currentProducers = context.Producers.Where(p => p.IsCurrentForComplianceYear).ToList();
                 RuleForEach(st => st.producerList)
                     .Must((st, producer) =>
                     {
                         if (producer.status == statusType.A)
                         {
-                            var matchingProducer = currentProducers.FirstOrDefault(p => p.RegistrationNumber == producer.registrationNo);
-                            if (matchingProducer != null &&
-                                matchingProducer.OrganisationName != producer.GetProducerName())
+                            string producerName = producer.GetProducerName();
+                            bool bMatchFound = false;
+                            var matchingProducer = currentProducers.FirstOrDefault(p => 
+                                                                    p.RegistrationNumber == producer.registrationNo
+                                                                    && p.MemberUpload.ComplianceYear == int.Parse(st.complianceYear)
+                                                                    && p.Scheme.OrganisationId != organisationId);
+                            if (matchingProducer == null)
+                            {
+                                // reverse the order the current producers list by compliance year and then by updatedDate
+                                matchingProducer = currentProducers.Where(p => p.RegistrationNumber == producer.registrationNo)
+                                                                   .OrderByDescending(p => p.MemberUpload.ComplianceYear)
+                                                                   .ThenBy(p => p.UpdatedDate)
+                                                                   .FirstOrDefault();
+                                if (matchingProducer == null)
+                                {
+                                    // search in migrated producers list
+                                    var migratedProducer = context.MigratedProducers.FirstOrDefault(p => p.ProducerRegistrationNumber == producer.registrationNo);
+                                    if (migratedProducer != null &&
+                                        migratedProducer.ProducerName != producerName)
+                                    {
+                                        return false;
+                                    }
+                                }
+                                else
+                                {
+                                    bMatchFound = true;
+                                }
+                            }
+                            else
+                            {
+                                bMatchFound = true;
+                            }
+
+                            if (bMatchFound && matchingProducer.OrganisationName != producerName)
                             {
                                 return false;
                             }
                         }
-
                         return true;
                     })
                     .WithState(st => ErrorLevel.Warning)
