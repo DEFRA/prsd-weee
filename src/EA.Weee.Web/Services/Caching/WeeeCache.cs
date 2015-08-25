@@ -67,7 +67,7 @@
                 var request = new GetOrganisationInfo(organisationId);
                 var result = await client.SendAsync(accessToken, request);
 
-                return result.Name;
+                return result.OrganisationName;
             }
         }
 

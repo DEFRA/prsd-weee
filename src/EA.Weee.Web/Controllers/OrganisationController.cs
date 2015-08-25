@@ -29,25 +29,27 @@
         {
             IEnumerable<OrganisationUserData> organisations = await GetOrganisations();
 
-            List<OrganisationUserData> accessibleOrganisations = new List<OrganisationUserData>(
-                organisations.Where(o => o.UserStatus == UserStatus.Active));
+            List<OrganisationUserData> accessibleOrganisations = organisations
+                .Where(o => o.UserStatus == UserStatus.Active)
+                .ToList();
 
-            List<OrganisationUserData> inaccessibleOrganisations = new List<OrganisationUserData>(
-                organisations.Except(accessibleOrganisations));
+            List<OrganisationUserData> inaccessibleOrganisations = organisations
+                .Except(accessibleOrganisations)
+                .ToList();
 
             if (accessibleOrganisations.Count == 1 && inaccessibleOrganisations.Count == 0)
             {
                 Guid organisationId = accessibleOrganisations[0].OrganisationId;
                 return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = organisationId });
             }
-            else if (accessibleOrganisations.Any())
+            else if (accessibleOrganisations.Count > 0)
             {
                 YourOrganisationsViewModel model = new YourOrganisationsViewModel();
                 
                 foreach (OrganisationUserData organisation in accessibleOrganisations)
                 {
                     RadioButtonPair<string, Guid> item = new RadioButtonPair<string, Guid>(
-                        organisation.Organisation.Name,
+                        organisation.Organisation.OrganisationName,
                         organisation.OrganisationId);
 
                     model.AccessibleOrganisations.PossibleValues.Add(item);
@@ -56,7 +58,7 @@
                 ViewBag.InaccessibleOrganisations = inaccessibleOrganisations;
                 return View("YourOrganisations", model);
             }
-            else if (inaccessibleOrganisations.Any())
+            else if (inaccessibleOrganisations.Count > 0)
             {
                 PendingOrganisationsViewModel model = new PendingOrganisationsViewModel();
 
@@ -103,6 +105,11 @@
             return PartialView(inaccessibleOrganisations);
         }
 
+        /// <summary>
+        /// Returns all complete organisations with which the user is associated,
+        /// ordered by organisation name.
+        /// </summary>
+        /// <returns></returns>
         private async Task<IEnumerable<OrganisationUserData>> GetOrganisations()
         {
             List<OrganisationUserData> organisations;
@@ -115,7 +122,9 @@
                      new GetUserOrganisationsByStatus(new int[0]));
             }
 
-            return organisations.Where(o => o.Organisation.OrganisationStatus == OrganisationStatus.Complete);
+            return organisations
+                .Where(o => o.Organisation.OrganisationStatus == OrganisationStatus.Complete)
+                .OrderBy(o => o.Organisation.OrganisationName);
         }
     }
 }

@@ -25,20 +25,10 @@
                 @foreach (OrganisationUserData item in Model.InaccessibleOrganisations)
                 {
                     <tr>
-                        @if (item.Organisation.OrganisationType == OrganisationType.RegisteredCompany)
-                        {
-                            <td>
-                                <span>@item.Organisation.Name</span>
-                                <span style="color:#6F777B;">- @item.UserStatus</span>
-                            </td>
-                        }
-                        else
-                        {
-                            <td>
-                                <span>@item.Organisation.TradingName</span>
-                                <span style="color:#6F777B;">- @item.UserStatus</span>
-                            </td>
-                        }
+                        <td>
+                            <span>@item.Organisation.OrganisationName</span>
+                            <span style="color:#6F777B;">- @item.UserStatus</span>
+                        </td>
                     </tr>
                 }
                 </tbody>
