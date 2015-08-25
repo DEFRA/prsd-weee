@@ -174,13 +174,23 @@
         }
 
         [Fact]
-        public async void XmlChargeBandCalculator_AmendmentWithNoPreviousHistory_ThrowsArgumentException()
+        public async void XmlChargeBandCalculator_AmendmentWithNoPreviousHistory_NormalCharge()
         {
+            // this situation can happen when we receive an amendment for a migrated producer
+            // we don't carry charge band history for those, so, no option but to charge full amount for new band
+
+            A.CallTo(() => context.ProducerChargeBands).Returns(helper.GetAsyncEnabledDbSet(GetFakeChargeBands()));
             A.CallTo(() => context.Producers).Returns(helper.GetAsyncEnabledDbSet(new List<Producer>()));
 
-            Assert.Throws<ArgumentException>(() => RunHandler(
+            var producerCharges = RunHandler(
                 new XmlChargeBandCalculator(context, new XmlConverter()),
-                @"ExampleXML\v3-valid-AmendmentBandC.xml"));
+                @"ExampleXML\v3-valid-AmendmentBandC.xml");
+
+            var producerCharge = (ProducerCharge)producerCharges["The Empire"];
+
+            // to C, so 3
+            Assert.Equal(ChargeBandType.C, producerCharge.ChargeBandType);
+            Assert.Equal(3, producerCharge.ChargeAmount);
         }
 
         private Hashtable RunHandler(XmlChargeBandCalculator xmlChargeBandCalculator, string relativeFilePath)

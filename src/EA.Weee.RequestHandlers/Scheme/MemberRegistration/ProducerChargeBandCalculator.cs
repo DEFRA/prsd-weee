@@ -6,7 +6,6 @@
     using DataAccess;
     using Domain;
     using Domain.Producer;
-    using Prsd.Core.Domain;
     using RequestHandlers;
 
     public class ProducerChargeBandCalculator
@@ -26,22 +25,15 @@
 
             if (producer.status == statusType.A)
             {
-                var chargesSoFarThisYear =
-                    context.Producers.Where(p => p.RegistrationNumber == producer.registrationNo
-                        && p.MemberUpload.ComplianceYear == complianceYear
-                        && p.MemberUpload.IsSubmitted)
-                        .Select(p => p.ChargeThisUpdate)
-                        .ToList();
+                var producerRecordsSoFarThisYear =
+                    context.Producers.Where(
+                        p => p.RegistrationNumber == producer.registrationNo
+                          && p.MemberUpload.ComplianceYear == complianceYear
+                          && p.MemberUpload.IsSubmitted);
 
-                if (chargesSoFarThisYear.Count == 0)
-                {
-                    throw new ArgumentException(
-                        string.Format(
-                            "Expected at least one previous submitted producer record for amended producer {0} and compliance year {1}, but found zero",
-                            producer.registrationNo, complianceYear));
-                }
+                var chargesSoFarThisYear = producerRecordsSoFarThisYear.Select(p => p.ChargeThisUpdate);
 
-                decimal totalChargeSoFarThisYear = chargesSoFarThisYear.Sum();
+                var totalChargeSoFarThisYear = chargesSoFarThisYear.DefaultIfEmpty(0).Sum();
 
                 producerCharge.ChargeAmount = Math.Max(0, producerCharge.ChargeAmount - totalChargeSoFarThisYear);
             }
@@ -96,11 +88,6 @@
             }
 
             return producerCharge;
-        }
-
-        private ChargeBandType GetChargeBandEnumeration(int value)
-        {
-            return Enumeration.FromValue<ChargeBandType>(value);
         }
     }
 }
