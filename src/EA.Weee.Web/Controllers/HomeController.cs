@@ -67,5 +67,12 @@
 
             return PartialView();
         }
+
+        [AllowAnonymous]
+        public ActionResult Robots()
+        {
+            Response.ContentType = "text/plain";
+            return View();
+        }
     }
 }

@@ -107,7 +107,7 @@
     <Compile Include="Helpers\PrnGeneration\QuadraticResidueHelper.cs" />
     <Compile Include="Helpers\Xml\IXmlErrorTranslator.cs" />
     <Compile Include="Helpers\Xml\XmlErrorTranslator.cs" />
-    <Compile Include="NewUser\UserData.cs" />
+    <Compile Include="Users\UserData.cs" />
     <Compile Include="Admin\UserSearchData.cs" />
     <Compile Include="Organisations\ContactData.cs" />
     <Compile Include="Organisations\OrganisationData.cs" />

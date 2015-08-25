@@ -2,16 +2,13 @@
 {
     using System;
     using System.Data.Entity;
-    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
-    using Domain;
     using Domain.Organisation;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using Helpers;
-    using Mappings;
     using RequestHandlers.Users;
     using Requests.Users;
     using Xunit;
@@ -38,7 +35,7 @@
 
             await
                 Assert.ThrowsAsync<SecurityException>(
-                    async () => await handler.HandleAsync(new UpdateOrganisationUserStatus(Guid.NewGuid(), UserStatus.Active, Guid.NewGuid())));
+                    async () => await handler.HandleAsync(new UpdateOrganisationUserStatus(Guid.NewGuid().ToString(), UserStatus.Active, Guid.NewGuid())));
         }
 
         [Fact]
@@ -50,10 +47,10 @@
 
             var handler = new UpdateOrganisationUserStatusHandler(context, permissiveAuthorization);
 
-            var organisationUserId = await handler.HandleAsync(new UpdateOrganisationUserStatus(orgId, UserStatus.Inactive, userId));
+            var organisationId = await handler.HandleAsync(new UpdateOrganisationUserStatus(userId.ToString(), UserStatus.Inactive, orgId));
 
-            Assert.NotNull(organisationUserId);
-            Assert.Equal(organisationUserId, orgId);
+            Assert.NotNull(organisationId);
+            Assert.Equal(organisationId, orgId);
         }
 
         private DbSet<OrganisationUser> MakeOrganisationUsers()

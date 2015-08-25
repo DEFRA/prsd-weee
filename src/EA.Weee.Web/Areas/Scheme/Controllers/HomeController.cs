@@ -25,6 +25,7 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
+        private const string DoNotChange = "Do not change at this time";
 
         public HomeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb)
         {
@@ -152,11 +153,19 @@
 
             using (var client = apiClient())
             {
+                var organisationExists =
+                   await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
+
+                if (!organisationExists)
+                {
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "pcsId");
+                }
+
                 var orgUser = await client.SendAsync(User.GetAccessToken(), new GetOrganisationUser(pcsId, userId));
                 var model = new OrganisationUserViewModel(orgUser);
                 model.UserStatuses = GetUserPossibleStatusToBeChanged(model.UserStatuses, model.UserStatus);
-                model.UserStatuses.PossibleValues.Add("Do not change at this time");
-                return View(model);
+                model.UserStatuses.PossibleValues.Add(DoNotChange);
+                return View("ManageOrganisationUser", model);
             }
         }
 
@@ -171,13 +180,13 @@
                 return View(model);
             }
 
-            if (model.UserStatuses.SelectedValue != "Do not change at this time")
+            if (model.UserStatuses.SelectedValue != DoNotChange)
             {
                 using (var client = apiClient())
                 {
                     var userStatus = model.UserStatuses.SelectedValue.GetValueFromDisplayName<UserStatus>();
                     await
-                        client.SendAsync(User.GetAccessToken(), new UpdateOrganisationUserStatus(model.Id, userStatus, pcsId));
+                        client.SendAsync(User.GetAccessToken(), new UpdateOrganisationUserStatus(model.UserId, userStatus, pcsId));
                 }
             }
 

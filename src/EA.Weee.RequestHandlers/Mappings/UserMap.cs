@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using Core.NewUser;
+    using Core.Users;
     using Domain;
     using Prsd.Core.Mapper;
 

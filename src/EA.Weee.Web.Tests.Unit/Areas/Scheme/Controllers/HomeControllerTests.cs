@@ -12,6 +12,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.Users;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -246,6 +247,89 @@
             Assert.Equal("ManageOrganisationUser", routeValues["action"]);
             Assert.Equal("Home", routeValues["controller"]);
             Assert.True(isModelStateValid);
+        }
+
+        [Fact]
+        public async void GetManageOrganisationUser_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(false);
+
+            await Assert.ThrowsAnyAsync<Exception>(() => HomeController().ManageOrganisationUser(A<Guid>._, A<Guid>._));
+        }
+
+        [Fact]
+        public async void GetManageOrganisationUser_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationUser>._))
+                .Returns(new OrganisationUserData
+                {
+                    UserId = Guid.NewGuid().ToString(),
+                    UserStatus = UserStatus.Active,
+                    User = new UserData()
+                });
+
+            var result = await HomeController().ManageOrganisationUser(A<Guid>._, A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(((ViewResult)result).ViewName, "ManageOrganisationUser");
+        }
+
+        [Fact]
+        public async void PostManageOrganisationUser_DoNotChangeSelected_MustNotHappendUpdateOrganisationUserStatus()
+        {
+            const string DoNotChange = "Do not change at this time";
+
+            var model = new OrganisationUserViewModel
+            {
+                UserStatus = UserStatus.Active,
+                UserId = Guid.NewGuid().ToString(),
+                Firstname = "Test",
+                Lastname = "Test",
+                Username = "test@test.com",
+                UserStatuses = new RadioButtonStringCollectionViewModel
+                {
+                    SelectedValue = DoNotChange,
+                    PossibleValues = new[] { "Inactive", DoNotChange }
+                }
+            };
+
+            await HomeController().ManageOrganisationUser(Guid.NewGuid(), model);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationUserStatus>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async void PostManageOrganisationUser_ModalStateValid_ReturnsView()
+        {
+            const string DoNotChange = "Do not change at this time";
+
+            var model = new OrganisationUserViewModel
+            {
+                UserStatus = UserStatus.Active,
+                UserId = Guid.NewGuid().ToString(),
+                Firstname = "Test",
+                Lastname = "Test",
+                Username = "test@test.com",
+                UserStatuses = new RadioButtonStringCollectionViewModel
+                {
+                    SelectedValue = "Inactive",
+                    PossibleValues = new[] { "Inactive", DoNotChange }
+                }
+            };
+
+            var result = await HomeController().ManageOrganisationUser(Guid.NewGuid(), model);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationUserStatus>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ManageOrganisationUsers", routeValues["action"]);
+            Assert.Equal("Home", routeValues["controller"]);
         }
 
         private HomeController HomeController()

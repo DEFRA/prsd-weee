@@ -8,13 +8,13 @@
     {
         public Guid OrganisationId { get; set; }
 
-        public Guid OrganisationUserId { get; set; }
+        public string UserId { get; set; }
 
         public UserStatus UserStatus { get; set; }
 
-        public UpdateOrganisationUserStatus(Guid organisationUserId, UserStatus userStatus, Guid orgId)
+        public UpdateOrganisationUserStatus(string userId, UserStatus userStatus, Guid orgId)
         {
-            OrganisationUserId = organisationUserId;
+           UserId = userId;
             UserStatus = userStatus;
             OrganisationId = orgId;
         }
