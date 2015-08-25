@@ -2,6 +2,7 @@
 {
     using System;
     using System.Data.Entity;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
@@ -14,8 +15,9 @@
     using RequestHandlers.Users;
     using Requests.Users;
     using Xunit;
+    using UserStatus = Core.Shared.UserStatus;
 
-    public class GetUsersByOrganisationIdHandlerTests
+    public class UpdateOrganisationUserStatusHandlerTests
     {
         private readonly WeeeContext context = A.Fake<WeeeContext>();
         private readonly DbContextHelper helper = new DbContextHelper();
@@ -27,45 +29,45 @@
             AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
         private readonly Guid orgId = Guid.NewGuid();
+        private readonly Guid userId = Guid.NewGuid();
 
         [Fact]
         public async void NotOrganisationUser_ThrowsSecurityException()
         {
-            var handler = new GetUsersByOrganisationIdHandler(context, denyingAuthorization, new OrganisationUserMap(new OrganisationMap(new AddressMap(), new ContactMap()), new UserMap()));
+            var handler = new UpdateOrganisationUserStatusHandler(context, denyingAuthorization);
 
             await
                 Assert.ThrowsAsync<SecurityException>(
-                    async () => await handler.HandleAsync(new GetUsersByOrganisationId(Guid.NewGuid())));
+                    async () => await handler.HandleAsync(new UpdateOrganisationUserStatus(Guid.NewGuid(), UserStatus.Active, Guid.NewGuid())));
         }
 
         [Fact]
-        public async Task GetUsersByOrganisationIdHandler_ApprovalNumberNotExists_ReturnsFalse()
+        public async Task UpdateOrganisationUserStatusHandler_UpdateUserStatus_ReturnsUpdatedOrgUserId()
         {
             var orgUsers = MakeOrganisationUsers();
 
             A.CallTo(() => context.OrganisationUsers).Returns(orgUsers);
 
-            var handler = new GetUsersByOrganisationIdHandler(context, permissiveAuthorization, new OrganisationUserMap(new OrganisationMap(new AddressMap(), new ContactMap()), new UserMap()));
+            var handler = new UpdateOrganisationUserStatusHandler(context, permissiveAuthorization);
 
-            var organisationUsers = await handler.HandleAsync(new GetUsersByOrganisationId(orgId));
+            var organisationUserId = await handler.HandleAsync(new UpdateOrganisationUserStatus(orgId, UserStatus.Inactive, userId));
 
-            Assert.NotNull(organisationUsers);
-            Assert.Equal(organisationUsers.Count, 2);
+            Assert.NotNull(organisationUserId);
+            Assert.Equal(organisationUserId, orgId);
         }
 
         private DbSet<OrganisationUser> MakeOrganisationUsers()
         {
             return helper.GetAsyncEnabledDbSet(new[]
             {
-                CreateOrganisationUser(orgId),
-                CreateOrganisationUser(orgId),
-                CreateOrganisationUser(Guid.NewGuid()),
+                CreateOrganisationUser(orgId, userId),
+                CreateOrganisationUser(Guid.NewGuid(), Guid.NewGuid()),
             });
         }
 
-        private static OrganisationUser CreateOrganisationUser(Guid orgId)
+        private static OrganisationUser CreateOrganisationUser(Guid orgId, Guid userId)
         {
-            var orgUser = new OrganisationUser(Guid.NewGuid(), orgId, UserStatus.Active);
+            var orgUser = new OrganisationUser(userId, orgId, Domain.UserStatus.Active);
             return orgUser;
         }
     }

@@ -7,6 +7,7 @@
     using Domain.Organisation;
     using AddressType = Domain.AddressType;
     using ObligationType = Domain.ObligationType;
+    using UserStatus = Domain.UserStatus;
 
     internal class ValueObjectInitializer
     {
@@ -62,6 +63,28 @@
                 default:
                     throw new ArgumentException(string.Format("Unknown obligation type: {0}", obligationType),
                         "obligationType");
+            }
+        }
+
+        public static UserStatus GetUserStatus(Core.Shared.UserStatus userStatus)
+        {
+            switch (userStatus)
+            {
+                case Core.Shared.UserStatus.Rejected:
+                    return UserStatus.Rejected;
+
+                case Core.Shared.UserStatus.Active:
+                    return UserStatus.Active;
+
+                case Core.Shared.UserStatus.Inactive:
+                    return UserStatus.Inactive;
+
+                case Core.Shared.UserStatus.Pending:
+                    return UserStatus.Pending;
+
+                default:
+                    throw new ArgumentException(string.Format("Unknown user status: {0}", userStatus),
+                        "userStatus");
             }
         }
     }

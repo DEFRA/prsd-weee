@@ -155,7 +155,7 @@
                     client.SendAsync(
                         User.GetAccessToken(),
                         new GetOrganisationsByUserId(User.GetUserId(),
-                            new[] { (int)UserStatus.Approved }, 
+                            new[] { (int)UserStatus.Active }, 
                             new int[] { (int)OrganisationStatus.Complete }));
 
                 var inactiveOrganisationUsers = await
@@ -164,7 +164,7 @@
                         new GetOrganisationsByUserId(User.GetUserId(),
                             new[]
                             {
-                                (int)UserStatus.Pending, (int)UserStatus.Refused,
+                                (int)UserStatus.Pending, (int)UserStatus.Rejected,
                                 (int)UserStatus.Inactive
                             }));
 

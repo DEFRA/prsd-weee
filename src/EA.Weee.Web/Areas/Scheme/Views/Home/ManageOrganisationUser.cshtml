@@ -1,0 +1,56 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.OrganisationUserViewModel
+@{
+    ViewBag.Title = "Manage Organisation User";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">Change the user's status</h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "ManageOrganisationUser", controllerName: "Home", method: FormMethod.Post))
+    {  
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.Firstname)
+        @Html.HiddenFor(m => m.Lastname)
+        @Html.HiddenFor(m => m.Username)
+        @Html.HiddenFor(m => m.UserStatus)
+        
+        <div class="form-group">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Current status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span style="font-family: 'Arial Bold', 'Arial'; font-weight: 700; color: #0B0C0C;">@Html.DisplayFor(m => m.Firstname) @Html.DisplayFor(m => m.Lastname)</span></td>
+                        <td>
+                            <a href="mailto:@Html.DisplayFor(m => m.Username)" target="_top">@Html.DisplayFor(m => m.Username)</a>
+                        </td>
+                        <td><span style="font-family: 'Arial'; font-weight: 400; color: #6F777B;">@Html.DisplayFor(m => m.UserStatus)</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <header class="hgroup">
+            <h2 class="heading-medium">Update status</h2>
+        </header>
+        
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.UserStatuses.SelectedValue)">
+            @Html.EditorFor(m => m.UserStatuses)
+        </div>
+
+        <div class="form-group">
+            <button class="button" type="submit">Save and continue</button>
+        </div>
+    }
+}

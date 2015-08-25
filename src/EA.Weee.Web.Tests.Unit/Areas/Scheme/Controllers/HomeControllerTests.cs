@@ -241,7 +241,10 @@
 
             var result = await HomeController().ManageOrganisationUsers(A<Guid>._, model);
 
-            Assert.IsType<ViewResult>(result);
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ManageOrganisationUser", routeValues["action"]);
+            Assert.Equal("Home", routeValues["controller"]);
             Assert.True(isModelStateValid);
         }
 

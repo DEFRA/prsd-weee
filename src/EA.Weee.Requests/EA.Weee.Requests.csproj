@@ -85,7 +85,9 @@
     <Compile Include="Organisations\OrganisationSearchById.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NewUser\UserById.cs" />
+    <Compile Include="Users\GetOrganisationUser.cs" />
     <Compile Include="Users\GetUsersByOrganisationId.cs" />
+    <Compile Include="Users\UpdateOrganisationUserStatus.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
