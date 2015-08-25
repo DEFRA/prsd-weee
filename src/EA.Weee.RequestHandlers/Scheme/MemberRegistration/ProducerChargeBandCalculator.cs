@@ -26,29 +26,24 @@
 
             if (producer.status == statusType.A)
             {
-                var chargeBandHistoryValuesThisYear =
+                var chargesSoFarThisYear =
                     context.Producers.Where(p => p.RegistrationNumber == producer.registrationNo
                         && p.MemberUpload.ComplianceYear == complianceYear
                         && p.MemberUpload.IsSubmitted)
-                        .Select(p => p.ChargeBandType)
+                        .Select(p => p.ChargeThisUpdate)
                         .ToList();
 
-                if (chargeBandHistoryValuesThisYear.Count == 0)
+                if (chargesSoFarThisYear.Count == 0)
                 {
                     throw new ArgumentException(
                         string.Format(
-                            "Expected at least one previous submitted producer record for producer {0} and compliance year {1}, but found zero",
+                            "Expected at least one previous submitted producer record for amended producer {0} and compliance year {1}, but found zero",
                             producer.registrationNo, complianceYear));
                 }
 
-                var chargeBandHistoryThisYear =
-                    chargeBandHistoryValuesThisYear.Select(cbv => GetChargeBandEnumeration(cbv));
+                decimal totalChargeSoFarThisYear = chargesSoFarThisYear.Sum();
 
-                var highestChargeThisYear =
-                    chargeBandHistoryThisYear.Select(c => GetChargeAmount(c))
-                        .Max(charge => charge);
-
-                producerCharge.ChargeAmount = Math.Max(0, producerCharge.ChargeAmount - highestChargeThisYear);
+                producerCharge.ChargeAmount = Math.Max(0, producerCharge.ChargeAmount - totalChargeSoFarThisYear);
             }
 
             return producerCharge;
