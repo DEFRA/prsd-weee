@@ -102,97 +102,6 @@
             Assert.Equal(fifthProducer.ChargeAmount, 30);
         }
 
-        [Fact]
-        public void XmlChargeBandCalculator_AmendmentWithHigherBand_IncreasesChargeByDifference()
-        {
-            A.CallTo(() => context.ProducerChargeBands).Returns(helper.GetAsyncEnabledDbSet(GetFakeChargeBands()));
-
-            var producerWithLowerBand = MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.E, 1);
-
-            A.CallTo(() => context.Producers).Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
-            {
-                producerWithLowerBand
-            }));
-
-            var producerCharges = RunHandler(
-                new XmlChargeBandCalculator(context, new XmlConverter()),
-                @"ExampleXML\v3-valid-AmendmentBandC.xml");
-
-            var producerCharge = (ProducerCharge)producerCharges["The Empire"];
-
-            // E up to C, raise by 2
-            Assert.Equal(ChargeBandType.C, producerCharge.ChargeBandType);
-            Assert.Equal(2, producerCharge.ChargeAmount);
-        }
-
-        [Fact]
-        public void XmlChargeBandCalculator_AmendmentWithLowerBand_ZeroCharge()
-        {
-            A.CallTo(() => context.ProducerChargeBands).Returns(helper.GetAsyncEnabledDbSet(GetFakeChargeBands()));
-
-            var producerWithHigherBand = MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.A, 5);
-
-            A.CallTo(() => context.Producers).Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
-            {
-                producerWithHigherBand
-            }));
-
-            var producerCharges = RunHandler(
-                new XmlChargeBandCalculator(context, new XmlConverter()),
-                @"ExampleXML\v3-valid-AmendmentBandC.xml");
-
-            var producerCharge = (ProducerCharge)producerCharges["The Empire"];
-
-            // A down to C, would be -2, but we don't refund, so just zero charge
-            Assert.Equal(ChargeBandType.C, producerCharge.ChargeBandType);
-            Assert.Equal(0, producerCharge.ChargeAmount);
-        }
-
-        [Fact]
-        public void XmlChargeBandCalculator_AmendmentWithHigherBandAfterAmendmentWithLowerBand_IncreasesChargeByDifference()
-        {
-            A.CallTo(() => context.ProducerChargeBands).Returns(helper.GetAsyncEnabledDbSet(GetFakeChargeBands()));
-
-            var producerWithHighishBand = MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.D, 2);
-            var producerWithLowerBand = MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.E, 0);
-
-            A.CallTo(() => context.Producers).Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
-            {
-                producerWithHighishBand,
-                producerWithLowerBand
-            }));
-
-            var producerCharges = RunHandler(
-                new XmlChargeBandCalculator(context, new XmlConverter()),
-                @"ExampleXML\v3-valid-AmendmentBandC.xml");
-
-            var producerCharge = (ProducerCharge)producerCharges["The Empire"];
-
-            // D down to E, then E up to C, highest before C was D, so D -> C, increase by 1
-            Assert.Equal(ChargeBandType.C, producerCharge.ChargeBandType);
-            Assert.Equal(1, producerCharge.ChargeAmount);
-        }
-
-        [Fact]
-        public async void XmlChargeBandCalculator_AmendmentWithNoPreviousHistory_NormalCharge()
-        {
-            // this situation can happen when we receive an amendment for a migrated producer
-            // we don't carry charge band history for those, so, no option but to charge full amount for new band
-
-            A.CallTo(() => context.ProducerChargeBands).Returns(helper.GetAsyncEnabledDbSet(GetFakeChargeBands()));
-            A.CallTo(() => context.Producers).Returns(helper.GetAsyncEnabledDbSet(new List<Producer>()));
-
-            var producerCharges = RunHandler(
-                new XmlChargeBandCalculator(context, new XmlConverter()),
-                @"ExampleXML\v3-valid-AmendmentBandC.xml");
-
-            var producerCharge = (ProducerCharge)producerCharges["The Empire"];
-
-            // to C, so 3
-            Assert.Equal(ChargeBandType.C, producerCharge.ChargeBandType);
-            Assert.Equal(3, producerCharge.ChargeAmount);
-        }
-
         private Hashtable RunHandler(XmlChargeBandCalculator xmlChargeBandCalculator, string relativeFilePath)
         {
             var absoluteFilePath = Path.Combine(
@@ -222,21 +131,15 @@
 
         private Producer GetPassingProducer()
         {
-            return MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.A, 5);
-        }
-
-        private Producer MakeSubmittedProducer(int complianceYear, string regNumber, ChargeBandType chargeBand, decimal chargeThisUpdate)
-        {
             var fakeMemberUpload = A.Fake<MemberUpload>();
             A.CallTo(() => fakeMemberUpload.IsSubmitted).Returns(true);
-            A.CallTo(() => fakeMemberUpload.ComplianceYear).Returns(complianceYear);
+            A.CallTo(() => fakeMemberUpload.ComplianceYear).Returns(2016);
 
-            // var producer = new Producer() // 18 parameters and unfakeable? ... Nnno.
-            var producer = (Producer)Activator.CreateInstance(typeof(Producer), true); 
-            typeof(Producer).GetProperty("RegistrationNumber").SetValue(producer, regNumber);
+            var producer = (Producer)Activator.CreateInstance(typeof(Producer), true);
+            typeof(Producer).GetProperty("RegistrationNumber").SetValue(producer, AmendmentRegistrationNumber);
             typeof(Producer).GetProperty("MemberUpload").SetValue(producer, fakeMemberUpload);
-            typeof(Producer).GetProperty("ChargeBandType").SetValue(producer, chargeBand.Value);
-            typeof(Producer).GetProperty("ChargeThisUpdate").SetValue(producer, chargeThisUpdate);
+            typeof(Producer).GetProperty("ChargeBandType").SetValue(producer, ChargeBandType.A.Value);
+            typeof(Producer).GetProperty("ChargeThisUpdate").SetValue(producer, (decimal)5);
 
             return producer;
         }
