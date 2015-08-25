@@ -40,7 +40,7 @@
         }
 
         [Fact]
-        public async Task GetUsersByOrganisationIdHandler_ApprovalNumberNotExists_ReturnsFalse()
+        public async Task GetOrganisationUserHandler_ReturnsRequestedOrganisationUser()
         {
             var orgUsers = MakeOrganisationUsers();
 
