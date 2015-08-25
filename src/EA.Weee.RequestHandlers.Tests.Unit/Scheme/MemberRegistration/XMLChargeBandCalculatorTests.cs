@@ -107,7 +107,7 @@
         {
             A.CallTo(() => context.ProducerChargeBands).Returns(helper.GetAsyncEnabledDbSet(GetFakeChargeBands()));
 
-            var producerWithLowerBand = MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.E);
+            var producerWithLowerBand = MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.E, 1);
 
             A.CallTo(() => context.Producers).Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
             {
@@ -130,7 +130,7 @@
         {
             A.CallTo(() => context.ProducerChargeBands).Returns(helper.GetAsyncEnabledDbSet(GetFakeChargeBands()));
 
-            var producerWithHigherBand = MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.A);
+            var producerWithHigherBand = MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.A, 5);
 
             A.CallTo(() => context.Producers).Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
             {
@@ -153,8 +153,8 @@
         {
             A.CallTo(() => context.ProducerChargeBands).Returns(helper.GetAsyncEnabledDbSet(GetFakeChargeBands()));
 
-            var producerWithHighishBand = MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.D);
-            var producerWithLowerBand = MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.E);
+            var producerWithHighishBand = MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.D, 2);
+            var producerWithLowerBand = MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.E, 0);
 
             A.CallTo(() => context.Producers).Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
             {
@@ -212,10 +212,10 @@
 
         private Producer GetPassingProducer()
         {
-            return MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.A);
+            return MakeSubmittedProducer(2016, AmendmentRegistrationNumber, ChargeBandType.A, 5);
         }
 
-        private Producer MakeSubmittedProducer(int complianceYear, string regNumber, ChargeBandType chargeBand)
+        private Producer MakeSubmittedProducer(int complianceYear, string regNumber, ChargeBandType chargeBand, decimal chargeThisUpdate)
         {
             var fakeMemberUpload = A.Fake<MemberUpload>();
             A.CallTo(() => fakeMemberUpload.IsSubmitted).Returns(true);
@@ -226,6 +226,7 @@
             typeof(Producer).GetProperty("RegistrationNumber").SetValue(producer, regNumber);
             typeof(Producer).GetProperty("MemberUpload").SetValue(producer, fakeMemberUpload);
             typeof(Producer).GetProperty("ChargeBandType").SetValue(producer, chargeBand.Value);
+            typeof(Producer).GetProperty("ChargeThisUpdate").SetValue(producer, chargeThisUpdate);
 
             return producer;
         }
