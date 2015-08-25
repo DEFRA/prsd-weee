@@ -1,4 +1,5 @@
 ﻿@using System.Collections.Generic
+@using System.Web.Mvc
 @using EA.Weee.Core.Organisations
 @model EA.Weee.Web.ViewModels.Organisation.YourOrganisationsViewModel
 @{
@@ -25,23 +26,25 @@
         <div class="form-group">
             <button class="button" type="submit">Perform activities</button>
         </div>
-            }
+
+        <div class="form-group">
+            <a href="@Url.Action("Type", "OrganisationRegistration")">Create or join another organisation</a>
+        </div>
+    }
 }
 
-@section related_content
-{
-    @{
-        // It's ok if the ViewBag property isn't defined here. The partial view can load the
-        // required data if we don't already have it available.
-        var inaccessibleOrganisations = ViewBag.InaccessibleOrganisations as IEnumerable<OrganisationUserData>;
-        bool alreadyLoaded = (inaccessibleOrganisations != null);
-        Html.RenderAction("_Pending", new { alreadyLoaded, inaccessibleOrganisations });
-    }
+@{
+    // It's ok if the ViewBag property isn't defined here. The partial view can load the
+    // required data if we don't already have it available.
+    var inaccessibleOrganisations = ViewBag.InaccessibleOrganisations as IEnumerable<OrganisationUserData>;
+    bool alreadyLoaded = (inaccessibleOrganisations != null);
+    var sideBarHtml = Html.Action("_Pending", new { alreadyLoaded, inaccessibleOrganisations });
 
-    <div class="related-section">
-        <h2 class="related-section-title">
-            If your organisation is not listed
-        </h2>
-        <a href="@Url.Action("Type", "OrganisationRegistration")">Create or join another organisation</a>
-    </div>
+    if (!MvcHtmlString.IsNullOrEmpty(sideBarHtml))
+    {
+        @section related_content
+        {
+            @sideBarHtml
+        }
+    }
 }
