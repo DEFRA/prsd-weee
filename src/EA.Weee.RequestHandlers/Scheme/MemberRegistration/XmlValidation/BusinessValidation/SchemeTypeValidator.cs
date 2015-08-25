@@ -2,20 +2,36 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using DataAccess;
     using Domain;
+    using Domain.Scheme;
     using Extensions;
     using FluentValidation;
-    using Prsd.Core.Domain;
-
+  
     public class SchemeTypeValidator : AbstractValidator<schemeType>
     {
         public const string NonDataValidation = "NonDataValidation";
         public const string DataValidation = "DataValidation";
-
+       
         public SchemeTypeValidator(WeeeContext context, Guid organisationId)
         {
+            RuleSet(DataValidation, () =>
+            {
+                var scheme = context.Schemes.FirstOrDefault(s => s.OrganisationId == organisationId);
+                if (scheme != null)
+                {
+                    RuleFor(st => st.approvalNo)
+                        .NotEmpty()
+                        .Matches(scheme.ApprovalNumber)
+                        .WithState(st => ErrorLevel.Error)
+                        .WithMessage(
+                            "The compliance scheme approval number in the xml '{0}' does not match your compliance scheme approval number",
+                            st => st.approvalNo);
+                }
+            });
+
             RuleSet(NonDataValidation, () =>
             {
                 RuleFor(st => st.producerList)

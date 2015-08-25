@@ -20,7 +20,7 @@
 
     public class SchemeTypeValidatorTests
     {
-        [Fact]
+      [Fact]
         public void
             SetOfDuplicateRegistrationNumbers_ValidationFails_IncludesRegistraionNumberInMessage_AndErrorLevelIsError()
         {
@@ -319,6 +319,7 @@
             var xml = new schemeType
             {
                 complianceYear = complianceYear,
+                approvalNo = "Test approval number 1",
                 producerList = new[]
                 {
                     new producerType
@@ -333,7 +334,7 @@
                 organisationId);
             var existingScheme = new Scheme(organisationId);
             existingScheme.Producers.Add(existingProducer);
-
+            existingScheme.UpdateScheme("Test", "Test approval number 1", String.Empty, ObligationType.B2B, Guid.NewGuid());
             var result = SchemeTypeValidator(existingScheme, organisationId)
                 .Validate(xml,
                     new RulesetValidatorSelector(
@@ -377,6 +378,57 @@
             Assert.True(result.IsValid);
         }
 
+        [Fact]
+        public void SchemeApprovalNumber_MatchesApprovalNumberinXML_ValidationSucceeds()
+        {
+            var xml = new schemeType
+            {
+                approvalNo = "Test Approval Number 1",
+                producerList = new[]
+                {
+                    new producerType
+                    {
+                        obligationType = obligationTypeType.B2B
+                    }
+                }
+            };
+            var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
+            var existingScheme = new Scheme(orgId);
+            existingScheme.UpdateScheme("test", "Test Approval Number 1", string.Empty, ObligationType.B2B, Guid.NewGuid());
+            var result = SchemeTypeValidator(existingScheme, orgId)
+               .Validate(xml,
+                   new RulesetValidatorSelector(
+                       RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                           .DataValidation));
+
+            Assert.True(result.IsValid);
+        }
+
+        [Fact]
+        public void SchemeApprovalNumber_DoesNotMatchApprovalNumberinXML_ValidationFails()
+        {
+            var xml = new schemeType
+            {
+                approvalNo = "Test Approval Number 2",
+                producerList = new[]
+                {
+                    new producerType
+                    {
+                        obligationType = obligationTypeType.B2B
+                    }
+                }
+            };
+            var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
+            var existingScheme = new Scheme(orgId);
+            existingScheme.UpdateScheme("test",  "Test Approval Number 1", String.Empty, ObligationType.B2B, Guid.NewGuid());
+            var result = SchemeTypeValidator(existingScheme, orgId)
+               .Validate(xml,
+                   new RulesetValidatorSelector(
+                       RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                           .DataValidation));
+
+            Assert.False(result.IsValid);
+        }
         private IValidator<schemeType> SchemeTypeValidator(Guid? existingOrganisationId = null,
             Guid? organisationId = null)
         {
@@ -466,6 +518,7 @@
             var xml = new schemeType
             {
                 complianceYear = "2016",
+                approvalNo = "Test Approval Number 1",
                 producerList = new[]
                 {
                     new producerType
