@@ -74,6 +74,7 @@
     <Compile Include="Organisation\ContactPersonTests.cs" />
     <Compile Include="Organisation\OrganisationAddressTests.cs" />
     <Compile Include="Organisation\OrganisationTests.cs" />
+    <Compile Include="Organisation\OrganisationUserTests.cs" />
     <Compile Include="Producer\AuthorisedRepresentativeTests.cs" />
     <Compile Include="Producer\BrandNameTests.cs" />
     <Compile Include="Producer\CompanyTests.cs" />
