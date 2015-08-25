@@ -113,22 +113,6 @@
             return xmlChargeBandCalculator.Calculate(new ProcessXMLFile(A<Guid>._, xml));
         }
 
-        /// <summary>
-        /// Provides a straightforward list of incrementing charges  (1, 2, 3, 4, 5) for test purposes.
-        /// </summary>
-        /// <returns></returns>
-        private List<ProducerChargeBand> GetFakeChargeBands()
-        {
-            return new List<ProducerChargeBand>
-            {
-                new ProducerChargeBand("A", 5),
-                new ProducerChargeBand("B", 4),
-                new ProducerChargeBand("C", 3),
-                new ProducerChargeBand("D", 2),
-                new ProducerChargeBand("E", 1)
-            };
-        }
-
         private Producer GetPassingProducer()
         {
             var fakeMemberUpload = A.Fake<MemberUpload>();
