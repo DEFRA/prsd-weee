@@ -160,13 +160,13 @@
         {
             string[] csvColumnHeaders =
             {
-                "Organisation Name", 
-                "Trading Name", 
-                "PRN", 
-                "Companies house number", 
+                "Organisation name", 
+                "Trading name", 
+                "Producer registration number", 
+                "Company registration number", 
                 "Charge band", 
-                "Date & Time (GMT) Registered", 
-                "Date & Time (GMT) Last Updated",
+                "Date & time (GMT) registered", 
+                "Date & time (GMT) last updated",
                 "Authorised representative", "Overseas producer"
             };
 
