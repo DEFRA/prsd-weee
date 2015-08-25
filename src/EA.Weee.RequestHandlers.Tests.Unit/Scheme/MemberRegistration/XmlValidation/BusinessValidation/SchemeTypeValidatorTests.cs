@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using DataAccess;
     using Domain;
@@ -471,14 +470,16 @@
             }
         }
 
-        [Fact]
-        public void ProducerAlreadyRegisteredSameScheme_AmendWithDifferentProducerName_ProducesWarnings()
+        [Theory]
+        [InlineData("2016")]
+        [InlineData("2018")]
+        public void ProducerAlreadyRegisteredSameScheme_AmendWithDifferentProducerName_ProducesWarnings(string complianceYear)
         {
             var weeeContext = CreateFakeDatabase();
             const string registrationNumber = "ABC";
             var xml = new schemeType
             {
-                complianceYear = "2016",
+                complianceYear = complianceYear,
                 approvalNo = "Test Approval Number 1",
                 producerList =
                 new producerType[]
@@ -509,6 +510,43 @@
             Assert.False(result.IsValid);
             Assert.Contains(registrationNumber, result.Errors.Single().ErrorMessage);
             Assert.Equal(ErrorLevel.Warning, result.Errors.Single().CustomState);
+        }
+
+        [Fact]
+        public void ProducerRegisteredForNewComplianceYearSameSchemeSameProducerName_Amend_ReturnsSuccess()
+        {
+            var weeeContext = CreateFakeDatabase();
+            const string registrationNumber = "ABC";
+            var xml = new schemeType
+            {
+                complianceYear = "2019",
+                approvalNo = "Test Approval Number 1",
+                producerList =
+                new producerType[]
+                {
+                    new producerType()
+                    {
+                        status = statusType.A,
+                        registrationNo = registrationNumber,
+                        producerBusiness = new producerBusinessType()
+                        {
+                           Item = new partnershipType
+                           {
+                              partnershipName = "Partnership Name"
+                           }
+                       }
+                    }
+                }
+            };
+            var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
+            var scheme = weeeContext.Schemes.FirstOrDefault(s => s.OrganisationId == orgId);
+            var result = SchemeTypeValidator(scheme, orgId)
+                        .Validate(xml,
+                            new RulesetValidatorSelector(
+                                RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                                    .DataValidation));
+
+            Assert.True(result.IsValid);
         }
 
         private IValidator<schemeType> SchemeTypeValidator(Guid? existingOrganisationId = null,
@@ -610,7 +648,7 @@
             Producer producer1 = FakeProducer.Create(MapObligationType(obligationTypeType.B2B), "ABC", false);
      
             Producer producer2 = FakeProducer.Create(MapObligationType(obligationTypeType.B2C), "ABC", true);
-     
+
             var organisation1 = A.Fake<Organisation>();
             A.CallTo(() => organisation1.TradingName).Returns("Test Trading Name 1");
 
@@ -632,13 +670,11 @@
             // Wire up member uploads to organisations (1-way)
             A.CallTo(() => memberUpload1.Organisation).Returns(organisation1);
             A.CallTo(() => memberUpload2.Organisation).Returns(organisation1);
-            //A.CallTo(() => memberUpload3.Organisation).Returns(organisation2);
-
+       
             // Wire up member uploads to schemes (1-way)
             A.CallTo(() => memberUpload1.Scheme).Returns(scheme1);
             A.CallTo(() => memberUpload2.Scheme).Returns(scheme1);
-            //A.CallTo(() => memberUpload3.Scheme).Returns(scheme2);
-
+       
             // Wire up producers and schemes (2-way).
             A.CallTo(() => scheme1.Producers).Returns(new List<Producer>
             {
