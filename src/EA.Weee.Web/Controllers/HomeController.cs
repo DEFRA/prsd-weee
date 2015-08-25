@@ -55,16 +55,14 @@
         }
 
         [AllowAnonymous]
+        [ChildActionOnly]
         public ActionResult _WeeeTitle()
         {
-            ViewBag.BreadcrumbInternalActivity = breadcrumb.InternalActivity;
-            ViewBag.BreadcrumbExternalActivity = breadcrumb.ExternalActivity;
-            ViewBag.BreadcrumbOrganisation = breadcrumb.Organsiation;
-            ViewBag.BreadcrumbUser = breadcrumb.User;
+            TitleViewModel model = new TitleViewModel();
+            model.User = User;
+            model.Breadcrumb = breadcrumb;
 
-            ViewBag.Name = User.Identity.Name;
-
-            return PartialView();
+            return PartialView(model);
         }
 
         [AllowAnonymous]

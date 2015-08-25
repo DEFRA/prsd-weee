@@ -235,7 +235,7 @@
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
         {
-            breadcrumb.Organsiation = await cache.FetchOrganisationName(organisationId);
+            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
         }
     }
