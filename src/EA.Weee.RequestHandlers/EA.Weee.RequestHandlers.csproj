@@ -71,7 +71,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -121,7 +120,7 @@
     <Compile Include="Organisations\Create\CreateSoleTraderRequestHandler.cs" />
     <Compile Include="Organisations\Create\CreatePartnershipRequestHandler.cs" />
     <Compile Include="Organisations\FindMatchingOrganisationsHandler.cs" />
-    <Compile Include="Organisations\GetOrganisationsByUserIdHandler.cs" />
+    <Compile Include="Organisations\GetUserOrganisationsByStatusHandler.cs" />
     <Compile Include="Organisations\IsUkOrganisationAddressHandler.cs" />
     <Compile Include="Organisations\JoinOrganisationHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
@@ -157,8 +156,9 @@
     <Compile Include="Users\GetOrganisationUserHandler.cs" />
     <Compile Include="Users\GetUsersByOrganisationIdHandler.cs" />
     <Compile Include="Admin\FindMatchingUsersHandler.cs" />
+    <Compile Include="Users\GetUserDataHandler.cs" />
     <Compile Include="Users\UpdateOrganisationUserStatusHandler.cs" />
-    <Compile Include="Users\UserByIdHandler.cs" />
+    
     <Compile Include="v3schema.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -22,6 +22,10 @@
             routes.MapRoute("Error500", "errors/500",
                 new { controller = "Errors", action = "InternalError" });
 
+            routes.MapRoute("Robots.txt", "robots.txt",
+                new { controller = "Home", action = "Robots" },
+                new[] { "EA.Weee.Web.Controllers" });
+
             routes.MapLowercaseDashedRoute("Default", "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
                 namespaces: new[] { typeof(HomeController).Namespace });

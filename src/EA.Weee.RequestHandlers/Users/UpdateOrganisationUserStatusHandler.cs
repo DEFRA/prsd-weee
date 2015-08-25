@@ -25,12 +25,12 @@
             authorization.EnsureOrganisationAccess(query.OrganisationId);
 
             var organisationUser =
-                await context.OrganisationUsers.SingleOrDefaultAsync(ou => ou.Id == query.OrganisationUserId);
+                await context.OrganisationUsers.SingleOrDefaultAsync(ou => ou.OrganisationId == query.OrganisationId && ou.UserId == query.UserId);
 
             var userStatus = ValueObjectInitializer.GetUserStatus(query.UserStatus);
             organisationUser.UpdateUserStatus(userStatus);
             await context.SaveChangesAsync();
-            return organisationUser.Id;
+            return organisationUser.OrganisationId;
         }
     }
 }

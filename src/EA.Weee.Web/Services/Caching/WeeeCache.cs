@@ -1,14 +1,11 @@
 ﻿namespace EA.Weee.Web.Services.Caching
 {
     using EA.Weee.Api.Client;
-    using EA.Weee.Requests.NewUser;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Scheme;
+    using EA.Weee.Requests.Users;
     using Infrastructure;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Web;
 
@@ -54,7 +51,7 @@
             {
                 string accessToken = HttpContext.Current.User.GetAccessToken();
 
-                var request = new UserById(userId.ToString());
+                var request = new GetUserData(userId.ToString());
                 var result = await client.SendAsync(accessToken, request);
                 
                 return string.Format("{0} {1}", result.FirstName, result.Surname).Trim();
