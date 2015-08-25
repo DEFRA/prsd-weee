@@ -41,12 +41,12 @@
             var orgUsers =
                 await
                     handler.HandleAsync(new GetUserOrganisationsByStatus(
-                        new[] { (int)UserStatus.Approved }));
+                       new[] { (int)UserStatus.Active }));
             var organisationUserInfo = orgUsers.FirstOrDefault();
 
             Assert.NotNull(organisationUserInfo);
             Assert.Equal(1, orgUsers.Count);
-            Assert.Equal(organisationUserInfo.UserStatus, UserStatus.Approved);
+            Assert.Equal(organisationUserInfo.UserStatus, UserStatus.Active);
         }
 
         [Fact]
@@ -59,14 +59,13 @@
 
             var orgUsers =
                 await
-                    handler.HandleAsync(new GetUserOrganisationsByStatus(
-                        new[] { (int)UserStatus.Pending, (int)UserStatus.Refused }));
+                    handler.HandleAsync(new GetUserOrganisationsByStatus(new[] { (int)UserStatus.Pending, (int)UserStatus.Rejected }));
             var organisationUserInfo = orgUsers.FirstOrDefault();
 
             Assert.NotNull(organisationUserInfo);
             Assert.Equal(2, orgUsers.Count);
             Assert.True(organisationUserInfo.UserStatus == UserStatus.Pending ||
-                        organisationUserInfo.UserStatus == UserStatus.Refused);
+                        organisationUserInfo.UserStatus == UserStatus.Rejected);
         }
 
         [Fact]
@@ -93,8 +92,8 @@
                 new int[] { (int)Core.Shared.OrganisationStatus.Complete }));
 
             Assert.Equal(2, orgUsers.Count);
-            Assert.True(orgUsers.First().UserStatus == UserStatus.Approved);
-            Assert.True(orgUsers.Last().UserStatus == UserStatus.Refused);
+            Assert.True(orgUsers.First().UserStatus == UserStatus.Active);
+            Assert.True(orgUsers.Last().UserStatus == UserStatus.Rejected);
         }
 
         [Fact]
@@ -108,7 +107,7 @@
                 new int[] { (int)Core.Shared.OrganisationStatus.Incomplete }));
 
             Assert.Equal(1, orgUsers.Count);
-            Assert.True(orgUsers.First().UserStatus == UserStatus.Approved);
+            Assert.True(orgUsers.First().UserStatus == UserStatus.Active);
         }
 
         [Fact]
@@ -118,11 +117,11 @@
             var handler = MakeTestGetUserOrganisationsByStatusHandler(organisationUsers);
 
             var orgUsers = await handler.HandleAsync(new GetUserOrganisationsByStatus(
-                new int[] { (int)UserStatus.Refused },
+                new int[] { (int)UserStatus.Rejected },
                 new int[] { (int)Core.Shared.OrganisationStatus.Complete }));
 
             Assert.Equal(1, orgUsers.Count);
-            Assert.True(orgUsers.First().UserStatus == UserStatus.Refused);
+            Assert.True(orgUsers.First().UserStatus == UserStatus.Rejected);
         }
 
         private DbSet<OrganisationUser> MakeOrganisationUsers(Guid userID)
@@ -130,11 +129,11 @@
             Guid otherUserID = new Guid("4462D664-5286-4332-8628-AAE13FD984CA");
 
             return helper.GetAsyncEnabledDbSet(new[]
-            {
-                orgUserHelper.GetOrganisationUser(userID, Domain.UserStatus.Approved),
+            {   
+                orgUserHelper.GetOrganisationUser(userID, Domain.UserStatus.Active),
                 orgUserHelper.GetOrganisationUser(userID, Domain.UserStatus.Pending),
-                orgUserHelper.GetOrganisationUser(userID, Domain.UserStatus.Refused),
-                orgUserHelper.GetOrganisationUser(otherUserID, Domain.UserStatus.Approved)
+                orgUserHelper.GetOrganisationUser(userID, Domain.UserStatus.Rejected),
+                orgUserHelper.GetOrganisationUser(otherUserID, Domain.UserStatus.Active)
             });
         }
 
@@ -144,10 +143,10 @@
 
             return helper.GetAsyncEnabledDbSet(new[]
             {
-                MakeOrganisationUserWithOrganisation(userGuid, Domain.UserStatus.Approved, Domain.Organisation.OrganisationStatus.Complete),
-                MakeOrganisationUserWithOrganisation(userGuid, Domain.UserStatus.Approved, Domain.Organisation.OrganisationStatus.Incomplete),
-                MakeOrganisationUserWithOrganisation(userGuid, Domain.UserStatus.Refused, Domain.Organisation.OrganisationStatus.Complete),
-                MakeOrganisationUserWithOrganisation(otherUserID, Domain.UserStatus.Approved, Domain.Organisation.OrganisationStatus.Complete)
+                MakeOrganisationUserWithOrganisation(userGuid, Domain.UserStatus.Active, Domain.Organisation.OrganisationStatus.Complete),
+                MakeOrganisationUserWithOrganisation(userGuid, Domain.UserStatus.Active, Domain.Organisation.OrganisationStatus.Incomplete),
+                MakeOrganisationUserWithOrganisation(userGuid, Domain.UserStatus.Rejected, Domain.Organisation.OrganisationStatus.Complete),
+                MakeOrganisationUserWithOrganisation(otherUserID, Domain.UserStatus.Active, Domain.Organisation.OrganisationStatus.Complete)
             });
         }
 
