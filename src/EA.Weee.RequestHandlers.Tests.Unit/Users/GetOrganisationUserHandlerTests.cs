@@ -15,7 +15,7 @@
     using Requests.Users;
     using Xunit;
 
-    public class GetUsersByOrganisationIdHandlerTests
+    public class GetOrganisationUserHandlerTests
     {
         private readonly WeeeContext context = A.Fake<WeeeContext>();
         private readonly DbContextHelper helper = new DbContextHelper();
@@ -27,15 +27,16 @@
             AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
         private readonly Guid orgId = Guid.NewGuid();
+        private readonly Guid userId = Guid.NewGuid();
 
         [Fact]
         public async void NotOrganisationUser_ThrowsSecurityException()
         {
-            var handler = new GetUsersByOrganisationIdHandler(context, denyingAuthorization, new OrganisationUserMap(new OrganisationMap(new AddressMap(), new ContactMap()), new UserMap()));
+            var handler = new GetOrganisationUserHandler(context, denyingAuthorization, new OrganisationUserMap(new OrganisationMap(new AddressMap(), new ContactMap()), new UserMap()));
 
             await
                 Assert.ThrowsAsync<SecurityException>(
-                    async () => await handler.HandleAsync(new GetUsersByOrganisationId(Guid.NewGuid())));
+                    async () => await handler.HandleAsync(new GetOrganisationUser(Guid.NewGuid(), Guid.NewGuid())));
         }
 
         [Fact]
@@ -45,27 +46,27 @@
 
             A.CallTo(() => context.OrganisationUsers).Returns(orgUsers);
 
-            var handler = new GetUsersByOrganisationIdHandler(context, permissiveAuthorization, new OrganisationUserMap(new OrganisationMap(new AddressMap(), new ContactMap()), new UserMap()));
+            var handler = new GetOrganisationUserHandler(context, permissiveAuthorization, new OrganisationUserMap(new OrganisationMap(new AddressMap(), new ContactMap()), new UserMap()));
 
-            var organisationUsers = await handler.HandleAsync(new GetUsersByOrganisationId(orgId));
+            var organisationUser = await handler.HandleAsync(new GetOrganisationUser(orgId, userId));
 
-            Assert.NotNull(organisationUsers);
-            Assert.Equal(organisationUsers.Count, 2);
+            Assert.NotNull(organisationUser);
+            Assert.Equal(organisationUser.OrganisationId, orgId);
+            Assert.Equal(organisationUser.UserId, userId.ToString());
         }
 
         private DbSet<OrganisationUser> MakeOrganisationUsers()
         {
             return helper.GetAsyncEnabledDbSet(new[]
             {
-                CreateOrganisationUser(orgId),
-                CreateOrganisationUser(orgId),
-                CreateOrganisationUser(Guid.NewGuid()),
+                CreateOrganisationUser(orgId, userId),
+                CreateOrganisationUser(Guid.NewGuid(), Guid.NewGuid()),
             });
         }
 
-        private static OrganisationUser CreateOrganisationUser(Guid orgId)
+        private static OrganisationUser CreateOrganisationUser(Guid orgId, Guid userId)
         {
-            var orgUser = new OrganisationUser(Guid.NewGuid(), orgId, UserStatus.Active);
+            var orgUser = new OrganisationUser(userId, orgId, UserStatus.Active);
             return orgUser;
         }
     }
