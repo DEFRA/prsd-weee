@@ -143,7 +143,7 @@
 
             var producerCharge = (ProducerCharge)producerCharges["The Empire"];
 
-            // A down to C, would be -2, but we don't reduce, so zero charge
+            // A down to C, would be -2, but we don't refund, so just zero charge
             Assert.Equal(ChargeBandType.C, producerCharge.ChargeBandType);
             Assert.Equal(0, producerCharge.ChargeAmount);
         }
@@ -171,6 +171,16 @@
             // D down to E, then E up to C, highest before C was D, so D -> C, increase by 1
             Assert.Equal(ChargeBandType.C, producerCharge.ChargeBandType);
             Assert.Equal(1, producerCharge.ChargeAmount);
+        }
+
+        [Fact]
+        public async void XmlChargeBandCalculator_AmendmentWithNoPreviousHistory_ThrowsArgumentException()
+        {
+            A.CallTo(() => context.Producers).Returns(helper.GetAsyncEnabledDbSet(new List<Producer>()));
+
+            Assert.Throws<ArgumentException>(() => RunHandler(
+                new XmlChargeBandCalculator(context, new XmlConverter()),
+                @"ExampleXML\v3-valid-AmendmentBandC.xml"));
         }
 
         private Hashtable RunHandler(XmlChargeBandCalculator xmlChargeBandCalculator, string relativeFilePath)
