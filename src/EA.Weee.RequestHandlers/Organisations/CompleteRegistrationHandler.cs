@@ -14,13 +14,11 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
-        private readonly IUserContext userContext;
-
-        public CompleteRegistrationHandler(IWeeeAuthorization authorization, WeeeContext context, IUserContext userContext)
+  
+        public CompleteRegistrationHandler(IWeeeAuthorization authorization, WeeeContext context)
         {
             this.authorization = authorization;
             this.context = context;
-            this.userContext = userContext;
         }
 
         public async Task<Guid> HandleAsync(CompleteRegistration message)

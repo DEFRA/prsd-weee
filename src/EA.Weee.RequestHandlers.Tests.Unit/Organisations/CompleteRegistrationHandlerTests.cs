@@ -28,7 +28,7 @@
         [Fact]
         public async Task CompleteRegistrationHandler_NotOrganisationUser_ThrowsSecurityException()
         {
-            var handler = new CompleteRegistrationHandler(denyingAuthorization, A<WeeeContext>._, A<IUserContext>._);
+            var handler = new CompleteRegistrationHandler(denyingAuthorization, A<WeeeContext>._);
             var message = new CompleteRegistration(Guid.NewGuid());
 
             await
@@ -41,7 +41,7 @@
             var context = A.Fake<WeeeContext>();
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>()));
 
-            var handler = new CompleteRegistrationHandler(permissiveAuthorization, context, A<IUserContext>._);
+            var handler = new CompleteRegistrationHandler(permissiveAuthorization, context);
             var message = new CompleteRegistration(Guid.NewGuid());
 
             var exception = await
@@ -67,7 +67,7 @@
             A.CallTo(() => context.Schemes.Add(A<Scheme>._))
                 .Invokes((Scheme s) => addedScheme = s);
 
-            var handler = new CompleteRegistrationHandler(permissiveAuthorization, context, A<IUserContext>._);
+            var handler = new CompleteRegistrationHandler(permissiveAuthorization, context);
             var message = new CompleteRegistration(organisationId);
 
             var result = await handler.HandleAsync(message);

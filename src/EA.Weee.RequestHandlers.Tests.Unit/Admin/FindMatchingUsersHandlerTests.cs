@@ -1,22 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
-    using Core.Admin;
-    using DataAccess;
-    using Domain;
-    using Domain.Admin;
-    using Domain.Organisation;
-    using EA.Weee.RequestHandlers.Security;
-    using FakeItEasy;
-    using Helpers;
-    using RequestHandlers.Admin;
-    using Requests.Admin;
-    using Requests.Shared;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Admin;
+    using FakeItEasy;
+    using Helpers;
+    using RequestHandlers.Admin;
+    using RequestHandlers.Security;
+    using Requests.Admin;
     using Xunit;
 
     public class FindMatchingUsersHandlerTests

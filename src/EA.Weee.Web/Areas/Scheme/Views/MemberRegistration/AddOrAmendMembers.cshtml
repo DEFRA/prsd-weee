@@ -50,8 +50,10 @@
             </p>
             <hr />
 
-            <div id="file-upload-group" class="form-group @Html.Gds().FormGroupClass(m => m.File)">
-                <input type="file" name="file" id="file" accept=".xml" />
+            <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
+                @Html.Gds().LabelFor(m => m.File)
+                @Html.Gds().ValidationMessageFor(m => m.File)
+                <input type="file" name="File" id="File" accept=".xml" />
             </div>
 
         </div>
