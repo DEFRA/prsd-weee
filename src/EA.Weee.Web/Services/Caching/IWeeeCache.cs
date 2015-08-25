@@ -13,5 +13,7 @@
         Task<string> FetchOrganisationName(Guid organisationId);
 
         Task<string> FetchSchemeName(Guid schemeId);
+
+        Task<int> FetchUserActiveCompleteOrganisationCount(Guid userId);
     }
 }

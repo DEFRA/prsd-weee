@@ -11,5 +11,6 @@
     {
         public IPrincipal User { get; set; }
         public BreadcrumbService Breadcrumb { get; set; }
+        public bool ShowLinkToSelectOrganisation { get; set; }
     }
 }
