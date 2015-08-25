@@ -19,20 +19,10 @@
                 @foreach (OrganisationUserData item in Model)
                 {
                     <tr>
-                        @if (item.Organisation.OrganisationType == OrganisationType.RegisteredCompany)
-                        {
-                            <td>
-                                <span>@item.Organisation.Name</span><br/>
-                                <span style="color:#6F777B;">- @item.UserStatus</span>
-                            </td>
-                        }
-                        else
-                        {
-                            <td>
-                                <span>@item.Organisation.TradingName</span><br />
-                                <span style="color:#6F777B;">- @item.UserStatus</span>
-                            </td>
-                        }
+                        <td>
+                            <span>@item.Organisation.OrganisationName</span><br/>
+                            <span style="color:#6F777B;">- @item.UserStatus</span>
+                        </td>
                     </tr>
                 }
             </tbody>
