@@ -174,7 +174,7 @@
 
             if (schemeId.HasValue)
             {
-                breadcrumb.Organsiation = await cache.FetchSchemeName(schemeId.Value);
+                breadcrumb.InternalOrganisation = await cache.FetchSchemeName(schemeId.Value);
             }
         }
     }

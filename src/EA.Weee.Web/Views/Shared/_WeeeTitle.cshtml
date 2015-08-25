@@ -1,10 +1,13 @@
-﻿@{
+﻿@model EA.Weee.Web.ViewModels.Shared.TitleViewModel
+@{
     bool showBreadcrumb =
-           (ViewBag.BreadcrumbInternalActivity != null)
-        || (ViewBag.BreadcrumbExternalActivity != null)
-        || (ViewBag.BreadcrumbOrganisation != null);
+           (Model.Breadcrumb.ExternalOrganisation != null)
+        || (Model.Breadcrumb.ExternalActivity != null)
+        || (Model.Breadcrumb.InternalActivity != null)
+        || (Model.Breadcrumb.InternalOrganisation != null)
+        || (Model.Breadcrumb.InternalUser != null);
         
-    bool showIdentity = User.Identity.IsAuthenticated;
+    bool showIdentity = Model.User.Identity.IsAuthenticated;
     
     bool showTitle = showBreadcrumb || showIdentity;
 
@@ -34,32 +37,39 @@
     <div class="@columnClass">
         <div class="breadcrumb-title-display font-xsmall">
             <ul>
-                @if (ViewBag.BreadcrumbInternalActivity != null)
+                @if (Model.Breadcrumb.ExternalOrganisation != null)
                 {
-                <li>
-                    <a href="@Url.Action("ChooseActivity", "Home", new { Area = "admin" })">Activity</a>: @ViewBag.BreadcrumbInternalActivity
-                </li>
+                    <li>
+                        <a href="@Url.RouteUrl("SelectOrganisation")">Organisation</a>: @Model.Breadcrumb.ExternalOrganisation
+                    </li>
                 }
                 
-                @if (ViewBag.BreadcrumbOrganisation != null)
+                @if (Model.Breadcrumb.ExternalActivity != null)
                 {
-                <li>
-                    <a href="@Url.RouteUrl("SelectOrganisation")">Organisation</a>: @ViewBag.BreadcrumbOrganisation
-                </li>
+                    <li>
+                        <a href="@Url.Action("ChooseActivity", "Home", new { Area = "scheme" })">Activity</a>: @Model.Breadcrumb.ExternalActivity
+                    </li>
+                }
+                
+                @if (Model.Breadcrumb.InternalActivity != null)
+                {
+                    <li>
+                        <a href="@Url.Action("ChooseActivity", "Home", new { Area = "admin" })">Activity</a>: @Model.Breadcrumb.InternalActivity
+                    </li>
                 }
 
-                @if (ViewBag.BreadcrumbUser != null)
+                @if (Model.Breadcrumb.InternalOrganisation != null)
                 {
-                <li>
-                    User: @ViewBag.BreadcrumbUser
-                </li>
+                    <li>
+                        <a href="@Url.Action("ManageSchemes", "Scheme", new { Area = "admin" })">Organisation</a>: @Model.Breadcrumb.InternalOrganisation
+                    </li>
                 }
 
-                @if (ViewBag.BreadcrumbExternalActivity != null)
+                @if (Model.Breadcrumb.InternalUser != null)
                 {
-                <li>
-                    <a href="@Url.Action("ChooseActivity", "Home", new { Area = "scheme" })">Activity</a>: @ViewBag.BreadcrumbExternalActivity
-                </li>
+                    <li>
+                        <a href="@Url.Action("ManageUsers", "User", new { Area = "admin" })">User</a>: @Model.Breadcrumb.InternalUser
+                    </li>
                 }
             </ul>
         </div>
@@ -72,7 +82,7 @@
         <div class="username-title-display font-xsmall">
             <ul>
                 <li>
-                    <div class="text-secondary">Signed in as: <span class="username-format">@ViewBag.Name</span></div>
+                    <div class="text-secondary">Signed in as: <span class="username-format">@Model.User.Identity.Name</span></div>
                 </li>
                 <li>
                     @using (Html.BeginForm("LogOff", "Account", routeValues: new { area = string.Empty }, method: FormMethod.Post, htmlAttributes: new { id = "logoutForm" }))

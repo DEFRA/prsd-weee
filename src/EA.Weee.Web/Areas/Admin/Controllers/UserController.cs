@@ -95,7 +95,7 @@
 
             if (userId.HasValue)
             {
-                breadcrumb.User = await cache.FetchUserName(userId.Value);
+                breadcrumb.InternalUser = await cache.FetchUserName(userId.Value);
             }
         }
     }
