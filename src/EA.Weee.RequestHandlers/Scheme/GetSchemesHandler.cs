@@ -15,13 +15,16 @@
 
     internal class GetSchemesHandler : IRequestHandler<GetSchemes, List<SchemeData>>
     {
-        private readonly WeeeContext context;
+        private readonly IGetSchemesDataAccess dataAccess;
         private readonly IMap<Scheme, SchemeData> schemeMap;
         private readonly IWeeeAuthorization authorization;
 
-        public GetSchemesHandler(WeeeContext context, IMap<Scheme, SchemeData> schemeMap, IWeeeAuthorization authorization)
+        public GetSchemesHandler(
+            IGetSchemesDataAccess dataAccess,
+            IMap<Scheme, SchemeData> schemeMap,
+            IWeeeAuthorization authorization)
         {
-            this.context = context;
+            this.dataAccess = dataAccess;
             this.schemeMap = schemeMap;
             this.authorization = authorization;
         }
@@ -30,9 +33,7 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            var schemes = await context.Schemes
-                .Where(s => s.Organisation.OrganisationStatus.Value == OrganisationStatus.Complete.Value)
-                .ToListAsync();
+            var schemes = await dataAccess.GetCompleteSchemes();
              
             return schemes.Select(s => schemeMap.Map(s))
                 .OrderBy(sd => sd.Name)

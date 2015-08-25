@@ -1,22 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
-    using Core.Admin;
-    using DataAccess;
-    using Domain;
-    using Domain.Admin;
-    using Domain.Organisation;
-    using EA.Weee.RequestHandlers.Security;
-    using FakeItEasy;
-    using Helpers;
-    using RequestHandlers.Admin;
-    using Requests.Admin;
-    using Requests.Shared;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Admin;
+    using FakeItEasy;
+    using Helpers;
+    using RequestHandlers.Admin;
+    using RequestHandlers.Security;
+    using Requests.Admin;
     using Xunit;
 
     public class FindMatchingUsersHandlerTests
@@ -24,17 +18,19 @@
         /// <summary>
         /// This test ensures that a non-internal user cannot execute requests to find matching users.
         /// </summary>
-        [Fact]
+        [Theory]
         [Trait("Authorization", "Internal")]
-        public async void FindMatchingUsersHandler_WithUnauthorizedUser_ThrowSecurityException()
+        [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
+        [InlineData(AuthorizationBuilder.UserType.External)]
+        public async void FindMatchingUsersHandler_WithNonInternalUser_ThrowSecurityException(AuthorizationBuilder.UserType userType)
         {
             // Arrage
             IFindMatchingUsersDataAccess dataAccess = A.Fake<IFindMatchingUsersDataAccess>();
             A.CallTo(() => dataAccess.GetOrganisationUsers()).Returns(new UserSearchData[5]);
             A.CallTo(() => dataAccess.GetCompetentAuthorityUsers()).Returns(new UserSearchData[5]);
 
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithNoRights();
-            
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
+
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
             
             FindMatchingUsers request = new FindMatchingUsers();

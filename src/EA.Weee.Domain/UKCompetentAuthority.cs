@@ -15,8 +15,9 @@
         {
         }
 
-        public UKCompetentAuthority(string name, string abbreviation, Country country)
+        public UKCompetentAuthority(Guid id, string name, string abbreviation, Country country)
         {
+            Id = id;
             Name = name;
             Abbreviation = abbreviation;
             Country = country;

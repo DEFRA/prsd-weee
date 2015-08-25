@@ -12,6 +12,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Prsd.Core.Extensions;
     using ViewModels;
     using Web.Controllers.Base;
     using Web.ViewModels.Shared;
@@ -24,6 +25,7 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
+        private const string DoNotChange = "Do not change at this time";
 
         public HomeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb)
         {
@@ -139,7 +141,89 @@
             {
                 return View(model);
             }
-            return View(model);
+
+            return RedirectToAction("ManageOrganisationUser", "Home",
+                   new { area = "Scheme", pcsId, userId = model.OrganisationUsers.SelectedValue });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ManageOrganisationUser(Guid pcsId, Guid userId)
+        {
+            await SetBreadcrumb(pcsId, "Manage users");
+
+            using (var client = apiClient())
+            {
+                var organisationExists =
+                   await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
+
+                if (!organisationExists)
+                {
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "pcsId");
+                }
+
+                var orgUser = await client.SendAsync(User.GetAccessToken(), new GetOrganisationUser(pcsId, userId));
+                var model = new OrganisationUserViewModel(orgUser);
+                model.UserStatuses = GetUserPossibleStatusToBeChanged(model.UserStatuses, model.UserStatus);
+                model.UserStatuses.PossibleValues.Add(DoNotChange);
+                return View("ManageOrganisationUser", model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ManageOrganisationUser(Guid pcsId, OrganisationUserViewModel model)
+        {
+            await SetBreadcrumb(pcsId, "Manage users");
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.UserStatuses.SelectedValue != DoNotChange)
+            {
+                using (var client = apiClient())
+                {
+                    var userStatus = model.UserStatuses.SelectedValue.GetValueFromDisplayName<UserStatus>();
+                    await
+                        client.SendAsync(User.GetAccessToken(), new UpdateOrganisationUserStatus(model.UserId, userStatus, pcsId));
+                }
+            }
+
+            return RedirectToAction("ManageOrganisationUsers", "Home",
+                   new { area = "Scheme", pcsId });
+        }
+
+        private RadioButtonStringCollectionViewModel GetUserPossibleStatusToBeChanged(RadioButtonStringCollectionViewModel userStatuses, UserStatus userStatus)
+        {
+            switch (userStatus)
+            {
+                case UserStatus.Active:
+                    {
+                        var possibleValues = userStatuses.PossibleValues.Where(us => us.Equals(UserStatus.Inactive.ToString())).ToList();
+                        userStatuses.PossibleValues = possibleValues;
+                        return userStatuses;
+                    }
+                case UserStatus.Pending:
+                    {
+                        var possibleValues = userStatuses.PossibleValues.Where(us => us.Equals(UserStatus.Active.ToString()) || us.Equals(UserStatus.Rejected.ToString())).ToList();
+                        userStatuses.PossibleValues = possibleValues;
+                        return userStatuses;
+                    }
+                case UserStatus.Inactive:
+                    {
+                        var possibleValues = userStatuses.PossibleValues.Where(us => us.Equals(UserStatus.Active.ToString())).ToList();
+                        userStatuses.PossibleValues = possibleValues;
+                        return userStatuses;
+                    }
+                case UserStatus.Rejected:
+                    {
+                        var possibleValues = userStatuses.PossibleValues.Where(us => us.Equals(UserStatus.Active.ToString())).ToList();
+                        userStatuses.PossibleValues = possibleValues;
+                        return userStatuses;
+                    }
+            }
+            return userStatuses;
         }
 
         private async Task<List<OrganisationUserData>> GetOrganisationUsers(Guid pcsId)

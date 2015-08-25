@@ -197,7 +197,7 @@
 
             WeeeContext weeeContext =
                 MakeFakeWeeeContext(
-                    new List<OrganisationUser> { new OrganisationUser(userId, organisationID, UserStatus.Approved) });
+                    new List<OrganisationUser> { new OrganisationUser(userId, organisationID, UserStatus.Active) });
 
             IUserContext userContext = A.Fake<IUserContext>();
             A.CallTo(() => userContext.UserId).Returns(userId);
@@ -268,7 +268,7 @@
 
             WeeeContext weeeContext =
                 MakeFakeWeeeContext(
-                    new List<OrganisationUser> { new OrganisationUser(userId, organisationID, UserStatus.Approved) },
+                    new List<OrganisationUser> { new OrganisationUser(userId, organisationID, UserStatus.Active) },
                     new List<Domain.Scheme.Scheme> { scheme });
 
             IUserContext userContext = A.Fake<IUserContext>();

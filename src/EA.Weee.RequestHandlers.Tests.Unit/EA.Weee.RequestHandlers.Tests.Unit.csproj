@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Helpers\AuthorizationBuilder.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Organisations\Create\CreateRegisteredCompanyRequestHandlerTests.cs" />
     <Compile Include="Organisations\Create\CreateSoleTraderRequestHandlerTests.cs" />
     <Compile Include="Organisations\OrganisationByIdHandlerTests.cs" />
+    <Compile Include="Scheme\GetSchemeByIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemesHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateFromXmlTests.cs" />
@@ -119,8 +121,10 @@
     <Compile Include="Scheme\VerifyApprovalNumberExistsHandlerTests.cs" />
     <Compile Include="Scheme\SetSchemeStatusHandlerTests.cs" />
     <Compile Include="Security\WeeeAuthorizationTests.cs" />
+    <Compile Include="Users\GetOrganisationUserHandlerTests.cs" />
     <Compile Include="Users\GetUserDataHandlerTests.cs" />
     <Compile Include="Users\GetUsersByOrganisationIdHandlerTests.cs" />
+    <Compile Include="Users\UpdateOrganisationUserStatusHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

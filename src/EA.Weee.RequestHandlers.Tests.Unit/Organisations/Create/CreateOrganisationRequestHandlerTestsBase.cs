@@ -58,7 +58,7 @@
             Assert.NotEqual(Guid.Empty, addedOrganisationId);
             Assert.Equal(tradingName, addedOrganisation.TradingName);
             Assert.Equal(addedOrganisationId, addedOrganisationUser.OrganisationId);
-            Assert.Equal(UserStatus.Approved, addedOrganisationUser.UserStatus);
+            Assert.Equal(UserStatus.Active, addedOrganisationUser.UserStatus);
         }
     }
 }
