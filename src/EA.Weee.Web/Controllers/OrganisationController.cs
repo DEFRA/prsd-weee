@@ -29,13 +29,18 @@
         {
             IEnumerable<OrganisationUserData> organisations = await GetOrganisations();
 
-            IEnumerable<OrganisationUserData> accessibleOrganisations = organisations
-                .Where(o => o.UserStatus == UserStatus.Approved);
+            List<OrganisationUserData> accessibleOrganisations = new List<OrganisationUserData>(
+                organisations.Where(o => o.UserStatus == UserStatus.Active));
 
-            IEnumerable<OrganisationUserData> inaccessibleOrganisations = organisations
-                .Where(o => o.UserStatus != UserStatus.Approved);
+            List<OrganisationUserData> inaccessibleOrganisations = new List<OrganisationUserData>(
+                organisations.Except(accessibleOrganisations));
 
-            if (accessibleOrganisations.Any())
+            if (accessibleOrganisations.Count == 1 && inaccessibleOrganisations.Count == 0)
+            {
+                Guid organisationId = accessibleOrganisations[0].OrganisationId;
+                return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = organisationId });
+            }
+            else if (accessibleOrganisations.Any())
             {
                 YourOrganisationsViewModel model = new YourOrganisationsViewModel();
                 
@@ -74,9 +79,9 @@
                 return View("YourOrganisations", model);
             }
 
-            Guid pcsId = model.AccessibleOrganisations.SelectedValue;
+            Guid organisationId = model.AccessibleOrganisations.SelectedValue;
 
-            return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId });
+            return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = organisationId });
         }
 
         [ChildActionOnly]
@@ -84,13 +89,15 @@
         {
             if (!alreadyLoaded)
             {
+                // MVC 5 doesn't allow child actions to run asynchornously, so we
+                // have to schedule this task and block the calling thread.
                 var task = Task.Run(async () => { return await GetOrganisations(); });
                 task.Wait();
 
                 IEnumerable<OrganisationUserData> organisations = task.Result;
 
                 inaccessibleOrganisations = organisations
-                    .Where(o => o.UserStatus != UserStatus.Approved);
+                    .Where(o => o.UserStatus != UserStatus.Active);
             }
 
             return PartialView(inaccessibleOrganisations);

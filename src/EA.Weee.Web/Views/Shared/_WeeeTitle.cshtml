@@ -44,7 +44,7 @@
                 @if (ViewBag.BreadcrumbOrganisation != null)
                 {
                 <li>
-                    Organisation: @ViewBag.BreadcrumbOrganisation
+                    <a href="@Url.RouteUrl("SelectOrganisation")">Organisation</a>: @ViewBag.BreadcrumbOrganisation
                 </li>
                 }
 
