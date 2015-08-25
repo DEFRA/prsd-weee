@@ -17,8 +17,46 @@
     ///         .DenyOrganisationAccess()
     ///         .Build();
     /// </example>
-    internal class AuthorizationBuilder
+    public class AuthorizationBuilder
     {
+        public enum UserType
+        {
+            Unauthenticated,
+            External,
+            Internal,
+        }
+
+        /// <summary>
+        /// Create authorization for a user of a specific type. This method can be used
+        /// in conjuection with the [Theory] and [InlineData] attribute to create XUnit
+        /// tests that check security rules for multiple user types.
+        /// </summary>
+        /// <param name="userType"></param>
+        /// <returns></returns>
+        public static IWeeeAuthorization CreateFromUserType(UserType userType)
+        {
+            switch (userType)
+            {
+                case UserType.Unauthenticated:
+                    return CreateUserWithNoRights();
+
+                case UserType.External:
+                    return new AuthorizationBuilder()
+                        .AllowExternalAreaAccess()
+                        .DenyInternalAreaAccess()
+                        .Build();
+
+                case UserType.Internal:
+                    return new AuthorizationBuilder()
+                        .DenyExternalAreaAccess()
+                        .AllowInternalAreaAccess()
+                        .Build();
+
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
         public static IWeeeAuthorization CreateUserWithAllRights()
         {
             return new AuthorizationBuilder().AllowEverything().Build();
