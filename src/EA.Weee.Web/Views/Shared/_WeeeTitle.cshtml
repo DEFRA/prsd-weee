@@ -40,7 +40,14 @@
                 @if (Model.Breadcrumb.ExternalOrganisation != null)
                 {
                     <li>
-                        <a href="@Url.RouteUrl("SelectOrganisation")">Organisation</a>: @Model.Breadcrumb.ExternalOrganisation
+                        @if (Model.ShowLinkToSelectOrganisation)
+                        {
+                            @:<a href="@Url.RouteUrl("SelectOrganisation")">Organisation</a>: @Model.Breadcrumb.ExternalOrganisation
+                        }
+                        else
+                        {
+                            @:Organisation: @Model.Breadcrumb.ExternalOrganisation
+                        }
                     </li>
                 }
                 

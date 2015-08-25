@@ -6,6 +6,7 @@
     using EA.Weee.Requests.Users;
     using Infrastructure;
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
 
@@ -17,11 +18,19 @@
         public Cache<Guid, string> UserNames { get; private set; }
         public Cache<Guid, string> OrganisationNames { get; private set; }
         public Cache<Guid, string> SchemeNames { get; private set; }
+        public Cache<Guid, int> UserActiveCompleteOrganisationCount { get; private set; }
+
+        private string accessToken;
 
         public WeeeCache(ICacheProvider provider, Func<IWeeeClient> apiClient)
         {
             this.provider = provider;
             this.apiClient = apiClient;
+
+            if (HttpContext.Current.User.Identity.IsAuthenticated)
+            {
+                accessToken = HttpContext.Current.User.GetAccessToken();
+            }
 
             UserNames = new Cache<Guid, string>(
                 provider,
@@ -39,18 +48,23 @@
 
             SchemeNames = new Cache<Guid, string>(
                 provider,
-                "OrganisationName",
+                "SchemeName",
                 TimeSpan.FromMinutes(15),
                 (key) => key.ToString(),
                 (key) => FetchSchemeNameFromApi(key));
+
+            UserActiveCompleteOrganisationCount = new Cache<Guid, int>(
+                provider,
+                "UserActiveCompleteOrganisationCount",
+                TimeSpan.FromMinutes(15),
+                (key) => key.ToString(),
+                (key) => FetchUserActiveCompleteOrganisationCountFromApi(key));
         }
 
         private async Task<string> FetchUserNameFromApi(Guid userId)
         {
             using (var client = apiClient())
             {
-                string accessToken = HttpContext.Current.User.GetAccessToken();
-
                 var request = new GetUserData(userId.ToString());
                 var result = await client.SendAsync(accessToken, request);
                 
@@ -62,8 +76,6 @@
         {
             using (var client = apiClient())
             {
-                string accessToken = HttpContext.Current.User.GetAccessToken();
-
                 var request = new GetOrganisationInfo(organisationId);
                 var result = await client.SendAsync(accessToken, request);
 
@@ -75,12 +87,24 @@
         {
             using (var client = apiClient())
             {
-                string accessToken = HttpContext.Current.User.GetAccessToken();
-
                 var request = new GetSchemeById(schemeId);
                 var result = await client.SendAsync(accessToken, request);
 
                 return result.Name;
+            }
+        }
+
+        private async Task<int> FetchUserActiveCompleteOrganisationCountFromApi(Guid key)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetUserOrganisationsByStatus(new int[0]);
+                var result = await client.SendAsync(accessToken, request);
+
+                return result
+                    .Where(o => o.UserStatus == Core.Shared.UserStatus.Active)
+                    .Where(o => o.Organisation.OrganisationStatus == Core.Shared.OrganisationStatus.Complete)
+                    .Count();
             }
         }
 
@@ -97,6 +121,11 @@
         public Task<string> FetchSchemeName(Guid schemeId)
         {
             return SchemeNames.Fetch(schemeId);
+        }
+
+        public Task<int> FetchUserActiveCompleteOrganisationCount(Guid userId)
+        {
+            return UserActiveCompleteOrganisationCount.Fetch(userId);
         }
     }
 }
