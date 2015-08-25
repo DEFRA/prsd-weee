@@ -9,6 +9,7 @@
     using Requests.Scheme;
     using System;
     using System.Data.Entity;
+    using System.Security;
     using System.Threading.Tasks;
     using Xunit;
     using ObligationType = Domain.ObligationType;
@@ -16,6 +17,32 @@
     public class VerifyApprovalNumberExistsHandlerTests
     {
         private readonly DbContextHelper helper = new DbContextHelper();
+
+        /// <summary>
+        /// This test ensures that a non-internal user cannot verify the existence of approval 
+        /// numbers.
+        /// </summary>
+        /// <returns></returns>
+        [Theory]
+        [Trait("Authorization", "Internal")]
+        [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
+        [InlineData(AuthorizationBuilder.UserType.External)]
+        public async Task VerifyApprovalNumberExistsHandler_WithNonInternalUser_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
+        {
+            // Arrange
+            WeeeContext context = A.Fake<WeeeContext>();
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
+
+            VerifyApprovalNumberExistsHandler handler = new VerifyApprovalNumberExistsHandler(context, authorization);
+
+            VerifyApprovalNumberExists request = new VerifyApprovalNumberExists("approval number");
+
+            // Act
+            Func<Task<bool>> action = () => handler.HandleAsync(request);
+
+            // Assert
+            await Assert.ThrowsAsync<SecurityException>(action);
+        }
 
         [Fact]
         public async Task VerifyApprovalNumberExistsHandler_ApprovalNumberNotExists_ReturnsFalse()

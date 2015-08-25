@@ -18,17 +18,19 @@
         /// <summary>
         /// This test ensures that a non-internal user cannot execute requests to find matching users.
         /// </summary>
-        [Fact]
+        [Theory]
         [Trait("Authorization", "Internal")]
-        public async void FindMatchingUsersHandler_WithUnauthorizedUser_ThrowSecurityException()
+        [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
+        [InlineData(AuthorizationBuilder.UserType.External)]
+        public async void FindMatchingUsersHandler_WithNonInternalUser_ThrowSecurityException(AuthorizationBuilder.UserType userType)
         {
             // Arrage
             IFindMatchingUsersDataAccess dataAccess = A.Fake<IFindMatchingUsersDataAccess>();
             A.CallTo(() => dataAccess.GetOrganisationUsers()).Returns(new UserSearchData[5]);
             A.CallTo(() => dataAccess.GetCompetentAuthorityUsers()).Returns(new UserSearchData[5]);
 
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithNoRights();
-            
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
+
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
             
             FindMatchingUsers request = new FindMatchingUsers();
