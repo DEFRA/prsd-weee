@@ -29,13 +29,13 @@
         {
             StringBuilder sb = new StringBuilder();
 
-            string[] titles = columns.Select(c => CsvEncode(c.Title)).ToArray();
+            string[] titles = columns.Select(c => Encode(c.Title)).ToArray();
             string titleString = string.Join(",", titles);
             sb.AppendLine(titleString);
 
             foreach (T item in items)
             {
-                string[] values = columns.Select(c => CsvEncode(c.GetData(item))).ToArray();
+                string[] values = columns.Select(c => Encode(c.GetData(item))).ToArray();
                 string valuesString = string.Join(",", values);
                 sb.AppendLine(valuesString);
             }
@@ -43,15 +43,19 @@
             return sb.ToString();
         }
 
-        private static string CsvEncode(string value)
+        public static string Encode(string value)
         {
             if (value.Contains(","))
             {
                 value = string.Concat("\"", value, "\"");
             }
 
+            value = value.Replace("\r\n", " ");
+            value = value.Replace("\n\n", " ");
             value = value.Replace("\r", " ");
             value = value.Replace("\n", " ");
+
+            value = value.Trim();
 
             return value;
         }
