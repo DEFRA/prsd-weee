@@ -470,16 +470,14 @@
             }
         }
 
-        [Theory]
-        [InlineData("2016")]
-        [InlineData("2018")]
-        public void ProducerAlreadyRegisteredSameScheme_AmendWithDifferentProducerName_ProducesWarnings(string complianceYear)
+        [Fact]
+        public void ProducerAlreadyRegisteredSameScheme_AmendWithDifferentProducerName_ProducesWarnings()
         {
-            var weeeContext = CreateFakeDatabase();
+            var weeeContext = A.Fake<WeeeContext>();
             const string registrationNumber = "ABC";
             var xml = new schemeType
             {
-                complianceYear = complianceYear,
+                complianceYear = "2018",
                 approvalNo = "Test Approval Number 1",
                 producerList =
                 new producerType[]
@@ -499,7 +497,28 @@
                 }
             };
             var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
-            var scheme = weeeContext.Schemes.FirstOrDefault(s => s.OrganisationId == orgId);
+            var scheme = (Scheme)Activator.CreateInstance(typeof(Scheme), true);
+            typeof(Scheme).GetProperty("OrganisationId").SetValue(scheme, orgId);
+            typeof(Scheme).GetProperty("ApprovalNumber").SetValue(scheme, "Test Approval Number 1");
+            List<Scheme> schemeList = new List<Scheme>()
+            {
+                scheme
+            };
+
+            A.CallTo(() => weeeContext.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemeList));
+    
+            List<Producer> producersList = new List<Producer>()
+            {
+                MakeProducer(2015, registrationNumber, new DateTime(2015, 06, 1), "Name1"), 
+                MakeProducer(2016, registrationNumber, new DateTime(2016, 12, 1), "Name2"), 
+                MakeProducer(2017, registrationNumber, new DateTime(2016, 11, 1), "Name3"), 
+                MakeProducer(2018, registrationNumber, new DateTime(2018, 1, 1), "Name4"),
+                MakeProducer(2018, registrationNumber, new DateTime(2018, 02, 1), "Name5") 
+            };
+            A.CallTo(() => weeeContext.Producers).Returns(dbContextHelper.GetAsyncEnabledDbSet(producersList));
+
+            typeof(Scheme).GetProperty("Producers").SetValue(scheme, producersList);
+       
             var result = SchemeTypeValidator(scheme, orgId)
                         .Validate(xml,
                             new RulesetValidatorSelector(
@@ -726,6 +745,33 @@
             A.CallTo(() => weeeContext.MemberUploads).Returns(memberUploadDbSet);
 
             return weeeContext;
+        }
+
+        private Producer MakeProducer(int complianceYear, string regNumber, DateTime updatedDate, string organisationName)
+        {
+            var fakeScheme = A.Fake<Scheme>();
+            var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
+            A.CallTo(() => fakeScheme.OrganisationId).Returns(orgId);
+
+            var fakeMemberUpload = A.Fake<MemberUpload>();
+            A.CallTo(() => fakeMemberUpload.IsSubmitted).Returns(true);
+            A.CallTo(() => fakeMemberUpload.ComplianceYear).Returns(complianceYear);
+
+            var fakePartnership = A.Fake<Partnership>();
+            A.CallTo(() => fakePartnership.Name).Returns(organisationName);
+
+            var fakeProducerBusiness = A.Fake<ProducerBusiness>();
+            A.CallTo(() => fakeProducerBusiness.Partnership).Returns(fakePartnership);
+
+            var producer = (Producer)Activator.CreateInstance(typeof(Producer), true);
+            typeof(Producer).GetProperty("RegistrationNumber").SetValue(producer, regNumber);
+            typeof(Producer).GetProperty("MemberUpload").SetValue(producer, fakeMemberUpload);
+            typeof(Producer).GetProperty("Scheme").SetValue(producer, fakeScheme);
+            typeof(Producer).GetProperty("ProducerBusiness").SetValue(producer, fakeProducerBusiness);
+            typeof(Producer).GetProperty("UpdatedDate").SetValue(producer, updatedDate);
+            typeof(Producer).GetProperty("IsCurrentForComplianceYear").SetValue(producer, true);
+       
+            return producer;
         }
     }
 }
