@@ -74,6 +74,7 @@
                     throw new ApplicationException(string.Format("No charges have been supplied for the {0}.", producerName));
                 }
                 var producerChargeBandType = ((ProducerCharge)producerCharges[producerName]).ChargeBandType;
+                var producerChargeThisUpdate = ((ProducerCharge)producerCharges[producerName]).ChargeAmount;
 
                 List<BrandName> brandNames = producerData.producerBrandNames.Select(name => new BrandName(name)).ToList();
 
@@ -120,7 +121,8 @@
                     brandNames,
                     codes,
                     true,
-                    producerChargeBandType);
+                    producerChargeBandType,
+                    producerChargeThisUpdate);
 
                 // modify producer data
                 switch (producerData.status)

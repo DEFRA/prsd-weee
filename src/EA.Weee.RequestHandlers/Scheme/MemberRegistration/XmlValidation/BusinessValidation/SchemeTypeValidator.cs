@@ -5,6 +5,7 @@
     using System.Linq;
     using DataAccess;
     using Domain;
+    using Domain.Producer;
     using Extensions;
     using FluentValidation;
   
@@ -131,43 +132,21 @@
                         if (producer.status == statusType.A)
                         {
                             string producerName = producer.GetProducerName();
-                            bool bMatchFound = false;
-                            var matchingProducer = currentProducers.FirstOrDefault(p => 
-                                                                    p.RegistrationNumber == producer.registrationNo
-                                                                    && p.MemberUpload.ComplianceYear == int.Parse(st.complianceYear)
-                                                                    && p.Scheme.OrganisationId == organisationId);
+                            var matchingProducer = GetMatchingProducer(currentProducers, producer.registrationNo, st.complianceYear, organisationId);
                             if (matchingProducer == null)
                             {
-                                // reverse the order the current producers list by compliance year and then by updatedDate
-                                matchingProducer = currentProducers.Where(p => p.RegistrationNumber == producer.registrationNo)
-                                                                   .OrderByDescending(p => p.MemberUpload.ComplianceYear)
-                                                                   .ThenBy(p => p.UpdatedDate)
-                                                                   .FirstOrDefault();
-                                if (matchingProducer == null)
+                                // search in migrated producers list if not in Producers database
+                                var migratedProducer = context.MigratedProducers.FirstOrDefault(p => p.ProducerRegistrationNumber == producer.registrationNo);
+                                if (migratedProducer != null &&
+                                    migratedProducer.ProducerName != producerName)
                                 {
-                                    // search in migrated producers list
-                                    var migratedProducer = context.MigratedProducers.FirstOrDefault(p => p.ProducerRegistrationNumber == producer.registrationNo);
-                                    if (migratedProducer != null &&
-                                        migratedProducer.ProducerName != producerName)
-                                    {
-                                        return false;
-                                    }
-                                    else
-                                    {
-                                        throw new ArgumentNullException(string.Format("No matching producer found for PRN {0}", producer.registrationNo));
-                                    }
+                                    return false;
                                 }
-                                else
-                                {
-                                    bMatchFound = true;
-                                }
+                                
+                                throw new ArgumentNullException(string.Format("No matching producer found for PRN {0}", producer.registrationNo));
                             }
-                            else
-                            {
-                                bMatchFound = true;
-                            }
-
-                            if (bMatchFound && matchingProducer.OrganisationName != producerName)
+                            
+                            if (matchingProducer.OrganisationName != producerName)
                             {
                                 return false;
                             }
@@ -180,6 +159,23 @@
                      (st, producer) => producer.registrationNo,
                      (st, procucer) => procucer.GetProducerName());
             });
+        }
+
+        private Producer GetMatchingProducer(List<Producer> currentProducers, string registrationNo, string schemeComplianceYear, Guid schemeOrgId)
+        {
+            var matchingProducer = currentProducers.FirstOrDefault(p =>
+                                                                    p.RegistrationNumber == registrationNo
+                                                                    && p.MemberUpload.ComplianceYear == int.Parse(schemeComplianceYear)
+                                                                    && p.Scheme.OrganisationId == schemeOrgId);
+            if (matchingProducer == null)
+            {
+                // reverse the order the current producers list by compliance year and then by updatedDate
+                matchingProducer = currentProducers.Where(p => p.RegistrationNumber == registrationNo)
+                    .OrderByDescending(p => p.MemberUpload.ComplianceYear)
+                    .ThenBy(p => p.UpdatedDate)
+                    .FirstOrDefault();
+            }
+            return matchingProducer;
         }
     }
 }

@@ -46,7 +46,8 @@
             brandNames, 
             codes,
             isCurrentForComplianceYear,
-            Domain.ChargeBandType.E)
+            Domain.ChargeBandType.E,
+            (decimal)30.0)
         {
             this.schemeOrganisationId = schemeOrganisationId;
         }

@@ -342,7 +342,7 @@
 
             var producer = new Producer(Guid.NewGuid(), memberUpload, business, authorisedRepresentative, DateTime.Now, 1000000000, true,
                 prn, DateTime.Now.AddDays(10), "Trading name", EEEPlacedOnMarketBandType.Both, SellingTechniqueType.Both, ObligationType.Both,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), true, ChargeBandType.A);
+                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), true, ChargeBandType.A, (decimal)5.0);
 
             return producer;
         }
@@ -360,7 +360,7 @@
 
             var producer = new Producer(Guid.NewGuid(), memberUpload, business, authorisedRepresentative, DateTime.Now, 1000000000, true,
                 prn, DateTime.Now.AddDays(10), tradingName, EEEPlacedOnMarketBandType.Both, SellingTechniqueType.Both, ObligationType.Both,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), true, chargeBand);
+                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), true, chargeBand, (decimal)5.0);
 
             return producer;
         }

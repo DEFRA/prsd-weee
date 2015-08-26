@@ -180,7 +180,7 @@
                 string.Empty, null, tradingName, EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
                 SellingTechniqueType.Both, ObligationType.Both,
                 AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(),
-                true, ChargeBandType.E);
+                true, ChargeBandType.E, (decimal)30.0);
         }
 
         public static MemberUpload FakeMemberUploadData()
