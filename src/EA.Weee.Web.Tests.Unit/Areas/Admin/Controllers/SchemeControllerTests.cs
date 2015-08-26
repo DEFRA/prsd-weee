@@ -38,7 +38,7 @@
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
             Assert.Equal("EditScheme", redirectValues["action"]);
-            Assert.Equal(selectedGuid, redirectValues["id"]);
+            Assert.Equal(selectedGuid, redirectValues["schemeid"]);
         }
 
         [Fact]
@@ -189,8 +189,7 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("ConfirmRejection", routeValues["action"]);
-            Assert.Equal("Scheme", routeValues["controller"]);
-            Assert.Equal(schemeId, routeValues["id"]);
+            Assert.Equal(schemeId, routeValues["schemeid"]);
         }
 
         [Fact]
@@ -208,8 +207,7 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("ConfirmRejection", routeValues["action"]);
-            Assert.Equal("Scheme", routeValues["controller"]);
-            Assert.Equal(schemeId, routeValues["id"]);
+            Assert.Equal(schemeId, routeValues["schemeid"]);
         }
 
         [Fact]
@@ -238,7 +236,6 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("ManageSchemes", routeValues["action"]);
-            Assert.Equal("Scheme", routeValues["controller"]);
         }
 
         [Fact]
@@ -258,7 +255,6 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("EditScheme", routeValues["action"]);
-            Assert.Equal("Scheme", routeValues["controller"]);
         }
 
         private SchemeController SchemeController()
