@@ -221,9 +221,8 @@
                 .Invokes((string t, IRequest<Guid> s) => status = ((SetSchemeStatus)s).Status)
                 .Returns(Guid.NewGuid());
 
-            var result = await SchemeController().ConfirmRejection(new ConfirmRejectionViewModel
+            var result = await SchemeController().ConfirmRejection(Guid.Empty, new ConfirmRejectionViewModel
             {
-                SchemeId = Guid.NewGuid(),
                 ConfirmRejectionOptions = new RadioButtonStringCollectionViewModel
                 {
                     PossibleValues = new[] { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No },
@@ -245,9 +244,8 @@
         [Fact]
         public async void HttpPost_ConfirmRejectionWithNoOption_AndRedirectsToEditScheme()
         {
-            var result = await SchemeController().ConfirmRejection(new ConfirmRejectionViewModel
+            var result = await SchemeController().ConfirmRejection(Guid.Empty, new ConfirmRejectionViewModel
             {
-                SchemeId = Guid.NewGuid(),
                 ConfirmRejectionOptions = new RadioButtonStringCollectionViewModel
                 {
                     PossibleValues = new[] { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No },
