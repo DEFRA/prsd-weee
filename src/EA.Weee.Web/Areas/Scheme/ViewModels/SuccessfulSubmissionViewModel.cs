@@ -7,5 +7,7 @@
         public Guid PcsId { get; set; }
 
         public Guid MemberUploadId { get; set; }
+
+        public int ComplianceYear { get; set; }
     }
 }

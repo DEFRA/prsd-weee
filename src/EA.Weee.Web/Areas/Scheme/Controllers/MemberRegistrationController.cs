@@ -2,10 +2,12 @@
 {
     using Api.Client;
     using Core.Shared;
+    using EA.Weee.Core.Scheme;
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
     using Services;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -96,12 +98,12 @@
         {
             using (var client = apiClient())
             {
-                var summary = await client.SendAsync(User.GetAccessToken(), new GetLatestMemberUploadList(pcsId));
+                List<int> years = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(pcsId));
 
-                if (summary.LatestMemberUploads.Any())
+                if (years.Count > 0)
                 {
                     await SetBreadcrumb(pcsId, "Manage scheme");
-                    return View(SummaryViewModel.Create(summary.LatestMemberUploads));
+                    return View(years);
                 }
             }
 
@@ -148,21 +150,42 @@
         [HttpGet]
         public async Task<ViewResult> SuccessfulSubmission(Guid pcsId, Guid memberUploadId)
         {
-            var model = new SuccessfulSubmissionViewModel { PcsId = pcsId, MemberUploadId = memberUploadId };
+            MemberUploadData memberUploadData;
+
+            using (var client = apiClient())
+            {
+                memberUploadData = await client.SendAsync(
+                    User.GetAccessToken(),
+                    new GetMemberUploadById(pcsId, memberUploadId));
+            }
+
+            if (!memberUploadData.IsSubmitted)
+            {
+                throw new Exception("The specified member upload has not yet been submitted.");
+            }
+
+            var model = new SuccessfulSubmissionViewModel
+            {
+                PcsId = pcsId,
+                MemberUploadId = memberUploadId,
+                ComplianceYear = memberUploadData.ComplianceYear.Value
+            };
 
             await SetBreadcrumb(pcsId, "Manage scheme");
             return View(model);
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetProducerCSV(Guid pcsId, Guid memberUploadId, string fileName = null)
+        public async Task<ActionResult> GetProducerCSV(Guid pcsId, int complianceYear)
         {
             using (var client = apiClient())
             {
                 var producerCSVData = await client.SendAsync(User.GetAccessToken(),
-                    new GetProducerCSVByMemberUploadId(pcsId, memberUploadId));
+                    new GetProducerCSV(pcsId, complianceYear));
 
-                return File(new UTF8Encoding().GetBytes(producerCSVData.FileContent), "text/csv", producerCSVData.FileName);
+                byte[] data = new UTF8Encoding().GetBytes(producerCSVData.FileContent);
+
+                return File(data, "text/csv", producerCSVData.FileName);
             }
         }
 
