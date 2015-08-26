@@ -1,19 +1,25 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
+    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
     using System;
     using System.Linq;
     using System.Security.Claims;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels.Shared;
 
     public class HomeController : Controller
     {
         private readonly BreadcrumbService breadcrumb;
+        private readonly IWeeeCache cache;
 
-        public HomeController(BreadcrumbService breadcrumb)
+        public HomeController(BreadcrumbService breadcrumb, IWeeeCache cache)
         {
             this.breadcrumb = breadcrumb;
+            this.cache = cache;
         }
 
         [HttpGet]
@@ -22,8 +28,7 @@
         {
             if (User.Identity.IsAuthenticated)
             {
-                //TODO : Aunthenticated user home page to perfrom different activities
-                return RedirectToAction("Type", "OrganisationRegistration");
+                return RedirectToRoute("SelectOrganisation");
             }
 
             return View("Index");
@@ -56,16 +61,37 @@
         }
 
         [AllowAnonymous]
+        [ChildActionOnly]
         public ActionResult _WeeeTitle()
         {
-            ViewBag.BreadcrumbInternalActivity = breadcrumb.InternalActivity;
-            ViewBag.BreadcrumbExternalActivity = breadcrumb.ExternalActivity;
-            ViewBag.BreadcrumbOrganisation = breadcrumb.Organsiation;
-            ViewBag.BreadcrumbUser = breadcrumb.User;
+            TitleViewModel model = new TitleViewModel();
+            model.User = User;
+            model.Breadcrumb = breadcrumb;
 
-            ViewBag.Name = User.Identity.Name;
+            string userIdString = User.GetUserId();
+            if (userIdString != null)
+            {
+                Guid userId = new Guid(userIdString);
 
-            return PartialView();
+                // MVC 5 doesn't allow child actions to run asynchronously, so we
+                // have to schedule this task and block the calling thread.
+                // Furthermore, this task will be scheduled on a thread with different
+                // synchronization context than the one used by ASP.NET so we wont
+                // have access to HttpContext.Current.
+                var task = Task.Run(async () =>
+                {
+                    return await cache.FetchUserActiveCompleteOrganisationCount(userId);
+                });
+                task.Wait();
+
+                model.ShowLinkToSelectOrganisation = (task.Result > 1);
+            }
+            else
+            {
+                model.ShowLinkToSelectOrganisation = false;
+            }
+
+            return PartialView(model);
         }
 
         [AllowAnonymous]

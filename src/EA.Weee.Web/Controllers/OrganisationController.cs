@@ -25,21 +25,106 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> HoldingMessageForPending()
+        public async Task<ActionResult> Index()
         {
-            var model = new OrganisationUserPendingViewModel();
+            IEnumerable<OrganisationUserData> organisations = await GetOrganisations();
+
+            List<OrganisationUserData> accessibleOrganisations = organisations
+                .Where(o => o.UserStatus == UserStatus.Active)
+                .ToList();
+
+            List<OrganisationUserData> inaccessibleOrganisations = organisations
+                .Except(accessibleOrganisations)
+                .ToList();
+
+            if (accessibleOrganisations.Count == 1 && inaccessibleOrganisations.Count == 0)
+            {
+                Guid organisationId = accessibleOrganisations[0].OrganisationId;
+                return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = organisationId });
+            }
+            else if (accessibleOrganisations.Count > 0)
+            {
+                YourOrganisationsViewModel model = new YourOrganisationsViewModel();
+                
+                foreach (OrganisationUserData organisation in accessibleOrganisations)
+                {
+                    RadioButtonPair<string, Guid> item = new RadioButtonPair<string, Guid>(
+                        organisation.Organisation.OrganisationName,
+                        organisation.OrganisationId);
+
+                    model.AccessibleOrganisations.PossibleValues.Add(item);
+                }
+
+                ViewBag.InaccessibleOrganisations = inaccessibleOrganisations;
+                return View("YourOrganisations", model);
+            }
+            else if (inaccessibleOrganisations.Count > 0)
+            {
+                PendingOrganisationsViewModel model = new PendingOrganisationsViewModel();
+
+                model.InaccessibleOrganisations = inaccessibleOrganisations;
+
+                return View("PendingOrganisations", model);
+            }
+            else
+            {
+                return RedirectToAction("Type", "OrganisationRegistration");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(YourOrganisationsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("YourOrganisations", model);
+            }
+
+            Guid organisationId = model.AccessibleOrganisations.SelectedValue;
+
+            return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = organisationId });
+        }
+
+        [ChildActionOnly]
+        public ActionResult _Pending(bool alreadyLoaded, IEnumerable<OrganisationUserData> inaccessibleOrganisations)
+        {
+            if (!alreadyLoaded)
+            {
+                // MVC 5 doesn't allow child actions to run asynchornously, so we
+                // have to schedule this task and block the calling thread.
+                var task = Task.Run(async () => { return await GetOrganisations(); });
+                task.Wait();
+
+                IEnumerable<OrganisationUserData> organisations = task.Result;
+
+                inaccessibleOrganisations = organisations
+                    .Where(o => o.UserStatus != UserStatus.Active);
+            }
+
+            return PartialView(inaccessibleOrganisations);
+        }
+
+        /// <summary>
+        /// Returns all complete organisations with which the user is associated,
+        /// ordered by organisation name.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<IEnumerable<OrganisationUserData>> GetOrganisations()
+        {
+            List<OrganisationUserData> organisations;
 
             using (var client = apiClient())
             {
-                var pendingOrganisationUsers = await
+                organisations = await
                  client.SendAsync(
                      User.GetAccessToken(),
-                     new GetUserOrganisationsByStatus(new[] { (int)UserStatus.Pending, (int)UserStatus.Rejected, (int)UserStatus.Inactive }));
-
-                model.OrganisationUserData = pendingOrganisationUsers;
+                     new GetUserOrganisationsByStatus(new int[0]));
             }
 
-            return View("HoldingMessageForPending", model);
+            return organisations
+                .Where(o => o.Organisation.OrganisationStatus == OrganisationStatus.Complete)
+                .OrderBy(o => o.Organisation.OrganisationName);
         }
     }
 }

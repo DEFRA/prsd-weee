@@ -34,12 +34,6 @@
             this.breadcrumb = breadcrumb;
         }
 
-        // GET: Scheme/Home
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         [HttpGet]
         public async Task<ActionResult> ChooseActivity(Guid pcsId)
         {
@@ -241,7 +235,7 @@
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
         {
-            breadcrumb.Organsiation = await cache.FetchOrganisationName(organisationId);
+            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
         }
     }
