@@ -151,7 +151,7 @@
 
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("AuthorizationRequired", routeValues["action"]);
+            Assert.Equal("AuthorisationRequired", routeValues["action"]);
             Assert.Equal("MemberRegistration", routeValues["controller"]);
         }
 
@@ -172,7 +172,7 @@
 
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("AuthorizationRequired", routeValues["action"]);
+            Assert.Equal("AuthorisationRequired", routeValues["action"]);
             Assert.Equal("MemberRegistration", routeValues["controller"]);
         }
 
