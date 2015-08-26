@@ -41,7 +41,7 @@
             return Equals(obj as Partnership);
         }
 
-        public string Name { get; private set; }
+        public virtual string Name { get; private set; }
 
         public virtual Guid PrincipalPlaceOfBusinessId { get; private set; }
 
