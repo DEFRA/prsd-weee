@@ -24,12 +24,12 @@
             <div class="warning-list-container">
                 <ul>
                     @foreach (var uploadError in Model.ErrorData)
+                    {
+                        if (uploadError.ErrorLevel == ErrorLevel.Warning)
                         {
-                            if (uploadError.ErrorLevel == ErrorLevel.Warning)
-                            {
-                                <li class="warning-list-item font-xsmall">@uploadError.Description</li>
-                            }
+                            <li class="warning-list-item font-xsmall">@uploadError.Description</li>
                         }
+                    }
                 </ul>
             </div>
         </details>
@@ -37,12 +37,13 @@
     }
 
     <div class="highlight-section">
-        <div class="highlight-section-text">The producer registration changes for new members and amended members in this XML file are:</div>
+        <div class="highlight-section-text">The producer registration charges for new members and amended members in this XML file are:</div>
         <div class="highlight-section-amount">
             £@Model.TotalCharges.ToString("N2")
         </div>
     </div>
-   
+
+
     @using (Html.BeginForm("SubmitXml", "MemberRegistration", FormMethod.Post, new { area = "Scheme", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
