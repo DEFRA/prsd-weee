@@ -135,7 +135,7 @@
                             var matchingProducer = currentProducers.FirstOrDefault(p => 
                                                                     p.RegistrationNumber == producer.registrationNo
                                                                     && p.MemberUpload.ComplianceYear == int.Parse(st.complianceYear)
-                                                                    && p.Scheme.OrganisationId != organisationId);
+                                                                    && p.Scheme.OrganisationId == organisationId);
                             if (matchingProducer == null)
                             {
                                 // reverse the order the current producers list by compliance year and then by updatedDate
@@ -151,6 +151,10 @@
                                         migratedProducer.ProducerName != producerName)
                                     {
                                         return false;
+                                    }
+                                    else
+                                    {
+                                        throw new ArgumentNullException(string.Format("No matching producer found for PRN {0}", producer.registrationNo));
                                     }
                                 }
                                 else
