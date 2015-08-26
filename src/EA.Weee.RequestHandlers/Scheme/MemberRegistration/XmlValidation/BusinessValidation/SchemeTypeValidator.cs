@@ -137,16 +137,18 @@
                             {
                                 // search in migrated producers list if not in Producers database
                                 var migratedProducer = context.MigratedProducers.FirstOrDefault(p => p.ProducerRegistrationNumber == producer.registrationNo);
-                                if (migratedProducer != null &&
-                                    migratedProducer.ProducerName != producerName)
+                                if (migratedProducer == null)
+                                {
+                                    throw new ArgumentNullException(string.Format("No matching producer found for PRN {0}", producer.registrationNo));
+                                }
+
+                                if (migratedProducer.ProducerName != producerName)
                                 {
                                     return false;
                                 }
-                                
-                                throw new ArgumentNullException(string.Format("No matching producer found for PRN {0}", producer.registrationNo));
                             }
                             
-                            if (matchingProducer.OrganisationName != producerName)
+                            if (matchingProducer != null && matchingProducer.OrganisationName != producerName)
                             {
                                 return false;
                             }
