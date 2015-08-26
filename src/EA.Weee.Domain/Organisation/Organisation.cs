@@ -151,5 +151,25 @@
         {
             get { return NotificationAddress != null; }
         }
+
+        /// <summary>
+        /// Provides a name that can be displayed to identify the organisation.
+        /// Where the organisation is a registered company this is simply the name,
+        /// otherwise this is the trading name.
+        /// </summary>
+        public string OrganisationName
+        {
+            get
+            {
+                if (OrganisationType.Value == OrganisationType.RegisteredCompany.Value)
+                {
+                    return Name;
+                }
+                else
+                {
+                    return TradingName;
+                }
+            }
+        }
     }
 }

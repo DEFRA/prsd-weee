@@ -26,6 +26,9 @@
                 new { controller = "Home", action = "Robots" },
                 new[] { "EA.Weee.Web.Controllers" });
 
+            routes.MapRoute("SelectOrganisation", "select-organisation",
+                new { controller = "Organisation", action = "Index" });
+
             routes.MapLowercaseDashedRoute("Default", "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
                 namespaces: new[] { typeof(HomeController).Namespace });

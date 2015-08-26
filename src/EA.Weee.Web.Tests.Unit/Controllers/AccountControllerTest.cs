@@ -39,39 +39,6 @@
         }
 
         [Fact]
-        public async void GetRedirectProcess_NoOrganisationUsers_ShouldRedirectToType()
-        {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
-                .Returns(new List<OrganisationUserData>());
-
-            var result = await AccountController().RedirectProcess();
-            var redirectToRouteResult = ((RedirectToRouteResult)result);
-
-            Assert.Equal("Type", redirectToRouteResult.RouteValues["action"]);
-        }
-
-        [Fact]
-        public async void GetRedirectProcess_ApprovedOrganisationUserOne_ShouldRedirectToChooseActivity()
-        {
-            var orgId = Guid.NewGuid();
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
-                .Returns(new List<OrganisationUserData>
-                {
-                    new OrganisationUserData
-                    {
-                        OrganisationId = orgId
-                    }
-                });
-
-            var result = await AccountController().RedirectProcess();
-            var redirectToRouteResult = ((RedirectToRouteResult)result);
-
-            Assert.Equal(orgId, redirectToRouteResult.RouteValues["pcsId"]);
-            Assert.Equal("ChooseActivity", redirectToRouteResult.RouteValues["action"]);
-        }
-
-        [Fact]
         public async void UserAccount_IfNotActivated_ShouldRedirectToUserAccountActivationRequired()
         {
             Guid id = Guid.NewGuid();

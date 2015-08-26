@@ -1,0 +1,32 @@
+﻿@using System.Collections.Generic
+@using EA.Weee.Core.Organisations
+@model IEnumerable<OrganisationUserData>
+
+@if (Model.Any())
+{
+<div class="related-section">
+    <h2 class="related-section-title">
+        Organisations you have applied to perform activities for:
+    </h2>
+    <div class="form-group">
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (OrganisationUserData item in Model)
+                {
+                    <tr>
+                        <td>
+                            <span>@item.Organisation.OrganisationName</span><br/>
+                            <span style="color:#6F777B;">- @item.UserStatus</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+}
