@@ -15,10 +15,10 @@
         <p>Please note that this change, once saved, cannot be undone.</p>
     </div>
 
-    @using (Html.BeginForm(actionName: "ConfirmRejection", controllerName: "Scheme", method: FormMethod.Post))
+    @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.SchemeId)
+
         <div class="form-group @Html.Gds().FormGroupClass(m => m.ConfirmRejectionOptions.SelectedValue)" id="ConfirmRejectionOptions">
             @Html.EditorFor(m => m.ConfirmRejectionOptions)
         </div>

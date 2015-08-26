@@ -10,11 +10,10 @@
         </h1>
     </header>
 
-    @using (Html.BeginForm("OrganisationAddress", "OrganisationRegistration", method: FormMethod.Post))
+    @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
-        @Html.HiddenFor(m => m.OrganisationId)
 
         @Html.EditorFor(m => m.Address)
 
