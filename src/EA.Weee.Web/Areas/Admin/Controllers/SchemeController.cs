@@ -47,7 +47,7 @@
                 return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
             }
 
-            return RedirectToAction("EditScheme", new { id = viewModel.Selected.Value });
+            return RedirectToAction("EditScheme", new { schemeId = viewModel.Selected.Value });
         }
 
         private async Task<List<SchemeData>> GetSchemes()
@@ -59,11 +59,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditScheme(Guid id)
+        public async Task<ActionResult> EditScheme(Guid schemeId)
         {
             using (var client = apiClient())
             {
-                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(id));
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
 
                 var model = new SchemeViewModel
                 {
@@ -78,25 +78,25 @@
                     IsUnchangeableStatus = scheme.SchemeStatus == SchemeStatus.Approved || scheme.SchemeStatus == SchemeStatus.Rejected
                 };
 
-                await SetBreadcrumb(id);
-                return View("EditScheme", model);
+                await SetBreadcrumb(schemeId);
+                return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditScheme(Guid id, SchemeViewModel model)
+        public async Task<ActionResult> EditScheme(Guid schemeId, SchemeViewModel model)
         {
             if (model.Status == SchemeStatus.Rejected)
             {
-                return RedirectToAction("ConfirmRejection", "Scheme", new { id });
+                return RedirectToAction("ConfirmRejection", new { schemeId });
             }
 
             model.CompetentAuthorities = await GetCompetentAuthorities();
 
             if (!ModelState.IsValid)
             {
-                await SetBreadcrumb(id);
+                await SetBreadcrumb(schemeId);
                 return View(model);
             }
 
@@ -111,14 +111,14 @@
                     if (approvalNumberExists)
                     {
                         ModelState.AddModelError("ApprovalNumber", "Approval number already exists.");
-                        await SetBreadcrumb(id);
-                        return View("EditScheme", model);
+                        await SetBreadcrumb(schemeId);
+                        return View(model);
                     }
                 }
 
                 await
                     client.SendAsync(User.GetAccessToken(),
-                        new UpdateSchemeInformation(id, model.SchemeName, model.ApprovalNumber,
+                        new UpdateSchemeInformation(schemeId, model.SchemeName, model.ApprovalNumber,
                             model.IbisCustomerReference,
                             model.ObligationType.Value, model.CompetentAuthorityId, model.Status));
 
@@ -135,37 +135,37 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ConfirmRejection(Guid id)
+        public async Task<ActionResult> ConfirmRejection(Guid schemeId)
         {
             var model = new ConfirmRejectionViewModel();
-            model.SchemeId = id;
-            await SetBreadcrumb(id);
-            return View("ConfirmRejection", model);
+            await SetBreadcrumb(schemeId);
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ConfirmRejection(ConfirmRejectionViewModel model)
+        public async Task<ActionResult> ConfirmRejection(Guid schemeId, ConfirmRejectionViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                await SetBreadcrumb(model.SchemeId);
+                await SetBreadcrumb(schemeId);
                 return View(model);
             }
 
             if (model.ConfirmRejectionOptions.SelectedValue == ConfirmSchemeRejectionOptions.No)
             {
-                return RedirectToAction("EditScheme", "Scheme", new { id = model.SchemeId });
+                return RedirectToAction("EditScheme", new { schemeId });
             }
 
             if (model.ConfirmRejectionOptions.SelectedValue == ConfirmSchemeRejectionOptions.Yes)
             {
                 using (var client = apiClient())
                 {
-                    await client.SendAsync(User.GetAccessToken(), new SetSchemeStatus(model.SchemeId, SchemeStatus.Rejected));
+                    await client.SendAsync(User.GetAccessToken(), new SetSchemeStatus(schemeId, SchemeStatus.Rejected));
                 }
             }
-            return RedirectToAction("ManageSchemes", "Scheme");
+
+            return RedirectToAction("ManageSchemes");
         }
 
         private async Task SetBreadcrumb(Guid? schemeId)

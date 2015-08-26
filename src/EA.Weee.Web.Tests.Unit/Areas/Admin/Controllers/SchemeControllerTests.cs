@@ -38,7 +38,7 @@
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
             Assert.Equal("EditScheme", redirectValues["action"]);
-            Assert.Equal(selectedGuid, redirectValues["id"]);
+            Assert.Equal(selectedGuid, redirectValues["schemeid"]);
         }
 
         [Fact]
@@ -189,8 +189,7 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("ConfirmRejection", routeValues["action"]);
-            Assert.Equal("Scheme", routeValues["controller"]);
-            Assert.Equal(schemeId, routeValues["id"]);
+            Assert.Equal(schemeId, routeValues["schemeid"]);
         }
 
         [Fact]
@@ -208,8 +207,7 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("ConfirmRejection", routeValues["action"]);
-            Assert.Equal("Scheme", routeValues["controller"]);
-            Assert.Equal(schemeId, routeValues["id"]);
+            Assert.Equal(schemeId, routeValues["schemeid"]);
         }
 
         [Fact]
@@ -221,9 +219,8 @@
                 .Invokes((string t, IRequest<Guid> s) => status = ((SetSchemeStatus)s).Status)
                 .Returns(Guid.NewGuid());
 
-            var result = await SchemeController().ConfirmRejection(new ConfirmRejectionViewModel
+            var result = await SchemeController().ConfirmRejection(Guid.Empty, new ConfirmRejectionViewModel
             {
-                SchemeId = Guid.NewGuid(),
                 ConfirmRejectionOptions = new RadioButtonStringCollectionViewModel
                 {
                     PossibleValues = new[] { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No },
@@ -239,15 +236,13 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("ManageSchemes", routeValues["action"]);
-            Assert.Equal("Scheme", routeValues["controller"]);
         }
 
         [Fact]
         public async void HttpPost_ConfirmRejectionWithNoOption_AndRedirectsToEditScheme()
         {
-            var result = await SchemeController().ConfirmRejection(new ConfirmRejectionViewModel
+            var result = await SchemeController().ConfirmRejection(Guid.Empty, new ConfirmRejectionViewModel
             {
-                SchemeId = Guid.NewGuid(),
                 ConfirmRejectionOptions = new RadioButtonStringCollectionViewModel
                 {
                     PossibleValues = new[] { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No },
@@ -260,7 +255,6 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("EditScheme", routeValues["action"]);
-            Assert.Equal("Scheme", routeValues["controller"]);
         }
 
         private SchemeController SchemeController()
