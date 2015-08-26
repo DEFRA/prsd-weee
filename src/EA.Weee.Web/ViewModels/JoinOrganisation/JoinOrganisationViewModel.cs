@@ -6,6 +6,6 @@ namespace EA.Weee.Web.ViewModels.JoinOrganisation
     public class JoinOrganisationViewModel
     {
         [Required]
-        public Guid OrganisationToJoin { get; set; }
+        public Guid OrganisationId { get; set; }
     }
 }

@@ -7,8 +7,6 @@
 
     public class ConfirmRejectionViewModel
     {
-        public Guid SchemeId { get; set; }
-
         [Required]
         public RadioButtonStringCollectionViewModel ConfirmRejectionOptions { get; set; }
 
