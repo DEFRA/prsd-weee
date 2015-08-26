@@ -610,7 +610,8 @@
                 brandNames.Select(bn => new BrandName(bn)).ToList(),
                 new List<SICCode>(),
                 true,
-                ChargeBandType.A);
+                ChargeBandType.A,
+                (decimal)445.0);
         }
 
         private ObligationType MapObligationType(obligationTypeType obligationType)

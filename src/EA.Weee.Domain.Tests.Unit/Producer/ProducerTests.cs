@@ -277,7 +277,8 @@
                     brandNames,
                     sicCodes,
                     isCurrentForComplianceYear,
-                    chargeBandType);
+                    chargeBandType,
+                    (decimal)5.0);
             }
 
             public static Producer NewProducer

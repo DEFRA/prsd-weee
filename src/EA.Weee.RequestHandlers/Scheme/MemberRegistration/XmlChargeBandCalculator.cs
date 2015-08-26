@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using DataAccess;
@@ -28,11 +29,12 @@
 
             var producerChargeBandCalculator = new ProducerChargeBandCalculator(context);
             var producerCharges = new Hashtable();
+            var complianceYear = Int32.Parse(schemeType.complianceYear);
 
             foreach (var producer in schemeType.producerList)
             {
                 var producerName = producer.GetProducerName();
-                var producerCharge = producerChargeBandCalculator.CalculateCharge(producer);
+                var producerCharge = producerChargeBandCalculator.CalculateCharge(producer, complianceYear);
                 if (producerCharge != null)
                 {
                     if (!producerCharges.ContainsKey(producerName))
