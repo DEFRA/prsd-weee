@@ -52,7 +52,7 @@
     <Compile Include="Organisations\UpdateOrganisationTypeDetails.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
     <Compile Include="Scheme\GetSchemeById.cs" />
-    <Compile Include="Scheme\MemberRegistration\GetLatestMemberUploadList.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetComplianceYears.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadById.cs" />
     <Compile Include="Scheme\GetSchemes.cs">
       <SubType>Code</SubType>
@@ -70,7 +70,7 @@
     <Compile Include="Organisations\Create\CreatePartnershipRequest.cs" />
     <Compile Include="Organisations\Create\CreateSoleTraderRequest.cs" />
     <Compile Include="Organisations\GetOrganisationInfo.cs" />
-    <Compile Include="Scheme\MemberRegistration\GetProducerCSVByMemberUploadId.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetProducerCSV.cs" />
     <Compile Include="Scheme\GetSchemeStatus.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmission.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFile.cs" />
@@ -84,7 +84,6 @@
     <Compile Include="Organisations\FindMatchingOrganisations.cs" />
     <Compile Include="Organisations\OrganisationSearchById.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    
     <Compile Include="Users\GetOrganisationUser.cs" />
     <Compile Include="Users\GetUsersByOrganisationId.cs" />
     <Compile Include="Users\GetUserData.cs" />
