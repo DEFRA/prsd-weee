@@ -83,6 +83,7 @@
     <Content Include="scripts\Update\Sprint11\20150812-0937-UpdateDataInCompetentAuthorityUserTable.sql" />
     <Content Include="scripts\Update\Sprint11\20150811-162438-UpdateSchemeTable.sql" />
     <Content Include="scripts\Update\Sprint12\20150825-132948-AddChargeThisUpdate.sql" />
+    <Content Include="scripts\Update\Sprint12\20150826-185300-AddStoredProcedureForProducerCsv.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
