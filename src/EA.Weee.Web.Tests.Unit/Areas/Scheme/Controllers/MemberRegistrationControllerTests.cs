@@ -223,15 +223,15 @@
         {
             await MemberRegistrationController().Summary(A<Guid>._);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadList>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetComplianceYears>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public async void GetSummary_HasNoUploads_RedirectsToAddOrAmendMembersPage()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadList>._))
-                .Returns(new LatestMemberUploadList());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetComplianceYears>._))
+                .Returns(new List<int>());
 
             var result = await MemberRegistrationController().Summary(A<Guid>._);
 
@@ -246,24 +246,13 @@
         [Fact]
         public async void GetSummary_HasUploadForThisScheme_ReturnsViewWithSummaryModel()
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetLatestMemberUploadList>._))
-                .Returns(new LatestMemberUploadList
-                {
-                    LatestMemberUploads = new List<LatestMemberUpload>
-                    {
-                        new LatestMemberUpload
-                        {
-                            ComplianceYear = 2016,
-                            CsvFileSizeEstimate = 150.00,
-                            UploadId = Guid.NewGuid()
-                        }
-                    }
-                });
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetComplianceYears>._))
+                .Returns(new List<int>() { 2015, 2016 });
 
             var result = await MemberRegistrationController().Summary(A<Guid>._);
 
             Assert.IsType<ViewResult>(result);
-            Assert.IsType<SummaryViewModel>(((ViewResult)result).Model);
+            Assert.IsType<List<int>>(((ViewResult)result).Model);
         }
 
         private const string XmlHasErrorsViewName = "ViewErrorsAndWarnings";
@@ -314,13 +303,14 @@
         }
 
         [Fact]
-        public async void GetProducerCSV_ValidMemberUploadId_ReturnsCSVFile()
+        public async void GetProducerCSV_ValidComplianceYear_ReturnsCSVFile()
         {
             var testCSVData = new ProducerCSVFileData { FileContent = "Test, Test, Test", FileName = "test.csv" };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerCSVByMemberUploadId>._))
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerCSV>._))
                 .Returns(testCSVData);
 
-            var result = await MemberRegistrationController().GetProducerCSV(A<Guid>._, A<Guid>._);
+            var result = await MemberRegistrationController().GetProducerCSV(A<Guid>._, A<int>._);
 
             Assert.IsType<FileContentResult>(result);
         }
