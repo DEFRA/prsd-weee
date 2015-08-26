@@ -1,5 +1,4 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.Shared
+﻿@using EA.Weee.Core.Shared
 @model EA.Weee.Web.Areas.Scheme.ViewModels.MemberUploadResultViewModel
 @{
     ViewBag.Title = "View any warnings";
@@ -15,7 +14,7 @@
     @if (Model.ErrorData == null || Model.ErrorData.Count == 0)
     {
         <div class="highlight-section">
-            <div class="highlight-section-text">Based on the information provided in your xml, your charges are:</div>
+            <div class="highlight-section-text">The producer registration charges for new members and amended members in this XML file are:</div>
             <div class="highlight-section-amount">
                 £@Model.TotalCharges.ToString("N2")
             </div>
