@@ -51,7 +51,6 @@
         {
             var result = ScenarioContext.Current.Get<RedirectToRouteResult>("Result");
 
-            //Assert.Equal("OrganisationRegistration", result.RouteValues["controller"]);
             Assert.Equal("SoleTraderDetails", result.RouteValues["action"]);
         }
 
@@ -60,7 +59,6 @@
         {
             var result = ScenarioContext.Current.Get<RedirectToRouteResult>("Result");
 
-            //Assert.Equal("OrganisationRegistration", result.RouteValues["controller"]);
             Assert.Equal("PartnershipDetails", result.RouteValues["action"]);
         }
 
@@ -69,7 +67,6 @@
         {
             var result = ScenarioContext.Current.Get<RedirectToRouteResult>("Result");
 
-            //Assert.Equal("OrganisationRegistration", result.RouteValues["controller"]);
             Assert.Equal("RegisteredCompanyDetails", result.RouteValues["action"]);
         }
 
