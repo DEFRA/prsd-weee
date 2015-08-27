@@ -38,7 +38,7 @@
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
             Assert.Equal("EditScheme", redirectValues["action"]);
-            Assert.Equal(selectedGuid, redirectValues["schemeid"]);
+            Assert.Equal(selectedGuid, redirectValues["schemeId"]);
         }
 
         [Fact]
@@ -181,7 +181,7 @@
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
             var result = await controller.EditScheme(schemeId, new SchemeViewModel
             {
-                Status = SchemeStatus.Rejected,
+                Status = SchemeStatus.Rejected
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
@@ -189,7 +189,7 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("ConfirmRejection", routeValues["action"]);
-            Assert.Equal(schemeId, routeValues["schemeid"]);
+            Assert.Equal(schemeId, routeValues["schemeId"]);
         }
 
         [Fact]
@@ -207,7 +207,7 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("ConfirmRejection", routeValues["action"]);
-            Assert.Equal(schemeId, routeValues["schemeid"]);
+            Assert.Equal(schemeId, routeValues["schemeId"]);
         }
 
         [Fact]

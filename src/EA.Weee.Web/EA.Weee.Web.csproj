@@ -600,7 +600,6 @@
     <Compile Include="Areas\Scheme\ViewModels\AuthorizationRequiredViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\OrganisationUserViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SuccessfulSubmissionViewModel.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\SummaryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\SchemeViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\GeneratePcsXmlController.cs" />
     <Compile Include="Areas\Test\Controllers\HomeController.cs" />

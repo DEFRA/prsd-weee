@@ -1,4 +1,4 @@
-﻿@using EA.Weee.Requests.Shared
+﻿@using EA.Weee.Core.Shared
 @model EA.Weee.Web.Areas.Scheme.ViewModels.MemberUploadResultViewModel
 @{
     ViewBag.Title = "View errors and warnings";
@@ -8,7 +8,8 @@
 
     <header class="hgroup">
         <div>
-            <h1 class="heading-large">The XML file contains @Model.ErrorData.Count error(s)</h1>
+            @{ int numOfErrors = @Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal); }
+            <h1 class="heading-large">The XML file contains @numOfErrors error(s)</h1>
         </div>
     </header>
 
@@ -17,13 +18,16 @@
 
     <details>
         <summary class="error-details-summary bold-small">
-            @Model.ErrorData.Count Error(s)
+            @numOfErrors Error(s)
         </summary>
         <div class="error-list-container">
             <ul>
                 @foreach (var uploadError in Model.ErrorData)
                 {
-                    <li class="error-list-item font-xsmall">@uploadError.Description</li>
+                    if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
+                    {
+                        <li class="error-list-item font-xsmall">@uploadError.Description</li>
+                    }
                 }
             </ul>
         </div>

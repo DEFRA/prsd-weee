@@ -107,7 +107,7 @@
 
         private string OrgName { get; set; }
 
-        public string OrganisationName
+        public virtual string OrganisationName
         {
             get
             {
@@ -147,115 +147,6 @@
         public void SetScheme(Scheme scheme)
         {
             Scheme = scheme;
-        }
-
-        private DateTime GetProducerRegistrationDate(string registrationNumber, int complianceYear)
-        {
-            return (from item in Scheme.Producers
-                    where item.MemberUpload.IsSubmitted && item.MemberUpload.ComplianceYear == complianceYear && item.RegistrationNumber == registrationNumber
-                    select item.UpdatedDate).ToList().OrderBy(ls => ls).First();
-        }
-
-        public static string GetCSVColumnHeaders()
-        {
-            string[] csvColumnHeaders =
-            {
-                "Organisation name", 
-                "Trading name", 
-                "Producer registration number", 
-                "Company registration number", 
-                "Charge band", 
-                "Date & time (GMT) registered", 
-                "Date & time (GMT) last updated",
-                "Authorised representative", "Overseas producer"
-            };
-
-            StringBuilder sb = new StringBuilder();
-
-            for (var i = 0; i <= csvColumnHeaders.Length - 1; i++)
-            {
-                sb.Append(csvColumnHeaders[i]);
-
-                if (i < csvColumnHeaders.Length - 1)
-                {
-                    sb.Append(",");
-                }
-            }
-
-            return sb.ToString();
-        }
-
-        public string ToCsvString()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            var companiesHouseNumber = ProducerBusiness != null && ProducerBusiness.CompanyDetails != null
-                ? ProducerBusiness.CompanyDetails.CompanyNumber
-                : string.Empty;
-
-            var chargeBand = Enumeration.FromValue<ChargeBandType>(ChargeBandType).DisplayName;
-
-            var dateRegistered = string.Format("{0:dd/MM/yyyy HH:mm:ss}", GetProducerRegistrationDate(RegistrationNumber, MemberUpload.ComplianceYear.Value));
-
-            var dateAmended = string.Format("{0:dd/MM/yyyy HH:mm:ss}", UpdatedDate);
-            if (dateRegistered == dateAmended)
-            {
-                dateAmended = string.Empty;
-            }
-
-            var authorisedRepresentative = AuthorisedRepresentative == null ? "No" : "Yes";
-
-            var overseasProducer = AuthorisedRepresentative == null
-                ? string.Empty
-                : AuthorisedRepresentative.OverseasProducerName;
-
-            sb.Append(ReplaceSpecialCharacters(OrganisationName));
-            sb.Append(",");
-
-            sb.Append(ReplaceSpecialCharacters(TradingName));
-            sb.Append(",");
-
-            sb.Append(ReplaceSpecialCharacters(RegistrationNumber));
-            sb.Append(",");
-
-            sb.Append(ReplaceSpecialCharacters(companiesHouseNumber));
-            sb.Append(",");
-
-            sb.Append(ReplaceSpecialCharacters(chargeBand));
-            sb.Append(",");
-
-            sb.Append(ReplaceSpecialCharacters(dateRegistered));
-            sb.Append(",");
-
-            sb.Append(ReplaceSpecialCharacters(dateAmended));
-            sb.Append(",");
-
-            sb.Append(ReplaceSpecialCharacters(authorisedRepresentative));
-            sb.Append(",");
-
-            sb.Append(ReplaceSpecialCharacters(overseasProducer));
-
-            sb.AppendLine();
-
-            return sb.ToString();
-        }
-
-        private string ReplaceSpecialCharacters(string value)
-        {
-            if (value.Contains(","))
-            {
-                value = string.Concat("\"", value, "\"");
-            }
-
-            if (value.Contains("\r"))
-            {
-                value = value.Replace("\r", " ");
-            }
-            if (value.Contains("\n"))
-            {
-                value = value.Replace("\n", " ");
-            }
-            return value;
         }
 
         public override int GetHashCode()

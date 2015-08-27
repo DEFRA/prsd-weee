@@ -107,12 +107,12 @@
     <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXml.cs" />
     <Compile Include="Scheme\Interfaces\IGenerateFromXml.cs" />
-    <Compile Include="Scheme\MemberRegistration\GetLatestMemberUploadListHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetComplianceYearsHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadByIdHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadDataHandler.cs" />
     <Compile Include="Scheme\Interfaces\IXmlChargeBandCalculator.cs" />
     <Compile Include="Scheme\Interfaces\IXmlConverter.cs" />
-    <Compile Include="Scheme\MemberRegistration\GetProducerCSVByMemberUploadIdHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandler.cs" />
     <Compile Include="Scheme\GetSchemesHandler.cs" />
@@ -133,6 +133,10 @@
     <Compile Include="Scheme\MemberRegistration\XmlChargeBandCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlConverter.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\BusinessValidator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\IRules.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Queries\IQueries.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Queries\Queries.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\Rules.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\Extensions\DeserializedXmlExtensions.cs" />
     <Compile Include="Scheme\Interfaces\IBusinessValidator.cs" />
     <Compile Include="Scheme\Interfaces\IXmlValidator.cs" />
@@ -162,7 +166,6 @@
     <Compile Include="Admin\FindMatchingUsersHandler.cs" />
     <Compile Include="Users\GetUserDataHandler.cs" />
     <Compile Include="Users\UpdateOrganisationUserStatusHandler.cs" />
-    
     <Compile Include="v3schema.cs" />
   </ItemGroup>
   <ItemGroup>
