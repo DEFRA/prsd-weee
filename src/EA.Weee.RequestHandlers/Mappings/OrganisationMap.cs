@@ -52,7 +52,8 @@
                     : null,
                 HasOrganisationAddress = source.HasOrganisationAddress,
                 HasBusinessAddress = source.HasBusinessAddress,
-                HasNotificationAddress = source.HasNotificationAddress
+                HasNotificationAddress = source.HasNotificationAddress,
+                OrganisationName = source.OrganisationName,
             };
         }
     }

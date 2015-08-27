@@ -2,11 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using DataAccess;
     using Domain;
-    using Domain.Scheme;
+    using Domain.Producer;
     using Extensions;
     using FluentValidation;
   
@@ -26,9 +25,7 @@
                         .NotEmpty()
                         .Matches(scheme.ApprovalNumber)
                         .WithState(st => ErrorLevel.Error)
-                        .WithMessage(
-                            "The compliance scheme approval number in the xml '{0}' does not match your compliance scheme approval number",
-                            st => st.approvalNo);
+                        .WithMessage("The approval number for your compliance scheme doesn’t match with the PCS that you selected. Please make sure that you’re entering the right compliance scheme approval number.");
                 }
             });
 
@@ -126,7 +123,61 @@
                         (st, producer) => producer.GetProducerName(),
                         (st, producer) => producer.registrationNo,
                         (st, producer) => producer.obligationType.ToString());
+
+                //Producer Name change warning
+                var currentProducers = context.Producers.Where(p => p.IsCurrentForComplianceYear).ToList();
+                RuleForEach(st => st.producerList)
+                    .Must((st, producer) =>
+                    {
+                        if (producer.status == statusType.A)
+                        {
+                            string producerName = producer.GetProducerName();
+                            var matchingProducer = GetMatchingProducer(currentProducers, producer.registrationNo, st.complianceYear, organisationId);
+                            if (matchingProducer == null)
+                            {
+                                // search in migrated producers list if not in Producers database
+                                var migratedProducer = context.MigratedProducers.FirstOrDefault(p => p.ProducerRegistrationNumber == producer.registrationNo);
+                                if (migratedProducer == null)
+                                {
+                                    throw new ArgumentNullException(string.Format("No matching producer found for PRN {0}", producer.registrationNo));
+                                }
+
+                                if (migratedProducer.ProducerName != producerName)
+                                {
+                                    return false;
+                                }
+                            }
+                            
+                            if (matchingProducer != null && matchingProducer.OrganisationName != producerName)
+                            {
+                                return false;
+                            }
+                        }
+                        return true;
+                    })
+                    .WithState(st => ErrorLevel.Warning)
+                    .WithMessage(
+                     "The name of the producer with registration number {0} will be amended to {1}.",
+                     (st, producer) => producer.registrationNo,
+                     (st, procucer) => procucer.GetProducerName());
             });
+        }
+
+        private Producer GetMatchingProducer(List<Producer> currentProducers, string registrationNo, string schemeComplianceYear, Guid schemeOrgId)
+        {
+            var matchingProducer = currentProducers.FirstOrDefault(p =>
+                                                                    p.RegistrationNumber == registrationNo
+                                                                    && p.MemberUpload.ComplianceYear == int.Parse(schemeComplianceYear)
+                                                                    && p.Scheme.OrganisationId == schemeOrgId);
+            if (matchingProducer == null)
+            {
+                // reverse the order the current producers list by compliance year and then by updatedDate
+                matchingProducer = currentProducers.Where(p => p.RegistrationNumber == registrationNo)
+                    .OrderByDescending(p => p.MemberUpload.ComplianceYear)
+                    .ThenBy(p => p.UpdatedDate)
+                    .FirstOrDefault();
+            }
+            return matchingProducer;
         }
     }
 }

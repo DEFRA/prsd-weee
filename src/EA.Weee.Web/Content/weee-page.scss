@@ -149,6 +149,10 @@
 // 2. Typography
 // ==========================================================================
 
+.related-section-title {
+	font-weight: 700;
+	font-size: 19px;
+}
 
 // 3. Colour
 // ==========================================================================
@@ -386,6 +390,23 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
     @include phase-banner($state: beta);
 }
 
+// Related Content
+// ==========================================================================
+
+.related {
+	border-top: 10px solid $govuk-blue;
+	margin-top: 1.6em;
+
+	.related-section {
+		padding-right: 1em;
+	
+		.related-section-title {
+			margin-top: 0.5em;
+			margin-bottom: 0.5em;
+		}
+	}
+}
+
 // Custom
 // ==========================================================================
 
@@ -522,6 +543,34 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
     border-left: 4px solid #4856A6;
     padding: 10px;
     margin: 10px;
+}
+
+.warning-details-summary {
+    width: 100%;
+    color: $black;
+    background-color: $yellow-50;
+    border-left: 3px solid $yellow;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 3px;
+}
+
+.warning-details-summary:hover {
+    color: $black;
+}
+
+.warning-list-container {
+    width: 100%;
+    background-color: $yellow-25;
+    padding-bottom: 10px;
+    border-left: 3px solid $yellow-25;
+    padding-left: 3px;
+}
+
+.warning-list-item {
+    padding-left: 10px;
+    padding-top: 10px;
+    word-wrap: break-word;
 }
 
 .error-details-summary {

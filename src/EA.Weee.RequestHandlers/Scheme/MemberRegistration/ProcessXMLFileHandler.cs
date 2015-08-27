@@ -63,7 +63,7 @@
             var upload = generateFromXml.GenerateMemberUpload(message, memberUploadErrors, totalCharges, scheme.Id);
 
             //Build producers domain object if there are no errors(schema or business during validation of xml file.
-            if (!memberUploadErrors.Any())
+            if (!memberUploadErrors.Any(e => (e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal)))
             {
                 var producers = await generateFromXml.GenerateProducers(message, upload, producerCharges);
                 context.MemberUploads.Add(upload);

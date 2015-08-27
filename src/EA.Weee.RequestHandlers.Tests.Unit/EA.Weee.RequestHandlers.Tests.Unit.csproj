@@ -84,6 +84,7 @@
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadByIdHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GetProducerCSVByMemberUploadIdHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\ProducerChargeBandCalculatorTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\DeserializedXmlExtensionsTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\XmlGeneratorTests.cs" />
@@ -172,6 +173,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ExampleXML\v3-same-producer-name.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-valid-AmendmentBandC.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ExampleXML\v3-valid-ChargeBand.xml">
