@@ -2,12 +2,19 @@
 @model EA.Weee.Web.Areas.Scheme.ViewModels.AddOrAmendMembersViewModel
 @{
     ViewBag.Title = "Manage Members";
+    HtmlHelper.ClientValidationEnabled = true;
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
 }
 
 @section main_content
 {
     <script type="text/javascript">
-        function disableSubmitButton() {
+        
+        function ajaxSubmit() {
+
+            if (!$("#form1").valid()) {
+                return false;
+            }
 
             $("#title")
                 .html('Checking your file for errors');
@@ -27,11 +34,24 @@
                     .fadeIn("slow");
             }, 5000);
 
-            return true;
+            $.ajax({
+                url: "@Url.Action("AddOrAmendMembers", "MemberRegistration")",
+                type: "POST",
+                data: $("#form1").serializeFiles(),
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    var placeHolderLocation = "@Url.Action("ViewErrorsAndWarnings", "MemberRegistration", new { memberUploadId = Guid.Empty })";
+                    window.location = placeHolderLocation.replace("@Guid.Empty", response);
+                },
+                error: function (response) {
+                    window.location = "@Url.Action("InternalError", "Errors", new { area = string.Empty })";
+                }
+            });
         }
     </script>
 
-    @using (Html.BeginForm("AddOrAmendMembers", "MemberRegistration", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return disableSubmitButton()" }))
+    @using (Html.BeginForm("AddOrAmendMembers", "MemberRegistration", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data", onsubmit = "ajaxSubmit(); return false;" }))
     {
         <header class="hgroup">
             <h1 id="title" class="heading-large" aria-live="off">
@@ -53,7 +73,7 @@
             <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
                 @Html.Gds().LabelFor(m => m.File)
                 @Html.Gds().ValidationMessageFor(m => m.File)
-                <input type="file" name="File" id="File" accept=".xml" />
+                @Html.Gds().TextBoxFor(m => m.File, new { type = "file", accept = ".xml" })
             </div>
 
         </div>
