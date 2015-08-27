@@ -1,17 +1,18 @@
 ﻿namespace EA.Weee.DataAccess
 {
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Admin;
     using Domain.Organisation;
     using Domain.Producer;
     using Domain.Scheme;
+    using EA.Weee.DataAccess.StoredProcedure;
     using Prsd.Core.DataAccess.Extensions;
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public class WeeeContext : DbContext
     {
@@ -43,11 +44,15 @@
 
         public virtual DbSet<CompetentAuthorityUser> CompetentAuthorityUsers { get; set; }
 
+        public virtual IStoredProcedures StoredProcedures { get; private set; }
+
         public WeeeContext(IUserContext userContext)
             : base("name=Weee.DefaultConnection")
         {
             this.userContext = userContext;
             Database.SetInitializer<WeeeContext>(null);
+
+            StoredProcedures = new StoredProcedures(this);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

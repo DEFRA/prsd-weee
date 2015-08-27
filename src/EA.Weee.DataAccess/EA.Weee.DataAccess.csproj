@@ -106,6 +106,9 @@
     <Compile Include="Mappings\SchemeMapping.cs" />
     <Compile Include="Mappings\SystemDataMapping.cs" />
     <Compile Include="RelationshipExtensions.cs" />
+    <Compile Include="StoredProcedure\IStoredProcedures.cs" />
+    <Compile Include="StoredProcedure\ProducerCsvData.cs" />
+    <Compile Include="StoredProcedure\StoredProcedures.cs" />
     <Compile Include="WeeeContext.cs" />
     <Compile Include="Mappings\AddressMapping.cs" />
     <Compile Include="Mappings\UKCompetentAuthorityMapping.cs" />

@@ -2,20 +2,21 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using DataAccess;
     using Domain;
-    using Domain.Scheme;
+    using Domain.Producer;
     using Extensions;
     using FluentValidation;
-  
+    using Queries;
+    using Rules;
+
     public class SchemeTypeValidator : AbstractValidator<schemeType>
     {
         public const string NonDataValidation = "NonDataValidation";
         public const string DataValidation = "DataValidation";
        
-        public SchemeTypeValidator(WeeeContext context, Guid organisationId)
+        public SchemeTypeValidator(WeeeContext context, Guid organisationId, IRules rules)
         {
             RuleSet(DataValidation, () =>
             {
@@ -26,9 +27,7 @@
                         .NotEmpty()
                         .Matches(scheme.ApprovalNumber)
                         .WithState(st => ErrorLevel.Error)
-                        .WithMessage(
-                            "The compliance scheme approval number in the xml '{0}' does not match your compliance scheme approval number",
-                            st => st.approvalNo);
+                        .WithMessage("The approval number for your compliance scheme doesn’t match with the PCS that you selected. Please make sure that you’re entering the right compliance scheme approval number.");
                 }
             });
 
@@ -126,6 +125,15 @@
                         (st, producer) => producer.GetProducerName(),
                         (st, producer) => producer.registrationNo,
                         (st, producer) => producer.obligationType.ToString());
+
+                //Producer Name change warning
+                RuleForEach(st => st.producerList)
+                    .Must((st, producer) => rules.ShouldNotWarnOfProducerNameChange(st, producer, organisationId))
+                    .WithState(st => ErrorLevel.Warning)
+                    .WithMessage(
+                     "The name of the producer with registration number {0} will be amended to {1}.",
+                     (st, producer) => producer.registrationNo,
+                     (st, producer) => producer.GetProducerName());
             });
         }
     }

@@ -9,10 +9,13 @@
     using FluentValidation;
     using FluentValidation.Internal;
     using Interfaces;
+    using Queries;
+    using Rules;
 
     public class BusinessValidator : IBusinessValidator
     {
         private readonly WeeeContext context;
+        private readonly IRules rules;
 
         public static string RegistrationNoRuleSet = "registrationNo";
 
@@ -20,14 +23,15 @@
 
         public static string DataValidationRuleSet = "dataValidation";
 
-        public BusinessValidator(WeeeContext context)
+        public BusinessValidator(WeeeContext context, IRules rules)
         {
             this.context = context;
+            this.rules = rules;
         }
 
         public IEnumerable<MemberUploadError> Validate(schemeType deserializedXml, Guid pcsId)
         {
-            var result = new SchemeTypeValidator(context, pcsId).Validate(deserializedXml, new RulesetValidatorSelector("*"));
+            var result = new SchemeTypeValidator(context, pcsId, rules).Validate(deserializedXml, new RulesetValidatorSelector("*"));
             return result.Errors.Select(err => new MemberUploadError((ErrorLevel)err.CustomState, MemberUploadErrorType.Business, err.ErrorMessage));
         }
     }
