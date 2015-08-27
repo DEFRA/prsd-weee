@@ -8,14 +8,17 @@
     <header class="hgroup">
         <h1 class="heading-large">Main contact person</h1>
     </header>
-    <p class="form-hint">Details for the main contact person for your organisation.</p>
+
+    <div style="margin-bottom: 1.66667em;">
+        <p>Enter the details of the main contact person</p>
+    </div>
 
     @using (Html.BeginForm(actionName: "MainContactPerson", controllerName: "OrganisationRegistration", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
-        
+
         <div class="form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
             @Html.Gds().LabelFor(m => m.FirstName)
             @Html.Gds().ValidationMessageFor(m => m.FirstName)
@@ -32,7 +35,7 @@
             @Html.Gds().TextBoxFor(m => m.Position, new { @maxlength = "35" })
         </div>
 
-      
+
         <div class="form-group">
             <button class="button" type="submit">Continue</button>
         </div>

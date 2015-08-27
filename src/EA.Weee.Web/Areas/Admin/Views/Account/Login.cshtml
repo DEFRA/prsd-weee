@@ -2,11 +2,14 @@
 @model EA.Weee.Web.Areas.Admin.ViewModels.InternalLoginViewModel
 
 @section main_content {
-    <h1 class="heading-large">
-        Sign in to your account
-    </h1>
-
-    <p class="form-hint">This area is reserved for the use of environmental agency staff only.</p>
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Sign in to your account
+        </h1>
+    </header>
+    <div style="margin-bottom: 1.66667em;">
+        <p>This area is reserved for the use of Authorising Authority staff only.</p>
+    </div>
 
     @using (Html.BeginForm("Login", "Account", new { ReturnUrl = Request.QueryString["ReturnUrl"] }))
     {

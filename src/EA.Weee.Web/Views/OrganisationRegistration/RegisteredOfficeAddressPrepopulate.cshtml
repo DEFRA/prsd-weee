@@ -5,7 +5,7 @@
     @if (@Model.OrganisationType.ToString().ToLower() == "partnership" || @Model.OrganisationType.ToString().ToLower() == "soletraderorindividual")
     {
         ViewBag.Title = "Principal place of business";
-        
+
         <header class="hgroup">
             <h1 class="heading-large">
                 Are the details for your principal place of business and your organisation contact details the same?
@@ -15,16 +15,16 @@
     else
     {
         ViewBag.Title = "Registered office";
-        
+
         <header class="hgroup">
             <h1 class="heading-large">
                 Are the details for your registered office and your organisation contact details the same?
             </h1>
         </header>
-        
-        <p class="form-hint">
-            Your registered office is the address listed with Companies House.
-        </p>
+
+        <div style="margin-bottom: 1.66667em;">
+            <p>Your registered office details are those that are listed with Companies House</p>
+        </div>
     }
 
     @using (Html.BeginForm("RegisteredOfficeAddressPrepopulate", "OrganisationRegistration", FormMethod.Post, new { @class = "form", role = "form" }))
