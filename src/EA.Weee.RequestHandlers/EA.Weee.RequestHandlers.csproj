@@ -107,12 +107,12 @@
     <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXml.cs" />
     <Compile Include="Scheme\Interfaces\IGenerateFromXml.cs" />
-    <Compile Include="Scheme\MemberRegistration\GetLatestMemberUploadListHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetComplianceYearsHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadByIdHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadDataHandler.cs" />
     <Compile Include="Scheme\Interfaces\IXmlChargeBandCalculator.cs" />
     <Compile Include="Scheme\Interfaces\IXmlConverter.cs" />
-    <Compile Include="Scheme\MemberRegistration\GetProducerCSVByMemberUploadIdHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandler.cs" />
     <Compile Include="Scheme\GetSchemesHandler.cs" />
