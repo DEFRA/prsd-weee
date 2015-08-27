@@ -14,12 +14,25 @@
     using Helpers;
     using RequestHandlers;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation;
+    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.Queries;
+    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.Rules;
     using Xunit;
     using ValidationContext = XmlValidation.ValidationContext;
 
     public class SchemeTypeValidatorTests
     {
-      [Fact]
+        private readonly IRules rules;
+
+        public SchemeTypeValidatorTests()
+        {
+            rules = A.Fake<IRules>();
+
+            // By default all abstracted rules pass
+            A.CallTo(() => rules.ShouldNotWarnOfProducerNameChange(A<schemeType>._, A<producerType>._, A<Guid>._))
+                .Returns(true);
+        }
+
+        [Fact]
         public void
             SetOfDuplicateRegistrationNumbers_ValidationFails_IncludesRegistraionNumberInMessage_AndErrorLevelIsError()
         {
@@ -419,7 +432,7 @@
             };
             var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
             var existingScheme = new Scheme(orgId);
-            existingScheme.UpdateScheme("test",  "Test Approval Number 1", String.Empty, ObligationType.B2B, Guid.NewGuid());
+            existingScheme.UpdateScheme("test", "Test Approval Number 1", String.Empty, ObligationType.B2B, Guid.NewGuid());
             var result = SchemeTypeValidator(existingScheme, orgId)
                .Validate(xml,
                    new RulesetValidatorSelector(
@@ -471,101 +484,43 @@
         }
 
         [Fact]
-        public void ProducerAlreadyRegisteredSameScheme_AmendWithDifferentProducerName_ProducesWarnings()
+        public void ShouldNotWarnOfProducerNameChange_ReturnsFalse_ShouldReturnWarningContainingPrnAndName()
         {
-            var weeeContext = A.Fake<WeeeContext>();
-            const string registrationNumber = "ABC";
+            var producerName = "Test Name";
+            var registrationNumber = "ABC12345";
+
+            A.CallTo(() => rules.ShouldNotWarnOfProducerNameChange(A<schemeType>._, A<producerType>._, A<Guid>._))
+                .Returns(false);
+
             var xml = new schemeType
             {
-                complianceYear = "2018",
-                approvalNo = "Test Approval Number 1",
-                producerList =
-                new producerType[]
+                producerList = new[]
                 {
-                    new producerType()
+                    new producerType
                     {
-                        status = statusType.A,
                         registrationNo = registrationNumber,
-                        producerBusiness = new producerBusinessType()
+                        producerBusiness = new producerBusinessType
                         {
-                           Item = new partnershipType
-                           {
-                              partnershipName = "New Producer Name"
-                           }
-                       }
+                            Item = new partnershipType
+                            {
+                                partnershipName = producerName
+                            }
+                        }
                     }
                 }
             };
-            var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
-            var scheme = (Scheme)Activator.CreateInstance(typeof(Scheme), true);
-            typeof(Scheme).GetProperty("OrganisationId").SetValue(scheme, orgId);
-            typeof(Scheme).GetProperty("ApprovalNumber").SetValue(scheme, "Test Approval Number 1");
-            List<Scheme> schemeList = new List<Scheme>()
-            {
-                scheme
-            };
 
-            A.CallTo(() => weeeContext.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemeList));
-    
-            List<Producer> producersList = new List<Producer>()
-            {
-                MakeProducer(2015, registrationNumber, new DateTime(2015, 06, 1), "Name1"), 
-                MakeProducer(2016, registrationNumber, new DateTime(2016, 12, 1), "Name2"), 
-                MakeProducer(2017, registrationNumber, new DateTime(2016, 11, 1), "Name3"), 
-                MakeProducer(2018, registrationNumber, new DateTime(2018, 1, 1), "Name4"),
-                MakeProducer(2018, registrationNumber, new DateTime(2018, 02, 1), "Name5") 
-            };
-            A.CallTo(() => weeeContext.Producers).Returns(dbContextHelper.GetAsyncEnabledDbSet(producersList));
+            var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(
+                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .DataValidation));
 
-            typeof(Scheme).GetProperty("Producers").SetValue(scheme, producersList);
-       
-            var result = SchemeTypeValidator(scheme, orgId)
-                        .Validate(xml,
-                            new RulesetValidatorSelector(
-                                RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
-                                    .DataValidation));
+            Assert.Single(result.Errors);
 
-            Assert.Equal(1, result.Errors.Count);
-            Assert.False(result.IsValid);
-            Assert.Contains(registrationNumber, result.Errors.Single().ErrorMessage);
-            Assert.Equal(ErrorLevel.Warning, result.Errors.Single().CustomState);
-        }
+            var error = result.Errors.Single();
 
-        [Fact]
-        public void ProducerRegisteredForNewComplianceYearSameSchemeSameProducerName_Amend_ReturnsSuccess()
-        {
-            var weeeContext = CreateFakeDatabase();
-            const string registrationNumber = "ABC";
-            var xml = new schemeType
-            {
-                complianceYear = "2019",
-                approvalNo = "Test Approval Number 1",
-                producerList =
-                new producerType[]
-                {
-                    new producerType()
-                    {
-                        status = statusType.A,
-                        registrationNo = registrationNumber,
-                        producerBusiness = new producerBusinessType()
-                        {
-                           Item = new partnershipType
-                           {
-                              partnershipName = "Partnership Name"
-                           }
-                       }
-                    }
-                }
-            };
-            var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
-            var scheme = weeeContext.Schemes.FirstOrDefault(s => s.OrganisationId == orgId);
-            var result = SchemeTypeValidator(scheme, orgId)
-                        .Validate(xml,
-                            new RulesetValidatorSelector(
-                                RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
-                                    .DataValidation));
-
-            Assert.True(result.IsValid);
+            Assert.Equal(ErrorLevel.Warning, error.CustomState);
+            Assert.Contains(producerName, error.ErrorMessage);
+            Assert.Contains(registrationNumber, error.ErrorMessage);
         }
 
         private IValidator<schemeType> SchemeTypeValidator(Guid? existingOrganisationId = null,
@@ -576,7 +531,7 @@
 
         private IValidator<schemeType> SchemeTypeValidator(Scheme scheme, Guid? organisationId = null)
         {
-            return new SchemeTypeValidator(ValidationContext.Create(scheme), organisationId ?? Guid.NewGuid());
+            return new SchemeTypeValidator(ValidationContext.Create(scheme), organisationId ?? Guid.NewGuid(), rules);
         }
 
         private producerType[] ProducersWithRegistrationNumbers(params string[] regstrationNumbers)
@@ -666,7 +621,7 @@
             A.CallTo(() => memberUpload2.IsSubmitted).Returns(true);
 
             Producer producer1 = FakeProducer.Create(MapObligationType(obligationTypeType.B2B), "ABC", false);
-     
+
             Producer producer2 = FakeProducer.Create(MapObligationType(obligationTypeType.B2C), "ABC", true);
 
             var organisation1 = A.Fake<Organisation>();
@@ -690,11 +645,11 @@
             // Wire up member uploads to organisations (1-way)
             A.CallTo(() => memberUpload1.Organisation).Returns(organisation1);
             A.CallTo(() => memberUpload2.Organisation).Returns(organisation1);
-       
+
             // Wire up member uploads to schemes (1-way)
             A.CallTo(() => memberUpload1.Scheme).Returns(scheme1);
             A.CallTo(() => memberUpload2.Scheme).Returns(scheme1);
-       
+
             // Wire up producers and schemes (2-way).
             A.CallTo(() => scheme1.Producers).Returns(new List<Producer>
             {
@@ -770,7 +725,7 @@
             typeof(Producer).GetProperty("ProducerBusiness").SetValue(producer, fakeProducerBusiness);
             typeof(Producer).GetProperty("UpdatedDate").SetValue(producer, updatedDate);
             typeof(Producer).GetProperty("IsCurrentForComplianceYear").SetValue(producer, true);
-       
+
             return producer;
         }
     }

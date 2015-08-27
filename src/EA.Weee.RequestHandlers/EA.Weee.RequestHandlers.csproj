@@ -133,6 +133,10 @@
     <Compile Include="Scheme\MemberRegistration\XmlChargeBandCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlConverter.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\BusinessValidator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\IRules.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Queries\IQueries.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Queries\Queries.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\Rules.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\Extensions\DeserializedXmlExtensions.cs" />
     <Compile Include="Scheme\Interfaces\IBusinessValidator.cs" />
     <Compile Include="Scheme\Interfaces\IXmlValidator.cs" />
@@ -162,7 +166,6 @@
     <Compile Include="Admin\FindMatchingUsersHandler.cs" />
     <Compile Include="Users\GetUserDataHandler.cs" />
     <Compile Include="Users\UpdateOrganisationUserStatusHandler.cs" />
-    
     <Compile Include="v3schema.cs" />
   </ItemGroup>
   <ItemGroup>
