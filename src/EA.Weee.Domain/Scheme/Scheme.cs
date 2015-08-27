@@ -79,21 +79,5 @@
                 .Where(p => p.MemberUpload.ComplianceYear == complianceYear)
                 .ToList();
         }
-
-        public string GetProducerCSV(int complianceYear)
-        {
-            List<Producer> producers = GetProducersList(complianceYear);
-            producers = producers.OrderBy(p => p.OrganisationName).ToList();
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append(Producer.GetCSVColumnHeaders());
-            sb.AppendLine();
-            foreach (Producer producer in producers)
-            {
-                sb.Append(producer.ToCsvString());
-            }
-
-            return sb.ToString();
-        }
     }
 }
