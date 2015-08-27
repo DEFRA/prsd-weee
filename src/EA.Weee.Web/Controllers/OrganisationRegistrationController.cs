@@ -83,11 +83,11 @@
                         switch (organisationType)
                         {
                             case OrganisationType.SoleTraderOrIndividual:
-                                return RedirectToAction("SoleTraderDetails", "OrganisationRegistration", new { organisationId = model.OrganisationId.Value });
+                                return RedirectToAction("SoleTraderDetails", new { organisationId = model.OrganisationId.Value });
                             case OrganisationType.RegisteredCompany:
-                                return RedirectToAction("RegisteredCompanyDetails", "OrganisationRegistration", new { organisationId = model.OrganisationId.Value });
+                                return RedirectToAction("RegisteredCompanyDetails", new { organisationId = model.OrganisationId.Value });
                             case OrganisationType.Partnership:
-                                return RedirectToAction("PartnershipDetails", "OrganisationRegistration", new { organisationId = model.OrganisationId.Value });
+                                return RedirectToAction("PartnershipDetails", new { organisationId = model.OrganisationId.Value });
                         }
                     }
                 }
@@ -96,11 +96,11 @@
                     switch (organisationType)
                     {
                         case OrganisationType.SoleTraderOrIndividual:
-                            return RedirectToAction("SoleTraderDetails", "OrganisationRegistration");
+                            return RedirectToAction("SoleTraderDetails");
                         case OrganisationType.RegisteredCompany:
-                            return RedirectToAction("RegisteredCompanyDetails", "OrganisationRegistration");
+                            return RedirectToAction("RegisteredCompanyDetails");
                         case OrganisationType.Partnership:
-                            return RedirectToAction("PartnershipDetails", "OrganisationRegistration");
+                            return RedirectToAction("PartnershipDetails");
                     }
                 }
             }
@@ -145,25 +145,28 @@
         [ValidateAntiForgeryToken]
         public ActionResult SoleTraderDetails(SoleTraderDetailsViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                if (model.OrganisationId != null)
+                return View(model);
+            }
+
+            if (model.OrganisationId != null)
+            {
+                return RedirectToAction("SelectOrganisation", new
                 {
-                    return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
-                    {
-                        tradingName = model.BusinessTradingName,
-                        type = OrganisationType.SoleTraderOrIndividual,
-                        organisationId = model.OrganisationId.Value
-                    });
-                }
-                return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
+                    tradingName = model.BusinessTradingName,
+                    type = OrganisationType.SoleTraderOrIndividual,
+                    organisationId = model.OrganisationId.Value
+                });
+            }
+            else
+            {
+                return RedirectToAction("SelectOrganisation", new
                 {
                     tradingName = model.BusinessTradingName,
                     type = OrganisationType.SoleTraderOrIndividual
                 });
             }
-
-            return View(model);
         }
 
         [HttpGet]
@@ -202,25 +205,28 @@
         [ValidateAntiForgeryToken]
         public ActionResult PartnershipDetails(PartnershipDetailsViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                if (model.OrganisationId != null)
+                return View(model);
+            }
+
+            if (model.OrganisationId != null)
+            {
+                return RedirectToAction("SelectOrganisation", new
                 {
-                    return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
-                    {
-                        tradingName = model.BusinessTradingName,
-                        type = OrganisationType.Partnership,
-                        organisationId = model.OrganisationId.Value
-                    });
-                }
-                return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
+                    tradingName = model.BusinessTradingName,
+                    type = OrganisationType.Partnership,
+                    organisationId = model.OrganisationId.Value
+                });
+            }
+            else
+            {
+                return RedirectToAction("SelectOrganisation", new
                 {
                     tradingName = model.BusinessTradingName,
                     type = OrganisationType.Partnership
                 });
             }
-
-            return View(model);
         }
 
         [HttpGet]
@@ -262,20 +268,25 @@
         [ValidateAntiForgeryToken]
         public ActionResult RegisteredCompanyDetails(RegisteredCompanyDetailsViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                if (model.OrganisationId != null)
+                return View(model);
+            }
+
+            if (model.OrganisationId != null)
+            {
+                return RedirectToAction("SelectOrganisation", new
                 {
-                    return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
-                    {
-                        name = model.CompanyName,
-                        tradingName = model.BusinessTradingName,
-                        companiesRegistrationNumber = model.CompaniesRegistrationNumber,
-                        type = OrganisationType.RegisteredCompany,
-                        organisationId = model.OrganisationId.Value
-                    });
-                }
-                return RedirectToAction("SelectOrganisation", "OrganisationRegistration", new
+                    name = model.CompanyName,
+                    tradingName = model.BusinessTradingName,
+                    companiesRegistrationNumber = model.CompaniesRegistrationNumber,
+                    type = OrganisationType.RegisteredCompany,
+                    organisationId = model.OrganisationId.Value
+                });
+            }
+            else
+            {
+                return RedirectToAction("SelectOrganisation", new
                 {
                     name = model.CompanyName,
                     tradingName = model.BusinessTradingName,
@@ -283,8 +294,6 @@
                     type = OrganisationType.RegisteredCompany
                 });
             }
-
-            return View(model);
         }
 
         [HttpGet]
@@ -345,17 +354,10 @@
             };
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult SelectOrganisation(SelectOrganisationViewModel model, string submitButton)
-        {
-            return RedirectToAction("JoinOrganisation", new { organisationId = Guid.Parse(submitButton) });
-        }
-
         [HttpGet]
-        public async Task<ViewResult> JoinOrganisation(Guid organisationId)
+        public ViewResult JoinOrganisation(Guid organisationId)
         {
-            return View(new JoinOrganisationViewModel { OrganisationToJoin = organisationId });
+            return View(new JoinOrganisationViewModel { OrganisationId = organisationId });
         }
 
         [HttpPost]
@@ -374,7 +376,7 @@
                     await
                         client.SendAsync(
                             User.GetAccessToken(),
-                            new JoinOrganisation(viewModel.OrganisationToJoin));
+                            new JoinOrganisation(viewModel.OrganisationId));
                 }
                 catch (ApiException ex)
                 {
@@ -406,16 +408,29 @@
                 {
                     if (viewModel.OrganisationId != null)
                     {
-                        var orgId = await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationTypeDetails(viewModel.OrganisationId.Value, viewModel.Type, viewModel.Name, viewModel.TradingName, viewModel.CompaniesRegistrationNumber));
-                        return RedirectToAction("MainContactPerson", new { id = orgId });
+                        UpdateOrganisationTypeDetails request = new UpdateOrganisationTypeDetails(
+                            viewModel.OrganisationId.Value,
+                            viewModel.Type,
+                            viewModel.Name,
+                            viewModel.TradingName,
+                            viewModel.CompaniesRegistrationNumber);
+
+                        Guid organisationId = await client.SendAsync(User.GetAccessToken(), request);
+
+                        return RedirectToAction("MainContactPerson", new { organisationId });
                     }
-                    var command = MakeOrganisationCreationRequest(
-                        viewModel.Name,
-                        viewModel.TradingName,
-                        viewModel.CompaniesRegistrationNumber,
-                        viewModel.Type);
-                    var organisationId = await client.SendAsync(User.GetAccessToken(), command);
-                    return RedirectToAction("MainContactPerson", new { id = organisationId });
+                    else
+                    {
+                        CreateOrganisationRequest request = MakeOrganisationCreationRequest(
+                            viewModel.Name,
+                            viewModel.TradingName,
+                            viewModel.CompaniesRegistrationNumber,
+                            viewModel.Type);
+
+                        Guid organisationId = await client.SendAsync(User.GetAccessToken(), request);
+
+                        return RedirectToAction("MainContactPerson", new { organisationId });
+                    }
                 }
                 catch (ApiBadRequestException ex)
                 {
@@ -465,29 +480,29 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> MainContactPerson(Guid id)
+        public async Task<ActionResult> MainContactPerson(Guid organisationId)
         {
             using (var client = apiClient())
             {
                 /* RP: Check with the API to see if this is a valid organisation
                  * It would be annoying for a user to fill out a form only to get an error at the end, 
                  * when this could be avoided by checking the validity of the ID before the page loads */
-                var organisationExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
+                var organisationExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(organisationId));
 
                 if (!organisationExists)
                 {
-                    throw new ArgumentException("No organisation found for supplied organisation Id", "id");
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
 
                 ContactPersonViewModel model;
-                var contactPerson = await client.SendAsync(User.GetAccessToken(), new GetContactPersonByOrganisationId(id));
+                var contactPerson = await client.SendAsync(User.GetAccessToken(), new GetContactPersonByOrganisationId(organisationId));
                 if (contactPerson.HasContact)
                 {
                     model = new ContactPersonViewModel(contactPerson);
                 }
                 else
                 {
-                    model = new ContactPersonViewModel { OrganisationId = id };
+                    model = new ContactPersonViewModel { OrganisationId = organisationId };
                 }
 
                 return View(model);
@@ -505,9 +520,9 @@
                     try
                     {
                         await client.SendAsync(User.GetAccessToken(), viewModel.ToAddRequest());
-                        return RedirectToAction("OrganisationAddress", "OrganisationRegistration", new
+                        return RedirectToAction("OrganisationAddress", new
                         {
-                            id = viewModel.OrganisationId
+                            viewModel.OrganisationId
                         });
                     }
                     catch (ApiBadRequestException ex)
@@ -535,11 +550,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> OrganisationAddress(Guid id)
+        public async Task<ActionResult> OrganisationAddress(Guid organisationId)
         {
             using (var client = apiClient())
             {
-                var model = await GetAddressViewModel(id, client, false, AddressType.OrganisationAddress);
+                var model = await GetAddressViewModel(organisationId, client, false, AddressType.OrganisationAddress);
 
                 return View(model);
             }
@@ -569,7 +584,7 @@
                     return
                         RedirectToAction(
                             isUkAddress ? "RegisteredOfficeAddressPrepopulate" : "RegisteredOfficeAddress",
-                            "OrganisationRegistration", new { id = viewModel.OrganisationId });
+                            new { viewModel.OrganisationId });
                 }
             }
             catch (ApiBadRequestException ex)
@@ -585,11 +600,11 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> RegisteredOfficeAddressPrepopulate(Guid id)
+        public async Task<ViewResult> RegisteredOfficeAddressPrepopulate(Guid organisationId)
         {
             using (var client = apiClient())
             {
-                return View(await GetAddressPrepopulateViewModel(id, client));
+                return View(await GetAddressPrepopulateViewModel(organisationId, client));
             }
         }
 
@@ -601,7 +616,7 @@
             {
                 if (viewModel.ContactDetailsSameAs.Choices.SelectedValue == "No")
                 {
-                    return RedirectToAction("RegisteredOfficeAddress", new { id = viewModel.OrganisationId });
+                    return RedirectToAction("RegisteredOfficeAddress", new { viewModel.OrganisationId });
                 }
                 if (viewModel.ContactDetailsSameAs.Choices.SelectedValue == "Yes")
                 {
@@ -612,7 +627,7 @@
                                 new CopyOrganisationAddressIntoRegisteredOffice(viewModel.OrganisationId));
                     }
 
-                    return RedirectToAction("ReviewOrganisationDetails", new { id = viewModel.OrganisationId });
+                    return RedirectToAction("ReviewOrganisationDetails", new { viewModel.OrganisationId });
                 }
             }
 
@@ -620,11 +635,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RegisteredOfficeAddress(Guid id)
+        public async Task<ActionResult> RegisteredOfficeAddress(Guid organisationId)
         {
             using (var client = apiClient())
             {
-                var model = await GetAddressViewModel(id, client, true, AddressType.RegisteredOrPPBAddress);
+                var model = await GetAddressViewModel(organisationId, client, true, AddressType.RegisteredOrPPBAddress);
                 return View(model);
             }
         }
@@ -645,9 +660,9 @@
                 using (var client = apiClient())
                 {
                     await AddAddressToOrganisation(viewModel, AddressType.RegisteredOrPPBAddress, client);
-                    return RedirectToAction("ReviewOrganisationDetails", "OrganisationRegistration", new
+                    return RedirectToAction("ReviewOrganisationDetails", new
                     {
-                        id = viewModel.OrganisationId
+                        viewModel.OrganisationId
                     });
                 }
             }
@@ -672,41 +687,44 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ReviewOrganisationDetails(Guid id)
+        public async Task<ActionResult> ReviewOrganisationDetails(Guid organisationId)
         {
-            var model = new OrganisationSummaryViewModel();
             using (var client = apiClient())
             {
                 var organisationExists =
-                   await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(id));
+                   await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(organisationId));
 
                 if (!organisationExists)
                 {
-                    throw new ArgumentException("No organisation found for supplied organisation Id", "id");
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
 
-                var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
-                model.OrganisationData = organisation;
+                OrganisationData organisationData = await client.SendAsync(
+                    User.GetAccessToken(),
+                    new GetOrganisationInfo(organisationId));
+
+                var model = new OrganisationSummaryViewModel()
+                {
+                    OrganisationData = organisationData,
+                };
+
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ConfirmOrganisationDetails(OrganisationSummaryViewModel model)
+        public async Task<ActionResult> ConfirmOrganisationDetails(Guid organisationId)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("ReviewOrganisationDetails", model);
-            }
             try
             {
                 using (var client = apiClient())
                 {
                     await
                         client.SendAsync(User.GetAccessToken(),
-                            new CompleteRegistration(model.OrganisationData.Id));
+                            new CompleteRegistration(organisationId));
                 }
+
                 return RedirectToAction("RedirectProcess", "Account");
             }
             catch (ApiBadRequestException ex)
@@ -718,7 +736,8 @@
                     throw;
                 }
             }
-            return View("ReviewOrganisationDetails", model);
+
+            return await ReviewOrganisationDetails(organisationId);
         }
 
         private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly, AddressType addressType)
@@ -757,12 +776,12 @@
             return model;
         }
 
-        private async Task<AddressPrepopulateViewModel> GetAddressPrepopulateViewModel(Guid id, IWeeeClient client)
+        private async Task<AddressPrepopulateViewModel> GetAddressPrepopulateViewModel(Guid organisationId, IWeeeClient client)
         {
-            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(id));
+            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
             var model = new AddressPrepopulateViewModel
             {
-                OrganisationId = id,
+                OrganisationId = organisationId,
                 OrganisationType = organisation.OrganisationType,
                 ContactDetailsSameAs = new YesNoChoiceViewModel()
             };

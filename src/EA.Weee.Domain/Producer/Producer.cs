@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using EA.Weee.Domain;
+    using Domain;
     using Prsd.Core.Domain;
     using Scheme;
 
@@ -27,7 +27,8 @@
             List<BrandName> brandnames,
             List<SICCode> codes,
             bool isCurrentForComplianceYear,
-            ChargeBandType chargeBandType)
+            ChargeBandType chargeBandType,
+            decimal chargeThisUpdate)
         {
             ProducerBusiness = producerBusiness;
             AuthorisedRepresentative = authorisedRepresentative;
@@ -53,6 +54,7 @@
             IsCurrentForComplianceYear = isCurrentForComplianceYear;
 
             ChargeBandType = chargeBandType.Value;
+            ChargeThisUpdate = chargeThisUpdate;
         }
 
         protected Producer()
@@ -101,9 +103,11 @@
 
         public int ChargeBandType { get; private set; }
 
+        public decimal ChargeThisUpdate { get; private set; }
+
         private string OrgName { get; set; }
 
-        public string OrganisationName
+        public virtual string OrganisationName
         {
             get
             {

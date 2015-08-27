@@ -105,7 +105,6 @@
         {
             var result = ScenarioContext.Current.Get<RedirectToRouteResult>("result");
 
-            Assert.Equal("OrganisationRegistration", result.RouteValues["controller"]);
             Assert.Equal("SelectOrganisation", result.RouteValues["action"]);
         }
 

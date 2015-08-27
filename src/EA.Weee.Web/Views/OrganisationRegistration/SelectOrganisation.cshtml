@@ -12,18 +12,10 @@
             Choose to join an existing organisation, or add a new one
         </h1>
     </header>
+
     @if (Model.MatchingOrganisations != null && Model.MatchingOrganisations.TotalItemCount > 0)
     {
         <p class="lede">We have found some organisations that match the information you have provided. Select your organisation or add it, if it is not listed.</p>
-
-        using (Html.BeginForm(actionName: "SelectOrganisation", controllerName: "OrganisationRegistration", method: FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            @Html.ValidationMessageFor(m => m.Selected)
-            @Html.HiddenFor(m => m.Name)
-            @Html.HiddenFor(m => m.TradingName)
-            @Html.HiddenFor(m => m.CompaniesRegistrationNumber)
-            @Html.HiddenFor(m => m.Type)
 
             int i = 0;
             foreach (OrganisationSearchData organisation in Model.MatchingOrganisations)
@@ -40,41 +32,37 @@
                     <div class="colored-header-bar"></div>
                     <ul>
                         <li>
-                            @Html.HiddenFor(m => organisation.DisplayName)
                             <span class="bold-small">@Html.DisplayFor(m => organisation.DisplayName)</span>
                         </li>
                         <li>
-                            @Html.Hidden(organisation.Address.Address1)
                            @Html.DisplayFor(m => organisation.Address.Address1),
                         </li>
                         <li>
-                            @Html.HiddenFor(m => organisation.Address.TownOrCity)
                             @Html.DisplayFor(m => organisation.Address.TownOrCity),
                         </li>
                         <li>
-                            @Html.HiddenFor(m => organisation.Address.Postcode)
                             @Html.DisplayFor(m => organisation.Address.Postcode)
                         </li>
                     </ul>
-                    <button type="submit" name="submitButton" value="@Html.Raw(organisation.Id)" class="link-submit">Request to join this organisation</button>
+                @Html.ActionLink("Request to join this organisation", "JoinOrganisation", new { OrganisationID = organisation.Id })
                 </div>
-               
+
                 if (!isNewRow || i == Model.MatchingOrganisations.Count() - 1)
-                { 
+                {
                     @:</div>
                 }
-                i++;  
+                i++;
             }
-        }
+                
         <div>
             @if (@Model.MatchingOrganisations.PageCount > 1)
             {
                 <br/>
                 <span style="display: inline-block">Showing @Model.MatchingOrganisations.ItemStart - @Model.MatchingOrganisations.ItemEnd of @Model.MatchingOrganisations.TotalItemCount</span>
-                <div class="pager">
-                    @Html.Pager(Model.MatchingOrganisations.PageSize, Model.MatchingOrganisations.PageNumber, Model.MatchingOrganisations.TotalItemCount).Options(o => o.RouteValues(@Model))
-                </div>
-                <br />
+            <div class="pager">
+                @Html.Pager(Model.MatchingOrganisations.PageSize, Model.MatchingOrganisations.PageNumber, Model.MatchingOrganisations.TotalItemCount).Options(o => o.RouteValues(@Model))
+            </div>
+            <br />
             }
         </div>
     }
@@ -86,7 +74,7 @@
     <hr />
     <p>Organisation not listed?</p>
 
-    @using (Html.BeginForm(actionName: "CreateOrganisation", controllerName: "OrganisationRegistration", method: FormMethod.Post))
+    @using (Html.BeginForm("CreateOrganisation", "OrganisationRegistration"))
     {
         @Html.AntiForgeryToken()
 

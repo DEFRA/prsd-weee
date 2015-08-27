@@ -147,45 +147,9 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RedirectProcess()
+        public ActionResult RedirectProcess()
         {
-            using (var client = apiClient())
-            {
-                var accessibleOrganisations = await
-                    client.SendAsync(
-                        User.GetAccessToken(),
-                        new GetUserOrganisationsByStatus(
-                            new[] { (int)UserStatus.Active }, 
-                            new int[] { (int)OrganisationStatus.Complete }));
-
-                var inaccessibleOrganisations = await
-                    client.SendAsync(
-                        User.GetAccessToken(),
-                        new GetUserOrganisationsByStatus(
-                            new[]
-                            {
-                                (int)UserStatus.Pending, (int)UserStatus.Rejected,
-                                (int)UserStatus.Inactive
-                            }));
-
-                if (accessibleOrganisations.Count >= 1)
-                {
-                    return RedirectToAction("ChooseActivity", "Home",
-                        new
-                        {
-                            area = "Scheme",
-                            pcsId = accessibleOrganisations.First().OrganisationId,
-                        });
-                }
-                else if (inaccessibleOrganisations.Count >= 1)
-                {
-                    return RedirectToAction("HoldingMessageForPending", "Organisation");
-                }
-                else
-                {
-                    return RedirectToAction("Type", "OrganisationRegistration");
-                }
-            }
+            return RedirectToRoute("SelectOrganisation");
         }
 
         [HttpGet]

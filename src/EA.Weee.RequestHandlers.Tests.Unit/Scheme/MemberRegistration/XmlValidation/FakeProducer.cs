@@ -46,7 +46,8 @@
             brandNames, 
             codes,
             isCurrentForComplianceYear,
-            Domain.ChargeBandType.E)
+            Domain.ChargeBandType.E,
+            (decimal)30.0)
         {
             this.schemeOrganisationId = schemeOrganisationId;
         }
@@ -85,7 +86,7 @@
             return new FakeProducer(schemeOrganisationId ?? Guid.NewGuid(),
                 Guid.NewGuid(),
                 new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>(), 0, 2016),
-                new ProducerBusiness(),
+                new ProducerBusiness(null, new Partnership("Partnership Name", null, new List<Partner>())),
                 new AuthorisedRepresentative("authrep"),
                 DateTime.Now,
                 decimal.Zero,

@@ -428,6 +428,146 @@
 
             Assert.False(result.IsValid);
         }
+
+        [Theory]
+        [InlineData(obligationTypeType.B2B)]
+        [InlineData(obligationTypeType.B2C)]
+        public void
+            ProducerRegisteredforAnotherSchemeforDifferentObligationTypeForDifferentComplianceYear_ValidationSucceeds(
+            obligationTypeType obligationType)
+        {
+            var weeeContext = CreateFakeDatabase();
+            var xml = new schemeType
+            {
+                complianceYear = "2016",
+                approvalNo = "Test Approval Number 1",
+
+                producerList = new[]
+                {
+                    new producerType
+                    {
+                        obligationType = obligationType,
+                        registrationNo = "ABC"
+                    }
+                }
+            };
+
+            var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
+            var scheme = weeeContext.Schemes.FirstOrDefault(s => s.OrganisationId == orgId);
+            var result = SchemeTypeValidator(scheme, orgId)
+                .Validate(xml,
+                    new RulesetValidatorSelector(
+                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .DataValidation));
+
+            if (obligationType == obligationTypeType.B2B)
+            {
+                Assert.True(result.IsValid);
+            }
+            else
+            {
+                Assert.False(result.IsValid);
+            }
+        }
+
+        [Fact]
+        public void ProducerAlreadyRegisteredSameScheme_AmendWithDifferentProducerName_ProducesWarnings()
+        {
+            var weeeContext = A.Fake<WeeeContext>();
+            const string registrationNumber = "ABC";
+            var xml = new schemeType
+            {
+                complianceYear = "2018",
+                approvalNo = "Test Approval Number 1",
+                producerList =
+                new producerType[]
+                {
+                    new producerType()
+                    {
+                        status = statusType.A,
+                        registrationNo = registrationNumber,
+                        producerBusiness = new producerBusinessType()
+                        {
+                           Item = new partnershipType
+                           {
+                              partnershipName = "New Producer Name"
+                           }
+                       }
+                    }
+                }
+            };
+            var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
+            var scheme = (Scheme)Activator.CreateInstance(typeof(Scheme), true);
+            typeof(Scheme).GetProperty("OrganisationId").SetValue(scheme, orgId);
+            typeof(Scheme).GetProperty("ApprovalNumber").SetValue(scheme, "Test Approval Number 1");
+            List<Scheme> schemeList = new List<Scheme>()
+            {
+                scheme
+            };
+
+            A.CallTo(() => weeeContext.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemeList));
+    
+            List<Producer> producersList = new List<Producer>()
+            {
+                MakeProducer(2015, registrationNumber, new DateTime(2015, 06, 1), "Name1"), 
+                MakeProducer(2016, registrationNumber, new DateTime(2016, 12, 1), "Name2"), 
+                MakeProducer(2017, registrationNumber, new DateTime(2016, 11, 1), "Name3"), 
+                MakeProducer(2018, registrationNumber, new DateTime(2018, 1, 1), "Name4"),
+                MakeProducer(2018, registrationNumber, new DateTime(2018, 02, 1), "Name5") 
+            };
+            A.CallTo(() => weeeContext.Producers).Returns(dbContextHelper.GetAsyncEnabledDbSet(producersList));
+
+            typeof(Scheme).GetProperty("Producers").SetValue(scheme, producersList);
+       
+            var result = SchemeTypeValidator(scheme, orgId)
+                        .Validate(xml,
+                            new RulesetValidatorSelector(
+                                RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                                    .DataValidation));
+
+            Assert.Equal(1, result.Errors.Count);
+            Assert.False(result.IsValid);
+            Assert.Contains(registrationNumber, result.Errors.Single().ErrorMessage);
+            Assert.Equal(ErrorLevel.Warning, result.Errors.Single().CustomState);
+        }
+
+        [Fact]
+        public void ProducerRegisteredForNewComplianceYearSameSchemeSameProducerName_Amend_ReturnsSuccess()
+        {
+            var weeeContext = CreateFakeDatabase();
+            const string registrationNumber = "ABC";
+            var xml = new schemeType
+            {
+                complianceYear = "2019",
+                approvalNo = "Test Approval Number 1",
+                producerList =
+                new producerType[]
+                {
+                    new producerType()
+                    {
+                        status = statusType.A,
+                        registrationNo = registrationNumber,
+                        producerBusiness = new producerBusinessType()
+                        {
+                           Item = new partnershipType
+                           {
+                              partnershipName = "Partnership Name"
+                           }
+                       }
+                    }
+                }
+            };
+            var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
+            var scheme = weeeContext.Schemes.FirstOrDefault(s => s.OrganisationId == orgId);
+            var result = SchemeTypeValidator(scheme, orgId)
+                        .Validate(xml,
+                            new RulesetValidatorSelector(
+                                RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                                    .DataValidation));
+
+            Assert.True(result.IsValid);
+        }
+
         private IValidator<schemeType> SchemeTypeValidator(Guid? existingOrganisationId = null,
             Guid? organisationId = null)
         {
@@ -489,7 +629,8 @@
                 brandNames.Select(bn => new BrandName(bn)).ToList(),
                 new List<SICCode>(),
                 true,
-                ChargeBandType.A);
+                ChargeBandType.A,
+                (decimal)445.0);
         }
 
         private ObligationType MapObligationType(obligationTypeType obligationType)
@@ -503,46 +644,6 @@
 
                 default:
                     return ObligationType.Both;
-            }
-        }
-
-        [Theory]
-        [InlineData(obligationTypeType.B2B)]
-        [InlineData(obligationTypeType.B2C)]
-        public void
-            ProducerRegisteredforAnotherSchemeforDifferentObligationTypeForDifferentComplianceYear_ValidationSucceeds(
-            obligationTypeType obligationType)
-        {
-            var weeeContext = CreateFakeDatabase();
-            var xml = new schemeType
-            {
-                complianceYear = "2016",
-                approvalNo = "Test Approval Number 1",
-                producerList = new[]
-                {
-                    new producerType
-                    {
-                        obligationType = obligationType,
-                        registrationNo = "ABC"
-                    }
-                }
-            };
-
-            var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
-            var scheme = weeeContext.Schemes.FirstOrDefault(s => s.OrganisationId == orgId);
-            var result = SchemeTypeValidator(scheme, orgId)
-                .Validate(xml,
-                    new RulesetValidatorSelector(
-                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
-                            .DataValidation));
-
-            if (obligationType == obligationTypeType.B2B)
-            {
-                Assert.True(result.IsValid);
-            }
-            else
-            {
-                Assert.False(result.IsValid);
             }
         }
 
@@ -565,7 +666,7 @@
             A.CallTo(() => memberUpload2.IsSubmitted).Returns(true);
 
             Producer producer1 = FakeProducer.Create(MapObligationType(obligationTypeType.B2B), "ABC", false);
-
+     
             Producer producer2 = FakeProducer.Create(MapObligationType(obligationTypeType.B2C), "ABC", true);
 
             var organisation1 = A.Fake<Organisation>();
@@ -589,13 +690,11 @@
             // Wire up member uploads to organisations (1-way)
             A.CallTo(() => memberUpload1.Organisation).Returns(organisation1);
             A.CallTo(() => memberUpload2.Organisation).Returns(organisation1);
-            //A.CallTo(() => memberUpload3.Organisation).Returns(organisation2);
-
+       
             // Wire up member uploads to schemes (1-way)
             A.CallTo(() => memberUpload1.Scheme).Returns(scheme1);
             A.CallTo(() => memberUpload2.Scheme).Returns(scheme1);
-            //A.CallTo(() => memberUpload3.Scheme).Returns(scheme2);
-
+       
             // Wire up producers and schemes (2-way).
             A.CallTo(() => scheme1.Producers).Returns(new List<Producer>
             {
@@ -646,6 +745,33 @@
             A.CallTo(() => weeeContext.MemberUploads).Returns(memberUploadDbSet);
 
             return weeeContext;
+        }
+
+        private Producer MakeProducer(int complianceYear, string regNumber, DateTime updatedDate, string organisationName)
+        {
+            var fakeScheme = A.Fake<Scheme>();
+            var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
+            A.CallTo(() => fakeScheme.OrganisationId).Returns(orgId);
+
+            var fakeMemberUpload = A.Fake<MemberUpload>();
+            A.CallTo(() => fakeMemberUpload.IsSubmitted).Returns(true);
+            A.CallTo(() => fakeMemberUpload.ComplianceYear).Returns(complianceYear);
+
+            var fakePartnership = A.Fake<Partnership>();
+            A.CallTo(() => fakePartnership.Name).Returns(organisationName);
+
+            var fakeProducerBusiness = A.Fake<ProducerBusiness>();
+            A.CallTo(() => fakeProducerBusiness.Partnership).Returns(fakePartnership);
+
+            var producer = (Producer)Activator.CreateInstance(typeof(Producer), true);
+            typeof(Producer).GetProperty("RegistrationNumber").SetValue(producer, regNumber);
+            typeof(Producer).GetProperty("MemberUpload").SetValue(producer, fakeMemberUpload);
+            typeof(Producer).GetProperty("Scheme").SetValue(producer, fakeScheme);
+            typeof(Producer).GetProperty("ProducerBusiness").SetValue(producer, fakeProducerBusiness);
+            typeof(Producer).GetProperty("UpdatedDate").SetValue(producer, updatedDate);
+            typeof(Producer).GetProperty("IsCurrentForComplianceYear").SetValue(producer, true);
+       
+            return producer;
         }
     }
 }

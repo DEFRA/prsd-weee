@@ -27,11 +27,10 @@
         </div>
     }
 
-    @using (Html.BeginForm("RegisteredOfficeAddressPrepopulate", "OrganisationRegistration", FormMethod.Post, new { @class = "form", role = "form" }))
+    @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
-        @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.OrganisationType)
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.ContactDetailsSameAs.Choices.SelectedValue)" id="ContactDetailsSameAs">
