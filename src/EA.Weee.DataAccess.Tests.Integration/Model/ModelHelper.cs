@@ -201,7 +201,7 @@
 
         private Contact1 CreateContact()
         {
-            Country england = model.Countries.Find(new Guid("C2D3F176-48E5-42FC-B06B-1520173B7879"));
+            Country england = model.Countries.Single(c => c.Name == "UK - England");
 
             int addressId = GetNextId(typeof(Address));
             Address1 address = new Address1
