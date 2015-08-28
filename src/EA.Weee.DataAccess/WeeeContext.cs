@@ -9,6 +9,7 @@
     using Prsd.Core.DataAccess.Extensions;
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
+    using System.Data.Common;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading;
@@ -53,6 +54,17 @@
             Database.SetInitializer<WeeeContext>(null);
 
             StoredProcedures = new StoredProcedures(this);
+        }
+
+        /// <summary>
+        /// This constructor should only be used for integration testing.
+        /// </summary>
+        /// <param name="userContext"></param>
+        /// <param name="connection"></param>
+        public WeeeContext(IUserContext userContext, DbConnection connection)
+            : base(connection, false)
+        {
+            this.userContext = userContext;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
