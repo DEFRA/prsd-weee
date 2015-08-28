@@ -6,6 +6,7 @@
         errorPath = Request.RawUrl;
     }
     errorPath = Path.GetFileNameWithoutExtension(errorPath);
+    Response.TrySkipIisCustomErrors = true;
     Response.StatusCode = 404;
 }
 
