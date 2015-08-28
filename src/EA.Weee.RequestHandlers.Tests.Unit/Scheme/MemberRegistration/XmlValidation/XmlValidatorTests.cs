@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Core.Helpers.Xml;
     using Domain;
     using Domain.Scheme;
     using FakeItEasy;
@@ -15,12 +16,14 @@
         private readonly ISchemaValidator schemaValidator;
         private readonly IBusinessValidator businessValidator;
         private readonly IXmlConverter xmlConverter;
+        private readonly IXmlErrorTranslator errorTranslator;
 
         public XmlValidatorTests()
         {
             schemaValidator = A.Fake<ISchemaValidator>();
             businessValidator = A.Fake<IBusinessValidator>();
             xmlConverter = A.Fake<IXmlConverter>();
+            errorTranslator = A.Fake<IXmlErrorTranslator>();
         }
 
         [Fact]
@@ -57,7 +60,7 @@
 
         private XmlValidator XmlValidator()
         {
-            return new XmlValidator(schemaValidator, xmlConverter, businessValidator);
+            return new XmlValidator(schemaValidator, xmlConverter, businessValidator, errorTranslator);
         }
     }
 }
