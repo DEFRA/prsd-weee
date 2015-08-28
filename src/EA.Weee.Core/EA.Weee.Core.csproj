@@ -99,6 +99,7 @@
     <Compile Include="Configuration\EmailRules\RuleType.cs" />
     <Compile Include="Configuration\IConfigurationManagerWrapper.cs" />
     <Compile Include="CoreModule.cs" />
+    <Compile Include="Exceptions\XmlDeserializationFailureException.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\PrnGeneration\IPrnHelper.cs" />
     <Compile Include="Helpers\PrnGeneration\IQuadraticResidueHelper.cs" />
