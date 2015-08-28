@@ -133,3 +133,10 @@ h2 + hr{
     margin-top: -10px;
     margin-bottom: 25px;
 }
+
+hr.grey {
+    background-color: $grey-2;
+    border: 0 none;
+    color: $grey-2;
+    height: 1px; 
+}

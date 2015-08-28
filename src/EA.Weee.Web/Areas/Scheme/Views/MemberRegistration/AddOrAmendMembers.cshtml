@@ -65,11 +65,11 @@
             @Html.Gds().ValidationSummary()
 
             <p>To register or update your members' details, upload and submit an XML file.</p>
-            <hr />
+            <hr class="grey"/>
             <p class="bold-small">
                 <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image" />Your XML file must use the version 3.06 schema.
             </p>
-            <hr />
+            <hr class="grey" />
             <br/>
             <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
                 @Html.Gds().LabelFor(m => m.File)
