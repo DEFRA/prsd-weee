@@ -33,7 +33,7 @@
         }
 
         [Fact]
-        public async void InvalidXml_ThrowsXmlDeserializationFailureException()
+        public void InvalidXml_ThrowsXmlDeserializationFailureException()
         {
             var data = Encoding.UTF8.GetPreamble().Concat(Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"UTF-16\"?><root></root>")).ToArray();
             var document = XmlConverter().Convert(new ProcessXMLFile(Guid.NewGuid(), data));
