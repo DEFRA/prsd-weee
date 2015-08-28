@@ -10,7 +10,7 @@
         </div>
     </header>
 
-    @using (Html.BeginForm("LogOff", "Account", new { Area = "" }, FormMethod.Post))
+    @using (Html.BeginForm("SignOut", "Account", new { Area = "" }, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         <p>You can now <a href="@Url.Action("GetProducerCSV", "MemberRegistration", new { pcsId = @Model.PcsId, memberUploadId = @Model.MemberUploadId })">download this CSV file</a>. In it you'll find the notification of your registered scheme members and their producer registration numbers.</p>

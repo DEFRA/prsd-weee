@@ -186,20 +186,20 @@
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult SignIn(string returnUrl)
         {
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToLocal(returnUrl);
             }
             ViewBag.ReturnUrl = returnUrl;
-            return View("Login");
+            return View("SignIn");
         }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(InternalLoginViewModel model, string returnUrl)
+        public async Task<ActionResult> SignIn(InternalLoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
@@ -218,12 +218,12 @@
                     return RedirectToLocal(returnUrl);
                 }
                 ModelState.AddModelError(string.Empty, "Invalid login details");
-                return View("Login", model);
+                return View("SignIn", model);
             }
 
             ModelState.AddModelError(string.Empty, ParseLoginError(response.Error));
 
-            return View("Login", model);
+            return View("SignIn", model);
         }
 
         private ActionResult RedirectToLocal(string returnUrl)

@@ -147,16 +147,16 @@
         }
 
         [Fact]
-        public void HttpGet_Login_ShouldReturnsLoginView()
+        public void HttpGet_SignIn_ShouldReturnsLoginView()
         {
             var controller = AccountController();
-            var result = controller.Login("AnyUrl");
+            var result = controller.SignIn("AnyUrl");
             var viewResult = ((ViewResult)result);
-            Assert.Equal("Login", viewResult.ViewName);
+            Assert.Equal("SignIn", viewResult.ViewName);
         }
 
         [Fact]
-        public async void HttpPost_Login_ModelIsInvalid_ShouldRedirectViewWithModel()
+        public async void HttpPost_SignIn_ModelIsInvalid_ShouldRedirectViewWithModel()
         {
             var controller = AccountController();
             controller.ModelState.AddModelError("Key", "Any error");
@@ -167,7 +167,7 @@
                 Password = "Test123***",
                 RememberMe = false
             };
-            var result = await controller.Login(model, "AnyUrl");
+            var result = await controller.SignIn(model, "AnyUrl");
 
             Assert.IsType<ViewResult>(result);
             Assert.Equal(model, ((ViewResult)(result)).Model);
@@ -223,7 +223,7 @@
         }
 
         [Fact]
-        public async void HttpPost_Login_ModelIsValidAndUserInfoResponseClaimToCanAccessInternalArea_ShouldRequestTokenOnce_AndShouldGetUserInfoOnce_AndShouldRedirectToHomePage()
+        public async void HttpPost_SignIn_ModelIsValidAndUserInfoResponseClaimToCanAccessInternalArea_ShouldRequestTokenOnce_AndShouldGetUserInfoOnce_AndShouldRedirectToHomePage()
         {
             var model = new InternalLoginViewModel
             {
@@ -245,7 +245,7 @@
             A.CallTo(() => userInfoClient.GetUserInfoAsync(A<string>._))
                 .Returns(userInfoResponse);
 
-            var result = await controller.Login(model, "AnyUrl");
+            var result = await controller.SignIn(model, "AnyUrl");
 
             A.CallTo(() => oauthClient.GetAccessTokenAsync(model.Email, model.Password))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -261,7 +261,7 @@
         }
 
         [Fact]
-        public async void HttpPost_Login_ModelIsValidAndUserInfoResponseClaimToCanAccessExternalArea_ShouldRequestTokenOnce_AndShouldGetUserInfoOnce_AndShouldReturnLoginView()
+        public async void HttpPost_SignIn_ModelIsValidAndUserInfoResponseClaimToCanAccessExternalArea_ShouldRequestTokenOnce_AndShouldGetUserInfoOnce_AndShouldReturnLoginView()
         {
             var model = new InternalLoginViewModel
             {
@@ -283,7 +283,7 @@
             A.CallTo(() => userInfoClient.GetUserInfoAsync(A<string>._))
                 .Returns(userInfoResponse);
 
-            var result = await controller.Login(model, "AnyUrl");
+            var result = await controller.SignIn(model, "AnyUrl");
 
             A.CallTo(() => oauthClient.GetAccessTokenAsync(model.Email, model.Password))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -293,7 +293,7 @@
 
             var viewResult = ((ViewResult)result);
 
-            Assert.Equal("Login", viewResult.ViewName);
+            Assert.Equal("SignIn", viewResult.ViewName);
             Assert.False(controller.ModelState.IsValid);
         }
 
