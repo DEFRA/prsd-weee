@@ -44,7 +44,7 @@
             }
             catch (InvalidOperationException e)
             {
-                var friendlyMessage = errorTranslator.MakeFriendlyErrorMessage(null, e.Message, -1);
+                var friendlyMessage = errorTranslator.MakeFriendlyErrorMessage(e.Message);
                 errors.Add(new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, friendlyMessage));
             }
 
