@@ -80,11 +80,13 @@
     <Compile Include="Scheme\GetSchemesHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateFromXmlTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\GetLatestMemberUploadListHandlerTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetComplianceYearsHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadByIdHandlerTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\GetProducerCSVByMemberUploadIdHandlerTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerChargeBandCalculatorTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Queries\QueriesTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\RulesTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\DeserializedXmlExtensionsTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\XmlGeneratorTests.cs" />
