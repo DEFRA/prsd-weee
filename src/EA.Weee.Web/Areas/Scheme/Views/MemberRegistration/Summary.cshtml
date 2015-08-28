@@ -1,6 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Helpers
-@model EA.Weee.Web.Areas.Scheme.ViewModels.SummaryViewModel
+@model System.Collections.Generic.List<System.Int32>
 @{
     ViewBag.Title = "Summary";
 }
@@ -17,10 +17,10 @@
     </div>
     <hr/>
     <div class="form-group">
-        @foreach (var latestUploadSummary in Model.LatestMemberUploads)
+        @foreach (int complianceYear in Model)
         {
-            var csvFileName = "Overview of current members " + latestUploadSummary.ComplianceYear + ".csv";
-            <a href="@Url.Action("GetProducerCSV", "MemberRegistration", new { memberUploadId = latestUploadSummary.UploadId, fileName = csvFileName })">@(csvFileName)</a><span style="color: #6f777b"> (less than 500KB).</span>
+            var csvFileName = "Overview of current members " + complianceYear + ".csv";
+            <a href="@Url.Action("GetProducerCSV", "MemberRegistration", new { complianceYear })">@(csvFileName)</a><span style="color: #6f777b"> (less than 500KB).</span>
             <br/>
         }
     </div>

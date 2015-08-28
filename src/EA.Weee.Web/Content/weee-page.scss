@@ -142,9 +142,18 @@
 }
 
 #footer .footer-agencies {
-	padding-left: 30px;
-	padding-right: 30px;
+
+	@include media(desktop) {
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+
+	@include media($max-width: 640px) {
+		padding-left: 15px;
+		padding-right: 15px;
+	}
 }
+
 
 // 2. Typography
 // ==========================================================================

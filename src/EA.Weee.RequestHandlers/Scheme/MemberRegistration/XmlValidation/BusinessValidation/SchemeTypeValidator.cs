@@ -8,13 +8,15 @@
     using Domain.Producer;
     using Extensions;
     using FluentValidation;
-  
+    using Queries;
+    using Rules;
+
     public class SchemeTypeValidator : AbstractValidator<schemeType>
     {
         public const string NonDataValidation = "NonDataValidation";
         public const string DataValidation = "DataValidation";
        
-        public SchemeTypeValidator(WeeeContext context, Guid organisationId)
+        public SchemeTypeValidator(WeeeContext context, Guid organisationId, IRules rules)
         {
             RuleSet(DataValidation, () =>
             {
@@ -125,59 +127,14 @@
                         (st, producer) => producer.obligationType.ToString());
 
                 //Producer Name change warning
-                var currentProducers = context.Producers.Where(p => p.IsCurrentForComplianceYear).ToList();
                 RuleForEach(st => st.producerList)
-                    .Must((st, producer) =>
-                    {
-                        if (producer.status == statusType.A)
-                        {
-                            string producerName = producer.GetProducerName();
-                            var matchingProducer = GetMatchingProducer(currentProducers, producer.registrationNo, st.complianceYear, organisationId);
-                            if (matchingProducer == null)
-                            {
-                                // search in migrated producers list if not in Producers database
-                                var migratedProducer = context.MigratedProducers.FirstOrDefault(p => p.ProducerRegistrationNumber == producer.registrationNo);
-                                if (migratedProducer == null)
-                                {
-                                    throw new ArgumentNullException(string.Format("No matching producer found for PRN {0}", producer.registrationNo));
-                                }
-
-                                if (migratedProducer.ProducerName != producerName)
-                                {
-                                    return false;
-                                }
-                            }
-                            
-                            if (matchingProducer != null && matchingProducer.OrganisationName != producerName)
-                            {
-                                return false;
-                            }
-                        }
-                        return true;
-                    })
+                    .Must((st, producer) => rules.ShouldNotWarnOfProducerNameChange(st, producer, organisationId))
                     .WithState(st => ErrorLevel.Warning)
                     .WithMessage(
                      "The name of the producer with registration number {0} will be amended to {1}.",
                      (st, producer) => producer.registrationNo,
-                     (st, procucer) => procucer.GetProducerName());
+                     (st, producer) => producer.GetProducerName());
             });
-        }
-
-        private Producer GetMatchingProducer(List<Producer> currentProducers, string registrationNo, string schemeComplianceYear, Guid schemeOrgId)
-        {
-            var matchingProducer = currentProducers.FirstOrDefault(p =>
-                                                                    p.RegistrationNumber == registrationNo
-                                                                    && p.MemberUpload.ComplianceYear == int.Parse(schemeComplianceYear)
-                                                                    && p.Scheme.OrganisationId == schemeOrgId);
-            if (matchingProducer == null)
-            {
-                // reverse the order the current producers list by compliance year and then by updatedDate
-                matchingProducer = currentProducers.Where(p => p.RegistrationNumber == registrationNo)
-                    .OrderByDescending(p => p.MemberUpload.ComplianceYear)
-                    .ThenBy(p => p.UpdatedDate)
-                    .FirstOrDefault();
-            }
-            return matchingProducer;
         }
     }
 }
