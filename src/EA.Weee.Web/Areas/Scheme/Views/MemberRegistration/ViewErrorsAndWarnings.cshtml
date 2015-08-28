@@ -33,5 +33,7 @@
         </div>
     </details>
     <br />
+    @Html.ActionLink("Download the errors", "DownloadErrorsAndWarnings", new { Model.MemberUploadId })
+    <br />
     <p>Go back and <a href="@Url.Action("AddOrAmendMembers", "MemberRegistration")">upload a new file</a></p>
 }
