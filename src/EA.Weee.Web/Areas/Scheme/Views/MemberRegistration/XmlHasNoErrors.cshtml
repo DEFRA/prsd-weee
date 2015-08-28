@@ -48,13 +48,14 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.MemberUploadId)
-        <br/>
+        <br />
         <p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete.</p>
 
-        <div class="form-group">
+        <div>
             <input type="submit" value="Submit" class="button" />
         </div>
-
-        <p>Go back and @Html.ActionLink("upload a new file.", "AddOrAmendMembers", "MemberRegistration")</p>
+        <div>
+            <p>Go back and @Html.ActionLink("upload a new file.", "AddOrAmendMembers", "MemberRegistration")</p>
+        </div>
     }
 }
