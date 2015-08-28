@@ -24,9 +24,9 @@
             The contact details for your registered office.
         </p>
 
-        <p class="form-hint">
-            Your registered office is the address listed with Companies House.
-        </p>
+        <div style="margin-bottom: 1.66667em;">
+            <p>Your registered office details are those that are listed with Companies House</p>
+        </div>
     }
 
     @using (Html.BeginForm())
@@ -36,7 +36,7 @@
         @Html.HiddenFor(m => m.OrganisationType)
 
         @Html.EditorFor(m => m.Address)
-    
+
         <div class="form-group">
             <input type="submit" class="button" value="Continue" />
         </div>
@@ -52,7 +52,7 @@
         })(jQuery);
 
         $(document).ready(function () {
-            /* Only when a validation error occurs for a select list - 
+            /* Only when a validation error occurs for a select list -
                 move the id from the select element to the next input element so the validation summary can link to it */
             var countryElementId = "#Address\\.CountryId";
 

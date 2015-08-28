@@ -79,7 +79,7 @@
                         }
                         else
                         {
-                            return RedirectToAction("AuthorizationRequired", "MemberRegistration", new { pcsId = viewModel.OrganisationId });
+                            return RedirectToAction("AuthorisationRequired", "MemberRegistration", new { pcsId = viewModel.OrganisationId });
                         }
                     }
                 }

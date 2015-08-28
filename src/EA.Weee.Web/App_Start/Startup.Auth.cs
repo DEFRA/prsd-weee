@@ -18,7 +18,7 @@
             app.UseCookieAuthentication(new CookieAuthenticationOptions()
             {
                 AuthenticationType = Constants.WeeeAuthType,
-                LoginPath = new PathString("/Account/Login"),
+                LoginPath = new PathString("/Account/SignIn"),
                 SlidingExpiration = true,
                 ExpireTimeSpan = TimeSpan.FromMinutes(20),
                 CookieName = EA.Prsd.Core.Web.Constants.CookiePrefix + Constants.WeeeAuthType,

@@ -31,14 +31,14 @@
         /// <summary>
         /// The AdminLoginPath property informs the provider where to redirect unauthenticated users 
         /// trying to access resources within the admin area.
-        /// This property defaults to "/Admin/Account/Login".
+        /// This property defaults to "/Admin/Account/SignIn".
         /// </summary>
         public PathString AdminLoginPath { get; set; }
 
         public WeeeCookieAuthenticationProvider()
         {
             AdminAreaName = "Admin";
-            AdminLoginPath = new PathString("/Admin/Account/Login");
+            AdminLoginPath = new PathString("/Admin/Account/SignIn");
 
             // Add our custom login to the redirect before applying the deafult implementation.
             OnApplyRedirect = (context) =>

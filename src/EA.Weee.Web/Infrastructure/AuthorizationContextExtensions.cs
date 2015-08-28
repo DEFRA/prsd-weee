@@ -7,8 +7,8 @@
     {
         private static readonly string[] AllowAnonymousActions =
         {
-            "LogOff",
-            "Login",
+            "SignOut",
+            "SignIn",
             "UserAccountActivationRequired",
             "ActivateUserAccount",
             "CheckIsPcs",

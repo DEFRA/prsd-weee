@@ -443,7 +443,7 @@
     <Content Include="Areas\Admin\Views\Account\AdminAccountActivationRequired.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ActivateUserAccount.cshtml" />
     <Content Include="Areas\Admin\Views\Emails\ActivateUserAccount.cshtml" />
-    <Content Include="Areas\Admin\Views\Account\Login.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\SignIn.cshtml" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
     <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
@@ -451,7 +451,7 @@
     <Content Include="Areas\Admin\Views\User\ManageUsers.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\ManageSchemes.cshtml" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\Summary.cshtml" />
-    <Content Include="Areas\Scheme\Views\MemberRegistration\AuthorizationRequired.cshtml" />
+    <Content Include="Areas\Scheme\Views\MemberRegistration\AuthorisationRequired.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\EditScheme.cshtml" />
     <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\ConfirmRejection.cshtml" />
@@ -518,7 +518,7 @@
     <Content Include="Views\Shared\_WeeeNavigation.cshtml" />
     <Content Include="Views\Shared\_WeeeTracking.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\RadioButtonStringCollectionBaseViewModel.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\SignIn.cshtml" />
     <Content Include="Views\NewUser\UserCreation.cshtml" />
     <Content Include="Views\OrganisationRegistration\SelectOrganisation.cshtml" />
     <Content Include="Views\Home\LandingPage.cshtml" />
