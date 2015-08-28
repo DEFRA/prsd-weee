@@ -17,117 +17,501 @@ using Xunit;
 
     public class SpgCSVDataByOrganisationIdAndComplianceYearTests
     {
+        /// <summary>
+        /// This test ensures that the "happy path" for the stored procedure results
+        /// in a full dataset being populated for a single current producer.
+        /// </summary>
+        /// <returns></returns>
         [Fact]
-        public async Task SpgCSVDataByOrganisationIdAndComplianceYear_HappyPath()
+        public async Task Execute_WithOneCurrentProducer_ReturnsFullSetOfData()
         {
             using (DatabaseWrapper db = new DatabaseWrapper())
             {
                 // Arrange
-                Guid organisation1Id = new Guid("B578C1CF-A4E9-448C-91E9-FEC1BF754987");
-                db.Model.Organisations.Add(new Organisation
-                {
-                    Id = organisation1Id,
-                    TradingName = "Organisation 1 Trading Name",
-                });
+                ModelHelper helper = new ModelHelper(db.Model);
 
-                Guid scheme1Id = new Guid("4641FBDC-B34B-4DB2-8CD6-F719540D6C92");
-                db.Model.Schemes.Add(new Scheme
-                {
-                    Id = scheme1Id,
-                    OrganisationId = organisation1Id,
-                });
+                Scheme scheme1 = helper.CreateScheme();
 
-                Guid memberUpload1 = new Guid("BB3B2318-A4BB-4321-94DD-836898DE880E");
-                db.Model.MemberUploads.Add(new MemberUpload
-                {
-                    Id = memberUpload1,
-                    OrganisationId = organisation1Id,
-                    SchemeId = scheme1Id,
-                    ComplianceYear = 2016,
-                    IsSubmitted = true,
-                    Data = "<memberUpload1 />",
-                });
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2016;
+                memberUpload1.IsSubmitted = true;
 
-                Guid address1Id = new Guid("56640071-E499-46A2-8F00-E11B0F08EC89");
-                db.Model.Address1.Add(new Address1
-                {
-                    Id = address1Id,
-                    PrimaryName = "Address 1 Primary Name",
-                    SecondaryName = "Address 1 Secondary Name",
-                    Street = "Address 1 Street",
-                    Town = "Address 1 Town",
-                    Locality = "Address 1 Locality",
-                    AdministrativeArea = "Address 1 Admin Area",
-                    PostCode = "Address 1 Post Code",
-                    CountryId = new Guid("C2D3F176-48E5-42FC-B06B-1520173B7879"), // UK - England
-                });
-
-                Guid contactId1 = new Guid();
-                db.Model.Contact1.Add(new Contact1
-                {
-                    Id = contactId1,
-                    Title = "Contact 1 Title",
-                    Forename = "Contact 1 Forename",
-                    Surname = "Contact 1 Surname",
-                    Telephone = "Contact 1 Telephone",
-                    Mobile = "Contact 1 Mobile",
-                    Fax = "Contact 1 Fax",
-                    Email = "Contact 1 Email",
-                    AddressId = address1Id,
-                });
-
-                Guid companyId1 = new Guid("56640071-E499-46A2-8F00-E11B0F08EC89");
-                db.Model.Companies.Add(new Company
-                {
-                    Id = companyId1,
-                    Name = "Company 1 Name",
-                    CompanyNumber = "11111111",
-                    RegisteredOfficeContactId = contactId1,
-                });
-
-                Guid businessId1 = new Guid();
-                db.Model.Businesses.Add(new Business
-                {
-                    Id = businessId1,
-                    CompanyId = companyId1,
-                });
-
-                Guid producerId1 = new Guid("94CF5223-A1DB-428E-B60E-BD240E19758E");
-                db.Model.Producers.Add(new Producer
-                {
-                    Id = producerId1,
-                    MemberUploadId = memberUpload1,
-                    IsCurrentForComplianceYear = true,
-                    RegistrationNumber = "WEE/11AAAA11",
-                    TradingName = "Producer 1 Trading Name",
-                    UpdatedDate = new DateTime(2015, 1, 1, 0, 0, 0),
-                    ProducerBusinessId = businessId1,
-                    SchemeId = scheme1Id,
-                    ChargeBandType = 2, // 2 = "C",
-                    AuthorisedRepresentativeId = null,
-                });
+                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
+                producer1.IsCurrentForComplianceYear = true;
+                producer1.ChargeBandType = 2; // 2 = "C"
+                producer1.UpdatedDate = new DateTime(2015, 1, 1);
 
                 db.Model.SaveChanges();
 
                 // Act
                 List<ProducerCsvData> results =
-                    await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(organisation1Id, 2016);
+                    await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
+
+                // Assert
+                Assert.NotNull(results);
+                Assert.Equal(1, results.Count);
+
+                ProducerCsvData result = results[0];
+
+                Assert.Equal(producer1.Business.Company.Name, result.OrganisationName);
+                Assert.Equal(producer1.TradingName, result.TradingName);
+                Assert.Equal(producer1.RegistrationNumber, result.RegistrationNumber);
+                Assert.Equal(producer1.Business.Company.CompanyNumber, result.CompanyNumber);
+                Assert.Equal("C", result.ChargeBand);
+                Assert.Equal(producer1.UpdatedDate, result.DateRegistered);
+                Assert.Equal(producer1.UpdatedDate, result.DateAmended);
+                Assert.Equal("No", result.AuthorisedRepresentative);
+                Assert.Equal(string.Empty, result.OverseasProducer);
+            }
+        }
+
+        /// <summary>
+        /// This test ensures that a producer in the database associated with a
+        /// member upload that has not yet been submitted will not appear in the results.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task Execute_WithNonSubmittedMemberUpload_IgnoresProducer()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+
+                Scheme scheme1 = helper.CreateScheme();
+
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2016;
+                memberUpload1.IsSubmitted = false;
+
+                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<ProducerCsvData> results =
+                    await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
+
+                // Assert
+                Assert.NotNull(results);
+                Assert.Equal(0, results.Count);
+            }
+        }
+
+        /// <summary>
+        /// This test ensures that for a producer which is a company, the company name
+        /// is returned as the OrganisationName property of the results.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task Execute_WithOneCurrentProducerAsCompany_ReturnsCompanyName()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+
+                Scheme scheme1 = helper.CreateScheme();
+                
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2016;
+                memberUpload1.IsSubmitted = true;
+
+                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
+                producer1.IsCurrentForComplianceYear = true;
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<ProducerCsvData> results =
+                    await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
                     
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
 
-                ProducerCsvData producer1 = results[0];
+                ProducerCsvData result = results[0];
 
-                Assert.Equal("Company 1 Name", producer1.OrganisationName);
-                Assert.Equal("Producer 1 Trading Name", producer1.TradingName);
-                Assert.Equal("WEE/11AAAA11", producer1.RegistrationNumber);
-                Assert.Equal("11111111", producer1.CompanyNumber);
-                Assert.Equal("C", producer1.ChargeBand);
-                Assert.Equal(new DateTime(2015, 1, 1, 0, 0, 0), producer1.DateRegistered);
-                Assert.Equal(new DateTime(2015, 1, 1, 0, 0, 0), producer1.DateAmended);
-                Assert.Equal("No", producer1.AuthorisedRepresentative);
-                Assert.Equal(string.Empty, producer1.OverseasProducer);
+                Assert.Equal(producer1.Business.Company.Name, result.OrganisationName);
+            }
+        }
+
+        /// <summary>
+        /// This test ensures that for a producer which is a partnership, the partnership name
+        /// is returned as the OrganisationName property of the results.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task Execute_WithOneCurrentProducerAsPartnership_ReturnsPartnershipName()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+
+                Scheme scheme1 = helper.CreateScheme();
+                
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2016;
+                memberUpload1.IsSubmitted = true;
+
+                Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                producer1.IsCurrentForComplianceYear = true;
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<ProducerCsvData> results =
+                    await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
+                    
+                // Assert
+                Assert.NotNull(results);
+                Assert.Equal(1, results.Count);
+
+                ProducerCsvData result = results[0];
+
+                Assert.Equal(producer1.Business.Partnership.Name, result.OrganisationName);
+            }
+        }
+
+        /// <summary>
+        /// This test ensures that for a producer which is a sole trader, an empty string
+        /// is returned as the OrganisationName property of the results.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task Execute_WithOneCurrentProducerAsSoleTrader_ReturnsNoName()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+
+                Scheme scheme1 = helper.CreateScheme();
+
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2016;
+                memberUpload1.IsSubmitted = true;
+
+                Producer producer1 = helper.CreateProducerAsSoleTrader(memberUpload1, "WEE/11AAAA11");
+                producer1.IsCurrentForComplianceYear = true;
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<ProducerCsvData> results =
+                    await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
+
+                // Assert
+                Assert.NotNull(results);
+                Assert.Equal(1, results.Count);
+
+                ProducerCsvData result = results[0];
+
+                Assert.Equal(string.Empty, result.OrganisationName);
+            }
+        }
+
+        /// <summary>
+        /// This test ensures that the registration date and amended date are correctly determined
+        /// for a producer with multiple updates within the same compliance year.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task Execute_WithSeveralVersionsOfOneCurrentProducer_ReturnsLatestDataWithFirstRegistrationDate()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+
+                Scheme scheme1 = helper.CreateScheme();
+
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2016;
+                memberUpload1.IsSubmitted = true;
+
+                Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                producer1.IsCurrentForComplianceYear = false;
+                producer1.UpdatedDate = new DateTime(2015, 1, 1);
+
+                MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme1);
+                memberUpload2.ComplianceYear = 2016;
+                memberUpload2.IsSubmitted = true;
+
+                Producer producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/11AAAA11");
+                producer2.IsCurrentForComplianceYear = false;
+                producer2.UpdatedDate = new DateTime(2015, 1, 2);
+
+                MemberUpload memberUpload3 = helper.CreateMemberUpload(scheme1);
+                memberUpload3.ComplianceYear = 2016;
+                memberUpload3.IsSubmitted = true;
+
+                Producer producer3 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                producer3.IsCurrentForComplianceYear = true;
+                producer3.UpdatedDate = new DateTime(2015, 1, 3);
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<ProducerCsvData> results =
+                    await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
+
+                // Assert
+                Assert.NotNull(results);
+                Assert.Equal(1, results.Count);
+
+                ProducerCsvData result = results[0];
+
+                Assert.Equal(producer3.RegistrationNumber, result.RegistrationNumber);
+                Assert.Equal(producer1.UpdatedDate, result.DateRegistered);
+                Assert.Equal(producer3.UpdatedDate, result.DateAmended);
+            }
+        }
+
+        /// <summary>
+        /// This test ensures that only producers registered in the specified compliance year
+        /// are returned.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task Execute_WithOneCurrentInSeveralYearsProducer_ReturnsTheCorrectYearsData()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+
+                Scheme scheme1 = helper.CreateScheme();
+
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2016;
+                memberUpload1.IsSubmitted = true;
+
+                Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                producer1.IsCurrentForComplianceYear = true;
+
+                MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme1);
+                memberUpload2.ComplianceYear = 2017;
+                memberUpload2.IsSubmitted = true;
+
+                Producer producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/11AAAA11");
+                producer2.IsCurrentForComplianceYear = true;
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<ProducerCsvData> results =
+                    await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
+
+                // Assert
+                Assert.NotNull(results);
+                Assert.Equal(1, results.Count);
+
+                ProducerCsvData result = results[0];
+
+                Assert.Equal(producer1.Business.Partnership.Name, result.OrganisationName);
+            }
+        }
+
+        /// <summary>
+        /// This test ensures that only producers registered in the specified scheme are returned.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task Execute_WithProducersInOtherSchemes_IgnoresOtherSchemes()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+
+                Scheme scheme1 = helper.CreateScheme();
+
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2016;
+                memberUpload1.IsSubmitted = true;
+
+                Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                producer1.IsCurrentForComplianceYear = true;
+
+                Scheme scheme2 = helper.CreateScheme();
+
+                MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme2);
+                memberUpload2.ComplianceYear = 2016;
+                memberUpload2.IsSubmitted = true;
+
+                Producer producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/22BBBB22");
+                producer2.IsCurrentForComplianceYear = true;
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<ProducerCsvData> results =
+                    await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
+
+                // Assert
+                Assert.NotNull(results);
+                Assert.Equal(1, results.Count);
+
+                ProducerCsvData result = results[0];
+
+                Assert.Equal(producer1.RegistrationNumber, result.RegistrationNumber);
+            }
+        }
+
+        /// <summary>
+        /// This test ensures that the results are ordered by organisation name.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task Execute_WithSeveralProducers_ReturnsResultsOrderedByOrganisationName()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+
+                Scheme scheme1 = helper.CreateScheme();
+
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2016;
+                memberUpload1.IsSubmitted = true;
+
+                Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11BBBB11");
+                producer1.IsCurrentForComplianceYear = true;
+                producer1.Business.Partnership.Name = "BBBB";
+
+                Producer producer2 = helper.CreateProducerAsCompany(memberUpload1, "WEE/22AAAA22");
+                producer2.IsCurrentForComplianceYear = true;
+                producer2.Business.Company.Name = "AAAA";
+
+                Producer producer3 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/33CCCC33");
+                producer3.IsCurrentForComplianceYear = true;
+                producer3.Business.Partnership.Name = "CCCC";
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<ProducerCsvData> results =
+                    await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
+
+                // Assert
+                Assert.NotNull(results);
+                Assert.Equal(3, results.Count);
+
+                Assert.Collection(results,
+                    (r1) => Assert.Equal("AAAA", r1.OrganisationName),
+                    (r2) => Assert.Equal("BBBB", r2.OrganisationName),
+                    (r3) => Assert.Equal("CCCC", r3.OrganisationName));
+            }
+        }
+
+        /// <summary>
+        /// This test ensures that the charge band integer values are correctly mapped to
+        /// there single letter equivalents. E.g. 0 = "A", 1 = "B".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task Execute_WithDifferentChargeBandTypes_MapsNumbersToLetters()
+        {
+            {
+                using (DatabaseWrapper db = new DatabaseWrapper())
+                {
+                    // Arrange
+                    ModelHelper helper = new ModelHelper(db.Model);
+
+                    Scheme scheme1 = helper.CreateScheme();
+
+                    MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                    memberUpload1.ComplianceYear = 2016;
+                    memberUpload1.IsSubmitted = true;
+
+                    Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                    producer1.IsCurrentForComplianceYear = true;
+                    producer1.ChargeBandType = 0; // 0 = "A"
+
+                    Producer producer2 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/22BBBB22");
+                    producer2.IsCurrentForComplianceYear = true;
+                    producer2.ChargeBandType = 1; // 1 = "B"
+
+                    Producer producer3 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/33CCCC33");
+                    producer3.IsCurrentForComplianceYear = true;
+                    producer3.ChargeBandType = 2; // 2 = "C"
+
+                    Producer producer4 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/44DDDD44");
+                    producer4.IsCurrentForComplianceYear = true;
+                    producer4.ChargeBandType = 3; // 3 = "D"
+
+                    Producer producer5 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/55EEEE55");
+                    producer5.IsCurrentForComplianceYear = true;
+                    producer5.ChargeBandType = 4; // 4 = "E"
+
+                    db.Model.SaveChanges();
+
+                    // Act
+                    List<ProducerCsvData> results =
+                        await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
+
+                    // Assert
+                    Assert.NotNull(results);
+                    Assert.Equal(5, results.Count);
+
+                    Assert.Collection(results,
+                        (r1) => Assert.Equal("A", r1.ChargeBand),
+                        (r2) => Assert.Equal("B", r2.ChargeBand),
+                        (r3) => Assert.Equal("C", r3.ChargeBand),
+                        (r4) => Assert.Equal("D", r4.ChargeBand),
+                        (r5) => Assert.Equal("E", r5.ChargeBand));
+                }
+            }
+        }
+
+        /// <summary>
+        /// This test ensures that the overseas producer name is returned for a producer with an
+        /// authorised representative.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task Execute_WithAuthorisedRepresentative_ReturnsOverseasProducer()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+
+                Scheme scheme1 = helper.CreateScheme();
+
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2016;
+                memberUpload1.IsSubmitted = true;
+
+                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
+                producer1.IsCurrentForComplianceYear = true;
+
+                AuthorisedRepresentative authorisedRepresentative = new AuthorisedRepresentative()
+                {
+                    Id = new Guid("620E71A6-0E74-47AF-B82F-97BA64083E37"),
+                    OverseasProducerName = "Overseas Producer Name",
+                };
+                db.Model.AuthorisedRepresentatives.Add(authorisedRepresentative);
+
+                producer1.AuthorisedRepresentative = authorisedRepresentative;
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<ProducerCsvData> results =
+                    await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
+
+                // Assert
+                Assert.NotNull(results);
+                Assert.Equal(1, results.Count);
+
+                ProducerCsvData result = results[0];
+
+                Assert.Equal("Yes", result.AuthorisedRepresentative);
+                Assert.Equal("Overseas Producer Name", result.OverseasProducer);
             }
         }
     }
