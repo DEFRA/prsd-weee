@@ -2,6 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Xml.Linq;
+    using Core.Exceptions;
     using Core.Helpers.Xml;
     using Domain;
     using Domain.Scheme;
@@ -56,6 +59,23 @@
             var result = XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
 
             Assert.NotEmpty(result);
+        }
+
+        [Fact]
+        public void SchemaValidatorHasNoErrors_DeserializationException_ShouldReturnError()
+        {
+            A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
+                .Returns(new List<MemberUploadError>());
+
+            A.CallTo(() => xmlConverter.Deserialize(A<XDocument>._))
+                .Throws(new XmlDeserializationFailureException(new Exception("Test exception")));
+
+            var result = XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
+
+            Assert.NotEmpty(result);
+            Assert.Equal(1, result.Count());
+
+            A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._)).MustNotHaveHappened();
         }
 
         private XmlValidator XmlValidator()

@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Xml;
+    using Core.Exceptions;
     using Core.Helpers.Xml;
     using Domain;
     using Domain.Scheme;
@@ -35,18 +34,24 @@
                 return errors;
             }
 
+            schemeType deserializedXml;
+
             try
             {
                 // Validate deserialized XML against business rules
-                var document = xmlConverter.Convert(message);
-                var deserializedXml = xmlConverter.Deserialize(document);
-                errors = businessValidator.Validate(deserializedXml, message.OrganisationId).ToList();
+                deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(message));
             }
-            catch (InvalidOperationException e)
+            catch (XmlDeserializationFailureException e)
             {
-                var friendlyMessage = errorTranslator.MakeFriendlyErrorMessage(e.Message);
+                // Couldn't deserialise - can't go any further, add an error and bail out here
+                var exceptionMessage = e.InnerException != null ? e.InnerException.Message : e.Message;
+                var friendlyMessage = errorTranslator.MakeFriendlyErrorMessage(exceptionMessage);
                 errors.Add(new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, friendlyMessage));
+
+                return errors;
             }
+
+            errors = businessValidator.Validate(deserializedXml, message.OrganisationId).ToList();
 
             return errors;
         }
