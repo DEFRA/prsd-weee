@@ -38,7 +38,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> AuthorizationRequired(Guid pcsId)
+        public async Task<ActionResult> AuthorisationRequired(Guid pcsId)
         {
             using (var client = apiClient())
             {
@@ -208,7 +208,7 @@
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext.ActionDescriptor.ActionName == "AuthorizationRequired")
+            if (filterContext.ActionDescriptor.ActionName == "AuthorisationRequired")
             {
                 base.OnActionExecuting(filterContext);
             }
@@ -230,7 +230,7 @@
 
                     if (status != SchemeStatus.Approved)
                     {
-                        filterContext.Result = RedirectToAction("AuthorizationRequired", new { pcsID = pcsId });
+                        filterContext.Result = RedirectToAction("AuthorisationRequired", new { pcsID = pcsId });
                     }
                     else
                     {

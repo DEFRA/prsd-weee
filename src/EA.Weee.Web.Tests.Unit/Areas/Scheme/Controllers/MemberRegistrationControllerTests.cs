@@ -58,9 +58,9 @@
         }
 
         [Fact]
-        public async void GetAuthorizationRequired_ChecksStatusOfScheme()
+        public async void GetAuthorisationRequired_ChecksStatusOfScheme()
         {
-            await MemberRegistrationController().AuthorizationRequired(A<Guid>._);
+            await MemberRegistrationController().AuthorisationRequired(A<Guid>._);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -72,7 +72,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Pending);
 
-            var result = await MemberRegistrationController().AuthorizationRequired(A<Guid>._);
+            var result = await MemberRegistrationController().AuthorisationRequired(A<Guid>._);
 
             Assert.IsType<ViewResult>(result);
 
@@ -87,7 +87,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Rejected);
 
-            var result = await MemberRegistrationController().AuthorizationRequired(A<Guid>._);
+            var result = await MemberRegistrationController().AuthorisationRequired(A<Guid>._);
 
             Assert.IsType<ViewResult>(result);
 
@@ -102,7 +102,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Approved);
 
-            var result = await MemberRegistrationController().AuthorizationRequired(A<Guid>._);
+            var result = await MemberRegistrationController().AuthorisationRequired(A<Guid>._);
 
             Assert.IsType<RedirectToRouteResult>(result);
 
@@ -335,7 +335,7 @@
         {
             var fakeController = BuildFakeMemberRegistrationController();
             var fakeActionParameters = ActionExecutingContextHelper.FakeActionParameters();
-            var fakeActionDescriptor = ActionExecutingContextHelper.FakeActionDescriptorWithActionName("AuthorizationRequired");
+            var fakeActionDescriptor = ActionExecutingContextHelper.FakeActionDescriptorWithActionName("AuthorisationRequired");
 
             ActionExecutingContext context = new ActionExecutingContext();
             context.ActionParameters = fakeActionParameters;
@@ -380,7 +380,7 @@
 
             var redirect = (RedirectToRouteResult)context.Result;
 
-            Assert.Equal("AuthorizationRequired", redirect.RouteValues["action"]);
+            Assert.Equal("AuthorisationRequired", redirect.RouteValues["action"]);
             Assert.Equal(pcsId, redirect.RouteValues["pcsId"]);
         }
 
