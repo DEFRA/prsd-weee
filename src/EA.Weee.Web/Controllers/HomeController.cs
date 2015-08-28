@@ -57,7 +57,7 @@
                 return RedirectToAction("CheckIsPcs", "NewUser");
             }
 
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("SignIn", "Account");
         }
 
         [AllowAnonymous]
