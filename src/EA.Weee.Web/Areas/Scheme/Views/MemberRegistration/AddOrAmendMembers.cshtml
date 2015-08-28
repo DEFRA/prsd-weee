@@ -64,12 +64,13 @@
             @Html.AntiForgeryToken()
             @Html.Gds().ValidationSummary()
 
-            <p class="form-hint">To register or update your members' details, upload and submit an xml file</p>
+            <p>To register or update your members' details, upload and submit an XML file.</p>
+            <hr />
             <p class="bold-small">
-                <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image" />Your XML file must use the version 3.06 Schema
+                <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image" />Your XML file must use the version 3.06 schema.
             </p>
             <hr />
-
+            <br/>
             <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
                 @Html.Gds().LabelFor(m => m.File)
                 @Html.Gds().ValidationMessageFor(m => m.File)
