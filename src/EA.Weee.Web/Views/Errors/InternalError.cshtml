@@ -1,5 +1,6 @@
 ﻿@{
     Page.Title = "Internal Server Error";
+    Response.TrySkipIisCustomErrors = true;
     Response.StatusCode = 500;
 }
 
