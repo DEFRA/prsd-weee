@@ -150,6 +150,34 @@
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> DownloadErrorsAndWarnings(Guid pcsId, Guid memberUploadId)
+        {
+            using (var client = apiClient())
+            {
+                IEnumerable<MemberUploadErrorData> errors =
+                    (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId)))
+                    .OrderByDescending(e => e.ErrorLevel);
+
+                CsvWriter<MemberUploadErrorData> csvWriter = new CsvWriter<MemberUploadErrorData>();
+                csvWriter.DefineColumn("Severity", e => (int)e.ErrorLevel >= 5 ? "Error" : "Warning");
+                csvWriter.DefineColumn("Description", e => e.Description);
+
+                string csv = csvWriter.Write(errors);
+
+                /* Strictly speaking, UTF8 doesn't require a byte order mark,
+                 * however some legacy applications (especially Excel) use the
+                 * presence of a BOM to correctly identify the file as UTF-8.
+                 */
+                Encoding encoding = Encoding.UTF8;
+                byte[] bom = encoding.GetPreamble();
+                byte[] data = encoding.GetBytes(csv);
+                byte[] file = bom.Concat(data).ToArray();
+
+                return File(file, "text/csv", "XML warning and errors.csv");
+            }
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SubmitXml(Guid pcsId, MemberUploadResultViewModel viewModel)
