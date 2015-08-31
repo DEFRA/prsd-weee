@@ -24,17 +24,20 @@
         private readonly IFileConverterService fileConverter;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
+        private readonly CsvWriterFactory csvWriterFactory;
 
         public MemberRegistrationController(
             Func<IWeeeClient> apiClient,
             IFileConverterService fileConverter,
             IWeeeCache cache,
-            BreadcrumbService breadcrumb)
+            BreadcrumbService breadcrumb,
+            CsvWriterFactory csvWriterFactory)
         {
             this.apiClient = apiClient;
             this.fileConverter = fileConverter;
             this.cache = cache;
             this.breadcrumb = breadcrumb;
+            this.csvWriterFactory = csvWriterFactory;
         }
 
         [HttpGet]
@@ -159,7 +162,7 @@
                     (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId)))
                     .OrderByDescending(e => e.ErrorLevel);
 
-                CsvWriter<MemberUploadErrorData> csvWriter = new CsvWriter<MemberUploadErrorData>();
+                CsvWriter<MemberUploadErrorData> csvWriter = csvWriterFactory.Create<MemberUploadErrorData>();
                 csvWriter.DefineColumn("Severity", e => (int)e.ErrorLevel >= 5 ? "Error" : "Warning");
                 csvWriter.DefineColumn("Description", e => e.Description);
 
