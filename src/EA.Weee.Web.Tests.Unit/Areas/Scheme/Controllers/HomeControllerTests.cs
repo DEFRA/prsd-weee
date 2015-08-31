@@ -66,7 +66,7 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_DoNotHaveOrganisationUser_ReturnsViewWithOnlyOneOption()
+        public async void GetChooseActivity_DoNotHaveOrganisationUser_ReturnsViewWithOnlyTwoOption()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
@@ -78,7 +78,7 @@
 
             var model = (ChooseActivityViewModel)((ViewResult)result).Model;
 
-            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 1);
+            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 2);
 
             Assert.False(model.ActivityOptions.PossibleValues.Contains(PcsAction.ManageOrganisationUsers));
 
@@ -86,7 +86,7 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_HaveOrganisationUser_ReturnsViewWithTwoOption()
+        public async void GetChooseActivity_HaveOrganisationUser_ReturnsViewWithThreeOption()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
@@ -108,7 +108,7 @@
 
             var model = (ChooseActivityViewModel)((ViewResult)result).Model;
 
-            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 2);
+            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 3);
 
             Assert.IsType<ViewResult>(result);
         }
