@@ -72,8 +72,8 @@
             public async void AddCompetentAuthorityUserHandler_FakeUser_ThrowsException()
             {
                AddCompetentAuthorityUser message = new AddCompetentAuthorityUser(FakeUserId.ToString());
-               A.CallTo(() => configurationManagerWrapper.HasKey("Weee.InternalUsersMode")).Returns(true);
-               A.CallTo(() => configurationManagerWrapper.GetKeyValue("Weee.InternalUsersMode")).Returns("false");
+               A.CallTo(() => configurationManagerWrapper.HasKey("Weee.InternalUsersTestMode")).Returns(true);
+               A.CallTo(() => configurationManagerWrapper.GetKeyValue("Weee.InternalUsersTestMode")).Returns("false");
                await Assert.ThrowsAsync<InvalidOperationException>(async () => await handler.HandleAsync(message));
             }
 
@@ -81,8 +81,8 @@
            public async void AddCompetentAuthorityUserHandler_InternalUsersModeSet_ReturnsSucess()
            {
                AddCompetentAuthorityUser message = new AddCompetentAuthorityUser(FakeUserId.ToString());
-               A.CallTo(() => configurationManagerWrapper.HasKey("Weee.InternalUsersMode")).Returns(true);
-               A.CallTo(() => configurationManagerWrapper.GetKeyValue("Weee.InternalUsersMode")).Returns("true");
+               A.CallTo(() => configurationManagerWrapper.HasKey("Weee.InternalUsersTestMode")).Returns(true);
+               A.CallTo(() => configurationManagerWrapper.GetKeyValue("Weee.InternalUsersTestMode")).Returns("true");
                Guid id = await handler.HandleAsync(message);
                A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened();
                Assert.NotNull(id);

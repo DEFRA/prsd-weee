@@ -79,15 +79,32 @@
         {
             if (!ModelState.IsValid)
             {
-                await SetBreadcrumb(pcsId, "Manage scheme");
-                return View(model);
+                if (Request.IsAjaxRequest())
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+                else
+                {
+                    await SetBreadcrumb(pcsId, "Manage scheme");
+                    return View(model);
+                }
             }
 
             var fileData = fileConverter.Convert(model.File);
+
+            Guid validationId;
+                
             using (var client = apiClient())
             {
-                var validationId = await client.SendAsync(User.GetAccessToken(), new ProcessXMLFile(pcsId, fileData));
+                validationId = await client.SendAsync(User.GetAccessToken(), new ProcessXMLFile(pcsId, fileData));
+            }
 
+            if (Request.IsAjaxRequest())
+            {
+                return Json(validationId);
+            }
+            else
+            {
                 return RedirectToAction("ViewErrorsAndWarnings", "MemberRegistration",
                     new { area = "Scheme", memberUploadId = validationId });
             }
