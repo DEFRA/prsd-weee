@@ -2,6 +2,7 @@
 {
     using Autofac;
     using Configuration.EmailRules;
+    using EA.Weee.Core.Shared;
 
     public class CoreModule : Module
     {
@@ -15,6 +16,8 @@
             builder.RegisterAssemblyTypes(this.GetType().Assembly)
                 .Where(t => t.Namespace.Contains("Helpers"))
                 .AsImplementedInterfaces();
+
+            builder.RegisterType<NoFormulaeExcelSanitizer>().As<IExcelSanitizer>();
         }
     }
 }
