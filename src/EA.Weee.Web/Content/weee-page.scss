@@ -143,15 +143,15 @@
 
 #footer .footer-agencies {
 
-	@include media(desktop) {
-		padding-left: 30px;
-		padding-right: 30px;
-	}
+    @include media(desktop) {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
 
-	@include media($max-width: 640px) {
-		padding-left: 15px;
-		padding-right: 15px;
-	}
+    @include media($max-width: 640px) {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 }
 
 
@@ -159,8 +159,8 @@
 // ==========================================================================
 
 .related-section-title {
-	font-weight: 700;
-	font-size: 19px;
+    font-weight: 700;
+    font-size: 19px;
 }
 
 // 3. Colour
@@ -403,17 +403,17 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 // ==========================================================================
 
 .related {
-	border-top: 10px solid $govuk-blue;
-	margin-top: 1.6em;
+    border-top: 10px solid $govuk-blue;
+    margin-top: 1.6em;
 
-	.related-section {
-		padding-right: 1em;
-	
-		.related-section-title {
-			margin-top: 0.5em;
-			margin-bottom: 0.5em;
-		}
-	}
+    .related-section {
+        padding-right: 1em;
+
+        .related-section-title {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+    }
 }
 
 // Custom
@@ -658,4 +658,23 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}  
+}
+
+.grey-text {
+    word-wrap: break-word;
+    font-size: 16px;
+    color: #6F777B;
+    font-family: 'Arial Regular', 'Arial';
+    font-weight: 400;
+    font-style: normal;
+    text-align: left;
+}
+.black-text {
+    word-wrap: break-word;
+    font-size: 16px;
+    color: #0B0C0C;
+    font-family: 'Arial Regular', 'Arial';
+    font-weight: 400;
+    font-style: normal;
+    text-align: left;
+}
