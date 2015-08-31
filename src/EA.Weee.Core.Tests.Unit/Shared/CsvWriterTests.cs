@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Shared
 {
     using EA.Weee.Core.Shared;
+    using FakeItEasy;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -112,6 +113,32 @@ lines.";
                 "4" + Environment.NewLine +
                 "9" + Environment.NewLine +
                 "16" + Environment.NewLine;
+
+            Assert.Equal(expectedValue, csv);
+        }
+
+        [Fact]
+        public void CsvWriter_WithExcelSanitizer_SanitizesValues()
+        {
+            // Arrange
+            IExcelSanitizer sanitizer = A.Fake<IExcelSanitizer>();
+            A.CallTo(() => sanitizer.IsThreat("Bad String")).Returns(true);
+            A.CallTo(() => sanitizer.Sanitize("Bad String")).Returns("Sanitized Bad String");
+
+            CsvWriter<string> writer = new CsvWriter<string>(sanitizer);
+
+            writer.DefineColumn("Column 1", x => x);
+
+            List<string> data = new List<string>() { "Good String", "Bad String" };
+
+            // Act
+            string csv = writer.Write(data);
+
+            // Assert
+            string expectedValue =
+                "Column 1" + Environment.NewLine +
+                "Good String" + Environment.NewLine +
+                "Sanitized Bad String" + Environment.NewLine;
 
             Assert.Equal(expectedValue, csv);
         }

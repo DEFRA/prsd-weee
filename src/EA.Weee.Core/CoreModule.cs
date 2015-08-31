@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Core
 {
     using Autofac;
+    using Autofac.Core;
     using Configuration.EmailRules;
     using EA.Weee.Core.Shared;
 
@@ -18,6 +19,8 @@
                 .AsImplementedInterfaces();
 
             builder.RegisterType<NoFormulaeExcelSanitizer>().As<IExcelSanitizer>();
+
+            builder.RegisterType<CsvWriterFactory>().SingleInstance();
         }
     }
 }

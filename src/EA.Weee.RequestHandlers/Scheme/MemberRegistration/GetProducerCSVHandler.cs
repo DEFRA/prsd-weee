@@ -15,11 +15,13 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
+        private readonly CsvWriterFactory csvWriterFactory;
 
-        public GetProducerCSVHandler(IWeeeAuthorization authorization, WeeeContext context)
+        public GetProducerCSVHandler(IWeeeAuthorization authorization, WeeeContext context, CsvWriterFactory csvWriterFactory)
         {
             this.authorization = authorization;
             this.context = context;
+            this.csvWriterFactory = csvWriterFactory;
         }
 
         public async Task<ProducerCSVFileData> HandleAsync(GetProducerCSV request)
@@ -38,7 +40,7 @@
                 request.OrganisationId,
                 request.ComplianceYear);
 
-            CsvWriter<ProducerCsvData> csvWriter = new CsvWriter<ProducerCsvData>();
+            CsvWriter<ProducerCsvData> csvWriter = csvWriterFactory.Create<ProducerCsvData>();
             csvWriter.DefineColumn("Organisation name", i => i.OrganisationName);
             csvWriter.DefineColumn("Trading name", i => i.TradingName);
             csvWriter.DefineColumn("Producer registration number", i => i.RegistrationNumber);
