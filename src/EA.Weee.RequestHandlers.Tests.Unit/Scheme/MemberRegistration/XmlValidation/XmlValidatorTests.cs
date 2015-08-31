@@ -2,6 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Xml.Linq;
+    using Core.Exceptions;
+    using Core.Helpers.Xml;
     using Domain;
     using Domain.Scheme;
     using FakeItEasy;
@@ -15,12 +19,14 @@
         private readonly ISchemaValidator schemaValidator;
         private readonly IBusinessValidator businessValidator;
         private readonly IXmlConverter xmlConverter;
+        private readonly IXmlErrorTranslator errorTranslator;
 
         public XmlValidatorTests()
         {
             schemaValidator = A.Fake<ISchemaValidator>();
             businessValidator = A.Fake<IBusinessValidator>();
             xmlConverter = A.Fake<IXmlConverter>();
+            errorTranslator = A.Fake<IXmlErrorTranslator>();
         }
 
         [Fact]
@@ -55,9 +61,26 @@
             Assert.NotEmpty(result);
         }
 
+        [Fact]
+        public void SchemaValidatorHasNoErrors_DeserializationException_ShouldReturnError()
+        {
+            A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
+                .Returns(new List<MemberUploadError>());
+
+            A.CallTo(() => xmlConverter.Deserialize(A<XDocument>._))
+                .Throws(new XmlDeserializationFailureException(new Exception("Test exception")));
+
+            var result = XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
+
+            Assert.NotEmpty(result);
+            Assert.Equal(1, result.Count());
+
+            A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._)).MustNotHaveHappened();
+        }
+
         private XmlValidator XmlValidator()
         {
-            return new XmlValidator(schemaValidator, xmlConverter, businessValidator);
+            return new XmlValidator(schemaValidator, xmlConverter, businessValidator, errorTranslator);
         }
     }
 }
