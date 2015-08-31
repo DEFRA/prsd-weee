@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -13,7 +14,23 @@
     /// <typeparam name="T">The type of data items that will be written.</typeparam>
     public class CsvWriter<T>
     {
+        private readonly IExcelSanitizer excelSanitizer;
         private List<CsvColumn> columns = new List<CsvColumn>();
+
+        public CsvWriter()
+        {
+            this.excelSanitizer = null;
+        }
+
+        /// <summary>
+        /// Create a CSV writer where values are sanitized to ensure they are
+        /// Excel-friendly before being written.
+        /// </summary>
+        /// <param name="excelSanitizer"></param>
+        public CsvWriter(IExcelSanitizer excelSanitizer)
+        {
+            this.excelSanitizer = excelSanitizer;
+        }
 
         /// <summary>
         /// Defines a column that will appear in the output.
@@ -22,7 +39,7 @@
         /// <param name="func">A Functhat defines how the data value will be extracted from each item.</param>
         public void DefineColumn(string title, Func<T, object> func)
         {
-            columns.Add(new CsvColumn(title, func));
+            columns.Add(new CsvColumn(title, func, excelSanitizer));
         }
 
         public string Write(IEnumerable<T> items)
@@ -64,24 +81,39 @@
         {
             public string Title { get; private set; }
             private readonly Func<T, object> func;
+            private readonly IExcelSanitizer excelSanitizer;
 
-            public CsvColumn(string title, Func<T, object> func)
+            public CsvColumn(string title, Func<T, object> func, IExcelSanitizer excelSanitizer)
             {
                 Title = title;
                 this.func = func;
+                this.excelSanitizer = excelSanitizer;
             }
 
             public string GetData(T item)
             {
+                string result;
+                
                 object data = func(item);
                 if (data == null)
                 {
-                    return string.Empty;
+                    result = string.Empty;
                 }
                 else
                 {
-                    return data.ToString();
+                    result = data.ToString();
                 }
+
+                if (excelSanitizer != null && excelSanitizer.IsThreat(result))
+                {
+                    string message = string.Format(
+                        "A potentially dangerous string was identified and santised when writing CSV data. The value was \"{0}\".",
+                        result);
+                    Trace.TraceWarning(message);
+                    result = excelSanitizer.Sanitize(result);
+                }
+
+                return result;
             }
         }
     }

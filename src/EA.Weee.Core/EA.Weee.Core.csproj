@@ -109,6 +109,7 @@
     <Compile Include="Helpers\Xml\IXmlErrorTranslator.cs" />
     <Compile Include="Helpers\Xml\XmlErrorTranslator.cs" />
     <Compile Include="Shared\CsvWriter.cs" />
+    <Compile Include="Shared\CsvWriterFactory.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizer.cs" />
     <Compile Include="Shared\IExcelSanitizer.cs" />
     <Compile Include="Users\UserData.cs" />
