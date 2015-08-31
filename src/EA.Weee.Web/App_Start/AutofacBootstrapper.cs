@@ -2,6 +2,7 @@
 {
     using Autofac;
     using Autofac.Integration.Mvc;
+    using EA.Weee.Core;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Modules;
@@ -31,7 +32,8 @@
 
             // Register all Autofac specific IModule implementations
             builder.RegisterAssemblyModules(typeof(Startup).Assembly);
-            
+            builder.RegisterModule(new CoreModule());
+
             // Register request creators
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
                 .AsClosedTypesOf(typeof(IRequestCreator<,>));
