@@ -39,7 +39,8 @@
                 () => weeeClient,
                 fileConverter,
                 A.Fake<IWeeeCache>(),
-                A.Fake<BreadcrumbService>());
+                A.Fake<BreadcrumbService>(),
+                A.Fake<CsvWriterFactory>());
 
             new HttpContextMocker().AttachToController(controller);
 
@@ -52,7 +53,8 @@
                 (weeeClient,
                 fileConverter,           
                 A.Fake<IWeeeCache>(),
-                A.Fake<BreadcrumbService>());
+                A.Fake<BreadcrumbService>(),
+                A.Fake<CsvWriterFactory>());
 
             new HttpContextMocker().AttachToController(controller);
 
@@ -479,8 +481,17 @@
         {
             public IWeeeClient ApiClient { get; private set; }
 
-            public FakeMemberRegistrationController(IWeeeClient apiClient, IFileConverterService fileConverter, IWeeeCache cache, BreadcrumbService breadcrumb)
-                : base(() => apiClient, fileConverter, cache, breadcrumb)
+            public FakeMemberRegistrationController(
+                IWeeeClient apiClient,
+                IFileConverterService fileConverter,
+                IWeeeCache cache,
+                BreadcrumbService breadcrumb,
+                CsvWriterFactory csvWriterFactory)
+                : base(() => apiClient,
+                fileConverter,
+                cache,
+                breadcrumb,
+                csvWriterFactory)
             {
                 ApiClient = apiClient;
             }
