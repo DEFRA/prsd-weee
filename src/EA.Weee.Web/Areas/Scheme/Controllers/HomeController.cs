@@ -87,6 +87,10 @@
                 {
                     return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId });
                 }
+                if (viewModel.ActivityOptions.SelectedValue == PcsAction.ViewOrganisationDetails)
+                {
+                    return RedirectToAction("ViewOrganisationDetails", new { pcsId = viewModel.OrganisationId });
+                }
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, null);
@@ -186,6 +190,39 @@
 
             return RedirectToAction("ManageOrganisationUsers", "Home",
                    new { area = "Scheme", pcsId });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ViewOrganisationDetails(Guid pcsId)
+        {
+            await SetBreadcrumb(pcsId, "Organisation details");
+
+            using (var client = apiClient())
+            {
+                var organisationExists =
+                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
+
+                if (!organisationExists)
+                {
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "pcsId");
+                }
+
+                var orgDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
+
+                var model = new ViewOrganisationDetailsViewModel
+                {
+                    OrganisationData = orgDetails
+                };
+                
+                return View("ViewOrganisationDetails", model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ViewOrganisationDetails(Guid pcsId, ViewOrganisationDetailsViewModel model)
+        {
+            return RedirectToAction("ChooseActivity", "Home", new { pcsId });
         }
 
         private RadioButtonStringCollectionViewModel GetUserPossibleStatusToBeChanged(RadioButtonStringCollectionViewModel userStatuses, UserStatus userStatus)

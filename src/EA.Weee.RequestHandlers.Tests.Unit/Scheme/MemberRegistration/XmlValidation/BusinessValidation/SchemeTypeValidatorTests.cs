@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.XmlBusinessValidation;
     using DataAccess;
     using Domain;
     using Domain.Organisation;
@@ -14,22 +15,24 @@
     using Helpers;
     using RequestHandlers;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation;
-    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.Queries;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.Rules;
     using Xunit;
     using ValidationContext = XmlValidation.ValidationContext;
 
     public class SchemeTypeValidatorTests
     {
-        private readonly IRules rules;
+        private readonly IRuleSelector ruleSelector;
 
         public SchemeTypeValidatorTests()
         {
-            rules = A.Fake<IRules>();
+            ruleSelector = A.Fake<IRuleSelector>();
 
-            // By default all abstracted rules pass
-            A.CallTo(() => rules.ShouldNotWarnOfProducerNameChange(A<schemeType>._, A<producerType>._, A<Guid>._))
-                .Returns(true);
+            // By default, rules pass
+            var producerNameWarning = A.Fake<IRule<ProducerNameWarning>>();
+            A.CallTo(() => producerNameWarning.Evaluate(A<ProducerNameWarning>._)).Returns(true);
+
+            A.CallTo(() => ruleSelector.GetRule<ProducerNameWarning>())
+                .Returns(producerNameWarning);
         }
 
         [Fact]
@@ -489,8 +492,13 @@
             var producerName = "Test Name";
             var registrationNumber = "ABC12345";
 
-            A.CallTo(() => rules.ShouldNotWarnOfProducerNameChange(A<schemeType>._, A<producerType>._, A<Guid>._))
+            var fakeRule = A.Fake<IRule<ProducerNameWarning>>();
+
+            A.CallTo(() => fakeRule.Evaluate(A<ProducerNameWarning>._))
                 .Returns(false);
+
+            A.CallTo(() => ruleSelector.GetRule<ProducerNameWarning>())
+                .Returns(fakeRule);
 
             var xml = new schemeType
             {
@@ -531,7 +539,7 @@
 
         private IValidator<schemeType> SchemeTypeValidator(Scheme scheme, Guid? organisationId = null)
         {
-            return new SchemeTypeValidator(ValidationContext.Create(scheme), organisationId ?? Guid.NewGuid(), rules);
+            return new SchemeTypeValidator(ValidationContext.Create(scheme), organisationId ?? Guid.NewGuid(), ruleSelector);
         }
 
         private producerType[] ProducersWithRegistrationNumbers(params string[] regstrationNumbers)

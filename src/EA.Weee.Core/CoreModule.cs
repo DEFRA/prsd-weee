@@ -4,6 +4,7 @@
     using Autofac.Core;
     using Configuration.EmailRules;
     using EA.Weee.Core.Shared;
+    using XmlBusinessValidation;
 
     public class CoreModule : Module
     {
@@ -21,6 +22,9 @@
             builder.RegisterType<NoFormulaeExcelSanitizer>().As<IExcelSanitizer>();
 
             builder.RegisterType<CsvWriterFactory>().SingleInstance();
+
+            // XML rules
+            builder.RegisterType<RuleSelector>().As<IRuleSelector>();
         }
     }
 }

@@ -3,20 +3,19 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.XmlBusinessValidation;
     using DataAccess;
     using Domain;
-    using Domain.Producer;
     using Extensions;
     using FluentValidation;
-    using Queries;
     using Rules;
 
     public class SchemeTypeValidator : AbstractValidator<schemeType>
     {
         public const string NonDataValidation = "NonDataValidation";
         public const string DataValidation = "DataValidation";
-       
-        public SchemeTypeValidator(WeeeContext context, Guid organisationId, IRules rules)
+
+        public SchemeTypeValidator(WeeeContext context, Guid organisationId, IRuleSelector ruleSelector)
         {
             RuleSet(DataValidation, () =>
             {
@@ -27,7 +26,8 @@
                         .NotEmpty()
                         .Matches(scheme.ApprovalNumber)
                         .WithState(st => ErrorLevel.Error)
-                        .WithMessage("The approval number for your compliance scheme doesn’t match with the PCS that you selected. Please make sure that you’re entering the right compliance scheme approval number.");
+                        .WithMessage("The PCS approval number in your XML file {0} doesn’t match with the PCS that  you’re uploading for. Please make sure that you’re  using the right  PCS approval number.",
+                        st => st.approvalNo);
                 }
             });
 
@@ -128,7 +128,7 @@
 
                 //Producer Name change warning
                 RuleForEach(st => st.producerList)
-                    .Must((st, producer) => rules.ShouldNotWarnOfProducerNameChange(st, producer, organisationId))
+                    .Must((st, producer) => ruleSelector.GetRule<ProducerNameWarning>().Evaluate(new ProducerNameWarning(st, producer, organisationId)))
                     .WithState(st => ErrorLevel.Warning)
                     .WithMessage(
                      "The name of the producer with registration number {0} will be amended to {1}.",
