@@ -175,6 +175,10 @@
     <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
     <Compile Include="Validation\InternalEmailAddressAttribute.cs" />
     <Compile Include="WeeeClaimTypes.cs" />
+    <Compile Include="XmlBusinessValidation\IRule.cs" />
+    <Compile Include="XmlBusinessValidation\IRuleSelector.cs" />
+    <Compile Include="XmlBusinessValidation\PersistentQueryResult.cs" />
+    <Compile Include="XmlBusinessValidation\RuleSelector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
