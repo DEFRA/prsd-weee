@@ -2,6 +2,7 @@
 {
     using DataAccess;
     using Domain.Scheme;
+    using EA.Weee.Core.Shared;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
@@ -28,8 +29,9 @@
 
             IWeeeAuthorization authorization  = new AuthorizationBuilder().DenyOrganisationAccess().Build();
             WeeeContext context = A.Fake<WeeeContext>();
+            CsvWriterFactory csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetProducerCSVHandler(authorization, context);
+            var handler = new GetProducerCSVHandler(authorization, context, csvWriterFactory);
             var request = new GetProducerCSV(pcsId, complianceYear);
 
             // Act
@@ -53,7 +55,9 @@
             A.CallTo(() => organisations.FindAsync(pcsId)).Returns((Organisation)null);
             A.CallTo(() => context.Organisations).Returns(organisations);
 
-            var handler = new GetProducerCSVHandler(authorization, context);
+            CsvWriterFactory csvWriterFactory = A.Fake<CsvWriterFactory>();
+
+            var handler = new GetProducerCSVHandler(authorization, context, csvWriterFactory);
             var request = new GetProducerCSV(pcsId, complianceYear);
 
             // Act
