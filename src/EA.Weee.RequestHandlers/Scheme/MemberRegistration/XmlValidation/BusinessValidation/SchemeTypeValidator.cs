@@ -15,7 +15,7 @@
     {
         public const string NonDataValidation = "NonDataValidation";
         public const string DataValidation = "DataValidation";
-       
+
         public SchemeTypeValidator(WeeeContext context, Guid organisationId, IRules rules)
         {
             RuleSet(DataValidation, () =>
@@ -27,7 +27,8 @@
                         .NotEmpty()
                         .Matches(scheme.ApprovalNumber)
                         .WithState(st => ErrorLevel.Error)
-                        .WithMessage("The approval number for your compliance scheme doesn’t match with the PCS that you selected. Please make sure that you’re entering the right compliance scheme approval number.");
+                        .WithMessage("The PCS approval number in your XML file {0} doesn’t match with the PCS that  you’re uploading for. Please make sure that you’re  using the right  PCS approval number.",
+                        st => st.approvalNo);
                 }
             });
 
