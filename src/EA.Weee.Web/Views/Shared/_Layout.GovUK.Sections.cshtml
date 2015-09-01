@@ -28,15 +28,25 @@
 }
 
 @section footer_top {
-    @if (ViewBag.ShowLinksToAgencies ?? true)
-    {
-        <div class="footer-agencies">
-            <p>Environment Agency (England) helpline: 03708 506 506 – Producer Responsibility Regulatory Services</p>
-            <p>Scottish Environment Protection Agency helpline: 01786 457700 - Producer Compliance and Waste Shipments Unit</p>
-            <p>Northern Ireland Environment Agency helpline: 02 890 569338 - Producer Responsibility Unit</p>
-            <p>Natural Resources Wales helpline: 03000 65 3096 - Producer Responsibility Unit</p>
+    <div class="footer">
+        <div>
+            <p>
+                @Html.ActionLink("Read full terms and conditions of use",
+                "TermsAndConditions", "NewUser", new { area = string.Empty },
+                new { rel = "external", target = "_blank" })
+            </p>
         </div>
-    }
+        @if (ViewBag.ShowLinksToAgencies ?? true)
+        {
+            <hr />
+            <div>
+                <p>Environment Agency (England) helpline: 03708 506 506 – Producer Responsibility Regulatory Services</p>
+                <p>Scottish Environment Protection Agency helpline: 01786 457700 - Producer Compliance and Waste Shipments Unit</p>
+                <p>Northern Ireland Environment Agency helpline: 02 890 569338 - Producer Responsibility Unit</p>
+                <p>Natural Resources Wales helpline: 03000 65 3096 - Producer Responsibility Unit</p>
+            </div>
+        }
+    </div>
 }
 
 @section footer_support_links {
