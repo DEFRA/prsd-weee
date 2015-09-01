@@ -19,7 +19,7 @@
         }
 
         [Fact]
-        public void ShouldNotWarnOfProducerNameChange_Insert_AndProducerExistsWithMatchingPrnInComplianceYearAndScheme_ReturnsTrue()
+        public void Evaluate_Insert_AndProducerExistsWithMatchingPrnInComplianceYearAndScheme_ReturnsTrue()
         {
             A.CallTo(() => querySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(FakeProducer.Create(ObligationType.Both, "ABC12345"));
@@ -42,7 +42,7 @@
         }
 
         [Fact]
-        public void ShouldNotWarnOfProducerNameChange_Amendment_AndProducerExistsWithMatchingPrnInComplianceYearAndScheme_ReturnsFalse()
+        public void Evaluate_Amendment_AndProducerExistsWithMatchingPrnInComplianceYearAndScheme_ReturnsFalse()
         {
             A.CallTo(() => querySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(FakeProducer.Create(ObligationType.Both, "ABC12345"));
@@ -65,9 +65,7 @@
         }
 
         [Fact]
-        public void
-            ShouldNotWarnOfProducerNameChange_Amendment_AndProducerExistsWithMatchingPrnInPreviousComplianceYear_ReturnsFalse
-            ()
+        public void Evaluate_Amendment_AndProducerExistsWithMatchingPrnInPreviousComplianceYear_ReturnsFalse()
         {
             A.CallTo(() => querySet.GetLatestProducerFromPreviousComplianceYears(A<string>._))
                 .Returns(FakeProducer.Create(ObligationType.Both, "ABC12345"));
@@ -90,7 +88,7 @@
         }
 
         [Fact]
-        public void ShouldNotWarnOfProducerNameChange_Amendment_MigratedProducerExistsWithPrn_ReturnsFalse()
+        public void Evaluate_Amendment_MigratedProducerExistsWithPrn_ReturnsFalse()
         {
             A.CallTo(() => querySet.GetMigratedProducer(A<string>._))
                 .Returns(new FakeMigratedProducer());
