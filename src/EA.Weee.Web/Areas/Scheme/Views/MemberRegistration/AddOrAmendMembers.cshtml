@@ -10,6 +10,13 @@
 {
     <script type="text/javascript">
         
+        @*
+            Prevent FireFox from using it's bfcache for this page
+            by adding an empty event handler to the "beforeunload"
+            window event.
+        *@
+        window.addEventListener("beforeunload", function () { });
+
         function ajaxSubmit() {
 
             if (!$("#form1").valid()) {
@@ -44,14 +51,23 @@
                     var placeHolderLocation = "@Url.Action("ViewErrorsAndWarnings", "MemberRegistration", new { memberUploadId = Guid.Empty })";
                     window.location = placeHolderLocation.replace("@Guid.Empty", response);
                 },
-                error: function (response) {
-                    window.location = "@Url.Action("InternalError", "Errors", new { area = string.Empty })";
-                }
+                statusCode: {
+                    500: function (response) {
+                        window.location = "@Url.Action("InternalError", "Errors", new { area = string.Empty })";
+                    }
+                },
             });
         }
     </script>
 
-    @using (Html.BeginForm("AddOrAmendMembers", "MemberRegistration", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data", onsubmit = "ajaxSubmit(); return false;" }))
+    @using (Html.BeginForm("AddOrAmendMembers", "MemberRegistration", FormMethod.Post,
+        new
+        {
+            id = "form1",
+            enctype = "multipart/form-data",
+            onsubmit = "ajaxSubmit(); return false;",
+            autocomplete = "off"
+        }))
     {
         <header class="hgroup">
             <h1 id="title" class="heading-large" aria-live="off">
