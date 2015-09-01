@@ -49,10 +49,27 @@
                     return RedirectToAction("Summary", "MemberRegistration");
                 }
 
+                var userIdString = User.GetUserId();
+                var showLinkToSelectOrganisation = false;
+
+                if (userIdString != null)
+                {
+                    var userId = new Guid(userIdString);
+
+                    var task = Task.Run(async () =>
+                    {
+                        return await cache.FetchUserActiveCompleteOrganisationCount(userId);
+                    });
+                    task.Wait();
+
+                    showLinkToSelectOrganisation = (task.Result > 1);
+                }
+
                 await SetBreadcrumb(pcsId, "Manage scheme");
                 return View(new AuthorizationRequiredViewModel
                 {
-                    Status = status
+                    Status = status,
+                    ShowLinkToSelectOrganisation = showLinkToSelectOrganisation
                 });
             }
         }
@@ -93,7 +110,7 @@
             var fileData = fileConverter.Convert(model.File);
 
             Guid validationId;
-                
+
             using (var client = apiClient())
             {
                 validationId = await client.SendAsync(User.GetAccessToken(), new ProcessXMLFile(pcsId, fileData));

@@ -15,33 +15,35 @@
                         <h1 class="heading-large">Your scheme is awaiting authorisation</h1>
                     </div>
                 </header>
-                <hr/>
+                <hr />
                 <p>Scheme authorisation - Pending</p>
                 <p class="form-hint">Once your organisation's request to operate as a PCS is approved, you will be able to manage members here.</p>
-                <hr/>
+                <hr />
             </div>
             break;
 
         case SchemeStatus.Rejected:
-            <div class="form-group">
-                <header class="hgroup">
-                    <div>
-                        <h1 class="heading-large">Your scheme's authorisation has been refused</h1>
-                    </div>
-                </header>
-                <hr/>
-                <p>Scheme authorisation - Refused</p>
-                <p class="form-hint">Unfortunately, your organisation's request to operate as a PCS has been refused. Please contact your authorising authority for more information.</p>
-                <hr/>
-            </div>
+        <div class="form-group">
+            <header class="hgroup">
+                <div>
+                    <h1 class="heading-large">Your scheme's authorisation has been refused</h1>
+                </div>
+            </header>
+            <hr />
+            <p>Scheme authorisation - Refused</p>
+            <p class="form-hint">Unfortunately, your organisation's request to operate as a PCS has been refused. Please contact your authorising authority for more information.</p>
+            <hr />
+        </div>
             break;
     }
 
     <div class="form-group">
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @area = "Scheme" }, new { @class = "button" })
     </div>
-
-    <div class="form-group">
-        <a href="@Url.RouteUrl("SelectOrganisation")">Select another organisation</a>
-    </div>
+    @if (Model.ShowLinkToSelectOrganisation)
+    {
+        <div class="form-group">
+            <a href="@Url.RouteUrl("SelectOrganisation")">Select another organisation</a>
+        </div>
+    }
 }
