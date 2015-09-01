@@ -89,7 +89,144 @@
             Assert.Null(result);
         }
 
-        // TODO: Tests for the other queries
+        [Theory]
+        [InlineData("ABC12345", "ABC12346")]
+        [InlineData("ABC12346", "ABC12345")]
+        public void GetLatestProducerFromPreviousComplianceYears_PrnDoesNotMatch_ReturnsNull(string thisPrn, string existingPrn)
+        {
+            var producer = FakeProducer.Create(ObligationType.Both, existingPrn, true, Guid.NewGuid(), 2016);
+
+            A.CallTo(() => context.MigratedProducers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>()));
+            A.CallTo(() => context.Producers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
+                {
+                    producer
+                }));
+
+            var result = ProducerNameWarningQuerySet().GetLatestProducerFromPreviousComplianceYears(thisPrn);
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetLatestProducerFromPreviousComplianceYears_TwoProducerEntriesInConsecutiveYears_ReturnsLatestProducerByComplianceYear()
+        {
+            const string prn = "ABC12345";
+
+            var oldestProducer = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2014);
+            var newestProducer = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
+
+            A.CallTo(() => context.MigratedProducers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>()));
+            A.CallTo(() => context.Producers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
+                {
+                    oldestProducer,
+                    newestProducer
+                }));
+
+            var result = ProducerNameWarningQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
+
+            Assert.Equal(newestProducer, result);
+        }
+
+        [Fact]
+        public void
+            GetLatestProducerFromPreviousComplianceYears_TwoProducerEntriesIn2015_ReturnsLatestProducerByUploadDate()
+        {
+            const string prn = "ABC12345";
+
+            var oldestProducer = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
+            var newestProducer = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
+
+            A.CallTo(() => context.MigratedProducers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>()));
+            A.CallTo(() => context.Producers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
+                {
+                    oldestProducer,
+                    newestProducer
+                }));
+
+            var result = ProducerNameWarningQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
+
+            Assert.Equal(newestProducer, result);
+        }
+
+        [Fact]
+        public void
+            GetLatestProducerFromPreviousComplianceYears_TwoProducerEntriesIn2015_AndOneIn2014_ReturnsLatestProducerByUploadDateIn2015()
+        {
+            const string prn = "ABC12345";
+
+            var producer2014 = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2014);
+            var oldestProducer2015 = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
+            var newestProducer2015 = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
+
+            A.CallTo(() => context.MigratedProducers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>()));
+            A.CallTo(() => context.Producers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
+                {
+                    producer2014,
+                    oldestProducer2015,
+                    newestProducer2015
+                }));
+
+            var result = ProducerNameWarningQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
+
+            Assert.Equal(newestProducer2015, result);
+        }
+
+        [Theory]
+        [InlineData("ABC12345", "ABC12346")]
+        [InlineData("ABC12346", "ABC12345")]
+        public void GetMigratedProducer_PrnDoesNotMatch_ReturnsNull(string thisPrn, string existingPrn)
+        {
+            var migratedProducer = FakeMigratedProducer(existingPrn);
+
+            A.CallTo(() => context.MigratedProducers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>
+                {
+                    migratedProducer
+                }));
+            A.CallTo(() => context.Producers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>()));
+
+            var result = ProducerNameWarningQuerySet().GetMigratedProducer(thisPrn);
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetMigratedProducer_PrnMatches_ReturnsMigratedProducer()
+        {
+            const string prn = "ABC12345";
+
+            var migratedProducer = FakeMigratedProducer(prn);
+
+            A.CallTo(() => context.MigratedProducers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>
+                {
+                    migratedProducer
+                }));
+            A.CallTo(() => context.Producers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>()));
+
+            var result = ProducerNameWarningQuerySet().GetMigratedProducer(prn);
+
+            Assert.Equal(migratedProducer, result);
+        }
+
+        private MigratedProducer FakeMigratedProducer(string prn)
+        {
+            var producer = A.Fake<MigratedProducer>();
+            A.CallTo(() => producer.ProducerRegistrationNumber)
+                .Returns(prn);
+
+            return producer;
+        }
 
         private ProducerNameWarningQuerySet ProducerNameWarningQuerySet()
         {
