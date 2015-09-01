@@ -195,6 +195,8 @@
         [HttpGet]
         public async Task<ActionResult> ViewOrganisationDetails(Guid pcsId)
         {
+            await SetBreadcrumb(pcsId, "Organisation details");
+
             using (var client = apiClient())
             {
                 var organisationExists =
@@ -211,8 +213,7 @@
                 {
                     OrganisationData = orgDetails
                 };
-
-                await SetBreadcrumb(pcsId, "Organisation details");
+                
                 return View("ViewOrganisationDetails", model);
             }
         }
