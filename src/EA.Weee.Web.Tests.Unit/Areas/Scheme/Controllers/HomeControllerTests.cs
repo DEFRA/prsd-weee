@@ -66,7 +66,7 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_DoNotHaveOrganisationUser_ReturnsViewWithOnlyOneOption()
+        public async void GetChooseActivity_DoNotHaveOrganisationUser_ReturnsViewWithOnlyTwoOption()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
@@ -78,7 +78,7 @@
 
             var model = (ChooseActivityViewModel)((ViewResult)result).Model;
 
-            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 1);
+            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 2);
 
             Assert.False(model.ActivityOptions.PossibleValues.Contains(PcsAction.ManageOrganisationUsers));
 
@@ -86,7 +86,7 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_HaveOrganisationUser_ReturnsViewWithTwoOption()
+        public async void GetChooseActivity_HaveOrganisationUser_ReturnsViewWithThreeOption()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
@@ -108,7 +108,7 @@
 
             var model = (ChooseActivityViewModel)((ViewResult)result).Model;
 
-            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 2);
+            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 3);
 
             Assert.IsType<ViewResult>(result);
         }
@@ -330,6 +330,59 @@
 
             Assert.Equal("ManageOrganisationUsers", routeValues["action"]);
             Assert.Equal("Home", routeValues["controller"]);
+        }
+
+        [Fact]
+        public async void PostChooseActivity_ViewOrganisationDetails_RedirectsToViewOrganisationDetails()
+        {
+            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
+            {
+                ActivityOptions = new RadioButtonStringCollectionViewModel
+                {
+                    SelectedValue = PcsAction.ViewOrganisationDetails
+                }
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ViewOrganisationDetails", routeValues["action"]);
+        }
+
+        [Fact]
+        public async void GetViewOrganisationDetails_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(false);
+
+            await Assert.ThrowsAnyAsync<Exception>(() => HomeController().ManageOrganisationUsers(A<Guid>._));
+        }
+
+        [Fact]
+        public async void GetViewOrganisationDetails_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData());
+
+            var result = await HomeController().ViewOrganisationDetails(A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(((ViewResult)result).ViewName, "ViewOrganisationDetails");
+        }
+
+        [Fact]
+        public void PostViewOrganisationDetails_RedirectToChooseActivityView()
+        {
+            var result = HomeController().ViewOrganisationDetails(A<Guid>._, new ViewOrganisationDetailsViewModel());
+
+            Assert.IsType<RedirectToRouteResult>(result);
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ChooseActivity", routeValues["action"]);
         }
 
         private HomeController HomeController()
