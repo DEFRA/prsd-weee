@@ -29,7 +29,7 @@
 
 @section footer_top {
     <div class="footer">
-        <div class="footer-links">
+        <div>
             <p>
                 @Html.ActionLink("Read full terms and conditions of use",
                 "TermsAndConditions", "NewUser", new { area = string.Empty },
@@ -39,7 +39,7 @@
         @if (ViewBag.ShowLinksToAgencies ?? true)
         {
             <hr />
-            <div class="footer-agencies">
+            <div>
                 <p>Environment Agency (England) helpline: 03708 506 506 – Producer Responsibility Regulatory Services</p>
                 <p>Scottish Environment Protection Agency helpline: 01786 457700 - Producer Compliance and Waste Shipments Unit</p>
                 <p>Northern Ireland Environment Agency helpline: 02 890 569338 - Producer Responsibility Unit</p>
