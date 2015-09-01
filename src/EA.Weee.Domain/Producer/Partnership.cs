@@ -47,6 +47,6 @@
 
         public virtual ProducerContact PrincipalPlaceOfBusiness { get; private set; }
 
-        public List<Partner> PartnersList { get; private set; }
+        public virtual List<Partner> PartnersList { get; private set; }
     }
 }

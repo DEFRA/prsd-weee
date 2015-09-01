@@ -3,7 +3,7 @@
     using System;
     using Prsd.Core.Domain;
 
-    public class BrandName : Entity, IEquatable<BrandName>
+    public class BrandName : Entity, IEquatable<BrandName>, IComparable<BrandName>
     {
         public BrandName(string name)
         {
@@ -32,6 +32,16 @@
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public int CompareTo(BrandName other)
+        {
+            if (other == null)
+            {
+                return 1;
+            }
+
+            return Name.CompareTo(other.Name);
         }
 
         public string Name { get; private set; }

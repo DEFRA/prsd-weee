@@ -3,7 +3,7 @@
     using System;
     using Prsd.Core.Domain;
 
-    public class Partner : Entity, IEquatable<Partner>
+    public class Partner : Entity, IEquatable<Partner>, IComparable<Partner>
     {
         public Partner(string name)
         {
@@ -32,6 +32,16 @@
         public override bool Equals(object obj)
         {
             return Equals(obj as Partner);
+        }
+
+        public int CompareTo(Partner other)
+        {            
+            if (other == null)
+            {
+                return 1;
+            }
+
+            return Name.CompareTo(other.Name);
         }
 
         public string Name { get; private set; }
