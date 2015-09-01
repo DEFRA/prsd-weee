@@ -6,20 +6,20 @@
     ViewBag.Title = "Choose Users";
 }
 
-@section main_content {
-    <header class="hgroup">
-        <h1 class="heading-large">
-            Choose a user
-        </h1>
-    </header>
 
-    @using (Html.BeginForm(actionName: "ManageUsers", controllerName: "User", method: FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
-        <div class="form-group">
-            <table class="prsd-table">
-                <thead>
+<header class="hgroup">
+    <h1 class="heading-large">
+        Choose a user
+    </h1>
+</header>
+
+@using (Html.BeginForm(actionName: "ManageUsers", controllerName: "User", method: FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
+    <div class="form-group">
+        <table class="prsd-table">
+            <thead>
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
@@ -27,8 +27,8 @@
                     <th>Status</th>
                     <th>Select</th>
                 </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody>
                 @foreach (UserSearchData user in Model.Users)
                 {
                     <tr>
@@ -49,21 +49,21 @@
                         </td>
                     </tr>
                 }
-                </tbody>
-            </table>
-        </div>
-        <br/>
-        if (@Model.Users.PageCount > 1)
-        {
-            <br/>
-            <span style="display: inline-block">Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</span>
-            <div class="pager">
-                @Html.Pager(Model.Users.PageSize, Model.Users.PageNumber, Model.Users.TotalItemCount)
+            </tbody>
+        </table>
+    </div>
+    <br />
+    if (@Model.Users.PageCount > 1)
+    {
+        <br />
+        <span style="display: inline-block">Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</span>
+        <div class="pager">
+            @Html.Pager(Model.Users.PageSize, Model.Users.PageNumber, Model.Users.TotalItemCount)
 
-            </div>
-        }
-        <div class="form-group">
-            <button class="button" type="submit">Continue</button>
         </div>
     }
+    <div class="form-group">
+        <button class="button" type="submit">Continue</button>
+    </div>
 }
+

@@ -4,28 +4,28 @@
     ViewBag.Title = "Manage schemes";
 }
 
-@section main_content {
-    <header class="hgroup">
-        <h1 class="heading-large">
-            Which scheme would you like to manage?
-        </h1>
-    </header>
 
-    @using (Html.BeginForm(actionName: "ManageSchemes", controllerName: "Scheme", method: FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
-        
-        <div class="form-group">
-            <table class="prsd-table">
-                <thead>
+<header class="hgroup">
+    <h1 class="heading-large">
+        Which scheme would you like to manage?
+    </h1>
+</header>
+
+@using (Html.BeginForm(actionName: "ManageSchemes", controllerName: "Scheme", method: FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
+
+    <div class="form-group">
+        <table class="prsd-table">
+            <thead>
                 <tr>
                     <th>Organisation name</th>
                     <th>Status</th>
                     <th>Select</th>
                 </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody>
                 @foreach (var scheme in Model.Schemes)
                 {
                     <tr>
@@ -34,12 +34,12 @@
                         <td>@Html.RadioButtonFor(m => m.Selected, @scheme.Id)</td>
                     </tr>
                 }
-                </tbody>
-            </table>
-        </div>
+            </tbody>
+        </table>
+    </div>
 
-        <div class="form-group">
-            <input type="submit" class="button" value="Continue"/>
-        </div>
-    }
+    <div class="form-group">
+        <input type="submit" class="button" value="Continue" />
+    </div>
 }
+

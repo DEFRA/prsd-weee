@@ -26,7 +26,7 @@
 
             var producerName = "Test Producer Name";
 
-            var result = ProducerNameWarning().Evaluate(new ProducerNameWarningData(new schemeType(), new producerType
+            var result = ProducerNameWarning().Evaluate(new ProducerNameWarning(new schemeType(), new producerType
             {
                 status = statusType.I,
                 producerBusiness = new producerBusinessType
@@ -49,7 +49,7 @@
 
             var producerName = "Test Producer Name";
 
-            var result = ProducerNameWarning().Evaluate(new ProducerNameWarningData(new schemeType(), new producerType
+            var result = ProducerNameWarning().Evaluate(new ProducerNameWarning(new schemeType(), new producerType
             {
                 status = statusType.A,
                 producerBusiness = new producerBusinessType
@@ -74,7 +74,7 @@
 
             var producerName = "Test Producer Name";
 
-            var result = ProducerNameWarning().Evaluate(new ProducerNameWarningData(new schemeType(), new producerType
+            var result = ProducerNameWarning().Evaluate(new ProducerNameWarning(new schemeType(), new producerType
             {
                 status = statusType.A,
                 producerBusiness = new producerBusinessType
@@ -97,7 +97,7 @@
 
             var producerName = "Test Producer Name";
 
-            var result = ProducerNameWarning().Evaluate(new ProducerNameWarningData(new schemeType(), new producerType
+            var result = ProducerNameWarning().Evaluate(new ProducerNameWarning(new schemeType(), new producerType
             {
                 status = statusType.A,
                 producerBusiness = new producerBusinessType

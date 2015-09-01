@@ -52,11 +52,7 @@
         private string AuthorityName(string email)
         {
             string authorityName = string.Empty;
-            string internalusersMode = Configuration.HasKey("Weee.InternalUsersMode") ? Configuration.GetKeyValue("Weee.InternalUsersMode") : null;
-            if (internalusersMode != null && internalusersMode.Equals("true"))
-            {
-                return "EA";
-            }
+            string internalUsersTestMode = Configuration.HasKey("Weee.InternalUsersTestMode") ? Configuration.GetKeyValue("Weee.InternalUsersTestMode") : null;
 
             switch (email)
             {
@@ -75,6 +71,13 @@
 
                 case "doeni.gov.uk":
                     authorityName = "NIEA";
+                    break;
+
+                default:
+                    if (internalUsersTestMode != null && internalUsersTestMode.Equals("true"))
+                    {
+                        return "EA";
+                    }
                     break;
             }
             return authorityName;

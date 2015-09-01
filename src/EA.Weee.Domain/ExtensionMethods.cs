@@ -9,6 +9,7 @@
     public static class ExtensionMethods
     {
         public static bool ElementsEqual<T>(this ICollection<T> first, ICollection<T> second)
+            where T : IComparable<T>
         {
             bool result;
 
@@ -32,7 +33,7 @@
                 firstList.Sort();
                 secondList.Sort();
 
-                result = first.SequenceEqual(secondList);
+                result = firstList.SequenceEqual(secondList);
             }
 
             return result;

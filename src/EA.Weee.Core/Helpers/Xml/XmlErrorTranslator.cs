@@ -15,6 +15,13 @@
         private const string InvalidChildElementPattern =
             @"^The element '([^']*)' in namespace '[^']*' has invalid child element '([^']*)' in namespace '[^']*'. List of possible elements expected: '[^']*' in namespace '[^']*'.$";
 
+        private const string ErrorInXmlDocumentPattern = @"^There is an error in XML document \(([0-9]*)\,\s([0-9]*)\)\.$";
+
+        public string MakeFriendlyErrorMessage(string message)
+        {
+            return MakeFriendlyErrorMessage(null, message, -1);
+        }
+
         public string MakeFriendlyErrorMessage(XElement sender, string message, int lineNumber)
         {
             string resultErrorMessage = message;
@@ -31,14 +38,19 @@
             {
                 resultErrorMessage = MakeFriendlyInvalidChildElementMessage(sender, message);
             }
+            else if (Regex.IsMatch(message, ErrorInXmlDocumentPattern))
+            {
+                resultErrorMessage = MakeFriendlyErrorInXmlDocumentMessage(message);
+            }
 
             var registrationNo = GetRegistrationNumber(sender);
-
             var registrationNoText = !string.IsNullOrEmpty(registrationNo) ? string.Format("Producer {0}: ", registrationNo) : string.Empty;
 
-            return string.Format("{0}{1} (Line {2}.)", registrationNoText, resultErrorMessage, lineNumber);
+            var lineNumberText = lineNumber > 0 ? string.Format(" (Line {0}.)", lineNumber) : string.Empty;
+
+            return string.Format("{0}{1}{2}", registrationNoText, resultErrorMessage, lineNumberText);
         }
-        
+
         private string MakeFriendlyGeneralConstraintFailureMessage(XElement sender, string exceptionMessage)
         {
             var constraintWhichFailed = Regex.Match(exceptionMessage, GeneralConstraintFailurePattern).Groups[1].ToString();
@@ -104,8 +116,20 @@
             return string.Format("The field {0} isn't expected here.", sender.Name.LocalName);
         }
 
+        private string MakeFriendlyErrorInXmlDocumentMessage(string message)
+        {
+            var lineNumber = Regex.Match(message, ErrorInXmlDocumentPattern).Groups[1].ToString();
+
+            return string.Format("{0} This can be caused by an error on this line, or before it. (Line {1}.)", message, lineNumber);
+        }
+
         private string GetRegistrationNumber(XElement sender)
         {
+            if (sender == null)
+            {
+                return string.Empty;
+            }
+
             var associatedProducerElement =
                 sender.AncestorsAndSelf().FirstOrDefault(e => e.Name.LocalName == "producer");
 

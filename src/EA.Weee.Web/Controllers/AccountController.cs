@@ -45,7 +45,7 @@
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult SignIn(string returnUrl)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -61,7 +61,7 @@
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model)
+        public async Task<ActionResult> SignIn(LoginViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -114,10 +114,10 @@
             return userInfo.Claims.Any(p => p.Item2 == Claims.CanAccessExternalArea);
         }
 
-        // POST: /Account/LogOff
+        // POST: /Account/SignOut
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
+        public ActionResult SignOut()
         {
             // I'm not happy about this code. I provided the IWeeeAuthorization interface
             // to avoid having to do exactly this...
@@ -128,11 +128,11 @@
 
             if (canAccessInternalArea)
             {
-                return RedirectToAction("Login", "Account", new { Area = "admin" });
+                return RedirectToAction("SignIn", "Account", new { Area = "admin" });
             }
             else
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("SignIn", "Account");
             }
         }
 

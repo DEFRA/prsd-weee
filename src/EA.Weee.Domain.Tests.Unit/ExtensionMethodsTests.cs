@@ -56,7 +56,7 @@
         [Fact]
         public void EqualElements_SameElementsDifferentOrder_ReturnsTrue()
         {
-            List<int> a = new List<int> { 1, 2, 3, 4, 5 };
+            List<int> a = new List<int> { 2, 1, 5, 3, 4 };
             List<int> b = new List<int> { 5, 3, 1, 4, 2 };
 
             Assert.True(a.ElementsEqual(b));

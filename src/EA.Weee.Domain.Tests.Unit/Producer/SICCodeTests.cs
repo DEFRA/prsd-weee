@@ -52,6 +52,41 @@
             Assert.NotEqual(sicCode, sicCode2);
         }
 
+        [Fact]
+        public void SICCode_CompareToNull_ReturnsOne()
+        {
+            var sicCode = SICCodeBuilder.NewSICCode;
+
+            Assert.Equal(1, sicCode.CompareTo(null));
+        }
+
+        [Fact]
+        public void SICCode_CompareToSICCodeSameName_ReturnsZero()
+        {
+            var sicCode = SICCodeBuilder.NewSICCode;
+            var sicCode2 = SICCodeBuilder.NewSICCode;
+
+            Assert.Equal(0, sicCode.CompareTo(sicCode2));
+        }
+
+        [Fact]
+        public void SICCode_CompareToSICCodeGreaterName_ReturnsMinusOne()
+        {
+            var sicCode = SICCodeBuilder.NewSICCode;
+            var sicCode2 = SICCodeBuilder.WithName("zzz");
+
+            Assert.Equal(-1, sicCode.CompareTo(sicCode2));
+        }
+
+        [Fact]
+        public void SICCode_CompareToSICCodeLesserName_ReturnsOne()
+        {
+            var sicCode = SICCodeBuilder.NewSICCode;
+            var sicCode2 = SICCodeBuilder.WithName("aaa");
+
+            Assert.Equal(1, sicCode.CompareTo(sicCode2));
+        }
+
         private class SICCodeBuilder
         {
             private string name = "name";

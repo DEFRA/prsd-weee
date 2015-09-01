@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Text;
+    using Core.Exceptions;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
     using Xunit;
@@ -29,6 +30,16 @@
             var result = XmlConverter().Convert(new ProcessXMLFile(Guid.NewGuid(), data));
 
             Assert.Equal(xml, result.ToString());  
+        }
+
+        [Fact]
+        public void InvalidXml_ThrowsXmlDeserializationFailureException()
+        {
+            var data = Encoding.UTF8.GetPreamble().Concat(Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"UTF-16\"?><root></root>")).ToArray();
+            var document = XmlConverter().Convert(new ProcessXMLFile(Guid.NewGuid(), data));
+
+            var exception = Assert.Throws<XmlDeserializationFailureException>(() => XmlConverter().Deserialize(document));
+            Assert.NotNull(exception.InnerException);
         }
 
         private XmlConverter XmlConverter()

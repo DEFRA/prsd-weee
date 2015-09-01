@@ -2,18 +2,19 @@
 @{
     ViewBag.Title = "Organisation Type";
 }
-<h1 class="heading-large">
-    About your Organisation
-</h1>
+
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-group">
-        <p class=" form-hint">
-            What type of organisation do you represent?<br/>
-            We use this information to check whether your organisation has already been created.
+    <header class="hgroup">
+        <h1 class="heading-large">
+            What type of organisation do you work for?
+        </h1>
+    </header>
+    <div style="margin-bottom: 1.66667em;">
+        <p>
+            We use the information you give us here to check through our database. This will help you to see whether you need to join an existing organisation, or create a new one.
         </p>
     </div>
 
