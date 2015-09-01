@@ -14,7 +14,7 @@
         [Fact]
         public void Partnership_EqualsNullParameter_ReturnsFalse()
         {
-            var partnership = PartnershipBuilder.NewPartnerShip;
+            var partnership = PartnershipBuilder.NewPartnership;
 
             Assert.NotEqual(partnership, null);
         }
@@ -22,7 +22,7 @@
         [Fact]
         public void Partnership_EqualsObjectParameter_ReturnsFalse()
         {
-            var partnership = PartnershipBuilder.NewPartnerShip;
+            var partnership = PartnershipBuilder.NewPartnership;
 
             Assert.NotEqual(partnership, new object());
         }
@@ -30,7 +30,7 @@
         [Fact]
         public void Partnership_EqualsSameInstance_ReturnsTrue()
         {
-            var partnership = PartnershipBuilder.NewPartnerShip;
+            var partnership = PartnershipBuilder.NewPartnership;
 
             Assert.Equal(partnership, partnership);
         }
@@ -38,8 +38,8 @@
         [Fact]
         public void Partnership_EqualsPartnershipSameDetails_ReturnsTrue()
         {
-            var partnership = PartnershipBuilder.NewPartnerShip;
-            var partnership2 = PartnershipBuilder.NewPartnerShip;
+            var partnership = PartnershipBuilder.NewPartnership;
+            var partnership2 = PartnershipBuilder.NewPartnership;
 
             Assert.Equal(partnership, partnership2);
         }
@@ -47,7 +47,7 @@
         [Fact]
         public void Partnership_EqualsPartnershipDifferentName_ReturnsFalse()
         {
-            var partnership = PartnershipBuilder.NewPartnerShip;
+            var partnership = PartnershipBuilder.NewPartnership;
             var partnership2 = PartnershipBuilder.WithName("name test");
 
             Assert.NotEqual(partnership, partnership2);
@@ -99,8 +99,8 @@
             private PartnershipBuilder()
             {
                 partners = new List<Partner>();
-                partners.Add(new Partner("Parner1"));
-                partners.Add(new Partner("Parner2"));
+                partners.Add(new Partner("Partner1"));
+                partners.Add(new Partner("Partner2"));
             }
 
             private Partnership Build()
@@ -108,7 +108,7 @@
                 return new Partnership(name, principalPlaceOfBusiness, partners);
             }
 
-            public static Partnership NewPartnerShip
+            public static Partnership NewPartnership
             {
                 get { return new PartnershipBuilder().Build(); }
             }

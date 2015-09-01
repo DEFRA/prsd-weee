@@ -1,25 +1,26 @@
-﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.Queries
+﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.QuerySets
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.XmlBusinessValidation;
     using DataAccess;
     using Domain.Producer;
 
-    public class Queries : IQueries
+    public class ProducerNameWarningQuerySet : IProducerNameWarningQuerySet
     {
-        private readonly IEnumerable<Producer> currentProducers;
-        private readonly IEnumerable<MigratedProducer> migratedProducers;
+        private readonly PersistentQueryResult<List<Producer>> currentProducers;
+        private readonly PersistentQueryResult<List<MigratedProducer>> migratedProducers; 
 
-        public Queries(WeeeContext context)
+        public ProducerNameWarningQuerySet(WeeeContext context)
         {
-            currentProducers = context.Producers.Where(p => p.IsCurrentForComplianceYear).ToList();
-            migratedProducers = context.MigratedProducers.ToList();
+            currentProducers = new PersistentQueryResult<List<Producer>>(() => context.Producers.Where(p => p.IsCurrentForComplianceYear).ToList());
+            migratedProducers = new PersistentQueryResult<List<MigratedProducer>>(() => context.MigratedProducers.ToList());
         }
 
         public Producer GetLatestProducerForComplianceYearAndScheme(string registrationNo, string schemeComplianceYear, Guid schemeOrgId)
         {
-            return currentProducers.FirstOrDefault(p =>
+            return currentProducers.Get().FirstOrDefault(p =>
                                                         p.RegistrationNumber == registrationNo
                                                         && p.MemberUpload.ComplianceYear == int.Parse(schemeComplianceYear)
                                                         && p.Scheme.OrganisationId == schemeOrgId);
@@ -27,7 +28,7 @@
 
         public Producer GetLatestProducerFromPreviousComplianceYears(string registrationNo)
         {
-            return currentProducers
+            return currentProducers.Get()
                     .Where(p => p.RegistrationNumber == registrationNo)
                     .OrderByDescending(p => p.MemberUpload.ComplianceYear)
                     .ThenBy(p => p.UpdatedDate)
@@ -36,7 +37,7 @@
 
         public MigratedProducer GetMigratedProducer(string registrationNo)
         {
-            return migratedProducers.SingleOrDefault(p => p.ProducerRegistrationNumber == registrationNo);
+            return migratedProducers.Get().SingleOrDefault(p => p.ProducerRegistrationNumber == registrationNo);
         }
     }
 }
