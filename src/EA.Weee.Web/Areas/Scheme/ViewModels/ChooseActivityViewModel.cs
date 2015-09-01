@@ -14,7 +14,7 @@
 
         public ChooseActivityViewModel()
         {
-            List<string> collection = new List<string> { PcsAction.ManagePcsMembers, PcsAction.ManageOrganisationUsers };
+            List<string> collection = new List<string> { PcsAction.ManagePcsMembers, PcsAction.ManageOrganisationUsers, PcsAction.ViewOrganisationDetails };
             ActivityOptions = new RadioButtonStringCollectionViewModel(collection);
         }
     }
