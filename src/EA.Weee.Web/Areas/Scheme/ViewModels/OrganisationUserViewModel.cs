@@ -14,6 +14,7 @@
             UserStatuses = RadioButtonStringCollectionViewModel.CreateFromEnum<UserStatus>();
         }
 
+        public Guid OrganisationUserId { get; set; }
         public string UserId { get; set; }
         public string Username { get; set; }
         public string Firstname { get; set; }
@@ -22,6 +23,7 @@
 
         public OrganisationUserViewModel(OrganisationUserData orgUser)
         {
+            OrganisationUserId = orgUser.Id;
             UserId = orgUser.UserId;
             Firstname = orgUser.User.FirstName;
             Lastname = orgUser.User.Surname;

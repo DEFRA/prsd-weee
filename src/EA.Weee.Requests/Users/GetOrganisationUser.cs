@@ -6,14 +6,11 @@
     
     public class GetOrganisationUser : IRequest<OrganisationUserData>
     {
-        public Guid OrganisationId { get; set; }
+        public Guid OrganisationUserId { get; set; }
 
-        public Guid UserId { get; set; }
-
-        public GetOrganisationUser(Guid organisationId, Guid userId)
+        public GetOrganisationUser(Guid organisationUserId)
         {
-            OrganisationId = organisationId;
-            UserId = userId;
+            OrganisationUserId = organisationUserId;
         }
     }
 }
