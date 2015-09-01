@@ -2,13 +2,16 @@
 @model EA.Weee.Web.Areas.Admin.ViewModels.InternalLoginViewModel
 
 @section main_content {
-    <h1 class="heading-large">
-        Sign in to your account
-    </h1>
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Sign in to your account
+        </h1>
+    </header>
+    <div style="margin-bottom: 1.66667em;">
+        <p>This area is reserved for the use of Authorising Authority staff only.</p>
+    </div>
 
-    <p class="form-hint">This area is reserved for the use of environmental agency staff only.</p>
-
-    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = Request.QueryString["ReturnUrl"] }))
+    @using (Html.BeginForm("SignIn", "Account", new { ReturnUrl = Request.QueryString["ReturnUrl"] }))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
@@ -24,9 +27,11 @@
             @Html.Gds().PasswordFor(m => m.Password)
         </div>
 
-        <div class="form-group">
+        <div>
             <input type="submit" value="Continue" class="button" />
         </div>
-        <p>@Html.ActionLink("Create a user account", "Create", "Account")</p>
+        <div>
+            <p>@Html.ActionLink("Create a user account", "Create", "Account")</p>
+        </div>
     }
 }

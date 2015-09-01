@@ -17,17 +17,17 @@
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-        
+
         <div class="form-group @Html.Gds().FormGroupClass(m => m.AccessibleOrganisations.Selected)">
             @Html.Gds().ValidationMessageFor(m => m.AccessibleOrganisations.Selected)
             @Html.EditorFor(m => m.AccessibleOrganisations)
         </div>
 
-        <div class="form-group">
+        <div>
             <button class="button" type="submit">Perform activities</button>
         </div>
 
-        <div class="form-group">
+        <div>
             <a href="@Url.Action("Type", "OrganisationRegistration")">Create or join another organisation</a>
         </div>
     }

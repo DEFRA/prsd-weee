@@ -9,9 +9,11 @@
     using Services;
     using System;
     using System.Collections.Generic;
+    using System.Net;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -58,9 +60,9 @@
         }
 
         [Fact]
-        public async void GetAuthorizationRequired_ChecksStatusOfScheme()
+        public async void GetAuthorisationRequired_ChecksStatusOfScheme()
         {
-            await MemberRegistrationController().AuthorizationRequired(A<Guid>._);
+            await MemberRegistrationController().AuthorisationRequired(A<Guid>._);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -72,7 +74,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Pending);
 
-            var result = await MemberRegistrationController().AuthorizationRequired(A<Guid>._);
+            var result = await MemberRegistrationController().AuthorisationRequired(A<Guid>._);
 
             Assert.IsType<ViewResult>(result);
 
@@ -87,7 +89,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Rejected);
 
-            var result = await MemberRegistrationController().AuthorizationRequired(A<Guid>._);
+            var result = await MemberRegistrationController().AuthorisationRequired(A<Guid>._);
 
             Assert.IsType<ViewResult>(result);
 
@@ -102,7 +104,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Approved);
 
-            var result = await MemberRegistrationController().AuthorizationRequired(A<Guid>._);
+            var result = await MemberRegistrationController().AuthorisationRequired(A<Guid>._);
 
             Assert.IsType<RedirectToRouteResult>(result);
 
@@ -148,14 +150,27 @@
         }
 
         [Fact]
-        public async void PostAddOrAmendMembers_ModelIsInvalid_ReturnsView()
+        public async void PostAddOrAmendMembers_NotAjaxRequest_ModelIsInvalid_ReturnsView()
         {
-            var controller = MemberRegistrationController();
+            var controller = GetRealMemberRegistrationControllerWithFakeContext();
+
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
 
             var result = await controller.AddOrAmendMembers(A<Guid>._, new AddOrAmendMembersViewModel());
 
             Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public async void PostAddOrAmendMembers_AjaxRequest_ModelIsInvalid_ReturnsError()
+        {
+            var controller = GetRealMemberRegistrationControllerWithAjaxRequest();
+
+            controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
+
+            var result = await controller.AddOrAmendMembers(A<Guid>._, new AddOrAmendMembersViewModel());
+
+            Assert.IsType<HttpStatusCodeResult>(result);
         }
 
         [Fact]
@@ -203,19 +218,35 @@
         }
 
         [Fact]
-        public async void PostAddOrAmendMembers_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
+        public async void PostAddOrAmendMembers_NotAjaxRequest_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
         {
             var validationId = Guid.NewGuid();
-
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessXMLFile>._))
                 .Returns(validationId);
 
-            var result = await MemberRegistrationController().AddOrAmendMembers(A<Guid>._, new AddOrAmendMembersViewModel());
+            var controller = GetRealMemberRegistrationControllerWithFakeContext();
+
+            var result = await controller.AddOrAmendMembers(A<Guid>._, new AddOrAmendMembersViewModel());
+
             var redirect = (RedirectToRouteResult)result;
 
             Assert.Equal("ViewErrorsAndWarnings", redirect.RouteValues["action"]);
             Assert.Equal("MemberRegistration", redirect.RouteValues["controller"]);
             Assert.Equal(validationId, redirect.RouteValues["memberUploadId"]);
+        }
+
+        [Fact]
+        public async void PostAddOrAmendMembers_AjaxRequest_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
+        {
+            var validationId = Guid.NewGuid();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessXMLFile>._))
+                .Returns(validationId);
+
+            var controller = GetRealMemberRegistrationControllerWithAjaxRequest();
+
+            var result = await controller.AddOrAmendMembers(A<Guid>._, new AddOrAmendMembersViewModel());
+
+            Assert.IsType<JsonResult>(result);
         }
 
         [Fact]
@@ -335,7 +366,7 @@
         {
             var fakeController = BuildFakeMemberRegistrationController();
             var fakeActionParameters = ActionExecutingContextHelper.FakeActionParameters();
-            var fakeActionDescriptor = ActionExecutingContextHelper.FakeActionDescriptorWithActionName("AuthorizationRequired");
+            var fakeActionDescriptor = ActionExecutingContextHelper.FakeActionDescriptorWithActionName("AuthorisationRequired");
 
             ActionExecutingContext context = new ActionExecutingContext();
             context.ActionParameters = fakeActionParameters;
@@ -380,7 +411,7 @@
 
             var redirect = (RedirectToRouteResult)context.Result;
 
-            Assert.Equal("AuthorizationRequired", redirect.RouteValues["action"]);
+            Assert.Equal("AuthorisationRequired", redirect.RouteValues["action"]);
             Assert.Equal(pcsId, redirect.RouteValues["pcsId"]);
         }
 
@@ -423,6 +454,25 @@
                 .Returns(memberUploadErrorDatas);
 
             return await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
+        }
+
+        private MemberRegistrationController GetRealMemberRegistrationControllerWithFakeContext()
+        {
+            var controller = MemberRegistrationController();
+            var controllerContext = A.Fake<HttpContextBase>();
+            controller.ControllerContext = new ControllerContext(controllerContext, new RouteData(), controller);
+            return controller;
+        }
+
+        private MemberRegistrationController GetRealMemberRegistrationControllerWithAjaxRequest()
+        {
+            var controller = MemberRegistrationController();
+            var controllerContext = A.Fake<HttpContextBase>();
+            controller.ControllerContext = new ControllerContext(controllerContext, new RouteData(), controller);
+            var request = A.Fake<HttpRequestBase>();
+            A.CallTo(() => request.Headers).Returns(new WebHeaderCollection { { "X-Requested-With", "XMLHttpRequest" } });
+            A.CallTo(() => controllerContext.Request).Returns(request);
+            return controller;
         }
 
         private class FakeMemberRegistrationController : MemberRegistrationController

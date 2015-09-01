@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
+    using System;
     using System.Linq;
     using System.Text;
     using System.Xml.Linq;
     using System.Xml.Serialization;
+    using Core.Exceptions;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
 
@@ -24,7 +26,14 @@
 
         public schemeType Deserialize(XDocument xdoc)
         {
-            return (schemeType)new XmlSerializer(typeof(schemeType)).Deserialize(xdoc.CreateReader());
+            try
+            {
+                return (schemeType)new XmlSerializer(typeof(schemeType)).Deserialize(xdoc.CreateReader());
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new XmlDeserializationFailureException(ex);
+            }
         }
 
         private byte[] RemoveUtf8Bom(byte[] data)

@@ -38,7 +38,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> AuthorizationRequired(Guid pcsId)
+        public async Task<ActionResult> AuthorisationRequired(Guid pcsId)
         {
             using (var client = apiClient())
             {
@@ -79,15 +79,32 @@
         {
             if (!ModelState.IsValid)
             {
-                await SetBreadcrumb(pcsId, "Manage scheme");
-                return View(model);
+                if (Request.IsAjaxRequest())
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+                else
+                {
+                    await SetBreadcrumb(pcsId, "Manage scheme");
+                    return View(model);
+                }
             }
 
             var fileData = fileConverter.Convert(model.File);
+
+            Guid validationId;
+                
             using (var client = apiClient())
             {
-                var validationId = await client.SendAsync(User.GetAccessToken(), new ProcessXMLFile(pcsId, fileData));
+                validationId = await client.SendAsync(User.GetAccessToken(), new ProcessXMLFile(pcsId, fileData));
+            }
 
+            if (Request.IsAjaxRequest())
+            {
+                return Json(validationId);
+            }
+            else
+            {
                 return RedirectToAction("ViewErrorsAndWarnings", "MemberRegistration",
                     new { area = "Scheme", memberUploadId = validationId });
             }
@@ -191,7 +208,7 @@
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext.ActionDescriptor.ActionName == "AuthorizationRequired")
+            if (filterContext.ActionDescriptor.ActionName == "AuthorisationRequired")
             {
                 base.OnActionExecuting(filterContext);
             }
@@ -213,7 +230,7 @@
 
                     if (status != SchemeStatus.Approved)
                     {
-                        filterContext.Result = RedirectToAction("AuthorizationRequired", new { pcsID = pcsId });
+                        filterContext.Result = RedirectToAction("AuthorisationRequired", new { pcsID = pcsId });
                     }
                     else
                     {

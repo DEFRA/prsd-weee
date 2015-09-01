@@ -81,6 +81,34 @@
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }
 
+        [Fact]
+        public void XmlErrorTranslator_ErrorInXmlDocument_CorrectMessage()
+        {
+            const string lineNumber = "57";
+
+            string providedException = string.Format("There is an error in XML document ({0}, 109).", lineNumber);
+            string expectedFriendlyMessage = string.Format("{0} This can be caused by an error on this line, or before it. (Line {1}.)", providedException, lineNumber);
+
+            var translator = new XmlErrorTranslator();
+
+            var friendlyMessage = translator.MakeFriendlyErrorMessage(providedException);
+
+            Assert.Equal(expectedFriendlyMessage, friendlyMessage);
+        }
+
+        [Fact]
+        public void XmlErrorTranslator_DoesntMatchAnything_OriginalMessage()
+        {
+            string providedException = "Here is some random text. There's no way this'll match any regex, surely.";
+            string expectedFriendlyMessage = providedException;
+
+            var translator = new XmlErrorTranslator();
+
+            var friendlyMessage = translator.MakeFriendlyErrorMessage(providedException);
+
+            Assert.Equal(expectedFriendlyMessage, friendlyMessage);
+        }
+
         private string AddUniversalMessageParts(string specificMessage)
         {
             var registrationNoText = string.Format("Producer {0}: ", TestRegistrationNo);

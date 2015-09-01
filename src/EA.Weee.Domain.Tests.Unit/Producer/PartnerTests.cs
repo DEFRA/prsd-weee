@@ -53,6 +53,41 @@
             Assert.NotEqual(partner, partner2);
         }
 
+        [Fact]
+        public void Partner_CompareToNull_ReturnsOne()
+        {
+            var partner = PartnerBuilder.NewPartner;
+
+            Assert.Equal(1, partner.CompareTo(null));
+        }
+
+        [Fact]
+        public void Partner_CompareToPartnerSameName_ReturnsZero()
+        {
+            var partner = PartnerBuilder.NewPartner;
+            var partner2 = PartnerBuilder.NewPartner;
+
+            Assert.Equal(0, partner.CompareTo(partner2));
+        }
+
+        [Fact]
+        public void Partner_CompareToPartnerGreaterName_ReturnsMinusOne()
+        {
+            var partner = PartnerBuilder.NewPartner;
+            var partner2 = PartnerBuilder.WithName("zzz");
+
+            Assert.Equal(-1, partner.CompareTo(partner2));
+        }
+
+        [Fact]
+        public void Partner_CompareToPartnerLesserName_ReturnsOne()
+        {
+            var partner = PartnerBuilder.NewPartner;
+            var partner2 = PartnerBuilder.WithName("aaa");
+
+            Assert.Equal(1, partner.CompareTo(partner2));
+        }
+
         private class PartnerBuilder
         {
             private string name = "name";
