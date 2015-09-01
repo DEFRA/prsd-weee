@@ -8,6 +8,7 @@
     {
         [Required(ErrorMessage = "You must choose a file")]
         [HttpPostedFileType("text/xml")]
+        [Display(Name = "Choose a file")]
         public HttpPostedFileBase File { get; set; }
     }
 }
