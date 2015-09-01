@@ -5,5 +5,7 @@
     public class AuthorizationRequiredViewModel
     {
         public SchemeStatus Status { get; set; }
+
+        public bool ShowLinkToSelectOrganisation { get; set; }
     }
 }
