@@ -1,22 +1,21 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.XmlValidation.BusinessValidation.Queries
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.XmlValidation.BusinessValidation.QuerySets
 {
     using System;
     using System.Collections.Generic;
     using DataAccess;
     using Domain;
     using Domain.Producer;
-    using Domain.Scheme;
     using FakeItEasy;
-    using Helpers;   
-    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.Queries;
+    using Helpers;
+    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.QuerySets;
     using Xunit;
 
-    public class QueriesTests
+    public class ProducerNameWarningQuerySetTests
     {
         private readonly WeeeContext context;
         private readonly DbContextHelper helper;
 
-        public QueriesTests()
+        public ProducerNameWarningQuerySetTests()
         {
             context = A.Fake<WeeeContext>();
             helper = new DbContextHelper();
@@ -39,7 +38,7 @@
                     producer
                 }));
 
-            var result = Queries().GetLatestProducerForComplianceYearAndScheme(registrationNumber, complianceYear.ToString(), schemeOrganisationId);
+            var result = ProducerNameWarningQuerySet().GetLatestProducerForComplianceYearAndScheme(registrationNumber, complianceYear.ToString(), schemeOrganisationId);
 
             Assert.Equal(producer, result);
         }
@@ -62,7 +61,7 @@
                     producer
                 }));
 
-            var result = Queries().GetLatestProducerForComplianceYearAndScheme(registrationNumber, thisComplianceYear.ToString(), schemeOrganisationId);
+            var result = ProducerNameWarningQuerySet().GetLatestProducerForComplianceYearAndScheme(registrationNumber, thisComplianceYear.ToString(), schemeOrganisationId);
            
             Assert.Null(result);
         }
@@ -85,16 +84,16 @@
                     producer
                 }));
 
-            var result = Queries().GetLatestProducerForComplianceYearAndScheme(thisPrn, complianceYear.ToString(), schemeOrganisationId);
+            var result = ProducerNameWarningQuerySet().GetLatestProducerForComplianceYearAndScheme(thisPrn, complianceYear.ToString(), schemeOrganisationId);
 
             Assert.Null(result);
         }
 
         // TODO: Tests for the other queries
 
-        private Queries Queries()
+        private ProducerNameWarningQuerySet ProducerNameWarningQuerySet()
         {
-            return new Queries(context);
+            return new ProducerNameWarningQuerySet(context);
         }
     }
 }

@@ -3,12 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.XmlBusinessValidation;
     using DataAccess;
     using Domain;
-    using Domain.Producer;
     using Extensions;
     using FluentValidation;
-    using Queries;
     using Rules;
 
     public class SchemeTypeValidator : AbstractValidator<schemeType>
@@ -16,7 +15,7 @@
         public const string NonDataValidation = "NonDataValidation";
         public const string DataValidation = "DataValidation";
        
-        public SchemeTypeValidator(WeeeContext context, Guid organisationId, IRules rules)
+        public SchemeTypeValidator(WeeeContext context, Guid organisationId, IRuleSelector ruleSelector)
         {
             RuleSet(DataValidation, () =>
             {
@@ -128,7 +127,7 @@
 
                 //Producer Name change warning
                 RuleForEach(st => st.producerList)
-                    .Must((st, producer) => rules.ShouldNotWarnOfProducerNameChange(st, producer, organisationId))
+                    .Must((st, producer) => ruleSelector.GetRule<ProducerNameWarning>().Evaluate(new ProducerNameWarning(st, producer, organisationId)))
                     .WithState(st => ErrorLevel.Warning)
                     .WithMessage(
                      "The name of the producer with registration number {0} will be amended to {1}.",

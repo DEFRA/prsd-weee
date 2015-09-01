@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers
 {
     using Autofac;
+    using Core.XmlBusinessValidation;
     using Prsd.Core.Autofac;
     using Prsd.Core.Decorators;
     using Prsd.Core.Mediator;
@@ -36,6 +37,10 @@
             // Xml Upload
             builder.RegisterAssemblyTypes(GetType().Assembly)
                 .Where(t => t.Namespace.Contains("MemberRegistration"))
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes()
+                .AsClosedTypesOf(typeof(IRule<>))
                 .AsImplementedInterfaces();
 
             // Register singleton types relating to PCS member upload testing.
