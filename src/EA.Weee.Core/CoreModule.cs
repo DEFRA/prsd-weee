@@ -2,6 +2,7 @@
 {
     using Autofac;
     using Configuration.EmailRules;
+    using XmlBusinessValidation;
 
     public class CoreModule : Module
     {
@@ -15,6 +16,9 @@
             builder.RegisterAssemblyTypes(this.GetType().Assembly)
                 .Where(t => t.Namespace.Contains("Helpers"))
                 .AsImplementedInterfaces();
+
+            // XML rules
+            builder.RegisterType<RuleSelector>().As<IRuleSelector>();
         }
     }
 }
