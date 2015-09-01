@@ -5,9 +5,9 @@
 
     public class MigratedProducer : Entity
     {
-        public string ProducerRegistrationNumber { get; private set; }
+        public virtual string ProducerRegistrationNumber { get; private set; }
 
-        public string ProducerName { get; private set; }
+        public virtual string ProducerName { get; private set; }
 
         protected MigratedProducer()
         {          
