@@ -52,6 +52,41 @@
             Assert.NotEqual(brandName, brandName2);
         }
 
+        [Fact]
+        public void BrandName_CompareToNull_ReturnsOne()
+        {
+            var brandName = BrandNameBuilder.NewBrandName;
+
+            Assert.Equal(1, brandName.CompareTo(null));
+        }
+
+        [Fact]
+        public void BrandName_CompareToBrandNameSameName_ReturnsZero()
+        {
+            var brandName = BrandNameBuilder.NewBrandName;
+            var brandName2 = BrandNameBuilder.NewBrandName;
+
+            Assert.Equal(0, brandName.CompareTo(brandName2));
+        }
+
+        [Fact]
+        public void BrandName_CompareToBrandNameGreaterName_ReturnsMinusOne()
+        {
+            var brandName = BrandNameBuilder.NewBrandName;
+            var brandName2 = BrandNameBuilder.WithName("zzz");
+
+            Assert.Equal(-1, brandName.CompareTo(brandName2));
+        }
+
+        [Fact]
+        public void BrandName_CompareToBrandNameLesserName_ReturnsOne()
+        {
+            var brandName = BrandNameBuilder.NewBrandName;
+            var brandName2 = BrandNameBuilder.WithName("aaa");
+
+            Assert.Equal(1, brandName.CompareTo(brandName2));
+        }
+
         private class BrandNameBuilder
         {
             private string name = "name";
