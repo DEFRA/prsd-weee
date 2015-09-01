@@ -1,0 +1,118 @@
+﻿@using EA.Weee.Core.Organisations
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ViewOrganisationDetailsViewModel
+@{
+    ViewBag.Title = "View Organisation Details";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">Viewing organisation details</h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "ViewOrganisationDetails", controllerName: "Home", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="grey-text" style="width: 250px">Organisation type</td>
+                        <td class="black-text">
+                            @if (Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+                            {
+                                <label>Sole trader or individual</label>
+                            }
+                            else if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership)
+                            {
+                                <label>Partnership</label>
+                            }
+                            else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+                            {
+                                <label>Registered company</label>
+                            }
+                        </td>
+                    </tr>
+                    @if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+                    {
+                        <tr>
+                            <td class="grey-text">Company name</td>
+                            <td class="black-text">@Model.OrganisationData.Name</td>
+                        </tr>
+                        <tr>
+                            <td class="grey-text">Company number</td>
+                            <td class="black-text">@Model.OrganisationData.CompanyRegistrationNumber</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td class="grey-text">Business trading name</td>
+                        <td class="black-text">@Model.OrganisationData.TradingName</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+        {
+            <h2 class="heading-medium">Principal place of business details</h2>
+        }
+        else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+        {
+            <h2 class="heading-medium">Registered office details</h2>
+        }
+
+        <div class="form-group">
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="grey-text" style="width: 250px">Address line 1</td>
+                        <td class="black-text">@Model.OrganisationData.BusinessAddress.Address1</td>
+                    </tr>
+                    <tr>
+                        <td class="grey-text">Address line 2</td>
+                        <td class="black-text">@Model.OrganisationData.BusinessAddress.Address2</td>
+                    </tr>
+                    <tr>
+                        <td class="grey-text">Town or city</td>
+                        <td class="black-text">@Model.OrganisationData.BusinessAddress.TownOrCity</td>
+                    </tr>
+                    <tr>
+                        <td class="grey-text">County or region</td>
+                        <td class="black-text">@Model.OrganisationData.BusinessAddress.CountyOrRegion</td>
+                    </tr>
+                    <tr>
+                        <td class="grey-text">Postcode</td>
+                        <td class="black-text">@Model.OrganisationData.BusinessAddress.Postcode</td>
+                    </tr>
+                    <tr>
+                        <td class="grey-text">Country</td>
+                        <td class="black-text">@Model.OrganisationData.BusinessAddress.CountryName</td>
+                    </tr>
+                    <tr>
+                        <td class="grey-text">Telephone number</td>
+                        <td class="black-text">@Model.OrganisationData.BusinessAddress.Telephone</td>
+                    </tr>
+                    <tr>
+                        <td class="grey-text">Email address</td>
+                        <td class="black-text">@Model.OrganisationData.BusinessAddress.Email</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+    }
+}
