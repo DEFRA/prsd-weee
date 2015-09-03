@@ -119,7 +119,7 @@
                         ou =>
                             new KeyValuePair<string, Guid>(
                                 ou.User.FirstName + " " + ou.User.Surname + " (" +
-                                ou.UserStatus.ToString() + ")", new Guid(ou.UserId)));
+                                ou.UserStatus.ToString() + ")", ou.Id));
 
                 var orgUserRadioButtons = new StringGuidRadioButtons(orgUsersKeyValuePairs);
                 model.OrganisationUsers = orgUserRadioButtons;
@@ -141,11 +141,11 @@
             }
 
             return RedirectToAction("ManageOrganisationUser", "Home",
-                   new { area = "Scheme", pcsId, userId = model.OrganisationUsers.SelectedValue });
+                   new { area = "Scheme", pcsId, organisationUserId = model.OrganisationUsers.SelectedValue });
         }
 
         [HttpGet]
-        public async Task<ActionResult> ManageOrganisationUser(Guid pcsId, Guid userId)
+        public async Task<ActionResult> ManageOrganisationUser(Guid pcsId, Guid organisationUserId)
         {
             await SetBreadcrumb(pcsId, "Manage users");
 
@@ -159,7 +159,7 @@
                     throw new ArgumentException("No organisation found for supplied organisation Id", "pcsId");
                 }
 
-                var orgUser = await client.SendAsync(User.GetAccessToken(), new GetOrganisationUser(pcsId, userId));
+                var orgUser = await client.SendAsync(User.GetAccessToken(), new GetOrganisationUser(organisationUserId));
                 var model = new OrganisationUserViewModel(orgUser);
                 model.UserStatuses = GetUserPossibleStatusToBeChanged(model.UserStatuses, model.UserStatus);
                 model.UserStatuses.PossibleValues.Add(DoNotChange);
@@ -184,7 +184,7 @@
                 {
                     var userStatus = model.UserStatuses.SelectedValue.GetValueFromDisplayName<UserStatus>();
                     await
-                        client.SendAsync(User.GetAccessToken(), new UpdateOrganisationUserStatus(model.UserId, userStatus, pcsId));
+                        client.SendAsync(User.GetAccessToken(), new UpdateOrganisationUserStatus(model.OrganisationUserId, userStatus));
                 }
             }
 
