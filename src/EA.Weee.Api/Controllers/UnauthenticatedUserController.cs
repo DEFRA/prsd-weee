@@ -1,30 +1,38 @@
 ﻿namespace EA.Weee.Api.Controllers
 {
-    using System;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using System.Web.Http;
     using Client.Entities;
     using DataAccess.Identity;
+    using EA.Weee.Email;
     using Identity;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Prsd.Core.Domain;
+    using System;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Http;
 
     [RoutePrefix("api/UnauthenticatedUser")]
     public class UnauthenticatedUserController : ApiController
     {
         private readonly ApplicationUserManager userManager;
         private readonly IUserContext userContext;
+        private readonly IWeeeEmailService emailService;
 
-        public UnauthenticatedUserController(ApplicationUserManager userManager, IUserContext userContext)
+        public UnauthenticatedUserController(
+            ApplicationUserManager userManager,
+            IUserContext userContext,
+            IWeeeEmailService emailService)
         {
             this.userManager = userManager;
             this.userContext = userContext;
+            this.emailService = emailService;
         }
 
         // POST api/UnauthenticatedUser/CreateUser
         [AllowAnonymous]
+        [HttpPost]
         [Route("CreateUser")]
         public async Task<IHttpActionResult> CreateUser(UserCreationData model)
         {
@@ -58,18 +66,12 @@
                 return GetErrorResult(result);
             }
 
+            bool emailSent = await SendActivationEmail(user.Id, user.Email, model.ActivationBaseUrl);
+
             return Ok(user.Id);
         }
 
-        [HttpGet]
-        [Route("GetUserAccountActivationToken")]
-        public async Task<string> GetUserAccountActivationToken()
-        {
-            var token = await userManager.GenerateEmailConfirmationTokenAsync(userContext.UserId.ToString());
-
-            return token;
-        }
-
+        [AllowAnonymous]
         [HttpPost]
         [Route("ActivateUserAccount")]
         public async Task<IHttpActionResult> ActivateUserAccount(ActivatedUserAccountData model)
@@ -77,6 +79,42 @@
             var result = await userManager.ConfirmEmailAsync(model.Id.ToString(), model.Code);
 
             return Ok(result.Succeeded);
+        }
+
+        [HttpGet]
+        [Route("GetUserAccountActivationToken")]
+        public async Task<string> GetUserAccountActivationToken()
+        {
+            string userId = userContext.UserId.ToString();
+
+            return await userManager.GenerateEmailConfirmationTokenAsync(userId);
+        }
+
+        [HttpPost]
+        [Route("ResendActivationEmail")]
+        public async Task<IHttpActionResult> ResendActivationEmail(ResendActivationEmailRequest model)
+        {
+            string userId = userContext.UserId.ToString();
+            
+            string emailAddress = await userManager.GetEmailAsync(userId);
+
+            bool emailSent = await SendActivationEmail(userId, emailAddress, model.ActivationBaseUrl);
+            
+            return Ok(emailSent);
+        }
+
+        private async Task<bool> SendActivationEmail(string userId, string emailAddress, string activationBaseUrl)
+        {
+            string activationToken = await userManager.GenerateEmailConfirmationTokenAsync(userId);
+
+            var uriBuilder = new UriBuilder(activationBaseUrl);
+            uriBuilder.Path += "/" + userId;
+            var parameters = HttpUtility.ParseQueryString(string.Empty);
+            parameters["code"] = activationToken;
+            uriBuilder.Query = parameters.ToString();
+            string activationUrl = uriBuilder.Uri.ToString();
+
+            return await emailService.SendActivateUserAccount(emailAddress, activationUrl);
         }
 
         [HttpPost]
