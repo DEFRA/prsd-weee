@@ -13,17 +13,17 @@
 
         public string CreateUniqueRandomVersionOfPrn(PrnAsComponents prnAsComponents)
         {
-            int firstLetterOrdinal = prnAsComponents.FirstLetter.GetOrdinalValue();
-            int secondLetterOrdinal = prnAsComponents.SecondLetter.GetOrdinalValue();
-            int thirdLetterOrdinal = prnAsComponents.ThirdLetter.GetOrdinalValue();
-            int fourthLetterOrdinal = prnAsComponents.FourthLetter.GetOrdinalValue();
+            int firstLetterOrdinal = prnAsComponents.FirstLetter.OrdinalValue();
+            int secondLetterOrdinal = prnAsComponents.SecondLetter.OrdinalValue();
+            int thirdLetterOrdinal = prnAsComponents.ThirdLetter.OrdinalValue();
+            int fourthLetterOrdinal = prnAsComponents.FourthLetter.OrdinalValue();
 
             // use quadratic residue to get a nice unique pseudorandomised version
             int randomisedNumber = quadraticResidueHelper.ForFourDigitNumber(prnAsComponents.Number);
-            char randomisedFirstLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(firstLetterOrdinal) + prnAsComponents.FirstLetter.Limit);
-            char randomisedSecondLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(secondLetterOrdinal) + prnAsComponents.SecondLetter.Limit);
-            char randomisedThirdLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(thirdLetterOrdinal) + prnAsComponents.ThirdLetter.Limit);
-            char randomisedFourthLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(fourthLetterOrdinal) + prnAsComponents.FourthLetter.Limit);
+            char randomisedFirstLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(firstLetterOrdinal) + prnAsComponents.FirstLetter.BaseChar);
+            char randomisedSecondLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(secondLetterOrdinal) + prnAsComponents.SecondLetter.BaseChar);
+            char randomisedThirdLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(thirdLetterOrdinal) + prnAsComponents.ThirdLetter.BaseChar);
+            char randomisedFourthLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(fourthLetterOrdinal) + prnAsComponents.FourthLetter.BaseChar);
 
             // there's a few characters we want to skip to avoid confusion with numbers
             if (randomisedFirstLetter >= 'I')
