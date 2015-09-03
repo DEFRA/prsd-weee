@@ -15,6 +15,7 @@
         @Html.AntiForgeryToken()
 
         @Html.HiddenFor(m => m.UserId)
+        @Html.HiddenFor(m => m.OrganisationUserId)
         @Html.HiddenFor(m => m.Firstname)
         @Html.HiddenFor(m => m.Lastname)
         @Html.HiddenFor(m => m.Username)
