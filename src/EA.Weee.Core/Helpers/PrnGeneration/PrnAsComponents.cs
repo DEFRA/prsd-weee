@@ -7,21 +7,66 @@
     {
         public ushort Number;
 
-        public char FirstLetter;
+        public class LetterComponent
+        {
+            public int Offset { get; private set; }
+            public uint Mask { get; private set; }
+            public char Limit { get; private set; }
 
-        public char SecondLetter;
+            private char letter;
 
-        public char ThirdLetter;
+            public LetterComponent(int offset, uint mask, char limit)
+            {
+                Offset = offset;
+                Mask = mask;
+                Limit = limit;
+            }
 
-        public char FourthLetter;
+            public void SetLetterFromSeed(uint seed)
+            {
+                letter = (char)(((seed & Mask) >> Offset) + Limit);
+            }
+
+            public void IncrementLetter()
+            {
+                letter++;
+            }
+
+            public int GetLetterIntValue()
+            {
+                return (letter - Limit) << Offset;
+            }
+
+            public char GetOrdinalValue()
+            {
+                return (char)(letter - Limit);
+            }
+
+            public bool OverflowsOutOfAllowableRange()
+            {
+                if (letter >= Limit + QuadraticResidueHelper.CharRange)
+                {
+                    letter = Limit;
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        public LetterComponent FirstLetter = new LetterComponent(28, 0xF0000000, 'M');
+        public LetterComponent SecondLetter = new LetterComponent(24, 0x0F000000, 'M');
+        public LetterComponent ThirdLetter = new LetterComponent(20, 0x00F00000, 'A');
+        public LetterComponent FourthLetter = new LetterComponent(16, 0x000F0000, 'A');
 
         public PrnAsComponents(uint seed)
         {
             Number = NumberComponentOfSeed(seed);
-            FirstLetter = (char)(LetterComponentOfSeed(seed, 0xF0000000, 28) + 'A');
-            SecondLetter = (char)(LetterComponentOfSeed(seed, 0x0F000000, 24) + 'A');
-            ThirdLetter = (char)(LetterComponentOfSeed(seed, 0x00F00000, 20) + 'M');
-            FourthLetter = (char)(LetterComponentOfSeed(seed, 0x000F0000, 16) + 'M');
+
+            FirstLetter.SetLetterFromSeed(seed);
+            SecondLetter.SetLetterFromSeed(seed);
+            ThirdLetter.SetLetterFromSeed(seed);
+            FourthLetter.SetLetterFromSeed(seed);
 
             PutComponentsInCorrectRanges();
         }
@@ -39,18 +84,19 @@
 
         public uint ToSeedValue()
         {
-            return (uint)(Number | (FirstLetter - 'A') << 28 | (SecondLetter - 'A') << 24 | (ThirdLetter - 'M') << 20 | (FourthLetter - 'M') << 16);
+            return
+                (uint)
+                (Number
+                | FirstLetter.GetLetterIntValue()
+                | SecondLetter.GetLetterIntValue()
+                | ThirdLetter.GetLetterIntValue()
+                | FourthLetter.GetLetterIntValue());
         }
 
         private static ushort NumberComponentOfSeed(uint seed)
         {
             const uint NumberMask = 0x0000FFFF;
             return (ushort)(seed & NumberMask);
-        }
-
-        private static char LetterComponentOfSeed(uint seed, uint mask, int offset)
-        {
-            return (char)((seed & mask) >> offset);
         }
 
         /// <summary>
@@ -62,39 +108,28 @@
             if (Number >= QuadraticResidueHelper.NumberRange)
             {
                 Number = 0;
-                FourthLetter++;
+                FourthLetter.IncrementLetter();
             }
 
-            if (OverflowOccursWhenPuttingCharacterInRange(ref FourthLetter, 'M', QuadraticResidueHelper.CharRange))
+            if (FourthLetter.OverflowsOutOfAllowableRange())
             {
-                ThirdLetter++;
+                ThirdLetter.IncrementLetter();
             }
 
-            if (OverflowOccursWhenPuttingCharacterInRange(ref ThirdLetter, 'M', QuadraticResidueHelper.CharRange))
+            if (ThirdLetter.OverflowsOutOfAllowableRange())
             {
-                SecondLetter++;
+                SecondLetter.IncrementLetter();
             }
 
-            if (OverflowOccursWhenPuttingCharacterInRange(ref SecondLetter, 'A', QuadraticResidueHelper.CharRange))
+            if (SecondLetter.OverflowsOutOfAllowableRange())
             {
-                FirstLetter++;
+                FirstLetter.IncrementLetter();
             }
 
-            if (OverflowOccursWhenPuttingCharacterInRange(ref FirstLetter, 'A', QuadraticResidueHelper.CharRange))
+            if (FirstLetter.OverflowsOutOfAllowableRange())
             {
                 throw new ArgumentOutOfRangeException("We've hit the limit on the number of PRNs we can generate with this scheme.");
             }
-        }
-
-        private bool OverflowOccursWhenPuttingCharacterInRange(ref char character, char lowerLimit, int allowableRangeSize)
-        {
-            if (character >= lowerLimit + allowableRangeSize)
-            {
-                character = lowerLimit;
-                return true;
-            }
-
-            return false;
         }
     }
 }
