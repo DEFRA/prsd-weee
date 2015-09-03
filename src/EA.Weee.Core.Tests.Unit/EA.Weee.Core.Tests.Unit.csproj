@@ -76,6 +76,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Email\WeeeEmailServiceTests.cs" />
     <Compile Include="Helpers\CoreEnumeration.cs" />
     <Compile Include="Helpers\DomainEnumeration.cs" />
     <Compile Include="Helpers\ExtensionsTests.cs" />
@@ -89,9 +90,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Prsd.Email\EA.Prsd.Email.csproj">
+      <Project>{3b5cb044-3b51-44eb-af94-1327b9e5e70f}</Project>
+      <Name>EA.Prsd.Email</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
       <Project>{75efee66-9358-4de4-9a84-e7191eec7db8}</Project>
       <Name>EA.Weee.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
+      <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>
+      <Name>EA.Weee.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Email\EA.Weee.Email.csproj">
+      <Project>{22dd3186-14ce-41e6-916d-643d4dee8b48}</Project>
+      <Name>EA.Weee.Email</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
