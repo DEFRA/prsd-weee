@@ -12,7 +12,7 @@
     public class WeeeClient : IWeeeClient
     {
         private readonly HttpClient httpClient;
-        private INewUser newUser;
+        private IUnauthenticatedUser user;
 
         public WeeeClient(string baseUrl)
         {
@@ -24,9 +24,9 @@
             };
         }
 
-        public INewUser NewUser
+        public IUnauthenticatedUser User
         {
-            get { return newUser ?? (newUser = new NewUser(httpClient)); }
+            get { return user ?? (user = new UnauthenticatedUser(httpClient)); }
         }
 
         public async Task<TResult> SendAsync<TResult>(IRequest<TResult> request)

@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
     using Entities;
 
-    public interface INewUser
+    public interface IUnauthenticatedUser
     {
         Task<string> CreateUserAsync(UserCreationData userCreationData);
         Task<bool> ActivateUserAccountEmailAsync(ActivatedUserAccountData activatedAccountData);
