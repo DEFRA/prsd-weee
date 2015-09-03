@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core.Configuration.EmailRules
+﻿namespace EA.Prsd.Email.Rules.Configuration
 {
     using System.Configuration;
 
