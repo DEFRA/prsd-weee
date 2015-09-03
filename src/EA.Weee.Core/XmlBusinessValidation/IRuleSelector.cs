@@ -2,6 +2,6 @@
 {
     public interface IRuleSelector
     {
-        IRule<T> GetRule<T>();
+        RuleResult EvaluateRule<T>(T rule);
     }
 }
