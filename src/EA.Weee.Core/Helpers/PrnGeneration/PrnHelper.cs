@@ -13,10 +13,10 @@
 
         public string CreateUniqueRandomVersionOfPrn(PrnAsComponents prnAsComponents)
         {
-            int firstLetterOrdinal = prnAsComponents.FirstLetter.OrdinalValue();
-            int secondLetterOrdinal = prnAsComponents.SecondLetter.OrdinalValue();
-            int thirdLetterOrdinal = prnAsComponents.ThirdLetter.OrdinalValue();
-            int fourthLetterOrdinal = prnAsComponents.FourthLetter.OrdinalValue();
+            int firstLetterOrdinal = prnAsComponents.FirstLetter.GetOrdinalValue();
+            int secondLetterOrdinal = prnAsComponents.SecondLetter.GetOrdinalValue();
+            int thirdLetterOrdinal = prnAsComponents.ThirdLetter.GetOrdinalValue();
+            int fourthLetterOrdinal = prnAsComponents.FourthLetter.GetOrdinalValue();
 
             // use quadratic residue to get a nice unique pseudorandomised version
             int randomisedNumber = quadraticResidueHelper.ForFourDigitNumber(prnAsComponents.Number);
@@ -26,22 +26,22 @@
             char randomisedFourthLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(fourthLetterOrdinal) + prnAsComponents.FourthLetter.BaseChar);
 
             // there's a few characters we want to skip to avoid confusion with numbers
-            if (randomisedFirstLetter >= 'I')
+            if (randomisedFirstLetter >= 'O')
             {
                 randomisedFirstLetter++;
             }
 
-            if (randomisedSecondLetter >= 'I')
+            if (randomisedSecondLetter >= 'O')
             {
                 randomisedSecondLetter++;
             }
 
-            if (randomisedThirdLetter >= 'O')
+            if (randomisedThirdLetter >= 'I')
             {
                 randomisedThirdLetter++;
             }
 
-            if (randomisedFourthLetter >= 'O')
+            if (randomisedFourthLetter >= 'I')
             {
                 randomisedFourthLetter++;
             }
