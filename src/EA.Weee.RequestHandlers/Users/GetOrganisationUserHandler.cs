@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Users
 {
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using Core.Organisations;
     using Domain.Organisation;
     using EA.Prsd.Core.Mediator;
@@ -9,6 +7,10 @@
     using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mapper;
     using Requests.Users;
+    using System;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     internal class GetOrganisationUserHandler : IRequestHandler<GetOrganisationUser, OrganisationUserData>
     {
@@ -25,13 +27,19 @@
 
         public async Task<OrganisationUserData> HandleAsync(GetOrganisationUser query)
         {
-            authorization.EnsureOrganisationAccess(query.OrganisationId);
+            OrganisationUser organisationUser = await context.OrganisationUsers.FindAsync(query.OrganisationUserId);
 
-            var organisationUsers =
-                await context.OrganisationUsers.SingleOrDefaultAsync(ou => ou.OrganisationId == query.OrganisationId
-                    && ou.UserId == query.UserId.ToString());
+            if (organisationUser == null)
+            {
+                string message = string.Format(
+                    "No organisation user was found with ID \"{0}\".",
+                    query.OrganisationUserId);
+                throw new Exception(message);
+            }
+            
+            authorization.EnsureOrganisationAccess(organisationUser.OrganisationId);
 
-            return organisationUserMap.Map(organisationUsers);
+            return organisationUserMap.Map(organisationUser);
         }
     }
 }

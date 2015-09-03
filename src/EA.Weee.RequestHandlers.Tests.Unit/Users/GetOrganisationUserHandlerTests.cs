@@ -1,73 +1,98 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Users
 {
-    using System;
-    using System.Data.Entity;
-    using System.Security;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain;
     using Domain.Organisation;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using Helpers;
     using Mappings;
     using RequestHandlers.Users;
     using Requests.Users;
+    using System;
+    using System.Data.Entity;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetOrganisationUserHandlerTests
     {
-        private readonly WeeeContext context = A.Fake<WeeeContext>();
-        private readonly DbContextHelper helper = new DbContextHelper();
+        [Fact]
+        public async Task HandleAsync_HappyPath_ReturnsOrganisationUserData()
+        {
+            // Arrange
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-        private readonly IWeeeAuthorization permissiveAuthorization =
-            AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
+            Guid organisationUserId = new Guid("10C57182-BF30-4729-BBF8-F8BCBC00EB77");
+            OrganisationUser organisationUser = A.Fake<OrganisationUser>();
 
-        private readonly IWeeeAuthorization denyingAuthorization =
-            AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
+            WeeeContext context = A.Fake<WeeeContext>();
+            A.CallTo(() => context.OrganisationUsers.FindAsync(organisationUserId)).Returns(organisationUser);
 
-        private readonly Guid orgId = Guid.NewGuid();
-        private readonly Guid userId = Guid.NewGuid();
+            IMap<OrganisationUser, OrganisationUserData> mapper = A.Fake<IMap<OrganisationUser, OrganisationUserData>>();
+            OrganisationUserData organisationUserData = new OrganisationUserData();
+            A.CallTo(() => mapper.Map(organisationUser)).Returns(organisationUserData);
+
+            var handler = new GetOrganisationUserHandler(context, authorization, mapper);
+            var request = new GetOrganisationUser(organisationUserId);
+
+            // Act
+            OrganisationUserData result = await handler.HandleAsync(request);
+
+            // Assert
+            Assert.Equal(organisationUserData, result);
+        }
 
         [Fact]
-        public async void NotOrganisationUser_ThrowsSecurityException()
+        [Trait("Authorization", "OrganisationAccess")]
+        public async Task HandleAsync_NotOrganisationUser_ThrowsSecurityException()
         {
-            var handler = new GetOrganisationUserHandler(context, denyingAuthorization, new OrganisationUserMap(new OrganisationMap(new AddressMap(), new ContactMap()), new UserMap()));
+            // Arrange
+            IWeeeAuthorization authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
 
-            await
-                Assert.ThrowsAsync<SecurityException>(
-                    async () => await handler.HandleAsync(new GetOrganisationUser(Guid.NewGuid(), Guid.NewGuid())));
+            Guid organisationUserId = new Guid("10C57182-BF30-4729-BBF8-F8BCBC00EB77");
+            OrganisationUser organisationUser = A.Fake<OrganisationUser>();
+
+            WeeeContext context = A.Fake<WeeeContext>();
+            A.CallTo(() => context.OrganisationUsers.FindAsync(organisationUserId)).Returns(organisationUser);
+
+            IMap<OrganisationUser, OrganisationUserData> mapper = A.Fake<IMap<OrganisationUser, OrganisationUserData>>();
+            OrganisationUserData organisationUserData = new OrganisationUserData();
+            A.CallTo(() => mapper.Map(organisationUser)).Returns(organisationUserData);
+
+            var handler = new GetOrganisationUserHandler(context, authorization, mapper);
+            var request = new GetOrganisationUser(organisationUserId);
+            
+            // Act
+            Func<Task> action = async () => await handler.HandleAsync(request);
+
+            // Assert
+            await Assert.ThrowsAsync<SecurityException>(action);
         }
 
         [Fact]
-        public async Task GetOrganisationUserHandler_ReturnsRequestedOrganisationUser()
+        public async Task HandleAsync_WithUnknownOrganisationUserId_ThrowsException()
         {
-            var orgUsers = MakeOrganisationUsers();
+            // Arrange
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            A.CallTo(() => context.OrganisationUsers).Returns(orgUsers);
+            Guid organisationUserId = new Guid("10C57182-BF30-4729-BBF8-F8BCBC00EB77");
 
-            var handler = new GetOrganisationUserHandler(context, permissiveAuthorization, new OrganisationUserMap(new OrganisationMap(new AddressMap(), new ContactMap()), new UserMap()));
+            WeeeContext context = A.Fake<WeeeContext>();
+            A.CallTo(() => context.OrganisationUsers.FindAsync(organisationUserId)).Returns((OrganisationUser)null);
 
-            var organisationUser = await handler.HandleAsync(new GetOrganisationUser(orgId, userId));
+            IMap<OrganisationUser, OrganisationUserData> mapper = A.Fake<IMap<OrganisationUser, OrganisationUserData>>();
 
-            Assert.NotNull(organisationUser);
-            Assert.Equal(organisationUser.OrganisationId, orgId);
-            Assert.Equal(organisationUser.UserId, userId.ToString());
-        }
+            var handler = new GetOrganisationUserHandler(context, authorization, mapper);
+            var request = new GetOrganisationUser(organisationUserId);
 
-        private DbSet<OrganisationUser> MakeOrganisationUsers()
-        {
-            return helper.GetAsyncEnabledDbSet(new[]
-            {
-                CreateOrganisationUser(orgId, userId),
-                CreateOrganisationUser(Guid.NewGuid(), Guid.NewGuid()),
-            });
-        }
+            // Act
+            Func<Task> action = async () => await handler.HandleAsync(request);
 
-        private static OrganisationUser CreateOrganisationUser(Guid orgId, Guid userId)
-        {
-            var orgUser = new OrganisationUser(userId, orgId, UserStatus.Active);
-            return orgUser;
+            // Assert
+            await Assert.ThrowsAsync<Exception>(action);
         }
     }
 }
