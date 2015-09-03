@@ -5,6 +5,7 @@
     using Api.Client;
     using Core.Organisations;
     using FakeItEasy;
+    using ViewModels.JoinOrganisation;
     using ViewModels.OrganisationRegistration;
     using ViewModels.OrganisationRegistration.Details;
     using ViewModels.OrganisationRegistration.Type;
@@ -12,7 +13,7 @@
     using Web.Controllers;
     using Weee.Requests.Organisations;
     using Xunit;
-    
+
     public class OrganisationRegistrationControllerTests
     {
         private readonly IWeeeClient apiClient;
@@ -220,7 +221,7 @@
 
         [Fact]
         public async void GetSoleTraderDetails_WithoutOrganisationId_ShouldReturnsSoleTraderDetailsView()
-        {  
+        {
             var result = await OrganisationRegistrationController().SoleTraderDetails();
             var model = ((ViewResult)result).Model;
 
@@ -242,7 +243,7 @@
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
              .Returns(true);
-           
+
             var orgData = new OrganisationData
             {
                 OrganisationType = OrganisationType.SoleTraderOrIndividual,
@@ -306,6 +307,16 @@
             Assert.Equal(orgData.TradingName, ((RegisteredCompanyDetailsViewModel)model).BusinessTradingName);
             Assert.Equal(orgData.CompanyRegistrationNumber, ((RegisteredCompanyDetailsViewModel)model).CompaniesRegistrationNumber);
             Assert.Equal(orgData.Name, ((RegisteredCompanyDetailsViewModel)model).CompanyName);
+        }
+
+        [Fact]
+        public void GetJoinOrganisation_ReturnsView()
+        {
+            var result = OrganisationRegistrationController().JoinOrganisation(A<Guid>._);
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<JoinOrganisationViewModel>(model);
         }
 
         private OrganisationRegistrationController OrganisationRegistrationController()
