@@ -177,7 +177,7 @@
                 using (var client = apiClient())
                 {
                     var activationToken =
-                        await client.NewUser.GetUserAccountActivationTokenAsync(User.GetAccessToken());
+                        await client.User.GetUserAccountActivationTokenAsync(User.GetAccessToken());
                     var activationEmail =
                         emailService.GenerateUserAccountActivationMessage(
                             Url.Action("ActivateUserAccount", "Account", null, Request.Url.Scheme),
@@ -209,7 +209,7 @@
         {
             using (var client = apiClient())
             {
-                bool result = await client.NewUser.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code });
+                bool result = await client.User.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code });
 
                 if (!result)
                 {
