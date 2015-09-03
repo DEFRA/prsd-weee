@@ -12,6 +12,7 @@
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Services;
+    using ViewModels.Account;
     using Web.Controllers;
     using Weee.Requests.Organisations;
     using Xunit;
@@ -52,6 +53,20 @@
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal("UserAccountActivationRequired", redirectToRouteResult.RouteValues["action"]);
+        }
+
+        [Fact]
+        public async void HttpPost_ResetPassword_ModelIsInvalid_ReturnsViewWithModel()
+        {
+            var passwordResetModel = new ResetPasswordModel();
+
+            var controller = AccountController();
+            controller.ModelState.AddModelError("Some model property", "Some error occurred");
+
+            var result = await controller.ResetPassword(A<Guid>._, A<string>._, passwordResetModel);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(passwordResetModel, ((ViewResult)result).Model);
         }
     }
 }
