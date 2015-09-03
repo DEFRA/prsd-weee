@@ -97,14 +97,14 @@
         public async Task HttpPost_NewUser_IsValid_OnlyClaimShouldBeExternalAccess()
         {
             var userCreationViewModel = GetValidUserCreationViewModel();
-            var newUser = A.Fake<INewUser>();
+            var newUser = A.Fake<IUnauthenticatedUser>();
 
             var userCreationData = new UserCreationData();
             A.CallTo(() => newUser.CreateUserAsync(A<UserCreationData>._))
                 .Invokes((UserCreationData u) => userCreationData = u)
                 .Returns(Task.FromResult(A<string>._));
 
-            A.CallTo(() => weeeClient.NewUser).Returns(newUser);
+            A.CallTo(() => weeeClient.User).Returns(newUser);
 
             try
             {
