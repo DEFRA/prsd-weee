@@ -10,19 +10,19 @@
     using Microsoft.AspNet.Identity.EntityFramework;
     using Prsd.Core.Domain;
 
-    [RoutePrefix("api/NewUser")]
-    public class NewUserController : ApiController
+    [RoutePrefix("api/UnauthenticatedUser")]
+    public class UnauthenticatedUserController : ApiController
     {
         private readonly ApplicationUserManager userManager;
         private readonly IUserContext userContext;
 
-        public NewUserController(ApplicationUserManager userManager, IUserContext userContext)
+        public UnauthenticatedUserController(ApplicationUserManager userManager, IUserContext userContext)
         {
             this.userManager = userManager;
             this.userContext = userContext;
         }
 
-        // POST api/NewUser/CreateUser
+        // POST api/UnauthenticatedUser/CreateUser
         [AllowAnonymous]
         [Route("CreateUser")]
         public async Task<IHttpActionResult> CreateUser(UserCreationData model)

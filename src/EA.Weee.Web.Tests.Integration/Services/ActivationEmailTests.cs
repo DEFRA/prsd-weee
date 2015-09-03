@@ -49,11 +49,11 @@
 
         private Func<IWeeeClient> SetupFakeApiClient(string activationTokenToUse)
         {
-            var newUser = A.Fake<INewUser>();
+            var newUser = A.Fake<IUnauthenticatedUser>();
             var weeeClient = A.Fake<IWeeeClient>();
             var apiClientFunction = A.Fake<Func<IWeeeClient>>();
             A.CallTo(() => newUser.GetUserAccountActivationTokenAsync(A<string>._)).Returns(activationTokenToUse);
-            A.CallTo(() => weeeClient.NewUser).Returns(newUser);
+            A.CallTo(() => weeeClient.User).Returns(newUser);
             A.CallTo(() => apiClientFunction()).Returns(weeeClient);
             return apiClientFunction;
         }

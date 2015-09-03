@@ -72,7 +72,7 @@
             {
                 using (var client = apiClient())
                 {
-                    var userId = await client.NewUser.CreateUserAsync(userCreationData);
+                    var userId = await client.User.CreateUserAsync(userCreationData);
                     var signInResponse = await oauthClient().GetAccessTokenAsync(userCreationData.Email, userCreationData.Password);
                     authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
                     var competentUserId = await client.SendAsync(signInResponse.AccessToken, new AddCompetentAuthorityUser(userId));
@@ -153,7 +153,7 @@
             {
                 bool result =
                     await
-                        client.NewUser.ActivateUserAccountEmailAsync(new ActivatedUserAccountData
+                        client.User.ActivateUserAccountEmailAsync(new ActivatedUserAccountData
                         {
                             Id = id,
                             Code = code
@@ -172,7 +172,7 @@
         {
             using (var client = apiClient())
             {
-                var activationCode = await client.NewUser.GetUserAccountActivationTokenAsync(accessToken);
+                var activationCode = await client.User.GetUserAccountActivationTokenAsync(accessToken);
 
                 if (Request.Url != null)
                 {
