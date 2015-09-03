@@ -86,7 +86,7 @@
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerChargeBandCalculatorTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\QuerySets\ProducerNameWarningQuerySetTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\ProducerNameWarningTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerNameWarningEvaluatorTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\DeserializedXmlExtensionsTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\XmlGeneratorTests.cs" />

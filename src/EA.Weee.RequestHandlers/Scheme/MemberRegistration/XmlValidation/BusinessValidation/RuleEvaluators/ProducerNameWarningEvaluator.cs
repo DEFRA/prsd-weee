@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.RuleEvaluators
 {
+    using Core.Shared;
     using Core.XmlBusinessValidation;
     using Extensions;
     using QuerySets;
@@ -14,7 +15,7 @@
             this.querySet = querySet;
         }
 
-        public bool Evaluate(ProducerNameWarning rule)
+        public RuleResult Evaluate(ProducerNameWarning rule)
         {
             if (rule.Producer.status == statusType.A)
             {
@@ -41,16 +42,24 @@
                     if (existingMigratedProducer == null)
                     {
                         // Producer doesn't exist so no warning
-                        return true;
+                        return RuleResult.Pass();
                     }
 
                     existingProducerName = existingMigratedProducer.ProducerName;
                 }
 
-                return existingProducerName == rule.Producer.GetProducerName();
+                if (existingProducerName != rule.Producer.GetProducerName())
+                {
+                    var errorMessage =
+                        string.Format(
+                            "You are changing producer (registration number {0}) company name from: {1} to: {2}. No action is required but you may want to check this.",
+                            rule.Producer.registrationNo, existingProducerName, rule.Producer.GetProducerName());
+
+                    return RuleResult.Fail(errorMessage, ErrorLevel.Warning);
+                }
             }
 
-            return true;
+            return RuleResult.Pass();
         }
     }
 }

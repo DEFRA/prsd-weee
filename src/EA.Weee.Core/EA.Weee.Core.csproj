@@ -184,6 +184,7 @@
     <Compile Include="XmlBusinessValidation\IRule.cs" />
     <Compile Include="XmlBusinessValidation\IRuleSelector.cs" />
     <Compile Include="XmlBusinessValidation\PersistentQueryResult.cs" />
+    <Compile Include="XmlBusinessValidation\RuleResult.cs" />
     <Compile Include="XmlBusinessValidation\RuleSelector.cs" />
   </ItemGroup>
   <ItemGroup>
