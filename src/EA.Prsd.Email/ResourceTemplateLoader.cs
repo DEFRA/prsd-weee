@@ -35,6 +35,17 @@ namespace EA.Prsd.Email
 
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             {
+                if (stream == null)
+                {
+                    string errorMessage = string.Format(
+                        "An email template was not found in assembly \"{0}\" with resource name \"{1}\". " +
+                        "Check the file name and ensure the file's Build Action has been set to \"Embedded Resource\".",
+                        assembly.FullName,
+                        resourceName);
+                    
+                    throw new InvalidOperationException(errorMessage);
+                }
+
                 using (StreamReader streamReader = new StreamReader(stream))
                 {
                     return streamReader.ReadToEnd();
