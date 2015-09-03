@@ -29,16 +29,16 @@
         private readonly IWeeeClient apiClient;
         private readonly IOAuthClient oauthClient;
         private readonly IAuthenticationManager authenticationManager;
-        private readonly IEmailService emailService;
         private readonly IUserInfoClient userInfoClient;
+        private readonly IExternalRouteService externalRouteService;
 
         public AccountControllerTests()
         {
             apiClient = A.Fake<IWeeeClient>();
             oauthClient = A.Fake<IOAuthClient>();
             authenticationManager = A.Fake<IAuthenticationManager>();
-            emailService = A.Fake<IEmailService>();
             userInfoClient = A.Fake<IUserInfoClient>();
+            externalRouteService = A.Fake<IExternalRouteService>();
         }
 
         [Fact]
@@ -105,32 +105,6 @@
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("AdminAccountActivationRequired", redirectValues["action"]);
-            Assert.Equal("Account", redirectValues["controller"]);
-            Assert.Equal("Admin", redirectValues["area"]);
-        }
-
-        [Fact]
-        public async void HttpPost_Create_ModelIsValid_ShouldSendEmail()
-        {
-            var model = ValidModel();
-
-            await AccountController().Create(model);
-
-            A.CallTo(() => emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
-        public async void HttpPost_Create_ModelIsInvalid_ShouldNotSendEmail()
-        {
-            var model = ValidModel();
-            var controller = AccountController();
-            controller.ModelState.AddModelError("Key", "Something went wrong :(");
-
-            await controller.Create(model);
-
-            A.CallTo(() => emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
-                .MustNotHaveHappened();
         }
 
         [Fact]
@@ -177,24 +151,36 @@
         [Fact]
         public async void HttpPost_AdminAccountActivationRequired_IfUserResendsActivationEmail_ShouldSendActivationEmail()
         {
-            var newUser = A.Fake<IUnauthenticatedUser>();
-            var controller = AccountController();
+            // Arrange
+            IUnauthenticatedUser user = A.Fake<IUnauthenticatedUser>();
 
-            var fakeUrlHelper = A.Fake<UrlHelper>();
-            controller.Url = fakeUrlHelper;
-            string route = "/Admin/Account/ActivateUserAccount";
-            A.CallTo(() => fakeUrlHelper.Action(A<string>.Ignored, A<string>.Ignored)).Returns(route);
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.User).Returns(user);
 
-            A.CallTo(() => apiClient.User).Returns(newUser);
+            ClaimsIdentity identity = new ClaimsIdentity();
+            identity.AddClaim(new Claim(OAuth2Constants.AccessToken, "accessToken"));
+            
+            IAuthenticationManager authenticationManager = A.Fake<IAuthenticationManager>();
+            A.CallTo(() => authenticationManager.User).Returns(new ClaimsPrincipal(identity));
 
-            A.CallTo(
-                () =>
-                    emailService.GenerateUserAccountActivationMessage(A<string>._, A<string>._, A<string>._, A<string>._))
-                .Returns(new MailMessage());
+            IExternalRouteService externalRouteService = A.Fake<IExternalRouteService>();
+            A.CallTo(() => externalRouteService.ActivateInternalUserAccountUrl).Returns("activationBaseUrl");
 
-            await controller.AdminAccountActivationRequired(A<FormCollection>._);
+            AccountController controller = new AccountController(
+                () => weeeClient,
+                authenticationManager,
+                () => A.Fake<IOAuthClient>(),
+                () => A.Fake<IUserInfoClient>(),
+                externalRouteService);
 
-            A.CallTo(() => emailService.SendAsync(A<MailMessage>._)).MustHaveHappened(Repeated.Exactly.Once);
+            FormCollection formCollection = new FormCollection();
+
+            // Act
+            await controller.AdminAccountActivationRequired(formCollection);
+
+            // Assert
+            A.CallTo(() => user.ResendActivationEmail("accessToken", "activationBaseUrl"))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -316,7 +302,13 @@
             var context = A.Fake<HttpContextBase>();
             A.CallTo(() => context.Request).Returns(request);
 
-            var controller = new AccountController(() => apiClient, authenticationManager, emailService, () => oauthClient, () => userInfoClient);
+            var controller = new AccountController(
+                () => apiClient,
+                authenticationManager,
+                () => oauthClient,
+                () => userInfoClient,
+                externalRouteService);
+
             controller.ControllerContext = new ControllerContext(context, new RouteData(), controller);
 
             controller.Url = new UrlHelper(new RequestContext(controller.HttpContext, new RouteData()));
