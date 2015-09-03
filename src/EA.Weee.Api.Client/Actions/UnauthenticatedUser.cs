@@ -5,12 +5,12 @@
     using Entities;
     using Prsd.Core.Web.Extensions;
 
-    internal class NewUser : INewUser
+    internal class UnauthenticatedUser : IUnauthenticatedUser
     {
-        private const string Controller = "NewUser/";
+        private const string Controller = "UnauthenticatedUser/";
         private readonly HttpClient httpClient;
 
-        public NewUser(HttpClient httpClient)
+        public UnauthenticatedUser(HttpClient httpClient)
         {
             this.httpClient = httpClient;
         }

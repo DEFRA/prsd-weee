@@ -180,7 +180,7 @@
                     .OrderByDescending(e => e.ErrorLevel);
 
                 CsvWriter<MemberUploadErrorData> csvWriter = csvWriterFactory.Create<MemberUploadErrorData>();
-                csvWriter.DefineColumn("Severity", e => (int)e.ErrorLevel >= 5 ? "Error" : "Warning");
+                csvWriter.DefineColumn("Type", e => (int)e.ErrorLevel >= 5 ? "Error" : "Warning");
                 csvWriter.DefineColumn("Description", e => e.Description);
 
                 string csv = csvWriter.Write(errors);

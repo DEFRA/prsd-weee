@@ -45,7 +45,7 @@
             string code =
                 "LZHQ5TGVPA6FtUb6AmSssW6o8GpGtkMzRJTP4%2bhK9CGitEafOHBRGriU%2b7ruHbAq85Btymlnu1ewPxkIZGE17v98a21EPTaCNE1N2QlD%2b5FDgwULWlC28SS%2fKpFRIEXD9RaaYjSS6%2bfyvyexihUGKskaqaTB4%2f%2b4bRcZ%2fniu%2bqCNT%2fSY6ziGbvkNRX9oM%2fXW";
 
-            A.CallTo(() => apiClient.NewUser.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code }))
+            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code }))
                .Returns(false);
 
             var result = await AccountController().ActivateUserAccount(id, code);
