@@ -388,14 +388,31 @@
                     throw;
                 }
 
-                return RedirectToAction("JoinOrganisationConfirmation");
+                return RedirectToAction("JoinOrganisationConfirmation", new { organisationId = viewModel.OrganisationId });
             }
         }
 
         [HttpGet]
-        public ViewResult JoinOrganisationConfirmation()
+        public async Task<ViewResult> JoinOrganisationConfirmation(Guid organisationId)
         {
-            return View();
+            using (var client = apiClient())
+            {
+                var organisationData = await client.SendAsync(
+                    User.GetAccessToken(),
+                    new GetOrganisationInfo(organisationId));
+
+                if (organisationData == null)
+                {
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
+                }
+
+                var model = new JoinOrganisationConfirmationViewModel()
+                {
+                    OrganisationName = organisationData.OrganisationName
+                };
+
+                return View(model);
+            }
         }
 
         [HttpPost]
