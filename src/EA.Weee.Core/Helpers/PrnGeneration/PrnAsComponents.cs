@@ -11,20 +11,20 @@
         {
             public int Offset { get; private set; }
             public uint Mask { get; private set; }
-            public char Limit { get; private set; }
+            public char BaseChar { get; private set; }
 
             private char letter;
 
-            public LetterComponent(int offset, uint mask, char limit)
+            public LetterComponent(int offset, uint mask, char baseChar)
             {
                 Offset = offset;
                 Mask = mask;
-                Limit = limit;
+                BaseChar = baseChar;
             }
 
             public void SetLetterFromSeed(uint seed)
             {
-                letter = (char)(((seed & Mask) >> Offset) + Limit);
+                letter = (char)(((seed & Mask) >> Offset) + BaseChar);
             }
 
             public void IncrementLetter()
@@ -34,19 +34,19 @@
 
             public int GetLetterIntValue()
             {
-                return (letter - Limit) << Offset;
+                return (letter - BaseChar) << Offset;
             }
 
-            public char GetOrdinalValue()
+            public int GetOrdinalValue()
             {
-                return (char)(letter - Limit);
+                return letter - BaseChar;
             }
 
             public bool OverflowsOutOfAllowableRange()
             {
-                if (letter >= Limit + QuadraticResidueHelper.CharRange)
+                if (letter >= BaseChar + QuadraticResidueHelper.CharRange)
                 {
-                    letter = Limit;
+                    letter = BaseChar;
                     return true;
                 }
 
@@ -54,10 +54,10 @@
             }
         }
 
-        public LetterComponent FirstLetter = new LetterComponent(28, 0xF0000000, 'M');
-        public LetterComponent SecondLetter = new LetterComponent(24, 0x0F000000, 'M');
-        public LetterComponent ThirdLetter = new LetterComponent(20, 0x00F00000, 'A');
-        public LetterComponent FourthLetter = new LetterComponent(16, 0x000F0000, 'A');
+        public LetterComponent FirstLetter = new LetterComponent(28, 0xF0000000, 'A');
+        public LetterComponent SecondLetter = new LetterComponent(24, 0x0F000000, 'A');
+        public LetterComponent ThirdLetter = new LetterComponent(20, 0x00F00000, 'M');
+        public LetterComponent FourthLetter = new LetterComponent(16, 0x000F0000, 'M');
 
         public PrnAsComponents(uint seed)
         {
