@@ -17,7 +17,7 @@
         <p class="lede">We have found some organisations that match the information you have provided. Select your organisation or add it, if it is not listed.</p>
 
         int i = 0;
-        foreach (OrganisationSearchData organisation in Model.MatchingOrganisations)
+        foreach (PublicOrganisationData organisation in Model.MatchingOrganisations)
         {
             bool isNewRow = i % 2 == 0;
 
