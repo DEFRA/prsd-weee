@@ -626,6 +626,14 @@
     <Compile Include="Infrastructure\RouteCollectionExtensions.cs" />
     <Compile Include="Infrastructure\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
+    <Compile Include="Requests\Base\IRequestCreator.cs" />
+    <Compile Include="Requests\Base\RequestCreator.cs" />
+    <Compile Include="Requests\IPartnershipDetailsRequestCreator.cs" />
+    <Compile Include="Requests\IRegisteredCompanyDetailsRequestCreator.cs" />
+    <Compile Include="Requests\ISoleTraderDetailsRequestCreator.cs" />
+    <Compile Include="Requests\PartnershipDetailsRequestCreator.cs" />
+    <Compile Include="Requests\RegisteredCompanyDetailsRequestCreator.cs" />
+    <Compile Include="Requests\SoleTraderDetailsRequestCreator.cs" />
     <Compile Include="Services\BreadcrumbService.cs" />
     <Compile Include="Services\Caching\Cache.cs" />
     <Compile Include="Services\Caching\CacheResult.cs" />
@@ -644,6 +652,7 @@
     <Compile Include="Services\IFileConverterService.cs" />
     <Compile Include="Services\ISmtpClient.cs" />
     <Compile Include="Services\SmtpClientProxy.cs" />
+    <Compile Include="ViewModels\Account\ResetPasswordModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\Scheme\SchemeAreaRegistration.cs" />
@@ -656,14 +665,6 @@
     </Compile>
     <Compile Include="Infrastructure\Constants.cs" />
     <Compile Include="Infrastructure\PrincipalExtensions.cs" />
-    <Compile Include="Requests\Base\IRequestCreator.cs" />
-    <Compile Include="Requests\Base\RequestCreator.cs" />
-    <Compile Include="Requests\IRegisteredCompanyDetailsRequestCreator.cs" />
-    <Compile Include="Requests\IPartnershipDetailsRequestCreator.cs" />
-    <Compile Include="Requests\ISoleTraderDetailsRequestCreator.cs" />
-    <Compile Include="Requests\RegisteredCompanyDetailsRequestCreator.cs" />
-    <Compile Include="Requests\PartnershipDetailsRequestCreator.cs" />
-    <Compile Include="Requests\SoleTraderDetailsRequestCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AppConfiguration.cs" />
     <Compile Include="Services\ConfigurationService.cs" />

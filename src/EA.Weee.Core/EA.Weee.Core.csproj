@@ -85,6 +85,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\PasswordReset\PasswordResetData.cs" />
+    <Compile Include="Account\PasswordReset\PasswordResetResult.cs" />
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
     <Compile Include="Admin\UserSearchDataResult.cs" />
     <Compile Include="Claims.cs" />

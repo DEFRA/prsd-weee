@@ -219,5 +219,23 @@
 
             return View();
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ResetPassword(Guid id, string token)
+        {
+            return View(new ResetPasswordModel());
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ResetPassword(Guid id, string token, ResetPasswordModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            throw new NotImplementedException();
+        }
     }
 }
