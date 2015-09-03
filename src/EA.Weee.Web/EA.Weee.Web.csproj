@@ -677,6 +677,7 @@
     <Compile Include="ViewModels\OrganisationRegistration\Details\RegisteredCompanyDetailsViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\SoleTraderDetailsViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\ContactPersonViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\JoinOrganisationConfirmationViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\OrganisationSummaryViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\AddressPrepopulateViewModel.cs" />
     <Compile Include="ViewModels\Organisation\PendingOrganisationsViewModel.cs" />
