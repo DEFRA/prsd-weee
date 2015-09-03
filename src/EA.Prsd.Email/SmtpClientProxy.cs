@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Services
+﻿namespace EA.Prsd.Email
 {
     using System.Net.Mail;
 
