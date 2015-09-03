@@ -28,6 +28,7 @@
     public class OrganisationRegistrationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
+        private const string NoSearchAnotherCompany = "No - search for another company";
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient)
         {
@@ -356,8 +357,17 @@
 
         [HttpGet]
         public ViewResult JoinOrganisation(Guid organisationId)
-        {
-            return View(new JoinOrganisationViewModel { OrganisationId = organisationId });
+        {   
+            var collection = new List<string> { "Yes", NoSearchAnotherCompany };
+            var model = new JoinOrganisationViewModel
+            {
+                OrganisationId = organisationId,
+                JoinOrganisationOptions = new RadioButtonStringCollectionViewModel
+                {
+                    PossibleValues = collection
+                }
+            };
+            return View(model);
         }
 
         [HttpPost]
