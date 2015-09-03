@@ -52,7 +52,7 @@
                 {
                     var errorMessage =
                         string.Format(
-                            "You are changing producer (registration number {0}) company name from: {1} to: {2}. No action is required but you may went to check this.",
+                            "You are changing producer (registration number {0}) company name from: {1} to: {2}. No action is required but you may want to check this.",
                             rule.Producer.registrationNo, existingProducerName, rule.Producer.GetProducerName());
 
                     return RuleResult.Fail(errorMessage, ErrorLevel.Warning);
