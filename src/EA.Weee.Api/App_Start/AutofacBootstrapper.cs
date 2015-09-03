@@ -33,6 +33,7 @@
             builder.RegisterModule(new CoreModule());
             builder.RegisterModule(new EntityFrameworkModule());
             builder.RegisterModule(new EmailModule());
+            builder.RegisterModule(new EventDispatcherModule());
 
             // http://www.talksharp.com/configuring-autofac-to-work-with-the-aspnet-identity-framework-in-mvc-5
             builder.RegisterType<WeeeIdentityContext>().AsSelf().InstancePerRequest();

@@ -255,6 +255,9 @@
     <Compile Include="Services\AppConfiguration.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Services\DebugExceptionLogger.cs" />
+    <Compile Include="Services\NullEventDispatcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
