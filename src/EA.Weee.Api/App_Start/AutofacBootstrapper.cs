@@ -1,15 +1,16 @@
 ﻿namespace EA.Weee.Api
 {
-    using System.Web.Http;
     using Autofac;
     using Autofac.Integration.WebApi;
     using Core;
     using DataAccess;
     using DataAccess.Identity;
+    using EA.Weee.Email;
     using Identity;
     using Microsoft.AspNet.Identity;
     using Prsd.Core.Autofac;
     using RequestHandlers;
+    using System.Web.Http;
 
     public class AutofacBootstrapper
     {
@@ -31,6 +32,7 @@
             builder.RegisterModule(new RequestHandlerModule());
             builder.RegisterModule(new CoreModule());
             builder.RegisterModule(new EntityFrameworkModule());
+            builder.RegisterModule(new EmailModule());
 
             // http://www.talksharp.com/configuring-autofac-to-work-with-the-aspnet-identity-framework-in-mvc-5
             builder.RegisterType<WeeeIdentityContext>().AsSelf().InstancePerRequest();
