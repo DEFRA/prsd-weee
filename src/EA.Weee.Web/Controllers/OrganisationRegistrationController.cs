@@ -302,7 +302,7 @@
         {
             var fallbackSelectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName,
                 companiesRegistrationNumber, type, organisationId,
-                new PagedList<OrganisationSearchData>());
+                new PagedList<PublicOrganisationData>());
 
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(tradingName))
             {
@@ -341,7 +341,7 @@
 
         private SelectOrganisationViewModel BuildSelectOrganisationViewModel(string name, string tradingName,
             string companiesRegistrationNumber, OrganisationType type, Guid? organisationId,
-            IPagedList<OrganisationSearchData> matchingOrganisations)
+            IPagedList<PublicOrganisationData> matchingOrganisations)
         {
             return new SelectOrganisationViewModel
             {
@@ -399,16 +399,11 @@
             {
                 var organisationData = await client.SendAsync(
                     User.GetAccessToken(),
-                    new GetOrganisationInfo(organisationId));
-
-                if (organisationData == null)
-                {
-                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
-                }
+                    new GetPublicOrganisationInfo(organisationId));
 
                 var model = new JoinOrganisationConfirmationViewModel()
                 {
-                    OrganisationName = organisationData.OrganisationName
+                    OrganisationName = organisationData.DisplayName
                 };
 
                 return View(model);
