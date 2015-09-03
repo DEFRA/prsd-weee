@@ -88,15 +88,6 @@
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
     <Compile Include="Admin\UserSearchDataResult.cs" />
     <Compile Include="Claims.cs" />
-    <Compile Include="Configuration\EmailRules\IRuleChecker.cs" />
-    <Compile Include="Configuration\EmailRules\IRuleSectionChecker.cs" />
-    <Compile Include="Configuration\EmailRules\RuleAction.cs" />
-    <Compile Include="Configuration\EmailRules\RuleChecker.cs" />
-    <Compile Include="Configuration\EmailRules\RuleSectionChecker.cs" />
-    <Compile Include="Configuration\EmailRules\RuleElement.cs" />
-    <Compile Include="Configuration\EmailRules\RuleElementCollection.cs" />
-    <Compile Include="Configuration\EmailRules\RulesSection.cs" />
-    <Compile Include="Configuration\EmailRules\RuleType.cs" />
     <Compile Include="Configuration\IConfigurationManagerWrapper.cs" />
     <Compile Include="CoreModule.cs" />
     <Compile Include="Exceptions\XmlDeserializationFailureException.cs" />

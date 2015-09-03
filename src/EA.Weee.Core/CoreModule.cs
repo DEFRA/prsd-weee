@@ -2,7 +2,6 @@
 {
     using Autofac;
     using Autofac.Core;
-    using Configuration.EmailRules;
     using EA.Weee.Core.Shared;
     using XmlBusinessValidation;
 
@@ -10,10 +9,6 @@
     {
         protected override void Load(ContainerBuilder builder)
         {
-            // Email Rules
-            builder.RegisterType<RuleSectionChecker>().As<IRuleSectionChecker>();
-            builder.RegisterType<RuleChecker>().As<IRuleChecker>();
-
             // Register the helper classes
             builder.RegisterAssemblyTypes(this.GetType().Assembly)
                 .Where(t => t.Namespace.Contains("Helpers"))
