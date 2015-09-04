@@ -646,9 +646,7 @@
     <Compile Include="Services\IAppConfiguration.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeController.cs" />
     <Compile Include="Services\IFileConverterService.cs" />
-    <Compile Include="Services\ISmtpClient.cs" />
     <Compile Include="Services\IWeeeAuthorization.cs" />
-    <Compile Include="Services\SmtpClientProxy.cs" />
     <Compile Include="Services\WeeeAuthorization.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordModel.cs" />
     <Compile Include="Services\IExternalRouteService.cs" />

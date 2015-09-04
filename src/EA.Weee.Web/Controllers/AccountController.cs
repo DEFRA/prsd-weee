@@ -36,9 +36,7 @@
         public AccountController(Func<IOAuthClient> oauthClient,
             IAuthenticationManager authenticationManager,
             Func<IWeeeClient> apiClient,
-            IEmailService emailService,
-            Func<IUserInfoClient> userInfoClient,
-            IWeeeAuthorization weeeAuthorization)
+            IWeeeAuthorization weeeAuthorization,
             Func<IUserInfoClient> userInfoClient,
             IExternalRouteService externalRouteService)
         {
