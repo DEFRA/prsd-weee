@@ -96,22 +96,19 @@
         }
 
         [Fact]
-        public async Task HttpPost_NewUser_IsValid_OnlyClaimShouldBeExternalAccess()
+        public async Task HttpPost_NewUser_IsValid()
         {
             var userCreationViewModel = GetValidUserCreationViewModel();
             var newUser = A.Fake<IUnauthenticatedUser>();
 
-            var userCreationData = new UserCreationData();
-            A.CallTo(() => newUser.CreateUserAsync(A<UserCreationData>._))
-                .Invokes((UserCreationData u) => userCreationData = u)
+            var userCreationData = new InternalUserCreationData();
+            A.CallTo(() => newUser.CreateInternalUserAsync(A<InternalUserCreationData>._))
+                .Invokes((InternalUserCreationData u) => userCreationData = u)
                 .Returns(Task.FromResult(A<string>._));
 
             A.CallTo(() => weeeClient.User).Returns(newUser);
 
             await NewUserController().UserCreation(userCreationViewModel);
-
-            Assert.Single(userCreationData.Claims);
-            Assert.Equal(Claims.CanAccessExternalArea, userCreationData.Claims.Single());
         }
 
         private NewUserController NewUserController()

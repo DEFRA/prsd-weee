@@ -16,9 +16,15 @@
             this.httpClient = httpClient;
         }
 
-        public async Task<string> CreateUserAsync(UserCreationData userCreationData)
+        public async Task<string> CreateInternalUserAsync(InternalUserCreationData userCreationData)
         {
-            var response = await httpClient.PostAsJsonAsync(Controller + "CreateUser", userCreationData);
+            var response = await httpClient.PostAsJsonAsync(Controller + "CreateInternalUser", userCreationData);
+            return await response.CreateResponseAsync<string>();
+        }
+
+        public async Task<string> CreateExternalUserAsync(ExternalUserCreationData userCreationData)
+        {
+            var response = await httpClient.PostAsJsonAsync(Controller + "CreateExternalUser", userCreationData);
             return await response.CreateResponseAsync<string>();
         }
 

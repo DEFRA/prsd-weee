@@ -2,6 +2,7 @@
 {
     using Client.Entities;
     using DataAccess.Identity;
+    using EA.Weee.Core;
     using EA.Weee.Email;
     using Identity;
     using Microsoft.AspNet.Identity;
@@ -30,11 +31,10 @@
             this.emailService = emailService;
         }
 
-        // POST api/UnauthenticatedUser/CreateUser
         [AllowAnonymous]
         [HttpPost]
-        [Route("CreateUser")]
-        public async Task<IHttpActionResult> CreateUser(UserCreationData model)
+        [Route("CreateInternalUser")]
+        public async Task<IHttpActionResult> CreateInternalUser(InternalUserCreationData model)
         {
             if (!ModelState.IsValid)
             {
@@ -46,18 +46,15 @@
                 UserName = model.Email, 
                 Email = model.Email, 
                 FirstName = model.FirstName, 
-                Surname = model.Surname, 
+                Surname = model.Surname,
             };
 
-            foreach (var claim in model.Claims)
+            user.Claims.Add(new IdentityUserClaim
             {
-                user.Claims.Add(new IdentityUserClaim
-                {
-                    ClaimType = ClaimTypes.AuthenticationMethod, 
-                    ClaimValue = claim, 
-                    UserId = user.Id
-                });
-            }
+                ClaimType = ClaimTypes.AuthenticationMethod, 
+                ClaimValue = Claims.CanAccessInternalArea, 
+                UserId = user.Id
+            });
 
             var result = await userManager.CreateAsync(user, model.Password);
 
@@ -66,7 +63,44 @@
                 return GetErrorResult(result);
             }
 
-            bool emailSent = await SendActivationEmail(user.Id, user.Email, model.ActivationBaseUrl);
+            await SendActivationEmail(user.Id, user.Email, model.ActivationBaseUrl);
+
+            return Ok(user.Id);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("CreateExternalUser")]
+        public async Task<IHttpActionResult> CreateExternalUser(ExternalUserCreationData model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = new ApplicationUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                Surname = model.Surname,
+            };
+
+            user.Claims.Add(new IdentityUserClaim
+            {
+                ClaimType = ClaimTypes.AuthenticationMethod,
+                ClaimValue = Claims.CanAccessExternalArea,
+                UserId = user.Id
+            });
+
+            var result = await userManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            await SendActivationEmail(user.Id, user.Email, model.ActivationBaseUrl);
 
             return Ok(user.Id);
         }

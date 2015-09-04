@@ -55,14 +55,14 @@
         }
 
         [Fact]
-        public async void HttpPost_Create_ModelIsValid_ShouldIncludeUserDetails_AndOnlyClaimShouldBeInternalAccess()
+        public async void HttpPost_Create_ModelIsValid_ShouldIncludeUserDetails()
         {
             var model = ValidModel();
             var newUser = A.Fake<IUnauthenticatedUser>();
 
-            var userCreationData = new UserCreationData();
-            A.CallTo(() => newUser.CreateUserAsync(A<UserCreationData>._))
-                .Invokes((UserCreationData u) => userCreationData = u)
+            var userCreationData = new InternalUserCreationData();
+            A.CallTo(() => newUser.CreateInternalUserAsync(A<InternalUserCreationData>._))
+                .Invokes((InternalUserCreationData u) => userCreationData = u)
                 .Returns(Task.FromResult(A<string>._));
 
             A.CallTo(() => apiClient.User).Returns(newUser);
@@ -76,9 +76,6 @@
             Assert.Equal(model.Surname, userCreationData.Surname);
             Assert.Equal(model.Email, userCreationData.Email);
             Assert.Equal(model.Password, userCreationData.Password);
-
-            Assert.Single(userCreationData.Claims);
-            Assert.Equal(Claims.CanAccessInternalArea, userCreationData.Claims.Single());
         }
 
         [Fact]
@@ -93,7 +90,7 @@
 
             var result = await AccountController().Create(model);
 
-            A.CallTo(() => apiClient.User.CreateUserAsync(A<UserCreationData>._))
+            A.CallTo(() => apiClient.User.CreateInternalUserAsync(A<InternalUserCreationData>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             A.CallTo(() => oauthClient.GetAccessTokenAsync(model.Email, model.Password))
@@ -113,7 +110,7 @@
             var model = ValidModel();
 
             var newUser = A.Fake<IUnauthenticatedUser>();
-            A.CallTo(() => newUser.CreateUserAsync(A<UserCreationData>._))
+            A.CallTo(() => newUser.CreateInternalUserAsync(A<InternalUserCreationData>._))
                 .Throws(new ApiException(HttpStatusCode.BadRequest, new ApiError()));
             A.CallTo(() => apiClient.User).Returns(newUser);
 
