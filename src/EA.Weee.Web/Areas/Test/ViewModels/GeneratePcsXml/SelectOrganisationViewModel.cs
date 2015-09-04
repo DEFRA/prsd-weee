@@ -11,6 +11,6 @@
         [DisplayName("Organisation Name")]
         public string OrganisationName { get; set; }
 
-        public IPagedList<OrganisationSearchData> MatchingOrganisations { get; set; }
+        public IPagedList<PublicOrganisationData> MatchingOrganisations { get; set; }
     }
 }
