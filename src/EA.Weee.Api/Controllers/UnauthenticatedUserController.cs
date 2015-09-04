@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Api.Controllers
 {
+    using System;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Http;
@@ -76,6 +77,26 @@
             var result = await userManager.ConfirmEmailAsync(model.Id.ToString(), model.Code);
 
             return Ok(result.Succeeded);
+        }
+
+        [HttpPost]
+        [Route("ResetPassword")]
+        public async Task<IHttpActionResult> ResetPassword(PasswordResetData model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result =
+            await userManager.ResetPasswordAsync(model.UserId.ToString(), model.Token, model.Password);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok(true);
         }
 
         private IHttpActionResult GetErrorResult(IdentityResult result)
