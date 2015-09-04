@@ -16,6 +16,7 @@
     @using (Html.BeginForm(actionName: "JoinOrganisation", controllerName: "OrganisationRegistration", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.OrganisationId)
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.JoinOrganisationOptions.SelectedValue)" id="JoinOrganisationOptions">
             @Html.EditorFor(m => m.JoinOrganisationOptions)

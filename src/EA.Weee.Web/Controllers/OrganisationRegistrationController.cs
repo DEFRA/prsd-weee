@@ -356,18 +356,25 @@
         }
 
         [HttpGet]
-        public ViewResult JoinOrganisation(Guid organisationId)
-        {   
-            var collection = new List<string> { "Yes", NoSearchAnotherCompany };
-            var model = new JoinOrganisationViewModel
+        public async Task<ViewResult> JoinOrganisation(Guid organisationId)
+        {
+            using (var client = apiClient())
             {
-                OrganisationId = organisationId,
-                JoinOrganisationOptions = new RadioButtonStringCollectionViewModel
+                var organisationData = await client.SendAsync(
+                    User.GetAccessToken(),
+                    new GetPublicOrganisationInfo(organisationId));
+
+                var collection = new List<string> { "Yes - join " + organisationData.DisplayName, NoSearchAnotherCompany };
+                var model = new JoinOrganisationViewModel
                 {
-                    PossibleValues = collection
-                }
-            };
-            return View(model);
+                    OrganisationId = organisationId,
+                    JoinOrganisationOptions = new RadioButtonStringCollectionViewModel
+                    {
+                        PossibleValues = collection
+                    }
+                };
+                return View(model);
+            }
         }
 
         [HttpPost]
@@ -377,6 +384,11 @@
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
+            }
+
+            if (viewModel.JoinOrganisationOptions.SelectedValue == NoSearchAnotherCompany)
+            {
+                return RedirectToAction("Type", "OrganisationRegistration");
             }
 
             using (var client = apiClient())
