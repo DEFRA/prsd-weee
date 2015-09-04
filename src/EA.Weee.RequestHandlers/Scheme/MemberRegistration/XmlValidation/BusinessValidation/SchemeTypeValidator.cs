@@ -3,11 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Helpers;
     using Core.XmlBusinessValidation;
     using DataAccess;
     using Domain;
     using Extensions;
     using FluentValidation;
+    using FluentValidation.Results;
+    using Prsd.Core.Domain;
     using Rules;
 
     public class SchemeTypeValidator : AbstractValidator<schemeType>
@@ -127,13 +130,15 @@
                         (st, producer) => producer.obligationType.ToString());
 
                 //Producer Name change warning
+                var ruleResult = RuleResult.Pass();
                 RuleForEach(st => st.producerList)
-                    .Must((st, producer) => ruleSelector.GetRule<ProducerNameWarning>().Evaluate(new ProducerNameWarning(st, producer, organisationId)))
-                    .WithState(st => ErrorLevel.Warning)
-                    .WithMessage(
-                     "The name of the producer with registration number {0} will be amended to {1}.",
-                     (st, producer) => producer.registrationNo,
-                     (st, producer) => producer.GetProducerName());
+                    .Must((st, producer) =>
+                    {
+                        ruleResult = ruleSelector.EvaluateRule(new ProducerNameWarning(st, producer, organisationId));
+                        return ruleResult.IsValid;
+                    })
+                    .WithState(st => ruleResult.ErrorLevel.ToDomainEnumeration<ErrorLevel>())
+                    .WithMessage("{0}", (st, producer) => ruleResult.Message);
             });
         }
     }

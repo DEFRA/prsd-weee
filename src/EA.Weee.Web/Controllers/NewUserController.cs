@@ -144,7 +144,7 @@
 
                     try
                     {
-                        var userId = await client.NewUser.CreateUserAsync(userCreationData);
+                        var userId = await client.User.CreateUserAsync(userCreationData);
                         await SendEmail(model.Email, model.Password, client, userId);
                         return RedirectToAction("UserAccountActivationRequired", "Account");
                     }
@@ -178,7 +178,7 @@
 
             authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
 
-            var activationCode = await client.NewUser.GetUserAccountActivationTokenAsync(signInResponse.AccessToken);
+            var activationCode = await client.User.GetUserAccountActivationTokenAsync(signInResponse.AccessToken);
 
             string baseUrl = Url.Action("ActivateUserAccount", "Account", null, Request.Url.Scheme);
 

@@ -58,14 +58,14 @@
         public async void HttpPost_Create_ModelIsValid_ShouldIncludeUserDetails_AndOnlyClaimShouldBeInternalAccess()
         {
             var model = ValidModel();
-            var newUser = A.Fake<INewUser>();
+            var newUser = A.Fake<IUnauthenticatedUser>();
 
             var userCreationData = new UserCreationData();
             A.CallTo(() => newUser.CreateUserAsync(A<UserCreationData>._))
                 .Invokes((UserCreationData u) => userCreationData = u)
                 .Returns(Task.FromResult(A<string>._));
 
-            A.CallTo(() => apiClient.NewUser).Returns(newUser);
+            A.CallTo(() => apiClient.User).Returns(newUser);
 
             A.CallTo(() => oauthClient.GetAccessTokenAsync(A<string>._, A<string>._))
                 .Returns(A.Fake<TokenResponse>());
@@ -85,15 +85,15 @@
         public async void HttpPost_Create_ModelIsValid_ShouldSubmitUserDetailsOnce_AndShouldRequestTokenOnce_AndShouldSignInOnce_AndShouldRedirectToAccountActivationPage()
         {
             var model = ValidModel();
-            var newUser = A.Fake<INewUser>();
+            var newUser = A.Fake<IUnauthenticatedUser>();
 
-            A.CallTo(() => apiClient.NewUser).Returns(newUser);
+            A.CallTo(() => apiClient.User).Returns(newUser);
             A.CallTo(() => oauthClient.GetAccessTokenAsync(A<string>._, A<string>._))
                 .Returns(A.Fake<TokenResponse>());
 
             var result = await AccountController().Create(model);
 
-            A.CallTo(() => apiClient.NewUser.CreateUserAsync(A<UserCreationData>._))
+            A.CallTo(() => apiClient.User.CreateUserAsync(A<UserCreationData>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             A.CallTo(() => oauthClient.GetAccessTokenAsync(model.Email, model.Password))
@@ -138,10 +138,10 @@
         {
             var model = ValidModel();
 
-            var newUser = A.Fake<INewUser>();
+            var newUser = A.Fake<IUnauthenticatedUser>();
             A.CallTo(() => newUser.CreateUserAsync(A<UserCreationData>._))
                 .Throws(new ApiException(HttpStatusCode.BadRequest, new ApiError()));
-            A.CallTo(() => apiClient.NewUser).Returns(newUser);
+            A.CallTo(() => apiClient.User).Returns(newUser);
 
             await Assert.ThrowsAnyAsync<ApiException>(() => AccountController().Create(model));
         }
@@ -177,7 +177,7 @@
         [Fact]
         public async void HttpPost_AdminAccountActivationRequired_IfUserResendsActivationEmail_ShouldSendActivationEmail()
         {
-            var newUser = A.Fake<INewUser>();
+            var newUser = A.Fake<IUnauthenticatedUser>();
             var controller = AccountController();
 
             var fakeUrlHelper = A.Fake<UrlHelper>();
@@ -185,7 +185,7 @@
             string route = "/Admin/Account/ActivateUserAccount";
             A.CallTo(() => fakeUrlHelper.Action(A<string>.Ignored, A<string>.Ignored)).Returns(route);
 
-            A.CallTo(() => apiClient.NewUser).Returns(newUser);
+            A.CallTo(() => apiClient.User).Returns(newUser);
 
             A.CallTo(
                 () =>
@@ -204,7 +204,7 @@
             string code =
                 "LZHQ5TGVPA6FtUb6AmSssW6o8GpGtkMzRJTP4%2bhK9CGitEafOHBRGriU%2b7ruHbAq85Btymlnu1ewPxkIZGE17v98a21EPTaCNE1N2QlD%2b5FDgwULWlC28SS%2fKpFRIEXD9RaaYjSS6%2bfyvyexihUGKskaqaTB4%2f%2b4bRcZ%2fniu%2bqCNT%2fSY6ziGbvkNRX9oM%2fXW";
 
-            A.CallTo(() => apiClient.NewUser.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code }))
+            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code }))
                .Returns(false);
 
             var result = await AccountController().ActivateUserAccount(id, code);
@@ -218,7 +218,7 @@
         {
             await AccountController().ActivateUserAccount(A<Guid>._, A<string>._);
 
-            A.CallTo(() => apiClient.NewUser.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
+            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 

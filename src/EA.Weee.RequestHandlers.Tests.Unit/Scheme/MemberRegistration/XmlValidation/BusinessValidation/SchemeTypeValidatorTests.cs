@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Helpers;
     using Core.XmlBusinessValidation;
     using DataAccess;
     using Domain;
@@ -13,6 +14,7 @@
     using FluentValidation;
     using FluentValidation.Internal;
     using Helpers;
+    using Prsd.Core.Domain;
     using RequestHandlers;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.Rules;
@@ -28,11 +30,8 @@
             ruleSelector = A.Fake<IRuleSelector>();
 
             // By default, rules pass
-            var producerNameWarning = A.Fake<IRule<ProducerNameWarning>>();
-            A.CallTo(() => producerNameWarning.Evaluate(A<ProducerNameWarning>._)).Returns(true);
-
-            A.CallTo(() => ruleSelector.GetRule<ProducerNameWarning>())
-                .Returns(producerNameWarning);
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameWarning>._))
+                .Returns(RuleResult.Pass());
         }
 
         [Fact]
@@ -487,18 +486,44 @@
         }
 
         [Fact]
-        public void ShouldNotWarnOfProducerNameChange_ReturnsFalse_ShouldReturnWarningContainingPrnAndName()
+        public void ShouldEvaluateProducerNameWarningRule()
         {
-            var producerName = "Test Name";
-            var registrationNumber = "ABC12345";
+            var xml = new schemeType
+            {
+                producerList = new[]
+                {
+                    new producerType
+                    {
+                        registrationNo = "ABC12345",
+                        producerBusiness = new producerBusinessType
+                        {
+                            Item = new partnershipType
+                            {
+                                partnershipName = "Test Name"
+                            }
+                        }
+                    }
+                }
+            };
 
-            var fakeRule = A.Fake<IRule<ProducerNameWarning>>();
+            SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(
+                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .DataValidation));
 
-            A.CallTo(() => fakeRule.Evaluate(A<ProducerNameWarning>._))
-                .Returns(false);
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameWarning>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
 
-            A.CallTo(() => ruleSelector.GetRule<ProducerNameWarning>())
-                .Returns(fakeRule);
+        [Theory]
+        [InlineData(Core.Shared.ErrorLevel.Warning)]
+        [InlineData(Core.Shared.ErrorLevel.Error)]
+        public void EvaluteProducerNameWarningRuleFails_ShouldMapErrorMessage_AndErrorLevel(Core.Shared.ErrorLevel errorLevel)
+        {
+            var errorMessage = "Some sort of error";
+            var failure = RuleResult.Fail(errorMessage, errorLevel);
+
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameWarning>._))
+                .Returns(failure);
 
             var xml = new schemeType
             {
@@ -506,12 +531,12 @@
                 {
                     new producerType
                     {
-                        registrationNo = registrationNumber,
+                        registrationNo = "ABC12345",
                         producerBusiness = new producerBusinessType
                         {
                             Item = new partnershipType
                             {
-                                partnershipName = producerName
+                                partnershipName = "Test Name"
                             }
                         }
                     }
@@ -526,9 +551,8 @@
 
             var error = result.Errors.Single();
 
-            Assert.Equal(ErrorLevel.Warning, error.CustomState);
-            Assert.Contains(producerName, error.ErrorMessage);
-            Assert.Contains(registrationNumber, error.ErrorMessage);
+            Assert.Equal(errorLevel.ToDomainEnumeration<ErrorLevel>(), error.CustomState);
+            Assert.Equal(errorMessage, error.ErrorMessage);
         }
 
         private IValidator<schemeType> SchemeTypeValidator(Guid? existingOrganisationId = null,
