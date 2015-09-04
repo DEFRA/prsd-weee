@@ -7,7 +7,7 @@
 
     public interface IWeeeClient : IDisposable
     {
-        INewUser NewUser { get; }
+        IUnauthenticatedUser User { get; }
 
         Task<TResult> SendAsync<TResult>(IRequest<TResult> request);
         Task<TResult> SendAsync<TResult>(string accessToken, IRequest<TResult> request);
