@@ -45,6 +45,9 @@
             // Breadcrumb
             builder.RegisterType<BreadcrumbService>().InstancePerRequest();
 
+            // Authorization
+            builder.RegisterType<WeeeAuthorization>().As<IWeeeAuthorization>();
+
             return builder.Build();
         }
     }
