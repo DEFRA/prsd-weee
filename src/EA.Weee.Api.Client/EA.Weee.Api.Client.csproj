@@ -82,6 +82,8 @@
   <ItemGroup>
     <Compile Include="Actions\UnauthenticatedUser.cs" />
     <Compile Include="Actions\IUnauthenticatedUser.cs" />
+    <Compile Include="Entities\ExternalUserCreationData.cs" />
+    <Compile Include="Entities\InternalUserCreationData.cs" />
     <Compile Include="Entities\PasswordResetData.cs" />
     <Compile Include="Entities\PasswordResetResult.cs" />
     <Compile Include="Entities\ResendActivationEmailRequest.cs" />

@@ -61,17 +61,13 @@
                 return View(model);
             }
 
-            var userCreationData = new UserCreationData
+            var userCreationData = new InternalUserCreationData
             {
                 Email = model.Email,
                 FirstName = model.Name,
                 Surname = model.Surname,
                 Password = model.Password,
                 ConfirmPassword = model.ConfirmPassword,
-                Claims = new[]
-                {
-                    Claims.CanAccessInternalArea
-                },
                 ActivationBaseUrl = externalRouteService.ActivateInternalUserAccountUrl,
             };
 
@@ -79,7 +75,7 @@
             {
                 using (var client = apiClient())
                 {
-                    var userId = await client.User.CreateUserAsync(userCreationData);
+                    var userId = await client.User.CreateInternalUserAsync(userCreationData);
                     var signInResponse = await oauthClient().GetAccessTokenAsync(userCreationData.Email, userCreationData.Password);
                     authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
                     var competentUserId = await client.SendAsync(signInResponse.AccessToken, new AddCompetentAuthorityUser(userId));
