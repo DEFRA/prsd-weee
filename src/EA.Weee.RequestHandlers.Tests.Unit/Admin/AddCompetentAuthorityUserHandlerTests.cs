@@ -27,6 +27,7 @@
             private readonly WeeeContext context;
             private readonly AddCompetentAuthorityUserHandler handler;
             private readonly IConfigurationManagerWrapper configurationManagerWrapper;
+            private readonly ITestInternalUserEmailDomains testInternalUserEmailDomains;
 
             public AddCompetentAuthorityUserHandlerTests()
             {
@@ -48,13 +49,15 @@
                 };
 
                 UKCompetentAuthoritiesDbSet = helper.GetAsyncEnabledDbSet(competentAuthorites);
-              
+
+                configurationManagerWrapper = A.Fake<IConfigurationManagerWrapper>();
+
                 context = A.Fake<WeeeContext>();
 
                 A.CallTo(() => context.Users).Returns(UsersDbSet);
                 A.CallTo(() => context.UKCompetentAuthorities).Returns(UKCompetentAuthoritiesDbSet);
 
-                ITestInternalUserEmailDomains testInternalUserEmailDomains = A.Fake<ITestInternalUserEmailDomains>();
+                testInternalUserEmailDomains = A.Fake<ITestInternalUserEmailDomains>();
 
                 handler = new AddCompetentAuthorityUserHandler(context, testInternalUserEmailDomains);
             }
@@ -80,6 +83,9 @@
            [Fact]
            public async void AddCompetentAuthorityUserHandler_InternalUsersModeSet_ReturnsSucess()
            {
+               A.CallTo(() => testInternalUserEmailDomains.Enabled).Returns(true);
+               A.CallTo(() => testInternalUserEmailDomains.Domains).Returns(new List<string>() { "co.uk" });
+
                AddCompetentAuthorityUser message = new AddCompetentAuthorityUser(FakeUserId.ToString());
                A.CallTo(() => configurationManagerWrapper.HasKey("Weee.InternalUsersTestMode")).Returns(true);
                A.CallTo(() => configurationManagerWrapper.GetKeyValue("Weee.InternalUsersTestMode")).Returns("true");
