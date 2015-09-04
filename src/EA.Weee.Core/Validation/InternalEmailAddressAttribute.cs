@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-using System.Text.RegularExpressions;
+    using System.Text.RegularExpressions;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class InternalEmailAddressAttribute : ValidationAttribute
@@ -19,8 +19,16 @@ using System.Text.RegularExpressions;
             "doeni.gov.uk"
         };
 
+        private readonly ITestInternalUserEmailDomains testInternalUserEmailDomains;
+
         private readonly Regex emailRegex = new Regex(@"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        public InternalEmailAddressAttribute()
+        {
+            ConfigurationManagerWrapper configuration = new ConfigurationManagerWrapper();
+            this.testInternalUserEmailDomains = configuration.TestInternalUserEmailDomains;
+        }
 
         public override bool IsValid(object value)
         {
@@ -53,6 +61,18 @@ using System.Text.RegularExpressions;
                 {
                     // If the domain matches one of the allowed domains, then the validation passes.
                     return true;
+                }
+            }
+
+            if (testInternalUserEmailDomains.Enabled)
+            {
+                foreach (string allowedDomain in testInternalUserEmailDomains.Domains)
+                {
+                    if (string.Equals(allowedDomain, domain, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // If the domain matches one of the allowed domains for testing, then the validation passes.
+                        return true;
+                    }
                 }
             }
 
