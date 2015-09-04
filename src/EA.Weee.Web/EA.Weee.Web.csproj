@@ -558,6 +558,7 @@
     <Content Include="Views\Home\Robots.cshtml" />
     <Content Include="Views\Organisation\YourOrganisations.cshtml" />
     <Content Include="Views\Organisation\_Pending.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

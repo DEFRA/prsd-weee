@@ -3,8 +3,6 @@
     using Api.Client;
     using Api.Client.Entities;
     using Core;
-    using Core.Organisations;
-    using Core.Shared;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
@@ -16,10 +14,10 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
     using Thinktecture.IdentityModel.Client;
     using ViewModels.Account;
-    using ViewModels.OrganisationRegistration;
-    using Weee.Requests.Organisations;
 
     [Authorize]
     public class AccountController : Controller
@@ -228,14 +226,44 @@
         }
 
         [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(Guid id, string token, ResetPasswordModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
+                try
+                {
+                    using (var client = apiClient())
+                    {
+                        var success = await client.User.ResetPasswordAsync(new PasswordResetData 
+                        {
+                            Password = model.Password, 
+                            Token = token,
+                            UserId = id
+                        });
+
+                        if (!success)
+                        {
+                            throw new Exception(
+                                string.Format("An error occurred whilst resetting the password for user '{0}'", User.Identity.Name));
+                        }
+
+                        return RedirectToAction("RedirectProcess", "Account");
+                    }
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                }
             }
 
-            throw new NotImplementedException();
+            return View(model);
         }
     }
 }
