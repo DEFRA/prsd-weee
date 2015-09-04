@@ -2,6 +2,7 @@
 {
     using Autofac;
     using Autofac.Core;
+    using EA.Weee.Core.Configuration;
     using EA.Weee.Core.Shared;
     using XmlBusinessValidation;
 
@@ -20,6 +21,11 @@
 
             // XML rules
             builder.RegisterType<RuleSelector>().As<IRuleSelector>();
+
+            builder.RegisterType<ConfigurationManagerWrapper>().As<IConfigurationManagerWrapper>();
+
+            builder.Register(c => c.Resolve<IConfigurationManagerWrapper>().TestInternalUserEmailDomains)
+                .As<ITestInternalUserEmailDomains>();
         }
     }
 }

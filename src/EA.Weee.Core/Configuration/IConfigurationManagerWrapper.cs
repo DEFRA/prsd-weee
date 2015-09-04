@@ -9,5 +9,7 @@
         string GetKeyValue(string key);
 
         bool HasKey(string key);
+
+        ITestInternalUserEmailDomains TestInternalUserEmailDomains { get; }
     }
 }

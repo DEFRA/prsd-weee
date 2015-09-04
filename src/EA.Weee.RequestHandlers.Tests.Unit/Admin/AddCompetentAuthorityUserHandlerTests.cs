@@ -54,9 +54,9 @@
                 A.CallTo(() => context.Users).Returns(UsersDbSet);
                 A.CallTo(() => context.UKCompetentAuthorities).Returns(UKCompetentAuthoritiesDbSet);
 
-                configurationManagerWrapper = A.Fake<IConfigurationManagerWrapper>();
-                handler = new AddCompetentAuthorityUserHandler(context);
-                handler.Configuration = configurationManagerWrapper;
+                ITestInternalUserEmailDomains testInternalUserEmailDomains = A.Fake<ITestInternalUserEmailDomains>();
+
+                handler = new AddCompetentAuthorityUserHandler(context, testInternalUserEmailDomains);
             }
 
             [Fact]

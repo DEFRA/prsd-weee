@@ -20,5 +20,23 @@
         {
             return ConfigurationManager.AppSettings.AllKeys.Select((string x) => x.ToUpperInvariant()).Contains(key.ToUpperInvariant());
         }
+
+        public ITestInternalUserEmailDomains TestInternalUserEmailDomains
+        {
+            get
+            {
+                var section = ConfigurationManager.GetSection("testInternalUserEmailDomains")
+                    as TestInternalUserEmailDomainsSection;
+
+                if (section == null)
+                {
+                    return new NoTestInternalUserEmailDomains();
+                }
+                else
+                {
+                    return section;
+                }
+            }
+        }
     }
 }
