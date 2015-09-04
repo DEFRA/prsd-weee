@@ -27,18 +27,21 @@
         private readonly IEmailService emailService;
         private readonly Func<IOAuthClient> oauthClient;
         private readonly Func<IUserInfoClient> userInfoClient;
+        private readonly IWeeeAuthorization weeeAuthorization;
 
         public AccountController(Func<IOAuthClient> oauthClient,
             IAuthenticationManager authenticationManager,
             Func<IWeeeClient> apiClient,
             IEmailService emailService,
-            Func<IUserInfoClient> userInfoClient)
+            Func<IUserInfoClient> userInfoClient,
+            IWeeeAuthorization weeeAuthorization)
         {
             this.oauthClient = oauthClient;
             this.apiClient = apiClient;
             this.authenticationManager = authenticationManager;
             this.emailService = emailService;
             this.userInfoClient = userInfoClient;
+            this.weeeAuthorization = weeeAuthorization;
         }
 
         [HttpGet]
@@ -236,20 +239,14 @@
                 {
                     using (var client = apiClient())
                     {
-                        var success = await client.User.ResetPasswordAsync(new PasswordResetData 
+                        var result = await client.User.ResetPasswordAsync(new PasswordResetData 
                         {
                             Password = model.Password, 
                             Token = token,
                             UserId = id
                         });
 
-                        if (!success)
-                        {
-                            throw new Exception(
-                                string.Format("An error occurred whilst resetting the password for user '{0}'", User.Identity.Name));
-                        }
-
-                        return RedirectToAction("RedirectProcess", "Account");
+                        return await weeeAuthorization.SignIn(result.EmailAddress, model.Password, false);
                     }
                 }
                 catch (ApiBadRequestException ex)
