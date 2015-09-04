@@ -4,6 +4,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
+    using Core.Shared;
     using FakeItEasy;
     using ViewModels.JoinOrganisation;
     using ViewModels.OrganisationRegistration;
@@ -13,7 +14,7 @@
     using Web.Controllers;
     using Weee.Requests.Organisations;
     using Xunit;
-
+    
     public class OrganisationRegistrationControllerTests
     {
         private readonly IWeeeClient apiClient;
@@ -221,7 +222,7 @@
 
         [Fact]
         public async void GetSoleTraderDetails_WithoutOrganisationId_ShouldReturnsSoleTraderDetailsView()
-        {
+        {  
             var result = await OrganisationRegistrationController().SoleTraderDetails();
             var model = ((ViewResult)result).Model;
 
@@ -243,7 +244,7 @@
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
              .Returns(true);
-
+           
             var orgData = new OrganisationData
             {
                 OrganisationType = OrganisationType.SoleTraderOrIndividual,
@@ -307,6 +308,26 @@
             Assert.Equal(orgData.TradingName, ((RegisteredCompanyDetailsViewModel)model).BusinessTradingName);
             Assert.Equal(orgData.CompanyRegistrationNumber, ((RegisteredCompanyDetailsViewModel)model).CompaniesRegistrationNumber);
             Assert.Equal(orgData.Name, ((RegisteredCompanyDetailsViewModel)model).CompanyName);
+        }
+
+        [Fact]
+        public async void GetJoinOrganisationConfirmation_ShouldReturnsJoinOrganisationConfirmationView()
+        {
+            var orgData = new PublicOrganisationData
+            {
+                Id = Guid.NewGuid(),
+                Address = new AddressData(),
+                DisplayName = "Test"
+            };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
+                .Returns(orgData);
+
+            var result = await OrganisationRegistrationController().JoinOrganisationConfirmation(orgData.Id);
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<JoinOrganisationConfirmationViewModel>(model);
         }
 
         [Fact]
