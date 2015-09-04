@@ -23,26 +23,32 @@
     {
         private readonly IWeeeClient apiClient;
         private readonly IAuthenticationManager authenticationManager;
-        private readonly IEmailService emailService;
         private readonly IOAuthClient oauthClient;
         private readonly IUserInfoClient userInfoClient;
         private readonly IUnauthenticatedUser unauthenticatedUserClient;
         private readonly IWeeeAuthorization weeeAuthorization;
+        private readonly IExternalRouteService externalRouteService;
 
         public AccountControllerTests()
         {
             apiClient = A.Fake<IWeeeClient>();
             authenticationManager = A.Fake<IAuthenticationManager>();
             oauthClient = A.Fake<IOAuthClient>();
-            emailService = A.Fake<EmailService>();
             userInfoClient = A.Fake<IUserInfoClient>();
             unauthenticatedUserClient = A.Fake<IUnauthenticatedUser>();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
+            externalRouteService = A.Fake<IExternalRouteService>();
         }
 
         private AccountController AccountController()
         {
-            return new AccountController(() => oauthClient, authenticationManager, () => apiClient, emailService, () => userInfoClient, weeeAuthorization);
+            return new AccountController(
+                () => oauthClient,
+                authenticationManager,
+                () => apiClient,
+                weeeAuthorization,
+                () => userInfoClient,
+                externalRouteService);
         }
 
         [Fact]
