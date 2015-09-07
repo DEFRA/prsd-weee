@@ -15,6 +15,10 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.SearchedText)
+        @Html.HiddenFor(m => m.Name)
+        @Html.HiddenFor(m => m.TradingName)
+        @Html.HiddenFor(m => m.CompaniesRegistrationNumber)
+        @Html.HiddenFor(m => m.Type)
 
         <p>We found no results for "@Model.SearchedText".</p>
 

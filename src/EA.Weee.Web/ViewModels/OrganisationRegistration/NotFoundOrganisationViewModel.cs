@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Core.Organisations;
     using Shared;
 
     public class NotFoundOrganisationViewModel
@@ -10,6 +11,14 @@
         public RadioButtonStringCollectionViewModel ActivityOptions { get; set; }
 
         public string SearchedText { get; set; }
+
+        public string Name { get; set; }
+
+        public string TradingName { get; set; }
+
+        public string CompaniesRegistrationNumber { get; set; }
+
+        public OrganisationType Type { get; set; }
 
         public NotFoundOrganisationViewModel()
         {
