@@ -4,10 +4,10 @@
 
     public class OrganisationSearchDataResult
     {
-        public IList<OrganisationSearchData> Results { get; private set; }
+        public IList<PublicOrganisationData> Results { get; private set; }
         public int TotalMatchingOrganisations { get; private set; }
 
-        public OrganisationSearchDataResult(IList<OrganisationSearchData> results, int totalMatchingOrganisations)
+        public OrganisationSearchDataResult(IList<PublicOrganisationData> results, int totalMatchingOrganisations)
         {
             Results = results;
             TotalMatchingOrganisations = totalMatchingOrganisations;

@@ -10,6 +10,7 @@
             "SignOut",
             "SignIn",
             "UserAccountActivationRequired",
+            "AdminAccountActivationRequired",
             "ActivateUserAccount",
             "CheckIsPcs",
             "CheckComplianceYear",

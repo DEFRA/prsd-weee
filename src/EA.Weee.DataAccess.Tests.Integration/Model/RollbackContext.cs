@@ -59,7 +59,9 @@
             DbConnection connection = Model.Database.Connection;
 
             IUserContext userContext = A.Fake<IUserContext>();
-            WeeeContext = new WeeeContext(userContext, connection);
+            IEventDispatcher eventDispatcher = A.Fake<IEventDispatcher>();
+
+            WeeeContext = new WeeeContext(userContext, eventDispatcher, connection);
 
             StoredProcedures = new StoredProcedures(WeeeContext);
         }
