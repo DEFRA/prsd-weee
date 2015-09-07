@@ -5,6 +5,7 @@
     using EA.Prsd.Email;
     using EA.Prsd.Email.Rules;
     using EA.Prsd.Email.Rules.Configuration;
+    using EA.Weee.Email.EventHandlers;
     using System;
     using System.Collections.Generic;
     using System.Configuration;
@@ -29,6 +30,9 @@
             builder.RegisterType<WeeeEmailService>().As<IWeeeEmailService>();
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
+
+            builder.RegisterType<OrganisationUserRequestEventHandlerDataAccess>()
+                .As<IOrganisationUserRequestEventHandlerDataAccess>();
         }
     }
 }
