@@ -4,7 +4,6 @@
     using Api.Client.Entities;
     using Base;
     using Core;
-    using EA.Weee.Requests.Users;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
@@ -17,31 +16,28 @@
     using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Authorization;
     using Thinktecture.IdentityModel.Client;
     using ViewModels;
     using Weee.Requests.Admin;
-    using UserInfoClient = Thinktecture.IdentityModel.Client.UserInfoClient;
 
     public class AccountController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IAuthenticationManager authenticationManager;
-        private readonly Func<IOAuthClient> oauthClient;
-        private readonly Func<IUserInfoClient> userInfoClient;
         private readonly IExternalRouteService externalRouteService;
+        private readonly IWeeeAuthorization weeeAuthorization;
 
         public AccountController(
             Func<IWeeeClient> apiClient,
             IAuthenticationManager authenticationManager,
-            Func<IOAuthClient> oauthClient,
-            Func<IUserInfoClient> userInfoClient,
-            IExternalRouteService externalRouteService)
+            IExternalRouteService externalRouteService,
+            IWeeeAuthorization weeeAuthorization)
         {
             this.apiClient = apiClient;
-            this.oauthClient = oauthClient;
             this.authenticationManager = authenticationManager;
-            this.userInfoClient = userInfoClient;
             this.externalRouteService = externalRouteService;
+            this.weeeAuthorization = weeeAuthorization;
         }
 
         [HttpGet]
@@ -76,12 +72,16 @@
                 using (var client = apiClient())
                 {
                     var userId = await client.User.CreateInternalUserAsync(userCreationData);
-                    var signInResponse = await oauthClient().GetAccessTokenAsync(userCreationData.Email, userCreationData.Password);
-                    authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
-                    var competentUserId = await client.SendAsync(signInResponse.AccessToken, new AddCompetentAuthorityUser(userId));
-                }
+                    var loginResult = await weeeAuthorization.SignIn(LoginType.Internal, model.Email, model.Password, false);
 
-                return RedirectToAction("AdminAccountActivationRequired");
+                    if (loginResult.Successful)
+                    {
+                        await client.SendAsync(loginResult.AccessToken, new AddCompetentAuthorityUser(userId));
+                        return RedirectToAction("AdminAccountActivationRequired");
+                    }
+
+                    ModelState.AddModelError(string.Empty, loginResult.ErrorMessage);
+                }               
             }
             catch (ApiBadRequestException ex)
             {
@@ -173,29 +173,20 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SignIn(InternalLoginViewModel model, string returnUrl)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
-            }
+                var loginResult =
+                await weeeAuthorization.SignIn(LoginType.Internal, model.Email, model.Password, model.RememberMe);
 
-            var response = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
-
-            if (response.AccessToken != null)
-            {
-                var isInternalUser = await IsInternalUser(response.AccessToken);
-                if (isInternalUser)
+                if (loginResult.Successful)
                 {
-                    authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = model.RememberMe },
-                        response.GenerateUserIdentity());
                     return RedirectToLocal(returnUrl);
                 }
-                ModelState.AddModelError(string.Empty, "Invalid login details");
-                return View("SignIn", model);
+
+                ModelState.AddModelError(string.Empty, loginResult.ErrorMessage);
             }
 
-            ModelState.AddModelError(string.Empty, ParseLoginError(response.Error));
-
-            return View("SignIn", model);
+            return View(model);
         }
 
         // POST: /Admin/Account/SignOut
@@ -203,7 +194,7 @@
         [ValidateAntiForgeryToken]
         public ActionResult SignOut()
         {
-            authenticationManager.SignOut();
+            weeeAuthorization.SignOut();
 
             return RedirectToAction("SignIn");
         }
@@ -216,33 +207,6 @@
             }
             
             return RedirectToAction("ChooseActivity", "Home", new { area = "Admin" });
-        }
-
-        private async Task<bool> IsInternalUser(string accessToken)
-        {
-            var userInfo = await userInfoClient().GetUserInfoAsync(accessToken);
-
-            return userInfo.Claims.Any(p => p.Item2 == Claims.CanAccessInternalArea);
-        }
-
-        private string ParseLoginError(string error)
-        {
-            switch (error)
-            {
-                case OAuth2Constants.Errors.AccessDenied:
-                    return "Access denied";
-                case OAuth2Constants.Errors.InvalidGrant:
-                    return "Invalid credentials";
-                case OAuth2Constants.Errors.Error:
-                case OAuth2Constants.Errors.InvalidClient:
-                case OAuth2Constants.Errors.InvalidRequest:
-                case OAuth2Constants.Errors.InvalidScope:
-                case OAuth2Constants.Errors.UnauthorizedClient:
-                case OAuth2Constants.Errors.UnsupportedGrantType:
-                case OAuth2Constants.Errors.UnsupportedResponseType:
-                default:
-                    return "Internal error";
-            }
         }
     }
 }
