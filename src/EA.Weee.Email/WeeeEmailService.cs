@@ -46,6 +46,28 @@
             return await sender.SendAsync(message);
         }
 
+        public async Task<bool> SendOrganisationUserRequest(string emailAddress, Domain.Organisation.OrganisationUser organisationUser)
+        {
+            var model = new
+            {
+                OrganisationName = organisationUser.Organisation.OrganisationName,
+                LoginUrl = "https://localhost:44300",
+            };
+
+            EmailContent content = new EmailContent()
+            {
+                HtmlText = templateExecutor.Execute("OrganisationUserRequest.cshtml", model),
+                PlainText = templateExecutor.Execute("OrganisationUserRequest.txt", model)
+            };
+
+            MailMessage message = messageCreator.Create(
+                emailAddress,
+                string.Format("Request to perform WEEE activities for {0}", model.OrganisationName),
+                content);
+
+            return await sender.SendAsync(message);
+        }
+
         public async Task<bool> SendOrganisationUserRequestCompleted(Domain.Organisation.OrganisationUser organisationUser)
         {
             var model = new
