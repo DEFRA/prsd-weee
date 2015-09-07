@@ -135,7 +135,7 @@
                     m => possibleOrganisations.Single(o => o.Id == m.Key));
 
             var totalMatchingOrganisationsData = totalMatchingOrganisations.Select(o =>
-                new OrganisationSearchData
+                new PublicOrganisationData
                 {
                     Id = o.Id,
                     Address = new AddressData
