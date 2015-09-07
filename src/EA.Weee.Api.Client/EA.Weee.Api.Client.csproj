@@ -85,6 +85,8 @@
     <Compile Include="Entities\ExternalUserCreationData.cs" />
     <Compile Include="Entities\InternalUserCreationData.cs" />
     <Compile Include="Entities\PasswordResetData.cs" />
+    <Compile Include="Entities\PasswordResetRequest.cs" />
+    <Compile Include="Entities\PasswordResetRequestResult.cs" />
     <Compile Include="Entities\PasswordResetResult.cs" />
     <Compile Include="Entities\ResendActivationEmailRequest.cs" />
     <Compile Include="Entities\UserCreationData.cs" />
