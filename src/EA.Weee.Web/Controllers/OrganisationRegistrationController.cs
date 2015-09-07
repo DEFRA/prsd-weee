@@ -323,7 +323,14 @@
 
                     if (organisationSearchResultData.TotalMatchingOrganisations == 0)
                     {
-                        return RedirectToAction("NotFoundOrganisation", new { searchedText = name ?? tradingName });
+                        return RedirectToAction("NotFoundOrganisation", new
+                        {
+                            name,
+                            tradingName,
+                            companiesRegistrationNumber,
+                            type,
+                            organisationId,
+                        });
                     }
 
                     var model = BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
@@ -345,11 +352,17 @@
         }
 
         [HttpGet]
-        public ActionResult NotFoundOrganisation(string searchedText)
+        public ActionResult NotFoundOrganisation(string name, string tradingName,
+                            string companiesRegistrationNumber,
+                            OrganisationType type)
         {
             var model = new NotFoundOrganisationViewModel
             {
-                SearchedText = searchedText
+                SearchedText = name ?? tradingName,
+                Name = name,
+                TradingName = tradingName,
+                CompaniesRegistrationNumber = companiesRegistrationNumber,
+                Type = type
             };
             return View(model);
         }
@@ -369,7 +382,7 @@
             }
             if (model.ActivityOptions.SelectedValue == NotFoundOrganisationAction.CreateNewOrg)
             {
-                return RedirectToAction("Type", "OrganisationRegistration");
+                return RedirectToAction("CreateOrganisation", "OrganisationRegistration");
             }
 
             return View(model);
