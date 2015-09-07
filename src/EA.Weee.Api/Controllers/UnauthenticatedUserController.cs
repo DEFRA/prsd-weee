@@ -78,6 +78,22 @@
             return Ok(result.Succeeded);
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("ResetPasswordRequest")]
+        public async Task<bool> ResetPasswordRequest(string emailAddress)
+        {
+            bool result = false;
+            var user = await userManager.FindByEmailAsync(emailAddress);
+
+            if (user != null)
+            {
+                result = true;
+            }
+
+            return result;
+        }
+
         private IHttpActionResult GetErrorResult(IdentityResult result)
         {
             if (result == null)
