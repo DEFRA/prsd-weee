@@ -1,14 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Net.Mail;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
     using Base;
     using Core;
+    using EA.Weee.Requests.Users;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
@@ -16,26 +12,36 @@
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Services;
+    using System;
+    using System.Linq;
+    using System.Net.Mail;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Thinktecture.IdentityModel.Client;
     using ViewModels;
     using Weee.Requests.Admin;
     using UserInfoClient = Thinktecture.IdentityModel.Client.UserInfoClient;
 
-    public class AccountController : Controller
+    public class AccountController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IAuthenticationManager authenticationManager;
         private readonly Func<IOAuthClient> oauthClient;
-        private readonly IEmailService emailService;
         private readonly Func<IUserInfoClient> userInfoClient;
+        private readonly IExternalRouteService externalRouteService;
 
-        public AccountController(Func<IWeeeClient> apiClient, IAuthenticationManager authenticationManager, IEmailService emailService, Func<IOAuthClient> oauthClient, Func<IUserInfoClient> userInfoClient)
+        public AccountController(
+            Func<IWeeeClient> apiClient,
+            IAuthenticationManager authenticationManager,
+            Func<IOAuthClient> oauthClient,
+            Func<IUserInfoClient> userInfoClient,
+            IExternalRouteService externalRouteService)
         {
             this.apiClient = apiClient;
             this.oauthClient = oauthClient;
             this.authenticationManager = authenticationManager;
-            this.emailService = emailService;
             this.userInfoClient = userInfoClient;
+            this.externalRouteService = externalRouteService;
         }
 
         [HttpGet]
@@ -65,7 +71,8 @@
                 Claims = new[]
                 {
                     Claims.CanAccessInternalArea
-                }
+                },
+                ActivationBaseUrl = externalRouteService.ActivateInternalUserAccountUrl,
             };
 
             try
@@ -76,17 +83,9 @@
                     var signInResponse = await oauthClient().GetAccessTokenAsync(userCreationData.Email, userCreationData.Password);
                     authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
                     var competentUserId = await client.SendAsync(signInResponse.AccessToken, new AddCompetentAuthorityUser(userId));
-                    bool emailSent = await Send(userCreationData.Email, userId, signInResponse.AccessToken);
-                    if (!emailSent)
-                    {
-                        ViewBag.Errors = new[]
-                        {
-                            "Email is currently unavailable at this time, please try again later."
-                        };
-                    }
                 }
 
-                return RedirectToAction("AdminAccountActivationRequired", "Account", new { area = "Admin" });
+                return RedirectToAction("AdminAccountActivationRequired");
             }
             catch (ApiBadRequestException ex)
             {
@@ -120,29 +119,22 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AdminAccountActivationRequired(FormCollection model)
         {
-            var email = User.GetEmailAddress();
-            if (!string.IsNullOrEmpty(email))
+            var emailAddress = authenticationManager.User.GetEmailAddress();
+            if (!string.IsNullOrEmpty(emailAddress))
             {
-                ViewBag.UserEmailAddress = User.GetEmailAddress();
-            }
-            try
-            {
-                //Resend activation email
-                bool emailSent = await Send(email, User.GetUserId(), User.GetAccessToken());
-                if (!emailSent)
-                {
-                    ViewBag.Errors = new[]
-                    {
-                        "Email is currently unavailable at this time, please try again later."
-                    };
-                }
-            }
-            catch (SmtpException)
-            {
-                ViewBag.Errors = new[] { "The activation email was not sent, please try again later." };
+                ViewBag.UserEmailAddress = emailAddress;
             }
 
-            return RedirectToAction("AdminAccountActivationRequired", "Account", new { area = "Admin" });
+            using (var client = apiClient())
+            {
+                string accessToken = authenticationManager.User.GetAccessToken();
+
+                string activationBaseUrl = externalRouteService.ActivateInternalUserAccountUrl;
+
+                await client.User.ResendActivationEmail(accessToken, activationBaseUrl);
+            }
+
+            return View();
         }
 
         [HttpGet]
@@ -166,22 +158,6 @@
             }
 
             return View();
-        }
-
-        private async Task<bool> Send(string email, string userId, string accessToken)
-        {
-            using (var client = apiClient())
-            {
-                var activationCode = await client.User.GetUserAccountActivationTokenAsync(accessToken);
-
-                if (Request.Url != null)
-                {
-                    var baseUrl = Url.Action("ActivateUserAccount", "Account", new { area = "Admin" }, Request.Url.Scheme);
-                    var activationEmail = emailService.GenerateUserAccountActivationMessage(baseUrl, activationCode, userId, email);
-                    return await emailService.SendAsync(activationEmail);
-                }
-            }
-            return false;
         }
 
         [HttpGet]
@@ -224,6 +200,16 @@
             ModelState.AddModelError(string.Empty, ParseLoginError(response.Error));
 
             return View("SignIn", model);
+        }
+
+        // POST: /Admin/Account/SignOut
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SignOut()
+        {
+            authenticationManager.SignOut();
+
+            return RedirectToAction("SignIn");
         }
 
         private ActionResult RedirectToLocal(string returnUrl)

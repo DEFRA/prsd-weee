@@ -48,6 +48,9 @@
             // Authorization
             builder.RegisterType<WeeeAuthorization>().As<IWeeeAuthorization>();
 
+            // External route resolution
+            builder.RegisterType<ExternalRouteService>().As<IExternalRouteService>().InstancePerRequest();
+
             return builder.Build();
         }
     }

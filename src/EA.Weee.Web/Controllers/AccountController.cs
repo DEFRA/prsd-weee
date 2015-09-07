@@ -3,6 +3,10 @@
     using Api.Client;
     using Api.Client.Entities;
     using Core;
+    using Core.Organisations;
+    using Core.Shared;
+    using EA.Weee.Requests.Users;
+    using EA.Weee.Web.Controllers.Base;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
@@ -20,28 +24,28 @@
     using ViewModels.Account;
 
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IAuthenticationManager authenticationManager;
-        private readonly IEmailService emailService;
         private readonly Func<IOAuthClient> oauthClient;
         private readonly Func<IUserInfoClient> userInfoClient;
         private readonly IWeeeAuthorization weeeAuthorization;
+        private readonly IExternalRouteService externalRouteService;
 
         public AccountController(Func<IOAuthClient> oauthClient,
             IAuthenticationManager authenticationManager,
             Func<IWeeeClient> apiClient,
-            IEmailService emailService,
+            IWeeeAuthorization weeeAuthorization,
             Func<IUserInfoClient> userInfoClient,
-            IWeeeAuthorization weeeAuthorization)
+            IExternalRouteService externalRouteService)
         {
             this.oauthClient = oauthClient;
             this.apiClient = apiClient;
             this.authenticationManager = authenticationManager;
-            this.emailService = emailService;
             this.userInfoClient = userInfoClient;
             this.weeeAuthorization = weeeAuthorization;
+            this.externalRouteService = externalRouteService;
         }
 
         [HttpGet]
@@ -120,21 +124,9 @@
         [ValidateAntiForgeryToken]
         public ActionResult SignOut()
         {
-            // I'm not happy about this code. I provided the IWeeeAuthorization interface
-            // to avoid having to do exactly this...
-            bool canAccessInternalArea = ((ClaimsIdentity)User.Identity).HasClaim(
-                ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea);
-
             authenticationManager.SignOut();
 
-            if (canAccessInternalArea)
-            {
-                return RedirectToAction("SignIn", "Account", new { Area = "admin" });
-            }
-            else
-            {
-                return RedirectToAction("SignIn", "Account");
-            }
+            return RedirectToAction("SignIn");
         }
 
         private ActionResult RedirectToLocal(string returnUrl)
@@ -168,37 +160,19 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UserAccountActivationRequired(FormCollection model)
         {
-            string email = User.GetEmailAddress();
-            if (!string.IsNullOrEmpty(email))
+            string emailAddress = User.GetEmailAddress();
+            if (!string.IsNullOrEmpty(emailAddress))
             {
                 ViewBag.UserEmailAddress = User.GetEmailAddress();
             }
-            try
-            {
-                using (var client = apiClient())
-                {
-                    var activationToken =
-                        await client.User.GetUserAccountActivationTokenAsync(User.GetAccessToken());
-                    var activationEmail =
-                        emailService.GenerateUserAccountActivationMessage(
-                            Url.Action("ActivateUserAccount", "Account", null, Request.Url.Scheme),
-                            activationToken, User.GetUserId(), User.GetEmailAddress());
-                    var emailSent = await emailService.SendAsync(activationEmail);
 
-                    if (!emailSent)
-                    {
-                        ViewBag.Errors = new[]
-                        {
-                            "Email is currently unavailable at this time, please try again later."
-                        };
-                        return View();
-                    }
-                }
-            }
-            catch (SmtpException)
+            using (var client = apiClient())
             {
-                ViewBag.Errors = new[] { "The activation email was not sent, please try again later." };
-                return View();
+                string accessToken = User.GetAccessToken();
+
+                string activationBaseUrl = externalRouteService.ActivateExternalUserAccountUrl;
+
+                await client.User.ResendActivationEmail(accessToken, activationBaseUrl);
             }
 
             return RedirectToAction("UserAccountActivationRequired");
