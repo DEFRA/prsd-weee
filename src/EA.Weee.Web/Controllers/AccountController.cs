@@ -127,7 +127,7 @@
             authenticationManager.SignOut();
 
             return RedirectToAction("SignIn");
-            }
+        }
 
         private ActionResult RedirectToLocal(string returnUrl)
         {
@@ -166,8 +166,8 @@
                 ViewBag.UserEmailAddress = User.GetEmailAddress();
             }
 
-                using (var client = apiClient())
-                {
+            using (var client = apiClient())
+            {
                 string accessToken = User.GetAccessToken();
 
                 string activationBaseUrl = externalRouteService.ActivateExternalUserAccountUrl;
