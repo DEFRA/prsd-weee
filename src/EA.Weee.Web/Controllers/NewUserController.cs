@@ -129,23 +129,19 @@
             {
                 using (var client = apiClient())
                 {
-                    var userCreationData = new UserCreationData
+                    var userCreationData = new ExternalUserCreationData
                     {
                         Email = model.Email,
                         FirstName = model.Name,
                         Surname = model.Surname,
                         Password = model.Password,
                         ConfirmPassword = model.ConfirmPassword,
-                        Claims = new[]
-                        {
-                            Claims.CanAccessExternalArea
-                        },
                         ActivationBaseUrl = externalRouteService.ActivateExternalUserAccountUrl,
                     };
 
                     try
                     {
-                        var userId = await client.User.CreateUserAsync(userCreationData);
+                        var userId = await client.User.CreateExternalUserAsync(userCreationData);
 
                         var signInResponse = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
 
