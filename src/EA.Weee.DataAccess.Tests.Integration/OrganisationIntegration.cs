@@ -22,7 +22,9 @@
 
             A.CallTo(() => userContext.UserId).Returns(Guid.NewGuid());
 
-            context = new WeeeContext(userContext);
+            IEventDispatcher eventDispatcher = A.Fake<IEventDispatcher>();
+
+            context = new WeeeContext(userContext, eventDispatcher);
         }
 
         [Fact]

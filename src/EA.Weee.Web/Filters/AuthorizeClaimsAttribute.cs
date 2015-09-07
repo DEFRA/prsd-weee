@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Security.Claims;
+    using System.Web.Mvc;
     using AuthorizationContext = System.Web.Mvc.AuthorizationContext;
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
@@ -18,6 +19,12 @@
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             base.OnAuthorization(filterContext);
+
+            if (filterContext.ActionDescriptor.GetCustomAttributes(typeof(AllowAnonymousAttribute), true).Any())
+            {
+                // The MVC "AllowAnonymous" attribute should overrule any authorization checks.
+                return;
+            }
 
             var claimsIdentity = filterContext.HttpContext.User.Identity as ClaimsIdentity;
 

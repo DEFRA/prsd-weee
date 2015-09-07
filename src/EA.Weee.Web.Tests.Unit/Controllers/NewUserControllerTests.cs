@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Actions;
     using Api.Client.Entities;
@@ -14,6 +8,14 @@
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Routing;
     using ViewModels.NewUser;
     using Web.Controllers;
     using Xunit;
@@ -23,14 +25,14 @@
         private readonly IOAuthClient oathClient;
         private readonly IWeeeClient weeeClient;
         private readonly IAuthenticationManager authenticationManager;
-        private readonly IEmailService emailService;
+        private readonly IExternalRouteService externalRouteService;
 
         public NewUserControllerTests()
         {
             oathClient = A.Fake<IOAuthClient>();
             weeeClient = A.Fake<IWeeeClient>();
             authenticationManager = A.Fake<IAuthenticationManager>();
-            emailService = A.Fake<IEmailService>();
+            externalRouteService = A.Fake<IExternalRouteService>();
         }
 
         [Fact]
@@ -94,38 +96,38 @@
         }
 
         [Fact]
-        public async Task HttpPost_NewUser_IsValid_OnlyClaimShouldBeExternalAccess()
+        public async Task HttpPost_NewUser_IsValid()
         {
             var userCreationViewModel = GetValidUserCreationViewModel();
             var newUser = A.Fake<IUnauthenticatedUser>();
 
-            var userCreationData = new UserCreationData();
-            A.CallTo(() => newUser.CreateUserAsync(A<UserCreationData>._))
-                .Invokes((UserCreationData u) => userCreationData = u)
+            var userCreationData = new InternalUserCreationData();
+            A.CallTo(() => newUser.CreateInternalUserAsync(A<InternalUserCreationData>._))
+                .Invokes((InternalUserCreationData u) => userCreationData = u)
                 .Returns(Task.FromResult(A<string>._));
 
             A.CallTo(() => weeeClient.User).Returns(newUser);
 
-            try
-            {
-                await NewUserController().UserCreation(userCreationViewModel);
-            }
-            catch (NullReferenceException)
-            {
-            }
-
-            Assert.Single(userCreationData.Claims);
-            Assert.Equal(Claims.CanAccessExternalArea, userCreationData.Claims.Single());
+            await NewUserController().UserCreation(userCreationViewModel);
         }
 
         private NewUserController NewUserController()
         {
-            return new NewUserController(() => oathClient, () => weeeClient, authenticationManager, emailService);
+            return new NewUserController(
+                () => oathClient,
+                () => weeeClient,
+                authenticationManager,
+                externalRouteService);
         }
 
-        private static NewUserController GetMockNewUserController(object viewModel)
+        private NewUserController GetMockNewUserController(object viewModel)
         {
-            var newuserController = new NewUserController(() => new OAuthClient("test", "test", "test"), () => new WeeeClient("test"), null, null);
+            var newuserController = new NewUserController(
+                () => new OAuthClient("test", "test", "test"),
+                () => new WeeeClient("test"),
+                null,
+                externalRouteService);
+            
             // Mimic the behaviour of the model binder which is responsible for Validating the Model
             var validationContext = new ValidationContext(viewModel, null, null);
             var validationResults = new List<ValidationResult>();

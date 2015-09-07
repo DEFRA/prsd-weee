@@ -20,18 +20,18 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly IAuthenticationManager authenticationManager;
-        private readonly IEmailService emailService;
         private readonly Func<IOAuthClient> oauthClient;
+        private readonly IExternalRouteService externalRouteService;
 
         public NewUserController(Func<IOAuthClient> oauthClient,
             Func<IWeeeClient> apiClient,
             IAuthenticationManager authenticationManager,
-            IEmailService emailService)
+            IExternalRouteService externalRouteService)
         {
             this.oauthClient = oauthClient;
             this.apiClient = apiClient;
             this.authenticationManager = authenticationManager;
-            this.emailService = emailService;
+            this.externalRouteService = externalRouteService;
         }
 
         [HttpGet]
@@ -129,23 +129,24 @@
             {
                 using (var client = apiClient())
                 {
-                    var userCreationData = new UserCreationData
+                    var userCreationData = new ExternalUserCreationData
                     {
                         Email = model.Email,
                         FirstName = model.Name,
                         Surname = model.Surname,
                         Password = model.Password,
                         ConfirmPassword = model.ConfirmPassword,
-                        Claims = new[]
-                        {
-                            Claims.CanAccessExternalArea
-                        }
+                        ActivationBaseUrl = externalRouteService.ActivateExternalUserAccountUrl,
                     };
 
                     try
                     {
-                        var userId = await client.User.CreateUserAsync(userCreationData);
-                        await SendEmail(model.Email, model.Password, client, userId);
+                        var userId = await client.User.CreateExternalUserAsync(userCreationData);
+
+                        var signInResponse = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
+
+                        authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
+
                         return RedirectToAction("UserAccountActivationRequired", "Account");
                     }
                     catch (ApiBadRequestException ex)
@@ -170,21 +171,6 @@
         public ActionResult TermsAndConditions()
         {
             return View();
-        }
-
-        public async Task<bool> SendEmail(string email, string password, IWeeeClient client, string userId)
-        {
-            var signInResponse = await oauthClient().GetAccessTokenAsync(email, password);
-
-            authenticationManager.SignIn(signInResponse.GenerateUserIdentity());
-
-            var activationCode = await client.User.GetUserAccountActivationTokenAsync(signInResponse.AccessToken);
-
-            string baseUrl = Url.Action("ActivateUserAccount", "Account", null, Request.Url.Scheme);
-
-            var activationEmail = emailService.GenerateUserAccountActivationMessage(baseUrl, activationCode, userId, email);
-
-            return await emailService.SendAsync(activationEmail);
         }
     }
 }

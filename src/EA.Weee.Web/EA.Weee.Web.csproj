@@ -558,6 +558,7 @@
     <Content Include="Views\Home\Robots.cshtml" />
     <Content Include="Views\Organisation\YourOrganisations.cshtml" />
     <Content Include="Views\Organisation\_Pending.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -575,7 +576,6 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\Modules\ApiClientModule.cs" />
-    <Compile Include="App_Start\Modules\EmailModule.cs" />
     <Compile Include="App_Start\Modules\FileConverterModule.cs" />
     <Compile Include="App_Start\PrsdCookieAuthenticationProvider.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -626,6 +626,14 @@
     <Compile Include="Infrastructure\RouteCollectionExtensions.cs" />
     <Compile Include="Infrastructure\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
+    <Compile Include="Requests\Base\IRequestCreator.cs" />
+    <Compile Include="Requests\Base\RequestCreator.cs" />
+    <Compile Include="Requests\IPartnershipDetailsRequestCreator.cs" />
+    <Compile Include="Requests\IRegisteredCompanyDetailsRequestCreator.cs" />
+    <Compile Include="Requests\ISoleTraderDetailsRequestCreator.cs" />
+    <Compile Include="Requests\PartnershipDetailsRequestCreator.cs" />
+    <Compile Include="Requests\RegisteredCompanyDetailsRequestCreator.cs" />
+    <Compile Include="Requests\SoleTraderDetailsRequestCreator.cs" />
     <Compile Include="Services\BreadcrumbService.cs" />
     <Compile Include="Services\Caching\Cache.cs" />
     <Compile Include="Services\Caching\CacheResult.cs" />
@@ -633,17 +641,15 @@
     <Compile Include="Services\Caching\InMemoryCacheProvider.cs" />
     <Compile Include="Services\Caching\IWeeeCache.cs" />
     <Compile Include="Services\Caching\WeeeCache.cs" />
-    <Compile Include="Services\EmailService.cs" />
-    <Compile Include="Services\EmailTemplate.cs" />
-    <Compile Include="Services\EmailTemplateService.cs" />
+    <Compile Include="Services\ExternalRouteService.cs" />
     <Compile Include="Services\FileConverterService.cs" />
     <Compile Include="Services\IAppConfiguration.cs" />
-    <Compile Include="Services\IEmailService.cs" />
-    <Compile Include="Services\IEmailTemplateService.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeController.cs" />
     <Compile Include="Services\IFileConverterService.cs" />
-    <Compile Include="Services\ISmtpClient.cs" />
-    <Compile Include="Services\SmtpClientProxy.cs" />
+    <Compile Include="Services\IWeeeAuthorization.cs" />
+    <Compile Include="Services\WeeeAuthorization.cs" />
+    <Compile Include="ViewModels\Account\ResetPasswordModel.cs" />
+    <Compile Include="Services\IExternalRouteService.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\Scheme\SchemeAreaRegistration.cs" />
@@ -656,14 +662,6 @@
     </Compile>
     <Compile Include="Infrastructure\Constants.cs" />
     <Compile Include="Infrastructure\PrincipalExtensions.cs" />
-    <Compile Include="Requests\Base\IRequestCreator.cs" />
-    <Compile Include="Requests\Base\RequestCreator.cs" />
-    <Compile Include="Requests\IRegisteredCompanyDetailsRequestCreator.cs" />
-    <Compile Include="Requests\IPartnershipDetailsRequestCreator.cs" />
-    <Compile Include="Requests\ISoleTraderDetailsRequestCreator.cs" />
-    <Compile Include="Requests\RegisteredCompanyDetailsRequestCreator.cs" />
-    <Compile Include="Requests\PartnershipDetailsRequestCreator.cs" />
-    <Compile Include="Requests\SoleTraderDetailsRequestCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AppConfiguration.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
@@ -677,6 +675,7 @@
     <Compile Include="ViewModels\OrganisationRegistration\Details\RegisteredCompanyDetailsViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Details\SoleTraderDetailsViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\ContactPersonViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\JoinOrganisationConfirmationViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\OrganisationSummaryViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\AddressPrepopulateViewModel.cs" />
     <Compile Include="ViewModels\Organisation\PendingOrganisationsViewModel.cs" />
