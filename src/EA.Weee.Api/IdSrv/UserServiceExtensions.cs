@@ -32,6 +32,7 @@
             factory.Register(new Registration<ConfigurationService> { Mode = RegistrationMode.InstancePerHttpRequest });
             factory.Register(new Registration<IUserContext, UserContext> { Mode = RegistrationMode.InstancePerHttpRequest });
             factory.Register(new Registration<WeeeContext> { Mode = RegistrationMode.InstancePerHttpRequest });
+            factory.Register(new Registration<IEventDispatcher, NullEventDispatcher>() { Mode = RegistrationMode.Singleton });
         }
     }
 }

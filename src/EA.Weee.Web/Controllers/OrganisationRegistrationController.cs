@@ -28,6 +28,7 @@
     public class OrganisationRegistrationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
+        private const string NoSearchAnotherCompany = "No - search for another company";
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient)
         {
@@ -302,7 +303,7 @@
         {
             var fallbackSelectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName,
                 companiesRegistrationNumber, type, organisationId,
-                new PagedList<OrganisationSearchData>());
+                new PagedList<PublicOrganisationData>());
 
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(tradingName))
             {
@@ -400,7 +401,7 @@
 
         private SelectOrganisationViewModel BuildSelectOrganisationViewModel(string name, string tradingName,
             string companiesRegistrationNumber, OrganisationType type, Guid? organisationId,
-            IPagedList<OrganisationSearchData> matchingOrganisations)
+            IPagedList<PublicOrganisationData> matchingOrganisations)
         {
             return new SelectOrganisationViewModel
             {
@@ -414,9 +415,25 @@
         }
 
         [HttpGet]
-        public ViewResult JoinOrganisation(Guid organisationId)
+        public async Task<ViewResult> JoinOrganisation(Guid organisationId)
         {
-            return View(new JoinOrganisationViewModel { OrganisationId = organisationId });
+            using (var client = apiClient())
+            {
+                var organisationData = await client.SendAsync(
+                    User.GetAccessToken(),
+                    new GetPublicOrganisationInfo(organisationId));
+
+                var collection = new List<string> { "Yes - join " + organisationData.DisplayName, NoSearchAnotherCompany };
+                var model = new JoinOrganisationViewModel
+                {
+                    OrganisationId = organisationId,
+                    JoinOrganisationOptions = new RadioButtonStringCollectionViewModel
+                    {
+                        PossibleValues = collection
+                    }
+                };
+                return View(model);
+            }
         }
 
         [HttpPost]
@@ -426,6 +443,11 @@
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
+            }
+
+            if (viewModel.JoinOrganisationOptions.SelectedValue == NoSearchAnotherCompany)
+            {
+                return RedirectToAction("Type", "OrganisationRegistration");
             }
 
             using (var client = apiClient())
@@ -447,14 +469,26 @@
                     throw;
                 }
 
-                return RedirectToAction("JoinOrganisationConfirmation");
+                return RedirectToAction("JoinOrganisationConfirmation", new { organisationId = viewModel.OrganisationId });
             }
         }
 
         [HttpGet]
-        public ViewResult JoinOrganisationConfirmation()
+        public async Task<ViewResult> JoinOrganisationConfirmation(Guid organisationId)
         {
-            return View();
+            using (var client = apiClient())
+            {
+                var organisationData = await client.SendAsync(
+                    User.GetAccessToken(),
+                    new GetPublicOrganisationInfo(organisationId));
+
+                var model = new JoinOrganisationConfirmationViewModel()
+                {
+                    OrganisationName = organisationData.DisplayName
+                };
+
+                return View(model);
+            }
         }
 
         [HttpPost]

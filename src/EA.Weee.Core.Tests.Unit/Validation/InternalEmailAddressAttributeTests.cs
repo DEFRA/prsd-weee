@@ -1,27 +1,26 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Validation
 {
     using Configuration;
-    using Configuration.EmailRules;
     using Core.Validation;
     using FakeItEasy;
     using Xunit;
 
     public class InternalEmailAddressAttributeTests
     {
-        private readonly IConfigurationManagerWrapper configurationManagerWrapper;
-
-        public InternalEmailAddressAttributeTests()
-        {
-            configurationManagerWrapper = A.Fake<IConfigurationManagerWrapper>();
-        }
-
         [Theory]
         [InlineData("test@someotherdomain.com")]
         [InlineData("test@environment-agency.gov.uka")]
         [InlineData("test@aenvironment-agency.gov.uk")]
-        public void EmailAddressDoesNotBelongToCompetantAuthority_IsInvalid(string emailAddress)
+        public void IsValid_EmailAddressDoesNotBelongToCompetentAuthority_ReturnsFalse(string emailAddress)
         {
-            Assert.False(InternalEmailAddressAttribute().IsValid(emailAddress));           
+            // Arrange
+            InternalEmailAddressAttribute attribute = new InternalEmailAddressAttribute();
+
+            // Act
+            bool result = attribute.IsValid(emailAddress);
+
+            // Assert
+            Assert.Equal(false, result);           
         }
 
         [Theory]
@@ -30,53 +29,41 @@
         [InlineData("test@naturalresourceswales.gov.uk")]
         [InlineData("test@sepa.org.uk")]
         [InlineData("test@doeni.gov.uk")]
-        [InlineData(null)]
-        [InlineData("")]
-        public void EmailAddressDoesBelongToCompetantAuthority_IsValid(string emailAddress)
+        public void IsValid_EmailAddressDoesBelongToCompetentAuthority_ReturnsTrue(string emailAddress)
         {
-            Assert.True(InternalEmailAddressAttribute().IsValid(emailAddress));  
+            // Arrange
+            InternalEmailAddressAttribute attribute = new InternalEmailAddressAttribute();
+
+            // Act
+            bool result = attribute.IsValid(emailAddress);
+
+            // Assert
+            Assert.Equal(true, result);
         }
 
+        /// <summary>
+        /// This test ensures that null, empty or invalid email addresses do not fail validation.
+        /// This is important otherwise a user may be overloaded with several error messages
+        /// about the same input field.
+        /// The trade-off here is that the [InternalEmailAddress] attribute MUST be used
+        /// in conjection with [Required].
+        /// </summary>
+        /// <param name="emailAddress"></param>
         [Theory]
         [InlineData(null)]
         [InlineData("")]
         [InlineData("invalid@emailaddress")]
         [InlineData("anotherinvalid.emailaddress")]
-        public void IfEmailAddressIsInvalid_OrNull_OrEmpty_ShouldNotValidate(string emailAddress)
+        public void IsValid_EmailAddressIsNullEmptyOrInvalid_ReturnsTrue(string emailAddress)
         {
-            Assert.True(InternalEmailAddressAttribute().IsValid(emailAddress));
-        }
+            // Arrange
+            InternalEmailAddressAttribute attribute = new InternalEmailAddressAttribute();
 
-        private InternalEmailAddressAttribute InternalEmailAddressAttribute()
-        {
-            var validEmailSuffixes = new[]
-            {
-                "^.*@environment-agency.gov.uk$",
-                "^.*@cyfoethnaturiolcymru.gov.uk$",
-                "^.*@naturalresourceswales.gov.uk$",
-                "^.*@doeni.gov.uk$",
-                "^.*@sepa.org.uk$"
-            };
+            // Act
+            bool result = attribute.IsValid(emailAddress);
 
-            var internalConfig = new RulesSection
-            {
-                DefaultAction = RuleAction.Deny
-            };
-
-            foreach (var validEmailSuffix in validEmailSuffixes)
-            {
-                internalConfig.Rules.Add(new RuleElement
-                {
-                    Type = RuleType.RegEx,
-                    Value = validEmailSuffix,
-                    Action = RuleAction.Allow
-                });
-            }
-
-            A.CallTo(() => configurationManagerWrapper.InternalEmailRules)
-                .Returns(internalConfig);
-
-            return new InternalEmailAddressAttribute { Configuration = configurationManagerWrapper };
+            // Assert
+            Assert.Equal(true, result);
         }
     }
 }
