@@ -6,6 +6,7 @@
     using Core.Organisations;
     using Core.Shared;
     using FakeItEasy;
+    using ViewModels.JoinOrganisation;
     using ViewModels.OrganisationRegistration;
     using ViewModels.OrganisationRegistration.Details;
     using ViewModels.OrganisationRegistration.Type;
@@ -327,6 +328,62 @@
 
             Assert.NotNull(model);
             Assert.IsType<JoinOrganisationConfirmationViewModel>(model);
+        }
+
+        [Fact]
+        public async void GetJoinOrganisation_ShouldReturnsView()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
+                .Returns(new PublicOrganisationData());
+
+            var result = await OrganisationRegistrationController().JoinOrganisation(A<Guid>._);
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<JoinOrganisationViewModel>(model);
+        }
+
+        [Fact]
+        public async void PostJoinOrganisation_NoSearchAnotherCompanySelected_ShouldRedirectedToTypeView()
+        {
+            var model = GetTestJoinOrgViewModel();
+
+            var result = await OrganisationRegistrationController().JoinOrganisation(model);
+
+            var redirectToRouteResult = ((RedirectToRouteResult)result);
+
+            Assert.Equal("Type", redirectToRouteResult.RouteValues["action"]);
+        }
+
+        [Fact]
+        public async void PostJoinOrganisation_YesJoinOrganisationSelected_ShouldRedirectedToJoinOrganisationConfirmationView()
+        {
+            var model = GetTestJoinOrgViewModel();
+
+            model.JoinOrganisationOptions.SelectedValue = "Yes - join xyz";
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<JoinOrganisation>._))
+                .Returns(Guid.NewGuid());
+
+            var result = await OrganisationRegistrationController().JoinOrganisation(model);
+
+            var redirectToRouteResult = ((RedirectToRouteResult)result);
+
+            Assert.Equal("JoinOrganisationConfirmation", redirectToRouteResult.RouteValues["action"]);
+        }
+
+        private JoinOrganisationViewModel GetTestJoinOrgViewModel()
+        {
+            const string noSearchAnotherCompany = "No - search for another company";
+            return new JoinOrganisationViewModel
+            {
+                OrganisationId = Guid.NewGuid(),
+                JoinOrganisationOptions = new RadioButtonStringCollectionViewModel
+                {
+                    PossibleValues = new[] { "Yes - join xyz", noSearchAnotherCompany },
+                    SelectedValue = noSearchAnotherCompany
+                }
+            };
         }
 
         private OrganisationRegistrationController OrganisationRegistrationController()

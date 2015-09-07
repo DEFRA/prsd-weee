@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -81,6 +82,40 @@
 
             var prns = producers.Select(p => p.RegistrationNumber);
             Assert.Equal(prns.Distinct(), prns); // all prns should be unique
+        }
+
+        [Fact(Skip = "This is a time-consuming test and shouldn't be run automatically")]
+        public void StressTest()
+        {
+            var helper = new PrnHelper(new QuadraticResidueHelper());
+            var generatedPrns = new HashSet<string>();
+
+            uint seed = (uint)GetCurrentSeed();
+            var components = new PrnAsComponents(seed);
+
+            // be careful how high you go with this limit or generatedPrns will fill up
+            // and your computer will get stuck in page-fault limbo
+            const int Limit = int.MaxValue / 100;
+
+            for (int ii = 0; ii < Limit; ii++)
+            {
+                if (ii % (Limit / 10) == 0)
+                {
+                    Debug.WriteLine("Done another ten per cent...");
+                }
+
+                var resultingPrn = helper.CreateUniqueRandomVersionOfPrn(components);
+
+                Assert.False(generatedPrns.Contains(resultingPrn),
+                    string.Format(
+                    "{0} was generated twice but is supposed to be unique for a very large range of seed values",
+                    resultingPrn));
+
+                generatedPrns.Add(resultingPrn);
+
+                seed = components.ToSeedValue() + 1;
+                components = new PrnAsComponents(seed);
+            }
         }
 
         private long GetCurrentSeed()
