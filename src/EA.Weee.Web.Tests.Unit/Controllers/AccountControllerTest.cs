@@ -7,6 +7,7 @@
     using Api.Client;
     using Api.Client.Entities;
     using Core.Organisations;
+    using EA.Weee.Web.ViewModels.Account;
     using FakeItEasy;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
@@ -57,6 +58,42 @@
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal("UserAccountActivationRequired", redirectToRouteResult.RouteValues["action"]);
+        }
+
+        [Fact]
+        public async void HttpPost_ResetPasswordRequest_EmailNotInDatabase_ReturnsError()
+        {
+            var model = new ResetPasswordRequestViewModel
+            {
+                Email = "a@b.c"
+            };
+
+            A.CallTo(() => apiClient.User.ResetPasswordRequestAsync(A<string>._)).Returns(false);
+
+            var controller = AccountController();
+            var result = await controller.ResetPasswordRequest(model);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(model, ((ViewResult)(result)).Model);
+            Assert.False(controller.ModelState.IsValid);
+        }
+
+        [Fact]
+        public async void HttpPost_ResetPasswordRequest_EmailNotInDatabase_ReturnsResetPasswordInstructionView()
+        {
+            var model = new ResetPasswordRequestViewModel
+            {
+                Email = "a@b.c"
+            };
+
+            A.CallTo(() => apiClient.User.ResetPasswordRequestAsync(A<string>._)).Returns(true);
+
+            var controller = AccountController();
+            var result = await controller.ResetPasswordRequest(model);
+            var viewResult = (ViewResult)result;
+
+            Assert.Equal("ResetPasswordInstruction", viewResult.ViewName);
+            Assert.Equal(model.Email, viewResult.ViewBag.Email);
         }
     }
 }

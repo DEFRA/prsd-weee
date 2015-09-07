@@ -46,7 +46,7 @@
                 UserName = model.Email, 
                 Email = model.Email, 
                 FirstName = model.FirstName, 
-                Surname = model.Surname,
+                Surname = model.Surname, 
             };
 
             user.Claims.Add(new IdentityUserClaim
@@ -177,6 +177,23 @@
             }
 
             return Ok(new PasswordResetResult(await userManager.GetEmailAsync(model.UserId.ToString())));
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("ResetPasswordRequest")]
+        public async Task<IHttpActionResult> ResetPasswordRequest(PasswordResetRequest model)
+        {
+            var result = new PasswordResetRequestResult();
+
+            var user = await userManager.FindByEmailAsync(model.EmailAddress);
+            if (user != null)
+            {
+                result.ValidEmail = true;
+                result.PasswordResetToken = await userManager.GeneratePasswordResetTokenAsync(user.Id);
+            }
+
+            return Ok(result);
         }
 
         private IHttpActionResult GetErrorResult(IdentityResult result)
