@@ -12,7 +12,7 @@
     using Web.Controllers;
     using Weee.Requests.Organisations;
     using Xunit;
-    
+
     public class OrganisationRegistrationControllerTests
     {
         private readonly IWeeeClient apiClient;
@@ -220,7 +220,7 @@
 
         [Fact]
         public async void GetSoleTraderDetails_WithoutOrganisationId_ShouldReturnsSoleTraderDetailsView()
-        {  
+        {
             var result = await OrganisationRegistrationController().SoleTraderDetails();
             var model = ((ViewResult)result).Model;
 
@@ -242,7 +242,7 @@
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
              .Returns(true);
-           
+
             var orgData = new OrganisationData
             {
                 OrganisationType = OrganisationType.SoleTraderOrIndividual,
@@ -306,6 +306,37 @@
             Assert.Equal(orgData.TradingName, ((RegisteredCompanyDetailsViewModel)model).BusinessTradingName);
             Assert.Equal(orgData.CompanyRegistrationNumber, ((RegisteredCompanyDetailsViewModel)model).CompaniesRegistrationNumber);
             Assert.Equal(orgData.Name, ((RegisteredCompanyDetailsViewModel)model).CompanyName);
+        }
+
+        [Fact]
+        public void GetNotFoundOrganisation_ShouldReturnsView()
+        {
+            var result = OrganisationRegistrationController().NotFoundOrganisation("Test");
+
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<NotFoundOrganisationViewModel>(model);
+        }
+
+        [Fact]
+        public void PostNotFoundOrganisation_TryAnotherSearchActionSelected_ShouldRedirectToTypeView()
+        {
+            var model = new NotFoundOrganisationViewModel
+            {
+                SearchedText = "Test",
+                ActivityOptions = new RadioButtonStringCollectionViewModel
+                {
+                    PossibleValues = new[] { NotFoundOrganisationAction.TryAnotherSearch, NotFoundOrganisationAction.CreateNewOrg },
+                    SelectedValue = NotFoundOrganisationAction.TryAnotherSearch
+                }
+            };
+
+            var result = OrganisationRegistrationController().NotFoundOrganisation(model);
+
+            var redirectRouteResult = (RedirectToRouteResult)result;
+
+            Assert.Equal(redirectRouteResult.RouteValues["action"], "Type");
         }
 
         private OrganisationRegistrationController OrganisationRegistrationController()

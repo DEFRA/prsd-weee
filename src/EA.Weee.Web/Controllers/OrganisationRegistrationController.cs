@@ -321,6 +321,11 @@
                             client.SendAsync(User.GetAccessToken(),
                                 new FindMatchingOrganisations(name ?? tradingName, page, OrganisationsPerPage));
 
+                    if (organisationSearchResultData.TotalMatchingOrganisations == 0)
+                    {
+                        return RedirectToAction("NotFoundOrganisation", new { searchedText = name ?? tradingName });
+                    }
+
                     var model = BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
                         organisationId,
                         organisationSearchResultData.Results.ToPagedList(page - 1, OrganisationsPerPage,
@@ -337,6 +342,37 @@
                     return View(fallbackSelectOrganisationViewModel);
                 }
             }
+        }
+
+        [HttpGet]
+        public ActionResult NotFoundOrganisation(string searchedText)
+        {
+            var model = new NotFoundOrganisationViewModel
+            {
+                SearchedText = searchedText
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult NotFoundOrganisation(NotFoundOrganisationViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.ActivityOptions.SelectedValue == NotFoundOrganisationAction.TryAnotherSearch)
+            {
+                return RedirectToAction("Type", "OrganisationRegistration");
+            }
+            if (model.ActivityOptions.SelectedValue == NotFoundOrganisationAction.CreateNewOrg)
+            {
+                return RedirectToAction("Type", "OrganisationRegistration");
+            }
+
+            return View(model);
         }
 
         private SelectOrganisationViewModel BuildSelectOrganisationViewModel(string name, string tradingName,
