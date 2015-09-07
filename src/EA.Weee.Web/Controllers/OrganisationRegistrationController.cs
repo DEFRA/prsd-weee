@@ -369,22 +369,32 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult NotFoundOrganisation(NotFoundOrganisationViewModel model)
+        public async Task<ActionResult> NotFoundOrganisation(NotFoundOrganisationViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
-            if (model.ActivityOptions.SelectedValue == NotFoundOrganisationAction.TryAnotherSearch)
+            using (var client = apiClient())
             {
-                return RedirectToAction("Type", "OrganisationRegistration");
-            }
-            if (model.ActivityOptions.SelectedValue == NotFoundOrganisationAction.CreateNewOrg)
-            {
-                return RedirectToAction("CreateOrganisation", "OrganisationRegistration");
-            }
+                if (model.ActivityOptions.SelectedValue == NotFoundOrganisationAction.TryAnotherSearch)
+                {
+                    return RedirectToAction("Type", "OrganisationRegistration");
+                }
 
+                if (model.ActivityOptions.SelectedValue == NotFoundOrganisationAction.CreateNewOrg)
+                {
+                    var request = MakeOrganisationCreationRequest(
+                        model.Name,
+                        model.TradingName,
+                        model.CompaniesRegistrationNumber,
+                        model.Type);
+
+                    var organisationId = await client.SendAsync(User.GetAccessToken(), request);
+
+                    return RedirectToAction("MainContactPerson", new { organisationId });
+                }
+            }
             return View(model);
         }
 
