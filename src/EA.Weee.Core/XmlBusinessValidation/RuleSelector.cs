@@ -12,16 +12,20 @@
             this.context = context;
         }
 
-        public IRule<T> GetRule<T>()
+        public RuleResult EvaluateRule<T>(T ruleData)
         {
+            IRule<T> rule;
+
             try
             {
-                return (IRule<T>)context.Resolve(typeof(IRule<>).MakeGenericType(typeof(T)));
+                rule = (IRule<T>)context.Resolve(typeof(IRule<>).MakeGenericType(typeof(T)));
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException(string.Format("No rule found for rule data type '{0}", typeof(T).Name), ex);
+                throw new InvalidOperationException(string.Format("No rule evaluator found for rule '{0}'", typeof(T).Name), ex);
             }
+
+            return rule.Evaluate(ruleData);
         }
     }
 }

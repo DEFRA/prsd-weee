@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.Api.Client.Actions
 {
+    using System.ComponentModel;
     using System.Net.Http;
     using System.Threading.Tasks;
     using Entities;
     using Prsd.Core.Web.Extensions;
 
-    internal class UnauthenticatedUser : IUnauthenticatedUser
+    public class UnauthenticatedUser : IUnauthenticatedUser
     {
         private const string Controller = "UnauthenticatedUser/";
         private readonly HttpClient httpClient;
@@ -36,6 +37,13 @@
             var response = await httpClient.GetAsync(url);
 
             return await response.CreateResponseAsync<string>();
+        }
+
+        public async Task<PasswordResetResult> ResetPasswordAsync(PasswordResetData passwordResetData)
+        {
+            var response = await httpClient.PostAsJsonAsync(Controller + "ResetPassword", passwordResetData);
+
+            return await response.CreateResponseAsync<PasswordResetResult>();
         }
     }
 }
