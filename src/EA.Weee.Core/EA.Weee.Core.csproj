@@ -112,7 +112,7 @@
     <Compile Include="Admin\UserSearchData.cs" />
     <Compile Include="Organisations\ContactData.cs" />
     <Compile Include="Organisations\OrganisationData.cs" />
-    <Compile Include="Organisations\OrganisationSearchData.cs" />
+    <Compile Include="Organisations\PublicOrganisationData.cs" />
     <Compile Include="Organisations\OrganisationSearchDataResult.cs" />
     <Compile Include="Organisations\OrganisationType.cs" />
     <Compile Include="Organisations\OrganisationUserData.cs" />
