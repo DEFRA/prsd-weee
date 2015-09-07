@@ -1,6 +1,6 @@
 ﻿Decision on your request to perform WEEE activities
 
-Hello
+Hello,
 
 Your request to perform Waste Electrical and Electronic Equipment (WEEE) activities for @Model.OrganisationName has been @(Model.Approved ? "authorised" : "rejected").
 
