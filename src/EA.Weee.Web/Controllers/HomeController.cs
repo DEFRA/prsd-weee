@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
+    using EA.Weee.Core;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
@@ -28,7 +29,17 @@
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToRoute("SelectOrganisation");
+                bool userIsInternal = ((ClaimsIdentity)User.Identity).HasClaim(
+                    ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea);
+
+                if (userIsInternal)
+                {
+                    return RedirectToAction("ChooseActivity", "Home", new { Area = "admin" });
+                }
+                else
+                {
+                    return RedirectToRoute("SelectOrganisation");
+                }
             }
 
             return View("Index");
@@ -64,8 +75,12 @@
         [ChildActionOnly]
         public ActionResult _WeeeTitle()
         {
+            bool userIsInternal = ((ClaimsIdentity)User.Identity).HasClaim(
+                ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea);
+            
             TitleViewModel model = new TitleViewModel();
             model.User = User;
+            model.UserIsInternal = userIsInternal;
             model.Breadcrumb = breadcrumb;
 
             string userIdString = User.GetUserId();

@@ -45,5 +45,21 @@
 
             return await response.CreateResponseAsync<PasswordResetResult>();
         }
+
+        public async Task<bool> ResendActivationEmail(string accessToken, string activationBaseUrl)
+        {
+            httpClient.SetBearerToken(accessToken);
+
+            string url = Controller + "ResendActivationEmail";
+            
+            ResendActivationEmailRequest model = new ResendActivationEmailRequest()
+            {
+                ActivationBaseUrl = activationBaseUrl,
+            };
+
+            var response = await httpClient.PostAsJsonAsync(url, model);
+
+            return await response.CreateResponseAsync<bool>();
+        }
     }
 }

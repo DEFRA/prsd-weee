@@ -17,9 +17,12 @@
         [Fact]
         public async void GetSchemesDataAccess_GetCompleteSchemes_ReturnsOnlySchemesWithCompleteOrganisations()
         {
-            var fakeUserContext = A.Fake<IUserContext>();
-            A.CallTo(() => fakeUserContext.UserId).Returns(Guid.NewGuid());
-            var realWeeeContext = new WeeeContext(fakeUserContext);
+            var userContext = A.Fake<IUserContext>();
+            A.CallTo(() => userContext.UserId).Returns(Guid.NewGuid());
+
+            IEventDispatcher eventDispatcher = A.Fake<IEventDispatcher>();
+
+            var realWeeeContext = new WeeeContext(userContext, eventDispatcher);
 
             var testSchemes = await AddTestOrganisationsAndSchemes(realWeeeContext);
             var completeOrganisation = testSchemes[OrganisationStatus.Complete].Organisation;

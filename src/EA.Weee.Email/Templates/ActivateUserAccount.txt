@@ -1,0 +1,9 @@
+﻿Activate your user account
+
+Your user account has been created on the Waste Electrical and Electronic Equipment service.
+
+To use this service you need to click activate your account: @Model.ActivationUrl 
+
+If you didn’t create a user account you don’t need to take any action.
+
+WEEE Team

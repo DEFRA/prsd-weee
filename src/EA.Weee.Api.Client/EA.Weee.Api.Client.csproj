@@ -84,6 +84,7 @@
     <Compile Include="Actions\IUnauthenticatedUser.cs" />
     <Compile Include="Entities\PasswordResetData.cs" />
     <Compile Include="Entities\PasswordResetResult.cs" />
+    <Compile Include="Entities\ResendActivationEmailRequest.cs" />
     <Compile Include="Entities\UserCreationData.cs" />
     <Compile Include="Entities\ActivatedUserAccountData.cs" />
     <Compile Include="IWeeeClient.cs" />
