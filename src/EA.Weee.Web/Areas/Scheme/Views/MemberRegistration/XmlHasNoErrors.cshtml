@@ -15,8 +15,8 @@
     @{int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);}
     @if (numWarnings > 0)
     {
-        <p>Your XML file contains @numWarnings @(numWarnings == 1 ? "warning" : "warnings"). Warnings may be displayed where member details are incorrect or invalid.</p>
-        <p>You must review all the warnings. Make corrections to the XML file and re-upload it, or, where the changes are valid, you may choose to submit the file as it is.</p>
+        <p>Your XML file contains @numWarnings @(numWarnings == 1 ? "warning" : "warnings"). Warnings may be displayed where member details are changed.</p>
+        <p>You must review all the warnings in your XML file. Please make any required corrections to your XML before trying to submit it again, or where changes are legitimate, you may choose to submit your XML file as it is with warnings.</p>
         <details>
             <summary class="warning-details-summary bold-small">
                 @numWarnings Warning(s)
