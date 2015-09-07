@@ -42,7 +42,9 @@
 
         private WeeeContext WeeeContext()
         {
-            return new WeeeContext(userContext);
+            IEventDispatcher eventDispatcher = A.Fake<IEventDispatcher>();
+
+            return new WeeeContext(userContext, eventDispatcher);
         }
 
         private Address ValidAddress()

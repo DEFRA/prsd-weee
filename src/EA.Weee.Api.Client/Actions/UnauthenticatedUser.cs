@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.Api.Client.Actions
 {
+    using System.ComponentModel;
     using System.Net.Http;
     using System.Threading.Tasks;
     using Entities;
     using Prsd.Core.Web.Extensions;
 
-    internal class UnauthenticatedUser : IUnauthenticatedUser
+    public class UnauthenticatedUser : IUnauthenticatedUser
     {
         private const string Controller = "UnauthenticatedUser/";
         private readonly HttpClient httpClient;
@@ -15,9 +16,15 @@
             this.httpClient = httpClient;
         }
 
-        public async Task<string> CreateUserAsync(UserCreationData userCreationData)
+        public async Task<string> CreateInternalUserAsync(InternalUserCreationData userCreationData)
         {
-            var response = await httpClient.PostAsJsonAsync(Controller + "CreateUser", userCreationData);
+            var response = await httpClient.PostAsJsonAsync(Controller + "CreateInternalUser", userCreationData);
+            return await response.CreateResponseAsync<string>();
+        }
+
+        public async Task<string> CreateExternalUserAsync(ExternalUserCreationData userCreationData)
+        {
+            var response = await httpClient.PostAsJsonAsync(Controller + "CreateExternalUser", userCreationData);
             return await response.CreateResponseAsync<string>();
         }
 
@@ -36,6 +43,29 @@
             var response = await httpClient.GetAsync(url);
 
             return await response.CreateResponseAsync<string>();
+        }
+
+        public async Task<PasswordResetResult> ResetPasswordAsync(PasswordResetData passwordResetData)
+        {
+            var response = await httpClient.PostAsJsonAsync(Controller + "ResetPassword", passwordResetData);
+
+            return await response.CreateResponseAsync<PasswordResetResult>();
+        }
+
+        public async Task<bool> ResendActivationEmail(string accessToken, string activationBaseUrl)
+        {
+            httpClient.SetBearerToken(accessToken);
+
+            string url = Controller + "ResendActivationEmail";
+            
+            ResendActivationEmailRequest model = new ResendActivationEmailRequest()
+            {
+                ActivationBaseUrl = activationBaseUrl,
+            };
+
+            var response = await httpClient.PostAsJsonAsync(url, model);
+
+            return await response.CreateResponseAsync<bool>();
         }
     }
 }

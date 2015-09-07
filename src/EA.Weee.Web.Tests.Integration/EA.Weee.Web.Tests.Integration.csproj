@@ -158,7 +158,6 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Services\ActivationEmailTests.cs" />
     <Compile Include="TestStartup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpecifyWhichOrganisationIWorkFor\SpecifyOrganisationDetails.feature.cs">
@@ -209,7 +208,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Services\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
