@@ -14,15 +14,18 @@
         private readonly ITemplateExecutor templateExecutor;
         private readonly IMessageCreator messageCreator;
         private readonly ISender sender;
+        private readonly IWeeeEmailConfiguration configuration;
 
         public WeeeEmailService(
             ITemplateExecutor templateExecutor,
             IMessageCreator messageCreator,
-            ISender sender)
+            ISender sender,
+            IWeeeEmailConfiguration configuration)
         {
             this.templateExecutor = templateExecutor;
             this.messageCreator = messageCreator;
             this.sender = sender;
+            this.configuration = configuration;
         }
 
         public async Task<bool> SendActivateUserAccount(string emailAddress, string activationUrl)
@@ -51,7 +54,7 @@
             var model = new
             {
                 OrganisationName = organisationUser.Organisation.OrganisationName,
-                LoginUrl = "https://localhost:44300",
+                SiteUrl = configuration.SiteUrl,
             };
 
             EmailContent content = new EmailContent()

@@ -18,7 +18,7 @@
         protected override void Load(ContainerBuilder builder)
         {
             builder.Register(c => ConfigurationManager.GetSection("emailRules")).As<IRuleSet>();
-            builder.Register(c => new ConfigReader("Weee")).As<IEmailConfiguration>();
+            builder.Register(c => new WeeeConfigReader()).As<IWeeeEmailConfiguration>();
 
             builder.Register(c => new ResourceTemplateLoader(ThisAssembly, "EA.Weee.Email.Templates"))
                 .As<ITemplateLoader>();
