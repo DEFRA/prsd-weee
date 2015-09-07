@@ -302,7 +302,7 @@
         {
             var fallbackSelectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName,
                 companiesRegistrationNumber, type, organisationId,
-                new PagedList<OrganisationSearchData>());
+                new PagedList<PublicOrganisationData>());
 
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(tradingName))
             {
@@ -341,7 +341,7 @@
 
         private SelectOrganisationViewModel BuildSelectOrganisationViewModel(string name, string tradingName,
             string companiesRegistrationNumber, OrganisationType type, Guid? organisationId,
-            IPagedList<OrganisationSearchData> matchingOrganisations)
+            IPagedList<PublicOrganisationData> matchingOrganisations)
         {
             return new SelectOrganisationViewModel
             {
@@ -388,14 +388,26 @@
                     throw;
                 }
 
-                return RedirectToAction("JoinOrganisationConfirmation");
+                return RedirectToAction("JoinOrganisationConfirmation", new { organisationId = viewModel.OrganisationId });
             }
         }
 
         [HttpGet]
-        public ViewResult JoinOrganisationConfirmation()
+        public async Task<ViewResult> JoinOrganisationConfirmation(Guid organisationId)
         {
-            return View();
+            using (var client = apiClient())
+            {
+                var organisationData = await client.SendAsync(
+                    User.GetAccessToken(),
+                    new GetPublicOrganisationInfo(organisationId));
+
+                var model = new JoinOrganisationConfirmationViewModel()
+                {
+                    OrganisationName = organisationData.DisplayName
+                };
+
+                return View(model);
+            }
         }
 
         [HttpPost]
