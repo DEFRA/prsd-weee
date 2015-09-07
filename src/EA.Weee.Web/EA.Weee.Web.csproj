@@ -652,8 +652,6 @@
     <Compile Include="Services\WeeeAuthorization.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordModel.cs" />
     <Compile Include="Services\IExternalRouteService.cs" />
-    <Compile Include="Services\ISmtpClient.cs" />
-    <Compile Include="Services\SmtpClientProxy.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordRequestViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />

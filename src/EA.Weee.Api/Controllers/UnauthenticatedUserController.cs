@@ -86,12 +86,12 @@
                 Surname = model.Surname,
             };
 
-                user.Claims.Add(new IdentityUserClaim
-                {
-                    ClaimType = ClaimTypes.AuthenticationMethod, 
+            user.Claims.Add(new IdentityUserClaim
+            {
+                ClaimType = ClaimTypes.AuthenticationMethod,
                 ClaimValue = Claims.CanAccessExternalArea,
-                    UserId = user.Id
-                });
+                UserId = user.Id
+            });
 
             var result = await userManager.CreateAsync(user, model.Password);
 
@@ -170,7 +170,7 @@
                 }
             }
             catch (InvalidOperationException)
-        {
+            {
                 // Because an invalid token or an invalid password does not throw an error on reset, we can say the only other parameter (user Id) is invalid
                 ModelState.AddModelError(string.Empty, "User not recognised");
                 return BadRequest(ModelState);
