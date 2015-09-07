@@ -4,11 +4,11 @@
     using Core.Organisations;
     using Prsd.Core.Mediator;
 
-    public class OrganisationSearchById : IRequest<OrganisationSearchData>
+    public class GetPublicOrganisationInfo : IRequest<PublicOrganisationData>
     {
         public readonly Guid Id;
 
-        public OrganisationSearchById(Guid id)
+        public GetPublicOrganisationInfo(Guid id)
         {
             Id = id;
         }

@@ -3,7 +3,7 @@
     using System;
     using Shared;
 
-    public class OrganisationSearchData
+    public class PublicOrganisationData
     {
         public Guid Id { get; set; }
 
