@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Api.Controllers
 {
+    using System;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Http;
@@ -76,6 +77,34 @@
             var result = await userManager.ConfirmEmailAsync(model.Id.ToString(), model.Code);
 
             return Ok(result.Succeeded);
+        }
+
+        [HttpPost]
+        [Route("ResetPassword")]
+        public async Task<IHttpActionResult> ResetPassword(PasswordResetData model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var result = await userManager.ResetPasswordAsync(model.UserId.ToString(), model.Token, model.Password);
+
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                // Because an invalid token or an invalid password does not throw an error on reset, we can say the only other parameter (user Id) is invalid
+                ModelState.AddModelError(string.Empty, "User not recognised");
+                return BadRequest(ModelState);
+            }
+
+            return Ok(new PasswordResetResult(await userManager.GetEmailAsync(model.UserId.ToString())));
         }
 
         private IHttpActionResult GetErrorResult(IdentityResult result)

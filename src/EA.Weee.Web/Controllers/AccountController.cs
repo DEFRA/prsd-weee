@@ -3,8 +3,6 @@
     using Api.Client;
     using Api.Client.Entities;
     using Core;
-    using Core.Organisations;
-    using Core.Shared;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
@@ -16,10 +14,10 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
     using Thinktecture.IdentityModel.Client;
     using ViewModels.Account;
-    using ViewModels.OrganisationRegistration;
-    using Weee.Requests.Organisations;
 
     [Authorize]
     public class AccountController : Controller
@@ -29,18 +27,21 @@
         private readonly IEmailService emailService;
         private readonly Func<IOAuthClient> oauthClient;
         private readonly Func<IUserInfoClient> userInfoClient;
+        private readonly IWeeeAuthorization weeeAuthorization;
 
         public AccountController(Func<IOAuthClient> oauthClient,
             IAuthenticationManager authenticationManager,
             Func<IWeeeClient> apiClient,
             IEmailService emailService,
-            Func<IUserInfoClient> userInfoClient)
+            Func<IUserInfoClient> userInfoClient,
+            IWeeeAuthorization weeeAuthorization)
         {
             this.oauthClient = oauthClient;
             this.apiClient = apiClient;
             this.authenticationManager = authenticationManager;
             this.emailService = emailService;
             this.userInfoClient = userInfoClient;
+            this.weeeAuthorization = weeeAuthorization;
         }
 
         [HttpGet]
@@ -218,6 +219,48 @@
             }
 
             return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ResetPassword(Guid id, string token)
+        {
+            return View(new ResetPasswordModel());
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPassword(Guid id, string token, ResetPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    using (var client = apiClient())
+                    {
+                        var result = await client.User.ResetPasswordAsync(new PasswordResetData 
+                        {
+                            Password = model.Password, 
+                            Token = token,
+                            UserId = id
+                        });
+
+                        return await weeeAuthorization.SignIn(result.EmailAddress, model.Password, false);
+                    }
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            return View(model);
         }
     }
 }
