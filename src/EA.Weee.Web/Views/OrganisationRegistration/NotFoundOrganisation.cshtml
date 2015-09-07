@@ -1,0 +1,29 @@
+﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.NotFoundOrganisationViewModel
+@{
+    ViewBag.Title = "Not Found Organisation";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Are you sure you entered the right details?
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "NotFoundOrganisation", controllerName: "OrganisationRegistration", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.SearchedText)
+
+        <p>We found no results for "@Model.SearchedText".</p>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.ActivityOptions.SelectedValue)" id="ActivityOptions">
+            @Html.EditorFor(m => m.ActivityOptions)
+        </div>
+
+        <div>
+            <input type="submit" class="button" value="Continue" />
+        </div>
+    }
+}
