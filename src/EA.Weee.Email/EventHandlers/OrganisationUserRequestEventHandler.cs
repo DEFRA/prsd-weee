@@ -25,15 +25,9 @@
         {
             IEnumerable<User> recipients = await dataAccess.FetchActiveOrganisationUsers(@event.OrganisationUser.OrganisationId);
 
-            List<Task> sendEmailTasks = new List<Task>();
             foreach (User recipient in recipients)
             {
-                sendEmailTasks.Add(emailService.SendOrganisationUserRequest(recipient.Email, @event.OrganisationUser));
-            }
-
-            foreach (Task sendEmailTask in sendEmailTasks)
-            {
-                await sendEmailTask;
+                await emailService.SendOrganisationUserRequest(recipient.Email, @event.OrganisationUser);
             }
         }
     }
