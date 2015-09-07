@@ -9,6 +9,7 @@
     using Requests.Base;
     using System.Linq;
     using System.Reflection;
+    using Authorization;
 
     public class AutofacBootstrapper
     {

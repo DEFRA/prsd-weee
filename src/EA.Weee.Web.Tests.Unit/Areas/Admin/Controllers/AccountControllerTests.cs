@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Net;
-    using System.Net.Mail;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web;
@@ -12,9 +11,10 @@
     using Api.Client;
     using Api.Client.Actions;
     using Api.Client.Entities;
-    using Core;
+    using Authorization;
     using FakeItEasy;
     using Microsoft.Owin.Security;
+    using Prsd.Core.Mediator;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
@@ -31,6 +31,7 @@
         private readonly IAuthenticationManager authenticationManager;
         private readonly IUserInfoClient userInfoClient;
         private readonly IExternalRouteService externalRouteService;
+        private readonly IWeeeAuthorization weeeAuthorization;
 
         public AccountControllerTests()
         {
@@ -39,6 +40,7 @@
             authenticationManager = A.Fake<IAuthenticationManager>();
             userInfoClient = A.Fake<IUserInfoClient>();
             externalRouteService = A.Fake<IExternalRouteService>();
+            weeeAuthorization = A.Fake<IWeeeAuthorization>();
         }
 
         [Fact]
@@ -67,8 +69,8 @@
 
             A.CallTo(() => apiClient.User).Returns(newUser);
 
-            A.CallTo(() => oauthClient.GetAccessTokenAsync(A<string>._, A<string>._))
-                .Returns(A.Fake<TokenResponse>());
+            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Success("dshadjk"));
 
             await AccountController().Create(model);
 
@@ -79,25 +81,63 @@
         }
 
         [Fact]
-        public async void HttpPost_Create_ModelIsValid_ShouldSubmitUserDetailsOnce_AndShouldRequestTokenOnce_AndShouldSignInOnce_AndShouldRedirectToAccountActivationPage()
+        public async void HttpPost_Create_ModelIsValid_ShouldSubmitUserDetailsOnce_AndShouldSignInOnce()
         {
             var model = ValidModel();
             var newUser = A.Fake<IUnauthenticatedUser>();
 
             A.CallTo(() => apiClient.User).Returns(newUser);
-            A.CallTo(() => oauthClient.GetAccessTokenAsync(A<string>._, A<string>._))
-                .Returns(A.Fake<TokenResponse>());
 
-            var result = await AccountController().Create(model);
+            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Success("dshadjk"));
+
+            await AccountController().Create(model);
 
             A.CallTo(() => apiClient.User.CreateInternalUserAsync(A<InternalUserCreationData>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            A.CallTo(() => oauthClient.GetAccessTokenAsync(model.Email, model.Password))
+            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void HttpPost_Create_SignInIsUnsuccessful_ShouldAddErrorToModel_AndReturnViewWithModel()
+        {
+            var model = ValidModel();
+            const string loginError = "Oops";
+            var newUser = A.Fake<IUnauthenticatedUser>();
+
+            A.CallTo(() => apiClient.User).Returns(newUser);
+
+            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Fail(loginError));
+
+            var controller = AccountController();
+            var result = await controller.Create(model);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(model, ((ViewResult)result).Model);
+
+            Assert.Single(controller.ModelState.Values);
+            Assert.Single(controller.ModelState.Values.Single().Errors);
+            Assert.Equal(loginError, controller.ModelState.Values.Single().Errors.Single().ErrorMessage);
+        }
+
+        [Fact]
+        public async void HttpPost_Create_SignInSuccessful_ShouldAddUserToCompetentAuthority_AndRedirectToAccountActivation()
+        {
+            var newUser = A.Fake<IUnauthenticatedUser>();
+            A.CallTo(() => apiClient.User).Returns(newUser);
+
+            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Success("dshjk"));
+
+            var result = await AccountController().Create(ValidModel());
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            A.CallTo(() => authenticationManager.SignIn(A<ClaimsIdentity>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            Assert.IsType<RedirectToRouteResult>(result);
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
 
@@ -151,29 +191,18 @@
             // Arrange
             IUnauthenticatedUser user = A.Fake<IUnauthenticatedUser>();
 
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.User).Returns(user);
+            A.CallTo(() => apiClient.User).Returns(user);
 
             ClaimsIdentity identity = new ClaimsIdentity();
             identity.AddClaim(new Claim(OAuth2Constants.AccessToken, "accessToken"));
             
-            IAuthenticationManager authenticationManager = A.Fake<IAuthenticationManager>();
             A.CallTo(() => authenticationManager.User).Returns(new ClaimsPrincipal(identity));
-
-            IExternalRouteService externalRouteService = A.Fake<IExternalRouteService>();
             A.CallTo(() => externalRouteService.ActivateInternalUserAccountUrl).Returns("activationBaseUrl");
-
-            AccountController controller = new AccountController(
-                () => weeeClient,
-                authenticationManager,
-                () => A.Fake<IOAuthClient>(),
-                () => A.Fake<IUserInfoClient>(),
-                externalRouteService);
 
             FormCollection formCollection = new FormCollection();
 
             // Act
-            await controller.AdminAccountActivationRequired(formCollection);
+            await AccountController().AdminAccountActivationRequired(formCollection);
 
             // Assert
             A.CallTo(() => user.ResendActivationEmail("accessToken", "activationBaseUrl"))
@@ -206,7 +235,7 @@
         }
 
         [Fact]
-        public async void HttpPost_SignIn_ModelIsValidAndUserInfoResponseClaimToCanAccessInternalArea_ShouldRequestTokenOnce_AndShouldGetUserInfoOnce_AndShouldRedirectToHomePage()
+        public async void HttpPost_SignIn_ModelIsValid_AndSignInSucceeds_ShouldRedirectToRedirectMechanism()
         {
             var model = new InternalLoginViewModel
             {
@@ -215,26 +244,12 @@
                 RememberMe = false
             };
 
-            var controller = AccountController();
+            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Success("dsadsada"));
 
-            A.CallTo(() => oauthClient.GetAccessTokenAsync(A<string>._, A<string>._))
-                .Returns(A.Fake<TokenResponse>());
+            var result = await AccountController().SignIn(model, "AnyUrl");
 
-            var userInfoResponse = new UserInfoResponse(HttpStatusCode.Accepted, string.Empty)
-            {
-                Claims = new[] { new Tuple<string, string>(string.Empty, Claims.CanAccessInternalArea) }
-            };
-
-            A.CallTo(() => userInfoClient.GetUserInfoAsync(A<string>._))
-                .Returns(userInfoResponse);
-
-            var result = await controller.SignIn(model, "AnyUrl");
-
-            A.CallTo(() => oauthClient.GetAccessTokenAsync(model.Email, model.Password))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
-            A.CallTo(() => userInfoClient.GetUserInfoAsync(A<string>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            Assert.IsType<RedirectToRouteResult>(result);
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
 
@@ -244,8 +259,9 @@
         }
 
         [Fact]
-        public async void HttpPost_SignIn_ModelIsValidAndUserInfoResponseClaimToCanAccessExternalArea_ShouldRequestTokenOnce_AndShouldGetUserInfoOnce_AndShouldReturnLoginView()
+        public async void HttpPost_SignIn_ModelIsValid_ButSignInFails_ShouldAddModelError_AndReturnViewWithModel()
         {
+            var loginError = ":(";
             var model = new InternalLoginViewModel
             {
                 Email = "test@sepa.org.uk",
@@ -253,31 +269,19 @@
                 RememberMe = false
             };
 
+            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Fail(loginError));
+
             var controller = AccountController();
-
-            A.CallTo(() => oauthClient.GetAccessTokenAsync(A<string>._, A<string>._))
-                .Returns(A.Fake<TokenResponse>());
-
-            var userInfoResponse = new UserInfoResponse(HttpStatusCode.Accepted, string.Empty)
-            {
-                Claims = new[] { new Tuple<string, string>(string.Empty, Claims.CanAccessExternalArea) }
-            };
-
-            A.CallTo(() => userInfoClient.GetUserInfoAsync(A<string>._))
-                .Returns(userInfoResponse);
-
             var result = await controller.SignIn(model, "AnyUrl");
 
-            A.CallTo(() => oauthClient.GetAccessTokenAsync(model.Email, model.Password))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(model, ((ViewResult)result).Model);
 
-            A.CallTo(() => userInfoClient.GetUserInfoAsync(A<string>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
-            var viewResult = ((ViewResult)result);
-
-            Assert.Equal("SignIn", viewResult.ViewName);
             Assert.False(controller.ModelState.IsValid);
+            Assert.Single(controller.ModelState.Values);
+            Assert.Single(controller.ModelState.Values.Single().Errors);
+            Assert.Equal(loginError, controller.ModelState.Values.Single().Errors.Single().ErrorMessage);
         }
 
         private InternalUserCreationViewModel ValidModel()
@@ -302,9 +306,8 @@
             var controller = new AccountController(
                 () => apiClient,
                 authenticationManager,
-                () => oauthClient,
-                () => userInfoClient,
-                externalRouteService);
+                externalRouteService,
+                weeeAuthorization);
 
             controller.ControllerContext = new ControllerContext(context, new RouteData(), controller);
 
