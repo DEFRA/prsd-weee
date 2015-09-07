@@ -182,17 +182,18 @@
         [AllowAnonymous]
         [HttpPost]
         [Route("ResetPasswordRequest")]
-        public async Task<bool> ResetPasswordRequest(string emailAddress)
+        public async Task<IHttpActionResult> ResetPasswordRequest(PasswordResetRequest model)
         {
-            bool result = false;
-            var user = await userManager.FindByEmailAsync(emailAddress);
+            var result = new PasswordResetRequestResult();
 
+            var user = await userManager.FindByEmailAsync(model.EmailAddress);
             if (user != null)
             {
-                result = true;
+                result.ValidEmail = true;
+                result.PasswordResetToken = await userManager.GeneratePasswordResetTokenAsync(user.Id);
             }
 
-            return result;
+            return Ok(result);
         }
 
         private IHttpActionResult GetErrorResult(IdentityResult result)

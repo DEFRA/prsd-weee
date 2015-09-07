@@ -17,6 +17,6 @@
         
         Task<bool> ResendActivationEmail(string accessToken, string activationBaseUrl);
 
-        Task<bool> ResetPasswordRequestAsync(string emailAddress);
+        Task<PasswordResetRequestResult> ResetPasswordRequestAsync(PasswordResetRequest passwordResetRequest);
     }
 }

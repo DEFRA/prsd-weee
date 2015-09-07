@@ -256,9 +256,9 @@
 
             using (var client = apiClient())
             {
-                bool result = await client.User.ResetPasswordRequestAsync(model.Email);
+                var result = await client.User.ResetPasswordRequestAsync(new PasswordResetRequest(model.Email));
 
-                if (!result)               
+                if (!result.ValidEmail)               
                 {
                     ModelState.AddModelError("Email", "Email address not recognised.");
                     return View(model);
