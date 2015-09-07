@@ -6,31 +6,24 @@
     using EA.Weee.Domain.Events;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
     public class OrganisationUserRequestEventHandler : IEventHandler<OrganisationUserRequestEvent>
     {
-        private readonly WeeeContext context;
+        private readonly IOrganisationUserRequestEventHandlerDataAccess dataAccess;
         private readonly IWeeeEmailService emailService;
 
-        public OrganisationUserRequestEventHandler(WeeeContext context, IWeeeEmailService emailService)
+        public OrganisationUserRequestEventHandler(IOrganisationUserRequestEventHandlerDataAccess dataAccess, IWeeeEmailService emailService)
         {
-            this.context = context;
+            this.dataAccess = dataAccess;
             this.emailService = emailService;
         }
 
         public async Task HandleAsync(OrganisationUserRequestEvent @event)
         {
-            List<User> recipients = await context.OrganisationUsers
-                .Where(ou => ou.OrganisationId == @event.OrganisationUser.OrganisationId)
-                .Where(ou => ou.UserStatus.Value == UserStatus.Active.Value)
-                .Select(ou => ou.User)
-                .Distinct()
-                .OrderBy(u => u.Email)
-                .ToListAsync();
+            IEnumerable<User> recipients = await dataAccess.FetchActiveOrganisationUsers(@event.OrganisationUser.OrganisationId);
 
             List<Task> sendEmailTasks = new List<Task>();
             foreach (User recipient in recipients)
