@@ -13,35 +13,35 @@
 
         public string CreateUniqueRandomVersionOfPrn(PrnAsComponents prnAsComponents)
         {
-            int firstLetterOrdinal = prnAsComponents.FirstLetter - 'A';
-            int secondLetterOrdinal = prnAsComponents.SecondLetter - 'A';
-            int thirdLetterOrdinal = prnAsComponents.ThirdLetter - 'M';
-            int fourthLetterOrdinal = prnAsComponents.FourthLetter - 'M';
+            int firstLetterOrdinal = prnAsComponents.FirstLetter.GetOrdinalValue();
+            int secondLetterOrdinal = prnAsComponents.SecondLetter.GetOrdinalValue();
+            int thirdLetterOrdinal = prnAsComponents.ThirdLetter.GetOrdinalValue();
+            int fourthLetterOrdinal = prnAsComponents.FourthLetter.GetOrdinalValue();
 
             // use quadratic residue to get a nice unique pseudorandomised version
             int randomisedNumber = quadraticResidueHelper.ForFourDigitNumber(prnAsComponents.Number);
-            char randomisedFirstLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(firstLetterOrdinal) + 'A');
-            char randomisedSecondLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(secondLetterOrdinal) + 'A');
-            char randomisedThirdLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(thirdLetterOrdinal) + 'M');
-            char randomisedFourthLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(fourthLetterOrdinal) + 'M');
+            char randomisedFirstLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(firstLetterOrdinal) + prnAsComponents.FirstLetter.BaseChar);
+            char randomisedSecondLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(secondLetterOrdinal) + prnAsComponents.SecondLetter.BaseChar);
+            char randomisedThirdLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(thirdLetterOrdinal) + prnAsComponents.ThirdLetter.BaseChar);
+            char randomisedFourthLetter = (char)(quadraticResidueHelper.ForSmallSubsetOfLetters(fourthLetterOrdinal) + prnAsComponents.FourthLetter.BaseChar);
 
             // there's a few characters we want to skip to avoid confusion with numbers
-            if (randomisedFirstLetter >= 'I')
+            if (randomisedFirstLetter >= 'O')
             {
                 randomisedFirstLetter++;
             }
 
-            if (randomisedSecondLetter >= 'I')
+            if (randomisedSecondLetter >= 'O')
             {
                 randomisedSecondLetter++;
             }
 
-            if (randomisedThirdLetter >= 'O')
+            if (randomisedThirdLetter >= 'I')
             {
                 randomisedThirdLetter++;
             }
 
-            if (randomisedFourthLetter >= 'O')
+            if (randomisedFourthLetter >= 'I')
             {
                 randomisedFourthLetter++;
             }
