@@ -8,5 +8,6 @@
         Task<string> CreateUserAsync(UserCreationData userCreationData);
         Task<bool> ActivateUserAccountEmailAsync(ActivatedUserAccountData activatedAccountData);
         Task<string> GetUserAccountActivationTokenAsync(string accessToken);
+        Task<bool> ResetPasswordRequestAsync(string emailAddress);
     }
 }
