@@ -2,6 +2,7 @@
 {
     using System;
     using EA.Prsd.Core.Domain;
+    using EA.Weee.Domain.Events;
 
     public class OrganisationUser : Entity
     {
@@ -55,6 +56,13 @@
             {
                 throw new InvalidOperationException("User status can not be set Pending");
             }
+
+            if (UserStatus == UserStatus.Pending)
+            {
+                // Raise a domain event indicating that the user's pending request has completed.
+                RaiseEvent(new OrganisationUserRequestCompletedEvent(this));
+            }
+
             UserStatus = userStatus;
         }
     }

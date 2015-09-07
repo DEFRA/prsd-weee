@@ -1,31 +1,40 @@
 ﻿namespace EA.Weee.Api.Controllers
 {
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using System.Web.Http;
     using Client.Entities;
     using DataAccess.Identity;
+    using EA.Weee.Core;
+    using EA.Weee.Email;
     using Identity;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Prsd.Core.Domain;
+    using System;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Http;
 
     [RoutePrefix("api/UnauthenticatedUser")]
     public class UnauthenticatedUserController : ApiController
     {
         private readonly ApplicationUserManager userManager;
         private readonly IUserContext userContext;
+        private readonly IWeeeEmailService emailService;
 
-        public UnauthenticatedUserController(ApplicationUserManager userManager, IUserContext userContext)
+        public UnauthenticatedUserController(
+            ApplicationUserManager userManager,
+            IUserContext userContext,
+            IWeeeEmailService emailService)
         {
             this.userManager = userManager;
             this.userContext = userContext;
+            this.emailService = emailService;
         }
 
-        // POST api/UnauthenticatedUser/CreateUser
         [AllowAnonymous]
-        [Route("CreateUser")]
-        public async Task<IHttpActionResult> CreateUser(UserCreationData model)
+        [HttpPost]
+        [Route("CreateInternalUser")]
+        public async Task<IHttpActionResult> CreateInternalUser(InternalUserCreationData model)
         {
             if (!ModelState.IsValid)
             {
@@ -40,15 +49,12 @@
                 Surname = model.Surname, 
             };
 
-            foreach (var claim in model.Claims)
+            user.Claims.Add(new IdentityUserClaim
             {
-                user.Claims.Add(new IdentityUserClaim
-                {
-                    ClaimType = ClaimTypes.AuthenticationMethod, 
-                    ClaimValue = claim, 
-                    UserId = user.Id
-                });
-            }
+                ClaimType = ClaimTypes.AuthenticationMethod, 
+                ClaimValue = Claims.CanAccessInternalArea, 
+                UserId = user.Id
+            });
 
             var result = await userManager.CreateAsync(user, model.Password);
 
@@ -57,18 +63,49 @@
                 return GetErrorResult(result);
             }
 
+            await SendActivationEmail(user.Id, user.Email, model.ActivationBaseUrl);
+
             return Ok(user.Id);
         }
 
-        [HttpGet]
-        [Route("GetUserAccountActivationToken")]
-        public async Task<string> GetUserAccountActivationToken()
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("CreateExternalUser")]
+        public async Task<IHttpActionResult> CreateExternalUser(ExternalUserCreationData model)
         {
-            var token = await userManager.GenerateEmailConfirmationTokenAsync(userContext.UserId.ToString());
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            return token;
+            var user = new ApplicationUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                Surname = model.Surname,
+            };
+
+                user.Claims.Add(new IdentityUserClaim
+                {
+                    ClaimType = ClaimTypes.AuthenticationMethod, 
+                ClaimValue = Claims.CanAccessExternalArea,
+                    UserId = user.Id
+                });
+
+            var result = await userManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            await SendActivationEmail(user.Id, user.Email, model.ActivationBaseUrl);
+
+            return Ok(user.Id);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("ActivateUserAccount")]
         public async Task<IHttpActionResult> ActivateUserAccount(ActivatedUserAccountData model)
@@ -76,6 +113,70 @@
             var result = await userManager.ConfirmEmailAsync(model.Id.ToString(), model.Code);
 
             return Ok(result.Succeeded);
+        }
+
+        [HttpGet]
+        [Route("GetUserAccountActivationToken")]
+        public async Task<string> GetUserAccountActivationToken()
+        {
+            string userId = userContext.UserId.ToString();
+
+            return await userManager.GenerateEmailConfirmationTokenAsync(userId);
+        }
+
+        [HttpPost]
+        [Route("ResendActivationEmail")]
+        public async Task<IHttpActionResult> ResendActivationEmail(ResendActivationEmailRequest model)
+        {
+            string userId = userContext.UserId.ToString();
+            
+            string emailAddress = await userManager.GetEmailAsync(userId);
+
+            bool emailSent = await SendActivationEmail(userId, emailAddress, model.ActivationBaseUrl);
+            
+            return Ok(emailSent);
+        }
+
+        private async Task<bool> SendActivationEmail(string userId, string emailAddress, string activationBaseUrl)
+        {
+            string activationToken = await userManager.GenerateEmailConfirmationTokenAsync(userId);
+
+            var uriBuilder = new UriBuilder(activationBaseUrl);
+            uriBuilder.Path += "/" + userId;
+            var parameters = HttpUtility.ParseQueryString(string.Empty);
+            parameters["code"] = activationToken;
+            uriBuilder.Query = parameters.ToString();
+            string activationUrl = uriBuilder.Uri.ToString();
+
+            return await emailService.SendActivateUserAccount(emailAddress, activationUrl);
+        }
+
+        [HttpPost]
+        [Route("ResetPassword")]
+        public async Task<IHttpActionResult> ResetPassword(PasswordResetData model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var result = await userManager.ResetPasswordAsync(model.UserId.ToString(), model.Token, model.Password);
+
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
+            }
+            catch (InvalidOperationException)
+        {
+                // Because an invalid token or an invalid password does not throw an error on reset, we can say the only other parameter (user Id) is invalid
+                ModelState.AddModelError(string.Empty, "User not recognised");
+                return BadRequest(ModelState);
+            }
+
+            return Ok(new PasswordResetResult(await userManager.GetEmailAsync(model.UserId.ToString())));
         }
 
         [AllowAnonymous]

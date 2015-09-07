@@ -18,6 +18,7 @@
     public class WeeeContext : DbContext
     {
         private readonly IUserContext userContext;
+        private readonly IEventDispatcher dispatcher;
 
         public virtual DbSet<AuditLog> AuditLogs { get; set; }
 
@@ -47,10 +48,12 @@
 
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
-        public WeeeContext(IUserContext userContext)
+        public WeeeContext(IUserContext userContext, IEventDispatcher dispatcher)
             : base("name=Weee.DefaultConnection")
         {
             this.userContext = userContext;
+            this.dispatcher = dispatcher;
+
             Database.SetInitializer<WeeeContext>(null);
 
             StoredProcedures = new StoredProcedures(this);
@@ -61,10 +64,11 @@
         /// </summary>
         /// <param name="userContext"></param>
         /// <param name="connection"></param>
-        public WeeeContext(IUserContext userContext, DbConnection connection)
+        public WeeeContext(IUserContext userContext, IEventDispatcher dispatcher, DbConnection connection)
             : base(connection, false)
         {
             this.userContext = userContext;
+            this.dispatcher = dispatcher;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -101,6 +105,8 @@
                         Database.ExecuteSqlCommand("EXEC [Producer].[sppRefreshProducerIsCurrent");
                     }
 
+                    Task.Run(() => this.DispatchEvents(dispatcher)).Wait();
+
                     transaction.Commit();
                 }
                 catch
@@ -135,6 +141,8 @@
                         await Database.ExecuteSqlCommandAsync(
                             "EXEC [Producer].[sppRefreshProducerIsCurrent]", cancellationToken);
                     }
+
+                    await this.DispatchEvents(dispatcher);
 
                     transaction.Commit();
                 }

@@ -14,12 +14,12 @@
     public class AddCompetentAuthorityUserHandler : IRequestHandler<AddCompetentAuthorityUser, Guid>
     {
         private readonly WeeeContext context;
-        public IConfigurationManagerWrapper Configuration { get; set; }
+        private readonly ITestInternalUserEmailDomains testInternalUserEmailDomains;
 
-        public AddCompetentAuthorityUserHandler(WeeeContext dbContext)
+        public AddCompetentAuthorityUserHandler(WeeeContext context, ITestInternalUserEmailDomains testInternalUserEmailDomains)
         {
-            context = dbContext;
-            Configuration = new ConfigurationManagerWrapper();
+            this.context = context;
+            this.testInternalUserEmailDomains = testInternalUserEmailDomains;
         }
 
         public async Task<Guid> HandleAsync(AddCompetentAuthorityUser message)
@@ -49,12 +49,11 @@
             return competentAuthorityUser.Id;
         }
 
-        private string AuthorityName(string email)
+        private string AuthorityName(string domain)
         {
-            string authorityName = string.Empty;
-            string internalUsersTestMode = Configuration.HasKey("Weee.InternalUsersTestMode") ? Configuration.GetKeyValue("Weee.InternalUsersTestMode") : null;
+            string authorityName;
 
-            switch (email)
+            switch (domain)
             {
                 case "environment-agency.gov.uk":
                     authorityName = "EA";
@@ -74,13 +73,35 @@
                     break;
 
                 default:
-                    if (internalUsersTestMode != null && internalUsersTestMode.Equals("true"))
                     {
-                        return "EA";
+                        if (testInternalUserEmailDomains.Enabled && IsDomainAllowedForTestUser(domain))
+                        {
+                            authorityName = "EA";
+                            break;
+                        }
+
+                        string errorMessage = string.Format(
+                            "The authority could not be determined from the domain name \"{0}\".",
+                            domain);
+
+                        throw new InvalidOperationException(errorMessage);
                     }
-                    break;
             }
+
             return authorityName;
+        }
+
+        private bool IsDomainAllowedForTestUser(string domain)
+        {
+            foreach (string allowedTestDomain in testInternalUserEmailDomains.Domains)
+            {
+                if (string.Equals(allowedTestDomain, domain, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

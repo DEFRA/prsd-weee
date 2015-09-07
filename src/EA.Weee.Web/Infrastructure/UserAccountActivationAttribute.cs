@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Infrastructure
 {
+    using EA.Weee.Core;
     using System;
     using System.Linq;
     using System.Security.Claims;
@@ -21,7 +22,17 @@
 
             if (hasEmailVerifiedClaim && identity.Claims.Single(c => c.Type.Equals(JwtClaimTypes.EmailVerified)).Value.Equals("false", StringComparison.InvariantCultureIgnoreCase))
             {
-                filterContext.Result = new RedirectResult("~/Account/UserAccountActivationRequired");
+                bool userIsInternal = ((ClaimsIdentity)filterContext.HttpContext.User.Identity).HasClaim(
+                    ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea);
+
+                if (userIsInternal)
+                {
+                    filterContext.Result = new RedirectResult("~/Admin/Account/AdminAccountActivationRequired");
+                }
+                else
+                {
+                    filterContext.Result = new RedirectResult("~/Account/UserAccountActivationRequired");
+                }
             }
         }
     }
