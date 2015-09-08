@@ -9,22 +9,25 @@
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Users;
+    using Security;
 
     internal class GetUserDataHandler : IRequestHandler<GetUserData, UserData>
     {
         private readonly WeeeContext context;
         private readonly IUserContext userContext;
+        private readonly IWeeeAuthorization weeeAuthorization;
 
-        public GetUserDataHandler(WeeeContext context, IUserContext userContext)
+        public GetUserDataHandler(WeeeContext context, IUserContext userContext, IWeeeAuthorization weeeAuthorization)
         {
             this.context = context;
             this.userContext = userContext;
+            this.weeeAuthorization = weeeAuthorization;
         }
 
         public async Task<UserData> HandleAsync(GetUserData query)
         {
             string userId = userContext.UserId.ToString();
-            if (query.Id != userId)
+            if (query.Id != userId && !weeeAuthorization.CheckCanAccessInternalArea())
             {
                 throw new UnauthorizedAccessException(
                     string.Format("User {0} is not able to access data relating to another user ({1})", userId, query.Id));
