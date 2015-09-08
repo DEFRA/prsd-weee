@@ -604,6 +604,8 @@
     <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SpecifyOptionsViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SelectOrganisationViewModel.cs" />
+    <Compile Include="Authorization\LoginResult.cs" />
+    <Compile Include="Authorization\LoginType.cs" />
     <Compile Include="Controllers\Base\ExternalSiteController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
@@ -641,8 +643,8 @@
     <Compile Include="Services\IAppConfiguration.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeController.cs" />
     <Compile Include="Services\IFileConverterService.cs" />
-    <Compile Include="Services\IWeeeAuthorization.cs" />
-    <Compile Include="Services\WeeeAuthorization.cs" />
+    <Compile Include="Authorization\IWeeeAuthorization.cs" />
+    <Compile Include="Authorization\WeeeAuthorization.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordModel.cs" />
     <Compile Include="Services\IExternalRouteService.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordRequestViewModel.cs" />
