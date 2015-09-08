@@ -375,7 +375,7 @@
 
         private JoinOrganisationViewModel GetTestJoinOrgViewModel()
         {
-            const string noSearchAnotherCompany = "No - search for another company";
+            const string noSearchAnotherCompany = "No - search for another organisation";
             return new JoinOrganisationViewModel
             {
                 OrganisationId = Guid.NewGuid(),
