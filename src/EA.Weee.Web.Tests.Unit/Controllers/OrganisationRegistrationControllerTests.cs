@@ -345,7 +345,7 @@
         }
 
         [Fact]
-        public async void PostJoinOrganisation_NoSearchAnotherCompanySelected_ShouldRedirectedToTypeView()
+        public async void PostJoinOrganisation_NoSearchAnotherOrganisationSelected_ShouldRedirectedToTypeView()
         {
             var model = GetTestJoinOrgViewModel();
 
@@ -375,14 +375,14 @@
 
         private JoinOrganisationViewModel GetTestJoinOrgViewModel()
         {
-            const string noSearchAnotherCompany = "No - search for another company";
+            const string NoSearchAnotherOrganisation = "No - search for another organisation";
             return new JoinOrganisationViewModel
             {
                 OrganisationId = Guid.NewGuid(),
                 JoinOrganisationOptions = new RadioButtonStringCollectionViewModel
                 {
-                    PossibleValues = new[] { "Yes - join xyz", noSearchAnotherCompany },
-                    SelectedValue = noSearchAnotherCompany
+                    PossibleValues = new[] { "Yes - join xyz", NoSearchAnotherOrganisation },
+                    SelectedValue = NoSearchAnotherOrganisation
                 }
             };
         }
