@@ -28,7 +28,7 @@
 }
 
 @section footer_top {
-    <div class="footer">
+    <div class="footer_agencies">
         @if (ViewBag.ShowLinksToAgencies ?? true)
         {
             <div>
@@ -39,19 +39,17 @@
             </div>
             <hr />
         }
-       
-        <div>
-            <p>
-                @Html.ActionLink("Read full terms and conditions of use",
-                "TermsAndConditions", "NewUser", new { area = string.Empty },
-                new { rel = "external", target = "_blank" })
-            </p>
-        </div>
     </div>
 }
 
 @section footer_support_links {
-
+    <ul>
+        <li>
+            @Html.ActionLink("Read full terms and conditions of use",
+                "TermsAndConditions", "NewUser", new { area = string.Empty },
+                new { rel = "external", target = "_blank" })
+        </li>
+    </ul>
 }
 
 @section body_end {
