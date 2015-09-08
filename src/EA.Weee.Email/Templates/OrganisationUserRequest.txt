@@ -1,6 +1,6 @@
 ﻿Request to perform activities
 
-Hello
+Hello,
 
 You're receiving this email because a Waste Electrical and Electronic Equipment (WEEE) user has asked for the right to perform activities for @Model.OrganisationName.
 
