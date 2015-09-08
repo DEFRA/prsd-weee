@@ -7,49 +7,45 @@ param
     [string]$configPath = $null,
 
     [Parameter(Mandatory=$true)]
-    [string]$defaultRule = 'Deny',
+    [string]$isEnabled = 'false',
 
     [Parameter(Mandatory=$false)]
-    [string[]]$allow = $null,
+    [string[]]$add = $null,
 
     [Parameter(Mandatory=$false)]
-    [string[]]$deny = $null
+    [string[]]$remove = $null
 )
 
 $doc = (gc $configPath) -as [xml]
-$rulesNode = $doc.SelectSingleNode("//internalEmailRules")
+$rulesNode = $doc.SelectSingleNode("//testInternalUserEmailDomains")
 
-if($rulesNode.Attributes["defaultAction"] -ne $null)
+if($rulesNode.Attributes["enabled"] -ne $null)
 {
-    Write "Setting default email rule to $defaultRule"
-    $rulesNode.Attributes["defaultAction"].InnerText = $defaultRule
+    Write "Setting default email rule to $isEnabled"
+    $rulesNode.Attributes["enabled"].InnerText = $isEnabled
 }
 
-if ($allow -ne $null){
+if ($add -ne $null){
     
-    $allow.GetEnumerator() | % {
-        $allowRulesArray = $_.Split(':')
-        Write "Adding email rule: Allow where $($allowRulesArray[0]) matches $($allowRulesArray[1])"
+    $add.GetEnumerator() | % {
+        Write "Adding allowed test email $($_)"
 
         $rule = $doc.CreateElement("add")
-        $rule.SetAttribute('action','Allow')
-        $rule.SetAttribute('type',$($allowRulesArray[0]))
-        $rule.SetAttribute('value',$($allowRulesArray[1]))
+        $rule.SetAttribute('value',$($_))
         $rulesNode.AppendChild($rule)
     }
 }
 
-if ($deny -ne $null){
-    
-    $deny.GetEnumerator() | % {
-        $denyRulesArray = $_.Split(':')
-        Write "Adding email rule: Deny where $($denyRulesArray[0]) matches $($denyRulesArray[1])"
+if ($remove -ne $null){
+    $remove.GetEnumerator() | % {
+        Write "Removing allowed test email '$($_)'"
+        Foreach ($node in $rulesNode.ChildNodes) {
 
-        $rule = $doc.CreateElement("add")
-        $rule.SetAttribute('action','Deny')
-        $rule.SetAttribute('type',$($denyRulesArray[0]))
-        $rule.SetAttribute('value',$($denyRulesArray[1]))
-        $rulesNode.AppendChild($rule)
+            $allowedEmail = $node.Attributes["value"]    
+            if ($allowedEmail -ne $null -and $allowedEmail.Value -eq $_) {
+                $rulesNode.RemoveChild($node)
+            }  
+        }
     }
 }
 
