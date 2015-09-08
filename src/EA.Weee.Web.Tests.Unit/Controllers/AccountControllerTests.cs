@@ -9,6 +9,7 @@
     using Api.Client;
     using Api.Client.Actions;
     using Api.Client.Entities;
+    using Authorization;
     using FakeItEasy;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
@@ -22,9 +23,6 @@
     public class AccountControllerTests
     {
         private readonly IWeeeClient apiClient;
-        private readonly IAuthenticationManager authenticationManager;
-        private readonly IOAuthClient oauthClient;
-        private readonly IUserInfoClient userInfoClient;
         private readonly IUnauthenticatedUser unauthenticatedUserClient;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IExternalRouteService externalRouteService;
@@ -32,9 +30,6 @@
         public AccountControllerTests()
         {
             apiClient = A.Fake<IWeeeClient>();
-            authenticationManager = A.Fake<IAuthenticationManager>();
-            oauthClient = A.Fake<IOAuthClient>();
-            userInfoClient = A.Fake<IUserInfoClient>();
             unauthenticatedUserClient = A.Fake<IUnauthenticatedUser>();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             externalRouteService = A.Fake<IExternalRouteService>();
@@ -43,11 +38,8 @@
         private AccountController AccountController()
         {
             return new AccountController(
-                () => oauthClient,
-                authenticationManager,
                 () => apiClient,
                 weeeAuthorization,
-                () => userInfoClient,
                 externalRouteService);
         }
 
@@ -88,6 +80,9 @@
 
             A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
                 .Returns(new PasswordResetResult(A<string>._));
+
+            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Success("dshjkal"));
 
             A.CallTo(() => apiClient.User)
                 .Returns(unauthenticatedUserClient);
@@ -137,9 +132,10 @@
         }
 
         [Fact]
-        public async void HttpPost_ResetPassword_ModelIsValid_PasswordResetReturnsEmailAddress_ShouldSignUserIn_AndRedirectToRedirectReturnedByAuthorizationSignIn()
+        public async void HttpPost_ResetPassword_ModelIsValid_ButAuthorizationUnsuccessful_ShouldAddErrorToModelErrors_AndReturnView()
         {
-            var redirect = new RedirectToRouteResult(new RouteValueDictionary(new { action = "AnAction", controller = "AController", area = "AnArea" }));
+            const string errorMessage = "Some error";
+            var model = new ResetPasswordModel();
 
             A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
                 .Returns(new PasswordResetResult("an@email.address"));
@@ -147,14 +143,42 @@
             A.CallTo(() => apiClient.User)
                 .Returns(unauthenticatedUserClient);
 
-            A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._, A<string>._))
-                .Returns(redirect);
+            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Fail(errorMessage));
+
+            var controller = AccountController();
+
+            var result = await controller.ResetPassword(A<Guid>._, A<string>._, model);
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(model, ((ViewResult)result).Model);
+            Assert.Single(controller.ModelState.Values);
+            Assert.Single(controller.ModelState.Values.Single().Errors);
+            Assert.Contains(errorMessage, controller.ModelState.Values.Single().Errors.Single().ErrorMessage);
+        }
+
+        [Fact]
+        public async void HttpPost_ResetPassword_ModelIsValid_AndAuthorizationSuccessful_ShouldRedirectToRedirectProcess()
+        {
+            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
+                .Returns(new PasswordResetResult("an@email.address"));
+
+            A.CallTo(() => apiClient.User)
+                .Returns(unauthenticatedUserClient);
+
+            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Success("dsadsa"));
 
             var result = await AccountController().ResetPassword(A<Guid>._, A<string>._, new ResetPasswordModel());
 
-            A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._, A<string>._))
+            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
-            Assert.Equal(redirect, result);
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("RedirectProcess", routeValues["action"]);
+            Assert.Equal("Account", routeValues["controller"]);
         }
     }
 }

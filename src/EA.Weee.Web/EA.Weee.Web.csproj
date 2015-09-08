@@ -230,7 +230,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Admin\Views\Emails\ActivateUserAccount.txt" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -442,7 +441,6 @@
     <Content Include="Areas\Test\Views\GeneratePcsXml\DownloadFile.cshtml" />
     <Content Include="Areas\Admin\Views\Account\AdminAccountActivationRequired.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ActivateUserAccount.cshtml" />
-    <Content Include="Areas\Admin\Views\Emails\ActivateUserAccount.cshtml" />
     <Content Include="Areas\Admin\Views\Account\SignIn.cshtml" />
     <Content Include="Scripts\govuk\govuk-template.js" />
     <Content Include="Scripts\govuk\ie.js" />
@@ -503,9 +501,6 @@
     <Content Include="Scripts\vendor\jquery-1.11.0.min.js" />
     <Content Include="Scripts\vendor\modernizr.custom.77028.js" />
     <Content Include="Scripts\vendor\prism.js" />
-    <Content Include="Views\Emails\ActivateUserAccount.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -538,9 +533,6 @@
     <Content Include="Views\OrganisationRegistration\JoinOrganisationConfirmation.cshtml" />
     <Content Include="Views\OrganisationRegistration\ReviewOrganisationDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddressPrepopulate.cshtml" />
-    <Content Include="Views\Emails\ActivateUserAccount.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\Account\ActivateUserAccount.cshtml" />
     <Content Include="Views\Account\UserAccountActivationRequired.cshtml" />
     <Content Include="Views\Organisation\PendingOrganisations.cshtml" />
@@ -559,6 +551,8 @@
     <Content Include="Views\Organisation\YourOrganisations.cshtml" />
     <Content Include="Views\Organisation\_Pending.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordRequest.cshtml" />
+    <Content Include="Views\Account\ResetPasswordInstruction.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -609,6 +603,8 @@
     <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SpecifyOptionsViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SelectOrganisationViewModel.cs" />
+    <Compile Include="Authorization\LoginResult.cs" />
+    <Compile Include="Authorization\LoginType.cs" />
     <Compile Include="Controllers\Base\ExternalSiteController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
@@ -646,10 +642,11 @@
     <Compile Include="Services\IAppConfiguration.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeController.cs" />
     <Compile Include="Services\IFileConverterService.cs" />
-    <Compile Include="Services\IWeeeAuthorization.cs" />
-    <Compile Include="Services\WeeeAuthorization.cs" />
+    <Compile Include="Authorization\IWeeeAuthorization.cs" />
+    <Compile Include="Authorization\WeeeAuthorization.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordModel.cs" />
     <Compile Include="Services\IExternalRouteService.cs" />
+    <Compile Include="ViewModels\Account\ResetPasswordRequestViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\Scheme\SchemeAreaRegistration.cs" />

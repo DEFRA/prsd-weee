@@ -1,5 +1,14 @@
 ﻿namespace EA.Weee.Api.Tests.Unit.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Results;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Api.Client.Entities;
     using EA.Weee.Api.Controllers;
@@ -10,13 +19,6 @@
     using FakeItEasy;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Http;
     using Xunit;
 
     public class UnauthenticatedUserControllerTests
@@ -111,6 +113,62 @@
                 && c.ClaimValue == Claims.CanAccessExternalArea);
 
             Assert.True(claimCount == 1, "A single \"CanAccessExterna;Area\" claim was not issued to the user.");
+        }
+
+        [Fact]
+        public async Task ResetPasswordRequest_InvalidEmailAddress_DoesNotReturnToken()
+        {
+            var builder = new UnauthenticatedUserControllerBuilder();
+            var controller = builder.Build();
+            var userManager = builder.UserManager;
+
+            A.CallTo(() => userManager.FindByEmailAsync(A<string>._)).Returns((ApplicationUser)null);
+
+            var result = (OkNegotiatedContentResult<PasswordResetRequestResult>)await controller.ResetPasswordRequest(A.Fake<PasswordResetRequest>());
+            var passwordResetRequestResult = result.Content;
+
+            A.CallTo(() => userManager.FindByEmailAsync(A<string>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => userManager.GeneratePasswordResetTokenAsync(A<string>._)).MustNotHaveHappened();
+            Assert.False(passwordResetRequestResult.ValidEmail);
+            Assert.Null(passwordResetRequestResult.PasswordResetToken);
+        }
+
+        [Fact]
+        public async Task ResetPasswordRequest_ValidEmailAddress_ReturnsToken()
+        {
+            var builder = new UnauthenticatedUserControllerBuilder();
+            var controller = builder.Build();
+            var userManager = builder.UserManager;
+
+            string resetToken = "Test token";
+
+            A.CallTo(() => userManager.FindByEmailAsync(A<string>._)).Returns(A.Fake<ApplicationUser>());
+            A.CallTo(() => userManager.GeneratePasswordResetTokenAsync(A<string>._)).Returns(resetToken);
+
+            var result = (OkNegotiatedContentResult<PasswordResetRequestResult>)await controller.ResetPasswordRequest(A.Fake<PasswordResetRequest>());
+            var passwordResetRequestResult = result.Content;
+
+            Assert.True(passwordResetRequestResult.ValidEmail);
+            Assert.Equal(resetToken, passwordResetRequestResult.PasswordResetToken);
+        }
+
+        private class UnauthenticatedUserControllerBuilder
+        {
+            public ApplicationUserManager UserManager { get; set; }
+            public IUserContext UserContext { get; set; }
+            public IWeeeEmailService EmailService { get; set; }
+
+            public UnauthenticatedUserControllerBuilder()
+            {
+                UserManager = A.Fake<ApplicationUserManager>();
+                UserContext = A.Fake<IUserContext>();
+                EmailService = A.Fake<IWeeeEmailService>();
+            }
+
+            public UnauthenticatedUserController Build()
+            {
+                return new UnauthenticatedUserController(UserManager, UserContext, EmailService);
+            }
         }
     }
 }
