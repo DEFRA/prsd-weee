@@ -236,5 +236,39 @@
 
             return View(model);
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ResetPasswordRequest()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPasswordRequest(ResetPasswordRequestViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                var result = await client.User.ResetPasswordRequestAsync(new PasswordResetRequest(model.Email));
+
+                if (!result.ValidEmail)               
+                {
+                    ModelState.AddModelError("Email", "Email address not recognised.");
+                    return View(model);
+                }
+                else
+                {
+                    ViewBag.Email = model.Email;
+                    return View("ResetPasswordInstruction");
+                }
+            }
+        }
     }
 }
