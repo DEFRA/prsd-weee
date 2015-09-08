@@ -99,6 +99,9 @@
     <Compile Include="Mappings\ValueObjectInitializer.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandler.cs" />
     <Compile Include="Organisations\GetPublicOrganisationInfoHandler.cs" />
+    <Compile Include="Organisations\JoinOrganisation\DataAccess\IJoinOrganisationDataAccess.cs" />
+    <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationDataAccess.cs" />
+    <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationResult.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
     <Compile Include="Scheme\GetSchemeByIdDataAccess.cs" />
@@ -128,7 +131,7 @@
     <Compile Include="Organisations\FindMatchingOrganisationsHandler.cs" />
     <Compile Include="Organisations\GetUserOrganisationsByStatusHandler.cs" />
     <Compile Include="Organisations\IsUkOrganisationAddressHandler.cs" />
-    <Compile Include="Organisations\JoinOrganisationHandler.cs" />
+    <Compile Include="Organisations\JoinOrganisation\JoinOrganisationHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerChargeBandCalculator.cs" />
