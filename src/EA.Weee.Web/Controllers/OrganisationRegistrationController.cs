@@ -28,7 +28,7 @@
     public class OrganisationRegistrationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private const string NoSearchAnotherCompany = "No - search for another company";
+        private const string NoSearchAnotherCompany = "No - search for another organisation";
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient)
         {
