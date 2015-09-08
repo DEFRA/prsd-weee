@@ -28,7 +28,7 @@
     public class OrganisationRegistrationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private const string NoSearchAnotherCompany = "No - search for another organisation";
+        private const string NoSearchAnotherOrganisation = "No - search for another organisation";
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient)
         {
@@ -423,7 +423,7 @@
                     User.GetAccessToken(),
                     new GetPublicOrganisationInfo(organisationId));
 
-                var collection = new List<string> { "Yes - join " + organisationData.DisplayName, NoSearchAnotherCompany };
+                var collection = new List<string> { "Yes - join " + organisationData.DisplayName, NoSearchAnotherOrganisation };
                 var model = new JoinOrganisationViewModel
                 {
                     OrganisationId = organisationId,
@@ -445,7 +445,7 @@
                 return View(viewModel);
             }
 
-            if (viewModel.JoinOrganisationOptions.SelectedValue == NoSearchAnotherCompany)
+            if (viewModel.JoinOrganisationOptions.SelectedValue == NoSearchAnotherOrganisation)
             {
                 return RedirectToAction("Type", "OrganisationRegistration");
             }
