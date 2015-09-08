@@ -29,7 +29,7 @@
                         .NotEmpty()
                         .Matches(scheme.ApprovalNumber)
                         .WithState(st => ErrorLevel.Error)
-                        .WithMessage("The PCS approval number in your XML file {0} doesn’t match with the PCS that  you’re uploading for. Please make sure that you’re  using the right  PCS approval number.",
+                        .WithMessage("The PCS approval number in your XML file {0} doesn’t match with the PCS that you’re uploading for. Please make sure that you’re using the right PCS approval number.",
                         st => st.approvalNo);
                 }
             });
