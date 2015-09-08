@@ -1,62 +1,117 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Users
 {
     using System;
-    using System.Data.Entity;
     using System.Threading.Tasks;
     using DataAccess;
-    using Domain;
     using FakeItEasy;
     using Helpers;
     using Prsd.Core.Domain;
+    using RequestHandlers.Security;
     using RequestHandlers.Users;
     using Requests.Users;
     using Xunit;
 
     public class GetUserDataHandlerTests
     {
-        private readonly DbContextHelper helper = new DbContextHelper();
-        private readonly UserHelper userHelper = new UserHelper();
-        private readonly Guid currentUserID = new Guid("012F9664-5286-433A-8628-AAE13FD1C2F5");
+        private readonly DbContextHelper helper;
+        private readonly UserHelper userHelper;
+        private readonly WeeeContext context;
+        private readonly IUserContext userContext;
+        private readonly IWeeeAuthorization weeeAuthorization;
+        
+        public GetUserDataHandlerTests()
+        {
+            context = A.Fake<WeeeContext>();
+            weeeAuthorization = A.Fake<IWeeeAuthorization>();
+            userContext = A.Fake<IUserContext>();
+
+            userHelper = new UserHelper();
+            helper = new DbContextHelper();
+        }
 
         [Fact]
-        public async Task GetUserDataHandler_NotRequestingCurrentUser_ThrowsException()
+        public async Task GetUserDataHandler_NotRequestingCurrentUser_AndUserIsNotAdmin_ThrowsException()
         {
-            var otherUserID = "7EA27664-5286-4332-8628-AAE13FD9F10B";
+            var otherUserId = Guid.NewGuid().ToString();
 
-            var context = A.Fake<WeeeContext>();
-            var handler = new GetUserDataHandler(context, MakeTestUserContext());
+            A.CallTo(() => userContext.UserId)
+                .Returns(Guid.NewGuid());
+
+            A.CallTo(() => weeeAuthorization.CheckCanAccessInternalArea())
+                .Returns(false);
 
             await
                 Assert.ThrowsAsync<UnauthorizedAccessException>(
-                    async () => await handler.HandleAsync(new GetUserData(otherUserID)));
+                    async () => await GetUserDataHandler().HandleAsync(new GetUserData(otherUserId)));
         }
 
         [Fact]
-        public async Task GetUserDataHandler_RequestingCurrentUser_ReturnsUserData()
+        public async Task GetUserDataHandler_RequestingCurrentUser_ButUserIsNotAdmin_ReturnsUserData()
         {
-            var context = A.Fake<WeeeContext>();
-            var handler = new GetUserDataHandler(context, MakeTestUserContext());
+            var userId = Guid.NewGuid();
 
-            A.CallTo(() => context.Users).Returns(MakeUser());
+            A.CallTo(() => userContext.UserId)
+                .Returns(userId);
 
-            var userData = await handler.HandleAsync(new GetUserData(currentUserID.ToString()));
-
-            Assert.Equal(userData.Id, currentUserID.ToString());
-        }
-
-        private IUserContext MakeTestUserContext()
-        {
-            IUserContext userContext = A.Fake<IUserContext>();
-            A.CallTo(() => userContext.UserId).Returns(currentUserID);
-            return userContext;
-        }
-
-        private DbSet<User> MakeUser()
-        {
-            return helper.GetAsyncEnabledDbSet(new[]
+            A.CallTo(() => context.Users).Returns(helper.GetAsyncEnabledDbSet(new[]
             {
-                userHelper.GetUser(currentUserID)
-            });
+                userHelper.GetUser(userId)
+            }));
+
+            A.CallTo(() => weeeAuthorization.CheckCanAccessInternalArea())
+                .Returns(false);
+
+            var userData = await GetUserDataHandler().HandleAsync(new GetUserData(userId.ToString()));
+
+            Assert.Equal(userData.Id, userId.ToString());
+        }
+
+        [Fact]
+        public async Task GetUserDataHandler_NotRequestingCurrentUser_ButUserIsAdmin_ReturnsUserData()
+        {
+            var requestUserId = Guid.NewGuid();
+            var currentUserId = Guid.NewGuid();
+
+            A.CallTo(() => userContext.UserId)
+                .Returns(currentUserId);
+
+            A.CallTo(() => context.Users).Returns(helper.GetAsyncEnabledDbSet(new[]
+            {
+                userHelper.GetUser(requestUserId)
+            }));
+
+            A.CallTo(() => weeeAuthorization.CheckCanAccessInternalArea())
+                .Returns(true);
+
+            var userData = await GetUserDataHandler().HandleAsync(new GetUserData(requestUserId.ToString()));
+
+            Assert.Equal(userData.Id, requestUserId.ToString());
+        }
+
+        [Fact]
+        public async Task GetUserDataHandler_RequestingCurrentUser_AndUserIsAdmin_ReturnsUserData()
+        {
+            var userId = Guid.NewGuid();
+
+            A.CallTo(() => userContext.UserId)
+                .Returns(userId);
+
+            A.CallTo(() => context.Users).Returns(helper.GetAsyncEnabledDbSet(new[]
+            {
+                userHelper.GetUser(userId)
+            }));
+
+            A.CallTo(() => weeeAuthorization.CheckCanAccessInternalArea())
+                .Returns(true);
+
+            var userData = await GetUserDataHandler().HandleAsync(new GetUserData(userId.ToString()));
+
+            Assert.Equal(userData.Id, userId.ToString());
+        }
+
+        private GetUserDataHandler GetUserDataHandler()
+        {
+            return new GetUserDataHandler(context, userContext, weeeAuthorization);
         }
     }
 }
