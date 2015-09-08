@@ -2,18 +2,19 @@
 {
     using Api.Client;
     using Api.Client.Entities;
+    using Authorization;
+    using EA.Weee.Core.Routing;
     using EA.Weee.Web.Controllers.Base;
     using Infrastructure;
     using Microsoft.Owin.Security;
+    using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Services;
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Authorization;
-    using Prsd.Core.Web.ApiClient;
-    using Prsd.Core.Web.Mvc.Extensions;
     using ViewModels.Account;
 
     [Authorize]
@@ -212,7 +213,10 @@
 
             using (var client = apiClient())
             {
-                var result = await client.User.ResetPasswordRequestAsync(new PasswordResetRequest(model.Email));
+                ResetPasswordRoute route = externalRouteService.ExternalUserResetPasswordRoute;
+                PasswordResetRequest apiModel = new PasswordResetRequest(model.Email, route);
+
+                var result = await client.User.ResetPasswordRequestAsync(apiModel);
 
                 if (!result.ValidEmail)               
                 {
