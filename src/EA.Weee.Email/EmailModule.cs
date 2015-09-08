@@ -5,6 +5,7 @@
     using EA.Prsd.Email;
     using EA.Prsd.Email.Rules;
     using EA.Prsd.Email.Rules.Configuration;
+    using EA.Weee.Email.EventHandlers;
     using System;
     using System.Collections.Generic;
     using System.Configuration;
@@ -17,7 +18,9 @@
         protected override void Load(ContainerBuilder builder)
         {
             builder.Register(c => ConfigurationManager.GetSection("emailRules")).As<IRuleSet>();
-            builder.Register(c => new ConfigReader("Weee")).As<IEmailConfiguration>();
+            builder.Register(c => new WeeeConfigReader())
+                .As<IWeeeEmailConfiguration>()
+                .As<IEmailConfiguration>();
 
             builder.Register(c => new ResourceTemplateLoader(ThisAssembly, "EA.Weee.Email.Templates"))
                 .As<ITemplateLoader>();
@@ -29,6 +32,9 @@
             builder.RegisterType<WeeeEmailService>().As<IWeeeEmailService>();
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
+
+            builder.RegisterType<OrganisationUserRequestEventHandlerDataAccess>()
+                .As<IOrganisationUserRequestEventHandlerDataAccess>();
         }
     }
 }

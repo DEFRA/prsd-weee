@@ -22,15 +22,15 @@
             string activationUrl = "http://";
             
             ITemplateExecutor templateExecutor = A.Fake<ITemplateExecutor>();
-
             IMessageCreator messageCreator = A.Fake<IMessageCreator>();
-
             ISender sender = A.Fake<ISender>();
+            IWeeeEmailConfiguration configuration = A.Fake<IWeeeEmailConfiguration>();
 
             WeeeEmailService weeeEmailService = new WeeeEmailService(
                 templateExecutor,
                 messageCreator,
-                sender);
+                sender,
+                configuration);
 
             // Act
             await weeeEmailService.SendActivateUserAccount(userEmailAddress, activationUrl);

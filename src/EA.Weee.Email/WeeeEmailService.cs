@@ -14,15 +14,18 @@
         private readonly ITemplateExecutor templateExecutor;
         private readonly IMessageCreator messageCreator;
         private readonly ISender sender;
+        private readonly IWeeeEmailConfiguration configuration;
 
         public WeeeEmailService(
             ITemplateExecutor templateExecutor,
             IMessageCreator messageCreator,
-            ISender sender)
+            ISender sender,
+            IWeeeEmailConfiguration configuration)
         {
             this.templateExecutor = templateExecutor;
             this.messageCreator = messageCreator;
             this.sender = sender;
+            this.configuration = configuration;
         }
 
         public async Task<bool> SendActivateUserAccount(string emailAddress, string activationUrl)
@@ -41,6 +44,28 @@
             MailMessage message = messageCreator.Create(
                 emailAddress,
                 "Activate your WEEE user account",
+                content);
+
+            return await sender.SendAsync(message);
+        }
+
+        public async Task<bool> SendOrganisationUserRequest(string emailAddress, Domain.Organisation.OrganisationUser organisationUser)
+        {
+            var model = new
+            {
+                OrganisationName = organisationUser.Organisation.OrganisationName,
+                SiteUrl = configuration.SiteUrl,
+            };
+
+            EmailContent content = new EmailContent()
+            {
+                HtmlText = templateExecutor.Execute("OrganisationUserRequest.cshtml", model),
+                PlainText = templateExecutor.Execute("OrganisationUserRequest.txt", model)
+            };
+
+            MailMessage message = messageCreator.Create(
+                emailAddress,
+                string.Format("Request to perform WEEE activities for {0}", model.OrganisationName),
                 content);
 
             return await sender.SendAsync(message);

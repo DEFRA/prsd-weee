@@ -25,6 +25,12 @@
             UserId = userId.ToString();
             OrganisationId = organisationId;
             UserStatus = userStatus;
+
+            if (userStatus == UserStatus.Pending)
+            {
+                // Raise a domain event indicating that a user's request to join an organisation is pending.
+                RaiseEvent(new OrganisationUserRequestEvent(this));
+            }
         }
 
         public void UpdateUserStatus(UserStatus userStatus)
