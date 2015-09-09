@@ -162,22 +162,14 @@
                 {
                     using (var client = apiClient())
                     {
-                        var result = await client.User.ResetPasswordAsync(new PasswordResetData
+                        await client.User.ResetPasswordAsync(new PasswordResetData
                         {
                             Password = model.Password,
                             Token = token,
                             UserId = id
                         });
 
-                        var loginResult =
-                            await weeeAuthorization.SignIn(LoginType.External, result.EmailAddress, model.Password, false);
-
-                        if (loginResult.Successful)
-                        {
-                            return RedirectToAction("RedirectProcess", "Account");
-                        }
-
-                        ModelState.AddModelError(string.Empty, loginResult.ErrorMessage);
+                        return RedirectToAction("SignIn", "Account");
                     }
                 }
                 catch (ApiBadRequestException ex)
