@@ -72,6 +72,8 @@
 
         public async Task<OrganisationSearchDataResult> HandleAsync(FindMatchingOrganisations query)
         {
+            Guard.ArgumentNotNullOrEmpty(() => query.CompanyName, query.CompanyName);
+
             var searchTerm = PrepareQuery(query);
 
             // This search uses the Levenshtein edit distance as a search algorithm.
