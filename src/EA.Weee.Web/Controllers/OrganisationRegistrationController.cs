@@ -28,7 +28,7 @@
     public class OrganisationRegistrationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private const string NoSearchAnotherCompany = "No - search for another company";
+        private const string NoSearchAnotherOrganisation = "No - search for another organisation";
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient)
         {
@@ -322,6 +322,18 @@
                             client.SendAsync(User.GetAccessToken(),
                                 new FindMatchingOrganisations(name ?? tradingName, page, OrganisationsPerPage));
 
+                    if (organisationSearchResultData.TotalMatchingOrganisations == 0)
+                    {
+                        return RedirectToAction("NotFoundOrganisation", new
+                        {
+                            name,
+                            tradingName,
+                            companiesRegistrationNumber,
+                            type,
+                            organisationId,
+                        });
+                    }
+
                     var model = BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
                         organisationId,
                         organisationSearchResultData.Results.ToPagedList(page - 1, OrganisationsPerPage,
@@ -338,6 +350,53 @@
                     return View(fallbackSelectOrganisationViewModel);
                 }
             }
+        }
+
+        [HttpGet]
+        public ActionResult NotFoundOrganisation(string name, string tradingName,
+                            string companiesRegistrationNumber,
+                            OrganisationType type)
+        {
+            var model = new NotFoundOrganisationViewModel
+            {
+                SearchedText = name ?? tradingName,
+                Name = name,
+                TradingName = tradingName,
+                CompaniesRegistrationNumber = companiesRegistrationNumber,
+                Type = type
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> NotFoundOrganisation(NotFoundOrganisationViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            using (var client = apiClient())
+            {
+                if (model.ActivityOptions.SelectedValue == NotFoundOrganisationAction.TryAnotherSearch)
+                {
+                    return RedirectToAction("Type", "OrganisationRegistration");
+                }
+
+                if (model.ActivityOptions.SelectedValue == NotFoundOrganisationAction.CreateNewOrg)
+                {
+                    var request = MakeOrganisationCreationRequest(
+                        model.Name,
+                        model.TradingName,
+                        model.CompaniesRegistrationNumber,
+                        model.Type);
+
+                    var organisationId = await client.SendAsync(User.GetAccessToken(), request);
+
+                    return RedirectToAction("MainContactPerson", new { organisationId });
+                }
+            }
+            return View(model);
         }
 
         private SelectOrganisationViewModel BuildSelectOrganisationViewModel(string name, string tradingName,
@@ -364,7 +423,7 @@
                     User.GetAccessToken(),
                     new GetPublicOrganisationInfo(organisationId));
 
-                var collection = new List<string> { "Yes - join " + organisationData.DisplayName, NoSearchAnotherCompany };
+                var collection = new List<string> { "Yes - join " + organisationData.DisplayName, NoSearchAnotherOrganisation };
                 var model = new JoinOrganisationViewModel
                 {
                     OrganisationId = organisationId,
@@ -386,7 +445,7 @@
                 return View(viewModel);
             }
 
-            if (viewModel.JoinOrganisationOptions.SelectedValue == NoSearchAnotherCompany)
+            if (viewModel.JoinOrganisationOptions.SelectedValue == NoSearchAnotherOrganisation)
             {
                 return RedirectToAction("Type", "OrganisationRegistration");
             }

@@ -24,7 +24,7 @@
             this.prefix = prefix;
         }
 
-        private string GetAppSettingName(string name)
+        protected string GetAppSettingName(string name)
         {
             return string.Format("{0}.{1}", prefix, name);
         }

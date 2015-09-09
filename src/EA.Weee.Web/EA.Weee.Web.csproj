@@ -134,7 +134,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
@@ -553,6 +552,7 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordRequest.cshtml" />
     <Content Include="Views\Account\ResetPasswordInstruction.cshtml" />
+    <Content Include="Views\OrganisationRegistration\NotFoundOrganisation.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -603,6 +603,8 @@
     <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SpecifyOptionsViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SelectOrganisationViewModel.cs" />
+    <Compile Include="Authorization\LoginResult.cs" />
+    <Compile Include="Authorization\LoginType.cs" />
     <Compile Include="Controllers\Base\ExternalSiteController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
@@ -640,8 +642,8 @@
     <Compile Include="Services\IAppConfiguration.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeController.cs" />
     <Compile Include="Services\IFileConverterService.cs" />
-    <Compile Include="Services\IWeeeAuthorization.cs" />
-    <Compile Include="Services\WeeeAuthorization.cs" />
+    <Compile Include="Authorization\IWeeeAuthorization.cs" />
+    <Compile Include="Authorization\WeeeAuthorization.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordModel.cs" />
     <Compile Include="Services\IExternalRouteService.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordRequestViewModel.cs" />
@@ -671,6 +673,8 @@
     <Compile Include="ViewModels\OrganisationRegistration\Details\SoleTraderDetailsViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\ContactPersonViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\JoinOrganisationConfirmationViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\NotFoundOrganisationAction.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\NotFoundOrganisationViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\OrganisationSummaryViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\AddressPrepopulateViewModel.cs" />
     <Compile Include="ViewModels\Organisation\PendingOrganisationsViewModel.cs" />

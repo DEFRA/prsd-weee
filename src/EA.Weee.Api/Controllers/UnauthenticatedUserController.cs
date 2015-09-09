@@ -191,6 +191,12 @@
             {
                 result.ValidEmail = true;
                 result.PasswordResetToken = await userManager.GeneratePasswordResetTokenAsync(user.Id);
+
+                model.Route.UserID = user.Id;
+                model.Route.Token = result.PasswordResetToken;
+                string passwordResetUrl = model.Route.GenerateUrl();
+
+                await emailService.SendPasswordResetRequest(model.EmailAddress, passwordResetUrl);
             }
 
             return Ok(result);
