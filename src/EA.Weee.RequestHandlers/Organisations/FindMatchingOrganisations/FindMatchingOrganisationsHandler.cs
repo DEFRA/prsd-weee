@@ -6,8 +6,10 @@
     using System.Threading.Tasks;
     using Core.Organisations;
     using Core.Shared;
+    using DataAccess;
     using Domain.Organisation;
     using Prsd.Core;
+    using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using OrganisationType = Domain.Organisation.OrganisationType;
@@ -16,6 +18,7 @@
         IRequestHandler<FindMatchingOrganisations, OrganisationSearchDataResult>
     {
         private readonly IFindMatchingOrganisationsDataAccess dataAccess;
+        private readonly IUserContext userContext;
 
         private readonly SpecialBusinessSearchCase[] specialCases =
         {
@@ -25,9 +28,10 @@
             new SpecialBusinessSearchCase(new[] { "COMPANY", "CO" }, Position.End)
         };
 
-        public FindMatchingOrganisationsHandler(IFindMatchingOrganisationsDataAccess dataAccess)
+        public FindMatchingOrganisationsHandler(IFindMatchingOrganisationsDataAccess dataAccess, IUserContext userContext)
         {
             this.dataAccess = dataAccess;
+            this.userContext = userContext;
         }
 
         private class OrganisationDataFields
@@ -73,7 +77,7 @@
             // This search uses the Levenshtein edit distance as a search algorithm.
             var permittedDistance = CalculateMaximumLevenshteinDistance(searchTerm);
 
-            var possibleOrganisations = await dataAccess.GetOrganisationsBySimpleSearchTerm(searchTerm);
+            var possibleOrganisations = await dataAccess.GetOrganisationsBySimpleSearchTerm(searchTerm, userContext.UserId);
 
             // extract data fields we want to compare against query and clean them up
             IEnumerable<Func<Organisation, string>> dataExtractors = GetDataExtractors();
