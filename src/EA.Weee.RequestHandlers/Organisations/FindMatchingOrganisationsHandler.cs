@@ -152,17 +152,6 @@
                     DisplayName = o.OrganisationType == OrganisationType.RegisteredCompany ? o.Name : o.TradingName
                 }).ToList();
 
-            if (query.Paged)
-            {
-                var pagedMatchingOrganisationsData =
-                    totalMatchingOrganisationsData.Skip((query.Page - 1) * query.OrganisationsPerPage)
-                        .Take(query.OrganisationsPerPage)
-                        .ToList();
-
-                return new OrganisationSearchDataResult(
-                    pagedMatchingOrganisationsData,
-                    totalMatchingOrganisationsData.Count);
-            }
             return new OrganisationSearchDataResult(
                 totalMatchingOrganisationsData,
                 totalMatchingOrganisationsData.Count);
