@@ -98,8 +98,8 @@
     <Compile Include="Mappings\UserMap.cs" />
     <Compile Include="Mappings\ValueObjectInitializer.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingOrganisationsHandler.cs" />
-    <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingOrganisationsDataAccess.cs" />
-    <Compile Include="Organisations\FindMatchingOrganisations\IFindMatchingOrganisationsDataAccess.cs" />
+    <Compile Include="Organisations\FindMatchingOrganisations\DataAccess\FindMatchingOrganisationsDataAccess.cs" />
+    <Compile Include="Organisations\FindMatchingOrganisations\DataAccess\IFindMatchingOrganisationsDataAccess.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandler.cs" />
     <Compile Include="Organisations\GetPublicOrganisationInfoHandler.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\IJoinOrganisationDataAccess.cs" />

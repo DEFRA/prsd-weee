@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.FindMatchingOrganisations
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -7,7 +8,9 @@
     using FakeItEasy;
     using Helpers;
     using Prsd.Core;
+    using Prsd.Core.Domain;
     using RequestHandlers.Organisations.FindMatchingOrganisations;
+    using RequestHandlers.Organisations.FindMatchingOrganisations.DataAccess;
     using Requests.Organisations;
     using Xunit;
 
@@ -20,10 +23,12 @@
         private readonly OrganisationHelper orgHelper = new OrganisationHelper();
 
         private readonly IFindMatchingOrganisationsDataAccess dataAccess;
+        private readonly IUserContext userContext;
 
         public FindMatchingOrganisationsHandlerTests()
         {
             dataAccess = A.Fake<IFindMatchingOrganisationsDataAccess>();
+            userContext = A.Fake<IUserContext>();
         }
 
         [Theory]
@@ -48,7 +53,7 @@
         [Fact]
         public async Task FindMatchingOrganisationsHandler_WithLtdCompany_OneMatches()
         {
-            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._, A<Guid>._))
                 .Returns(new[]
                 {
                     orgHelper.GetOrganisationWithName("Test Ltd"),
@@ -67,7 +72,7 @@
         [Fact]
         public async Task FindMatchingOrganisationsHandler_WithLtdAndLimitedCompany_TwoMatches()
         {
-            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._, A<Guid>._))
                 .Returns(new[]
                 {
                     orgHelper.GetOrganisationWithName("TEST Ltd"),
@@ -82,7 +87,7 @@
         [Fact]
         public async Task FindMatchingOrganisationsHandler_SearchTermContainsThe_ReturnsMatchingResults()
         {
-            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._, A<Guid>._))
                 .Returns(new[]
                 {
                     orgHelper.GetOrganisationWithName("Environment Agency"),
@@ -104,7 +109,7 @@
                 orgHelper.GetOrganisationWithName("Environment Agency")
             };
 
-            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._, A<Guid>._))
                 .Returns(data);
 
             var results = await FindMatchingOrganisationsHandler().HandleAsync(new FindMatchingOrganisations("Environment Agency"));
@@ -118,7 +123,7 @@
             var names = new[] { "Environment Agency", "Environemnt Agincy" };
             var data = names.Select(orgHelper.GetOrganisationWithName).ToArray();
 
-            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._, A<Guid>._))
                 .Returns(data);
 
             var results = await FindMatchingOrganisationsHandler().HandleAsync(new FindMatchingOrganisations("Environment Agency"));
@@ -141,7 +146,7 @@
             var organisations =
                 namesWithDistances.Select(n => orgHelper.GetOrganisationWithName(n.Key)).ToArray();
 
-            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._, A<Guid>._))
                 .Returns(organisations);
 
             var results = await FindMatchingOrganisationsHandler().HandleAsync(new FindMatchingOrganisations(searchTerm));
@@ -165,7 +170,7 @@
                     OrganisationType.Partnership, OrganisationStatus.Complete)
             };
 
-            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._, A<Guid>._))
                 .Returns(data);
 
             var results = await FindMatchingOrganisationsHandler().HandleAsync(new FindMatchingOrganisations("Environment Agency"));
@@ -193,7 +198,7 @@
                     OrganisationType.RegisteredCompany, OrganisationStatus.Complete)
             };
 
-            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._, A<Guid>._))
                 .Returns(data);
 
             var handler = FindMatchingOrganisationsHandler();
@@ -219,7 +224,7 @@
 
         private FindMatchingOrganisationsHandler FindMatchingOrganisationsHandler()
         {
-            return new FindMatchingOrganisationsHandler(dataAccess);
+            return new FindMatchingOrganisationsHandler(dataAccess, userContext);
         }
     }
 }

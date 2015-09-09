@@ -9,21 +9,19 @@
     using FakeItEasy;
     using Helpers;
     using Prsd.Core.Domain;
-    using RequestHandlers.Organisations.FindMatchingOrganisations;
+    using RequestHandlers.Organisations.FindMatchingOrganisations.DataAccess;
     using Weee.DataAccess;
     using Xunit;
 
     public class FindMatchingOrganisationsDataAccessTests
     {
         private readonly WeeeContext context;
-        private readonly IUserContext userContext;
 
         private readonly DbContextHelper dbContextHelper;
 
         public FindMatchingOrganisationsDataAccessTests()
         {
             context = A.Fake<WeeeContext>();
-            userContext = A.Fake<IUserContext>();
 
             dbContextHelper = new DbContextHelper();
 
@@ -33,10 +31,6 @@
 
             A.CallTo(() => context.OrganisationUsers)
                 .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<OrganisationUser>()));
-
-            // By default, user Id is empty guid so user id matches any faked db sets with user id
-            A.CallTo(() => userContext.UserId)
-                .Returns(Guid.Empty);
         }
 
         [Theory]
@@ -54,7 +48,7 @@
             A.CallTo(() => context.Organisations)
                 .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Organisation> { organisation }));
 
-            var result = await FindMatchingOrganisationsDataAccess().GetOrganisationsBySimpleSearchTerm(searchTerm);
+            var result = await FindMatchingOrganisationsDataAccess().GetOrganisationsBySimpleSearchTerm(searchTerm, Guid.Empty);
 
             Assert.Single(result);
             Assert.Equal(organisation, result.Single());
@@ -72,7 +66,7 @@
             A.CallTo(() => context.Organisations)
                 .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Organisation> { organisation }));
 
-            var result = await FindMatchingOrganisationsDataAccess().GetOrganisationsBySimpleSearchTerm(searchTerm);
+            var result = await FindMatchingOrganisationsDataAccess().GetOrganisationsBySimpleSearchTerm(searchTerm, Guid.Empty);
 
             Assert.Empty(result);
         }
@@ -82,12 +76,9 @@
         [InlineData("7CE63EB0-0D7D-46AA-9385-EA2DC6D9B2F1", "00000000-0000-0000-0000-000000000000", Core.Shared.UserStatus.Active, Core.Shared.OrganisationStatus.Complete)] // Active status & complete org, but non-matching guids
         [InlineData("7CE63EB0-0D7D-46AA-9385-EA2DC6D9B2F1", "00000000-0000-0000-0000-000000000000", Core.Shared.UserStatus.Pending, Core.Shared.OrganisationStatus.Complete)] // Pending status & complete org, but non-matching guids
         [InlineData("7CE63EB0-0D7D-46AA-9385-EA2DC6D9B2F1", "00000000-0000-0000-0000-000000000000", Core.Shared.UserStatus.Inactive, Core.Shared.OrganisationStatus.Complete)] // Inactive status & complete org, but non-matching guids
-        [InlineData("00000000-0000-0000-0000-000000000000", "7CE63EB0-0D7D-46AA-9385-EA2DC6D9B2F1", Core.Shared.UserStatus.Active, Core.Shared.OrganisationStatus.Complete)] // Active status & complete org, but non-matching guids
-        [InlineData("00000000-0000-0000-0000-000000000000", "7CE63EB0-0D7D-46AA-9385-EA2DC6D9B2F1", Core.Shared.UserStatus.Pending, Core.Shared.OrganisationStatus.Complete)] // Pending status & complete org, but non-matching guids
-        [InlineData("00000000-0000-0000-0000-000000000000", "7CE63EB0-0D7D-46AA-9385-EA2DC6D9B2F1", Core.Shared.UserStatus.Inactive, Core.Shared.OrganisationStatus.Complete)] // Inactive status & complete org, but non-matching guids
         public async void
             GetOrganisationBySimpleSearchTerm_SearchIsValid_AndNoConflictingOrganisationUserExists_ReturnsOrganisation(
-            string userId, string organisationId, Core.Shared.UserStatus userStatus, Core.Shared.OrganisationStatus organisationStatus)
+            string existingUserId, string userId, Core.Shared.UserStatus userStatus, Core.Shared.OrganisationStatus organisationStatus)
         {
             var organisation = A.Fake<Organisation>();
             A.CallTo(() => organisation.TradingName).Returns("A Company");
@@ -96,14 +87,14 @@
             A.CallTo(() => context.Organisations)
                 .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Organisation> { organisation }));
 
-            var organisationUser = new OrganisationUser(new Guid(userId), new Guid(organisationId), userStatus.ToDomainEnumeration<UserStatus>());
+            var organisationUser = new OrganisationUser(new Guid(userId), new Guid(existingUserId), userStatus.ToDomainEnumeration<UserStatus>());
             A.CallTo(() => context.OrganisationUsers)
                 .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<OrganisationUser>
                 {
                     organisationUser
                 }));
 
-            var result = await FindMatchingOrganisationsDataAccess().GetOrganisationsBySimpleSearchTerm("A");
+            var result = await FindMatchingOrganisationsDataAccess().GetOrganisationsBySimpleSearchTerm("A", new Guid(userId));
 
             Assert.Single(result);
             Assert.Equal(organisation, result.Single());
@@ -119,7 +110,7 @@
         [InlineData("00000000-0000-0000-0000-000000000000", "00000000-0000-0000-0000-000000000000", Core.Shared.UserStatus.Rejected, Core.Shared.OrganisationStatus.Incomplete)] // Rejected status & matching guids, but incomplete org
         public async void
             GetOrganisationBySimpleSearchTerm_SearchIsValid_ButConflictingOrganisationUserExists_DoesNotReturnOrganisation(
-            string userId, string organisationId, Core.Shared.UserStatus userStatus, Core.Shared.OrganisationStatus organisationStatus)
+            string existingUserId, string userId, Core.Shared.UserStatus userStatus, Core.Shared.OrganisationStatus organisationStatus)
         {
             var organisation = A.Fake<Organisation>();
             A.CallTo(() => organisation.TradingName).Returns("A Company");
@@ -128,21 +119,21 @@
             A.CallTo(() => context.Organisations)
                 .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Organisation> { organisation }));
 
-            var organisationUser = new OrganisationUser(new Guid(userId), new Guid(organisationId), userStatus.ToDomainEnumeration<UserStatus>());
+            var organisationUser = new OrganisationUser(new Guid(userId), new Guid(existingUserId), userStatus.ToDomainEnumeration<UserStatus>());
             A.CallTo(() => context.OrganisationUsers)
                 .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<OrganisationUser>
                 {
                     organisationUser
                 }));
 
-            var result = await FindMatchingOrganisationsDataAccess().GetOrganisationsBySimpleSearchTerm("A");
+            var result = await FindMatchingOrganisationsDataAccess().GetOrganisationsBySimpleSearchTerm("A", new Guid(userId));
 
             Assert.Empty(result);
         }
 
         private FindMatchingOrganisationsDataAccess FindMatchingOrganisationsDataAccess()
         {
-            return new FindMatchingOrganisationsDataAccess(context, userContext);
+            return new FindMatchingOrganisationsDataAccess(context);
         }
     }
 }
