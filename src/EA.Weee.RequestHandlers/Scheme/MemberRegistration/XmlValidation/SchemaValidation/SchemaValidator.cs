@@ -35,7 +35,7 @@
                 //check if the xml is not blank before doing any validations
                 if (message.Data != null && message.Data.Length == 0)
                 {
-                    errors.Add(new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "Xml file is blank"));
+                    errors.Add(new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "The file you're trying to upload is not a correctly formatted XML file. Please make sure you're uploading a valid XML file"));
                     return errors;
                 }
 
