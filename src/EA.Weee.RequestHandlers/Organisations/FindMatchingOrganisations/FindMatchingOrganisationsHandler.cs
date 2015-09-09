@@ -1,24 +1,21 @@
-﻿namespace EA.Weee.RequestHandlers.Organisations
+﻿namespace EA.Weee.RequestHandlers.Organisations.FindMatchingOrganisations
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using Core.Organisations;
     using Core.Shared;
-    using DataAccess;
     using Domain.Organisation;
     using Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
-    using OrganisationStatus = Domain.Organisation.OrganisationStatus;
     using OrganisationType = Domain.Organisation.OrganisationType;
 
     internal class FindMatchingOrganisationsHandler :
         IRequestHandler<FindMatchingOrganisations, OrganisationSearchDataResult>
     {
-        private readonly WeeeContext context;
+        private readonly IFindMatchingOrganisationsDataAccess dataAccess;
 
         private readonly SpecialBusinessSearchCase[] specialCases =
         {
@@ -28,9 +25,9 @@
             new SpecialBusinessSearchCase(new[] { "COMPANY", "CO" }, Position.End)
         };
 
-        public FindMatchingOrganisationsHandler(WeeeContext context)
+        public FindMatchingOrganisationsHandler(IFindMatchingOrganisationsDataAccess dataAccess)
         {
-            this.context = context;
+            this.dataAccess = dataAccess;
         }
 
         private class OrganisationDataFields
@@ -76,10 +73,7 @@
             // This search uses the Levenshtein edit distance as a search algorithm.
             var permittedDistance = CalculateMaximumLevenshteinDistance(searchTerm);
 
-            var possibleOrganisations = (await GetPossibleOrganisationNames(searchTerm))
-                .Where(
-                    o =>
-                        o.OrganisationStatus == OrganisationStatus.Complete);
+            var possibleOrganisations = await dataAccess.GetOrganisationsBySimpleSearchTerm(searchTerm);
 
             // extract data fields we want to compare against query and clean them up
             IEnumerable<Func<Organisation, string>> dataExtractors = GetDataExtractors();
@@ -198,18 +192,6 @@
             }
 
             return distance;
-        }
-
-        private async Task<Organisation[]> GetPossibleOrganisationNames(string searchTerm)
-        {
-            var firstLetterOfSearchTerm = searchTerm[0].ToString();
-
-            return await context.Organisations
-                .Where(o => (o.Name != null && o.Name.StartsWith(firstLetterOfSearchTerm))
-                            || (o.Name != null && o.Name.StartsWith("THE "))
-                            || (o.TradingName != null && o.TradingName.StartsWith(firstLetterOfSearchTerm))
-                            || (o.TradingName != null && o.TradingName.StartsWith("THE ")))
-                .ToArrayAsync();
         }
 
         /// <summary>

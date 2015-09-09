@@ -1,24 +1,30 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.FindMatchingOrganisations
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess;
     using Domain.Organisation;
     using FakeItEasy;
     using Helpers;
     using Prsd.Core;
-    using RequestHandlers.Organisations;
+    using RequestHandlers.Organisations.FindMatchingOrganisations;
     using Requests.Organisations;
     using Xunit;
 
-    public class FindMatchingCompaniesHandlerTests
+    public class FindMatchingOrganisationsHandlerTests
     {
         private readonly string companyRegistrationNumber = "AB123456";
 
         private readonly DbContextHelper helper = new DbContextHelper();
 
         private readonly OrganisationHelper orgHelper = new OrganisationHelper();
+
+        private readonly IFindMatchingOrganisationsDataAccess dataAccess;
+
+        public FindMatchingOrganisationsHandlerTests()
+        {
+            dataAccess = A.Fake<IFindMatchingOrganisationsDataAccess>();
+        }
 
         [Theory]
         [InlineData("", "", 0)]
@@ -42,23 +48,18 @@
         [Fact]
         public async Task FindMatchingOrganisationsHandler_WithLtdCompany_OneMatches()
         {
-            var organisations = helper.GetAsyncEnabledDbSet(new[]
-            {
-                orgHelper.GetOrganisationWithName("Test Ltd"),
-                orgHelper.GetOrganisationWithName("tset"),
-                orgHelper.GetOrganisationWithName("mfw"),
-                orgHelper.GetOrganisationWithName("mfi Kitchens and Showrooms Ltd"),
-                orgHelper.GetOrganisationWithName("SEPA England"),
-                orgHelper.GetOrganisationWithName("Tesco Recycling")
-            });
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+                .Returns(new[]
+                {
+                    orgHelper.GetOrganisationWithName("Test Ltd"),
+                    orgHelper.GetOrganisationWithName("tset"),
+                    orgHelper.GetOrganisationWithName("mfw"),
+                    orgHelper.GetOrganisationWithName("mfi Kitchens and Showrooms Ltd"),
+                    orgHelper.GetOrganisationWithName("SEPA England"),
+                    orgHelper.GetOrganisationWithName("Tesco Recycling")
+                });
 
-            var context = A.Fake<WeeeContext>();
-
-            A.CallTo(() => context.Organisations).Returns(organisations);
-
-            var handler = new FindMatchingOrganisationsHandler(context);
-
-            var strings = await handler.HandleAsync(new FindMatchingOrganisations("Test"));
+            var strings = await FindMatchingOrganisationsHandler().HandleAsync(new FindMatchingOrganisations("Test"));
 
             Assert.Equal(1, strings.Results.Count());
         }
@@ -66,19 +67,14 @@
         [Fact]
         public async Task FindMatchingOrganisationsHandler_WithLtdAndLimitedCompany_TwoMatches()
         {
-            var organisations = helper.GetAsyncEnabledDbSet(new[]
-            {
-                orgHelper.GetOrganisationWithName("TEST Ltd"),
-                orgHelper.GetOrganisationWithName("TEST  Limited")
-            });
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+                .Returns(new[]
+                {
+                    orgHelper.GetOrganisationWithName("TEST Ltd"),
+                    orgHelper.GetOrganisationWithName("TEST  Limited")
+                });
 
-            var context = A.Fake<WeeeContext>();
-
-            A.CallTo(() => context.Organisations).Returns(organisations);
-
-            var handler = new FindMatchingOrganisationsHandler(context);
-
-            var strings = await handler.HandleAsync(new FindMatchingOrganisations("test"));
+            var strings = await FindMatchingOrganisationsHandler().HandleAsync(new FindMatchingOrganisations("test"));
 
             Assert.Equal(2, strings.Results.Count());
         }
@@ -86,19 +82,14 @@
         [Fact]
         public async Task FindMatchingOrganisationsHandler_SearchTermContainsThe_ReturnsMatchingResults()
         {
-            var organisations = helper.GetAsyncEnabledDbSet(new[]
-            {
-                orgHelper.GetOrganisationWithName("Environment Agency"),
-                orgHelper.GetOrganisationWithName("Enivronent Agency")
-            });
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+                .Returns(new[]
+                {
+                    orgHelper.GetOrganisationWithName("Environment Agency"),
+                    orgHelper.GetOrganisationWithName("Enivronent Agency")
+                });
 
-            var context = A.Fake<WeeeContext>();
-
-            A.CallTo(() => context.Organisations).Returns(organisations);
-
-            var handler = new FindMatchingOrganisationsHandler(context);
-
-            var results = await handler.HandleAsync(new FindMatchingOrganisations("THe environment agency"));
+            var results = await FindMatchingOrganisationsHandler().HandleAsync(new FindMatchingOrganisations("THe environment agency"));
 
             Assert.Equal(2, results.Results.Count());
         }
@@ -113,15 +104,10 @@
                 orgHelper.GetOrganisationWithName("Environment Agency")
             };
 
-            var organisations = helper.GetAsyncEnabledDbSet(data);
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+                .Returns(data);
 
-            var context = A.Fake<WeeeContext>();
-
-            A.CallTo(() => context.Organisations).Returns(organisations);
-
-            var handler = new FindMatchingOrganisationsHandler(context);
-
-            var results = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency"));
+            var results = await FindMatchingOrganisationsHandler().HandleAsync(new FindMatchingOrganisations("Environment Agency"));
 
             Assert.Equal(data.Length, results.Results.Count());
         }
@@ -130,18 +116,12 @@
         public async Task FindMatchingOrganisationsHandler_AllDataMatches_ReturnedStringsMatchInputDataWithCase()
         {
             var names = new[] { "Environment Agency", "Environemnt Agincy" };
-
             var data = names.Select(orgHelper.GetOrganisationWithName).ToArray();
 
-            var organisations = helper.GetAsyncEnabledDbSet(data);
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+                .Returns(data);
 
-            var context = A.Fake<WeeeContext>();
-
-            A.CallTo(() => context.Organisations).Returns(organisations);
-
-            var handler = new FindMatchingOrganisationsHandler(context);
-
-            var results = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency"));
+            var results = await FindMatchingOrganisationsHandler().HandleAsync(new FindMatchingOrganisations("Environment Agency"));
 
             Assert.Equal(names, results.Results.Select(r => r.DisplayName).ToArray());
         }
@@ -159,16 +139,12 @@
             };
 
             var organisations =
-                helper.GetAsyncEnabledDbSet(
-                    namesWithDistances.Select(n => orgHelper.GetOrganisationWithName(n.Key)).ToArray());
+                namesWithDistances.Select(n => orgHelper.GetOrganisationWithName(n.Key)).ToArray();
 
-            var context = A.Fake<WeeeContext>();
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+                .Returns(organisations);
 
-            A.CallTo(() => context.Organisations).Returns(organisations);
-
-            var handler = new FindMatchingOrganisationsHandler(context);
-
-            var results = await handler.HandleAsync(new FindMatchingOrganisations(searchTerm));
+            var results = await FindMatchingOrganisationsHandler().HandleAsync(new FindMatchingOrganisations(searchTerm));
 
             Assert.Equal(namesWithDistances.OrderBy(n => n.Value).Select(n => n.Key),
                 results.Results.Select(r => r.DisplayName));
@@ -189,15 +165,10 @@
                     OrganisationType.Partnership, OrganisationStatus.Complete)
             };
 
-            var organisations = helper.GetAsyncEnabledDbSet(data);
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+                .Returns(data);
 
-            var context = A.Fake<WeeeContext>();
-
-            A.CallTo(() => context.Organisations).Returns(organisations);
-
-            var handler = new FindMatchingOrganisationsHandler(context);
-
-            var results = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency"));
+            var results = await FindMatchingOrganisationsHandler().HandleAsync(new FindMatchingOrganisations("Environment Agency"));
 
             Assert.Equal(data.Length, results.Results.Count());
         }
@@ -222,13 +193,10 @@
                     OrganisationType.RegisteredCompany, OrganisationStatus.Complete)
             };
 
-            var organisations = helper.GetAsyncEnabledDbSet(data);
+            A.CallTo(() => dataAccess.GetOrganisationsBySimpleSearchTerm(A<string>._))
+                .Returns(data);
 
-            var context = A.Fake<WeeeContext>();
-
-            A.CallTo(() => context.Organisations).Returns(organisations);
-
-            var handler = new FindMatchingOrganisationsHandler(context);
+            var handler = FindMatchingOrganisationsHandler();
 
             const int PageSize = 2;
 
@@ -249,32 +217,9 @@
             Assert.Equal(QuiteDifferentToQuery, secondPage.Results[0].DisplayName);
         }
 
-        [Fact]
-        public async Task FindMatchingOrganisationsHandler_SearchMightIncludeIncompleteOrgs_OnlyShowComplete()
+        private FindMatchingOrganisationsHandler FindMatchingOrganisationsHandler()
         {
-            const string CompleteName = "Environment Agency 1";
-            const string IncompleteName = "Environment Agency 2";
-
-            var data = new[]
-            {
-                orgHelper.GetOrganisationWithDetails(CompleteName, null, companyRegistrationNumber,
-                    OrganisationType.RegisteredCompany, OrganisationStatus.Complete),
-                orgHelper.GetOrganisationWithDetails(IncompleteName, null, companyRegistrationNumber,
-                    OrganisationType.RegisteredCompany, OrganisationStatus.Incomplete)
-            };
-
-            var organisations = helper.GetAsyncEnabledDbSet(data);
-
-            var context = A.Fake<WeeeContext>();
-
-            A.CallTo(() => context.Organisations).Returns(organisations);
-
-            var handler = new FindMatchingOrganisationsHandler(context);
-
-            var results = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency"));
-
-            Assert.Equal(1, results.Results.Count());
-            Assert.Equal(CompleteName, results.Results[0].DisplayName);
+            return new FindMatchingOrganisationsHandler(dataAccess);
         }
     }
 }
