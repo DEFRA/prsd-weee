@@ -203,7 +203,7 @@
         }
 
         [Fact]
-        public async Task FindMatchingOrganisationsHandler_Paged_ReturnsMatchingResults()
+        public async Task FindMatchingOrganisationsHandler_ReturnsMatchingResults()
         {
             const string IdenticalToQuery = "Environment Agency";
             const string CloseToQuery = "Enviroment Agency";
@@ -230,23 +230,12 @@
 
             var handler = new FindMatchingOrganisationsHandler(context);
 
-            const int PageSize = 2;
-
-            var firstPage = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency", 1, PageSize));
-            var secondPage = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency", 2, PageSize));
-            var thirdEmptyPage =
-                await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency", 3, PageSize));
-
-            Assert.Equal(PageSize, firstPage.Results.Count());
-            Assert.Equal(PageSize - 1, secondPage.Results.Count());
-                // we aren't expecting to see the one named CompletelyUnlikeQuery
-            Assert.Equal(0, thirdEmptyPage.Results.Count());
-
+            var orgs = await handler.HandleAsync(new FindMatchingOrganisations("Environment Agency"));
+           
             // handler sorts by distance
-            Assert.Equal(IdenticalToQuery, firstPage.Results[0].DisplayName);
-            Assert.Equal(CloseToQuery, firstPage.Results[1].DisplayName);
-
-            Assert.Equal(QuiteDifferentToQuery, secondPage.Results[0].DisplayName);
+            Assert.Equal(IdenticalToQuery, orgs.Results[0].DisplayName);
+            Assert.Equal(CloseToQuery, orgs.Results[1].DisplayName);
+            Assert.Equal(QuiteDifferentToQuery, orgs.Results[2].DisplayName);
         }
 
         [Fact]
