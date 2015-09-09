@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
+    using EA.Weee.Core.Routing;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -35,6 +36,24 @@
             {
                 string protocol = UrlHelper.RequestContext.HttpContext.Request.Url.Scheme;
                 return UrlHelper.Action("ActivateUserAccount", "Account", null, protocol);
+            }
+        }
+
+        public ResetPasswordRoute ExternalUserResetPasswordRoute
+        {
+            get
+            {
+                string protocol = UrlHelper.RequestContext.HttpContext.Request.Url.Scheme;
+
+                var routeValues = new
+                {
+                    id = ResetPasswordRoute.PlaceholderUserId,
+                    token = ResetPasswordRoute.PlaceholderToken,
+                };
+
+                string url = UrlHelper.Action("ResetPassword", "Account", routeValues, protocol);
+
+                return new ResetPasswordRoute(url);
             }
         }
     }

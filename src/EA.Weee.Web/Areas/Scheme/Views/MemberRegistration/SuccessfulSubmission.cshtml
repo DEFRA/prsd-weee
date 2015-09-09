@@ -14,7 +14,7 @@
     {
         @Html.AntiForgeryToken()
         <p>You can now <a href="@Url.Action("GetProducerCSV", "MemberRegistration", new { @Model.PcsId, @Model.ComplianceYear })">download this CSV file</a>. In it you'll find the notification of your registered scheme members and their producer registration numbers.</p>
-        <p>We will invoice you for any producer registration charges that may apply.</p>
+        <p>We will invoice you for any producer registration charges that apply.</p>
         <p>If you have finished performing tasks you can <span id="log-off-link"><noscript><input type="submit" value="sign-out" /></noscript></span> or proceed to perform more activities</p>
     }
 

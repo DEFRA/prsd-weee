@@ -23,19 +23,21 @@
     </p>
     @if (String.IsNullOrEmpty(ViewBag.UserEmailAddress))
     {
-        <p>We have sent you an activation email. You need to use the link in the email to activate your user account. Please check your email inbox or junk folder.</p>
+        <p>We have sent you an activation email. You need to use the link in the email to activate your user account.</p>
     }
     else
     {
-        <p>We have sent your activation email to @ViewBag.UserEmailAddress. You need to use the link in the email to activate your user account. Please check your email inbox or junk folder.</p>
+        <p>We have sent your activation email to @ViewBag.UserEmailAddress. You need to use the link in the email to activate your user account.</p>
     }
 
+    <p>If the email address shown above is wrong then you will need to create another user account using the correct email address.</p>
+    <p></p>
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         <p>
-            If you have not received the email, you can
-            <button class="link-submit" type="submit">request another activation email</button>
+            If the email address shown above is correct but you have not received your activation email, please check your email inbox or junk folder, or you can
+            <button class="link-submit" type="submit">request another activation email.</button>
         </p>
     }
 }

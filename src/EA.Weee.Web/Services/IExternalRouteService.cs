@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
+    using EA.Weee.Core.Routing;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -20,5 +21,10 @@
         /// The absolute URL of the user account activation page for an external user.
         /// </summary>
         string ActivateExternalUserAccountUrl { get; }
+
+        /// <summary>
+        /// The route to the password reset page for an external user.
+        /// </summary>
+        ResetPasswordRoute ExternalUserResetPasswordRoute { get; }
     }
 }
