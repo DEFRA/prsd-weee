@@ -13,6 +13,10 @@ using System.Threading.Tasks;
     {
         Task<bool> SendActivateUserAccount(string emailAddress, string activationUrl);
 
+        Task<bool> SendPasswordResetRequest(string emailAddress, string passwordResetUrl);
+
+        Task<bool> SendOrganisationUserRequest(string emailAddress, OrganisationUser organisationUser);
+
         Task<bool> SendOrganisationUserRequestCompleted(OrganisationUser organisationUser);
     }
 }

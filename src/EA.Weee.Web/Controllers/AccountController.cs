@@ -2,48 +2,33 @@
 {
     using Api.Client;
     using Api.Client.Entities;
-    using Core;
-    using Core.Organisations;
-    using Core.Shared;
-    using EA.Weee.Requests.Users;
+    using Authorization;
+    using EA.Weee.Core.Routing;
     using EA.Weee.Web.Controllers.Base;
     using Infrastructure;
     using Microsoft.Owin.Security;
+    using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Services;
     using System;
-    using System.Linq;
-    using System.Net.Mail;
-    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Prsd.Core.Web.ApiClient;
-    using Prsd.Core.Web.Mvc.Extensions;
-    using Thinktecture.IdentityModel.Client;
     using ViewModels.Account;
 
     [Authorize]
     public class AccountController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly IAuthenticationManager authenticationManager;
-        private readonly Func<IOAuthClient> oauthClient;
-        private readonly Func<IUserInfoClient> userInfoClient;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IExternalRouteService externalRouteService;
 
-        public AccountController(Func<IOAuthClient> oauthClient,
-            IAuthenticationManager authenticationManager,
-            Func<IWeeeClient> apiClient,
+        public AccountController(Func<IWeeeClient> apiClient,
             IWeeeAuthorization weeeAuthorization,
-            Func<IUserInfoClient> userInfoClient,
             IExternalRouteService externalRouteService)
         {
-            this.oauthClient = oauthClient;
             this.apiClient = apiClient;
-            this.authenticationManager = authenticationManager;
-            this.userInfoClient = userInfoClient;
             this.weeeAuthorization = weeeAuthorization;
             this.externalRouteService = externalRouteService;
         }
@@ -68,55 +53,19 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SignIn(LoginViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
-            }
+                var loginResult = await weeeAuthorization.SignIn(LoginType.External, model.Email, model.Password, model.RememberMe);
 
-            var response = await oauthClient().GetAccessTokenAsync(model.Email, model.Password);
-            if (response.AccessToken != null)
-            {
-                var isExternalUser = await IsExternalUser(response.AccessToken);
-                if (isExternalUser)
+                if (loginResult.Successful)
                 {
-                    authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = model.RememberMe },
-                        response.GenerateUserIdentity());
                     return RedirectToLocal(model.ReturnUrl);
                 }
-                ModelState.AddModelError(string.Empty, "Invalid login details");
-                return View(model);
-            }
 
-            ModelState.AddModelError(string.Empty, ParseLoginError(response.Error));
+                ModelState.AddModelError(string.Empty, loginResult.ErrorMessage);
+            }
 
             return View(model);
-        }
-
-        private string ParseLoginError(string error)
-        {
-            switch (error)
-            {
-                case OAuth2Constants.Errors.AccessDenied:
-                    return "Access denied";
-                case OAuth2Constants.Errors.InvalidGrant:
-                    return "Invalid credentials";
-                case OAuth2Constants.Errors.Error:
-                case OAuth2Constants.Errors.InvalidClient:
-                case OAuth2Constants.Errors.InvalidRequest:
-                case OAuth2Constants.Errors.InvalidScope:
-                case OAuth2Constants.Errors.UnauthorizedClient:
-                case OAuth2Constants.Errors.UnsupportedGrantType:
-                case OAuth2Constants.Errors.UnsupportedResponseType:
-                default:
-                    return "Internal error";
-            }
-        }
-
-        private async Task<bool> IsExternalUser(string accessToken)
-        {
-            var userInfo = await userInfoClient().GetUserInfoAsync(accessToken);
-
-            return userInfo.Claims.Any(p => p.Item2 == Claims.CanAccessExternalArea);
         }
 
         // POST: /Account/SignOut
@@ -124,7 +73,7 @@
         [ValidateAntiForgeryToken]
         public ActionResult SignOut()
         {
-            authenticationManager.SignOut();
+            weeeAuthorization.SignOut();
 
             return RedirectToAction("SignIn");
         }
@@ -213,14 +162,22 @@
                 {
                     using (var client = apiClient())
                     {
-                        var result = await client.User.ResetPasswordAsync(new PasswordResetData 
+                        var result = await client.User.ResetPasswordAsync(new PasswordResetData
                         {
-                            Password = model.Password, 
+                            Password = model.Password,
                             Token = token,
                             UserId = id
                         });
 
-                        return await weeeAuthorization.SignIn(result.EmailAddress, model.Password, false);
+                        var loginResult =
+                            await weeeAuthorization.SignIn(LoginType.External, result.EmailAddress, model.Password, false);
+
+                        if (loginResult.Successful)
+                        {
+                            return RedirectToAction("RedirectProcess", "Account");
+                        }
+
+                        ModelState.AddModelError(string.Empty, loginResult.ErrorMessage);
                     }
                 }
                 catch (ApiBadRequestException ex)
@@ -256,7 +213,10 @@
 
             using (var client = apiClient())
             {
-                var result = await client.User.ResetPasswordRequestAsync(new PasswordResetRequest(model.Email));
+                ResetPasswordRoute route = externalRouteService.ExternalUserResetPasswordRoute;
+                PasswordResetRequest apiModel = new PasswordResetRequest(model.Email, route);
+
+                var result = await client.User.ResetPasswordRequestAsync(apiModel);
 
                 if (!result.ValidEmail)               
                 {
