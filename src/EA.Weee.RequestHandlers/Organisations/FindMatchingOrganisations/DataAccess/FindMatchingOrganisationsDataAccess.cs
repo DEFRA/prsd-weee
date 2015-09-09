@@ -23,7 +23,7 @@
         {
             var firstLetterOfSearchTerm = searchTerm[0].ToString();
 
-            var outstandingJoinRequests = await OrganisationsWithOutstandingUserJoinRequests(userId);
+            var organisationsCurrentlyLinkedToUser = await OrganisationsCurrentlyLinkedToUser(userId);
 
             return (await context.Organisations.ToListAsync())
                 .Where(o =>
@@ -46,7 +46,7 @@
 
                     var organisationIsComplete = o.OrganisationStatus == OrganisationStatus.Complete;
 
-                    var hasOutstandingJoinRequest = outstandingJoinRequests.Any(id => id == o.Id);
+                    var hasOutstandingJoinRequest = organisationsCurrentlyLinkedToUser.Any(id => id == o.Id);
 
                     return organisationIsComplete
                            && (organisationNameStartsWithThe || organisationNameStartsWithFirstLetter)
@@ -54,7 +54,7 @@
                 }).ToArray();
         }
 
-        private async Task<IEnumerable<Guid>> OrganisationsWithOutstandingUserJoinRequests(Guid userId)
+        private async Task<IEnumerable<Guid>> OrganisationsCurrentlyLinkedToUser(Guid userId)
         {
             return (await context.OrganisationUsers
                 .Where(ou => ou.UserId == userId.ToString()
