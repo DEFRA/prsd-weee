@@ -1,7 +1,6 @@
-﻿namespace EA.Weee.RequestHandlers.Organisations
+﻿namespace EA.Weee.RequestHandlers.Organisations.JoinOrganisation
 {
     using System;
-    using System.Data.Entity;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.Organisation;
@@ -13,13 +12,13 @@
     internal class JoinOrganisationHandler : IRequestHandler<JoinOrganisation, Guid>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly WeeeContext context;
+        private readonly IJoinOrganisationDataAccess dataAccess;
         private readonly IUserContext userContext;
 
-        public JoinOrganisationHandler(IWeeeAuthorization authorization, WeeeContext context, IUserContext userContext)
+        public JoinOrganisationHandler(IWeeeAuthorization authorization, IJoinOrganisationDataAccess dataAccess, IUserContext userContext)
         {
             this.authorization = authorization;
-            this.context = context;
+            this.dataAccess = dataAccess;
             this.userContext = userContext;
         }
 
@@ -29,12 +28,12 @@
 
             var userId = userContext.UserId;
 
-            if (await context.Users.FirstOrDefaultAsync(u => u.Id == userId.ToString()) == null)
+            if (!await dataAccess.DoesUserExist(userId))
             {
                 throw new ArgumentException(string.Format("Could not find a user with id {0}", userId));
             }
 
-            if (await context.Organisations.FirstOrDefaultAsync(o => o.Id == message.OrganisationId) == null)
+            if (!await dataAccess.DoesOrganisationExist(message.OrganisationId))
             {
                 throw new ArgumentException(string.Format("Could not find an organisation with id {0}",
                     message.OrganisationId));
@@ -43,9 +42,12 @@
             var organisationUser = new OrganisationUser(userId, message.OrganisationId,
                 Domain.UserStatus.Pending);
 
-            context.OrganisationUsers.Add(organisationUser);
+            var result = await dataAccess.JoinOrganisation(organisationUser);
 
-            await context.SaveChangesAsync();
+            if (!result.Successful)
+            {
+                throw new InvalidOperationException(result.ErrorMessage);
+            }
 
             return message.OrganisationId;
         }
