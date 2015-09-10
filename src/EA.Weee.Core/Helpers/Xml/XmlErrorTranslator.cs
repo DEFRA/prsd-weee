@@ -60,16 +60,12 @@
             switch (constraintWhichFailed)
             {
                 case "MinInclusive":
-                    friendlyMessageTemplate =
-                        "The value '{0}' supplied for field '{1}' is too low.";
-                    break;
                 case "MaxInclusive":
                     friendlyMessageTemplate =
-                        "The value '{0}' supplied for field '{1}' is too high.";
+                        "The {1} you've provided is incorrect. Please make sure you enter the right value."; 
                     break;
                 case "Pattern":
-                    friendlyMessageTemplate =
-                        "The value '{0}' supplied for field '{1}' doesn't match the required format.";
+                    friendlyMessageTemplate = string.IsNullOrEmpty(sender.Value) ? "Mandatory {1} field." : "The value '{0}' supplied for field '{1}' doesn't match the required format.";
                     break;
                 case "Enumeration":
                     friendlyMessageTemplate =
