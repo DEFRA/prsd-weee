@@ -132,52 +132,21 @@
         }
 
         [Fact]
-        public async void HttpPost_ResetPassword_ModelIsValid_ButAuthorizationUnsuccessful_ShouldAddErrorToModelErrors_AndReturnView()
-        {
-            const string errorMessage = "Some error";
-            var model = new ResetPasswordModel();
-
-            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
-                .Returns(new PasswordResetResult("an@email.address"));
-
-            A.CallTo(() => apiClient.User)
-                .Returns(unauthenticatedUserClient);
-
-            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Fail(errorMessage));
-
-            var controller = AccountController();
-
-            var result = await controller.ResetPassword(A<Guid>._, A<string>._, model);
-            Assert.IsType<ViewResult>(result);
-            Assert.Equal(model, ((ViewResult)result).Model);
-            Assert.Single(controller.ModelState.Values);
-            Assert.Single(controller.ModelState.Values.Single().Errors);
-            Assert.Contains(errorMessage, controller.ModelState.Values.Single().Errors.Single().ErrorMessage);
-        }
-
-        [Fact]
-        public async void HttpPost_ResetPassword_ModelIsValid_AndAuthorizationSuccessful_ShouldRedirectToRedirectProcess()
+        public async void HttpPost_ResetPassword_ModelIsValid_AndAuthorizationSuccessful_ShouldRedirectToSignIn()
         {
             A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
                 .Returns(new PasswordResetResult("an@email.address"));
 
             A.CallTo(() => apiClient.User)
                 .Returns(unauthenticatedUserClient);
-
-            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Success("dsadsa"));
 
             var result = await AccountController().ResetPassword(A<Guid>._, A<string>._, new ResetPasswordModel());
-
-            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.IsType<RedirectToRouteResult>(result);
 
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("RedirectProcess", routeValues["action"]);
+            Assert.Equal("SignIn", routeValues["action"]);
             Assert.Equal("Account", routeValues["controller"]);
         }
     }
