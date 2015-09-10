@@ -22,7 +22,7 @@
         public void XmlErrorTranslator_MinInclusiveFailed_CorrectMessage()
         {
             string providedException = string.Format("The '{0}' element is invalid - The value '{1}' is invalid according to its datatype '{2}' - The MinInclusive constraint failed.", TestField, TestValue, TestType);
-            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' is too low.", TestValue, TestField));
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The {1} you've provided is incorrect. Please make sure you enter the right value.", TestValue, TestField));
 
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }
@@ -31,7 +31,7 @@
         public void XmlErrorTranslator_MaxInclusiveFailed_CorrectMessage()
         {
             string providedException = string.Format("The '{0}' element is invalid - The value '{1}' is invalid according to its datatype '{2}' - The MaxInclusive constraint failed.", TestField, TestValue, TestType);
-            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' is too high.", TestValue, TestField));
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The {1} you've provided is incorrect. Please make sure you enter the right value.", TestValue, TestField));
 
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }
