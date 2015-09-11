@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.DataAccess
 {
+    using System.Collections.Generic;
+    using System.Data.Common;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Domain;
     using Domain.Admin;
     using Domain.Organisation;
@@ -9,11 +15,6 @@
     using Prsd.Core.DataAccess.Extensions;
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
-    using System.Data.Common;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     public class WeeeContext : DbContext
     {
@@ -90,7 +91,7 @@
             this.SetEntityId();
             //this.DeleteRemovedRelationships();
             this.AuditChanges(userContext.UserId);
-            
+
             int result;
             if (alreadyHasTransaction)
             {
@@ -109,7 +110,7 @@
                     transaction.Commit();
                 }
             }
-            
+
             return result;
         }
 
