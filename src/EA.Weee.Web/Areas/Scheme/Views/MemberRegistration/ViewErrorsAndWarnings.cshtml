@@ -11,20 +11,22 @@
             @{
                 int numOfErrors = @Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal);
                 int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
+                string errorText = (numOfErrors > 1 ? "errors" : "error");
+                string warningText = (numWarnings > 1 ? "warnings" : "warning");
             }
-            
-                @if (numWarnings > 0)
-                {
-                    <h1 class="heading-large">
-                        The XML file contains @numOfErrors error(s) and @numWarnings warning(s)
-                    </h1>
-                }
-                else
-                {
-                    <h1 class="heading-large">
-                        The XML file contains @numOfErrors error(s)
-                    </h1>
-                }
+
+            @if (numWarnings > 0)
+            {
+                <h1 class="heading-large">
+                    The XML file contains @numOfErrors @errorText and @numWarnings @warningText
+                </h1>
+            }
+            else
+            {
+                <h1 class="heading-large">
+                    The XML file contains @numOfErrors @errorText
+                </h1>
+            }
         </div>
     </header>
     @if (numWarnings > 0)
@@ -46,7 +48,7 @@
 
     <details>
         <summary class="error-details-summary bold-small">
-            @numOfErrors Error(s)
+            View @numOfErrors @errorText
         </summary>
         <div class="error-list-container">
             <ul>
@@ -60,12 +62,12 @@
             </ul>
         </div>
     </details>
-    <br/>
+    <br />
     @if (numWarnings > 0)
     {
         <details>
             <summary class="warning-details-summary bold-small">
-                @numWarnings Warning(s)
+                View @numWarnings @warningText
             </summary>
             <div class="warning-list-container">
                 <ul>
@@ -87,8 +89,9 @@
     }
     else
     {
-        <p>@Html.ActionLink("Download the errors", "DownloadErrorsAndWarnings", new { Model.MemberUploadId })</p>
+        <p>@Html.ActionLink("Download the " + errorText, "DownloadErrorsAndWarnings", new { Model.MemberUploadId })</p>
     }
-    <p>Go back and <a href="@Url.Action("AddOrAmendMembers", "MemberRegistration")">upload a new file</a>
+    <p>
+        Go back and <a href="@Url.Action("AddOrAmendMembers", "MemberRegistration")">upload a new file</a>
     </p>
 }
