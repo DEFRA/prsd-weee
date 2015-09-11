@@ -15,6 +15,9 @@
         private const string InvalidChildElementPattern =
             @"^The element '([^']*)' in namespace '[^']*' has invalid child element '([^']*)' in namespace '[^']*'. List of possible elements expected: '[^']*' in namespace '[^']*'.$";
 
+        private const string IncompleteContentPattern =
+           @"^The element '([^']*)' in namespace '[^']*' has incomplete content. List of possible elements expected: '[^']*' in namespace '[^']*'.$";
+
         private const string ErrorInXmlDocumentPattern = @"^There is an error in XML document \(([0-9]*)\,\s([0-9]*)\)\.$";
 
         public string MakeFriendlyErrorMessage(string message)
@@ -37,6 +40,10 @@
             else if (Regex.IsMatch(message, InvalidChildElementPattern))
             {
                 resultErrorMessage = MakeFriendlyInvalidChildElementMessage(sender, message);
+            }
+            else if (Regex.IsMatch(message, IncompleteContentPattern))
+            {
+                resultErrorMessage = MakeFriendlyIncompleteContentMessage(sender, message);
             }
             else if (Regex.IsMatch(message, ErrorInXmlDocumentPattern))
             {
@@ -110,6 +117,16 @@
         private string MakeFriendlyInvalidChildElementMessage(XElement sender, string message)
         {
             return string.Format("The field {0} isn't expected here.", sender.Name.LocalName);
+        }
+
+        private string MakeFriendlyIncompleteContentMessage(XElement sender, string message)
+        {
+            string listName = sender.Name.LocalName;
+            if (sender.Name.LocalName.Contains("List"))
+            {
+                listName = listName.Substring(0, listName.Length - 4);
+            }
+            return string.Format("There are no {0} details in XML file. Plesae provide details for at least one {0}.", listName);    
         }
 
         private string MakeFriendlyErrorInXmlDocumentMessage(string message)
