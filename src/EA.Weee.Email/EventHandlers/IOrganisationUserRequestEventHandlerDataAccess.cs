@@ -1,12 +1,10 @@
 ﻿namespace EA.Weee.Email.EventHandlers
 {
-    using EA.Weee.Domain;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    
+    using Domain.Organisation;
+
     public interface IOrganisationUserRequestEventHandlerDataAccess
     {
         /// <summary>
@@ -15,6 +13,6 @@
         /// </summary>
         /// <param name="organisationId"></param>
         /// <returns></returns>
-        Task<IEnumerable<User>> FetchActiveOrganisationUsers(Guid organisationId);
+        Task<IEnumerable<OrganisationUser>> FetchActiveOrganisationUsers(Guid organisationId);
     }
 }

@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.Email.EventHandlers
 {
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
+    using DataAccess;
+    using Domain;
+    using Domain.Organisation;
 
     public class OrganisationUserRequestEventHandlerDataAccess : IOrganisationUserRequestEventHandlerDataAccess
     {
@@ -18,14 +18,13 @@
             this.context = context;
         }
 
-        public async Task<IEnumerable<User>> FetchActiveOrganisationUsers(Guid organisationId)
+        public async Task<IEnumerable<OrganisationUser>> FetchActiveOrganisationUsers(Guid organisationId)
         {
             return await context.OrganisationUsers
                 .Where(ou => ou.OrganisationId == organisationId)
                 .Where(ou => ou.UserStatus.Value == UserStatus.Active.Value)
-                .Select(ou => ou.User)
                 .Distinct()
-                .OrderBy(u => u.Email)
+                .OrderBy(u => u.User.Email)
                 .ToListAsync();
         }
     }

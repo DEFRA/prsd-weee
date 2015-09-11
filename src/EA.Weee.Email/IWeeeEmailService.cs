@@ -1,13 +1,7 @@
 ﻿namespace EA.Weee.Email
 {
-    using EA.Weee.Domain;
-using EA.Weee.Domain.Organisation;
-using EA.Weee.Domain.Scheme;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+    using System.Threading.Tasks;
+    using Domain.Organisation;
 
     public interface IWeeeEmailService
     {
@@ -15,7 +9,7 @@ using System.Threading.Tasks;
 
         Task<bool> SendPasswordResetRequest(string emailAddress, string passwordResetUrl);
 
-        Task<bool> SendOrganisationUserRequest(string emailAddress, OrganisationUser organisationUser);
+        Task<bool> SendOrganisationUserRequest(string emailAddress, string organisationName);
 
         Task<bool> SendOrganisationUserRequestCompleted(OrganisationUser organisationUser);
     }
