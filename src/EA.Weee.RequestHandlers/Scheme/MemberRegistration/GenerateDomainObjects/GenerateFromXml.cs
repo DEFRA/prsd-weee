@@ -122,7 +122,7 @@
                     annualturnoverType,
                     brandNames,
                     codes,
-                    true,
+                    false,
                     producerChargeBandType,
                     producerChargeThisUpdate);
 
