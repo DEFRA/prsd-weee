@@ -33,9 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15236.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.1.0.15236-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15252.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.15252-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -75,7 +75,9 @@
     <Compile Include="Organisations\Create\CreatePartnershipRequestHandlerTests.cs" />
     <Compile Include="Organisations\Create\CreateRegisteredCompanyRequestHandlerTests.cs" />
     <Compile Include="Organisations\Create\CreateSoleTraderRequestHandlerTests.cs" />
+    <Compile Include="Organisations\FindMatchingOrganisations\DataAccess\FindMatchingOrganisationsDataAccessTests.cs" />
     <Compile Include="Organisations\GetPublicOrganisationInfoHandlerTests.cs" />
+    <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationDataAccessTests.cs" />
     <Compile Include="Organisations\OrganisationByIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemesHandlerTests.cs" />
@@ -113,8 +115,8 @@
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadDataHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidatorTests.cs" />
     <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandlerTests.cs" />
-    <Compile Include="Organisations\FindMatchingCompaniesHandlerTests.cs" />
-    <Compile Include="Organisations\JoinOrganisationHandlerTests.cs" />
+    <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingOrganisationsHandlerTests.cs" />
+    <Compile Include="Organisations\JoinOrganisation\JoinOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandlerTests.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandlerTests.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandlerTests.cs" />

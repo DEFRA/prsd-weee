@@ -49,6 +49,27 @@
             return await sender.SendAsync(message);
         }
 
+        public async Task<bool> SendPasswordResetRequest(string emailAddress, string passwordResetUrl)
+        {
+            var model = new
+            {
+                PasswordResetUrl = passwordResetUrl,
+            };
+
+            EmailContent content = new EmailContent()
+            {
+                HtmlText = templateExecutor.Execute("PasswordResetRequest.cshtml", model),
+                PlainText = templateExecutor.Execute("PasswordResetRequest.txt", model)
+            };
+
+            MailMessage message = messageCreator.Create(
+                emailAddress,
+                "Reset your WEEE password",
+                content);
+
+            return await sender.SendAsync(message);
+        }
+
         public async Task<bool> SendOrganisationUserRequest(string emailAddress, Domain.Organisation.OrganisationUser organisationUser)
         {
             var model = new
