@@ -553,6 +553,7 @@
     <Content Include="Views\Account\ResetPasswordRequest.cshtml" />
     <Content Include="Views\Account\ResetPasswordInstruction.cshtml" />
     <Content Include="Views\OrganisationRegistration\NotFoundOrganisation.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SelectOrganisationRadioButtons.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -665,6 +666,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
     <Compile Include="ViewModels\Home\IndexViewModel.cs" />
+    <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationAction.cs" />
     <Compile Include="ViewModels\NewUser\UserCreationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationViewModel.cs" />
@@ -692,6 +694,7 @@
     <Compile Include="ViewModels\Shared\AddressViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionOptionalViewModel.cs" />
     <Compile Include="ViewModels\Shared\StringGuidRadioButtons.cs" />
+    <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationRadioButtons.cs" />
     <Compile Include="ViewModels\Shared\TitleViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\MemberUploadResultViewModel.cs" />
