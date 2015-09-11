@@ -69,17 +69,17 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15236.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15236-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="EA.Prsd.Core.Web">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15236-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15252.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15252-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15236.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15236-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15252.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15252-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15252.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15252-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
@@ -134,7 +134,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
@@ -453,6 +452,8 @@
     <Content Include="Areas\Admin\Views\Scheme\EditScheme.cshtml" />
     <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\ConfirmRejection.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\ManageOrganisationUser.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\ViewOrganisationDetails.cshtml" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_media-player.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
@@ -466,8 +467,6 @@
     <Content Include="Content\govuk_toolkit\stylesheets\_css3.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\_conditionals.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\_colours.scss" />
-    <Content Include="Areas\Scheme\Views\Home\ManageOrganisationUser.cshtml" />
-    <Content Include="Areas\Scheme\Views\Home\ViewOrganisationDetails.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\download-link-tracker.js" />
@@ -554,6 +553,7 @@
     <Content Include="Views\Account\ResetPasswordRequest.cshtml" />
     <Content Include="Views\Account\ResetPasswordInstruction.cshtml" />
     <Content Include="Views\OrganisationRegistration\NotFoundOrganisation.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SelectOrganisationRadioButtons.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -666,6 +666,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
     <Compile Include="ViewModels\Home\IndexViewModel.cs" />
+    <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationAction.cs" />
     <Compile Include="ViewModels\NewUser\UserCreationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationViewModel.cs" />
@@ -693,6 +694,7 @@
     <Compile Include="ViewModels\Shared\AddressViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionOptionalViewModel.cs" />
     <Compile Include="ViewModels\Shared\StringGuidRadioButtons.cs" />
+    <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationRadioButtons.cs" />
     <Compile Include="ViewModels\Shared\TitleViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\MemberUploadResultViewModel.cs" />

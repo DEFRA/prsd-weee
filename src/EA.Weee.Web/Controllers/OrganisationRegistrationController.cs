@@ -3,13 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Core.Organisations;
     using Core.Shared;
-    using Core.Shared.Paging;
     using Infrastructure;
     using Prsd.Core.Extensions;
     using Prsd.Core.Web.ApiClient;
@@ -299,28 +299,26 @@
 
         [HttpGet]
         public async Task<ActionResult> SelectOrganisation(string name, string tradingName,
-            string companiesRegistrationNumber, OrganisationType type, Guid? organisationId = null, int page = 1)
+            string companiesRegistrationNumber, OrganisationType type, Guid? organisationId = null)
         {
-            var fallbackSelectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName,
+            var selectOrganisationViewModel = BuildSelectOrganisationViewModel(name, tradingName,
                 companiesRegistrationNumber, type, organisationId,
-                new PagedList<PublicOrganisationData>());
+                new SelectOrganisationRadioButtons());
 
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(tradingName))
             {
                 ModelState.AddModelError(string.Empty, "No name or trading name supplied, unable to perform search");
-                return View(fallbackSelectOrganisationViewModel);
+                return View(selectOrganisationViewModel);
             }
 
             using (var client = apiClient())
             {
                 try
                 {
-                    const int OrganisationsPerPage = 4;
-                    // would rather bake this into the db query but not really feasible
                     var organisationSearchResultData =
                         await
                             client.SendAsync(User.GetAccessToken(),
-                                new FindMatchingOrganisations(name ?? tradingName, page, OrganisationsPerPage));
+                                new FindMatchingOrganisations(name ?? tradingName));
 
                     if (organisationSearchResultData.TotalMatchingOrganisations == 0)
                     {
@@ -334,10 +332,21 @@
                         });
                     }
 
-                    var model = BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber, type,
-                        organisationId,
-                        organisationSearchResultData.Results.ToPagedList(page - 1, OrganisationsPerPage,
-                            organisationSearchResultData.TotalMatchingOrganisations));
+                    var orgsKeyValuePairs =
+                            organisationSearchResultData.Results.ToList().Select(
+                            o => new KeyValuePair<string, string>(o.DisplayName, o.Id.ToString()));
+
+                    orgsKeyValuePairs = orgsKeyValuePairs.Concat(new[]
+                    {
+                        new KeyValuePair<string, string>(SelectOrganisationAction.CreateNewOrg, SelectOrganisationAction.CreateNewOrg), 
+                        new KeyValuePair<string, string>(SelectOrganisationAction.TryAnotherSearch, SelectOrganisationAction.TryAnotherSearch)
+                    });
+
+                    var orgRadioButtons = new SelectOrganisationRadioButtons(orgsKeyValuePairs);
+
+                    var model = BuildSelectOrganisationViewModel(name, tradingName, companiesRegistrationNumber,
+                        type, organisationId, orgRadioButtons);
+
                     return View(model);
                 }
                 catch (ApiBadRequestException ex)
@@ -347,9 +356,44 @@
                     {
                         throw;
                     }
-                    return View(fallbackSelectOrganisationViewModel);
+                    return View(selectOrganisationViewModel);
                 }
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SelectOrganisation(SelectOrganisationViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.Organisations.SelectedValue == SelectOrganisationAction.TryAnotherSearch)
+            {
+                return RedirectToAction("Type", "OrganisationRegistration");
+            }
+
+            if (model.Organisations.SelectedValue == SelectOrganisationAction.CreateNewOrg)
+            {
+                using (var client = apiClient())
+                {
+                    CreateOrganisationRequest request = MakeOrganisationCreationRequest(
+                        model.Name,
+                        model.TradingName,
+                        model.CompaniesRegistrationNumber,
+                        model.Type);
+
+                    Guid organisationId = await client.SendAsync(User.GetAccessToken(), request);
+
+                    return RedirectToAction("MainContactPerson", new { organisationId });
+                }
+            }
+
+            var selectedOrgId = new Guid(model.Organisations.SelectedValue);
+            return RedirectToAction("JoinOrganisation", "OrganisationRegistration",
+                new { OrganisationID = selectedOrgId });
         }
 
         [HttpGet]
@@ -401,16 +445,17 @@
 
         private SelectOrganisationViewModel BuildSelectOrganisationViewModel(string name, string tradingName,
             string companiesRegistrationNumber, OrganisationType type, Guid? organisationId,
-            IPagedList<PublicOrganisationData> matchingOrganisations)
+            SelectOrganisationRadioButtons organisationRadioButtons)
         {
             return new SelectOrganisationViewModel
             {
                 Name = name,
                 TradingName = tradingName,
                 CompaniesRegistrationNumber = companiesRegistrationNumber,
+                SearchedText = name ?? tradingName,
                 Type = type,
-                MatchingOrganisations = matchingOrganisations,
-                OrganisationId = organisationId
+                OrganisationId = organisationId,
+                Organisations = organisationRadioButtons
             };
         }
 

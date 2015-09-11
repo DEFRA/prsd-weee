@@ -15,7 +15,7 @@
     using Web.Controllers;
     using Weee.Requests.Organisations;
     using Xunit;
-    
+
     public class OrganisationRegistrationControllerTests
     {
         private readonly IWeeeClient apiClient;
@@ -223,7 +223,7 @@
 
         [Fact]
         public async void GetSoleTraderDetails_WithoutOrganisationId_ShouldReturnsSoleTraderDetailsView()
-        {  
+        {
             var result = await OrganisationRegistrationController().SoleTraderDetails();
             var model = ((ViewResult)result).Model;
 
@@ -245,7 +245,7 @@
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
              .Returns(true);
-           
+
             var orgData = new OrganisationData
             {
                 OrganisationType = OrganisationType.SoleTraderOrIndividual,
@@ -456,6 +456,122 @@
             var redirectRouteResult = (RedirectToRouteResult)result;
 
             Assert.Equal(redirectRouteResult.RouteValues["action"], "NotFoundOrganisation");
+        }
+
+        [Fact]
+        public async void GetSelectOrganisation_FoundMatchingOrganisation_ShouldReturnsView()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<FindMatchingOrganisations>._))
+                .Returns(new OrganisationSearchDataResult(new List<PublicOrganisationData>
+                {
+                    new PublicOrganisationData(),
+                    new PublicOrganisationData()
+                }, 2));
+
+            var result =
+                await
+                    OrganisationRegistrationController()
+                        .SelectOrganisation("xyz ltd.", "xyz", "12345678", OrganisationType.RegisteredCompany);
+
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<SelectOrganisationViewModel>(model);
+        }
+
+        [Fact]
+        public async void PostSelectOrganisation_TryAnotherSearchSelected_ShouldRedirectToType()
+        {
+            var model = new SelectOrganisationViewModel
+            {
+                Organisations = new SelectOrganisationRadioButtons
+                {
+                    PossibleValues = new List<RadioButtonPair<string, string>>
+                    {
+                        new RadioButtonPair<string, string>("Test ltd.", Guid.NewGuid().ToString()),
+                        new RadioButtonPair<string, string>(SelectOrganisationAction.TryAnotherSearch,
+                            SelectOrganisationAction.TryAnotherSearch),
+                        new RadioButtonPair<string, string>(SelectOrganisationAction.CreateNewOrg,
+                            SelectOrganisationAction.CreateNewOrg)
+                    },
+                    SelectedValue = SelectOrganisationAction.TryAnotherSearch
+                }
+            };
+
+            var result =
+                await
+                    OrganisationRegistrationController()
+                        .SelectOrganisation(model);
+
+            var redirectRouteResult = (RedirectToRouteResult)result;
+
+            Assert.Equal(redirectRouteResult.RouteValues["action"], "Type");
+        }
+
+        [Fact]
+        public async void PostSelectOrganisation_CreateNewOrgSelected_ShouldRedirectToMainContactPerson()
+        {
+            var model = new SelectOrganisationViewModel
+            {
+                Organisations = new SelectOrganisationRadioButtons
+                {
+                    PossibleValues = new List<RadioButtonPair<string, string>>
+                    {
+                        new RadioButtonPair<string, string>("Test ltd.", Guid.NewGuid().ToString()),
+                        new RadioButtonPair<string, string>(SelectOrganisationAction.TryAnotherSearch,
+                            SelectOrganisationAction.TryAnotherSearch),
+                        new RadioButtonPair<string, string>(SelectOrganisationAction.CreateNewOrg,
+                            SelectOrganisationAction.CreateNewOrg)
+                    },
+                    SelectedValue = SelectOrganisationAction.CreateNewOrg
+                },
+                Type = OrganisationType.SoleTraderOrIndividual,
+                TradingName = "Test",
+                SearchedText = "Test"
+            };
+
+            var result =
+                await
+                    OrganisationRegistrationController()
+                        .SelectOrganisation(model);
+
+            var redirectRouteResult = (RedirectToRouteResult)result;
+
+            Assert.Equal(redirectRouteResult.RouteValues["action"], "MainContactPerson");
+        }
+
+        [Fact]
+        public async void PostSelectOrganisation_AnyOrganisationSelected_ShouldRedirectToJoinOrganisation()
+        {
+            var orgId = Guid.NewGuid().ToString();
+
+            var model = new SelectOrganisationViewModel
+            {
+                Organisations = new SelectOrganisationRadioButtons
+                {
+                    PossibleValues = new List<RadioButtonPair<string, string>>
+                    {
+                        new RadioButtonPair<string, string>("Test ltd.", orgId),
+                        new RadioButtonPair<string, string>(SelectOrganisationAction.TryAnotherSearch,
+                            SelectOrganisationAction.TryAnotherSearch),
+                        new RadioButtonPair<string, string>(SelectOrganisationAction.CreateNewOrg,
+                            SelectOrganisationAction.CreateNewOrg)
+                    },
+                    SelectedValue = orgId
+                },
+                Type = OrganisationType.SoleTraderOrIndividual,
+                TradingName = "Test",
+                SearchedText = "Test"
+            };
+
+            var result =
+                await
+                    OrganisationRegistrationController()
+                        .SelectOrganisation(model);
+
+            var redirectRouteResult = (RedirectToRouteResult)result;
+
+            Assert.Equal(redirectRouteResult.RouteValues["action"], "JoinOrganisation");
         }
 
         private OrganisationRegistrationController OrganisationRegistrationController()
