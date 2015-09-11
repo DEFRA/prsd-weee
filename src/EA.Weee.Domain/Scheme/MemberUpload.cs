@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.Domain.Scheme
 {
-    using System;
-    using System.Collections.Generic;
+    using EA.Weee.Domain.Events;
     using Organisation;
     using Producer;
     using Prsd.Core;
     using Prsd.Core.Domain;
+    using System;
+    using System.Collections.Generic;
 
     public class MemberUpload : Entity
     {
@@ -55,6 +56,8 @@
             }
 
             IsSubmitted = true;
+
+            RaiseEvent(new MemberUploadSubmittedEvent(this));
         }
 
         protected MemberUpload()

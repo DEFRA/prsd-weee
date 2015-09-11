@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
     <Compile Include="ChargeBandType.cs" />
+    <Compile Include="Events\MemberUploadSubmittedEvent.cs" />
     <Compile Include="Events\OrganisationUserRequestEvent.cs" />
     <Compile Include="Events\OrganisationUserRequestCompletedEvent.cs" />
     <Compile Include="ExtensionMethods.cs" />
