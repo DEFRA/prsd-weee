@@ -92,6 +92,6 @@
         <p>@Html.ActionLink("Download the " + errorText, "DownloadErrorsAndWarnings", new { Model.MemberUploadId })</p>
     }
     <p>
-        Go back and <a href="@Url.Action("AddOrAmendMembers", "MemberRegistration")">upload a new file</a>
+        @Html.ActionLink("Upload a new file", "AddOrAmendMembers", "MemberRegistration", new { @class = "button" })
     </p>
 }
