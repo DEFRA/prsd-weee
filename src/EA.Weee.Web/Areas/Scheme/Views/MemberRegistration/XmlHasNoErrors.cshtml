@@ -19,7 +19,7 @@
         <p>You must review all the warnings in your XML file. Please make any required corrections to your XML before trying to submit it again, or where changes are legitimate, you may choose to submit your XML file as it is with warnings.</p>
         <details>
             <summary class="warning-details-summary bold-small">
-                @numWarnings Warning(s)
+                @numWarnings @(numWarnings == 1 ? "Warning" : "Warnings")
             </summary>
             <div class="warning-list-container">
                 <ul>
@@ -55,7 +55,7 @@
             <input type="submit" value="Submit" class="button" />
         </div>
         <div>
-            <p>Go back and @Html.ActionLink("upload a new file.", "AddOrAmendMembers", "MemberRegistration")</p>
+            <p>Make changes and @Html.ActionLink("upload a new file", "AddOrAmendMembers", "MemberRegistration").</p>
         </div>
     }
 }

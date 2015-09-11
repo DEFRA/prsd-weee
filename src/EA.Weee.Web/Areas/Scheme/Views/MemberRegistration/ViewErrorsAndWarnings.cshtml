@@ -8,8 +8,11 @@
 
     <header class="hgroup">
         <div>
-            @{ int numOfErrors = @Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal); }
-            <h1 class="heading-large">The XML file contains @numOfErrors error(s)</h1>
+            @{ 
+                int numOfErrors = @Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal);
+                string errorText = (numOfErrors > 1 ? "errors" : "error");
+            }
+            <h1 class="heading-large">The XML file contains @numOfErrors @errorText</h1>
         </div>
     </header>
 
@@ -18,7 +21,7 @@
 
     <details>
         <summary class="error-details-summary bold-small">
-            @numOfErrors Error(s)
+            View @numOfErrors @errorText
         </summary>
         <div class="error-list-container">
             <ul>
@@ -32,6 +35,6 @@
             </ul>
         </div>
     </details>
-    <p>@Html.ActionLink("Download the errors", "DownloadErrorsAndWarnings", new { Model.MemberUploadId })</p>
-    <p>Go back and <a href="@Url.Action("AddOrAmendMembers", "MemberRegistration")">upload a new file</a></p>
+    <p>@Html.ActionLink("Download the " + errorText, "DownloadErrorsAndWarnings", new { Model.MemberUploadId })</p>
+    <p>@Html.ActionLink("Upload a new file", "AddOrAmendMembers", "MemberRegistration", new { @class = "button" })</p>
 }
