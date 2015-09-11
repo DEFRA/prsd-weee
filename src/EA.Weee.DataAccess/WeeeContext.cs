@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.DataAccess
 {
+    using System.Collections.Generic;
+    using System.Data.Common;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Domain;
     using Domain.Admin;
     using Domain.Organisation;
@@ -9,11 +15,6 @@
     using Prsd.Core.DataAccess.Extensions;
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
-    using System.Data.Common;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     public class WeeeContext : DbContext
     {
@@ -89,33 +90,25 @@
             //this.DeleteRemovedRelationships();
             this.AuditChanges(userContext.UserId);
 
-            bool needToRefreshProducersIsCurrentForComplianceYear
-                = NeedToRefreshProducersIsCurrentForComplianceYear();
-            
+            var affectedMemberUploads = RefreshProducersIsCurrentForComplianceYear();
+
             int result;
             using (var transaction = Database.BeginTransaction())
             {
-                try
+                result = base.SaveChanges();
+
+                foreach (var memberUpload in affectedMemberUploads)
                 {
-                    result = base.SaveChanges();
-
-                    if (needToRefreshProducersIsCurrentForComplianceYear)
-                    {
-                        // Refresh the [IsCurrentForComplianceYear] column in [Producer].[Producer].
-                        Database.ExecuteSqlCommand("EXEC [Producer].[sppRefreshProducerIsCurrent");
-                    }
-
-                    Task.Run(() => this.DispatchEvents(dispatcher)).Wait();
-
-                    transaction.Commit();
+                    Database.ExecuteSqlCommand("[Producer].[sppRefreshProducerIsCurrent] @SchemeId = {0}, @ComplianceYear = {1}",
+                       memberUpload.SchemeId,
+                       memberUpload.ComplianceYear);
                 }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
-                }
+
+                Task.Run(() => this.DispatchEvents(dispatcher)).Wait();
+
+                transaction.Commit();
             }
-            
+
             return result;
         }
 
@@ -125,32 +118,24 @@
             //this.DeleteRemovedRelationships();
             this.AuditChanges(userContext.UserId);
 
-            bool needToRefreshProducersIsCurrentForComplianceYear
-                = NeedToRefreshProducersIsCurrentForComplianceYear();
+            var affectedMemberUploads = RefreshProducersIsCurrentForComplianceYear();
 
             int result;
             using (var transaction = Database.BeginTransaction())
             {
-                try
+                result = await base.SaveChangesAsync(cancellationToken);
+
+                foreach (var memberUpload in affectedMemberUploads)
                 {
-                    result = await base.SaveChangesAsync(cancellationToken);
-
-                    if (needToRefreshProducersIsCurrentForComplianceYear)
-                    {
-                        // Refresh the [IsCurrentForComplianceYear] column in [Producer].[Producer].
-                        await Database.ExecuteSqlCommandAsync(
-                            "EXEC [Producer].[sppRefreshProducerIsCurrent]", cancellationToken);
-                    }
-
-                    await this.DispatchEvents(dispatcher);
-
-                    transaction.Commit();
+                    await Database.ExecuteSqlCommandAsync("[Producer].[sppRefreshProducerIsCurrent] @SchemeId = {0}, @ComplianceYear = {1}",
+                        cancellationToken,
+                        memberUpload.SchemeId,
+                        memberUpload.ComplianceYear);
                 }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
-                }
+
+                await this.DispatchEvents(dispatcher);
+
+                transaction.Commit();
             }
 
             return result;
@@ -161,30 +146,51 @@
         /// require that the [IsCurrentForComplianceYear] column needs to be refreshed
         /// for all producers.
         /// 
-        /// This will be true if any rows are added, modified or deleted from the [Producer]
-        /// table, or if any entry in the [MemberUpload] table has been updated.
+        /// This will return the affected member uploads if any rows are added, modified
+        /// or deleted from the [Producer] table, or if any entry in the [MemberUpload]
+        /// table has been updated.
         /// </summary>
         /// <returns></returns>
-        private bool NeedToRefreshProducersIsCurrentForComplianceYear()
+        private List<MemberUpload> RefreshProducersIsCurrentForComplianceYear()
         {
-            bool anyProducerUpdates = ChangeTracker.Entries()
+            var equalityComparer = new MemberUploadRefreshEquality();
+
+            var producerUpdatesMemberUploads = ChangeTracker.Entries()
                 .Where(e => e.Entity is Producer)
                 .Where(e => (e.State == EntityState.Added
                     || e.State == EntityState.Modified
                     || e.State == EntityState.Deleted))
-                .Any();
+                .Select(e => ((Producer)e.Entity).MemberUpload)
+                .Distinct(equalityComparer);
 
-            bool anyMemberUploadUpdates = ChangeTracker.Entries()
+            var anyMemberUploadUpdates = ChangeTracker.Entries()
                 .Where(e => e.Entity is MemberUpload)
                 .Where(e => e.State == EntityState.Modified)
-                .Any();
+                .Select(e => (MemberUpload)e.Entity)
+                .Distinct(equalityComparer);
 
-            return anyProducerUpdates || anyMemberUploadUpdates;
+            return producerUpdatesMemberUploads
+                   .Union(anyMemberUploadUpdates, equalityComparer)
+                   .ToList();
         }
 
         public void DeleteOnCommit(Entity entity)
         {
             Entry(entity).State = EntityState.Deleted;
+        }
+
+        private class MemberUploadRefreshEquality : IEqualityComparer<MemberUpload>
+        {
+            public bool Equals(MemberUpload x, MemberUpload y)
+            {
+                return x.ComplianceYear == y.ComplianceYear &&
+                       x.SchemeId == y.SchemeId;
+            }
+
+            public int GetHashCode(MemberUpload obj)
+            {
+                return obj.SchemeId.GetHashCode() ^ obj.ComplianceYear.GetHashCode();
+            }
         }
     }
 }
