@@ -172,5 +172,12 @@
         {
             return View();
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Cookies()
+        {
+            return View();
+        }
     }
 }
