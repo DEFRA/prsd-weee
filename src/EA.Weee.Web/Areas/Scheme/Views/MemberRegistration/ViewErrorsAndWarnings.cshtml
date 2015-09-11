@@ -8,16 +8,43 @@
 
     <header class="hgroup">
         <div>
-            @{ 
+            @{
                 int numOfErrors = @Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal);
+                int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
                 string errorText = (numOfErrors > 1 ? "errors" : "error");
+                string warningText = (numWarnings > 1 ? "warnings" : "warning");
             }
-            <h1 class="heading-large">The XML file contains @numOfErrors @errorText</h1>
+
+            @if (numWarnings > 0)
+            {
+                <h1 class="heading-large">
+                    The XML file contains @numOfErrors @errorText and @numWarnings @warningText
+                </h1>
+            }
+            else
+            {
+                <h1 class="heading-large">
+                    The XML file contains @numOfErrors @errorText
+                </h1>
+            }
         </div>
     </header>
+    @if (numWarnings > 0)
+    {
+        <p>
+            Errors are problems with the XML file structure and formatting that stop it being uploaded successfully and Warnings are displayed where member details are changed.
+        </p>
+        <p>
+            You must review all the errors and warnings in your XML file.
+            Please make any required corrections to your XML before trying to submit it again, or where changes are legitimate, you may choose to proceed to next step in case of warnings.
+        </p>
 
-    <p>Errors are problems with the XML file structure and formatting that stop it being uploaded successfully.</p>
-    <p>You must review, amend and re-upload your file before you can proceed to the next step.</p>
+    }
+    else
+    {
+        <p>Errors are problems with the XML file structure and formatting that stop it being uploaded successfully.</p>
+        <p>You must review, amend and re-upload your file before you can proceed to the next step.</p>
+    }
 
     <details>
         <summary class="error-details-summary bold-small">
@@ -35,6 +62,36 @@
             </ul>
         </div>
     </details>
-    <p>@Html.ActionLink("Download the " + errorText, "DownloadErrorsAndWarnings", new { Model.MemberUploadId })</p>
-    <p>@Html.ActionLink("Upload a new file", "AddOrAmendMembers", "MemberRegistration", new { @class = "button" })</p>
+    <br />
+    @if (numWarnings > 0)
+    {
+        <details>
+            <summary class="warning-details-summary bold-small">
+                View @numWarnings @warningText
+            </summary>
+            <div class="warning-list-container">
+                <ul>
+                    @foreach (var uploadError in Model.ErrorData)
+                    {
+                        if (uploadError.ErrorLevel == ErrorLevel.Warning)
+                        {
+                            <li class="warning-list-item font-xsmall">@uploadError.Description</li>
+                        }
+                    }
+                </ul>
+            </div>
+        </details>
+        <br />
+    }
+    @if (numWarnings > 0)
+    {
+        <p>@Html.ActionLink("Download errors and warnings", "DownloadErrorsAndWarnings", new { Model.MemberUploadId })</p>
+    }
+    else
+    {
+        <p>@Html.ActionLink("Download the " + errorText, "DownloadErrorsAndWarnings", new { Model.MemberUploadId })</p>
+    }
+    <p>
+        Go back and <a href="@Url.Action("AddOrAmendMembers", "MemberRegistration")">upload a new file</a>
+    </p>
 }
