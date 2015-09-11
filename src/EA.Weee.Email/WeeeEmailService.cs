@@ -1,13 +1,9 @@
 ﻿namespace EA.Weee.Email
 {
-    using EA.Prsd.Email;
-    using EA.Weee.Domain;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Net.Mail;
-    using System.Text;
     using System.Threading.Tasks;
+    using Domain;
+    using Prsd.Email;
 
     public class WeeeEmailService : IWeeeEmailService
     {
@@ -70,12 +66,12 @@
             return await sender.SendAsync(message);
         }
 
-        public async Task<bool> SendOrganisationUserRequest(string emailAddress, Domain.Organisation.OrganisationUser organisationUser)
+        public async Task<bool> SendOrganisationUserRequest(string emailAddress, string organisationName)
         {
             var model = new
             {
-                OrganisationName = organisationUser.Organisation.OrganisationName,
-                SiteUrl = configuration.SiteUrl,
+                OrganisationName = organisationName,
+                configuration.SiteUrl,
             };
 
             EmailContent content = new EmailContent()

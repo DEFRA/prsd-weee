@@ -1,14 +1,10 @@
 ﻿namespace EA.Weee.Email.EventHandlers
 {
-    using EA.Prsd.Core.Domain;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.Events;
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
+    using Domain.Events;
+    using Domain.Organisation;
+    using Prsd.Core.Domain;
 
     public class OrganisationUserRequestEventHandler : IEventHandler<OrganisationUserRequestEvent>
     {
@@ -23,11 +19,11 @@
 
         public async Task HandleAsync(OrganisationUserRequestEvent @event)
         {
-            IEnumerable<User> recipients = await dataAccess.FetchActiveOrganisationUsers(@event.OrganisationUser.OrganisationId);
+            IEnumerable<OrganisationUser> activeOrganisationUsers = await dataAccess.FetchActiveOrganisationUsers(@event.OrganisationId);
 
-            foreach (User recipient in recipients)
+            foreach (OrganisationUser activeOrganisationUser in activeOrganisationUsers)
             {
-                await emailService.SendOrganisationUserRequest(recipient.Email, @event.OrganisationUser);
+                await emailService.SendOrganisationUserRequest(activeOrganisationUser.User.Email, activeOrganisationUser.Organisation.OrganisationName);
             }
         }
     }

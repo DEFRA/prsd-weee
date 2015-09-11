@@ -1,20 +1,17 @@
 ﻿namespace EA.Weee.Domain.Events
 {
-    using EA.Prsd.Core.Domain;
-    using EA.Weee.Domain.Organisation;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
+    using Prsd.Core.Domain;
+   
     public class OrganisationUserRequestEvent : IEvent
     {
-        public OrganisationUser OrganisationUser { get; private set; }
+        public Guid OrganisationId { get; private set; }
+        public Guid UserId { get; private set; }
 
-        internal OrganisationUserRequestEvent(OrganisationUser organisationUser)
+        internal OrganisationUserRequestEvent(Guid organisationId, Guid userId)
         {
-            OrganisationUser = organisationUser;
+            OrganisationId = organisationId;
+            UserId = userId;
         }
     }
 }
