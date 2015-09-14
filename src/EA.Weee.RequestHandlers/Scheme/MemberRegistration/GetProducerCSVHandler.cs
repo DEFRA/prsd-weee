@@ -46,6 +46,7 @@
             csvWriter.DefineColumn("Producer registration number", i => i.RegistrationNumber);
             csvWriter.DefineColumn("Company registration number", i => i.CompanyNumber);
             csvWriter.DefineColumn("Charge band", i => i.ChargeBand);
+            csvWriter.DefineColumn("Obligation Type", i => i.ObligationType);
             csvWriter.DefineColumn("Date & time (GMT) registered", i => i.DateRegistered.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn("Date & time (GMT) last updated", i => (i.DateRegistered.ToString("dd/MM/yyyy HH:mm:ss").Equals(i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss")) ? string.Empty : i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss")));
             csvWriter.DefineColumn("Authorised representative", i => i.AuthorisedRepresentative);
