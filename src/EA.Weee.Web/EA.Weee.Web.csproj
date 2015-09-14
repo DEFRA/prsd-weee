@@ -554,6 +554,7 @@
     <Content Include="Views\Account\ResetPasswordInstruction.cshtml" />
     <Content Include="Views\OrganisationRegistration\NotFoundOrganisation.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SelectOrganisationRadioButtons.cshtml" />
+    <Content Include="Views\NewUser\Cookies.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
