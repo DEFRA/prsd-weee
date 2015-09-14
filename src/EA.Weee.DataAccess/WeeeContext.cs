@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.DataAccess
 {
+    using System.Collections.Generic;
+    using System.Data.Common;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Domain;
     using Domain.Admin;
     using Domain.Organisation;
@@ -9,11 +15,6 @@
     using Prsd.Core.DataAccess.Extensions;
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
-    using System.Data.Common;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     public class WeeeContext : DbContext
     {
@@ -85,101 +86,62 @@
 
         public override int SaveChanges()
         {
+            bool alreadyHasTransaction = (this.Database.CurrentTransaction != null);
+
             this.SetEntityId();
             //this.DeleteRemovedRelationships();
             this.AuditChanges(userContext.UserId);
 
-            bool needToRefreshProducersIsCurrentForComplianceYear
-                = NeedToRefreshProducersIsCurrentForComplianceYear();
-            
             int result;
-            using (var transaction = Database.BeginTransaction())
+            if (alreadyHasTransaction)
             {
-                try
+                result = base.SaveChanges();
+
+                Task.Run(() => this.DispatchEvents(dispatcher)).Wait();
+            }
+            else
+            {
+                using (var transaction = Database.BeginTransaction())
                 {
                     result = base.SaveChanges();
-
-                    if (needToRefreshProducersIsCurrentForComplianceYear)
-                    {
-                        // Refresh the [IsCurrentForComplianceYear] column in [Producer].[Producer].
-                        Database.ExecuteSqlCommand("EXEC [Producer].[sppRefreshProducerIsCurrent");
-                    }
 
                     Task.Run(() => this.DispatchEvents(dispatcher)).Wait();
 
                     transaction.Commit();
                 }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
-                }
             }
-            
+
             return result;
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
+            bool alreadyHasTransaction = (this.Database.CurrentTransaction != null);
+
             this.SetEntityId();
             //this.DeleteRemovedRelationships();
             this.AuditChanges(userContext.UserId);
 
-            bool needToRefreshProducersIsCurrentForComplianceYear
-                = NeedToRefreshProducersIsCurrentForComplianceYear();
-
             int result;
-            using (var transaction = Database.BeginTransaction())
+            if (alreadyHasTransaction)
             {
-                try
+                result = await base.SaveChangesAsync(cancellationToken);
+
+                await this.DispatchEvents(dispatcher);
+            }
+            else
+            {
+                using (var transaction = Database.BeginTransaction())
                 {
                     result = await base.SaveChangesAsync(cancellationToken);
-
-                    if (needToRefreshProducersIsCurrentForComplianceYear)
-                    {
-                        // Refresh the [IsCurrentForComplianceYear] column in [Producer].[Producer].
-                        await Database.ExecuteSqlCommandAsync(
-                            "EXEC [Producer].[sppRefreshProducerIsCurrent]", cancellationToken);
-                    }
 
                     await this.DispatchEvents(dispatcher);
 
                     transaction.Commit();
                 }
-                catch
-                {
-                    transaction.Rollback();
-                    throw;
-                }
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Determines whether the current set of changes being tracked by the context
-        /// require that the [IsCurrentForComplianceYear] column needs to be refreshed
-        /// for all producers.
-        /// 
-        /// This will be true if any rows are added, modified or deleted from the [Producer]
-        /// table, or if any entry in the [MemberUpload] table has been updated.
-        /// </summary>
-        /// <returns></returns>
-        private bool NeedToRefreshProducersIsCurrentForComplianceYear()
-        {
-            bool anyProducerUpdates = ChangeTracker.Entries()
-                .Where(e => e.Entity is Producer)
-                .Where(e => (e.State == EntityState.Added
-                    || e.State == EntityState.Modified
-                    || e.State == EntityState.Deleted))
-                .Any();
-
-            bool anyMemberUploadUpdates = ChangeTracker.Entries()
-                .Where(e => e.Entity is MemberUpload)
-                .Where(e => e.State == EntityState.Modified)
-                .Any();
-
-            return anyProducerUpdates || anyMemberUploadUpdates;
         }
 
         public void DeleteOnCommit(Entity entity)

@@ -16,6 +16,7 @@
         public string RegistrationNumber { get; set; }
         public string CompanyNumber { get; set; }
         public string ChargeBand { get; set; }
+        public string ObligationType { get; set; }
         public DateTime DateRegistered { get; set; }
         public DateTime DateAmended { get; set; }
         public string AuthorisedRepresentative { get; set; }
