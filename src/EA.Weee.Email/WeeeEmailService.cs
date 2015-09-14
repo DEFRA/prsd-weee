@@ -71,7 +71,7 @@
             var model = new
             {
                 OrganisationName = organisationName,
-                configuration.SiteUrl,
+                ExternalUserLoginUrl = configuration.ExternalUserLoginUrl,
             };
 
             EmailContent content = new EmailContent()

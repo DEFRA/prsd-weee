@@ -10,8 +10,8 @@
     public interface IWeeeEmailConfiguration : IEmailConfiguration
     {
         /// <summary>
-        /// The absolute URL for the public website.
+        /// The absolute URL for the external user login page.
         /// </summary>
-        string SiteUrl { get; }
+        string ExternalUserLoginUrl { get; }
     }
 }
