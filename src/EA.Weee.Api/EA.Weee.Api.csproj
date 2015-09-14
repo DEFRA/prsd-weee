@@ -75,6 +75,10 @@
       <HintPath>..\packages\EA.Prsd.Core.Web.1.0.15252-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EA.Prsd.Email, Version=1.0.15254.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Email.1.0.15254-develop3\lib\net451\EA.Prsd.Email.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Elmah">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
     </Reference>
@@ -139,6 +143,10 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RazorEngine, Version=3.7.2.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.7.2\lib\net45\RazorEngine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Collections" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20622.1351, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -190,6 +198,10 @@
     </Reference>
     <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
@@ -277,10 +289,6 @@
     <Folder Include="Documents\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EA.Prsd.Email\EA.Prsd.Email.csproj">
-      <Project>{3b5cb044-3b51-44eb-af94-1327b9e5e70f}</Project>
-      <Name>EA.Prsd.Email</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Api.Client\EA.Weee.Api.Client.csproj">
       <Project>{b772429d-709e-4978-b105-a54606acc29a}</Project>
       <Name>EA.Weee.Api.Client</Name>
