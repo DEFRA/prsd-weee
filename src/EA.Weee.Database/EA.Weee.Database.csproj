@@ -85,6 +85,8 @@
     <Content Include="scripts\Update\Sprint11\20150818-140014-UpdateSchemeTable.sql" />
     <Content Include="scripts\Update\Sprint12\20150825-132948-AddChargeThisUpdate.sql" />
     <Content Include="scripts\Update\Sprint12\20150826-185300-AddStoredProcedureForProducerCsv.sql" />
+    <Content Include="scripts\Update\Sprint13\20150911-1756-DropSppRefreshProducerIsCurrent.sql" />
+    <Content Include="scripts\Update\Sprint13\20150911-1233-UpdateSppRefreshProducerIsCurrent.sql" />
     <Content Include="scripts\Update\Sprint13\20150903-162000-ResetPrnSeed.sql" />
     <Content Include="scripts\Update\Sprint13\20150911-UpdateStoredProcedureForProducerCsv.sql" />
   </ItemGroup>
