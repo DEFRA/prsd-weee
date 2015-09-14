@@ -141,8 +141,11 @@
         /// 
         /// A filtered index in the database has been provided to ensure that such queries
         /// are efficient at including only current producers.
+        /// 
+        /// This property is kept up to date by the MemberUploadSubmittedEventHandler
+        /// and should not be changed anywhere else.
         /// </summary>
-        public virtual bool IsCurrentForComplianceYear { get; private set; }
+        public virtual bool IsCurrentForComplianceYear { get; set; }
 
         public void SetScheme(Scheme scheme)
         {
