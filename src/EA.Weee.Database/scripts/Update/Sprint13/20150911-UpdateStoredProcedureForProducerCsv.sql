@@ -43,7 +43,7 @@ BEGIN
 			WHEN 2 THEN 'B2C'
 			WHEN 3 THEN 'Both'
 			ELSE ''
-		END AS 'ObliationType',
+		END AS 'ObligationType',
 
 		P_First.UpdatedDate AS 'DateRegistered',
 		P.UpdatedDate AS 'DateAmended',
