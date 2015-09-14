@@ -514,5 +514,55 @@ using Xunit;
                 Assert.Equal("Overseas Producer Name", result.OverseasProducer);
             }
         }
+
+        /// <summary>
+        /// This test ensures that the obligation type integer values are correctly mapped to
+        /// there single letter equivalents. E.g. 1 = "B2B", 2 = "B2C", 3 = "Both'.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task Execute_WithDifferentObligationTypes_MapsNumbersToObligationTypes()
+        {
+            {
+                using (DatabaseWrapper db = new DatabaseWrapper())
+                {
+                    // Arrange
+                    ModelHelper helper = new ModelHelper(db.Model);
+
+                    Scheme scheme1 = helper.CreateScheme();
+
+                    MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                    memberUpload1.ComplianceYear = 2017;
+                    memberUpload1.IsSubmitted = true;
+
+                    Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                    producer1.IsCurrentForComplianceYear = true;
+                    producer1.ObligationType = 1; // 1 = "B2B"
+
+                    Producer producer2 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/22BBBB22");
+                    producer2.IsCurrentForComplianceYear = true;
+                    producer2.ObligationType = 2; // 2 = "B2C"
+
+                    Producer producer3 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/33CCCC33");
+                    producer3.IsCurrentForComplianceYear = true;
+                    producer3.ObligationType = 3; // 3 = "Both"
+
+                    db.Model.SaveChanges();
+
+                    // Act
+                    List<ProducerCsvData> results =
+                        await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2017);
+
+                    // Assert
+                    Assert.NotNull(results);
+                    Assert.Equal(3, results.Count);
+
+                    Assert.Collection(results,
+                        (r1) => Assert.Equal("B2B", r1.ObligationType),
+                        (r2) => Assert.Equal("B2C", r2.ObligationType),
+                        (r3) => Assert.Equal("Both", r3.ObligationType));
+                }
+            }
+        }
     }
 }
