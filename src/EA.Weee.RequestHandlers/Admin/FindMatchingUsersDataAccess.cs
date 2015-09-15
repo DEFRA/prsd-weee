@@ -44,7 +44,7 @@
                     join ou in context.OrganisationUsers on u.Id equals ou.UserId into idOrgUsers
                     from orgUser in idOrgUsers
                     join org in context.Organisations on orgUser.OrganisationId equals org.Id
-                    where org.OrganisationStatus == OrganisationStatus.Complete
+                    where org.OrganisationStatus.Value == OrganisationStatus.Complete.Value
                     select new UserSearchData
                     {
                         Email = u.Email,
