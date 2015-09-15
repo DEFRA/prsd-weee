@@ -71,7 +71,7 @@
     @RenderSection("scripts", required: false)
 }
 
-<main id="content" role="main">
+<main id="content">
     @Html.Partial("_FeedbackBanner")
     @{ Html.RenderAction("_WeeeTitle", "Home", new { area = string.Empty });}
     @RenderBody()
