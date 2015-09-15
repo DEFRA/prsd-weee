@@ -59,6 +59,8 @@
             DbConnection connection = Model.Database.Connection;
 
             IUserContext userContext = A.Fake<IUserContext>();
+            A.CallTo(() => userContext.UserId).Returns(Guid.NewGuid());
+
             IEventDispatcher eventDispatcher = A.Fake<IEventDispatcher>();
 
             WeeeContext = new WeeeContext(userContext, eventDispatcher, connection);
