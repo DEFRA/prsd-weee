@@ -4,6 +4,7 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.ViewModels.Home;
     using System;
     using System.Linq;
     using System.Security.Claims;
@@ -49,13 +50,13 @@
         [AllowAnonymous]
         public ActionResult LandingPage()
         {
-            return View(new YesNoChoiceViewModel());
+            return View(new LandingPageViewModel());
         }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult LandingPage(YesNoChoiceViewModel viewModel)
+        public ActionResult LandingPage(LandingPageViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {

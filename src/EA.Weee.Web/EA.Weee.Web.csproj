@@ -649,6 +649,7 @@
     <Compile Include="ViewModels\Account\ResetPasswordModel.cs" />
     <Compile Include="Services\IExternalRouteService.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordRequestViewModel.cs" />
+    <Compile Include="ViewModels\Home\LandingPageViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\Scheme\SchemeAreaRegistration.cs" />
