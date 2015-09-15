@@ -6,6 +6,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using OrganisationStatus = Domain.Organisation.OrganisationStatus;
 
     public class FindMatchingUsersDataAccess : IFindMatchingUsersDataAccess
     {
@@ -43,6 +44,7 @@
                     join ou in context.OrganisationUsers on u.Id equals ou.UserId into idOrgUsers
                     from orgUser in idOrgUsers
                     join org in context.Organisations on orgUser.OrganisationId equals org.Id
+                    where org.OrganisationStatus.Value == OrganisationStatus.Complete.Value
                     select new UserSearchData
                     {
                         Email = u.Email,
