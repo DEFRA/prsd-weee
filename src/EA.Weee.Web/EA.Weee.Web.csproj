@@ -667,7 +667,6 @@
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
-    <Compile Include="ViewModels\Home\IndexViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationAction.cs" />
     <Compile Include="ViewModels\NewUser\UserCreationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\OrganisationViewModel.cs" />
