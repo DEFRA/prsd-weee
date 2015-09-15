@@ -1,72 +1,105 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Users
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Security;
     using System.Threading.Tasks;
-    using DataAccess;
+    using Core.Organisations;
     using Domain;
     using Domain.Organisation;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
-    using Helpers;
     using Mappings;
-    using RequestHandlers.Users;
-    using Requests.Users;
+    using Prsd.Core.Mapper;
+    using RequestHandlers.Users.GetManageableOrganisationUsers;
+    using Requests.Users.GetManageableOrganisationUsers;
     using Xunit;
 
     public class GetUsersByOrganisationIdHandlerTests
     {
-        private readonly WeeeContext context = A.Fake<WeeeContext>();
-        private readonly DbContextHelper helper = new DbContextHelper();
+        private readonly IGetManageableOrganisationUsersDataAccess dataAccess;
+        private readonly IWeeeAuthorization weeeAuthorization;
+        private readonly IMap<OrganisationUser, OrganisationUserData> mapper;
 
-        private readonly IWeeeAuthorization permissiveAuthorization =
-            AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
-
-        private readonly IWeeeAuthorization denyingAuthorization =
-            AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
-
-        private readonly Guid orgId = Guid.NewGuid();
-
-        [Fact]
-        public async void NotOrganisationUser_ThrowsSecurityException()
+        public GetUsersByOrganisationIdHandlerTests()
         {
-            var handler = new GetUsersByOrganisationIdHandler(context, denyingAuthorization, new OrganisationUserMap(new OrganisationMap(new AddressMap(), new ContactMap()), new UserMap()));
-
-            await
-                Assert.ThrowsAsync<SecurityException>(
-                    async () => await handler.HandleAsync(new GetUsersByOrganisationId(Guid.NewGuid())));
+            dataAccess = A.Fake<IGetManageableOrganisationUsersDataAccess>();
+            weeeAuthorization = A.Fake<IWeeeAuthorization>();
+            mapper = A.Fake<IMap<OrganisationUser, OrganisationUserData>>();
         }
 
         [Fact]
-        public async Task GetUsersByOrganisationIdHandler_ApprovalNumberNotExists_ReturnsFalse()
+        public async void ShouldCheckUserIsAbleToAccessOrganisation()
         {
-            var orgUsers = MakeOrganisationUsers();
+            var organisationId = Guid.NewGuid();
 
-            A.CallTo(() => context.OrganisationUsers).Returns(orgUsers);
+            await GetManageableOrganisationUsersHandler().HandleAsync(new GetManageableOrganisationUsers(organisationId));
 
-            var handler = new GetUsersByOrganisationIdHandler(context, permissiveAuthorization, new OrganisationUserMap(new OrganisationMap(new AddressMap(), new ContactMap()), new UserMap()));
-
-            var organisationUsers = await handler.HandleAsync(new GetUsersByOrganisationId(orgId));
-
-            Assert.NotNull(organisationUsers);
-            Assert.Equal(organisationUsers.Count, 2);
+            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisationId))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
-        private DbSet<OrganisationUser> MakeOrganisationUsers()
+        [Fact]
+        public async void UserIsUnableToAccessOrganisation_ShouldNotGetManageableOrganisationUsers()
         {
-            return helper.GetAsyncEnabledDbSet(new[]
+            var organisationId = Guid.NewGuid();
+
+            A.CallTo(() => weeeAuthorization.EnsureOrganisationAccess(organisationId))
+                .Throws<SecurityException>();
+
+            await Assert.ThrowsAsync<SecurityException>(
+                () =>
+                    GetManageableOrganisationUsersHandler()
+                        .HandleAsync(new GetManageableOrganisationUsers(organisationId)));
+
+            A.CallTo(() => dataAccess.GetManageableUsers(A<Guid>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async void UserIsAbleToAccessOrganisation_ShouldGetManageableUsers() // By default, an exception is not thrown on authorization check
+        {
+            var organisationId = Guid.NewGuid();
+
+            await GetManageableOrganisationUsersHandler().HandleAsync(new GetManageableOrganisationUsers(organisationId));
+
+            A.CallTo(() => dataAccess.GetManageableUsers(organisationId))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task GetManageableUsers_ShouldMapOrganisationUsersToOrganisationUserData()
+        {
+            var noOfUsers = 5; // Should map this number of users
+
+            var organisationId = Guid.NewGuid();
+
+            A.CallTo(() => dataAccess.GetManageableUsers(organisationId))
+                .Returns(OrganisationUsers(noOfUsers, organisationId));
+
+            var result =
+                await
+                    GetManageableOrganisationUsersHandler()
+                        .HandleAsync(new GetManageableOrganisationUsers(organisationId));
+
+            A.CallTo(() => mapper.Map(A<OrganisationUser>._))
+                .MustHaveHappened(Repeated.Exactly.Times(noOfUsers));
+
+            Assert.Equal(noOfUsers, result.Count);
+        }
+
+        private IEnumerable<OrganisationUser> OrganisationUsers(int quantity, Guid organisationId)
+        {
+            for (var i = 0; i < quantity; i++)
             {
-                CreateOrganisationUser(orgId),
-                CreateOrganisationUser(orgId),
-                CreateOrganisationUser(Guid.NewGuid()),
-            });
+                yield return new OrganisationUser(Guid.NewGuid(), organisationId, UserStatus.Active);
+            }
         }
 
-        private static OrganisationUser CreateOrganisationUser(Guid orgId)
+        private GetManageableOrganisationUsersHandler GetManageableOrganisationUsersHandler()
         {
-            var orgUser = new OrganisationUser(Guid.NewGuid(), orgId, UserStatus.Active);
-            return orgUser;
+            return new GetManageableOrganisationUsersHandler(dataAccess, weeeAuthorization, mapper);
         }
     }
 }

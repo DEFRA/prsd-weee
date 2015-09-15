@@ -19,6 +19,7 @@
     using Web.ViewModels.Shared;
     using Weee.Requests.Organisations;
     using Weee.Requests.Users;
+    using Weee.Requests.Users.GetManageableOrganisationUsers;
     using Xunit;
 
     public class HomeControllerTests
@@ -71,7 +72,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUsersByOrganisationId>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetManageableOrganisationUsers>._))
                .Returns(new List<OrganisationUserData>());
 
             var result = await HomeController().ChooseActivity(A<Guid>._);
@@ -91,7 +92,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUsersByOrganisationId>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetManageableOrganisationUsers>._))
                .Returns(new List<OrganisationUserData>
                {
                    new OrganisationUserData
@@ -209,7 +210,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUsersByOrganisationId>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetManageableOrganisationUsers>._))
                 .Returns(new List<OrganisationUserData>
                 {
                     new OrganisationUserData(),
