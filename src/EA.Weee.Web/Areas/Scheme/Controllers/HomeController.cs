@@ -18,6 +18,7 @@
     using Web.ViewModels.Shared;
     using Weee.Requests.Organisations;
     using Weee.Requests.Users;
+    using Weee.Requests.Users.GetManageableOrganisationUsers;
 
     [Authorize]
     public class HomeController : ExternalSiteController
@@ -262,7 +263,7 @@
             using (var client = apiClient())
             {
                 var orgUsers = await client.SendAsync(User.GetAccessToken(),
-                    new GetUsersByOrganisationId(pcsId));
+                    new GetManageableOrganisationUsers(pcsId));
 
                 var loggedInUserId = User.GetUserId();
 
