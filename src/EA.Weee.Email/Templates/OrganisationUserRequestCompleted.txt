@@ -6,9 +6,17 @@ Your request to perform Waste Electrical and Electronic Equipment (WEEE) activit
 
 If you didn't create a user account you don't need to take any action.
 
-- This is an automated emai, please do not reply
+This is an automated email; please do not reply.
 
-- If you have any enquiries please contact the relevant helpline as per the footer on the service pages.
+If you have any enquiries, please contact the relevant helpline:
+
+- Environment Agency (England): 03708 506506
+
+- Scottish Environment Protection Agency: 12786 457700
+
+- Northern Ireland Environment Agency: 02 809 569338
+
+- Natural Resources Wales: 03000 65 3096
 
 Regards,
 WEEE Team
