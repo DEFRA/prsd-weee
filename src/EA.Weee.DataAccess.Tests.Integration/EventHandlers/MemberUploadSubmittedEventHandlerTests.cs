@@ -218,10 +218,10 @@
                 return memberUpload;
             }
 
-            public Producer AddProducer(MemberUpload memberUpload, string registrationNumber, int obligrationType = 1, bool isCurrentForComplianceYear = false)
+            public Producer AddProducer(MemberUpload memberUpload, string registrationNumber, int obligationType = 1, bool isCurrentForComplianceYear = false)
             {
                 Producer producer = helper.CreateProducerAsCompany(memberUpload, registrationNumber);
-                producer.ObligationType = 1;
+                producer.ObligationType = obligationType;
                 producer.IsCurrentForComplianceYear = isCurrentForComplianceYear;
 
                 return producer;
