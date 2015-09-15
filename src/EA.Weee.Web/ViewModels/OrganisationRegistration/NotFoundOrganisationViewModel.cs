@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Core.Organisations;
@@ -19,6 +20,8 @@
         public string CompaniesRegistrationNumber { get; set; }
 
         public OrganisationType Type { get; set; }
+
+        public Guid? OrganisationId { get; set; }
 
         public NotFoundOrganisationViewModel()
         {
