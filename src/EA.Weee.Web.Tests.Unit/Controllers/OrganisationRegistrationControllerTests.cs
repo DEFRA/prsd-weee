@@ -14,6 +14,7 @@
     using ViewModels.Shared;
     using Web.Controllers;
     using Weee.Requests.Organisations;
+    using Weee.Requests.Organisations.Create.Base;
     using Xunit;
 
     public class OrganisationRegistrationControllerTests
@@ -419,7 +420,7 @@
         }
 
         [Fact]
-        public async void PostNotFoundOrganisation_CreateNewOrgSelected_ShouldRedirectToContactPersonView()
+        public async void PostNotFoundOrganisation_CreateNewOrgSelectedWithoutOrgId_ShouldNotUpdateOrganisatonDetailsAndRedirectToContactPersonView()
         {
             var model = new NotFoundOrganisationViewModel
             {
@@ -436,6 +437,37 @@
             };
 
             var result = await OrganisationRegistrationController().NotFoundOrganisation(model);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<UpdateOrganisationTypeDetails>._))
+               .MustNotHaveHappened();
+
+            var redirectRouteResult = (RedirectToRouteResult)result;
+
+            Assert.Equal(redirectRouteResult.RouteValues["action"], "MainContactPerson");
+        }
+
+        [Fact]
+        public async void PostNotFoundOrganisation_CreateNewOrgSelectedWithOrgId_ShouldUpdateOrganisationDetailsAndRedirectToContactPersonView()
+        {
+            var model = new NotFoundOrganisationViewModel
+            {
+                SearchedText = "xyz ltd.",
+                Name = "xyz ltd.",
+                TradingName = "xyz",
+                Type = OrganisationType.RegisteredCompany,
+                CompaniesRegistrationNumber = "12345678",
+                ActivityOptions = new RadioButtonStringCollectionViewModel
+                {
+                    PossibleValues = new[] { NotFoundOrganisationAction.TryAnotherSearch, NotFoundOrganisationAction.CreateNewOrg },
+                    SelectedValue = NotFoundOrganisationAction.CreateNewOrg
+                },
+                OrganisationId = Guid.NewGuid()
+            };
+
+            var result = await OrganisationRegistrationController().NotFoundOrganisation(model);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<UpdateOrganisationTypeDetails>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
 
             var redirectRouteResult = (RedirectToRouteResult)result;
 
@@ -509,7 +541,7 @@
         }
 
         [Fact]
-        public async void PostSelectOrganisation_CreateNewOrgSelected_ShouldRedirectToMainContactPerson()
+        public async void PostSelectOrganisation_CreateNewOrgSelectedWithoutOrgId_ShouldRedirectToMainContactPersonAndCreateNewOrg()
         {
             var model = new SelectOrganisationViewModel
             {
@@ -534,6 +566,51 @@
                 await
                     OrganisationRegistrationController()
                         .SelectOrganisation(model);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<UpdateOrganisationTypeDetails>._))
+                .MustNotHaveHappened();
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<CreateOrganisationRequest>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            var redirectRouteResult = (RedirectToRouteResult)result;
+
+            Assert.Equal(redirectRouteResult.RouteValues["action"], "MainContactPerson");
+        }
+
+        [Fact]
+        public async void PostSelectOrganisation_CreateNewOrgSelectedWithOrgId_ShouldRedirectToMainContactPersonAndUpdateOrgDetails()
+        {
+            var model = new SelectOrganisationViewModel
+            {
+                Organisations = new SelectOrganisationRadioButtons
+                {
+                    PossibleValues = new List<RadioButtonPair<string, string>>
+                    {
+                        new RadioButtonPair<string, string>("Test ltd.", Guid.NewGuid().ToString()),
+                        new RadioButtonPair<string, string>(SelectOrganisationAction.TryAnotherSearch,
+                            SelectOrganisationAction.TryAnotherSearch),
+                        new RadioButtonPair<string, string>(SelectOrganisationAction.CreateNewOrg,
+                            SelectOrganisationAction.CreateNewOrg)
+                    },
+                    SelectedValue = SelectOrganisationAction.CreateNewOrg
+                },
+                Type = OrganisationType.SoleTraderOrIndividual,
+                TradingName = "Test",
+                SearchedText = "Test",
+                OrganisationId = Guid.NewGuid()
+            };
+
+            var result =
+                await
+                    OrganisationRegistrationController()
+                        .SelectOrganisation(model);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<UpdateOrganisationTypeDetails>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<CreateOrganisationRequest>._))
+                .MustNotHaveHappened();
 
             var redirectRouteResult = (RedirectToRouteResult)result;
 
