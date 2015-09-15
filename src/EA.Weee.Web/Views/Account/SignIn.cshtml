@@ -25,12 +25,14 @@
         @*<div class="form-group">
                 @Html.Gds().CheckBoxFor(m => m.RememberMe)
             </div>*@
-        <div>
+        <p>
             <input type="submit" value="Continue" class="button" />
+        </p>
+        <div>
+            @Html.ActionLink("Create a user account", "UserCreation", "NewUser")
         </div>
         <div>
-            <p>@Html.ActionLink("Create a user account", "UserCreation", "NewUser")</p>
-            <p>@Html.ActionLink("Reset password", "ResetPasswordRequest", "Account")</p>
+            @Html.ActionLink("Reset password", "ResetPasswordRequest", "Account")
         </div>
     }
 }
