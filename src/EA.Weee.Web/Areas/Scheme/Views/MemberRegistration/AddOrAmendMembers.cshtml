@@ -29,6 +29,9 @@
             $("#preSubmissionContent")
                 .hide();
 
+            $("#anotherActivitylink")
+                .hide();
+
             $("#submitButton")
                 .prop('disabled', true)
                 .prop('value', 'Checking file for errors...');
@@ -101,7 +104,7 @@
         </div>
 
     <div>
-        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { id = "anotherActivitylink" })
     </div>
     }
 
