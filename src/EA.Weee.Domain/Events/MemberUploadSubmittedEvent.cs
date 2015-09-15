@@ -12,9 +12,9 @@
     {
         public MemberUpload MemberUpload { get; private set; }
 
-        public MemberUploadSubmittedEvent(MemberUpload memebrUpload)
+        public MemberUploadSubmittedEvent(MemberUpload memberUpload)
         {
-            MemberUpload = memebrUpload;
+            MemberUpload = memberUpload;
         }
     }
 }
