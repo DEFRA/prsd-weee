@@ -15,11 +15,11 @@
         {
         }
 
-        public string SiteUrl
+        public string ExternalUserLoginUrl
         {
             get
             {
-                string settingName = GetAppSettingName("SiteUrl");
+                string settingName = GetAppSettingName("ExternalUserLoginUrl");
                 return ConfigurationManager.AppSettings.Get(settingName);
             }
         }
