@@ -4,7 +4,7 @@ Hello,
 
 You're receiving this email because a Waste Electrical and Electronic Equipment (WEEE) user has asked for the right to perform activities for @Model.OrganisationName.
 
-Please sign in to the WEEE service to action this request at @Model.SiteUrl
+Please sign in to the WEEE service to action this request at @Model.ExternalUserLoginUrl
 
 If you didn't create a user account you don't need to take any action.
 
