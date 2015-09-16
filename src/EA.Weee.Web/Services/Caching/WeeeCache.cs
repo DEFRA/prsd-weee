@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Services.Caching
 {
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.Scheme;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Requests.Users;
@@ -19,6 +20,7 @@
         public Cache<Guid, string> OrganisationNames { get; private set; }
         public Cache<Guid, string> SchemeNames { get; private set; }
         public Cache<Guid, int> UserActiveCompleteOrganisationCount { get; private set; }
+        public Cache<Guid, SchemePublicInfo> SchemePublicInfos { get; private set; }
 
         private string accessToken;
 
@@ -59,6 +61,13 @@
                 TimeSpan.FromMinutes(15),
                 (key) => key.ToString(),
                 (key) => FetchUserActiveCompleteOrganisationCountFromApi(key));
+
+            SchemePublicInfos = new Cache<Guid, SchemePublicInfo>(
+                provider,
+                "SchemeInfos",
+                TimeSpan.FromMinutes(15),
+                (key) => key.ToString(),
+                (key) => FetchSchemePublicInfoFromApi(key));
         }
 
         private async Task<string> FetchUserNameFromApi(Guid userId)
@@ -108,6 +117,17 @@
             }
         }
 
+        private async Task<SchemePublicInfo> FetchSchemePublicInfoFromApi(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var request = new GetSchemePublicInfo(organisationId);
+                var result = await client.SendAsync(accessToken, request);
+
+                return result;
+            }
+        }
+
         public Task<string> FetchUserName(Guid userId)
         {
             return UserNames.Fetch(userId);
@@ -126,6 +146,11 @@
         public Task<int> FetchUserActiveCompleteOrganisationCount(Guid userId)
         {
             return UserActiveCompleteOrganisationCount.Fetch(userId);
+        }
+
+        public Task<SchemePublicInfo> FetchSchemePublicInfo(Guid organisationId)
+        {
+            return SchemePublicInfos.Fetch(organisationId);
         }
     }
 }
