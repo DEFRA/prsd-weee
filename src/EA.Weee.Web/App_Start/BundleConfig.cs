@@ -8,17 +8,23 @@
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                     "~/Scripts/jquery-{version}.js",
-                     "~/Scripts/jquery.unobtrusive-ajax.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/jquery-ui").Include(
+            // JQuery 1.x.x is used for IE 8 and earlier.
+            bundles.Add(new ScriptBundle("~/bundles/jquery-1").Include(
+                "~/Scripts/jquery-1*",
+                "~/Scripts/jquery.unobtrusive-ajax.js",
                 "~/Scripts/jquery-ui-{version}.js",
-                "~/Scripts/jquery.select-to-autocomplete.js"));
+                "~/Scripts/jquery.select-to-autocomplete.js",
+                "~/Scripts/jquery.validate*",
+                "~/Scripts/custom-validation.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*",
-                        "~/Scripts/custom-validation.js"));
+            // JQuery 2.x.x is used for allother browsers.
+            bundles.Add(new ScriptBundle("~/bundles/jquery-2").Include(
+                "~/Scripts/jquery-2*",
+                "~/Scripts/jquery.unobtrusive-ajax.js",
+                "~/Scripts/jquery-ui-{version}.js",
+                "~/Scripts/jquery.select-to-autocomplete.js",
+                "~/Scripts/jquery.validate*",
+                "~/Scripts/custom-validation.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_toolkit").Include(
                       "~/Scripts/govuk_toolkit/vendor/polyfills/bind.js",
@@ -28,9 +34,6 @@
                       "~/Scripts/vendor/modernizr.custom.77028.js",
                       "~/Scripts/vendor/details.polyfill.js",
                       "~/Scripts/application.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/prism").Include(
-                      "~/Scripts/vendor/prism.js"));
 
             bundles.Add(new SassBundle("~/Content/weee-page-ie6", "~/Content/govuk_toolkit/stylesheets").Include(
                       "~/Content/weee-page-ie6.scss"));
