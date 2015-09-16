@@ -43,7 +43,11 @@
             Assert.Empty(result);
         }
 
-        [Fact]
+        [Theory]
+        [InlineData(Core.Shared.UserStatus.Inactive)]
+        [InlineData(Core.Shared.UserStatus.Active)]
+        [InlineData(Core.Shared.UserStatus.Pending)]
+        [InlineData(Core.Shared.UserStatus.Rejected)]
         public async void SingleOrganisationUserForUser_ShouldGetRequest(Core.Shared.UserStatus userStatus)
         {
             var organisationId = Guid.NewGuid();
