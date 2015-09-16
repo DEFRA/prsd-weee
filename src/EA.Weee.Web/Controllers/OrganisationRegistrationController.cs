@@ -370,27 +370,46 @@
                 return View(model);
             }
 
-            if (model.Organisations.SelectedValue == SelectOrganisationAction.TryAnotherSearch)
+            using (var client = apiClient())
             {
-                return RedirectToAction("Type", "OrganisationRegistration");
-            }
-
-            if (model.Organisations.SelectedValue == SelectOrganisationAction.CreateNewOrg)
-            {
-                using (var client = apiClient())
+                if (model.Organisations.SelectedValue == SelectOrganisationAction.TryAnotherSearch)
                 {
-                    CreateOrganisationRequest request = MakeOrganisationCreationRequest(
-                        model.Name,
-                        model.TradingName,
-                        model.CompaniesRegistrationNumber,
-                        model.Type);
+                    if (model.OrganisationId != null)
+                    {
+                        return RedirectToAction("Type", "OrganisationRegistration", new { model.OrganisationId });
+                    }
+                    return RedirectToAction("Type", "OrganisationRegistration");
+                }
 
-                    Guid organisationId = await client.SendAsync(User.GetAccessToken(), request);
+                if (model.Organisations.SelectedValue == SelectOrganisationAction.CreateNewOrg)
+                {
+                    if (model.OrganisationId != null)
+                    {
+                        UpdateOrganisationTypeDetails request = new UpdateOrganisationTypeDetails(
+                            model.OrganisationId.Value,
+                            model.Type,
+                            model.Name,
+                            model.TradingName,
+                            model.CompaniesRegistrationNumber);
 
-                    return RedirectToAction("MainContactPerson", new { organisationId });
+                        Guid organisationId = await client.SendAsync(User.GetAccessToken(), request);
+
+                        return RedirectToAction("MainContactPerson", new { organisationId });
+                    }
+                    else
+                    {
+                        CreateOrganisationRequest request = MakeOrganisationCreationRequest(
+                            model.Name,
+                            model.TradingName,
+                            model.CompaniesRegistrationNumber,
+                            model.Type);
+
+                        Guid organisationId = await client.SendAsync(User.GetAccessToken(), request);
+
+                        return RedirectToAction("MainContactPerson", new { organisationId });
+                    }
                 }
             }
-
             var selectedOrgId = new Guid(model.Organisations.SelectedValue);
             return RedirectToAction("JoinOrganisation", "OrganisationRegistration",
                 new { OrganisationID = selectedOrgId });
@@ -399,7 +418,7 @@
         [HttpGet]
         public ActionResult NotFoundOrganisation(string name, string tradingName,
                             string companiesRegistrationNumber,
-                            OrganisationType type)
+                            OrganisationType type, Guid? organisationId = null)
         {
             var model = new NotFoundOrganisationViewModel
             {
@@ -407,7 +426,8 @@
                 Name = name,
                 TradingName = tradingName,
                 CompaniesRegistrationNumber = companiesRegistrationNumber,
-                Type = type
+                Type = type,
+                OrganisationId = organisationId
             };
             return View(model);
         }
@@ -424,20 +444,40 @@
             {
                 if (model.ActivityOptions.SelectedValue == NotFoundOrganisationAction.TryAnotherSearch)
                 {
+                    if (model.OrganisationId != null)
+                    {
+                        return RedirectToAction("Type", "OrganisationRegistration", new { model.OrganisationId });
+                    }
                     return RedirectToAction("Type", "OrganisationRegistration");
                 }
 
                 if (model.ActivityOptions.SelectedValue == NotFoundOrganisationAction.CreateNewOrg)
                 {
-                    var request = MakeOrganisationCreationRequest(
-                        model.Name,
-                        model.TradingName,
-                        model.CompaniesRegistrationNumber,
-                        model.Type);
+                    if (model.OrganisationId != null)
+                    {
+                        UpdateOrganisationTypeDetails request = new UpdateOrganisationTypeDetails(
+                            model.OrganisationId.Value,
+                            model.Type,
+                            model.Name,
+                            model.TradingName,
+                            model.CompaniesRegistrationNumber);
 
-                    var organisationId = await client.SendAsync(User.GetAccessToken(), request);
+                        Guid organisationId = await client.SendAsync(User.GetAccessToken(), request);
 
-                    return RedirectToAction("MainContactPerson", new { organisationId });
+                        return RedirectToAction("MainContactPerson", new { organisationId });
+                    }
+                    else
+                    {
+                        var request = MakeOrganisationCreationRequest(
+                            model.Name,
+                            model.TradingName,
+                            model.CompaniesRegistrationNumber,
+                            model.Type);
+
+                        var organisationId = await client.SendAsync(User.GetAccessToken(), request);
+
+                        return RedirectToAction("MainContactPerson", new { organisationId });
+                    }
                 }
             }
             return View(model);
