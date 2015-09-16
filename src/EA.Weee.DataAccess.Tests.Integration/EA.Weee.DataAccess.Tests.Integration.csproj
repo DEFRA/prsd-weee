@@ -160,6 +160,7 @@
     <Compile Include="Model\Scheme.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Scheme\GetSchemePublicInfoDataAccessTests.cs" />
     <Compile Include="Scheme\GetSchemesDataAccessTests.cs" />
     <Compile Include="Model\SICCode.cs">
       <DependentUpon>Model1.tt</DependentUpon>
