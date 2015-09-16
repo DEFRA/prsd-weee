@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -12,6 +13,7 @@
     using Prsd.Core.Web.Mvc.Extensions;
     using Prsd.Core.Web.OAuth;
     using Services;
+    using ViewModels.JoinOrganisation;
     using ViewModels.NewUser;
     using ViewModels.Shared;
 
@@ -178,6 +180,41 @@
         public ActionResult Cookies()
         {
             return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Feedback()
+        {
+            var collection = new List<string>
+            {
+                FeedbackOptions.VerySatisfied, 
+                FeedbackOptions.Satisfied, 
+                FeedbackOptions.NeitherSatisfiedOrDissatisfied,
+                FeedbackOptions.Dissatisfied,
+                FeedbackOptions.VeryDissatisfied
+            };
+
+            var model = new FeedbackViewModel
+            {
+                FeedbackOptions = new RadioButtonStringCollectionViewModel
+                {
+                    PossibleValues = collection
+                }
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult Feedback(FeedbackViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            return View(model);
         }
     }
 }

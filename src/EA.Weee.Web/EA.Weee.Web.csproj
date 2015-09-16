@@ -555,6 +555,7 @@
     <Content Include="Views\OrganisationRegistration\NotFoundOrganisation.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SelectOrganisationRadioButtons.cshtml" />
     <Content Include="Views\NewUser\Cookies.cshtml" />
+    <Content Include="Views\NewUser\Feedback.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -668,6 +669,8 @@
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
     <Compile Include="ViewModels\Home\IndexViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationAction.cs" />
+    <Compile Include="ViewModels\NewUser\FeedbackOptions.cs" />
+    <Compile Include="ViewModels\NewUser\FeedbackViewModel.cs" />
     <Compile Include="ViewModels\NewUser\UserCreationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationViewModel.cs" />
