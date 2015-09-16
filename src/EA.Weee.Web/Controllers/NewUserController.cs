@@ -208,6 +208,7 @@
 
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public ActionResult Feedback(FeedbackViewModel model)
         {
             if (!ModelState.IsValid)
