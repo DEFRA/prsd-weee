@@ -3,7 +3,6 @@
     using System;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Domain.Events;
-    using Prsd.Core;
 
     public class OrganisationUser : Entity
     {
