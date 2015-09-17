@@ -625,6 +625,9 @@
     <Compile Include="Infrastructure\RouteCollectionExtensions.cs" />
     <Compile Include="Infrastructure\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.Label.cs" />
+    <Compile Include="RazorHelpers\WeeeGdsExtensions.cs" />
     <Compile Include="Requests\Base\IRequestCreator.cs" />
     <Compile Include="Requests\Base\RequestCreator.cs" />
     <Compile Include="Requests\IPartnershipDetailsRequestCreator.cs" />
