@@ -6,7 +6,13 @@
     ViewBag.Title = "Choose Users";
 }
 
-
+@section scripts{
+    <script>
+            $('#idManageUsersTable tr').click(function() {
+                $(this).find('td input[type=radio]').prop('checked', true);
+            })
+    </script>
+}
 <header class="hgroup">
     <h1 class="heading-large">
         Choose a user
@@ -17,53 +23,42 @@
 {
     @Html.AntiForgeryToken()
     @Html.Gds().ValidationSummary()
-    <div class="form-group">
-        <table class="prsd-table">
-            <thead>
+    <div class="table-hr"></div>
+    <table id="idManageUsersTable" class="prsd-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Organisation</th>
+                <th>Status</th>
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (UserSearchData user in Model.Users)
+            {
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Organisation</th>
-                    <th>Status</th>
-                    <th>Select</th>
+                    <td width="100%">@user.FullName</td>
+                    <td>@user.Email</td>
+                    <td>@user.OrganisationName</td>
+                    <td>@user.Status</td>
+                    <td>@Html.RadioButtonFor(m => m.SelectedUserId, @user.Id)</td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (UserSearchData user in Model.Users)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(m => user.FullName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(m => user.Email)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(m => user.OrganisationName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(m => user.Status)
-                        </td>
-                        <td>
-                            @Html.RadioButtonFor(m => m.SelectedUserId, @user.Id)
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <br />
+        }
+        </tbody>
+    </table>
+    <br/>
     if (@Model.Users.PageCount > 1)
     {
-        <br />
-        <span style="display: inline-block">Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</span>
         <div class="pager">
             @Html.Pager(Model.Users.PageSize, Model.Users.PageNumber, Model.Users.TotalItemCount)
 
         </div>
+        <p>Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</p>
+
     }
     <div class="form-group">
-        <button class="button" type="submit">Continue</button>
+        <input type="submit" class="button" value="Continue" />
     </div>
 }
 
