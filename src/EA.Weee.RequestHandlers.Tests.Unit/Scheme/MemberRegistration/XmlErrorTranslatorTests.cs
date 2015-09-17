@@ -87,7 +87,7 @@
             const string lineNumber = "57";
 
             string providedException = string.Format("There is an error in XML document ({0}, 109).", lineNumber);
-            string expectedFriendlyMessage = string.Format("{0} This can be caused by an error on this line, or before it. (Line {1}.)", providedException, lineNumber);
+            string expectedFriendlyMessage = string.Format("{0} This can be caused by an error on this line, or before it. (XML line number {1}.)", providedException, lineNumber);
 
             var translator = new XmlErrorTranslator();
 
@@ -112,7 +112,7 @@
         private string AddUniversalMessageParts(string specificMessage)
         {
             var registrationNoText = string.Format("Producer {0}: ", TestRegistrationNo);
-            var lineNumberText = string.Format("(Line {0}.)", TestLineNumber);
+            var lineNumberText = string.Format("(XML line number {0}.)", TestLineNumber);
             return string.Format("{0}{1} {2}", registrationNoText, specificMessage, lineNumberText);
         }
 
