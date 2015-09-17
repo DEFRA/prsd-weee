@@ -10,7 +10,7 @@
     {
         [Required]
         [Display(Name = "Email address")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "The email address is not valid.")]
         public string Email { get; set; }
     }
 }
