@@ -15,22 +15,22 @@
     {
         @Html.AntiForgeryToken()
         <div class="form-group">
-            <table>
+            <table title="This table lists the organisation you have applied to perform activities for.">
                 <thead>
                     <tr>
-                        <th colspan="2"></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                @foreach (OrganisationUserData item in Model.InaccessibleOrganisations)
-                {
-                    <tr>
-                        <td>
-                            <span>@item.Organisation.OrganisationName</span>
-                            <span style="color:#6F777B;">- @item.UserStatus</span>
-                        </td>
-                    </tr>
-                }
+                    @foreach (OrganisationUserData item in Model.InaccessibleOrganisations)
+                    {
+                        <tr>
+                            <td>
+                                <span>@item.Organisation.OrganisationName</span>
+                                <span style="color:#6F777B;">- @item.UserStatus</span>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
