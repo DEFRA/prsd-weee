@@ -37,13 +37,6 @@
 
             // Focus on first error link in the error container 
             $('.error-summary-errors a').first().focus();
-
-            // Move the focus to the associated input when error message link is triggered.
-            // A simple href anchor link doesnt seem to place focus inside the input
-            $('.error-summary-errors a').click(function () {
-                $($(this).attr('href')).focus();
-                return false;
-            });
         }
         this.defaultShowErrors();
     }

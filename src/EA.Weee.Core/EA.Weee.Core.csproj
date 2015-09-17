@@ -107,6 +107,7 @@
     <Compile Include="Helpers\Xml\XmlErrorTranslator.cs" />
     <Compile Include="Routing\ExternalRoute.cs" />
     <Compile Include="Routing\ResetPasswordRoute.cs" />
+    <Compile Include="Scheme\SchemePublicInfo.cs" />
     <Compile Include="Shared\CsvWriter.cs" />
     <Compile Include="Shared\CsvWriterFactory.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizer.cs" />

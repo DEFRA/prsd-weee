@@ -109,6 +109,9 @@
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
     <Compile Include="Scheme\GetSchemeByIdDataAccess.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandler.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfo\GetSchemePublicInfoDataAccess.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfo\GetSchemePublicInfoHandler.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfo\IGetSchemePublicInfoDataAccess.cs" />
     <Compile Include="Scheme\GetSchemesDataAccess.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandler.cs" />
     <Compile Include="Scheme\IGetSchemeByIdDataAccess.cs" />
