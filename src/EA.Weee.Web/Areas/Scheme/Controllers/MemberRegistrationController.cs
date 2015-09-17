@@ -25,6 +25,7 @@
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
         private readonly CsvWriterFactory csvWriterFactory;
+        private const string ManageMembersActivity = "Manage members";
 
         public MemberRegistrationController(
             Func<IWeeeClient> apiClient,
@@ -68,7 +69,7 @@
                     showLinkToSelectOrganisation = (task.Result > 1);
                 }
 
-                await SetBreadcrumb(pcsId, "Manage scheme");
+                await SetBreadcrumb(pcsId, ManageMembersActivity);
                 return View(new AuthorizationRequiredViewModel
                 {
                     Status = status,
@@ -85,7 +86,7 @@
                 var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
                 if (orgExists)
                 {
-                    await SetBreadcrumb(pcsId, "Manage scheme");
+                    await SetBreadcrumb(pcsId, ManageMembersActivity);
                     return View();
                 }
             }
@@ -105,7 +106,7 @@
                 }
                 else
                 {
-                    await SetBreadcrumb(pcsId, "Manage scheme");
+                    await SetBreadcrumb(pcsId, ManageMembersActivity);
                     return View(model);
                 }
             }
@@ -139,7 +140,7 @@
 
                 if (years.Count > 0)
                 {
-                    await SetBreadcrumb(pcsId, "Manage scheme");
+                    await SetBreadcrumb(pcsId, ManageMembersActivity);
                     return View(years);
                 }
             }
@@ -159,12 +160,12 @@
 
                 if (errors.Any(e => e.ErrorLevel == ErrorLevel.Error))
                 {
-                    await SetBreadcrumb(pcsId, "Manage scheme");
+                    await SetBreadcrumb(pcsId, ManageMembersActivity);
                     return View("ViewErrorsAndWarnings",
                         new MemberUploadResultViewModel { MemberUploadId = memberUploadId, ErrorData = errors, TotalCharges = memberUpload.TotalCharges });
                 }
 
-                await SetBreadcrumb(pcsId, "Manage scheme");
+                await SetBreadcrumb(pcsId, ManageMembersActivity);
                 return View("XmlHasNoErrors",
                     new MemberUploadResultViewModel { MemberUploadId = memberUploadId, ErrorData = errors, TotalCharges = memberUpload.TotalCharges });
             }
@@ -244,7 +245,7 @@
                 ComplianceYear = memberUploadData.ComplianceYear.Value
             };
 
-            await SetBreadcrumb(pcsId, "Manage scheme");
+            await SetBreadcrumb(pcsId, ManageMembersActivity);
             return View(model);
         }
 
