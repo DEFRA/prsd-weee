@@ -19,7 +19,6 @@
         @Html.AntiForgeryToken()
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.AccessibleOrganisations.Selected)">
-            @Html.Gds().ValidationMessageFor(m => m.AccessibleOrganisations.Selected)
             @Html.EditorFor(m => m.AccessibleOrganisations)
         </div>
 

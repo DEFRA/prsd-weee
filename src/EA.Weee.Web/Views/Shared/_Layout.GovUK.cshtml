@@ -42,16 +42,16 @@
     <link rel="shortcut icon" href="@Url.Content("~/Content/govuk/images/favicon.ico")" type="image/x-icon" />
 
     <!-- Size for iPad and iPad mini (high resolution) -->
-    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-152x152.png") "/>
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-152x152.png")"/>
     <!-- Size for iPhone and iPod touch (high resolution) -->
-    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-120x120.png") "/>
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-120x120.png")"/>
     <!-- Size for iPad 2 and iPad mini (standard resolution) -->
-    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-76x76.png") "/>
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-76x76.png")"/>
     <!-- Default non-defined size, also used for Android 2.1+ devices -->
-    <link rel="apple-touch-icon-precomposed" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-60x60.png") "/>
+    <link rel="apple-touch-icon-precomposed" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-60x60.png")"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta property="og:image" content="@Url.Content("~/Content/govuk/images/opengraph-image.png") "/>
+    <meta property="og:image" content="@Url.Content("~/Content/govuk/images/opengraph-image.png")"/>
 
     @RenderSection("head", required: false)
   </head>
@@ -71,7 +71,7 @@
     </div>
     <!--end global-cookie-message-->
     
-    <header role="banner" id="global-header" class="@Html.Raw(ViewBag.HeaderClass ?? string.Empty)">
+    <header id="global-header" class="@Html.Raw(ViewBag.HeaderClass ?? string.Empty)">
       <div class="header-wrapper">
         <div class="header-global">
           <div class="header-logo">
@@ -94,7 +94,7 @@
 
     @RenderBody()
 
-    <footer class="group js-footer" id="footer" role="contentinfo">
+    <footer class="group js-footer" id="footer">
 
       <div class="footer-wrapper">
         @RenderSection("footer_top", required: false)
