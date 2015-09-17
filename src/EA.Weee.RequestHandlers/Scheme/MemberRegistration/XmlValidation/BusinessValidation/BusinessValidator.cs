@@ -22,6 +22,8 @@
 
         public static string DataValidationRuleSet = "dataValidation";
 
+        public static string CustomRules = "customrules";
+
         public BusinessValidator(WeeeContext context, IRuleSelector ruleSelector)
         {
             this.context = context;
