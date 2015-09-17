@@ -18,7 +18,7 @@
         public string Surname { get; set; }
 
         [Required(ErrorMessage = "Email is required.")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "The email address is not valid.")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
@@ -34,7 +34,7 @@
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [MustBeTrue(ErrorMessage = "Please confirm that you have read the terms and conditions")]
+        [MustBeTrue(ErrorMessage = "Please confirm that you have read the terms and conditions.")]
         public bool TermsAndConditions { get; set; }
     }
 }
