@@ -4,10 +4,13 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Core.Helpers;
+    using Core.XmlBusinessValidation;
     using DataAccess;
     using Domain;
     using Extensions;
     using FluentValidation;
+    using Rules;
 
     public class ProducerTypeValidator : AbstractValidator<producerType>
     {
@@ -18,7 +21,7 @@
             countryType.UKSCOTLAND, countryType.UKWALES
         };
 
-        public ProducerTypeValidator(WeeeContext context)
+        public ProducerTypeValidator(WeeeContext context, IRuleSelector ruleSelector)
         {
             RuleSet(
                 BusinessValidator.RegistrationNoRuleSet,
@@ -92,6 +95,19 @@
                             (p, prn) => p.GetProducerName(),
                             (p, prn) => prn);
                 });
+
+            RuleSet(BusinessValidator.CustomRules, () =>
+            {
+                var annualTurnoverMismatchResult = RuleResult.Pass();
+                RuleFor(p => p)
+                    .Must(p =>
+                    {
+                        annualTurnoverMismatchResult = ruleSelector.EvaluateRule(new AnnualTurnoverMismatch(p));
+                        return annualTurnoverMismatchResult.IsValid;
+                    })
+                    .WithState(p => annualTurnoverMismatchResult.ErrorLevel.ToDomainEnumeration<ErrorLevel>())
+                    .WithMessage("{0}", p => annualTurnoverMismatchResult.Message);
+            });
         }
     }
 }
