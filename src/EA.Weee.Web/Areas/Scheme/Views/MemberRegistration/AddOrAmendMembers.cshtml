@@ -15,7 +15,9 @@
             by adding an empty event handler to the "beforeunload"
             window event.
         *@
-        window.addEventListener("beforeunload", function () { });
+        if (window.addEventListener) {
+            window.addEventListener("beforeunload", function () { });
+        }
 
         function ajaxSubmit() {
 
@@ -36,30 +38,41 @@
                 .prop('disabled', true)
                 .prop('value', 'Checking file for errors...');
 
-            $("#spinner")
-                .show();
-
             setTimeout(function () {
                 $("#processingTimeMessage")
                     .fadeIn("slow");
             }, 5000);
 
-            $.ajax({
-                url: "@Url.Action("AddOrAmendMembers", "MemberRegistration")",
-                type: "POST",
-                data: $("#form1").serializeFiles(),
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    var placeHolderLocation = "@Url.Action("ViewErrorsAndWarnings", "MemberRegistration", new { memberUploadId = Guid.Empty })";
-                    window.location = placeHolderLocation.replace("@Guid.Empty", response);
-                },
-                statusCode: {
-                    500: function (response) {
-                        window.location = "@Url.Action("InternalError", "Errors", new { area = string.Empty })";
-                    }
-                },
-            });
+            @*
+                Without the FormData API, doing an AJAX upload of a file is really hard.
+                This only affects IE9 and earlier, so we'll fall back to a non-AJAX submission.
+            *@
+            if (typeof FormData == 'undefined') {
+                return true;
+            }
+            else {
+                $("#spinner")
+                    .show();
+
+                $.ajax({
+                    url: "@Url.Action("AddOrAmendMembers", "MemberRegistration")",
+                    type: "POST",
+                    data: $("#form1").serializeFiles(),
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        var placeHolderLocation = "@Url.Action("ViewErrorsAndWarnings", "MemberRegistration", new { memberUploadId = Guid.Empty })";
+                        window.location = placeHolderLocation.replace("@Guid.Empty", response);
+                    },
+                    statusCode: {
+                        500: function (response) {
+                            window.location = "@Url.Action("InternalError", "Errors", new { area = string.Empty })";
+                        }
+                    },
+                });
+
+                return false;
+            }
         }
     </script>
 
@@ -68,7 +81,7 @@
         {
             id = "form1",
             enctype = "multipart/form-data",
-            onsubmit = "ajaxSubmit(); return false;",
+            onsubmit = "return ajaxSubmit();",
             autocomplete = "off"
         }))
     {
