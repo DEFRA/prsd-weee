@@ -53,7 +53,7 @@
             var registrationNo = GetRegistrationNumber(sender);
             var registrationNoText = !string.IsNullOrEmpty(registrationNo) ? string.Format("Producer {0}: ", registrationNo) : string.Empty;
 
-            var lineNumberText = lineNumber > 0 ? string.Format(" (Line {0}.)", lineNumber) : string.Empty;
+            var lineNumberText = lineNumber > 0 ? string.Format(" (XML line number {0}.)", lineNumber) : string.Empty;
 
             return string.Format("{0}{1}{2}", registrationNoText, resultErrorMessage, lineNumberText);
         }
@@ -133,7 +133,7 @@
         {
             var lineNumber = Regex.Match(message, ErrorInXmlDocumentPattern).Groups[1].ToString();
 
-            return string.Format("{0} This can be caused by an error on this line, or before it. (Line {1}.)", message, lineNumber);
+            return string.Format("{0} This can be caused by an error on this line, or before it. (XML line number {1}.)", message, lineNumber);
         }
 
         private string GetRegistrationNumber(XElement sender)
