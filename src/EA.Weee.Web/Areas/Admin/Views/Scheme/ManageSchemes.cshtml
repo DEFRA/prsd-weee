@@ -4,20 +4,25 @@
     ViewBag.Title = "Manage schemes";
 }
 
+@section scripts{
+    <script>
+            $('#idManageSchemesTable tr').click(function() {
+                $(this).find('td input[type=radio]').prop('checked', true);
+            })
+    </script>
+}
 
 <header class="hgroup">
     <h1 class="heading-large">
         Which scheme would you like to manage?
     </h1>
 </header>
-
-@using (Html.BeginForm(actionName: "ManageSchemes", controllerName: "Scheme", method: FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    @Html.Gds().ValidationSummary()
-
-    <div class="form-group">
-        <table class="prsd-table">
+    @using (Html.BeginForm(actionName: "ManageSchemes", controllerName: "Scheme", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        <div class="table-hr"></div>
+        <table id="idManageSchemesTable" class="prsd-table">
             <thead>
                 <tr>
                     <th>Organisation name</th>
@@ -36,10 +41,9 @@
                 }
             </tbody>
         </table>
-    </div>
-
-    <div class="form-group">
-        <input type="submit" class="button" value="Continue" />
-    </div>
-}
+        <br/>
+        <div class="form-group">
+            <input type="submit" class="button" value="Continue" />
+        </div>
+    }
 
