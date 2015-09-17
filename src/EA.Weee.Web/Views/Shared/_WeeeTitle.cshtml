@@ -104,6 +104,11 @@
     }
     
 </div>
-
+    
 <div class="account-link-banner"></div>
+}
+
+@if (Model.Breadcrumb.SchemeInfo != null)
+{
+    <div id="schemeBanner">@(Model.Breadcrumb.SchemeInfo.Name): @Model.Breadcrumb.SchemeInfo.ApprovalNo</div>
 }

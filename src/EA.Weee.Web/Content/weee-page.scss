@@ -141,6 +141,13 @@
     text-indent: -999em;
 }
 
+#schemeBanner {
+	margin-top: 3px;
+	padding: 5px 10px;
+	background: $grey-3;
+	font-size: 16px;
+}
+
 #footer .footer_agencies {
 
 	@include media(desktop) {
