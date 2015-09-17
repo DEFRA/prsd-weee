@@ -15,6 +15,33 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
+        @Html.HiddenFor(m => m.OrganisationData.Id)
+        @Html.HiddenFor(m => m.OrganisationData.OrganisationType)
+        @Html.HiddenFor(m => m.OrganisationData.Name)
+        @Html.HiddenFor(m => m.OrganisationData.CompanyRegistrationNumber)
+        @Html.HiddenFor(m => m.OrganisationData.TradingName)
+        @Html.HiddenFor(m => m.OrganisationData.Contact.FirstName)
+        @Html.HiddenFor(m => m.OrganisationData.Contact.LastName)
+        @Html.HiddenFor(m => m.OrganisationData.Contact.Position)
+        @Html.HiddenFor(m => m.OrganisationData.OrganisationAddress.Address1)
+        @Html.HiddenFor(m => m.OrganisationData.OrganisationAddress.Address2)
+        @Html.HiddenFor(m => m.OrganisationData.OrganisationAddress.CountryId)
+        @Html.HiddenFor(m => m.OrganisationData.OrganisationAddress.CountryName)
+        @Html.HiddenFor(m => m.OrganisationData.OrganisationAddress.CountyOrRegion)
+        @Html.HiddenFor(m => m.OrganisationData.OrganisationAddress.Email)
+        @Html.HiddenFor(m => m.OrganisationData.OrganisationAddress.Postcode)
+        @Html.HiddenFor(m => m.OrganisationData.OrganisationAddress.Telephone)
+        @Html.HiddenFor(m => m.OrganisationData.OrganisationAddress.TownOrCity)
+        @Html.HiddenFor(m => m.OrganisationData.BusinessAddress.Address1)
+        @Html.HiddenFor(m => m.OrganisationData.BusinessAddress.Address2)
+        @Html.HiddenFor(m => m.OrganisationData.BusinessAddress.CountryId)
+        @Html.HiddenFor(m => m.OrganisationData.BusinessAddress.CountryName)
+        @Html.HiddenFor(m => m.OrganisationData.BusinessAddress.CountyOrRegion)
+        @Html.HiddenFor(m => m.OrganisationData.BusinessAddress.Email)
+        @Html.HiddenFor(m => m.OrganisationData.BusinessAddress.Postcode)
+        @Html.HiddenFor(m => m.OrganisationData.BusinessAddress.Telephone)
+        @Html.HiddenFor(m => m.OrganisationData.BusinessAddress.TownOrCity)
+
                 <!-- //////////// Main Accordion /////////////// -->
         <section id="form-summary" role="main">
             <div class="overview-summary">
@@ -202,13 +229,83 @@
                     </div>
                 </details>
             </div>
-            <br/>
-            <p>By creating your organisation, you are confirming that the information you’ve provided is accurate and complete.</p>
-
-            <div class="form-group">
-                <input type="submit" class="button" value="Create organisation" />
-            </div>
         </section>
+        <br />
+
+        <p>By creating your organisation, you are confirming that the information you’ve provided is accurate and complete.</p>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
+            <fieldset>
+                @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
+                <div class="checkbox-inherit">
+                    <label class="block-label" for="PrivacyPolicy">
+                        <details>
+                            <summary><span class="summary">Privacy policy</span></summary>
+                            <div class="panel-indent">
+                                <div class="text">
+                                    <h2 class="heading-small">The Data Protection Act 1998</h2>
+                                    <p>
+                                        We, the Environment Agency, Natural Resources Wales, Northern Ireland Environment Agency
+                                        or Scottish Environment Protection Agency, (depending on which regulator you have applied to)
+                                        will process the information you provide so that we can deal with your application, make sure
+                                        you keep to the conditions of the licence, permit or registration, process renewals and keep
+                                        the public registers up to date.
+                                    </p>
+
+                                    <p>We may also process or release the information to:</p>
+                                    <ul class="list-bullet">
+                                        <li>
+                                            offer you documents or services relating to environmental
+                                            matters;
+                                        </li>
+                                        <li>
+                                            consult the public, public organisations and other
+                                            organisations (for example, the Health and Safety
+                                            Executive, local authorities, the emergency services, the
+                                            Department for Environment, Food and Rural Affairs) on
+                                            environmental issues;
+                                        </li>
+                                        <li>
+                                            carry out research and development work on
+                                            environmental issues;
+                                        </li>
+                                        <li>
+                                            provide information from the public register to anyone
+                                            who asks;
+                                        </li>
+                                        <li>
+                                            prevent anyone from breaking environmental law,
+                                            investigate cases where environmental law may have been
+                                            broken, and take any action that is needed;
+                                        </li>
+                                        <li>
+                                            assess whether customers are satisfied with our service,
+                                            and to improve our service; and
+                                        </li>
+                                        <li>
+                                            respond to requests for information under the Freedom of
+                                            Information Act 2000 and the Environmental Information
+                                            Regulations 2004 (if the Data Protection Act allows).
+                                            We may pass the information on to our agents or
+                                            representatives to do these things for us.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </details>
+                        <div>
+                            @Html.CheckBoxFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy", @class = "checkbox-inherit" })
+                            Please tick to confirm you have read our data protection notice
+                        </div>
+                    </label>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="button" value="Create organisation" />
+        </div>
+
     }
 }
 

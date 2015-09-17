@@ -728,3 +728,11 @@ input[type="file"].form-control {
 .full-width {
     width: $full-width;
 }
+
+.checkbox-inherit{
+    position: inherit;
+}
+
+.checkbox-inherit input{
+    position: inherit;
+}

@@ -892,8 +892,12 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ConfirmOrganisationDetails(Guid organisationId)
+        public async Task<ActionResult> ConfirmOrganisationDetails(OrganisationSummaryViewModel model, Guid organisationId)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("ReviewOrganisationDetails", model);
+            }
             try
             {
                 using (var client = apiClient())
