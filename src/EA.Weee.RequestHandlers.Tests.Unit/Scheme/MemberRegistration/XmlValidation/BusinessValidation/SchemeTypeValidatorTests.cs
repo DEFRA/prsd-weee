@@ -32,6 +32,8 @@
             // By default, rules pass
             A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameWarning>._))
                 .Returns(RuleResult.Pass());
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerChargeBandWarning>._))
+                .Returns(RuleResult.Pass());
         }
 
         [Fact]
@@ -523,6 +525,76 @@
             var failure = RuleResult.Fail(errorMessage, errorLevel);
 
             A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameWarning>._))
+                .Returns(failure);
+
+            var xml = new schemeType
+            {
+                producerList = new[]
+                {
+                    new producerType
+                    {
+                        registrationNo = "ABC12345",
+                        producerBusiness = new producerBusinessType
+                        {
+                            Item = new partnershipType
+                            {
+                                partnershipName = "Test Name"
+                            }
+                        }
+                    }
+                }
+            };
+
+            var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(
+                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .DataValidation));
+
+            Assert.Single(result.Errors);
+
+            var error = result.Errors.Single();
+
+            Assert.Equal(errorLevel.ToDomainEnumeration<ErrorLevel>(), error.CustomState);
+            Assert.Equal(errorMessage, error.ErrorMessage);
+        }
+
+        [Fact]
+        public void ShouldEvaluateProducerChargeBandWarningRule()
+        {
+            var xml = new schemeType
+            {
+                producerList = new[]
+                {
+                    new producerType
+                    {
+                        registrationNo = "ABC12345",
+                        producerBusiness = new producerBusinessType
+                        {
+                            Item = new partnershipType
+                            {
+                                partnershipName = "Test Name"
+                            }
+                        }
+                    }
+                }
+            };
+
+            SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(
+                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
+                            .DataValidation));
+
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerChargeBandWarning>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Theory]
+        [InlineData(Core.Shared.ErrorLevel.Warning)]
+        [InlineData(Core.Shared.ErrorLevel.Error)]
+        public void EvaluteProducerChargeBandWarningRuleFails_ShouldMapErrorMessage_AndErrorLevel(Core.Shared.ErrorLevel errorLevel)
+        {
+            var errorMessage = "Some sort of error";
+            var failure = RuleResult.Fail(errorMessage, errorLevel);
+
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerChargeBandWarning>._))
                 .Returns(failure);
 
             var xml = new schemeType

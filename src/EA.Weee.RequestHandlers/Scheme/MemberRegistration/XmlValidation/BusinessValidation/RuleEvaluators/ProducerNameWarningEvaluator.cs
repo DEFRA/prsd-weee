@@ -8,9 +8,9 @@
 
     public class ProducerNameWarningEvaluator : IRule<ProducerNameWarning>
     {
-        private readonly IProducerNameWarningQuerySet querySet;
+        private readonly IProducerQuerySet querySet;
 
-        public ProducerNameWarningEvaluator(IProducerNameWarningQuerySet querySet)
+        public ProducerNameWarningEvaluator(IProducerQuerySet querySet)
         {
             this.querySet = querySet;
         }

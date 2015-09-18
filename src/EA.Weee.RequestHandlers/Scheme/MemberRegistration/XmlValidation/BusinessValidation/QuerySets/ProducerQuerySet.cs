@@ -7,12 +7,12 @@
     using DataAccess;
     using Domain.Producer;
 
-    public class ProducerNameWarningQuerySet : IProducerNameWarningQuerySet
+    public class ProducerQuerySet : IProducerQuerySet
     {
         private readonly PersistentQueryResult<List<Producer>> currentProducers;
         private readonly PersistentQueryResult<List<MigratedProducer>> migratedProducers; 
 
-        public ProducerNameWarningQuerySet(WeeeContext context)
+        public ProducerQuerySet(WeeeContext context)
         {
             currentProducers = new PersistentQueryResult<List<Producer>>(() => context.Producers.Where(p => p.IsCurrentForComplianceYear).ToList());
             migratedProducers = new PersistentQueryResult<List<MigratedProducer>>(() => context.MigratedProducers.ToList());

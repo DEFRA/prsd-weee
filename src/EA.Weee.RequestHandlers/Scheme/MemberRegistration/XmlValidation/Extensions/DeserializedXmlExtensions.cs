@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation.Extensions
 {
+    using System;
     using Domain;
 
     public static class DeserializedXmlExtensions
@@ -44,13 +45,13 @@
             {
                 return obligationTypeType.B2B;
             }
-            
+
             if (obligationType == ObligationType.B2C)
             {
                 return obligationTypeType.B2C;
             }
 
-            return obligationTypeType.Both;   
+            return obligationTypeType.Both;
         }
     }
 }
