@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.AddOrAmendMembersViewModel
 @{
     ViewBag.Title = "Manage Members";
@@ -104,7 +105,7 @@
             <hr class="grey" />
             <br/>
             <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
-                @Html.Gds().LabelFor(m => m.File)
+                @Html.WeeeGds().ScreenReaderLabelFor(m => m.File)
                 @Html.Gds().ValidationMessageFor(m => m.File)
                 @Html.Gds().TextBoxFor(m => m.File, new { type = "file", accept = ".xml" })
             </div>
