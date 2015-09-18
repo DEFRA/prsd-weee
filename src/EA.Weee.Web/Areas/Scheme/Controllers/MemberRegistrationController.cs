@@ -207,6 +207,14 @@
             {
                 // TODO: insert request including check against submitting a member upload with errors or different PCS here...
 
+                if (!ModelState.IsValid)
+                {
+                    var errors =
+                    await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, viewModel.MemberUploadId));
+                    viewModel.ErrorData = errors;
+                    return View("XmlHasNoErrors", viewModel);
+                }
+
                 await client.SendAsync(User.GetAccessToken(), new MemberUploadSubmission(pcsId, viewModel.MemberUploadId));
 
                 return RedirectToAction("SuccessfulSubmission", new { pcsId = pcsId, memberUploadId = viewModel.MemberUploadId });
