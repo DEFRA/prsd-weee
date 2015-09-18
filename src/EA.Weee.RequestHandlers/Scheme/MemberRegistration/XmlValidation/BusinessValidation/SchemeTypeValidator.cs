@@ -37,7 +37,7 @@
             RuleSet(NonDataValidation, () =>
             {
                 RuleFor(st => st.producerList)
-                    .SetCollectionValidator(new ProducerTypeValidator(context));
+                    .SetCollectionValidator(new ProducerTypeValidator(context, ruleSelector));
 
                 var duplicateRegistrationNumbers = new List<string>();
                 RuleForEach(st => st.producerList)
