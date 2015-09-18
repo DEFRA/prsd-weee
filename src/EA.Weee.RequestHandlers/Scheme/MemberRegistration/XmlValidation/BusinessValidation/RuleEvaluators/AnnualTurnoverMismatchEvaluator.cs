@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.RuleEvaluators
 {
-    using System;
     using Core.Shared;
     using Core.XmlBusinessValidation;
     using Extensions;
