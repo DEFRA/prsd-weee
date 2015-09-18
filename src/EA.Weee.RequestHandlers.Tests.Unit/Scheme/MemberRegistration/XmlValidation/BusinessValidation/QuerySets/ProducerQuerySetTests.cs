@@ -10,12 +10,12 @@
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.QuerySets;
     using Xunit;
 
-    public class ProducerNameWarningQuerySetTests
+    public class ProducerQuerySetTests
     {
         private readonly WeeeContext context;
         private readonly DbContextHelper helper;
 
-        public ProducerNameWarningQuerySetTests()
+        public ProducerQuerySetTests()
         {
             context = A.Fake<WeeeContext>();
             helper = new DbContextHelper();
@@ -38,7 +38,7 @@
                     producer
                 }));
 
-            var result = ProducerNameWarningQuerySet().GetLatestProducerForComplianceYearAndScheme(registrationNumber, complianceYear.ToString(), schemeOrganisationId);
+            var result = ProducerQuerySet().GetLatestProducerForComplianceYearAndScheme(registrationNumber, complianceYear.ToString(), schemeOrganisationId);
 
             Assert.Equal(producer, result);
         }
@@ -61,7 +61,7 @@
                     producer
                 }));
 
-            var result = ProducerNameWarningQuerySet().GetLatestProducerForComplianceYearAndScheme(registrationNumber, thisComplianceYear.ToString(), schemeOrganisationId);
+            var result = ProducerQuerySet().GetLatestProducerForComplianceYearAndScheme(registrationNumber, thisComplianceYear.ToString(), schemeOrganisationId);
            
             Assert.Null(result);
         }
@@ -84,7 +84,7 @@
                     producer
                 }));
 
-            var result = ProducerNameWarningQuerySet().GetLatestProducerForComplianceYearAndScheme(thisPrn, complianceYear.ToString(), schemeOrganisationId);
+            var result = ProducerQuerySet().GetLatestProducerForComplianceYearAndScheme(thisPrn, complianceYear.ToString(), schemeOrganisationId);
 
             Assert.Null(result);
         }
@@ -104,7 +104,7 @@
                     producer
                 }));
 
-            var result = ProducerNameWarningQuerySet().GetLatestProducerFromPreviousComplianceYears(thisPrn);
+            var result = ProducerQuerySet().GetLatestProducerFromPreviousComplianceYears(thisPrn);
 
             Assert.Null(result);
         }
@@ -126,11 +126,30 @@
                     newestProducer
                 }));
 
-            var result = ProducerNameWarningQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
+            var result = ProducerQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
 
             Assert.Equal(newestProducer, result);
         }
 
+        [Fact]
+        public void GetLatestProducerFromCurrentComplianceYearForAnotherSchemeSameObligationType__ReturnsAnotherSchemeProducer()
+        {
+            const string prn = "ABC12345";
+            Guid schemeOrgId = Guid.NewGuid();
+            var anotherSchemeProducer = FakeProducer.Create(ObligationType.B2B, prn, true, schemeOrgId, 2016);
+            var currentSchemeProducer = FakeProducer.Create(ObligationType.B2B, prn, true, Guid.NewGuid(), 2016);
+
+            A.CallTo(() => context.Producers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
+                {
+                    anotherSchemeProducer,
+                    currentSchemeProducer
+                }));
+
+            var result = ProducerQuerySet().GetProducerForOtherSchemeAndObligationType(prn, "2016", schemeOrgId, 1);
+
+            Assert.Equal(anotherSchemeProducer, result);
+        }
         [Fact]
         public void
             GetLatestProducerFromPreviousComplianceYears_TwoProducerEntriesIn2015_ReturnsLatestProducerByUploadDate()
@@ -149,7 +168,7 @@
                     newestProducer
                 }));
 
-            var result = ProducerNameWarningQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
+            var result = ProducerQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
 
             Assert.Equal(newestProducer, result);
         }
@@ -174,7 +193,7 @@
                     newestProducer2015
                 }));
 
-            var result = ProducerNameWarningQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
+            var result = ProducerQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
 
             Assert.Equal(newestProducer2015, result);
         }
@@ -194,7 +213,7 @@
             A.CallTo(() => context.Producers)
                 .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>()));
 
-            var result = ProducerNameWarningQuerySet().GetMigratedProducer(thisPrn);
+            var result = ProducerQuerySet().GetMigratedProducer(thisPrn);
 
             Assert.Null(result);
         }
@@ -214,7 +233,7 @@
             A.CallTo(() => context.Producers)
                 .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>()));
 
-            var result = ProducerNameWarningQuerySet().GetMigratedProducer(prn);
+            var result = ProducerQuerySet().GetMigratedProducer(prn);
 
             Assert.Equal(migratedProducer, result);
         }
@@ -228,9 +247,9 @@
             return producer;
         }
 
-        private ProducerNameWarningQuerySet ProducerNameWarningQuerySet()
+        private ProducerQuerySet ProducerQuerySet()
         {
-            return new ProducerNameWarningQuerySet(context);
+            return new ProducerQuerySet(context);
         }
     }
 }

@@ -3,12 +3,14 @@
     using System;
     using Domain.Producer;
 
-    public interface IProducerNameWarningQuerySet
+    public interface IProducerQuerySet
     {
         Producer GetLatestProducerForComplianceYearAndScheme(string registrationNo, string schemeComplianceYear, Guid schemeOrgId);
 
         Producer GetLatestProducerFromPreviousComplianceYears(string registrationNo);
 
         MigratedProducer GetMigratedProducer(string registrationNo);
+
+        Producer GetProducerForOtherSchemeAndObligationType(string registrationNo, string schemeComplianceYear, Guid schemeOrgId, int obligationType);
     }
 }
