@@ -141,6 +141,13 @@
     text-indent: -999em;
 }
 
+#schemeBanner {
+	margin-top: 3px;
+	padding: 5px 10px;
+	background: $grey-3;
+	font-size: 16px;
+}
+
 #footer .footer_agencies {
 
 	@include media(desktop) {
@@ -719,6 +726,19 @@ input[type="file"].form-control {
     font-weight: 400;
     font-style: normal;
     text-align: left;
+}
+
+/* Taken from http://www.paciellogroup.com/blog/2012/05/html5-accessibility-chops-hidden-and-aria-hidden/ */
+
+.hidden-for-screen-reader {
+	position: absolute;
+	clip: rect(1px 1px 1px 1px); /* for Internet Explorer */
+	clip: rect(1px, 1px, 1px, 1px);
+	padding: 0;
+	border: 0;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
 }
 
 .text-area {
