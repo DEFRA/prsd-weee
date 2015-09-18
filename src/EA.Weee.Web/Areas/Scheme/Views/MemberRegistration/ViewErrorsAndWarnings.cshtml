@@ -92,7 +92,7 @@
         <p>@Html.ActionLink("Download the " + errorText, "DownloadErrorsAndWarnings", new { Model.MemberUploadId })</p>
     }
     <p>
-        @Html.ActionLink("Upload a new file", "AddOrAmendMembers", "MemberRegistration", new { @class = "button" })
+        @Html.ActionLink("Upload a new file", "AddOrAmendMembers", "MemberRegistration", null, new { @class = "button" })
     </p>
 
     <div>
