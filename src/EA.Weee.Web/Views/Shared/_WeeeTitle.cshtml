@@ -108,7 +108,7 @@
 <div class="account-link-banner"></div>
 }
 
-@if (Model.Breadcrumb.SchemeInfo != null)
+@if (Model.Breadcrumb.SchemeInfo != null && (Model.Breadcrumb.SchemeInfo.StatusName != "Pending" && Model.Breadcrumb.SchemeInfo.StatusName != "Rejected"))
 {
-    <div id="schemeBanner">@(Model.Breadcrumb.SchemeInfo.Name): @Model.Breadcrumb.SchemeInfo.ApprovalNo</div>
+    <div id="schemeBanner">@(Model.Breadcrumb.SchemeInfo.Name): @(Model.Breadcrumb.SchemeInfo.ApprovalNo) Status: @(Model.Breadcrumb.SchemeInfo.StatusName)</div>
 }

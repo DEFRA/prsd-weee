@@ -16,14 +16,7 @@
                     OrganisationAddress = address.OverwriteWhereNull(OrganisationAddress);
                     break;
                 case "Registered or PPB address":
-                    if (address.IsUkAddress())
-                    {
-                        BusinessAddress = address.OverwriteWhereNull(BusinessAddress);
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("Cannot add Business address to Organisation. Address should be UK address.");
-                    }
+                    BusinessAddress = address.OverwriteWhereNull(BusinessAddress);
                     break;
                 case "Service of notice address":
                     NotificationAddress = address.OverwriteWhereNull(NotificationAddress);

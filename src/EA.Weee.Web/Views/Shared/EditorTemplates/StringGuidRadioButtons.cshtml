@@ -4,7 +4,7 @@
 }
 @if (Model != null)
 {
-    @Html.Gds().ValidationMessageFor(model => model.SelectedValue, "Please answer this question")
+    @Html.Gds().ValidationMessageFor(model => model.Selected, "Please answer this question")
     <fieldset>
         @if (!String.IsNullOrEmpty(modelMetadata.DisplayName))
         {
