@@ -755,15 +755,6 @@
                 {
                     await AddAddressToOrganisation(viewModel, AddressType.OrganisationAddress, client);
 
-                    //var isUkAddress = await client.SendAsync(
-                    //    User.GetAccessToken(),
-                    //    new IsUkOrganisationAddress(viewModel.OrganisationId));
-
-                    //return
-                    //    RedirectToAction(
-                    //        isUkAddress ? "RegisteredOfficeAddressPrepopulate" : "RegisteredOfficeAddress",
-                    //        new { viewModel.OrganisationId });
-
                     return
                         RedirectToAction("RegisteredOfficeAddressPrepopulate",
                             new { viewModel.OrganisationId });
