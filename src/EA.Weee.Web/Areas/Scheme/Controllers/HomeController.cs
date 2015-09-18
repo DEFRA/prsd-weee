@@ -58,6 +58,9 @@
 
                 model.OrganisationId = pcsId;
                 await SetBreadcrumb(pcsId, null);
+
+                await SetShowLinkToCreateOrJoinOrganisation(model);
+
                 return View(model);
             }
         }
@@ -95,7 +98,47 @@
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, null);
+            await SetShowLinkToCreateOrJoinOrganisation(viewModel);
             return View(viewModel);
+        }
+
+        private async Task SetShowLinkToCreateOrJoinOrganisation(ChooseActivityViewModel model)
+        {
+            IEnumerable<OrganisationUserData> organisations = await GetOrganisations();
+
+            List<OrganisationUserData> accessibleOrganisations = organisations
+                .Where(o => o.UserStatus == UserStatus.Active)
+                .ToList();
+
+            List<OrganisationUserData> inaccessibleOrganisations = organisations
+                .Except(accessibleOrganisations)
+                .ToList();
+
+            bool showLink = (accessibleOrganisations.Count == 1 && inaccessibleOrganisations.Count == 0);
+
+            model.ShowLinkToCreateOrJoinOrganisation = showLink;
+        }
+
+        /// <summary>
+        /// Returns all complete organisations with which the user is associated,
+        /// ordered by organisation name.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<IEnumerable<OrganisationUserData>> GetOrganisations()
+        {
+            List<OrganisationUserData> organisations;
+
+            using (var client = apiClient())
+            {
+                organisations = await
+                 client.SendAsync(
+                     User.GetAccessToken(),
+                     new GetUserOrganisationsByStatus(new int[0]));
+            }
+
+            return organisations
+                .Where(o => o.Organisation.OrganisationStatus == OrganisationStatus.Complete)
+                .OrderBy(o => o.Organisation.OrganisationName);
         }
 
         [HttpGet]

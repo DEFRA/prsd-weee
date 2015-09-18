@@ -12,6 +12,8 @@
 
         public Guid OrganisationId { get; set; }
 
+        public bool ShowLinkToCreateOrJoinOrganisation { get; set; }
+
         public ChooseActivityViewModel()
         {
             List<string> collection = new List<string> { PcsAction.ManagePcsMembers, PcsAction.ManageOrganisationUsers, PcsAction.ViewOrganisationDetails };
