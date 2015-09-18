@@ -148,6 +148,11 @@
 	font-size: 16px;
 }
 
+.secondaryHeaderContent {
+	margin-top: 45px;
+    margin-bottom: 20px;
+}
+
 #footer .footer_agencies {
 
 	@include media(desktop) {
@@ -739,4 +744,20 @@ input[type="file"].form-control {
 	height: 1px;
 	width: 1px;
 	overflow: hidden;
+}
+
+.text-area {
+    height: 200px;
+}
+
+.full-width {
+    width: $full-width;
+}
+
+.checkbox-inherit{
+    position: inherit;
+}
+
+.checkbox-inherit input{
+    position: inherit;
 }
