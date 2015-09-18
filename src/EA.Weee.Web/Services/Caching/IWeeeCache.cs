@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Services.Caching
 {
+    using EA.Weee.Core.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -15,5 +16,7 @@
         Task<string> FetchSchemeName(Guid schemeId);
 
         Task<int> FetchUserActiveCompleteOrganisationCount(Guid userId);
+
+        Task<SchemePublicInfo> FetchSchemePublicInfo(Guid organisationId);
     }
 }

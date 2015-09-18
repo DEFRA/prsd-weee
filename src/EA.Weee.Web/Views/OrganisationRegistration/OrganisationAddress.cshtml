@@ -26,28 +26,3 @@
         </div>
     }
 }
-
-@section scripts{
-    <script>
-        (function ($) {
-            $(function () {
-                $("#Address\\.CountryId").selectToAutocomplete();
-            });
-        })(jQuery);
-
-        $(document).ready(function () {
-            /* Only when a validation error occurs for a select list - 
-                move the id from the select element to the next input element so the validation summary can link to it */
-            var countryElementId = "#Address\\.CountryId";
-
-            if ($(countryElementId).hasClass("input-validation-error")) {
-                $(countryElementId).attr("name", "Address.CountryIds"); // Bug Fix - anchor doesn't work in IE if name is same as ID
-                var validationInput = $(countryElementId).next("input");
-                if (validationInput.length) {
-                    $(countryElementId).removeAttr("id");
-                    validationInput.attr("id", "Address.CountryId");
-                }
-            }
-        });
-    </script>
-}
