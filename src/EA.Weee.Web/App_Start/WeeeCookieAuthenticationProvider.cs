@@ -37,8 +37,8 @@
 
         public WeeeCookieAuthenticationProvider()
         {
-            AdminAreaName = "Admin";
-            AdminLoginPath = new PathString("/Admin/Account/SignIn");
+            AdminAreaName = "admin";
+            AdminLoginPath = new PathString("/admin/account/sign-in");
 
             // Add our custom login to the redirect before applying the deafult implementation.
             OnApplyRedirect = (context) =>
