@@ -118,6 +118,19 @@
         }
 
         [Fact]
+        public async void PostOrganisationAddress_IrrespectiveOfCountry_ShouldRedirectToRegisteredOfficeAddressPrepopulate()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<AddAddressToOrganisation>._))
+               .Returns(Guid.NewGuid());
+
+            var result = await OrganisationRegistrationController().OrganisationAddress(new AddressViewModel());
+
+            var redirectToRouteResult = ((RedirectToRouteResult)result);
+
+            Assert.Equal("RegisteredOfficeAddressPrepopulate", redirectToRouteResult.RouteValues["action"]);
+        }
+
+        [Fact]
         public async void GetMainContactPerson_OrganisationIdIsInvalid_ShouldThrowArgumentException()
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
@@ -312,6 +325,23 @@
             Assert.Equal(orgData.TradingName, ((RegisteredCompanyDetailsViewModel)model).BusinessTradingName);
             Assert.Equal(orgData.CompanyRegistrationNumber, ((RegisteredCompanyDetailsViewModel)model).CompaniesRegistrationNumber);
             Assert.Equal(orgData.Name, ((RegisteredCompanyDetailsViewModel)model).CompanyName);
+        }
+
+        [Theory]
+        [InlineData("12345")]
+        [InlineData("AB1258")]
+        [InlineData("AB123456789")]
+        public void PostRegisteredCompanyDetails_WithInvalidCompanyRegistrationNo_ShouldReturnsValidationError(string companyRegistrationNo)
+        {
+            var model = new RegisteredCompanyDetailsViewModel
+            {
+                OrganisationId = Guid.NewGuid(),
+                CompaniesRegistrationNumber = companyRegistrationNo,
+                CompanyName = "Test Ltd."
+            };
+            var result = OrganisationRegistrationController(model).RegisteredCompanyDetails(model) as ViewResult;
+
+            Assert.False(result.ViewData.ModelState.IsValid);
         }
 
         [Fact]
