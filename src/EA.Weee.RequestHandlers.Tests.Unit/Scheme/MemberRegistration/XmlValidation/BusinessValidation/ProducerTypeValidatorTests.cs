@@ -1,21 +1,36 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.XmlValidation.BusinessValidation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using Core.XmlBusinessValidation;
     using Domain;
     using Domain.Producer;
     using Domain.Scheme;
+    using FakeItEasy;
     using FluentValidation;
     using FluentValidation.Internal;
     using RequestHandlers;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation;
+    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.Rules;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.Extensions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Core.Helpers;
     using Xunit;
-    using ValidationContext = XmlValidation.ValidationContext;
+    using ValidationContext = ValidationContext;
 
     public class ProducerTypeValidatorTests
     {
+        private readonly IRuleSelector ruleSelector;
+
+        public ProducerTypeValidatorTests()
+        {
+            ruleSelector = A.Fake<IRuleSelector>();
+
+            // By default, all rules pass
+            A.CallTo(() => ruleSelector.EvaluateRule(A<AnnualTurnoverMismatch>._))
+                .Returns(RuleResult.Pass());
+        }
+
         [Theory]
         [InlineData(null, "TestCompany")]
         [InlineData("", "TestCompany")]
@@ -272,15 +287,42 @@
             Assert.Empty(result.Errors);
         }
 
+        [Fact]
+        public void ProducerDoesNotHaveAnnualTurnoverMismatch_ReturnsValidResult()
+        {
+            var result = ProducerTypeValidator()
+                .Validate(new producerType(), new RulesetValidatorSelector(BusinessValidator.CustomRules));
+
+            Assert.True(result.IsValid);
+        }
+
+        [Theory]
+        [InlineData(Core.Shared.ErrorLevel.Warning)]
+        [InlineData(Core.Shared.ErrorLevel.Error)]
+        public void ProducerDoesHaveAnnualTurnoverMismatch_ReturnsResult_WithMappedState_AndMappedErrorMessage(Core.Shared.ErrorLevel errorLevel)
+        {
+            var ruleResult = RuleResult.Fail("oops", errorLevel);
+
+            A.CallTo(() => ruleSelector.EvaluateRule(A<AnnualTurnoverMismatch>._))
+                .Returns(ruleResult);
+
+            var result = ProducerTypeValidator()
+                .Validate(new producerType(), new RulesetValidatorSelector(BusinessValidator.CustomRules));
+
+            Assert.False(result.IsValid);
+            Assert.Equal(ruleResult.Message, result.Errors.Single().ErrorMessage);
+            Assert.Equal(errorLevel.ToDomainEnumeration<ErrorLevel>(), result.Errors.Single().CustomState);
+        }
+
         private ProducerTypeValidator ProducerTypeValidator()
         {
-            return new ProducerTypeValidator(ValidationContext.Create(new List<Producer>(), new List<MigratedProducer>()));
+            return new ProducerTypeValidator(ValidationContext.Create(new List<Producer>(), new List<MigratedProducer>()), ruleSelector);
         }
 
         private ProducerTypeValidator ProducerTypeValidator(IEnumerable<Producer> producers,
             IEnumerable<MigratedProducer> migratedProducers)
         {
-            return new ProducerTypeValidator(ValidationContext.Create(producers, migratedProducers));
+            return new ProducerTypeValidator(ValidationContext.Create(producers, migratedProducers), ruleSelector);
         }
 
         private producerBusinessType MakeProducerBusinessTypeInCountry(countryType country)
