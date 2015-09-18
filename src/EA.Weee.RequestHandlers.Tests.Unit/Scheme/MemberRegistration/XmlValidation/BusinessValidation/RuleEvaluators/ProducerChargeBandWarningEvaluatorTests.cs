@@ -37,6 +37,27 @@
             var runner = new EvaluateProducerChargeBandWarningEvaluatorRunner();
 
             var fakeProducer = A.Fake<Producer>();
+            A.CallTo(() => fakeProducer.ChargeBandType).Returns(ChargeBandType.E.Value);
+
+            A.CallTo(() => runner.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
+                .Returns(fakeProducer);
+
+            var producer = new producerType()
+            {
+                status = statusType.A
+            };
+
+            var result = runner.RunWithProducerChargeBand(ChargeBandType.E);
+
+            Assert.True(result.IsValid);
+        }
+
+        [Fact]
+        public void Evaluate_Amendment_AndProducerExistsWithDifferentChargeBand_FailAsWarning()
+        {
+            var runner = new EvaluateProducerChargeBandWarningEvaluatorRunner();
+
+            var fakeProducer = A.Fake<Producer>();
             A.CallTo(() => fakeProducer.ChargeBandType).Returns(ChargeBandType.A.Value);
 
             A.CallTo(() => runner.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
@@ -47,9 +68,43 @@
                 status = statusType.A
             };
 
-            var result = new EvaluateProducerChargeBandWarningEvaluatorRunner().RunWithProducer(producer);
+            var result = runner.RunWithProducerChargeBand(ChargeBandType.B);
 
-            Assert.True(result.IsValid);
+            Assert.False(result.IsValid);
+            Assert.Equal(Core.Shared.ErrorLevel.Warning, result.ErrorLevel);
+        }
+
+        [Fact]
+        public void Evaluate_Amendment_AndProducerExistsWithDifferentChargeBand_FailAsWarning_AndIncludesProducerDetailsAndChargeBandsInErrorMessage()
+        {
+            string producerName = "ProdA";
+            string registrationNumber = "reg123";
+            var existingChargeBand = ChargeBandType.A;
+            var newChargeBand = ChargeBandType.B;
+
+            var runner = new EvaluateProducerChargeBandWarningEvaluatorRunner();
+
+            var fakeProducer = A.Fake<Producer>();
+            A.CallTo(() => fakeProducer.ChargeBandType).Returns(existingChargeBand.Value);
+            A.CallTo(() => fakeProducer.OrganisationName).Returns(producerName);
+            A.CallTo(() => fakeProducer.RegistrationNumber).Returns(registrationNumber);
+
+            A.CallTo(() => runner.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
+                .Returns(fakeProducer);
+
+            var producer = new producerType()
+            {
+                status = statusType.A,
+            };
+
+            var result = runner.RunWithProducerChargeBand(newChargeBand);
+
+            Assert.False(result.IsValid);
+            Assert.Equal(Core.Shared.ErrorLevel.Warning, result.ErrorLevel);
+            Assert.Contains(producerName, result.Message);
+            Assert.Contains(registrationNumber, result.Message);
+            Assert.Contains(existingChargeBand.DisplayName, result.Message);
+            Assert.Contains(newChargeBand.DisplayName, result.Message);
         }
         
         private class EvaluateProducerChargeBandWarningEvaluatorRunner
