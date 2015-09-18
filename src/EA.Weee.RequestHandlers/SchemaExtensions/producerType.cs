@@ -12,43 +12,36 @@
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "This is the naming used in the XML file.")]
     public partial class producerType
     {
+        private ChargeBandType chargeBand;
+
         public virtual ChargeBandType GetProducerChargeBand()
         {
-            ChargeBandType chargeBand;
-
-            if (eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
+            if (chargeBand == null)
             {
-                chargeBand = ChargeBandType.E;
-            }
-            else
-            {
-                if (annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds &&
-                    VATRegistered
-                    && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                if (eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
                 {
-                    chargeBand = ChargeBandType.A;
+                    chargeBand = ChargeBandType.E;
                 }
-                else if (annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
-                         && VATRegistered
-                         && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                else if (eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
-                    chargeBand = ChargeBandType.B;
-                }
-                else if (annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
-                         && !VATRegistered
-                         && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
-                {
-                    chargeBand = ChargeBandType.D;
-                }
-                else if (annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
-                         && !VATRegistered
-                         && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
-                {
-                    chargeBand = ChargeBandType.C;
+                    if (annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds)
+                    {
+                        chargeBand = VATRegistered ? ChargeBandType.A : ChargeBandType.D;
+                    }
+                    else if (annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds)
+                    {
+                        chargeBand = VATRegistered ? ChargeBandType.B : ChargeBandType.C;
+                    }
+                    else
+                    {
+                        throw new ApplicationException(string.Format("Charge band for producer {0} could not be determined due to the annualTurnoverBand value of {1}.",
+                            DeserializedXmlExtensions.GetProducerName(this), annualTurnoverBand));
+                    }
                 }
                 else
                 {
-                    throw new ApplicationException(string.Format("Charge band for producer {0} could not be determined.", DeserializedXmlExtensions.GetProducerName(this)));
+                    throw new ApplicationException(string.Format("Charge band for producer {0} could not be determined due to the eeePlacedOnMarketBand value of {1}.",
+                        DeserializedXmlExtensions.GetProducerName(this), eeePlacedOnMarketBand));
                 }
             }
 
