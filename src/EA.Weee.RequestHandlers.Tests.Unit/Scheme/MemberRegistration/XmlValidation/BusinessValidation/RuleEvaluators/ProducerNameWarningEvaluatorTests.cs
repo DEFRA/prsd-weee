@@ -11,11 +11,11 @@
 
     public class ProducerNameWarningTests
     {
-        private readonly IProducerNameWarningQuerySet querySet;
+        private readonly IProducerQuerySet querySet;
 
         public ProducerNameWarningTests()
         {
-            querySet = A.Fake<IProducerNameWarningQuerySet>();
+            querySet = A.Fake<IProducerQuerySet>();
 
             // By default, nulls returned from queries
             A.CallTo(() => querySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
