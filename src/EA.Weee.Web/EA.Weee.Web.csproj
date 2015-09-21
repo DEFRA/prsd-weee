@@ -547,6 +547,7 @@
     <Content Include="Views\Errors\Error.cshtml" />
     <Content Include="Views\Shared\_WeeeTitle.cshtml" />
     <Content Include="Views\NewUser\TermsAndConditions.cshtml" />
+    <Content Include="Views\NewUser\Privacy.cshtml" />
     <Content Include="Views\Home\Robots.cshtml" />
     <Content Include="Views\Organisation\YourOrganisations.cshtml" />
     <Content Include="Views\Organisation\_Pending.cshtml" />
@@ -558,7 +559,7 @@
     <Content Include="Views\NewUser\Cookies.cshtml" />
     <Content Include="Views\NewUser\Feedback.cshtml" />
     <Content Include="Views\Shared\_Layout.GovUK.Sections.WithoutFeedbackBanner.cshtml" />
-    <Content Include="Views\NewUser\Privacy.cshtml" />
+    <Content Include="Views\Shared\_PrivacyPolicy.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -580,6 +581,7 @@
     <Compile Include="App_Start\PrsdCookieAuthenticationProvider.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\TrimModelBinder.cs" />
     <Compile Include="App_Start\WeeeCookieAuthenticationProvider.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
