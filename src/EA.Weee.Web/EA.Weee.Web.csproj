@@ -579,6 +579,7 @@
     <Compile Include="App_Start\PrsdCookieAuthenticationProvider.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\TrimModelBinder.cs" />
     <Compile Include="App_Start\WeeeCookieAuthenticationProvider.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
