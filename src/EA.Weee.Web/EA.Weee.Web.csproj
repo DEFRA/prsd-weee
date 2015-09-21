@@ -558,6 +558,7 @@
     <Content Include="Views\NewUser\Cookies.cshtml" />
     <Content Include="Views\NewUser\Feedback.cshtml" />
     <Content Include="Views\Shared\_Layout.GovUK.Sections.WithoutFeedbackBanner.cshtml" />
+    <Content Include="Views\Shared\_PrivacyPolicy.cshtml" />
     <Content Include="Views\Shared\_CompetentAuthoritiesContactDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -580,6 +581,7 @@
     <Compile Include="App_Start\PrsdCookieAuthenticationProvider.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\TrimModelBinder.cs" />
     <Compile Include="App_Start\WeeeCookieAuthenticationProvider.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />

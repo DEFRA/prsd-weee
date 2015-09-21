@@ -608,59 +608,31 @@ input[type="file"].form-control {
     margin: 10px;
 }
 
-.warning-details-summary {
-    width: 100%;
-    color: $black;
+details.warnings summary {
+	display: block;
+	color: $black;
     background-color: $yellow-50;
-    border-left: 3px solid $yellow;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 3px;
+	padding: 5px;
 }
 
-.warning-details-summary:hover {
-    color: $black;
+details.warnings div.panel-indent {
+    border-color: $yellow-50;
 }
 
-.warning-list-container {
-    width: 100%;
-    background-color: $yellow-25;
-    padding-bottom: 10px;
-    border-left: 3px solid $yellow-25;
-    padding-left: 3px;
-}
-
-.warning-list-item {
-    padding-left: 10px;
-    padding-top: 10px;
-    word-wrap: break-word;
-}
-
-.error-details-summary {
-    width: 100%;
-    color: $black;
+details.errors summary {
+	display: block;
+	color: $black;
     background-color: $mellow-red-50;
-    border-left: 3px solid $mellow-red;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 3px;
+	padding: 5px;
 }
 
-.error-details-summary:hover {
-    color: $black;
+details.errors div.panel-indent {
+    border-color: $mellow-red-50;
 }
 
-.error-list-container {
-    width: 100%;
-    background-color: $mellow-red-25;
+
+details div.panel-indent ul li {
     padding-bottom: 10px;
-    border-left: 3px solid $mellow-red-25;
-    padding-left: 3px;
-}
-
-.error-list-item {
-    padding-left: 10px;
-    padding-top: 10px;
     word-wrap: break-word;
 }
 
