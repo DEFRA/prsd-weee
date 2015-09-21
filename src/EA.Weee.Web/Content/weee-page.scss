@@ -141,6 +141,18 @@
     text-indent: -999em;
 }
 
+#schemeBanner {
+	margin-top: 3px;
+	padding: 5px 10px;
+	background: $grey-3;
+	font-size: 16px;
+}
+
+.secondaryHeaderContent {
+	margin-top: 45px;
+    margin-bottom: 20px;
+}
+
 #footer .footer_agencies {
 
 	@include media(desktop) {
@@ -596,59 +608,31 @@ input[type="file"].form-control {
     margin: 10px;
 }
 
-.warning-details-summary {
-    width: 100%;
-    color: $black;
+details.warnings summary {
+	display: block;
+	color: $black;
     background-color: $yellow-50;
-    border-left: 3px solid $yellow;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 3px;
+	padding: 5px;
 }
 
-.warning-details-summary:hover {
-    color: $black;
+details.warnings div.panel-indent {
+    border-color: $yellow-50;
 }
 
-.warning-list-container {
-    width: 100%;
-    background-color: $yellow-25;
-    padding-bottom: 10px;
-    border-left: 3px solid $yellow-25;
-    padding-left: 3px;
-}
-
-.warning-list-item {
-    padding-left: 10px;
-    padding-top: 10px;
-    word-wrap: break-word;
-}
-
-.error-details-summary {
-    width: 100%;
-    color: $black;
+details.errors summary {
+	display: block;
+	color: $black;
     background-color: $mellow-red-50;
-    border-left: 3px solid $mellow-red;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 3px;
+	padding: 5px;
 }
 
-.error-details-summary:hover {
-    color: $black;
+details.errors div.panel-indent {
+    border-color: $mellow-red-50;
 }
 
-.error-list-container {
-    width: 100%;
-    background-color: $mellow-red-25;
+
+details div.panel-indent ul li {
     padding-bottom: 10px;
-    border-left: 3px solid $mellow-red-25;
-    padding-left: 3px;
-}
-
-.error-list-item {
-    padding-left: 10px;
-    padding-top: 10px;
     word-wrap: break-word;
 }
 
@@ -719,4 +703,33 @@ input[type="file"].form-control {
     font-weight: 400;
     font-style: normal;
     text-align: left;
+}
+
+/* Taken from http://www.paciellogroup.com/blog/2012/05/html5-accessibility-chops-hidden-and-aria-hidden/ */
+
+.hidden-for-screen-reader {
+	position: absolute;
+	clip: rect(1px 1px 1px 1px); /* for Internet Explorer */
+	clip: rect(1px, 1px, 1px, 1px);
+	padding: 0;
+	border: 0;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+}
+
+.text-area {
+    height: 200px;
+}
+
+.full-width {
+    width: $full-width;
+}
+
+.checkbox-inherit{
+    position: inherit;
+}
+
+.checkbox-inherit input{
+    position: inherit;
 }

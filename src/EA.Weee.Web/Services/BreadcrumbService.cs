@@ -1,10 +1,11 @@
 ﻿namespace EA.Weee.Web.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
-    using System.Web.Mvc;
+    using EA.Weee.Core.Scheme;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
 
     public class BreadcrumbService
     {
@@ -32,5 +33,10 @@
         /// For an internal user, the user currently in scope.
         /// </summary>
         public string InternalUser { get; set; }
+
+        /// <summary>
+        /// Information about the scheme currently in scope.
+        /// </summary>
+        public SchemePublicInfo SchemeInfo { get; set; }
     }
 }

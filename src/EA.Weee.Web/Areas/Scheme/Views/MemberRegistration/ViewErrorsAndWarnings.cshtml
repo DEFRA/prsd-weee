@@ -18,85 +18,82 @@
             @if (numWarnings > 0)
             {
                 <h1 class="heading-large">
-                    The XML file contains @numOfErrors @errorText and @numWarnings @warningText
+                    Your XML file contains @numOfErrors @errorText and @numWarnings @warningText
                 </h1>
             }
             else
             {
                 <h1 class="heading-large">
-                    The XML file contains @numOfErrors @errorText
+                    Your XML file contains @numOfErrors @errorText
                 </h1>
             }
         </div>
     </header>
+
+    <p>
+        Errors are problems with the XML file structure and formatting. They stop it from being uploaded successfully.
+        You must rectify all errors in order to proceed and upload the file.
+    </p>
+
     @if (numWarnings > 0)
     {
         <p>
-            Errors are problems with the XML file structure and formatting that stop it being uploaded successfully and Warnings are displayed where member details are changed.
+            Warnings get displayed where member details are changed. You must review all the warnings in your XML file.
+            Please make any necessary corrections to it before trying to submit it again.
+            Or, if the changes are valid, you can submit your XML file as it is, with warnings.
         </p>
-        <p>
-            You must review all the errors and warnings in your XML file.
-            Please make any required corrections to your XML before trying to submit it again, or where changes are legitimate, you may choose to proceed to next step in case of warnings.
-        </p>
-
-    }
-    else
-    {
-        <p>Errors are problems with the XML file structure and formatting that stop it being uploaded successfully.</p>
-        <p>You must review, amend and re-upload your file before you can proceed to the next step.</p>
     }
 
-    <details>
-        <summary class="error-details-summary bold-small">
-            View @numOfErrors @errorText
-        </summary>
-        <div class="error-list-container">
-            <ul>
-                @foreach (var uploadError in Model.ErrorData)
-                {
-                    if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
-                    {
-                        <li class="error-list-item font-xsmall">@uploadError.Description</li>
-                    }
-                }
-            </ul>
-        </div>
-    </details>
-    <br />
-    @if (numWarnings > 0)
-    {
-        <details>
-            <summary class="warning-details-summary bold-small">
-                View @numWarnings @warningText
+    <p>
+        <details class="errors">
+            <summary>
+                <span class="summary">View @numOfErrors @errorText</span>
             </summary>
-            <div class="warning-list-container">
+            <div class="panel-indent">
                 <ul>
                     @foreach (var uploadError in Model.ErrorData)
                     {
-                        if (uploadError.ErrorLevel == ErrorLevel.Warning)
+                        if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
                         {
-                            <li class="warning-list-item font-xsmall">@uploadError.Description</li>
+                            <li>@uploadError.Description</li>
                         }
                     }
                 </ul>
             </div>
         </details>
-        <br />
-    }
+    </p>
+
     @if (numWarnings > 0)
     {
-        <p>@Html.ActionLink("Download errors and warnings", "DownloadErrorsAndWarnings", new { Model.MemberUploadId })</p>
+        <p>
+            <details class="warnings">
+                <summary>
+                    <span class="summary">View @numWarnings @warningText</span>
+                </summary>
+                <div class="panel-indent">
+                    <ul>
+                        @foreach (var uploadError in Model.ErrorData)
+                        {
+                            if (uploadError.ErrorLevel == ErrorLevel.Warning)
+                            {
+                                <li>@uploadError.Description</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </details>
+        </p>
     }
-    else
-    {
-        <p>@Html.ActionLink("Download the " + errorText, "DownloadErrorsAndWarnings", new { Model.MemberUploadId })</p>
-    }
+    
     <p>
-        @Html.ActionLink("Upload a new file", "AddOrAmendMembers", "MemberRegistration", new { @class = "button" })
+        To see your XML file’s full list, <a href="@Url.Action("DownloadErrorsAndWarnings", new { Model.MemberUploadId })">download your errors and warnings</a>.
+    </p>
+
+    <p>
+        @Html.ActionLink("Upload a new file", "AddOrAmendMembers", "MemberRegistration", null, new { @class = "button" })
     </p>
 
     <div>
-     @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </div>
-
 }

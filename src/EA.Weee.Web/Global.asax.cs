@@ -14,6 +14,7 @@
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            ModelBinders.Binders.DefaultBinder = new TrimModelBinder();
         }
 
         protected void Application_PreSendRequestHeaders(object sender, EventArgs e)

@@ -11,34 +11,36 @@
             Organisations you have applied to perform activities for:
         </h1>
     </header>
+
+    <table title="This table lists the organisation you have applied to perform activities for.">
+        <thead>
+            <tr>
+                <th>Organisation name</th>
+                <th>Your account status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (OrganisationUserData item in Model.InaccessibleOrganisations)
+            {
+                <tr>
+                    <td>@item.Organisation.OrganisationName</td>
+                    <td>@item.UserStatus</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <p>
+        If your account status is incorrect, contact your organisation's administrator.
+    </p>
+        
+    <p>
+        <a href="@Url.Action("Type", "OrganisationRegistration")">Create or join another organisation</a>
+    </p>
+
     @using (Html.BeginForm("SignOut", "Account", FormMethod.Post, new { id = "logoutForm" }))
     {
         @Html.AntiForgeryToken()
-        <div class="form-group">
-            <table title="This table lists the organisation you have applied to perform activities for.">
-                <thead>
-                    <tr>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (OrganisationUserData item in Model.InaccessibleOrganisations)
-                    {
-                        <tr>
-                            <td>
-                                <span>@item.Organisation.OrganisationName</span>
-                                <span style="color:#6F777B;">- @item.UserStatus</span>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <div class="form-group">
-            <a href="@Url.Action("Type", "OrganisationRegistration")">Create or join another organisation</a>
-        </div>
-
         <div class="form-group">
             <input type="submit" class="button" value="Sign out" />
         </div>

@@ -2,7 +2,7 @@
 
 Hello,
 
-Your user account has been created on the Waste Electrical and Electronic Equipment service.
+Your user account has been created on the Waste Electrical and Electronic Equipment (WEEE) service.
 
 To use this service you need to click activate your account: @Model.ActivationUrl 
 

@@ -5,7 +5,9 @@
     using System.Linq;
     using Core.XmlBusinessValidation;
     using DataAccess;
+    using Domain;
     using Domain.Producer;
+    using Domain.Scheme;
 
     public class ProducerQuerySet : IProducerQuerySet
     {
@@ -38,6 +40,20 @@
         public MigratedProducer GetMigratedProducer(string registrationNo)
         {
             return migratedProducers.Get().SingleOrDefault(p => p.ProducerRegistrationNumber == registrationNo);
+        }
+
+        public Producer GetProducerForOtherSchemeAndObligationType(string registrationNo, string schemeComplianceYear, Guid schemeOrgId, int obligationType)
+        {
+            var currentComplianceYearProducersforOtherSchemes =
+               currentProducers.Get().Where(p => p.MemberUpload != null
+                                                  && p.Scheme.OrganisationId != schemeOrgId).ToList();
+
+            return currentComplianceYearProducersforOtherSchemes.FirstOrDefault(p =>
+                                                       p.RegistrationNumber == registrationNo
+                                                       && p.MemberUpload.ComplianceYear == int.Parse(schemeComplianceYear)
+                                                       && ((p.ObligationType == obligationType
+                                                            || p.ObligationType == (int)ObligationType.Both
+                                                            || obligationType == (int)obligationTypeType.Both)));
         }
     }
 }

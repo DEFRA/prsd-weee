@@ -14,9 +14,9 @@
     using FluentValidation;
     using FluentValidation.Internal;
     using Helpers;
-    using Prsd.Core.Domain;
     using RequestHandlers;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation;
+    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.RuleEvaluators;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.Rules;
     using Xunit;
     using ValidationContext = XmlValidation.ValidationContext;
@@ -32,6 +32,10 @@
             // By default, rules pass
             A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameWarning>._))
                 .Returns(RuleResult.Pass());
+
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerAlreadyRegisteredError>._))
+              .Returns(RuleResult.Pass());
+
             A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerChargeBandWarning>._))
                 .Returns(RuleResult.Pass());
         }
@@ -210,190 +214,6 @@
             Assert.True(result.IsValid);
         }
 
-        [Theory]
-        [InlineData(obligationTypeType.B2B, obligationTypeType.B2B)]
-        [InlineData(obligationTypeType.B2C, obligationTypeType.B2C)]
-        [InlineData(obligationTypeType.Both, obligationTypeType.B2C)]
-        [InlineData(obligationTypeType.Both, obligationTypeType.B2B)]
-        [InlineData(obligationTypeType.B2B, obligationTypeType.Both)]
-        [InlineData(obligationTypeType.B2C, obligationTypeType.Both)]
-        public void
-            ProducerAlreadyRegisteredForSameComplianceYearAndObligationType_ValidationFails_AndMessageIncludesPrnAndObligationType_AndErrorLevelIsError
-            (obligationTypeType existingObligationType, obligationTypeType xmlObligationType)
-        {
-            const string complianceYear = "2016";
-            const string registrationNumber = "ABC12345";
-            var xml = new schemeType
-            {
-                complianceYear = complianceYear,
-                producerList = new[]
-                {
-                    new producerType
-                    {
-                        tradingName = "Test Trader",
-                        obligationType = xmlObligationType,
-                        registrationNo = registrationNumber
-                    }
-                }
-            };
-
-            var existingProducer = FakeProducer.Create(MapObligationType(existingObligationType), registrationNumber);
-            var existingScheme = new Scheme(Guid.NewGuid());
-            existingScheme.Producers.Add(existingProducer);
-
-            var result = SchemeTypeValidator(existingScheme)
-                .Validate(xml,
-                    new RulesetValidatorSelector(
-                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
-                            .DataValidation));
-
-            Assert.False(result.IsValid);
-            Assert.Contains(registrationNumber, result.Errors.Single().ErrorMessage);
-            Assert.Contains(existingObligationType.ToString(), result.Errors.Single().ErrorMessage);
-            Assert.Equal(ErrorLevel.Error, result.Errors.Single().CustomState);
-        }
-
-        [Theory]
-        [InlineData(obligationTypeType.B2B, obligationTypeType.B2C)]
-        [InlineData(obligationTypeType.B2C, obligationTypeType.B2B)]
-        public void ProducerAlreadyRegisteredForSameComplianceYearButObligationTypeDiffers_ValidationSucceeds(
-            obligationTypeType existingObligationType, obligationTypeType xmlObligationType)
-        {
-            const string complianceYear = "2016";
-            const string registrationNumber = "ABC12345";
-            var xml = new schemeType
-            {
-                complianceYear = complianceYear,
-                producerList = new[]
-                {
-                    new producerType
-                    {
-                        obligationType = xmlObligationType,
-                        registrationNo = registrationNumber
-                    }
-                }
-            };
-
-            var existingProducer = FakeProducer.Create(MapObligationType(existingObligationType), registrationNumber);
-            var existingScheme = new Scheme(Guid.NewGuid());
-            existingScheme.Producers.Add(existingProducer);
-
-            var result = SchemeTypeValidator(existingScheme)
-                .Validate(xml,
-                    new RulesetValidatorSelector(
-                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
-                            .DataValidation));
-
-            Assert.True(result.IsValid);
-        }
-
-        [Theory]
-        [InlineData(obligationTypeType.B2B, obligationTypeType.B2B)]
-        [InlineData(obligationTypeType.B2C, obligationTypeType.B2C)]
-        [InlineData(obligationTypeType.Both, obligationTypeType.B2C)]
-        [InlineData(obligationTypeType.Both, obligationTypeType.B2B)]
-        [InlineData(obligationTypeType.B2B, obligationTypeType.Both)]
-        [InlineData(obligationTypeType.B2C, obligationTypeType.Both)]
-        public void ProducerRegisteredForDifferentComplianceYearButObligationTypeMatches_ValidationSucceeds(
-            obligationTypeType existingObligationType, obligationTypeType xmlObligationType)
-        {
-            const string complianceYear = "2015";
-            const string registrationNumber = "ABC12345";
-            var xml = new schemeType
-            {
-                complianceYear = complianceYear,
-                producerList = new[]
-                {
-                    new producerType
-                    {
-                        obligationType = xmlObligationType,
-                        registrationNo = registrationNumber
-                    }
-                }
-            };
-
-            var existingProducer = FakeProducer.Create(MapObligationType(existingObligationType), registrationNumber);
-            var existingScheme = new Scheme(Guid.NewGuid());
-            existingScheme.Producers.Add(existingProducer);
-
-            var result = SchemeTypeValidator(existingScheme)
-                .Validate(xml,
-                    new RulesetValidatorSelector(
-                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
-                            .DataValidation));
-
-            Assert.True(result.IsValid);
-        }
-
-        [Fact]
-        public void ProducerRegisteredForSameComplianceYearAndObligationTypeButPartOfSameScheme_ValidationSucceeds()
-        {
-            const string complianceYear = "2016";
-            const string registrationNumber = "ABC12345";
-            var organisationId = Guid.NewGuid();
-            const obligationTypeType obligationType = obligationTypeType.B2B;
-            var xml = new schemeType
-            {
-                complianceYear = complianceYear,
-                approvalNo = "Test approval number 1",
-                producerList = new[]
-                {
-                    new producerType
-                    {
-                        obligationType = obligationType,
-                        registrationNo = registrationNumber
-                    }
-                }
-            };
-
-            var existingProducer = FakeProducer.Create(MapObligationType(obligationType), registrationNumber,
-                organisationId);
-            var existingScheme = new Scheme(organisationId);
-            existingScheme.Producers.Add(existingProducer);
-            existingScheme.UpdateScheme("Test", "Test approval number 1", String.Empty, ObligationType.B2B, Guid.NewGuid());
-            var result = SchemeTypeValidator(existingScheme, organisationId)
-                .Validate(xml,
-                    new RulesetValidatorSelector(
-                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
-                            .DataValidation));
-
-            Assert.True(result.IsValid);
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public void
-            ProducerRegisteredMatchesComplianceYearAndObligationType_ButRegistrationNumberIsNullOrEmpty_ValidationSucceeds
-            (string registrationNumber)
-        {
-            const string complianceYear = "2016";
-            var xml = new schemeType
-            {
-                complianceYear = complianceYear,
-                producerList = new[]
-                {
-                    new producerType
-                    {
-                        obligationType = obligationTypeType.B2B,
-                        registrationNo = registrationNumber
-                    }
-                }
-            };
-
-            var existingProducer = FakeProducer.Create(MapObligationType(obligationTypeType.B2B), registrationNumber);
-            var existingScheme = new Scheme(Guid.NewGuid());
-            existingScheme.Producers.Add(existingProducer);
-
-            var result = SchemeTypeValidator(existingScheme)
-                .Validate(xml,
-                    new RulesetValidatorSelector(
-                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
-                            .DataValidation));
-
-            Assert.True(result.IsValid);
-        }
-
         [Fact]
         public void SchemeApprovalNumber_MatchesApprovalNumberinXML_ValidationSucceeds()
         {
@@ -411,6 +231,7 @@
             var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
             var existingScheme = new Scheme(orgId);
             existingScheme.UpdateScheme("test", "Test Approval Number 1", string.Empty, ObligationType.B2B, Guid.NewGuid());
+
             var result = SchemeTypeValidator(existingScheme, orgId)
                .Validate(xml,
                    new RulesetValidatorSelector(
@@ -425,11 +246,13 @@
         {
             var xml = new schemeType
             {
+                complianceYear = "2016",
                 approvalNo = "Test Approval Number 2",
                 producerList = new[]
                 {
                     new producerType
                     {
+                        registrationNo = "ABC12345",
                         obligationType = obligationTypeType.B2B
                     }
                 }
@@ -437,6 +260,7 @@
             var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
             var existingScheme = new Scheme(orgId);
             existingScheme.UpdateScheme("test", "Test Approval Number 1", String.Empty, ObligationType.B2B, Guid.NewGuid());
+            
             var result = SchemeTypeValidator(existingScheme, orgId)
                .Validate(xml,
                    new RulesetValidatorSelector(
@@ -446,45 +270,37 @@
             Assert.False(result.IsValid);
         }
 
-        [Theory]
-        [InlineData(obligationTypeType.B2B)]
-        [InlineData(obligationTypeType.B2C)]
-        public void
-            ProducerRegisteredforAnotherSchemeforDifferentObligationTypeForDifferentComplianceYear_ValidationSucceeds(
-            obligationTypeType obligationType)
+        [Fact]
+        public void ShouldEvaluateProducerAlreadyRegisteredRule()
         {
-            var weeeContext = CreateFakeDatabase();
             var xml = new schemeType
             {
                 complianceYear = "2016",
-                approvalNo = "Test Approval Number 1",
-
                 producerList = new[]
                 {
                     new producerType
                     {
-                        obligationType = obligationType,
-                        registrationNo = "ABC"
+                        registrationNo = "ABC12345",
+                        status = statusType.A,
+                        obligationType = obligationTypeType.B2B,
+
+                        producerBusiness = new producerBusinessType
+                        {
+                            Item = new partnershipType
+                            {
+                                partnershipName = "Test Name"
+                            }
+                        }
                     }
                 }
             };
 
-            var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
-            var scheme = weeeContext.Schemes.FirstOrDefault(s => s.OrganisationId == orgId);
-            var result = SchemeTypeValidator(scheme, orgId)
-                .Validate(xml,
-                    new RulesetValidatorSelector(
+            SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(
                         RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
                             .DataValidation));
 
-            if (obligationType == obligationTypeType.B2B)
-            {
-                Assert.True(result.IsValid);
-            }
-            else
-            {
-                Assert.False(result.IsValid);
-            }
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerAlreadyRegisteredError>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -669,29 +485,6 @@
             }).ToArray();
         }
 
-        private Producer Producer(ObligationType obligationType, string prn, params string[] brandNames)
-        {
-            return new Producer(Guid.NewGuid(),
-                new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>(), 2016, 0),
-                new ProducerBusiness(),
-                new AuthorisedRepresentative("authrep"),
-                DateTime.Now,
-                decimal.Zero,
-                true,
-                prn,
-                null,
-                "trading name",
-                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                SellingTechniqueType.Both,
-                obligationType,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds,
-                brandNames.Select(bn => new BrandName(bn)).ToList(),
-                new List<SICCode>(),
-                true,
-                ChargeBandType.A,
-                (decimal)445.0);
-        }
-
         private ObligationType MapObligationType(obligationTypeType obligationType)
         {
             switch (obligationType)
@@ -804,33 +597,6 @@
             A.CallTo(() => weeeContext.MemberUploads).Returns(memberUploadDbSet);
 
             return weeeContext;
-        }
-
-        private Producer MakeProducer(int complianceYear, string regNumber, DateTime updatedDate, string organisationName)
-        {
-            var fakeScheme = A.Fake<Scheme>();
-            var orgId = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B");
-            A.CallTo(() => fakeScheme.OrganisationId).Returns(orgId);
-
-            var fakeMemberUpload = A.Fake<MemberUpload>();
-            A.CallTo(() => fakeMemberUpload.IsSubmitted).Returns(true);
-            A.CallTo(() => fakeMemberUpload.ComplianceYear).Returns(complianceYear);
-
-            var fakePartnership = A.Fake<Partnership>();
-            A.CallTo(() => fakePartnership.Name).Returns(organisationName);
-
-            var fakeProducerBusiness = A.Fake<ProducerBusiness>();
-            A.CallTo(() => fakeProducerBusiness.Partnership).Returns(fakePartnership);
-
-            var producer = (Producer)Activator.CreateInstance(typeof(Producer), true);
-            typeof(Producer).GetProperty("RegistrationNumber").SetValue(producer, regNumber);
-            typeof(Producer).GetProperty("MemberUpload").SetValue(producer, fakeMemberUpload);
-            typeof(Producer).GetProperty("Scheme").SetValue(producer, fakeScheme);
-            typeof(Producer).GetProperty("ProducerBusiness").SetValue(producer, fakeProducerBusiness);
-            typeof(Producer).GetProperty("UpdatedDate").SetValue(producer, updatedDate);
-            typeof(Producer).GetProperty("IsCurrentForComplianceYear").SetValue(producer, true);
-
-            return producer;
         }
     }
 }
