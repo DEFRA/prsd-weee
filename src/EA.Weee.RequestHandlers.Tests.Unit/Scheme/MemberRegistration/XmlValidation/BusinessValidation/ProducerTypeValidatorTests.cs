@@ -29,6 +29,8 @@
             // By default, all rules pass
             A.CallTo(() => ruleSelector.EvaluateRule(A<AnnualTurnoverMismatch>._))
                 .Returns(RuleResult.Pass());
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameRegisteredBefore>._))
+                .Returns(RuleResult.Pass());
         }
 
         [Theory]
@@ -290,6 +292,9 @@
         [Fact]
         public void ProducerDoesNotHaveAnnualTurnoverMismatch_ReturnsValidResult()
         {
+            A.CallTo(() => ruleSelector.EvaluateRule(A<AnnualTurnoverMismatch>._))
+                .Returns(RuleResult.Pass());
+
             var result = ProducerTypeValidator()
                 .Validate(new producerType(), new RulesetValidatorSelector(BusinessValidator.CustomRules));
 
@@ -304,6 +309,36 @@
             var ruleResult = RuleResult.Fail("oops", errorLevel);
 
             A.CallTo(() => ruleSelector.EvaluateRule(A<AnnualTurnoverMismatch>._))
+                .Returns(ruleResult);
+
+            var result = ProducerTypeValidator()
+                .Validate(new producerType(), new RulesetValidatorSelector(BusinessValidator.CustomRules));
+
+            Assert.False(result.IsValid);
+            Assert.Equal(ruleResult.Message, result.Errors.Single().ErrorMessage);
+            Assert.Equal(errorLevel.ToDomainEnumeration<ErrorLevel>(), result.Errors.Single().CustomState);
+        }
+
+        [Fact]
+        public void ProducerNameHasNotBeenRegisteredBefore_ReturnsValidResult()
+        {
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameRegisteredBefore>._))
+                .Returns(RuleResult.Pass());
+
+            var result = ProducerTypeValidator()
+                .Validate(new producerType(), new RulesetValidatorSelector(BusinessValidator.CustomRules));
+
+            Assert.True(result.IsValid);
+        }
+
+        [Theory]
+        [InlineData(Core.Shared.ErrorLevel.Warning)]
+        [InlineData(Core.Shared.ErrorLevel.Error)]
+        public void ProducerNameHasBeenRegisteredBefore_ReturnsResult_WithMappedState_AndMappedErrorMessage(Core.Shared.ErrorLevel errorLevel)
+        {
+            var ruleResult = RuleResult.Fail("oops", errorLevel);
+
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameRegisteredBefore>._))
                 .Returns(ruleResult);
 
             var result = ProducerTypeValidator()
