@@ -44,7 +44,7 @@
 
 @section footer_support_links {
     <ul>
-        @* Show terms and conditions only on external site *@
+       @* Show terms and conditions and privacy policy only on external site *@
         @if (ViewBag.ShowLinksToAgencies ?? true)
         {
             <li>
@@ -52,7 +52,13 @@
                     "TermsAndConditions", "NewUser", new { area = string.Empty },
                     new { target = "_blank" })
             </li>
+            <li>
+                @Html.ActionLink("Privacy",
+                                 "Privacy", "NewUser", new { area = string.Empty },
+                        new { target = "_blank" })
+            </li>
         }
+       
         <li>
             @Html.ActionLink("Cookies",
                 "Cookies", "NewUser", new { area = string.Empty },
