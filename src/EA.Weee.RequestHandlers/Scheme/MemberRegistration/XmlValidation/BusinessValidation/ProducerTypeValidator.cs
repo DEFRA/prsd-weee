@@ -107,6 +107,16 @@
                     })
                     .WithState(p => annualTurnoverMismatchResult.ErrorLevel.ToDomainEnumeration<ErrorLevel>())
                     .WithMessage("{0}", p => annualTurnoverMismatchResult.Message);
+
+                var producerNameAlreadyRegisteredBeforeResult = RuleResult.Pass();
+                RuleFor(p => p)
+                    .Must(p =>
+                    {
+                        producerNameAlreadyRegisteredBeforeResult = ruleSelector.EvaluateRule(new ProducerNameRegisteredBefore());
+                        return producerNameAlreadyRegisteredBeforeResult.IsValid;
+                    })
+                    .WithState(p => producerNameAlreadyRegisteredBeforeResult.ErrorLevel.ToDomainEnumeration<ErrorLevel>())
+                    .WithMessage("{0}", p => producerNameAlreadyRegisteredBeforeResult.Message);
             });
         }
     }
