@@ -27,24 +27,20 @@
             Please make any necessary corrections to it before trying to submit it again. Or, if the changes are valid, you can
             submit your XML file as it is, with warnings.
         </p>
-        <p>
-            <details class="warnings">
-                <summary>
-                    <span class="summary">View @numWarnings @warningText</span>
-                </summary>
-                <div class="panel-indent">
-                    <ul>
-                        @foreach (var uploadError in Model.ErrorData)
+        <details>
+            <summary class="warning-details-summary bold-small">View @numWarnings @warningText</summary>
+            <div class="warning-list-container">
+                <ul>
+                    @foreach (var uploadError in Model.ErrorData)
+                    {
+                        if (uploadError.ErrorLevel == ErrorLevel.Warning)
                         {
-                            if (uploadError.ErrorLevel == ErrorLevel.Warning)
-                            {
-                                <li>@uploadError.Description</li>
-                            }
+                            <li class="warning-list-item font-xsmall">@uploadError.Description</li>
                         }
-                    </ul>
-                </div>
-            </details>
-        </p>
+                    }
+                </ul>
+            </div>
+        </details>
     }
 
     <div class="highlight-section">
