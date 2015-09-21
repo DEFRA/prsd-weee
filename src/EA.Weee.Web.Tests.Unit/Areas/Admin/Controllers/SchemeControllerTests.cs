@@ -12,7 +12,7 @@
     using System.Web.Mvc;
     using ViewModels.Shared;
     using Web.Areas.Admin.Controllers;
-    using Web.Areas.Admin.ViewModels;
+    using Web.Areas.Admin.ViewModels.Scheme;
     using Weee.Requests.Scheme;
     using Xunit;
 
