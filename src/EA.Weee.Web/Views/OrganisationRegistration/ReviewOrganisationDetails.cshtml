@@ -244,9 +244,13 @@
             </label>
         </div>
 
-        <div class="form-group">
-            <input type="submit" class="button" value="Create organisation" />
+        <div>
+            <input type="submit" class="button" value="Create organisation"/>
         </div>
+        <p>
+            @Html.ActionLink("What did you think of this service?", "Feedback", "NewUser", new { @area = "" }, new { @target = "_blank" })
+            (takes 30 seconds)
+        </p>
     }
 }
 
