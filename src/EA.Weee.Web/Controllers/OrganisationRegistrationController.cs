@@ -755,13 +755,8 @@
                 {
                     await AddAddressToOrganisation(viewModel, AddressType.OrganisationAddress, client);
 
-                    var isUkAddress = await client.SendAsync(
-                        User.GetAccessToken(),
-                        new IsUkOrganisationAddress(viewModel.OrganisationId));
-
                     return
-                        RedirectToAction(
-                            isUkAddress ? "RegisteredOfficeAddressPrepopulate" : "RegisteredOfficeAddress",
+                        RedirectToAction("RegisteredOfficeAddressPrepopulate",
                             new { viewModel.OrganisationId });
                 }
             }
@@ -817,7 +812,7 @@
         {
             using (var client = apiClient())
             {
-                var model = await GetAddressViewModel(organisationId, client, true, AddressType.RegisteredOrPPBAddress);
+                var model = await GetAddressViewModel(organisationId, client, false, AddressType.RegisteredOrPPBAddress);
                 return View(model);
             }
         }
@@ -826,7 +821,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisteredOfficeAddress(AddressViewModel viewModel)
         {
-            viewModel.Address.Countries = await GetCountries(true);
+            viewModel.Address.Countries = await GetCountries(false);
 
             if (!ModelState.IsValid)
             {
@@ -892,8 +887,12 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ConfirmOrganisationDetails(Guid organisationId)
+        public async Task<ActionResult> ConfirmOrganisationDetails(OrganisationSummaryViewModel model, Guid organisationId)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("ReviewOrganisationDetails", model);
+            }
             try
             {
                 using (var client = apiClient())

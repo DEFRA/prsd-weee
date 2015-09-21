@@ -132,6 +132,25 @@
         }
 
         [Fact]
+        public void GetLatestProducerFromCurrentComplianceYearForAnotherSchemeSameObligationType__ReturnsAnotherSchemeProducer()
+        {
+            const string prn = "ABC12345";
+            Guid schemeOrgId = Guid.NewGuid();
+            var anotherSchemeProducer = FakeProducer.Create(ObligationType.B2B, prn, true, schemeOrgId, 2016);
+            var currentSchemeProducer = FakeProducer.Create(ObligationType.B2B, prn, true, Guid.NewGuid(), 2016);
+
+            A.CallTo(() => context.Producers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
+                {
+                    anotherSchemeProducer,
+                    currentSchemeProducer
+                }));
+
+            var result = ProducerQuerySet().GetProducerForOtherSchemeAndObligationType(prn, "2016", schemeOrgId, 1);
+
+            Assert.Equal(anotherSchemeProducer, result);
+        }
+        [Fact]
         public void
             GetLatestProducerFromPreviousComplianceYears_TwoProducerEntriesIn2015_ReturnsLatestProducerByUploadDate()
         {

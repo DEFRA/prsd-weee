@@ -110,6 +110,9 @@
     <Compile Include="SchemaExtensions\producerType.cs" />
     <Compile Include="Scheme\GetSchemeByIdDataAccess.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandler.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfo\GetSchemePublicInfoDataAccess.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfo\GetSchemePublicInfoHandler.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfo\IGetSchemePublicInfoDataAccess.cs" />
     <Compile Include="Scheme\GetSchemesDataAccess.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandler.cs" />
     <Compile Include="Scheme\IGetSchemeByIdDataAccess.cs" />
@@ -143,8 +146,12 @@
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\BusinessValidator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\QuerySets\IProducerQuerySet.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\QuerySets\ProducerQuerySet.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\AnnualTurnoverMismatchEvaluator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerAlreadyRegisteredErrorEvaluator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerChargeBandWarningEvaluator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerNameWarningEvaluator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\ProducerAlreadyRegisteredError.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\AnnualTurnoverMismatch.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\ProducerChargeBandWarning.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\ProducerNameWarning.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\Extensions\DeserializedXmlExtensions.cs" />

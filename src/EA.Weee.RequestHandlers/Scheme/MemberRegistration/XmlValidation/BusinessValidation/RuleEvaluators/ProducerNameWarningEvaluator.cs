@@ -19,17 +19,12 @@
         {
             if (rule.Producer.status == statusType.A)
             {
-                var existingProducerName = string.Empty;
+                string existingProducerName = string.Empty;
 
                 var existingProducer =
                     querySet.GetLatestProducerForComplianceYearAndScheme(rule.Producer.registrationNo,
-                        rule.Scheme.complianceYear, rule.OrganisationId);
-
-                if (existingProducer == null)
-                {
-                    existingProducer =
-                        querySet.GetLatestProducerFromPreviousComplianceYears(rule.Producer.registrationNo);
-                }
+                        rule.Scheme.complianceYear, rule.OrganisationId) ??
+                    querySet.GetLatestProducerFromPreviousComplianceYears(rule.Producer.registrationNo);
 
                 if (existingProducer != null)
                 {

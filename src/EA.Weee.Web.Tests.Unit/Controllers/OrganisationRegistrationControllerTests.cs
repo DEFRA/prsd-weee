@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
@@ -113,6 +115,19 @@
 
             Assert.NotNull(model);
             Assert.IsType<AddressViewModel>(model);
+        }
+
+        [Fact]
+        public async void PostOrganisationAddress_IrrespectiveOfCountry_ShouldRedirectToRegisteredOfficeAddressPrepopulate()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<AddAddressToOrganisation>._))
+               .Returns(Guid.NewGuid());
+
+            var result = await OrganisationRegistrationController().OrganisationAddress(new AddressViewModel());
+
+            var redirectToRouteResult = ((RedirectToRouteResult)result);
+
+            Assert.Equal("RegisteredOfficeAddressPrepopulate", redirectToRouteResult.RouteValues["action"]);
         }
 
         [Fact]
@@ -310,6 +325,23 @@
             Assert.Equal(orgData.TradingName, ((RegisteredCompanyDetailsViewModel)model).BusinessTradingName);
             Assert.Equal(orgData.CompanyRegistrationNumber, ((RegisteredCompanyDetailsViewModel)model).CompaniesRegistrationNumber);
             Assert.Equal(orgData.Name, ((RegisteredCompanyDetailsViewModel)model).CompanyName);
+        }
+
+        [Theory]
+        [InlineData("12345")]
+        [InlineData("AB1258")]
+        [InlineData("AB123456789")]
+        public void PostRegisteredCompanyDetails_WithInvalidCompanyRegistrationNo_ShouldReturnsValidationError(string companyRegistrationNo)
+        {
+            var model = new RegisteredCompanyDetailsViewModel
+            {
+                OrganisationId = Guid.NewGuid(),
+                CompaniesRegistrationNumber = companyRegistrationNo,
+                CompanyName = "Test Ltd."
+            };
+            var result = OrganisationRegistrationController(model).RegisteredCompanyDetails(model) as ViewResult;
+
+            Assert.False(result.ViewData.ModelState.IsValid);
         }
 
         [Fact]
@@ -651,9 +683,41 @@
             Assert.Equal(redirectRouteResult.RouteValues["action"], "JoinOrganisation");
         }
 
+        [Fact]
+        public async void PostConfirmOrganisationDetails_PrivacyPolicyNotChecked_ReturnsValidationError()
+        {
+            var model = new OrganisationSummaryViewModel
+            {
+                PrivacyPolicy = false,
+                OrganisationData = new OrganisationData()
+            };
+
+            var result =
+               await
+                   OrganisationRegistrationController(model)
+                       .ConfirmOrganisationDetails(model, Guid.NewGuid()) as ViewResult;
+
+            Assert.False(result.ViewData.ModelState.IsValid);
+        }
+
         private OrganisationRegistrationController OrganisationRegistrationController()
         {
             return new OrganisationRegistrationController(() => apiClient);
+        }
+
+        private OrganisationRegistrationController OrganisationRegistrationController(object viewModel)
+        {
+            var controller = new OrganisationRegistrationController(() => apiClient);
+            // Mimic the behaviour of the model binder which is responsible for Validating the Model
+            var validationContext = new ValidationContext(viewModel, null, null);
+            var validationResults = new List<ValidationResult>();
+            Validator.TryValidateObject(viewModel, validationContext, validationResults, true);
+            foreach (var validationResult in validationResults)
+            {
+                controller.ModelState.AddModelError(validationResult.MemberNames.First(), validationResult.ErrorMessage);
+            }
+
+            return controller;
         }
 
         private AddressPrepopulateViewModel GetMockAddressPrepopulateViewModel()

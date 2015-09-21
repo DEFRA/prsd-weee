@@ -166,6 +166,25 @@ $(document).ready(function () {
         var ul = this.menu.element;
         ul.outerWidth(this.element.outerWidth());
     }
+
+    // Set the country drop-down list for any address to use auto-complete.
+    var countryInput = $("#Address_CountryId");
+    countryInput.selectToAutocomplete();
+
+    // When there is a validation erorr, move the ID from the select element to the auto-complete
+    // textbox so that the links in the validation summary will work.
+    if (countryInput.hasClass("input-validation-error")) {
+        var validationInput = countryInput.next("input");
+        countryInput.removeAttr("id");
+        validationInput.attr("id", "Address_CountryId");
+    }
+
+    // When a link is clicked in the validation summary, move the focus to the associated input.
+    // The link will only set the target, not the focus, to the specified anchor.
+    $('.error-summary a').click(function () {
+        $($(this).attr('href')).focus();
+        return false;
+    });
 });
 
 //USAGE: $("#form").serializeFiles();

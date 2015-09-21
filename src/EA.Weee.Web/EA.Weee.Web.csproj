@@ -556,6 +556,9 @@
     <Content Include="Views\OrganisationRegistration\NotFoundOrganisation.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SelectOrganisationRadioButtons.cshtml" />
     <Content Include="Views\NewUser\Cookies.cshtml" />
+    <Content Include="Views\NewUser\Feedback.cshtml" />
+    <Content Include="Views\Shared\_Layout.GovUK.Sections.WithoutFeedbackBanner.cshtml" />
+    <Content Include="Views\Shared\_PrivacyPolicy.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -577,6 +580,7 @@
     <Compile Include="App_Start\PrsdCookieAuthenticationProvider.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\TrimModelBinder.cs" />
     <Compile Include="App_Start\WeeeCookieAuthenticationProvider.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
@@ -625,6 +629,9 @@
     <Compile Include="Infrastructure\RouteCollectionExtensions.cs" />
     <Compile Include="Infrastructure\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.Label.cs" />
+    <Compile Include="RazorHelpers\WeeeGdsExtensions.cs" />
     <Compile Include="Requests\Base\IRequestCreator.cs" />
     <Compile Include="Requests\Base\RequestCreator.cs" />
     <Compile Include="Requests\IPartnershipDetailsRequestCreator.cs" />
@@ -669,6 +676,8 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationAction.cs" />
+    <Compile Include="ViewModels\NewUser\FeedbackOptions.cs" />
+    <Compile Include="ViewModels\NewUser\FeedbackViewModel.cs" />
     <Compile Include="ViewModels\NewUser\UserCreationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\OrganisationViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationViewModel.cs" />

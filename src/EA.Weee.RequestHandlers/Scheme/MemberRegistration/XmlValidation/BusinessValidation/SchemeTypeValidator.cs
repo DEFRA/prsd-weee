@@ -9,8 +9,6 @@
     using Domain;
     using Extensions;
     using FluentValidation;
-    using FluentValidation.Results;
-    using Prsd.Core.Domain;
     using Rules;
 
     public class SchemeTypeValidator : AbstractValidator<schemeType>
@@ -20,24 +18,13 @@
 
         public SchemeTypeValidator(WeeeContext context, Guid organisationId, IRuleSelector ruleSelector)
         {
-            RuleSet(DataValidation, () =>
-            {
-                var scheme = context.Schemes.FirstOrDefault(s => s.OrganisationId == organisationId);
-                if (scheme != null)
-                {
-                    RuleFor(st => st.approvalNo)
-                        .NotEmpty()
-                        .Matches(scheme.ApprovalNumber)
-                        .WithState(st => ErrorLevel.Error)
-                        .WithMessage("The PCS approval number in your XML file {0} doesn’t match with the PCS that you’re uploading for. Please make sure that you’re using the right PCS approval number.",
-                        st => st.approvalNo);
-                }
-            });
-
+            RuleResult ruleResult = null;
+            
+            //Non data validation
             RuleSet(NonDataValidation, () =>
             {
                 RuleFor(st => st.producerList)
-                    .SetCollectionValidator(new ProducerTypeValidator(context));
+                    .SetCollectionValidator(new ProducerTypeValidator(context, ruleSelector));
 
                 var duplicateRegistrationNumbers = new List<string>();
                 RuleForEach(st => st.producerList)
@@ -87,50 +74,33 @@
                     (st, producer) => producer.GetProducerName());
             });
 
+            //data validation
             RuleSet(DataValidation, () =>
             {
-                var producers = context.Producers
-                    .Where(p => p.MemberUpload != null
-                    && p.Scheme.OrganisationId != organisationId && p.IsCurrentForComplianceYear)
-                    .ToList();
+                //approval number validation
+                var scheme = context.Schemes.FirstOrDefault(s => s.OrganisationId == organisationId);
+                if (scheme != null)
+                {
+                    RuleFor(st => st.approvalNo)
+                        .NotEmpty()
+                        .Matches(scheme.ApprovalNumber)
+                        .WithState(st => ErrorLevel.Error)
+                        .WithMessage("The PCS approval number in your XML file {0} doesn’t match with the PCS that you’re uploading for. Please make sure that you’re using the right PCS approval number.",
+                        st => st.approvalNo);
+                }
 
+                //Producer already registered with another scheme for obligation type
                 RuleForEach(st => st.producerList)
                     .Must((st, producer) =>
                     {
-                        if (!string.IsNullOrEmpty(producer.registrationNo))
-                        {
-                            var existingProducer = producers
-                                .FirstOrDefault(p => p.MemberUpload.ComplianceYear == int.Parse(st.complianceYear)
-                                                     && p.RegistrationNumber == producer.registrationNo
-                                                     &&
-                                                     ((Domain.ObligationType)p.ObligationType ==
-                                                      producer.obligationType.ToDomainObligationType()
-                                                      ||
-                                                      (Domain.ObligationType)p.ObligationType ==
-                                                      ObligationType.Both
-                                                      || producer.obligationType == obligationTypeType.Both));
-
-                            if (existingProducer != null)
-                            {
-                                // Map the existing obligation type to the producer so we can use it in the error message
-                                producer.obligationType =
-                                    DeserializedXmlExtensions.ToDeserializedXmlObligationType(
-                                        (Domain.ObligationType)existingProducer.ObligationType);
-                                return false;
-                            }
-                        }
-
-                        return true;
+                        ProducerAlreadyRegisteredError rule = new ProducerAlreadyRegisteredError(st, producer, organisationId);
+                        ruleResult = ruleSelector.EvaluateRule(rule);
+                        return ruleResult.IsValid;
                     })
-                    .WithState(st => ErrorLevel.Error)
-                    .WithMessage(
-                        "{0} {1} is already registered with another scheme with obligation type: {2}.",
-                        (st, producer) => producer.GetProducerName(),
-                        (st, producer) => producer.registrationNo,
-                        (st, producer) => producer.obligationType.ToString());
+                    .WithState(st => ruleResult.ErrorLevel.ToDomainEnumeration<ErrorLevel>())
+                    .WithMessage("{0}", (st, producer) => ruleResult.Message);
 
                 //Producer Name change warning
-                var ruleResult = RuleResult.Pass();
                 RuleForEach(st => st.producerList)
                     .Must((st, producer) =>
                     {
