@@ -14,6 +14,8 @@
 
     <p>Please note: Though your file has passed our technical validation checks, we can’t verify that all the information you submitted within it is correct.</p>
 
+    @Html.Gds().ValidationSummary()
+
     @{
         int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
         string warningText = numWarnings > 1 ? "warnings" : "warning";
@@ -60,6 +62,7 @@
     @using (Html.BeginForm("SubmitXml", "MemberRegistration", FormMethod.Post, new { area = "Scheme", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
+
         @Html.HiddenFor(m => m.MemberUploadId)
         @Html.HiddenFor(m => m.TotalCharges)
 
@@ -69,7 +72,7 @@
             @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
             <label class="block-label" for="PrivacyPolicy">
                 @Html.CheckBoxFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy" })
-                Please tick to confirm you have read our data protection notice
+                Confirm you have read our privacy policy
             </label>
         </div>
         
