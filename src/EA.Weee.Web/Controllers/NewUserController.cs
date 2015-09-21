@@ -117,14 +117,6 @@
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult RedirectToHomePage()
-        {
-            return RedirectToAction("LandingPage", "Home");
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> UserCreation(UserCreationViewModel model)
         {
             if (ModelState.IsValid)
@@ -171,6 +163,13 @@
         [HttpGet]
         [AllowAnonymous]
         public ActionResult TermsAndConditions()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Privacy()
         {
             return View();
         }
