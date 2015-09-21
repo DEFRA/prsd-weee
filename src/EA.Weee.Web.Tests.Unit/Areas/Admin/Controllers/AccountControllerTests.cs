@@ -1,13 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Net;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using System.Web;
-    using System.Web.Mvc;
-    using System.Web.Routing;
     using Api.Client;
     using Api.Client.Actions;
     using Api.Client.Entities;
@@ -19,6 +11,15 @@
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Routing;
     using Thinktecture.IdentityModel.Client;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Account;
@@ -282,6 +283,109 @@
             Assert.Single(controller.ModelState.Values);
             Assert.Single(controller.ModelState.Values.Single().Errors);
             Assert.Equal(loginError, controller.ModelState.Values.Single().Errors.Single().ErrorMessage);
+        }
+
+        [Fact]
+        public async void HttpPost_ResetPassword_ModelIsInvalid_ReturnsViewWithModel()
+        {
+            // Arrange
+            var controller = AccountController();
+            controller.ModelState.AddModelError("Some model property", "Some error occurred");
+
+            var passwordResetModel = new ResetPasswordModel();
+
+            // Act
+            ActionResult result = await controller.ResetPassword(A<Guid>._, A<string>._, passwordResetModel);
+
+            // Assert
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(passwordResetModel, ((ViewResult)result).Model);
+        }
+
+        [Fact]
+        public async void HttpPost_ResetPassword_ModelIsValid_CallsApiToResetPassword()
+        {
+            // Arrange
+            IUnauthenticatedUser unauthenticatedUserClient = A.Fake<IUnauthenticatedUser>();
+            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
+                .Returns(new PasswordResetResult(A<string>._));
+
+            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Success("dshjkal"));
+
+            A.CallTo(() => apiClient.User)
+                .Returns(unauthenticatedUserClient);
+
+            var passwordResetModel = new ResetPasswordModel();
+
+            // Act
+            ActionResult result = await AccountController().ResetPassword(A<Guid>._, A<string>._, passwordResetModel);
+
+            // Assert
+            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void HttpPost_ResetPassword_ModelIsValid_PasswordResetThrowsApiBadRequestExceptionWithModelErrors_ReturnsViewWithModel_AndErrorAddedToModelState()
+        {
+            // Arrange
+            Dictionary<string, ICollection<string>> modelState = new Dictionary<string, ICollection<string>>
+            {
+                {
+                    "A Key", new List<string>
+                    {
+                        "Something wen't wrong"
+                    }
+                }
+            };
+
+            ApiBadRequestException badRequestException = new ApiBadRequestException(HttpStatusCode.BadRequest, new ApiBadRequest
+            {
+                ModelState = modelState
+            });
+
+            IUnauthenticatedUser unauthenticatedUserClient = A.Fake<IUnauthenticatedUser>();
+            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
+                .Throws(badRequestException);
+
+            A.CallTo(() => apiClient.User)
+                .Returns(unauthenticatedUserClient);
+
+            AccountController controller = AccountController();
+
+            ResetPasswordModel passwordResetModel = new ResetPasswordModel();
+
+            // Act
+            ActionResult result = await controller.ResetPassword(A<Guid>._, A<string>._, passwordResetModel);
+
+            // Assert
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(passwordResetModel, ((ViewResult)result).Model);
+            Assert.Single(controller.ModelState.Values);
+            Assert.Single(controller.ModelState.Values.Single().Errors);
+            Assert.Contains("Something wen't wrong", controller.ModelState.Values.Single().Errors.Single().ErrorMessage);
+        }
+
+        [Fact]
+        public async void HttpPost_ResetPassword_ModelIsValid_AndAuthorizationSuccessful_ShouldRedirectToSignIn()
+        {
+            // Arrange
+            IUnauthenticatedUser unauthenticatedUserClient = A.Fake<IUnauthenticatedUser>();
+            A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
+                .Returns(new PasswordResetResult("an@email.address"));
+
+            A.CallTo(() => apiClient.User)
+                .Returns(unauthenticatedUserClient);
+
+            // Act
+            ActionResult result = await AccountController().ResetPassword(A<Guid>._, A<string>._, new ResetPasswordModel());
+
+            // Assert
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+            Assert.Equal("SignIn", routeValues["action"]);
         }
 
         private InternalUserCreationViewModel ValidModel()
