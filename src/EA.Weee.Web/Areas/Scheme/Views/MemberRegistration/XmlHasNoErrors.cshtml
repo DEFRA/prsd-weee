@@ -11,10 +11,9 @@
             <h1 class="heading-large">Your file has passed our validation checks</h1>
         </div>
     </header>
+    @Html.Gds().ValidationSummary()
 
     <p>Please note: Though your file has passed our technical validation checks, we can’t verify that all the information you submitted within it is correct.</p>
-
-    @Html.Gds().ValidationSummary()
 
     @{
         int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
