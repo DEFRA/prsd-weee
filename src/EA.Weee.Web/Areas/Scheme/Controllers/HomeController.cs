@@ -120,25 +120,18 @@
         }
 
         /// <summary>
-        /// Returns all complete organisations with which the user is associated,
-        /// ordered by organisation name.
+        /// Returns all complete organisations with which the user is associated.
         /// </summary>
         /// <returns></returns>
         private async Task<IEnumerable<OrganisationUserData>> GetOrganisations()
         {
-            List<OrganisationUserData> organisations;
-
             using (var client = apiClient())
             {
-                organisations = await
+                return await
                  client.SendAsync(
                      User.GetAccessToken(),
-                     new GetUserOrganisationsByStatus(new int[0]));
+                     new GetUserOrganisationsByStatus(new int[0], new int[1] { (int)OrganisationStatus.Complete }));
             }
-
-            return organisations
-                .Where(o => o.Organisation.OrganisationStatus == OrganisationStatus.Complete)
-                .OrderBy(o => o.Organisation.OrganisationName);
         }
 
         [HttpGet]
