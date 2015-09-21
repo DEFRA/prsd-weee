@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.User
 {
     using System;
     using System.ComponentModel.DataAnnotations;

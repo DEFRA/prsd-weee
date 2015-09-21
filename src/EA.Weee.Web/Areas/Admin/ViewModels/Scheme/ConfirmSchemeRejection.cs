@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Scheme
 {
     public static class ConfirmSchemeRejectionOptions
     {

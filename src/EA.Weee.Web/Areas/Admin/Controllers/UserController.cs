@@ -11,7 +11,7 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using ViewModels;
+    using ViewModels.User;
     using Weee.Requests.Admin;
 
     public class UserController : AdminController
