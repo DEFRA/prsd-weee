@@ -8,13 +8,6 @@
 
 <p>Please try again in a few moments.</p>
 
-<div class="form-group">
-    <details>
-        <summary><span class="summary">If you continue to see this message, contact us.</span></summary>
-        <div class="panel-indent">
-            @Html.Partial("_CompetentAuthoritiesContactDetails")
-        </div>
-    </details>
-</div>
+@Html.Partial("_CompetentAuthoritiesContactDetails", new ViewDataDictionary { { "title", "If you continue to see this message, contact us." } })
 
 <p><a href="/" class="button">Continue</a></p>
