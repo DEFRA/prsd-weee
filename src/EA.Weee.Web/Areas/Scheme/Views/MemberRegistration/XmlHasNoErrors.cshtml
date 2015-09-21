@@ -32,19 +32,19 @@
             <details class="warnings">
                 <summary>
                     <span class="summary">View @numWarnings @warningText</span>
-            </summary>
+                </summary>
                 <div class="panel-indent">
-                <ul>
-                    @foreach (var uploadError in Model.ErrorData)
-                    {
-                        if (uploadError.ErrorLevel == ErrorLevel.Warning)
+                    <ul>
+                        @foreach (var uploadError in Model.ErrorData)
                         {
+                            if (uploadError.ErrorLevel == ErrorLevel.Warning)
+                            {
                                 <li>@uploadError.Description</li>
+                            }
                         }
-                    }
-                </ul>
-            </div>
-        </details>
+                    </ul>
+                </div>
+            </details>
         </p>
     }
 
@@ -69,12 +69,12 @@
         @Html.Partial("_PrivacyPolicy");
         
         <div class="form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
-                @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
-                    <label class="block-label" for="PrivacyPolicy">
+            @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
+            <label class="block-label" for="PrivacyPolicy">
                 @Html.CheckBoxFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy" })
-                            Please tick to confirm you have read our data protection notice
-                    </label>
-                </div>
+                Confirm you have read our privacy policy
+            </label>
+        </div>
         
         <p>
             <input type="submit" value="Submit" class="button" />
