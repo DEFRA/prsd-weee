@@ -177,6 +177,13 @@
 
         [HttpGet]
         [AllowAnonymous]
+        public ActionResult Privacy()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
         public ActionResult Cookies()
         {
             return View();

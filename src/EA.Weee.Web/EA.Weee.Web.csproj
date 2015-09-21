@@ -558,6 +558,7 @@
     <Content Include="Views\NewUser\Cookies.cshtml" />
     <Content Include="Views\NewUser\Feedback.cshtml" />
     <Content Include="Views\Shared\_Layout.GovUK.Sections.WithoutFeedbackBanner.cshtml" />
+    <Content Include="Views\NewUser\Privacy.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
