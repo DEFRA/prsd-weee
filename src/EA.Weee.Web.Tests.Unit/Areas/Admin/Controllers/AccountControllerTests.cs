@@ -21,7 +21,7 @@
     using Services;
     using Thinktecture.IdentityModel.Client;
     using Web.Areas.Admin.Controllers;
-    using Web.Areas.Admin.ViewModels;
+    using Web.Areas.Admin.ViewModels.Account;
     using Xunit;
 
     public class AccountControllerTests
