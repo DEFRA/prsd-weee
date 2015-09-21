@@ -8,22 +8,23 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.IsUnchangeableStatus)
 
-    <div class="heading-large" style="padding-bottom:2%">
-        <header class="hgroup">
-            <h1 style="position: absolute; font-weight:bold">
-                Edit Scheme
-            </h1>
-        </header>
-
-        <div class="grid-row">
-            <div class="column-third" style="float: right">
-                <div class="@Html.Gds().FormGroupClass(m => m.Status)">
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <header class="hgroup">
+                <h1 class="heading-large">Edit Scheme</h1>
+            </header>
+        </div>
+        <div class="column-third">
+            <div class="secondaryHeaderContent">
+                <div class="form-group @Html.Gds().FormGroupClass(m => m.Status)">
                     @Html.Gds().ValidationMessageFor(m => m.Status)
-
                     @if (Model.IsUnchangeableStatus)
                     {
-                        @Html.Gds().DropDownListFor(m => m.Status, Model.StatusSelectList, new { disabled = "true" })
+                        <select class="form-control" disabled="disabled">
+                            <option>@Model.Status</option>
+                        </select>
                         @Html.HiddenFor(m => m.Status)
                     }
                     else

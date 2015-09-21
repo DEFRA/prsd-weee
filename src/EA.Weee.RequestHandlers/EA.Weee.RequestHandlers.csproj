@@ -143,9 +143,13 @@
     <Compile Include="Scheme\MemberRegistration\XmlChargeBandCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlConverter.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\BusinessValidator.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\QuerySets\IProducerNameWarningQuerySet.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\QuerySets\ProducerNameWarningQuerySet.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\QuerySets\IProducerQuerySet.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\QuerySets\ProducerQuerySet.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\AnnualTurnoverMismatchEvaluator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerAlreadyRegisteredErrorEvaluator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerNameWarningEvaluator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\ProducerAlreadyRegisteredError.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\AnnualTurnoverMismatch.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\ProducerNameWarning.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\Extensions\DeserializedXmlExtensions.cs" />
     <Compile Include="Scheme\Interfaces\IBusinessValidator.cs" />

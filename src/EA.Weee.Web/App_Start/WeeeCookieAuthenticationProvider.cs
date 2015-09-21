@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.Web.App_Start
 {
     using Microsoft.Owin;
-    using Microsoft.Owin.Security.Cookies;
-    using System;
-    using System.IO;
-    using System.Web;
-    using System.Web.Routing;
+using Microsoft.Owin.Security.Cookies;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Web;
+using System.Web.Routing;
 
     /// <summary>
     /// This cookie authentication provider overrides the default "redirect to login page" behaviour.
@@ -37,13 +38,14 @@
 
         public WeeeCookieAuthenticationProvider()
         {
-            AdminAreaName = "Admin";
-            AdminLoginPath = new PathString("/Admin/Account/SignIn");
+            AdminAreaName = "admin";
+            AdminLoginPath = new PathString("/admin/account/sign-in");
 
             // Add our custom login to the redirect before applying the deafult implementation.
             OnApplyRedirect = (context) =>
             {
                 UpdateRedirectUrlToAdminLoginPageIfNecessary(context);
+                ApplyReturnUrlMapping(context);
                 defaultImplementation.ApplyRedirect(context);
             };
         }
@@ -86,6 +88,48 @@
             bool userWasAccessingInternalArea = string.Equals(area, AdminAreaName, StringComparison.OrdinalIgnoreCase);
             
             return userWasAccessingInternalArea;
+        }
+
+        /// <summary>
+        /// This dictionary defines the mapping used by the <see cref="ApplyReturnUrlMapping"/> method below.
+        /// A null value will result in the ReturnUrl parameter being removed from the query string.
+        /// </summary>
+        private static readonly Dictionary<string, string> returnUrlMapping = new Dictionary<string, string>()
+        {
+            { "/account/sign-out", null },
+            { "/admin/account/sign-out", null }
+        };
+
+        /// <summary>
+        /// If a user times out before attempting an action, the "ReturnUrl" query string
+        /// parameter included in the sign-in page URL may need to be rewritten.
+        /// This can be used to prevent the user being redirected with a GET to a POST-only action
+        /// after they sign back in.
+        /// </summary>
+        private void ApplyReturnUrlMapping(CookieApplyRedirectContext context)
+        {
+            Uri currentUri = new Uri(context.RedirectUri);
+            var queryStringParameters = HttpUtility.ParseQueryString(currentUri.Query);
+
+            string returnUrl = queryStringParameters["ReturnUrl"];
+
+            if (returnUrlMapping.ContainsKey(returnUrl))
+            {
+                returnUrl = returnUrlMapping[returnUrl];
+
+                if (returnUrl != null)
+                {
+                    queryStringParameters["ReturnUrl"] = returnUrl;
+                }
+                else
+                {
+                    queryStringParameters.Remove("ReturnUrl");
+                }
+
+                UriBuilder uriBuilder = new UriBuilder(currentUri);
+                uriBuilder.Query = queryStringParameters.ToString();
+                context.RedirectUri = uriBuilder.Uri.ToString();
+            }
         }
     }
 }

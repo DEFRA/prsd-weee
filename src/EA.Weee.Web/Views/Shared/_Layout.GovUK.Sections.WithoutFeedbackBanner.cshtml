@@ -62,15 +62,16 @@
 }
 
 @section body_end {
-    <!--[if gt IE 8]><!-->@Scripts.Render("~/bundles/jquery-2")<!--<![endif]-->
-    <!--[if lte IE 8]>@Scripts.Render("~/bundles/jquery-1")<![endif]-->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery-ui")
+    @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/govuk_toolkit")
     @Scripts.Render("~/bundles/govuk_weee")
+    @Scripts.Render("~/bundles/prism")
     @RenderSection("scripts", required: false)
 }
 
-<main id="content">
-    @Html.Partial("_FeedbackBanner")
+<main id="content" role="main">
     @{ Html.RenderAction("_WeeeTitle", "Home", new { area = string.Empty });}
     @RenderBody()
     @if (IsSectionDefined("main_content"))
