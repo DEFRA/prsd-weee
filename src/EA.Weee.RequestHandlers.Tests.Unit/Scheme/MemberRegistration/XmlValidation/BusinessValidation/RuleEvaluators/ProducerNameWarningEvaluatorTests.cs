@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.XmlValidation.BusinessValidation.Rules
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.XmlValidation.BusinessValidation.RuleEvaluators
 {
     using System;
     using Domain;
@@ -9,13 +9,13 @@
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.Rules;
     using Xunit;
 
-    public class ProducerNameWarningTests
+    public class ProducerNameWarningEvaluatorTests
     {
-        private readonly IProducerNameWarningQuerySet querySet;
+        private readonly IProducerQuerySet querySet;
 
-        public ProducerNameWarningTests()
+        public ProducerNameWarningEvaluatorTests()
         {
-            querySet = A.Fake<IProducerNameWarningQuerySet>();
+            querySet = A.Fake<IProducerQuerySet>();
 
             // By default, nulls returned from queries
             A.CallTo(() => querySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
@@ -23,6 +23,9 @@
             A.CallTo(() => querySet.GetLatestProducerFromPreviousComplianceYears(A<string>._))
                 .Returns(null);
             A.CallTo(() => querySet.GetMigratedProducer(A<string>._))
+                .Returns(null);
+
+            A.CallTo(() => querySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, A<Guid>._, A<int>._))
                 .Returns(null);
         }
 

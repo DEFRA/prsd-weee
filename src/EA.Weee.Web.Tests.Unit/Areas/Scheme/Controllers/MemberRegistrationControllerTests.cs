@@ -9,6 +9,8 @@
     using Services;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using System.Web;
@@ -43,6 +45,29 @@
                 A.Fake<CsvWriterFactory>());
 
             new HttpContextMocker().AttachToController(controller);
+
+            return controller;
+        }
+
+        private MemberRegistrationController MemberRegistrationController(object viewModel)
+        {
+            var controller = new MemberRegistrationController(
+                 () => weeeClient,
+                 fileConverter,
+                 A.Fake<IWeeeCache>(),
+                 A.Fake<BreadcrumbService>(),
+                 A.Fake<CsvWriterFactory>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            // Mimic the behaviour of the model binder which is responsible for Validating the Model
+            var validationContext = new ValidationContext(viewModel, null, null);
+            var validationResults = new List<ValidationResult>();
+            Validator.TryValidateObject(viewModel, validationContext, validationResults, true);
+            foreach (var validationResult in validationResults)
+            {
+                controller.ModelState.AddModelError(validationResult.MemberNames.First(), validationResult.ErrorMessage);
+            }
 
             return controller;
         }
@@ -355,12 +380,32 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<MemberUploadSubmission>._))
                 .Returns(memberUploadId);
 
-            var result = await MemberRegistrationController().SubmitXml(A<Guid>._, new MemberUploadResultViewModel { ErrorData = new List<MemberUploadErrorData>(), MemberUploadId = memberUploadId });
+            var result = await MemberRegistrationController().SubmitXml(A<Guid>._, new MemberUploadResultViewModel { ErrorData = new List<MemberUploadErrorData>(), MemberUploadId = memberUploadId});
 
             var redirect = (RedirectToRouteResult)result;
 
             Assert.Equal("SuccessfulSubmission", redirect.RouteValues["action"]);
             Assert.Equal(memberUploadId, redirect.RouteValues["memberUploadId"]);
+        }
+
+        [Fact]
+        public async void PostSubmitXml_PrivacyPolicyNotChecked_ReturnsValidationError()
+        {
+            var memberUploadId = Guid.NewGuid();
+
+            var memberUploadResult = new MemberUploadResultViewModel
+            {
+                ErrorData = new List<MemberUploadErrorData>(),
+                MemberUploadId = memberUploadId,
+                PrivacyPolicy = false
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
+               .Returns(new List<MemberUploadErrorData>());
+
+            var result = await MemberRegistrationController(memberUploadResult).SubmitXml(A<Guid>._, memberUploadResult) as ViewResult;
+
+            Assert.False(result.ViewData.ModelState.IsValid);
         }
 
         [Fact]

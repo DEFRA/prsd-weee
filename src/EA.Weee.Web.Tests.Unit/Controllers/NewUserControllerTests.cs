@@ -111,6 +111,17 @@
             await NewUserController().UserCreation(userCreationViewModel);
         }
 
+        [Fact]
+        public void HttpGet_Feedback_ReturnsView()
+        {
+            var result = NewUserController().Feedback();
+
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<FeedbackViewModel>(model);
+        }
+
         private NewUserController NewUserController()
         {
             return new NewUserController(
@@ -127,7 +138,7 @@
                 () => new WeeeClient("test"),
                 null,
                 externalRouteService);
-            
+
             // Mimic the behaviour of the model binder which is responsible for Validating the Model
             var validationContext = new ValidationContext(viewModel, null, null);
             var validationResults = new List<ValidationResult>();
