@@ -9,9 +9,11 @@
     <header class="hgroup">
         <div>
             <h1 class="heading-large">Your file has passed our validation checks</h1>
-            <p>Please note: Though your file has passed our technical validation checks, we can’t verify that all the information you submitted within it is correct.</p>
         </div>
     </header>
+    @Html.Gds().ValidationSummary()
+
+    <p>Please note: Though your file has passed our technical validation checks, we can’t verify that all the information you submitted within it is correct.</p>
 
     @{
         int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
@@ -19,12 +21,14 @@
     }
     @if (numWarnings > 0)
     {
-        <p>Your XML file contains @numWarnings @warningText. Warnings may be displayed where member details are changed.</p>
-        <p>You must review all the warnings in your XML file. Please make any necessary corrections to it before trying to submit it again. Or, if the changes are valid, you may choose to submit your XML file as it is, with warnings.</p>
+        <p>
+            Your XML file contains @numWarnings @warningText.
+            Warnings get displayed where member details are changed. You must review all the warnings in your XML file.
+            Please make any necessary corrections to it before trying to submit it again. Or, if the changes are valid, you can
+            submit your XML file as it is, with warnings.
+        </p>
         <details>
-            <summary class="warning-details-summary bold-small">
-                View @numWarnings @warningText
-            </summary>
+            <summary class="warning-details-summary bold-small">View @numWarnings @warningText</summary>
             <div class="warning-list-container">
                 <ul>
                     @foreach (var uploadError in Model.ErrorData)
@@ -37,97 +41,42 @@
                 </ul>
             </div>
         </details>
-        <br />
     }
 
     <div class="highlight-section">
-        <div class="highlight-section-text">Based on the information provided in your XML, your charges are:</div>
+        <div class="highlight-section-text">
+            Based on the information provided in your XML, your charges are:
+        </div>
         <div class="highlight-section-amount">
             £@Model.TotalCharges.ToString("N2")
         </div>
     </div>
 
+    <p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete.</p>
 
     @using (Html.BeginForm("SubmitXml", "MemberRegistration", FormMethod.Post, new { area = "Scheme", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
+
         @Html.HiddenFor(m => m.MemberUploadId)
         @Html.HiddenFor(m => m.TotalCharges)
-        <br />
-        <p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete.</p>
 
+        @Html.Partial("_PrivacyPolicy");
+        
         <div class="form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
-            <fieldset>
-                @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
-                <div class="checkbox-inherit">
-                    <label class="block-label" for="PrivacyPolicy">
-                        <details>
-                            <summary><span class="summary">Privacy policy</span></summary>
-                            <div class="panel-indent">
-                                <div class="text">
-                                    <h2 class="heading-small">The Data Protection Act 1998</h2>
-                                    <p>
-                                        We, the Environment Agency, Natural Resources Wales, Northern Ireland Environment Agency
-                                        or Scottish Environment Protection Agency, (depending on which regulator you have applied to)
-                                        will process the information you provide so that we can deal with your application, make sure
-                                        you keep to the conditions of the licence, permit or registration, process renewals and keep
-                                        the public registers up to date.
-                                    </p>
-
-                                    <p>We may also process or release the information to:</p>
-                                    <ul class="list-bullet">
-                                        <li>
-                                            offer you documents or services relating to environmental
-                                            matters;
-                                        </li>
-                                        <li>
-                                            consult the public, public organisations and other
-                                            organisations (for example, the Health and Safety
-                                            Executive, local authorities, the emergency services, the
-                                            Department for Environment, Food and Rural Affairs) on
-                                            environmental issues;
-                                        </li>
-                                        <li>
-                                            carry out research and development work on
-                                            environmental issues;
-                                        </li>
-                                        <li>
-                                            provide information from the public register to anyone
-                                            who asks;
-                                        </li>
-                                        <li>
-                                            prevent anyone from breaking environmental law,
-                                            investigate cases where environmental law may have been
-                                            broken, and take any action that is needed;
-                                        </li>
-                                        <li>
-                                            assess whether customers are satisfied with our service,
-                                            and to improve our service; and
-                                        </li>
-                                        <li>
-                                            respond to requests for information under the Freedom of
-                                            Information Act 2000 and the Environmental Information
-                                            Regulations 2004 (if the Data Protection Act allows).
-                                            We may pass the information on to our agents or
-                                            representatives to do these things for us.
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </details>
-                        <div>
-                            @Html.CheckBoxFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy", @class = "checkbox-inherit" })
-                            Please tick to confirm you have read our data protection notice
-                        </div>
-                    </label>
-                </div>
-            </fieldset>
+            @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
+            <label class="block-label" for="PrivacyPolicy">
+                @Html.CheckBoxFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy" })
+                Confirm you have read our privacy policy
+            </label>
         </div>
+        
         <p>
             <input type="submit" value="Submit" class="button" />
         </p>
-        <div>
-            <p>Make changes and @Html.ActionLink("upload a new file", "AddOrAmendMembers", "MemberRegistration").</p>
-        </div>
+
+        <p>
+            Make changes and @Html.ActionLink("upload a new file", "AddOrAmendMembers", "MemberRegistration").
+        </p>
     }
 }
