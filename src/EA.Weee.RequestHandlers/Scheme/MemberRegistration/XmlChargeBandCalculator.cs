@@ -8,7 +8,7 @@
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
-    using XmlValidation.Extensions;
+    using Xml;
 
     public class XmlChargeBandCalculator : IXmlChargeBandCalculator
     {
@@ -25,7 +25,7 @@
 
         public Hashtable Calculate(ProcessXMLFile message)
         {
-            schemeType schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
+            var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
 
             var producerChargeBandCalculator = new ProducerChargeBandCalculator(context);
             var producerCharges = new Hashtable();

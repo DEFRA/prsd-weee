@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.XmlValidation
 {
-    using RequestHandlers;
-    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.Extensions;
+    using Xml;
+    using Xml.Schemas;
     using Xunit;
 
     public class DeserializedXmlExtensionsTests

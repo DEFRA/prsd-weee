@@ -79,7 +79,6 @@
     <Compile Include="Organisations\GetPublicOrganisationInfoHandlerTests.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationDataAccessTests.cs" />
     <Compile Include="Organisations\OrganisationByIdHandlerTests.cs" />
-    <Compile Include="SchemaExtensions\producerTypeTests.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemesHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandlerTests.cs" />
@@ -89,23 +88,17 @@
     <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerChargeBandCalculatorTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\QuerySets\ProducerQuerySetTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerAlreadyRegisteredEvaluatorTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\AnnualTurnoverMismatchEvaluatorTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerChargeBandWarningEvaluatorTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerNameWarningEvaluatorTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\FakeProducer.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidatorTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\DeserializedXmlExtensionsTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\ValidationContext.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\XmlValidatorTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\XmlGeneratorTests.cs" />
     <Compile Include="Scheme\PrnGeneration\PrnHelperTests.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlConverterTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlErrorTranslatorTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\ProducerTypeValidatorTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\SchemeTypeValidatorTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\FakeProducer.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\ValidationContext.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\XmlValidatorTests.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandlerTests.cs" />
     <Compile Include="Organisations\GetUserOrganisationsByStatusHandlerTests.cs" />
     <Compile Include="Helpers\DbContextHelper.cs" />
@@ -117,7 +110,6 @@
     <Compile Include="Helpers\TestDbAsyncQueryProvider.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadDataHandlerTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidatorTests.cs" />
     <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandlerTests.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingOrganisationsHandlerTests.cs" />
     <Compile Include="Organisations\JoinOrganisation\JoinOrganisationHandlerTests.cs" />
@@ -161,6 +153,14 @@
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
       <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
       <Name>EA.Weee.Requests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.XmlValidation\EA.Weee.XmlValidation.csproj">
+      <Project>{de6ea3d2-5f5f-4da6-b3a2-da97b757096c}</Project>
+      <Name>EA.Weee.XmlValidation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Xml\EA.Weee.Xml.csproj">
+      <Project>{a0c346a3-f2cc-4acd-80a3-0e99c3dc1c03}</Project>
+      <Name>EA.Weee.Xml</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
