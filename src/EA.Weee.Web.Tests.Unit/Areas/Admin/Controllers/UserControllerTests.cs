@@ -8,7 +8,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.Admin.Controllers;
-    using Web.Areas.Admin.ViewModels;
+    using Web.Areas.Admin.ViewModels.User;
     using Xunit;
 
     public class UserControllerTests
