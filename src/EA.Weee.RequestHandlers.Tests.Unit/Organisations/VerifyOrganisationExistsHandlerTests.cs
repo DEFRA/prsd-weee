@@ -20,7 +20,7 @@
 
         private readonly OrganisationHelper orgHelper = new OrganisationHelper();
 
-        private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
+        private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserWithAllRights();
 
         [Fact]
         public async Task VerifyOrganisationExistsHandler_NotOrganisationUser_ThrowsSecurityException()
