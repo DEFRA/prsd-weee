@@ -547,6 +547,7 @@
     <Content Include="Views\Errors\Error.cshtml" />
     <Content Include="Views\Shared\_WeeeTitle.cshtml" />
     <Content Include="Views\NewUser\TermsAndConditions.cshtml" />
+    <Content Include="Views\NewUser\Privacy.cshtml" />
     <Content Include="Views\Home\Robots.cshtml" />
     <Content Include="Views\Organisation\YourOrganisations.cshtml" />
     <Content Include="Views\Organisation\_Pending.cshtml" />
@@ -559,6 +560,7 @@
     <Content Include="Views\NewUser\Feedback.cshtml" />
     <Content Include="Views\Shared\_Layout.GovUK.Sections.WithoutFeedbackBanner.cshtml" />
     <Content Include="Views\Shared\_PrivacyPolicy.cshtml" />
+    <Content Include="Views\Shared\_CompetentAuthoritiesContactDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

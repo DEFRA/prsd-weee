@@ -7,7 +7,7 @@
 {
     <header class="hgroup">
         <h1 class="heading-large">
-            Are you sure you entered the right details?
+            We found no results for @Model.SearchedText
         </h1>
     </header>
 
@@ -21,7 +21,7 @@
         @Html.HiddenFor(m => m.Type)
         @Html.HiddenFor(m => m.OrganisationId)
 
-        <p>We found no results for "@Model.SearchedText".</p>
+        <p>What would you like to do next?</p>
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.ActivityOptions.SelectedValue)" id="ActivityOptions">
             @Html.EditorFor(m => m.ActivityOptions)

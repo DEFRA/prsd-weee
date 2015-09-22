@@ -6,6 +6,8 @@
 
     public class XmlErrorTranslator : IXmlErrorTranslator
     {
+        private const string DataAtTheRoolLevelIsInvalid = @"^Data at the root level is invalid\..*$";
+
         private const string GeneralConstraintFailurePattern =
             @"^The '[^']*' element is invalid - The value '[^']*' is invalid according to its datatype '[^']*' - The ([^']*) constraint failed.$";
 
@@ -29,7 +31,11 @@
         {
             string resultErrorMessage = message;
 
-            if (Regex.IsMatch(message, GeneralConstraintFailurePattern))
+            if (Regex.IsMatch(message, DataAtTheRoolLevelIsInvalid))
+            {
+                resultErrorMessage = "The file you're trying to upload is not a correctly formatted XML file. Please make sure you're uploading a valid XML file.";
+            }
+            else if (Regex.IsMatch(message, GeneralConstraintFailurePattern))
             {
                 resultErrorMessage = MakeFriendlyGeneralConstraintFailureMessage(sender, message);
             }
