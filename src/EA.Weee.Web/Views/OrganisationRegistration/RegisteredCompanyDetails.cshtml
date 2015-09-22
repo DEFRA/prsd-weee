@@ -29,7 +29,7 @@
         <div class="form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
             @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
             @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
-            @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = "64" })
+            @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = "10" })
         </div>
         <div class="form-group">
             <details>
