@@ -81,7 +81,7 @@
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
     <Compile Include="Admin\FindMatchingUsersDataAccess.cs" />
-    <Compile Include="Admin\GeAdminUserStatusHandler.cs" />
+    <Compile Include="Admin\GetAdminUserStatusHandler.cs" />
     <Compile Include="Admin\GetAdminUserDataAccess.cs" />
     <Compile Include="Admin\IFindMatchingUsersDataAccess.cs" />
     <Compile Include="Admin\IGetAdminUserDataAccess.cs" />
