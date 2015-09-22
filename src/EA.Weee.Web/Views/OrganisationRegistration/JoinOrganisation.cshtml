@@ -1,17 +1,17 @@
 ﻿@model EA.Weee.Web.ViewModels.JoinOrganisation.JoinOrganisationViewModel
 
 @{
-    ViewBag.Title = "Join Organisation";
+    ViewBag.Title = "Access Organisation";
 }
 
 @section main_content {
     <header class="hgroup">
         <h1 class="heading-large">
-            Confirm your organisation joining request
+            Confirm your organisation access request
         </h1>
     </header>
-    <p>A request to join this organisation will be sent to their administrator.</p>
-    <p>If you do not wish to join this organisation, you can search for a different one.</p>
+    <p>A request to access this organisation will be sent to their administrator.</p>
+    <p>If you do not wish to access this organisation, you can search for a different one.</p>
 
     @using (Html.BeginForm(actionName: "JoinOrganisation", controllerName: "OrganisationRegistration", method: FormMethod.Post))
     {

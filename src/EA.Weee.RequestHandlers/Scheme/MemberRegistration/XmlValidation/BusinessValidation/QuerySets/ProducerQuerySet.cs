@@ -12,8 +12,8 @@
     public class ProducerQuerySet : IProducerQuerySet
     {
         private readonly PersistentQueryResult<List<Producer>> currentProducers;
-        private readonly PersistentQueryResult<List<MigratedProducer>> migratedProducers;
-   
+        private readonly PersistentQueryResult<List<MigratedProducer>> migratedProducers; 
+
         public ProducerQuerySet(WeeeContext context)
         {
             currentProducers = new PersistentQueryResult<List<Producer>>(() => context.Producers.Where(p => p.IsCurrentForComplianceYear).ToList());

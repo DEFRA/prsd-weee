@@ -111,6 +111,7 @@
     <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationResult.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
+    <Compile Include="SchemaExtensions\producerType.cs" />
     <Compile Include="Scheme\GetSchemeByIdDataAccess.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandler.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo\GetSchemePublicInfoDataAccess.cs" />
@@ -151,9 +152,11 @@
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\QuerySets\ProducerQuerySet.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\AnnualTurnoverMismatchEvaluator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerAlreadyRegisteredErrorEvaluator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerChargeBandWarningEvaluator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerNameWarningEvaluator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\ProducerAlreadyRegisteredError.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\AnnualTurnoverMismatch.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\ProducerChargeBandWarning.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\ProducerNameWarning.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\Extensions\DeserializedXmlExtensions.cs" />
     <Compile Include="Scheme\Interfaces\IBusinessValidator.cs" />

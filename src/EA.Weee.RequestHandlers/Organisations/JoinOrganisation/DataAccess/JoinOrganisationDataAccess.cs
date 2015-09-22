@@ -42,7 +42,7 @@
             }
 
             return JoinOrganisationResult.Fail(string.Format(
-                "Cannot submit a request for user with Id '{0}' to join organisation with Id '{1}': A request to join this organisation already exists with state '{2}'",
+                "Cannot submit a request for user with Id '{0}' to access organisation with Id '{1}': A request to access this organisation already exists with state '{2}'",
                 organisationUser.UserId,
                 organisationUser.OrganisationId,
                 existingRequest.UserStatus.DisplayName));
