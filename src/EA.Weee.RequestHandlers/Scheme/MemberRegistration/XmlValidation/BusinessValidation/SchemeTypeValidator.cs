@@ -88,38 +88,44 @@
                         .WithMessage("The PCS approval number in your XML file {0} doesn’t match with the PCS that you’re uploading for. Please make sure that you’re using the right PCS approval number.",
                         st => st.approvalNo);
                 }
+            });
 
+            RuleSet(BusinessValidator.CustomRules, () =>
+            {
                 //Producer already registered with another scheme for obligation type
+                var producerAlreadyRegisteredResult = RuleResult.Pass();
                 RuleForEach(st => st.producerList)
                     .Must((st, producer) =>
                     {
-                        ProducerAlreadyRegisteredError rule = new ProducerAlreadyRegisteredError(st, producer, organisationId);
-                        ruleResult = ruleSelector.EvaluateRule(rule);
-                        return ruleResult.IsValid;
+                        producerAlreadyRegisteredResult = ruleSelector.EvaluateRule(new ProducerAlreadyRegisteredError(st, producer, organisationId));
+                        return producerAlreadyRegisteredResult.IsValid;
                     })
-                    .WithState(st => ruleResult.ErrorLevel.ToDomainEnumeration<ErrorLevel>())
-                    .WithMessage("{0}", (st, producer) => ruleResult.Message);
+                    .WithState(st => producerAlreadyRegisteredResult.ErrorLevel.ToDomainEnumeration<ErrorLevel>())
+                    .WithMessage("{0}", (st, producer) => producerAlreadyRegisteredResult.Message);
 
                 //Producer Name change warning
+                var producerNameChangeWarningResult = RuleResult.Pass();
                 RuleForEach(st => st.producerList)
                     .Must((st, producer) =>
                     {
-                        ruleResult = ruleSelector.EvaluateRule(new ProducerNameWarning(st, producer, organisationId));
-                        return ruleResult.IsValid;
+                        producerNameChangeWarningResult = ruleSelector.EvaluateRule(new ProducerNameWarning(st, producer, organisationId));
+                        return producerNameChangeWarningResult.IsValid;
                     })
-                    .WithState(st => ruleResult.ErrorLevel.ToDomainEnumeration<ErrorLevel>())
-                    .WithMessage("{0}", (st, producer) => ruleResult.Message);
+                    .WithState(st => producerNameChangeWarningResult.ErrorLevel.ToDomainEnumeration<ErrorLevel>())
+                    .WithMessage("{0}", (st, producer) => producerNameChangeWarningResult.Message);
 
-                // Producer charge band warning
-                var producerChargeBandRuleResult = RuleResult.Pass();
+                // Producer name has already been registered
+                var producerNameAlreadyRegisteredBeforeResult = RuleResult.Pass();
                 RuleForEach(st => st.producerList)
                     .Must((st, producer) =>
                     {
-                        producerChargeBandRuleResult = ruleSelector.EvaluateRule(new ProducerChargeBandWarning(st, producer, organisationId));
-                        return producerChargeBandRuleResult.IsValid;
+                        producerNameAlreadyRegisteredBeforeResult =
+                            ruleSelector.EvaluateRule(new ProducerNameRegisteredBefore(producer, st.complianceYear));
+                        return producerNameAlreadyRegisteredBeforeResult.IsValid;
                     })
-                    .WithState(st => producerChargeBandRuleResult.ErrorLevel.ToDomainEnumeration<ErrorLevel>())
-                    .WithMessage("{0}", (st, producer) => producerChargeBandRuleResult.Message);
+                    .WithState(
+                        st => producerNameAlreadyRegisteredBeforeResult.ErrorLevel.ToDomainEnumeration<ErrorLevel>())
+                    .WithMessage("{0}", (st, producer) => producerNameAlreadyRegisteredBeforeResult.Message);
             });
         }
     }

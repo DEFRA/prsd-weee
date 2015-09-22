@@ -2,5 +2,14 @@
 {
     public class ProducerNameRegisteredBefore
     {
+        public producerType Producer { get; set; }
+
+        public string ComplianceYear { get; set; }
+
+        public ProducerNameRegisteredBefore(producerType producer, string complianceYear)
+        {
+            Producer = producer;
+            ComplianceYear = complianceYear;
+        }
     }
 }
