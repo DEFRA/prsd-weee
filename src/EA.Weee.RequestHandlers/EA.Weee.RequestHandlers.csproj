@@ -142,24 +142,7 @@
     <Compile Include="Scheme\MemberRegistration\ProducerChargeBandCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlChargeBandCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlConverter.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\BusinessValidator.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Helpers\ISearchMatch.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Helpers\SearchMatch.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\QuerySets\IProducerQuerySet.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\QuerySets\ProducerQuerySet.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\AnnualTurnoverMismatchEvaluator.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerAlreadyRegisteredErrorEvaluator.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerNameRegisteredBeforeEvaluator.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerNameWarningEvaluator.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\ProducerAlreadyRegisteredError.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\AnnualTurnoverMismatch.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\ProducerNameRegisteredBefore.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\ProducerNameWarning.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\Extensions\DeserializedXmlExtensions.cs" />
-    <Compile Include="Scheme\Interfaces\IBusinessValidator.cs" />
     <Compile Include="Scheme\Interfaces\IXmlValidator.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\ProducerTypeValidator.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\SchemeTypeValidator.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerCharge.cs" />
     <Compile Include="Scheme\Interfaces\ISchemaValidator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidator.cs" />
@@ -186,7 +169,6 @@
     <Compile Include="Admin\FindMatchingUsersHandler.cs" />
     <Compile Include="Users\GetUserDataHandler.cs" />
     <Compile Include="Users\UpdateOrganisationUserStatusHandler.cs" />
-    <Compile Include="v3schema.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
@@ -205,15 +187,19 @@
       <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
       <Name>EA.Weee.Requests</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.XmlValidation\EA.Weee.XmlValidation.csproj">
+      <Project>{de6ea3d2-5f5f-4da6-b3a2-da97b757096c}</Project>
+      <Name>EA.Weee.XmlValidation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Xml\EA.Weee.Xml.csproj">
+      <Project>{a0c346a3-f2cc-4acd-80a3-0e99c3dc1c03}</Project>
+      <Name>EA.Weee.Xml</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="GenerateSchemaCs.ps1" />
     <None Include="packages.config" />
-    <None Include="v3schema.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

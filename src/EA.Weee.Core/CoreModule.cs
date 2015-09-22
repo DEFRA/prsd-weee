@@ -1,10 +1,8 @@
 ﻿namespace EA.Weee.Core
 {
     using Autofac;
-    using Autofac.Core;
-    using EA.Weee.Core.Configuration;
-    using EA.Weee.Core.Shared;
-    using XmlBusinessValidation;
+    using Configuration;
+    using Shared;
 
     public class CoreModule : Module
     {
@@ -18,9 +16,6 @@
             builder.RegisterType<NoFormulaeExcelSanitizer>().As<IExcelSanitizer>();
 
             builder.RegisterType<CsvWriterFactory>().SingleInstance();
-
-            // XML rules
-            builder.RegisterType<RuleSelector>().As<IRuleSelector>();
 
             builder.RegisterType<ConfigurationManagerWrapper>().As<IConfigurationManagerWrapper>();
 

@@ -212,6 +212,10 @@
       <Project>{87FBB5CC-A732-4363-A158-39DBF3707407}</Project>
       <Name>EA.Weee.Requests</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Xml\EA.Weee.Xml.csproj">
+      <Project>{a0c346a3-f2cc-4acd-80a3-0e99c3dc1c03}</Project>
+      <Name>EA.Weee.Xml</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

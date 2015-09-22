@@ -9,6 +9,7 @@
     using FakeItEasy;
     using Helpers;
     using RequestHandlers.Scheme.MemberRegistration;
+    using Xml.Schemas;
     using Xunit;
 
     public class ProducerChargeBandCalculatorTests
