@@ -5,6 +5,7 @@
     using Api.Client;
     using Core.Shared;
     using FakeItEasy;
+    using Services;
     using TestHelpers;
     using ViewModels.Shared;
     using Web.Areas.Admin.Controllers;
@@ -124,7 +125,7 @@
         }
         private HomeController HomeController()
         {
-            var controller = new HomeController(() => weeeClient);
+            var controller = new HomeController(() => weeeClient, A.Fake<BreadcrumbService>());
             new HttpContextMocker().AttachToController(controller);
 
             return controller;

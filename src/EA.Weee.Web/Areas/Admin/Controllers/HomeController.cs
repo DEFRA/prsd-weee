@@ -72,7 +72,7 @@
         [HttpGet]
         public async Task<ActionResult> InternalUserAuthorisationRequired(string activity)
         {
-            SetBreadcrumb(activity);
+            await SetBreadcrumb(activity);
             using (var client = apiClient())
             {
                // var userId = GetUserId();
