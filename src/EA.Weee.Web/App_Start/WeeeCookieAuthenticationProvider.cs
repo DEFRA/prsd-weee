@@ -34,12 +34,16 @@ using System.Web.Routing;
         /// trying to access resources within the admin area.
         /// This property defaults to "/Admin/Account/SignIn".
         /// </summary>
-        public PathString AdminLoginPath { get; set; }
+        public string AdminLoginPath { get; set; }
 
-        public WeeeCookieAuthenticationProvider()
+        private readonly IReturnUrlMapping returnUrlMapping;
+
+        public WeeeCookieAuthenticationProvider(IReturnUrlMapping returnUrlMapping)
         {
+            this.returnUrlMapping = returnUrlMapping;
+
             AdminAreaName = "admin";
-            AdminLoginPath = new PathString("/admin/account/sign-in");
+            AdminLoginPath = "/admin/account/sign-in";
 
             // Add our custom login to the redirect before applying the deafult implementation.
             OnApplyRedirect = (context) =>
@@ -50,12 +54,12 @@ using System.Web.Routing;
             };
         }
 
-        private void UpdateRedirectUrlToAdminLoginPageIfNecessary(CookieApplyRedirectContext context)
+        public void UpdateRedirectUrlToAdminLoginPageIfNecessary(CookieApplyRedirectContext context)
         {
             if (UserWasAccessingInternalArea(context))
             {
-                string standardLoginPathString = context.Options.LoginPath.Value;
-                string adminLoginPathString = AdminLoginPath.Value;
+                string standardLoginPathString = VirtualPathUtility.ToAbsolute(context.Options.LoginPath.Value);
+                string adminLoginPathString = VirtualPathUtility.ToAbsolute(AdminLoginPath);
 
                 Uri currentUri = new Uri(context.RedirectUri);
                 
@@ -75,7 +79,7 @@ using System.Web.Routing;
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        private bool UserWasAccessingInternalArea(CookieApplyRedirectContext context)
+        public bool UserWasAccessingInternalArea(CookieApplyRedirectContext context)
         {
             HttpRequest request = new HttpRequest(null, context.Request.Uri.OriginalString, context.Request.Uri.Query);
             HttpResponse response = new HttpResponse(new StringWriter());
@@ -91,31 +95,21 @@ using System.Web.Routing;
         }
 
         /// <summary>
-        /// This dictionary defines the mapping used by the <see cref="ApplyReturnUrlMapping"/> method below.
-        /// A null value will result in the ReturnUrl parameter being removed from the query string.
-        /// </summary>
-        private static readonly Dictionary<string, string> returnUrlMapping = new Dictionary<string, string>()
-        {
-            { "/account/sign-out", null },
-            { "/admin/account/sign-out", null }
-        };
-
-        /// <summary>
         /// If a user times out before attempting an action, the "ReturnUrl" query string
         /// parameter included in the sign-in page URL may need to be rewritten.
         /// This can be used to prevent the user being redirected with a GET to a POST-only action
         /// after they sign back in.
         /// </summary>
-        private void ApplyReturnUrlMapping(CookieApplyRedirectContext context)
+        public void ApplyReturnUrlMapping(CookieApplyRedirectContext context)
         {
             Uri currentUri = new Uri(context.RedirectUri);
             var queryStringParameters = HttpUtility.ParseQueryString(currentUri.Query);
 
             string returnUrl = queryStringParameters["ReturnUrl"];
 
-            if (returnUrlMapping.ContainsKey(returnUrl))
+            if (returnUrlMapping.IsMapped(returnUrl))
             {
-                returnUrl = returnUrlMapping[returnUrl];
+                returnUrl = returnUrlMapping.ApplyMap(returnUrl);
 
                 if (returnUrl != null)
                 {

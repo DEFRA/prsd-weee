@@ -580,9 +580,11 @@
     <Compile Include="App_Start\AutofacBootstrapper.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IReturnUrlMapping.cs" />
     <Compile Include="App_Start\Modules\ApiClientModule.cs" />
     <Compile Include="App_Start\Modules\FileConverterModule.cs" />
     <Compile Include="App_Start\PrsdCookieAuthenticationProvider.cs" />
+    <Compile Include="App_Start\ReturnUrlMapping.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\TrimModelBinder.cs" />
