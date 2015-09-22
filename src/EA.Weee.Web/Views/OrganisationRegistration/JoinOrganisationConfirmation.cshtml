@@ -1,16 +1,16 @@
 ﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.JoinOrganisationConfirmationViewModel
 @{
-    ViewBag.Title = "Join Organisation Confirmation";
+    ViewBag.Title = "Access Organisation Confirmation";
 }
 
 @section main_content {
     <header class="hgroup">
         <h1 class="heading-large">
-            Your request to join @Model.OrganisationName has been sent
+            Your request to access @Model.OrganisationName has been sent
         </h1>
     </header>
 
-    <p>Their administrator now has to authorise your request to join their organisation. Once authorised, you’ll be able to perform activities under the WEEE service.</p>
+    <p>Their administrator now has to authorise your request to access their organisation. Once authorised, you’ll be able to perform activities under the WEEE service.</p>
 
     <div class="form-group">
         <a href="@Url.Action("RedirectProcess", "Account")" class="button">Continue</a>
