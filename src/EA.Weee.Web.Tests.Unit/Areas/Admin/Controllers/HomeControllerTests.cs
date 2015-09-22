@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using System;
     using System.Web.Mvc;
     using Api.Client;
     using Core.Shared;
@@ -9,8 +8,9 @@
     using TestHelpers;
     using ViewModels.Shared;
     using Web.Areas.Admin.Controllers;
-    using Web.Areas.Admin.ViewModels;
+    using Web.Areas.Admin.ViewModels.Home;
     using Weee.Requests.Admin;
+
     using Xunit;
 
     public class HomeControllerTests

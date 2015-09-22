@@ -1,16 +1,16 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using Base;
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
-    using Base;
-    using Core.Shared;
+  using Core.Shared;
     using Infrastructure;
     using Services;
-    using ViewModels;
+    using ViewModels.Home;
     using Weee.Requests.Admin;
-   
+
     public class HomeController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -72,7 +72,7 @@
         [HttpGet]
         public async Task<ActionResult> InternalUserAuthorisationRequired(string activity)
         {
-            await SetBreadcrumb(activity);
+            SetBreadcrumb(activity);
             using (var client = apiClient())
             {
                // var userId = GetUserId();
@@ -100,7 +100,7 @@
             }
         }
 
-        private async Task SetBreadcrumb(string activity)
+        private void SetBreadcrumb(string activity)
         {
             breadcrumb.InternalActivity = activity;
         }

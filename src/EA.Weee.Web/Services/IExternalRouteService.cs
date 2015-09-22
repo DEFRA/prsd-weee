@@ -23,6 +23,11 @@
         string ActivateExternalUserAccountUrl { get; }
 
         /// <summary>
+        /// The route to the password reset page for an internal user.
+        /// </summary>
+        ResetPasswordRoute InternalUserResetPasswordRoute { get; }
+
+        /// <summary>
         /// The route to the password reset page for an external user.
         /// </summary>
         ResetPasswordRoute ExternalUserResetPasswordRoute { get; }

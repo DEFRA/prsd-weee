@@ -5,7 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
     using Core.Shared;
-    using Web.Areas.Admin.ViewModels;
+    using Web.Areas.Admin.ViewModels.Scheme;
     using Xunit;
 
     public class SchemeViewModelTests
