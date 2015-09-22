@@ -508,7 +508,7 @@
                     User.GetAccessToken(),
                     new GetPublicOrganisationInfo(organisationId));
 
-                var collection = new List<string> { "Yes - join " + organisationData.DisplayName, NoSearchAnotherOrganisation };
+                var collection = new List<string> { "Yes - access " + organisationData.DisplayName, NoSearchAnotherOrganisation };
                 var model = new JoinOrganisationViewModel
                 {
                     OrganisationId = organisationId,
