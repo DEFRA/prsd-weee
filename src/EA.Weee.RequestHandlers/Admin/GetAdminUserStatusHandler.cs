@@ -9,14 +9,14 @@
     using Requests.Admin;
     using Security;
 
-    public class GeAdminUserStatusHandler : IRequestHandler<GetAdminUserStatus, Core.Shared.UserStatus>
+    public class GetAdminUserStatusHandler : IRequestHandler<GetAdminUserStatus, Core.Shared.UserStatus>
     {
         private readonly IGetAdminUserDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
 
         private readonly IMap<UserStatus, Core.Shared.UserStatus> userMap;
 
-        public GeAdminUserStatusHandler(IGetAdminUserDataAccess dataAccess, IMap<UserStatus, Core.Shared.UserStatus> userMap,
+        public GetAdminUserStatusHandler(IGetAdminUserDataAccess dataAccess, IMap<UserStatus, Core.Shared.UserStatus> userMap,
             IWeeeAuthorization authorization)
         {
             this.dataAccess = dataAccess;
