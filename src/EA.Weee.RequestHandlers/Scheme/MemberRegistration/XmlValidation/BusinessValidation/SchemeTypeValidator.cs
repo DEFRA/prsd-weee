@@ -109,6 +109,17 @@
                     })
                     .WithState(st => ruleResult.ErrorLevel.ToDomainEnumeration<ErrorLevel>())
                     .WithMessage("{0}", (st, producer) => ruleResult.Message);
+
+                // Producer charge band warning
+                var producerChargeBandRuleResult = RuleResult.Pass();
+                RuleForEach(st => st.producerList)
+                    .Must((st, producer) =>
+                    {
+                        producerChargeBandRuleResult = ruleSelector.EvaluateRule(new ProducerChargeBandWarning(st, producer, organisationId));
+                        return producerChargeBandRuleResult.IsValid;
+                    })
+                    .WithState(st => producerChargeBandRuleResult.ErrorLevel.ToDomainEnumeration<ErrorLevel>())
+                    .WithMessage("{0}", (st, producer) => producerChargeBandRuleResult.Message);
             });
         }
     }
