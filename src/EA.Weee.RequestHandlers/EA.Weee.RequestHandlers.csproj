@@ -143,6 +143,8 @@
     <Compile Include="Scheme\MemberRegistration\XmlChargeBandCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlConverter.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\BusinessValidator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Helpers\ISearchMatch.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Helpers\SearchMatch.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\QuerySets\IProducerQuerySet.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\QuerySets\ProducerQuerySet.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\AnnualTurnoverMismatchEvaluator.cs" />

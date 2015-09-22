@@ -12,5 +12,7 @@
         MigratedProducer GetMigratedProducer(string registrationNo);
 
         Producer GetProducerForOtherSchemeAndObligationType(string registrationNo, string schemeComplianceYear, Guid schemeOrgId, int obligationType);
+
+        bool ProducerNameAlreadyRegisteredForComplianceYear(string producerName, string schemeComplianceYear);
     }
 }

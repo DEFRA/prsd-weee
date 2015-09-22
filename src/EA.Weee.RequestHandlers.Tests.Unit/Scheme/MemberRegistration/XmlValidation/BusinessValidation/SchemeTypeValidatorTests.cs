@@ -33,10 +33,10 @@
             A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameWarning>._))
                 .Returns(RuleResult.Pass());
 
-            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerAlreadyRegisteredError>._))
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameRegisteredBefore>._))
               .Returns(RuleResult.Pass());
 
-            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerChargeBandWarning>._))
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameRegisteredBefore>._))
                 .Returns(RuleResult.Pass());
         }
 
@@ -295,9 +295,7 @@
                 }
             };
 
-            SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(
-                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
-                            .DataValidation));
+            SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(BusinessValidator.CustomRules));
 
             A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerAlreadyRegisteredError>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -324,9 +322,7 @@
                 }
             };
 
-            SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(
-                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
-                            .DataValidation));
+            SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(BusinessValidator.CustomRules));
 
             A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameWarning>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -361,9 +357,7 @@
                 }
             };
 
-            var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(
-                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
-                            .DataValidation));
+            var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(BusinessValidator.CustomRules));
 
             Assert.Single(result.Errors);
 
@@ -374,73 +368,53 @@
         }
 
         [Fact]
-        public void ShouldEvaluateProducerChargeBandWarningRule()
+        public void ProducerNameHasNotBeenRegisteredBefore_ReturnsValidResult()
         {
-            var xml = new schemeType
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameRegisteredBefore>._))
+                .Returns(RuleResult.Pass());
+
+            var scheme = new schemeType
             {
                 producerList = new[]
                 {
-                    new producerType
-                    {
-                        registrationNo = "ABC12345",
-                        producerBusiness = new producerBusinessType
-                        {
-                            Item = new partnershipType
-                            {
-                                partnershipName = "Test Name"
-                            }
-                        }
-                    }
+                    new producerType()
                 }
             };
 
-            SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(
-                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
-                            .DataValidation));
+            var result = SchemeTypeValidator().Validate(scheme, new RulesetValidatorSelector(BusinessValidator.CustomRules));
 
-            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerChargeBandWarning>._))
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameRegisteredBefore>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.True(result.IsValid);
         }
 
         [Theory]
         [InlineData(Core.Shared.ErrorLevel.Warning)]
         [InlineData(Core.Shared.ErrorLevel.Error)]
-        public void EvaluteProducerChargeBandWarningRuleFails_ShouldMapErrorMessage_AndErrorLevel(Core.Shared.ErrorLevel errorLevel)
+        public void ProducerNameHasBeenRegisteredBefore_ReturnsResult_WithMappedState_AndMappedErrorMessage(Core.Shared.ErrorLevel errorLevel)
         {
-            var errorMessage = "Some sort of error";
-            var failure = RuleResult.Fail(errorMessage, errorLevel);
+            var ruleResult = RuleResult.Fail("oops", errorLevel);
 
-            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerChargeBandWarning>._))
-                .Returns(failure);
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameRegisteredBefore>._))
+                .Returns(ruleResult);
 
-            var xml = new schemeType
+            var scheme = new schemeType
             {
                 producerList = new[]
                 {
-                    new producerType
-                    {
-                        registrationNo = "ABC12345",
-                        producerBusiness = new producerBusinessType
-                        {
-                            Item = new partnershipType
-                            {
-                                partnershipName = "Test Name"
-                            }
-                        }
-                    }
+                    new producerType()
                 }
             };
 
-            var result = SchemeTypeValidator().Validate(xml, new RulesetValidatorSelector(
-                        RequestHandlers.Scheme.MemberRegistration.XmlValidation.BusinessValidation.SchemeTypeValidator
-                            .DataValidation));
+            var result = SchemeTypeValidator().Validate(scheme, new RulesetValidatorSelector(BusinessValidator.CustomRules));
 
-            Assert.Single(result.Errors);
+            A.CallTo(() => ruleSelector.EvaluateRule(A<ProducerNameRegisteredBefore>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
 
-            var error = result.Errors.Single();
-
-            Assert.Equal(errorLevel.ToDomainEnumeration<ErrorLevel>(), error.CustomState);
-            Assert.Equal(errorMessage, error.ErrorMessage);
+            Assert.False(result.IsValid);
+            Assert.Equal(ruleResult.Message, result.Errors.Single().ErrorMessage);
+            Assert.Equal(errorLevel.ToDomainEnumeration<ErrorLevel>(), result.Errors.Single().CustomState);
         }
 
         private IValidator<schemeType> SchemeTypeValidator(Guid? existingOrganisationId = null,

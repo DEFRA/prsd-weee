@@ -5,19 +5,21 @@
     using System.Linq;
     using Core.XmlBusinessValidation;
     using DataAccess;
+    using DataAccess.Extensions;
     using Domain;
     using Domain.Producer;
-    using Domain.Scheme;
 
     public class ProducerQuerySet : IProducerQuerySet
     {
         private readonly PersistentQueryResult<List<Producer>> currentProducers;
-        private readonly PersistentQueryResult<List<MigratedProducer>> migratedProducers; 
-
+        private readonly PersistentQueryResult<List<MigratedProducer>> migratedProducers;
+        private readonly PersistentQueryResult<List<string>> existingProducerNames;
+   
         public ProducerQuerySet(WeeeContext context)
         {
             currentProducers = new PersistentQueryResult<List<Producer>>(() => context.Producers.Where(p => p.IsCurrentForComplianceYear).ToList());
             migratedProducers = new PersistentQueryResult<List<MigratedProducer>>(() => context.MigratedProducers.ToList());
+            existingProducerNames = new PersistentQueryResult<List<string>>(() => context.Producers.ProducerNames().Union(context.MigratedProducers.Select(mp => mp.ProducerName)).ToList());
         }
 
         public Producer GetLatestProducerForComplianceYearAndScheme(string registrationNo, string schemeComplianceYear, Guid schemeOrgId)
@@ -54,6 +56,17 @@
                                                        && ((p.ObligationType == obligationType
                                                             || p.ObligationType == (int)ObligationType.Both
                                                             || obligationType == (int)obligationTypeType.Both)));
+        }
+
+        public bool ProducerNameAlreadyRegisteredForComplianceYear(string producerName, string schemeComplianceYear)
+        {
+            if (string.IsNullOrEmpty(producerName) || string.IsNullOrEmpty(schemeComplianceYear))
+            {
+                return false;
+            }
+
+            return existingProducerNames.Get()
+                .Any(pn => string.Equals(pn.Trim(), producerName.Trim(), StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }
