@@ -33,16 +33,16 @@
     <p>
         If your account status is incorrect, contact your organisation's administrator.
     </p>
-        
-    <p>
-        <a href="@Url.Action("Type", "OrganisationRegistration")">Create or join another organisation</a>
-    </p>
 
     @using (Html.BeginForm("SignOut", "Account", FormMethod.Post, new { id = "logoutForm" }))
     {
         @Html.AntiForgeryToken()
-        <div class="form-group">
+        <div>
             <input type="submit" class="button" value="Sign out" />
         </div>
     }
+    <p>
+        <a href="@Url.Action("Type", "OrganisationRegistration")">Create or join another organisation</a>
+    </p>
+   
 }
