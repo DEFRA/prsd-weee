@@ -1,0 +1,42 @@
+﻿@using EA.Weee.Core.Shared
+@model EA.Weee.Web.Areas.Admin.ViewModels.InternalUserAuthorizationRequiredViewModel
+@{
+    ViewBag.Title = "Internal User Authorisation Required";
+}
+
+@section main_content {
+
+    @switch (Model.Status)
+    {
+        case UserStatus.Pending:
+            <div class="form-group">
+                <header class="hgroup">
+                    <div>
+                        <h1 class="heading-large">Authorisation pending</h1>
+                    </div>
+                </header>
+                <hr />
+                <p>At present your account is not authorised; please check back soon.</p>
+                <hr />
+            </div>
+            break;
+
+        case UserStatus.Rejected:
+        <div class="form-group">
+            <header class="hgroup">
+                <div>
+                    <h1 class="heading-large">Authorisation rejected</h1>
+                </div>
+            </header>
+            <hr />
+            <p>Authorisation - Rejected</p>
+            <p>Unfortunately, your request for access has been rejected. Please contact your administrator for more information.</p>
+            <hr />
+        </div>
+            break;
+    }
+
+    <p>
+        @Html.ActionLink("Sign out", "SignOut", "Account", new { @area = "" }, new { @class = "button" })
+    </p>
+}

@@ -2,7 +2,7 @@
 {
     public static class InternalUserActivity
     {
-        public static string ManageScheme = "Manage schemes";
-        public static string ManageUsers = "Manage users";   
+        public const string ManageScheme = "Manage schemes";
+        public const string ManageUsers = "Manage users";   
     }
 }
