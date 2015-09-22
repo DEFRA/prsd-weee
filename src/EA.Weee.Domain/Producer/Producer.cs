@@ -101,7 +101,7 @@
 
         public int SellingTechniqueType { get; private set; }
 
-        public int ChargeBandType { get; private set; }
+        public virtual int ChargeBandType { get; private set; }
 
         public decimal ChargeThisUpdate { get; private set; }
 
