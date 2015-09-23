@@ -8,19 +8,19 @@
     public class ProducerNameAlreadyRegisteredTests
     {
         private readonly IProducerQuerySet producerQuerySet;
-        private readonly ISearchMatcher searchMatch;
+        private readonly ISearchMatcher searchMatcher;
 
         public ProducerNameAlreadyRegisteredTests()
         {
             producerQuerySet = A.Fake<IProducerQuerySet>();
-            searchMatch = A.Fake<ISearchMatcher>();
+            searchMatcher = A.Fake<ISearchMatcher>();
         }
 
         // TODO: Tests
 
         private ProducerNameAlreadyRegistered Rule()
         {
-            return new ProducerNameAlreadyRegistered(producerQuerySet, searchMatch);
+            return new ProducerNameAlreadyRegistered(producerQuerySet, searchMatcher);
         }
     }
 }
