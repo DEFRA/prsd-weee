@@ -4,13 +4,12 @@
     using Domain.Organisation;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
-    using Helpers;
     using RequestHandlers.Users;
     using Requests.Users;
     using System;
-    using System.Data.Entity;
     using System.Security;
     using System.Threading.Tasks;
+    using Weee.Tests.Core;
     using Xunit;
     using UserStatus = Core.Shared.UserStatus;
 

@@ -11,10 +11,11 @@
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
+    using Xml.Schemas;
 
     public class SchemaValidator : ISchemaValidator
     {
-        private const string SchemaLocation = @"v3schema.xsd";
+        private const string SchemaLocation = @"EA.Weee.Xml.v3schema.xsd";
         private const string SchemaNamespace = @"http://www.environment-agency.gov.uk/WEEE/XMLSchema";
 
         private readonly IXmlErrorTranslator xmlErrorTranslator;
@@ -42,9 +43,18 @@
                 // Validate against the schema
                 var source = xmlConverter.Convert(message);
                 var schemas = new XmlSchemaSet();
-                var absoluteSchemaLocation =
-                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), SchemaLocation);
-                schemas.Add(SchemaNamespace, absoluteSchemaLocation);
+
+                using (var stream = typeof(schemeType).Assembly.GetManifestResourceStream(SchemaLocation))
+                {
+                    using (var schemaReader = XmlReader.Create(stream))
+                    {
+                        schemas.Add(null, schemaReader);
+                    }
+                }
+
+                //var absoluteSchemaLocation =
+                //    Path.Combine(Path.GetDirectoryName(), SchemaLocation);
+                //schemas.Add(SchemaNamespace, absoluteSchemaLocation);
 
                 string sourceNamespace = source.Root.GetDefaultNamespace().NamespaceName;
                 if (sourceNamespace != SchemaNamespace)
