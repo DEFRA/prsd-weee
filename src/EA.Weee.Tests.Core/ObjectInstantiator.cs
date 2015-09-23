@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Helpers
+﻿namespace EA.Weee.Tests.Core
 {
     using System;
     using System.Linq.Expressions;

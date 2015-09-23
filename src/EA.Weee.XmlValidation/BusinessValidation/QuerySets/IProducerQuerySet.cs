@@ -10,8 +10,6 @@
 
         Producer GetLatestProducerFromPreviousComplianceYears(string registrationNo);
 
-        MigratedProducer GetMigratedProducer(string registrationNo);
-
         Producer GetProducerForOtherSchemeAndObligationType(string registrationNo, string schemeComplianceYear, Guid schemeOrgId, int obligationType);
 
         List<string> GetAllRegistrationNumbers(); 

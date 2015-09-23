@@ -10,7 +10,6 @@
     using Domain;
     using FakeItEasy;
     using RequestHandlers.Scheme.Interfaces;
-    using RequestHandlers.Scheme.MemberRegistration;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.SchemaValidation;
     using Requests.Scheme.MemberRegistration;
     using Xunit;

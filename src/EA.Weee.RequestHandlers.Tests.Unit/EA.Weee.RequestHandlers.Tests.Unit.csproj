@@ -13,6 +13,12 @@
     <AssemblyName>EA.Weee.RequestHandlers.Tests.Unit</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
     <NuGetPackageImportStamp>746c4ab8</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -67,7 +73,6 @@
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
-    <Compile Include="Helpers\AuthorizationBuilder.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandlerTests.cs" />
@@ -88,9 +93,7 @@
     <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerChargeBandCalculatorTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\FakeProducer.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidatorTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\DeserializedXmlExtensionsTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\ValidationContext.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\XmlValidatorTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryTests.cs" />
@@ -101,14 +104,6 @@
     <Compile Include="Scheme\MemberRegistration\XmlErrorTranslatorTests.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandlerTests.cs" />
     <Compile Include="Organisations\GetUserOrganisationsByStatusHandlerTests.cs" />
-    <Compile Include="Helpers\DbContextHelper.cs" />
-    <Compile Include="Helpers\ObjectInstantiator.cs" />
-    <Compile Include="Helpers\OrganisationHelper.cs" />
-    <Compile Include="Helpers\OrganisationUserHelper.cs" />
-    <Compile Include="Helpers\TestDbAsyncEnumerable.cs" />
-    <Compile Include="Helpers\TestDbAsyncEnumerator.cs" />
-    <Compile Include="Helpers\TestDbAsyncQueryProvider.cs" />
-    <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadDataHandlerTests.cs" />
     <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandlerTests.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingOrganisationsHandlerTests.cs" />
@@ -153,6 +148,10 @@
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
       <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
       <Name>EA.Weee.Requests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Tests.Core\EA.Weee.Tests.Core.csproj">
+      <Project>{0162d3e9-cd9b-478d-a6b4-0638c96bcf14}</Project>
+      <Name>EA.Weee.Tests.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.XmlValidation\EA.Weee.XmlValidation.csproj">
       <Project>{de6ea3d2-5f5f-4da6-b3a2-da97b757096c}</Project>

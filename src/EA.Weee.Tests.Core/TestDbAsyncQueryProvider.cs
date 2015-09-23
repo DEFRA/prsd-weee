@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Helpers
+﻿namespace EA.Weee.Tests.Core
 {
     using System.Data.Entity.Infrastructure;
     using System.Linq;

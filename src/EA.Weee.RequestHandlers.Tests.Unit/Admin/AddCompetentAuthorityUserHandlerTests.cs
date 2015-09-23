@@ -3,15 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Linq;
     using Core.Configuration;
     using DataAccess;
     using Domain;
     using Domain.Admin;
     using FakeItEasy;
-    using Helpers;
     using RequestHandlers.Admin;
     using Requests.Admin;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class AddCompetentAuthorityUserHandlerTests

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections;
-    using System.Collections.Generic;
     using System.Data.Entity;
     using System.IO;
     using System.Reflection;
@@ -12,9 +11,9 @@
     using Domain.Producer;
     using Domain.Scheme;
     using FakeItEasy;
-    using Helpers;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class XMLChargeBandCalculatorTests

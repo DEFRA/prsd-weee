@@ -208,7 +208,7 @@
             A.CallTo(() => annualTurnoverMismatch.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
             A.CallTo(() => producerAlreadyRegistered.Evaluate(A<schemeType>._, A<producerType>._, A<Guid>._)).Returns(RuleResult.Pass());
             A.CallTo(() => producerNameAlreadyRegistered.Evaluate()).Returns(RuleResult.Pass());
-            A.CallTo(() => duplicateProducerRegistrationNumbers.Evaluate(A<schemeType>._)).Returns(new List<RuleResult>{ RuleResult.Pass() });
+            A.CallTo(() => duplicateProducerRegistrationNumbers.Evaluate(A<schemeType>._)).Returns(new List<RuleResult> { RuleResult.Pass() });
             A.CallTo(() => duplicateProducerNames.Evaluate(A<schemeType>._)).Returns(new List<RuleResult> { RuleResult.Pass() });
             A.CallTo(() => correctSchemeApprovalNumber.Evaluate(A<schemeType>._, A<Guid>._)).Returns(RuleResult.Pass());
             A.CallTo(() => amendmentHasNoProducerRegistrationNumber.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());

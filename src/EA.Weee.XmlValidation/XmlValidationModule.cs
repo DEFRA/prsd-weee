@@ -73,8 +73,8 @@
                 .As<IDuplicateProducerRegistrationNumbers>()
                 .InstancePerRequest();
 
-            builder.RegisterType<SearchMatch>()
-                .As<ISearchMatch>()
+            builder.RegisterType<SearchMatcher>()
+                .As<ISearchMatcher>()
                 .InstancePerRequest();
 
             //builder.RegisterAssemblyTypes(GetType().Assembly)

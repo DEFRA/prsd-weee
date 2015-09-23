@@ -7,8 +7,8 @@
     using Domain.Producer;
     using Domain.Scheme;
     using FakeItEasy;
-    using Helpers;
     using RequestHandlers.Scheme.MemberRegistration;
+    using Weee.Tests.Core;
     using Xml.Schemas;
     using Xunit;
 

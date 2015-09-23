@@ -58,8 +58,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusinessValidation\Helpers\ISearchMatch.cs" />
-    <Compile Include="BusinessValidation\Helpers\SearchMatch.cs" />
+    <Compile Include="BusinessValidation\Helpers\ISearchMatcher.cs" />
+    <Compile Include="BusinessValidation\Helpers\SearchMatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BusinessValidation\QuerySets\IMigratedProducerQuerySet.cs" />
     <Compile Include="BusinessValidation\QuerySets\ISchemeQuerySet.cs" />
