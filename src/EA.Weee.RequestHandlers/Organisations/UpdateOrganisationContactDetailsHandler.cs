@@ -13,7 +13,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class UpdateOrganisationContactDetailsHandler : IRequestHandler<UpdateOrganisationContactDetails, UpdateResult>
+    public class UpdateOrganisationContactDetailsHandler : IRequestHandler<UpdateOrganisationContactDetails, bool>
     {
         private IUpdateOrganisationContactDetailsDataAccess dataAccess;
         private IMap<Organisation, OrganisationData> mapping;
@@ -24,12 +24,9 @@
             this.mapping = mapping;
         }
 
-        public async Task<UpdateResult> HandleAsync(UpdateOrganisationContactDetails message)
+        public async Task<bool> HandleAsync(UpdateOrganisationContactDetails message)
         {
-            Organisation organisation = await dataAccess.FetchOrganisationAsync(
-                message.OrganisationData.Id,
-                message.OrganisationData.Contact.RowVersion,
-                message.OrganisationData.OrganisationAddress.RowVersion);
+            Organisation organisation = await dataAccess.FetchOrganisationAsync(message.OrganisationData.Id);
 
             Contact contact = new Contact(
                 message.OrganisationData.Contact.FirstName,
@@ -52,19 +49,9 @@
             
             organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
 
-            try
-            {
-                await dataAccess.SaveAsync();
-                return UpdateResult.OK;
-            }
-            catch (ConcurrencyException)
-            {
-                return UpdateResult.ConcurrencyError;
-            }
-            catch (Exception)
-            {
-                return UpdateResult.UnknownError;
-            }
+            await dataAccess.SaveAsync();
+
+            return true;
         }
     }
 }

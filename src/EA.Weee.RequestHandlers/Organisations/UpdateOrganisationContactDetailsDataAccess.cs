@@ -20,7 +20,7 @@
             this.context = context;
         }
 
-        public async Task<Organisation> FetchOrganisationAsync(Guid organisationId, byte[] contactRowVersion, byte[] addressRowVersion)
+        public async Task<Organisation> FetchOrganisationAsync(Guid organisationId)
         {
             Organisation organisation = await context.Organisations.FindAsync(organisationId);
 
@@ -29,9 +29,6 @@
                 string errorMessage = string.Format("No organisation was found with an ID of \"{0}\".", organisationId);
                 throw new Exception(errorMessage);
             }
-
-            context.Entry(organisation.Contact).OriginalValues.SetValues(new { RowVersion = contactRowVersion });
-            context.Entry(organisation.OrganisationAddress).OriginalValues.SetValues(new { RowVersion = addressRowVersion });
 
             return organisation;
         }
@@ -51,14 +48,7 @@
 
         public async Task SaveAsync()
         {
-            try
-            {
-                await context.SaveChangesAsync(); 
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                throw new ConcurrencyException("Failed to update database.", ex);
-            }
+            await context.SaveChangesAsync(); 
         }
     }
 }
