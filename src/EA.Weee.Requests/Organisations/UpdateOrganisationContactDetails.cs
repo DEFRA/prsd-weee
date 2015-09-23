@@ -8,7 +8,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class UpdateOrganisationContactDetails : IRequest<UpdateResult>
+    public class UpdateOrganisationContactDetails : IRequest<bool>
     {
         public OrganisationData OrganisationData { get; private set; }
 

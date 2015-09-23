@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
     public interface IUpdateOrganisationContactDetailsDataAccess
     {
-        Task<Organisation> FetchOrganisationAsync(Guid organisationId, byte[] contactRowVersion, byte[] addressRowVersion);
+        Task<Organisation> FetchOrganisationAsync(Guid organisationId);
         
         Task<Country> FetchCountryAsync(Guid countryId);
         
