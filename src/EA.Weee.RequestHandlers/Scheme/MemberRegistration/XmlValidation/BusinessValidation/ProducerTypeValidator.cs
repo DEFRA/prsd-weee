@@ -73,7 +73,7 @@
                             .When(pt => pt.authorisedRepresentative.overseasProducer != null)
                             .WithState(pt => ErrorLevel.Error)
                             .WithMessage(
-                                "{0} has a country named in their address which is in the UK. An authorised representative cannot represent a UK-based producer. To register or amend this producer, please check they are an authorised representative and that their client is not based in the UK.",
+                                "{0} is an authorised representative but has a country in their address which is outside of the UK. An authorised representative must be based in the UK. In order to register or amend this producer please check they are an authorised representative and are based in the UK.",
                                 (pt, item) => pt.GetProducerName());
                     });
 
