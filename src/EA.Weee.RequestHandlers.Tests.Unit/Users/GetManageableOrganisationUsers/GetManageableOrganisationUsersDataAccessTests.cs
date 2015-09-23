@@ -9,9 +9,9 @@
     using Domain;
     using Domain.Organisation;
     using FakeItEasy;
-    using Helpers;
     using Prsd.Core.Domain;
     using RequestHandlers.Users.GetManageableOrganisationUsers;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class GetManageableOrganisationUsersDataAccessTests

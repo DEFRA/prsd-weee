@@ -17,11 +17,11 @@
     using Domain.Scheme;
     using FakeItEasy;
     using Prsd.Core.Domain;
-    using RequestHandlers;
     using RequestHandlers.Scheme.MemberRegistration;
     using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
-    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.Extensions;
     using Requests.Scheme.MemberRegistration;
+    using Xml;
+    using Xml.Schemas;
     using Xunit;
 
     public class PrnGenerationIntegration

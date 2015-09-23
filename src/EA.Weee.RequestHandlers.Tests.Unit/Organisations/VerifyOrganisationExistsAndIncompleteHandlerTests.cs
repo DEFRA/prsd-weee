@@ -8,10 +8,10 @@
     using DataAccess;
     using Domain.Organisation;
     using FakeItEasy;
-    using Helpers;
     using RequestHandlers.Organisations;
     using RequestHandlers.Security;
     using Requests.Organisations;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class VerifyOrganisationExistsAndIncompleteHandlerTests

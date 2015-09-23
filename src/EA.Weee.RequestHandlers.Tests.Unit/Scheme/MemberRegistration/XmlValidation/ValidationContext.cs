@@ -5,7 +5,7 @@
     using Domain.Producer;
     using Domain.Scheme;
     using FakeItEasy;
-    using Helpers;
+    using Weee.Tests.Core;
 
     public class ValidationContext
     {
