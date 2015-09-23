@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using DataAccess;
-    using Domain.Scheme;
 
     public class SchemeQuerySet : ISchemeQuerySet
     {
@@ -14,9 +13,12 @@
             this.context = context;
         }
 
-        public Scheme GetScheme(Guid schemeId)
+        public string GetSchemeApprovalNumber(Guid schemeId)
         {
-            return context.Schemes.FirstOrDefault(s => s.OrganisationId == schemeId);
+            return context.Schemes
+                .Where(s => s.OrganisationId == schemeId)
+                .Select(s => s.ApprovalNumber)
+                .SingleOrDefault();
         }
     }
 }

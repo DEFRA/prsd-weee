@@ -1,17 +1,17 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Helpers
+﻿namespace EA.Weee.Tests.Core
 {
     using System;
     using Domain;
     using Domain.Organisation;
 
-    internal class OrganisationHelper
+    public class OrganisationHelper
     {
-        internal Organisation GetOrganisationWithName(string name)
+        public Organisation GetOrganisationWithName(string name)
         {
             return GetOrganisationWithDetails(name, null, "1234567", OrganisationType.RegisteredCompany, OrganisationStatus.Complete);
         }
 
-        internal Organisation GetOrganisationWithDetails(string name, string tradingName, string companyRegistrationNumber, OrganisationType type, OrganisationStatus status)
+        public Organisation GetOrganisationWithDetails(string name, string tradingName, string companyRegistrationNumber, OrganisationType type, OrganisationStatus status)
         {
             Organisation organisation;
 

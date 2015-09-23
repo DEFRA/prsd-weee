@@ -16,8 +16,8 @@
 
         public RuleResult Evaluate(schemeType scheme, Guid schemeId)
         {
-            var existingScheme = schemeQuerySet.GetScheme(schemeId);
-            if (existingScheme != null && existingScheme.ApprovalNumber != scheme.approvalNo)
+            var approvalNumber = schemeQuerySet.GetSchemeApprovalNumber(schemeId);
+            if (!string.Equals(approvalNumber, scheme.approvalNo, StringComparison.InvariantCultureIgnoreCase))
             {
                 return
                     RuleResult.Fail(

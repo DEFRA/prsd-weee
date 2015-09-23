@@ -26,6 +26,7 @@
                                 string.Format(
                                     "The Registration Number '{0}' appears more than once in the uploaded XML file",
                                     producer.registrationNo));
+                        continue;
                     }
                 }
 

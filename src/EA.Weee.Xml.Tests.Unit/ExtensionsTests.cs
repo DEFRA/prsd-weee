@@ -1,45 +1,44 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.XmlValidation
+﻿namespace EA.Weee.Xml.Tests.Unit
 {
-    using Xml;
-    using Xml.Schemas;
+    using Schemas;
     using Xunit;
 
-    public class DeserializedXmlExtensionsTests
+    public class ExtensionsTests
     {
         [Fact]
         public void GetProducerName_ProducerBusinessIsNull_ReturnsTradingName()
         {
-            const string TradingName = "some trading name";
+            const string tradingName = "some trading name";
 
             var producer = new producerType
             {
-                tradingName = TradingName
+                tradingName = tradingName
             };
 
-            Assert.Equal(TradingName, producer.GetProducerName());
+            Assert.Equal(tradingName, producer.GetProducerName());
         }
 
         [Fact]
         public void GetProducerName_ProducerBusinessItemIsNull_ReturnsTradingName()
         {
-            const string TradingName = "some trading name";
+            const string tradingName = "some trading name";
 
             var producer = new producerType
             {
-                tradingName = TradingName,
+                tradingName = tradingName,
                 producerBusiness = new producerBusinessType
                 {
                     Item = null
                 }
             };
 
-            Assert.Equal(TradingName, producer.GetProducerName());
+            Assert.Equal(tradingName, producer.GetProducerName());
         }
 
         [Fact]
         public void GetProducerName_ProducerIsCompanyTypeAndNameExists_ReturnsCompanyName()
         {
-            const string CompanyName = "some company name";
+            const string companyName = "some company name";
 
             var producer = new producerType
             {
@@ -48,22 +47,22 @@
                 {
                     Item = new companyType
                     {
-                        companyName = CompanyName
+                        companyName = companyName
                     }
                 }
             };
 
-            Assert.Equal(CompanyName, producer.GetProducerName());
+            Assert.Equal(companyName, producer.GetProducerName());
         }
 
         [Fact]
         public void GetProducerName_ProducerIsCompanyTypeButNameIsNull_ReturnsTradingName()
         {
-            const string TradingName = "some trading name";
+            const string tradingName = "some trading name";
 
             var producer = new producerType
             {
-                tradingName = TradingName,
+                tradingName = tradingName,
                 producerBusiness = new producerBusinessType
                 {
                     Item = new companyType
@@ -73,13 +72,13 @@
                 }
             };
 
-            Assert.Equal(TradingName, producer.GetProducerName());
+            Assert.Equal(tradingName, producer.GetProducerName());
         }
 
         [Fact]
         public void GetProducerName_ProducerIsPartnershipTypeAndNameExists_ReturnsPartnershipName()
         {
-            const string PartnershipName = "some company name";
+            const string partnershipName = "some company name";
 
             var producer = new producerType
             {
@@ -88,22 +87,22 @@
                 {
                     Item = new partnershipType
                     {
-                        partnershipName = PartnershipName
+                        partnershipName = partnershipName
                     }
                 }
             };
 
-            Assert.Equal(PartnershipName, producer.GetProducerName());
+            Assert.Equal(partnershipName, producer.GetProducerName());
         }
 
         [Fact]
         public void GetProducerName_ProducerIsPartnershipTypeButNameIsNull_ReturnsTradingName()
         {
-            const string TradingName = "some trading name";
+            const string tradingName = "some trading name";
 
             var producer = new producerType
             {
-                tradingName = TradingName,
+                tradingName = tradingName,
                 producerBusiness = new producerBusinessType
                 {
                     Item = new partnershipType
@@ -113,7 +112,7 @@
                 }
             };
 
-            Assert.Equal(TradingName, producer.GetProducerName());
+            Assert.Equal(tradingName, producer.GetProducerName());
         }
     }
 }

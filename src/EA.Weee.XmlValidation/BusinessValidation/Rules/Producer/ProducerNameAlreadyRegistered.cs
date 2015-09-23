@@ -7,9 +7,9 @@
     public class ProducerNameAlreadyRegistered : IProducerNameAlreadyRegistered
     {
         private readonly IProducerQuerySet producerQuerySet;
-        private readonly ISearchMatch searchMatch;
+        private readonly ISearchMatcher searchMatch;
 
-        public ProducerNameAlreadyRegistered(IProducerQuerySet producerQuerySet, ISearchMatch searchMatch)
+        public ProducerNameAlreadyRegistered(IProducerQuerySet producerQuerySet, ISearchMatcher searchMatch)
         {
             this.producerQuerySet = producerQuerySet;
             this.searchMatch = searchMatch;

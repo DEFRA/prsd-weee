@@ -8,11 +8,13 @@
 
     public class ProducerNameChange : IProducerNameChange
     {
-        private readonly IProducerQuerySet querySet;
+        private readonly IProducerQuerySet producerQuerySet;
+        private readonly IMigratedProducerQuerySet migratedProducerQuerySet;
 
-        public ProducerNameChange(IProducerQuerySet querySet)
+        public ProducerNameChange(IProducerQuerySet producerQuerySet, IMigratedProducerQuerySet migratedProducerQuerySet)
         {
-            this.querySet = querySet;
+            this.producerQuerySet = producerQuerySet;
+            this.migratedProducerQuerySet = migratedProducerQuerySet;
         }
 
         public RuleResult Evaluate(schemeType scheme, producerType producer, Guid schemeId)
@@ -22,9 +24,9 @@
                 string existingProducerName = string.Empty;
 
                 var existingProducer =
-                    querySet.GetLatestProducerForComplianceYearAndScheme(producer.registrationNo,
+                    producerQuerySet.GetLatestProducerForComplianceYearAndScheme(producer.registrationNo,
                         scheme.complianceYear, schemeId) ??
-                    querySet.GetLatestProducerFromPreviousComplianceYears(producer.registrationNo);
+                    producerQuerySet.GetLatestProducerFromPreviousComplianceYears(producer.registrationNo);
 
                 if (existingProducer != null)
                 {
@@ -32,7 +34,7 @@
                 }
                 else
                 {
-                    var existingMigratedProducer = querySet.GetMigratedProducer(producer.registrationNo);
+                    var existingMigratedProducer = migratedProducerQuerySet.GetMigratedProducer(producer.registrationNo);
 
                     if (existingMigratedProducer == null)
                     {

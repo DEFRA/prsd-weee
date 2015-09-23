@@ -1,8 +1,8 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Helpers
+﻿namespace EA.Weee.Tests.Core
 {
-    using FakeItEasy;
     using System;
     using System.Security;
+    using FakeItEasy;
     using RequestHandlers.Security;
 
     /// <summary>

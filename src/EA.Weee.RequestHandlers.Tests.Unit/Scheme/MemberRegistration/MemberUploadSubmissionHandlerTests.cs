@@ -8,9 +8,9 @@
     using DataAccess;
     using Domain.Scheme;
     using FakeItEasy;
-    using Helpers;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class MemberUploadSubmissionHandlerTests

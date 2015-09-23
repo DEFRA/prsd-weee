@@ -1,11 +1,11 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.XmlValidation
+﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Domain
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Domain;
-    using Domain.Producer;
-    using Domain.Scheme;
+    using Weee.Domain;
+    using Weee.Domain.Producer;
+    using Weee.Domain.Scheme;
 
     public class FakeProducer : Producer
     {
@@ -46,7 +46,7 @@
             brandNames, 
             codes,
             isCurrentForComplianceYear,
-            Domain.ChargeBandType.E,
+            Weee.Domain.ChargeBandType.E,
             (decimal)30.0)
         {
             this.schemeOrganisationId = schemeOrganisationId;
@@ -66,10 +66,10 @@
                 prn,
                 null,
                 "trading name",
-                Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                Domain.SellingTechniqueType.Both,
+                Weee.Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                Weee.Domain.SellingTechniqueType.Both,
                 obligationType,
-                Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                Weee.Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 brandNames.Select(bn => new BrandName(bn)).ToList(),
                 new List<SICCode>(),
                 true);
@@ -94,10 +94,10 @@
                 prn,
                 null,
                 "trading name",
-                Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                Domain.SellingTechniqueType.Both,
+                Weee.Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                Weee.Domain.SellingTechniqueType.Both,
                 obligationType,
-                Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                Weee.Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 brandNames.Select(bn => new BrandName(bn)).ToList(),
                 new List<SICCode>(),
                 iscurrentcomplainceYear);
