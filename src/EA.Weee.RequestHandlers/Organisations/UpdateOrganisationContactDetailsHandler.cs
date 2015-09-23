@@ -16,12 +16,10 @@
     public class UpdateOrganisationContactDetailsHandler : IRequestHandler<UpdateOrganisationContactDetails, bool>
     {
         private IUpdateOrganisationContactDetailsDataAccess dataAccess;
-        private IMap<Organisation, OrganisationData> mapping;
 
-        public UpdateOrganisationContactDetailsHandler(IUpdateOrganisationContactDetailsDataAccess dataAccess, IMap<Organisation, OrganisationData> mapping)
+        public UpdateOrganisationContactDetailsHandler(IUpdateOrganisationContactDetailsDataAccess dataAccess)
         {
             this.dataAccess = dataAccess;
-            this.mapping = mapping;
         }
 
         public async Task<bool> HandleAsync(UpdateOrganisationContactDetails message)
