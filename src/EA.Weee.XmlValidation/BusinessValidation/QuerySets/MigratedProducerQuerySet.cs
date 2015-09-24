@@ -7,23 +7,53 @@
 
     public class MigratedProducerQuerySet : IMigratedProducerQuerySet
     {
-        private readonly PersistentQueryResult<List<string>> existingMigratedProducerRegistrationNumbers;
-        private readonly PersistentQueryResult<List<MigratedProducer>> migratedProducers; 
+        private readonly WeeeContext context;
+        
+        private bool dataFetched = false;
+        private List<string> existingMigratedProducerRegistrationNumbers;
+        private List<MigratedProducer> migratedProducers; 
 
         public MigratedProducerQuerySet(WeeeContext context)
         {
-            existingMigratedProducerRegistrationNumbers = new PersistentQueryResult<List<string>>(() => context.MigratedProducers.Select(mp => mp.ProducerRegistrationNumber).Distinct().ToList());
-            migratedProducers = new PersistentQueryResult<List<MigratedProducer>>(() => context.MigratedProducers.ToList());
+            this.context = context;
+        }
+
+        private void EnsureDataFetched()
+        {
+            if (!dataFetched)
+            {
+                FetchData();
+                dataFetched = true;
+            }
+        }
+
+        private void FetchData()
+        {
+            existingMigratedProducerRegistrationNumbers = context
+                .MigratedProducers
+                .Select(mp => mp.ProducerRegistrationNumber)
+                .Distinct()
+                .ToList();
+
+            migratedProducers = context
+                .MigratedProducers
+                .AsNoTracking()
+                .ToList();
         }
 
         public List<string> GetAllRegistrationNumbers()
         {
-            return existingMigratedProducerRegistrationNumbers.Get();
+            EnsureDataFetched();
+
+            return existingMigratedProducerRegistrationNumbers;
         }
 
         public MigratedProducer GetMigratedProducer(string registrationNo)
         {
-            return migratedProducers.Get().SingleOrDefault(p => p.ProducerRegistrationNumber == registrationNo);
+            EnsureDataFetched();
+
+            return migratedProducers
+                .SingleOrDefault(p => p.ProducerRegistrationNumber == registrationNo);
         }
     }
 }
