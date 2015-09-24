@@ -31,7 +31,8 @@
                         Id = u.Id,
                         LastName = u.Surname,
                         OrganisationName = ca.Abbreviation,
-                        Status = (UserStatus)caUser.UserStatus.Value
+                        Status = (UserStatus)caUser.UserStatus.Value,
+                        OrganisationUserId = caUser.Id
                     }).ToArrayAsync();
 
             return competentAuthorityUsers;
@@ -52,7 +53,8 @@
                         Id = u.Id,
                         LastName = u.Surname,
                         OrganisationName = org.Name ?? org.TradingName,
-                        Status = (UserStatus)orgUser.UserStatus.Value
+                        Status = (UserStatus)orgUser.UserStatus.Value,
+                        OrganisationUserId = orgUser.Id
                     }).ToArrayAsync();
 
             return organisationsUsers;
