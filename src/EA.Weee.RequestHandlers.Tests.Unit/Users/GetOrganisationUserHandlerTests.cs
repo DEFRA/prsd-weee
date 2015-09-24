@@ -1,20 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Users
 {
     using DataAccess;
-    using Domain;
     using Domain.Organisation;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Organisations;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
-    using Helpers;
-    using Mappings;
     using RequestHandlers.Users;
     using Requests.Users;
     using System;
-    using System.Data.Entity;
     using System.Security;
     using System.Threading.Tasks;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class GetOrganisationUserHandlerTests

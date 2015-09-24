@@ -2,7 +2,7 @@
 {
     using System.Web.Mvc;
     using Web.Areas.Admin.Controllers;
-    using Web.Areas.Admin.ViewModels;
+    using Web.Areas.Admin.ViewModels.Home;
     using Xunit;
 
     public class HomeControllerTests

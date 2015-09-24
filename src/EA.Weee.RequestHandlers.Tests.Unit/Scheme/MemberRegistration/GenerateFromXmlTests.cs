@@ -10,6 +10,7 @@
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using Requests.Scheme.MemberRegistration;
+    using Xml.Schemas;
     using Xunit;
 
     public class GenerateFromXmlTests
