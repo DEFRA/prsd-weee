@@ -6,11 +6,11 @@
     using DataAccess;
     using Domain.Scheme;
     using FakeItEasy;
-    using Helpers;
     using Prsd.Core.Mapper;
     using RequestHandlers.Scheme;
     using RequestHandlers.Security;
     using Requests.Scheme;
+    using Weee.Tests.Core;
     using Xunit;
     using SchemeStatus = Core.Shared.SchemeStatus;
 

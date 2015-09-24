@@ -12,19 +12,21 @@
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation;
     using Requests.Scheme.MemberRegistration;
+    using Weee.XmlValidation.BusinessValidation;
+    using Xml.Schemas;
     using Xunit;
 
     public class XmlValidatorTests
     {
         private readonly ISchemaValidator schemaValidator;
-        private readonly IBusinessValidator businessValidator;
+        private readonly IXmlBusinessValidator businessValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
 
         public XmlValidatorTests()
         {
             schemaValidator = A.Fake<ISchemaValidator>();
-            businessValidator = A.Fake<IBusinessValidator>();
+            businessValidator = A.Fake<IXmlBusinessValidator>();
             xmlConverter = A.Fake<IXmlConverter>();
             errorTranslator = A.Fake<IXmlErrorTranslator>();
         }
@@ -51,9 +53,9 @@
                 .Returns(new List<MemberUploadError>());
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._))
-                .Returns(new List<MemberUploadError>
+                .Returns(new List<RuleResult>
                             {
-                                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "An error occurred")
+                                RuleResult.Fail("An error occurred")
                             });
 
             var result = XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));

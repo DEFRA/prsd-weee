@@ -1,5 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.InternalLoginViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.Account.InternalLoginViewModel
 
 @section main_content {
     <header class="hgroup">
@@ -32,6 +32,9 @@
         </p>
         <div>
             <p>@Html.ActionLink("Create a user account", "Create", "Account")</p>
+        </div>
+        <div>
+            @Html.ActionLink("Reset password", "ResetPasswordRequest", "Account")
         </div>
     }
 }

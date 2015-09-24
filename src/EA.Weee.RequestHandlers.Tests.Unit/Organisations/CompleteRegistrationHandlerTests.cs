@@ -8,11 +8,10 @@
     using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
-    using Helpers;
-    using Prsd.Core.Domain;
     using RequestHandlers.Organisations;
     using RequestHandlers.Security;
     using Requests.Organisations;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class CompleteRegistrationHandlerTests

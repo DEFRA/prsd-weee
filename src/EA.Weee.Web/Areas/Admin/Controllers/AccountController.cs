@@ -2,8 +2,10 @@
 {
     using Api.Client;
     using Api.Client.Entities;
+    using Authorization;
     using Base;
     using Core;
+    using EA.Weee.Core.Routing;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
@@ -16,9 +18,8 @@
     using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Authorization;
     using Thinktecture.IdentityModel.Client;
-    using ViewModels;
+    using ViewModels.Account;
     using Weee.Requests.Admin;
 
     public class AccountController : AdminController
@@ -207,6 +208,85 @@
             }
             
             return RedirectToAction("ChooseActivity", "Home", new { area = "Admin" });
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ResetPassword(Guid id, string token)
+        {
+            return View(new ResetPasswordModel());
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPassword(Guid id, string token, ResetPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    using (var client = apiClient())
+                    {
+                        await client.User.ResetPasswordAsync(new PasswordResetData
+                        {
+                            Password = model.Password,
+                            Token = token,
+                            UserId = id
+                        });
+
+                        return RedirectToAction("SignIn");
+                    }
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ResetPasswordRequest()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPasswordRequest(ResetPasswordRequestViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                ResetPasswordRoute route = externalRouteService.InternalUserResetPasswordRoute;
+                PasswordResetRequest apiModel = new PasswordResetRequest(model.Email, route);
+
+                var result = await client.User.ResetPasswordRequestAsync(apiModel);
+
+                if (!result.ValidEmail)
+                {
+                    ModelState.AddModelError("Email", "Email address not recognised.");
+                    return View(model);
+                }
+                else
+                {
+                    ViewBag.Email = model.Email;
+                    return View("ResetPasswordInstruction");
+                }
+            }
         }
     }
 }

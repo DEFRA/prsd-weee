@@ -13,7 +13,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using ViewModels;
+    using ViewModels.Scheme;
     using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
 

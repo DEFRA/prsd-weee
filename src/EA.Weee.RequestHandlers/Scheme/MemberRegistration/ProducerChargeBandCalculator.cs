@@ -7,6 +7,7 @@
     using Domain;
     using Domain.Producer;
     using RequestHandlers;
+    using Xml.Schemas;
 
     public class ProducerChargeBandCalculator
     {

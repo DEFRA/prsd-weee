@@ -9,10 +9,10 @@
     using Domain;
     using Domain.Scheme;
     using FakeItEasy;
-    using Helpers;
     using Mappings;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class GetMemberUploadDataHandlerTests
