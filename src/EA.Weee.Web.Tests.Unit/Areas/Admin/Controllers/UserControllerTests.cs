@@ -11,6 +11,7 @@
     using Core.Shared;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels;
+    using Web.Areas.Admin.ViewModels.User;
     using Weee.Requests.Admin;
     using Weee.Requests.Users;
     using Xunit;

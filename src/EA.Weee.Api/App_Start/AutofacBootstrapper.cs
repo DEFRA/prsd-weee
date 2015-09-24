@@ -11,6 +11,7 @@
     using Prsd.Core.Autofac;
     using RequestHandlers;
     using System.Web.Http;
+    using XmlValidation;
 
     public class AutofacBootstrapper
     {
@@ -33,6 +34,7 @@
             builder.RegisterModule(new CoreModule());
             builder.RegisterModule(new EntityFrameworkModule());
             builder.RegisterModule(new EmailModule());
+            builder.RegisterModule(new XmlValidationModule());
             builder.RegisterModule(new EventDispatcherModule());
 
             // http://www.talksharp.com/configuring-autofac-to-work-with-the-aspnet-identity-framework-in-mvc-5

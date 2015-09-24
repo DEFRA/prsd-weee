@@ -39,6 +39,25 @@
             }
         }
 
+        public ResetPasswordRoute InternalUserResetPasswordRoute
+        {
+            get
+            {
+                string protocol = UrlHelper.RequestContext.HttpContext.Request.Url.Scheme;
+
+                var routeValues = new
+                {
+                    area = "admin",
+                    id = ResetPasswordRoute.PlaceholderUserId,
+                    token = ResetPasswordRoute.PlaceholderToken,
+                };
+
+                string url = UrlHelper.Action("ResetPassword", "Account", routeValues, protocol);
+
+                return new ResetPasswordRoute(url);
+            }
+        }
+
         public ResetPasswordRoute ExternalUserResetPasswordRoute
         {
             get

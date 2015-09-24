@@ -3,21 +3,24 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core.Exceptions;
+    using Core.Helpers;
     using Core.Helpers.Xml;
     using Domain;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
+    using Weee.XmlValidation.BusinessValidation;
+    using Xml.Schemas;
 
     public class XmlValidator : IXmlValidator
     {
         private readonly ISchemaValidator schemaValidator;
-        private readonly IBusinessValidator businessValidator;
+        private readonly IXmlBusinessValidator businessValidator;
 
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
 
-        public XmlValidator(ISchemaValidator schemaValidator, IXmlConverter xmlConverter, IBusinessValidator businessValidator, IXmlErrorTranslator errorTranslator)
+        public XmlValidator(ISchemaValidator schemaValidator, IXmlConverter xmlConverter, IXmlBusinessValidator businessValidator, IXmlErrorTranslator errorTranslator)
         {
             this.schemaValidator = schemaValidator;
             this.businessValidator = businessValidator;
@@ -51,7 +54,9 @@
                 return errors;
             }
 
-            errors = businessValidator.Validate(deserializedXml, message.OrganisationId).ToList();
+            errors = businessValidator.Validate(deserializedXml, message.OrganisationId)
+                .Select(err => new MemberUploadError(err.ErrorLevel.ToDomainEnumeration<ErrorLevel>(), MemberUploadErrorType.Business, err.Message))
+                .ToList();
 
             return errors;
         }

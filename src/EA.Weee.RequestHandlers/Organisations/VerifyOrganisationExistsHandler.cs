@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
     using System.Linq;
+    using System.Security;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
@@ -20,7 +21,11 @@
 
         public Task<bool> HandleAsync(VerifyOrganisationExists message)
         {
-            authorization.EnsureOrganisationAccess(message.OrganisationId);
+            if (!authorization.CheckCanAccessExternalArea() &&
+                !authorization.CheckCanAccessInternalArea())
+            {
+                throw new SecurityException("The user is not able to access the external or internal area");
+            }
 
             var organisationExists = context.Organisations.FirstOrDefault(o => o.Id == message.OrganisationId) != null;
 

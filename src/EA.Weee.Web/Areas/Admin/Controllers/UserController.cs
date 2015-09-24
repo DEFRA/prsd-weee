@@ -15,6 +15,7 @@
     using System.Web.Mvc;
     using Core.Shared;
     using ViewModels;
+    using ViewModels.User;
     using Weee.Requests.Admin;
     using Weee.Requests.Users;
     using GetUserData = Weee.Requests.Admin.GetUserData;
@@ -121,7 +122,7 @@
                     await client.SendAsync(User.GetAccessToken(), new UpdateCompetentAuthorityUserStatus(model.Id, model.UserStatus));
                 }
                 else
-                {
+        {
                     await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationUserStatus(model.Id, model.UserStatus));
                 }
             }

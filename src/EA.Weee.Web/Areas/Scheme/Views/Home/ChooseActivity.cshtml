@@ -26,9 +26,12 @@
         </p>
     }
 
+    @if (Model.ShowLinkToCreateOrJoinOrganisation)
+    {
     <div>
-        <a href="@Url.Action("Type", "OrganisationRegistration", new { area = "" })">Create or join another organisation</a>
+        <a href="@Url.Action("Type", "OrganisationRegistration", new { area = "" })">Create or access another organisation</a>
     </div>
+}
 }
 
 

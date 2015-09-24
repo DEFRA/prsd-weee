@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using Base;
     using System;
     using System.Web.Mvc;
-    using Base;
-    using ViewModels;
+    using ViewModels.Home;
 
     public class HomeController : AdminController
     {

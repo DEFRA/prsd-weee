@@ -1,18 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
-    using Core.Helpers;
-    using DataAccess;
-    using Domain.Scheme;
-    using EA.Weee.RequestHandlers.Security;
-    using FakeItEasy;
-    using Helpers;
-    using RequestHandlers.Scheme;
-    using Requests.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Helpers;
+    using DataAccess;
+    using Domain.Scheme;
+    using FakeItEasy;
+    using RequestHandlers.Scheme;
+    using Requests.Scheme;
+    using Weee.Tests.Core;
     using Xunit;
     using SchemeStatus = Core.Shared.SchemeStatus;
 
@@ -28,22 +27,23 @@
         }
 
         /// <summary>
-        /// This test ensures that a non-internal user cannot execute requests to set a scheme's status.
+        ///     This test ensures that a non-internal user cannot execute requests to set a scheme's status.
         /// </summary>
         /// <returns></returns>
         [Theory]
         [Trait("Authorization", "Internal")]
         [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
         [InlineData(AuthorizationBuilder.UserType.External)]
-        public async Task SetSchemeStatusHandler_WithNonInternalUser_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
+        public async Task SetSchemeStatusHandler_WithNonInternalUser_ThrowsSecurityException(
+            AuthorizationBuilder.UserType userType)
         {
             // Arrange
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
+            var authorization = AuthorizationBuilder.CreateFromUserType(userType);
 
-            SetSchemeStatusHandler handler = new SetSchemeStatusHandler(context, authorization);
+            var handler = new SetSchemeStatusHandler(context, authorization);
 
-            Guid schemeId = new Guid("3C367528-AE93-427F-A4C5-E23F0D317633");
-            SetSchemeStatus request = new SetSchemeStatus(schemeId, SchemeStatus.Approved);
+            var schemeId = new Guid("3C367528-AE93-427F-A4C5-E23F0D317633");
+            var request = new SetSchemeStatus(schemeId, SchemeStatus.Approved);
 
             // Act
             Func<Task<Guid>> action = () => handler.HandleAsync(request);
@@ -86,7 +86,7 @@
 
         private SetSchemeStatusHandler SetSchemeStatusHandler()
         {
-            IWeeeAuthorization authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
+            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
 
             return new SetSchemeStatusHandler(context, authorization);
         }
