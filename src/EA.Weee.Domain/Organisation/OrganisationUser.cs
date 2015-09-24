@@ -35,6 +35,11 @@
 
         public void UpdateUserStatus(UserStatus userStatus)
         {
+            if (userStatus == UserStatus)
+            {
+                return;
+            }
+
             if (userStatus == UserStatus.Active)
             {
                 if (UserStatus != UserStatus.Inactive && UserStatus != UserStatus.Pending &&
