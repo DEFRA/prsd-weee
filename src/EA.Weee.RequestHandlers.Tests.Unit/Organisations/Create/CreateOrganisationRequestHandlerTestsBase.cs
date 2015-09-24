@@ -6,9 +6,9 @@
     using Domain;
     using Domain.Organisation;
     using FakeItEasy;
-    using Helpers;
     using Prsd.Core.Domain;
     using RequestHandlers.Security;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class CreateOrganisationRequestHandlerTestsBase

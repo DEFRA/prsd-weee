@@ -4,11 +4,11 @@
     using System.Threading.Tasks;
     using DataAccess;
     using FakeItEasy;
-    using Helpers;
     using Prsd.Core.Domain;
     using RequestHandlers.Security;
     using RequestHandlers.Users;
     using Requests.Users;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class GetUserDataHandlerTests

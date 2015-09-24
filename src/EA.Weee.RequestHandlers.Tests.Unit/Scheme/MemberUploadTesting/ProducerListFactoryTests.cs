@@ -8,8 +8,8 @@
     using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
-    using Helpers;
     using RequestHandlers.Scheme.MemberUploadTesting;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ProducerListFactoryTests

@@ -7,10 +7,9 @@
     using Domain;
     using Domain.Organisation;
     using FakeItEasy;
-    using Helpers;
-    using Prsd.Core.Domain;
     using RequestHandlers.Organisations.FindMatchingOrganisations.DataAccess;
     using Weee.DataAccess;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class FindMatchingOrganisationsDataAccessTests
