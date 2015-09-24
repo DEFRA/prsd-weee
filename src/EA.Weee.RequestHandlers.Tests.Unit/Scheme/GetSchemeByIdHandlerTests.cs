@@ -1,19 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.Scheme;
-    using EA.Weee.DataAccess;
-    using EA.Weee.RequestHandlers.Scheme;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.RequestHandlers.Tests.Unit.Helpers;
-    using EA.Weee.Requests.Scheme;
-    using FakeItEasy;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
+    using Core.Scheme;
+    using Domain.Scheme;
+    using FakeItEasy;
+    using Prsd.Core.Mapper;
+    using RequestHandlers.Scheme;
+    using RequestHandlers.Security;
+    using Requests.Scheme;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class GetSchemeByIdHandlerTests
@@ -29,14 +26,14 @@
             Guid schemeId = new Guid("AC9116BC-5732-4F80-9AED-A6E2A0C4C1F1");
 
             IGetSchemeByIdDataAccess dataAccess = A.Fake<IGetSchemeByIdDataAccess>();
-            Domain.Scheme.Scheme scheme = A.Fake<Domain.Scheme.Scheme>();
+            Scheme scheme = A.Fake<Scheme>();
             A.CallTo(() => dataAccess.GetSchemeOrDefault(schemeId)).Returns(scheme);
 
             IWeeeAuthorization authorization = new AuthorizationBuilder()
                 .AllowInternalAreaAccess()
                 .Build();
 
-            var schemeMap = A.Fake<IMap<EA.Weee.Domain.Scheme.Scheme, SchemeData>>();
+            var schemeMap = A.Fake<IMap<Scheme, SchemeData>>();
             SchemeData schemeData = A.Fake<SchemeData>();
             A.CallTo(() => schemeMap.Map(scheme)).Returns(schemeData);
 
@@ -64,12 +61,12 @@
             Guid schemeId = new Guid("AC9116BC-5732-4F80-9AED-A6E2A0C4C1F1");
 
             IGetSchemeByIdDataAccess dataAccess = A.Fake<IGetSchemeByIdDataAccess>();
-            Domain.Scheme.Scheme scheme = A.Fake<Domain.Scheme.Scheme>();
+            Scheme scheme = A.Fake<Scheme>();
             A.CallTo(() => dataAccess.GetSchemeOrDefault(schemeId)).Returns(scheme);
             
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
             
-            var schemeMap = A.Fake<IMap<EA.Weee.Domain.Scheme.Scheme, SchemeData>>();
+            var schemeMap = A.Fake<IMap<Scheme, SchemeData>>();
             SchemeData schemeData = A.Fake<SchemeData>();
             A.CallTo(() => schemeMap.Map(scheme)).Returns(schemeData);
 
@@ -95,13 +92,13 @@
             Guid badSchemeId = new Guid("88C60FAC-1172-43F2-9AA5-7E79A8877F92");
 
             IGetSchemeByIdDataAccess dataAccess = A.Fake<IGetSchemeByIdDataAccess>();
-            A.CallTo(() => dataAccess.GetSchemeOrDefault(badSchemeId)).Returns((Domain.Scheme.Scheme)null);
+            A.CallTo(() => dataAccess.GetSchemeOrDefault(badSchemeId)).Returns((Scheme)null);
 
             IWeeeAuthorization authorization = new AuthorizationBuilder()
                 .AllowInternalAreaAccess()
                 .Build();
 
-            var schemeMap = A.Fake<IMap<EA.Weee.Domain.Scheme.Scheme, SchemeData>>();
+            var schemeMap = A.Fake<IMap<Scheme, SchemeData>>();
 
             GetSchemeByIdHandler handler = new GetSchemeByIdHandler(dataAccess, schemeMap, authorization);
 

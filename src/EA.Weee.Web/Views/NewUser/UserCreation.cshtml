@@ -45,7 +45,7 @@
                 <p>
                     @Html.ActionLink("Read full terms and conditions of use",
                     "TermsAndConditions", "NewUser", new { area = string.Empty },
-                    new { rel = "external", target = "_blank" })
+                    new { target = "_blank" })
                 </p>
                 <label class="block-label" for="TermsAndConditions">
                     @Html.CheckBoxFor(m => m.TermsAndConditions, new { @id = "TermsAndConditions" })

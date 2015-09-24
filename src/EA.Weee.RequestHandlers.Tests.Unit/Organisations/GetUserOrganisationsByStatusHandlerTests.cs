@@ -8,11 +8,11 @@
     using DataAccess;
     using Domain.Organisation;
     using FakeItEasy;
-    using Helpers;
     using Prsd.Core.Domain;
     using RequestHandlers.Mappings;
     using RequestHandlers.Organisations;
     using Requests.Organisations;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class GetUserOrganisationsByStatusHandlerTests

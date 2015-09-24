@@ -2,6 +2,7 @@
 {
     using System.Xml.Linq;
     using Requests.Scheme.MemberRegistration;
+    using Xml.Schemas;
 
     public interface IXmlConverter
     {
