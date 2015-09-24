@@ -68,7 +68,7 @@
             }
             else
             {
-                return RedirectToAction("SearchOrganisation", "OrganisationRegistration");
+                return RedirectToAction("Type", "OrganisationRegistration");
             }
         }
 
