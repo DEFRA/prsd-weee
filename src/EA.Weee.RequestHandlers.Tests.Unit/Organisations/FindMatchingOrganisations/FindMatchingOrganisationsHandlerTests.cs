@@ -6,12 +6,12 @@
     using System.Threading.Tasks;
     using Domain.Organisation;
     using FakeItEasy;
-    using Helpers;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using RequestHandlers.Organisations.FindMatchingOrganisations;
     using RequestHandlers.Organisations.FindMatchingOrganisations.DataAccess;
     using Requests.Organisations;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class FindMatchingOrganisationsHandlerTests

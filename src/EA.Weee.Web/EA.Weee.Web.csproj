@@ -564,6 +564,7 @@
     <Content Include="Views\Shared\_Layout.GovUK.Sections.WithoutFeedbackBanner.cshtml" />
     <Content Include="Views\Shared\_PrivacyPolicy.cshtml" />
     <Content Include="Views\Shared\_CompetentAuthoritiesContactDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\SearchOrganisation.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -697,6 +698,7 @@
     <Compile Include="ViewModels\OrganisationRegistration\NotFoundOrganisationViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\OrganisationSummaryViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\AddressPrepopulateViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\SearchOrganisationViewModel.cs" />
     <Compile Include="ViewModels\Organisation\PendingOrganisationsViewModel.cs" />
     <Compile Include="ViewModels\Organisation\YourOrganisationsViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
