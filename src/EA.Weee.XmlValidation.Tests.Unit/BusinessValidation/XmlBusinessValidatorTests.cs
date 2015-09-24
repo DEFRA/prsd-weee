@@ -24,6 +24,7 @@
         private readonly IInsertHasProducerRegistrationNumber insertHasProducerRegistrationNumber;
         private readonly IUkBasedAuthorisedRepresentative ukBasedAuthorisedRepresentative;
         private readonly IProducerRegistrationNumberValidity producerRegistrationNumberValidity;
+        private readonly IEnsureAnOverseasProducerIsNotBasedInTheUK ensureAnOverseasProducerIsNotBasedInTheUK;
 
         public XmlBusinessValidatorTests()
         {
@@ -38,6 +39,7 @@
             insertHasProducerRegistrationNumber = A.Fake<IInsertHasProducerRegistrationNumber>();
             ukBasedAuthorisedRepresentative = A.Fake<IUkBasedAuthorisedRepresentative>();
             producerRegistrationNumberValidity = A.Fake<IProducerRegistrationNumberValidity>();
+            ensureAnOverseasProducerIsNotBasedInTheUK = A.Fake<IEnsureAnOverseasProducerIsNotBasedInTheUK>();
         }
 
         [Fact]
@@ -215,7 +217,8 @@
             A.CallTo(() => insertHasProducerRegistrationNumber.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
             A.CallTo(() => ukBasedAuthorisedRepresentative.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
             A.CallTo(() => producerRegistrationNumberValidity.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
-
+            A.CallTo(() => ensureAnOverseasProducerIsNotBasedInTheUK.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
+            
             var scheme = new schemeType
             {
                 producerList = new[]
@@ -233,10 +236,19 @@
 
         private XmlBusinessValidator XmlBusinessValidator()
         {
-            return new XmlBusinessValidator(producerNameWarning, annualTurnoverMismatch, producerAlreadyRegistered,
-                producerNameAlreadyRegistered, duplicateProducerRegistrationNumbers, duplicateProducerNames,
-                correctSchemeApprovalNumber, amendmentHasNoProducerRegistrationNumber,
-                insertHasProducerRegistrationNumber, ukBasedAuthorisedRepresentative, producerRegistrationNumberValidity);
+            return new XmlBusinessValidator(
+                producerNameWarning,
+                annualTurnoverMismatch,
+                producerAlreadyRegistered,
+                producerNameAlreadyRegistered,
+                duplicateProducerRegistrationNumbers,
+                duplicateProducerNames,
+                correctSchemeApprovalNumber,
+                amendmentHasNoProducerRegistrationNumber,
+                insertHasProducerRegistrationNumber,
+                ukBasedAuthorisedRepresentative,
+                producerRegistrationNumberValidity,
+                ensureAnOverseasProducerIsNotBasedInTheUK);
         }
 
         private schemeType SchemeWithXProducers(int numberOfProducers)
