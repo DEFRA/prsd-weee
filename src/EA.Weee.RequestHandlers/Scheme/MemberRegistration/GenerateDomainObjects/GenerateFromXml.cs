@@ -6,7 +6,6 @@
     using Domain.Producer;
     using Domain.Scheme;
     using Interfaces;
-    using Mappings;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Requests.Scheme.MemberRegistration;
@@ -14,14 +13,13 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Runtime.ExceptionServices;
-    using System.Text;
     using System.Threading.Tasks;
     using System.Xml.Serialization;
-    using XmlValidation.Extensions;
+    using Xml;
+    using Xml.Schemas;
 
     public class GenerateFromXml : IGenerateFromXml
     {

@@ -12,11 +12,11 @@
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
-    using Helpers;
     using Prsd.Core;
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class ProcessXMLFileHandlerTests

@@ -15,6 +15,10 @@
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app, IAppConfiguration config)
         {
+            ReturnUrlMapping returnUrlMapping = new ReturnUrlMapping();
+            returnUrlMapping.Add("/account/sign-out", null);
+            returnUrlMapping.Add("/admin/account/sign-out", null);
+
             app.UseCookieAuthentication(new CookieAuthenticationOptions()
             {
                 AuthenticationType = Constants.WeeeAuthType,
@@ -22,7 +26,7 @@
                 SlidingExpiration = true,
                 ExpireTimeSpan = TimeSpan.FromMinutes(20),
                 CookieName = EA.Prsd.Core.Web.Constants.CookiePrefix + Constants.WeeeAuthType,
-                Provider = new WeeeCookieAuthenticationProvider()
+                Provider = new WeeeCookieAuthenticationProvider(returnUrlMapping)
             });
         }
     }

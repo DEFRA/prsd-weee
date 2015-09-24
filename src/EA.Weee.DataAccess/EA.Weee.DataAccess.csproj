@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="EntityFrameworkModule.cs" />
     <Compile Include="EventHandlers\MemberUploadSubmittedEventHandler.cs" />
+    <Compile Include="Extensions\ProducerExtensions.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
     <Compile Include="Identity\WeeeIdentityContext.cs" />

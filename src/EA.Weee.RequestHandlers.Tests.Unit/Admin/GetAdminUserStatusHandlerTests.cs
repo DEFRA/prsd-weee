@@ -1,22 +1,15 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.Scheme;
-    using EA.Weee.DataAccess;
-    using EA.Weee.RequestHandlers.Scheme;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.RequestHandlers.Tests.Unit.Helpers;
-    using EA.Weee.Requests.Scheme;
-    using FakeItEasy;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Core.Shared;
+    using FakeItEasy;
+    using Prsd.Core.Mapper;
     using RequestHandlers.Admin;
+    using RequestHandlers.Security;
     using Requests.Admin;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class GetAdminUserStatusHandlerTests
