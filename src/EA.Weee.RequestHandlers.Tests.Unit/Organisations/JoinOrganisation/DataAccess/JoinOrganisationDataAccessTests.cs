@@ -2,15 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
     using Core.Helpers;
     using Domain;
     using Domain.Organisation;
     using FakeItEasy;
-    using Helpers;
     using RequestHandlers.Organisations.JoinOrganisation.DataAccess;
     using Weee.DataAccess;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class JoinOrganisationDataAccessTests

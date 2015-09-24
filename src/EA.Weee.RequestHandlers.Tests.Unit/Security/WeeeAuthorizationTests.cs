@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Security;
     using System.Security.Claims;
     using Core;
@@ -10,9 +9,9 @@
     using Domain;
     using Domain.Organisation;
     using FakeItEasy;
-    using Helpers;
     using Prsd.Core.Domain;
     using RequestHandlers.Security;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class WeeeAuthorizationTests

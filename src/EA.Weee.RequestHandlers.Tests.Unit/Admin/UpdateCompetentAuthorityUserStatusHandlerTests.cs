@@ -3,12 +3,12 @@
     using DataAccess;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
-    using Helpers;
     using System;
     using System.Threading.Tasks;
     using Domain.Admin;
     using RequestHandlers.Admin;
     using Requests.Admin;
+    using Weee.Tests.Core;
     using Xunit;
     using UserStatus = Core.Shared.UserStatus;
 
