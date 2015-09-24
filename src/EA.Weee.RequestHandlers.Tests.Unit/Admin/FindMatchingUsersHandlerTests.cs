@@ -7,10 +7,10 @@
     using System.Threading.Tasks;
     using Core.Admin;
     using FakeItEasy;
-    using Helpers;
     using RequestHandlers.Admin;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class FindMatchingUsersHandlerTests

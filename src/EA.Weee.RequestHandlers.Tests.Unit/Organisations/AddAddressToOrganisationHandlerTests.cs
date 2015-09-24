@@ -9,10 +9,10 @@
     using Domain;
     using Domain.Organisation;
     using FakeItEasy;
-    using Helpers;
     using RequestHandlers.Organisations;
     using RequestHandlers.Security;
     using Requests.Organisations;
+    using Weee.Tests.Core;
     using Xunit;
     using AddressType = Core.Shared.AddressType;
 

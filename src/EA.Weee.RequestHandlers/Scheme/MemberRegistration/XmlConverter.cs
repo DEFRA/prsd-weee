@@ -8,6 +8,7 @@
     using Core.Exceptions;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
+    using Xml.Schemas;
 
     public class XmlConverter : IXmlConverter
     {

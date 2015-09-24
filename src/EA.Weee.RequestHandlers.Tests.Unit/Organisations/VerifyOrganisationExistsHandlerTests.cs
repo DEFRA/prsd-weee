@@ -8,10 +8,10 @@
     using DataAccess;
     using Domain.Organisation;
     using FakeItEasy;
-    using Helpers;
     using RequestHandlers.Organisations;
     using RequestHandlers.Security;
     using Requests.Organisations;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class VerifyOrganisationExistsHandlerTests
@@ -20,7 +20,7 @@
 
         private readonly OrganisationHelper orgHelper = new OrganisationHelper();
 
-        private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
+        private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserWithAllRights();
 
         [Fact]
         public async Task VerifyOrganisationExistsHandler_NotOrganisationUser_ThrowsSecurityException()
