@@ -47,8 +47,12 @@
   <ItemGroup>
     <Compile Include="Admin\FindMatchingUsers.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUser.cs" />
+    <Compile Include="Admin\GetUserData.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus.cs" />
+    <Compile Include="Admin\UpdateUser.cs" />
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
+    <Compile Include="Organisations\UpdateOrganisationContactDetails.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
     <Compile Include="Scheme\GetSchemeById.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo.cs" />
