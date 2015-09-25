@@ -82,6 +82,7 @@
     <Compile Include="BusinessValidation\Helpers\SearchMatcherTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\AmendmentHasNoProducerRegistrationNumberTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\InsertHasProducerRegistrationNumberTests.cs" />
+    <Compile Include="BusinessValidation\Rules\Producer\ProducerChargeBandChangeTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\ProducerNameAlreadyRegisteredTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\ProducerRegistrationNumberValidityTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\UkBasedAuthorisedRepresentativeTests.cs" />
