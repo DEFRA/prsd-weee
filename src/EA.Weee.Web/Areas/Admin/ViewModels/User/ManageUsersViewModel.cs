@@ -11,5 +11,6 @@
 
          [Required(ErrorMessage = "You must choose a user to manage")]
         public Guid? SelectedUserId { get; set; }
+         public bool IsCompetentAuthorityUser { get; set; }
     }
 }
