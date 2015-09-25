@@ -321,6 +321,10 @@
       <Project>{de6ea3d2-5f5f-4da6-b3a2-da97b757096c}</Project>
       <Name>EA.Weee.XmlValidation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Xml\EA.Weee.Xml.csproj">
+      <Project>{a0c346a3-f2cc-4acd-80a3-0e99c3dc1c03}</Project>
+      <Name>EA.Weee.Xml</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

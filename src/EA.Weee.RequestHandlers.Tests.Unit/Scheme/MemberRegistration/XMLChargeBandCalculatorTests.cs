@@ -10,6 +10,7 @@
     using Domain;
     using Domain.Producer;
     using Domain.Scheme;
+    using EA.Weee.Xml;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
@@ -24,7 +25,7 @@
         private readonly DbSet<Producer> producers;
 
         private const string AmendmentRegistrationNumber = "WEE/HE0234YV";
-     
+
         public XMLChargeBandCalculatorTests()
         {
             producerChargeBandDbSet = helper.GetAsyncEnabledDbSet(new[]
@@ -39,15 +40,16 @@
             producers = helper.GetAsyncEnabledDbSet(new[] { GetPassingProducer() });
 
             context = A.Fake<WeeeContext>();
-     
+
             A.CallTo(() => context.ProducerChargeBands).Returns(producerChargeBandDbSet);
             A.CallTo(() => context.Producers).Returns(producers);
         }
-        
+
         [Fact]
         public void XMLChargeBandCalculator_ValidXml_NoErrors()
         {
-            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter());
+            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter(),
+                new ProducerChargeCalculator(context, new ProducerChargeBandCalculator()));
 
             RunHandler(xmlChargeBandCalculator, @"ExampleXML\v3-valid.xml");
 
@@ -57,7 +59,8 @@
         [Fact]
         public void XMLChargeBandCalculator_XmlWithSameProducerName_AddsError()
         {
-            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter());
+            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter(),
+                new ProducerChargeCalculator(context, new ProducerChargeBandCalculator()));
 
             RunHandler(xmlChargeBandCalculator, @"ExampleXML\v3-same-producer-name.xml");
 
@@ -68,7 +71,8 @@
         public void XMLChargeBandCalculator_ValidXmlForChargeBand_GivesCorrectChargeBand()
         {
             var producerCharges = RunHandler(
-                new XmlChargeBandCalculator(context, new XmlConverter()),
+                new XmlChargeBandCalculator(context, new XmlConverter(),
+                    new ProducerChargeCalculator(context, new ProducerChargeBandCalculator())),
                 @"ExampleXML\v3-valid-ChargeBand.xml");
 
             Assert.NotNull(producerCharges);
