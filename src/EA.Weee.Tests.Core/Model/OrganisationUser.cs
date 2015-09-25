@@ -7,19 +7,19 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EA.Weee.DataAccess.Tests.Integration.Model
+namespace EA.Weee.Tests.Core.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class CompetentAuthorityUser
+    public partial class OrganisationUser
     {
         public System.Guid Id { get; set; }
         public string UserId { get; set; }
-        public System.Guid CompetentAuthorityId { get; set; }
+        public System.Guid OrganisationId { get; set; }
         public int UserStatus { get; set; }
         public byte[] RowVersion { get; set; }
     
-        public virtual CompetentAuthority CompetentAuthority { get; set; }
+        public virtual Organisation Organisation { get; set; }
     }
 }

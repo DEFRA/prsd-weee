@@ -7,16 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EA.Weee.DataAccess.Tests.Integration.Model
+namespace EA.Weee.Tests.Core.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class MigratedProducer
+    public partial class SICCode
     {
         public System.Guid Id { get; set; }
+        public System.Guid ProducerId { get; set; }
+        public string Name { get; set; }
         public byte[] RowVersion { get; set; }
-        public string ProducerRegistrationNumber { get; set; }
-        public string ProducerName { get; set; }
+    
+        public virtual Producer Producer { get; set; }
     }
 }

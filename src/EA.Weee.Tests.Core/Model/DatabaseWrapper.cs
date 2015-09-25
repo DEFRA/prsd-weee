@@ -1,6 +1,7 @@
-﻿namespace EA.Weee.DataAccess.Tests.Integration.Model
+﻿namespace EA.Weee.Tests.Core.Model
 {
     using EA.Prsd.Core.Domain;
+    using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.StoredProcedure;
     using FakeItEasy;
     using System;

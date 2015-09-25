@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration.Organisations
 {
-    using EA.Weee.DataAccess.Tests.Integration.Model;
     using EA.Weee.RequestHandlers.Organisations;
+    using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using System;
     using System.Collections.Generic;

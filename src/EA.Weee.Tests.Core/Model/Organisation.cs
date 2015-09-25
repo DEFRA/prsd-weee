@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EA.Weee.DataAccess.Tests.Integration.Model
+namespace EA.Weee.Tests.Core.Model
 {
     using System;
     using System.Collections.Generic;

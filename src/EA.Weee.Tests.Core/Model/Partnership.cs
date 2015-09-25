@@ -7,27 +7,26 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EA.Weee.DataAccess.Tests.Integration.Model
+namespace EA.Weee.Tests.Core.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Business
+    public partial class Partnership
     {
-        public Business()
+        public Partnership()
         {
-            this.Producers = new HashSet<Producer>();
+            this.Businesses = new HashSet<Business>();
+            this.Partners = new HashSet<Partner>();
         }
     
         public System.Guid Id { get; set; }
         public byte[] RowVersion { get; set; }
-        public Nullable<System.Guid> CorrespondentForNoticesContactId { get; set; }
-        public Nullable<System.Guid> CompanyId { get; set; }
-        public Nullable<System.Guid> PartnershipId { get; set; }
+        public string Name { get; set; }
+        public System.Guid PrincipalPlaceOfBusinessId { get; set; }
     
-        public virtual Company Company { get; set; }
+        public virtual ICollection<Business> Businesses { get; set; }
         public virtual Contact1 Contact1 { get; set; }
-        public virtual Partnership Partnership { get; set; }
-        public virtual ICollection<Producer> Producers { get; set; }
+        public virtual ICollection<Partner> Partners { get; set; }
     }
 }
