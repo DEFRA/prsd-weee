@@ -22,7 +22,7 @@
                 return
                     RuleResult.Fail(
                         string.Format(
-                            "The 'annualTurnover' amount you've entered does not match the 'annualTurnoverBand' for {0}, {1}. Please make sure that the 'annualTurnover' amount and 'annualTurnoverBand' for this producer in the XML file are compatible.",
+                            "The annualTurnover amount and the annualTurnoverBand you've entered in the xml file for {0} {1} are not compatible. Please make sure that the annualTurnover amount and annualTurnoverBand for this producer in the XML file are compatible.",
                             producer.GetProducerName(), producer.registrationNo), ErrorLevel.Warning);
             }
 
