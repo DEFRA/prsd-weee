@@ -77,6 +77,10 @@
                 .As<ISearchMatcher>()
                 .InstancePerRequest();
 
+            builder.RegisterType<EnsureAnOverseasProducerIsNotBasedInTheUK>()
+                .As<IEnsureAnOverseasProducerIsNotBasedInTheUK>()
+                .InstancePerRequest();
+
             //builder.RegisterAssemblyTypes(GetType().Assembly)
             //    .Where(t => t.Name.StartsWith("BusinessValidation"))
             //    .AsImplementedInterfaces();

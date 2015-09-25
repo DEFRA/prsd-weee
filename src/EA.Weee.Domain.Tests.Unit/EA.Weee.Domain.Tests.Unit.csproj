@@ -71,6 +71,7 @@
     <Compile Include="AddressTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Admin\CompetentAuthorityUserTests.cs" />
     <Compile Include="CountryTests.cs" />
     <Compile Include="ExtensionMethodsTests.cs" />
     <Compile Include="Helpers\UKCompetentAuthorityFactory.cs" />

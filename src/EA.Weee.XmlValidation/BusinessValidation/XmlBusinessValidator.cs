@@ -20,6 +20,7 @@
         private readonly IInsertHasProducerRegistrationNumber insertHasProducerRegistrationNumber;
         private readonly IUkBasedAuthorisedRepresentative ukBasedAuthorisedRepresentative;
         private readonly IProducerRegistrationNumberValidity producerRegistrationNumberValidity;
+        private readonly IEnsureAnOverseasProducerIsNotBasedInTheUK ensureAnOverseasProducerIsNotBasedInTheUK;
 
         public XmlBusinessValidator(IProducerNameChange producerNameWarning, 
             IAnnualTurnoverMismatch annualTurnoverMismatch, 
@@ -31,7 +32,8 @@
             IAmendmentHasNoProducerRegistrationNumber amendmentHasNoProducerRegistrationNumber,
             IInsertHasProducerRegistrationNumber insertHasProducerRegistrationNumber,
             IUkBasedAuthorisedRepresentative ukBasedAuthorisedRepresentative,
-            IProducerRegistrationNumberValidity producerRegistrationNumberValidity)
+            IProducerRegistrationNumberValidity producerRegistrationNumberValidity,
+            IEnsureAnOverseasProducerIsNotBasedInTheUK ensureAnOverseasProducerIsNotBasedInTheUK)
         {
             this.producerNameWarning = producerNameWarning;
             this.annualTurnoverMismatch = annualTurnoverMismatch;
@@ -44,6 +46,7 @@
             this.insertHasProducerRegistrationNumber = insertHasProducerRegistrationNumber;
             this.ukBasedAuthorisedRepresentative = ukBasedAuthorisedRepresentative;
             this.producerRegistrationNumberValidity = producerRegistrationNumberValidity;
+            this.ensureAnOverseasProducerIsNotBasedInTheUK = ensureAnOverseasProducerIsNotBasedInTheUK;
         }
 
         public IEnumerable<RuleResult> Validate(schemeType scheme, Guid schemeId)
@@ -66,6 +69,7 @@
                 result.Add(ukBasedAuthorisedRepresentative.Evaluate(producer));
                 result.Add(producerNameWarning.Evaluate(scheme, producer, schemeId));
                 result.Add(annualTurnoverMismatch.Evaluate(producer));
+                result.Add(ensureAnOverseasProducerIsNotBasedInTheUK.Evaluate(producer));
 
                 // Now comparing against existing data...
                 result.Add(producerRegistrationNumberValidity.Evaluate(producer));

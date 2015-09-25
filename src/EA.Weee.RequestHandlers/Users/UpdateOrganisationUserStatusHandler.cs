@@ -34,7 +34,8 @@
                 throw new Exception(message);
             }
 
-            authorization.EnsureOrganisationAccess(organisationUser.OrganisationId);
+            // TODO : Needs to be changed this authorisation code as per 34415
+            //authorization.EnsureOrganisationAccess(organisationUser.OrganisationId);
             
             UserStatus userStatus = ValueObjectInitializer.GetUserStatus(query.UserStatus);
             

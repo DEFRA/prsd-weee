@@ -66,5 +66,10 @@
         public virtual Guid AddressId { get; private set; }
 
         public virtual ProducerAddress Address { get; private set; }
+
+        public virtual bool IsOverseas
+        {
+            get { return !Address.IsUkAddress(); }
+        }
     }
 }
