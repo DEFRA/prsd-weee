@@ -9,7 +9,7 @@
     {
         public IPagedList<UserSearchData> Users { get; set; }
 
-         [Required(ErrorMessage = "You must choose a user to manage")]
+        [Required(ErrorMessage = "You must choose a user to manage")]
         public Guid? SelectedUserId { get; set; }
     }
 }
