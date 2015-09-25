@@ -44,7 +44,6 @@
                     <td>@user.Status</td>
                     <td>
                         @Html.RadioButtonFor(m => m.SelectedUserId, @user.OrganisationUserId)
-                        @Html.HiddenFor(m => m.IsCompetentAuthorityUser, @user.IsCompetentAuthorityUser)
                     </td>
                 </tr>
         }

@@ -85,18 +85,17 @@
                     return View(model);
                 }
             }
-            return RedirectToAction("EditUser", "User", new { orgUserId = model.SelectedUserId, isCompetentAuthorityUser = model.IsCompetentAuthorityUser });
+            return RedirectToAction("EditUser", "User", new { orgUserId = model.SelectedUserId });
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditUser(Guid orgUserId, bool isCompetentAuthorityUser)
+        public async Task<ActionResult> EditUser(Guid orgUserId)
         {
             using (var client = apiClient())
             {
                 var editUserData = await client.SendAsync(User.GetAccessToken(), new GetUserData(orgUserId));
                 var model = new EditUserViewModel(editUserData);
                 model.UserStatusSelectList = FilterUserStatus(model.UserStatus, model.UserStatusSelectList);
-                await SetBreadcrumb(new Guid(model.UserId));
                 return View(model);
             }
         }
@@ -105,8 +104,6 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditUser(EditUserViewModel model)
         {
-            await SetBreadcrumb(new Guid(model.UserId));
-
             if (!ModelState.IsValid)
             {
                 model.UserStatusSelectList = FilterUserStatus(model.UserStatus, model.UserStatusSelectList);
