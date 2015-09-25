@@ -12,126 +12,158 @@
     public class AuthorisedRepresentativeTests
     {
         [Fact]
-        public void AuthorisedRepresentative_EqualsNullParameter_ReturnsFalse()
+        public void Equals_NullParameter_ReturnsFalse()
         {
-            var authorisedRepresentative = AuthorisedRepresentativeBuilder.NewAuthorisedRepresentative;
+            AuthorisedRepresentative authorisedRepresentative = new AuthorisedRepresentative(
+                "1",
+                null);
 
             Assert.NotEqual(authorisedRepresentative, null);
         }
 
         [Fact]
-        public void AuthorisedRepresentative_EqualsObjectParameter_ReturnsFalse()
+        public void Equals_ObjectParameter_ReturnsFalse()
         {
-            var authorisedRepresentative = AuthorisedRepresentativeBuilder.NewAuthorisedRepresentative;
+            AuthorisedRepresentative authorisedRepresentative = new AuthorisedRepresentative(
+                "1",
+                null);
 
             Assert.NotEqual(authorisedRepresentative, new object());
         }
 
         [Fact]
-        public void AuthorisedRepresentative_EqualsSameInstance_ReturnsTrue()
+        public void Equals_SameInstance_ReturnsTrue()
         {
-            var authorisedRepresentative = AuthorisedRepresentativeBuilder.NewAuthorisedRepresentative;
+            AuthorisedRepresentative authorisedRepresentative = new AuthorisedRepresentative(
+                "1",
+                null);
 
             Assert.Equal(authorisedRepresentative, authorisedRepresentative);
         }
 
         [Fact]
-        public void AuthorisedRepresentative_EqualsAuthorisedRepresentativeSameDetails_ReturnsTrue()
+        public void Equals_AuthorisedRepresentativeWithSameDetails_ReturnsTrue()
         {
-            var authorisedRepresentative = AuthorisedRepresentativeBuilder.NewAuthorisedRepresentative;
-            var authorisedRepresentative2 = AuthorisedRepresentativeBuilder.NewAuthorisedRepresentative;
+            ProducerContact contact = A.Dummy<ProducerContact>();
+            A.CallTo(() => contact.IsOverseas).Returns(true);
 
-            Assert.Equal(authorisedRepresentative, authorisedRepresentative2);
+            AuthorisedRepresentative authorisedRepresentative1 = new AuthorisedRepresentative(
+                "1",
+                contact);
+
+            AuthorisedRepresentative authorisedRepresentative2 = new AuthorisedRepresentative(
+                "1",
+                contact);
+
+            Assert.Equal(authorisedRepresentative1, authorisedRepresentative2);
         }
 
         [Fact]
-        public void AuthorisedRepresentative_EqualsAuthorisedRepresentativeDifferentName_ReturnsFalse()
+        public void Equals_AuthorisedRepresentativeWithDifferentName_ReturnsFalse()
         {
-            var authorisedRepresentative = AuthorisedRepresentativeBuilder.NewAuthorisedRepresentative;
-            var authorisedRepresentative2 = AuthorisedRepresentativeBuilder.WithName("name test");
+            ProducerContact contact = A.Fake<ProducerContact>();
+            A.CallTo(() => contact.IsOverseas).Returns(true);
 
-            Assert.NotEqual(authorisedRepresentative, authorisedRepresentative2);
+            AuthorisedRepresentative authorisedRepresentative1 = new AuthorisedRepresentative(
+                "1",
+                contact);
+
+            AuthorisedRepresentative authorisedRepresentative2 = new AuthorisedRepresentative(
+                "2",
+                contact);
+
+            Assert.NotEqual(authorisedRepresentative1, authorisedRepresentative2);
         }
 
         [Fact]
-        public void AuthorisedRepresentative_EqualsAuthorisedRepresentativeDifferentProducerContact_ReturnsFalse()
+        public void Equals_AuthorisedRepresentativeWithDifferentProducerContact_ReturnsFalse()
         {
-            var authorisedRepresentative = AuthorisedRepresentativeBuilder.WithProducerContact(new AlwaysUnequalProducerContact());
-            var authorisedRepresentative2 = AuthorisedRepresentativeBuilder.WithProducerContact(new AlwaysUnequalProducerContact());
+            ProducerContact contact1 = A.Fake<ProducerContact>();
+            A.CallTo(() => contact1.IsOverseas).Returns(true);
+            A.CallTo(() => contact1.Equals(A<ProducerContact>._)).Returns(false);
 
-            Assert.NotEqual(authorisedRepresentative, authorisedRepresentative2);
+            ProducerContact contact2 = A.Fake<ProducerContact>();
+            A.CallTo(() => contact2.IsOverseas).Returns(true);
+            A.CallTo(() => contact2.Equals(A<ProducerContact>._)).Returns(false);
+
+            AuthorisedRepresentative authorisedRepresentative1 = new AuthorisedRepresentative(
+                "1",
+                contact1);
+
+            AuthorisedRepresentative authorisedRepresentative2 = new AuthorisedRepresentative(
+                "1",
+                contact2);
+
+            Assert.NotEqual(authorisedRepresentative1, authorisedRepresentative2);
         }
 
         [Fact]
-        public void AuthorisedRepresentative_EqualsAuthorisedRepresentativeNullProducerContact_ReturnsFalse()
+        public void Equals_AuthorisedRepresentativeWithNullProducerContact_ReturnsFalse()
         {
-            var authorisedRepresentative = AuthorisedRepresentativeBuilder.NewAuthorisedRepresentative;
-            var authorisedRepresentative2 = AuthorisedRepresentativeBuilder.WithProducerContact(null);
+            ProducerContact contact = A.Fake<ProducerContact>();
+            A.CallTo(() => contact.IsOverseas).Returns(true);
 
-            Assert.NotEqual(authorisedRepresentative, authorisedRepresentative2);
+            AuthorisedRepresentative authorisedRepresentative1 = new AuthorisedRepresentative(
+                "1",
+                contact);
+
+            AuthorisedRepresentative authorisedRepresentative2 = new AuthorisedRepresentative(
+                "2",
+                null);
+
+            Assert.NotEqual(authorisedRepresentative1, authorisedRepresentative2);
         }
 
-        private class AlwaysEqualProducerContact : ProducerContact
+        /// <summary>
+        /// This test ensures that an authorised representative cannot be created with an
+        /// overseas producer that is based in the UK.
+        /// </summary>
+        [Fact]
+        public void AuthorisedRepresentative_WithOverseasProducerBasedInUK_ThrowsArgumentException()
         {
-            public override bool Equals(ProducerContact other)
-            {
-                return true;
-            }
+            // Arrange
+            ProducerContact contact = A.Fake<ProducerContact>();
+            A.CallTo(() => contact.IsOverseas).Returns(false);
+
+            // Act
+            Func<AuthorisedRepresentative> action = () => new AuthorisedRepresentative("Name", contact);
+
+            // Assert
+            Assert.Throws<ArgumentException>(action);
         }
 
-        private class AlwaysUnequalProducerContact : ProducerContact
+        /// <summary>
+        /// This test ensures that an authorised representative can be created with an
+        /// overseas producer that is not based in the UK.
+        /// </summary>
+        [Fact]
+        public void AuthorisedRepresentative_WithOverseasProducerNotBasedInUK_DoesntThrowException()
         {
-            public override bool Equals(ProducerContact other)
-            {
-                return false;
-            }
+            // Arrange
+            ProducerContact contact = A.Fake<ProducerContact>();
+            A.CallTo(() => contact.IsOverseas).Returns(true);
+
+            // Act
+            AuthorisedRepresentative result = new AuthorisedRepresentative("Name", contact);
+
+            // Assert
+            // No exception thrown.
         }
 
-        private class AuthorisedRepresentativeBuilder
+        /// <summary>
+        /// This test ensures that an authorised representative can be created without an
+        /// overseas producer.
+        /// </summary>
+        [Fact]
+        public void AuthorisedRepresentative_WithNoOverseasProducer_DoesntThrowException()
         {
-            private string name = "name";
-            private ProducerContact contact = new AlwaysEqualProducerContact();
+            // Arrange
 
-            private AuthorisedRepresentativeBuilder()
-            {
-            }
+            // Act
+            AuthorisedRepresentative result = new AuthorisedRepresentative("Name", null);
 
-            private AuthorisedRepresentative Build()
-            {
-                AuthorisedRepresentative authorisedRepresentative;
-
-                if (contact != null)
-                {
-                    authorisedRepresentative = new AuthorisedRepresentative(name, contact);
-                }
-                else
-                {
-                    authorisedRepresentative = new AuthorisedRepresentative(name);
-                }
-
-                return authorisedRepresentative;
-            }
-
-            public static AuthorisedRepresentative NewAuthorisedRepresentative
-            {
-                get { return new AuthorisedRepresentativeBuilder().Build(); }
-            }
-
-            public static AuthorisedRepresentative WithName(string name)
-            {
-                var builder = new AuthorisedRepresentativeBuilder();
-                builder.name = name;
-
-                return builder.Build();
-            }
-
-            public static AuthorisedRepresentative WithProducerContact(ProducerContact contact)
-            {
-                var builder = new AuthorisedRepresentativeBuilder();
-                builder.contact = contact;
-
-                return builder.Build();
-            }
+            // Assert
+            // No exception thrown.
         }
     }
 }
