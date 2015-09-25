@@ -14,12 +14,14 @@
     {
         private readonly WeeeContext context;
         private readonly IXmlConverter xmlConverter;
+        private readonly IProducerChargeCalculator producerChargeCalculator;
         public List<MemberUploadError> ErrorsAndWarnings { get; set; }
 
-        public XmlChargeBandCalculator(WeeeContext context, IXmlConverter xmlConverter)
+        public XmlChargeBandCalculator(WeeeContext context, IXmlConverter xmlConverter, IProducerChargeCalculator producerChargeCalculator)
         {
             this.context = context;
             this.xmlConverter = xmlConverter;
+            this.producerChargeCalculator = producerChargeCalculator;
             ErrorsAndWarnings = new List<MemberUploadError>();
         }
 
@@ -27,14 +29,13 @@
         {
             var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
 
-            var producerChargeBandCalculator = new ProducerChargeCalculator(context);
             var producerCharges = new Hashtable();
             var complianceYear = Int32.Parse(schemeType.complianceYear);
 
             foreach (var producer in schemeType.producerList)
             {
                 var producerName = producer.GetProducerName();
-                var producerCharge = producerChargeBandCalculator.CalculateCharge(producer, complianceYear);
+                var producerCharge = producerChargeCalculator.CalculateCharge(producer, complianceYear);
                 if (producerCharge != null)
                 {
                     if (!producerCharges.ContainsKey(producerName))
