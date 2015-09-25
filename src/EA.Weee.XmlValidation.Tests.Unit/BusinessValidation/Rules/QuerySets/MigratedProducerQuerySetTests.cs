@@ -1,80 +1,56 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Rules.QuerySets
 {
-    using System.Collections.Generic;
     using DataAccess;
+    using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
-    using Weee.Domain.Producer;
+    using System;
+    using System.Collections.Generic;
     using Weee.Tests.Core;
     using XmlValidation.BusinessValidation.QuerySets;
     using Xunit;
 
     public class MigratedProducerQuerySetTests
     {
-        private readonly WeeeContext context;
-        private readonly DbContextHelper helper;
-
-        public MigratedProducerQuerySetTests()
+        [Fact]
+        public void GetMigratedProducer_PrnDoesNotExist_ReturnsNull()
         {
-            context = A.Fake<WeeeContext>();
-            helper = new DbContextHelper();
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                MigratedProducerQuerySet querySet = new MigratedProducerQuerySet(database.WeeeContext);
 
-            // By default, context returns no migrated producers
-            A.CallTo(() => context.MigratedProducers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>()));
-        }
+                // Act
+                EA.Weee.Domain.Producer.MigratedProducer result = querySet.GetMigratedProducer("XXX");
 
-        [Theory]
-        [InlineData("ABC12345", "ABC12346")]
-        [InlineData("ABC12346", "ABC12345")]
-        public void GetMigratedProducer_PrnDoesNotMatch_ReturnsNull(string thisPrn, string existingPrn)
-        {
-            var migratedProducer = FakeMigratedProducer(existingPrn);
-
-            A.CallTo(() => context.MigratedProducers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>
-                {
-                    migratedProducer
-                }));
-            A.CallTo(() => context.Producers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>()));
-
-            var result = MigratedProducerQuerySet().GetMigratedProducer(thisPrn);
-
-            Assert.Null(result);
+                // Assert
+                Assert.Null(result);
+            }
         }
 
         [Fact]
-        public void GetMigratedProducer_PrnMatches_ReturnsMigratedProducer()
+        public void GetMigratedProducer_PrnExists_ReturnsMigratedProducer()
         {
-            const string prn = "ABC12345";
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                MigratedProducer migratedProducer1 = new MigratedProducer();
+                migratedProducer1.Id = new Guid("B1750CCE-77D9-4A11-9ACC-D29D692FAA52");
+                migratedProducer1.ProducerRegistrationNumber = "ABC";
+                migratedProducer1.ProducerName = "Test Producer 1";
 
-            var migratedProducer = FakeMigratedProducer(prn);
+                database.Model.MigratedProducers.Add(migratedProducer1);
+                database.Model.SaveChanges();
 
-            A.CallTo(() => context.MigratedProducers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>
-                {
-                    migratedProducer
-                }));
-            A.CallTo(() => context.Producers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>()));
+                MigratedProducerQuerySet querySet = new MigratedProducerQuerySet(database.WeeeContext);
 
-            var result = MigratedProducerQuerySet().GetMigratedProducer(prn);
+                // Act
+                EA.Weee.Domain.Producer.MigratedProducer result = querySet.GetMigratedProducer("ABC");
 
-            Assert.Equal(migratedProducer, result);
-        }
-
-        private MigratedProducerQuerySet MigratedProducerQuerySet()
-        {
-            return new MigratedProducerQuerySet(context);
-        }
-
-        private MigratedProducer FakeMigratedProducer(string prn)
-        {
-            var producer = A.Fake<MigratedProducer>();
-            A.CallTo(() => producer.ProducerRegistrationNumber)
-                .Returns(prn);
-
-            return producer;
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(new Guid("B1750CCE-77D9-4A11-9ACC-D29D692FAA52"), result.Id);
+                Assert.Equal("Test Producer 1", result.ProducerName);
+            }
         }
     }
 }

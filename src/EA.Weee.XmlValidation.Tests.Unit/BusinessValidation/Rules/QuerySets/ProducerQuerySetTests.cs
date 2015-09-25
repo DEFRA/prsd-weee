@@ -1,10 +1,12 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Rules.QuerySets
 {
-    using System;
-    using System.Collections.Generic;
     using DataAccess;
     using Domain;
+    using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Weee.Domain;
     using Weee.Domain.Producer;
     using Weee.Tests.Core;
@@ -13,201 +15,314 @@
 
     public class ProducerQuerySetTests
     {
-        private readonly WeeeContext context;
-        private readonly DbContextHelper helper;
-
-        public ProducerQuerySetTests()
-        {
-            context = A.Fake<WeeeContext>();
-            helper = new DbContextHelper();
-        }
-
         [Fact]
         public void GetLatestProducerForComplianceYearAndScheme_AllParametersMatch_ReturnsProducer()
         {
-            var schemeOrganisationId = Guid.NewGuid();
-            var registrationNumber = "ABC12345";
-            var complianceYear = 2016;
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
 
-            var producer = FakeProducer.Create(ObligationType.Both, registrationNumber, true, schemeOrganisationId, complianceYear);
+                // Arrange
+                Scheme scheme = helper.CreateScheme();
 
-            A.CallTo(() => context.MigratedProducers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>()));
-            A.CallTo(() => context.Producers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
-                {
-                    producer
-                }));
+                MemberUpload memberUpload = helper.CreateMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2016;
+                memberUpload.IsSubmitted = true;
 
-            var result = ProducerQuerySet().GetLatestProducerForComplianceYearAndScheme(registrationNumber, complianceYear.ToString(), schemeOrganisationId);
+                EA.Weee.Tests.Core.Model.Producer producer = helper.CreateProducerAsCompany(memberUpload, "AAAAAAA");
+                producer.IsCurrentForComplianceYear = true;
 
-            Assert.Equal(producer, result);
+                database.Model.SaveChanges();
+
+                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+
+                // Act
+                var result = querySet.GetLatestProducerForComplianceYearAndScheme("AAAAAAA", "2016", scheme.OrganisationId);
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(producer.Id, result.Id);
+            }
         }
 
-        [Theory]
-        [InlineData(2016, 2017)]
-        [InlineData(2017, 2016)]
-        public void GetLatestProducerForComplianceYearAndScheme_ComplianceYearDoesNotMatch_ReturnsNull(int thisComplianceYear, int existingComplianceYear)
+        [Fact]
+        public void GetLatestProducerForComplianceYearAndScheme_ComplianceYearDoesNotMatch_ReturnsNull()
         {
-            var schemeOrganisationId = Guid.NewGuid();
-            var registrationNumber = "ABC12345";
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
 
-            var producer = FakeProducer.Create(ObligationType.Both, registrationNumber, true, schemeOrganisationId, existingComplianceYear);
+                // Arrange
+                Scheme scheme = helper.CreateScheme();
 
-            A.CallTo(() => context.MigratedProducers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>()));
-            A.CallTo(() => context.Producers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
-                {
-                    producer
-                }));
+                MemberUpload memberUpload = helper.CreateMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2016;
+                memberUpload.IsSubmitted = true;
 
-            var result = ProducerQuerySet().GetLatestProducerForComplianceYearAndScheme(registrationNumber, thisComplianceYear.ToString(), schemeOrganisationId);
+                EA.Weee.Tests.Core.Model.Producer producer = helper.CreateProducerAsCompany(memberUpload, "AAAAAAA");
+                producer.IsCurrentForComplianceYear = true;
 
-            Assert.Null(result);
+                database.Model.SaveChanges();
+
+                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+
+                // Act
+                var result = querySet.GetLatestProducerForComplianceYearAndScheme("AAAAAAA", "2017", scheme.OrganisationId);
+
+                // Assert
+                Assert.Null(result);
+            }
         }
 
-        [Theory]
-        [InlineData("ABC12345", "ABC12346")]
-        [InlineData("ABC12346", "ABC12345")]
-        public void GetLatestProducerForComplianceYearAndScheme_PrnDoesNotMatch_ReturnsNull(string thisPrn, string existingPrn)
+        [Fact]
+        public void GetLatestProducerForComplianceYearAndScheme_PrnDoesNotMatch_ReturnsNull()
         {
-            var schemeOrganisationId = Guid.NewGuid();
-            var complianceYear = 2016;
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
 
-            var producer = FakeProducer.Create(ObligationType.Both, existingPrn, true, schemeOrganisationId, complianceYear);
+                // Arrange
+                Scheme scheme = helper.CreateScheme();
 
-            A.CallTo(() => context.MigratedProducers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>()));
-            A.CallTo(() => context.Producers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
-                {
-                    producer
-                }));
+                MemberUpload memberUpload = helper.CreateMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2016;
+                memberUpload.IsSubmitted = true;
 
-            var result = ProducerQuerySet().GetLatestProducerForComplianceYearAndScheme(thisPrn, complianceYear.ToString(), schemeOrganisationId);
+                EA.Weee.Tests.Core.Model.Producer producer = helper.CreateProducerAsCompany(memberUpload, "AAAAAAAA");
+                producer.IsCurrentForComplianceYear = true;
 
-            Assert.Null(result);
+                database.Model.SaveChanges();
+
+                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+
+                // Act
+                var result = querySet.GetLatestProducerForComplianceYearAndScheme("XXXXXXXX", "2016", scheme.OrganisationId);
+
+                // Assert
+                Assert.Null(result);
+            }
         }
 
-        [Theory]
-        [InlineData("ABC12345", "ABC12346")]
-        [InlineData("ABC12346", "ABC12345")]
-        public void GetLatestProducerFromPreviousComplianceYears_PrnDoesNotMatch_ReturnsNull(string thisPrn, string existingPrn)
+        [Fact]
+        public void GetLatestProducerFromPreviousComplianceYears_PrnDoesNotMatch_ReturnsNull()
         {
-            var producer = FakeProducer.Create(ObligationType.Both, existingPrn, true, Guid.NewGuid(), 2016);
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
 
-            A.CallTo(() => context.MigratedProducers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>()));
-            A.CallTo(() => context.Producers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
-                {
-                    producer
-                }));
+                // Arrange
+                Scheme scheme = helper.CreateScheme();
 
-            var result = ProducerQuerySet().GetLatestProducerFromPreviousComplianceYears(thisPrn);
+                MemberUpload memberUpload = helper.CreateMemberUpload(scheme);
+                memberUpload.ComplianceYear = 2016;
+                memberUpload.IsSubmitted = true;
 
-            Assert.Null(result);
+                EA.Weee.Tests.Core.Model.Producer producer = helper.CreateProducerAsCompany(memberUpload, "AAAAAAA");
+                producer.IsCurrentForComplianceYear = true;
+
+                database.Model.SaveChanges();
+
+                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+
+                // Act
+                var result = querySet.GetLatestProducerFromPreviousComplianceYears("XXXXXXX");
+
+                // Assert
+                Assert.Null(result);
+            } 
         }
 
         [Fact]
         public void GetLatestProducerFromPreviousComplianceYears_TwoProducerEntriesInConsecutiveYears_ReturnsLatestProducerByComplianceYear()
         {
-            const string prn = "ABC12345";
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
 
-            var oldestProducer = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2014);
-            var newestProducer = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
+                // Arrange
+                Scheme scheme = helper.CreateScheme();
 
-            A.CallTo(() => context.MigratedProducers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>()));
-            A.CallTo(() => context.Producers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
-                {
-                    oldestProducer,
-                    newestProducer
-                }));
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme);
+                memberUpload1.ComplianceYear = 2015;
+                memberUpload1.IsSubmitted = true;
 
-            var result = ProducerQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
+                EA.Weee.Tests.Core.Model.Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
+                producer1.IsCurrentForComplianceYear = true;
 
-            Assert.Equal(newestProducer, result);
+                MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
+                memberUpload2.ComplianceYear = 2016;
+                memberUpload2.IsSubmitted = true;
+
+                EA.Weee.Tests.Core.Model.Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
+                producer2.IsCurrentForComplianceYear = true;
+
+                database.Model.SaveChanges();
+
+                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+
+                // Act
+                var result = querySet.GetLatestProducerFromPreviousComplianceYears("AAAAAAA");
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(producer2.Id, result.Id);
+            }
         }
 
         [Fact]
-        public void GetLatestProducerFromCurrentComplianceYearForAnotherSchemeSameObligationType__ReturnsAnotherSchemeProducer()
+        public void GetLatestProducerFromPreviousComplianceYears_TwoProducerEntriesIn2015_ReturnsLatestProducerByUdatedDate()
         {
-            const string prn = "ABC12345";
-            Guid schemeOrgId = Guid.NewGuid();
-            var anotherSchemeProducer = FakeProducer.Create(ObligationType.B2B, prn, true, schemeOrgId, 2016);
-            var currentSchemeProducer = FakeProducer.Create(ObligationType.B2B, prn, true, Guid.NewGuid(), 2016);
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
 
-            A.CallTo(() => context.Producers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
-                {
-                    anotherSchemeProducer,
-                    currentSchemeProducer
-                }));
+                // Arrange
+                Scheme scheme = helper.CreateScheme();
 
-            var result = ProducerQuerySet().GetProducerForOtherSchemeAndObligationType(prn, "2016", schemeOrgId, 1);
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme);
+                memberUpload1.ComplianceYear = 2015;
+                memberUpload1.IsSubmitted = true;
 
-            Assert.Equal(anotherSchemeProducer, result);
-        }
-        [Fact]
-        public void
-            GetLatestProducerFromPreviousComplianceYears_TwoProducerEntriesIn2015_ReturnsLatestProducerByUploadDate()
-        {
-            const string prn = "ABC12345";
+                EA.Weee.Tests.Core.Model.Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
+                producer1.UpdatedDate = new DateTime(2015, 1, 1);
+                producer1.IsCurrentForComplianceYear = false;
 
-            var oldestProducer = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
-            var newestProducer = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
+                MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
+                memberUpload2.ComplianceYear = 2015;
+                memberUpload2.IsSubmitted = true;
 
-            A.CallTo(() => context.MigratedProducers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>()));
-            A.CallTo(() => context.Producers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
-                {
-                    oldestProducer,
-                    newestProducer
-                }));
+                EA.Weee.Tests.Core.Model.Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
+                producer2.UpdatedDate = new DateTime(2015, 1, 2);
+                producer2.IsCurrentForComplianceYear = true;
 
-            var result = ProducerQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
+                database.Model.SaveChanges();
 
-            Assert.Equal(newestProducer, result);
+                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+
+                // Act
+                var result = querySet.GetLatestProducerFromPreviousComplianceYears("AAAAAAA");
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(producer2.Id, result.Id);
+            }
         }
 
         [Fact]
-        public void
-            GetLatestProducerFromPreviousComplianceYears_TwoProducerEntriesIn2015_AndOneIn2014_ReturnsLatestProducerByUploadDateIn2015()
+        public void GetLatestProducerFromPreviousComplianceYears_TwoProducerEntriesIn2015_AndOneIn2014_ReturnsLatestProducerByUpdatedDateIn2015()
         {
-            const string prn = "ABC12345";
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
 
-            var producer2014 = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2014);
-            var oldestProducer2015 = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
-            var newestProducer2015 = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
+                // Arrange
+                Scheme scheme = helper.CreateScheme();
 
-            A.CallTo(() => context.MigratedProducers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<MigratedProducer>()));
-            A.CallTo(() => context.Producers)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
-                {
-                    producer2014,
-                    oldestProducer2015,
-                    newestProducer2015
-                }));
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme);
+                memberUpload1.ComplianceYear = 2015;
+                memberUpload1.IsSubmitted = true;
 
-            var result = ProducerQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
+                EA.Weee.Tests.Core.Model.Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
+                producer1.UpdatedDate = new DateTime(2015, 1, 1);
+                producer1.IsCurrentForComplianceYear = false;
 
-            Assert.Equal(newestProducer2015, result);
+                MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
+                memberUpload2.ComplianceYear = 2015;
+                memberUpload2.IsSubmitted = true;
+
+                EA.Weee.Tests.Core.Model.Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
+                producer2.UpdatedDate = new DateTime(2015, 1, 2);
+                producer2.IsCurrentForComplianceYear = true;
+
+                MemberUpload memberUpload3 = helper.CreateMemberUpload(scheme);
+                memberUpload3.ComplianceYear = 2014;
+                memberUpload3.IsSubmitted = true;
+
+                EA.Weee.Tests.Core.Model.Producer producer3 = helper.CreateProducerAsCompany(memberUpload3, "AAAAAAA");
+                producer3.UpdatedDate = new DateTime(2014, 1, 1);
+                producer3.IsCurrentForComplianceYear = true;
+
+                database.Model.SaveChanges();
+
+                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+
+                // Act
+                var result = querySet.GetLatestProducerFromPreviousComplianceYears("AAAAAAA");
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(producer2.Id, result.Id);
+            }
         }
 
         [Fact]
         public void GetAllRegistrationNumbers_ReturnsDistinctRegistrationNumbers()
         {
-            const string prn = "ABC12345";
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+
+                // Arrange
+                Scheme scheme = helper.CreateScheme();
+
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme);
+                memberUpload1.ComplianceYear = 2015;
+                memberUpload1.IsSubmitted = false;
+
+                EA.Weee.Tests.Core.Model.Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
+                producer1.IsCurrentForComplianceYear = true;
+
+                MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
+                memberUpload2.ComplianceYear = 2015;
+                memberUpload2.IsSubmitted = true;
+
+                EA.Weee.Tests.Core.Model.Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
+                producer2.IsCurrentForComplianceYear = true;
+
+                database.Model.SaveChanges();
+
+                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+
+                // Act
+                List<string> results = querySet.GetAllRegistrationNumbers();
+
+                // Assert
+                Assert.NotNull(results);
+                Assert.Equal(1, results.Count(r => r == "AAAAAAA"));
+            }
         }
 
-        private ProducerQuerySet ProducerQuerySet()
+        [Fact]
+        public void GetProducerForOtherSchemeAndObligationType_ForAnotherSchemeSameObligationType_ReturnsAnotherSchemeProducer()
         {
-            return new ProducerQuerySet(context);
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+
+                // Arrange
+                Scheme scheme1 = helper.CreateScheme();
+                
+                Scheme scheme2 = helper.CreateScheme();
+
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme2);
+                memberUpload1.ComplianceYear = 2015;
+                memberUpload1.IsSubmitted = true;
+
+                EA.Weee.Tests.Core.Model.Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
+                producer1.ObligationType = (int)ObligationType.B2C;
+                producer1.IsCurrentForComplianceYear = true;
+
+                database.Model.SaveChanges();
+
+                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+
+                // Act
+                var result = querySet.GetProducerForOtherSchemeAndObligationType("AAAAAAA", "2015", scheme1.OrganisationId, (int)ObligationType.B2C);
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(producer1.Id, result.Id);
+            }
         }
     }
 }

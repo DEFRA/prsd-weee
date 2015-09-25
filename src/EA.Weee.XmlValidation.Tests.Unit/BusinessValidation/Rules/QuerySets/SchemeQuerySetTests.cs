@@ -1,76 +1,55 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Rules.QuerySets
 {
+    using DataAccess;
+    using EA.Weee.Tests.Core.Model;
+    using FakeItEasy;
     using System;
     using System.Collections.Generic;
-    using DataAccess;
-    using FakeItEasy;
-    using Weee.Domain.Scheme;
     using Weee.Tests.Core;
     using XmlValidation.BusinessValidation.QuerySets;
     using Xunit;
 
     public class SchemeQuerySetTests
     {
-        private readonly WeeeContext context;
-        private readonly DbContextHelper helper;
-
-        public SchemeQuerySetTests()
+        [Fact]
+        public void GetSchemeApprovalNumber_SchemeIdDoesNotExist_ReturnsNull()
         {
-            context = A.Fake<WeeeContext>();
-            helper = new DbContextHelper();
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                var schemeId = new Guid("15BE2DE7-8D51-470E-B27D-779AF14172AD");
 
-            // By default, context returns no schemes
-            A.CallTo(() => context.Schemes)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<Scheme>()));
+                SchemeQuerySet schemeQuerySet = new SchemeQuerySet(database.WeeeContext);
+
+                // Act
+                string result = schemeQuerySet.GetSchemeApprovalNumber(schemeId);
+
+                // Assert
+                Assert.Null(result);
+            }
         }
 
         [Fact]
-        public void GetSchemeApprovalNumber_SchemeIdDoesNotMatch_ReturnsNull()
+        public void GetSchemeApprovalNumber_SchemeIdDoesExist_ReturnsApprovalNumber()
         {
-            var schemeId = Guid.NewGuid();
-            var approvalNumber = "WEE/ZZ1234AA/SCH";
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
 
-            A.CallTo(() => context.Schemes)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<Scheme>
-                {
-                    SchemeWithApprovalNumber(approvalNumber)
-                }));
+                // Arrange
+                Scheme scheme1 = helper.CreateScheme();
+                scheme1.ApprovalNumber = "ABC";
+                
+                database.Model.SaveChanges();
 
-            var result = SchemeQuerySet().GetSchemeApprovalNumber(schemeId);
+                SchemeQuerySet schemeQuerySet = new SchemeQuerySet(database.WeeeContext);
 
-            Assert.Null(result);
-        }
+                // Act
+                string result = schemeQuerySet.GetSchemeApprovalNumber(scheme1.Id);
 
-        [Fact]
-        public void GetSchemeApprovalNumber_SchemeIdDoesMatch_ReturnsApprovalNumber()
-        {
-            var schemeId = Guid.Empty; // This will match because Id is not set against existing scheme
-            var approvalNumber = "WEE/ZZ1234AA/SCH";
-
-            A.CallTo(() => context.Schemes)
-                .Returns(helper.GetAsyncEnabledDbSet(new List<Scheme>
-                {
-                    SchemeWithApprovalNumber(approvalNumber)
-                }));
-
-            var result = SchemeQuerySet().GetSchemeApprovalNumber(schemeId);
-
-            Assert.Equal(approvalNumber, result);
-        }
-
-        private SchemeQuerySet SchemeQuerySet()
-        {
-            return new SchemeQuerySet(context);
-        }
-
-        private Scheme SchemeWithApprovalNumber(string approvalNumber)
-        {
-            var scheme = A.Fake<Scheme>();
-
-            A.CallTo(() => scheme.ApprovalNumber)
-                .Returns(approvalNumber);
-
-            return scheme;
+                // Assert
+                Assert.Equal("ABC", result);
+            }
         }
     }
 }
