@@ -127,6 +127,7 @@
     <Compile Include="Scheme\Interfaces\IXmlChargeBandCalculator.cs" />
     <Compile Include="Scheme\Interfaces\IXmlConverter.cs" />
     <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\IProducerChargeCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandler.cs" />
     <Compile Include="Scheme\GetSchemesHandler.cs" />

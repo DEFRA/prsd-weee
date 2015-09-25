@@ -6,6 +6,7 @@
     using Domain;
     using Domain.Producer;
     using Domain.Scheme;
+    using EA.Weee.Xml;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
     using Weee.Tests.Core;
@@ -34,7 +35,7 @@
                 MakeSubmittedProducer(SomeComplianceYear, SomeRegistrationNumber, fakeE.Amount)
             }));
 
-            var calculator = new ProducerChargeCalculator(context);
+            var calculator = new ProducerChargeCalculator(context, new ProducerChargeBandCalculator());
 
             var producer = GetAmendingProducerType(SomeRegistrationNumber, ChargeBandType.A);
             var producerCharge = calculator.CalculateCharge(producer, SomeComplianceYear);
@@ -51,7 +52,7 @@
                 MakeSubmittedProducer(SomeComplianceYear, SomeRegistrationNumber, fakeB.Amount)
             }));
 
-            var calculator = new ProducerChargeCalculator(context);
+            var calculator = new ProducerChargeCalculator(context, new ProducerChargeBandCalculator());
 
             var producer = GetAmendingProducerType(SomeRegistrationNumber, ChargeBandType.E);
             var producerCharge = calculator.CalculateCharge(producer, SomeComplianceYear);
@@ -71,7 +72,7 @@
                 MakeSubmittedProducer(SomeComplianceYear, SomeRegistrationNumber, 0) // E
             }));
 
-            var calculator = new ProducerChargeCalculator(context);
+            var calculator = new ProducerChargeCalculator(context, new ProducerChargeBandCalculator());
 
             var producer = GetAmendingProducerType(SomeRegistrationNumber, ChargeBandType.A);
             var producerCharge = calculator.CalculateCharge(producer, SomeComplianceYear);
@@ -91,7 +92,7 @@
                 MakeSubmittedProducer(SomeComplianceYear, SomeRegistrationNumber, fakeA.Amount - fakeB.Amount) // A
             }));
 
-            var calculator = new ProducerChargeCalculator(context);
+            var calculator = new ProducerChargeCalculator(context, new ProducerChargeBandCalculator());
 
             var producer = GetAmendingProducerType(SomeRegistrationNumber, ChargeBandType.E);
             var producerCharge = calculator.CalculateCharge(producer, SomeComplianceYear);
@@ -105,7 +106,7 @@
             var context = GetContextWithFakeChargeBands();
             A.CallTo(() => context.Producers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Producer>()));
 
-            var calculator = new ProducerChargeCalculator(context);
+            var calculator = new ProducerChargeCalculator(context, new ProducerChargeBandCalculator());
 
             var producer = GetAmendingProducerType(SomeRegistrationNumber, ChargeBandType.A);
             var producerCharge = calculator.CalculateCharge(producer, SomeComplianceYear);
@@ -122,7 +123,7 @@
             var context = GetContextWithFakeChargeBands();
             A.CallTo(() => context.Producers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Producer>()));
 
-            var calculator = new ProducerChargeCalculator(context);
+            var calculator = new ProducerChargeCalculator(context, new ProducerChargeBandCalculator());
 
             var producerInBandA = GetAmendingProducerType(SomeRegistrationNumber, ChargeBandType.A);
             var producerInBandB = GetAmendingProducerType(SomeRegistrationNumber, ChargeBandType.B);

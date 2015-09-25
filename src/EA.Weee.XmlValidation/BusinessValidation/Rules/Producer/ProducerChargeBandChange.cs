@@ -13,10 +13,12 @@
     public class ProducerChargeBandChange : IProducerChargeBandChange
     {
         private readonly IProducerQuerySet querySet;
+        private IProducerChargeBandCalculator producerChargeBandCalculator;
 
-        public ProducerChargeBandChange(IProducerQuerySet querySet)
+        public ProducerChargeBandChange(IProducerQuerySet querySet, IProducerChargeBandCalculator producerChargeBandCalculator)
         {
             this.querySet = querySet;
+            this.producerChargeBandCalculator = producerChargeBandCalculator;
         }
 
         public RuleResult Evaluate(schemeType root, producerType element, Guid schemeId)
@@ -30,7 +32,7 @@
 
                 if (existingProducer != null)
                 {
-                    var chargeBand = ProducerChargeBandCalculator.GetProducerChargeBand(element.annualTurnoverBand, element.VATRegistered, element.eeePlacedOnMarketBand);
+                    var chargeBand = producerChargeBandCalculator.GetProducerChargeBand(element.annualTurnoverBand, element.VATRegistered, element.eeePlacedOnMarketBand);
 
                     if (existingProducer.ChargeBandType != chargeBand.Value)
                     {

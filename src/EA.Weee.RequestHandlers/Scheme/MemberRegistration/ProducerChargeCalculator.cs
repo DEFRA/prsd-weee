@@ -10,15 +10,17 @@
     using RequestHandlers;
     using Xml.Schemas;
 
-    public class ProducerChargeCalculator
+    public class ProducerChargeCalculator : IProducerChargeCalculator
     {
         private readonly WeeeContext context;
         private readonly List<ProducerChargeBand> producerChargeBands;
+        private readonly IProducerChargeBandCalculator producerChargeBandCalculator;
 
-        public ProducerChargeCalculator(WeeeContext context)
+        public ProducerChargeCalculator(WeeeContext context, IProducerChargeBandCalculator producerChargeBandCalculator)
         {
             this.context = context;
             producerChargeBands = context.ProducerChargeBands.ToList();
+            this.producerChargeBandCalculator = producerChargeBandCalculator;
         }
 
         public ProducerCharge CalculateCharge(producerType producer, int complianceYear)
@@ -50,7 +52,7 @@
 
         private ProducerCharge GetProducerCharge(producerType producer)
         {
-            ChargeBandType chargeBandType = ProducerChargeBandCalculator.GetProducerChargeBand(
+            ChargeBandType chargeBandType = producerChargeBandCalculator.GetProducerChargeBand(
                 producer.annualTurnoverBand,
                 producer.VATRegistered,
                 producer.eeePlacedOnMarketBand);

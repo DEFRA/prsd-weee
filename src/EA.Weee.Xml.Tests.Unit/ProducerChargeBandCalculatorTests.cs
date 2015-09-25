@@ -24,7 +24,7 @@
             eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
 
             // Act
-            ChargeBandType result = ProducerChargeBandCalculator.GetProducerChargeBand(
+            ChargeBandType result = new ProducerChargeBandCalculator().GetProducerChargeBand(
                 annualTurnoverBand,
                 vatRegistered,
                 eeePlacedOnMarketBand);
@@ -46,7 +46,7 @@
             eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
 
             // Act
-            ChargeBandType result = ProducerChargeBandCalculator.GetProducerChargeBand(
+            ChargeBandType result = new ProducerChargeBandCalculator().GetProducerChargeBand(
                 annualTurnoverBand,
                 vatRegistered,
                 eeePlacedOnMarketBand);
@@ -68,7 +68,7 @@
             eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
 
             // Act
-            ChargeBandType result = ProducerChargeBandCalculator.GetProducerChargeBand(
+            ChargeBandType result = new ProducerChargeBandCalculator().GetProducerChargeBand(
                 annualTurnoverBand,
                 vatRegistered,
                 eeePlacedOnMarketBand);
@@ -90,7 +90,7 @@
             eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
 
             // Act
-            ChargeBandType result = ProducerChargeBandCalculator.GetProducerChargeBand(
+            ChargeBandType result = new ProducerChargeBandCalculator().GetProducerChargeBand(
                 annualTurnoverBand,
                 vatRegistered,
                 eeePlacedOnMarketBand);
@@ -112,7 +112,7 @@
             eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket;
 
             // Act
-            ChargeBandType result = ProducerChargeBandCalculator.GetProducerChargeBand(
+            ChargeBandType result = new ProducerChargeBandCalculator().GetProducerChargeBand(
                 annualTurnoverBand,
                 vatRegistered,
                 eeePlacedOnMarketBand);

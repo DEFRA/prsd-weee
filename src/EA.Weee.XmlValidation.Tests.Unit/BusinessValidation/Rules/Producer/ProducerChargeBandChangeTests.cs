@@ -6,7 +6,11 @@
     using System.Text;
     using System.Threading.Tasks;
     using EA.Weee.Domain;
+    using EA.Weee.Xml;
     using EA.Weee.Xml.Schemas;
+    using EA.Weee.XmlValidation.BusinessValidation;
+    using EA.Weee.XmlValidation.BusinessValidation.QuerySets;
+    using EA.Weee.XmlValidation.BusinessValidation.Rules.Producer;
     using FakeItEasy;
     using Xunit;
     using Producer = EA.Weee.Domain.Producer.Producer;
@@ -16,12 +20,7 @@
         [Fact]
         public void Evaluate_Insert_ReturnsPass()
         {
-            var producer = new producerType()
-            {
-                status = statusType.I,
-            };
-
-            var result = new EvaluateProducerChargeBandWarningEvaluatorRunner().RunWithProducer(producer);
+            var result = new ProducerChargeBandChangeEvaluator().Evaluate(ChargeBandType.B, statusType.I);
 
             Assert.True(result.IsValid);
         }
@@ -29,20 +28,15 @@
         [Fact]
         public void Evaluate_Amendment_AndProducerExistsWithMatchingChargeBand_ReturnsPass()
         {
-            var runner = new EvaluateProducerChargeBandWarningEvaluatorRunner();
+            var evaluator = new ProducerChargeBandChangeEvaluator();
 
             var fakeProducer = A.Fake<Producer>();
             A.CallTo(() => fakeProducer.ChargeBandType).Returns(ChargeBandType.E.Value);
 
-            A.CallTo(() => runner.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
+            A.CallTo(() => evaluator.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(fakeProducer);
 
-            var producer = new producerType()
-            {
-                status = statusType.A
-            };
-
-            var result = runner.RunWithProducerChargeBand(ChargeBandType.E);
+            var result = evaluator.Evaluate(ChargeBandType.E);
 
             Assert.True(result.IsValid);
         }
@@ -50,20 +44,15 @@
         [Fact]
         public void Evaluate_Amendment_AndProducerExistsWithDifferentChargeBand_FailAsWarning()
         {
-            var runner = new EvaluateProducerChargeBandWarningEvaluatorRunner();
+            var evaluator = new ProducerChargeBandChangeEvaluator();
 
             var fakeProducer = A.Fake<Producer>();
             A.CallTo(() => fakeProducer.ChargeBandType).Returns(ChargeBandType.A.Value);
 
-            A.CallTo(() => runner.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
+            A.CallTo(() => evaluator.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(fakeProducer);
 
-            var producer = new producerType()
-            {
-                status = statusType.A
-            };
-
-            var result = runner.RunWithProducerChargeBand(ChargeBandType.B);
+            var result = evaluator.Evaluate(ChargeBandType.B);
 
             Assert.False(result.IsValid);
             Assert.Equal(Core.Shared.ErrorLevel.Warning, result.ErrorLevel);
@@ -77,22 +66,17 @@
             var existingChargeBand = ChargeBandType.A;
             var newChargeBand = ChargeBandType.B;
 
-            var runner = new EvaluateProducerChargeBandWarningEvaluatorRunner();
+            var evaluator = new ProducerChargeBandChangeEvaluator();
 
             var fakeProducer = A.Fake<Producer>();
             A.CallTo(() => fakeProducer.ChargeBandType).Returns(existingChargeBand.Value);
             A.CallTo(() => fakeProducer.OrganisationName).Returns(producerName);
             A.CallTo(() => fakeProducer.RegistrationNumber).Returns(registrationNumber);
 
-            A.CallTo(() => runner.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
+            A.CallTo(() => evaluator.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(fakeProducer);
 
-            var producer = new producerType()
-            {
-                status = statusType.A,
-            };
-
-            var result = runner.RunWithProducerChargeBand(newChargeBand);
+            var result = evaluator.Evaluate(newChargeBand);
 
             Assert.False(result.IsValid);
             Assert.Equal(Core.Shared.ErrorLevel.Warning, result.ErrorLevel);
@@ -102,45 +86,36 @@
             Assert.Contains(newChargeBand.DisplayName, result.Message);
         }
 
-        private class EvaluateProducerChargeBandWarningEvaluatorRunner
+        private class ProducerChargeBandChangeEvaluator
         {
-            private ProducerChargeBandWarningEvaluator evaluator;
             public IProducerQuerySet QuerySet { get; private set; }
-            public schemeType Scheme { get; set; }
-            public Guid OrgnanisationId { get; set; }
+            public IProducerChargeBandCalculator ProducerChargeBandCalculator { get; private set; }
+            private ProducerChargeBandChange producerChargeBandChange;
 
-            public EvaluateProducerChargeBandWarningEvaluatorRunner()
+            public ProducerChargeBandChangeEvaluator()
             {
                 QuerySet = A.Fake<IProducerQuerySet>();
-                evaluator = new ProducerChargeBandWarningEvaluator(QuerySet);
-                Scheme = new schemeType();
-                OrgnanisationId = Guid.NewGuid();
+                ProducerChargeBandCalculator = A.Fake<IProducerChargeBandCalculator>();
+
+                producerChargeBandChange = new ProducerChargeBandChange(QuerySet, ProducerChargeBandCalculator);
             }
 
-            public RuleResult RunWithProducer(producerType producer)
+            public RuleResult Evaluate(ChargeBandType producerChargeBand, statusType producerStatus = statusType.A)
             {
-                return evaluator.Evaluate(new ProducerChargeBandWarning(Scheme, producer, OrgnanisationId));
-            }
-
-            public RuleResult RunWithProducerChargeBand(ChargeBandType chargeBand)
-            {
-                var producer = new TestProducerType()
+                var producer = new producerType()
                 {
-                    status = statusType.A,
-                    ChargeBandType = chargeBand
+                    status = producerStatus
                 };
 
-                return RunWithProducer(producer);
-            }
-        }
+                var scheme = new schemeType()
+                {
+                    complianceYear = "2016"
+                };
 
-        private class TestProducerType : producerType
-        {
-            public ChargeBandType ChargeBandType { get; set; }
+                A.CallTo(() => ProducerChargeBandCalculator.GetProducerChargeBand(A<annualTurnoverBandType>._, A<bool>._, A<eeePlacedOnMarketBandType>._))
+                    .Returns(producerChargeBand);
 
-            public override ChargeBandType GetProducerChargeBand()
-            {
-                return ChargeBandType;
+                return producerChargeBandChange.Evaluate(scheme, producer, A<Guid>._);
             }
         }
     }
