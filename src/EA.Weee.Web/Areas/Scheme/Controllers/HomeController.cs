@@ -3,16 +3,18 @@
     using Api.Client;
     using Core.Organisations;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Requests;
     using EA.Weee.Requests.Scheme;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
+    using Prsd.Core.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Prsd.Core.Extensions;
     using ViewModels;
     using Web.Controllers.Base;
     using Web.ViewModels.Shared;
@@ -94,6 +96,10 @@
                 if (viewModel.ActivityOptions.SelectedValue == PcsAction.ViewOrganisationDetails)
                 {
                     return RedirectToAction("ViewOrganisationDetails", new { pcsId = viewModel.OrganisationId });
+                }
+                if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManageContactDetails)
+                {
+                    return RedirectToAction("ManageContactDetails", new { pcsId = viewModel.OrganisationId });
                 }
             }
 
@@ -260,6 +266,44 @@
         public ActionResult ViewOrganisationDetails(Guid pcsId, ViewOrganisationDetailsViewModel model)
         {
             return RedirectToAction("ChooseActivity", "Home", new { pcsId });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ManageContactDetails(Guid pcsId)
+        {
+            await SetBreadcrumb(pcsId, "Organisation contact details");
+
+            OrganisationData model;
+            using (var client = apiClient())
+            {
+                model = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
+                model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ManageContactDetails(OrganisationData model)
+        {
+            await SetBreadcrumb(model.Id, "Organisation contact details");
+
+            if (!ModelState.IsValid)
+            {
+                using (var client = apiClient())
+                {
+                    model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                }
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationContactDetails(model));
+            }
+
+            return RedirectToAction("ChooseActivity", new { pcsId = model.Id });
         }
 
         private RadioButtonStringCollectionViewModel GetUserPossibleStatusToBeChanged(RadioButtonStringCollectionViewModel userStatuses, UserStatus userStatus)

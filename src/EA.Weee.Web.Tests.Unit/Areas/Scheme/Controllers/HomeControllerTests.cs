@@ -2,8 +2,10 @@
 {
     using Api.Client;
     using Core.Organisations;
+    using Core.Users;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
@@ -12,7 +14,6 @@
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Core.Users;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -67,7 +68,7 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_DoNotHaveOrganisationUser_ReturnsViewWithOnlyTwoOption()
+        public async void GetChooseActivity_DoNotHaveOrganisationUser_ReturnsViewWithOnlyThreeOption()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
@@ -79,7 +80,7 @@
 
             var model = (ChooseActivityViewModel)((ViewResult)result).Model;
 
-            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 2);
+            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 3);
 
             Assert.False(model.ActivityOptions.PossibleValues.Contains(PcsAction.ManageOrganisationUsers));
 
@@ -87,7 +88,7 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_HaveOrganisationUser_ReturnsViewWithThreeOption()
+        public async void GetChooseActivity_HaveOrganisationUser_ReturnsViewWithFourOption()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
@@ -109,7 +110,7 @@
 
             var model = (ChooseActivityViewModel)((ViewResult)result).Model;
 
-            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 3);
+            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 4);
 
             Assert.IsType<ViewResult>(result);
         }
@@ -392,6 +393,153 @@
             new HttpContextMocker().AttachToController(controller);
 
             return controller;
+        }
+
+        /// <summary>
+        /// This test ensures that a GET request to the "ManageContactDetails" action of the Home controller will
+        /// fetch the organisation data and the list of countries, set the countries on the organsiation's address
+        /// and then return the default view with the organisation data as the model.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetManageContactDetails_WithValidOrganisationId_GetsDataAndGetsCountriesAndReturnsDefaultView()
+        {
+            // Arrange
+            IWeeeClient client = A.Fake<IWeeeClient>();
+
+            OrganisationData organisationData = new OrganisationData();
+            organisationData.Contact = new ContactData();
+            organisationData.OrganisationAddress = new AddressData();
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationData);
+
+            List<CountryData> countries = new List<CountryData>();
+            
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            Func<IWeeeClient> apiClient = () => client;
+
+            IWeeeCache cache = A.Dummy<IWeeeCache>();
+
+            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
+
+            HomeController controller = new HomeController(apiClient, cache, breadcrumb);
+            new HttpContextMocker().AttachToController(controller);
+
+            // Act
+            ActionResult result = await controller.ManageContactDetails(new Guid("A4B50C6B-64FE-4119-ACDF-82C502B59BC8"));
+
+            // Assert
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+            
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetCountries>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.Equal(countries, organisationData.OrganisationAddress.Countries);
+
+            Assert.NotNull(result);
+            Assert.IsType(typeof(ViewResult), result);
+            
+            ViewResult viewResult = (ViewResult)result;
+
+            Assert.Equal(string.Empty, viewResult.ViewName);
+            Assert.Equal(organisationData, viewResult.Model);
+        }
+
+        /// <summary>
+        /// This test ensures that a POST request to the "ManageContactDetails" action of the Home controller where
+        /// the post data results in a model error will fetch the list of countries, set the countries on the
+        /// organsiation's address and then return the default view with the organisation data as the model.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostManageContactDetails_WithModelErrors_GetsCountriesAndReturnsDefaultView()
+        {
+            // Arrange
+            OrganisationData organisationData = new OrganisationData();
+            organisationData.Contact = new ContactData();
+            organisationData.OrganisationAddress = new AddressData();
+
+            IWeeeClient client = A.Fake<IWeeeClient>();
+
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            Func<IWeeeClient> apiClient = () => client;
+
+            IWeeeCache cache = A.Dummy<IWeeeCache>();
+
+            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
+
+            HomeController controller = new HomeController(apiClient, cache, breadcrumb);
+            new HttpContextMocker().AttachToController(controller);
+
+            controller.ModelState.AddModelError("SomeProperty", "IsInvalid");
+
+            // Act
+            ActionResult result = await controller.ManageContactDetails(organisationData);
+
+            // Assert
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetCountries>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.Equal(countries, organisationData.OrganisationAddress.Countries);
+
+            Assert.NotNull(result);
+            Assert.IsType(typeof(ViewResult), result);
+
+            ViewResult viewResult = (ViewResult)result;
+
+            Assert.Equal(string.Empty, viewResult.ViewName);
+            Assert.Equal(organisationData, viewResult.Model);
+        }
+
+        /// <summary>
+        /// This test ensures that a POST request to the "ManageContactDetails" action of the Home controller where
+        /// the post data results in no model errors will call the API to update the organisation details and
+        /// then return a redirect result to the activity springboard page.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostManageContactDetails_WithNoModelErrors_UpdatesDetailsAndRedirectsToActivitySpringboard()
+        {
+            // Arrange
+            OrganisationData organisationData = new OrganisationData();
+            organisationData.Contact = new ContactData();
+            organisationData.OrganisationAddress = new AddressData();
+
+            IWeeeClient client = A.Fake<IWeeeClient>();
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
+                .Returns(true);
+
+            Func<IWeeeClient> apiClient = () => client;
+
+            IWeeeCache cache = A.Dummy<IWeeeCache>();
+
+            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
+
+            HomeController controller = new HomeController(apiClient, cache, breadcrumb);
+            new HttpContextMocker().AttachToController(controller);
+
+            // Act
+            ActionResult result = await controller.ManageContactDetails(organisationData);
+
+            // Assert
+            A.CallTo(() => client.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.NotNull(result);
+            Assert.IsType(typeof(RedirectToRouteResult), result);
+
+            RedirectToRouteResult redirectResult = (RedirectToRouteResult)result;
+
+            Assert.Equal("ChooseActivity", redirectResult.RouteValues["Action"]);
         }
     }
 }

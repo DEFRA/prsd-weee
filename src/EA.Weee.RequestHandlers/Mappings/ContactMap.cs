@@ -10,6 +10,7 @@
         {
             return new ContactData
             {
+                RowVersion = source.RowVersion,
                 FirstName = source.FirstName,
                 LastName = source.LastName,
                 Position = source.Position,
@@ -23,6 +24,7 @@
             {
                 return new ContactData
                 {
+                    RowVersion = source.Contact.RowVersion,
                     FirstName = source.Contact.FirstName,
                     LastName = source.Contact.LastName,
                     Position = source.Contact.Position,
