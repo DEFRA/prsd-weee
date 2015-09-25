@@ -28,5 +28,14 @@
         public string Surname { get; private set; }
 
         public string Email { get; private set; }
+
+        public void UpdateUserInfo(string firstName, string lastName)
+        {
+            Guard.ArgumentNotNullOrEmpty(() => firstName, firstName);
+            Guard.ArgumentNotNullOrEmpty(() => lastName, lastName);
+
+            FirstName = firstName;
+            Surname = lastName;
+        }
     }
 }

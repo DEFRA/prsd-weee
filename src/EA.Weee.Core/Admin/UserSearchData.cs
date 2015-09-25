@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Core.Admin
 {
+    using System;
     using Shared;
 
     public class UserSearchData
@@ -15,6 +16,10 @@
         public UserStatus Status { get; set; }
 
         public string OrganisationName { get; set; }
+
+        public Guid OrganisationUserId { get; set; }
+
+        public bool IsCompetentAuthorityUser { get; set; }
 
         public string FullName
         {

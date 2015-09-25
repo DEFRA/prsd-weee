@@ -73,6 +73,9 @@
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
+    <Compile Include="Admin\GetUserDataHandlerTests.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
+    <Compile Include="Admin\UpdateUserHandlerTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandlerTests.cs" />

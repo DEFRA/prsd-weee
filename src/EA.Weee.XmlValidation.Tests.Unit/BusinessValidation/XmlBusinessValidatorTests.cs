@@ -24,6 +24,7 @@
         private readonly IInsertHasProducerRegistrationNumber insertHasProducerRegistrationNumber;
         private readonly IUkBasedAuthorisedRepresentative ukBasedAuthorisedRepresentative;
         private readonly IProducerRegistrationNumberValidity producerRegistrationNumberValidity;
+        private readonly IEnsureAnOverseasProducerIsNotBasedInTheUK ensureAnOverseasProducerIsNotBasedInTheUK;
         private readonly IProducerChargeBandChange producerChargeBandChangeWarning;
 
         public XmlBusinessValidatorTests()
@@ -39,6 +40,7 @@
             insertHasProducerRegistrationNumber = A.Fake<IInsertHasProducerRegistrationNumber>();
             ukBasedAuthorisedRepresentative = A.Fake<IUkBasedAuthorisedRepresentative>();
             producerRegistrationNumberValidity = A.Fake<IProducerRegistrationNumberValidity>();
+            ensureAnOverseasProducerIsNotBasedInTheUK = A.Fake<IEnsureAnOverseasProducerIsNotBasedInTheUK>();
             producerChargeBandChangeWarning = A.Fake<IProducerChargeBandChange>();
         }
 
@@ -232,6 +234,7 @@
             A.CallTo(() => insertHasProducerRegistrationNumber.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
             A.CallTo(() => ukBasedAuthorisedRepresentative.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
             A.CallTo(() => producerRegistrationNumberValidity.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
+            A.CallTo(() => ensureAnOverseasProducerIsNotBasedInTheUK.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
             A.CallTo(() => producerChargeBandChangeWarning.Evaluate(A<schemeType>._, A<producerType>._, A<Guid>._)).Returns(RuleResult.Pass());
 
             var scheme = new schemeType
@@ -251,10 +254,19 @@
 
         private XmlBusinessValidator XmlBusinessValidator()
         {
-            return new XmlBusinessValidator(producerNameWarning, annualTurnoverMismatch, producerAlreadyRegistered,
-                producerNameAlreadyRegistered, duplicateProducerRegistrationNumbers, duplicateProducerNames,
-                correctSchemeApprovalNumber, amendmentHasNoProducerRegistrationNumber,
-                insertHasProducerRegistrationNumber, ukBasedAuthorisedRepresentative, producerRegistrationNumberValidity,
+            return new XmlBusinessValidator(
+                producerNameWarning,
+                annualTurnoverMismatch,
+                producerAlreadyRegistered,
+                producerNameAlreadyRegistered,
+                duplicateProducerRegistrationNumbers,
+                duplicateProducerNames,
+                correctSchemeApprovalNumber,
+                amendmentHasNoProducerRegistrationNumber,
+                insertHasProducerRegistrationNumber,
+                ukBasedAuthorisedRepresentative,
+                producerRegistrationNumberValidity,
+                ensureAnOverseasProducerIsNotBasedInTheUK,
                 producerChargeBandChangeWarning);
         }
 

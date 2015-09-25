@@ -77,6 +77,10 @@
                 .As<ISearchMatcher>()
                 .InstancePerRequest();
 
+            builder.RegisterType<EnsureAnOverseasProducerIsNotBasedInTheUK>()
+                .As<IEnsureAnOverseasProducerIsNotBasedInTheUK>()
+                .InstancePerRequest();
+
             builder.RegisterType<ProducerChargeBandChange>()
                 .As<IProducerChargeBandChange>()
                 .InstancePerRequest();

@@ -470,6 +470,7 @@
     <Content Include="Areas\Admin\Views\Account\ResetPassword.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPasswordInstruction.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPasswordRequest.cshtml" />
+    <Content Include="Areas\Admin\Views\User\EditUser.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ManageContactDetails.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
@@ -606,6 +607,7 @@
     <Compile Include="Areas\Admin\ViewModels\Account\InternalLoginViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\User\ManageUsersViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ManageSchemesViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\EditUserViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\MemberRegistrationController.cs" />
     <Compile Include="Areas\Scheme\ViewModels\AddOrAmendMembersViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\LatestMemberUploadViewModel.cs" />
