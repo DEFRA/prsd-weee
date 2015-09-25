@@ -318,6 +318,5 @@
             // Assert
             Assert.Equal(ChargeBandType.E, result);
         }
-
     }
 }
