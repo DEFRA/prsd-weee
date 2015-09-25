@@ -7,24 +7,20 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EA.Weee.DataAccess.Tests.Integration.Model
+namespace EA.Weee.Tests.Core.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class CompetentAuthority
+    public partial class MemberUploadError
     {
-        public CompetentAuthority()
-        {
-            this.CompetentAuthorityUsers = new HashSet<CompetentAuthorityUser>();
-        }
-    
         public System.Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Abbreviation { get; set; }
-        public System.Guid CountryId { get; set; }
+        public byte[] RowVersion { get; set; }
+        public int ErrorLevel { get; set; }
+        public int ErrorType { get; set; }
+        public string Description { get; set; }
+        public System.Guid MemberUploadId { get; set; }
     
-        public virtual ICollection<CompetentAuthorityUser> CompetentAuthorityUsers { get; set; }
-        public virtual Country Country { get; set; }
+        public virtual MemberUpload MemberUpload { get; set; }
     }
 }

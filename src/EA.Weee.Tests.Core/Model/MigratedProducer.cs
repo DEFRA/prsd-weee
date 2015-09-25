@@ -7,24 +7,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EA.Weee.DataAccess.Tests.Integration.Model
+namespace EA.Weee.Tests.Core.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class AuthorisedRepresentative
+    public partial class MigratedProducer
     {
-        public AuthorisedRepresentative()
-        {
-            this.Producers = new HashSet<Producer>();
-        }
-    
         public System.Guid Id { get; set; }
         public byte[] RowVersion { get; set; }
-        public string OverseasProducerName { get; set; }
-        public Nullable<System.Guid> OverseasContactId { get; set; }
-    
-        public virtual Contact1 Contact1 { get; set; }
-        public virtual ICollection<Producer> Producers { get; set; }
+        public string ProducerRegistrationNumber { get; set; }
+        public string ProducerName { get; set; }
     }
 }

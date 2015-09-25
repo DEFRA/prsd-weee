@@ -7,25 +7,24 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EA.Weee.DataAccess.Tests.Integration.Model
+namespace EA.Weee.Tests.Core.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Country
+    public partial class Contact
     {
-        public Country()
+        public Contact()
         {
-            this.CompetentAuthorities = new HashSet<CompetentAuthority>();
-            this.Addresses = new HashSet<Address>();
-            this.Address1 = new HashSet<Address1>();
+            this.Organisations = new HashSet<Organisation>();
         }
     
         public System.Guid Id { get; set; }
-        public string Name { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Position { get; set; }
+        public byte[] RowVersion { get; set; }
     
-        public virtual ICollection<CompetentAuthority> CompetentAuthorities { get; set; }
-        public virtual ICollection<Address> Addresses { get; set; }
-        public virtual ICollection<Address1> Address1 { get; set; }
+        public virtual ICollection<Organisation> Organisations { get; set; }
     }
 }

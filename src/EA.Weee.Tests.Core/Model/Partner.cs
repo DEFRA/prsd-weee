@@ -7,20 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EA.Weee.DataAccess.Tests.Integration.Model
+namespace EA.Weee.Tests.Core.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class MemberUploadError
+    public partial class Partner
     {
         public System.Guid Id { get; set; }
         public byte[] RowVersion { get; set; }
-        public int ErrorLevel { get; set; }
-        public int ErrorType { get; set; }
-        public string Description { get; set; }
-        public System.Guid MemberUploadId { get; set; }
+        public string Name { get; set; }
+        public System.Guid PartnershipId { get; set; }
     
-        public virtual MemberUpload MemberUpload { get; set; }
+        public virtual Partnership Partnership { get; set; }
     }
 }

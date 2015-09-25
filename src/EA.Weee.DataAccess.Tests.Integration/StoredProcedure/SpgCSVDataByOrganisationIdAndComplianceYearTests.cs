@@ -1,19 +1,18 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration.StoredProcedure
 {
     using EA.Prsd.Core.Domain;
-using EA.Weee.DataAccess.StoredProcedure;
-using EA.Weee.DataAccess.Tests.Integration.Model;
-using FakeItEasy;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
-using Xunit;
+    using EA.Weee.DataAccess.StoredProcedure;
+    using EA.Weee.Tests.Core.Model;
+    using FakeItEasy;
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Data.Common;
+    using System.Data.SqlClient;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Xunit;
 
     public class SpgCSVDataByOrganisationIdAndComplianceYearTests
     {

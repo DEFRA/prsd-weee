@@ -7,19 +7,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EA.Weee.DataAccess.Tests.Integration.Model
+namespace EA.Weee.Tests.Core.Model
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class OrganisationUser
+    public partial class ProducerChargeBand
     {
         public System.Guid Id { get; set; }
-        public string UserId { get; set; }
-        public System.Guid OrganisationId { get; set; }
-        public int UserStatus { get; set; }
+        public string Name { get; set; }
+        public decimal Amount { get; set; }
         public byte[] RowVersion { get; set; }
-    
-        public virtual Organisation Organisation { get; set; }
     }
 }

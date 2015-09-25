@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration.Scheme
 {
-    using EA.Weee.DataAccess.Tests.Integration.Model;
     using EA.Weee.RequestHandlers.Scheme.GetSchemePublicInfo;
+    using EA.Weee.Tests.Core.Model;
     using System;
     using System.Collections.Generic;
     using System.Linq;

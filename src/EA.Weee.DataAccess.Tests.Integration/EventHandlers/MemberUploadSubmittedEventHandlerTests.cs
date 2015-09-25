@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration.EventHandlers
 {
+    using EA.Weee.DataAccess.EventHandlers;
+    using EA.Weee.Domain.Events;
+    using EA.Weee.Tests.Core.Model;
+    using FakeItEasy;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -9,10 +13,6 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using EA.Weee.DataAccess.EventHandlers;
-    using EA.Weee.DataAccess.Tests.Integration.Model;
-    using EA.Weee.Domain.Events;
-    using FakeItEasy;
     using Xunit;
 
     public class MemberUploadSubmittedEventHandlerTests
