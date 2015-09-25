@@ -199,11 +199,11 @@
             Assert.Equal(newestProducer2015, result);
         }
 
-        [Fact]
-        public void GetAllRegistrationNumbers_ReturnsDistinctRegistrationNumbers()
-        {
-            const string prn = "ABC12345";
-        }
+        //[Fact]
+        //public void GetAllRegistrationNumbers_ReturnsDistinctRegistrationNumbers()
+        //{
+        //    const string prn = "ABC12345";
+        //}
 
         private ProducerQuerySet ProducerQuerySet()
         {
