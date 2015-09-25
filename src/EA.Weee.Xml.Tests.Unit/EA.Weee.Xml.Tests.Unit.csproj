@@ -66,9 +66,14 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ExtensionsTests.cs" />
+    <Compile Include="ProducerChargeBandCalculatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
+      <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>
+      <Name>EA.Weee.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Xml\EA.Weee.Xml.csproj">
       <Project>{a0c346a3-f2cc-4acd-80a3-0e99c3dc1c03}</Project>
       <Name>EA.Weee.Xml</Name>
