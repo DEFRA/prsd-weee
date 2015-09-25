@@ -85,11 +85,11 @@
                     return View(model);
                 }
             }
-            return RedirectToAction("EditUser", "User", new { orgUserId = model.SelectedUserId });
+            return RedirectToAction("EditUser", "User", new { orgUserId = model.SelectedUserId, isCompetentAuthorityUser = model.IsCompetentAuthorityUser });
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditUser(Guid orgUserId)
+        public async Task<ActionResult> EditUser(Guid orgUserId, bool isCompetentAuthorityUser)
         {
             using (var client = apiClient())
             {
