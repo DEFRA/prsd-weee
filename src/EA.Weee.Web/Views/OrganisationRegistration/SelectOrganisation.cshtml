@@ -1,5 +1,4 @@
-﻿@using EA.Weee.Web.ViewModels.JoinOrganisation
-@model EA.Weee.Web.ViewModels.JoinOrganisation.SelectOrganisationViewModel
+﻿@model EA.Weee.Web.ViewModels.JoinOrganisation.SelectOrganisationViewModel
 @{
     ViewBag.Title = "Choose your organisation";
 }
@@ -8,7 +7,7 @@
 {
     <header class="hgroup">
         <h1 class="heading-large">
-            Here are the search results for "@Model.SearchedText"
+            Here are the search results for "@Model.Name"
         </h1>
     </header>
 
@@ -22,11 +21,7 @@
 
         @Html.HiddenFor(m => m.Name)
         @Html.HiddenFor(m => m.SearchedText)
-        @Html.HiddenFor(m => m.TradingName)
-        @Html.HiddenFor(m => m.OrganisationId)
-        @Html.HiddenFor(m => m.CompaniesRegistrationNumber)
-        @Html.HiddenFor(m => m.Type)
-
+ 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Organisations.Selected)">
             @Html.Gds().ValidationMessageFor(m => m.Organisations.Selected)
             @Html.EditorFor(m => m.Organisations)

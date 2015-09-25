@@ -108,7 +108,6 @@
     <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandlerTests.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingOrganisationsHandlerTests.cs" />
     <Compile Include="Organisations\JoinOrganisation\JoinOrganisationHandlerTests.cs" />
-    <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandlerTests.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandlerTests.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandlerTests.cs" />
     <Compile Include="Scheme\PrnGeneration\QuadraticResidueTests.cs" />
