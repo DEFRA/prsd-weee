@@ -66,6 +66,8 @@
 
         public decimal FetchSumOfExistingCharges(string registrationNumber, int complianceYear)
         {
+            EnsureDataFetched();
+
             ProducerYear key = new ProducerYear(registrationNumber, complianceYear);
             if (sumOfExistingChargesLookup.ContainsKey(key))
             {
