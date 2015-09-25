@@ -470,6 +470,7 @@
     <Content Include="Areas\Admin\Views\Account\ResetPassword.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPasswordInstruction.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPasswordRequest.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\ManageContactDetails.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\download-link-tracker.js" />

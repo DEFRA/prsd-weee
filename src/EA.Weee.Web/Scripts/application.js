@@ -168,7 +168,7 @@ $(document).ready(function () {
     }
 
     // Set the country drop-down list for any address to use auto-complete.
-    var countryInput = $("#Address_CountryId");
+    var countryInput = $(".form-group.countries select");
     countryInput.selectToAutocomplete();
 
     // When there is a validation erorr, move the ID from the select element to the auto-complete
