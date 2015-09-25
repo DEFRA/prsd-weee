@@ -49,46 +49,54 @@
 
         private ProducerCharge GetProducerCharge(producerType producer)
         {
-            ProducerCharge producerCharge = new ProducerCharge();
+            ChargeBandType chargeBandType = GetProducerChargeBand(
+                producer.annualTurnoverBand,
+                producer.VATRegistered,
+                producer.eeePlacedOnMarketBand);
 
-            if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
+            decimal chargeAmount = GetChargeAmount(chargeBandType);
+
+            return new ProducerCharge()
             {
-                producerCharge.ChargeBandType = ChargeBandType.E;
-                producerCharge.ChargeAmount = GetChargeAmount(ChargeBandType.E);
+                ChargeBandType = chargeBandType,
+                ChargeAmount = chargeAmount
+            };
+        }
+
+        public static ChargeBandType GetProducerChargeBand(
+            annualTurnoverBandType annualTurnoverBand,
+            bool vatRegistered,
+            eeePlacedOnMarketBandType eeePlacedOnMarketBand)
+        {
+            if (eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
+            {
+                return ChargeBandType.E;
             }
             else
             {
-                if (producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds && producer.VATRegistered
-                    && producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                if (annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
+                    && vatRegistered
+                    && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
-                    producerCharge.ChargeBandType = ChargeBandType.A;
-                    producerCharge.ChargeAmount = GetChargeAmount(ChargeBandType.A);
+                    return ChargeBandType.A;
                 }
-                else if (producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
-                         && producer.VATRegistered
-                         && producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                else if (annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
+                         && vatRegistered
+                         && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
-                    producerCharge.ChargeBandType = ChargeBandType.B;
-                    producerCharge.ChargeAmount = GetChargeAmount(ChargeBandType.B);
+                    return ChargeBandType.B;
                 }
-                else if (producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
-                         && producer.VATRegistered == false
-                         && producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                else if (annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
+                         && !vatRegistered
+                         && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
-                    producerCharge.ChargeBandType = ChargeBandType.D;
-                    producerCharge.ChargeAmount = GetChargeAmount(ChargeBandType.D);
+                    return ChargeBandType.D;
                 }
-                else if (producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
-                         && producer.VATRegistered == false
-                         && producer.eeePlacedOnMarketBand
-                         == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                else
                 {
-                    producerCharge.ChargeBandType = ChargeBandType.C;
-                    producerCharge.ChargeAmount = GetChargeAmount(ChargeBandType.C);
+                    return ChargeBandType.C;
                 }
             }
-
-            return producerCharge;
         }
     }
 }

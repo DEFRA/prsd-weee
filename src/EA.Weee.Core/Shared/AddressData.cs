@@ -6,6 +6,8 @@
 
     public class AddressData : IValidatableObject
     {
+        public byte[] RowVersion { get; set; }
+
         [Required]
         [StringLength(35)]
         [Display(Name = "Address line 1")]

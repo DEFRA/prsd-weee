@@ -24,6 +24,7 @@
             return new OrganisationData
             {
                 Id = source.Id,
+                RowVersion = source.RowVersion,
                 CompanyRegistrationNumber = source.CompanyRegistrationNumber,
                 Name = source.Name,
                 TradingName = source.TradingName,
