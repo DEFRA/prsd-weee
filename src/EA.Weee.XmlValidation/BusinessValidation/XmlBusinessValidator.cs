@@ -20,6 +20,7 @@
         private readonly IInsertHasProducerRegistrationNumber insertHasProducerRegistrationNumber;
         private readonly IUkBasedAuthorisedRepresentative ukBasedAuthorisedRepresentative;
         private readonly IProducerRegistrationNumberValidity producerRegistrationNumberValidity;
+        private readonly IProducerChargeBandChange producerChargeBandChangeWarning;
 
         public XmlBusinessValidator(IProducerNameChange producerNameWarning, 
             IAnnualTurnoverMismatch annualTurnoverMismatch, 
@@ -31,7 +32,8 @@
             IAmendmentHasNoProducerRegistrationNumber amendmentHasNoProducerRegistrationNumber,
             IInsertHasProducerRegistrationNumber insertHasProducerRegistrationNumber,
             IUkBasedAuthorisedRepresentative ukBasedAuthorisedRepresentative,
-            IProducerRegistrationNumberValidity producerRegistrationNumberValidity)
+            IProducerRegistrationNumberValidity producerRegistrationNumberValidity,
+            IProducerChargeBandChange producerChargeBandChangeWarning)
         {
             this.producerNameWarning = producerNameWarning;
             this.annualTurnoverMismatch = annualTurnoverMismatch;
@@ -44,6 +46,7 @@
             this.insertHasProducerRegistrationNumber = insertHasProducerRegistrationNumber;
             this.ukBasedAuthorisedRepresentative = ukBasedAuthorisedRepresentative;
             this.producerRegistrationNumberValidity = producerRegistrationNumberValidity;
+            this.producerChargeBandChangeWarning = producerChargeBandChangeWarning;
         }
 
         public IEnumerable<RuleResult> Validate(schemeType scheme, Guid schemeId)
@@ -71,6 +74,7 @@
                 result.Add(producerRegistrationNumberValidity.Evaluate(producer));
                 result.Add(producerAlreadyRegistered.Evaluate(scheme, producer, schemeId));
                 result.Add(producerNameAlreadyRegistered.Evaluate());
+                result.Add(producerChargeBandChangeWarning.Evaluate(scheme, producer, schemeId));
             }
 
             return result.Where(r => r != null && !r.IsValid);

@@ -60,6 +60,8 @@
   <ItemGroup>
     <Compile Include="BusinessValidation\Helpers\ISearchMatcher.cs" />
     <Compile Include="BusinessValidation\Helpers\SearchMatcher.cs" />
+    <Compile Include="BusinessValidation\Rules\Producer\IProducerChargeBandChange.cs" />
+    <Compile Include="BusinessValidation\Rules\Producer\ProducerChargeBandChange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BusinessValidation\QuerySets\IMigratedProducerQuerySet.cs" />
     <Compile Include="BusinessValidation\QuerySets\ISchemeQuerySet.cs" />

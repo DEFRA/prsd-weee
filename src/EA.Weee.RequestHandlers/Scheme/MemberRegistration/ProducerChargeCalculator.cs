@@ -6,15 +6,16 @@
     using DataAccess;
     using Domain;
     using Domain.Producer;
+    using EA.Weee.Xml;
     using RequestHandlers;
     using Xml.Schemas;
 
-    public class ProducerChargeBandCalculator
+    public class ProducerChargeCalculator
     {
         private readonly WeeeContext context;
         private readonly List<ProducerChargeBand> producerChargeBands;
 
-        public ProducerChargeBandCalculator(WeeeContext context)
+        public ProducerChargeCalculator(WeeeContext context)
         {
             this.context = context;
             producerChargeBands = context.ProducerChargeBands.ToList();
@@ -49,7 +50,7 @@
 
         private ProducerCharge GetProducerCharge(producerType producer)
         {
-            ChargeBandType chargeBandType = GetProducerChargeBand(
+            ChargeBandType chargeBandType = ProducerChargeBandCalculator.GetProducerChargeBand(
                 producer.annualTurnoverBand,
                 producer.VATRegistered,
                 producer.eeePlacedOnMarketBand);
@@ -61,42 +62,6 @@
                 ChargeBandType = chargeBandType,
                 ChargeAmount = chargeAmount
             };
-        }
-
-        public static ChargeBandType GetProducerChargeBand(
-            annualTurnoverBandType annualTurnoverBand,
-            bool vatRegistered,
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand)
-        {
-            if (eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
-            {
-                return ChargeBandType.E;
-            }
-            else
-            {
-                if (annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
-                    && vatRegistered
-                    && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
-                {
-                    return ChargeBandType.A;
-                }
-                else if (annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
-                         && vatRegistered
-                         && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
-                {
-                    return ChargeBandType.B;
-                }
-                else if (annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
-                         && !vatRegistered
-                         && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
-                {
-                    return ChargeBandType.D;
-                }
-                else
-                {
-                    return ChargeBandType.C;
-                }
-            }
         }
     }
 }

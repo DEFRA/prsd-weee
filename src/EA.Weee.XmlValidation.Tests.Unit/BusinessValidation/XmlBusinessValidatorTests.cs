@@ -24,6 +24,7 @@
         private readonly IInsertHasProducerRegistrationNumber insertHasProducerRegistrationNumber;
         private readonly IUkBasedAuthorisedRepresentative ukBasedAuthorisedRepresentative;
         private readonly IProducerRegistrationNumberValidity producerRegistrationNumberValidity;
+        private readonly IProducerChargeBandChange producerChargeBandChangeWarning;
 
         public XmlBusinessValidatorTests()
         {
@@ -38,6 +39,7 @@
             insertHasProducerRegistrationNumber = A.Fake<IInsertHasProducerRegistrationNumber>();
             ukBasedAuthorisedRepresentative = A.Fake<IUkBasedAuthorisedRepresentative>();
             producerRegistrationNumberValidity = A.Fake<IProducerRegistrationNumberValidity>();
+            producerChargeBandChangeWarning = A.Fake<IProducerChargeBandChange>();
         }
 
         [Fact]
@@ -215,6 +217,7 @@
             A.CallTo(() => insertHasProducerRegistrationNumber.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
             A.CallTo(() => ukBasedAuthorisedRepresentative.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
             A.CallTo(() => producerRegistrationNumberValidity.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
+            A.CallTo(() => producerChargeBandChangeWarning.Evaluate(A<schemeType>._, A<producerType>._, A<Guid>._)).Returns(RuleResult.Pass());
 
             var scheme = new schemeType
             {
@@ -236,7 +239,8 @@
             return new XmlBusinessValidator(producerNameWarning, annualTurnoverMismatch, producerAlreadyRegistered,
                 producerNameAlreadyRegistered, duplicateProducerRegistrationNumbers, duplicateProducerNames,
                 correctSchemeApprovalNumber, amendmentHasNoProducerRegistrationNumber,
-                insertHasProducerRegistrationNumber, ukBasedAuthorisedRepresentative, producerRegistrationNumberValidity);
+                insertHasProducerRegistrationNumber, ukBasedAuthorisedRepresentative, producerRegistrationNumberValidity,
+                producerChargeBandChangeWarning);
         }
 
         private schemeType SchemeWithXProducers(int numberOfProducers)

@@ -27,7 +27,7 @@
         {
             var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
 
-            var producerChargeBandCalculator = new ProducerChargeBandCalculator(context);
+            var producerChargeBandCalculator = new ProducerChargeCalculator(context);
             var producerCharges = new Hashtable();
             var complianceYear = Int32.Parse(schemeType.complianceYear);
 
