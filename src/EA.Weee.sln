@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{0B57A119-CD64-4296-A23D-02A0E3024245}"
 EndProject
@@ -60,6 +60,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Xml.Tests.Unit", "EA.Weee.Xml.Tests.Unit\EA.Weee.Xml.Tests.Unit.csproj", "{C91384FB-0676-497B-9440-9B3AD36D56D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Tests.Core", "EA.Weee.Tests.Core\EA.Weee.Tests.Core.csproj", "{0162D3E9-CD9B-478D-A6B4-0638C96BCF14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.XmlValidation.Tests.DataAccess", "EA.Weee.XmlValidation.Tests.DataAccess\EA.Weee.XmlValidation.Tests.DataAccess.csproj", "{111620A5-024A-415C-8B5D-9D9A477D9BAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -347,6 +349,16 @@ Global
 		{0162D3E9-CD9B-478D-A6B4-0638C96BCF14}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0162D3E9-CD9B-478D-A6B4-0638C96BCF14}.Release|x64.ActiveCfg = Release|Any CPU
 		{0162D3E9-CD9B-478D-A6B4-0638C96BCF14}.Release|x64.Build.0 = Release|Any CPU
+		{111620A5-024A-415C-8B5D-9D9A477D9BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{111620A5-024A-415C-8B5D-9D9A477D9BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{111620A5-024A-415C-8B5D-9D9A477D9BAE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{111620A5-024A-415C-8B5D-9D9A477D9BAE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{111620A5-024A-415C-8B5D-9D9A477D9BAE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{111620A5-024A-415C-8B5D-9D9A477D9BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{111620A5-024A-415C-8B5D-9D9A477D9BAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{111620A5-024A-415C-8B5D-9D9A477D9BAE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{111620A5-024A-415C-8B5D-9D9A477D9BAE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{111620A5-024A-415C-8B5D-9D9A477D9BAE}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -375,5 +387,6 @@ Global
 		{9E453AF7-CBDD-4136-980C-1D99425A3E10} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
 		{C91384FB-0676-497B-9440-9B3AD36D56D1} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
 		{0162D3E9-CD9B-478D-A6B4-0638C96BCF14} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
+		{111620A5-024A-415C-8B5D-9D9A477D9BAE} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
 	EndGlobalSection
 EndGlobal
