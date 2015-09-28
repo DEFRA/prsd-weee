@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Home
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Account
 {
     using Core.Shared;
 
