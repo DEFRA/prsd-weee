@@ -63,6 +63,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.Tests.Core", "EA.We
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.XmlValidation.Tests.DataAccess", "EA.Weee.XmlValidation.Tests.DataAccess\EA.Weee.XmlValidation.Tests.DataAccess.csproj", "{111620A5-024A-415C-8B5D-9D9A477D9BAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Weee.RequestHandlers.Tests.DataAccess", "EA.Weee.RequestHandlers.Tests.DataAccess\EA.Weee.RequestHandlers.Tests.DataAccess.csproj", "{F4B25C37-3497-478A-AC13-63DE28F65A8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -359,6 +361,16 @@ Global
 		{111620A5-024A-415C-8B5D-9D9A477D9BAE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{111620A5-024A-415C-8B5D-9D9A477D9BAE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{111620A5-024A-415C-8B5D-9D9A477D9BAE}.Release|x64.ActiveCfg = Release|Any CPU
+		{F4B25C37-3497-478A-AC13-63DE28F65A8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4B25C37-3497-478A-AC13-63DE28F65A8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4B25C37-3497-478A-AC13-63DE28F65A8A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F4B25C37-3497-478A-AC13-63DE28F65A8A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F4B25C37-3497-478A-AC13-63DE28F65A8A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F4B25C37-3497-478A-AC13-63DE28F65A8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4B25C37-3497-478A-AC13-63DE28F65A8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4B25C37-3497-478A-AC13-63DE28F65A8A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F4B25C37-3497-478A-AC13-63DE28F65A8A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F4B25C37-3497-478A-AC13-63DE28F65A8A}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -388,5 +400,6 @@ Global
 		{C91384FB-0676-497B-9440-9B3AD36D56D1} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
 		{0162D3E9-CD9B-478D-A6B4-0638C96BCF14} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
 		{111620A5-024A-415C-8B5D-9D9A477D9BAE} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
+		{F4B25C37-3497-478A-AC13-63DE28F65A8A} = {3628FF82-4514-4427-ADD0-534A6575C1DB}
 	EndGlobalSection
 EndGlobal
