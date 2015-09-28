@@ -25,6 +25,7 @@
         private readonly IUkBasedAuthorisedRepresentative ukBasedAuthorisedRepresentative;
         private readonly IProducerRegistrationNumberValidity producerRegistrationNumberValidity;
         private readonly IEnsureAnOverseasProducerIsNotBasedInTheUK ensureAnOverseasProducerIsNotBasedInTheUK;
+        private readonly IProducerChargeBandChange producerChargeBandChangeWarning;
 
         public XmlBusinessValidatorTests()
         {
@@ -40,6 +41,7 @@
             ukBasedAuthorisedRepresentative = A.Fake<IUkBasedAuthorisedRepresentative>();
             producerRegistrationNumberValidity = A.Fake<IProducerRegistrationNumberValidity>();
             ensureAnOverseasProducerIsNotBasedInTheUK = A.Fake<IEnsureAnOverseasProducerIsNotBasedInTheUK>();
+            producerChargeBandChangeWarning = A.Fake<IProducerChargeBandChange>();
         }
 
         [Fact]
@@ -204,6 +206,21 @@
         }
 
         [Fact]
+        public void ProducerChargeBandChanged_ShouldReturnRuleResult()
+        {
+            var scheme = SchemeWithXProducers(1);
+            var schemeId = Guid.NewGuid();
+            var error = RuleResult.Fail("oops", ErrorLevel.Warning);
+
+            A.CallTo(() => producerChargeBandChangeWarning.Evaluate(scheme, scheme.producerList.Single(), schemeId)).Returns(error);
+
+            var result = XmlBusinessValidator().Validate(scheme, schemeId);
+
+            Assert.Single(result);
+            Assert.Equal(error, result.Single());
+        }
+
+        [Fact]
         public void WhereAllRulesPass_NoRuleResultsShouldBeReturned()
         {
             A.CallTo(() => producerNameWarning.Evaluate(A<schemeType>._, A<producerType>._, A<Guid>._)).Returns(RuleResult.Pass());
@@ -218,7 +235,8 @@
             A.CallTo(() => ukBasedAuthorisedRepresentative.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
             A.CallTo(() => producerRegistrationNumberValidity.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
             A.CallTo(() => ensureAnOverseasProducerIsNotBasedInTheUK.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
-            
+            A.CallTo(() => producerChargeBandChangeWarning.Evaluate(A<schemeType>._, A<producerType>._, A<Guid>._)).Returns(RuleResult.Pass());
+
             var scheme = new schemeType
             {
                 producerList = new[]
@@ -248,7 +266,8 @@
                 insertHasProducerRegistrationNumber,
                 ukBasedAuthorisedRepresentative,
                 producerRegistrationNumberValidity,
-                ensureAnOverseasProducerIsNotBasedInTheUK);
+                ensureAnOverseasProducerIsNotBasedInTheUK,
+                producerChargeBandChangeWarning);
         }
 
         private schemeType SchemeWithXProducers(int numberOfProducers)
