@@ -15,7 +15,7 @@
             @Html.Gds().LabelFor(m => m.SearchedText)
             @Html.Gds().ValidationMessageFor(m => m.SearchedText)
             @Html.Gds().TextBoxFor(m => m.SearchedText, new { @maxlength = "2048" })
-            <button type="submit" class="button" style="width: 45px; height: 35px">
+            <button type="submit" class="search-button">
                 <img src="@Url.Content("~/Content/govuk_toolkit/images/icon-search.png")" alt="Search"/>
             </button>
         </div>
