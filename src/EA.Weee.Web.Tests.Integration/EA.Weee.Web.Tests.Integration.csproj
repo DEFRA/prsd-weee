@@ -159,12 +159,6 @@
   <ItemGroup>
     <Compile Include="TestStartup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpecifyWhichOrganisationIWorkFor\SpecifyOrganisationDetails.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SpecifyOrganisationDetails.feature</DependentUpon>
-    </Compile>
-    <Compile Include="SpecifyWhichOrganisationIWorkFor\SpecifyOrganisationDetailsSteps.cs" />
     <Compile Include="SpecifyWhichOrganisationIWorkFor\SpecifyWhichTypeOfOrganisationIWorkFor.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -197,10 +191,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="SpecifyWhichOrganisationIWorkFor\SpecifyOrganisationDetails.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>SpecifyOrganisationDetails.feature.cs</LastGenOutput>
-    </None>
     <None Include="SpecifyWhichOrganisationIWorkFor\SpecifyWhichTypeOfOrganisationIWorkFor.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>SpecifyWhichTypeOfOrganisationIWorkFor.feature.cs</LastGenOutput>
