@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.XmlValidation
+﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme.MemberRegistration.XmlValidation
 {
     using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.Scheme.MemberRegistration;
