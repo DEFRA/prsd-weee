@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Rules.QuerySets
+﻿namespace EA.Weee.XmlValidation.Tests.DataAccess.BusinessValidation.Rules.QuerySets
 {
     using DataAccess;
     using EA.Weee.Tests.Core.Model;
