@@ -132,6 +132,7 @@
     <Compile Include="Scheme\Interfaces\IXmlChargeBandCalculator.cs" />
     <Compile Include="Scheme\Interfaces\IXmlConverter.cs" />
     <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\IProducerChargeCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandler.cs" />
     <Compile Include="Scheme\GetSchemesHandler.cs" />
@@ -147,7 +148,7 @@
     <Compile Include="Organisations\JoinOrganisation\JoinOrganisationHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandler.cs" />
-    <Compile Include="Scheme\MemberRegistration\ProducerChargeBandCalculator.cs" />
+    <Compile Include="Scheme\MemberRegistration\ProducerChargeCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlChargeBandCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlConverter.cs" />
     <Compile Include="Scheme\Interfaces\IXmlValidator.cs" />
