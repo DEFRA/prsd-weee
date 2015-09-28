@@ -1,27 +1,21 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using System;
+    using System.Net.Mail;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
     using Authorization;
     using Base;
-    using Core;
-    using EA.Weee.Core.Routing;
+    using Core.Routing;
+    using Core.Shared;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
-    using Prsd.Core.Web.OAuth;
-    using Prsd.Core.Web.OpenId;
     using Services;
-    using System;
-    using System.Linq;
-    using System.Net.Mail;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using Core.Shared;
-    using Thinktecture.IdentityModel.Client;
     using ViewModels.Account;
-    using ViewModels.Home;
     using Weee.Requests.Admin;
 
     public class AccountController : AdminController
