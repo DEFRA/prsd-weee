@@ -177,18 +177,8 @@
             {
                 using (var client = apiClient())
                 {
-                    var organisationExistsAndIncomplete =
-                        await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExistsAndIncomplete(organisationId.Value));
-
-                    if (!organisationExistsAndIncomplete)
-                    {
-                        throw new ArgumentException("No organisation found for supplied organisation Id with Incomplete status", "organisationId");
-                    }
-
-                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId.Value));
-
+                    var organisation = await GetOrganisation(organisationId, client);
                     var model = new OrganisationTypeViewModel(organisation.OrganisationType, organisationId.Value);
-
                     return View("Type", model);
                 }
             }
@@ -208,13 +198,7 @@
                 {
                     using (var client = apiClient())
                     {
-                        var organisationExistsAndIncomplete =
-                            await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExistsAndIncomplete(model.OrganisationId.Value));
-
-                        if (!organisationExistsAndIncomplete)
-                        {
-                            throw new Exception("No organisation found for supplied organisation Id with Incomplete status");
-                        }
+                        await GetOrganisation(model.OrganisationId.Value, client);
 
                         switch (organisationType)
                         {
@@ -251,15 +235,7 @@
             {
                 using (var client = apiClient())
                 {
-                    var organisationExistsAndIncomplete =
-                        await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExistsAndIncomplete(organisationId.Value));
-
-                    if (!organisationExistsAndIncomplete)
-                    {
-                        throw new ArgumentException("No organisation found for supplied organisation Id with Incomplete status", "organisationId");
-                    }
-
-                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId.Value));
+                    var organisation = await GetOrganisation(organisationId, client);
 
                     if (organisation.OrganisationType == OrganisationType.SoleTraderOrIndividual)
                     {
@@ -291,7 +267,7 @@
                 TradingName = model.BusinessTradingName
             };
 
-            return await RedirectToMainContactPerson(request);
+            return await RedirectToMainContactPerson(request, model.OrganisationId);
         }
 
         [HttpGet]
@@ -301,15 +277,7 @@
             {
                 using (var client = apiClient())
                 {
-                    var organisationExistsAndIncomplete =
-                        await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExistsAndIncomplete(organisationId.Value));
-
-                    if (!organisationExistsAndIncomplete)
-                    {
-                        throw new ArgumentException("No organisation found for supplied organisation Id with Incomplete status", "organisationId");
-                    }
-
-                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId.Value));
+                    var organisation = await GetOrganisation(organisationId, client);
                     if (organisation.OrganisationType == OrganisationType.Partnership)
                     {
                         var model = new PartnershipDetailsViewModel
@@ -325,7 +293,7 @@
             }
             return View(new PartnershipDetailsViewModel());
         }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> PartnershipDetails(PartnershipDetailsViewModel model)
@@ -340,16 +308,7 @@
                 TradingName = model.BusinessTradingName
             };
 
-            return await RedirectToMainContactPerson(request);
-        }
-
-        private async Task<ActionResult> RedirectToMainContactPerson(CreateOrganisationRequest request)
-        {
-            using (var client = apiClient())
-            {
-            Guid organisationId = await client.SendAsync(User.GetAccessToken(), request);
-            return RedirectToAction("MainContactPerson", new { organisationId });
-            }
+            return await RedirectToMainContactPerson(request, model.OrganisationId);
         }
 
         [HttpGet]
@@ -359,15 +318,7 @@
             {
                 using (var client = apiClient())
                 {
-                    var organisationExistsAndIncomplete =
-                        await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExistsAndIncomplete(organisationId.Value));
-
-                    if (!organisationExistsAndIncomplete)
-                    {
-                        throw new ArgumentException("No organisation found for supplied organisation Id with Incomplete status", "organisationId");
-                    }
-
-                    var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId.Value));
+                    var organisation = await GetOrganisation(organisationId, client);
 
                     if (organisation.OrganisationType == OrganisationType.RegisteredCompany)
                     {
@@ -403,7 +354,7 @@
                 TradingName = model.BusinessTradingName
             };
 
-            return await RedirectToMainContactPerson(request);
+            return await RedirectToMainContactPerson(request, model.OrganisationId);
         }
 
         [HttpGet]
@@ -813,6 +764,36 @@
                 Name = name,
                 Organisations = organisationRadioButtons
             };
+        }
+
+        private async Task<OrganisationData> GetOrganisation(Guid? organisationId, IWeeeClient client)
+        {
+            var organisationExistsAndIncomplete =
+                await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExistsAndIncomplete(organisationId.Value));
+
+            if (!organisationExistsAndIncomplete)
+            {
+                throw new ArgumentException("No organisation found for supplied organisation Id with Incomplete status",
+                    "organisationId");
+            }
+
+            var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId.Value));
+            return organisation;
+        }
+
+        private async Task<ActionResult> RedirectToMainContactPerson(CreateOrganisationRequest request, Guid? organisationId = null)
+        {
+            using (var client = apiClient())
+            {
+               var organisationExists = organisationId != null && await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(organisationId.Value));
+                    if (!organisationExists)
+                    {
+                        //create the organisation only if does not exist
+                        organisationId = await client.SendAsync(User.GetAccessToken(), request);
+                    }
+
+                    return RedirectToAction("MainContactPerson", new { organisationId });
+            }
         }
     }
 }
