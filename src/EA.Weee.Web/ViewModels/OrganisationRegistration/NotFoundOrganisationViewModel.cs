@@ -15,14 +15,6 @@
 
         public string Name { get; set; }
 
-        public string TradingName { get; set; }
-
-        public string CompaniesRegistrationNumber { get; set; }
-
-        public OrganisationType Type { get; set; }
-
-        public Guid? OrganisationId { get; set; }
-
         public NotFoundOrganisationViewModel()
         {
             var collection = new List<string> { NotFoundOrganisationAction.TryAnotherSearch, NotFoundOrganisationAction.CreateNewOrg };
