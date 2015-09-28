@@ -44,12 +44,16 @@
                     return new AuthorizationBuilder()
                         .AllowExternalAreaAccess()
                         .DenyInternalAreaAccess()
+                        .DenyOrganisationAccess()
+                        .DenyInternalOrOrganisationAccess()
                         .Build();
 
                 case UserType.Internal:
                     return new AuthorizationBuilder()
                         .DenyExternalAreaAccess()
                         .AllowInternalAreaAccess()
+                        .DenyOrganisationAccess()
+                        .AllowInternalOrOrganisationAccess()
                         .Build();
 
                 default:
@@ -67,14 +71,30 @@
             return new AuthorizationBuilder().DenyEverything().Build();
         }
 
+        /// <summary>
+        /// Create authorization for a user that can access an organisation, but does not have internal access.
+        /// </summary>
         public static IWeeeAuthorization CreateUserAllowedToAccessOrganisation()
         {
-            return new AuthorizationBuilder().AllowOrganisationAccess().Build();
+            return new AuthorizationBuilder()
+                .AllowOrganisationAccess()
+                .AllowInternalOrOrganisationAccess()
+                .DenyInternalAreaAccess()
+                .DenyExternalAreaAccess()
+                .Build();
         }
 
+        /// <summary>
+        /// Create authorization for a user that cannot access an organisation and does not have internal access.
+        /// </summary>
         public static IWeeeAuthorization CreateUserDeniedFromAccessingOrganisation()
         {
-            return new AuthorizationBuilder().DenyOrganisationAccess().Build();
+            return new AuthorizationBuilder()
+                .DenyOrganisationAccess()
+                .DenyInternalOrOrganisationAccess()
+                .DenyInternalAreaAccess()
+                .DenyExternalAreaAccess()
+                .Build();
         }
 
         private IWeeeAuthorization fake;
@@ -141,6 +161,20 @@
         {
             A.CallTo(() => fake.EnsureOrganisationAccess(A.Dummy<Guid>())).WithAnyArguments().Throws<SecurityException>();
             A.CallTo(() => fake.CheckOrganisationAccess(A.Dummy<Guid>())).WithAnyArguments().Returns(false);
+            return this;
+        }
+
+        public AuthorizationBuilder AllowInternalOrOrganisationAccess()
+        {
+            A.CallTo(() => fake.EnsureInternalOrOrganisationAccess(A.Dummy<Guid>())).WithAnyArguments().DoesNothing();
+            A.CallTo(() => fake.CheckInternalOrOrganisationAccess(A.Dummy<Guid>())).WithAnyArguments().Returns(true);
+            return this;
+        }
+
+        public AuthorizationBuilder DenyInternalOrOrganisationAccess()
+        {
+            A.CallTo(() => fake.EnsureInternalOrOrganisationAccess(A.Dummy<Guid>())).WithAnyArguments().Throws<SecurityException>();
+            A.CallTo(() => fake.CheckInternalOrOrganisationAccess(A.Dummy<Guid>())).WithAnyArguments().Returns(false);
             return this;
         }
 
