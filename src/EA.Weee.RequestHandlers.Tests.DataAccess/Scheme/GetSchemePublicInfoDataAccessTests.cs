@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.DataAccess.Tests.Integration.Scheme
+﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme
 {
     using EA.Weee.RequestHandlers.Scheme.GetSchemePublicInfo;
     using EA.Weee.Tests.Core.Model;
