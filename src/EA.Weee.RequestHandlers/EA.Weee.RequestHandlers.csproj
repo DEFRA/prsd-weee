@@ -119,6 +119,7 @@
     <Compile Include="Organisations\UpdateOrganisationContactDetailsHandler.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
+    <Compile Include="SchemaExtensions\producerType.cs" />
     <Compile Include="Scheme\GetSchemeByIdDataAccess.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandler.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo\GetSchemePublicInfoDataAccess.cs" />
@@ -158,6 +159,8 @@
     <Compile Include="Scheme\Interfaces\IXmlValidator.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerCharge.cs" />
     <Compile Include="Scheme\Interfaces\ISchemaValidator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\RuleEvaluators\ProducerChargeBandWarningEvaluator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\BusinessValidation\Rules\ProducerChargeBandWarning.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\XmlValidator.cs" />
     <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />

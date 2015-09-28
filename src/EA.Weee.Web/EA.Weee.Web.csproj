@@ -469,7 +469,7 @@
     <Content Include="Content\govuk_toolkit\stylesheets\_css3.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\_conditionals.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\_colours.scss" />
-    <Content Include="Areas\Admin\Views\Home\InternalUserAuthorisationRequired.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\InternalUserAuthorisationRequired.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPassword.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPasswordInstruction.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPasswordRequest.cshtml" />
@@ -598,7 +598,7 @@
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
     <Compile Include="Areas\Admin\Controllers\Base\AdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Home\InternalUserAuthorizationRequiredViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Account\InternalUserAuthorizationRequiredViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\InternalLoginViewModel.cs" />

@@ -18,8 +18,10 @@
     using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.Shared;
     using Thinktecture.IdentityModel.Client;
     using ViewModels.Account;
+    using ViewModels.Home;
     using Weee.Requests.Admin;
 
     public class AccountController : AdminController
@@ -206,8 +208,25 @@
             {
                 return Redirect(returnUrl);
             }
-            
-            return RedirectToAction("ChooseActivity", "Home", new { area = "Admin" });
+
+            return RedirectToAction("InternalUserAuthorisationRequired", "Account", new { area = "Admin" });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> InternalUserAuthorisationRequired()
+        {
+            using (var client = apiClient())
+            {
+                var status = await client.SendAsync(User.GetAccessToken(), new GetAdminUserStatus(User.GetUserId()));
+
+                if (status == UserStatus.Active)
+                {
+                    return RedirectToAction("ChooseActivity", "Home", new { area = "Admin" });
+                }
+
+                InternalUserAuthorizationRequiredViewModel model = new InternalUserAuthorizationRequiredViewModel() { Status = status };
+                return View(model);
+            }
         }
 
         [HttpGet]
