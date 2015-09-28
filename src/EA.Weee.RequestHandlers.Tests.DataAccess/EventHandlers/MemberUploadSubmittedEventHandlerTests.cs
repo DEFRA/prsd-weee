@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Test.DataAccess.EventHandlers
+﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.EventHandlers
 {
     using EA.Weee.DataAccess.EventHandlers;
     using EA.Weee.Domain.Events;
