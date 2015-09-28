@@ -81,6 +81,10 @@
                 .As<IEnsureAnOverseasProducerIsNotBasedInTheUK>()
                 .InstancePerRequest();
 
+            builder.RegisterType<ProducerChargeBandChange>()
+                .As<IProducerChargeBandChange>()
+                .InstancePerRequest();
+
             //builder.RegisterAssemblyTypes(GetType().Assembly)
             //    .Where(t => t.Name.StartsWith("BusinessValidation"))
             //    .AsImplementedInterfaces();

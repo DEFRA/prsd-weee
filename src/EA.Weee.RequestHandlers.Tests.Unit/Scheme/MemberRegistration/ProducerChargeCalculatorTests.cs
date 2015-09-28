@@ -6,13 +6,14 @@
     using Domain;
     using Domain.Producer;
     using Domain.Scheme;
+    using EA.Weee.Xml;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
     using Weee.Tests.Core;
     using Xml.Schemas;
     using Xunit;
 
-    public class ProducerChargeBandCalculatorTests
+    public class ProducerChargeCalculatorTests
     {
         private const int SomeComplianceYear = 2016;
         private const string SomeRegistrationNumber = "WEE/AB1234CD";
@@ -34,7 +35,7 @@
                 MakeSubmittedProducer(SomeComplianceYear, SomeRegistrationNumber, fakeE.Amount)
             }));
 
-            var calculator = new ProducerChargeBandCalculator(context);
+            var calculator = new ProducerChargeCalculator(context, new ProducerChargeBandCalculator());
 
             var producer = GetAmendingProducerType(SomeRegistrationNumber, ChargeBandType.A);
             var producerCharge = calculator.CalculateCharge(producer, SomeComplianceYear);
@@ -51,7 +52,7 @@
                 MakeSubmittedProducer(SomeComplianceYear, SomeRegistrationNumber, fakeB.Amount)
             }));
 
-            var calculator = new ProducerChargeBandCalculator(context);
+            var calculator = new ProducerChargeCalculator(context, new ProducerChargeBandCalculator());
 
             var producer = GetAmendingProducerType(SomeRegistrationNumber, ChargeBandType.E);
             var producerCharge = calculator.CalculateCharge(producer, SomeComplianceYear);
@@ -71,7 +72,7 @@
                 MakeSubmittedProducer(SomeComplianceYear, SomeRegistrationNumber, 0) // E
             }));
 
-            var calculator = new ProducerChargeBandCalculator(context);
+            var calculator = new ProducerChargeCalculator(context, new ProducerChargeBandCalculator());
 
             var producer = GetAmendingProducerType(SomeRegistrationNumber, ChargeBandType.A);
             var producerCharge = calculator.CalculateCharge(producer, SomeComplianceYear);
@@ -91,7 +92,7 @@
                 MakeSubmittedProducer(SomeComplianceYear, SomeRegistrationNumber, fakeA.Amount - fakeB.Amount) // A
             }));
 
-            var calculator = new ProducerChargeBandCalculator(context);
+            var calculator = new ProducerChargeCalculator(context, new ProducerChargeBandCalculator());
 
             var producer = GetAmendingProducerType(SomeRegistrationNumber, ChargeBandType.E);
             var producerCharge = calculator.CalculateCharge(producer, SomeComplianceYear);
@@ -105,7 +106,7 @@
             var context = GetContextWithFakeChargeBands();
             A.CallTo(() => context.Producers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Producer>()));
 
-            var calculator = new ProducerChargeBandCalculator(context);
+            var calculator = new ProducerChargeCalculator(context, new ProducerChargeBandCalculator());
 
             var producer = GetAmendingProducerType(SomeRegistrationNumber, ChargeBandType.A);
             var producerCharge = calculator.CalculateCharge(producer, SomeComplianceYear);
@@ -122,7 +123,7 @@
             var context = GetContextWithFakeChargeBands();
             A.CallTo(() => context.Producers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Producer>()));
 
-            var calculator = new ProducerChargeBandCalculator(context);
+            var calculator = new ProducerChargeCalculator(context, new ProducerChargeBandCalculator());
 
             var producerInBandA = GetAmendingProducerType(SomeRegistrationNumber, ChargeBandType.A);
             var producerInBandB = GetAmendingProducerType(SomeRegistrationNumber, ChargeBandType.B);
@@ -207,116 +208,6 @@
             }
             
             return producer;
-        }
-
-        /// <summary>
-        /// This test ensures that the charge band is A when the amount of EEE placed on the market per year
-        /// is at least 5 Tonnes, the annual turnover is greater than £1,000,000 and the company is VAT registered.
-        /// </summary>
-        [Fact]
-        public void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered_ReturnsChargeBandA()
-        {
-            // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Greaterthanonemillionpounds;
-            bool vatRegistered = true;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
-
-            // Act
-            ChargeBandType result = ProducerChargeBandCalculator.GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
-
-            // Assert
-            Assert.Equal(ChargeBandType.A, result);
-        }
-
-        /// <summary>
-        /// This test ensures that the charge band is B when the amount of EEE placed on the market per year
-        /// is at least 5 Tonnes, the annual turnover is at most £1,000,000 and the company is VAT registered.
-        /// </summary>
-        [Fact]
-        public void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_VATRegistered_ReturnsChargeBandB()
-        {
-            // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds;
-            bool vatRegistered = true;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
-
-            // Act
-            ChargeBandType result = ProducerChargeBandCalculator.GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
-
-            // Assert
-            Assert.Equal(ChargeBandType.B, result);
-        }
-
-        /// <summary>
-        /// This test ensures that the charge band is C when the amount of EEE placed on the market per year
-        /// is at least 5 Tonnes, the annual turnover is at most £1,000,000 and the company is not VAT registered.
-        /// </summary>
-        [Fact]
-        public void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_Lessthanorequaltoonemillionpounds_NotVATRegistered_ReturnsChargeBandC()
-        {
-            // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds;
-            bool vatRegistered = false;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
-
-            // Act
-            ChargeBandType result = ProducerChargeBandCalculator.GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
-
-            // Assert
-            Assert.Equal(ChargeBandType.C, result);
-        }
-
-        /// <summary>
-        /// This test ensures that the charge band is D when the amount of EEE placed on the market per year
-        /// is at least 5 Tonnes, the annual turnover is greater than £1,000,000 and the company is not VAT registered.
-        /// </summary>
-        [Fact]
-        public void GetProducerChargeBand_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered_ReturnsChargeBandD()
-        {
-            // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Greaterthanonemillionpounds;
-            bool vatRegistered = false;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
-
-            // Act
-            ChargeBandType result = ProducerChargeBandCalculator.GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
-
-            // Assert
-            Assert.Equal(ChargeBandType.D, result);
-        }
-
-        /// <summary>
-        /// This test ensures that the charge band is E when the amount of EEE placed on the market per year
-        /// is less than 5 Tonnes.
-        /// </summary>
-        [Fact]
-        public void GetProducerChargeBand_Lessthan5TEEEplacedonmarket_ReturnsChargeBandE()
-        {
-            // Arrange
-            annualTurnoverBandType annualTurnoverBand = annualTurnoverBandType.Lessthanorequaltoonemillionpounds;
-            bool vatRegistered = false;
-            eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket;
-
-            // Act
-            ChargeBandType result = ProducerChargeBandCalculator.GetProducerChargeBand(
-                annualTurnoverBand,
-                vatRegistered,
-                eeePlacedOnMarketBand);
-
-            // Assert
-            Assert.Equal(ChargeBandType.E, result);
         }
     }
 }
