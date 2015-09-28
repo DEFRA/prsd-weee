@@ -20,6 +20,7 @@
     using ViewModels.Shared;
     using Weee.Requests.Organisations;
     using Weee.Requests.Organisations.Create;
+    using Weee.Requests.Organisations.Create.Base;
     using Weee.Requests.Shared;
 
     [Authorize]
@@ -290,11 +291,7 @@
                 TradingName = model.BusinessTradingName
             };
 
-            using (var client = apiClient())
-            {
-                Guid organisationId = await client.SendAsync(User.GetAccessToken(), request);
-                return RedirectToAction("MainContactPerson", new { organisationId });
-            }
+            return await RedirectToMainContactPerson(request);
         }
 
         [HttpGet]
@@ -343,10 +340,15 @@
                 TradingName = model.BusinessTradingName
             };
 
+            return await RedirectToMainContactPerson(request);
+        }
+
+        private async Task<ActionResult> RedirectToMainContactPerson(CreateOrganisationRequest request)
+        {
             using (var client = apiClient())
             {
-                Guid organisationId = await client.SendAsync(User.GetAccessToken(), request);
-                return RedirectToAction("MainContactPerson", new { organisationId });
+            Guid organisationId = await client.SendAsync(User.GetAccessToken(), request);
+            return RedirectToAction("MainContactPerson", new { organisationId });
             }
         }
 
@@ -401,11 +403,7 @@
                 TradingName = model.BusinessTradingName
             };
 
-            using (var client = apiClient())
-            {
-                Guid organisationId = await client.SendAsync(User.GetAccessToken(), request);
-                return RedirectToAction("MainContactPerson", new { organisationId });
-            }
+            return await RedirectToMainContactPerson(request);
         }
 
         [HttpGet]
