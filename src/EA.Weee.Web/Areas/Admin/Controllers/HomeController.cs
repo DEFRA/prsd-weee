@@ -1,13 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using Base;
-    using System;
-    using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-  using Core.Shared;
-    using Infrastructure;
-    using Services;
     using ViewModels.Home;
     
     public class HomeController : AdminController
