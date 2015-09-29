@@ -42,14 +42,6 @@
       <HintPath>..\packages\EA.Prsd.Core.1.0.15257-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="FakeItEasy, Version=1.25.3.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
       <HintPath>..\packages\FakeItEasy.1.25.3\lib\net40\FakeItEasy.dll</HintPath>
       <Private>True</Private>
@@ -88,14 +80,11 @@
     <Compile Include="BusinessValidation\Rules\Producer\ProducerNameAlreadyRegisteredTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\ProducerRegistrationNumberValidityTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\UkBasedAuthorisedRepresentativeTests.cs" />
-    <Compile Include="BusinessValidation\Rules\QuerySets\MigratedProducerQuerySetTests.cs" />
-    <Compile Include="BusinessValidation\Rules\QuerySets\SchemeQuerySetTests.cs" />
     <Compile Include="BusinessValidation\Rules\Scheme\CorrectSchemeApprovalNumberTests.cs" />
     <Compile Include="BusinessValidation\Rules\Scheme\DuplicateProducerNamesTests.cs" />
     <Compile Include="BusinessValidation\Rules\Scheme\DuplicateProducerRegistrationNumbersTests.cs" />
     <Compile Include="BusinessValidation\XmlBusinessValidatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BusinessValidation\Rules\QuerySets\ProducerQuerySetTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\AnnualTurnoverMismatchTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\ProducerAlreadyRegisteredTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\ProducerNameChangeTests.cs" />
@@ -108,10 +97,6 @@
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
       <Project>{75efee66-9358-4de4-9a84-e7191eec7db8}</Project>
       <Name>EA.Weee.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EA.Weee.DataAccess\EA.Weee.DataAccess.csproj">
-      <Project>{46300373-d7ae-40aa-bf96-3fc3889825a4}</Project>
-      <Name>EA.Weee.DataAccess</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
       <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>

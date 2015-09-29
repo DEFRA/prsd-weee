@@ -2,12 +2,14 @@
 {
     using System;
     using System.Data.Entity;
+    using System.Diagnostics;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.Organisation;
     using FakeItEasy;
+    using FakeItEasy.ExtensionSyntax.Full;
     using RequestHandlers.Organisations;
     using RequestHandlers.Security;
     using Requests.Organisations;
@@ -16,21 +18,55 @@
 
     public class VerifyOrganisationExistsHandlerTests
     {
-        private readonly DbContextHelper helper = new DbContextHelper();
+        private readonly DbContextHelper dbHelper = new DbContextHelper();
 
         private readonly OrganisationHelper orgHelper = new OrganisationHelper();
 
         private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserWithAllRights();
 
         [Fact]
-        public async Task VerifyOrganisationExistsHandler_NotOrganisationUser_ThrowsSecurityException()
+        public async Task VerifyOrganisationExistsHandler_NotOrganisationOrInternalUser_ThrowsSecurityException()
         {
-            var authorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
+            var deniedAuthorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
-            var handler = new VerifyOrganisationExistsHandler(authorization, A<WeeeContext>._);
+            var handler = new VerifyOrganisationExistsHandler(deniedAuthorization, A<WeeeContext>._);
             var message = new VerifyOrganisationExists(Guid.NewGuid());
 
             await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
+        }
+
+        [Fact]
+        public async Task VerifyOrganisationExistsHandler_InternalUser_PassesSecurityCheck()
+        {
+            var internalAuthorization = AuthorizationBuilder.CreateFromUserType(AuthorizationBuilder.UserType.Internal);
+
+            var organisations = MakeOrganisation();
+            var context = A.Fake<WeeeContext>();
+            A.CallTo(() => context.Organisations).Returns(organisations);
+
+            var handler = new VerifyOrganisationExistsHandler(internalAuthorization, context);
+            var message = new VerifyOrganisationExists(Guid.NewGuid());
+
+            await handler.HandleAsync(message);
+
+            A.CallTo(() => context.Organisations).MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task VerifyOrganisationExistsHandler_OrganisationUser_PassesSecurityCheck()
+        {
+            var organisationAuthorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
+
+            var organisations = MakeOrganisation();
+            var context = A.Fake<WeeeContext>();
+            A.CallTo(() => context.Organisations).Returns(organisations);
+
+            var handler = new VerifyOrganisationExistsHandler(organisationAuthorization, context);
+            var message = new VerifyOrganisationExists(Guid.NewGuid());
+
+            await handler.HandleAsync(message);
+
+            A.CallTo(() => context.Organisations).MustHaveHappened();
         }
 
         [Fact]
@@ -67,7 +103,7 @@
 
         private DbSet<Organisation> MakeOrganisation()
         {
-            return helper.GetAsyncEnabledDbSet(new[]
+            return dbHelper.GetAsyncEnabledDbSet(new[]
             {
                 orgHelper.GetOrganisationWithName("TEST Ltd")
             });

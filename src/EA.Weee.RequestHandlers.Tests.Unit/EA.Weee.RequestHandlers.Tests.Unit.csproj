@@ -44,8 +44,12 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="FakeItEasy, Version=1.25.3.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -112,7 +116,6 @@
     <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandlerTests.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingOrganisationsHandlerTests.cs" />
     <Compile Include="Organisations\JoinOrganisation\JoinOrganisationHandlerTests.cs" />
-    <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandlerTests.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandlerTests.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandlerTests.cs" />
     <Compile Include="Scheme\PrnGeneration\QuadraticResidueTests.cs" />

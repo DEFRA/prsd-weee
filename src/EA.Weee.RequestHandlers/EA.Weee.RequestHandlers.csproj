@@ -124,6 +124,7 @@
     <Compile Include="Scheme\GetSchemeStatusHandler.cs" />
     <Compile Include="Scheme\IGetSchemeByIdDataAccess.cs" />
     <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
+    <Compile Include="Scheme\MemberRegistration\IProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXml.cs" />
     <Compile Include="Scheme\Interfaces\IGenerateFromXml.cs" />
     <Compile Include="Scheme\MemberRegistration\GetComplianceYearsHandler.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerChargeCalculator.cs" />
+    <Compile Include="Scheme\MemberRegistration\ProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlChargeBandCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlConverter.cs" />
     <Compile Include="Scheme\Interfaces\IXmlValidator.cs" />

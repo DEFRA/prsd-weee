@@ -183,7 +183,7 @@
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
                 .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().Type(A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().Type(A<string>._, A<Guid>._));
         }
 
         [Fact]
@@ -196,7 +196,7 @@
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(new OrganisationData());
 
-            var result = await OrganisationRegistrationController().Type(organisationId);
+            var result = await OrganisationRegistrationController().Type(A<string>._, organisationId);
             var model = ((ViewResult)result).Model;
 
             Assert.IsType<OrganisationTypeViewModel>(model);
@@ -331,7 +331,7 @@
         [InlineData("12345")]
         [InlineData("AB1258")]
         [InlineData("AB123456789")]
-        public void PostRegisteredCompanyDetails_WithInvalidCompanyRegistrationNo_ShouldReturnsValidationError(string companyRegistrationNo)
+        public async void PostRegisteredCompanyDetails_WithInvalidCompanyRegistrationNo_ShouldReturnsValidationError(string companyRegistrationNo)
         {
             var model = new RegisteredCompanyDetailsViewModel
             {
@@ -339,9 +339,11 @@
                 CompaniesRegistrationNumber = companyRegistrationNo,
                 CompanyName = "Test Ltd."
             };
-            var result = OrganisationRegistrationController(model).RegisteredCompanyDetails(model) as ViewResult;
-
-            Assert.False(result.ViewData.ModelState.IsValid);
+            var result = await OrganisationRegistrationController(model).RegisteredCompanyDetails(model);
+            var viewmodel = ((ViewResult)result).Model;
+            
+            Assert.NotNull(viewmodel);
+            Assert.False(((ViewResult)result).ViewData.ModelState.IsValid);
         }
 
         [Fact]
@@ -386,7 +388,7 @@
 
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
-            Assert.Equal("Type", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal("SearchOrganisation", redirectToRouteResult.RouteValues["action"]);
         }
 
         [Fact]
@@ -423,7 +425,7 @@
         [Fact]
         public void GetNotFoundOrganisation_ShouldReturnsView()
         {
-            var result = OrganisationRegistrationController().NotFoundOrganisation("name", "trading name", "12345678", OrganisationType.RegisteredCompany);
+            var result = OrganisationRegistrationController().NotFoundOrganisation("name");
 
             var model = ((ViewResult)result).Model;
 
@@ -432,7 +434,7 @@
         }
 
         [Fact]
-        public async void PostNotFoundOrganisation_TryAnotherSearchActionSelected_ShouldRedirectToTypeView()
+        public void PostNotFoundOrganisation_TryAnotherSearchActionSelected_ShouldRedirectToTypeView()
         {
             var model = new NotFoundOrganisationViewModel
             {
@@ -444,23 +446,20 @@
                 }
             };
 
-            var result = await OrganisationRegistrationController().NotFoundOrganisation(model);
+            var result = OrganisationRegistrationController().NotFoundOrganisation(model);
 
             var redirectRouteResult = (RedirectToRouteResult)result;
 
-            Assert.Equal(redirectRouteResult.RouteValues["action"], "Type");
+            Assert.Equal(redirectRouteResult.RouteValues["action"], "SearchOrganisation");
         }
 
         [Fact]
-        public async void PostNotFoundOrganisation_CreateNewOrgSelectedWithoutOrgId_ShouldNotUpdateOrganisatonDetailsAndRedirectToContactPersonView()
+        public void PostNotFoundOrganisation_CreateNewOrgSelected_ShouldRedirectToTypeView()
         {
             var model = new NotFoundOrganisationViewModel
             {
                 SearchedText = "xyz ltd.",
                 Name = "xyz ltd.",
-                TradingName = "xyz",
-                Type = OrganisationType.RegisteredCompany,
-                CompaniesRegistrationNumber = "12345678",
                 ActivityOptions = new RadioButtonStringCollectionViewModel
                 {
                     PossibleValues = new[] { NotFoundOrganisationAction.TryAnotherSearch, NotFoundOrganisationAction.CreateNewOrg },
@@ -468,46 +467,14 @@
                 }
             };
 
-            var result = await OrganisationRegistrationController().NotFoundOrganisation(model);
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<UpdateOrganisationTypeDetails>._))
-               .MustNotHaveHappened();
-
+            var result = OrganisationRegistrationController().NotFoundOrganisation(model);
             var redirectRouteResult = (RedirectToRouteResult)result;
 
-            Assert.Equal(redirectRouteResult.RouteValues["action"], "MainContactPerson");
+            Assert.Equal(redirectRouteResult.RouteValues["action"], "Type");
         }
-
+       
         [Fact]
-        public async void PostNotFoundOrganisation_CreateNewOrgSelectedWithOrgId_ShouldUpdateOrganisationDetailsAndRedirectToContactPersonView()
-        {
-            var model = new NotFoundOrganisationViewModel
-            {
-                SearchedText = "xyz ltd.",
-                Name = "xyz ltd.",
-                TradingName = "xyz",
-                Type = OrganisationType.RegisteredCompany,
-                CompaniesRegistrationNumber = "12345678",
-                ActivityOptions = new RadioButtonStringCollectionViewModel
-                {
-                    PossibleValues = new[] { NotFoundOrganisationAction.TryAnotherSearch, NotFoundOrganisationAction.CreateNewOrg },
-                    SelectedValue = NotFoundOrganisationAction.CreateNewOrg
-                },
-                OrganisationId = Guid.NewGuid()
-            };
-
-            var result = await OrganisationRegistrationController().NotFoundOrganisation(model);
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<UpdateOrganisationTypeDetails>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
-            var redirectRouteResult = (RedirectToRouteResult)result;
-
-            Assert.Equal(redirectRouteResult.RouteValues["action"], "MainContactPerson");
-        }
-
-        [Fact]
-        public async void GetSelectOrganisation_NoMatchingOrganisation_ShouldRedirectToNotFoundOrganisationView()
+        public async void GetSearchOrganisation_NoMatchingOrganisation_ShouldRedirectToNotFoundOrganisationView()
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<FindMatchingOrganisations>._))
                 .Returns(new OrganisationSearchDataResult(new List<PublicOrganisationData>(), 0));
@@ -515,7 +482,7 @@
             var result =
                 await
                     OrganisationRegistrationController()
-                        .SelectOrganisation("xyz ltd.", "xyz", "12345678", OrganisationType.RegisteredCompany);
+                        .SelectOrganisation("xyz ltd.");
 
             var redirectRouteResult = (RedirectToRouteResult)result;
 
@@ -523,7 +490,7 @@
         }
 
         [Fact]
-        public async void GetSelectOrganisation_FoundMatchingOrganisation_ShouldReturnsView()
+        public async void GetSearchOrganisation_FoundMatchingOrganisation_ShouldReturnsView()
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<FindMatchingOrganisations>._))
                 .Returns(new OrganisationSearchDataResult(new List<PublicOrganisationData>
@@ -535,7 +502,7 @@
             var result =
                 await
                     OrganisationRegistrationController()
-                        .SelectOrganisation("xyz ltd.", "xyz", "12345678", OrganisationType.RegisteredCompany);
+                        .SelectOrganisation("xyz ltd.");
 
             var model = ((ViewResult)result).Model;
 
@@ -544,7 +511,7 @@
         }
 
         [Fact]
-        public async void PostSelectOrganisation_TryAnotherSearchSelected_ShouldRedirectToType()
+        public void PostSelectOrganisation_TryAnotherSearchSelected_ShouldRedirectToSearch()
         {
             var model = new SelectOrganisationViewModel
             {
@@ -562,95 +529,43 @@
                 }
             };
 
-            var result =
-                await
+            var result = 
                     OrganisationRegistrationController()
                         .SelectOrganisation(model);
 
+            var redirectRouteResult = (RedirectToRouteResult)result;
+
+            Assert.Equal(redirectRouteResult.RouteValues["action"], "SearchOrganisation");
+        }
+
+        [Fact]
+        public void PostSelectOrganisation_CreateNewOrgSelected_ShouldRedirectToTypeOrg()
+        {
+            var model = new SelectOrganisationViewModel
+            {
+                Organisations = new SelectOrganisationRadioButtons
+                {
+                    PossibleValues = new List<RadioButtonPair<string, string>>
+                    {
+                        new RadioButtonPair<string, string>("Test ltd.", Guid.NewGuid().ToString()),
+                        new RadioButtonPair<string, string>(SelectOrganisationAction.TryAnotherSearch,
+                            SelectOrganisationAction.TryAnotherSearch),
+                        new RadioButtonPair<string, string>(SelectOrganisationAction.CreateNewOrg,
+                            SelectOrganisationAction.CreateNewOrg)
+                    },
+                    SelectedValue = SelectOrganisationAction.CreateNewOrg
+                },
+                SearchedText = "Test"
+            };
+
+            var result = OrganisationRegistrationController().SelectOrganisation(model);
             var redirectRouteResult = (RedirectToRouteResult)result;
 
             Assert.Equal(redirectRouteResult.RouteValues["action"], "Type");
         }
-
+      
         [Fact]
-        public async void PostSelectOrganisation_CreateNewOrgSelectedWithoutOrgId_ShouldRedirectToMainContactPersonAndCreateNewOrg()
-        {
-            var model = new SelectOrganisationViewModel
-            {
-                Organisations = new SelectOrganisationRadioButtons
-                {
-                    PossibleValues = new List<RadioButtonPair<string, string>>
-                    {
-                        new RadioButtonPair<string, string>("Test ltd.", Guid.NewGuid().ToString()),
-                        new RadioButtonPair<string, string>(SelectOrganisationAction.TryAnotherSearch,
-                            SelectOrganisationAction.TryAnotherSearch),
-                        new RadioButtonPair<string, string>(SelectOrganisationAction.CreateNewOrg,
-                            SelectOrganisationAction.CreateNewOrg)
-                    },
-                    SelectedValue = SelectOrganisationAction.CreateNewOrg
-                },
-                Type = OrganisationType.SoleTraderOrIndividual,
-                TradingName = "Test",
-                SearchedText = "Test"
-            };
-
-            var result =
-                await
-                    OrganisationRegistrationController()
-                        .SelectOrganisation(model);
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<UpdateOrganisationTypeDetails>._))
-                .MustNotHaveHappened();
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<CreateOrganisationRequest>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
-            var redirectRouteResult = (RedirectToRouteResult)result;
-
-            Assert.Equal(redirectRouteResult.RouteValues["action"], "MainContactPerson");
-        }
-
-        [Fact]
-        public async void PostSelectOrganisation_CreateNewOrgSelectedWithOrgId_ShouldRedirectToMainContactPersonAndUpdateOrgDetails()
-        {
-            var model = new SelectOrganisationViewModel
-            {
-                Organisations = new SelectOrganisationRadioButtons
-                {
-                    PossibleValues = new List<RadioButtonPair<string, string>>
-                    {
-                        new RadioButtonPair<string, string>("Test ltd.", Guid.NewGuid().ToString()),
-                        new RadioButtonPair<string, string>(SelectOrganisationAction.TryAnotherSearch,
-                            SelectOrganisationAction.TryAnotherSearch),
-                        new RadioButtonPair<string, string>(SelectOrganisationAction.CreateNewOrg,
-                            SelectOrganisationAction.CreateNewOrg)
-                    },
-                    SelectedValue = SelectOrganisationAction.CreateNewOrg
-                },
-                Type = OrganisationType.SoleTraderOrIndividual,
-                TradingName = "Test",
-                SearchedText = "Test",
-                OrganisationId = Guid.NewGuid()
-            };
-
-            var result =
-                await
-                    OrganisationRegistrationController()
-                        .SelectOrganisation(model);
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<UpdateOrganisationTypeDetails>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<CreateOrganisationRequest>._))
-                .MustNotHaveHappened();
-
-            var redirectRouteResult = (RedirectToRouteResult)result;
-
-            Assert.Equal(redirectRouteResult.RouteValues["action"], "MainContactPerson");
-        }
-
-        [Fact]
-        public async void PostSelectOrganisation_AnyOrganisationSelected_ShouldRedirectToJoinOrganisation()
+        public void PostSelectOrganisation_AnyOrganisationSelected_ShouldRedirectToJoinOrganisation()
         {
             var orgId = Guid.NewGuid().ToString();
 
@@ -668,14 +583,10 @@
                     },
                     SelectedValue = orgId
                 },
-                Type = OrganisationType.SoleTraderOrIndividual,
-                TradingName = "Test",
                 SearchedText = "Test"
             };
 
-            var result =
-                await
-                    OrganisationRegistrationController()
+            var result = OrganisationRegistrationController()
                         .SelectOrganisation(model);
 
             var redirectRouteResult = (RedirectToRouteResult)result;

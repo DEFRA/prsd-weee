@@ -69,3 +69,15 @@
     -webkit-user-drag: none;
     box-sizing: border-box;
 }
+
+.search-button{
+    @include button ($button-colour);
+    margin: 0 $gutter-half $gutter-half 0;  
+    vertical-align: top;
+    width: 45px;
+    height: 35px;    
+    outline: none;
+    padding :0;
+
+
+}
