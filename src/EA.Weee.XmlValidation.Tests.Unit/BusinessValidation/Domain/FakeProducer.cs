@@ -81,12 +81,12 @@
         }
 
         public static FakeProducer Create(ObligationType obligationType, string prn, bool iscurrentcomplainceYear, 
-          Guid? schemeOrganisationId = null, int? complianceYear = null,  params string[] brandNames)
+          Guid? schemeOrganisationId = null, int? complianceYear = null, ProducerBusiness producerBusiness = null, params string[] brandNames)
         {
             return new FakeProducer(schemeOrganisationId ?? Guid.NewGuid(),
                 Guid.NewGuid(),
                 new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>(), 0, complianceYear ?? 2016),
-                new ProducerBusiness(null, new Partnership("Partnership Name", null, new List<Partner>())),
+                producerBusiness ?? new ProducerBusiness(null, new Partnership("Partnership Name", null, new List<Partner>())),
                 new AuthorisedRepresentative("authrep"),
                 DateTime.Now,
                 decimal.Zero,

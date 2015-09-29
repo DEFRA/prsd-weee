@@ -85,6 +85,10 @@
                 .As<IProducerChargeBandChange>()
                 .InstancePerRequest();
 
+            builder.RegisterType<CompanyAlreadyRegistered>()
+                .As<ICompanyAlreadyRegistered>()
+                .InstancePerRequest();                
+
             //builder.RegisterAssemblyTypes(GetType().Assembly)
             //    .Where(t => t.Name.StartsWith("BusinessValidation"))
             //    .AsImplementedInterfaces();
