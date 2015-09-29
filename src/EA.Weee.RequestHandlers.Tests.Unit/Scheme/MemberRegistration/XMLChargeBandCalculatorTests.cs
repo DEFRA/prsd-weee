@@ -1,80 +1,99 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
-    using System;
-    using System.Collections;
-    using System.Data.Entity;
-    using System.IO;
-    using System.Reflection;
-    using System.Text;
-    using DataAccess;
-    using Domain;
-    using Domain.Producer;
-    using Domain.Scheme;
-    using EA.Weee.Xml;
+    using EA.Weee.RequestHandlers.Scheme.Interfaces;
+    using EA.Weee.Xml.Schemas;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
-    using Weee.Tests.Core;
+    using System;
+    using System.Collections;
+    using System.IO;
+    using System.Reflection;
+    using System.Text;
     using Xunit;
 
-    public class XMLChargeBandCalculatorTests
+    public class XmlChargeBandCalculatorTests
     {
-        private readonly DbContextHelper helper = new DbContextHelper();
-        private readonly WeeeContext context;
-        private readonly DbSet<ProducerChargeBand> producerChargeBandDbSet;
-        private readonly DbSet<Producer> producers;
-
-        private const string AmendmentRegistrationNumber = "WEE/HE0234YV";
-
-        public XMLChargeBandCalculatorTests()
-        {
-            producerChargeBandDbSet = helper.GetAsyncEnabledDbSet(new[]
-            {
-                new ProducerChargeBand("A", 445),
-                new ProducerChargeBand("B", 210),
-                new ProducerChargeBand("C", 30),
-                new ProducerChargeBand("D", 30),
-                new ProducerChargeBand("E", 30)
-            });
-
-            producers = helper.GetAsyncEnabledDbSet(new[] { GetPassingProducer() });
-
-            context = A.Fake<WeeeContext>();
-
-            A.CallTo(() => context.ProducerChargeBands).Returns(producerChargeBandDbSet);
-            A.CallTo(() => context.Producers).Returns(producers);
-        }
-
         [Fact]
-        public void XMLChargeBandCalculator_ValidXml_NoErrors()
+        public void Calculate_WithValidXml_GeneratesNoErrors()
         {
-            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter(),
-                new ProducerChargeCalculator(context, new ProducerChargeBandCalculator()));
+            // Arrange
 
-            RunHandler(xmlChargeBandCalculator, @"ExampleXML\v3-valid.xml");
+            // This file contains no errors.
+            string absoluteFilePath = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\v3-valid.xml");
 
+            byte[] xml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(absoluteFilePath).LocalPath));
+            ProcessXMLFile request = new ProcessXMLFile(A<Guid>._, xml);
+
+            IProducerChargeCalculator calculator = A.Fake<IProducerChargeCalculator>();
+            XmlConverter xmlConverter = new XmlConverter();
+            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(xmlConverter, calculator);
+
+            // Act
+            Hashtable producerCharges = xmlChargeBandCalculator.Calculate(request);
+
+            // Assert
             Assert.Empty(xmlChargeBandCalculator.ErrorsAndWarnings);
         }
 
         [Fact]
-        public void XMLChargeBandCalculator_XmlWithSameProducerName_AddsError()
+        public void Calculate_XmlWithSameProducerName_AddsError()
         {
-            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(context, new XmlConverter(),
-                new ProducerChargeCalculator(context, new ProducerChargeBandCalculator()));
+            // Arrange
 
-            RunHandler(xmlChargeBandCalculator, @"ExampleXML\v3-same-producer-name.xml");
+            // This file contains no errors.
+            string absoluteFilePath = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
+                @"ExampleXML\v3-same-producer-name.xml");
 
+            byte[] xml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(absoluteFilePath).LocalPath));
+            ProcessXMLFile request = new ProcessXMLFile(A<Guid>._, xml);
+
+            IProducerChargeCalculator calculator = A.Fake<IProducerChargeCalculator>();
+            XmlConverter xmlConverter = new XmlConverter();
+            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(xmlConverter, calculator);
+
+            // Act
+            Hashtable producerCharges = xmlChargeBandCalculator.Calculate(request);
+
+            // Assert
             Assert.NotEmpty(xmlChargeBandCalculator.ErrorsAndWarnings);
         }
 
         [Fact]
-        public void XMLChargeBandCalculator_ValidXmlForChargeBand_GivesCorrectChargeBand()
+        public void Calculate_WithVaildXmlFileContainingFiveProducers_ReturnsFiveCharges()
         {
-            var producerCharges = RunHandler(
-                new XmlChargeBandCalculator(context, new XmlConverter(),
-                    new ProducerChargeCalculator(context, new ProducerChargeBandCalculator())),
+            // Arrange
+
+            // This file contains 5 producers.
+            string absoluteFilePath = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
                 @"ExampleXML\v3-valid-ChargeBand.xml");
 
+            byte[] xml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(absoluteFilePath).LocalPath));
+            ProcessXMLFile request = new ProcessXMLFile(A<Guid>._, xml);
+
+            ProducerCharge producerCharge1 = A.Dummy<ProducerCharge>();
+            ProducerCharge producerCharge2 = A.Dummy<ProducerCharge>();
+            ProducerCharge producerCharge3 = A.Dummy<ProducerCharge>();
+            ProducerCharge producerCharge4 = A.Dummy<ProducerCharge>();
+            ProducerCharge producerCharge5 = A.Dummy<ProducerCharge>();
+
+            IProducerChargeCalculator calculator = A.Fake<IProducerChargeCalculator>();
+
+            A.CallTo(() => calculator.CalculateCharge(A<producerType>._, A<int>._))
+                .ReturnsNextFromSequence(producerCharge1, producerCharge2, producerCharge3, producerCharge4, producerCharge5);
+
+            XmlConverter xmlConverter = new XmlConverter();
+
+            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(xmlConverter, calculator);
+
+            // Act
+            Hashtable producerCharges = xmlChargeBandCalculator.Calculate(request);
+
+            // Assert
             Assert.NotNull(producerCharges);
             Assert.Equal(producerCharges.Count, 5);
             Assert.True(producerCharges.ContainsKey("The Empire"));
@@ -83,52 +102,11 @@
             Assert.True(producerCharges.ContainsKey("The Empire 2"));
             Assert.True(producerCharges.ContainsKey("The Empire 3"));
 
-            var firstProducer = (ProducerCharge)producerCharges["The Empire"];
-            var secondProducer = (ProducerCharge)producerCharges["Tom and Jerry"];
-            var thirdProducer = (ProducerCharge)producerCharges["The Empire 1"];
-            var fourthProducer = (ProducerCharge)producerCharges["The Empire 2"];
-            var fifthProducer = (ProducerCharge)producerCharges["The Empire 3"];
-
-            Assert.Equal(firstProducer.ChargeBandType, ChargeBandType.E);
-            Assert.Equal(firstProducer.ChargeAmount, 30);
-
-            Assert.Equal(secondProducer.ChargeBandType, ChargeBandType.A);
-            Assert.Equal(secondProducer.ChargeAmount, 445);
-
-            Assert.Equal(thirdProducer.ChargeBandType, ChargeBandType.B);
-            Assert.Equal(thirdProducer.ChargeAmount, 210);
-
-            Assert.Equal(fourthProducer.ChargeBandType, ChargeBandType.D);
-            Assert.Equal(fourthProducer.ChargeAmount, 30);
-
-            Assert.Equal(fifthProducer.ChargeBandType, ChargeBandType.C);
-            Assert.Equal(fifthProducer.ChargeAmount, 30);
-        }
-
-        private Hashtable RunHandler(XmlChargeBandCalculator xmlChargeBandCalculator, string relativeFilePath)
-        {
-            var absoluteFilePath = Path.Combine(
-                Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase),
-                relativeFilePath);
-
-            var xml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(absoluteFilePath).LocalPath));
-
-            return xmlChargeBandCalculator.Calculate(new ProcessXMLFile(A<Guid>._, xml));
-        }
-
-        private Producer GetPassingProducer()
-        {
-            var fakeMemberUpload = A.Fake<MemberUpload>();
-            A.CallTo(() => fakeMemberUpload.IsSubmitted).Returns(true);
-            A.CallTo(() => fakeMemberUpload.ComplianceYear).Returns(2016);
-
-            var producer = (Producer)Activator.CreateInstance(typeof(Producer), true);
-            typeof(Producer).GetProperty("RegistrationNumber").SetValue(producer, AmendmentRegistrationNumber);
-            typeof(Producer).GetProperty("MemberUpload").SetValue(producer, fakeMemberUpload);
-            typeof(Producer).GetProperty("ChargeBandType").SetValue(producer, ChargeBandType.A.Value);
-            typeof(Producer).GetProperty("ChargeThisUpdate").SetValue(producer, (decimal)5);
-
-            return producer;
+            Assert.Equal(producerCharge1, producerCharges["The Empire"]);
+            Assert.Equal(producerCharge2, producerCharges["Tom and Jerry"]);
+            Assert.Equal(producerCharge3, producerCharges["The Empire 1"]);
+            Assert.Equal(producerCharge4, producerCharges["The Empire 2"]);
+            Assert.Equal(producerCharge5, producerCharges["The Empire 3"]);
         }
     }
 }
