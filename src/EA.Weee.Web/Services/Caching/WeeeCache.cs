@@ -128,11 +128,6 @@
             }
         }
 
-        public Task<string> FetchUserName(Guid userId)
-        {
-            return UserNames.Fetch(userId);
-        }
-
         public Task<string> FetchOrganisationName(Guid organisationId)
         {
             return OrganisationNames.Fetch(organisationId);

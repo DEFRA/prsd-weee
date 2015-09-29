@@ -9,8 +9,6 @@
 
     public interface IWeeeCache
     {
-        Task<string> FetchUserName(Guid userId);
-
         Task<string> FetchOrganisationName(Guid organisationId);
 
         Task<string> FetchSchemeName(Guid schemeId);
