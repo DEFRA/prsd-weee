@@ -22,6 +22,7 @@
         private readonly IProducerRegistrationNumberValidity producerRegistrationNumberValidity;
         private readonly IEnsureAnOverseasProducerIsNotBasedInTheUK ensureAnOverseasProducerIsNotBasedInTheUK;
         private readonly IProducerChargeBandChange producerChargeBandChangeWarning;
+        private readonly ICompanyAlreadyRegistered companyAlreadyRegistered;
 
         public XmlBusinessValidator(IProducerNameChange producerNameWarning, 
             IAnnualTurnoverMismatch annualTurnoverMismatch, 
@@ -35,7 +36,8 @@
             IUkBasedAuthorisedRepresentative ukBasedAuthorisedRepresentative,
             IProducerRegistrationNumberValidity producerRegistrationNumberValidity,
             IEnsureAnOverseasProducerIsNotBasedInTheUK ensureAnOverseasProducerIsNotBasedInTheUK,
-            IProducerChargeBandChange producerChargeBandChangeWarning)
+            IProducerChargeBandChange producerChargeBandChangeWarning,
+            ICompanyAlreadyRegistered companyAlreadyRegistered)
         {
             this.producerNameWarning = producerNameWarning;
             this.annualTurnoverMismatch = annualTurnoverMismatch;
@@ -50,6 +52,7 @@
             this.producerRegistrationNumberValidity = producerRegistrationNumberValidity;
             this.ensureAnOverseasProducerIsNotBasedInTheUK = ensureAnOverseasProducerIsNotBasedInTheUK;
             this.producerChargeBandChangeWarning = producerChargeBandChangeWarning;
+            this.companyAlreadyRegistered = companyAlreadyRegistered;
         }
 
         public IEnumerable<RuleResult> Validate(schemeType scheme, Guid schemeId)
@@ -79,6 +82,7 @@
                 result.Add(producerAlreadyRegistered.Evaluate(scheme, producer, schemeId));
                 result.Add(producerNameAlreadyRegistered.Evaluate());
                 result.Add(producerChargeBandChangeWarning.Evaluate(scheme, producer, schemeId));
+                result.Add(companyAlreadyRegistered.Evaluate(producer));
             }
 
             return result.Where(r => r != null && !r.IsValid);

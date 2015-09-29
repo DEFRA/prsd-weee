@@ -18,6 +18,7 @@
         private List<string> existingProducerNames;
         private List<string> existingProducerRegistrationNumbers;
         private Dictionary<string, List<Producer>> currentProducersByRegistrationNumber;
+        private List<Producer> currentCompanyProducers;
 
         public ProducerQuerySet(WeeeContext context)
         {
@@ -47,6 +48,16 @@
                 .Producers
                 .Select(p => p.RegistrationNumber)
                 .Distinct()
+                .ToList();
+
+            currentCompanyProducers = context
+                .Producers
+                .Include(p => p.ProducerBusiness)
+                .Include(p => p.ProducerBusiness.CompanyDetails)
+                .Where(p => p.IsCurrentForComplianceYear &&
+                            p.ProducerBusiness != null &&
+                            p.ProducerBusiness.CompanyDetails != null)
+                .AsNoTracking()
                 .ToList();
         }
 
@@ -129,6 +140,13 @@
             EnsureDataFetched();
 
             return existingProducerRegistrationNumbers;
+        }
+
+        public List<Producer> GetLatestCompanyProducers()
+        {
+            EnsureDataFetched();
+
+            return currentCompanyProducers;
         }
     }
 }
