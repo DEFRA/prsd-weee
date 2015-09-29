@@ -104,11 +104,11 @@
             {
                 Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
                 Guard.ArgumentNotNullOrEmpty(() => companyRegNumber, companyRegNumber);
+                Name = companyName;
+                CompanyRegistrationNumber = companyRegNumber;
             }
 
             OrganisationType = organisationType;
-            Name = companyName;
-            CompanyRegistrationNumber = companyRegNumber;
             TradingName = tradingName;
         }
 
