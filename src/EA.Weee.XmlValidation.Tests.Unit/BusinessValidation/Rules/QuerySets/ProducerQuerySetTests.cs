@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using DataAccess;
     using Domain;
     using FakeItEasy;
@@ -202,7 +203,71 @@
         [Fact]
         public void GetAllRegistrationNumbers_ReturnsDistinctRegistrationNumbers()
         {
-            const string prn = "ABC12345";
+            const string prnA1 = "ABC12345";
+            const string prnB = "BBC12345";
+            const string prnC = "CBC12345";
+            const string prnA2 = "ABC12345";
+
+            A.CallTo(() => context.Producers)
+                .Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
+                {
+                    FakeProducer.Create(ObligationType.Both, prnA1),
+                    FakeProducer.Create(ObligationType.Both, prnB),
+                    FakeProducer.Create(ObligationType.Both, prnC),
+                    FakeProducer.Create(ObligationType.Both, prnA2),
+                    FakeProducer.Create(ObligationType.Both, prnA1)
+                }));
+
+            var result = ProducerQuerySet().GetAllRegistrationNumbers();
+
+            Assert.Equal(3, result.Count);
+            Assert.Single(result, prnA1);
+            Assert.Single(result, prnB);
+            Assert.Single(result, prnC);
+        }
+
+        [Fact]
+        public void GetLatestCompanyProducers_ReturnsCompaniesOnly()
+        {
+            var company1 = FakeProducer.Create(ObligationType.Both, "123", true, producerBusiness: new ProducerBusiness(companyDetails: new Company("Company1", "123456", null)));
+            var company2 = FakeProducer.Create(ObligationType.Both, "123", true, producerBusiness: new ProducerBusiness(companyDetails: new Company("Company2", "123456", null)));
+            var partnership1 = FakeProducer.Create(ObligationType.Both, "123", true, producerBusiness: new ProducerBusiness(partnership: new Partnership("Partnership1", null, null)));
+            var partnership2 = FakeProducer.Create(ObligationType.Both, "123", true, producerBusiness: new ProducerBusiness(partnership: new Partnership("Partnership2", null, null)));
+
+            A.CallTo(() => context.Producers).Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
+                {
+                    company1,
+                    partnership1,
+                    partnership2,
+                    company2
+                }));
+
+            var result = ProducerQuerySet().GetLatestCompanyProducers();
+
+            Assert.Equal(2, result.Count);
+            Assert.Contains(company1, result);
+            Assert.Contains(company2, result);
+        }
+
+        [Fact]
+        public void GetLatestCompanyProducers_ReturnsCurrentForComplianceYearCompaniesOnly()
+        {
+            var company1 = FakeProducer.Create(ObligationType.Both, "123", true, complianceYear: 2016, producerBusiness: new ProducerBusiness(companyDetails: new Company("Company1", "123456", null)));
+            var company2 = FakeProducer.Create(ObligationType.Both, "123", false, complianceYear: 2016, producerBusiness: new ProducerBusiness(companyDetails: new Company("Company2", "123456", null)));
+            var company3 = FakeProducer.Create(ObligationType.Both, "123", true, complianceYear: 2017, producerBusiness: new ProducerBusiness(companyDetails: new Company("Company1", "123456", null)));
+
+            A.CallTo(() => context.Producers).Returns(helper.GetAsyncEnabledDbSet(new List<Producer>
+                {
+                    company1,
+                    company2,
+                    company3
+                }));
+
+            var result = ProducerQuerySet().GetLatestCompanyProducers();
+
+            Assert.Equal(2, result.Count);
+            Assert.Contains(company1, result);
+            Assert.Contains(company3, result);
         }
 
         private ProducerQuerySet ProducerQuerySet()
