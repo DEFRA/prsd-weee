@@ -47,7 +47,7 @@
                         producer.GetProducerName(),
                         producer.registrationNo);
 
-                    return RuleResult.Fail("An overseas ", Core.Shared.ErrorLevel.Error);
+                    return RuleResult.Fail(errorMessage, Core.Shared.ErrorLevel.Error);
 
                 default:
                     return RuleResult.Pass();

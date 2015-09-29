@@ -79,7 +79,6 @@
     <Compile Include="BusinessValidation\Rules\Producer\IProducerRegistrationNumberValidity.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\ProducerAlreadyRegistered.cs" />
     <Compile Include="BusinessValidation\QuerySets\IProducerQuerySet.cs" />
-    <Compile Include="BusinessValidation\QuerySets\PersistentQueryResult.cs" />
     <Compile Include="BusinessValidation\QuerySets\ProducerQuerySet.cs" />
     <Compile Include="BusinessValidation\RuleResult.cs" />
     <Compile Include="BusinessValidation\IXmlBusinessValidator.cs" />

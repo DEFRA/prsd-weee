@@ -175,8 +175,9 @@ $(document).ready(function () {
     // textbox so that the links in the validation summary will work.
     if (countryInput.hasClass("input-validation-error")) {
         var validationInput = countryInput.next("input");
+        var id = countryInput.attr("id");
         countryInput.removeAttr("id");
-        validationInput.attr("id", "Address_CountryId");
+        validationInput.attr("id", id);
     }
 
     // When a link is clicked in the validation summary, move the focus to the associated input.
