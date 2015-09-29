@@ -73,6 +73,7 @@
     <Compile Include="BusinessValidation\Domain\FakeProducer.cs" />
     <Compile Include="BusinessValidation\Helpers\SearchMatcherTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\AmendmentHasNoProducerRegistrationNumberTests.cs" />
+    <Compile Include="BusinessValidation\Rules\Producer\CompanyAlreadyRegisteredTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\EnsureAnOverseasProducerIsNotBasedInTheUKTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\InsertHasProducerRegistrationNumberTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\ProducerChargeBandChangeTests.cs" />

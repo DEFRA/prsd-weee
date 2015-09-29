@@ -45,7 +45,7 @@
 
             using (var client = apiClient())
             {
-                await SetBreadcrumb(null);
+                SetBreadcrumb();
 
                 try
                 {
@@ -81,7 +81,7 @@
                 {
                     var usersSearchResultData = await client.SendAsync(User.GetAccessToken(), new FindMatchingUsers(page, DefaultPageSize));
                     model.Users = usersSearchResultData.Results.ToPagedList(page - 1, DefaultPageSize, usersSearchResultData.UsersCount);
-                    await SetBreadcrumb(null);
+                    SetBreadcrumb();
                     return View(model);
                 }
             }
@@ -97,7 +97,7 @@
                 var model = new EditUserViewModel(editUserData);
                 model.UserStatusSelectList = FilterUserStatus(model.UserStatus, model.UserStatusSelectList);
                 Guid userId = new Guid(editUserData.UserId);
-                await SetBreadcrumb(userId);
+                SetBreadcrumb();
                 return View(model);
             }
         }
@@ -110,7 +110,7 @@
             {
                 model.UserStatusSelectList = FilterUserStatus(model.UserStatus, model.UserStatusSelectList);
                 Guid userId = new Guid(model.UserId);
-                await SetBreadcrumb(userId);
+                SetBreadcrumb();
                 return View(model);
             }
 
@@ -123,7 +123,7 @@
                     await client.SendAsync(User.GetAccessToken(), new UpdateCompetentAuthorityUserStatus(model.Id, model.UserStatus));
                 }
                 else
-        {
+                {
                     await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationUserStatus(model.Id, model.UserStatus));
                 }
             }
@@ -131,14 +131,9 @@
             return RedirectToAction("ManageUsers", "User");
         }
 
-        private async Task SetBreadcrumb(Guid? userId)
+        private void SetBreadcrumb()
         {
             breadcrumb.InternalActivity = "Manage users";
-
-            if (userId.HasValue)
-            {
-                breadcrumb.InternalUser = await cache.FetchUserName(userId.Value);
-            }
         }
 
         private IEnumerable<SelectListItem> FilterUserStatus(UserStatus userStatus, IEnumerable<SelectListItem> userStatusSelectList)
