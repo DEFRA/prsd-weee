@@ -183,7 +183,9 @@
     <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsersHandler.cs" />
     <Compile Include="Admin\FindMatchingUsersHandler.cs" />
     <Compile Include="Users\GetUserDataHandler.cs" />
-    <Compile Include="Users\UpdateOrganisationUserStatusHandler.cs" />
+    <Compile Include="Users\UpdateOrganisationUserStatus\IUpdateOrganisationUserStatusDataAccess.cs" />
+    <Compile Include="Users\UpdateOrganisationUserStatus\UpdateOrganisationUserStatusDataAccess.cs" />
+    <Compile Include="Users\UpdateOrganisationUserStatus\UpdateOrganisationUserStatusHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
