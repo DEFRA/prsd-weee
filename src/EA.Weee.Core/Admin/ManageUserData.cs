@@ -5,6 +5,11 @@
 
     public class ManageUserData
     {
+        public ManageUserData()
+        {
+            CanChangeStatus = true;
+        }
+
         public Guid Id { get; set; }
 
         public Guid OrganisationId { get; set; }
@@ -20,6 +25,8 @@
         public string Email { get; set; }
 
         public bool IsCompetentAuthorityUser { get; set; }
+
+        public bool CanChangeStatus { get; set; }
 
         public UserStatus UserStatus { get; set; }
     }
