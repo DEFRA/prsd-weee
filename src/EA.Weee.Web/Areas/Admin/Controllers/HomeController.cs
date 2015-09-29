@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using Base;
-    using System;
     using System.Web.Mvc;
     using ViewModels.Home;
-
+    
     public class HomeController : AdminController
     {
         // GET: Admin/Home
@@ -24,20 +23,23 @@
         [ValidateAntiForgeryToken]
         public ActionResult ChooseActivity(InternalUserActivityViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
-            }
-            if (model.InternalUserActivityOptions.SelectedValue == InternalUserActivity.ManageUsers)
-            {
-                return RedirectToAction("ManageUsers", "User");    
-            }
+                string choosenActivity = model.InternalUserActivityOptions.SelectedValue;
+                switch (choosenActivity)
+                {
+                case InternalUserActivity.ManageUsers:
+                    {
+                        return RedirectToAction("ManageUsers", "User");
+                    }
 
-            if (model.InternalUserActivityOptions.SelectedValue == InternalUserActivity.ManageScheme)
-            {
-                return RedirectToAction("ManageSchemes", "Scheme");
+                case InternalUserActivity.ManageScheme:
+                    {
+                        return RedirectToAction("ManageSchemes", "Scheme");
+                    }
+                }
             }
-
+            
             return View(model);
         }
     }

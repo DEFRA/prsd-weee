@@ -96,6 +96,8 @@
                 var editUserData = await client.SendAsync(User.GetAccessToken(), new GetUserData(orgUserId));
                 var model = new EditUserViewModel(editUserData);
                 model.UserStatusSelectList = FilterUserStatus(model.UserStatus, model.UserStatusSelectList);
+                Guid userId = new Guid(editUserData.UserId);
+                await SetBreadcrumb(userId);
                 return View(model);
             }
         }
@@ -107,6 +109,8 @@
             if (!ModelState.IsValid)
             {
                 model.UserStatusSelectList = FilterUserStatus(model.UserStatus, model.UserStatusSelectList);
+                Guid userId = new Guid(model.UserId);
+                await SetBreadcrumb(userId);
                 return View(model);
             }
 
