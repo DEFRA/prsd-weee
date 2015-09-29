@@ -21,6 +21,19 @@
             </div>
             break;
 
+        case UserStatus.Inactive:
+        <div class="form-group">
+            <header class="hgroup">
+                <div>
+                    <h1 class="heading-large">Account Inactive</h1>
+                </div>
+            </header>
+            <hr />
+            <p>At present your account is not active. Please contact your administrator for more information.</p>
+            <hr />
+        </div>
+            break;
+            
         case UserStatus.Rejected:
         <div class="form-group">
             <header class="hgroup">
@@ -36,7 +49,11 @@
             break;
     }
 
-    <p>
-        @Html.ActionLink("Sign out", "SignOut", "Account", new { @area = "" }, new { @class = "button" })
-    </p>
+    @using (Html.BeginForm("SignOut", "Account", new { @area = "Admin" }, FormMethod.Post, new { id = "signoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <div>
+            <input type="submit" class="button" value="Sign out" />
+        </div>
+    }
 }
