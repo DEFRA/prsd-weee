@@ -81,9 +81,12 @@
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
     <Compile Include="Admin\FindMatchingUsersDataAccess.cs" />
+    <Compile Include="Admin\GetAdminUserStatusHandler.cs" />
+    <Compile Include="Admin\GetAdminUserDataAccess.cs" />
+    <Compile Include="Admin\IFindMatchingUsersDataAccess.cs" />
+    <Compile Include="Admin\IGetAdminUserDataAccess.cs" />
     <Compile Include="Admin\GetManageUserDataAccess.cs" />
     <Compile Include="Admin\GetUserDataHandler.cs" />
-    <Compile Include="Admin\IFindMatchingUsersDataAccess.cs" />
     <Compile Include="Admin\IGetManageUserDataAccess.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatusHandler.cs" />
     <Compile Include="Admin\UpdateUserHandler.cs" />
@@ -98,6 +101,7 @@
     <Compile Include="Mappings\OrganisationMap.cs" />
     <Compile Include="Mappings\OrganisationUserMap.cs" />
     <Compile Include="Mappings\SchemeMap.cs" />
+    <Compile Include="Mappings\UserStatusMap.cs" />
     <Compile Include="Mappings\SchemeStatusMap.cs" />
     <Compile Include="Mappings\UKCompetentAuthorityMap.cs" />
     <Compile Include="Mappings\UserMap.cs" />

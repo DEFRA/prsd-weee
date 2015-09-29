@@ -429,7 +429,9 @@
     <Content Include="Areas\Scheme\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\SuccessfulSubmission.cshtml" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\ViewErrorsAndWarnings.cshtml" />
-    <Content Include="Areas\Admin\Views\web.config" />
+    <Content Include="Areas\Admin\Views\web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Account\Create.cshtml" />
     <Content Include="Areas\Test\Views\_ViewStart.cshtml" />
@@ -467,6 +469,7 @@
     <Content Include="Content\govuk_toolkit\stylesheets\_css3.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\_conditionals.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\_colours.scss" />
+    <Content Include="Areas\Admin\Views\Account\InternalUserAuthorisationRequired.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPassword.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPasswordInstruction.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPasswordRequest.cshtml" />
@@ -596,18 +599,19 @@
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
     <Compile Include="Areas\Admin\Controllers\Base\AdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Account\InternalUserAuthorizationRequiredViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Account\InternalLoginViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Account\InternalUserCreationViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Home\InternalUserActivity.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Home\InternalUserActivityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\ResetPasswordModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\ResetPasswordRequestViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmRejectionViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmSchemeRejection.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Home\InternalUserActivity.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Home\InternalUserActivityViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Account\InternalUserCreationViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Account\InternalLoginViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\User\ManageUsersViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ManageSchemesViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\User\ManageUsersViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\EditUserViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\MemberRegistrationController.cs" />
     <Compile Include="Areas\Scheme\ViewModels\AddOrAmendMembersViewModel.cs" />

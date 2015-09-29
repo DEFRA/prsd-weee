@@ -20,9 +20,11 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Core.Shared;
     using Thinktecture.IdentityModel.Client;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Account;
+    using Weee.Requests.Admin;
     using Xunit;
 
     public class AccountControllerTests
@@ -244,9 +246,11 @@
                 Password = "Test123***",
                 RememberMe = false
             };
+          
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAdminUserStatus>._)).Returns(UserStatus.Active);
 
             A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Success("dsadsada"));
+              .Returns(LoginResult.Success("dsadsada"));
 
             var result = await AccountController().SignIn(model, "AnyUrl");
 
@@ -254,8 +258,83 @@
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
 
+            Assert.Equal("InternalUserAuthorisationRequired", redirectValues["action"]);
+            Assert.Equal("Account", redirectValues["controller"]);
+            Assert.Equal("Admin", redirectValues["area"]);
+        }
+
+        [Fact]
+        public async void HttpPost_SignIn_ModelIsValid_AndSignInSucceeds_UserActive_ShouldRedirectToRedirectAuthorisationRequired()
+        {
+            var model = new InternalLoginViewModel
+            {
+                Email = "test@sepa.org.uk",
+                Password = "Test123***",
+                RememberMe = false
+            };
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAdminUserStatus>._)).Returns(UserStatus.Active);
+
+            var result = await AccountController().InternalUserAuthorisationRequired();
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var redirectValues = ((RedirectToRouteResult)result).RouteValues;
+
             Assert.Equal("ChooseActivity", redirectValues["action"]);
             Assert.Equal("Home", redirectValues["controller"]);
+            Assert.Equal("Admin", redirectValues["area"]);
+        }
+
+        [Fact]
+        public async void HttpPost_SignIn_ModelIsValid_AndSignInSucceeds_UserPending_ShouldRedirectToRedirectAuthorisationRequired()
+        {
+            var model = new InternalLoginViewModel
+            {
+                Email = "test@sepa.org.uk",
+                Password = "Test123***",
+                RememberMe = false
+            };
+
+            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Success("dsadsada"));
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAdminUserStatus>._)).Returns(UserStatus.Pending);
+
+            var result = await AccountController().SignIn(model, "AnyUrl");
+            
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var redirectValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("InternalUserAuthorisationRequired", redirectValues["action"]);
+            Assert.Equal("Account", redirectValues["controller"]);
+            Assert.Equal("Admin", redirectValues["area"]);
+        }
+
+        [Fact]
+        public async void HttpPost_SignIn_ModelIsValid_AndSignInSucceeds_UserRejected_ShouldRedirectToRedirectAuthorisationRequired()
+        {
+            var model = new InternalLoginViewModel
+            {
+                Email = "test@sepa.org.uk",
+                Password = "Test123***",
+                RememberMe = false
+            };
+
+            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Success("dsadsada"));
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAdminUserStatus>._)).Returns(UserStatus.Rejected);
+
+            var result = await AccountController().SignIn(model, "AnyUrl");
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var redirectValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("InternalUserAuthorisationRequired", redirectValues["action"]);
+            Assert.Equal("Account", redirectValues["controller"]);
             Assert.Equal("Admin", redirectValues["area"]);
         }
 
