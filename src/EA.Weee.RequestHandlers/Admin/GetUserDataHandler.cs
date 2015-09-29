@@ -31,7 +31,7 @@
                 && userContext != null 
                 && userContext.UserId.ToString() == manageUserData.UserId)
             {
-                manageUserData.CanChangeStatus = false;
+                manageUserData.CanManageStatus = false;
             }
 
             return manageUserData;

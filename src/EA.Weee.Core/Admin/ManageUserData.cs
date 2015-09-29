@@ -7,7 +7,7 @@
     {
         public ManageUserData()
         {
-            CanChangeStatus = true;
+            CanManageStatus = true;
         }
 
         public Guid Id { get; set; }
@@ -26,7 +26,7 @@
 
         public bool IsCompetentAuthorityUser { get; set; }
 
-        public bool CanChangeStatus { get; set; }
+        public bool CanManageStatus { get; set; }
 
         public UserStatus UserStatus { get; set; }
     }
