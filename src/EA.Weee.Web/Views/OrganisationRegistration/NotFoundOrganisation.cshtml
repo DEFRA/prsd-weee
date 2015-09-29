@@ -7,7 +7,7 @@
 {
     <header class="hgroup">
         <h1 class="heading-large">
-            We found no results for @Model.SearchedText
+            We found no results for @Model.Name
         </h1>
     </header>
 
@@ -16,11 +16,7 @@
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.SearchedText)
         @Html.HiddenFor(m => m.Name)
-        @Html.HiddenFor(m => m.TradingName)
-        @Html.HiddenFor(m => m.CompaniesRegistrationNumber)
-        @Html.HiddenFor(m => m.Type)
-        @Html.HiddenFor(m => m.OrganisationId)
-
+        
         <p>What would you like to do next?</p>
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.ActivityOptions.SelectedValue)" id="ActivityOptions">

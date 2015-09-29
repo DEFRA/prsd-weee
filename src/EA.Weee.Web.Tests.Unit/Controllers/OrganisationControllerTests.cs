@@ -188,7 +188,7 @@
 
             Assert.Equal(null, redirectResult.RouteValues["area"] as string, ignoreCase: true);
             Assert.Equal("organisationregistration", redirectResult.RouteValues["controller"] as string, ignoreCase: true);
-            Assert.Equal("type", redirectResult.RouteValues["action"] as string, ignoreCase: true);
+            Assert.Equal("SearchOrganisation", redirectResult.RouteValues["action"] as string, ignoreCase: true);
         }
     }
 }

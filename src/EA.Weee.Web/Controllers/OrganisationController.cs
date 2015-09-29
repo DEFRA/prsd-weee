@@ -42,7 +42,8 @@
                 Guid organisationId = accessibleOrganisations[0].OrganisationId;
                 return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = organisationId });
             }
-            else if (accessibleOrganisations.Count > 0)
+            
+            if (accessibleOrganisations.Count > 0)
             {
                 YourOrganisationsViewModel model = new YourOrganisationsViewModel();
                 
@@ -58,7 +59,8 @@
                 ViewBag.InaccessibleOrganisations = inaccessibleOrganisations;
                 return View("YourOrganisations", model);
             }
-            else if (inaccessibleOrganisations.Count > 0)
+            
+            if (inaccessibleOrganisations.Count > 0)
             {
                 PendingOrganisationsViewModel model = new PendingOrganisationsViewModel();
 
@@ -66,10 +68,8 @@
 
                 return View("PendingOrganisations", model);
             }
-            else
-            {
-                return RedirectToAction("Type", "OrganisationRegistration");
-            }
+
+            return RedirectToAction("SearchOrganisation", "OrganisationRegistration");
         }
 
         [HttpPost]

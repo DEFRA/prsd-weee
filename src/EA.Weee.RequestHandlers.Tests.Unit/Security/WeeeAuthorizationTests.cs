@@ -212,6 +212,98 @@
 
         [Fact]
         [Trait("Area", "Security")]
+        public void EnsureInternalOrOrganisationAccess_ThrowsSecurityException_WhenUserHasNoClaims()
+        {
+            // Arrange
+            Guid organisationID = new Guid("5F3069F4-EDA3-43A3-BDD8-726028CDABB0");
+            Guid userId = Guid.NewGuid();
+
+            WeeeContext weeeContext = MakeFakeWeeeContext();
+
+            IUserContext userContext = A.Fake<IUserContext>();
+            A.CallTo(() => userContext.UserId).Returns(userId);
+
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
+
+            // Act
+            Action action = () => authorization.EnsureInternalOrOrganisationAccess(organisationID);
+
+            // Assert
+            Assert.Throws(typeof(SecurityException), action);
+        }
+
+        [Fact]
+        [Trait("Area", "Security")]
+        public void CheckInternalOrOrganisationAccess_ReturnsFalse_WhenUserHasNoClaims()
+        {
+            // Arrange
+            Guid organisationID = new Guid("5F3069F4-EDA3-43A3-BDD8-726028CDABB0");
+            Guid userId = Guid.NewGuid();
+
+            WeeeContext weeeContext = MakeFakeWeeeContext();
+
+            IUserContext userContext = A.Fake<IUserContext>();
+            A.CallTo(() => userContext.UserId).Returns(userId);
+
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
+
+            // Act
+            bool result = authorization.CheckInternalOrOrganisationAccess(organisationID);
+
+            // Assert
+            Assert.Equal(false, result);
+        }
+
+        [Fact]
+        [Trait("Area", "Security")]
+        public void CheckInternalOrOrganisationAccess_ReturnsTrue_WhenUserHasRequiredOrganisationClaim()
+        {
+            // Arrange
+            Guid organisationID = new Guid("5F3069F4-EDA3-43A3-BDD8-726028CDABB0");
+            Guid userId = Guid.NewGuid();
+
+            WeeeContext weeeContext =
+                MakeFakeWeeeContext(
+                    new List<OrganisationUser> { new OrganisationUser(userId, organisationID, UserStatus.Active) });
+
+            IUserContext userContext = A.Fake<IUserContext>();
+            A.CallTo(() => userContext.UserId).Returns(userId);
+
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
+
+            // Act
+            bool result = authorization.CheckInternalOrOrganisationAccess(organisationID);
+
+            // Assert
+            Assert.Equal(true, result);
+        }
+
+        [Fact]
+        [Trait("Area", "Security")]
+        public void CheckInternalOrOrganisationAccess_ReturnsTrue_WhenUserHasRequiredInternalClaim()
+        {
+            // Arrange
+            WeeeContext weeeContext = A.Fake<WeeeContext>();
+            Guid organisationID = new Guid("5F3069F4-EDA3-43A3-BDD8-726028CDABB0");
+
+            ClaimsIdentity identity = new ClaimsIdentity();
+            identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea));
+
+            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            IUserContext userContext = A.Fake<IUserContext>();
+            A.CallTo(() => userContext.Principal).Returns(principal);
+
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
+
+            // Act
+            bool result = authorization.CheckInternalOrOrganisationAccess(organisationID);
+
+            // Assert
+            Assert.Equal(true, result);
+        }
+
+        [Fact]
+        [Trait("Area", "Security")]
         public void EnsureSchemeAccess_ThrowsSecurityException_WhenUserHasNoClaims()
         {
             // Arrange

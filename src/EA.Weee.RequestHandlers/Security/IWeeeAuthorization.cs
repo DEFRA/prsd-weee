@@ -41,6 +41,18 @@
 
         /// <summary>
         /// Ensures that the principal represents a user with a claim
+        /// granting them access to the specified organisation.
+        /// </summary>
+        void EnsureInternalOrOrganisationAccess(Guid organisationId);
+
+        /// <summary>
+        /// Checks that the principal represents a user with a claim
+        /// granting them access to the specified organisation.
+        /// </summary>
+        bool CheckInternalOrOrganisationAccess(Guid organisationId);
+
+        /// <summary>
+        /// Ensures that the principal represents a user with a claim
         /// granting them access to the specified scheme.
         /// </summary>
         void EnsureSchemeAccess(Guid schemeId);

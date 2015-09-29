@@ -149,6 +149,35 @@
                        && ou.UserStatus.Value == UserStatus.Active.Value);
         }
 
+        /// <summary>
+        /// Ensures that the principal represents a user with a claim
+        /// granting them access to the internal area or the specified
+        /// organisation.
+        /// </summary>
+        public void EnsureInternalOrOrganisationAccess(Guid organisationId)
+        {
+            bool access = CheckInternalOrOrganisationAccess(organisationId);
+
+            if (!access)
+            {
+                string message = string.Format(
+                    "The user does not have access to the internal area or the organisation with ID \"{0}\".",
+                    organisationId);
+
+                throw new SecurityException(message);
+            }
+        }
+
+        /// <summary>
+        /// Checks that the principal represents a user with a claim
+        /// granting them access to the internal area or the specified
+        /// organisation.
+        /// </summary>
+        public bool CheckInternalOrOrganisationAccess(Guid organisationId)
+        {
+            return CheckCanAccessInternalArea() || CheckOrganisationAccess(organisationId);
+        }
+
         private bool HasClaim(Claim claim)
         {
             foreach (ClaimsIdentity identity in userContext.Principal.Identities)
