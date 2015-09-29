@@ -1,9 +1,11 @@
 ﻿@model EA.Weee.Web.ViewModels.Account.LoginViewModel
 
 @section main_content {
-    <h1 class="heading-large">
-        Sign in to your account
-    </h1>
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Sign in to your account
+        </h1>
+    </header>
 
     @using (Html.BeginForm("SignIn", "Account", new { ReturnUrl = Request.QueryString["ReturnUrl"] }))
     {
@@ -28,11 +30,12 @@
         <p>
             <input type="submit" value="Continue" class="button" />
         </p>
-        <div>
-            @Html.ActionLink("Create a user account", "UserCreation", "NewUser")
-        </div>
-        <div>
-            @Html.ActionLink("Reset password", "ResetPasswordRequest", "Account")
-        </div>
     }
+
+    <p>
+        @Html.ActionLink("Create a user account", "UserCreation", "NewUser")
+    </p>
+    <p>
+        @Html.ActionLink("Reset password", "ResetPasswordRequest", "Account")
+    </p>
 }
