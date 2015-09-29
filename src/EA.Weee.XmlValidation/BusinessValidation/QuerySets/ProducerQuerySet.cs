@@ -13,13 +13,15 @@
     {
         private readonly PersistentQueryResult<List<Producer>> currentProducers;
         private readonly PersistentQueryResult<List<string>> existingProducerNames;
-        private readonly PersistentQueryResult<List<string>> existingProducerRegistrationNumbers; 
+        private readonly PersistentQueryResult<List<string>> existingProducerRegistrationNumbers;
+        private readonly PersistentQueryResult<List<Producer>> currentCompanyProducers;
    
         public ProducerQuerySet(WeeeContext context)
         {
             currentProducers = new PersistentQueryResult<List<Producer>>(() => context.Producers.Where(p => p.IsCurrentForComplianceYear).ToList());
             existingProducerNames = new PersistentQueryResult<List<string>>(() => context.Producers.ProducerNames().ToList());
             existingProducerRegistrationNumbers = new PersistentQueryResult<List<string>>(() => context.Producers.Select(p => p.RegistrationNumber).Distinct().ToList());
+            currentCompanyProducers = new PersistentQueryResult<List<Producer>>(() => currentProducers.Get().Where(p => p.ProducerBusiness != null && p.ProducerBusiness.CompanyDetails != null).ToList());
         }
 
         public Producer GetLatestProducerForComplianceYearAndScheme(string registrationNo, string schemeComplianceYear, Guid schemeOrgId)
@@ -67,6 +69,11 @@
         public List<string> GetAllRegistrationNumbers()
         {
             return existingProducerRegistrationNumbers.Get();
+        }
+
+        public List<Producer> GetLatestCompanyProducers()
+        {
+            return currentCompanyProducers.Get();
         }
     }
 }
