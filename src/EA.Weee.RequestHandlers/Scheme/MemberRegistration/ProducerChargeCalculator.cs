@@ -12,42 +12,27 @@
 
     public class ProducerChargeCalculator : IProducerChargeCalculator
     {
-        private readonly WeeeContext context;
-        private readonly List<ProducerChargeBand> producerChargeBands;
+        private readonly IProducerChargeCalculatorDataAccess dataAccess;
         private readonly IProducerChargeBandCalculator producerChargeBandCalculator;
 
-        public ProducerChargeCalculator(WeeeContext context, IProducerChargeBandCalculator producerChargeBandCalculator)
+        public ProducerChargeCalculator(IProducerChargeCalculatorDataAccess dataAccess, IProducerChargeBandCalculator producerChargeBandCalculator)
         {
-            this.context = context;
-            producerChargeBands = context.ProducerChargeBands.ToList();
+            this.dataAccess = dataAccess;
             this.producerChargeBandCalculator = producerChargeBandCalculator;
         }
 
         public ProducerCharge CalculateCharge(producerType producer, int complianceYear)
         {
-            var producerCharge = GetProducerCharge(producer);
+            ProducerCharge producerCharge = GetProducerCharge(producer);
 
             if (producer.status == statusType.A)
             {
-                var producerRecordsSoFarThisYear =
-                    context.Producers.Where(
-                        p => p.RegistrationNumber == producer.registrationNo
-                          && p.MemberUpload.ComplianceYear == complianceYear
-                          && p.MemberUpload.IsSubmitted);
+                decimal sumOfExistingCharges = dataAccess.FetchSumOfExistingCharges(producer.registrationNo, complianceYear);
 
-                var chargesSoFarThisYear = producerRecordsSoFarThisYear.Select(p => p.ChargeThisUpdate);
-
-                var totalChargeSoFarThisYear = chargesSoFarThisYear.DefaultIfEmpty(0).Sum();
-
-                producerCharge.ChargeAmount = Math.Max(0, producerCharge.ChargeAmount - totalChargeSoFarThisYear);
+                producerCharge.ChargeAmount = Math.Max(0, producerCharge.ChargeAmount - sumOfExistingCharges);
             }
 
             return producerCharge;
-        }
-
-        public decimal GetChargeAmount(ChargeBandType chargeBandType)
-        {
-            return producerChargeBands.Single(pc => pc.Name == chargeBandType.DisplayName).Amount;
         }
 
         private ProducerCharge GetProducerCharge(producerType producer)
@@ -57,7 +42,7 @@
                 producer.VATRegistered,
                 producer.eeePlacedOnMarketBand);
 
-            decimal chargeAmount = GetChargeAmount(chargeBandType);
+            decimal chargeAmount = dataAccess.FetchChargeBandAmount(chargeBandType);
 
             return new ProducerCharge()
             {
