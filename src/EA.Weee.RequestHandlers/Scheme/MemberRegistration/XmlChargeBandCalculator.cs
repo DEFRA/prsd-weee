@@ -12,14 +12,12 @@
 
     public class XmlChargeBandCalculator : IXmlChargeBandCalculator
     {
-        private readonly WeeeContext context;
         private readonly IXmlConverter xmlConverter;
         private readonly IProducerChargeCalculator producerChargeCalculator;
         public List<MemberUploadError> ErrorsAndWarnings { get; set; }
 
-        public XmlChargeBandCalculator(WeeeContext context, IXmlConverter xmlConverter, IProducerChargeCalculator producerChargeCalculator)
+        public XmlChargeBandCalculator(IXmlConverter xmlConverter, IProducerChargeCalculator producerChargeCalculator)
         {
-            this.context = context;
             this.xmlConverter = xmlConverter;
             this.producerChargeCalculator = producerChargeCalculator;
             ErrorsAndWarnings = new List<MemberUploadError>();
