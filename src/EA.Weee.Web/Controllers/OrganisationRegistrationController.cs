@@ -20,7 +20,6 @@
     using ViewModels.Shared;
     using Weee.Requests.Organisations;
     using Weee.Requests.Organisations.Create;
-    using Weee.Requests.Organisations.Create.Base;
     using Weee.Requests.Shared;
 
     [Authorize]
@@ -130,7 +129,7 @@
 
             if (model.Organisations.SelectedValue == SelectOrganisationAction.CreateNewOrg)
             {
-                    return RedirectToAction("Type");
+                return RedirectToAction("Type", new { searchedText = model.Name });
             }
   
             var selectedOrgId = new Guid(model.Organisations.SelectedValue);
@@ -164,14 +163,14 @@
 
                 if (model.ActivityOptions.SelectedValue == NotFoundOrganisationAction.CreateNewOrg)
                 {
-                    return RedirectToAction("Type");
+                    return RedirectToAction("Type", new { searchedText = model.SearchedText });
                 }
 
             return View(model);
         }
 
         [HttpGet]
-        public async Task<ActionResult> Type(Guid? organisationId = null)
+        public async Task<ActionResult> Type(string searchedText, Guid? organisationId = null)
         {
             if (organisationId != null)
             {
@@ -182,7 +181,8 @@
                     return View("Type", model);
                 }
             }
-            return View(new OrganisationTypeViewModel());
+
+            return View(new OrganisationTypeViewModel(searchedText));
         }
 
         [HttpPost]
@@ -216,11 +216,11 @@
                     switch (organisationType)
                     {
                         case OrganisationType.SoleTraderOrIndividual:
-                            return RedirectToAction("SoleTraderDetails");
+                            return RedirectToAction("SoleTraderDetails", new { searchedText = model.SearchedText});
                         case OrganisationType.RegisteredCompany:
-                            return RedirectToAction("RegisteredCompanyDetails");
+                            return RedirectToAction("RegisteredCompanyDetails", new { searchedText = model.SearchedText });
                         case OrganisationType.Partnership:
-                            return RedirectToAction("PartnershipDetails");
+                            return RedirectToAction("PartnershipDetails", new { searchedText = model.SearchedText });
                     }
                 }
             }
@@ -229,7 +229,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> SoleTraderDetails(Guid? organisationId = null)
+        public async Task<ActionResult> SoleTraderDetails(Guid? organisationId = null, string searchedText = null)
         {
             if (organisationId != null)
             {
@@ -247,10 +247,10 @@
 
                         return View("SoleTraderDetails", model);
                     }
-                    return View(new SoleTraderDetailsViewModel());
+                    return View(new SoleTraderDetailsViewModel { BusinessTradingName = searchedText });
                 }
             }
-            return View(new SoleTraderDetailsViewModel());
+            return View(new SoleTraderDetailsViewModel { BusinessTradingName = searchedText });
         }
 
         [HttpPost]
@@ -262,16 +262,34 @@
                 return View(model);
             }
 
-            CreateSoleTraderRequest request = new CreateSoleTraderRequest
+            using (var client = apiClient())
             {
-                TradingName = model.BusinessTradingName
-            };
+                if (model.OrganisationId != null)
+                {
+                    // update orgnisation details
+                    UpdateOrganisationTypeDetails updateRequest = new UpdateOrganisationTypeDetails(
+                        model.OrganisationId.Value,
+                        OrganisationType.SoleTraderOrIndividual,
+                        String.Empty, 
+                        model.BusinessTradingName,
+                        String.Empty);
 
-            return await RedirectToMainContactPerson(request, model.OrganisationId);
+                    Guid organisationId = await client.SendAsync(User.GetAccessToken(), updateRequest);
+                    return RedirectToAction("MainContactPerson", new { organisationId });
+                }
+
+                CreateSoleTraderRequest request = new CreateSoleTraderRequest
+                {
+                    TradingName = model.BusinessTradingName
+                };
+                //create the organisation only if does not exist
+                Guid orgId = await client.SendAsync(User.GetAccessToken(), request);
+                return RedirectToAction("MainContactPerson", new { organisationId = orgId });
+            }
         }
 
         [HttpGet]
-        public async Task<ActionResult> PartnershipDetails(Guid? organisationId = null)
+        public async Task<ActionResult> PartnershipDetails(Guid? organisationId = null, string searchedText = null)
         {
             if (organisationId != null)
             {
@@ -288,10 +306,10 @@
 
                         return View("PartnershipDetails", model);
                     }
-                    return View(new PartnershipDetailsViewModel());
+                    return View(new PartnershipDetailsViewModel { BusinessTradingName = searchedText });
                 }
             }
-            return View(new PartnershipDetailsViewModel());
+            return View(new PartnershipDetailsViewModel { BusinessTradingName = searchedText });
         }
         
         [HttpPost]
@@ -302,17 +320,35 @@
             {
                 return View(model);
             }
-            
-            CreatePartnershipRequest request = new CreatePartnershipRequest
-            {
-                TradingName = model.BusinessTradingName
-            };
 
-            return await RedirectToMainContactPerson(request, model.OrganisationId);
+            using (var client = apiClient())
+            {
+                if (model.OrganisationId != null)
+                {
+                    // update orgnisation details
+                    UpdateOrganisationTypeDetails updateRequest = new UpdateOrganisationTypeDetails(
+                        model.OrganisationId.Value,
+                        OrganisationType.Partnership,
+                        string.Empty,
+                        model.BusinessTradingName,
+                        String.Empty);
+
+                    Guid organisationId = await client.SendAsync(User.GetAccessToken(), updateRequest);
+                    return RedirectToAction("MainContactPerson", new { organisationId });
+                }
+
+                CreatePartnershipRequest request = new CreatePartnershipRequest
+                {
+                    TradingName = model.BusinessTradingName
+                };
+                //create the organisation only if does not exist
+                Guid orgId = await client.SendAsync(User.GetAccessToken(), request);
+                return RedirectToAction("MainContactPerson", new { organisationId = orgId });
+            }
         }
 
         [HttpGet]
-        public async Task<ActionResult> RegisteredCompanyDetails(Guid? organisationId = null)
+        public async Task<ActionResult> RegisteredCompanyDetails(Guid? organisationId = null, string searchedText = null)
         {
             if (organisationId != null)
             {
@@ -332,10 +368,10 @@
 
                         return View("RegisteredCompanyDetails", model);
                     }
-                    return View(new RegisteredCompanyDetailsViewModel());
+                    return View(new RegisteredCompanyDetailsViewModel { CompanyName = searchedText });
                 }
             }
-            return View(new RegisteredCompanyDetailsViewModel());
+            return View(new RegisteredCompanyDetailsViewModel { CompanyName = searchedText });
         }
 
         [HttpPost]
@@ -346,15 +382,32 @@
             {
                 return View(model);
             }
-
-            CreateRegisteredCompanyRequest request = new CreateRegisteredCompanyRequest
+            using (var client = apiClient())
             {
-                BusinessName = model.CompanyName,
-                CompanyRegistrationNumber = model.CompaniesRegistrationNumber,
-                TradingName = model.BusinessTradingName
-            };
+                if (model.OrganisationId != null)
+                {
+                    // update orgnisation details
+                    UpdateOrganisationTypeDetails updateRequest = new UpdateOrganisationTypeDetails(
+                        model.OrganisationId.Value,
+                        OrganisationType.RegisteredCompany,
+                        model.CompanyName,
+                        model.BusinessTradingName,
+                        model.CompaniesRegistrationNumber);
 
-            return await RedirectToMainContactPerson(request, model.OrganisationId);
+                    Guid organisationId = await client.SendAsync(User.GetAccessToken(), updateRequest);
+                    return RedirectToAction("MainContactPerson", new { organisationId });
+                }
+
+                CreateRegisteredCompanyRequest request = new CreateRegisteredCompanyRequest
+                {
+                    BusinessName = model.CompanyName,
+                    CompanyRegistrationNumber = model.CompaniesRegistrationNumber,
+                    TradingName = model.BusinessTradingName
+                };
+                //create the organisation only if does not exist
+                Guid orgId = await client.SendAsync(User.GetAccessToken(), request);
+                return RedirectToAction("MainContactPerson", new { organisationId = orgId });
+            }
         }
 
         [HttpGet]
@@ -762,6 +815,7 @@
             return new SelectOrganisationViewModel
             {
                 Name = name,
+                SearchedText = name,
                 Organisations = organisationRadioButtons
             };
         }
@@ -779,21 +833,6 @@
 
             var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId.Value));
             return organisation;
-        }
-
-        private async Task<ActionResult> RedirectToMainContactPerson(CreateOrganisationRequest request, Guid? organisationId = null)
-        {
-            using (var client = apiClient())
-            {
-               var organisationExists = organisationId != null && await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(organisationId.Value));
-                    if (!organisationExists)
-                    {
-                        //create the organisation only if does not exist
-                        organisationId = await client.SendAsync(User.GetAccessToken(), request);
-                    }
-
-                    return RedirectToAction("MainContactPerson", new { organisationId });
-            }
         }
     }
 }

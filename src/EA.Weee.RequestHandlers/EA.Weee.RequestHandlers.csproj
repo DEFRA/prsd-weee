@@ -117,6 +117,7 @@
     <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationResult.cs" />
     <Compile Include="Organisations\UpdateOrganisationContactDetailsDataAccess.cs" />
     <Compile Include="Organisations\UpdateOrganisationContactDetailsHandler.cs" />
+    <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
     <Compile Include="Scheme\GetSchemeByIdDataAccess.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandler.cs" />
