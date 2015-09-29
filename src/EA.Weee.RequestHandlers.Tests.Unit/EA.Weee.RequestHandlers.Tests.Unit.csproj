@@ -129,7 +129,8 @@
     <Compile Include="Users\GetOrganisationUserHandlerTests.cs" />
     <Compile Include="Users\GetUserDataHandlerTests.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsersHandlerTests.cs" />
-    <Compile Include="Users\UpdateOrganisationUserStatusHandlerTests.cs" />
+    <Compile Include="Users\UpdateOrganisationUserStatus\UpdateOrganisationUserStatusDataAccessTests.cs" />
+    <Compile Include="Users\UpdateOrganisationUserStatus\UpdateOrganisationUserStatusHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
