@@ -183,7 +183,7 @@
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
                 .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().Type(A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().Type(A<string>._, A<Guid>._));
         }
 
         [Fact]
@@ -196,7 +196,7 @@
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(new OrganisationData());
 
-            var result = await OrganisationRegistrationController().Type(organisationId);
+            var result = await OrganisationRegistrationController().Type(A<string>._, organisationId);
             var model = ((ViewResult)result).Model;
 
             Assert.IsType<OrganisationTypeViewModel>(model);

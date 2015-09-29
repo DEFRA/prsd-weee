@@ -7,6 +7,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.SearchedText)
     <header class="hgroup">
         <h1 class="heading-large">
             What type of organisation is your producer compliance scheme (PCS)?
