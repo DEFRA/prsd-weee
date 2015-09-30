@@ -88,7 +88,9 @@
     <Compile Include="Admin\GetManageUserDataAccess.cs" />
     <Compile Include="Admin\GetUserDataHandler.cs" />
     <Compile Include="Admin\IGetManageUserDataAccess.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserStatusHandler.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccess.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\IUpdateCompetentAuthorityUserStatusDataAccess.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandler.cs" />
     <Compile Include="Admin\UpdateUserHandler.cs" />
     <Compile Include="Mappings\AddressMap.cs" />
     <Compile Include="Mappings\CompetentAuthorityUserMap.cs" />
