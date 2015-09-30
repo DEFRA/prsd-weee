@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Core.Scheme.MemberUploadTesting
 {
-    public class ProducerSettings : IProducerBusinessSettings, IAuthorizedRepresentativeSettings
+    public class ProducerSettings : ISettings
     {
         public SchemaVersion SchemaVersion { get; set; }
 
