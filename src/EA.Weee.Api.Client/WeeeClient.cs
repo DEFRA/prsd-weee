@@ -14,13 +14,14 @@
         private readonly HttpClient httpClient;
         private IUnauthenticatedUser user;
 
-        public WeeeClient(string baseUrl)
+        public WeeeClient(string baseUrl, TimeSpan timeout)
         {
             var baseUri = new Uri(baseUrl);
 
             httpClient = new HttpClient
             {
-                BaseAddress = new Uri(baseUri, "/api/")
+                BaseAddress = new Uri(baseUri, "/api/"),
+                Timeout = timeout
             };
         }
 
