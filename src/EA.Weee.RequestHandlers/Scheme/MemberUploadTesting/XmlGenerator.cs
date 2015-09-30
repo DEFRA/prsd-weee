@@ -418,9 +418,18 @@
             xmlAddress.Add(xmlCountry);
             xmlCountry.Value = address.Country ?? string.Empty;
 
-            XElement xmlPostCode = new XElement(ns + "postCode");
-            xmlAddress.Add(xmlPostCode);
-            xmlPostCode.Value = address.PostCode ?? string.Empty;
+            if (address.IsUkBased)
+            {
+                XElement xmlPostCode = new XElement(ns + "postCode");
+                xmlAddress.Add(xmlPostCode);
+                xmlPostCode.Value = address.PostCode ?? string.Empty;
+            }
+            else
+            {
+                XElement xmlInternationalPostCode = new XElement(ns + "internationalPostCode");
+                xmlAddress.Add(xmlInternationalPostCode);
+                xmlInternationalPostCode.Value = address.PostCode ?? string.Empty;
+            }
         }
     }
 }

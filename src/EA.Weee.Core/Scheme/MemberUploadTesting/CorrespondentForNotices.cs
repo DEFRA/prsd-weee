@@ -8,13 +8,13 @@
         {
         }
 
-        public static CorrespondentForNotices Create(ICorrespondentForNoticesSettings settings)
+        public static CorrespondentForNotices Create(ISettings settings)
         {
             CorrespondentForNotices correspondentForNotices = new CorrespondentForNotices();
 
             if (RandomHelper.OneIn(2))
             {
-                correspondentForNotices.ContactDetails = ContactDetails.Create(settings);
+                correspondentForNotices.ContactDetails = ContactDetails.Create(settings, true);
             }
 
             return correspondentForNotices;
