@@ -43,7 +43,7 @@
                         "{0} {1} is an Authorised Representative but has a country named in their overseas producers' address details which is in the UK. " +
                         "An Authorised Representative cannot represent a UK based producer. In order to register this producer, please check whether " + 
                         "they are an Authorised Representative and that their client is not based in the UK. You will need to amend their details in " + 
-                        "the xml accordingly.",
+                        "the XML accordingly.",
                         producer.GetProducerName(),
                         producer.registrationNo);
 
