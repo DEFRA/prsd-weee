@@ -77,8 +77,10 @@
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
+    <Compile Include="Admin\GetAdminUserStatusHandlerTests.cs" />
     <Compile Include="Admin\GetUserDataHandlerTests.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccessTests.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
     <Compile Include="Admin\UpdateUserHandlerTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandlerTests.cs" />
@@ -129,7 +131,8 @@
     <Compile Include="Users\GetOrganisationUserHandlerTests.cs" />
     <Compile Include="Users\GetUserDataHandlerTests.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsersHandlerTests.cs" />
-    <Compile Include="Users\UpdateOrganisationUserStatusHandlerTests.cs" />
+    <Compile Include="Users\UpdateOrganisationUserStatus\UpdateOrganisationUserStatusDataAccessTests.cs" />
+    <Compile Include="Users\UpdateOrganisationUserStatus\UpdateOrganisationUserStatusHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -46,8 +46,8 @@
                     return
                         RuleResult.Fail(
                             string.Format(
-                                "{0} has a country named in their address which is in the UK. An authorised representative cannot represent a UK-based producer. To register or amend this producer, please check they are an authorised representative and that their client is not based in the UK.",
-                                producer.GetProducerName()));
+                                "{0}, {1} is identified as an Authorised Representative but has a non UK country listed in their address. An Authorised Representative must be based in the UK. Please review and amend the details for this producer before re-submitting your XML file.",
+                                producer.GetProducerName(), producer.registrationNo));
                 }
             }
 

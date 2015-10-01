@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
+    using System;
     using System.ComponentModel;
 
     public class AppConfiguration : IAppConfiguration
@@ -21,6 +22,9 @@
         public string ApiSecret { get; set; }
 
         public string ApiClientId { get; set; }
+
+        [DefaultValue(60)]
+        public double ApiTimeoutInSeconds { get; set; }
 
         [DefaultValue("false")]
         public string TruncateEmailAfterPlus { get; set; }

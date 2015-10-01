@@ -6,7 +6,7 @@
         public string CompanyNumber { get; set; }
         public ContactDetails RegisteredOffice { get; set; }
 
-        public static Company Create(ICompanySettings settings)
+        public static Company Create(ISettings settings)
         {
             Company company = new Company();
 
@@ -21,7 +21,7 @@
                 company.CompanyNumber = RandomHelper.CreateRandomStringOfNumbers(0, 1000);
             }
 
-            company.RegisteredOffice = ContactDetails.Create(settings);
+            company.RegisteredOffice = ContactDetails.Create(settings, true);
 
             return company;
         }

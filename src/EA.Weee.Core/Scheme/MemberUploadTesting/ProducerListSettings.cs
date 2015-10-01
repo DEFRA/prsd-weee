@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class ProducerListSettings : ISchemeBusinessSettings
+    public class ProducerListSettings : ISettings
     {
         public Guid OrganisationID { get; set; }
 

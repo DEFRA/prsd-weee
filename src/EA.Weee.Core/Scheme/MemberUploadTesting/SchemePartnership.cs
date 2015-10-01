@@ -12,7 +12,7 @@
             PartnershipList = new List<string>();
         }
 
-        public static SchemePartnership Create(IPartnershipSettings settings)
+        public static SchemePartnership Create(ISettings settings)
         {
             SchemePartnership schemePartnership = new SchemePartnership();
 
