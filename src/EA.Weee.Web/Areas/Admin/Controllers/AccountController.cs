@@ -101,10 +101,7 @@
         public ActionResult AdminAccountActivationRequired()
         {
             var email = User.GetEmailAddress();
-            if (!string.IsNullOrEmpty(email))
-            {
-                ViewBag.UserEmailAddress = User.GetEmailAddress();
-            }
+            ViewBag.UserEmailAddress = User.GetEmailAddress();
             return View();
         }
 
@@ -112,12 +109,6 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AdminAccountActivationRequired(FormCollection model)
         {
-            var emailAddress = authenticationManager.User.GetEmailAddress();
-            if (!string.IsNullOrEmpty(emailAddress))
-            {
-                ViewBag.UserEmailAddress = emailAddress;
-            }
-
             using (var client = apiClient())
             {
                 string accessToken = authenticationManager.User.GetAccessToken();
@@ -127,7 +118,7 @@
                 await client.User.ResendActivationEmail(accessToken, activationBaseUrl);
             }
 
-            return View();
+            return View("AccountActivationRequested");
         }
 
         [HttpGet]

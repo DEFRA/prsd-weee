@@ -5,6 +5,7 @@
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Services;
+    using System;
 
     public class ApiClientModule : Module
     {
@@ -14,7 +15,8 @@
             {
                 var cc = c.Resolve<IComponentContext>();
                 var config = cc.Resolve<IAppConfiguration>();
-                return new WeeeClient(config.ApiUrl);
+                TimeSpan timeout = TimeSpan.FromSeconds(config.ApiTimeoutInSeconds);
+                return new WeeeClient(config.ApiUrl, timeout);
             }).As<IWeeeClient>();
 
             builder.Register(c =>

@@ -165,6 +165,10 @@ p {
   color: $link-colour;
 }
 
+.email {
+	white-space: nowrap;
+}
+
 // Code styles
 pre,
 code {
