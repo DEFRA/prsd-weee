@@ -9,7 +9,7 @@
         {
         }
 
-        internal static OverseasProducer Create(IOverseasProducerSettings settings)
+        internal static OverseasProducer Create(ISettings settings)
         {
             OverseasProducer overseasProducer = new OverseasProducer();
 
@@ -24,7 +24,7 @@
 
             if (RandomHelper.OneIn(2))
             {
-                overseasProducer.ContactDetails = ContactDetails.Create(settings);
+                overseasProducer.ContactDetails = ContactDetails.Create(settings, false);
             }
 
             return overseasProducer;
