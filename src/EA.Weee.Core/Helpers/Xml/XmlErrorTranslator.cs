@@ -20,6 +20,15 @@
         private const string IncompleteContentPattern =
            @"^The element '([^']*)' in namespace '[^']*' has incomplete content. List of possible elements expected: '[^']*' in namespace '[^']*'.$";
 
+        private const string AmpersandWithNoCharacterEntityReferencePattern =
+            @"^An error occurred while parsing EntityName\.";
+
+        private const string UnterminatedCharacterEntityReferencePattern =
+            @"^'[^']*' is an unexpected token\. The expected token is ';'\.";
+
+        private const string InvalidCharacterEntityReferencePattern =
+            @"^Reference to undeclared entity '[^']*'\.";
+
         private const string ErrorInXmlDocumentPattern = @"^There is an error in XML document \(([0-9]*)\,\s([0-9]*)\)\.$";
 
         public string MakeFriendlyErrorMessage(string message)
@@ -54,6 +63,18 @@
             else if (Regex.IsMatch(message, ErrorInXmlDocumentPattern))
             {
                 resultErrorMessage = MakeFriendlyErrorInXmlDocumentMessage(message);
+            }
+            else if (Regex.IsMatch(message, AmpersandWithNoCharacterEntityReferencePattern))
+            {
+                resultErrorMessage = "The XML file you're trying to upload has not been encoded correctly. Please check that any ampersand characters (&) have been replaced by &amp;.";
+            }
+            else if (Regex.IsMatch(message, UnterminatedCharacterEntityReferencePattern))
+            {
+                resultErrorMessage = "The XML file you're trying to upload has not been encoded correctly. Please check that any ampersand characters (&) have been replaced by &amp;.";
+            }
+            else if (Regex.IsMatch(message, InvalidCharacterEntityReferencePattern))
+            {
+                resultErrorMessage = "The XML file you're trying to upload has not been encoded correctly. Please check that any ampersand characters (&) have been replaced by &amp;.";
             }
 
             var registrationNo = GetRegistrationNumber(sender);
