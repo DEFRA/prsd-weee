@@ -1,0 +1,50 @@
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.SearchResultsViewModel
+@{
+    ViewBag.Title = "Search results";
+}
+
+@section main_content {
+
+    <header class="hgroup">
+        <h1 class="heading-large">Search results</h1>
+    </header>
+
+    @if (Model.Results.Count > 0)
+    {
+        <p>
+            Here are some producers that matched your search:
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Producer</th>
+                    <th>Registration Number</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.Results)
+                {
+                    <tr>
+                        <td>@result.Name</td>
+                        <td>@result.RegistrationNumber</td>
+                        <td>@Html.ActionLink("Select", "Details", "Producers", new { RegistrationNumber = result.RegistrationNumber, ComplianceYear = result.ComplianceYear }, null)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>We didn't find any producers that matched your search.</p>
+    }
+
+    <p>
+        @Html.ActionLink("Back", "Search", "Producers")
+    </p>
+}
+
+
+
+
