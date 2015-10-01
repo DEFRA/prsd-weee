@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using Base;
+    using System;
     using System.Web.Mvc;
     using ViewModels.Home;
     
@@ -23,24 +24,25 @@
         [ValidateAntiForgeryToken]
         public ActionResult ChooseActivity(InternalUserActivityViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                string choosenActivity = model.InternalUserActivityOptions.SelectedValue;
-                switch (choosenActivity)
-                {
+                return View(model);
+            }
+
+            switch (model.InternalUserActivityOptions.SelectedValue)
+            {
                 case InternalUserActivity.ManageUsers:
-                    {
-                        return RedirectToAction("ManageUsers", "User");
-                    }
+                    return RedirectToAction("ManageUsers", "User");
 
                 case InternalUserActivity.ManageScheme:
-                    {
-                        return RedirectToAction("ManageSchemes", "Scheme");
-                    }
-                }
+                    return RedirectToAction("ManageSchemes", "Scheme");
+
+                case InternalUserActivity.ViewProducerInformation:
+                    return RedirectToAction("Search", "Producers");
+
+                default:
+                    throw new NotSupportedException();
             }
-            
-            return View(model);
         }
     }
 }
