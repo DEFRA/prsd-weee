@@ -9,7 +9,7 @@
         {
         }
 
-        public static SchemeBusiness Create(ISchemeBusinessSettings settings)
+        public static SchemeBusiness Create(ISettings settings)
         {
             SchemeBusiness schemeBusiness = new SchemeBusiness();
 

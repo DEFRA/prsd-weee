@@ -475,6 +475,7 @@
     <Content Include="Areas\Admin\Views\Account\ResetPasswordRequest.cshtml" />
     <Content Include="Areas\Admin\Views\User\EditUser.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ManageContactDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\AccountActivationRequested.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\download-link-tracker.js" />
@@ -570,6 +571,7 @@
     <Content Include="Views\Shared\_PrivacyPolicy.cshtml" />
     <Content Include="Views\Shared\_CompetentAuthoritiesContactDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\SearchOrganisation.cshtml" />
+    <Content Include="Views\Account\AccountActivationRequested.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -5,7 +5,7 @@
         public string CompanyName { get; set; }
         public string CompanyNumber { get; set; }
 
-        public static SchemeCompany Create(ICompanySettings settings)
+        public static SchemeCompany Create(ISettings settings)
         {
             SchemeCompany schemeCompany = new SchemeCompany();
 

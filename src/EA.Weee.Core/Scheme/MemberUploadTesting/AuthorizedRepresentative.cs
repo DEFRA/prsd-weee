@@ -8,7 +8,7 @@
         {
         }
 
-        public static AuthorizedRepresentative Create(IAuthorizedRepresentativeSettings settings)
+        public static AuthorizedRepresentative Create(ISettings settings)
         {
             AuthorizedRepresentative authorizedRepresentative = new AuthorizedRepresentative();
 

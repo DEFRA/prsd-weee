@@ -23,6 +23,7 @@
         @Html.HiddenFor(m => m.UserId)
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.IsCompetentAuthorityUser)
+        @Html.HiddenFor(m => m.CanManageStatus)
 
         <div class="form-group">
             <table title="This table contains the organisation user details.">
@@ -50,11 +51,19 @@
             @Html.Gds().ValidationMessageFor(m => m.LastName)
             @Html.Gds().TextBoxFor(m => m.LastName, new { @maxlength = "256" })
         </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.UserStatus)">
-            @Html.Gds().LabelFor(m => m.UserStatus)
-            @Html.Gds().ValidationMessageFor(m => m.UserStatus)
-            @Html.Gds().DropDownListFor(m => m.UserStatus, Model.UserStatusSelectList, new { autocomplete = "false" })
-        </div>
+
+        if (Model.CanManageStatus)
+        {
+            <div class="form-group @Html.Gds().FormGroupClass(m => m.UserStatus)">
+                @Html.Gds().LabelFor(m => m.UserStatus)
+                @Html.Gds().ValidationMessageFor(m => m.UserStatus)
+                @Html.Gds().DropDownListFor(m => m.UserStatus, Model.UserStatusSelectList, new { autocomplete = "false" })
+            </div>
+        }
+        else
+        {
+            @Html.Gds().DropDownListFor(m => m.UserStatus, Model.UserStatusSelectList, new { hidden = "true" })
+        }
 
         <div class="form-group">
             <button class="button" type="submit">Save and continue</button>

@@ -11,7 +11,7 @@
             CorrespondentForNotices = new CorrespondentForNotices();
         }
 
-        public static ProducerBusiness Create(IProducerBusinessSettings settings)
+        public static ProducerBusiness Create(ISettings settings)
         {
             ProducerBusiness producerBusiness = new ProducerBusiness();
             
