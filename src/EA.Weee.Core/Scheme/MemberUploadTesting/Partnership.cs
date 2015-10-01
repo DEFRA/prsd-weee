@@ -14,7 +14,7 @@
             PrincipalPlaceOfBusiness = new ContactDetails();
         }
 
-        public static Partnership Create(IPartnershipSettings settings)
+        public static Partnership Create(ISettings settings)
         {
             Partnership partnership = new Partnership();
 
@@ -40,7 +40,7 @@
                 }
             }
 
-            partnership.PrincipalPlaceOfBusiness = ContactDetails.Create(settings);
+            partnership.PrincipalPlaceOfBusiness = ContactDetails.Create(settings, true);
 
             return partnership;
         }

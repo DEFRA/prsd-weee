@@ -16,7 +16,7 @@
             Address = new Address();
         }
 
-        public static ContactDetails Create(IContactDetailsSettings settings)
+        public static ContactDetails Create(ISettings settings, bool isUkBased)
         {
             ContactDetails contactDetails = new ContactDetails();
 
@@ -41,7 +41,7 @@
                 contactDetails.Email = RandomHelper.CreateRandomString("WEEE_", 0, 1000, false) + "@environment-agency.gov.uk";
             }
 
-            contactDetails.Address = Address.Create(settings);
+            contactDetails.Address = Address.Create(settings, isUkBased);
 
             return contactDetails;
         }
