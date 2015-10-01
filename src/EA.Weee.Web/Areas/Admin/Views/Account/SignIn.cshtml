@@ -7,9 +7,10 @@
             Sign in to your account
         </h1>
     </header>
-    <div style="margin-bottom: 1.66667em;">
-        <p>This area is reserved for the use of regulatory staff only.</p>
-    </div>
+
+    <p>
+        This area is reserved for the use of regulatory staff only.
+    </p>
 
     @using (Html.BeginForm("SignIn", "Account", new { ReturnUrl = Request.QueryString["ReturnUrl"] }))
     {
@@ -30,11 +31,12 @@
         <p>
             <input type="submit" value="Continue" class="button" />
         </p>
-        <div>
-            <p>@Html.ActionLink("Create a user account", "Create", "Account")</p>
-        </div>
-        <div>
-            @Html.ActionLink("Reset password", "ResetPasswordRequest", "Account")
-        </div>
     }
+
+    <p>
+        @Html.ActionLink("Create a user account", "Create", "Account")
+    </p>
+    <p>
+        @Html.ActionLink("Reset password", "ResetPasswordRequest", "Account")
+    </p>
 }

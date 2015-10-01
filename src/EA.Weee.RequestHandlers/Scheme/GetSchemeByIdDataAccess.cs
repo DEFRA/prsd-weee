@@ -1,12 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme
 {
-    using EA.Weee.DataAccess;
     using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
+    using DataAccess;
 
     public class GetSchemeByIdDataAccess : IGetSchemeByIdDataAccess
     {

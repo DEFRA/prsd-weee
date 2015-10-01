@@ -323,5 +323,79 @@
                 Assert.Equal(producer1.Id, result.Id);
             }
         }
+
+        [Fact]
+        public void GetLatestCompanyProducers_ReturnsCompaniesOnly()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+
+                // Arrange
+                Scheme scheme1 = helper.CreateScheme();
+
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2015;
+                memberUpload1.IsSubmitted = true;
+
+                var companyProducer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
+                companyProducer1.IsCurrentForComplianceYear = true;
+
+                var partnershipProducer = helper.CreateProducerAsPartnership(memberUpload1, "PPP1");
+                partnershipProducer.IsCurrentForComplianceYear = true;
+
+                var soleTraderProducer = helper.CreateProducerAsSoleTrader(memberUpload1, "SSS1");
+                soleTraderProducer.IsCurrentForComplianceYear = true;
+
+                var companyProducer2 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
+                companyProducer2.IsCurrentForComplianceYear = true;
+
+                database.Model.SaveChanges();
+
+                // Act
+                var result = new ProducerQuerySet(database.WeeeContext).GetLatestCompanyProducers();
+
+                // Assert
+                Assert.Contains(result, p => p.Id == companyProducer1.Id);
+                Assert.Contains(result, p => p.Id == companyProducer2.Id);
+                Assert.DoesNotContain(result, p => p.Id == soleTraderProducer.Id);
+                Assert.DoesNotContain(result, p => p.Id == partnershipProducer.Id);
+            }
+        }
+
+        [Fact]
+        public void GetLatestCompanyProducers_ReturnsCurrentForComplianceYearCompaniesOnly()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+
+                // Arrange
+                Scheme scheme1 = helper.CreateScheme();
+
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2015;
+                memberUpload1.IsSubmitted = true;
+
+                var companyProducer1 = helper.CreateProducerAsCompany(memberUpload1, "AA");
+                companyProducer1.IsCurrentForComplianceYear = true;
+
+                var companyProducer2 = helper.CreateProducerAsCompany(memberUpload1, "BB");
+                companyProducer2.IsCurrentForComplianceYear = false;
+
+                var companyProducer3 = helper.CreateProducerAsCompany(memberUpload1, "CC");
+                companyProducer3.IsCurrentForComplianceYear = true;
+
+                database.Model.SaveChanges();
+
+                // Act
+                var result = new ProducerQuerySet(database.WeeeContext).GetLatestCompanyProducers();
+
+                // Assert
+                Assert.Contains(result, p => p.Id == companyProducer1.Id);
+                Assert.Contains(result, p => p.Id == companyProducer3.Id);
+                Assert.DoesNotContain(result, p => p.Id == companyProducer2.Id);
+            }
+        }
     }
 }

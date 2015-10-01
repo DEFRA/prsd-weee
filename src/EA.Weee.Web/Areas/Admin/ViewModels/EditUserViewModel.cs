@@ -39,6 +39,8 @@
 
         public string Email { get; set; }
 
+        public bool CanManageStatus { get; set; }
+
         public bool IsCompetentAuthorityUser { get; set; }
 
         [Required(ErrorMessage = "Current status is required.")]
@@ -59,6 +61,7 @@
             IsCompetentAuthorityUser = manageUser.IsCompetentAuthorityUser;
             UserStatus = manageUser.UserStatus;
             UserStatusSelectList = new SelectList(EnumHelper.GetValues(typeof(UserStatus)), "Key", "Value");
+            CanManageStatus = manageUser.CanManageStatus;
         }
     }
 }

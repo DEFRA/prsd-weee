@@ -15,5 +15,7 @@
         List<string> GetAllRegistrationNumbers(); 
 
         bool ProducerNameAlreadyRegisteredForComplianceYear(string producerName, string schemeComplianceYear);
+
+        List<Producer> GetLatestCompanyProducers();
     }
 }

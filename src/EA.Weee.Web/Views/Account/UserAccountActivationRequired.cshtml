@@ -4,40 +4,24 @@
 
 @section main_content
 {
-    @if (ViewBag.Errors != null && ((string[])ViewBag.Errors).Length > 0)
-    {
-        <div class="validation-summary" style="margin-top: 25px">
-            <h1 class="heading-small">An error occurred.</h1>
-            <ul>
-                @foreach (var error in (string[])ViewBag.Errors)
-                {
-                    <li>@Html.Raw(error)</li>
-                }
-            </ul>
-        </div>
-    }
-
     <h2 class="heading-large">Activate your user account</h2>
+
     <p class="lede">
         In order to use this service, please activate your user account.
     </p>
-    @if (String.IsNullOrEmpty(ViewBag.UserEmailAddress))
-    {
-        <p>We have sent you an activation email. You need to use the link in the email to activate your user account.</p>
-    }
-    else
-    {
-        <p>We have sent your activation email to @ViewBag.UserEmailAddress. You need to use the link in the email to activate your user account.</p>
-    }
+
+    <p>
+        We have sent your activation email to <span class="email">@ViewBag.UserEmailAddress</span>.
+        You need to use the link in the email to activate your user account.
+    </p>
 
     <p>If the email address shown above is wrong then you will need to create another user account using the correct email address.</p>
-    <p></p>
+
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         <p>
-            If the email address shown above is correct but you have not received your activation email, please check your email inbox or junk folder, or you can
-            <button class="link-submit" type="submit">request another activation email</button>.
+            <button class="button" type="submit">Request another email</button>        
         </p>
     }
 }

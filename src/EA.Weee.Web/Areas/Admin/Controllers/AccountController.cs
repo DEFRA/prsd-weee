@@ -1,24 +1,20 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using System;
+    using System.Net.Mail;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
     using Authorization;
     using Base;
-    using Core;
-    using EA.Weee.Core.Routing;
+    using Core.Routing;
+    using Core.Shared;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
-    using Prsd.Core.Web.OAuth;
-    using Prsd.Core.Web.OpenId;
     using Services;
-    using System;
-    using System.Linq;
-    using System.Net.Mail;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
-    using Thinktecture.IdentityModel.Client;
     using ViewModels.Account;
     using Weee.Requests.Admin;
 
@@ -105,10 +101,7 @@
         public ActionResult AdminAccountActivationRequired()
         {
             var email = User.GetEmailAddress();
-            if (!string.IsNullOrEmpty(email))
-            {
-                ViewBag.UserEmailAddress = User.GetEmailAddress();
-            }
+            ViewBag.UserEmailAddress = User.GetEmailAddress();
             return View();
         }
 
@@ -116,12 +109,6 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AdminAccountActivationRequired(FormCollection model)
         {
-            var emailAddress = authenticationManager.User.GetEmailAddress();
-            if (!string.IsNullOrEmpty(emailAddress))
-            {
-                ViewBag.UserEmailAddress = emailAddress;
-            }
-
             using (var client = apiClient())
             {
                 string accessToken = authenticationManager.User.GetAccessToken();
@@ -131,7 +118,7 @@
                 await client.User.ResendActivationEmail(accessToken, activationBaseUrl);
             }
 
-            return View();
+            return View("AccountActivationRequested");
         }
 
         [HttpGet]
@@ -206,8 +193,25 @@
             {
                 return Redirect(returnUrl);
             }
-            
-            return RedirectToAction("ChooseActivity", "Home", new { area = "Admin" });
+
+            return RedirectToAction("InternalUserAuthorisationRequired", "Account", new { area = "Admin" });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> InternalUserAuthorisationRequired()
+        {
+            using (var client = apiClient())
+            {
+                var status = await client.SendAsync(User.GetAccessToken(), new GetAdminUserStatus(User.GetUserId()));
+
+                if (status == UserStatus.Active)
+                {
+                    return RedirectToAction("ChooseActivity", "Home", new { area = "Admin" });
+                }
+
+                InternalUserAuthorizationRequiredViewModel model = new InternalUserAuthorizationRequiredViewModel() { Status = status };
+                return View(model);
+            }
         }
 
         [HttpGet]

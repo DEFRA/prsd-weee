@@ -8,15 +8,6 @@
 
     public class Global : HttpApplication
     {
-        protected void Application_Start()
-        {
-            AreaRegistration.RegisterAllAreas();
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
-            ModelBinders.Binders.DefaultBinder = new TrimModelBinder();
-        }
-
         protected void Application_PreSendRequestHeaders(object sender, EventArgs e)
         {
             HttpContext.Current.Response.Headers.Remove("Server");
