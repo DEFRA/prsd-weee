@@ -7,10 +7,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Weee.DataAccess;
     using Weee.Domain.Producer;
     using Weee.Tests.Core;
     using XmlValidation.BusinessValidation.QuerySets;
+    using XmlValidation.BusinessValidation.QuerySets.Queries.Producer;
     using Xunit;
+    using Assert = Xunit.Assert;
 
     public class ProducerQuerySetTests
     {
@@ -33,7 +37,7 @@
 
                 database.Model.SaveChanges();
 
-                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+                ProducerQuerySet querySet = ProducerQuerySet(database.WeeeContext);
 
                 // Act
                 var result = querySet.GetLatestProducerForComplianceYearAndScheme("AAAAAAA", "2016", scheme.OrganisationId);
@@ -63,7 +67,7 @@
 
                 database.Model.SaveChanges();
 
-                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+                ProducerQuerySet querySet = ProducerQuerySet(database.WeeeContext);
 
                 // Act
                 var result = querySet.GetLatestProducerForComplianceYearAndScheme("AAAAAAA", "2017", scheme.OrganisationId);
@@ -92,7 +96,7 @@
 
                 database.Model.SaveChanges();
 
-                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+                ProducerQuerySet querySet = ProducerQuerySet(database.WeeeContext);
 
                 // Act
                 var result = querySet.GetLatestProducerForComplianceYearAndScheme("XXXXXXXX", "2016", scheme.OrganisationId);
@@ -121,7 +125,7 @@
 
                 database.Model.SaveChanges();
 
-                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+                ProducerQuerySet querySet = ProducerQuerySet(database.WeeeContext);
 
                 // Act
                 var result = querySet.GetLatestProducerFromPreviousComplianceYears("XXXXXXX");
@@ -157,7 +161,7 @@
 
                 database.Model.SaveChanges();
 
-                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+                ProducerQuerySet querySet = ProducerQuerySet(database.WeeeContext);
 
                 // Act
                 var result = querySet.GetLatestProducerFromPreviousComplianceYears("AAAAAAA");
@@ -196,7 +200,7 @@
 
                 database.Model.SaveChanges();
 
-                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+                ProducerQuerySet querySet = ProducerQuerySet(database.WeeeContext);
 
                 // Act
                 var result = querySet.GetLatestProducerFromPreviousComplianceYears("AAAAAAA");
@@ -243,7 +247,7 @@
 
                 database.Model.SaveChanges();
 
-                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+                ProducerQuerySet querySet = ProducerQuerySet(database.WeeeContext);
 
                 // Act
                 var result = querySet.GetLatestProducerFromPreviousComplianceYears("AAAAAAA");
@@ -280,7 +284,7 @@
 
                 database.Model.SaveChanges();
 
-                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+                ProducerQuerySet querySet = ProducerQuerySet(database.WeeeContext);
 
                 // Act
                 List<string> results = querySet.GetAllRegistrationNumbers();
@@ -313,7 +317,7 @@
 
                 database.Model.SaveChanges();
 
-                ProducerQuerySet querySet = new ProducerQuerySet(database.WeeeContext);
+                ProducerQuerySet querySet = ProducerQuerySet(database.WeeeContext);
 
                 // Act
                 var result = querySet.GetProducerForOtherSchemeAndObligationType("AAAAAAA", "2015", scheme1.OrganisationId, (int)ObligationType.B2C);
@@ -353,7 +357,7 @@
                 database.Model.SaveChanges();
 
                 // Act
-                var result = new ProducerQuerySet(database.WeeeContext).GetLatestCompanyProducers();
+                var result = ProducerQuerySet(database.WeeeContext).GetLatestCompanyProducers();
 
                 // Assert
                 Assert.Contains(result, p => p.Id == companyProducer1.Id);
@@ -389,13 +393,21 @@
                 database.Model.SaveChanges();
 
                 // Act
-                var result = new ProducerQuerySet(database.WeeeContext).GetLatestCompanyProducers();
+                var result = ProducerQuerySet(database.WeeeContext).GetLatestCompanyProducers();
 
                 // Assert
                 Assert.Contains(result, p => p.Id == companyProducer1.Id);
                 Assert.Contains(result, p => p.Id == companyProducer3.Id);
                 Assert.DoesNotContain(result, p => p.Id == companyProducer2.Id);
             }
+        }
+
+        private ProducerQuerySet ProducerQuerySet(WeeeContext context)
+        {
+            return new ProducerQuerySet(new CurrentProducersByRegistrationNumber(context),
+                new ExistingProducerNames(context),
+                new ExistingProducerRegistrationNumbers(context),
+                new CurrentCompanyProducers(context));
         }
     }
 }
