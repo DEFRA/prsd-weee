@@ -4,6 +4,7 @@
     using BusinessValidation;
     using BusinessValidation.Helpers;
     using BusinessValidation.QuerySets;
+    using BusinessValidation.QuerySets.Queries.Producer;
     using BusinessValidation.Rules.Producer;
     using BusinessValidation.Rules.Scheme;
 
@@ -87,7 +88,12 @@
 
             builder.RegisterType<CompanyAlreadyRegistered>()
                 .As<ICompanyAlreadyRegistered>()
-                .InstancePerRequest();                
+                .InstancePerRequest();
+
+            builder.RegisterType<ExistingProducerNames>().As<IExistingProducerNames>().InstancePerRequest();
+            builder.RegisterType<CurrentCompanyProducers>().As<ICurrentCompanyProducers>().InstancePerRequest();
+            builder.RegisterType<ExistingProducerRegistrationNumbers>().As<IExistingProducerRegistrationNumbers>().InstancePerRequest();
+            builder.RegisterType<CurrentProducersByRegistrationNumber>().As<ICurrentProducersByRegistrationNumber>().InstancePerRequest();
 
             //builder.RegisterAssemblyTypes(GetType().Assembly)
             //    .Where(t => t.Name.StartsWith("BusinessValidation"))

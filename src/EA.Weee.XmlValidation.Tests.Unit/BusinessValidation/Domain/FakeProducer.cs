@@ -86,7 +86,7 @@
             return new FakeProducer(schemeOrganisationId ?? Guid.NewGuid(),
                 Guid.NewGuid(),
                 new MemberUpload(Guid.NewGuid(), "<xml>SomeData</xml>", new List<MemberUploadError>(), 0, complianceYear ?? 2016),
-                producerBusiness ?? new ProducerBusiness(null, new Partnership("Partnership Name", null, new List<Partner>())),
+                producerBusiness ?? new ProducerBusiness(new Company("A company name", "ABC12345", null), new Partnership("Partnership Name", null, new List<Partner>())),
                 new AuthorisedRepresentative("authrep"),
                 DateTime.Now,
                 decimal.Zero,
