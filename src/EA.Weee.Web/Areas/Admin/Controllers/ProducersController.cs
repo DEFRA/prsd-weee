@@ -1,23 +1,27 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using EA.Weee.Core.Admin;
-using EA.Weee.Web.Areas.Admin.Controllers.Base;
-using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
-using EA.Weee.Web.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+    using EA.Weee.Core.Scheme;
+    using EA.Weee.Web.Areas.Admin.Controllers.Base;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
+    using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.Caching;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Mvc;
 
     public class ProducersController : AdminController
     {
         private readonly BreadcrumbService breadcrumb;
+        private readonly IWeeeCache cache;
 
-        public ProducersController(BreadcrumbService breadcrumb)
+        public ProducersController(BreadcrumbService breadcrumb, IWeeeCache cache)
         {
             this.breadcrumb = breadcrumb;
+            this.cache = cache;
         }
 
         /// <summary>
@@ -103,25 +107,13 @@ using System.Web.Mvc;
 
         private async Task<IList<ProducerSearchResult>> FetchSearchResults(string searchTerm)
         {
-            // TODO: Data access.
-
-            return new List<ProducerSearchResult>()
-            {
-                new ProducerSearchResult() { RegistrationNumber = "WEE/AA1234AA", Name = "Graham's waste disposal company", ComplianceYear = 2011 },
-                new ProducerSearchResult() { RegistrationNumber = "WEE/AE4776DJ", Name = "Waste not want not", ComplianceYear = 2012 },
-                new ProducerSearchResult() { RegistrationNumber = "WEE/ED1254EK", Name = "Waste of time", ComplianceYear = 2013 },
-                new ProducerSearchResult() { RegistrationNumber = "WEE/HB4434FD", Name = "More waste less speed", ComplianceYear = 2014 },
-                new ProducerSearchResult() { RegistrationNumber = "WEE/NJ4234RE", Name = "Cut, copy and waste", ComplianceYear = 2015 },
-                new ProducerSearchResult() { RegistrationNumber = "WEE/DE1244HW", Name = "Wasted on a Sunday morning", ComplianceYear = 2016 },
-                new ProducerSearchResult() { RegistrationNumber = "WEE/EE1254CQ", Name = "Fancy waistcoat company", ComplianceYear = 2017 },
-                new ProducerSearchResult() { RegistrationNumber = "WEE/GJ5495AQ", Name = "This producer has a really long name that will need to be handled nicely on narrow browsers", ComplianceYear = 2018 },
-            }
-            .Where(i => i.RegistrationNumber.ToLowerInvariant().Contains(searchTerm.ToLowerInvariant()) || i.Name.ToLowerInvariant().Contains(searchTerm.ToLowerInvariant()))
-            .OrderBy(i => i.RegistrationNumber)
-            .Take(10)
-            .ToList();
-
-            await Task.Yield();
+            var list = await cache.FetchProducerSearchResultList();
+            
+            return list
+                .Where(i => i.RegistrationNumber.ToLowerInvariant().Contains(searchTerm.ToLowerInvariant()) || i.Name.ToLowerInvariant().Contains(searchTerm.ToLowerInvariant()))
+                .OrderBy(i => i.RegistrationNumber)
+                .Take(10)
+                .ToList();
         }
 
         private async Task SetBreadcrumb()
