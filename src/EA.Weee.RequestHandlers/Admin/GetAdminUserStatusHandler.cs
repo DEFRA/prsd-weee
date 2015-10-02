@@ -26,7 +26,7 @@
 
         public async Task<Core.Shared.UserStatus> HandleAsync(GetAdminUserStatus request)
         {
-            authorization.EnsureCanAccessInternalArea();
+            authorization.EnsureCanAccessInternalArea(false);
 
             var adminUser = await dataAccess.GetAdminUserOrDefault(new Guid(request.UserId));
 
