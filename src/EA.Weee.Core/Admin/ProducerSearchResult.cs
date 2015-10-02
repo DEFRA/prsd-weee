@@ -9,8 +9,6 @@
     public class ProducerSearchResult
     {
         public string RegistrationNumber { get; set; }
-
-        public int ComplianceYear { get; set; }
         
         public string Name { get; set; }
     }

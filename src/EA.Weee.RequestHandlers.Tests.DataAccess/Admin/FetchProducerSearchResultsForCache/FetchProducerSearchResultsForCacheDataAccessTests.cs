@@ -49,8 +49,8 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Contains(results, p => p.RegistrationNumber == "AAAAA" && p.ComplianceYear == 2016);
-                Assert.DoesNotContain(results, p => p.RegistrationNumber == "AAAAA" && p.ComplianceYear == 2015);
+                Assert.Contains(results, p => p.RegistrationNumber == "AAAAA" && p.Name == producer2.Business.Company.Name);
+                Assert.DoesNotContain(results, p => p.RegistrationNumber == "AAAAA" && p.Name == producer1.Business.Company.Name);
             }
         }
 

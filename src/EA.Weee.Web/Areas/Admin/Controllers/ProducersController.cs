@@ -32,7 +32,7 @@
         public async Task<ActionResult> Search()
         {
             await SetBreadcrumb();
-            return View("Search", new SearchViewModel());
+            return View();
         }
 
         /// <summary>
@@ -48,28 +48,61 @@
 
             if (!ModelState.IsValid)
             {
-                return View("Search", viewModel);
+                return View(viewModel);
             }
 
             // Check to see if a registration number and compliance year were selected.
-            if (!string.IsNullOrEmpty(viewModel.SelectedRegistrationNumber) && viewModel.SelectedComplianceYear != null)
+            if (!string.IsNullOrEmpty(viewModel.SelectedRegistrationNumber))
             {
-                // Make sure that the search term wasn't changed since a value was selected.
-                if (viewModel.SearchTerm.Contains(viewModel.SelectedRegistrationNumber))
+                return RedirectToAction("Details", new
                 {
-                    return RedirectToAction("Details", new
-                    {
-                        RegistrationNumber = viewModel.SelectedRegistrationNumber,
-                        ComplianceYear = viewModel.SelectedComplianceYear
-                    });
-                }
+                    RegistrationNumber = viewModel.SelectedRegistrationNumber
+                });
             }
 
-            SearchResultsViewModel resultsViewModel = new SearchResultsViewModel();
+            return RedirectToAction("SearchResults", new { viewModel.SearchTerm });
+        }
 
-            resultsViewModel.Results = await FetchSearchResults(viewModel.SearchTerm);
+        /// <summary>
+        /// This method is used by users who are not using the auto-complete.
+        /// It loads the search results page for a specified search term.
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ActionResult> SearchResults(string searchTerm)
+        {
+            await SetBreadcrumb();
 
-            return View("SearchResults", resultsViewModel);
+            SearchResultsViewModel viewModel = new SearchResultsViewModel();
+            viewModel.SearchTerm = searchTerm;
+            viewModel.Results = await FetchSearchResults(searchTerm);
+
+            return View(viewModel);
+        }
+
+        /// <summary>
+        /// This method is used to select an item from the search results page.
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SearchResults(SearchResultsViewModel viewModel)
+        {
+            await SetBreadcrumb();
+
+            if (!ModelState.IsValid)
+            {
+                viewModel.Results = await FetchSearchResults(viewModel.SearchTerm);
+
+                return View(viewModel);
+            }
+
+            return RedirectToAction("Details", new
+            {
+                RegistrationNumber = viewModel.SelectedRegistrationNumber
+            });
         }
 
         /// <summary>
@@ -78,7 +111,8 @@
         /// <param name="viewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> FetchSearchResults(SearchViewModel viewModel)
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> FetchSearchResultsJson(string searchTerm)
         {
             if (!Request.IsAjaxRequest())
             {
@@ -87,16 +121,16 @@
 
             if (!ModelState.IsValid)
             {
-                return Json(null);
+                return Json(null, JsonRequestBehavior.AllowGet);
             }
 
-            IList<ProducerSearchResult> searchResults = await FetchSearchResults(viewModel.SearchTerm);
+            IList<ProducerSearchResult> searchResults = await FetchSearchResults(searchTerm);
 
-            return Json(searchResults);
+            return Json(searchResults, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
-        public async Task<ActionResult> Details(string registrationNumber, int complianceYear)
+        public async Task<ActionResult> Details(string registrationNumber)
         {
             await SetBreadcrumb();
 
@@ -107,6 +141,11 @@
 
         private async Task<IList<ProducerSearchResult>> FetchSearchResults(string searchTerm)
         {
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return new List<ProducerSearchResult>();
+            }
+
             var list = await cache.FetchProducerSearchResultList();
             
             return list

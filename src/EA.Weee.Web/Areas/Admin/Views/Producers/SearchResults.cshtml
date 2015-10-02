@@ -11,29 +11,43 @@
 
     @if (Model.Results.Count > 0)
     {
-        <p>
-            Here are some producers that matched your search:
-        </p>
+        using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Producer</th>
-                    <th>Registration Number</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var result in Model.Results)
-                {
+            <p>
+                Here are some producers that matched your search:
+            </p>
+
+            <div class="table-hr"></div>
+            <table id="producers" class="prsd-table">
+                <thead>
                     <tr>
-                        <td>@result.Name</td>
-                        <td>@result.RegistrationNumber</td>
-                        <td>@Html.ActionLink("Select", "Details", "Producers", new { RegistrationNumber = result.RegistrationNumber, ComplianceYear = result.ComplianceYear }, null)</td>
+                        <th>Producer</th>
+                        <th>Registration Number</th>
+                        <th>Select</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.Results)
+                    {
+                        <tr>
+                            <td>@result.Name</td>
+                            <td>@result.RegistrationNumber</td>
+                            <td>
+                                @Html.RadioButtonFor(m => m.SelectedRegistrationNumber, result.RegistrationNumber)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br/>
+
+            <div class="form-group">
+                <input type="submit" class="button" value="Continue" />
+            </div>
+        }
     }
     else
     {
@@ -44,6 +58,18 @@
         @Html.ActionLink("Back", "Search", "Producers")
     </p>
 }
+
+@section scripts{
+    <script type="text/javascript">
+        $('#producers tr').click(function () {
+            $(this).find('td input[type=radio]').prop('checked', true);
+        })
+    </script>
+}
+
+
+
+
 
 
 
