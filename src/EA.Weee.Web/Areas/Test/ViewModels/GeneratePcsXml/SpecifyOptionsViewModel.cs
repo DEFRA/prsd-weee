@@ -29,6 +29,9 @@
         [DisplayName("Number of existing producers")]
         public int NumberOfExistingProducers { get; set; }
 
+        [DisplayName("Don't allow producers to be companies")]
+        public bool NoCompaniesForNewProducers { get; set; }
+
         [DisplayName("Include badly-formed root element")]
         public bool IncludeMalformedSchema { get; set; }
 

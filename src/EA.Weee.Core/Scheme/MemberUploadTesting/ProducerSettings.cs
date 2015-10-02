@@ -9,5 +9,7 @@
         public string RegistrationNumber { get; set; }
 
         public bool IgnoreStringLengthConditions { get; set; }
+
+        public bool NoCompaniesForNewProducers { get; set; }
     }
 }
