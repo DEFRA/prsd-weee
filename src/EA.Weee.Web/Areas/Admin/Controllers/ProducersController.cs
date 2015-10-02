@@ -1,23 +1,33 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using EA.Weee.Core.Admin;
-    using EA.Weee.Web.Areas.Admin.Controllers.Base;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
-    using System.Web.Mvc;
+using EA.Weee.Web.Areas.Admin.Controllers.Base;
+using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
+using EA.Weee.Web.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 
     public class ProducersController : AdminController
     {
+        private readonly BreadcrumbService breadcrumb;
+
+        public ProducersController(BreadcrumbService breadcrumb)
+        {
+            this.breadcrumb = breadcrumb;
+        }
+
         /// <summary>
         /// This method is used by both JS and non-JS users.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult Search()
+        public async Task<ActionResult> Search()
         {
+            await SetBreadcrumb();
             return View("Search", new SearchViewModel());
         }
 
@@ -28,8 +38,10 @@
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Search(SearchViewModel viewModel)
+        public async Task<ActionResult> Search(SearchViewModel viewModel)
         {
+            await SetBreadcrumb();
+
             if (!ModelState.IsValid)
             {
                 return View("Search", viewModel);
@@ -51,7 +63,7 @@
 
             SearchResultsViewModel resultsViewModel = new SearchResultsViewModel();
 
-            resultsViewModel.Results = FetchSearchResults(viewModel.SearchTerm);
+            resultsViewModel.Results = await FetchSearchResults(viewModel.SearchTerm);
 
             return View("SearchResults", resultsViewModel);
         }
@@ -62,7 +74,7 @@
         /// <param name="viewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult FetchSearchResults(SearchViewModel viewModel)
+        public async Task<JsonResult> FetchSearchResults(SearchViewModel viewModel)
         {
             if (!Request.IsAjaxRequest())
             {
@@ -74,22 +86,24 @@
                 return Json(null);
             }
 
-            IList<ProducerSearchResult> searchResults = FetchSearchResults(viewModel.SearchTerm);
+            IList<ProducerSearchResult> searchResults = await FetchSearchResults(viewModel.SearchTerm);
 
             return Json(searchResults);
         }
 
         [HttpGet]
-        public ActionResult Details(string registrationNumber, int complianceYear)
+        public async Task<ActionResult> Details(string registrationNumber, int complianceYear)
         {
+            await SetBreadcrumb();
+
             // TODO: Data access
 
             return View((object)registrationNumber);
         }
 
-        private IList<ProducerSearchResult> FetchSearchResults(string searchTerm)
+        private async Task<IList<ProducerSearchResult>> FetchSearchResults(string searchTerm)
         {
-            // TODO: Data access
+            // TODO: Data access.
 
             return new List<ProducerSearchResult>()
             {
@@ -106,6 +120,15 @@
             .OrderBy(i => i.RegistrationNumber)
             .Take(10)
             .ToList();
+
+            await Task.Yield();
+        }
+
+        private async Task SetBreadcrumb()
+        {
+            breadcrumb.InternalActivity = "View producer information";
+
+            await Task.Yield();
         }
     }
 }
