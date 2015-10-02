@@ -2,86 +2,42 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using DataAccess;
-    using DataAccess.Extensions;
     using Domain;
     using Domain.Producer;
+    using Queries.Producer;
+    using Xml;
     using Xml.Schemas;
 
     public class ProducerQuerySet : IProducerQuerySet
     {
-        private readonly WeeeContext context;
+        private readonly IExistingProducerNames existingProducerNames;
+        private readonly IExistingProducerRegistrationNumbers existingProducerRegistrationNumbers;
+        private readonly ICurrentProducersByRegistrationNumber currentProducersByRegistrationNumber;
+        private readonly ICurrentCompanyProducers currentCompanyProducers;
 
-        private bool dataFetched = false;
-        private List<string> existingProducerNames;
-        private List<string> existingProducerRegistrationNumbers;
-        private Dictionary<string, List<Producer>> currentProducersByRegistrationNumber;
-        private List<Producer> currentCompanyProducers;
-
-        public ProducerQuerySet(WeeeContext context)
+        public ProducerQuerySet(ICurrentProducersByRegistrationNumber currentProducersByRegistrationNumber,
+            IExistingProducerNames existingProducerNames,
+            IExistingProducerRegistrationNumbers existingProducerRegistrationNumbers,
+            ICurrentCompanyProducers currentCompanyProducers)
         {
-            this.context = context;
-        }
-
-        private void FetchData()
-        {
-            currentProducersByRegistrationNumber = context
-                .Producers
-                .Include(p => p.MemberUpload)
-                .Include(p => p.Scheme)
-                .Include(p => p.ProducerBusiness)
-                .Include(p => p.ProducerBusiness.CompanyDetails)
-                .Include(p => p.ProducerBusiness.Partnership)
-                .Where(p => p.IsCurrentForComplianceYear)
-                .AsNoTracking()
-                .GroupBy(p => p.RegistrationNumber)
-                .ToDictionary(g => g.Key, p => p.ToList());
-
-            existingProducerNames = context
-                .Producers
-                .ProducerNames()
-                .ToList();
-
-            existingProducerRegistrationNumbers = context
-                .Producers
-                .Select(p => p.RegistrationNumber)
-                .Distinct()
-                .ToList();
-
-            currentCompanyProducers = context
-                .Producers
-                .Include(p => p.ProducerBusiness)
-                .Include(p => p.ProducerBusiness.CompanyDetails)
-                .Where(p => p.IsCurrentForComplianceYear &&
-                            p.ProducerBusiness != null &&
-                            p.ProducerBusiness.CompanyDetails != null)
-                .AsNoTracking()
-                .ToList();
-        }
-
-        private void EnsureDataFetched()
-        {
-            if (!dataFetched)
-            {
-                FetchData();
-                dataFetched = true;
-            }
+            this.currentProducersByRegistrationNumber = currentProducersByRegistrationNumber;
+            this.existingProducerRegistrationNumbers = existingProducerRegistrationNumbers;
+            this.existingProducerNames = existingProducerNames;
+            this.currentCompanyProducers = currentCompanyProducers;
         }
 
         public Producer GetLatestProducerForComplianceYearAndScheme(string registrationNo, string schemeComplianceYear, Guid schemeOrgId)
         {
-            EnsureDataFetched();
-
             int complianceYear = int.Parse(schemeComplianceYear);
 
-            if (!currentProducersByRegistrationNumber.ContainsKey(registrationNo))
+            if (!currentProducersByRegistrationNumber.Run().ContainsKey(registrationNo))
             {
                 return null;
             }
 
-            return currentProducersByRegistrationNumber[registrationNo]
+            return currentProducersByRegistrationNumber.Run()[registrationNo]
                 .Where(p => p.MemberUpload.ComplianceYear == complianceYear)
                 .Where(p => p.Scheme.OrganisationId == schemeOrgId)
                 .SingleOrDefault();
@@ -89,64 +45,52 @@
 
         public Producer GetLatestProducerFromPreviousComplianceYears(string registrationNo)
         {
-            EnsureDataFetched();
-
-            if (!currentProducersByRegistrationNumber.ContainsKey(registrationNo))
+            if (!currentProducersByRegistrationNumber.Run().ContainsKey(registrationNo))
             {
                 return null;
             }
 
-            return currentProducersByRegistrationNumber[registrationNo]
+            return currentProducersByRegistrationNumber.Run()[registrationNo]
                 .OrderByDescending(p => p.MemberUpload.ComplianceYear)
                 .FirstOrDefault();
         }
 
         public Producer GetProducerForOtherSchemeAndObligationType(string registrationNo, string schemeComplianceYear, Guid schemeOrgId, int obligationType)
         {
-            EnsureDataFetched();
-
             int complianceYear = int.Parse(schemeComplianceYear);
 
-            if (!currentProducersByRegistrationNumber.ContainsKey(registrationNo))
+            if (!currentProducersByRegistrationNumber.Run().ContainsKey(registrationNo))
             {
                 return null;
             }
 
-            return currentProducersByRegistrationNumber[registrationNo]
-                .Where(p => p.Scheme.OrganisationId != schemeOrgId)
-                .Where(p => p.MemberUpload.ComplianceYear == complianceYear)
-                .Where(p => (
-                    p.ObligationType == obligationType || 
+            return currentProducersByRegistrationNumber.Run()[registrationNo]
+                .FirstOrDefault(p => p.Scheme.OrganisationId != schemeOrgId
+                    && p.MemberUpload.ComplianceYear == complianceYear
+                    && (p.ObligationType == obligationType || 
                     p.ObligationType == (int)ObligationType.Both ||
-                    obligationType == (int)obligationTypeType.Both))
-                .SingleOrDefault();
+                    obligationType == (int)(obligationTypeType.Both.ToDomainObligationType())));
         }
 
         public bool ProducerNameAlreadyRegisteredForComplianceYear(string producerName, string schemeComplianceYear)
         {
-            EnsureDataFetched();
-
             if (string.IsNullOrEmpty(producerName) || string.IsNullOrEmpty(schemeComplianceYear))
             {
                 return false;
             }
 
-            return existingProducerNames
+            return existingProducerNames.Run()
                 .Any(pn => string.Equals(pn.Trim(), producerName.Trim(), StringComparison.InvariantCultureIgnoreCase));
         }
 
         public List<string> GetAllRegistrationNumbers()
         {
-            EnsureDataFetched();
-
-            return existingProducerRegistrationNumbers;
+            return existingProducerRegistrationNumbers.Run();
         }
 
         public List<Producer> GetLatestCompanyProducers()
         {
-            EnsureDataFetched();
-
-            return currentCompanyProducers;
+            return currentCompanyProducers.Run();
         }
     }
 }
