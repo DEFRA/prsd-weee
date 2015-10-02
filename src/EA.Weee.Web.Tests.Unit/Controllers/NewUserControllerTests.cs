@@ -135,7 +135,7 @@
         {
             var newuserController = new NewUserController(
                 () => new OAuthClient("test", "test", "test"),
-                () => new WeeeClient("test"),
+                () => new WeeeClient("test", TimeSpan.FromSeconds(60)),
                 null,
                 externalRouteService);
 

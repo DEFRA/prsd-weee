@@ -5,14 +5,16 @@ using Microsoft.Owin;
 
 namespace EA.Weee.Web
 {
-    using System.Web;
-    using System.Web.Helpers;
-    using System.Web.Mvc;
     using Autofac;
     using Autofac.Integration.Mvc;
     using Infrastructure;
     using Owin;
     using Services;
+    using System.Web;
+    using System.Web.Helpers;
+    using System.Web.Mvc;
+    using System.Web.Optimization;
+    using System.Web.Routing;
     using Thinktecture.IdentityModel.Client;
 
     public partial class Startup
@@ -41,6 +43,12 @@ namespace EA.Weee.Web
             AntiForgeryConfig.CookieName = Prsd.Core.Web.Constants.CookiePrefix + Constants.AntiForgeryCookieName;
 
             MvcHandler.DisableMvcResponseHeader = true;
+
+            AreaRegistration.RegisterAllAreas();
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            ModelBinders.Binders.DefaultBinder = new TrimModelBinder();
         }
     }
 }

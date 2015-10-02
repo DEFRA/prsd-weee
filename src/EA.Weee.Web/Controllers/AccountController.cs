@@ -98,10 +98,9 @@
         public ActionResult UserAccountActivationRequired()
         {
             string email = User.GetEmailAddress();
-            if (!string.IsNullOrEmpty(email))
-            {
-                ViewBag.UserEmailAddress = User.GetEmailAddress();
-            }
+
+            ViewBag.UserEmailAddress = User.GetEmailAddress();
+            
             return View();
         }
 
@@ -109,12 +108,6 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UserAccountActivationRequired(FormCollection model)
         {
-            string emailAddress = User.GetEmailAddress();
-            if (!string.IsNullOrEmpty(emailAddress))
-            {
-                ViewBag.UserEmailAddress = User.GetEmailAddress();
-            }
-
             using (var client = apiClient())
             {
                 string accessToken = User.GetAccessToken();
@@ -124,7 +117,7 @@
                 await client.User.ResendActivationEmail(accessToken, activationBaseUrl);
             }
 
-            return RedirectToAction("UserAccountActivationRequired");
+            return View("AccountActivationRequested");
         }
 
         [HttpGet]

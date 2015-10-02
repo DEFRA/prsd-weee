@@ -10,12 +10,13 @@
         public string AdministrativeArea { get; set; }
         public string Country { get; set; }
         public string PostCode { get; set; }
+        public bool IsUkBased { get; set; }
 
         public Address()
         {
         }
 
-        public static Address Create(IAddressSettings settings)
+        public static Address Create(ISettings settings, bool isUkBased)
         {
             Address address = new Address();
 
@@ -37,9 +38,18 @@
                 address.Locality = RandomHelper.CreateRandomString(string.Empty, 0, 1000);
                 address.AdministrativeArea = RandomHelper.CreateRandomString(string.Empty, 0, 1000);
             }
-                
-            address.Country = "UK - ENGLAND";
-            address.PostCode = "GU22 7UY";
+
+            address.IsUkBased = isUkBased;
+            if (isUkBased)
+            {
+                address.Country = "UK - ENGLAND";
+                address.PostCode = "GU22 7UY";
+            }
+            else
+            {
+                address.Country = "FRANCE";
+                address.PostCode = "75008";
+            }
 
             return address;
         }

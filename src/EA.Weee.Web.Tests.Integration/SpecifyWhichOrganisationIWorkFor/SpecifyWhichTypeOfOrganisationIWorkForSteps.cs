@@ -78,7 +78,7 @@
 
         private OrganisationRegistrationController OrganisationRegistrationController()
         {
-            return new OrganisationRegistrationController(() => new WeeeClient(ConfigurationManager.AppSettings["Weee.ApiUrl"]));
+            return new OrganisationRegistrationController(() => new WeeeClient(ConfigurationManager.AppSettings["Weee.ApiUrl"], TimeSpan.FromSeconds(60)));
         }
 
         private OrganisationTypeViewModel OrganisationType(OrganisationType selectedOption)

@@ -33,7 +33,15 @@
         /// </summary>
         public void EnsureCanAccessInternalArea()
         {
-            bool canAccessInternalArea = CheckCanAccessInternalArea();
+            EnsureCanAccessInternalArea(true);
+        }
+
+        /// <summary>
+        /// Ensures that the user can access the internal area.
+        /// </summary>
+        public void EnsureCanAccessInternalArea(bool requiresActiveUser)
+        {
+            bool canAccessInternalArea = CheckCanAccessInternalArea(requiresActiveUser);
 
             if (!canAccessInternalArea)
             {
@@ -47,9 +55,20 @@
         /// </summary>
         public bool CheckCanAccessInternalArea()
         {
+            return CheckCanAccessInternalArea(true);
+        }
+
+        /// <summary>
+        /// Checks that the user can access the internal area.
+        /// </summary>
+        public bool CheckCanAccessInternalArea(bool requiresActiveUser)
+        {
             Claim claim = new Claim(ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea);
 
-            return HasClaim(claim);
+            var userId = userContext.UserId.ToString();
+
+            return HasClaim(claim) &&
+                   (!requiresActiveUser || context.CompetentAuthorityUsers.Single(u => u.UserId == userId).UserStatus == UserStatus.Active);
         }
 
         /// <summary>
