@@ -11,11 +11,13 @@
 
     public class CompanyAlreadyRegistered : ICompanyAlreadyRegistered
     {
-        private readonly IProducerQuerySet querySet;
+        private readonly IProducerQuerySet producerQuerySet;
+        private readonly IMigratedProducerQuerySet migratedProducerQuerySet;
 
-        public CompanyAlreadyRegistered(IProducerQuerySet querySet)
+        public CompanyAlreadyRegistered(IProducerQuerySet producerQuerySet, IMigratedProducerQuerySet migratedProducerQuerySet)
         {
-            this.querySet = querySet;
+            this.producerQuerySet = producerQuerySet;
+            this.migratedProducerQuerySet = migratedProducerQuerySet;
         }
 
         public RuleResult Evaluate(producerType element)
@@ -31,13 +33,21 @@
                     var companyNumber = FormatCompanyRegistrationNumber(company.companyNumber);
 
                     if (!string.IsNullOrEmpty(companyNumber) &&
-                        querySet.GetLatestCompanyProducers().Any(p =>
+                        (producerQuerySet.GetLatestCompanyProducers().Any(p =>
                             {
                                 var existingCompanyRegistrationNumber = FormatCompanyRegistrationNumber(p.ProducerBusiness.CompanyDetails.CompanyNumber);
 
                                 return !string.IsNullOrEmpty(existingCompanyRegistrationNumber) &&
                                     existingCompanyRegistrationNumber == companyNumber;
-                            }))
+                            })
+                         ||
+                         migratedProducerQuerySet.GetAllMigratedProducers().Any(m =>
+                             {
+                                 var migratedProducerCompanyNumber = FormatCompanyRegistrationNumber(m.CompanyNumber);
+
+                                 return !string.IsNullOrEmpty(migratedProducerCompanyNumber) &&
+                                     migratedProducerCompanyNumber == companyNumber;
+                             })))
                     {
                         result = RuleResult.Fail(
                             string.Format(@"{0} (Companies House number {1}) has been registered previously. Check this producer's details. To register this producer obtain and add the producer's existing registration number and use the status ""A"" in the XML file.",
