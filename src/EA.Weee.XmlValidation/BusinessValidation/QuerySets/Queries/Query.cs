@@ -6,6 +6,12 @@
     {
         private T result;
         protected Func<T> query;
+        private bool hasRun;
+
+        protected Query()
+        {
+            hasRun = false;
+        }
 
         public virtual T Run()
         {
@@ -14,9 +20,10 @@
                 throw new InvalidOperationException("Cannot execute query because no query was set");
             }
 
-            if (result == null || result.Equals(default(T)))
+            if (!hasRun)
             {
                 result = query();
+                hasRun = true;
             }
 
             return result;
