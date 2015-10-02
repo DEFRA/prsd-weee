@@ -15,7 +15,6 @@
         @Html.Gds().ValidationSummary()
 
         @Html.HiddenFor(m => m.SelectedRegistrationNumber);
-        @Html.HiddenFor(m => m.SelectedComplianceYear);
         
         <p id="introJavaScriptEnabled" style="display:none;">
             Start typing the name or registration number to find a match.
@@ -46,17 +45,16 @@
             $("#introJavaScriptEnabled").show();
         });
 
-        $("#SearchTerm").autocomplete({
+        $("#SearchTerm")
+            .change(function () { $("#SelectedRegistrationNumber").val(""); })
+            .autocomplete({
             source: function (request, response) {
                 $.ajax({
                     type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    url: "/admin/producers/fetch-search-results",
-                    dataType: "json",
-                    data: "{'SearchTerm':'" + request.term + "'}",
+                    url: "/admin/producers/fetch-search-results-json",
+                    context: document.body,
+                    data: { SearchTerm : request.term, __RequestVerificationToken : $("[name=__RequestVerificationToken]").val() },
                     success: function (data) {
-                        $("#SelectedRegistrationNumber").val("");
-                        $("#SelectedComplianceYear").val("");
                         response($.map(data, function (item) { return item }))
                     }
                 });
@@ -65,7 +63,6 @@
             select: function (event, ui) {
                 $("#SearchTerm").val(ui.item.Name + ', ' + ui.item.RegistrationNumber);
                 $("#SelectedRegistrationNumber").val(ui.item.RegistrationNumber);
-                $("#SelectedComplianceYear").val(ui.item.ComplianceYear);
                 return false;
             },
             open: function () {

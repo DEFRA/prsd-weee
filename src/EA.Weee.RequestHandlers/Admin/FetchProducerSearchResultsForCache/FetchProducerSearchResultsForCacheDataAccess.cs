@@ -45,8 +45,7 @@
             return results.Select(r => new ProducerSearchResult()
                 {
                     RegistrationNumber = r.RegistrationNumber,
-                    Name = r.OrganisationName,
-                    ComplianceYear = r.MemberUpload.ComplianceYear.Value
+                    Name = r.OrganisationName
                 })
                 .ToList();
         }

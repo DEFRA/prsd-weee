@@ -14,6 +14,5 @@
         public string SearchTerm { get; set; }
 
         public string SelectedRegistrationNumber { get; set; }
-        public int? SelectedComplianceYear { get; set; }
     }
 }
