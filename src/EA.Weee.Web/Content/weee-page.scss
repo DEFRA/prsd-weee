@@ -205,6 +205,12 @@
 	}
 }
 
+// Used to right-align the registration numbers on the admin's find producer page.
+.ui-autocomplete .ui-menu-item span.registrationNumber {
+    float:right;
+    font-family: monospace;
+}
+
 // 2. Typography
 // ==========================================================================
 
