@@ -14,6 +14,8 @@
 
         public int NumberOfExistingProducers { get; set; }
 
+        public bool NoCompaniesForNewProducers { get; set; }
+
         public bool IncludeMalformedSchema { get; set; }
 
         public bool IncludeUnexpectedFooElement { get; set; }
