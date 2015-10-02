@@ -13,7 +13,7 @@
                 return
                     RuleResult.Fail(
                         string.Format(
-                            "A producer registration number for: '{0}' has been entered in the xml file but you are trying to register this producer for the very first time. Check this producer's details. To add this as a new producer remove the producer registration number or to amend  an existing producer details use status \"A\" not \"I\".",
+                            "A producer registration number for: '{0}' has been entered in the XML file but you are trying to register this producer for the very first time. Check this producer's details. To add this as a new producer remove the producer registration number or to amend  an existing producer details use status \"A\" not \"I\".",
                             producer.GetProducerName()));
             }
 

@@ -125,14 +125,18 @@
         public AuthorizationBuilder AllowInternalAreaAccess()
         {
             A.CallTo(() => fake.EnsureCanAccessInternalArea()).DoesNothing();
+            A.CallTo(() => fake.EnsureCanAccessInternalArea(A<bool>._)).DoesNothing();
             A.CallTo(() => fake.CheckCanAccessInternalArea()).Returns(true);
+            A.CallTo(() => fake.CheckCanAccessInternalArea(A<bool>._)).Returns(true);
             return this;
         }
 
         public AuthorizationBuilder DenyInternalAreaAccess()
         {
             A.CallTo(() => fake.EnsureCanAccessInternalArea()).Throws<SecurityException>();
+            A.CallTo(() => fake.EnsureCanAccessInternalArea(A<bool>._)).Throws<SecurityException>();
             A.CallTo(() => fake.CheckCanAccessInternalArea()).Returns(false);
+            A.CallTo(() => fake.CheckCanAccessInternalArea(A<bool>._)).Returns(false);
             return this;
         }
 
