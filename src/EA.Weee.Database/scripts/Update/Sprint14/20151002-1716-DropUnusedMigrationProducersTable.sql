@@ -1,0 +1,4 @@
+﻿IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MigratedProducers' AND TABLE_SCHEMA = 'Producer')
+BEGIN
+	DROP TABLE [Producer].[MigratedProducers]
+END
