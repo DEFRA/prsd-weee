@@ -13,9 +13,19 @@
         void EnsureCanAccessInternalArea();
 
         /// <summary>
+        /// Ensures that the user can access the internal area.
+        /// </summary>
+        void EnsureCanAccessInternalArea(bool requiresActiveUser);
+
+        /// <summary>
         /// Checks that the user can access the internal area.
         /// </summary>
         bool CheckCanAccessInternalArea();
+
+        /// <summary>
+        /// Checks that the user can access the internal area.
+        /// </summary>
+        bool CheckCanAccessInternalArea(bool requiresActiveUser);
 
         /// <summary>
         /// Ensures that the user can access the external area.
