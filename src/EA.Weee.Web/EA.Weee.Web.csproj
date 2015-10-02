@@ -671,6 +671,7 @@
     <Compile Include="Services\Caching\ICacheProvider.cs" />
     <Compile Include="Services\Caching\InMemoryCacheProvider.cs" />
     <Compile Include="Services\Caching\IWeeeCache.cs" />
+    <Compile Include="Services\Caching\SingleItemCache.cs" />
     <Compile Include="Services\Caching\WeeeCache.cs" />
     <Compile Include="Services\ExternalRouteService.cs" />
     <Compile Include="Services\FileConverterService.cs" />
