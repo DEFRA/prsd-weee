@@ -12,6 +12,13 @@
 
     public class XmlConverter : IXmlConverter
     {
+        private readonly IWhiteSpaceCollapser whiteSpaceCollapser;
+
+        public XmlConverter(IWhiteSpaceCollapser whiteSpaceCollapser)
+        {
+            this.whiteSpaceCollapser = whiteSpaceCollapser;
+        }
+
         public XDocument Convert(ProcessXMLFile message)
         {
             return XDocument.Parse(XmlToUtf8String(message), LoadOptions.SetLineInfo);          
@@ -29,7 +36,11 @@
         {
             try
             {
-                return (schemeType)new XmlSerializer(typeof(schemeType)).Deserialize(xdoc.CreateReader());
+                schemeType scheme = (schemeType)new XmlSerializer(typeof(schemeType)).Deserialize(xdoc.CreateReader());
+
+                whiteSpaceCollapser.Collapse(scheme);
+
+                return scheme;
             }
             catch (InvalidOperationException ex)
             {

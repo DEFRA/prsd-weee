@@ -8,5 +8,7 @@
         MigratedProducer GetMigratedProducer(string registrationNo);
 
         List<string> GetAllRegistrationNumbers();
+
+        List<MigratedProducer> GetAllMigratedProducers();
     }
 }
