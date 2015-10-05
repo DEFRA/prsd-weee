@@ -14,7 +14,7 @@
     using System.Threading.Tasks;
     using System.Web;
 
-    public class WeeeCache : IWeeeCache
+    public class WeeeCache : IWeeeCache, IProducerSearchResultProvider
     {
         private readonly ICacheProvider provider;
         private readonly Func<IWeeeClient> apiClient;
@@ -172,6 +172,11 @@
         public Task<IList<ProducerSearchResult>> FetchProducerSearchResultList()
         {
             return ProducerSearchResultList.Fetch();
+        }
+
+        Task<IList<ProducerSearchResult>> IProducerSearchResultProvider.FetchAll()
+        {
+            return FetchProducerSearchResultList();
         }
     }
 }

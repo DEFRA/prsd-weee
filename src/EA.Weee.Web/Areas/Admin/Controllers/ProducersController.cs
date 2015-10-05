@@ -16,12 +16,13 @@
     public class ProducersController : AdminController
     {
         private readonly BreadcrumbService breadcrumb;
-        private readonly IWeeeCache cache;
+        private readonly IProducerSearcher producerSearcher;
+        private const int maximumSearchResults = 10;
 
-        public ProducersController(BreadcrumbService breadcrumb, IWeeeCache cache)
+        public ProducersController(BreadcrumbService breadcrumb, IProducerSearcher producerSearcher)
         {
             this.breadcrumb = breadcrumb;
-            this.cache = cache;
+            this.producerSearcher = producerSearcher;
         }
 
         /// <summary>
@@ -51,7 +52,7 @@
                 return View(viewModel);
             }
 
-            // Check to see if a registration number and compliance year were selected.
+            // Check to see if a registration number was selected.
             if (!string.IsNullOrEmpty(viewModel.SelectedRegistrationNumber))
             {
                 return RedirectToAction("Details", new
@@ -76,7 +77,7 @@
 
             SearchResultsViewModel viewModel = new SearchResultsViewModel();
             viewModel.SearchTerm = searchTerm;
-            viewModel.Results = await FetchSearchResults(searchTerm);
+            viewModel.Results = await producerSearcher.Search(searchTerm, maximumSearchResults);
 
             return View(viewModel);
         }
@@ -94,7 +95,7 @@
 
             if (!ModelState.IsValid)
             {
-                viewModel.Results = await FetchSearchResults(viewModel.SearchTerm);
+                viewModel.Results = await producerSearcher.Search(viewModel.SearchTerm, maximumSearchResults);
 
                 return View(viewModel);
             }
@@ -124,7 +125,7 @@
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
 
-            IList<ProducerSearchResult> searchResults = await FetchSearchResults(searchTerm);
+            IList<ProducerSearchResult> searchResults = await producerSearcher.Search(searchTerm, maximumSearchResults);
 
             return Json(searchResults, JsonRequestBehavior.AllowGet);
         }
@@ -137,22 +138,6 @@
             // TODO: Data access
 
             return View((object)registrationNumber);
-        }
-
-        private async Task<IList<ProducerSearchResult>> FetchSearchResults(string searchTerm)
-        {
-            if (string.IsNullOrEmpty(searchTerm))
-            {
-                return new List<ProducerSearchResult>();
-            }
-
-            var list = await cache.FetchProducerSearchResultList();
-            
-            return list
-                .Where(i => i.RegistrationNumber.ToLowerInvariant().Contains(searchTerm.ToLowerInvariant()) || i.Name.ToLowerInvariant().Contains(searchTerm.ToLowerInvariant()))
-                .OrderBy(i => i.RegistrationNumber)
-                .Take(10)
-                .ToList();
         }
 
         private async Task SetBreadcrumb()

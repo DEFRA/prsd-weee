@@ -87,7 +87,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
+    <Compile Include="Admin\IProducerSearcher.cs" />
+    <Compile Include="Admin\IProducerSearchResultProvider.cs" />
     <Compile Include="Admin\ManageUserData.cs" />
+    <Compile Include="Admin\SimpleProducerSearcher.cs" />
     <Compile Include="Admin\ProducerSearchResult.cs" />
     <Compile Include="Admin\UserSearchDataResult.cs" />
     <Compile Include="Claims.cs" />

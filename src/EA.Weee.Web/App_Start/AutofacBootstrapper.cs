@@ -10,6 +10,7 @@
     using System.Linq;
     using System.Reflection;
     using Authorization;
+    using EA.Weee.Core.Admin;
 
     public class AutofacBootstrapper
     {
@@ -41,7 +42,9 @@
 
             // Register caching
             builder.RegisterType<InMemoryCacheProvider>().As<ICacheProvider>();
-            builder.RegisterType<WeeeCache>().As<IWeeeCache>();
+            builder.RegisterType<WeeeCache>()
+                .As<IWeeeCache>()
+                .As<IProducerSearchResultProvider>();
 
             // Breadcrumb
             builder.RegisterType<BreadcrumbService>().InstancePerRequest();
@@ -51,6 +54,9 @@
 
             // External route resolution
             builder.RegisterType<ExternalRouteService>().As<IExternalRouteService>().InstancePerRequest();
+
+            // We're going to use the simple producer searcher.
+            builder.RegisterType<SimpleProducerSearcher>().As<IProducerSearcher>().InstancePerRequest();
 
             return builder.Build();
         }
