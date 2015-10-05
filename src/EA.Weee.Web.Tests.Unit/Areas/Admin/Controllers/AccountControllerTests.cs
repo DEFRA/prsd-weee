@@ -238,7 +238,7 @@
         }
 
         [Fact]
-        public async void HttpPost_SignIn_ModelIsValid_AndSignInSucceeds_ShouldRedirectToRedirectMechanism()
+        public async void HttpPost_SignIn_ModelIsValid_AndSignInSucceeds_ShouldRedirectHomeIndex()
         {
             var model = new InternalLoginViewModel
             {
@@ -246,95 +246,20 @@
                 Password = "Test123***",
                 RememberMe = false
             };
-          
+
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAdminUserStatus>._)).Returns(UserStatus.Active);
 
             A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
               .Returns(LoginResult.Success("dsadsada"));
 
-            var result = await AccountController().SignIn(model, "AnyUrl");
+            var result = await AccountController().SignIn(model, string.Empty);
 
             Assert.IsType<RedirectToRouteResult>(result);
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("InternalUserAuthorisationRequired", redirectValues["action"]);
-            Assert.Equal("Account", redirectValues["controller"]);
-            Assert.Equal("Admin", redirectValues["area"]);
-        }
-
-        [Fact]
-        public async void HttpPost_SignIn_ModelIsValid_AndSignInSucceeds_UserActive_ShouldRedirectToRedirectAuthorisationRequired()
-        {
-            var model = new InternalLoginViewModel
-            {
-                Email = "test@sepa.org.uk",
-                Password = "Test123***",
-                RememberMe = false
-            };
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAdminUserStatus>._)).Returns(UserStatus.Active);
-
-            var result = await AccountController().InternalUserAuthorisationRequired();
-
-            Assert.IsType<RedirectToRouteResult>(result);
-
-            var redirectValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("ChooseActivity", redirectValues["action"]);
+            Assert.Equal("Index", redirectValues["action"]);
             Assert.Equal("Home", redirectValues["controller"]);
-            Assert.Equal("Admin", redirectValues["area"]);
-        }
-
-        [Fact]
-        public async void HttpPost_SignIn_ModelIsValid_AndSignInSucceeds_UserPending_ShouldRedirectToRedirectAuthorisationRequired()
-        {
-            var model = new InternalLoginViewModel
-            {
-                Email = "test@sepa.org.uk",
-                Password = "Test123***",
-                RememberMe = false
-            };
-
-            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Success("dsadsada"));
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAdminUserStatus>._)).Returns(UserStatus.Pending);
-
-            var result = await AccountController().SignIn(model, "AnyUrl");
-            
-            Assert.IsType<RedirectToRouteResult>(result);
-
-            var redirectValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("InternalUserAuthorisationRequired", redirectValues["action"]);
-            Assert.Equal("Account", redirectValues["controller"]);
-            Assert.Equal("Admin", redirectValues["area"]);
-        }
-
-        [Fact]
-        public async void HttpPost_SignIn_ModelIsValid_AndSignInSucceeds_UserRejected_ShouldRedirectToRedirectAuthorisationRequired()
-        {
-            var model = new InternalLoginViewModel
-            {
-                Email = "test@sepa.org.uk",
-                Password = "Test123***",
-                RememberMe = false
-            };
-
-            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Success("dsadsada"));
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAdminUserStatus>._)).Returns(UserStatus.Rejected);
-
-            var result = await AccountController().SignIn(model, "AnyUrl");
-
-            Assert.IsType<RedirectToRouteResult>(result);
-
-            var redirectValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("InternalUserAuthorisationRequired", redirectValues["action"]);
-            Assert.Equal("Account", redirectValues["controller"]);
             Assert.Equal("Admin", redirectValues["area"]);
         }
 
@@ -465,6 +390,42 @@
 
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
             Assert.Equal("SignIn", routeValues["action"]);
+        }
+
+        [HttpGet]
+        public void HttpGet_InternalUserAuthorisationRequired_NoStatusIsSupplied_ThrowsInvalidException()
+        {
+            Assert.ThrowsAny<InvalidOperationException>(
+                () => AccountController().InternalUserAuthorisationRequired(null));
+        }
+
+        [HttpGet]
+        public void HttpGet_InternalUserAuthorisationRequired_ActiveStatusIsSupplied_RedirectsToHomeIndex()
+        {
+            var result = AccountController().InternalUserAuthorisationRequired(UserStatus.Active);
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Index", routeValues["action"]);
+            Assert.Equal("Home", routeValues["controller"]);
+        }
+
+        [Theory]
+        [InlineData(UserStatus.Inactive)]
+        [InlineData(UserStatus.Rejected)]
+        [InlineData(UserStatus.Pending)]
+        public void HttpGet_InternalUserAuthorisationRequired_StatusOtherThanActiveIsSupplied_ReturnsViewWithStatus(UserStatus userStatus)
+        {
+            var result = AccountController().InternalUserAuthorisationRequired(userStatus);
+
+            Assert.IsType<ViewResult>(result);
+
+            var model = ((ViewResult)result).Model;
+
+            Assert.IsType<InternalUserAuthorizationRequiredViewModel>(model);
+            Assert.Equal(userStatus, ((InternalUserAuthorizationRequiredViewModel)model).Status);
         }
 
         private InternalUserCreationViewModel ValidModel()

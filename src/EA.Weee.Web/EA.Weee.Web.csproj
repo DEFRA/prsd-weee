@@ -452,7 +452,6 @@
     <Content Include="Areas\Scheme\Views\MemberRegistration\Summary.cshtml" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\AuthorisationRequired.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\EditScheme.cshtml" />
-    <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\ConfirmRejection.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ManageOrganisationUser.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ViewOrganisationDetails.cshtml" />
