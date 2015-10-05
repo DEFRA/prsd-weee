@@ -613,6 +613,7 @@
     <Compile Include="Areas\Admin\ViewModels\Home\InternalUserActivityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\ResetPasswordModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\ResetPasswordRequestViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\DetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\SearchResultsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\SearchViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmRejectionViewModel.cs" />

@@ -1,9 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using EA.Weee.Api.Client;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
+    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using System;
@@ -17,12 +20,14 @@
     {
         private readonly BreadcrumbService breadcrumb;
         private readonly IProducerSearcher producerSearcher;
+        private readonly Func<IWeeeClient> apiClient;
         private const int maximumSearchResults = 10;
 
-        public ProducersController(BreadcrumbService breadcrumb, IProducerSearcher producerSearcher)
+        public ProducersController(BreadcrumbService breadcrumb, IProducerSearcher producerSearcher, Func<IWeeeClient> apiClient)
         {
             this.breadcrumb = breadcrumb;
             this.producerSearcher = producerSearcher;
+            this.apiClient = apiClient;
         }
 
         /// <summary>
@@ -135,9 +140,21 @@
         {
             await SetBreadcrumb();
 
-            // TODO: Data access
+            ProducerDetails producerDetails;
+            using (IWeeeClient client = apiClient())
+            {
+                GetProducerDetails request = new GetProducerDetails()
+                {
+                    RegistrationNumber = registrationNumber
+                };
 
-            return View((object)registrationNumber);
+                producerDetails = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            DetailsViewModel viewModel = new DetailsViewModel();
+            viewModel.Details = producerDetails;
+
+            return View(viewModel);
         }
 
         private async Task SetBreadcrumb()

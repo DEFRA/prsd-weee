@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using EA.Weee.Api.Client;
     using EA.Weee.Core.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
@@ -22,8 +23,9 @@
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
             IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
 
             // Act
             ActionResult result = await controller.Search();
@@ -41,8 +43,9 @@
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
             IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
 
             SearchViewModel viewModel = new SearchViewModel();
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -63,8 +66,9 @@
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
             IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
 
             SearchViewModel viewModel = new SearchViewModel();
             viewModel.SearchTerm = "testSearchTerm";
@@ -87,8 +91,9 @@
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
             IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
 
             SearchViewModel viewModel = new SearchViewModel();
             viewModel.SearchTerm = "testSearchTerm, WEE/AA1111AA";
@@ -124,7 +129,9 @@
             A.CallTo(() => producerSearcher.Search("testSearchTerm", 10))
                 .Returns(fakeResults);
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher);
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
 
             // Act
             ActionResult result = await controller.SearchResults("testSearchTerm");
@@ -160,7 +167,9 @@
             A.CallTo(() => producerSearcher.Search("testSearchTerm", 10))
                 .Returns(fakeResults);
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher);
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
 
             SearchResultsViewModel viewModel = new SearchResultsViewModel();
             viewModel.SearchTerm = "testSearchTerm";
@@ -188,7 +197,9 @@
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
             IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher);
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
 
             SearchResultsViewModel viewModel = new SearchResultsViewModel()
             {
