@@ -2,10 +2,9 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Base;
-    using System;
     using System.Web.Mvc;
     using Api.Client;
+    using Base;
     using Core.Shared;
     using Infrastructure;
     using ViewModels.Home;
@@ -13,7 +12,7 @@
 
     public class HomeController : AdminController
     {
-        private readonly Func<IWeeeClient> apiClient; 
+        private readonly Func<IWeeeClient> apiClient;
 
         public HomeController(Func<IWeeeClient> apiClient)
         {
@@ -31,12 +30,13 @@
                 {
                     case UserStatus.Active:
                         return RedirectToAction("ChooseActivity", "Home");
-                    case UserStatus.Inactive: 
-                    case UserStatus.Pending: 
+                    case UserStatus.Inactive:
+                    case UserStatus.Pending:
                     case UserStatus.Rejected:
                         return RedirectToAction("InternalUserAuthorisationRequired", "Account", new { userStatus });
                     default:
-                        throw new NotSupportedException(string.Format("Cannot determine result for user with status '{0}'", userStatus));
+                        throw new NotSupportedException(
+                            string.Format("Cannot determine result for user with status '{0}'", userStatus));
                 }
             }
         }
