@@ -109,6 +109,7 @@
                 ComplianceYear = viewModel.ComplianceYear, 
                 NumberOfNewProducers = viewModel.NumberOfNewProducers, 
                 NumberOfExistingProducers = viewModel.NumberOfExistingProducers, 
+                NoCompaniesForNewProducers = viewModel.NoCompaniesForNewProducers,
                 IncludeMalformedSchema = viewModel.IncludeMalformedSchema, 
                 IncludeUnexpectedFooElement = viewModel.IncludeUnexpectedFooElement, 
                 IgnoreStringLengthConditions = viewModel.IgnoreStringLengthConditions, 
