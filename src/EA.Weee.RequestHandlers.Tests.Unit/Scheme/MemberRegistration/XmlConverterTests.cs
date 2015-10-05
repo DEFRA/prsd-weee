@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
+    using FakeItEasy;
     using System;
     using System.Linq;
     using System.Text;
@@ -44,7 +45,8 @@
 
         private XmlConverter XmlConverter()
         {
-            return new XmlConverter();
+            IWhiteSpaceCollapser whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
+            return new XmlConverter(whiteSpaceCollapser);
         }
     }
 }
