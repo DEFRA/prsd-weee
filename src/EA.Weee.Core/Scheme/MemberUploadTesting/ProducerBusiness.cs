@@ -11,13 +11,13 @@
             CorrespondentForNotices = new CorrespondentForNotices();
         }
 
-        public static ProducerBusiness Create(ISettings settings)
+        public static ProducerBusiness Create(ISettings settings, bool noCompany)
         {
             ProducerBusiness producerBusiness = new ProducerBusiness();
             
             producerBusiness.CorrespondentForNotices = CorrespondentForNotices.Create(settings);
 
-            if (RandomHelper.OneIn(2))
+            if (noCompany || RandomHelper.OneIn(2))
             {
                 producerBusiness.Partnership = Partnership.Create(settings);
             }

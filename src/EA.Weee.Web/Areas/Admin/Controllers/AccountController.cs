@@ -194,24 +194,23 @@
                 return Redirect(returnUrl);
             }
 
-            return RedirectToAction("InternalUserAuthorisationRequired", "Account", new { area = "Admin" });
+            return RedirectToAction("Index", "Home", new { area = "Admin" });
         }
 
         [HttpGet]
-        public async Task<ActionResult> InternalUserAuthorisationRequired()
+        public ActionResult InternalUserAuthorisationRequired(UserStatus? userStatus)
         {
-            using (var client = apiClient())
+            if (!userStatus.HasValue)
             {
-                var status = await client.SendAsync(User.GetAccessToken(), new GetAdminUserStatus(User.GetUserId()));
-
-                if (status == UserStatus.Active)
-                {
-                    return RedirectToAction("ChooseActivity", "Home", new { area = "Admin" });
-                }
-
-                InternalUserAuthorizationRequiredViewModel model = new InternalUserAuthorizationRequiredViewModel() { Status = status };
-                return View(model);
+                throw new InvalidOperationException("User status not recognised");
             }
+
+            if (userStatus == UserStatus.Active)
+            {
+                return RedirectToAction("Index", "Home", new { area = "Admin" });
+            }
+
+            return View(new InternalUserAuthorizationRequiredViewModel { Status = userStatus.Value });
         }
 
         [HttpGet]

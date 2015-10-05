@@ -56,7 +56,9 @@
             long initialSeed = GetCurrentSeed();
             long expectedSeed = ExpectedSeedAfterThisXml(validXmlString, initialSeed);
 
-            XmlConverter xmlConverter = new XmlConverter();
+            IWhiteSpaceCollapser whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
+
+            XmlConverter xmlConverter = new XmlConverter(whiteSpaceCollapser);
             var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
 
             var producerCharges = new Hashtable();
@@ -74,7 +76,7 @@
             }
 
             // act
-            IEnumerable<Producer> producers = await new GenerateFromXml(new XmlConverter(), context).GenerateProducers(message, memberUpload, producerCharges);
+            IEnumerable<Producer> producers = await new GenerateFromXml(xmlConverter, context).GenerateProducers(message, memberUpload, producerCharges);
 
             // assert
             long newSeed = GetCurrentSeed();

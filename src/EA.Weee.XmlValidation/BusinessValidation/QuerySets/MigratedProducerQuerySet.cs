@@ -55,5 +55,12 @@
             return migratedProducers
                 .SingleOrDefault(p => p.ProducerRegistrationNumber == registrationNo);
         }
+
+        public List<MigratedProducer> GetAllMigratedProducers()
+        {
+            EnsureDataFetched();
+
+            return migratedProducers;
+        }
     }
 }

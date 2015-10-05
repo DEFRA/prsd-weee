@@ -9,6 +9,8 @@
 
         public virtual string ProducerName { get; private set; }
 
+        public virtual string CompanyNumber { get; private set; }
+
         protected MigratedProducer()
         {          
         }
