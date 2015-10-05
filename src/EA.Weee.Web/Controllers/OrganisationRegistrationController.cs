@@ -59,7 +59,7 @@
         [HttpGet]
         public async Task<ActionResult> SelectOrganisation(string name)
         {
-            var selectOrganisationViewModel = BuildSelectOrganisationViewModel(name, new SelectOrganisationRadioButtons());
+            var selectOrganisationViewModel = BuildSelectOrganisationViewModel(name, new StringGuidRadioButtons());
 
             if (string.IsNullOrEmpty(name))
             {
@@ -87,15 +87,9 @@
 
                     var orgsKeyValuePairs =
                             organisationSearchResultData.Results.ToList().Select(
-                            o => new KeyValuePair<string, string>(o.DisplayName, o.Id.ToString()));
+                            o => new KeyValuePair<string, Guid>(o.DisplayName, o.Id));
 
-                    orgsKeyValuePairs = orgsKeyValuePairs.Concat(new[]
-                    {
-                        new KeyValuePair<string, string>(SelectOrganisationAction.CreateNewOrg, SelectOrganisationAction.CreateNewOrg), 
-                        new KeyValuePair<string, string>(SelectOrganisationAction.TryAnotherSearch, SelectOrganisationAction.TryAnotherSearch)
-                    });
-
-                    var orgRadioButtons = new SelectOrganisationRadioButtons(orgsKeyValuePairs);
+                    var orgRadioButtons = new StringGuidRadioButtons(orgsKeyValuePairs);
 
                     var model = BuildSelectOrganisationViewModel(name, orgRadioButtons);
 
@@ -122,17 +116,7 @@
                 return View(model);
             }
 
-            if (model.Organisations.SelectedValue == SelectOrganisationAction.TryAnotherSearch)
-            {
-                return RedirectToAction("SearchOrganisation", "OrganisationRegistration");
-            }
-
-            if (model.Organisations.SelectedValue == SelectOrganisationAction.CreateNewOrg)
-            {
-                return RedirectToAction("Type", new { searchedText = model.Name });
-            }
-  
-            var selectedOrgId = new Guid(model.Organisations.SelectedValue);
+            var selectedOrgId = model.Organisations.SelectedValue;
             return RedirectToAction("JoinOrganisation", "OrganisationRegistration",
                 new { OrganisationID = selectedOrgId });
         }
@@ -145,27 +129,6 @@
                 SearchedText = name,
                 Name = name,
             };
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult NotFoundOrganisation(NotFoundOrganisationViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-                if (model.ActivityOptions.SelectedValue == NotFoundOrganisationAction.TryAnotherSearch)
-                {
-                    return RedirectToAction("SearchOrganisation", "OrganisationRegistration");
-                }
-
-                if (model.ActivityOptions.SelectedValue == NotFoundOrganisationAction.CreateNewOrg)
-                {
-                    return RedirectToAction("Type", new { searchedText = model.SearchedText });
-                }
-
             return View(model);
         }
 
@@ -216,7 +179,7 @@
                     switch (organisationType)
                     {
                         case OrganisationType.SoleTraderOrIndividual:
-                            return RedirectToAction("SoleTraderDetails", new { searchedText = model.SearchedText});
+                            return RedirectToAction("SoleTraderDetails", new { searchedText = model.SearchedText });
                         case OrganisationType.RegisteredCompany:
                             return RedirectToAction("RegisteredCompanyDetails", new { searchedText = model.SearchedText });
                         case OrganisationType.Partnership:
@@ -270,7 +233,7 @@
                     UpdateOrganisationTypeDetails updateRequest = new UpdateOrganisationTypeDetails(
                         model.OrganisationId.Value,
                         OrganisationType.SoleTraderOrIndividual,
-                        String.Empty, 
+                        String.Empty,
                         model.BusinessTradingName,
                         String.Empty);
 
@@ -311,7 +274,7 @@
             }
             return View(new PartnershipDetailsViewModel { BusinessTradingName = searchedText });
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> PartnershipDetails(PartnershipDetailsViewModel model)
@@ -810,7 +773,7 @@
             }
         }
 
-        private SelectOrganisationViewModel BuildSelectOrganisationViewModel(string name, SelectOrganisationRadioButtons organisationRadioButtons)
+        private SelectOrganisationViewModel BuildSelectOrganisationViewModel(string name, StringGuidRadioButtons organisationRadioButtons)
         {
             return new SelectOrganisationViewModel
             {

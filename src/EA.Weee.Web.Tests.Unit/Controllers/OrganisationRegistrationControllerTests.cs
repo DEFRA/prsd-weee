@@ -434,46 +434,6 @@
         }
 
         [Fact]
-        public void PostNotFoundOrganisation_TryAnotherSearchActionSelected_ShouldRedirectToTypeView()
-        {
-            var model = new NotFoundOrganisationViewModel
-            {
-                SearchedText = "Test",
-                ActivityOptions = new RadioButtonStringCollectionViewModel
-                {
-                    PossibleValues = new[] { NotFoundOrganisationAction.TryAnotherSearch, NotFoundOrganisationAction.CreateNewOrg },
-                    SelectedValue = NotFoundOrganisationAction.TryAnotherSearch
-                }
-            };
-
-            var result = OrganisationRegistrationController().NotFoundOrganisation(model);
-
-            var redirectRouteResult = (RedirectToRouteResult)result;
-
-            Assert.Equal(redirectRouteResult.RouteValues["action"], "SearchOrganisation");
-        }
-
-        [Fact]
-        public void PostNotFoundOrganisation_CreateNewOrgSelected_ShouldRedirectToTypeView()
-        {
-            var model = new NotFoundOrganisationViewModel
-            {
-                SearchedText = "xyz ltd.",
-                Name = "xyz ltd.",
-                ActivityOptions = new RadioButtonStringCollectionViewModel
-                {
-                    PossibleValues = new[] { NotFoundOrganisationAction.TryAnotherSearch, NotFoundOrganisationAction.CreateNewOrg },
-                    SelectedValue = NotFoundOrganisationAction.CreateNewOrg
-                }
-            };
-
-            var result = OrganisationRegistrationController().NotFoundOrganisation(model);
-            var redirectRouteResult = (RedirectToRouteResult)result;
-
-            Assert.Equal(redirectRouteResult.RouteValues["action"], "Type");
-        }
-       
-        [Fact]
         public async void GetSearchOrganisation_NoMatchingOrganisation_ShouldRedirectToNotFoundOrganisationView()
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<FindMatchingOrganisations>._))
@@ -509,77 +469,19 @@
             Assert.NotNull(model);
             Assert.IsType<SelectOrganisationViewModel>(model);
         }
-
-        [Fact]
-        public void PostSelectOrganisation_TryAnotherSearchSelected_ShouldRedirectToSearch()
-        {
-            var model = new SelectOrganisationViewModel
-            {
-                Organisations = new SelectOrganisationRadioButtons
-                {
-                    PossibleValues = new List<RadioButtonPair<string, string>>
-                    {
-                        new RadioButtonPair<string, string>("Test ltd.", Guid.NewGuid().ToString()),
-                        new RadioButtonPair<string, string>(SelectOrganisationAction.TryAnotherSearch,
-                            SelectOrganisationAction.TryAnotherSearch),
-                        new RadioButtonPair<string, string>(SelectOrganisationAction.CreateNewOrg,
-                            SelectOrganisationAction.CreateNewOrg)
-                    },
-                    SelectedValue = SelectOrganisationAction.TryAnotherSearch
-                }
-            };
-
-            var result = 
-                    OrganisationRegistrationController()
-                        .SelectOrganisation(model);
-
-            var redirectRouteResult = (RedirectToRouteResult)result;
-
-            Assert.Equal(redirectRouteResult.RouteValues["action"], "SearchOrganisation");
-        }
-
-        [Fact]
-        public void PostSelectOrganisation_CreateNewOrgSelected_ShouldRedirectToTypeOrg()
-        {
-            var model = new SelectOrganisationViewModel
-            {
-                Organisations = new SelectOrganisationRadioButtons
-                {
-                    PossibleValues = new List<RadioButtonPair<string, string>>
-                    {
-                        new RadioButtonPair<string, string>("Test ltd.", Guid.NewGuid().ToString()),
-                        new RadioButtonPair<string, string>(SelectOrganisationAction.TryAnotherSearch,
-                            SelectOrganisationAction.TryAnotherSearch),
-                        new RadioButtonPair<string, string>(SelectOrganisationAction.CreateNewOrg,
-                            SelectOrganisationAction.CreateNewOrg)
-                    },
-                    SelectedValue = SelectOrganisationAction.CreateNewOrg
-                },
-                SearchedText = "Test"
-            };
-
-            var result = OrganisationRegistrationController().SelectOrganisation(model);
-            var redirectRouteResult = (RedirectToRouteResult)result;
-
-            Assert.Equal(redirectRouteResult.RouteValues["action"], "Type");
-        }
       
         [Fact]
         public void PostSelectOrganisation_AnyOrganisationSelected_ShouldRedirectToJoinOrganisation()
         {
-            var orgId = Guid.NewGuid().ToString();
+            var orgId = Guid.NewGuid();
 
             var model = new SelectOrganisationViewModel
             {
-                Organisations = new SelectOrganisationRadioButtons
+                Organisations = new StringGuidRadioButtons()
                 {
-                    PossibleValues = new List<RadioButtonPair<string, string>>
+                    PossibleValues = new List<RadioButtonPair<string, Guid>>
                     {
-                        new RadioButtonPair<string, string>("Test ltd.", orgId),
-                        new RadioButtonPair<string, string>(SelectOrganisationAction.TryAnotherSearch,
-                            SelectOrganisationAction.TryAnotherSearch),
-                        new RadioButtonPair<string, string>(SelectOrganisationAction.CreateNewOrg,
-                            SelectOrganisationAction.CreateNewOrg)
+                        new RadioButtonPair<string, Guid>("Test ltd.", orgId),
                     },
                     SelectedValue = orgId
                 },
