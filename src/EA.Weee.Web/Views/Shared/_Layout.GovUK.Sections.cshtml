@@ -31,12 +31,43 @@
     <div class="footer_agencies">
         @if (ViewBag.ShowLinksToAgencies ?? true)
         {
-            <div>
-                <p>Environment Agency (England) helpline: 03708 506 506 – Producer Responsibility Regulatory Services</p>
-                <p>Scottish Environment Protection Agency helpline: 01786 457700 - Producer Compliance and Waste Shipments Unit</p>
-                <p>Northern Ireland Environment Agency helpline: 02 890 569338 - Producer Responsibility Unit</p>
-                <p>Natural Resources Wales helpline: 03000 65 3096 - Producer Responsibility Unit</p>
+            <h1 class="heading-medium">Contact us</h1>
+            <div class="grid-row">
+
+                <div class="column-half">
+                    <h1 class="heading-small">England</h1>
+                    <span>
+                        Environment Agency<br />
+                        Producer Responsibility Regulatory Services<br />
+                        Telephone: 03708 506 506<br />
+                    </span>
+
+                    <h1 class="heading-small">Scotland</h1>
+                    <span>
+                        Scottish Environment Protection Agency<br />
+                        Producer Compliance and Waste Shipments Unit<br />
+                        Telephone: 01786 457700<br />
+                    </span>
+                </div>
+
+                <div class="column-half">
+                    <h1 class="heading-small">Northern Ireland</h1>
+                    <span>
+                        Northern Ireland Environment Agency<br />
+                        Producer Responsibility Unit<br />
+                        Telephone: 02 890 569338<br />
+                    </span>
+
+                    <h1 class="heading-small">Wales</h1>
+                    <span>
+                        Natural Resources Wales<br />
+                        Producer Responsibility Unit<br />
+                        Telephone: 03000 65 3096<br />
+                    </span>
+                </div>
+
             </div>
+            
             <hr />
         }
     </div>
@@ -54,7 +85,7 @@
             </li>
             <li>
                 @Html.ActionLink("Privacy",
-                        "Privacy", "NewUser", new { area = string.Empty },new { target = "_blank" })
+                        "Privacy", "NewUser", new { area = string.Empty }, new { target = "_blank" })
             </li>
         }
         <li>
