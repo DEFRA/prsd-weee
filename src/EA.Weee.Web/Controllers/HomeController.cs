@@ -35,7 +35,7 @@
 
                 if (userIsInternal)
                 {
-                    return RedirectToAction("ChooseActivity", "Home", new { Area = "admin" });
+                    return RedirectToAction("Index", "Home", new { Area = "Admin" });
                 }
                 else
                 {
