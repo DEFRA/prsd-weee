@@ -28,7 +28,8 @@
             ProcessXMLFile request = new ProcessXMLFile(A<Guid>._, xml);
 
             IProducerChargeCalculator calculator = A.Fake<IProducerChargeCalculator>();
-            XmlConverter xmlConverter = new XmlConverter();
+            IWhiteSpaceCollapser whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
+            XmlConverter xmlConverter = new XmlConverter(whiteSpaceCollapser);
             XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(xmlConverter, calculator);
 
             // Act
@@ -52,7 +53,8 @@
             ProcessXMLFile request = new ProcessXMLFile(A<Guid>._, xml);
 
             IProducerChargeCalculator calculator = A.Fake<IProducerChargeCalculator>();
-            XmlConverter xmlConverter = new XmlConverter();
+            IWhiteSpaceCollapser whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
+            XmlConverter xmlConverter = new XmlConverter(whiteSpaceCollapser);
             XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(xmlConverter, calculator);
 
             // Act
@@ -86,7 +88,8 @@
             A.CallTo(() => calculator.CalculateCharge(A<producerType>._, A<int>._))
                 .ReturnsNextFromSequence(producerCharge1, producerCharge2, producerCharge3, producerCharge4, producerCharge5);
 
-            XmlConverter xmlConverter = new XmlConverter();
+            IWhiteSpaceCollapser whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
+            XmlConverter xmlConverter = new XmlConverter(whiteSpaceCollapser);
 
             XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(xmlConverter, calculator);
 
