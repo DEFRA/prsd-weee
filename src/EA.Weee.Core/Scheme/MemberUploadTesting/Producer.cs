@@ -32,8 +32,8 @@
             ProducerBusiness = new ProducerBusiness();
             AuthorizedRepresentative = new AuthorizedRepresentative();
         }
-
-        public static Producer Create(ProducerSettings settings)
+        
+        public static Producer Create(ProducerSettings settings, bool noCompany)
         {
             Producer producer = new Producer();
 
@@ -95,7 +95,7 @@
                 }
             }
 
-            producer.ProducerBusiness = ProducerBusiness.Create(settings);
+            producer.ProducerBusiness = ProducerBusiness.Create(settings, noCompany);
             producer.AuthorizedRepresentative = AuthorizedRepresentative.Create(settings);
 
             if (RandomHelper.OneIn(2))

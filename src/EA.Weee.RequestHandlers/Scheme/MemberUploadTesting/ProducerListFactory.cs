@@ -56,7 +56,7 @@
                 producerSettings.IsNew = true;
                 producerSettings.IgnoreStringLengthConditions = listSettings.IgnoreStringLengthConditions;
 
-                Producer producer = Producer.Create(producerSettings);
+                Producer producer = Producer.Create(producerSettings, listSettings.NoCompaniesForNewProducers);
 
                 producerList.Producers.Add(producer);
             }
@@ -88,7 +88,7 @@
                 producerSettings.RegistrationNumber = registrationNumbers[index];
                 producerSettings.IgnoreStringLengthConditions = listSettings.IgnoreStringLengthConditions;
 
-                Producer producer = Producer.Create(producerSettings);
+                Producer producer = Producer.Create(producerSettings, listSettings.NoCompaniesForNewProducers);
 
                 producerList.Producers.Add(producer);
             }

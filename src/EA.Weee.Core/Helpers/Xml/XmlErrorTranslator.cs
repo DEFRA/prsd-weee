@@ -20,6 +20,18 @@
         private const string IncompleteContentPattern =
            @"^The element '([^']*)' in namespace '[^']*' has incomplete content. List of possible elements expected: '[^']*' in namespace '[^']*'.$";
 
+        private static readonly Regex EntityNameParsingErrorPattern = new Regex(
+            @"^An error occurred while parsing EntityName\. Line (?<LineNumber>\d+), position \d+\.$",
+            RegexOptions.Compiled);
+
+        private static readonly Regex UnterminatedCharacterEntityReferencePattern = new Regex(
+            @"^'[^']*' is an unexpected token\. The expected token is ';'\. Line (?<LineNumber>\d+), position \d+\.$",
+            RegexOptions.Compiled);
+
+        private static readonly Regex InvalidCharacterEntityReferencePattern = new Regex(
+            @"^Reference to undeclared entity '[^']*'\. Line (?<LineNumber>\d+), position \d+\.$",
+            RegexOptions.Compiled);
+
         private const string ErrorInXmlDocumentPattern = @"^There is an error in XML document \(([0-9]*)\,\s([0-9]*)\)\.$";
 
         public string MakeFriendlyErrorMessage(string message)
@@ -30,6 +42,7 @@
         public string MakeFriendlyErrorMessage(XElement sender, string message, int lineNumber)
         {
             string resultErrorMessage = message;
+            Match match = null;
 
             if (Regex.IsMatch(message, DataAtTheRoolLevelIsInvalid))
             {
@@ -55,6 +68,21 @@
             {
                 resultErrorMessage = MakeFriendlyErrorInXmlDocumentMessage(message);
             }
+            else if (TestRegex(message, EntityNameParsingErrorPattern, out match))
+            {
+                lineNumber = int.Parse(match.Groups["LineNumber"].Value);
+                resultErrorMessage = "Your XML file is not encoded correctly. Check for any characters which need to be encoded. For example, replace ampersand (&) characters with &amp;.";
+            }
+            else if (TestRegex(message, UnterminatedCharacterEntityReferencePattern, out match))
+            {
+                lineNumber = int.Parse(match.Groups["LineNumber"].Value);
+                resultErrorMessage = "Your XML file is not encoded correctly. Check for any characters which need to be encoded. For example, replace ampersand (&) characters with &amp;.";
+            }
+            else if (TestRegex(message, InvalidCharacterEntityReferencePattern, out match))
+            {
+                lineNumber = int.Parse(match.Groups["LineNumber"].Value);
+                resultErrorMessage = "Your XML file is not encoded correctly. Check for any characters which need to be encoded. For example, replace ampersand (&) characters with &amp;.";
+            }
 
             var registrationNo = GetRegistrationNumber(sender);
             var registrationNoText = !string.IsNullOrEmpty(registrationNo) ? string.Format("Producer {0}: ", registrationNo) : string.Empty;
@@ -62,6 +90,12 @@
             var lineNumberText = lineNumber > 0 ? string.Format(" (XML line {0})", lineNumber) : string.Empty;
 
             return string.Format("{0}{1}{2}", registrationNoText, resultErrorMessage, lineNumberText);
+        }
+
+        private static bool TestRegex(string message, Regex regex, out Match match)
+        {
+            match = regex.Match(message);
+            return match.Success;
         }
 
         private string MakeFriendlyGeneralConstraintFailureMessage(XElement sender, string exceptionMessage)
