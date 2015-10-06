@@ -34,9 +34,27 @@
         }
 
         [HttpGet]
-        public ActionResult SearchOrganisation()
+        public async Task<ActionResult> SearchOrganisation()
         {
-            return View();
+            IEnumerable<OrganisationUserData> organisations = await GetAccessibleOrganisations();
+
+            var model = new SearchOrganisationViewModel { ShowPerformAnotherActivityLink = organisations.Count() > 1 };
+
+            return View(model);
+        }
+
+        private async Task<IEnumerable<OrganisationUserData>> GetAccessibleOrganisations()
+        {
+            List<OrganisationUserData> accessibleOrganisations;
+
+            using (var client = apiClient())
+            {
+                accessibleOrganisations = await
+                 client.SendAsync(
+                     User.GetAccessToken(),
+                     new GetUserOrganisationsByStatus(new int[1] { (int)UserStatus.Active }, new int[1] { (int)OrganisationStatus.Complete }));
+            }
+            return accessibleOrganisations;
         }
 
         [HttpPost]
