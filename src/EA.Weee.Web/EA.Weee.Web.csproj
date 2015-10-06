@@ -452,7 +452,6 @@
     <Content Include="Areas\Scheme\Views\MemberRegistration\Summary.cshtml" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\AuthorisationRequired.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\EditScheme.cshtml" />
-    <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\ConfirmRejection.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ManageOrganisationUser.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ViewOrganisationDetails.cshtml" />
@@ -476,6 +475,9 @@
     <Content Include="Areas\Admin\Views\User\EditUser.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ManageContactDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Account\AccountActivationRequested.cshtml" />
+    <Content Include="Areas\Admin\Views\Producers\Search.cshtml" />
+    <Content Include="Areas\Admin\Views\Producers\SearchResults.cshtml" />
+    <Content Include="Areas\Admin\Views\Producers\Details.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\download-link-tracker.js" />
@@ -601,6 +603,7 @@
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
     <Compile Include="Areas\Admin\Controllers\Base\AdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProducersController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\InternalUserAuthorizationRequiredViewModel.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeController.cs" />
@@ -610,6 +613,8 @@
     <Compile Include="Areas\Admin\ViewModels\Home\InternalUserActivityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\ResetPasswordModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\ResetPasswordRequestViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\SearchResultsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\SearchViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmRejectionViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmSchemeRejection.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ManageSchemesViewModel.cs" />
@@ -665,6 +670,7 @@
     <Compile Include="Services\Caching\ICacheProvider.cs" />
     <Compile Include="Services\Caching\InMemoryCacheProvider.cs" />
     <Compile Include="Services\Caching\IWeeeCache.cs" />
+    <Compile Include="Services\Caching\SingleItemCache.cs" />
     <Compile Include="Services\Caching\WeeeCache.cs" />
     <Compile Include="Services\ExternalRouteService.cs" />
     <Compile Include="Services\FileConverterService.cs" />
