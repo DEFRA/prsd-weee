@@ -469,7 +469,46 @@
             Assert.NotNull(model);
             Assert.IsType<SelectOrganisationViewModel>(model);
         }
-      
+
+        [Fact]
+        public async void GetSearchOrganisation_OnlyOneAccessibleOrganisation_ShowPerformAnotherActivityShouldBeFalse()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
+               .Returns(new List<OrganisationUserData>
+               {
+                   new OrganisationUserData()
+               });
+
+            var result =
+                await
+                    OrganisationRegistrationController().SearchOrganisation();
+
+            var model = ((ViewResult)result).Model as SearchOrganisationViewModel;
+
+            Assert.NotNull(model);
+            Assert.False(model.ShowPerformAnotherActivityLink);
+        }
+
+        [Fact]
+        public async void GetSearchOrganisation_MoreThanOneAccessibleOrganisation_ShowPerformAnotherActivityShouldBeTrue()
+        {
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
+               .Returns(new List<OrganisationUserData>
+               {
+                   new OrganisationUserData(),
+                   new OrganisationUserData()
+               });
+
+            var result =
+                await
+                    OrganisationRegistrationController().SearchOrganisation();
+
+            var model = ((ViewResult)result).Model as SearchOrganisationViewModel;
+
+            Assert.NotNull(model);
+            Assert.True(model.ShowPerformAnotherActivityLink);
+        }
+
         [Fact]
         public void PostSelectOrganisation_AnyOrganisationSelected_ShouldRedirectToJoinOrganisation()
         {
