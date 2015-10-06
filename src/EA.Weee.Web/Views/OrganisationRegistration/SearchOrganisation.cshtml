@@ -5,21 +5,27 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="heading-large">Let's try and find the organisation for you...</h1>
+        <h1 class="heading-large">Add your organisation</h1>
     </header>
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.ShowPerformAnotherActivityLink)
         @Html.Gds().ValidationSummary()
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SearchedText)">
             @Html.Gds().LabelFor(m => m.SearchedText)
             @Html.Gds().ValidationMessageFor(m => m.SearchedText)
             @Html.Gds().TextBoxFor(m => m.SearchedText, new { @maxlength = "2048" })
             <button type="submit" class="search-button">
-                <img src="@Url.Content("~/Content/govuk_toolkit/images/icon-search.png")" alt="Search"/>
+                <img src="@Url.Content("~/Content/govuk_toolkit/images/icon-search.png")" alt="Search" />
             </button>
         </div>
-   
+    }
+    @if (Model.ShowPerformAnotherActivityLink)
+    {
+        <p>
+            @Html.ActionLink("Perform another activity", "Index", "Organisation")
+        </p>
     }
 }
 

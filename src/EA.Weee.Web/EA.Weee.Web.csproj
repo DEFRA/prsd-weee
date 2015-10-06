@@ -566,7 +566,6 @@
     <Content Include="Views\Account\ResetPasswordRequest.cshtml" />
     <Content Include="Views\Account\ResetPasswordInstruction.cshtml" />
     <Content Include="Views\OrganisationRegistration\NotFoundOrganisation.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\SelectOrganisationRadioButtons.cshtml" />
     <Content Include="Views\NewUser\Cookies.cshtml" />
     <Content Include="Views\NewUser\Feedback.cshtml" />
     <Content Include="Views\Shared\_Layout.GovUK.Sections.WithoutFeedbackBanner.cshtml" />
@@ -701,7 +700,6 @@
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
-    <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationAction.cs" />
     <Compile Include="ViewModels\NewUser\FeedbackOptions.cs" />
     <Compile Include="ViewModels\NewUser\FeedbackViewModel.cs" />
     <Compile Include="ViewModels\NewUser\UserCreationViewModel.cs" />
@@ -712,7 +710,6 @@
     <Compile Include="ViewModels\OrganisationRegistration\Details\SoleTraderDetailsViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\ContactPersonViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\JoinOrganisationConfirmationViewModel.cs" />
-    <Compile Include="ViewModels\OrganisationRegistration\NotFoundOrganisationAction.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\SearchOrganisationViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\NotFoundOrganisationViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\OrganisationSummaryViewModel.cs" />

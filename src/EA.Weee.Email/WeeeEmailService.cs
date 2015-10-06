@@ -94,6 +94,7 @@
             {
                 OrganisationName = organisationUser.Organisation.OrganisationName,
                 Approved = organisationUser.UserStatus == UserStatus.Active,
+                ExternalUserLoginUrl = configuration.ExternalUserLoginUrl
             };
 
             EmailContent content = new EmailContent()
