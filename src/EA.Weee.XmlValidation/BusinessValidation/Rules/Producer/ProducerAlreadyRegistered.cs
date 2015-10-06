@@ -32,7 +32,7 @@
                     }
            
                     var errorMessage = string.Format(
-                        "{0} {1} is already registered with {2} with obligation type: {3}.",
+                        "{0} {1} is already registered with {2} with obligation type: {3}. Review your file.",
                         producer.GetProducerName(),
                         producer.registrationNo,
                         schemeName,
