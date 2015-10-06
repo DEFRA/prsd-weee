@@ -11,10 +11,6 @@
         </h1>
     </header>
 
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(m => m.SearchedText)
-    @Html.HiddenFor(m => m.Name)
-
     <p>We found no search results for '@Model.Name'.</p>
 
     <div class="form-group">
