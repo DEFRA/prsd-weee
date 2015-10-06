@@ -1,0 +1,85 @@
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.SearchViewModel
+@{
+    ViewBag.Title = "Find producer";
+}
+
+@section main_content {
+
+    <header class="hgroup">
+        <h1 class="heading-large">Find producer</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        @Html.HiddenFor(m => m.SelectedRegistrationNumber);
+        
+        <p id="introJavaScriptEnabled" style="display:none;">
+            Start typing the name or registration number to find a match.
+        </p>
+        <noscript>
+            <p>Type the name or registration number to find a match.</p>
+        </noscript>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SearchTerm)">
+            @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "visuallyhidden" })
+            @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
+            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { style = "width:100%", placeholder = "Producer name or registration number"})
+        </div>
+        
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+    }
+
+    <p>
+        @Html.ActionLink("Back", "ChooseActivity", "Home")
+    </p>
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#introJavaScriptEnabled").show();
+        });
+
+        $("#SearchTerm")
+            .change(function () { $("#SelectedRegistrationNumber").val(""); })
+            .autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/producers/fetch-search-results-json",
+                    context: document.body,
+                    data: { SearchTerm : request.term, __RequestVerificationToken : $("[name=__RequestVerificationToken]").val() },
+                    success: function (data) {
+                        response($.map(data, function (item) { return item }))
+                    }
+                });
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                $("#SearchTerm").val(ui.item.Name + ', ' + ui.item.RegistrationNumber);
+                $("#SelectedRegistrationNumber").val(ui.item.RegistrationNumber);
+                return false;
+            },
+            open: function () {
+                $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+            },
+            close: function () {
+                $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                // Do nothing.
+            },
+
+        }).autocomplete("instance")._renderItem = function (ul, item) {
+            return $("<li></li>")
+                .data("item.autocomplete", item)
+                .append("<span>" + item.Name + "</span><span class=\"registrationNumber\">" + item.RegistrationNumber + "</span>")
+                .appendTo(ul);
+        };
+    </script>
+}
