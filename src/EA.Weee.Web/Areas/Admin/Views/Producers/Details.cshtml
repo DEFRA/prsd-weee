@@ -1,5 +1,6 @@
 ﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.DetailsViewModel
 @{
+    string schemePlural = Model.Details.Schemes.Count != 1 ? "schemes" : "scheme";
     ViewBag.Title = "Details";
 }
 
@@ -10,7 +11,8 @@
     </header>
 
     <p>
-        Here are the details for @Model.Details.RegistrationNumber in @Model.Details.ComplianceYear.
+        @Model.Details.RegistrationNumber in registered with the
+        following @schemePlural in @Model.Details.ComplianceYear.
     </p>
 
     @foreach (var scheme in Model.Details.Schemes)
