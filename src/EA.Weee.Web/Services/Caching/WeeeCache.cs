@@ -1,17 +1,20 @@
 ﻿namespace EA.Weee.Web.Services.Caching
 {
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Scheme;
+    using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Requests.Users;
     using Infrastructure;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
 
-    public class WeeeCache : IWeeeCache
+    public class WeeeCache : IWeeeCache, IProducerSearchResultProvider
     {
         private readonly ICacheProvider provider;
         private readonly Func<IWeeeClient> apiClient;
@@ -21,6 +24,7 @@
         public Cache<Guid, string> SchemeNames { get; private set; }
         public Cache<Guid, int> UserActiveCompleteOrganisationCount { get; private set; }
         public Cache<Guid, SchemePublicInfo> SchemePublicInfos { get; private set; }
+        public SingleItemCache<IList<ProducerSearchResult>> ProducerSearchResultList { get; private set; }
 
         private string accessToken;
 
@@ -68,13 +72,19 @@
                 TimeSpan.FromMinutes(15),
                 (key) => key.ToString(),
                 (key) => FetchSchemePublicInfoFromApi(key));
+
+            ProducerSearchResultList = new SingleItemCache<IList<ProducerSearchResult>>(
+                provider,
+                "ProducerPublicInfoList",
+                TimeSpan.FromDays(1),
+                () => FetchProducerSearchResultListFromApi());
         }
 
         private async Task<string> FetchUserNameFromApi(Guid userId)
         {
             using (var client = apiClient())
             {
-                var request = new GetUserData(userId.ToString());
+                var request = new EA.Weee.Requests.Users.GetUserData(userId.ToString());
                 var result = await client.SendAsync(accessToken, request);
                 
                 return string.Format("{0} {1}", result.FirstName, result.Surname).Trim();
@@ -128,6 +138,17 @@
             }
         }
 
+        private async Task<IList<ProducerSearchResult>> FetchProducerSearchResultListFromApi()
+        {
+            using (var client = apiClient())
+            {
+                var request = new FetchProducerSearchResultsForCache();
+                var result = await client.SendAsync(accessToken, request);
+
+                return result;
+            }
+        }
+
         public Task<string> FetchOrganisationName(Guid organisationId)
         {
             return OrganisationNames.Fetch(organisationId);
@@ -146,6 +167,16 @@
         public Task<SchemePublicInfo> FetchSchemePublicInfo(Guid organisationId)
         {
             return SchemePublicInfos.Fetch(organisationId);
+        }
+
+        public Task<IList<ProducerSearchResult>> FetchProducerSearchResultList()
+        {
+            return ProducerSearchResultList.Fetch();
+        }
+
+        Task<IList<ProducerSearchResult>> IProducerSearchResultProvider.FetchAll()
+        {
+            return FetchProducerSearchResultList();
         }
     }
 }

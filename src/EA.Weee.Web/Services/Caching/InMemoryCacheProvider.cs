@@ -40,7 +40,7 @@
 
             if (item != null)
             {
-                if (typeof(T) == item.Value.GetType())
+                if (typeof(T).IsAssignableFrom(item.Value.GetType()))
                 {
                     result = CacheResult<T>.Found((T)item.Value);
                 }
