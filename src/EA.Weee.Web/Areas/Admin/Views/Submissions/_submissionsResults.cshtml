@@ -1,0 +1,48 @@
+﻿@using EA.Weee.Core.Admin
+@model IEnumerable<SubmissionsHistorySearchResult>
+
+@if (Model.Any())
+{
+    <div class="related-section">
+        <div class="form-group">
+            <div class="table-hr"></div>
+            <table id="submissions" class="prsd-table">
+                <thead>
+                    <tr>
+                        <th>Date and time</th>
+                        <th>Warnings</th>
+                        <th>PCS</th>
+                        <th>Submitted by</th>
+                    </tr>
+                </thead>
+                <tbody>
+               @foreach (SubmissionsHistorySearchResult item in Model)
+               {
+                    <tr>
+                        <td>@item.DateTime</td>
+                        <td>@item.NoOfWarnings</td>
+                        <td>@item.SchemeName</td>
+                        <td>@item.SubmittedBy</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            <br/>
+
+            <div class="form-group">
+                <input type="submit" class="button" value="Continue"/>
+            </div>
+            }
+            }
+
+        </div>
+    </div>
+}
+else
+{
+    <p>We didn't find any submission that matched your criteria.</p>
+}
+
+<p>
+    @Html.ActionLink("Back", "ChooseActivity", "Home")
+</p>
