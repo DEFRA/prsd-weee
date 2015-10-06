@@ -44,12 +44,12 @@
         <div class="form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
             @Html.Gds().LabelFor(m => m.FirstName)
             @Html.Gds().ValidationMessageFor(m => m.FirstName)
-            @Html.Gds().TextBoxFor(m => m.FirstName, new { @maxlength = "50" })
+            @Html.Gds().TextBoxFor(m => m.FirstName, new { @maxlength = "256" })
         </div>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.LastName)">
             @Html.Gds().LabelFor(m => m.LastName)
             @Html.Gds().ValidationMessageFor(m => m.LastName)
-            @Html.Gds().TextBoxFor(m => m.LastName, new { @maxlength = "50" })
+            @Html.Gds().TextBoxFor(m => m.LastName, new { @maxlength = "256" })
         </div>
 
         if (Model.CanManageStatus)
