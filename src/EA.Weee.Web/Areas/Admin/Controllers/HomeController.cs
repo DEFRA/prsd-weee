@@ -1,15 +1,44 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using Base;
+    using System;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Api.Client;
+    using Base;
+    using Core.Shared;
+    using Infrastructure;
     using ViewModels.Home;
-    
+    using Weee.Requests.Admin;
+
     public class HomeController : AdminController
     {
-        // GET: Admin/Home
-        public ActionResult Index()
+        private readonly Func<IWeeeClient> apiClient;
+
+        public HomeController(Func<IWeeeClient> apiClient)
         {
-            return View();
+            this.apiClient = apiClient;
+        }
+
+        // GET: Admin/Home
+        public async Task<ActionResult> Index()
+        {
+            using (var client = apiClient())
+            {
+                var userStatus = await client.SendAsync(User.GetAccessToken(), new GetAdminUserStatus(User.GetUserId()));
+
+                switch (userStatus)
+                {
+                    case UserStatus.Active:
+                        return RedirectToAction("ChooseActivity", "Home");
+                    case UserStatus.Inactive:
+                    case UserStatus.Pending:
+                    case UserStatus.Rejected:
+                        return RedirectToAction("InternalUserAuthorisationRequired", "Account", new { userStatus });
+                    default:
+                        throw new NotSupportedException(
+                            string.Format("Cannot determine result for user with status '{0}'", userStatus));
+                }
+            }
         }
 
         [HttpGet]
@@ -23,24 +52,25 @@
         [ValidateAntiForgeryToken]
         public ActionResult ChooseActivity(InternalUserActivityViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                string choosenActivity = model.InternalUserActivityOptions.SelectedValue;
-                switch (choosenActivity)
-                {
+                return View(model);
+            }
+
+            switch (model.InternalUserActivityOptions.SelectedValue)
+            {
                 case InternalUserActivity.ManageUsers:
-                    {
-                        return RedirectToAction("ManageUsers", "User");
-                    }
+                    return RedirectToAction("ManageUsers", "User");
 
                 case InternalUserActivity.ManageScheme:
-                    {
-                        return RedirectToAction("ManageSchemes", "Scheme");
-                    }
-                }
+                    return RedirectToAction("ManageSchemes", "Scheme");
+
+                case InternalUserActivity.ViewProducerInformation:
+                    return RedirectToAction("Search", "Producers");
+
+                default:
+                    throw new NotSupportedException();
             }
-            
-            return View(model);
         }
     }
 }
