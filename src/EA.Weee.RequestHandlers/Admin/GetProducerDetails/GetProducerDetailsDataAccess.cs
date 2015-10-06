@@ -18,12 +18,23 @@
             this.context = context;
         }
 
+        /// <summary>
+        /// Fetches all submitted producer registrations with the specified
+        /// registration number. The results will not be deterministically
+        /// ordered.
+        /// 
+        /// All producer entities will be returned with member uploads,
+        /// producer business, company and partnership relationships pre-loaded.
+        /// 
+        /// The returned entities will not be tracked for changes.
+        /// </summary>
+        /// <param name="registrationNumber"></param>
+        /// <returns></returns>
         public async Task<List<Producer>> Fetch(string registrationNumber)
         {
             return await context.Producers
                 .Where(p => p.MemberUpload.IsSubmitted)
                 .Where(p => p.RegistrationNumber == registrationNumber)
-                .OrderBy(p => p.RegistrationNumber)
                 .Include(p => p.MemberUpload)
                 .Include(p => p.ProducerBusiness)
                 .Include(p => p.ProducerBusiness.CompanyDetails)

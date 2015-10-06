@@ -46,7 +46,7 @@
 
             var schemeGroups = producers
                 .Where(p => p.MemberUpload.ComplianceYear.Value == complianceYear)
-                .GroupBy(p => p.MemberUpload.Scheme)
+                .GroupBy(p => new { p.MemberUpload.Scheme.Id, p.MemberUpload.Scheme.SchemeName })
                 .OrderBy(p => p.Key.SchemeName);
 
             foreach (var schemeGroup in schemeGroups)
@@ -58,7 +58,7 @@
 
                 Producer latestDetails = schemeGroup
                     .OrderBy(p => p.UpdatedDate)
-                    .First();
+                    .Last();
 
                 string companyNumber = null;
                 if (latestDetails.ProducerBusiness.CompanyDetails != null)
