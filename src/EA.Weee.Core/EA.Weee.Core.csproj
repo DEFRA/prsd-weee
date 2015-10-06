@@ -90,7 +90,6 @@
     <Compile Include="Admin\IProducerSearcher.cs" />
     <Compile Include="Admin\IProducerSearchResultProvider.cs" />
     <Compile Include="Admin\ManageUserData.cs" />
-    <Compile Include="Admin\SchemeSearchData.cs" />
     <Compile Include="Admin\SubmissionsHistorySearchResult .cs" />
     <Compile Include="Admin\SimpleProducerSearcher.cs" />
     <Compile Include="Admin\ProducerSearchResult.cs" />
