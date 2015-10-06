@@ -2,6 +2,7 @@
 {
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Admin;
+    using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Services;
@@ -215,6 +216,45 @@
 
             Assert.Equal("Details", redirectResult.RouteValues["action"]);
             Assert.Equal("WEE/AA1111AA", redirectResult.RouteValues["RegistrationNumber"]);
+        }
+
+        [Fact]
+        public async Task GetDetails_FetchesDetailsFromApiAndReturnsDetailsView()
+        {
+            // Arrange
+            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
+            IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+
+            ProducerDetails producerDetails = A.Dummy<ProducerDetails>();
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetails>._))
+                .WhenArgumentsMatch(a => ((GetProducerDetails)a[1]).RegistrationNumber == "WEE/AA1111AA")
+                .Returns(producerDetails);
+            
+            Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
+            A.CallTo(() => weeeClientFunc())
+                .Returns(weeeClient);
+
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc);
+
+            // Act
+            ActionResult result = await controller.Details("WEE/AA1111AA");
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetails>._))
+                .WhenArgumentsMatch(a => ((GetProducerDetails)a[1]).RegistrationNumber == "WEE/AA1111AA")
+                .MustHaveHappened();
+            
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "details");
+
+            DetailsViewModel resultsViewModel = viewResult.Model as DetailsViewModel;
+            Assert.NotNull(resultsViewModel);
+
+            Assert.Equal(producerDetails, resultsViewModel.Details);
         }
     }
 }
