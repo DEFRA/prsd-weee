@@ -86,6 +86,9 @@
     <Compile Include="Admin\FindMatchingUsersDataAccess.cs" />
     <Compile Include="Admin\GetAdminUserStatusHandler.cs" />
     <Compile Include="Admin\GetAdminUserDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerDetailsDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandler.cs" />
+    <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsDataAccess.cs" />
     <Compile Include="Admin\IFindMatchingUsersDataAccess.cs" />
     <Compile Include="Admin\IGetAdminUserDataAccess.cs" />
     <Compile Include="Admin\GetManageUserDataAccess.cs" />

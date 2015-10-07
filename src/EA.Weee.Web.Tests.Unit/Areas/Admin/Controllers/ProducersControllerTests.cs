@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using EA.Weee.Api.Client;
     using EA.Weee.Core.Admin;
+    using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Services;
@@ -22,8 +24,9 @@
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
             IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
 
             // Act
             ActionResult result = await controller.Search();
@@ -41,8 +44,9 @@
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
             IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
 
             SearchViewModel viewModel = new SearchViewModel();
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -63,8 +67,9 @@
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
             IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
 
             SearchViewModel viewModel = new SearchViewModel();
             viewModel.SearchTerm = "testSearchTerm";
@@ -87,8 +92,9 @@
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
             IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher);
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
 
             SearchViewModel viewModel = new SearchViewModel();
             viewModel.SearchTerm = "testSearchTerm, WEE/AA1111AA";
@@ -124,7 +130,9 @@
             A.CallTo(() => producerSearcher.Search("testSearchTerm", 10))
                 .Returns(fakeResults);
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher);
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
 
             // Act
             ActionResult result = await controller.SearchResults("testSearchTerm");
@@ -160,7 +168,9 @@
             A.CallTo(() => producerSearcher.Search("testSearchTerm", 10))
                 .Returns(fakeResults);
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher);
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
 
             SearchResultsViewModel viewModel = new SearchResultsViewModel();
             viewModel.SearchTerm = "testSearchTerm";
@@ -188,7 +198,9 @@
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
             IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher);
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
 
             SearchResultsViewModel viewModel = new SearchResultsViewModel()
             {
@@ -204,6 +216,45 @@
 
             Assert.Equal("Details", redirectResult.RouteValues["action"]);
             Assert.Equal("WEE/AA1111AA", redirectResult.RouteValues["RegistrationNumber"]);
+        }
+
+        [Fact]
+        public async Task GetDetails_FetchesDetailsFromApiAndReturnsDetailsView()
+        {
+            // Arrange
+            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
+            IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+
+            ProducerDetails producerDetails = A.Dummy<ProducerDetails>();
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetails>._))
+                .WhenArgumentsMatch(a => ((GetProducerDetails)a[1]).RegistrationNumber == "WEE/AA1111AA")
+                .Returns(producerDetails);
+            
+            Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
+            A.CallTo(() => weeeClientFunc())
+                .Returns(weeeClient);
+
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc);
+
+            // Act
+            ActionResult result = await controller.Details("WEE/AA1111AA");
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetails>._))
+                .WhenArgumentsMatch(a => ((GetProducerDetails)a[1]).RegistrationNumber == "WEE/AA1111AA")
+                .MustHaveHappened();
+            
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "details");
+
+            DetailsViewModel resultsViewModel = viewResult.Model as DetailsViewModel;
+            Assert.NotNull(resultsViewModel);
+
+            Assert.Equal(producerDetails, resultsViewModel.Details);
         }
     }
 }
