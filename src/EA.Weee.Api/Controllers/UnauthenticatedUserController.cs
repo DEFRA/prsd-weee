@@ -160,23 +160,21 @@
                 return BadRequest(ModelState);
             }
 
+            IdentityResult result = null;
+
             try
             {
-                var result = await userManager.ResetPasswordAsync(model.UserId.ToString(), model.Token, model.Password);
-
-                if (!result.Succeeded)
-                {
-                    return GetErrorResult(result);
-                }
+                result = await userManager.ResetPasswordAsync(model.UserId.ToString(), model.Token, model.Password);
             }
             catch (InvalidOperationException)
             {
-                // Because an invalid token or an invalid password does not throw an error on reset, we can say the only other parameter (user Id) is invalid
+                // Because an invalid token or an invalid password does not throw an error on reset,
+                // we can say the only other parameter (user Id) is invalid.
                 ModelState.AddModelError(string.Empty, "User not recognised");
                 return BadRequest(ModelState);
             }
 
-            return Ok(new PasswordResetResult(await userManager.GetEmailAsync(model.UserId.ToString())));
+            return Ok(result.Succeeded);
         }
 
         [AllowAnonymous]
