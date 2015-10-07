@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Admin
+﻿namespace EA.Weee.RequestHandlers.Admin.Submissions
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

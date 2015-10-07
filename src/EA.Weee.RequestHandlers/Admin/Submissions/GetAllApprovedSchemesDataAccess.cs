@@ -1,11 +1,9 @@
-﻿namespace EA.Weee.RequestHandlers.Admin
+﻿namespace EA.Weee.RequestHandlers.Admin.Submissions
 {
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.Admin;
-    using Core.Scheme;
     using DataAccess;
     using Domain.Scheme;
 
@@ -20,7 +18,10 @@
 
         public async Task<List<Scheme>> GetAllApprovedSchemes()
         {
-            return await context.Schemes.Where(s => s.SchemeStatus.Value == SchemeStatus.Approved.Value).ToListAsync();
+            return await context.Schemes.Where(s => s.SchemeStatus.Value == SchemeStatus.Approved.Value)
+                                        .Distinct()
+                                        .OrderBy(s => s.SchemeName)
+                                        .ToListAsync();
         }
     }
 }

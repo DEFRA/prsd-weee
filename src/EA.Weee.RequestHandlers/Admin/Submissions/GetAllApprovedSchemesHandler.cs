@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Admin
+﻿namespace EA.Weee.RequestHandlers.Admin.Submissions
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -29,7 +29,6 @@
             var schemes = await dataAccess.GetAllApprovedSchemes();
 
             return schemes.Select(s => schemeMap.Map(s))
-                .OrderBy(sd => sd.Name)
                 .ToList();
         }
     }

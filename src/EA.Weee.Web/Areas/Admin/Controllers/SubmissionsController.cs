@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -15,6 +17,7 @@
     using Services.Caching;
     using ViewModels.Submissions;
     using Weee.Requests.Admin;
+    using Weee.Requests.Scheme.MemberRegistration;
 
     public class SubmissionsController : AdminController
     {
@@ -52,7 +55,7 @@
                         ComplianceYears = new SelectList(allYears),
                         SchemeNames = new SelectList(allSchemes, "Id", "SchemeName"),
                         SelectedYear = allYears.First(),
-                        SelectedScheme = allSchemes.First().SchemeName
+                        SelectedScheme = allSchemes.First().Id
                     };
                     return View(model);
                 }
@@ -90,11 +93,12 @@
         /// <summary>
         /// This method is called using AJAX by JS-users.
         /// </summary>
-        /// <param name="viewModel"></param>
+        /// <param name="year"></param>
+        /// <param name="schemeId"></param>
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> FetchSearchResultsJson(int year, string schemeName)
+        public async Task<ActionResult> FetchSubmissionResults(int year, Guid schemeId)
         {
             if (!Request.IsAjaxRequest())
             {
@@ -105,11 +109,33 @@
             {
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
+            using (var client = apiClient())
+            {
+                try
+                {
+                    //Get all the compliance years currently in database and set it to latest one.
+                    //Get all the approved PCSs
+                    IList<SubmissionsHistorySearchResult> searchResults;
+                    searchResults = await client.SendAsync(User.GetAccessToken(), new GetSubmissionsHistoryResults(year, schemeId));
+                    return PartialView("_submissionsResults", searchResults);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+                    throw;
+                }
+            }
+        }
 
-            //TODO
-            IList<SubmissionsHistorySearchResult> searchResults = new List<SubmissionsHistorySearchResult>();
+        [HttpGet]
+        public ActionResult DownloadCSV(Guid schemeId, int year, Guid memberUploadId)
+        {
+            using (var client = apiClient())
+            {
+                byte[] data = new byte[256];
 
-            return Json(searchResults, JsonRequestBehavior.AllowGet);
+                return File(data, "text/csv", "CSV File");
+            }
         }
 
        private async Task SetBreadcrumb()

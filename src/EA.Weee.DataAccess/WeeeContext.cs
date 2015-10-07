@@ -35,6 +35,8 @@
 
         public virtual DbSet<MemberUpload> MemberUploads { get; set; }
 
+        public virtual DbSet<MemberUploadError> MemberUploadErrors { get; set; }
+
         public virtual DbSet<Scheme> Schemes { get; set; }
 
         public virtual DbSet<Producer> Producers { get; set; }
