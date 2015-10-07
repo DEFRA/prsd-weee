@@ -617,11 +617,11 @@
         {
             if (ModelState.IsValid)
             {
-                if (viewModel.ContactDetailsSameAs.Choices.SelectedValue == "No")
+                if (viewModel.SelectedValue == "No")
                 {
                     return RedirectToAction("RegisteredOfficeAddress", new { viewModel.OrganisationId });
                 }
-                if (viewModel.ContactDetailsSameAs.Choices.SelectedValue == "Yes")
+                if (viewModel.SelectedValue == "Yes")
                 {
                     using (var client = apiClient())
                     {
@@ -790,7 +790,6 @@
             {
                 OrganisationId = organisationId,
                 OrganisationType = organisation.OrganisationType,
-                ContactDetailsSameAs = new YesNoChoiceViewModel()
             };
 
             return model;
