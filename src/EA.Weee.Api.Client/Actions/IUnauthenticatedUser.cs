@@ -13,7 +13,7 @@
         
         Task<string> GetUserAccountActivationTokenAsync(string accessToken);
         
-        Task<PasswordResetResult> ResetPasswordAsync(PasswordResetData passwordResetData);
+        Task<bool> ResetPasswordAsync(PasswordResetData passwordResetData);
         
         Task<bool> ResendActivationEmail(string accessToken, string activationBaseUrl);
 

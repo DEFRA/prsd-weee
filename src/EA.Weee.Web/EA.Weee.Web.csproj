@@ -479,6 +479,8 @@
     <Content Include="Areas\Admin\Views\Producers\SearchResults.cshtml" />
     <Content Include="Areas\Admin\Views\Producers\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Account\AccountActivationFailed.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\ResetPasswordExpired.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\ResetPasswordComplete.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\download-link-tracker.js" />
@@ -575,6 +577,8 @@
     <Content Include="Views\OrganisationRegistration\SearchOrganisation.cshtml" />
     <Content Include="Views\Account\AccountActivationRequested.cshtml" />
     <Content Include="Views\Account\AccountActivationFailed.cshtml" />
+    <Content Include="Views\Account\ResetPasswordExpired.cshtml" />
+    <Content Include="Views\Account\ResetPasswordComplete.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

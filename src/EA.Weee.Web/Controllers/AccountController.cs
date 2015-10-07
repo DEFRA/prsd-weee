@@ -151,34 +151,48 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(Guid id, string token, ResetPasswordModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                var passwordResetData = new PasswordResetData
+                {
+                    Password = model.Password,
+                    Token = token,
+                    UserId = id
+                };
+
+                bool result;
                 try
                 {
-                    using (var client = apiClient())
-                    {
-                        await client.User.ResetPasswordAsync(new PasswordResetData
-                        {
-                            Password = model.Password,
-                            Token = token,
-                            UserId = id
-                        });
-
-                        return RedirectToAction("SignIn", "Account");
-                    }
+                    result = await client.User.ResetPasswordAsync(passwordResetData);
                 }
                 catch (ApiBadRequestException ex)
                 {
                     this.HandleBadRequest(ex);
 
-                    if (ModelState.IsValid)
+                    if (!ModelState.IsValid)
+                    {
+                        return View(model);
+                    }
+                    else
                     {
                         throw;
                     }
                 }
-            }
 
-            return View(model);
+                if (!result)
+                {
+                    return View("ResetPasswordExpired");
+                }
+                else
+                {
+                    return View("ResetPasswordComplete");
+                }
+            }
         }
 
         [HttpGet]

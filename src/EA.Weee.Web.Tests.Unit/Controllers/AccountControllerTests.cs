@@ -87,7 +87,7 @@
             var passwordResetModel = new ResetPasswordModel();
 
             A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
-                .Returns(new PasswordResetResult(A<string>._));
+                .Returns(true);
 
             A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
                 .Returns(LoginResult.Success("dshjkal"));
@@ -140,22 +140,23 @@
         }
 
         [Fact]
-        public async void HttpPost_ResetPassword_ModelIsValid_AndAuthorizationSuccessful_ShouldRedirectToSignIn()
+        public async void HttpPost_ResetPassword_ModelIsValid_AndAuthorizationSuccessful_ReturnsResetPasswordCompleteView()
         {
+            // Arrange
             A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
-                .Returns(new PasswordResetResult("an@email.address"));
+                .Returns(true);
 
             A.CallTo(() => apiClient.User)
                 .Returns(unauthenticatedUserClient);
 
+            // Act
             var result = await AccountController().ResetPassword(A<Guid>._, A<string>._, new ResetPasswordModel());
 
-            Assert.IsType<RedirectToRouteResult>(result);
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
 
-            var routeValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("SignIn", routeValues["action"]);
-            Assert.Equal("Account", routeValues["controller"]);
+            Assert.Equal("ResetPasswordComplete", viewResult.ViewName);
         }
     }
 }
