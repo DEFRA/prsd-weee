@@ -46,7 +46,7 @@
             var schemeId = Guid.NewGuid();
 
             A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, schemeId, A<int>._))
-                .Returns(FakeProducer.Create(ObligationType.Both, "ABC12345"));
+                .Returns(FakeProducer.Create(existingObligationType.ToDomainObligationType(), "ABC12345"));
 
             const string complianceYear = "2016";
             const string registrationNumber = "ABC12345";
@@ -78,7 +78,7 @@
 
             Assert.False(result.IsValid);
             Assert.Contains(registrationNumber, result.Message);
-            Assert.Contains(xmlObligationType.ToString(), result.Message);
+            Assert.Contains(existingObligationType.ToDomainObligationType().ToString(), result.Message);
             Assert.Equal(Core.Shared.ErrorLevel.Error, result.ErrorLevel);
         }
 

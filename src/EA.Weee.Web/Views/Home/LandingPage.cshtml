@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.ViewModels.Home.LandingPageViewModel
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.Home.LandingPageViewModel
 @{
     ViewBag.Title = "Landing Page";
 }
@@ -15,8 +16,8 @@
     {
         @Html.AntiForgeryToken()
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.Choices.SelectedValue)">
-            @Html.EditorFor(m => m.Choices)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+            @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "Do you already have a personal user account?", true)
         </div>
         <div class="form-group">
             <button class="button" type="submit">Continue</button>

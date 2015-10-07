@@ -6,7 +6,7 @@
     using System.Linq;
     using System.Reflection;
 
-    public sealed class RadioButtonStringCollectionViewModel : RadioButtonStringCollectionBaseViewModel
+    public class RadioButtonStringCollectionViewModel : RadioButtonStringCollectionBaseViewModel
     {
         [Required(ErrorMessage = "This answer is required.")]
         public override string SelectedValue { get; set; }
