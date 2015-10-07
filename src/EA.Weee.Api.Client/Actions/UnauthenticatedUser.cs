@@ -74,5 +74,12 @@
 
             return await response.CreateResponseAsync<PasswordResetRequestResult>();
         }
+
+        public async Task<bool> IsPasswordResetTokenValidAsync(PasswordResetData passwordResetData)
+        {
+            var response = await httpClient.PostAsJsonAsync(Controller + "IsPasswordResetTokenValid", passwordResetData);
+
+            return await response.CreateResponseAsync<bool>();
+        }
     }
 }

@@ -200,6 +200,18 @@
             return Ok(result);
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("IsPasswordResetTokenValid")]
+        public async Task<IHttpActionResult> IsPasswordResetTokenValid(PasswordResetData model)
+        {
+            string userId = model.UserId.ToString();
+
+            bool result = await userManager.VerifyUserTokenAsync(userId, "ResetPassword", model.Token);
+            
+            return Ok(result);
+        }
+
         private IHttpActionResult GetErrorResult(IdentityResult result)
         {
             if (result == null)

@@ -213,9 +213,28 @@
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult ResetPassword(Guid id, string token)
+        public async Task<ActionResult> ResetPassword(Guid id, string token)
         {
-            return View(new ResetPasswordModel());
+            using (var client = apiClient())
+            {
+                var passwordResetData = new PasswordResetData
+                {
+                    Password = string.Empty,
+                    Token = token,
+                    UserId = id
+                };
+
+                bool result = await client.User.IsPasswordResetTokenValidAsync(passwordResetData);
+
+                if (!result)
+                {
+                    return View("ResetPasswordExpired");
+                }
+                else
+                {
+                    return View("ResetPassword");
+                }
+            }
         }
 
         [HttpPost]
