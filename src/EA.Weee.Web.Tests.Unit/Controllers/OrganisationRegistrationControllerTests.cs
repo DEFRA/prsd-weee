@@ -169,7 +169,7 @@
         public async void PostRegisteredOfficeAddressPrepopulate_WithNoSelection_ShouldRedirectToRegisteredOfficeAddress()
         {
             var model = GetMockAddressPrepopulateViewModel();
-            model.ContactDetailsSameAs.Choices.SelectedValue = "No";
+            model.SelectedValue = "No";
 
             var result = await OrganisationRegistrationController().RegisteredOfficeAddressPrepopulate(model);
             var redirectToRouteResult = ((RedirectToRouteResult)result);
@@ -637,7 +637,7 @@
             {
                 OrganisationType = OrganisationType.SoleTraderOrIndividual,
                 OrganisationId = Guid.NewGuid(),
-                ContactDetailsSameAs = new YesNoChoiceViewModel { Choices = new RadioButtonStringCollectionViewModel { PossibleValues = new[] { "Yes", "No" }, SelectedValue = "Yes" } }
+                SelectedValue = "Yes" 
             };
 
             return addressPrepopulateViewModel;

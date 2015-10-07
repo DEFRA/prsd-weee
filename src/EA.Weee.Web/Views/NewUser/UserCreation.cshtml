@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.ViewModels.NewUser.UserCreationViewModel
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.NewUser.UserCreationViewModel
 @{
     ViewBag.Title = "Register";
 }
@@ -43,9 +44,8 @@
             <fieldset>
                 @Html.Gds().ValidationMessageFor(m => m.TermsAndConditions)
                 <p>
-                    @Html.ActionLink("Read full terms and conditions of use",
-                    "TermsAndConditions", "NewUser", new { area = string.Empty },
-                    new { target = "_blank" })
+                    @Html.WeeeGds().ActionLinkToNewTab("Read full terms and conditions of use",
+                    "TermsAndConditions", "NewUser", new { area = string.Empty })
                 </p>
                 <label class="block-label" for="TermsAndConditions">
                     @Html.CheckBoxFor(m => m.TermsAndConditions, new { @id = "TermsAndConditions" })
