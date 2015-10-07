@@ -101,8 +101,10 @@
         public ActionResult AdminAccountActivationRequired()
         {
             var email = User.GetEmailAddress();
+
             ViewBag.UserEmailAddress = User.GetEmailAddress();
-            return View();
+
+            return View("AccountActivationRequired");
         }
 
         [HttpPost]
@@ -127,21 +129,17 @@
         {
             using (var client = apiClient())
             {
-                bool result =
-                    await
-                        client.User.ActivateUserAccountEmailAsync(new ActivatedUserAccountData
-                        {
-                            Id = id,
-                            Code = code
-                        });
+                bool result = await client.User.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code });
 
                 if (!result)
                 {
-                    return RedirectToAction("AdminAccountActivationRequired", "Account", new { area = "Admin" });
+                    return View("AccountActivationFailed");
+                }
+                else
+                {
+                    return View("AccountActivated");
                 }
             }
-
-            return View();
         }
 
         [HttpGet]

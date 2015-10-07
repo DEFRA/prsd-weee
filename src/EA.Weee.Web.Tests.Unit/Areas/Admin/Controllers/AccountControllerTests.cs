@@ -213,19 +213,27 @@
         }
 
         [Fact]
-        public async void AdminAccount_IfNotActivated_ShouldRedirectToAdminAccountActivationRequired()
+        public async Task ActivateUserAccount_WithInvalidToken_ReturnsAccountActivationFailedView()
         {
-            Guid id = Guid.NewGuid();
-            string code =
-                "LZHQ5TGVPA6FtUb6AmSssW6o8GpGtkMzRJTP4%2bhK9CGitEafOHBRGriU%2b7ruHbAq85Btymlnu1ewPxkIZGE17v98a21EPTaCNE1N2QlD%2b5FDgwULWlC28SS%2fKpFRIEXD9RaaYjSS6%2bfyvyexihUGKskaqaTB4%2f%2b4bRcZ%2fniu%2bqCNT%2fSY6ziGbvkNRX9oM%2fXW";
+            // Arrange
+            IWeeeClient apiClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
+                .Returns(false);
 
-            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code }))
-               .Returns(false);
+            IExternalRouteService externalRouteService = A.Dummy<IExternalRouteService>();
+            IAuthenticationManager authenticationManager = A.Dummy<IAuthenticationManager>();
+            IWeeeAuthorization weeeAuthorization = A.Dummy<IWeeeAuthorization>();
 
-            var result = await AccountController().ActivateUserAccount(id, code);
-            var redirectToRouteResult = ((RedirectToRouteResult)result);
+            var controller = new AccountController(() => apiClient, authenticationManager, externalRouteService, weeeAuthorization);
 
-            Assert.Equal("AdminAccountActivationRequired", redirectToRouteResult.RouteValues["action"]);
+            // Act
+            var result = await controller.ActivateUserAccount(new Guid("EF565DF2-DC16-4589-9CE4-B29568B3E274"), "code");
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.Equal("AccountActivationFailed", viewResult.ViewName);
         }
 
         [Fact]

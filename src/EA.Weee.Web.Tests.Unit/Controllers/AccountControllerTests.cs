@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Web.Mvc;
-    using System.Web.Routing;
     using Api.Client;
     using Api.Client.Actions;
     using Api.Client.Entities;
@@ -16,6 +10,13 @@
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+    using System.Web.Routing;
     using ViewModels.Account;
     using Web.Controllers;
     using Xunit;
@@ -44,19 +45,26 @@
         }
 
         [Fact]
-        public async void UserAccount_IfNotActivated_ShouldRedirectToUserAccountActivationRequired()
+        public async Task ActivateUserAccount_WithInvalidToken_ReturnsAccountActivationFailedView()
         {
-            Guid id = Guid.NewGuid();
-            string code =
-                "LZHQ5TGVPA6FtUb6AmSssW6o8GpGtkMzRJTP4%2bhK9CGitEafOHBRGriU%2b7ruHbAq85Btymlnu1ewPxkIZGE17v98a21EPTaCNE1N2QlD%2b5FDgwULWlC28SS%2fKpFRIEXD9RaaYjSS6%2bfyvyexihUGKskaqaTB4%2f%2b4bRcZ%2fniu%2bqCNT%2fSY6ziGbvkNRX9oM%2fXW";
+            // Arrange
+            IWeeeClient apiClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(A<ActivatedUserAccountData>._))
+                .Returns(false);
+            
+            IWeeeAuthorization weeeAuthorization = A.Dummy<IWeeeAuthorization>();
+            IExternalRouteService externalRouteService = A.Dummy<IExternalRouteService>();
 
-            A.CallTo(() => apiClient.User.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code }))
-               .Returns(false);
-
-            var result = await AccountController().ActivateUserAccount(id, code);
-            var redirectToRouteResult = ((RedirectToRouteResult)result);
-
-            Assert.Equal("UserAccountActivationRequired", redirectToRouteResult.RouteValues["action"]);
+            var controller = new AccountController(() => apiClient, weeeAuthorization, externalRouteService);
+            
+            // Act
+            var result = await controller.ActivateUserAccount(new Guid("EF565DF2-DC16-4589-9CE4-B29568B3E274"), "code");
+            
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            
+            Assert.Equal("AccountActivationFailed", viewResult.ViewName);
         }
 
         [Fact]
