@@ -91,6 +91,7 @@
     <Content Include="scripts\Update\Sprint13\20150911-UpdateStoredProcedureForProducerCsv.sql" />
     <Content Include="scripts\Update\Sprint14\20151002-1303-MigratedProducers.sql" />
     <Content Include="scripts\Update\Sprint14\20151002-1716-DropUnusedMigrationProducersTable.sql" />
+    <Content Include="scripts\Update\Sprint14\20151007-1323-AddIndex_AuditLogandMemberUploadError.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

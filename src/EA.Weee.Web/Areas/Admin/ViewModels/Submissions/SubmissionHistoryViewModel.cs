@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Submissions
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
@@ -14,7 +15,7 @@
 
         [Required(ErrorMessage = "PCS is required.")]
         [DisplayName("PCS")]
-        public string SelectedScheme { get; set; }
+        public Guid SelectedScheme { get; set; }
     
         public IList<SubmissionsHistorySearchResult> Results { get; set; }
 

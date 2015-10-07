@@ -1,11 +1,11 @@
-﻿namespace EA.Weee.RequestHandlers.Admin
+﻿namespace EA.Weee.RequestHandlers.Admin.Submissions
 {
     using System.Collections.Generic;
-    using DataAccess;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
- 
+    using DataAccess;
+
     public class GetAllComplianceYearsDataAccess : IGetAllComplianceYearsDataAccess
     {
         private readonly WeeeContext context;
