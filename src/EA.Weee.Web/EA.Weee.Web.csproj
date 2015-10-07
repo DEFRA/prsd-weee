@@ -570,7 +570,6 @@
     <Content Include="Views\Account\ResetPasswordRequest.cshtml" />
     <Content Include="Views\Account\ResetPasswordInstruction.cshtml" />
     <Content Include="Views\OrganisationRegistration\NotFoundOrganisation.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\SelectOrganisationRadioButtons.cshtml" />
     <Content Include="Views\NewUser\Cookies.cshtml" />
     <Content Include="Views\NewUser\Feedback.cshtml" />
     <Content Include="Views\Shared\_Layout.GovUK.Sections.WithoutFeedbackBanner.cshtml" />
@@ -617,6 +616,7 @@
     <Compile Include="Areas\Admin\ViewModels\Home\InternalUserActivityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\ResetPasswordModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\ResetPasswordRequestViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\DetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\SearchResultsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\SearchViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmRejectionViewModel.cs" />
@@ -657,8 +657,11 @@
     <Compile Include="Infrastructure\RouteCollectionExtensions.cs" />
     <Compile Include="Infrastructure\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.ProgressiveDisclosure.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.ActionLink.cs" />
     <Compile Include="RazorHelpers\WeeeGds.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Label.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.RadioButtons.cs" />
     <Compile Include="RazorHelpers\WeeeGdsExtensions.cs" />
     <Compile Include="Requests\Base\IRequestCreator.cs" />
     <Compile Include="Requests\Base\RequestCreator.cs" />
@@ -704,7 +707,6 @@
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
-    <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationAction.cs" />
     <Compile Include="ViewModels\NewUser\FeedbackOptions.cs" />
     <Compile Include="ViewModels\NewUser\FeedbackViewModel.cs" />
     <Compile Include="ViewModels\NewUser\UserCreationViewModel.cs" />
@@ -715,7 +717,6 @@
     <Compile Include="ViewModels\OrganisationRegistration\Details\SoleTraderDetailsViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\ContactPersonViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\JoinOrganisationConfirmationViewModel.cs" />
-    <Compile Include="ViewModels\OrganisationRegistration\NotFoundOrganisationAction.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\SearchOrganisationViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\NotFoundOrganisationViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\OrganisationSummaryViewModel.cs" />

@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.AddressPrepopulateViewModel
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.AddressPrepopulateViewModel
 
 @section main_content
 {
@@ -23,7 +24,7 @@
         </header>
 
         <div style="margin-bottom: 1.66667em;">
-            <p>These details should be the same as those listed with Companies House.</p>
+            <p>For UK companies, these details must be the same as those listed with Companies House.</p>
         </div>
     }
 
@@ -33,8 +34,8 @@
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationType)
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.ContactDetailsSameAs.Choices.SelectedValue)" id="ContactDetailsSameAs">
-            @Html.EditorFor(m => m.ContactDetailsSameAs.Choices)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ContactDetailsSameAs">
+            @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "Are the details for your registered office and your organisation contact details the same?", true)
         </div>
 
         <div class="form-group">
