@@ -7,18 +7,19 @@
     {
         [Required(ErrorMessage = "First name is required.")]
         [Display(Name = "First name")]
-        [StringLength(50)]
+        [StringLength(256)]
         [DataType(DataType.Text)]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Last name is required.")]
-        [StringLength(50)]
+        [StringLength(256)]
         [DataType(DataType.Text)]
         [Display(Name = "Last name")]
         public string Surname { get; set; }
 
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "The email address is not valid.")]
+        [StringLength(256)]
         [Display(Name = "Email")]
         public string Email { get; set; }
 

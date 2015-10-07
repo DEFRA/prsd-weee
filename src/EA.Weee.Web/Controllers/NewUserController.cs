@@ -53,7 +53,7 @@
                 return View(viewModel);
             }
 
-            var selectedOption = viewModel.Choices.SelectedValue;
+            var selectedOption = viewModel.SelectedValue;
 
             if (selectedOption.Equals("No"))
             {
@@ -85,7 +85,7 @@
                 return View(viewModel);
             }
 
-            var selectedOption = viewModel.Choices.SelectedValue;
+            var selectedOption = viewModel.SelectedValue;
 
             if (selectedOption.Equals("No"))
             {
