@@ -51,8 +51,12 @@
             DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             MaxFailedAccessAttemptsBeforeLockout = 5;
 
-            UserTokenProvider =
-                new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+            IDataProtector dataProtector = dataProtectionProvider.Create("ASP.NET Identity");
+
+            var userTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtector);
+            userTokenProvider.TokenLifespan = TimeSpan.FromHours(24);
+
+            UserTokenProvider = userTokenProvider;
         }
 
         public override async Task<IdentityResult> CreateAsync(ApplicationUser user)
