@@ -29,9 +29,9 @@
             @Html.Gds().TextBoxFor(m => m.SearchTerm, new { style = "width:100%", placeholder = "Producer name or registration number"})
         </div>
         
-        <div class="form-group">
+        <p>
             <button class="button" type="submit">Continue</button>
-        </div>
+        </p>
     }
 
     <p>
@@ -51,7 +51,7 @@
             source: function (request, response) {
                 $.ajax({
                     type: "POST",
-                    url: "/admin/producers/fetch-search-results-json",
+                    url: "@Url.Action("FetchSearchResultsJson")",
                     context: document.body,
                     data: { SearchTerm : request.term, __RequestVerificationToken : $("[name=__RequestVerificationToken]").val() },
                     success: function (data) {
