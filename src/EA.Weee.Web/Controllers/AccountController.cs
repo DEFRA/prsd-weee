@@ -100,8 +100,8 @@
             string email = User.GetEmailAddress();
 
             ViewBag.UserEmailAddress = User.GetEmailAddress();
-            
-            return View();
+
+            return View("AccountActivationRequired");
         }
 
         [HttpPost]
@@ -130,11 +130,13 @@
 
                 if (!result)
                 {
-                    return RedirectToAction("UserAccountActivationRequired");
+                    return View("AccountActivationFailed");
+                }
+                else
+                {
+                    return View("AccountActivated");
                 }
             }
-
-            return View();
         }
 
         [HttpGet]
