@@ -5,7 +5,7 @@
 
     public partial class WeeeGds<TModel>
     {
-        protected readonly HtmlHelper<TModel> HtmlHelper;
+        public readonly HtmlHelper<TModel> HtmlHelper;
 
         private readonly Gds<TModel> gdsHelper;
 
@@ -13,6 +13,11 @@
         {
             HtmlHelper = htmlHelper;
             gdsHelper = new Gds<TModel>(htmlHelper);
+        }
+
+        public ProgressiveDisclosure<TModel> ProgressiveDisclosure(string linkText)
+        {
+            return new ProgressiveDisclosure<TModel>(this, linkText);
         }
     }
 }

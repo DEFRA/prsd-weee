@@ -2,14 +2,11 @@
 {
     using System.Collections.Generic;
 
-    public class YesNoChoiceViewModel
+    public class YesNoChoiceViewModel : RadioButtonStringCollectionViewModel
     {
-        public RadioButtonStringCollectionViewModel Choices { get; set; }
-
         public YesNoChoiceViewModel()
+            : base(new List<string> { "Yes", "No" })
         {
-            List<string> choices = new List<string> {"Yes", "No"};
-            this.Choices = new RadioButtonStringCollectionViewModel(choices);
         }
     }
 }
