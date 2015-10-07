@@ -30,7 +30,6 @@
             SICCodes = new List<string>();
             BrandNames = new List<string>();
             ProducerBusiness = new ProducerBusiness();
-            AuthorizedRepresentative = new AuthorizedRepresentative();
         }
         
         public static Producer Create(ProducerSettings settings, bool noCompany)
@@ -96,7 +95,11 @@
             }
 
             producer.ProducerBusiness = ProducerBusiness.Create(settings, noCompany);
-            producer.AuthorizedRepresentative = AuthorizedRepresentative.Create(settings);
+
+            if (settings.SchemaVersion < SchemaVersion.Version_3_07 || RandomHelper.OneIn(2))
+            {
+                producer.AuthorizedRepresentative = AuthorizedRepresentative.Create(settings);
+            }
 
             if (RandomHelper.OneIn(2))
             {

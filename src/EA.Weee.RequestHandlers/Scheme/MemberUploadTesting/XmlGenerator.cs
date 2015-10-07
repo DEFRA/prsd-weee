@@ -57,6 +57,10 @@
                     xmlXSDVersion.Value = "3.06";
                     break;
 
+                case SchemaVersion.Version_3_07:
+                    xmlXSDVersion.Value = "3.07";
+                    break;
+
                 default:
                     throw new NotSupportedException();
             }
@@ -239,9 +243,12 @@
             xmlProducer.Add(xmlProducerBusiness);
             PopulateProducerBusiness(producer.ProducerBusiness, xmlProducerBusiness);
 
-            XElement xmlAuthorizedRepresentative = new XElement(ns + "authorisedRepresentative");
-            xmlProducer.Add(xmlAuthorizedRepresentative);
-            PopulateAuthorizedRepresentative(producer.AuthorizedRepresentative, xmlAuthorizedRepresentative);
+            if (producer.AuthorizedRepresentative != null)
+            {
+                XElement xmlAuthorizedRepresentative = new XElement(ns + "authorisedRepresentative");
+                xmlProducer.Add(xmlAuthorizedRepresentative);
+                PopulateAuthorizedRepresentative(producer.AuthorizedRepresentative, xmlAuthorizedRepresentative);
+            }
 
             if (producer.CeasedToExistDate != null)
             {
