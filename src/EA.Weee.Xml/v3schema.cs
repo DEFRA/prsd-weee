@@ -37,7 +37,7 @@ namespace EA.Weee.Xml.Schemas {
         private producerType[] producerListField;
         
         public schemeType() {
-            this.xSDVersionField = ((decimal)(3.06m));
+            this.xSDVersionField = ((decimal)(3.07m));
         }
         
         /// <remarks/>
