@@ -4,6 +4,8 @@ Hello,
 
 Your request to perform Waste Electrical and Electronic Equipment (WEEE) activities for @Model.OrganisationName has been @(Model.Approved ? "authorised" : "rejected").
 
+@(Model.Approved ? "Sign in to the WEEE service to perform activites at: @Model.ExternalUserLoginUrl" : "")
+
 This is an automated email; please do not reply.
 
 If you have any enquiries, please contact the relevant helpline:

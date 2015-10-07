@@ -7,12 +7,12 @@
 {
     <header class="hgroup">
         <h1 class="heading-large">
-            Here are the search results for "@Model.Name"
+            Search results
         </h1>
     </header>
 
     <div style="margin-bottom: 1.66667em;">
-        <p>Choose your organisation from the list.</p>
+        <p>We found results for '@Model.Name'.</p>
     </div>
 
     @using (Html.BeginForm(actionName: "SelectOrganisation", controllerName: "OrganisationRegistration", method: FormMethod.Post))
@@ -21,9 +21,8 @@
 
         @Html.HiddenFor(m => m.Name)
         @Html.HiddenFor(m => m.SearchedText)
- 
+        <p>Select an organisation to add.</p>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Organisations.Selected)">
-            @Html.Gds().ValidationMessageFor(m => m.Organisations.Selected)
             @Html.EditorFor(m => m.Organisations)
         </div>
 
@@ -31,4 +30,17 @@
             <button class="button" type="submit">Continue</button>
         </div>
     }
+
+    <div class="form-group">
+        <details>
+            <summary><span class="summary">My organisation is not listed</span></summary>
+            <div class="panel-indent">
+                <p>If your organisation is not listed, @Html.ActionLink("create a new organisation", "Type", "OrganisationRegistration", new { searchedText = @Model.Name }, null).</p>
+            </div>
+        </details>
+    </div>
+
+    <p>
+        @Html.ActionLink("Start new search", "SearchOrganisation", "OrganisationRegistration")
+    </p>
 }
