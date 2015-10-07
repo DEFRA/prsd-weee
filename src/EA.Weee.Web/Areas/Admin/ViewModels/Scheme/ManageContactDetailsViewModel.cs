@@ -2,11 +2,16 @@
 {
     using System;
     using Core.Organisations;
+    using Core.Shared;
 
     public class ManageContactDetailsViewModel
-    {
-        public OrganisationData OrganisationData { get; set; }
+    {   
+        public AddressData OrganisationAddress { get; set; }
+
+        public ContactData Contact { get; set; }
 
         public Guid SchemeId { get; set; }
+
+        public Guid OrgId { get; set; }
     }
 }
