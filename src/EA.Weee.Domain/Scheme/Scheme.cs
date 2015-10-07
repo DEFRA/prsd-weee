@@ -33,7 +33,7 @@
 
         public virtual List<Producer> Producers { get; private set; }
 
-        public string SchemeName { get; private set; }
+        public virtual string SchemeName { get; private set; }
 
         public string IbisCustomerReference { get; private set; }
 
