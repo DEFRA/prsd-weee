@@ -24,7 +24,7 @@
                         duplicateProducerNames.Add(producer.GetProducerName());
                         yield return
                             RuleResult.Fail(
-                                string.Format("The Producer Name '{0}' appears more than once in the uploaded XML file",
+                                string.Format("{0} can only appear once in your file. Review your file.",
                                     producer.GetProducerName()));
                         continue;
                     }

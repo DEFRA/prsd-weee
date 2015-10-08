@@ -13,7 +13,7 @@
                 return
                     RuleResult.Fail(
                         string.Format(
-                            "The producer registration number for '{0}' has been left out of the XML file but the XML file is amending existing producer details. Check this producer's details. To amend this producer add the producer registration number or to add as a brand new producer use status \"I\" not \"A\".",
+                            "You have not provided a producer registration number (PRN) for {0} when attempting to amend existing producer details. To amend this producer add the PRN or to add as a brand new producer use status 'I' in the XML.",
                             producer.GetProducerName()));
             }
 
