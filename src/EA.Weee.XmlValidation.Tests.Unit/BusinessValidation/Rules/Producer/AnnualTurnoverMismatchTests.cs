@@ -52,7 +52,6 @@
 
             Assert.False(result.IsValid);
             Assert.Contains(name, result.Message);
-            Assert.Contains(prn, result.Message);
             Assert.Equal(Core.Shared.ErrorLevel.Warning, result.ErrorLevel);
         }
 
