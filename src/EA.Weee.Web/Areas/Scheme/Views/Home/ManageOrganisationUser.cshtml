@@ -13,6 +13,7 @@
     @using (Html.BeginForm(actionName: "ManageOrganisationUser", controllerName: "Home", method: FormMethod.Post))
     {  
         @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
 
         @Html.HiddenFor(m => m.UserId)
         @Html.HiddenFor(m => m.OrganisationUserId)

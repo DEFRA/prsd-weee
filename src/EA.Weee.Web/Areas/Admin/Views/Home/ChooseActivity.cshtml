@@ -15,6 +15,7 @@
     @using (Html.BeginForm(actionName: "ChooseActivity", controllerName: "Home", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.InternalUserActivityOptions.SelectedValue)" id="InternalUserActivityOptions">
             @Html.EditorFor(m => m.InternalUserActivityOptions)
