@@ -18,6 +18,7 @@
     @using (Html.BeginForm(actionName: "SelectOrganisation", controllerName: "OrganisationRegistration", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
 
         @Html.HiddenFor(m => m.Name)
         @Html.HiddenFor(m => m.SearchedText)

@@ -57,6 +57,7 @@
     @using (Html.BeginForm("SubmitXml", "MemberRegistration", FormMethod.Post, new { area = "Scheme", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
 
         @Html.HiddenFor(m => m.MemberUploadId)
         @Html.HiddenFor(m => m.TotalCharges)

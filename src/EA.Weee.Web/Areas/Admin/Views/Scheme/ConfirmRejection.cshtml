@@ -18,6 +18,7 @@
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.ConfirmRejectionOptions.SelectedValue)" id="ConfirmRejectionOptions">
             @Html.EditorFor(m => m.ConfirmRejectionOptions)

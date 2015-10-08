@@ -15,6 +15,7 @@
     @using (Html.BeginForm(actionName: "LandingPage", controllerName: "Home", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
             @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "Do you already have a personal user account?", true)

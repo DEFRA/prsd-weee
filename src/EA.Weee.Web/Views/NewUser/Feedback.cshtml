@@ -13,7 +13,8 @@
     @using (Html.BeginForm(actionName: "Feedback", controllerName: "NewUser", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        
+        @Html.Gds().ValidationSummary()
+
         <h2 class="heading-small">Overall, how did you feel about the service you received today?</h2>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.FeedbackOptions.SelectedValue)" id="FeedbackOptions">
             @Html.EditorFor(m => m.FeedbackOptions)
