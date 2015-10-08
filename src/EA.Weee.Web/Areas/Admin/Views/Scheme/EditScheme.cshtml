@@ -9,6 +9,8 @@
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.IsUnchangeableStatus)
+    @Html.HiddenFor(m => m.OrganisationId)
+    @Html.HiddenFor(m => m.SchemeId)
 
     <div class="grid-row">
         <div class="column-two-thirds">
@@ -73,6 +75,10 @@
         </div>
     }
 }
+
+<p>
+    @Html.ActionLink("View or edit organisation contact details", "ManageContactDetails", "Scheme", new { schemeId = @Model.SchemeId, orgId = @Model.OrganisationId }, null)
+</p>
 
 @section scripts {
     <script>
