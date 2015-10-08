@@ -30,7 +30,7 @@
                     return
                         RuleResult.Fail(
                             string.Format(
-                                "{0} {1} has a producer registration number in the XML which is not recognised. In order to register or amend this producer please enter the correct producer registration number for the producer.",
+                                "We cannot recognise the producer registration number (PRN) you have entered for {0} {1}. Enter the correct PRN for this producer.",
                                 producer.GetProducerName(), producer.registrationNo));
                 }
             }
