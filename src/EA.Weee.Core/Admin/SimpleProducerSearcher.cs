@@ -43,7 +43,8 @@
 
             return list
                 .Where(i => ToInvariant(i.RegistrationNumber).Contains(invariantSearchTerm) || ToInvariant(i.Name).Contains(invariantSearchTerm))
-                .OrderBy(i => i.RegistrationNumber)
+                .OrderBy(i => i.Name)
+                .ThenBy(i => i.RegistrationNumber)
                 .Take(maxResults)
                 .ToList();
         }

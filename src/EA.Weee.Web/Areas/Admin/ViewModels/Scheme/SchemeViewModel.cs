@@ -54,6 +54,10 @@
 
         public bool IsUnchangeableStatus { get; set; }
 
+        public Guid SchemeId { get; set; }
+
+        public Guid OrganisationId { get; set; }
+
         public IEnumerable<UKCompetentAuthorityData> CompetentAuthorities { get; set; }
 
         public IEnumerable<SelectListItem> ObligationTypeSelectList { get; set; }

@@ -8,12 +8,17 @@
     using FakeItEasy;
     using Prsd.Core.Mediator;
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.Organisations;
+    using TestHelpers;
     using ViewModels.Shared;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Scheme;
+    using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
+    using Weee.Requests.Shared;
     using Xunit;
 
     public class SchemeControllerTests
@@ -255,6 +260,103 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("EditScheme", routeValues["action"]);
+        }
+
+        [Fact]
+        public async Task GetManageContactDetails_WithValidOrganisationId_ShouldReturnsDataAndDefaultView()
+        {
+            var organisationData = new OrganisationData
+            {
+                Contact = new ContactData(),
+                OrganisationAddress = new AddressData()
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationData);
+
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            var schemeController = SchemeController();
+
+            new HttpContextMocker().AttachToController(schemeController);
+
+            ActionResult result = await schemeController.ManageContactDetails(Guid.NewGuid(), Guid.NewGuid());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.NotNull(result);
+            Assert.IsType(typeof(ViewResult), result);
+        }
+
+        [Fact]
+        public async Task PostManageContactDetails_WithModelErrors_GetsCountriesAndReturnsDefaultView()
+        {
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            var schemeController = SchemeController();
+
+            new HttpContextMocker().AttachToController(schemeController);
+
+            schemeController.ModelState.AddModelError("SomeProperty", "IsInvalid");
+
+            var manageContactDetailsViewModel = new ManageContactDetailsViewModel
+            {
+                Contact = new ContactData(),
+                OrganisationAddress = new AddressData(),
+                SchemeId = Guid.NewGuid(),
+                OrgId = Guid.NewGuid()
+            };
+            ActionResult result = await schemeController.ManageContactDetails(manageContactDetailsViewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.Equal(countries, manageContactDetailsViewModel.OrganisationAddress.Countries);
+
+            Assert.NotNull(result);
+            Assert.IsType(typeof(ViewResult), result);
+
+            ViewResult viewResult = (ViewResult)result;
+
+            Assert.Equal(string.Empty, viewResult.ViewName);
+            Assert.Equal(manageContactDetailsViewModel, viewResult.Model);
+        }
+
+        [Fact]
+        public async Task PostManageContactDetails_WithNoModelErrors_UpdatesDetailsAndRedirectsToEditScheme()
+        {
+            var manageContactDetailsViewModel = new ManageContactDetailsViewModel
+            {
+                Contact = new ContactData(),
+                OrganisationAddress = new AddressData(),
+                SchemeId = Guid.NewGuid(),
+                OrgId = Guid.NewGuid()
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
+                .Returns(true);
+            var schemeController = SchemeController();
+            new HttpContextMocker().AttachToController(schemeController);
+
+            ActionResult result = await schemeController.ManageContactDetails(manageContactDetailsViewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationContactDetails>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.NotNull(result);
+            Assert.IsType(typeof(RedirectToRouteResult), result);
+
+            RedirectToRouteResult redirectResult = (RedirectToRouteResult)result;
+            Assert.Equal("EditScheme", redirectResult.RouteValues["Action"]);
         }
 
         private SchemeController SchemeController()
