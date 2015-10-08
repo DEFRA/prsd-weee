@@ -22,7 +22,7 @@
                 return
                     RuleResult.Fail(
                         string.Format(
-                            "The PCS approval number in your XML file {0} doesn’t match with the PCS that you’re uploading for. Please make sure that you’re using the right PCS approval number.",
+                            "The PCS approval number {0} you have provided does not match with the PCS. Review the PCS approval number.",
                             scheme.approvalNo));
             }
 
