@@ -19,39 +19,48 @@
 
         public RuleResult Evaluate(producerType producer)
         {
-            if (producer.authorisedRepresentative.overseasProducer != null)
+            if (producer.authorisedRepresentative == null)
             {
-                var producerBusinessItem = producer.producerBusiness.Item;
-                contactDetailsContainerType officeContactDetails;
-
-                if (producerBusinessItem is companyType)
-                {
-                    officeContactDetails = ((companyType)producerBusinessItem).registeredOffice;
-                }
-                else if (producerBusinessItem is partnershipType)
-                {
-                    officeContactDetails =
-                        ((partnershipType)producerBusinessItem).principalPlaceOfBusiness;
-                }
-                else
-                {
-                    throw new ArgumentException(
-                        string.Format("{0}: producerBusinessItem must be of type companyType or partnershipType",
-                            producer.tradingName));
-                }
-
-                // abusing law of demeter here, but schema requires all these fields to be present and correct
-                if (!ukCountries.Contains(officeContactDetails.contactDetails.address.country))
-                {
-                    return
-                        RuleResult.Fail(
-                            string.Format(
-                                "{0}, {1} is identified as an Authorised Representative but has a non UK country listed in their address. An Authorised Representative must be based in the UK. Please review and amend the details for this producer before re-submitting your XML file.",
-                                producer.GetProducerName(), producer.registrationNo));
-                }
+                return RuleResult.Pass();
             }
 
-            return RuleResult.Pass();
+            if (producer.authorisedRepresentative.overseasProducer == null)
+            {
+                return RuleResult.Pass();
+            }
+
+            var producerBusinessItem = producer.producerBusiness.Item;
+            contactDetailsContainerType officeContactDetails;
+
+            if (producerBusinessItem is companyType)
+            {
+                officeContactDetails = ((companyType)producerBusinessItem).registeredOffice;
+            }
+            else if (producerBusinessItem is partnershipType)
+            {
+                officeContactDetails =
+                    ((partnershipType)producerBusinessItem).principalPlaceOfBusiness;
+            }
+            else
+            {
+                throw new ArgumentException(
+                    string.Format("{0}: producerBusinessItem must be of type companyType or partnershipType",
+                        producer.tradingName));
+            }
+
+            // abusing law of demeter here, but schema requires all these fields to be present and correct
+            if (!ukCountries.Contains(officeContactDetails.contactDetails.address.country))
+            {
+                return
+                    RuleResult.Fail(
+                        string.Format(
+                            "You have entered {0} as an authorised representative with a non-UK address. Authorised representatives must be based in the UK. Review your file.",
+                            producer.GetProducerName()));
+            }
+            else
+            {
+                return RuleResult.Pass();
+            }
         }
     }
 }

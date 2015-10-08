@@ -101,8 +101,10 @@
         public ActionResult AdminAccountActivationRequired()
         {
             var email = User.GetEmailAddress();
+
             ViewBag.UserEmailAddress = User.GetEmailAddress();
-            return View();
+
+            return View("AccountActivationRequired");
         }
 
         [HttpPost]
@@ -127,21 +129,17 @@
         {
             using (var client = apiClient())
             {
-                bool result =
-                    await
-                        client.User.ActivateUserAccountEmailAsync(new ActivatedUserAccountData
-                        {
-                            Id = id,
-                            Code = code
-                        });
+                bool result = await client.User.ActivateUserAccountEmailAsync(new ActivatedUserAccountData { Id = id, Code = code });
 
                 if (!result)
                 {
-                    return RedirectToAction("AdminAccountActivationRequired", "Account", new { area = "Admin" });
+                    return View("AccountActivationFailed");
+                }
+                else
+                {
+                    return View("AccountActivated");
                 }
             }
-
-            return View();
         }
 
         [HttpGet]
@@ -215,9 +213,28 @@
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult ResetPassword(Guid id, string token)
+        public async Task<ActionResult> ResetPassword(Guid id, string token)
         {
-            return View(new ResetPasswordModel());
+            using (var client = apiClient())
+            {
+                var passwordResetData = new PasswordResetData
+                {
+                    Password = string.Empty,
+                    Token = token,
+                    UserId = id
+                };
+
+                bool result = await client.User.IsPasswordResetTokenValidAsync(passwordResetData);
+
+                if (!result)
+                {
+                    return View("ResetPasswordExpired");
+                }
+                else
+                {
+                    return View("ResetPassword");
+                }
+            }
         }
 
         [HttpPost]
@@ -225,34 +242,48 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(Guid id, string token, ResetPasswordModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                var passwordResetData = new PasswordResetData
+                {
+                    Password = model.Password,
+                    Token = token,
+                    UserId = id
+                };
+
+                bool result;
                 try
                 {
-                    using (var client = apiClient())
-                    {
-                        await client.User.ResetPasswordAsync(new PasswordResetData
-                        {
-                            Password = model.Password,
-                            Token = token,
-                            UserId = id
-                        });
-
-                        return RedirectToAction("SignIn");
-                    }
+                    result = await client.User.ResetPasswordAsync(passwordResetData);
                 }
                 catch (ApiBadRequestException ex)
                 {
                     this.HandleBadRequest(ex);
 
-                    if (ModelState.IsValid)
+                    if (!ModelState.IsValid)
+                    {
+                        return View(model);
+                    }
+                    else
                     {
                         throw;
                     }
                 }
-            }
 
-            return View(model);
+                if (!result)
+                {
+                    return View("ResetPasswordExpired");
+                }
+                else
+                {
+                    return View("ResetPasswordComplete");
+                }
+            }
         }
 
         [HttpGet]
