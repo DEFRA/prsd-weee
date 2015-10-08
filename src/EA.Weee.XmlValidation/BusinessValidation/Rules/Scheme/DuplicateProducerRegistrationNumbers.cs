@@ -24,7 +24,7 @@
                         yield return
                             RuleResult.Fail(
                                 string.Format(
-                                    "The Registration Number '{0}' appears more than once in the uploaded XML file",
+                                    "Producer registration number (PRN) {0} can only appear once in your XML file. Review your file",
                                     producer.registrationNo));
                         continue;
                     }
