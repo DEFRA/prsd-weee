@@ -6,12 +6,14 @@
     using System.Web.Mvc;
     using Api.Client;
     using Base;
+    using Core.Organisations;
     using Core.Scheme;
     using Core.Shared;
     using Infrastructure;
     using Services;
     using Services.Caching;
     using ViewModels.Scheme;
+    using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
 
@@ -73,7 +75,9 @@
                     SchemeName = scheme.SchemeName,
                     ObligationType = scheme.ObligationType,
                     Status = scheme.SchemeStatus,
-                    IsUnchangeableStatus = scheme.SchemeStatus == SchemeStatus.Approved || scheme.SchemeStatus == SchemeStatus.Rejected
+                    IsUnchangeableStatus = scheme.SchemeStatus == SchemeStatus.Approved || scheme.SchemeStatus == SchemeStatus.Rejected,
+                    OrganisationId = scheme.OrganisationId,
+                    SchemeId = schemeId
                 };
 
                 await SetBreadcrumb(schemeId);
@@ -122,6 +126,56 @@
 
                 return RedirectToAction("ManageSchemes");
             }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ManageContactDetails(Guid schemeId, Guid orgId)
+        {
+            await SetBreadcrumb(schemeId);
+
+            var model = new ManageContactDetailsViewModel();
+            using (var client = apiClient())
+            {
+                var organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(orgId));
+                var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+
+                model.OrganisationAddress = organisationData.OrganisationAddress;
+                model.Contact = organisationData.Contact;
+                model.OrganisationAddress.Countries = countries;
+                model.SchemeId = schemeId;
+                model.OrgId = orgId;
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ManageContactDetails(ManageContactDetailsViewModel model)
+        {
+            await SetBreadcrumb(model.SchemeId);
+
+            if (!ModelState.IsValid)
+            {
+                using (var client = apiClient())
+                {
+                    model.OrganisationAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                }
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                var orgData = new OrganisationData
+                {
+                    Id = model.OrgId,
+                    Contact = model.Contact,
+                    OrganisationAddress = model.OrganisationAddress,
+                };
+                await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationContactDetails(orgData));
+            }
+
+            return RedirectToAction("EditScheme", new { schemeId = model.SchemeId });
         }
 
         private async Task<IEnumerable<UKCompetentAuthorityData>> GetCompetentAuthorities()

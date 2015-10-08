@@ -114,6 +114,11 @@
 
 $(document).ready(function () {
 
+    // Focus on first validation error input, when validation errors occur
+    if ($("error_explanation") != null) {
+        $(".input-validation-error:input:first").focus();
+    }
+
     // Turn off jQuery animation
     jQuery.fx.off = true;
 

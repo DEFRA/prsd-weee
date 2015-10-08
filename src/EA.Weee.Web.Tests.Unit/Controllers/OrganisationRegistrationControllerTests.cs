@@ -471,13 +471,10 @@
         }
 
         [Fact]
-        public async void GetSearchOrganisation_OnlyOneAccessibleOrganisation_ShowPerformAnotherActivityShouldBeFalse()
+        public async void GetSearchOrganisation_UserHasNotOrganisation_ShowPerformAnotherActivityShouldBeFalse()
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
-               .Returns(new List<OrganisationUserData>
-               {
-                   new OrganisationUserData()
-               });
+               .Returns(new List<OrganisationUserData>());
 
             var result =
                 await
@@ -490,7 +487,7 @@
         }
 
         [Fact]
-        public async void GetSearchOrganisation_MoreThanOneAccessibleOrganisation_ShowPerformAnotherActivityShouldBeTrue()
+        public async void GetSearchOrganisation_UserHasOrganisation_ShowPerformAnotherActivityShouldBeTrue()
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
                .Returns(new List<OrganisationUserData>
