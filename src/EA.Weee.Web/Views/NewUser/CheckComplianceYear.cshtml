@@ -1,4 +1,5 @@
 ﻿
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.ViewModels.Shared.YesNoChoiceViewModel
 @{
     ViewBag.Title = "Do you need a user account?";
@@ -15,8 +16,8 @@
         @Html.AntiForgeryToken()
 
         
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.Choices.SelectedValue)">
-            @Html.EditorFor(m => m.Choices)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+            @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "Do you want to perform activites for the 2016 compliance year?", true)
         </div>
         <div class="form-group">
             <button class="button" type="submit">Continue</button>

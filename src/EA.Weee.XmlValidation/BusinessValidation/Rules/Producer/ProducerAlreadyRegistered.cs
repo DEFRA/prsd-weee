@@ -2,6 +2,7 @@
 {
     using System;
     using BusinessValidation;
+    using Domain;
     using QuerySets;
     using Xml;
     using Xml.Schemas;
@@ -36,7 +37,7 @@
                         producer.GetProducerName(),
                         producer.registrationNo,
                         schemeName,
-                        producer.obligationType);
+                        (ObligationType)existingProducer.ObligationType);
                     return RuleResult.Fail(errorMessage);
                 }
         
