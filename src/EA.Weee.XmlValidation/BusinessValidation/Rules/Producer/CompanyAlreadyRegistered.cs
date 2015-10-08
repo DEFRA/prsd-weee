@@ -50,7 +50,7 @@
                              })))
                     {
                         result = RuleResult.Fail(
-                            string.Format(@"{0} (Companies House number {1}) has been registered previously. Check this producer's details. To register this producer obtain and add the producer's existing registration number and use the status ""A"" in the XML file.",
+                            string.Format(@"We have previously issued a producer registration number (PRN) to {0} with company registration number (CRN) {1}. To register this producer, provide its existing producer registration number and use the status 'A' in the XML file.",
                                 element.GetProducerName(), company.companyNumber),
                             Core.Shared.ErrorLevel.Error);
                     }
