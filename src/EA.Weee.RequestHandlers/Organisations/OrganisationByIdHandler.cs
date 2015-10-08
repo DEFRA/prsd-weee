@@ -26,7 +26,7 @@
 
         public async Task<OrganisationData> HandleAsync(GetOrganisationInfo query)
         {
-            authorization.EnsureOrganisationAccess(query.OrganisationId);
+            authorization.EnsureInternalOrOrganisationAccess(query.OrganisationId);
 
             // Need to materialize EF request before mapping (because mapping parses enums)
             var org = await context.Organisations

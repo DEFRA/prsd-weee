@@ -24,6 +24,7 @@
             return new SchemeData
             {
                 Id = source.Id,
+                OrganisationId = source.OrganisationId,
                 Name = source.Organisation.OrganisationType.Value == OrganisationType.RegisteredCompany.Value
                     ? source.Organisation.Name
                     : source.Organisation.TradingName,
