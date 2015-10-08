@@ -47,8 +47,8 @@
 
                 if (existingProducerName != producer.GetProducerName())
                 {
-                    var errorMessage = string.Format("The company name of producer (registration number {0})  will change from {1} to {2}. Please double-check that this is correct.",
-                        producer.registrationNo, existingProducerName, producer.GetProducerName());
+                    var errorMessage = string.Format("The company name of {0} {1} will change from {0} to {2}.",
+                        existingProducerName, producer.registrationNo, producer.GetProducerName());
 
                     return RuleResult.Fail(errorMessage, Core.Shared.ErrorLevel.Warning);
                 }

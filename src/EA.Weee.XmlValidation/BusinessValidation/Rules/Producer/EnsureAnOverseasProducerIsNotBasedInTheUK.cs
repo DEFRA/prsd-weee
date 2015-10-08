@@ -40,12 +40,8 @@
                 case countryType.UKWALES:
 
                     string errorMessage = string.Format(
-                        "{0} {1} is an Authorised Representative but has a country named in their overseas producers' address details which is in the UK. " +
-                        "An Authorised Representative cannot represent a UK based producer. In order to register this producer, please check whether " + 
-                        "they are an Authorised Representative and that their client is not based in the UK. You will need to amend their details in " + 
-                        "the XML accordingly.",
-                        producer.GetProducerName(),
-                        producer.registrationNo);
+                        "You have entered {0} as an authorised representative of an organisation with a UK address. Authorised representatives cannot represent producers based in the UK. Review your file.",
+                        producer.GetProducerName());
 
                     return RuleResult.Fail(errorMessage, Core.Shared.ErrorLevel.Error);
 
