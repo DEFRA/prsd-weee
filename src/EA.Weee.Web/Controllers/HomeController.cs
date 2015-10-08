@@ -63,7 +63,7 @@
                 return View(viewModel);
             }
 
-            var selectedOption = viewModel.Choices.SelectedValue;
+            var selectedOption = viewModel.SelectedValue;
             if (selectedOption.Equals("No"))
             {
                 return RedirectToAction("CheckIsPcs", "NewUser");

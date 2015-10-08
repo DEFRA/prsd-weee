@@ -1,4 +1,5 @@
 ﻿@using EA.Weee.Core.Organisations
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.ViewModels.OrganisationRegistration.OrganisationSummaryViewModel
 @{
     ViewBag.Title = "Review Organisation Details";
@@ -49,7 +50,7 @@
                 <details role="group">
                     <summary role="button" aria-controls="details-content-1" tabindex="0" aria-expanded="false">
                         <h3 title="About-your-organisation">About your organisation</h3>
-                        <a href="@Url.Action("Type", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit</a>
+                        <a href="@Url.Action("Type", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit<span class="hidden-for-screen-reader"> organisation type</span></a>
                     </summary>
                     <div class="form-detail-cont" id="details-content-0" aria-hidden="true" style="display: block;">
 
@@ -104,7 +105,7 @@
                 <details role="group">
                     <summary role="button" aria-controls="details-content-2" tabindex="0" aria-expanded="false">
                         <h3 title="The-main-contact-for-your-organisation">The main contact for your organisation</h3>
-                        <a href="@Url.Action("MainContactPerson", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit</a>
+                        <a href="@Url.Action("MainContactPerson", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit<span class="hidden-for-screen-reader"> main contact for organisation</span></a>
                     </summary>
                     <div class="form-detail-cont" id="details-content-2" aria-hidden="true" style="display: block;">
 
@@ -132,7 +133,7 @@
                 <details role="group">
                     <summary role="button" aria-controls="details-content-3" tabindex="0" aria-expanded="false">
                         <h3 title="Your-organisation-details">Your organisation contact details</h3>
-                        <a href="@Url.Action("OrganisationAddress", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit</a>
+                        <a href="@Url.Action("OrganisationAddress", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit<span class="hidden-for-screen-reader"> organisation address, email and telephone details</span></a>
                     </summary>
                     <div class="form-detail-cont" id="details-content-3" aria-hidden="true" style="display: block;">
 
@@ -181,12 +182,14 @@
                         @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
                         {
                             <h3 title="Your-principal-place-of-business">Your principal place of business</h3>
+                            <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit<span class="hidden-for-screen-reader"> principal place of business</span></a>
                         }
                         else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
                         {
                             <h3 title="Your-registered-company">Your registered company details</h3>
+                            <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit<span class="hidden-for-screen-reader"> registered company details</span></a>
                         }
-                        <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit</a>
+
                     </summary>
                     <div class="form-detail-cont" id="details-content-4" aria-hidden="true" style="display: block;">
 
