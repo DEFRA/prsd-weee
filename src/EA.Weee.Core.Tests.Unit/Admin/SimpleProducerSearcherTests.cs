@@ -137,25 +137,30 @@
         }
 
         [Fact]
-        public async Task Search_WithValidSearchReturnsResultsOrderedByPRN()
+        public async Task Search_WithValidSearchReturnsResultsOrderedByNameThenByPRN()
         {
             // Arrange
             List<ProducerSearchResult> fakeResults = new List<ProducerSearchResult>()
             {
                 new ProducerSearchResult()
                 {
-                    RegistrationNumber = "WEE/BB2222BB",
-                    Name = "A Producer"
+                    RegistrationNumber = "WEE/AA12532HZ",
+                    Name = "BB Producer"
                 },
                 new ProducerSearchResult()
                 {
-                    RegistrationNumber = "WEE/CC3333CC",
-                    Name = "Another Producer"
+                    RegistrationNumber = "WEE/AA12532HA",
+                    Name = "BB Producer"
                 },
                 new ProducerSearchResult()
                 {
-                    RegistrationNumber = "WEE/AA1111AA",
-                    Name = "Some Other Producer"
+                    RegistrationNumber = "WEE/MM5683KV",
+                    Name = "CC Producer"
+                },
+                new ProducerSearchResult()
+                {
+                    RegistrationNumber = "WEE/ZZ9463EA",
+                    Name = "AA Producer"
                 },
             };
 
@@ -171,9 +176,10 @@
             //Assert
             Assert.NotNull(results);
             Assert.Collection(results,
-                r1 => Assert.Equal("WEE/AA1111AA", r1.RegistrationNumber),
-                r2 => Assert.Equal("WEE/BB2222BB", r2.RegistrationNumber),
-                r3 => Assert.Equal("WEE/CC3333CC", r3.RegistrationNumber));
+                r1 => Assert.Equal("AA Producer", r1.Name),
+                r2 => { Assert.Equal("BB Producer", r2.Name); Assert.Equal("WEE/AA12532HA", r2.RegistrationNumber); },
+                r3 => { Assert.Equal("BB Producer", r3.Name); Assert.Equal("WEE/AA12532HZ", r3.RegistrationNumber); },
+                r4 => Assert.Equal("CC Producer", r4.Name));
         }
     }
 }

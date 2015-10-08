@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Account activation request expired";
+}
+
+<h2 class="heading-large">Your request to activate your account has expired</h2>
+
+@using (Html.BeginForm("UserAccountActivationRequired", "Account"))
+{
+    @Html.AntiForgeryToken()
+    <p>
+        <button class="button" type="submit">Request another email</button>
+    </p>
+}

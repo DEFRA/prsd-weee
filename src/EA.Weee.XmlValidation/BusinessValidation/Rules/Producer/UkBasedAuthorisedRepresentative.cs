@@ -54,8 +54,8 @@
                 return
                     RuleResult.Fail(
                         string.Format(
-                            "{0}, {1} is identified as an Authorised Representative but has a non UK country listed in their address. An Authorised Representative must be based in the UK. Please review and amend the details for this producer before re-submitting your XML file.",
-                            producer.GetProducerName(), producer.registrationNo));
+                            "You have entered {0} as an authorised representative with a non-UK address. Authorised representatives must be based in the UK. Review your file.",
+                            producer.GetProducerName()));
             }
             else
             {
