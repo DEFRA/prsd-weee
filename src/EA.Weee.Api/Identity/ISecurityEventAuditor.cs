@@ -22,6 +22,6 @@
 
         Task EmailConfirmed(string userId);
 
-        Task UserUpdated(IUser<string> user);
+        Task UserUpdated(string userId, IUser<string> user);
     }
 }

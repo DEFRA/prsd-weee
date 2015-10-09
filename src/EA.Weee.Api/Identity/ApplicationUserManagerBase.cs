@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web;
 
@@ -35,7 +36,9 @@
         {
             IdentityResult result = await base.UpdateAsync(user);
 
-            await auditSecurityEventService.UserUpdated(user);
+            string userId = GetCurrentUserId();
+
+            await auditSecurityEventService.UserUpdated(userId, user);
 
             return result;
         }
@@ -56,6 +59,34 @@
             await auditSecurityEventService.EmailConfirmed(userId);
 
             return result;
+        }
+
+        private static string GetCurrentUserId()
+        {
+            if (HttpContext.Current == null)
+            {
+                return null;
+            }
+
+            ClaimsPrincipal claimsPrincipal = HttpContext.Current.User as ClaimsPrincipal;
+
+            if (claimsPrincipal != null)
+            {
+                foreach (var identity in claimsPrincipal.Identities)
+                {
+                    if (identity.AuthenticationType.Equals("BEARER", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        var idClaim = identity.FindFirst("sub");
+
+                        if (idClaim != null)
+                        {
+                            return idClaim.Value;
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }
