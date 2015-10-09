@@ -11,58 +11,56 @@
             <h1 class="heading-large">Your file has passed our validation checks</h1>
         </div>
     </header>
-    @Html.Gds().ValidationSummary()
-
-    <p>Please note: Though your file has passed our technical validation checks, we can’t verify that all the information you submitted within it is correct.</p>
-
-    @{
-        int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
-        string warningText = numWarnings > 1 ? "warnings" : "warning";
-    }
-    @if (numWarnings > 0)
-    {
-        <p>
-            Your XML file contains @numWarnings @warningText.
-            Warnings get displayed where member details are changed. You must review all the warnings in your XML file.
-            Please make any necessary corrections to it before trying to submit it again. Or, if the changes are valid, you can
-            submit your XML file as it is, with warnings.
-        </p>
-        <details>
-            <summary class="warning-details-summary bold-small">View @numWarnings @warningText</summary>
-            <div class="warning-list-container">
-                <ul>
-                    @foreach (var uploadError in Model.ErrorData)
-                    {
-                        if (uploadError.ErrorLevel == ErrorLevel.Warning)
-                        {
-                            <li class="warning-list-item font-xsmall">@uploadError.Description</li>
-                        }
-                    }
-                </ul>
-            </div>
-        </details>
-    }
-
-    <div class="highlight-section">
-        <div class="highlight-section-text">
-            Based on the information provided in your XML, your charges are:
-        </div>
-        <div class="highlight-section-amount">
-            £@Model.TotalCharges.ToString("N2")
-        </div>
-    </div>
-
-    <p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete.</p>
-
     @using (Html.BeginForm("SubmitXml", "MemberRegistration", FormMethod.Post, new { area = "Scheme", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
 
         @Html.HiddenFor(m => m.MemberUploadId)
         @Html.HiddenFor(m => m.TotalCharges)
+        
+        <p>Please note: Though your file has passed our technical validation checks, we can’t verify that all the information you submitted within it is correct.</p>
+
+        int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
+        string warningText = numWarnings > 1 ? "warnings" : "warning";
+
+        if (@numWarnings > 0)
+        {
+            <p>
+                Your XML file contains @numWarnings @warningText.
+                Warnings get displayed where member details are changed. You must review all the warnings in your XML file.
+                Please make any necessary corrections to it before trying to submit it again. Or, if the changes are valid, you can
+                submit your XML file as it is, with warnings.
+            </p>
+            <details>
+                <summary class="warning-details-summary bold-small">View @numWarnings @warningText</summary>
+                <div class="warning-list-container">
+                    <ul>
+                        @foreach (var uploadError in Model.ErrorData)
+                        {
+                            if (uploadError.ErrorLevel == ErrorLevel.Warning)
+                            {
+                                <li class="warning-list-item font-xsmall">@uploadError.Description</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </details>
+        }
+
+        <div class="highlight-section">
+            <div class="highlight-section-text">
+                Based on the information provided in your XML, your charges are:
+            </div>
+            <div class="highlight-section-amount">
+                £@Model.TotalCharges.ToString("N2")
+            </div>
+        </div>
+
+        <p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete.</p>
 
         @Html.Partial("_PrivacyPolicy");
-        
+
         <div class="form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
             @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
             <label class="block-label" for="PrivacyPolicy">
@@ -70,7 +68,7 @@
                 Confirm you have read our privacy policy
             </label>
         </div>
-        
+
         <p>
             <input type="submit" value="Submit" class="button" />
         </p>

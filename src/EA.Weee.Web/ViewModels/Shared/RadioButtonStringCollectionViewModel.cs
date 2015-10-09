@@ -8,7 +8,7 @@
 
     public class RadioButtonStringCollectionViewModel : RadioButtonStringCollectionBaseViewModel
     {
-        [Required(ErrorMessage = "This answer is required.")]
+        [Required(ErrorMessage = "Please answer this question")]
         public override string SelectedValue { get; set; }
 
         public override IList<string> PossibleValues { get; set; }

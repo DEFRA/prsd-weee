@@ -17,6 +17,7 @@
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.AccessibleOrganisations.Selected)">
             @Html.EditorFor(m => m.AccessibleOrganisations)
