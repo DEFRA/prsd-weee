@@ -482,6 +482,8 @@
     <Content Include="Areas\Admin\Views\Account\AccountActivationFailed.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPasswordExpired.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPasswordComplete.cshtml" />
+    <Content Include="Areas\Test\Views\ManageCache\Index.cshtml" />
+    <Content Include="Areas\Test\Views\ManageCache\CacheCleared.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\download-link-tracker.js" />
@@ -636,6 +638,7 @@
     <Compile Include="Areas\Scheme\ViewModels\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\SchemeViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\ViewOrganisationDetailsViewModel.cs" />
+    <Compile Include="Areas\Test\Controllers\ManageCacheController.cs" />
     <Compile Include="Areas\Test\Controllers\GeneratePcsXmlController.cs" />
     <Compile Include="Areas\Test\Controllers\HomeController.cs" />
     <Compile Include="Areas\Test\TestAreaRegistration.cs" />

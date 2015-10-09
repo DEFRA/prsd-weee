@@ -9,8 +9,8 @@
     
     public class HomeViewModel
     {
-        //TODO: These strings should be loaded from a resource file.
         public const string OptionGeneratePcsXmlFile = "Generate PCS XML File";
+        public const string ManageCache = "Manage Cache";
         
         [Required]
         public RadioButtonStringCollectionViewModel Options { get; set; }
@@ -20,6 +20,7 @@
             List<string> collection = new List<string>
             {
                 OptionGeneratePcsXmlFile,
+                ManageCache
             };
 
             Options = new RadioButtonStringCollectionViewModel(collection);
