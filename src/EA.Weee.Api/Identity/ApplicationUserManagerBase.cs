@@ -26,7 +26,16 @@
         {
             IdentityResult result = await base.CreateAsync(user);
 
-            await auditSecurityEventService.UserCreated(user.Id);
+            await auditSecurityEventService.UserCreated(user);
+
+            return result;
+        }
+
+        public override async Task<IdentityResult> UpdateAsync(TUser user)
+        {
+            IdentityResult result = await base.UpdateAsync(user);
+
+            await auditSecurityEventService.UserUpdated(user);
 
             return result;
         }
