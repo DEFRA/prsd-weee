@@ -54,10 +54,10 @@
             await LogEvent(4, "EmailConfirmed", userId, null);
         }
 
-        public async Task UserUpdated(IUser<string> user)
+        public async Task UserUpdated(string userId, IUser<string> user)
         {
             string data = JsonConvert.SerializeObject(user);
-            await LogEvent(5, "UserUpdated", user.Id, data);
+            await LogEvent(5, "UserUpdated", userId, data);
         }
         
         private async Task LogEvent(int eventId, string eventName, string userId, string data)
