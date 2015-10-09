@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -150,6 +151,18 @@
                         if (ModelState.IsValid)
                         {
                             throw;
+                        }
+
+                        foreach (ModelState modelState in ViewData.ModelState.Values.ToList())
+                        {
+                            foreach (ModelError error in modelState.Errors.ToList())
+                            {
+                                if (error.ErrorMessage.Contains("is already taken"))
+                                {   
+                                    modelState.Errors.Remove(error);
+                                    modelState.Errors.Add("An account already exists with this email address. Sign in or reset your password.");
+                                }
+                            }
                         }
                     }
 
