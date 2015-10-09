@@ -15,6 +15,7 @@
     @using (Html.BeginForm(actionName: "CheckIsPcs", controllerName: "NewUser", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
             @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "Are you a producer compliance scheme (PCS)?", true)
