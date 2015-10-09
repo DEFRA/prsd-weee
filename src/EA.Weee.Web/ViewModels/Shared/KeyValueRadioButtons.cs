@@ -44,7 +44,7 @@
         /// <summary>
         /// The selected RadioButtonPair when a selection has been made.
         /// </summary>
-        [Required(ErrorMessage = "This answer is required")]
+        [Required(ErrorMessage = "Please answer this question")]
         public virtual RadioButtonPair<TKey, TValue> Selected
         {
             get
@@ -64,7 +64,7 @@
         /// <summary>
         /// The value passed to the controller from the view, used to populate the Selected RadioButtonPair.
         /// </summary>
-        [Required(ErrorMessage = "This answer is required")]
+        [Required(ErrorMessage = "Please answer this question")]
         public virtual TValue SelectedValue { get; set; }
     }
 }

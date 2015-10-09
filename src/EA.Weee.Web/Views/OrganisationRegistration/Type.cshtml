@@ -14,6 +14,8 @@
             What type of organisation is your producer compliance scheme (PCS)?
         </h1>
     </header>
+    
+    @Html.Gds().ValidationSummary()
 
     <div class="form-group">
         @using (Html.WeeeGds().ProgressiveDisclosure("What is a registered company partnership or sole trader?"))
