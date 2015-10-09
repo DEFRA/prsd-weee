@@ -24,7 +24,7 @@
             try
             {
                 var results = await(from mu in context.MemberUploads
-                    join user in context.Users on mu.UserId.ToString() equals user.Id
+                    join user in context.Users on mu.UserId equals user.Id
                     where mu.IsSubmitted & mu.SchemeId.Value.Equals(schemeId) & mu.ComplianceYear.Value.Equals(year)
                     select new SubmissionsHistorySearchResult
                     {
@@ -33,7 +33,7 @@
                         MemberUploadId = mu.Id,
                         SubmittedBy = user.FirstName + " " + user.Surname,
                         Year = mu.ComplianceYear.Value,
-                        DateTime = mu.SubmittedDate.Value,
+                        DateTime = mu.Date.Value,
                         NoOfWarnings = (from me in context.MemberUploadErrors
                                         where me.MemberUploadId.Equals(mu.Id) & (me.ErrorLevel.Value == Domain.ErrorLevel.Warning.Value)
                                         select me).Count()

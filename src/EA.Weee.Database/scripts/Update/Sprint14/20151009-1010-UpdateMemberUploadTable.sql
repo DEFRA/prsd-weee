@@ -5,12 +5,12 @@ PRINT N'Altering [PCS].[MemberUpload]...';
 GO
 ALTER TABLE [PCS].[MemberUpload] ADD [UserId] NVARCHAR (128) NULL;
 
-ALTER TABLE [PCS].[MemberUpload] ADD [SubmittedDate] DATETIME NULL;
+ALTER TABLE [PCS].[MemberUpload] ADD [Date] DATETIME NULL;
 
 
 GO
 
-PRINT N'Update existin data for UserId and SubmittedDate in [PCS].[MemberUpload]...'
+PRINT N'Update existing data for UserId and Date in [PCS].[MemberUpload]...'
 GO
 
 IF OBJECT_ID('tempdb..#temp_table') IS NOT NULL
@@ -24,10 +24,9 @@ IF OBJECT_ID('tempdb..#temp_table') IS NOT NULL
   FROM           
   [EA.Weee].[PCS].[MemberUpload] MU 
   inner join [EA.Weee].[Auditing].[AuditLog] A on MU.Id = a.RecordId
-  WHERE MU.IsSubmitted = '1' 
 
   update PCS.MemberUpload
-	Set SubmittedDate = T.EventDate, 
+	Set Date = T.EventDate, 
 		UserId = T.UserId
 
   from #temp_table T 
