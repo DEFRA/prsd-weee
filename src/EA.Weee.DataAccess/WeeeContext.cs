@@ -1,20 +1,20 @@
 ﻿namespace EA.Weee.DataAccess
 {
-    using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Domain;
     using Domain.Admin;
+    using Domain.Audit;
     using Domain.Organisation;
     using Domain.Producer;
     using Domain.Scheme;
-    using EA.Weee.DataAccess.StoredProcedure;
+    using Prsd.Core;
     using Prsd.Core.DataAccess.Extensions;
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
+    using StoredProcedure;
 
     public class WeeeContext : DbContext
     {
@@ -91,9 +91,8 @@
             bool alreadyHasTransaction = (this.Database.CurrentTransaction != null);
 
             this.SetEntityId();
-            //this.DeleteRemovedRelationships();
             this.AuditChanges(userContext.UserId);
-
+            AuditEntity();
             int result;
             if (alreadyHasTransaction)
             {
@@ -121,9 +120,8 @@
             bool alreadyHasTransaction = (this.Database.CurrentTransaction != null);
 
             this.SetEntityId();
-            //this.DeleteRemovedRelationships();
             this.AuditChanges(userContext.UserId);
-
+            AuditEntity();
             int result;
             if (alreadyHasTransaction)
             {
@@ -149,6 +147,18 @@
         public void DeleteOnCommit(Entity entity)
         {
             Entry(entity).State = EntityState.Deleted;
+        }
+
+        private void AuditEntity()
+        {
+            foreach (var auditableEntity in ChangeTracker.Entries<IAuditableEntity>())
+            {
+                if (auditableEntity.State == EntityState.Added || auditableEntity.State == EntityState.Modified)
+                {
+                    auditableEntity.Entity.Date = SystemTime.UtcNow;
+                    auditableEntity.Entity.UserId = userContext.UserId.ToString();
+                }
+            }
         }
     }
 }
