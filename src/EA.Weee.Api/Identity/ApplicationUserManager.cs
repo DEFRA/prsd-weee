@@ -51,23 +51,12 @@
             DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             MaxFailedAccessAttemptsBeforeLockout = 5;
 
-            // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
-            // You can write your own provider and plug it in here.
-            RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<ApplicationUser>
-            {
-                MessageFormat = "Your security code is {0}"
-            });
+            IDataProtector dataProtector = dataProtectionProvider.Create("ASP.NET Identity");
 
-            RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<ApplicationUser>
-            {
-                Subject = "Security Code",
-                BodyFormat = "Your security code is {0}"
-            });
+            var userTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtector);
+            userTokenProvider.TokenLifespan = TimeSpan.FromHours(24);
 
-            EmailService = new EmailService();
-
-            UserTokenProvider =
-                new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+            UserTokenProvider = userTokenProvider;
         }
 
         public override async Task<IdentityResult> CreateAsync(ApplicationUser user)
