@@ -2,7 +2,9 @@
 {
     using EA.Prsd.Core;
     using EA.Weee.DataAccess;
+    using EA.Weee.DataAccess.Identity;
     using EA.Weee.Domain;
+    using Microsoft.AspNet.Identity;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -36,9 +38,10 @@
             await LogEvent(1, "LoginFailure", null, data);
         }
 
-        public async Task UserCreated(string userId)
+        public async Task UserCreated(IUser<string> user)
         {
-            await LogEvent(2, "UserCreated", userId, null);
+            string data = JsonConvert.SerializeObject(user);
+            await LogEvent(2, "UserCreated", user.Id, data);
         }
 
         public async Task PasswordReset(string userId)
@@ -51,6 +54,12 @@
             await LogEvent(4, "EmailConfirmed", userId, null);
         }
 
+        public async Task UserUpdated(IUser<string> user)
+        {
+            string data = JsonConvert.SerializeObject(user);
+            await LogEvent(5, "UserUpdated", user.Id, data);
+        }
+        
         private async Task LogEvent(int eventId, string eventName, string userId, string data)
         {
             Guard.ArgumentNotNullOrEmpty(() => eventName, eventName);

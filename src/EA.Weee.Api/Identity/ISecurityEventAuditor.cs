@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Api.Identity
 {
+    using Microsoft.AspNet.Identity;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -15,10 +16,12 @@
 
         Task LoginFailure(string userName);
 
-        Task UserCreated(string userId);
+        Task UserCreated(IUser<string> user);
 
         Task PasswordReset(string userId);
 
         Task EmailConfirmed(string userId);
+
+        Task UserUpdated(IUser<string> user);
     }
 }
