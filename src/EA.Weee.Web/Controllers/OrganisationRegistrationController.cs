@@ -36,25 +36,25 @@
         [HttpGet]
         public async Task<ActionResult> SearchOrganisation()
         {
-            IEnumerable<OrganisationUserData> organisations = await GetAccessibleOrganisations();
+            IEnumerable<OrganisationUserData> organisations = await GetOrganisations();
 
-            var model = new SearchOrganisationViewModel { ShowPerformAnotherActivityLink = organisations.Count() > 1 };
+            var model = new SearchOrganisationViewModel { ShowPerformAnotherActivityLink = organisations.Any() };
 
             return View(model);
         }
 
-        private async Task<IEnumerable<OrganisationUserData>> GetAccessibleOrganisations()
+        private async Task<IEnumerable<OrganisationUserData>> GetOrganisations()
         {
-            List<OrganisationUserData> accessibleOrganisations;
+            List<OrganisationUserData> organisations;
 
             using (var client = apiClient())
             {
-                accessibleOrganisations = await
+                organisations = await
                  client.SendAsync(
                      User.GetAccessToken(),
-                     new GetUserOrganisationsByStatus(new int[1] { (int)UserStatus.Active }, new int[1] { (int)OrganisationStatus.Complete }));
+                     new GetUserOrganisationsByStatus(new int[0], new int[1] { (int)OrganisationStatus.Complete }));
             }
-            return accessibleOrganisations;
+            return organisations;
         }
 
         [HttpPost]

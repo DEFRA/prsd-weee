@@ -284,6 +284,11 @@
 
         private async Task<AuthorisedRepresentative> SetAuthorisedRepresentative(authorisedRepresentativeType representative)
         {
+            if (representative == null)
+            {
+                return null;
+            }
+
             if (representative.overseasProducer == null)
             {
                 return null;
