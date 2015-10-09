@@ -11,13 +11,14 @@
         </h1>
     </header>
 
-    <div style="margin-bottom: 1.66667em;">
-        <p>We found results for '@Model.Name'.</p>
-    </div>
-
     @using (Html.BeginForm(actionName: "SelectOrganisation", controllerName: "OrganisationRegistration", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div style="margin-bottom: 1.66667em;">
+            <p>We found results for '@Model.Name'.</p>
+        </div>
 
         @Html.HiddenFor(m => m.Name)
         @Html.HiddenFor(m => m.SearchedText)

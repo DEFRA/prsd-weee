@@ -1,5 +1,4 @@
-﻿
-@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.ViewModels.Shared.YesNoChoiceViewModel
 @{
     ViewBag.Title = "Do you need a user account?";
@@ -14,8 +13,8 @@
     @using (Html.BeginForm(actionName: "CheckComplianceYear", controllerName: "NewUser", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
 
-        
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
             @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "Do you want to perform activites for the 2016 compliance year?", true)
         </div>
