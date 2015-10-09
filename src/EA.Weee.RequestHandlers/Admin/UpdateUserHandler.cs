@@ -1,21 +1,23 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
-    using System;
-    using System.Data.Entity;
+    using DataAccess;
+    using EA.Weee.DataAccess.Identity;
+    using Microsoft.AspNet.Identity;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
+    using System;
+    using System.Data.Entity;
     using System.Threading.Tasks;
-    using DataAccess;
 
     internal class UpdateUserHandler : IRequestHandler<UpdateUser, Guid>
     {
-        private readonly WeeeContext db;
         private readonly IWeeeAuthorization authorization;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public UpdateUserHandler(WeeeContext context, IWeeeAuthorization authorization)
+        public UpdateUserHandler(IWeeeAuthorization authorization, UserManager<ApplicationUser> userManager)
         {
-            db = context;
+            this.userManager = userManager;
             this.authorization = authorization;
         }
 
@@ -23,7 +25,7 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            var user = await db.Users.FirstOrDefaultAsync(u => u.Id == query.UserId);
+            var user = await userManager.FindByIdAsync(query.UserId);
 
             if (user == null)
             {
@@ -31,9 +33,16 @@
                     query.UserId));
             }
 
-            user.UpdateUserInfo(query.FirstName, query.LastName);
+            user.FirstName = query.FirstName;
+            user.Surname = query.LastName;
 
-            await db.SaveChangesAsync();
+            var result = await userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                string message = "User update failed.";
+                throw new Exception(message);
+            }
 
             return new Guid(user.Id);
         }
