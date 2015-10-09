@@ -93,6 +93,7 @@
     <Content Include="scripts\Update\Sprint14\20151005-1510-MigratedProducers.sql" />
     <Content Include="scripts\Update\Sprint14\20151002-1303-MigratedProducers.sql" />
     <Content Include="scripts\Update\Sprint14\20151002-1716-DropUnusedMigrationProducersTable.sql" />
+    <Content Include="scripts\Update\Sprint14\20151008-2138-CreateAuditEventTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
