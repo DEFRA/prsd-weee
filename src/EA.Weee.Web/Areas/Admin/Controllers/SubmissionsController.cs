@@ -10,6 +10,7 @@
     using Api.Client;
     using Base;
     using Core.Admin;
+    using Core.Shared;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
@@ -22,15 +23,16 @@
     public class SubmissionsController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private const int DefaultPageSize = 25;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
+        private readonly CsvWriterFactory csvWriterFactory;
 
-        public SubmissionsController(BreadcrumbService breadcrumb, Func<IWeeeClient> client, IWeeeCache cache)
+        public SubmissionsController(BreadcrumbService breadcrumb, Func<IWeeeClient> client, IWeeeCache cache, CsvWriterFactory csvWriterFactory)
         {
             this.breadcrumb = breadcrumb;
             this.apiClient = client;
             this.cache = cache;
+            this.csvWriterFactory = csvWriterFactory;
         }
 
         /// <summary>
@@ -128,13 +130,25 @@
         }
 
         [HttpGet]
-        public ActionResult DownloadCSV(Guid schemeId, int year, Guid memberUploadId)
+        public async Task<ActionResult> DownloadCSV(Guid schemeId, int year, Guid memberUploadId)
         {
-            using (var client = apiClient())
+         using (var client = apiClient())
             {
-                byte[] data = new byte[256];
+                IEnumerable<MemberUploadErrorData> errors =
+                    (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(schemeId, memberUploadId)))
+                    .OrderByDescending(e => e.ErrorLevel);
 
-                return File(data, "text/csv", "CSV File");
+                CsvWriter<MemberUploadErrorData> csvWriter = csvWriterFactory.Create<MemberUploadErrorData>();
+                csvWriter.DefineColumn("Description", e => e.Description);
+
+                string csv = csvWriter.Write(errors);
+
+                Encoding encoding = Encoding.UTF8;
+                byte[] bom = encoding.GetPreamble();
+                byte[] data = encoding.GetBytes(csv);
+                byte[] file = bom.Concat(data).ToArray();
+
+                return File(file, "text/csv", "XML warnings.csv");
             }
         }
 
