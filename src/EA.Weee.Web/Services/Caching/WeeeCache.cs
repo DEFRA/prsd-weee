@@ -178,5 +178,10 @@
         {
             return FetchProducerSearchResultList();
         }
+
+        public async Task InvalidateProducerSearch()
+        {
+            await ProducerSearchResultList.InvalidateCache();
+        }
     }
 }
