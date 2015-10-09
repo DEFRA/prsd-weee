@@ -12,7 +12,11 @@
     {
         public virtual Guid OrganisationId { get; private set; }
 
-        public Guid? SchemeId { get; private set; }
+        public virtual Guid? SchemeId { get; private set; }
+
+        public virtual string UserId { get; private set; }
+
+        public DateTime? SubmittedDate { get; private set; }
 
         public virtual Organisation Organisation { get; private set; }
 
@@ -39,6 +43,8 @@
             TotalCharges = totalCharges;
             ComplianceYear = complianceYear;
             RawData = new MemberUploadRawData() { Data = data };
+            UserId = null;
+            SubmittedDate = null;
         }
 
         public MemberUpload(Guid organisationId, string data)
@@ -46,6 +52,8 @@
             OrganisationId = organisationId;
             Errors = new List<MemberUploadError>();
             RawData = new MemberUploadRawData() { Data = data };
+            UserId = null;
+            SubmittedDate = null;
         }
 
         public void Submit()
