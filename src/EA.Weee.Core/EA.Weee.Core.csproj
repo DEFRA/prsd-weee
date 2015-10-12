@@ -87,12 +87,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
+    <Compile Include="Search\IOrganisationSearchResultProvider.cs" />
+    <Compile Include="Search\IOrganisationSearcher.cs" />
     <Compile Include="Search\IProducerSearcher.cs" />
     <Compile Include="Search\IProducerSearchResultProvider.cs" />
     <Compile Include="Admin\ManageUserData.cs" />
     <Compile Include="Admin\SubmissionsHistorySearchResult.cs" />
     <Compile Include="Admin\ProducerDetails.cs" />
     <Compile Include="Admin\ProducerDetailsScheme.cs" />
+    <Compile Include="Search\OrganisationSearchResult.cs" />
+    <Compile Include="Search\SimpleOrganisationSearcher.cs" />
     <Compile Include="Search\SimpleProducerSearcher.cs" />
     <Compile Include="Search\ProducerSearchResult.cs" />
     <Compile Include="Admin\UserSearchDataResult.cs" />
