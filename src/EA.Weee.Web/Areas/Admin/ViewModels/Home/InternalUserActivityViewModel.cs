@@ -14,6 +14,7 @@
             List<string> collection = new List<string>
             {
                 InternalUserActivity.ManageScheme,
+                InternalUserActivity.SubmissionsHistory,
                 InternalUserActivity.ViewProducerInformation,
                 InternalUserActivity.ManageUsers
             };

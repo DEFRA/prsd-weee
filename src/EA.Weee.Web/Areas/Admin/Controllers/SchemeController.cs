@@ -59,29 +59,36 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditScheme(Guid schemeId)
+        public async Task<ActionResult> EditScheme(Guid? schemeId)
         {
-            using (var client = apiClient())
+            if (schemeId.HasValue)
             {
-                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
-
-                var model = new SchemeViewModel
+                using (var client = apiClient())
                 {
-                    CompetentAuthorities = await GetCompetentAuthorities(),
-                    ApprovalNumber = scheme.ApprovalName,
-                    OldApprovalNumber = scheme.ApprovalName,
-                    IbisCustomerReference = scheme.IbisCustomerReference,
-                    CompetentAuthorityId = scheme.CompetentAuthorityId ?? Guid.Empty,
-                    SchemeName = scheme.SchemeName,
-                    ObligationType = scheme.ObligationType,
-                    Status = scheme.SchemeStatus,
-                    IsUnchangeableStatus = scheme.SchemeStatus == SchemeStatus.Approved || scheme.SchemeStatus == SchemeStatus.Rejected,
-                    OrganisationId = scheme.OrganisationId,
-                    SchemeId = schemeId
-                };
+                    var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId.Value));
 
-                await SetBreadcrumb(schemeId);
-                return View(model);
+                    var model = new SchemeViewModel
+                    {
+                        CompetentAuthorities = await GetCompetentAuthorities(),
+                        ApprovalNumber = scheme.ApprovalName,
+                        OldApprovalNumber = scheme.ApprovalName,
+                        IbisCustomerReference = scheme.IbisCustomerReference,
+                        CompetentAuthorityId = scheme.CompetentAuthorityId ?? Guid.Empty,
+                        SchemeName = scheme.SchemeName,
+                        ObligationType = scheme.ObligationType,
+                        Status = scheme.SchemeStatus,
+                        IsUnchangeableStatus = scheme.SchemeStatus == SchemeStatus.Approved || scheme.SchemeStatus == SchemeStatus.Rejected,
+                        OrganisationId = scheme.OrganisationId,
+                        SchemeId = schemeId.Value
+                    };
+
+                    await SetBreadcrumb(schemeId);
+                    return View(model);
+                }
+            }
+            else
+            {
+                return RedirectToAction("ManageSchemes");
             }
         }
 
