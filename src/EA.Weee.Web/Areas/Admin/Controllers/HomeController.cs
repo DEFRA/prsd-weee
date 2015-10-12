@@ -68,6 +68,9 @@
                 case InternalUserActivity.ViewProducerInformation:
                     return RedirectToAction("Search", "Producers");
 
+                case InternalUserActivity.SubmissionsHistory:
+                    return RedirectToAction("SubmissionsHistory", "Submissions");
+
                 default:
                     throw new NotSupportedException();
             }
