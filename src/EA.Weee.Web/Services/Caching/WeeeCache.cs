@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.Services.Caching
 {
     using EA.Weee.Api.Client;
-    using EA.Weee.Core.Admin;
     using EA.Weee.Core.Scheme;
-    using EA.Weee.Requests.Admin;
+    using EA.Weee.Core.Search;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Scheme;
+    using EA.Weee.Requests.Search;
     using EA.Weee.Requests.Users;
     using Infrastructure;
     using System;

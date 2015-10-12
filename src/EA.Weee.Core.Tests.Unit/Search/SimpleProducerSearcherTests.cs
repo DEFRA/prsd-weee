@@ -1,6 +1,6 @@
-﻿namespace EA.Weee.Core.Tests.Unit.Admin
+﻿namespace EA.Weee.Core.Tests.Unit.Search
 {
-    using EA.Weee.Core.Admin;
+    using EA.Weee.Core.Search;
     using FakeItEasy;
     using System;
     using System.Collections.Generic;

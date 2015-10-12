@@ -10,7 +10,7 @@
     using System.Linq;
     using System.Reflection;
     using Authorization;
-    using EA.Weee.Core.Admin;
+    using EA.Weee.Core.Search;
 
     public class AutofacBootstrapper
     {

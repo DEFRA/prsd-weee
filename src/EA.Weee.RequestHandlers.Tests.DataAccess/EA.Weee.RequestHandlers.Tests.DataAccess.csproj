@@ -82,7 +82,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Admin\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccessTests.cs" />
+    <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccessTests.cs" />
     <Compile Include="EventHandlers\MemberUploadSubmittedEventHandlerTests.cs" />
     <Compile Include="Organisations\UpdateOrganisationContactDetailsDataAccessTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -116,7 +116,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Admin\" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

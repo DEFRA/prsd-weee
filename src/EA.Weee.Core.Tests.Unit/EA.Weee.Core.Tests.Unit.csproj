@@ -92,7 +92,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Admin\SimpleProducerSearcherTests.cs" />
+    <Compile Include="Search\SimpleProducerSearcherTests.cs" />
     <Compile Include="Email\WeeeEmailServiceTests.cs" />
     <Compile Include="Helpers\CoreEnumeration.cs" />
     <Compile Include="Helpers\DomainEnumeration.cs" />

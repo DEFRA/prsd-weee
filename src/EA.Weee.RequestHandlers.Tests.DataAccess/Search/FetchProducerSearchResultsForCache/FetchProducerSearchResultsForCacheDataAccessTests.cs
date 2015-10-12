@@ -1,6 +1,6 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.FetchProducerSearchResultsForCache
+﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Search.FetchProducerSearchResultsForCache
 {
-    using EA.Weee.RequestHandlers.Admin.FetchProducerSearchResultsForCache;
+    using EA.Weee.RequestHandlers.Search.FetchProducerSearchResultsForCache;
     using EA.Weee.Tests.Core.Model;
     using System;
     using System.Collections.Generic;
