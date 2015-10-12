@@ -44,7 +44,7 @@
         }
 
         [Fact]
-        public async Task EditUsersGet_ReturnsView()
+        public async Task EditUserGet_ReturnsView()
         {   
             var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
 
@@ -75,7 +75,21 @@
         }
 
         [Fact]
-        public async Task EditUsersPost_CompetentAuthorityUser_UpdateUserAndCompetentAuthorityUserStatusAndRedirectToManageUser()
+        public async Task EditUserGet_NullOrgUserId_RedirectsToManageUsers()
+        {
+            var controller = new UserController(A.Dummy<WeeeClient>, A.Dummy<IWeeeCache>(), A.Dummy<BreadcrumbService>());
+
+            var result = await controller.EditUser((Guid?)null);
+
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var redirectValues = ((RedirectToRouteResult)result).RouteValues;
+            Assert.Equal("ManageUsers", redirectValues["action"]);
+        }
+
+        [Fact]
+        public async Task EditUserPost_CompetentAuthorityUser_UpdateUserAndCompetentAuthorityUserStatusAndRedirectToManageUser()
         {
             var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
 
@@ -108,7 +122,7 @@
         }
 
         [Fact]
-        public async Task EditUsersPost_OrganisationUser_UpdateUserAndOrganisationUserStatusAndRedirectToManageUser()
+        public async Task EditUserPost_OrganisationUser_UpdateUserAndOrganisationUserStatusAndRedirectToManageUser()
         {
             var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
 

@@ -89,16 +89,23 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditUser(Guid orgUserId)
+        public async Task<ActionResult> EditUser(Guid? orgUserId)
         {
-            using (var client = apiClient())
+            if (orgUserId.HasValue)
             {
-                var editUserData = await client.SendAsync(User.GetAccessToken(), new GetUserData(orgUserId));
-                var model = new EditUserViewModel(editUserData);
-                model.UserStatusSelectList = FilterUserStatus(model.UserStatus, model.UserStatusSelectList);
-                Guid userId = new Guid(editUserData.UserId);
-                SetBreadcrumb();
-                return View(model);
+                using (var client = apiClient())
+                {
+                    var editUserData = await client.SendAsync(User.GetAccessToken(), new GetUserData(orgUserId.Value));
+                    var model = new EditUserViewModel(editUserData);
+                    model.UserStatusSelectList = FilterUserStatus(model.UserStatus, model.UserStatusSelectList);
+                    Guid userId = new Guid(editUserData.UserId);
+                    SetBreadcrumb();
+                    return View(model);
+                }
+            }
+            else
+            {
+                return RedirectToAction("ManageUsers");
             }
         }
 
