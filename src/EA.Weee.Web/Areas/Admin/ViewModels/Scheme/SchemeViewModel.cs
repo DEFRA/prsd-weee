@@ -41,11 +41,11 @@
         [Display(Name = "Obligation type")]
         public ObligationType? ObligationType { get; set; }
 
-        [Required(ErrorMessage = "Authorising authority is required.")]
-        [Display(Name = "Authorising authority")]
+        [Required(ErrorMessage = "Appropriate authority is required.")]
+        [Display(Name = "Appropriate authority")]
         public Guid CompetentAuthorityId { get; set; }
 
-        [Display(Name = "Authorising authority")]
+        [Display(Name = "Appropriate authority")]
         public string CompetentAuthorityName { get; set; }
 
         [Required(ErrorMessage = "Status is required")]

@@ -16,16 +16,18 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
 
-    public class ApplicationUserManager : UserManager<ApplicationUser>
+    public class ApplicationUserManager : ApplicationUserManagerBase<ApplicationUser>
     {
         private readonly ConfigurationService configurationService;
         private readonly WeeeContext context;
 
-        public ApplicationUserManager(IUserStore<ApplicationUser> store,
+        public ApplicationUserManager(
+            IUserStore<ApplicationUser> store,
+            ISecurityEventAuditor auditSecurityEventService,
             IDataProtectionProvider dataProtectionProvider,
             ConfigurationService configurationService,
             WeeeContext context)
-            : base(store)
+            : base(store, auditSecurityEventService)
         {
             this.configurationService = configurationService;
             this.context = context;
