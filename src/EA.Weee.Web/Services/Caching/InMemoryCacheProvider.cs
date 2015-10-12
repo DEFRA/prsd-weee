@@ -61,5 +61,14 @@
         {
             return string.Format("WEEE:{0}:{1}", cacheName, key);
         }
+
+        public Task Remove(string cache, string key)
+        {
+            string fullKey = GetFullKey(cache, key);
+
+            memoryCache.Remove(fullKey);
+
+            return Task.FromResult<object>(null);
+        }
     }
 }
