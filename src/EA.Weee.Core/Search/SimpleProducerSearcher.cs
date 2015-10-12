@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core.Admin
+﻿namespace EA.Weee.Core.Search
 {
     using System;
     using System.Collections.Generic;

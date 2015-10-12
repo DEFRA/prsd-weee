@@ -1,7 +1,7 @@
-﻿namespace EA.Weee.Requests.Admin
+﻿namespace EA.Weee.Requests.Search
 {
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.Admin;
+    using EA.Weee.Core.Search;
     using System;
     using System.Collections.Generic;
     using System.Linq;
