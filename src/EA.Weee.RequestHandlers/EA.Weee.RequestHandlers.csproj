@@ -80,6 +80,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
+    <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheDataAccess.cs" />
+    <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheHandler.cs" />
+    <Compile Include="Search\FetchOrganisationSearchResultsForCache\IFetchOrganisationSearchResultsForCacheDataAccess.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccess.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheHandler.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\IFetchProducerSearchResultsForCacheDataAccess.cs" />
