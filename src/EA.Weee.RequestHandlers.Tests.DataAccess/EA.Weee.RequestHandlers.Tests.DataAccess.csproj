@@ -82,6 +82,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheDataAccessTests.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccessTests.cs" />
     <Compile Include="EventHandlers\MemberUploadSubmittedEventHandlerTests.cs" />
     <Compile Include="Organisations\UpdateOrganisationContactDetailsDataAccessTests.cs" />
