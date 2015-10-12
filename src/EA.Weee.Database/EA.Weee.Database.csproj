@@ -90,6 +90,7 @@
     <Content Include="scripts\Update\Sprint13\20150903-162000-ResetPrnSeed.sql" />
     <Content Include="scripts\Update\Sprint13\20150911-UpdateStoredProcedureForProducerCsv.sql" />
     <Content Include="scripts\Update\Sprint14\20151006-1938-AddPRNIndexToProducerTable.sql" />
+    <Content Include="scripts\Update\Sprint14\20151012-1633-AddSchemeIdIndexToProducerTable.sql" />
     <Content Include="scripts\Update\Sprint14\20151005-1510-MigratedProducers.sql" />
     <Content Include="scripts\Update\Sprint14\20151002-1303-MigratedProducers.sql" />
     <Content Include="scripts\Update\Sprint14\20151002-1716-DropUnusedMigrationProducersTable.sql" />
