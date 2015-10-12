@@ -79,7 +79,7 @@
                     }
 
                     ModelState.AddModelError(string.Empty, loginResult.ErrorMessage);
-                }               
+                }
             }
             catch (ApiBadRequestException ex)
             {
@@ -90,13 +90,13 @@
                     throw;
                 }
 
-                foreach (ModelState modelState in ViewData.ModelState.Values.ToList())
+                foreach (var modelState in ViewData.ModelState.Values.ToList())
                 {
-                    foreach (ModelError error in modelState.Errors.ToList())
+                    for (var i = modelState.Errors.Count - 1; i >= 0; i--)
                     {
-                        if (error.ErrorMessage.Contains("is already taken"))
+                        if (modelState.Errors[i].ErrorMessage.Contains("is already taken"))
                         {
-                            modelState.Errors.Remove(error);
+                            modelState.Errors.Remove(modelState.Errors[i]);
                             modelState.Errors.Add("An account already exists with this email address. Sign in or reset your password.");
                         }
                     }
