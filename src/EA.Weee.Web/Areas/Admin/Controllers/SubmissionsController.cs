@@ -56,8 +56,8 @@
                     {
                         ComplianceYears = new SelectList(allYears),
                         SchemeNames = new SelectList(allSchemes, "Id", "SchemeName"),
-                        SelectedYear = allYears.First(),
-                        SelectedScheme = allSchemes.First().Id
+                        SelectedYear = allYears.FirstOrDefault(),
+                        SelectedScheme = allSchemes.Count > 0 ? allSchemes.First().Id : Guid.Empty
                     };
                     return View(model);
                 }

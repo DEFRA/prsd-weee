@@ -22,7 +22,7 @@
         public async Task<List<SubmissionsHistorySearchResult>> HandleAsync(GetSubmissionsHistoryResults request)
         {
             authorization.EnsureCanAccessInternalArea();
-            var results = await dataAccess.GetSubmissionsHisotry(request.ComplianceYear, request.SchemeId);
+            var results = await dataAccess.GetSubmissionsHistory(request.ComplianceYear, request.SchemeId);
             return results.ToList();
         }
     }

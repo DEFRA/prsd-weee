@@ -1,4 +1,5 @@
-﻿@using EA.Weee.Core.Admin
+﻿@using System.Globalization
+@using EA.Weee.Core.Admin
 @model IEnumerable<SubmissionsHistorySearchResult>
 
 @if (Model.Any())
@@ -9,7 +10,7 @@
                 <table id="submissions" class="prsd-table">
                     <thead>
                         <tr>
-                            <th>Date and time</th>
+                            <th>Date and time (GMT)</th>
                             <th>Warnings</th>
                             <th>Submitted by</th>
                         </tr>
@@ -17,8 +18,9 @@
                     <tbody>
                    @foreach (SubmissionsHistorySearchResult item in Model)
                    {
+                       string datetime = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
                         <tr>
-                            <td>@item.DateTime</td>
+                            <td>@datetime</td>
                             <td>
                                 @if (item.NoOfWarnings > 0)
                                 {
