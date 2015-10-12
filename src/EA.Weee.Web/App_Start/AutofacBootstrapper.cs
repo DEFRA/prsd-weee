@@ -44,7 +44,8 @@
             builder.RegisterType<InMemoryCacheProvider>().As<ICacheProvider>();
             builder.RegisterType<WeeeCache>()
                 .As<IWeeeCache>()
-                .As<IProducerSearchResultProvider>();
+                .As<IProducerSearchResultProvider>()
+                .As<IOrganisationSearchResultProvider>();
 
             // Breadcrumb
             builder.RegisterType<BreadcrumbService>().InstancePerRequest();
@@ -57,6 +58,9 @@
 
             // We're going to use the simple producer searcher.
             builder.RegisterType<SimpleProducerSearcher>().As<IProducerSearcher>().InstancePerRequest();
+
+            // We're going to use the simple organisation searcher.
+            builder.RegisterType<SimpleOrganisationSearcher>().As<IOrganisationSearcher>().InstancePerRequest();
 
             return builder.Build();
         }
