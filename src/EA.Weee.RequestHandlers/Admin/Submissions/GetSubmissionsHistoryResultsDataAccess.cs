@@ -19,31 +19,24 @@
             this.context = context;
         }
 
-        public async Task<List<SubmissionsHistorySearchResult>> GetSubmissionsHisotry(int year, System.Guid schemeId)
+        public async Task<List<SubmissionsHistorySearchResult>> GetSubmissionsHistory(int year, Guid schemeId)
         {
-            try
+        var results = await(from mu in context.MemberUploads
+            join user in context.Users on mu.UserId equals user.Id
+            where mu.IsSubmitted & mu.SchemeId == schemeId & mu.ComplianceYear == year
+            select new SubmissionsHistorySearchResult
             {
-                var results = await(from mu in context.MemberUploads
-                    join user in context.Users on mu.UserId equals user.Id
-                    where mu.IsSubmitted & mu.SchemeId.Value.Equals(schemeId) & mu.ComplianceYear.Value.Equals(year)
-                    select new SubmissionsHistorySearchResult
-                    {
-                        SchemeId = mu.SchemeId.Value,
-                        OrganisationId = mu.OrganisationId,
-                        MemberUploadId = mu.Id,
-                        SubmittedBy = user.FirstName + " " + user.Surname,
-                        Year = mu.ComplianceYear.Value,
-                        DateTime = mu.Date.Value,
-                        NoOfWarnings = (from me in context.MemberUploadErrors
-                                        where me.MemberUploadId.Equals(mu.Id) & (me.ErrorLevel.Value == Domain.ErrorLevel.Warning.Value)
-                                        select me).Count()
-                    }).OrderByDescending(s => s.DateTime).ToListAsync();
-                return results;
-            }
-            catch (Exception ex)
-            {
-            }
-            return null;
+                SchemeId = mu.SchemeId.Value,
+                OrganisationId = mu.OrganisationId,
+                MemberUploadId = mu.Id,
+                SubmittedBy = user.FirstName + " " + user.Surname,
+                Year = mu.ComplianceYear.Value,
+                DateTime = mu.Date.Value,
+                NoOfWarnings = (from me in context.MemberUploadErrors
+                                where me.MemberUploadId == mu.Id & (me.ErrorLevel.Value == Domain.ErrorLevel.Warning.Value)
+                                select me).Count()
+            }).OrderByDescending(s => s.DateTime).ToListAsync();
+        return results;
         }
     }
 }

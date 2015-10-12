@@ -9,7 +9,7 @@
 
     public class SubmissionsHistoryViewModel
     {
-        [Required(ErrorMessage = "year is required.")]
+        [Required(ErrorMessage = "Year is required.")]
         [DisplayName("Year")]
         public int SelectedYear { get; set; }
 

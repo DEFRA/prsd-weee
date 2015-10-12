@@ -30,7 +30,7 @@
         public virtual MemberUploadRawData RawData { get; set; }
 
         public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors, decimal totalCharges,
-            int? complianceYear, Guid? schemeId = null)
+            int? complianceYear, Guid? schemeId = null, string userId = null)
         {
             OrganisationId = organisationId;
             SchemeId = schemeId.GetValueOrDefault();
@@ -39,6 +39,7 @@
             TotalCharges = totalCharges;
             ComplianceYear = complianceYear;
             RawData = new MemberUploadRawData() { Data = data };
+            UserId = userId;
         }
 
         public MemberUpload(Guid organisationId, string data)

@@ -20,8 +20,8 @@
             return await context.MemberUploads
                  .Where(mu => mu.IsSubmitted)
                  .Where(mu => mu.ComplianceYear.HasValue)
-                 .GroupBy(mu => (int)mu.ComplianceYear)
-                 .Select(group => group.Key)
+                 .Select(mu => (int)mu.ComplianceYear)
+                 .Distinct()
                  .OrderByDescending(year => year)
                  .ToListAsync();
         }

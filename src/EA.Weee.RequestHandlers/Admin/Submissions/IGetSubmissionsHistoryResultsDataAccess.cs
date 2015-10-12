@@ -7,6 +7,6 @@
 
     public interface IGetSubmissionsHistoryResultsDataAccess
     {
-        Task<List<SubmissionsHistorySearchResult>> GetSubmissionsHisotry(int year, Guid schemeId);
+        Task<List<SubmissionsHistorySearchResult>> GetSubmissionsHistory(int year, Guid schemeId);
     }
 }
