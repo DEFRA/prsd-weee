@@ -8,7 +8,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public interface IWeeeCache
+    public interface IWeeeCache : IProducerSearchResultProvider, IOrganisationSearchResultProvider
     {
         Task<string> FetchOrganisationName(Guid organisationId);
 
@@ -20,6 +20,10 @@
 
         Task<IList<ProducerSearchResult>> FetchProducerSearchResultList();
 
+        Task<IList<OrganisationSearchResult>> FetchOrganisationSearchResultList();
+
         Task InvalidateProducerSearch();
+
+        Task InvalidateOrganisationSearch();
     }
 }

@@ -14,7 +14,7 @@
     using System.Threading.Tasks;
     using System.Web;
 
-    public class WeeeCache : IWeeeCache, IProducerSearchResultProvider
+    public class WeeeCache : IWeeeCache
     {
         private readonly ICacheProvider provider;
         private readonly Func<IWeeeClient> apiClient;
@@ -25,6 +25,7 @@
         public Cache<Guid, int> UserActiveCompleteOrganisationCount { get; private set; }
         public Cache<Guid, SchemePublicInfo> SchemePublicInfos { get; private set; }
         public SingleItemCache<IList<ProducerSearchResult>> ProducerSearchResultList { get; private set; }
+        public SingleItemCache<IList<OrganisationSearchResult>> OrganisationSearchResultList { get; private set; }
 
         private string accessToken;
 
@@ -78,6 +79,12 @@
                 "ProducerPublicInfoList",
                 TimeSpan.FromDays(1),
                 () => FetchProducerSearchResultListFromApi());
+
+            OrganisationSearchResultList = new SingleItemCache<IList<OrganisationSearchResult>>(
+                provider,
+                "OrganisationPublicInfoList",
+                TimeSpan.FromDays(1),
+                () => FetchOrganisationSearchResultListFromApi());
         }
 
         private async Task<string> FetchUserNameFromApi(Guid userId)
@@ -149,6 +156,17 @@
             }
         }
 
+        private async Task<IList<OrganisationSearchResult>> FetchOrganisationSearchResultListFromApi()
+        {
+            using (var client = apiClient())
+            {
+                var request = new FetchOrganisationSearchResultsForCache();
+                var result = await client.SendAsync(accessToken, request);
+
+                return result;
+            }
+        }
+
         public Task<string> FetchOrganisationName(Guid organisationId)
         {
             return OrganisationNames.Fetch(organisationId);
@@ -182,6 +200,21 @@
         public async Task InvalidateProducerSearch()
         {
             await ProducerSearchResultList.InvalidateCache();
+        }
+
+        public Task<IList<OrganisationSearchResult>> FetchOrganisationSearchResultList()
+        {
+            return OrganisationSearchResultList.Fetch();
+        }
+
+        Task<IList<OrganisationSearchResult>> IOrganisationSearchResultProvider.FetchAll()
+        {
+            return FetchOrganisationSearchResultList();
+        }
+
+        public async Task InvalidateOrganisationSearch()
+        {
+            await OrganisationSearchResultList.InvalidateCache();
         }
     }
 }
