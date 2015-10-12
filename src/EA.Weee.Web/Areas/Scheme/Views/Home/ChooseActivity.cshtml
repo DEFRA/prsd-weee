@@ -30,7 +30,7 @@
     @if (Model.ShowLinkToCreateOrJoinOrganisation)
     {
     <div>
-        <a href="@Url.Action("SearchOrganisation", "OrganisationRegistration", new { area = "" })">Create or access another organisation</a>
+        <a href="@Url.Action("Search", "OrganisationRegistration", new { area = "" })">Create or access another organisation</a>
     </div>
 }
 }

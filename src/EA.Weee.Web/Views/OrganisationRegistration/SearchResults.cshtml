@@ -1,0 +1,79 @@
+﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.SearchResultsViewModel
+@{
+    ViewBag.Title = "Choose your organisation";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Search results
+        </h1>
+    </header>
+
+    @if (Model.Results.Count > 0)
+    {
+        using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+
+            <p>
+                Here are some organisations that matched your search:
+            </p>
+
+            <table id="organisations" class="prsd-table">
+                <thead>
+                    <tr>
+                        <th>Organisation</th>
+                        <th>Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.Results)
+                    {
+                        <tr>
+                            <td>@result.Name</td>
+                            <td>
+                                @Html.RadioButtonFor(m => m.SelectedOrganisationId, result.OrganisationId)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br/>
+
+            <p>
+                <input type="submit" class="button" value="Continue" />
+            </p>
+        }
+
+        <details>
+            <summary><span class="summary">My organisation is not listed</span></summary>
+            <div class="panel-indent">
+                <p>If your organisation is not listed, @Html.ActionLink("create a new organisation", "Type", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, null).</p>
+            </div>
+        </details>
+        <br />
+    }
+    else
+    {
+        <p>We found no search results for '@Model.SearchTerm'.</p>
+
+        <p>
+            @Html.ActionLink("Create a new organisation", "Type", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "button" })
+        </p>
+    }
+
+    <p>
+        @Html.ActionLink("Start new search", "Search", "OrganisationRegistration")
+    </p>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $('#organisations tr').click(function () {
+            $(this).find('td input[type=radio]').prop('checked', true);
+        })
+    </script>
+}
