@@ -752,5 +752,210 @@
             ViewResult viewResult = result as ViewResult;
             Assert.False(viewResult.ViewData.ModelState.IsValid);
         }
+
+        [Fact]
+        public async Task GetSearch_ReturnsSearchView()
+        {
+            // Arrange
+            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.Search();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "search");
+        }
+
+        [Fact]
+        public async Task PostSearch_WithInvalidModel_ReturnsSearchView()
+        {
+            // Arrange
+            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            SearchViewModel viewModel = new SearchViewModel();
+            controller.ModelState.AddModelError("SomeProperty", "Exception");
+
+            // Act
+            ActionResult result = await controller.Search(viewModel);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "search");
+        }
+
+        [Fact]
+        public async Task PostSearch_WithSearchTermAndNoSelectedOrganisationId_RedirectsToSearchResultsAction()
+        {
+            // Arrange
+            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            SearchViewModel viewModel = new SearchViewModel();
+            viewModel.SearchTerm = "testSearchTerm";
+            viewModel.SelectedOrganisationId = null;
+
+            // Act
+            ActionResult result = await controller.Search(viewModel);
+
+            // Assert
+            RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
+            Assert.NotNull(redirectResult);
+
+            Assert.Equal("SearchResults", redirectResult.RouteValues["action"]);
+            Assert.Equal("testSearchTerm", redirectResult.RouteValues["SearchTerm"]);
+        }
+
+        [Fact]
+        public async Task PostSearch_WithSelectedOrganisationId_RedirectsToJoinOrganisationAction()
+        {
+            // Arrange
+            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            SearchViewModel viewModel = new SearchViewModel();
+            viewModel.SearchTerm = "Test Company";
+            viewModel.SelectedOrganisationId = new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8");
+
+            // Act
+            ActionResult result = await controller.Search(viewModel);
+
+            // Assert
+            RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
+            Assert.NotNull(redirectResult);
+
+            Assert.Equal("JoinOrganisation", redirectResult.RouteValues["action"]);
+            Assert.Equal(new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"), redirectResult.RouteValues["OrganisationId"]);
+        }
+
+        [Fact]
+        public async Task GetSearchResults_DoesSearchForTenResultsAndReturnsSearchReturnsView()
+        {
+            // Arrange
+            List<OrganisationSearchResult> fakeResults = new List<OrganisationSearchResult>()
+            {
+                new OrganisationSearchResult()
+                {
+                    OrganisationId = new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"),
+                    Name = "Test Company",
+                }
+            };
+
+            IOrganisationSearcher organisationSearcher = A.Fake<IOrganisationSearcher>();
+            A.CallTo(() => organisationSearcher.Search("testSearchTerm", 10))
+                .Returns(fakeResults);
+
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.SearchResults("testSearchTerm");
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "searchresults");
+
+            SearchResultsViewModel viewModel = viewResult.Model as SearchResultsViewModel;
+            Assert.NotNull(viewModel);
+
+            Assert.Contains(viewModel.Results, r => r.OrganisationId == new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
+        }
+
+        [Fact]
+        public async Task PostSearchResults_WithInvalidModel_DoesSearchForTenResultsAndReturnsSearchReturnsView()
+        {
+            // Arrange
+            List<OrganisationSearchResult> fakeResults = new List<OrganisationSearchResult>()
+            {
+                new OrganisationSearchResult()
+                {
+                    OrganisationId = new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"),
+                    Name = "Test Company",
+                }
+            };
+
+            IOrganisationSearcher organisationSearcher = A.Fake<IOrganisationSearcher>();
+            A.CallTo(() => organisationSearcher.Search("testSearchTerm", 10))
+                .Returns(fakeResults);
+
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            SearchResultsViewModel viewModel = new SearchResultsViewModel();
+            viewModel.SearchTerm = "testSearchTerm";
+            controller.ModelState.AddModelError("SomeProperty", "Exception");
+
+            // Act
+            ActionResult result = await controller.SearchResults(viewModel);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "searchresults");
+
+            SearchResultsViewModel resultsViewModel = viewResult.Model as SearchResultsViewModel;
+            Assert.NotNull(resultsViewModel);
+
+            Assert.Contains(resultsViewModel.Results, r => r.OrganisationId == new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
+        }
+
+        [Fact]
+        public async Task PostSearchResults_WithSelectedOrganisationId_RedirectsToJoinOrganisationAction()
+        {
+            // Arrange
+            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            SearchResultsViewModel viewModel = new SearchResultsViewModel()
+            {
+                SelectedOrganisationId = new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8")
+            };
+
+            // Act
+            ActionResult result = await controller.SearchResults(viewModel);
+
+            // Assert
+            RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
+            Assert.NotNull(redirectResult);
+
+            Assert.Equal("JoinOrganisation", redirectResult.RouteValues["action"]);
+            Assert.Equal(new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"), redirectResult.RouteValues["OrganisationId"]);
+        }
     }
 }
