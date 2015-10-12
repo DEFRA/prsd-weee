@@ -46,7 +46,7 @@
         });
 
         $("#SearchTerm")
-            .change(function () { $("#SelectedRegistrationNumber").val(""); })
+            .keyup(function () { $("#SelectedRegistrationNumber").val(""); })
             .autocomplete({
             source: function (request, response) {
                 $.ajax({
