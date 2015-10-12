@@ -249,6 +249,9 @@
     <Compile Include="App_Start\AutofacBootstrapper.cs" />
     <Compile Include="App_Start\Modules\SecurityModule.cs" />
     <Compile Include="App_Start\Modules\UserContextModule.cs" />
+    <Compile Include="Identity\ApplicationUserManagerBase.cs" />
+    <Compile Include="Identity\ISecurityEventAuditor.cs" />
+    <Compile Include="Identity\SecurityEventService.cs" />
     <Compile Include="Infrastructure\HttpStatusCodeResult.cs" />
     <Compile Include="Controllers\MediatorController.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
@@ -269,6 +272,7 @@
     <Compile Include="Services\NullEventDispatcher.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Identity\SecurityEventDatabaseAuditor.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>

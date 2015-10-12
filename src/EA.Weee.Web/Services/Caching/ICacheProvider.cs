@@ -26,5 +26,13 @@
         /// <param name="key"></param>
         /// <returns></returns>
         Task<CacheResult<T>> Fetch<T>(string cache, string key);
+
+        /// <summary>
+        /// Removes an item from the cache.
+        /// </summary>
+        /// <param name="cache"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        Task Remove(string cache, string key);
     }
 }
