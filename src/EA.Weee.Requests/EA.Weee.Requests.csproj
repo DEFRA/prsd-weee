@@ -49,7 +49,10 @@
     <Compile Include="Admin\FindMatchingUsers.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUser.cs" />
     <Compile Include="Admin\GetAdminUserStatus.cs" />
-    <Compile Include="Admin\GetProducerDetails.cs" />
+    <Compile Include="Admin\GetAllApprovedSchemes.cs" />
+    <Compile Include="Admin\GetAllComplianceYears.cs" />
+    <Compile Include="Admin\GetSubmissionsHistoryResults.cs" />
+   <Compile Include="Admin\GetProducerDetails.cs" />
     <Compile Include="Admin\GetUserData.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus.cs" />
     <Compile Include="Admin\UpdateUser.cs" />

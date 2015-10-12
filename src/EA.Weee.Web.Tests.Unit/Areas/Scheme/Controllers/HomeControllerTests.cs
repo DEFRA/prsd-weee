@@ -281,6 +281,20 @@
         }
 
         [Fact]
+        public async void GetManageOrganisationUser_NullOrganisationUserId_RedirectsToManageOrganisationUsers()
+        {
+            var result = await HomeController().ManageOrganisationUser(A.Dummy<Guid>(), (Guid?)null);
+
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ManageOrganisationUsers", routeValues["action"]);
+            Assert.Equal("Home", routeValues["controller"]);
+        }
+
+        [Fact]
         public async void PostManageOrganisationUser_DoNotChangeSelected_MustNotHappendUpdateOrganisationUserStatus()
         {
             const string DoNotChange = "Do not change at this time";

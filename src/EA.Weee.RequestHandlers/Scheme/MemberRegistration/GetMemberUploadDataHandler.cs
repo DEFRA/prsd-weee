@@ -28,7 +28,7 @@
 
         public async Task<List<MemberUploadErrorData>> HandleAsync(GetMemberUploadData message)
         {
-            authorization.EnsureOrganisationAccess(message.PcsId);
+            authorization.EnsureInternalOrOrganisationAccess(message.PcsId);
 
             var memberUpload = await context.MemberUploads.FirstOrDefaultAsync(m => m.Id == message.MemberUploadId);
 

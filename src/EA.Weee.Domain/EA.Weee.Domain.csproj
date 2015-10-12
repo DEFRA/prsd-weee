@@ -46,6 +46,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
+    <Compile Include="Audit\AuditableEntity.cs" />
+    <Compile Include="Audit\IAuditableEntity.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ChargeBandType.cs" />
     <Compile Include="Events\MemberUploadSubmittedEvent.cs" />
     <Compile Include="Events\OrganisationUserRequestEvent.cs" />

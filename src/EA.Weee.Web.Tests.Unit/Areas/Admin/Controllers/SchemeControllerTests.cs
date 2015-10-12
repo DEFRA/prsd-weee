@@ -73,6 +73,20 @@
             Assert.IsType<SchemeViewModel>(model);
         }
 
+        [Fact]
+        public async void GetEditScheme_NullSchemeId_RedirectsToManageSchemes()
+        {
+            var controller = SchemeController();
+
+            var result = await controller.EditScheme(null);
+
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var redirectValues = ((RedirectToRouteResult)result).RouteValues;
+            Assert.Equal("ManageSchemes", redirectValues["action"]);
+        }
+
         [Theory]
         [InlineData(SchemeStatus.Approved)]
         [InlineData(SchemeStatus.Rejected)]
