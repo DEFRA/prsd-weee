@@ -1,18 +1,17 @@
 ﻿namespace EA.Weee.Domain.Scheme
 {
-    using EA.Weee.Domain.Events;
-    using Organisation;
-    using Producer;
-    using Prsd.Core;
-    using Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
+    using Audit;
+    using Events;
+    using Organisation;
+    using Producer;
 
-    public class MemberUpload : Entity
+    public class MemberUpload : AuditableEntity
     {
         public virtual Guid OrganisationId { get; private set; }
 
-        public Guid? SchemeId { get; private set; }
+        public virtual Guid? SchemeId { get; private set; }
 
         public virtual Organisation Organisation { get; private set; }
 
@@ -30,7 +29,8 @@
 
         public virtual MemberUploadRawData RawData { get; set; }
 
-        public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors, decimal totalCharges, int? complianceYear, Guid? schemeId = null)
+        public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors, decimal totalCharges,
+            int? complianceYear, Guid? schemeId = null, string userId = null)
         {
             OrganisationId = organisationId;
             SchemeId = schemeId.GetValueOrDefault();
@@ -39,6 +39,7 @@
             TotalCharges = totalCharges;
             ComplianceYear = complianceYear;
             RawData = new MemberUploadRawData() { Data = data };
+            UserId = userId;
         }
 
         public MemberUpload(Guid organisationId, string data)

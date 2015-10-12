@@ -127,7 +127,10 @@
 
                 if (model.IsCompetentAuthorityUser)
                 {
-                    await client.SendAsync(User.GetAccessToken(), new UpdateCompetentAuthorityUserStatus(model.Id, model.UserStatus));
+                    if (User.GetUserId() != model.UserId)
+                    {
+                        await client.SendAsync(User.GetAccessToken(), new UpdateCompetentAuthorityUserStatus(model.Id, model.UserStatus));
+                    }
                 }
                 else
                 {
