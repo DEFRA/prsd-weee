@@ -14,7 +14,7 @@
     <p>We found no search results for '@Model.Name'.</p>
 
     <div class="form-group">
-        <p>@Html.ActionLink("Create a new organisation", "Type", "OrganisationRegistration", new { searchedText = @Model.SearchedText }, new { @class = "button" })</p>
+        @Html.ActionLink("Create a new organisation", "Type", "OrganisationRegistration", new { searchedText = @Model.SearchedText }, new { @class = "button" })
     </div>
 
     <p>

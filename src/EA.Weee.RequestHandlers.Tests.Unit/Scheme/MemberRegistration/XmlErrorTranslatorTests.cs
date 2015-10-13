@@ -76,7 +76,7 @@
         public void XmlErrorTranslator_InvalidChildElement_CorrectMessage()
         {
             string providedException = string.Format("The element 'TestParentElement' in namespace '{0}' has invalid child element '{1}' in namespace '{0}'. List of possible elements expected: '{2}' in namespace '{0}'.", TestNamespace, TestField, TestType);
-            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The field {0} isn't expected here. Please check that you are using v3.0.6 of the XSD schema (XML template).", TestField));
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The field {0} isn't expected here. Please check that you are using v3.0.7 of the XSD schema (XML template).", TestField));
 
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }

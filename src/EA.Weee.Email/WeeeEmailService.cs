@@ -82,7 +82,7 @@
 
             MailMessage message = messageCreator.Create(
                 emailAddress,
-                string.Format("Request to perform WEEE activities for {0}", model.OrganisationName),
+                "New request to access your organisation",
                 content);
 
             return await sender.SendAsync(message);
@@ -105,7 +105,7 @@
 
             MailMessage message = messageCreator.Create(
                 organisationUser.User.Email,
-                "Decision on your request to perform WEEE activities",
+                "Your request to access a WEEE organisation",
                 content);
 
             return await sender.SendAsync(message);

@@ -8,9 +8,9 @@ To use this service you need to click activate your account: @Model.ActivationUr
 
 If you didn’t create a user account you don’t need to take any action.
 
-This is an automated email; please do not reply.
+This is an automated email; do not reply.
 
-If you have any enquiries, please contact the relevant helpline:
+If you have any enquiries, contact your relevant helpline:
 
 - Environment Agency (England): 03708 506506
 
