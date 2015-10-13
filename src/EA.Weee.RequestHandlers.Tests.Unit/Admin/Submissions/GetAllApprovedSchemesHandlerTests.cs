@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Submissions
 {
     using System;
     using System.Collections.Generic;
