@@ -19,5 +19,7 @@
         Task<SchemePublicInfo> FetchSchemePublicInfo(Guid organisationId);
 
         Task<IList<ProducerSearchResult>> FetchProducerSearchResultList();
+
+        Task InvalidateProducerSearch();
     }
 }

@@ -27,6 +27,9 @@
                     case HomeViewModel.OptionGeneratePcsXmlFile:
                         return RedirectToAction("SelectOrganisation", "GeneratePcsXml");
 
+                    case HomeViewModel.ManageCache:
+                        return RedirectToAction("Index", "ManageCache");
+
                     default:
                         throw new NotSupportedException();
                 }

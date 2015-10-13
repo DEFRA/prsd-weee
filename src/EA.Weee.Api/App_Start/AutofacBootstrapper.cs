@@ -1,17 +1,18 @@
 ﻿namespace EA.Weee.Api
 {
-    using System.Web.Http;
     using Autofac;
     using Autofac.Integration.WebApi;
     using Core;
     using DataAccess;
     using DataAccess.Identity;
+    using EA.Weee.Api.Services;
     using EA.Weee.Email;
     using EA.Weee.Xml;
     using Identity;
     using Microsoft.AspNet.Identity;
     using Prsd.Core.Autofac;
     using RequestHandlers;
+    using System.Web.Http;
     using XmlValidation;
 
     public class AutofacBootstrapper
@@ -44,6 +45,13 @@
             builder.RegisterType<ApplicationUserStore>().As<IUserStore<ApplicationUser>>().InstancePerRequest();
             builder.RegisterType<ApplicationUserManager>().AsSelf().InstancePerRequest();
             builder.RegisterType<ApplicationUserManager>().As<UserManager<ApplicationUser>>().InstancePerRequest();
+
+            string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["Weee.DefaultConnection"].ConnectionString;
+
+            builder.RegisterType<SecurityEventDatabaseAuditor>()
+                .WithParameter(new NamedParameter("connectionString", connectionString))
+                .As<ISecurityEventAuditor>()
+                .InstancePerRequest();
 
             return builder.Build();
         }
