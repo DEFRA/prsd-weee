@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin
+﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.Submissions
 {
     using System.Threading.Tasks;
     using RequestHandlers.Admin.Submissions;
