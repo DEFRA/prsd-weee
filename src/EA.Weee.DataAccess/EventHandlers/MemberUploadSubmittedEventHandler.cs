@@ -1,14 +1,11 @@
 ﻿namespace EA.Weee.DataAccess.EventHandlers
 {
-    using EA.Prsd.Core.Domain;
-    using EA.Weee.Domain.Events;
-    using EA.Weee.Domain.Producer;
-    using System;
-    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
+    using Domain.Events;
+    using Domain.Producer;
+    using Prsd.Core.Domain;
 
     public class MemberUploadSubmittedEventHandler : IEventHandler<MemberUploadSubmittedEvent>
     {
@@ -30,8 +27,7 @@
             foreach (Producer newVersion in @event.MemberUpload.Producers)
             {
                 Producer previousVersion = currentProducers
-                    .Where(p => p.RegistrationNumber == newVersion.RegistrationNumber)
-                    .SingleOrDefault();
+                    .SingleOrDefault(p => p.RegistrationNumber == newVersion.RegistrationNumber);
 
                 if (previousVersion != null)
                 {
@@ -46,7 +42,6 @@
                     newVersion.IsCurrentForComplianceYear = true;
                 }
             }
-
             await context.SaveChangesAsync();
         }
     }

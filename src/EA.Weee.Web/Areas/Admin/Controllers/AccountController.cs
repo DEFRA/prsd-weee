@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System;
+    using System.Linq;
     using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -78,7 +79,7 @@
                     }
 
                     ModelState.AddModelError(string.Empty, loginResult.ErrorMessage);
-                }               
+                }
             }
             catch (ApiBadRequestException ex)
             {
@@ -87,6 +88,18 @@
                 if (ModelState.IsValid)
                 {
                     throw;
+                }
+
+                foreach (var modelState in ViewData.ModelState.Values.ToList())
+                {
+                    for (var i = modelState.Errors.Count - 1; i >= 0; i--)
+                    {
+                        if (modelState.Errors[i].ErrorMessage.Contains("is already taken"))
+                        {
+                            modelState.Errors.Remove(modelState.Errors[i]);
+                            modelState.Errors.Add("An account already exists with this email address. Sign in or reset your password.");
+                        }
+                    }
                 }
             }
             catch (SmtpException)
