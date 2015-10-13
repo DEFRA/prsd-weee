@@ -7,13 +7,15 @@
     <header class="hgroup">
         <h1 class="heading-large">Add your organisation</h1>
     </header>
+
+    <p>Search for your organisation on our system. If your organisation is not listed, create a new organisation.</p>
+
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.ShowPerformAnotherActivityLink)
         @Html.Gds().ValidationSummary()
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SearchedText)">
-            @Html.Gds().LabelFor(m => m.SearchedText)
             @Html.Gds().ValidationMessageFor(m => m.SearchedText)
             @Html.Gds().TextBoxFor(m => m.SearchedText, new { @maxlength = "2048" })
             <button type="submit" class="search-button">
