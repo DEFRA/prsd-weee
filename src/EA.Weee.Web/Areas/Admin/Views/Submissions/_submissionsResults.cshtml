@@ -28,9 +28,9 @@
                                     <a href="@Url.Action("DownloadCSV", "Submissions", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId })">@item.NoOfWarnings @warningText</a>
                                 }
                             </td>
-                            <td>@item.SubmittedBy</td>
-                        </tr>
-                    }
+                            <td style="text-align:left">@item.SubmittedBy</td>
+                         </tr>
+                   }
                     </tbody>
                 </table>
         </div>
