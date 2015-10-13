@@ -18,6 +18,11 @@
 
         public async Task HandleAsync(MemberUploadSubmittedEvent @event)
         {
+            /* This query relies on producers being indexed by scheme to avoid
+             * taking shared read locks on producers outside of this scheme.
+             * By using this index, deadlocks will be avoided provided that multiple
+             * uploads for the same scheme are not being submitted concurrently.
+             */
             var currentProducers = await context.Producers
                 .Where(p => p.SchemeId == @event.MemberUpload.SchemeId)
                 .Where(p => p.MemberUpload.ComplianceYear == @event.MemberUpload.ComplianceYear)
