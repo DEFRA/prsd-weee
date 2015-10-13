@@ -66,7 +66,12 @@ namespace EA.Weee.Api
 
             return new IdentityServerOptions
             {
-                Factory = factory
+                Factory = factory,
+                EventsOptions = new EventsOptions()
+                {
+                    RaiseSuccessEvents = true,
+                    RaiseFailureEvents = true
+                }
             };
         }
     }
