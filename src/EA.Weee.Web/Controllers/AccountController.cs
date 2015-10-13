@@ -120,6 +120,35 @@
             return View("AccountActivationRequested");
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UserAccountActivationFailed(Guid id, AccountActivationRequestViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("AccountActivationFailed", model);
+            }
+
+            using (var client = apiClient())
+            {
+                string activationBaseUrl = externalRouteService.ActivateExternalUserAccountUrl;
+
+                var result = await client.User.ResendActivationEmailByUserId(id.ToString(), model.Email, activationBaseUrl);
+
+                if (!result)
+                {
+                    ModelState.AddModelError("Email", "The email address does not match the address for your account.");
+                    return View("AccountActivationFailed", model);
+                }
+                else
+                {
+                    ViewBag.Email = model.Email;
+                    return View("AccountActivationRequested");
+                }
+            }
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult> ActivateUserAccount(Guid id, string code)
