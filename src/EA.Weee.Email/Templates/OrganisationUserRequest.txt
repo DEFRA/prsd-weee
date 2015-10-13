@@ -1,14 +1,14 @@
-﻿Request to perform activities
+﻿New request to access your organisation
 
 Hello,
 
-You're receiving this email because a Waste Electrical and Electronic Equipment (WEEE) user has asked for the right to perform activities for @Model.OrganisationName.
+You're receiving this email because a Waste Electrical and Electronic Equipment (WEEE) user has asked for the right to access @Model.OrganisationName.
 
-Please sign in to the WEEE service to action this request at @Model.ExternalUserLoginUrl
+Sign in to the WEEE online service to action this request at @Model.ExternalUserLoginUrl
 
-This is an automated email; please do not reply.
+This is an automated email; do not reply.
 
-If you have any enquiries, please contact the relevant helpline:
+If you have any enquiries, contact your relevant helpline:
 
 - Environment Agency (England): 03708 506506
 
