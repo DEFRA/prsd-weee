@@ -230,6 +230,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
@@ -699,6 +700,7 @@
     <Compile Include="Authorization\WeeeAuthorization.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordModel.cs" />
     <Compile Include="Services\IExternalRouteService.cs" />
+    <Compile Include="ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordRequestViewModel.cs" />
     <Compile Include="ViewModels\Home\LandingPageViewModel.cs" />
     <Compile Include="ViewModels\JoinOrganisation\JoinOrganisationViewModel.cs" />
