@@ -8,12 +8,12 @@
     public class GetSubmissionsHistoryResultsDataAccessTests
     {
         /// <summary>
-        /// This test ensures that only the latest result will be returned for a producer who is
+        /// This test ensures that only the submissions for the selected year and scheme
         /// registered in multiple compliance years.
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task FetchSumissions_ForYearandScheme_Returns2Submissions()
+        public async Task FetchSumissions_ForYearandScheme_ReturnsCorrectSubmissions()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
