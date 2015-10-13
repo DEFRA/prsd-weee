@@ -97,20 +97,10 @@
                 ExternalUserLoginUrl = configuration.ExternalUserLoginUrl
             };
 
-            var plainText = string.Empty;
-            if (organisationUser.UserStatus == UserStatus.Active)
-            {
-                plainText = templateExecutor.Execute("OrganisationUserRequestCompletedForApprove.txt", model);
-            }
-            else if (organisationUser.UserStatus == UserStatus.Rejected)
-            {
-                plainText = templateExecutor.Execute("OrganisationUserRequestCompletedForReject.txt", model);
-            }
-
             EmailContent content = new EmailContent()
             {
                 HtmlText = templateExecutor.Execute("OrganisationUserRequestCompleted.cshtml", model),
-                PlainText = plainText
+                PlainText = templateExecutor.Execute("OrganisationUserRequestCompleted.txt", model)
             };
 
             MailMessage message = messageCreator.Create(
