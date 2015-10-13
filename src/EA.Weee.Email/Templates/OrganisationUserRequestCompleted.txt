@@ -4,6 +4,8 @@ Hello,
 
 @Model.OrganisationName has @(Model.Approved ? "authorised" : "rejected") your request to access the Waste Electrical and Electronic Equipment (WEEE) online service on their behalf.
 
+@(Model.Approved ? string.Format("Sign in to the WEEE online service to perform activities at {0}", @Model.ExternalUserLoginUrl) : "") 
+
 This is an automated email; do not reply.
 
 If you have any enquiries, contact your relevant helpline:
