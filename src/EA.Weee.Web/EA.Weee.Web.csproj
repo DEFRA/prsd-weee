@@ -229,6 +229,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -478,6 +480,8 @@
     <Content Include="Areas\Admin\Views\Producers\Search.cshtml" />
     <Content Include="Areas\Admin\Views\Producers\SearchResults.cshtml" />
     <Content Include="Areas\Admin\Views\Producers\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Submissions\SubmissionsHistory.cshtml" />
+    <Content Include="Areas\Admin\Views\Submissions\_submissionsResults.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\ManageContactDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Account\AccountActivationFailed.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPasswordExpired.cshtml" />
