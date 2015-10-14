@@ -74,7 +74,7 @@
             {
                 foreach (var identity in claimsPrincipal.Identities)
                 {
-                    if (identity.AuthenticationType.Equals("BEARER", StringComparison.InvariantCultureIgnoreCase))
+                    if (string.Equals(identity.AuthenticationType, "BEARER", StringComparison.InvariantCultureIgnoreCase))
                     {
                         var idClaim = identity.FindFirst("sub");
 
