@@ -19,15 +19,12 @@
             Search for you organisation on our system. If you organisation is not listed, create a new organisation.
         </p>
         
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SearchTerm)">
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SearchTerm) form-search">
             @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "visuallyhidden" })
             @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
-            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { style = "width:100%" })
+            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { @class = "form-control" })
+            <button type="submit" class="button">Search</button>
         </div>
-
-        <p>
-            <button class="button" type="submit">Continue</button>
-        </p>
     }
 
     @if (Model.ShowPerformAnotherActivityLink)
