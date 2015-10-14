@@ -105,12 +105,12 @@
 
             schemeData2 = A.Fake<SchemeData>();
             schemeData2.SchemeName = "ARB";
-            schemeData1.SchemeStatus = SchemeStatus.Approved;
+            schemeData2.SchemeStatus = SchemeStatus.Approved;
             A.CallTo(() => schemeMap.Map(scheme2)).Returns(schemeData2);
 
             schemeData3 = A.Fake<SchemeData>();
             schemeData3.SchemeName = "ZRS";
-            schemeData1.SchemeStatus = SchemeStatus.Pending;
+            schemeData3.SchemeStatus = SchemeStatus.Pending;
             A.CallTo(() => schemeMap.Map(scheme3)).Returns(schemeData3);
 
             return schemeMap;
