@@ -74,7 +74,7 @@
         }
 
         [Fact]
-        public async Task FetchSumissions_ForYearandScheme_ReturnsSubmittedSubmissionsWithWarnings()
+        public async Task FetchSumissions_ForYearandScheme_ReturnsSubmittedSubmissionsWithCorrectnumberOfWarnings()
             {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -88,7 +88,7 @@
                 var user2 = helper.CreateUser("a1@co.uk");
 
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
-                memberUpload1.ComplianceYear = 2015;
+                memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
                 memberUpload1.Date = new DateTime(2015, 09, 23, 10, 45, 45);
                 memberUpload1.UserId = user1.Id;
@@ -122,11 +122,10 @@
                 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
-                
-                var result1 = results.SingleOrDefault(r => r.Year == 2016);
-                Assert.NotNull(result1);
-                Assert.Equal(2, result1.NoOfWarnings);
+                Assert.Equal(2, results.Count);
+                Assert.Collection(results,
+                    r1 => Assert.Equal(0, r1.NoOfWarnings),
+                    r2 => Assert.Equal(2, r2.NoOfWarnings));
             }
         }
     }
