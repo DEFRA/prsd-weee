@@ -23,7 +23,9 @@
             @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "visuallyhidden" })
             @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
             @Html.Gds().TextBoxFor(m => m.SearchTerm, new { @class = "form-control" })
-            <button type="submit" class="button">Search</button>
+            <button type="submit" class="button">
+                <img src="@Url.Content("~/Content/govuk_toolkit/images/icon-search.png")" alt="Search" />
+            </button>
         </div>
     }
 
