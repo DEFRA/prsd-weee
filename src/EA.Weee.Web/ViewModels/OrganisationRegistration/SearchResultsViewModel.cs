@@ -17,6 +17,7 @@
         public IList<OrganisationSearchResult> Results { get; set; }
 
         [Required(ErrorMessage = "You must choose an organisation")]
+        [DisplayName("Select an organisation to add.")]
         public Guid? SelectedOrganisationId { get; set; }
     }
 }
