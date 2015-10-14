@@ -192,7 +192,7 @@
             return ProducerSearchResultList.Fetch();
         }
 
-        Task<IList<ProducerSearchResult>> IProducerSearchResultProvider.FetchAll()
+        Task<IList<ProducerSearchResult>> ISearchResultProvider<ProducerSearchResult>.FetchAll()
         {
             return FetchProducerSearchResultList();
         }
@@ -207,7 +207,7 @@
             return OrganisationSearchResultList.Fetch();
         }
 
-        Task<IList<OrganisationSearchResult>> IOrganisationSearchResultProvider.FetchAll()
+        Task<IList<OrganisationSearchResult>> ISearchResultProvider<OrganisationSearchResult>.FetchAll()
         {
             return FetchOrganisationSearchResultList();
         }

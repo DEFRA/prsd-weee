@@ -6,10 +6,8 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class OrganisationSearchResult : SearchResult
+    public interface ISearchResultProvider<T> where T : SearchResult
     {
-        public Guid OrganisationId { get; set; }
-
-        public string Name { get; set; }
+        Task<IList<T>> FetchAll();
     }
 }

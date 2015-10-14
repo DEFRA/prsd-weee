@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core.Search
+﻿namespace EA.Weee.Core.Search.Simple
 {
     using System;
     using System.Collections.Generic;
@@ -7,25 +7,26 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    /// An organsation searcher that uses a simple string matching algorithm.
+    /// A searcher that uses a simple string matching algorithm.
+    /// Only results that wholly contain the search phrase are returned.
     /// </summary>
-    public class SimpleOrganisationSearcher : IOrganisationSearcher
+    public abstract class SimpleSearcher<T> : ISearcher<T> where T : SearchResult
     {
-        private readonly IOrganisationSearchResultProvider searchResultProvider;
+        private readonly ISearchResultProvider<T> searchResultProvider;
 
-        public SimpleOrganisationSearcher(IOrganisationSearchResultProvider searchResultProvider)
+        public SimpleSearcher(ISearchResultProvider<T> searchResultProvider)
         {
             this.searchResultProvider = searchResultProvider;
         }
 
         /// <summary>
-        /// Returns results where the organisation name contains the whole search term,
+        /// Returns results where the result name contains the whole search term,
         /// using a simple invariant string match.
         /// </summary>
         /// <param name="searchTerm">The string that must be contained.</param>
         /// <param name="maxResults">The maximum number of results to return. This must be at least 1.</param>
         /// <returns></returns>
-        public async Task<IList<OrganisationSearchResult>> Search(string searchTerm, int maxResults)
+        public async Task<IList<T>> Search(string searchTerm, int maxResults, bool asYouType)
         {
             if (maxResults < 1)
             {
@@ -34,16 +35,19 @@
 
             if (string.IsNullOrEmpty(searchTerm))
             {
-                return new List<OrganisationSearchResult>();
+                return new List<T>();
             }
 
-            IList<OrganisationSearchResult> list = await searchResultProvider.FetchAll();
+            IList<T> list = await searchResultProvider.FetchAll();
 
             string invariantSearchTerm = ToInvariant(searchTerm);
 
-            return list
-                .Where(i => ToInvariant(i.Name).Contains(invariantSearchTerm))
-                .OrderBy(i => i.Name)
+            IEnumerable<T> results = list
+                .Where(i => ToInvariant(ResultToString(i)).Contains(invariantSearchTerm));
+
+            IOrderedEnumerable<T> orderedResults = OrderResults(results);
+
+            return orderedResults
                 .Take(maxResults)
                 .ToList();
         }
@@ -56,6 +60,13 @@
             }
 
             return term.ToLowerInvariant();
+        }
+
+        protected abstract string ResultToString(T result);
+
+        protected virtual IOrderedEnumerable<T> OrderResults(IEnumerable<T> results)
+        {
+            return results.OrderBy(i => true);
         }
     }
 }
