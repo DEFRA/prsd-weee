@@ -143,7 +143,7 @@
         public async Task<IHttpActionResult> ResendActivationEmailByUserId(ResendActivationEmailByUserIdRequest model)
         {
             var user = await userManager.FindByEmailAsync(model.EmailAddress);
-            if (user == null || user.Id == model.UserId)
+            if (user == null || user.Id != model.UserId)
             {
                 return Ok(false);
             }
