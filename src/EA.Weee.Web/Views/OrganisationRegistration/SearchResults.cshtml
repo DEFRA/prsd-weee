@@ -5,23 +5,27 @@
 
 @section main_content
 {
-    <header class="hgroup">
-        <h1 class="heading-large">
-            Search results
-        </h1>
-    </header>
-
     @if (Model.Results.Count > 0)
     {
+        <header class="hgroup">
+            <h1 class="heading-large">
+                Search results
+            </h1>
+        </header>
+
         using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
             @Html.Gds().ValidationSummary()
 
             <p>
-                Here are some organisations that matched your search:
+                We found results for '@Model.SearchTerm'.
             </p>
 
+            <p>
+                Select an organisation to add.
+            </p>
+        
             <table id="organisations" class="prsd-table">
                 <thead>
                     <tr>
@@ -58,6 +62,12 @@
     }
     else
     {
+        <header class="hgroup">
+            <h1 class="heading-large">
+                No results found
+            </h1>
+        </header>
+
         <p>We found no search results for '@Model.SearchTerm'.</p>
 
         <p>

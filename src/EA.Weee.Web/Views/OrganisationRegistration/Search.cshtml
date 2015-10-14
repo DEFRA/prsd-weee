@@ -5,7 +5,7 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="heading-large">Find your organisation</h1>
+        <h1 class="heading-large">Add your organisation</h1>
     </header>
 
     @using (Html.BeginForm())
@@ -15,12 +15,9 @@
         
         @Html.HiddenFor(m => m.SelectedOrganisationId);
         
-        <p id="introJavaScriptEnabled" style="display:none;">
-            Start typing the name of your organisation to find a match.
+        <p>
+            Search for you organisation on our system. If you organisation is not listed, create a new organisation.
         </p>
-        <noscript>
-            <p>Type the name of your organisation to find a match.</p>
-        </noscript>
         
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SearchTerm)">
             @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "visuallyhidden" })
@@ -43,10 +40,6 @@
 
 @section scripts {
     <script type="text/javascript">
-        $(document).ready(function () {
-            $("#introJavaScriptEnabled").show();
-        });
-
         $("#SearchTerm")
             .keyup(function () { $("#SelectedOrganisationId").val(""); })
             .autocomplete({
