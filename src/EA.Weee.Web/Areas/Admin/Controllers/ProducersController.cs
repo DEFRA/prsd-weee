@@ -20,11 +20,11 @@
     public class ProducersController : AdminController
     {
         private readonly BreadcrumbService breadcrumb;
-        private readonly IProducerSearcher producerSearcher;
+        private readonly ISearcher<ProducerSearchResult> producerSearcher;
         private readonly Func<IWeeeClient> apiClient;
         private const int maximumSearchResults = 10;
 
-        public ProducersController(BreadcrumbService breadcrumb, IProducerSearcher producerSearcher, Func<IWeeeClient> apiClient)
+        public ProducersController(BreadcrumbService breadcrumb, ISearcher<ProducerSearchResult> producerSearcher, Func<IWeeeClient> apiClient)
         {
             this.breadcrumb = breadcrumb;
             this.producerSearcher = producerSearcher;
@@ -83,7 +83,7 @@
 
             SearchResultsViewModel viewModel = new SearchResultsViewModel();
             viewModel.SearchTerm = searchTerm;
-            viewModel.Results = await producerSearcher.Search(searchTerm, maximumSearchResults);
+            viewModel.Results = await producerSearcher.Search(searchTerm, maximumSearchResults, false);
 
             return View(viewModel);
         }
@@ -101,7 +101,7 @@
 
             if (!ModelState.IsValid)
             {
-                viewModel.Results = await producerSearcher.Search(viewModel.SearchTerm, maximumSearchResults);
+                viewModel.Results = await producerSearcher.Search(viewModel.SearchTerm, maximumSearchResults, false);
 
                 return View(viewModel);
             }
@@ -131,7 +131,7 @@
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
 
-            IList<ProducerSearchResult> searchResults = await producerSearcher.Search(searchTerm, maximumSearchResults);
+            IList<ProducerSearchResult> searchResults = await producerSearcher.Search(searchTerm, maximumSearchResults, true);
 
             return Json(searchResults, JsonRequestBehavior.AllowGet);
         }

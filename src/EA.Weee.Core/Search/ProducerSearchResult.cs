@@ -6,7 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class ProducerSearchResult
+    public class ProducerSearchResult : SearchResult
     {
         public string RegistrationNumber { get; set; }
         

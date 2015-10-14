@@ -26,12 +26,12 @@
     public class OrganisationRegistrationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly IOrganisationSearcher organisationSearcher;
+        private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private const int maximumSearchResults = 10;
 
         private const string NoSearchAnotherOrganisation = "No - search for another organisation";
 
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, IOrganisationSearcher organisationSearcher)
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, ISearcher<OrganisationSearchResult> organisationSearcher)
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
@@ -78,7 +78,7 @@
         {
             SearchResultsViewModel viewModel = new SearchResultsViewModel();
             viewModel.SearchTerm = searchTerm;
-            viewModel.Results = await organisationSearcher.Search(searchTerm, maximumSearchResults);
+            viewModel.Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false);
 
             return View(viewModel);
         }
@@ -89,7 +89,7 @@
         {
             if (!ModelState.IsValid)
             {
-                viewModel.Results = await organisationSearcher.Search(viewModel.SearchTerm, maximumSearchResults);
+                viewModel.Results = await organisationSearcher.Search(viewModel.SearchTerm, maximumSearchResults, false);
 
                 return View(viewModel);
             }
@@ -119,7 +119,7 @@
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
 
-            IList<OrganisationSearchResult> searchResults = await organisationSearcher.Search(searchTerm, maximumSearchResults);
+            IList<OrganisationSearchResult> searchResults = await organisationSearcher.Search(searchTerm, maximumSearchResults, true);
 
             return Json(searchResults, JsonRequestBehavior.AllowGet);
         }

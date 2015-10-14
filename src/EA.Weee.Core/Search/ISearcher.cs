@@ -6,10 +6,8 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class OrganisationSearchResult : SearchResult
+    public interface ISearcher<T> where T : SearchResult
     {
-        public Guid OrganisationId { get; set; }
-
-        public string Name { get; set; }
+        Task<IList<T>> Search(string searchTerm, int maxResults, bool asYouType);
     }
 }

@@ -27,7 +27,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Throws<Exception>();
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -57,7 +57,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(organisationData);
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -83,7 +83,7 @@
         {
             // Arrange
             IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -107,7 +107,7 @@
         {
             // Arrange
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -128,7 +128,7 @@
         {
             // Arrange
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -154,7 +154,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(new OrganisationData());
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -178,7 +178,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddAddressToOrganisation>._))
                .Returns(Guid.NewGuid());
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -201,7 +201,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -222,7 +222,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -245,7 +245,7 @@
         {
             // Arrange
             IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -268,7 +268,7 @@
         {
             // Arrange
             IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -294,7 +294,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
                 .Returns(false);
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -317,7 +317,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(new OrganisationData());
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -336,7 +336,7 @@
         {
             // Arrange
             IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -372,7 +372,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(orgData);
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -396,7 +396,7 @@
         {
             // Arrange
             IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -420,7 +420,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
                .Returns(false);
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -450,7 +450,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(orgData);
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -475,7 +475,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
                .Returns(false);
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -493,7 +493,7 @@
         {
             // Arrange
             IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -528,7 +528,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(orgData);
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -552,7 +552,7 @@
         {
             // Arrange
             IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -587,7 +587,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
                 .Returns(orgData);
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -611,7 +611,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
                 .Returns(new PublicOrganisationData());
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -632,7 +632,7 @@
         {
             // Arrange
             IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -659,7 +659,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<JoinOrganisation>._))
                 .Returns(Guid.NewGuid());
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -686,7 +686,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
                .Returns(new List<OrganisationUserData>());
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -714,7 +714,7 @@
                    new OrganisationUserData()
                });
 
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -735,7 +735,7 @@
         {
             // Arrange
             IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -757,7 +757,7 @@
         public async Task GetSearch_ReturnsSearchView()
         {
             // Arrange
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
@@ -778,7 +778,7 @@
         public async Task PostSearch_WithInvalidModel_ReturnsSearchView()
         {
             // Arrange
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
@@ -802,7 +802,7 @@
         public async Task PostSearch_WithSearchTermAndNoSelectedOrganisationId_RedirectsToSearchResultsAction()
         {
             // Arrange
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
@@ -828,7 +828,7 @@
         public async Task PostSearch_WithSelectedOrganisationId_RedirectsToJoinOrganisationAction()
         {
             // Arrange
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
             OrganisationRegistrationController controller = new OrganisationRegistrationController(
@@ -863,8 +863,8 @@
                 }
             };
 
-            IOrganisationSearcher organisationSearcher = A.Fake<IOrganisationSearcher>();
-            A.CallTo(() => organisationSearcher.Search("testSearchTerm", 10))
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
+            A.CallTo(() => organisationSearcher.Search("testSearchTerm", 10, false))
                 .Returns(fakeResults);
 
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
@@ -901,8 +901,8 @@
                 }
             };
 
-            IOrganisationSearcher organisationSearcher = A.Fake<IOrganisationSearcher>();
-            A.CallTo(() => organisationSearcher.Search("testSearchTerm", 10))
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
+            A.CallTo(() => organisationSearcher.Search("testSearchTerm", 10, false))
                 .Returns(fakeResults);
 
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
@@ -934,7 +934,7 @@
         public async Task PostSearchResults_WithSelectedOrganisationId_RedirectsToJoinOrganisationAction()
         {
             // Arrange
-            IOrganisationSearcher organisationSearcher = A.Dummy<IOrganisationSearcher>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 

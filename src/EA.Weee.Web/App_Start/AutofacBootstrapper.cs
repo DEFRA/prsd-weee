@@ -1,16 +1,18 @@
 ﻿namespace EA.Weee.Web
 {
+    using Authorization;
     using Autofac;
     using Autofac.Integration.Mvc;
     using EA.Weee.Core;
+    using EA.Weee.Core.Search;
+    using EA.Weee.Core.Search.Fuzzy;
+    using EA.Weee.Core.Search.Simple;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Modules;
     using Requests.Base;
     using System.Linq;
     using System.Reflection;
-    using Authorization;
-    using EA.Weee.Core.Search;
 
     public class AutofacBootstrapper
     {
@@ -44,8 +46,8 @@
             builder.RegisterType<InMemoryCacheProvider>().As<ICacheProvider>();
             builder.RegisterType<WeeeCache>()
                 .As<IWeeeCache>()
-                .As<IProducerSearchResultProvider>()
-                .As<IOrganisationSearchResultProvider>();
+                .As<ISearchResultProvider<ProducerSearchResult>>()
+                .As<ISearchResultProvider<OrganisationSearchResult>>();
 
             // Breadcrumb
             builder.RegisterType<BreadcrumbService>().InstancePerRequest();
@@ -57,10 +59,14 @@
             builder.RegisterType<ExternalRouteService>().As<IExternalRouteService>().InstancePerRequest();
 
             // We're going to use the simple producer searcher.
-            builder.RegisterType<SimpleProducerSearcher>().As<IProducerSearcher>().InstancePerRequest();
+            builder.RegisterType<SimpleProducerSearcher>()
+                .As<ISearcher<ProducerSearchResult>>()
+                .InstancePerRequest();
 
-            // We're going to use the simple organisation searcher.
-            builder.RegisterType<SimpleOrganisationSearcher>().As<IOrganisationSearcher>().InstancePerRequest();
+            // We're going to use the fuzzy organisation searcher.
+            builder.RegisterType<FuzzyOrganisationSearcher>()
+                .As<ISearcher<OrganisationSearchResult>>()
+                .InstancePerRequest();
 
             return builder.Build();
         }
