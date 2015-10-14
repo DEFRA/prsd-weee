@@ -61,6 +61,22 @@
             return await response.CreateResponseAsync<bool>();
         }
 
+        public async Task<bool> ResendActivationEmailByUserId(string userId, string emailAddress, string activationBaseUrl)
+        {
+            string url = Controller + "ResendActivationEmailByUserId";
+
+            ResendActivationEmailByUserIdRequest model = new ResendActivationEmailByUserIdRequest()
+            {
+                UserId = userId,
+                EmailAddress = emailAddress,
+                ActivationBaseUrl = activationBaseUrl,
+            };
+
+            var response = await httpClient.PostAsJsonAsync(url, model);
+
+            return await response.CreateResponseAsync<bool>();
+        }
+
         public async Task<bool> ResetPasswordAsync(PasswordResetData passwordResetData)
         {
             var response = await httpClient.PostAsJsonAsync(Controller + "ResetPassword", passwordResetData);
