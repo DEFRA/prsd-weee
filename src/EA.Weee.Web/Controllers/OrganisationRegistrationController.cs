@@ -27,7 +27,7 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
-        private const int maximumSearchResults = 10;
+        private const int maximumSearchResults = 5;
 
         private const string NoSearchAnotherOrganisation = "No - search for another organisation";
 
