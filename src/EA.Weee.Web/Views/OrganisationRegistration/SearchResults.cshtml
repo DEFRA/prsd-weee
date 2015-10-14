@@ -22,30 +22,21 @@
                 We found results for '@Model.SearchTerm'.
             </p>
 
-            <p>
-                Select an organisation to add.
-            </p>
-        
-            <table id="organisations" class="prsd-table">
-                <thead>
-                    <tr>
-                        <th>Organisation</th>
-                        <th>Select</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
+                @Html.Gds().ValidationMessageFor(m => m.SelectedOrganisationId)
+                <fieldset>
+                    <legend>
+                        @Html.Gds().LabelFor(m => m.SelectedOrganisationId)
+                    </legend>
                     @foreach (var result in Model.Results)
                     {
-                        <tr>
-                            <td>@result.Name</td>
-                            <td>
-                                @Html.RadioButtonFor(m => m.SelectedOrganisationId, result.OrganisationId)
-                            </td>
-                        </tr>
+                        <label class="block-label" for="@("SelectedOrganisationId_" + result.OrganisationId.ToString())">
+                            <input id="@("SelectedOrganisationId_" + result.OrganisationId.ToString())" type="radio" name="SelectedOrganisationId" value="@result.OrganisationId">
+                            @result.Name
+                        </label>
                     }
-                </tbody>
-            </table>
-            <br/>
+                </fieldset>
+            </div>
 
             <p>
                 <input type="submit" class="button" value="Continue" />
