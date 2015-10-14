@@ -851,7 +851,7 @@
         }
 
         [Fact]
-        public async Task GetSearchResults_DoesSearchForTenResultsAndReturnsSearchReturnsView()
+        public async Task GetSearchResults_DoesSearchForFiveResultsAndReturnsSearchReturnsView()
         {
             // Arrange
             List<OrganisationSearchResult> fakeResults = new List<OrganisationSearchResult>()
@@ -864,7 +864,7 @@
             };
 
             ISearcher<OrganisationSearchResult> organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
-            A.CallTo(() => organisationSearcher.Search("testSearchTerm", 10, false))
+            A.CallTo(() => organisationSearcher.Search("testSearchTerm", 5, false))
                 .Returns(fakeResults);
 
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
@@ -889,7 +889,7 @@
         }
 
         [Fact]
-        public async Task PostSearchResults_WithInvalidModel_DoesSearchForTenResultsAndReturnsSearchReturnsView()
+        public async Task PostSearchResults_WithInvalidModel_DoesSearchForFiveResultsAndReturnsSearchReturnsView()
         {
             // Arrange
             List<OrganisationSearchResult> fakeResults = new List<OrganisationSearchResult>()
@@ -902,7 +902,7 @@
             };
 
             ISearcher<OrganisationSearchResult> organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
-            A.CallTo(() => organisationSearcher.Search("testSearchTerm", 10, false))
+            A.CallTo(() => organisationSearcher.Search("testSearchTerm", 5, false))
                 .Returns(fakeResults);
 
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
