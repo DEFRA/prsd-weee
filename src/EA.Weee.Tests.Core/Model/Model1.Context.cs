@@ -47,5 +47,6 @@ namespace EA.Weee.Tests.Core.Model
         public virtual DbSet<Producer> Producers { get; set; }
         public virtual DbSet<ProducerChargeBand> ProducerChargeBands { get; set; }
         public virtual DbSet<SICCode> SICCodes { get; set; }
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
     }
 }

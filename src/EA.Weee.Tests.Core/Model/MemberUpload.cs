@@ -28,6 +28,8 @@ namespace EA.Weee.Tests.Core.Model
         public Nullable<System.Guid> SchemeId { get; set; }
         public bool IsSubmitted { get; set; }
         public decimal TotalCharges { get; set; }
+        public string UserId { get; set; }
+        public Nullable<System.DateTime> Date { get; set; }
     
         public virtual Organisation Organisation { get; set; }
         public virtual Scheme Scheme { get; set; }

@@ -18,5 +18,6 @@ namespace EA.Weee.Tests.Core.Model
         public byte[] RowVersion { get; set; }
         public string ProducerRegistrationNumber { get; set; }
         public string ProducerName { get; set; }
+        public string CompanyNumber { get; set; }
     }
 }
