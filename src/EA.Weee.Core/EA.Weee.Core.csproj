@@ -96,6 +96,7 @@
     </Compile>
     <Compile Include="Search\Fuzzy\ITerm.cs" />
     <Compile Include="Search\Fuzzy\LevenshteinDistance.cs" />
+    <Compile Include="Search\Fuzzy\Rank.cs" />
     <Compile Include="Search\Fuzzy\ResultMetadata.cs" />
     <Compile Include="Search\Fuzzy\ResultTerm.cs" />
     <Compile Include="Search\Fuzzy\SearchWord.cs" />
