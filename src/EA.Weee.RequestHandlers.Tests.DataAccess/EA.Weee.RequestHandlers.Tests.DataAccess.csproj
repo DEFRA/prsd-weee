@@ -83,6 +83,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Admin\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccessTests.cs" />
+    <Compile Include="Admin\Submissions\GetSubmissionsHistoryResultsDataAccessTests.cs" />
     <Compile Include="EventHandlers\MemberUploadSubmittedEventHandlerTests.cs" />
     <Compile Include="Organisations\UpdateOrganisationContactDetailsDataAccessTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

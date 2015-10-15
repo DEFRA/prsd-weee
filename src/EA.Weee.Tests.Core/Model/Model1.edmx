@@ -15,6 +15,25 @@
           <Property Name="UserStatus" Type="int" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="256" />
+          <Property Name="Surname" Type="nvarchar" MaxLength="256" />
+        </EntityType>
         <EntityType Name="CompetentAuthority">
           <Key>
             <PropertyRef Name="Id" />
@@ -94,6 +113,8 @@
           <Property Name="SchemeId" Type="uniqueidentifier" />
           <Property Name="IsSubmitted" Type="bit" Nullable="false" />
           <Property Name="TotalCharges" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" />
+          <Property Name="Date" Type="datetime" />
         </EntityType>
         <EntityType Name="MemberUploadError">
           <Key>
@@ -196,6 +217,7 @@
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="ProducerRegistrationNumber" Type="nvarchar" MaxLength="255" />
           <Property Name="ProducerName" Type="nvarchar" MaxLength="255" />
+          <Property Name="CompanyNumber" Type="nvarchar" MaxLength="8" />
         </EntityType>
         <EntityType Name="Partner">
           <Key>
@@ -365,6 +387,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_CompetentAuthorityUser_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="CompetentAuthorityUser" Type="Self.CompetentAuthorityUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetentAuthorityUser">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_CompetentAuthorityUser_CompetentAuthority">
           <End Role="CompetentAuthority" Type="Self.CompetentAuthority" Multiplicity="1" />
           <End Role="CompetentAuthorityUser" Type="Self.CompetentAuthorityUser" Multiplicity="*" />
@@ -470,6 +504,18 @@
             </Principal>
             <Dependent Role="Organisation">
               <PropertyRef Name="OrganisationAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrganisationUser_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="OrganisationUser" Type="Self.OrganisationUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OrganisationUser">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -583,6 +629,7 @@
         </Association>
         <EntityContainer Name="EAWeeeTestModelStoreContainer">
           <EntitySet Name="CompetentAuthorityUser" EntityType="Self.CompetentAuthorityUser" Schema="Admin" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="Identity" store:Type="Tables" />
           <EntitySet Name="CompetentAuthority" EntityType="Self.CompetentAuthority" Schema="Lookup" store:Type="Tables" />
           <EntitySet Name="Country" EntityType="Self.Country" Schema="Lookup" store:Type="Tables" />
           <EntitySet Name="Address" EntityType="Self.Address" Schema="Organisation" store:Type="Tables" />
@@ -640,6 +687,10 @@
             <End Role="Country" EntitySet="Country" />
             <End Role="CompetentAuthority" EntitySet="CompetentAuthority" />
           </AssociationSet>
+          <AssociationSet Name="FK_CompetentAuthorityUser_AspNetUsers" Association="Self.FK_CompetentAuthorityUser_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="CompetentAuthorityUser" EntitySet="CompetentAuthorityUser" />
+          </AssociationSet>
           <AssociationSet Name="FK_CompetentAuthorityUser_CompetentAuthority" Association="Self.FK_CompetentAuthorityUser_CompetentAuthority">
             <End Role="CompetentAuthority" EntitySet="CompetentAuthority" />
             <End Role="CompetentAuthorityUser" EntitySet="CompetentAuthorityUser" />
@@ -675,6 +726,10 @@
           <AssociationSet Name="FK_Organisation_OrganisationAddress" Association="Self.FK_Organisation_OrganisationAddress">
             <End Role="Address" EntitySet="Address" />
             <End Role="Organisation" EntitySet="Organisation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrganisationUser_AspNetUsers" Association="Self.FK_OrganisationUser_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="OrganisationUser" EntitySet="OrganisationUser" />
           </AssociationSet>
           <AssociationSet Name="FK_OrganisationUser_Organisation" Association="Self.FK_OrganisationUser_Organisation">
             <End Role="Organisation" EntitySet="Organisation" />
@@ -727,6 +782,7 @@
           <Property Name="UserStatus" Type="Int32" Nullable="false" />
           <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="CompetentAuthority" Relationship="Self.FK_CompetentAuthorityUser_CompetentAuthority" FromRole="CompetentAuthorityUser" ToRole="CompetentAuthority" />
+          <NavigationProperty Name="AspNetUser" Relationship="EA.Weee.TestModel.FK_CompetentAuthorityUser_AspNetUsers" FromRole="CompetentAuthorityUser" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="CompetentAuthority">
           <Key>
@@ -812,6 +868,7 @@
           <Property Name="UserStatus" Type="Int32" Nullable="false" />
           <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="Organisation" Relationship="Self.FK_OrganisationUser_Organisation" FromRole="OrganisationUser" ToRole="Organisation" />
+          <NavigationProperty Name="AspNetUser" Relationship="EA.Weee.TestModel.FK_OrganisationUser_AspNetUsers" FromRole="OrganisationUser" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="MemberUpload">
           <Key>
@@ -829,6 +886,8 @@
           <NavigationProperty Name="Scheme" Relationship="Self.FK_MemberUpload_Scheme" FromRole="MemberUpload" ToRole="Scheme" />
           <NavigationProperty Name="MemberUploadErrors" Relationship="Self.FK_MemberUploadError_MemberUpload" FromRole="MemberUpload" ToRole="MemberUploadError" />
           <NavigationProperty Name="Producers" Relationship="Self.FK_Producer_MemberUpload" FromRole="MemberUpload" ToRole="Producer" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="MemberUploadError">
           <Key>
@@ -951,6 +1010,7 @@
           <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="ProducerRegistrationNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="ProducerName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyNumber" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Partner">
           <Key>
@@ -1478,7 +1538,61 @@
             <End Role="Producer" EntitySet="Producers" />
             <End Role="SICCode" EntitySet="SICCodes" />
           </AssociationSet>
+          <EntitySet Name="AspNetUsers" EntityType="EA.Weee.TestModel.AspNetUser" />
+          <AssociationSet Name="FK_CompetentAuthorityUser_AspNetUsers" Association="EA.Weee.TestModel.FK_CompetentAuthorityUser_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="CompetentAuthorityUser" EntitySet="CompetentAuthorityUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrganisationUser_AspNetUsers" Association="EA.Weee.TestModel.FK_OrganisationUser_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="OrganisationUser" EntitySet="OrganisationUsers" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Surname" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CompetentAuthorityUsers" Relationship="EA.Weee.TestModel.FK_CompetentAuthorityUser_AspNetUsers" FromRole="AspNetUser" ToRole="CompetentAuthorityUser" />
+          <NavigationProperty Name="OrganisationUsers" Relationship="EA.Weee.TestModel.FK_OrganisationUser_AspNetUsers" FromRole="AspNetUser" ToRole="OrganisationUser" />
+        </EntityType>
+        <Association Name="FK_CompetentAuthorityUser_AspNetUsers">
+          <End Type="EA.Weee.TestModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.CompetentAuthorityUser" Role="CompetentAuthorityUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetentAuthorityUser">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrganisationUser_AspNetUsers">
+          <End Type="EA.Weee.TestModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.OrganisationUser" Role="OrganisationUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OrganisationUser">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1572,6 +1686,8 @@
           <EntitySetMapping Name="MemberUploads">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.MemberUpload">
               <MappingFragment StoreEntitySet="MemberUpload">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="OrganisationId" ColumnName="OrganisationId" />
@@ -1687,6 +1803,7 @@
           <EntitySetMapping Name="MigratedProducers">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.MigratedProducer">
               <MappingFragment StoreEntitySet="MigratedProducer">
+                <ScalarProperty Name="CompanyNumber" ColumnName="CompanyNumber" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="ProducerRegistrationNumber" ColumnName="ProducerRegistrationNumber" />
@@ -1756,6 +1873,26 @@
                 <ScalarProperty Name="ProducerId" ColumnName="ProducerId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
