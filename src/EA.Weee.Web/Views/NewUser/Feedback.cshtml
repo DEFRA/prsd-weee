@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.ViewModels.NewUser.FeedbackViewModel
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.NewUser.FeedbackViewModel
 @{
     Layout = "~/Views/Shared/_Layout.GovUK.Sections.WithoutFeedbackBanner.cshtml";
     ViewBag.Title = "Feedback";
@@ -16,8 +17,8 @@
         @Html.Gds().ValidationSummary()
 
         <h2 class="heading-small">Overall, how did you feel about the service you received today?</h2>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.FeedbackOptions.SelectedValue)" id="FeedbackOptions">
-            @Html.EditorFor(m => m.FeedbackOptions)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="FeedbackOptions">
+            @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "Overall, how did you feel about the service you received today?", true)
         </div>
 
         <div class="form-group">
