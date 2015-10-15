@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.ViewModels.JoinOrganisation.JoinOrganisationViewModel
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.JoinOrganisation.JoinOrganisationViewModel
 
 @{
     ViewBag.Title = "Access Organisation";
@@ -20,8 +21,8 @@
         <p>A request to access this organisation will be sent to their administrator.</p>
         <p>If you do not wish to access this organisation, you can search for a different one.</p>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.JoinOrganisationOptions.SelectedValue)" id="JoinOrganisationOptions">
-            @Html.EditorFor(m => m.JoinOrganisationOptions)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="JoinOrganisationOptions">
+            @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "Confirm your organisation access request", true)
         </div>
 
         <div class="form-group">

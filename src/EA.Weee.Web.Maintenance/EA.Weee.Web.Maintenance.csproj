@@ -441,7 +441,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Maintenance\Maintenance.cshtml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>

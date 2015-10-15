@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ChooseActivityViewModel
 @{
     ViewBag.Title = "Choose Activity";
@@ -18,8 +19,8 @@
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.ActivityOptions.SelectedValue)" id="ActivityOptions">
-            @Html.EditorFor(m => m.ActivityOptions)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ActivityOptions">
+            @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "What would you like to do?", true)
         </div>
 
         <p>
