@@ -50,7 +50,7 @@
                              })))
                     {
                         result = RuleResult.Fail(
-                            string.Format(@"We have previously issued a producer registration number (PRN) to {0} with company registration number (CRN) {1}. To register this producer, provide its existing producer registration number and use the status 'A' in the XML file.",
+                            string.Format(@"We have previously issued a producer registration number (PRN) to {0} with company registration number (CRN) {1}. To register this producer, provide its existing PRN and use the status 'A' in the XML file.",
                                 element.GetProducerName(), company.companyNumber),
                             Core.Shared.ErrorLevel.Error);
                     }
