@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.SearchResultsViewModel
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.SearchResultsViewModel
 @{
     ViewBag.Title = "Choose your organisation";
 }
@@ -43,13 +44,14 @@
             </p>
         }
 
-        <details>
-            <summary><span class="summary">My organisation is not listed</span></summary>
-            <div class="panel-indent">
-                <p>If your organisation is not listed, @Html.ActionLink("create a new organisation", "Type", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, null).</p>
-            </div>
-        </details>
-        <br />
+        <div class="form-group">
+            @using (Html.WeeeGds().ProgressiveDisclosure("My organisation is not listed"))
+            {
+                <p>
+                    If your organisation is not listed, @Html.ActionLink("create a new organisation", "Type", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, null).
+                </p>
+            }
+        </div>
     }
     else
     {
