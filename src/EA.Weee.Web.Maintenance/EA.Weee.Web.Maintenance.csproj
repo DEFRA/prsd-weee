@@ -441,7 +441,12 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Maintenance\Maintenance.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\EA.Weee.Web\EA.Weee.Web.csproj">
+      <Project>{2e112d48-a841-4db7-b96f-4211c4da31c0}</Project>
+      <Name>EA.Weee.Web</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
