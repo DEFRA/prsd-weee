@@ -14,7 +14,6 @@
     using Prsd.Core.Web.Mvc.Extensions;
     using Prsd.Core.Web.OAuth;
     using Services;
-    using ViewModels.JoinOrganisation;
     using ViewModels.NewUser;
     using ViewModels.Shared;
 
@@ -209,10 +208,7 @@
 
             var model = new FeedbackViewModel
             {
-                FeedbackOptions = new RadioButtonStringCollectionViewModel
-                {
-                    PossibleValues = collection
-                }
+                PossibleValues = collection
             };
 
             return View(model);

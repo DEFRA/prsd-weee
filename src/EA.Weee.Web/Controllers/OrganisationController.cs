@@ -69,7 +69,7 @@
                 return View("PendingOrganisations", model);
             }
 
-            return RedirectToAction("SearchOrganisation", "OrganisationRegistration");
+            return RedirectToAction("Search", "OrganisationRegistration");
         }
 
         [HttpPost]

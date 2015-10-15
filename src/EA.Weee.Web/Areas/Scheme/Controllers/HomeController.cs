@@ -55,7 +55,7 @@
 
                 if (orgUsers.Count == 0)
                 {
-                    model.ActivityOptions.PossibleValues.Remove(PcsAction.ManageOrganisationUsers);
+                    model.PossibleValues.Remove(PcsAction.ManageOrganisationUsers);
                 }
 
                 model.OrganisationId = pcsId;
@@ -73,7 +73,7 @@
         {
             if (ModelState.IsValid)
             {
-                if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManagePcsMembers)
+                if (viewModel.SelectedValue == PcsAction.ManagePcsMembers)
                 {
                     using (var client = apiClient())
                     {
@@ -89,15 +89,15 @@
                         }
                     }
                 }
-                if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManageOrganisationUsers)
+                if (viewModel.SelectedValue == PcsAction.ManageOrganisationUsers)
                 {
                     return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId });
                 }
-                if (viewModel.ActivityOptions.SelectedValue == PcsAction.ViewOrganisationDetails)
+                if (viewModel.SelectedValue == PcsAction.ViewOrganisationDetails)
                 {
                     return RedirectToAction("ViewOrganisationDetails", new { pcsId = viewModel.OrganisationId });
                 }
-                if (viewModel.ActivityOptions.SelectedValue == PcsAction.ManageContactDetails)
+                if (viewModel.SelectedValue == PcsAction.ManageContactDetails)
                 {
                     return RedirectToAction("ManageContactDetails", new { pcsId = viewModel.OrganisationId });
                 }
@@ -206,8 +206,8 @@
 
                     var orgUser = await client.SendAsync(User.GetAccessToken(), new GetOrganisationUser(organisationUserId.Value));
                     var model = new OrganisationUserViewModel(orgUser);
-                    model.UserStatuses = GetUserPossibleStatusToBeChanged(model.UserStatuses, model.UserStatus);
-                    model.UserStatuses.PossibleValues.Add(DoNotChange);
+                    model.PossibleValues = GetUserPossibleStatusToBeChanged(model.UserStatus);
+                    model.PossibleValues.Add(DoNotChange);
                     return View("ManageOrganisationUser", model);
                 }
             }
@@ -229,11 +229,11 @@
                 return View(model);
             }
 
-            if (model.UserStatuses.SelectedValue != DoNotChange)
+            if (model.SelectedValue != DoNotChange)
             {
                 using (var client = apiClient())
                 {
-                    var userStatus = model.UserStatuses.SelectedValue.GetValueFromDisplayName<UserStatus>();
+                    var userStatus = model.SelectedValue.GetValueFromDisplayName<UserStatus>();
                     await
                         client.SendAsync(User.GetAccessToken(), new UpdateOrganisationUserStatus(model.OrganisationUserId, userStatus));
                 }
@@ -314,36 +314,30 @@
             return RedirectToAction("ChooseActivity", new { pcsId = model.Id });
         }
 
-        private RadioButtonStringCollectionViewModel GetUserPossibleStatusToBeChanged(RadioButtonStringCollectionViewModel userStatuses, UserStatus userStatus)
+        private IList<string> GetUserPossibleStatusToBeChanged(UserStatus userStatus)
         {
+            var userStatuses = new RadioButtonGenericStringCollectionViewModel<UserStatus>();
+
             switch (userStatus)
             {
                 case UserStatus.Active:
                     {
-                        var possibleValues = userStatuses.PossibleValues.Where(us => us.Equals(UserStatus.Inactive.ToString())).ToList();
-                        userStatuses.PossibleValues = possibleValues;
-                        return userStatuses;
+                        return userStatuses.PossibleValues.Where(us => us.Equals(UserStatus.Inactive.ToString())).ToList();
                     }
                 case UserStatus.Pending:
                     {
-                        var possibleValues = userStatuses.PossibleValues.Where(us => us.Equals(UserStatus.Active.ToString()) || us.Equals(UserStatus.Rejected.ToString())).ToList();
-                        userStatuses.PossibleValues = possibleValues;
-                        return userStatuses;
+                        return userStatuses.PossibleValues.Where(us => us.Equals(UserStatus.Active.ToString()) || us.Equals(UserStatus.Rejected.ToString())).ToList();
                     }
                 case UserStatus.Inactive:
                     {
-                        var possibleValues = userStatuses.PossibleValues.Where(us => us.Equals(UserStatus.Active.ToString())).ToList();
-                        userStatuses.PossibleValues = possibleValues;
-                        return userStatuses;
+                        return userStatuses.PossibleValues.Where(us => us.Equals(UserStatus.Active.ToString())).ToList();
                     }
                 case UserStatus.Rejected:
                     {
-                        var possibleValues = userStatuses.PossibleValues.Where(us => us.Equals(UserStatus.Active.ToString())).ToList();
-                        userStatuses.PossibleValues = possibleValues;
-                        return userStatuses;
+                        return userStatuses.PossibleValues.Where(us => us.Equals(UserStatus.Active.ToString())).ToList();
                     }
             }
-            return userStatuses;
+            return userStatuses.PossibleValues;
         }
 
         private async Task<List<OrganisationUserData>> GetOrganisationUsers(Guid pcsId)

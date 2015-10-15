@@ -211,12 +211,12 @@
                 return View(model);
             }
 
-            if (model.ConfirmRejectionOptions.SelectedValue == ConfirmSchemeRejectionOptions.No)
+            if (model.SelectedValue == ConfirmSchemeRejectionOptions.No)
             {
                 return RedirectToAction("EditScheme", new { schemeId });
             }
 
-            if (model.ConfirmRejectionOptions.SelectedValue == ConfirmSchemeRejectionOptions.Yes)
+            if (model.SelectedValue == ConfirmSchemeRejectionOptions.Yes)
             {
                 using (var client = apiClient())
                 {

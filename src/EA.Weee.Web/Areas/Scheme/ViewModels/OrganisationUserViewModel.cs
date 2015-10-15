@@ -5,21 +5,18 @@
     using Core.Shared;
     using Web.ViewModels.Shared;
 
-    public class OrganisationUserViewModel
+    public class OrganisationUserViewModel : RadioButtonGenericStringCollectionViewModel<UserStatus>
     {
-        public RadioButtonStringCollectionViewModel UserStatuses { get; set; }
-
-        public OrganisationUserViewModel()
-        {
-            UserStatuses = RadioButtonStringCollectionViewModel.CreateFromEnum<UserStatus>();
-        }
-
         public Guid OrganisationUserId { get; set; }
         public string UserId { get; set; }
         public string Username { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public UserStatus UserStatus { get; set; }
+
+        public OrganisationUserViewModel()
+        {
+        }
 
         public OrganisationUserViewModel(OrganisationUserData orgUser)
         {
@@ -29,7 +26,6 @@
             Lastname = orgUser.User.Surname;
             Username = orgUser.User.Email;
             UserStatus = orgUser.UserStatus;
-            UserStatuses = RadioButtonStringCollectionViewModel.CreateFromEnum<UserStatus>();
         }
     }
 }
