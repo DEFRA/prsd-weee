@@ -628,6 +628,55 @@
         }
 
         [Fact]
+        public async Task GetJoinOrganisation_UserAlreadyAssociated_ReturnsUserAlreadyAssociatedWithOrgansiationView()
+        {
+            // Arrange
+            Guid organisationId = new Guid("101F5E58-FEA3-4F59-9281-E543EDE5699F");
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            PublicOrganisationData organisation = new PublicOrganisationData()
+            {
+                Id = organisationId,
+                DisplayName = "Test Company"
+            };
+            
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
+                .Returns(organisation);
+
+            OrganisationUserData association = new OrganisationUserData()
+            {
+                OrganisationId = organisationId,
+                UserStatus = UserStatus.Active,
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
+                .Returns(new List<OrganisationUserData>() { association });
+
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.JoinOrganisation(organisationId);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.Equal("UserAlreadyAssociatedWithOrganisation", viewResult.ViewName);
+
+            UserAlreadyAssociatedWithOrganisationViewModel viewModel = viewResult.Model as UserAlreadyAssociatedWithOrganisationViewModel;
+            Assert.NotNull(viewModel);
+
+            Assert.Equal(organisationId, viewModel.OrganisationId);
+            Assert.Equal(UserStatus.Active, viewModel.Status);
+            Assert.Equal("Test Company", viewModel.OrganisationName);
+        }
+
+        [Fact]
         public async Task PostJoinOrganisation_NoSearchAnotherOrganisationSelected_RedirectsToType()
         {
             // Arrange
