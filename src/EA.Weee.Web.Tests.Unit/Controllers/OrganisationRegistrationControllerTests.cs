@@ -8,7 +8,6 @@
     using Api.Client;
     using Core.Organisations;
     using Core.Shared;
-    using Core.Validation;
     using FakeItEasy;
     using ViewModels.JoinOrganisation;
     using ViewModels.OrganisationRegistration;
