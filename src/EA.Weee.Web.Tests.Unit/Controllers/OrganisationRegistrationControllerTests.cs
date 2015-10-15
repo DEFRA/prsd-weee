@@ -8,6 +8,7 @@
     using Api.Client;
     using Core.Organisations;
     using Core.Shared;
+    using Core.Validation;
     using FakeItEasy;
     using ViewModels.JoinOrganisation;
     using ViewModels.OrganisationRegistration;
@@ -16,7 +17,6 @@
     using ViewModels.Shared;
     using Web.Controllers;
     using Weee.Requests.Organisations;
-    using Weee.Requests.Organisations.Create.Base;
     using Xunit;
 
     public class OrganisationRegistrationControllerTests
@@ -80,6 +80,29 @@
             var returnedModel = ((ViewResult)result).Model;
 
             Assert.Equal(model, returnedModel);
+        }
+
+        [Theory]
+        [InlineData("1234 1233 123456&")]
+        [InlineData("1234 %^")]
+        [InlineData("+ext 1234#")]
+        public async void ValidatePhoneNumberRegex_ReturnsFalse(string phoneNumber)
+        {
+           GenericPhoneNumberAttribute attribute = new GenericPhoneNumberAttribute();
+            Assert.Equal(false, attribute.IsValid(phoneNumber));
+        }
+
+        [Theory]
+        [InlineData("1234 1233 12345")]
+        [InlineData("(1234) (12345) (5656)")]
+        [InlineData("+65 123 4343 34343")]
+        [InlineData("123.4343.343.43")]
+        [InlineData("1245 5435435245")]
+        [InlineData("++..()")]
+        public async void ValidatePhoneNumberRegex_ReturnsTrue(string phoneNumber)
+        {
+            GenericPhoneNumberAttribute attribute = new GenericPhoneNumberAttribute();
+            Assert.Equal(true, attribute.IsValid(phoneNumber));
         }
 
         [Fact]

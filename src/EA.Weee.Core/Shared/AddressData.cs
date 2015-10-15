@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Validation;
 
     public class AddressData : IValidatableObject
     {
@@ -42,6 +43,7 @@
         [Required]
         [StringLength(20)]
         [Display(Name = "Phone")]
+        [GenericPhoneNumber(ErrorMessage = "The telephone number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters")]
         public string Telephone { get; set; }
 
         [Required]
