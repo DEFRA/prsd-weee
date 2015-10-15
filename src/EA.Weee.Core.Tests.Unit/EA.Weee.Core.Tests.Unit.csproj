@@ -103,6 +103,7 @@
     <Compile Include="Routing\ResetPasswordRouteTests.cs" />
     <Compile Include="Shared\CsvWriterTests.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizerTests.cs" />
+    <Compile Include="Validation\GenericPhoneNumberAttributeTests.cs" />
     <Compile Include="Validation\InternalEmailAddressAttributeTests.cs" />
   </ItemGroup>
   <ItemGroup>
