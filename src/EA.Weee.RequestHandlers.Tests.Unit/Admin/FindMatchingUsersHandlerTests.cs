@@ -33,7 +33,7 @@
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
             
-            FindMatchingUsers request = new FindMatchingUsers(1, 1);
+            FindMatchingUsers request = new FindMatchingUsers(1, 1, FindMatchingUsers.OrderBy.FullNameAscending);
 
             // Act
             Func<Task<UserSearchDataResult>> action = () => handler.HandleAsync(request);
@@ -58,7 +58,7 @@
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
 
-            FindMatchingUsers request = new FindMatchingUsers(1, 1);
+            FindMatchingUsers request = new FindMatchingUsers(1, 1, FindMatchingUsers.OrderBy.FullNameAscending);
 
             // Act
             await handler.HandleAsync(request);
@@ -80,7 +80,8 @@
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
 
-            FindMatchingUsers request = new FindMatchingUsers(2, 3); // Page 2, where each page has 3 resutls.
+            // Page 2, where each page has 3 results.
+            FindMatchingUsers request = new FindMatchingUsers(2, 3, FindMatchingUsers.OrderBy.FullNameAscending); 
 
             // Act
             var response = await handler.HandleAsync(request);
@@ -98,7 +99,7 @@
         /// This test ensures that the results are correctly sorted before being returned.
         /// </summary>
         [Fact]
-        public async void FindMatchingUsersHandler_WithDefaultOrdering_ReturnsResultsSortedByFullName()
+        public async void FindMatchingUsersHandler_WithFullNameAscendingOrdering_ReturnsResultsSortedByFullName()
         {
             // Arrage
             IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess();
@@ -106,7 +107,7 @@
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
 
-            FindMatchingUsers request = new FindMatchingUsers(1, 1); // Default ordering.
+            FindMatchingUsers request = new FindMatchingUsers(1, 1, FindMatchingUsers.OrderBy.FullNameAscending);
 
             // Act
             var response = await handler.HandleAsync(request);
