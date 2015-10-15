@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.Details.RegisteredCompanyDetailsViewModel
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.Details.RegisteredCompanyDetailsViewModel
 @{
     ViewBag.Title = "Registered company";
 }
@@ -34,17 +35,15 @@
             @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = "10" })
         </div>
         <div class="form-group">
-            <details>
-                <summary><span class="summary">Where can I find my company registration number?</span></summary>
-                <div class="panel-indent">
-                    <p>
-                        For companies registered in the UK, a company registration number (CRN) is allocated by Companies House when a company is registered.
-                    </p>
-                    <p>
-                        You can search <a href="https://www.gov.uk/get-information-about-a-company" target="_blank" rel="external">Companies House online services</a> to find your CRN.
-                    </p>
-                </div>
-            </details>
+            @using (Html.WeeeGds().ProgressiveDisclosure("Where can I find my company registration number?"))
+            {
+                <p>
+                    For companies registered in the UK, a company registration number (CRN) is allocated by Companies House when a company is registered.
+                </p>
+                <p>
+                    You can search <a href="https://www.gov.uk/get-information-about-a-company" target="_blank" rel="external">Companies House online services</a> to find your CRN.
+                </p>
+            }
         </div>
 
         <div class="form-group">
