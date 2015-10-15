@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Home.InternalUserActivityViewModel
 @{
     ViewBag.Title = "Choose Activity";
@@ -17,8 +18,8 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.InternalUserActivityOptions.SelectedValue)" id="InternalUserActivityOptions">
-            @Html.EditorFor(m => m.InternalUserActivityOptions)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="InternalUserActivityOptions">
+            @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "What activity would you like to do?", true)
         </div>
 
         <div class="form-group">

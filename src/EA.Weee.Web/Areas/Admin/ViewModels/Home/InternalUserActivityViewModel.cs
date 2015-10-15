@@ -4,22 +4,16 @@
     using System.ComponentModel.DataAnnotations;
     using Web.ViewModels.Shared;
 
-    public class InternalUserActivityViewModel
+    public class InternalUserActivityViewModel : RadioButtonStringCollectionViewModel
     {
-        [Required]
-        public RadioButtonStringCollectionViewModel InternalUserActivityOptions { get; set; }
-
-        public InternalUserActivityViewModel()
+        public InternalUserActivityViewModel() : base(new List<string>
         {
-            List<string> collection = new List<string>
-            {
-                InternalUserActivity.ManageScheme,
-                InternalUserActivity.SubmissionsHistory,
-                InternalUserActivity.ViewProducerInformation,
-                InternalUserActivity.ManageUsers
-            };
-            
-            InternalUserActivityOptions = new RadioButtonStringCollectionViewModel(collection);
+            InternalUserActivity.ManageScheme,
+            InternalUserActivity.SubmissionsHistory,
+            InternalUserActivity.ViewProducerInformation,
+            InternalUserActivity.ManageUsers
+        })
+        {
         }
     }
 }

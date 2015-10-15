@@ -396,7 +396,7 @@
         {
             var model = GetTestJoinOrgViewModel();
 
-            model.JoinOrganisationOptions.SelectedValue = "Yes - join xyz";
+            model.SelectedValue = "Yes - join xyz";
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<JoinOrganisation>._))
                 .Returns(Guid.NewGuid());
@@ -414,11 +414,8 @@
             return new JoinOrganisationViewModel
             {
                 OrganisationId = Guid.NewGuid(),
-                JoinOrganisationOptions = new RadioButtonStringCollectionViewModel
-                {
-                    PossibleValues = new[] { "Yes - join xyz", NoSearchAnotherOrganisation },
-                    SelectedValue = NoSearchAnotherOrganisation
-                }
+                PossibleValues = new[] { "Yes - join xyz", NoSearchAnotherOrganisation },
+                SelectedValue = NoSearchAnotherOrganisation
             };
         }
 
