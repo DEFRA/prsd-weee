@@ -5,15 +5,10 @@
     using System.ComponentModel.DataAnnotations;
     using Web.ViewModels.Shared;
 
-    public class ConfirmRejectionViewModel
+    public class ConfirmRejectionViewModel : RadioButtonStringCollectionViewModel
     {
-        [Required]
-        public RadioButtonStringCollectionViewModel ConfirmRejectionOptions { get; set; }
-
-        public ConfirmRejectionViewModel()
+        public ConfirmRejectionViewModel() : base(new List<string> { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No })
         {
-            var collection = new List<string> { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No };
-            ConfirmRejectionOptions = new RadioButtonStringCollectionViewModel(collection);
         }
     }
 }

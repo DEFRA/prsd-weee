@@ -57,7 +57,7 @@
                 return View(model);
             }
 
-            switch (model.InternalUserActivityOptions.SelectedValue)
+            switch (model.SelectedValue)
             {
                 case InternalUserActivity.ManageUsers:
                     return RedirectToAction("ManageUsers", "User");

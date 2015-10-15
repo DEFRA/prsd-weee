@@ -240,11 +240,8 @@
 
             var result = await SchemeController().ConfirmRejection(Guid.Empty, new ConfirmRejectionViewModel
             {
-                ConfirmRejectionOptions = new RadioButtonStringCollectionViewModel
-                {
-                    PossibleValues = new[] { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No },
-                    SelectedValue = ConfirmSchemeRejectionOptions.Yes
-                }
+                PossibleValues = new[] { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No },
+                SelectedValue = ConfirmSchemeRejectionOptions.Yes
             });
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
@@ -262,11 +259,8 @@
         {
             var result = await SchemeController().ConfirmRejection(Guid.Empty, new ConfirmRejectionViewModel
             {
-                ConfirmRejectionOptions = new RadioButtonStringCollectionViewModel
-                {
-                    PossibleValues = new[] { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No },
-                    SelectedValue = ConfirmSchemeRejectionOptions.No
-                }
+                PossibleValues = new[] { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No },
+                SelectedValue = ConfirmSchemeRejectionOptions.No
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
