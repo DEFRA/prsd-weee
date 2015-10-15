@@ -8,7 +8,7 @@
     public class GenericPhoneNumberAttribute : ValidationAttribute
     {
         /// <summary>
-        /// Checks that string is compromised only of digits
+        /// Checks that string is compromised only of digits, white spaces and special characters i.e.(+ . - "()") only.
         /// </summary>
         /// <param name="value">The string to check</param>
         /// <returns>A boolean confirming whether the string is a valid phone number</returns>
@@ -16,11 +16,8 @@
         {
             if (value != null)
             {
-                var phoneNumber = value.ToString().Trim()
-                    .Replace(" ", string.Empty)
-                    .Replace("-", string.Empty);
-
-                return new Regex("^[0-9]+$").IsMatch(phoneNumber);
+                Regex validRegex = new Regex("^[0-9+.()\\s-]+$");
+                return validRegex.IsMatch(value.ToString());
             }
 
             return false;
