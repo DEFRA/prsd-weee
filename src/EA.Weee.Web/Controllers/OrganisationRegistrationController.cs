@@ -378,10 +378,7 @@
                 var model = new JoinOrganisationViewModel
                 {
                     OrganisationId = organisationId,
-                    JoinOrganisationOptions = new RadioButtonStringCollectionViewModel
-                    {
-                        PossibleValues = collection
-                    }
+                    PossibleValues = collection
                 };
                 return View(model);
             }
@@ -396,7 +393,7 @@
                 return View(viewModel);
             }
 
-            if (viewModel.JoinOrganisationOptions.SelectedValue == NoSearchAnotherOrganisation)
+            if (viewModel.SelectedValue == NoSearchAnotherOrganisation)
             {
                 return RedirectToAction("Search", "OrganisationRegistration");
             }

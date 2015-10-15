@@ -208,10 +208,7 @@
 
             var model = new FeedbackViewModel
             {
-                FeedbackOptions = new RadioButtonStringCollectionViewModel
-                {
-                    PossibleValues = collection
-                }
+                PossibleValues = collection
             };
 
             return View(model);

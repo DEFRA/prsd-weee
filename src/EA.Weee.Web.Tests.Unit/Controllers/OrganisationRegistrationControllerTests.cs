@@ -639,8 +639,7 @@
                 organisationSearcher);
 
             JoinOrganisationViewModel model = new JoinOrganisationViewModel();
-            model.JoinOrganisationOptions = new RadioButtonStringCollectionViewModel();
-            model.JoinOrganisationOptions.SelectedValue = "No - search for another organisation";
+            model.SelectedValue = "No - search for another organisation";
 
             // Act
             ActionResult result = await controller.JoinOrganisation(model);
@@ -666,8 +665,7 @@
                 organisationSearcher);
 
             JoinOrganisationViewModel model = new JoinOrganisationViewModel();
-            model.JoinOrganisationOptions = new RadioButtonStringCollectionViewModel();
-            model.JoinOrganisationOptions.SelectedValue = "Yes - join xyz";
+            model.SelectedValue = "Yes - join xyz";
 
             // Act
             ActionResult result = await controller.JoinOrganisation(model);
