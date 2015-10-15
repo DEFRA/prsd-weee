@@ -156,7 +156,7 @@
 
         private string MakeFriendlyInvalidChildElementMessage(XElement sender, string message)
         {
-            return string.Format("The field {0} isn't expected here. Please check that you are using v3.0.6 of the XSD schema (XML template).", sender.Name.LocalName);
+            return string.Format("The field {0} isn't expected here. Please check that you are using v3.0.7 of the XSD schema (XML template).", sender.Name.LocalName);
         }
 
         private string MakeFriendlyIncompleteContentMessage(XElement sender, string message)

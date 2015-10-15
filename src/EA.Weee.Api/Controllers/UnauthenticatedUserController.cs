@@ -137,6 +137,23 @@
             return Ok(emailSent);
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("ResendActivationEmailByUserId")]
+        public async Task<IHttpActionResult> ResendActivationEmailByUserId(ResendActivationEmailByUserIdRequest model)
+        {
+            var user = await userManager.FindByEmailAsync(model.EmailAddress);
+            if (user == null || user.Id != model.UserId)
+            {
+                return Ok(false);
+            }
+            else
+            {
+                await SendActivationEmail(model.UserId, model.EmailAddress, model.ActivationBaseUrl);
+                return Ok(true);
+            }
+        }
+
         private async Task<bool> SendActivationEmail(string userId, string emailAddress, string activationBaseUrl)
         {
             string activationToken = await userManager.GenerateEmailConfirmationTokenAsync(userId);
