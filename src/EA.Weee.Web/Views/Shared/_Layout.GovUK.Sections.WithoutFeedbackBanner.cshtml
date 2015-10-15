@@ -1,4 +1,5 @@
-﻿@{
+﻿@using EA.Weee.Web.RazorHelpers
+@{
     Layout = "~/Views/Shared/_Layout.GovUK.cshtml";
     ViewBag.HeaderClass = "with-proposition";
 }
@@ -48,21 +49,18 @@
         @if (ViewBag.ShowLinksToAgencies ?? true)
         {
             <li>
-                @Html.ActionLink("Terms and conditions",
-                    "TermsAndConditions", "NewUser", new { area = string.Empty },
-                    new { target = "_blank" })
+                @Html.WeeeGds().ActionLinkToNewTab("Terms and conditions",
+                    "TermsAndConditions", "NewUser", new { area = string.Empty })
             </li>
             <li>
-                @Html.ActionLink("Privacy",
-                                 "Privacy", "NewUser", new { area = string.Empty },
-                        new { target = "_blank" })
+                @Html.WeeeGds().ActionLinkToNewTab("Privacy",
+                                 "Privacy", "NewUser", new { area = string.Empty })
             </li>
         }
        
         <li>
-            @Html.ActionLink("Cookies",
-                "Cookies", "NewUser", new { area = string.Empty },
-                new { target = "_blank" })
+            @Html.WeeeGds().ActionLinkToNewTab("Cookies",
+                "Cookies", "NewUser", new { area = string.Empty })
         </li>
     </ul>
 }

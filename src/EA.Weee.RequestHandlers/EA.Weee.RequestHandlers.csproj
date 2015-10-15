@@ -80,9 +80,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
-    <Compile Include="Admin\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccess.cs" />
-    <Compile Include="Admin\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheHandler.cs" />
-    <Compile Include="Admin\FetchProducerSearchResultsForCache\IFetchProducerSearchResultsForCacheDataAccess.cs" />
+    <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheDataAccess.cs" />
+    <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheHandler.cs" />
+    <Compile Include="Search\FetchOrganisationSearchResultsForCache\IFetchOrganisationSearchResultsForCacheDataAccess.cs" />
+    <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccess.cs" />
+    <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheHandler.cs" />
+    <Compile Include="Search\FetchProducerSearchResultsForCache\IFetchProducerSearchResultsForCacheDataAccess.cs" />
     <Compile Include="Admin\Submissions\GetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Admin\Submissions\GetAllApprovedSchemesDataAccess.cs" />
     <Compile Include="Admin\Submissions\GetSubmissionsHistoryResultsHandler.cs" />

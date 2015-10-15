@@ -1,19 +1,19 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
+    using Api.Client;
+    using Base;
+    using Core.Organisations;
+    using Core.Shared;
+    using EA.Weee.Core.Search;
+    using Infrastructure;
+    using Prsd.Core.Extensions;
+    using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Api.Client;
-    using Base;
-    using Core.Organisations;
-    using Core.Shared;
-    using Infrastructure;
-    using Prsd.Core.Extensions;
-    using Prsd.Core.Web.ApiClient;
-    using Prsd.Core.Web.Mvc.Extensions;
-    using ViewModels.JoinOrganisation;
     using ViewModels.OrganisationRegistration;
     using ViewModels.OrganisationRegistration.Details;
     using ViewModels.OrganisationRegistration.Type;
@@ -26,128 +26,102 @@
     public class OrganisationRegistrationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
+        private const int maximumSearchResults = 5;
+
         private const string NoSearchAnotherOrganisation = "No - search for another organisation";
 
-        public OrganisationRegistrationController(Func<IWeeeClient> apiClient)
+        public OrganisationRegistrationController(Func<IWeeeClient> apiClient, ISearcher<OrganisationSearchResult> organisationSearcher)
         {
             this.apiClient = apiClient;
+            this.organisationSearcher = organisationSearcher;
         }
 
         [HttpGet]
-        public async Task<ActionResult> SearchOrganisation()
+        public async Task<ActionResult> Search()
         {
             IEnumerable<OrganisationUserData> organisations = await GetOrganisations();
-
-            var model = new SearchOrganisationViewModel { ShowPerformAnotherActivityLink = organisations.Any() };
+            SearchViewModel model = new SearchViewModel
+            {
+                ShowPerformAnotherActivityLink = organisations.Any()
+            };
 
             return View(model);
         }
 
-        private async Task<IEnumerable<OrganisationUserData>> GetOrganisations()
-        {
-            List<OrganisationUserData> organisations;
-
-            using (var client = apiClient())
-            {
-                organisations = await
-                 client.SendAsync(
-                     User.GetAccessToken(),
-                     new GetUserOrganisationsByStatus(new int[0], new int[1] { (int)OrganisationStatus.Complete }));
-            }
-            return organisations;
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SearchOrganisation(SearchOrganisationViewModel model)
-        {
-            if (string.IsNullOrEmpty(model.SearchedText))
-            {
-                return View(model);
-            }
-
-            //do the search and show the relevant page.
-            return RedirectToAction("SelectOrganisation", new
-                        {
-                            name = model.SearchedText,
-                            SearchText = model.SearchedText
-                        });
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> SelectOrganisation(string name)
-        {
-            var selectOrganisationViewModel = BuildSelectOrganisationViewModel(name, new StringGuidRadioButtons());
-
-            if (string.IsNullOrEmpty(name))
-            {
-                ModelState.AddModelError(string.Empty, "No organisation name supplied, unable to perform search");
-                return View(selectOrganisationViewModel);
-            }
-
-            using (var client = apiClient())
-            {
-                try
-                {
-                    var organisationSearchResultData =
-                        await
-                            client.SendAsync(User.GetAccessToken(),
-                                new FindMatchingOrganisations(name));
-
-                    if (organisationSearchResultData.TotalMatchingOrganisations == 0)
-                    {
-                        return RedirectToAction("NotFoundOrganisation", new
-                        {
-                            SearchText = name,
-                            Name = name
-                        });
-                    }
-
-                    var orgsKeyValuePairs =
-                            organisationSearchResultData.Results.ToList().Select(
-                            o => new KeyValuePair<string, Guid>(o.DisplayName, o.Id));
-
-                    var orgRadioButtons = new StringGuidRadioButtons(orgsKeyValuePairs);
-
-                    var model = BuildSelectOrganisationViewModel(name, orgRadioButtons);
-
-                    return View(model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                    return View(selectOrganisationViewModel);
-                }
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult SelectOrganisation(SelectOrganisationViewModel model)
+        public async Task<ActionResult> Search(SearchViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                IEnumerable<OrganisationUserData> organisations = await GetOrganisations();
+                viewModel.ShowPerformAnotherActivityLink = organisations.Any();
+
+                return View(viewModel);
             }
 
-            var selectedOrgId = model.Organisations.SelectedValue;
-            return RedirectToAction("JoinOrganisation", "OrganisationRegistration",
-                new { OrganisationID = selectedOrgId });
+            // Check to see if an organisation was selected.
+            if (viewModel.SelectedOrganisationId != null)
+            {
+                return RedirectToAction("JoinOrganisation", new
+                {
+                    OrganisationId = viewModel.SelectedOrganisationId.Value
+                });
+            }
+
+            return RedirectToAction("SearchResults", new { viewModel.SearchTerm });
         }
 
         [HttpGet]
-        public ActionResult NotFoundOrganisation(string name)
+        public async Task<ActionResult> SearchResults(string searchTerm)
         {
-            var model = new NotFoundOrganisationViewModel
+            SearchResultsViewModel viewModel = new SearchResultsViewModel();
+            viewModel.SearchTerm = searchTerm;
+            viewModel.Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SearchResults(SearchResultsViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
             {
-                SearchedText = name,
-                Name = name,
-            };
-            return View(model);
+                viewModel.Results = await organisationSearcher.Search(viewModel.SearchTerm, maximumSearchResults, false);
+
+                return View(viewModel);
+            }
+
+            return RedirectToAction("JoinOrganisation", new
+            {
+                OrganisationId = viewModel.SelectedOrganisationId.Value
+            });
+        }
+
+        /// <summary>
+        /// This method is called using AJAX by JS-users.
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> FetchSearchResultsJson(string searchTerm)
+        {
+            if (!Request.IsAjaxRequest())
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+
+            IList<OrganisationSearchResult> searchResults = await organisationSearcher.Search(searchTerm, maximumSearchResults, true);
+
+            return Json(searchResults, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -421,7 +395,7 @@
 
             if (viewModel.SelectedValue == NoSearchAnotherOrganisation)
             {
-                return RedirectToAction("SearchOrganisation", "OrganisationRegistration");
+                return RedirectToAction("Search", "OrganisationRegistration");
             }
 
             using (var client = apiClient())
@@ -787,16 +761,6 @@
             }
         }
 
-        private SelectOrganisationViewModel BuildSelectOrganisationViewModel(string name, StringGuidRadioButtons organisationRadioButtons)
-        {
-            return new SelectOrganisationViewModel
-            {
-                Name = name,
-                SearchedText = name,
-                Organisations = organisationRadioButtons
-            };
-        }
-
         private async Task<OrganisationData> GetOrganisation(Guid? organisationId, IWeeeClient client)
         {
             var organisationExistsAndIncomplete =
@@ -810,6 +774,20 @@
 
             var organisation = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId.Value));
             return organisation;
+        }
+
+        private async Task<IEnumerable<OrganisationUserData>> GetOrganisations()
+        {
+            List<OrganisationUserData> organisations;
+
+            using (var client = apiClient())
+            {
+                organisations = await
+                 client.SendAsync(
+                     User.GetAccessToken(),
+                     new GetUserOrganisationsByStatus(new int[0], new int[1] { (int)OrganisationStatus.Complete }));
+            }
+            return organisations;
         }
     }
 }
