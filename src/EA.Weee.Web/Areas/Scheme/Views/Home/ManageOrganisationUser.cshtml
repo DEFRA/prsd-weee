@@ -22,24 +22,25 @@
         @Html.HiddenFor(m => m.Lastname)
         @Html.HiddenFor(m => m.Username)
         @Html.HiddenFor(m => m.UserStatus)
-        
+
         <div class="form-group">
             <table>
+                <caption><span class="hidden-for-screen-reader">User Details</span></caption>
                 <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Current status</th>
-                    </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Current status</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><span style="font-family: 'Arial Bold', 'Arial'; font-weight: 700; color: #0B0C0C;">@Html.DisplayFor(m => m.Firstname) @Html.DisplayFor(m => m.Lastname)</span></td>
-                        <td>
-                            <a href="mailto:@Html.DisplayFor(m => m.Username)" target="_top">@Html.DisplayFor(m => m.Username)</a>
-                        </td>
-                        <td><span style="font-family: 'Arial'; font-weight: 400; color: #6F777B;">@Html.DisplayFor(m => m.UserStatus)</span></td>
-                    </tr>
+                <tr>
+                    <td><span style="font-family: 'Arial Bold', 'Arial'; font-weight: 700; color: #0B0C0C;">@Html.DisplayFor(m => m.Firstname) @Html.DisplayFor(m => m.Lastname)</span></td>
+                    <td>
+                        <a href="mailto:@Html.DisplayFor(m => m.Username)" target="_top">@Html.DisplayFor(m => m.Username)</a>
+                    </td>
+                    <td><span style="font-family: 'Arial'; font-weight: 400; color: #6F777B;">@Html.DisplayFor(m => m.UserStatus)</span></td>
+                </tr>
                 </tbody>
             </table>
         </div>
