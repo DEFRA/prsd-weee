@@ -21,5 +21,6 @@ namespace EA.Weee.Tests.Core.Model
         public byte[] RowVersion { get; set; }
     
         public virtual Organisation Organisation { get; set; }
+        public virtual AspNetUser AspNetUser { get; set; }
     }
 }
