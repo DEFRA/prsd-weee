@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    
+    using Domain;
+    using Domain.Scheme;
+
     /// <summary>
     /// This class provides helper methods for deterministically seeding a database.
     /// It should be used during the "arrange" step of data access integration tests.
@@ -39,6 +39,25 @@
         private Guid IntegerToGuid(int id)
         {
             return new Guid(id, 0, 0, new byte[8]);
+        }
+
+        /// <summary>
+        /// Create user with userName
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        public AspNetUser CreateUser(string userName)
+        {
+            int userId = GetNextId(typeof(AspNetUser));
+            AspNetUser user = new AspNetUser();
+            user.Id = userId.ToString();
+            user.FirstName = "Test";
+            user.Surname = "LastName";
+            user.Email = userName;
+            user.EmailConfirmed = true;
+            user.UserName = userName;
+            model.AspNetUsers.Add(user);
+            return user;
         }
 
         /// <summary>
@@ -88,6 +107,28 @@
             model.MemberUploads.Add(memberUpload);
 
             return memberUpload;
+        }
+
+        /// <summary>
+        /// Creates memberupload errors and warnings
+        /// </summary>
+        /// <param name="memberUpload"></param>
+        /// <returns></returns>
+        public MemberUploadError CreateMemberUploadError(MemberUpload memberUpload)
+        {
+            int memberUploadErrorId = GetNextId(typeof(MemberUploadError));
+            MemberUploadError memberUploadError = new MemberUploadError
+            {
+                Id = IntegerToGuid(memberUploadErrorId),
+                MemberUploadId = memberUpload.Id,
+                ErrorLevel = ErrorLevel.Warning.Value,
+                ErrorType = MemberUploadErrorType.Business.Value,
+                Description = "Test Warning"
+            };
+         
+            model.MemberUploadErrors.Add(memberUploadError);
+
+            return memberUploadError;
         }
 
         /// <summary>

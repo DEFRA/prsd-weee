@@ -1,19 +1,16 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Submissions
 {
     using System;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.Scheme;
-    using Domain.Scheme;
     using FakeItEasy;
-    using Prsd.Core.Mapper;
     using RequestHandlers.Admin.Submissions;
     using RequestHandlers.Security;
     using Requests.Admin;
     using Weee.Tests.Core;
     using Xunit;
 
-    public class GetAllApprovedSchemesHandlerTests
+    public class GetSubmissionsHistoryResultsHandlerTests
         {
             private readonly DbContextHelper dbContextHelper = new DbContextHelper();
 
@@ -24,12 +21,12 @@
             {
                 // Arrange
                 Guid pcsId = new Guid("A7905BCD-8EE7-48E5-9E71-2B571F7BBC81");
-                IGetAllApprovedSchemesDataAccess dataAccess = A.Dummy<IGetAllApprovedSchemesDataAccess>();
+                IGetSubmissionsHistoryResultsDataAccess dataAccess = A.Dummy<IGetSubmissionsHistoryResultsDataAccess>();
                 IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
-                var schemeMap = A.Fake<IMap<Scheme, SchemeData>>();
-                GetAllApprovedSchemesHandler handler = new GetAllApprovedSchemesHandler(authorization, schemeMap, dataAccess);
 
-                GetAllApprovedSchemes request = new GetAllApprovedSchemes();
+                GetSubmissionsHistoryResultsHandler handler = new GetSubmissionsHistoryResultsHandler(authorization, dataAccess);
+
+                GetSubmissionsHistoryResults request = new GetSubmissionsHistoryResults(2016, pcsId);
 
                 // Act
                 Func<Task> action = async () => await handler.HandleAsync(request);

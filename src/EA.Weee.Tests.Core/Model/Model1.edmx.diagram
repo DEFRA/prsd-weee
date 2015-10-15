@@ -54,6 +54,9 @@
         <AssociationConnector Association="EA.Weee.TestModel.FK_Partnership_Contact" ManuallyRouted="false" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_Partner_Partnership" ManuallyRouted="false" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_SICCodeList_Producer" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.AspNetUser" Width="1.5" PointX="5.375" PointY="1" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_CompetentAuthorityUser_AspNetUsers" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_OrganisationUser_AspNetUsers" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
