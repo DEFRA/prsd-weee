@@ -1,0 +1,82 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.SearchResultsViewModel
+@{
+    ViewBag.Title = "Choose your organisation";
+}
+
+@section main_content
+{
+    @if (Model.Results.Count > 0)
+    {
+        <header class="hgroup">
+            <h1 class="heading-large">
+                Search results
+            </h1>
+        </header>
+
+        using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+
+            <p>
+                We found results for '@Model.SearchTerm'.
+            </p>
+
+            <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
+                @Html.Gds().ValidationMessageFor(m => m.SelectedOrganisationId)
+                <fieldset>
+                    <legend>
+                        @Html.Gds().LabelFor(m => m.SelectedOrganisationId)
+                    </legend>
+                    @foreach (var result in Model.Results)
+                    {
+                        <label class="block-label" for="@("SelectedOrganisationId_" + result.OrganisationId.ToString())">
+                            <input id="@("SelectedOrganisationId_" + result.OrganisationId.ToString())" type="radio" name="SelectedOrganisationId" value="@result.OrganisationId">
+                            @result.Name
+                        </label>
+                    }
+                </fieldset>
+            </div>
+
+            <p>
+                <input type="submit" class="button" value="Continue" />
+            </p>
+        }
+
+        <div class="form-group">
+            @using (Html.WeeeGds().ProgressiveDisclosure("My organisation is not listed"))
+            {
+                <p>
+                    If your organisation is not listed, @Html.ActionLink("create a new organisation", "Type", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, null).
+                </p>
+            }
+        </div>
+    }
+    else
+    {
+        <header class="hgroup">
+            <h1 class="heading-large">
+                No results found
+            </h1>
+        </header>
+
+        <p>We found no search results for '@Model.SearchTerm'.</p>
+
+        <p>
+            @Html.ActionLink("Create a new organisation", "Type", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "button" })
+        </p>
+    }
+
+    <p>
+        @Html.ActionLink("Start new search", "Search", "OrganisationRegistration")
+    </p>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $('#organisations tr').click(function () {
+            $(this).find('td input[type=radio]').prop('checked', true);
+        })
+    </script>
+}

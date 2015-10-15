@@ -2,6 +2,7 @@
 {
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Admin;
+    using EA.Weee.Core.Search;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
@@ -23,7 +24,7 @@
         {
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-            IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
             ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
@@ -43,7 +44,7 @@
         {
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-            IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
             ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
@@ -66,7 +67,7 @@
         {
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-            IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
             ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
@@ -91,7 +92,7 @@
         {
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-            IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
             ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
@@ -125,9 +126,9 @@
                     RegistrationNumber = "WEE/AA1111AA"
                 }
             };
-            
-            IProducerSearcher producerSearcher = A.Fake<IProducerSearcher>();
-            A.CallTo(() => producerSearcher.Search("testSearchTerm", 10))
+
+            ISearcher<ProducerSearchResult> producerSearcher = A.Fake<ISearcher<ProducerSearchResult>>();
+            A.CallTo(() => producerSearcher.Search("testSearchTerm", 10, false))
                 .Returns(fakeResults);
 
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
@@ -164,8 +165,8 @@
                 }
             };
 
-            IProducerSearcher producerSearcher = A.Fake<IProducerSearcher>();
-            A.CallTo(() => producerSearcher.Search("testSearchTerm", 10))
+            ISearcher<ProducerSearchResult> producerSearcher = A.Fake<ISearcher<ProducerSearchResult>>();
+            A.CallTo(() => producerSearcher.Search("testSearchTerm", 10, false))
                 .Returns(fakeResults);
 
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
@@ -196,7 +197,7 @@
         {
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-            IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
 
             Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
 
@@ -223,7 +224,7 @@
         {
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-            IProducerSearcher producerSearcher = A.Dummy<IProducerSearcher>();
+            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
 
             ProducerDetails producerDetails = A.Dummy<ProducerDetails>();
 

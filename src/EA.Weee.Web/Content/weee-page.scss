@@ -211,6 +211,26 @@
     font-family: monospace;
 }
 
+.form-search {
+
+	.form-control {
+		margin-bottom: 15px;
+	}
+
+	.button {
+		line-height: 1em;
+		white-space: nowrap;
+
+		@media (min-width: 641px) {
+			margin-left: 15px;
+		}
+
+		@media (max-width: 640px) {
+			width: 100%;
+		}
+	}
+}
+
 // 2. Typography
 // ==========================================================================
 
