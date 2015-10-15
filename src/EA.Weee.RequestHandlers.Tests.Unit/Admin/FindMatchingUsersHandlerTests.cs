@@ -33,7 +33,7 @@
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
             
-            FindMatchingUsers request = new FindMatchingUsers();
+            FindMatchingUsers request = new FindMatchingUsers(1, 1);
 
             // Act
             Func<Task<UserSearchDataResult>> action = () => handler.HandleAsync(request);
@@ -58,7 +58,7 @@
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
 
-            FindMatchingUsers request = new FindMatchingUsers();
+            FindMatchingUsers request = new FindMatchingUsers(1, 1);
 
             // Act
             await handler.HandleAsync(request);
@@ -98,7 +98,7 @@
         /// This test ensures that the results are correctly sorted before being returned.
         /// </summary>
         [Fact]
-        public async void FindMatchingUsersHandler_RequestingAllResults_ReturnsResultsSortedByFullName()
+        public async void FindMatchingUsersHandler_WithDefaultOrdering_ReturnsResultsSortedByFullName()
         {
             // Arrage
             IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess();
@@ -106,7 +106,7 @@
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
 
-            FindMatchingUsers request = new FindMatchingUsers(); // Request all users.
+            FindMatchingUsers request = new FindMatchingUsers(1, 1); // Default ordering.
 
             // Act
             var response = await handler.HandleAsync(request);
