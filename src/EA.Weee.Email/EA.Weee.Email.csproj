@@ -97,7 +97,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <EmbeddedResource Include="Templates\OrganisationUserRequestCompleted.cshtml" />
     <EmbeddedResource Include="Templates\OrganisationUserRequest.cshtml" />

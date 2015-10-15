@@ -70,15 +70,15 @@
             @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthorities, "Id", "Abbreviation"), string.Empty, new { autocomplete = "false" })
         </div>
 
+        <p>
+            @Html.ActionLink("View or edit organisation contact details", "ManageContactDetails", "Scheme", new { schemeId = @Model.SchemeId, orgId = @Model.OrganisationId }, null)
+        </p>
+
         <div class="form-group">
             <input type="submit" value="Save and continue" class="button" />
         </div>
     }
 }
-
-<p>
-    @Html.ActionLink("View or edit organisation contact details", "ManageContactDetails", "Scheme", new { schemeId = @Model.SchemeId, orgId = @Model.OrganisationId }, null)
-</p>
 
 @section scripts {
     <script>

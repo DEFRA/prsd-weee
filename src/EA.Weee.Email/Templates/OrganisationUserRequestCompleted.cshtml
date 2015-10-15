@@ -2,7 +2,7 @@
 <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
-    <title>Decision on your request to perform WEEE activities</title>
+    <title>Your request to access a WEEE organisation</title>
     <style>
         li {
             margin: 1em 0;
@@ -25,22 +25,23 @@
         </tr>
     </table>
     <h1 class="email" style="font-weight: 700; font-size: 36px; line-height: 1.041666667; margin: 30px 0;">
-        Decision on your request to perform WEEE activities
+        Your request to access a WEEE organisation
     </h1>
 
     <p>Hello,</p>
-<p>
-    Your request to perform Waste Electrical and Electronic Equipment (WEEE)
-    activities for @Model.OrganisationName has been @(Model.Approved ? "authorised" : "rejected").
-</p>
-   @if (Model.Approved)
-   {
-       <p>
-           <a href="@Model.ExternalUserLoginUrl">Sign in to the WEEE service</a> to perform activities.
-       </p>
-   }
-    <p>This is an automated email; please do not reply.</p>
-    <p>If you have any enquiries, please contact the relevant helpline:</p>
+    <p>
+        @Model.OrganisationName has @(Model.Approved ? "authorised" : "rejected") your request to access the Waste Electrical and Electronic Equipment (WEEE) online service on their behalf.
+    </p>
+
+    @if (Model.Approved)
+    {
+        <p><a href="@Model.ExternalUserLoginUrl">Sign in to the WEEE online service</a> to perform activities.</p>
+    }
+
+    @*@(Model.Approved ? "<a href=\"@Model.ExternalUserLoginUrl\">Sign in to the WEEE online service</a> to perform activities." : "")*@
+
+    <p>This is an automated email; do not reply.</p>
+    <p>If you have any enquiries, contact your relevant helpline:</p>
     <ul>
         <li><span>Environment Agency (England): 03708 506506</span></li>
         <li><span>Scottish Environment Protection Agency: 12786 457700</span></li>
