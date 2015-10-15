@@ -585,6 +585,7 @@
     <Content Include="Views\Account\AccountActivationFailed.cshtml" />
     <Content Include="Views\Account\ResetPasswordExpired.cshtml" />
     <Content Include="Views\Account\ResetPasswordComplete.cshtml" />
+    <Content Include="Views\OrganisationRegistration\UserAlreadyAssociatedWithOrganisation.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -730,6 +731,7 @@
     <Compile Include="ViewModels\OrganisationRegistration\SearchViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\OrganisationSummaryViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\AddressPrepopulateViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\UserAlreadyAssociatedWithOrganisationViewModel.cs" />
     <Compile Include="ViewModels\Organisation\PendingOrganisationsViewModel.cs" />
     <Compile Include="ViewModels\Organisation\YourOrganisationsViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
