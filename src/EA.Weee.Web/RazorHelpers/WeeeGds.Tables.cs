@@ -18,7 +18,7 @@
             foreach (var key in data.Keys)
             {
                 html += string.Format("<tr><td class=\"grey-text\" style=\"width: 250px\">{0}</td>", key);
-                html += string.Format("<td class=\"black-text\"><label>{0}</label>", data[key]);
+                html += string.Format("<td class=\"black-text\">{0}</td></tr>", data[key]);
             }
 
             html += "</tbody></table></div>";
