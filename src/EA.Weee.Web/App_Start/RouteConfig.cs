@@ -29,8 +29,12 @@
             routes.MapRoute("SelectOrganisation", "select-organisation",
                 new { controller = "Organisation", action = "Index" });
 
+            routes.MapRoute("LandingPage", string.Empty,
+                new { controller = "Account", action = "SignIn" },
+                namespaces: new[] { typeof(AccountController).Namespace });
+
             routes.MapLowercaseDashedRoute("Default", "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                defaults: new { action = "Index", id = UrlParameter.Optional },
                 namespaces: new[] { typeof(HomeController).Namespace });
         }
     }

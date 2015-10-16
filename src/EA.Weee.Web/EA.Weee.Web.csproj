@@ -527,7 +527,6 @@
     <Content Include="Scripts\vendor\modernizr.custom.77028.js" />
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Shared\_Layout.GovUK.Sections.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
@@ -540,11 +539,7 @@
     <Content Include="Views\Account\SignIn.cshtml" />
     <Content Include="Views\NewUser\UserCreation.cshtml" />
     <Content Include="Views\OrganisationRegistration\SearchResults.cshtml" />
-    <Content Include="Views\Home\LandingPage.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressData.cshtml" />
-    <Content Include="Views\NewUser\AccountNotRequired.cshtml" />
-    <Content Include="Views\NewUser\CheckIsPcs.cshtml" />
-    <Content Include="Views\NewUser\CheckComplianceYear.cshtml" />
     <Content Include="Views\OrganisationRegistration\MainContactPerson.cshtml" />
     <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
@@ -704,7 +699,6 @@
     <Compile Include="Services\IExternalRouteService.cs" />
     <Compile Include="ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordRequestViewModel.cs" />
-    <Compile Include="ViewModels\Home\LandingPageViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\Scheme\SchemeAreaRegistration.cs" />
