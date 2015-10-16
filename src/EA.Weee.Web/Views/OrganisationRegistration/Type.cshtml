@@ -41,8 +41,8 @@
         }
     </div>
 
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.OrganisationTypes.SelectedValue)">
-        @Html.EditorFor(m => m.OrganisationTypes)
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+        @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "What type of organisation is your producer compliance scheme?", true)
     </div>
 
     <div class="form-group">

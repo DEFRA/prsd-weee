@@ -343,8 +343,7 @@
                 organisationSearcher);
 
             OrganisationTypeViewModel model = new OrganisationTypeViewModel();
-            model.OrganisationTypes = new RadioButtonStringCollectionViewModel();
-            model.OrganisationTypes.SelectedValue = "Sole trader or individual";
+            model.SelectedValue = "Sole trader or individual";
             model.OrganisationId = null;
 
             // Act

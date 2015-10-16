@@ -4,31 +4,30 @@
     using Core.Organisations;
     using Shared;
 
-    public class OrganisationTypeViewModel
+    public class OrganisationTypeViewModel : RadioButtonStringCollectionViewModel
     {
         public Guid? OrganisationId { get; set; }
 
         public string SearchedText { get; set; }
 
-        public RadioButtonStringCollectionViewModel OrganisationTypes { get; set; }
-
         public OrganisationTypeViewModel()
+            : base(CreateFromEnum<OrganisationType>().PossibleValues)
         {
-            OrganisationTypes = RadioButtonStringCollectionViewModel.CreateFromEnum<OrganisationType>();
-            SearchedText = string.Empty;
         }
 
-        public OrganisationTypeViewModel(string searchText)
+        public OrganisationTypeViewModel(string searchText) : this()
         {
-            OrganisationTypes = RadioButtonStringCollectionViewModel.CreateFromEnum<OrganisationType>();
             SearchedText = searchText;
         }
 
-        public OrganisationTypeViewModel(OrganisationType organisationType, Guid orgId)
+        public OrganisationTypeViewModel(Guid orgId) : this(string.Empty)
         {
-            OrganisationTypes = RadioButtonStringCollectionViewModel.CreateFromEnum<OrganisationType>(organisationType);
-            SearchedText = string.Empty;
             OrganisationId = orgId;
+        }
+
+        public OrganisationTypeViewModel(OrganisationType organisationType, Guid orgId) : this(orgId)
+        {
+            SelectedValue = CreateFromEnum(organisationType).SelectedValue;
         }
     }
 }
