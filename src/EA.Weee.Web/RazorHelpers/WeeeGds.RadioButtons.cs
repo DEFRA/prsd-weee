@@ -8,7 +8,82 @@
 
     public partial class WeeeGds<TModel>
     {
-        public MvcHtmlString RadioButtonsFor<TValue>(Expression<Func<TModel, TValue>> expression, IList<string> possibleValues, string legend, bool legendIsHidden = false)
+        public MvcHtmlString RadioButtonsFor<TValue, T>(
+            Expression<Func<TModel, TValue>> expression,
+            IEnumerable<T> possibleValues,
+            Func<T, TValue> keySelector,
+            Func<T, string> valueSelector,
+            RadioButtonLegend legend,
+            RadioButtonLayout layout)
+        {
+            string labelsHtml = string.Empty;
+            foreach (T possibleValue in possibleValues)
+            {
+                MvcHtmlString name = HtmlHelper.NameFor(expression);
+
+                string key = keySelector(possibleValue).ToString();
+                string value = valueSelector(possibleValue);
+                
+                string id = string.Format("{0}-{1}", name, key);
+
+                string inputHtml = string.Format("<input id=\"{0}\" type=\"radio\" name=\"{1}\" value=\"{2}\">", id, name, key);
+
+                string labelHtml = string.Format("<label class=\"block-label\" for=\"{0}\">{1}{2}</label>", id, inputHtml, value);
+
+                labelsHtml += labelHtml;
+            }
+
+            string legendClassHtml;
+            switch (legend)
+            {
+                case RadioButtonLegend.Displayed:
+                    legendClassHtml = string.Empty;
+                    break;
+
+                case RadioButtonLegend.VisuallyHidden:
+                    legendClassHtml = "class=\"visuallyhidden\"";
+                    break;
+
+                default:
+                    throw new NotSupportedException();
+            }
+
+            MvcHtmlString legendText = HtmlHelper.DisplayNameFor(expression);
+
+            if (MvcHtmlString.IsNullOrEmpty(legendText))
+            {
+                string errorMessage = "A legend should always be provided for a radio button selection. " +
+                    "Consider adding a display name data annotation to the selected item property.";
+                throw new Exception(errorMessage);
+            }
+
+            string legendHtml = string.Format("<legend {0}>{1}</legend>", legendClassHtml, legendText);
+
+            string fieldSetClassHtml;
+            switch (layout)
+            {
+                case RadioButtonLayout.Stacked:
+                    fieldSetClassHtml = string.Empty;
+                    break;
+
+                case RadioButtonLayout.Inline:
+                    fieldSetClassHtml = "class=\"inline\"";
+                    break;
+
+                default:
+                    throw new NotSupportedException();
+            }
+
+            string fieldSetHtml = string.Format("<fieldset {0}>{1}{2}</fieldset>", fieldSetClassHtml, legendHtml, labelsHtml);
+
+            return new MvcHtmlString(fieldSetHtml);
+        }
+
+        public MvcHtmlString RadioButtonsFor<TValue>(
+            Expression<Func<TModel, TValue>> expression,
+            IList<string> possibleValues,
+            string legend,
+            bool legendIsHidden = false)
         {
             if (string.IsNullOrEmpty(legend))
             {
