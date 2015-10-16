@@ -107,7 +107,7 @@
 
             FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
 
-            FindMatchingUsers request = new FindMatchingUsers(1, 1, FindMatchingUsers.OrderBy.FullNameAscending);
+            FindMatchingUsers request = new FindMatchingUsers(1, 1000, FindMatchingUsers.OrderBy.FullNameAscending);
 
             // Act
             var response = await handler.HandleAsync(request);
