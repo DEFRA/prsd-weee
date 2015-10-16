@@ -23,7 +23,7 @@
                 string fullKey = GetFullKey(cache, key);
 
                 CacheItemPolicy policy = new CacheItemPolicy();
-                policy.SlidingExpiration = duration;
+                policy.AbsoluteExpiration = DateTime.UtcNow + duration;
 
                 memoryCache.Add(fullKey, value, policy);
             }
