@@ -143,8 +143,11 @@
     <Compile Include="Scheme\GetSchemePublicInfo\IGetSchemePublicInfoDataAccess.cs" />
     <Compile Include="Scheme\GetSchemesDataAccess.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandler.cs" />
+    <Compile Include="Scheme\GetSubmissionsHistoryResultsDataAccess.cs" />
+    <Compile Include="Scheme\GetSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Scheme\IGetSchemeByIdDataAccess.cs" />
     <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
+    <Compile Include="Scheme\IGetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\IProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXml.cs" />
     <Compile Include="Scheme\Interfaces\IGenerateFromXml.cs" />

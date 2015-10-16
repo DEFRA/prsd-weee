@@ -19,6 +19,7 @@
             List<string> collection = new List<string>
             {
                 PcsAction.ManagePcsMembers,
+                PcsAction.ViewSubmissionHistory,
                 PcsAction.ManageOrganisationUsers,
                 PcsAction.ViewOrganisationDetails,
                 PcsAction.ManageContactDetails

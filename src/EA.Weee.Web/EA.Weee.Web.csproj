@@ -231,6 +231,7 @@
   <ItemGroup>
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
@@ -489,6 +490,7 @@
     <Content Include="Areas\Admin\Views\Account\ResetPasswordComplete.cshtml" />
     <Content Include="Areas\Test\Views\ManageCache\Index.cshtml" />
     <Content Include="Areas\Test\Views\ManageCache\CacheCleared.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\download-link-tracker.js" />
