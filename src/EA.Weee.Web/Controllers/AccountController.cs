@@ -85,12 +85,6 @@
                 return Redirect(returnUrl);
             }
 
-            return RedirectToAction("RedirectProcess");
-        }
-
-        [HttpGet]
-        public ActionResult RedirectProcess()
-        {
             return RedirectToRoute("SelectOrganisation");
         }
 
