@@ -132,7 +132,7 @@
                 using (var client = apiClient())
                 {
                     var organisation = await GetOrganisation(organisationId, client);
-                    var model = new OrganisationTypeViewModel(organisation.OrganisationType, organisationId.Value);
+                    var model = new OrganisationTypeViewModel(organisationId.Value);
                     return View("Type", model);
                 }
             }
@@ -147,7 +147,7 @@
             if (ModelState.IsValid)
             {
                 var organisationType =
-                        model.OrganisationTypes.SelectedValue.GetValueFromDisplayName<OrganisationType>();
+                        model.SelectedValue.GetValueFromDisplayName<OrganisationType>();
 
                 if (model.OrganisationId != null)
                 {
