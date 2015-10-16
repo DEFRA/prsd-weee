@@ -21,7 +21,12 @@
         <p>If you do not wish to access this organisation, you can search for a different one.</p>
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="JoinOrganisationOptions">
-            @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "Confirm your organisation access request", true)
+            @Html.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Confirm your organisation access request",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
         </div>
 
         <div class="form-group">

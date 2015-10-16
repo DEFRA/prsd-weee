@@ -33,21 +33,6 @@
                 labelsHtml += labelHtml;
             }
 
-            string legendClassHtml;
-            switch (legend)
-            {
-                case RadioButtonLegend.Displayed:
-                    legendClassHtml = string.Empty;
-                    break;
-
-                case RadioButtonLegend.VisuallyHidden:
-                    legendClassHtml = "class=\"visuallyhidden\"";
-                    break;
-
-                default:
-                    throw new NotSupportedException();
-            }
-
             MvcHtmlString legendText = HtmlHelper.DisplayNameFor(expression);
 
             if (MvcHtmlString.IsNullOrEmpty(legendText))
@@ -57,35 +42,17 @@
                 throw new Exception(errorMessage);
             }
 
-            string legendHtml = string.Format("<legend {0}>{1}</legend>", legendClassHtml, legendText);
-
-            string fieldSetClassHtml;
-            switch (layout)
-            {
-                case RadioButtonLayout.Stacked:
-                    fieldSetClassHtml = string.Empty;
-                    break;
-
-                case RadioButtonLayout.Inline:
-                    fieldSetClassHtml = "class=\"inline\"";
-                    break;
-
-                default:
-                    throw new NotSupportedException();
-            }
-
-            string fieldSetHtml = string.Format("<fieldset {0}>{1}{2}</fieldset>", fieldSetClassHtml, legendHtml, labelsHtml);
-
-            return new MvcHtmlString(fieldSetHtml);
+            return WrapRadioButtonsInFieldSet(labelsHtml, legendText, legend, layout);
         }
 
         public MvcHtmlString RadioButtonsFor<TValue>(
             Expression<Func<TModel, TValue>> expression,
             IList<string> possibleValues,
-            string legend,
-            bool legendIsHidden = false)
+            string legendText,
+            RadioButtonLegend legend,
+            RadioButtonLayout layout)
         {
-            if (string.IsNullOrEmpty(legend))
+            if (string.IsNullOrEmpty(legendText))
             {
                 throw new InvalidOperationException("A legend should always be provided for a radio button selection");
             }
@@ -111,12 +78,50 @@
                 radioButtonHtml += div + label;
             }
 
-            if (legendIsHidden)
+            return WrapRadioButtonsInFieldSet(radioButtonHtml, new MvcHtmlString(legendText), legend, layout);
+        }
+
+        private MvcHtmlString WrapRadioButtonsInFieldSet(
+            string radioButtonsHtml,
+            MvcHtmlString legendText,
+            RadioButtonLegend legend,
+            RadioButtonLayout layout)
+        {
+            string legendClassHtml;
+            switch (legend)
             {
-                return new MvcHtmlString(validationMessage + string.Format("<fieldset><legend class=\"hidden-for-screen-reader\">{0}</legend>{1}</fieldset>", legend, radioButtonHtml));
+                case RadioButtonLegend.Displayed:
+                    legendClassHtml = string.Empty;
+                    break;
+
+                case RadioButtonLegend.VisuallyHidden:
+                    legendClassHtml = "class=\"visuallyhidden\"";
+                    break;
+
+                default:
+                    throw new NotSupportedException();
             }
-            
-            return new MvcHtmlString(validationMessage + string.Format("<fieldset><legend>{0}</legend>{1}</fieldset>", legend, radioButtonHtml));
+
+            string legendHtml = string.Format("<legend {0}>{1}</legend>", legendClassHtml, legendText);
+
+            string fieldSetClassHtml;
+            switch (layout)
+            {
+                case RadioButtonLayout.Stacked:
+                    fieldSetClassHtml = string.Empty;
+                    break;
+
+                case RadioButtonLayout.Inline:
+                    fieldSetClassHtml = "class=\"inline\"";
+                    break;
+
+                default:
+                    throw new NotSupportedException();
+            }
+
+            string fieldSetHtml = string.Format("<fieldset {0}>{1}{2}</fieldset>", fieldSetClassHtml, legendHtml, radioButtonsHtml);
+
+            return new MvcHtmlString(fieldSetHtml);
         }
     }
 }
