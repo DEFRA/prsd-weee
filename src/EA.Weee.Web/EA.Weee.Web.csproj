@@ -673,6 +673,7 @@
     <Compile Include="RazorHelpers\WeeeGds.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Label.cs" />
     <Compile Include="RazorHelpers\WeeeGds.RadioButtons.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.Tables.cs" />
     <Compile Include="RazorHelpers\WeeeGdsExtensions.cs" />
     <Compile Include="Requests\Base\IRequestCreator.cs" />
     <Compile Include="Requests\Base\RequestCreator.cs" />

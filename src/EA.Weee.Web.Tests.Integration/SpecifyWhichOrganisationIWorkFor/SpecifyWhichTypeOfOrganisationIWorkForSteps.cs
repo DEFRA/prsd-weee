@@ -83,10 +83,7 @@
 
         private OrganisationTypeViewModel OrganisationType(OrganisationType selectedOption)
         {
-            return new OrganisationTypeViewModel
-            {
-                OrganisationTypes = RadioButtonStringCollectionViewModel.CreateFromEnum(selectedOption)
-            };
+            return new OrganisationTypeViewModel(selectedOption, Guid.NewGuid());
         }
     }
 }
