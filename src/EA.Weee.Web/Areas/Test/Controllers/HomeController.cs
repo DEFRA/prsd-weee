@@ -22,7 +22,7 @@
         {
             if (ModelState.IsValid)
             {
-                switch (viewModel.Options.SelectedValue)
+                switch (viewModel.SelectedValue)
                 {
                     case HomeViewModel.OptionGeneratePcsXmlFile:
                         return RedirectToAction("SelectOrganisation", "GeneratePcsXml");

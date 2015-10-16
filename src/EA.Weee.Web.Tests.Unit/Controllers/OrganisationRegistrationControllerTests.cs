@@ -1,116 +1,169 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
     using Core.Shared;
+    using EA.Weee.Core.Search;
     using FakeItEasy;
-    using ViewModels.JoinOrganisation;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.OrganisationRegistration;
     using ViewModels.OrganisationRegistration.Details;
     using ViewModels.OrganisationRegistration.Type;
     using ViewModels.Shared;
     using Web.Controllers;
     using Weee.Requests.Organisations;
-    using Weee.Requests.Organisations.Create.Base;
     using Xunit;
 
     public class OrganisationRegistrationControllerTests
     {
-        private readonly IWeeeClient apiClient;
-
-        public OrganisationRegistrationControllerTests()
-        {
-            apiClient = A.Fake<IWeeeClient>();
-        }
-
         [Fact]
-        public async void GetRegisteredOfficeAddress_ApiThrowsException_ExceptionShouldNotBeCaught()
+        public async Task GetRegisteredOfficeAddress_ApiThrowsException_ExceptionShouldNotBeCaught()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Throws<Exception>();
 
-            await Assert.ThrowsAnyAsync<Exception>(() => OrganisationRegistrationController().RegisteredOfficeAddress(A<Guid>._));
-        }
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
-        [Theory]
-        [InlineData("Sole trader or individual")]
-        [InlineData("Partnership")]
-        [InlineData("Registered Company")]
-        public async void GetRegisteredOfficeAddress_ApiReturnsOrganisationData_ShouldMapOrganisationTypeToModel(string organisationType)
-        {
-            var orgType = CastOrganisationType(organisationType);
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(new OrganisationData
-                {
-                    OrganisationType = orgType
-                });
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
 
-            var result = await OrganisationRegistrationController().RegisteredOfficeAddress(A<Guid>._);
-            var model = (AddressViewModel)((ViewResult)result).Model;
+            // Act
+            Func<Task<ActionResult>> action = async () => await controller.RegisteredOfficeAddress(A<Guid>._);
 
-            Assert.Equal(orgType, model.OrganisationType);
+            // Assert
+            await Assert.ThrowsAnyAsync<Exception>(action);
         }
 
         [Fact]
-        public async void GetRegisteredOfficeAddress_ApiReturnsOrganisationData_ShouldReturnViewWithModel()
+        public async Task GetRegisteredOfficeAddress_ApiReturnsOrganisationData_ReturnsViewWithModel()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(new OrganisationData());
+            // Arrange
+            AddressData addressData = new AddressData();
+            addressData.Address1 = "Address Line 1";
 
-            var result = await OrganisationRegistrationController().RegisteredOfficeAddress(A<Guid>._);
-            var model = ((ViewResult)result).Model;
+            OrganisationData organisationData = new OrganisationData();
+            organisationData.Id = new Guid("1B7329B9-DC7F-4621-8E97-FD97CDDDBA10");
+            organisationData.OrganisationType = OrganisationType.RegisteredCompany;
+            organisationData.HasBusinessAddress = true;
+            organisationData.BusinessAddress = addressData;
 
-            Assert.NotNull(model);
-            Assert.IsType<AddressViewModel>(model);
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationData);
+
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.RegisteredOfficeAddress(new Guid("1B7329B9-DC7F-4621-8E97-FD97CDDDBA10"));
+            
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            AddressViewModel viewModel = viewResult.Model as AddressViewModel;
+            Assert.NotNull(viewModel);
+
+            Assert.Equal(new Guid("1B7329B9-DC7F-4621-8E97-FD97CDDDBA10"), viewModel.OrganisationId);
+            Assert.Equal(OrganisationType.RegisteredCompany, viewModel.OrganisationType);
+            Assert.Equal("Address Line 1", viewModel.Address.Address1);
         }
 
         [Fact]
-        public async void PostRegisteredOfficeAddress_ModelStateIsInvalid_ShouldReturnViewWithInvalidModel()
+        public async Task PostRegisteredOfficeAddress_ModelStateIsInvalid_ReturnsViewModel()
         {
+            // Arrange
+            IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
             var model = new AddressViewModel();
-            var controller = OrganisationRegistrationController();
             controller.ModelState.AddModelError("Key", "Error"); // To make the model state invalid
+            
+            // Act
+            ActionResult result = await controller.RegisteredOfficeAddress(model);
 
-            var result = await controller.RegisteredOfficeAddress(model);
-            var returnedModel = ((ViewResult)result).Model;
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
 
-            Assert.Equal(model, returnedModel);
+            Assert.Equal(model, viewResult.Model);
         }
 
         [Fact]
-        public async void PostRegisteredOfficeAddress_PrincipalPlaceOfBusinessIsValid_ShouldSubmitDetailsToApi()
+        public async void PostRegisteredOfficeAddress_PrincipalPlaceOfBusinessIsValid_CallsApiToAddAddressToOrganisation()
         {
-            var model = new AddressViewModel();
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
-            await OrganisationRegistrationController().RegisteredOfficeAddress(model);
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<AddAddressToOrganisation>._))
+            AddressViewModel model = new AddressViewModel();
+
+            // Act
+            ActionResult result = await controller.RegisteredOfficeAddress(model);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddAddressToOrganisation>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public async void PostRegisteredOfficeAddress_PrincipalPlaceOfBusinessIsValid_ShouldRedirectToSummaryPage()
+        public async Task PostRegisteredOfficeAddress_PrincipalPlaceOfBusinessIsValid_RedirectsToReviewOrganisationDetails()
         {
-            var model = new AddressViewModel();
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
-            var result = await OrganisationRegistrationController().RegisteredOfficeAddress(model);
-            var redirectToRouteResult = ((RedirectToRouteResult)result);
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            AddressViewModel model = new AddressViewModel();
+
+            // Act
+            ActionResult result = await controller.RegisteredOfficeAddress(model);
+
+            // Assert
+            RedirectToRouteResult redirectToRouteResult = result as RedirectToRouteResult;
+            Assert.NotNull(redirectToRouteResult);
 
             Assert.Equal("ReviewOrganisationDetails", redirectToRouteResult.RouteValues["action"]);
         }
 
         [Fact]
-        public async void GetOrganisationAddress_ApiReturnsOrganisationData_ShouldReturnViewWithModel()
+        public async Task GetOrganisationAddress_ApiReturnsOrganisationData_ReturnsViewWithModel()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(new OrganisationData());
 
-            var result = await OrganisationRegistrationController().OrganisationAddress(A<Guid>._);
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.OrganisationAddress(A<Guid>._);
+            
+            // Assert
             var model = ((ViewResult)result).Model;
 
             Assert.NotNull(model);
@@ -118,36 +171,69 @@
         }
 
         [Fact]
-        public async void PostOrganisationAddress_IrrespectiveOfCountry_ShouldRedirectToRegisteredOfficeAddressPrepopulate()
+        public async Task PostOrganisationAddress_IrrespectiveOfCountry_RedirectsToRegisteredOfficeAddressPrepopulate()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<AddAddressToOrganisation>._))
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddAddressToOrganisation>._))
                .Returns(Guid.NewGuid());
 
-            var result = await OrganisationRegistrationController().OrganisationAddress(new AddressViewModel());
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.OrganisationAddress(new AddressViewModel());
+
+            // Assert
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal("RegisteredOfficeAddressPrepopulate", redirectToRouteResult.RouteValues["action"]);
         }
 
         [Fact]
-        public async void GetMainContactPerson_OrganisationIdIsInvalid_ShouldThrowArgumentException()
+        public async Task GetMainContactPerson_OrganisationIdIsInvalid_ThrowsArgumentException()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().MainContactPerson(A<Guid>._));
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            Func<Task<ActionResult>> action = async () => await controller.MainContactPerson(A<Guid>._);
+
+            // Assert
+            await Assert.ThrowsAsync<ArgumentException>(action);
         }
 
         [Fact]
-        public async void
-            GetMainContactPerson_OrganisationIdIsValid_ShouldReturnContactPersonViewModelWithOrganisationId()
+        public async Task GetMainContactPerson_OrganisationIdIsValid_ReturnsContactPersonViewModelWithOrganisationId()
         {
-            var organisationId = Guid.NewGuid();
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
 
-            var result = await OrganisationRegistrationController().MainContactPerson(organisationId);
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            var organisationId = new Guid("B387D62D-8615-4F67-999E-41F97F14638D");
+
+            // Act
+            var result = await controller.MainContactPerson(organisationId);
+
+            // Assert
             var model = ((ViewResult)result).Model;
 
             Assert.IsType<ContactPersonViewModel>(model);
@@ -155,92 +241,171 @@
         }
 
         [Fact]
-        public async void PostRegisteredOfficeAddressPrepopulate_WithYesSelection_ShouldRedirectToSummaryPage()
+        public async Task PostRegisteredOfficeAddressPrepopulate_WithYesSelection_RedirectsToSummaryPage()
         {
-            var model = GetMockAddressPrepopulateViewModel();
+            // Arrange
+            IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
-            var result = await OrganisationRegistrationController().RegisteredOfficeAddressPrepopulate(model);
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            var model = new AddressPrepopulateViewModel();
+            model.SelectedValue = "Yes";
+
+            // Act
+            ActionResult result = await controller.RegisteredOfficeAddressPrepopulate(model);
+
+            // Assert
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal("ReviewOrganisationDetails", redirectToRouteResult.RouteValues["action"]);
         }
 
         [Fact]
-        public async void PostRegisteredOfficeAddressPrepopulate_WithNoSelection_ShouldRedirectToRegisteredOfficeAddress()
+        public async Task PostRegisteredOfficeAddressPrepopulate_WithNoSelection_RedirectsToRegisteredOfficeAddress()
         {
-            var model = GetMockAddressPrepopulateViewModel();
+            // Arrange
+            IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            var model = new AddressPrepopulateViewModel();
             model.SelectedValue = "No";
 
-            var result = await OrganisationRegistrationController().RegisteredOfficeAddressPrepopulate(model);
+            // Act
+            ActionResult result = await controller.RegisteredOfficeAddressPrepopulate(model);
+
+            // Assert
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal("RegisteredOfficeAddress", redirectToRouteResult.RouteValues["action"]);
         }
 
         [Fact]
-        public async void GetType_OrganisationIdIsInvalid_ShouldThrowArgumentException()
+        public async Task GetType_OrganisationIdIsInvalid_ThrowsArgumentException()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
                 .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().Type(A<string>._, A<Guid>._));
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            Func<Task<ActionResult>> action = async () => await controller.Type(A<string>._, A<Guid>._);
+
+            // Assert
+            await Assert.ThrowsAsync<ArgumentException>(action);
         }
 
         [Fact]
-        public async void GetType_OrganisationIdIsValid_ShouldReturnOrganisationTypeViewModel()
+        public async Task GetType_OrganisationIdIsValid_ReturnsOrganisationTypeViewModel()
         {
-            var organisationId = Guid.NewGuid();
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
                 .Returns(true);
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(new OrganisationData());
 
-            var result = await OrganisationRegistrationController().Type(A<string>._, organisationId);
-            var model = ((ViewResult)result).Model;
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.Type(A<string>._, A<Guid>._);
+            
+            // Assert
+            var model = ((ViewResult)result).Model;
             Assert.IsType<OrganisationTypeViewModel>(model);
         }
 
         [Fact]
-        public async void PostType_SoleTraderDetailsSelectionWithoutOrganisationId_ShouldRedirectSoleTraderDetails()
+        public async Task PostType_SoleTraderDetailsSelectionWithoutOrganisationId_RedirectsToSoleTraderDetails()
         {
-            var model = GetMockOrganisationTypeViewModel();
+            // Arrange
+            IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
-            var result = await OrganisationRegistrationController().Type(model);
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            OrganisationTypeViewModel model = new OrganisationTypeViewModel();
+            model.OrganisationTypes = new RadioButtonStringCollectionViewModel();
+            model.OrganisationTypes.SelectedValue = "Sole trader or individual";
+            model.OrganisationId = null;
+
+            // Act
+            ActionResult result = await controller.Type(model);
+
+            // Assert
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal("SoleTraderDetails", redirectToRouteResult.RouteValues["action"]);
         }
 
         [Fact]
-        public async void PostType_SoleTraderDetailsSelectionWithOrganisationId_ShouldRedirectSoleTraderDetails()
+        public async Task PostType_SoleTraderDetailsSelectionWithOrganisationId_RedirectsToSoleTraderDetails()
         {
-            var model = GetMockOrganisationTypeViewModel();
-            model.OrganisationId = Guid.NewGuid();
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
-               .Returns(true);
-
-            var orgData = new OrganisationData
+            // Arrange
+            OrganisationData orgData = new OrganisationData
             {
                 OrganisationType = OrganisationType.SoleTraderOrIndividual,
                 Id = Guid.NewGuid()
             };
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
+                .Returns(true);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(orgData);
 
-            var result = await OrganisationRegistrationController().Type(model);
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            OrganisationTypeViewModel model = new OrganisationTypeViewModel(
+                OrganisationType.SoleTraderOrIndividual,
+                new Guid("35EFE82E-0706-4E80-8AFA-D81C4B58102A"));
+
+            // Act
+            ActionResult result = await controller.Type(model);
+
+            // Assert
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal("SoleTraderDetails", redirectToRouteResult.RouteValues["action"]);
         }
 
         [Fact]
-        public async void GetSoleTraderDetails_WithoutOrganisationId_ShouldReturnsSoleTraderDetailsView()
+        public async Task GetSoleTraderDetails_WithoutOrganisationId_ReturnsSoleTraderDetailsView()
         {
-            var result = await OrganisationRegistrationController().SoleTraderDetails();
+            // Arrange
+            IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.SoleTraderDetails();
+
+            // Assert
             var model = ((ViewResult)result).Model;
 
             Assert.NotNull(model);
@@ -248,31 +413,53 @@
         }
 
         [Fact]
-        public async void GetSoleTraderDetails_InvalidOrganisationId_ShouldThrowArgumentException()
+        public async Task GetSoleTraderDetails_InvalidOrganisationId_ThrowsArgumentException()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
                .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().SoleTraderDetails(A<Guid>._));
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            Func<Task<ActionResult>> action = async () => await controller.SoleTraderDetails(A<Guid>._);
+
+            // Assert
+            await Assert.ThrowsAsync<ArgumentException>(action);
         }
 
         [Fact]
-        public async void GetSoleTraderDetails_WithValidOrganisationId_ShouldReturnsSoleTraderDetailsViewWithModel()
+        public async Task GetSoleTraderDetails_WithValidOrganisationId_ReturnsSoleTraderDetailsViewWithModel()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
-             .Returns(true);
-
-            var orgData = new OrganisationData
+            // Arrange
+            OrganisationData orgData = new OrganisationData
             {
                 OrganisationType = OrganisationType.SoleTraderOrIndividual,
                 Id = Guid.NewGuid(),
                 TradingName = "TEST Ltd."
             };
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
+                .Returns(true);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(orgData);
 
-            var result = await OrganisationRegistrationController().SoleTraderDetails(orgData.Id);
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.SoleTraderDetails(orgData.Id);
+
+            // Assert
             var model = ((ViewResult)result).Model;
 
             Assert.NotNull(model);
@@ -281,18 +468,41 @@
         }
 
         [Fact]
-        public async void GetRegisteredCompanyDetails_InvalidOrganisationId_ShouldThrowArgumentException()
+        public async Task GetRegisteredCompanyDetails_InvalidOrganisationId_ThrowsArgumentException()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
                .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => OrganisationRegistrationController().RegisteredCompanyDetails(A<Guid>._));
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            Func<Task<ActionResult>> action = async () => await controller.RegisteredCompanyDetails(A<Guid>._);
+
+            // Assert
+            await Assert.ThrowsAsync<ArgumentException>(action);
         }
 
         [Fact]
-        public async void GetRegisteredCompanyDetails_WithoutOrganisationId_ShouldReturnsRegisteredCompanyDetailsView()
+        public async Task GetRegisteredCompanyDetails_WithoutOrganisationId_ReturnsRegisteredCompanyDetailsView()
         {
-            var result = await OrganisationRegistrationController().RegisteredCompanyDetails();
+            // Arrange
+            IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            var result = await controller.RegisteredCompanyDetails();
+
+            // Assert
             var model = ((ViewResult)result).Model;
 
             Assert.NotNull(model);
@@ -300,12 +510,10 @@
         }
 
         [Fact]
-        public async void GetRegisteredCompanyDetails_WithValidOrganisationId_ShouldReturnsRegisteredCompanyDetailsViewWithModel()
+        public async Task GetRegisteredCompanyDetails_WithValidOrganisationId_ReturnsRegisteredCompanyDetailsViewWithModel()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
-             .Returns(true);
-
-            var orgData = new OrganisationData
+            // Arrange
+            OrganisationData orgData = new OrganisationData
             {
                 OrganisationType = OrganisationType.RegisteredCompany,
                 Id = Guid.NewGuid(),
@@ -314,10 +522,22 @@
                 Name = "TEST"
             };
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExistsAndIncomplete>._))
+                .Returns(true);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(orgData);
 
-            var result = await OrganisationRegistrationController().RegisteredCompanyDetails(orgData.Id);
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.RegisteredCompanyDetails(orgData.Id);
+
+            // Assert
             var model = ((ViewResult)result).Model;
 
             Assert.NotNull(model);
@@ -327,19 +547,25 @@
             Assert.Equal(orgData.Name, ((RegisteredCompanyDetailsViewModel)model).CompanyName);
         }
 
-        [Theory]
-        [InlineData("12345")]
-        [InlineData("AB1258")]
-        [InlineData("AB123456789")]
-        public async void PostRegisteredCompanyDetails_WithInvalidCompanyRegistrationNo_ShouldReturnsValidationError(string companyRegistrationNo)
+        [Fact]
+        public async Task PostRegisteredCompanyDetails_WithInvalidModel_ReturnsView()
         {
-            var model = new RegisteredCompanyDetailsViewModel
-            {
-                OrganisationId = Guid.NewGuid(),
-                CompaniesRegistrationNumber = companyRegistrationNo,
-                CompanyName = "Test Ltd."
-            };
-            var result = await OrganisationRegistrationController(model).RegisteredCompanyDetails(model);
+            // Arrange
+            IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            controller.ModelState.AddModelError("Key", "Error");
+
+            RegisteredCompanyDetailsViewModel model = new RegisteredCompanyDetailsViewModel();
+
+            // Act
+            ActionResult result = await controller.RegisteredCompanyDetails(model);
+            
+            // Assert
             var viewmodel = ((ViewResult)result).Model;
             
             Assert.NotNull(viewmodel);
@@ -347,8 +573,9 @@
         }
 
         [Fact]
-        public async void GetJoinOrganisationConfirmation_ShouldReturnsJoinOrganisationConfirmationView()
+        public async Task GetJoinOrganisationConfirmation_ReturnsJoinOrganisationConfirmationView()
         {
+            // Arrange
             var orgData = new PublicOrganisationData
             {
                 Id = Guid.NewGuid(),
@@ -356,10 +583,20 @@
                 DisplayName = "Test"
             };
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
                 .Returns(orgData);
 
-            var result = await OrganisationRegistrationController().JoinOrganisationConfirmation(orgData.Id);
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id);
+
+            // Assert
             var model = ((ViewResult)result).Model;
 
             Assert.NotNull(model);
@@ -367,12 +604,23 @@
         }
 
         [Fact]
-        public async void GetJoinOrganisation_ShouldReturnsView()
+        public async Task GetJoinOrganisation_ReturnsView()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
                 .Returns(new PublicOrganisationData());
 
-            var result = await OrganisationRegistrationController().JoinOrganisation(A<Guid>._);
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.JoinOrganisation(A<Guid>._);
+
+            // Assert
             var model = ((ViewResult)result).Model;
 
             Assert.NotNull(model);
@@ -380,228 +628,332 @@
         }
 
         [Fact]
-        public async void PostJoinOrganisation_NoSearchAnotherOrganisationSelected_ShouldRedirectedToTypeView()
+        public async Task PostJoinOrganisation_NoSearchAnotherOrganisationSelected_RedirectsToType()
         {
-            var model = GetTestJoinOrgViewModel();
+            // Arrange
+            IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
-            var result = await OrganisationRegistrationController().JoinOrganisation(model);
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
 
+            JoinOrganisationViewModel model = new JoinOrganisationViewModel();
+            model.SelectedValue = "No - search for another organisation";
+
+            // Act
+            ActionResult result = await controller.JoinOrganisation(model);
+
+            // Assert
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
-            Assert.Equal("SearchOrganisation", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal("Search", redirectToRouteResult.RouteValues["action"]);
         }
 
         [Fact]
-        public async void PostJoinOrganisation_YesJoinOrganisationSelected_ShouldRedirectedToJoinOrganisationConfirmationView()
+        public async Task PostJoinOrganisation_YesJoinOrganisationSelected_RedirectsToJoinOrganisationConfirmation()
         {
-            var model = GetTestJoinOrgViewModel();
-
-            model.JoinOrganisationOptions.SelectedValue = "Yes - join xyz";
-
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<JoinOrganisation>._))
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<JoinOrganisation>._))
                 .Returns(Guid.NewGuid());
 
-            var result = await OrganisationRegistrationController().JoinOrganisation(model);
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            JoinOrganisationViewModel model = new JoinOrganisationViewModel();
+            model.SelectedValue = "Yes - join xyz";
+
+            // Act
+            ActionResult result = await controller.JoinOrganisation(model);
+
+            // Assert
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
             Assert.Equal("JoinOrganisationConfirmation", redirectToRouteResult.RouteValues["action"]);
         }
 
-        private JoinOrganisationViewModel GetTestJoinOrgViewModel()
-        {
-            const string NoSearchAnotherOrganisation = "No - search for another organisation";
-            return new JoinOrganisationViewModel
-            {
-                OrganisationId = Guid.NewGuid(),
-                JoinOrganisationOptions = new RadioButtonStringCollectionViewModel
-                {
-                    PossibleValues = new[] { "Yes - join xyz", NoSearchAnotherOrganisation },
-                    SelectedValue = NoSearchAnotherOrganisation
-                }
-            };
-        }
-
         [Fact]
-        public void GetNotFoundOrganisation_ShouldReturnsView()
+        public async Task GetSearch_UserHasNotOrganisation_ShowPerformAnotherActivityLinkIsFalse()
         {
-            var result = OrganisationRegistrationController().NotFoundOrganisation("name");
-
-            var model = ((ViewResult)result).Model;
-
-            Assert.NotNull(model);
-            Assert.IsType<NotFoundOrganisationViewModel>(model);
-        }
-
-        [Fact]
-        public async void GetSearchOrganisation_NoMatchingOrganisation_ShouldRedirectToNotFoundOrganisationView()
-        {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<FindMatchingOrganisations>._))
-                .Returns(new OrganisationSearchDataResult(new List<PublicOrganisationData>(), 0));
-
-            var result =
-                await
-                    OrganisationRegistrationController()
-                        .SelectOrganisation("xyz ltd.");
-
-            var redirectRouteResult = (RedirectToRouteResult)result;
-
-            Assert.Equal(redirectRouteResult.RouteValues["action"], "NotFoundOrganisation");
-        }
-
-        [Fact]
-        public async void GetSearchOrganisation_FoundMatchingOrganisation_ShouldReturnsView()
-        {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<FindMatchingOrganisations>._))
-                .Returns(new OrganisationSearchDataResult(new List<PublicOrganisationData>
-                {
-                    new PublicOrganisationData(),
-                    new PublicOrganisationData()
-                }, 2));
-
-            var result =
-                await
-                    OrganisationRegistrationController()
-                        .SelectOrganisation("xyz ltd.");
-
-            var model = ((ViewResult)result).Model;
-
-            Assert.NotNull(model);
-            Assert.IsType<SelectOrganisationViewModel>(model);
-        }
-
-        [Fact]
-        public async void GetSearchOrganisation_UserHasNotOrganisation_ShowPerformAnotherActivityShouldBeFalse()
-        {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
                .Returns(new List<OrganisationUserData>());
 
-            var result =
-                await
-                    OrganisationRegistrationController().SearchOrganisation();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
-            var model = ((ViewResult)result).Model as SearchOrganisationViewModel;
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.Search();
+
+            // Assert
+            var model = ((ViewResult)result).Model as SearchViewModel;
 
             Assert.NotNull(model);
             Assert.False(model.ShowPerformAnotherActivityLink);
         }
 
         [Fact]
-        public async void GetSearchOrganisation_UserHasOrganisation_ShowPerformAnotherActivityShouldBeTrue()
+        public async Task GetSearch_UserHasOrganisations_ShowPerformAnotherActivityLinkIsTrue()
         {
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
                .Returns(new List<OrganisationUserData>
                {
                    new OrganisationUserData(),
                    new OrganisationUserData()
                });
 
-            var result =
-                await
-                    OrganisationRegistrationController().SearchOrganisation();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
-            var model = ((ViewResult)result).Model as SearchOrganisationViewModel;
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.Search();
+
+            // Assert
+            var model = ((ViewResult)result).Model as SearchViewModel;
 
             Assert.NotNull(model);
             Assert.True(model.ShowPerformAnotherActivityLink);
         }
 
         [Fact]
-        public void PostSelectOrganisation_AnyOrganisationSelected_ShouldRedirectToJoinOrganisation()
+        public async Task PostConfirmOrganisationDetails_WithInvalidModel_ReturnsView()
         {
-            var orgId = Guid.NewGuid();
+            // Arrange
+            IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
 
-            var model = new SelectOrganisationViewModel
-            {
-                Organisations = new StringGuidRadioButtons()
-                {
-                    PossibleValues = new List<RadioButtonPair<string, Guid>>
-                    {
-                        new RadioButtonPair<string, Guid>("Test ltd.", orgId),
-                    },
-                    SelectedValue = orgId
-                },
-                SearchedText = "Test"
-            };
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
 
-            var result = OrganisationRegistrationController()
-                        .SelectOrganisation(model);
+            controller.ModelState.AddModelError("Key", "Error");
 
-            var redirectRouteResult = (RedirectToRouteResult)result;
+            OrganisationSummaryViewModel model = new OrganisationSummaryViewModel();
 
-            Assert.Equal(redirectRouteResult.RouteValues["action"], "JoinOrganisation");
+            // Act
+            ActionResult result = await controller.ConfirmOrganisationDetails(model, Guid.NewGuid());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.False(viewResult.ViewData.ModelState.IsValid);
         }
 
         [Fact]
-        public async void PostConfirmOrganisationDetails_PrivacyPolicyNotChecked_ReturnsValidationError()
+        public async Task GetSearch_ReturnsSearchView()
         {
-            var model = new OrganisationSummaryViewModel
+            // Arrange
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.Search();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "search");
+        }
+
+        [Fact]
+        public async Task PostSearch_WithInvalidModel_ReturnsSearchView()
+        {
+            // Arrange
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            SearchViewModel viewModel = new SearchViewModel();
+            controller.ModelState.AddModelError("SomeProperty", "Exception");
+
+            // Act
+            ActionResult result = await controller.Search(viewModel);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "search");
+        }
+
+        [Fact]
+        public async Task PostSearch_WithSearchTermAndNoSelectedOrganisationId_RedirectsToSearchResultsAction()
+        {
+            // Arrange
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            SearchViewModel viewModel = new SearchViewModel();
+            viewModel.SearchTerm = "testSearchTerm";
+            viewModel.SelectedOrganisationId = null;
+
+            // Act
+            ActionResult result = await controller.Search(viewModel);
+
+            // Assert
+            RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
+            Assert.NotNull(redirectResult);
+
+            Assert.Equal("SearchResults", redirectResult.RouteValues["action"]);
+            Assert.Equal("testSearchTerm", redirectResult.RouteValues["SearchTerm"]);
+        }
+
+        [Fact]
+        public async Task PostSearch_WithSelectedOrganisationId_RedirectsToJoinOrganisationAction()
+        {
+            // Arrange
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            SearchViewModel viewModel = new SearchViewModel();
+            viewModel.SearchTerm = "Test Company";
+            viewModel.SelectedOrganisationId = new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8");
+
+            // Act
+            ActionResult result = await controller.Search(viewModel);
+
+            // Assert
+            RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
+            Assert.NotNull(redirectResult);
+
+            Assert.Equal("JoinOrganisation", redirectResult.RouteValues["action"]);
+            Assert.Equal(new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"), redirectResult.RouteValues["OrganisationId"]);
+        }
+
+        [Fact]
+        public async Task GetSearchResults_DoesSearchForFiveResultsAndReturnsSearchReturnsView()
+        {
+            // Arrange
+            List<OrganisationSearchResult> fakeResults = new List<OrganisationSearchResult>()
             {
-                PrivacyPolicy = false,
-                OrganisationData = new OrganisationData()
+                new OrganisationSearchResult()
+                {
+                    OrganisationId = new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"),
+                    Name = "Test Company",
+                }
             };
 
-            var result =
-               await
-                   OrganisationRegistrationController(model)
-                       .ConfirmOrganisationDetails(model, Guid.NewGuid()) as ViewResult;
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
+            A.CallTo(() => organisationSearcher.Search("testSearchTerm", 5, false))
+                .Returns(fakeResults);
 
-            Assert.False(result.ViewData.ModelState.IsValid);
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.SearchResults("testSearchTerm");
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "searchresults");
+
+            SearchResultsViewModel viewModel = viewResult.Model as SearchResultsViewModel;
+            Assert.NotNull(viewModel);
+
+            Assert.Contains(viewModel.Results, r => r.OrganisationId == new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
         }
 
-        private OrganisationRegistrationController OrganisationRegistrationController()
+        [Fact]
+        public async Task PostSearchResults_WithInvalidModel_DoesSearchForFiveResultsAndReturnsSearchReturnsView()
         {
-            return new OrganisationRegistrationController(() => apiClient);
-        }
-
-        private OrganisationRegistrationController OrganisationRegistrationController(object viewModel)
-        {
-            var controller = new OrganisationRegistrationController(() => apiClient);
-            // Mimic the behaviour of the model binder which is responsible for Validating the Model
-            var validationContext = new ValidationContext(viewModel, null, null);
-            var validationResults = new List<ValidationResult>();
-            Validator.TryValidateObject(viewModel, validationContext, validationResults, true);
-            foreach (var validationResult in validationResults)
+            // Arrange
+            List<OrganisationSearchResult> fakeResults = new List<OrganisationSearchResult>()
             {
-                controller.ModelState.AddModelError(validationResult.MemberNames.First(), validationResult.ErrorMessage);
-            }
-
-            return controller;
-        }
-
-        private AddressPrepopulateViewModel GetMockAddressPrepopulateViewModel()
-        {
-            var addressPrepopulateViewModel = new AddressPrepopulateViewModel
-            {
-                OrganisationType = OrganisationType.SoleTraderOrIndividual,
-                OrganisationId = Guid.NewGuid(),
-                SelectedValue = "Yes" 
+                new OrganisationSearchResult()
+                {
+                    OrganisationId = new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"),
+                    Name = "Test Company",
+                }
             };
 
-            return addressPrepopulateViewModel;
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
+            A.CallTo(() => organisationSearcher.Search("testSearchTerm", 5, false))
+                .Returns(fakeResults);
+
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            SearchResultsViewModel viewModel = new SearchResultsViewModel();
+            viewModel.SearchTerm = "testSearchTerm";
+            controller.ModelState.AddModelError("SomeProperty", "Exception");
+
+            // Act
+            ActionResult result = await controller.SearchResults(viewModel);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "searchresults");
+
+            SearchResultsViewModel resultsViewModel = viewResult.Model as SearchResultsViewModel;
+            Assert.NotNull(resultsViewModel);
+
+            Assert.Contains(resultsViewModel.Results, r => r.OrganisationId == new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"));
         }
 
-        private OrganisationTypeViewModel GetMockOrganisationTypeViewModel()
+        [Fact]
+        public async Task PostSearchResults_WithSelectedOrganisationId_RedirectsToJoinOrganisationAction()
         {
-            var organisationTypeViewModel = new OrganisationTypeViewModel
+            // Arrange
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            SearchResultsViewModel viewModel = new SearchResultsViewModel()
             {
-                OrganisationTypes = RadioButtonStringCollectionViewModel.CreateFromEnum<OrganisationType>(OrganisationType.SoleTraderOrIndividual)
+                SelectedOrganisationId = new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8")
             };
 
-            return organisationTypeViewModel;
-        }
+            // Act
+            ActionResult result = await controller.SearchResults(viewModel);
 
-        private OrganisationType CastOrganisationType(string organisationType)
-        {
-            switch (organisationType)
-            {
-                case "Sole trader or individual":
-                    return OrganisationType.SoleTraderOrIndividual;
-                case "Partnership":
-                    return OrganisationType.Partnership;
-                default:
-                    return OrganisationType.RegisteredCompany;
-            }
+            // Assert
+            RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
+            Assert.NotNull(redirectResult);
+
+            Assert.Equal("JoinOrganisation", redirectResult.RouteValues["action"]);
+            Assert.Equal(new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"), redirectResult.RouteValues["OrganisationId"]);
         }
     }
 }

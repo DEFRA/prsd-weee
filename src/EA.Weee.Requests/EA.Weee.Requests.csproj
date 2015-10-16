@@ -45,7 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin\FetchProducerSearchResultsForCache.cs" />
+    <Compile Include="Search\FetchOrganisationSearchResultsForCache.cs" />
+    <Compile Include="Search\FetchProducerSearchResultsForCache.cs" />
     <Compile Include="Admin\FindMatchingUsers.cs" />
     <Compile Include="Admin\AddCompetentAuthorityUser.cs" />
     <Compile Include="Admin\GetAdminUserStatus.cs" />

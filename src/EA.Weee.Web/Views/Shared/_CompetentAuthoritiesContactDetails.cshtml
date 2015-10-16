@@ -1,8 +1,8 @@
-﻿<div class="form-group">
-    <details>
-        <summary><span class="summary">@ViewData["title"]</span></summary>
-        <div class="panel-indent">
-            <p>@ViewData["SubHeading"]</p>
+﻿@using EA.Weee.Web.RazorHelpers
+<div class="form-group">
+    @using (Html.WeeeGds().ProgressiveDisclosure(ViewData["title"].ToString()))
+    {
+          <p>@ViewData["SubHeading"]</p>
             <p>
                 <h2 class="heading-small">
                     England
@@ -43,6 +43,5 @@
                     Telephone: 03000 65 3096
                 </span>
             </p>
-        </div>
-    </details>
+    }
 </div>

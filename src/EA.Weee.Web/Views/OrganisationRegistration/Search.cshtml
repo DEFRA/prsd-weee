@@ -1,0 +1,85 @@
+﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.SearchViewModel
+@{
+    ViewBag.Title = "Search Organisation";
+}
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">Add your organisation</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        
+        @Html.HiddenFor(m => m.SelectedOrganisationId);
+        
+        <p>
+            Search for your organisation on our system. If your organisation is not listed, create a new organisation.
+        </p>
+        
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SearchTerm) form-search">
+            @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "visuallyhidden" })
+            @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
+            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { @class = "form-control" })
+            <button type="submit" class="button">
+                <img src="@Url.Content("~/Content/govuk_toolkit/images/icon-search.png")" alt="Search" />
+            </button>
+        </div>
+    }
+
+    @if (Model.ShowPerformAnotherActivityLink)
+    {
+        <p>
+            @Html.ActionLink("Perform another activity", "Index", "Organisation")
+        </p>
+    }
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $("#SearchTerm")
+            .keyup(function () { $("#SelectedOrganisationId").val(""); })
+            .autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("FetchSearchResultsJson")",
+                        context: document.body,
+                        data: { SearchTerm: request.term, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
+                        success: function (data) {
+                            response($.map(data, function (item) { return item }))
+                        }
+                    });
+                },
+                minLength: 1,
+                select: function (event, ui) {
+                    $("#SearchTerm").val(ui.item.Name);
+                    $("#SelectedOrganisationId").val(ui.item.OrganisationId);
+                    return false;
+                },
+                open: function () {
+                    $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+                },
+                close: function () {
+                    $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    // Do nothing.
+                },
+                disabled: window.innerWidth <= 640
+            }).autocomplete("instance")._renderItem = function (ul, item) {
+                return $("<li></li>")
+                    .data("item.autocomplete", item)
+                    .append("<span>" + item.Name + "</span>")
+                    .appendTo(ul);
+            };
+
+        $(window).resize(function () {
+            $("#SearchTerm").autocomplete("option", "disabled", window.innerWidth <= 640);
+        });
+
+    </script>
+}
+
