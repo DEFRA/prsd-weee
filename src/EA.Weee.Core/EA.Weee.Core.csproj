@@ -87,14 +87,32 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
-    <Compile Include="Admin\IProducerSearcher.cs" />
-    <Compile Include="Admin\IProducerSearchResultProvider.cs" />
+    <Compile Include="Search\Fuzzy\CommonTerm.cs" />
+    <Compile Include="Search\Fuzzy\FuzzyOrganisationSearcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Search\Fuzzy\FuzzySearcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Search\Fuzzy\ITerm.cs" />
+    <Compile Include="Search\Fuzzy\LevenshteinDistance.cs" />
+    <Compile Include="Search\Fuzzy\Rank.cs" />
+    <Compile Include="Search\Fuzzy\ResultMetadata.cs" />
+    <Compile Include="Search\Fuzzy\ResultTerm.cs" />
+    <Compile Include="Search\Fuzzy\SearchWord.cs" />
+    <Compile Include="Search\Fuzzy\Synonym.cs" />
+    <Compile Include="Search\Fuzzy\Word.cs" />
     <Compile Include="Admin\ManageUserData.cs" />
     <Compile Include="Admin\SubmissionsHistorySearchResult.cs" />
     <Compile Include="Admin\ProducerDetails.cs" />
     <Compile Include="Admin\ProducerDetailsScheme.cs" />
-    <Compile Include="Admin\SimpleProducerSearcher.cs" />
-    <Compile Include="Admin\ProducerSearchResult.cs" />
+    <Compile Include="Search\ISearcher.cs" />
+    <Compile Include="Search\ISearchResultProvider.cs" />
+    <Compile Include="Search\OrganisationSearchResult.cs" />
+    <Compile Include="Search\SearchResult.cs" />
+    <Compile Include="Search\Simple\SimpleOrganisationSearcher.cs" />
+    <Compile Include="Search\Simple\SimpleProducerSearcher.cs" />
+    <Compile Include="Search\ProducerSearchResult.cs" />
     <Compile Include="Admin\UserSearchDataResult.cs" />
     <Compile Include="Claims.cs" />
     <Compile Include="Configuration\IConfigurationManagerWrapper.cs" />
@@ -116,6 +134,9 @@
     <Compile Include="Routing\ExternalRoute.cs" />
     <Compile Include="Routing\ResetPasswordRoute.cs" />
     <Compile Include="Scheme\SchemePublicInfo.cs" />
+    <Compile Include="Search\Simple\SimpleSearcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Shared\ChargeBandType.cs" />
     <Compile Include="Shared\CsvWriter.cs" />
     <Compile Include="Shared\CsvWriterFactory.cs" />

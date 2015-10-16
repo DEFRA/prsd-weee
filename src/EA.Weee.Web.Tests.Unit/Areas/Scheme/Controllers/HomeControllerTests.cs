@@ -81,9 +81,9 @@
 
             var model = (ChooseActivityViewModel)((ViewResult)result).Model;
 
-            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 4);
+            Assert.Equal(model.PossibleValues.Count, 4);
 
-            Assert.False(model.ActivityOptions.PossibleValues.Contains(PcsAction.ManageOrganisationUsers));
+            Assert.False(model.PossibleValues.Contains(PcsAction.ManageOrganisationUsers));
 
             Assert.IsType<ViewResult>(result);
         }
@@ -111,7 +111,7 @@
 
             var model = (ChooseActivityViewModel)((ViewResult)result).Model;
 
-            Assert.Equal(model.ActivityOptions.PossibleValues.Count, 5);
+            Assert.Equal(model.PossibleValues.Count, 5);
 
             Assert.IsType<ViewResult>(result);
         }
@@ -123,10 +123,7 @@
 
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                ActivityOptions = new RadioButtonStringCollectionViewModel
-                {
-                    SelectedValue = PcsAction.ManagePcsMembers
-                }
+                SelectedValue = PcsAction.ManagePcsMembers
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
@@ -144,10 +141,7 @@
 
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                ActivityOptions = new RadioButtonStringCollectionViewModel
-                {
-                    SelectedValue = PcsAction.ManagePcsMembers
-                }
+                SelectedValue = PcsAction.ManagePcsMembers
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
@@ -165,10 +159,7 @@
 
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                ActivityOptions = new RadioButtonStringCollectionViewModel
-                {
-                    SelectedValue = PcsAction.ManagePcsMembers
-                }
+                SelectedValue = PcsAction.ManagePcsMembers
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
@@ -184,10 +175,7 @@
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                ActivityOptions = new RadioButtonStringCollectionViewModel
-                {
-                    SelectedValue = PcsAction.ManageOrganisationUsers
-                }
+                SelectedValue = PcsAction.ManageOrganisationUsers
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
@@ -205,10 +193,7 @@
 
             var model = new ChooseActivityViewModel
             {
-                ActivityOptions = new RadioButtonStringCollectionViewModel
-                {
-                    SelectedValue = PcsAction.ManageOrganisationUsers
-                }
+                SelectedValue = PcsAction.ManageOrganisationUsers
             };
             var result = await controller.ChooseActivity(model);
 
@@ -327,11 +312,8 @@
                 Firstname = "Test",
                 Lastname = "Test",
                 Username = "test@test.com",
-                UserStatuses = new RadioButtonStringCollectionViewModel
-                {
-                    SelectedValue = DoNotChange,
-                    PossibleValues = new[] { "Inactive", DoNotChange }
-                }
+                SelectedValue = DoNotChange,
+                PossibleValues = new[] { "Inactive", DoNotChange }
             };
 
             await HomeController().ManageOrganisationUser(Guid.NewGuid(), model);
@@ -351,11 +333,8 @@
                 Firstname = "Test",
                 Lastname = "Test",
                 Username = "test@test.com",
-                UserStatuses = new RadioButtonStringCollectionViewModel
-                {
-                    SelectedValue = "Inactive",
-                    PossibleValues = new[] { "Inactive", DoNotChange }
-                }
+                SelectedValue = "Inactive",
+                PossibleValues = new[] { "Inactive", DoNotChange }
             };
 
             var result = await HomeController().ManageOrganisationUser(Guid.NewGuid(), model);
@@ -374,10 +353,7 @@
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                ActivityOptions = new RadioButtonStringCollectionViewModel
-                {
-                    SelectedValue = PcsAction.ViewOrganisationDetails
-                }
+                SelectedValue = PcsAction.ViewOrganisationDetails
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
@@ -392,10 +368,7 @@
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                ActivityOptions = new RadioButtonStringCollectionViewModel
-                {
-                    SelectedValue = PcsAction.ViewSubmissionHistory
-                }
+                SelectedValue = PcsAction.ViewSubmissionHistory
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
@@ -603,7 +576,7 @@
 
         [Fact]
         public async void GetViewSubmissionHistory_ShouldExecuteGetSubmissionsHistoryResultsAndReturnsView()
-        {   
+        {
             var controller = HomeController();
 
             var result = await controller.ViewSubmissionHistory(A<Guid>._);

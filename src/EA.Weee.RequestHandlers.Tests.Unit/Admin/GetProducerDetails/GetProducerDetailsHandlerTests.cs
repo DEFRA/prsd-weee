@@ -69,8 +69,8 @@
             var scheme = A.Fake<EA.Weee.Domain.Scheme.Scheme>();
             A.CallTo(() => scheme.SchemeName).Returns("Scheme Name");
 
-            var memberUpload = A.Fake<EA.Weee.Domain.Scheme.MemberUpload>();
-            A.CallTo(() => memberUpload.ComplianceYear).Returns(2017);
+           var memberUpload = A.Fake<EA.Weee.Domain.Scheme.MemberUpload>();
+            A.CallTo(() => memberUpload.ComplianceYear).Returns(2017); 
             A.CallTo(() => memberUpload.Scheme).Returns(scheme);
 
             var producer = new EA.Weee.Domain.Producer.Producer(

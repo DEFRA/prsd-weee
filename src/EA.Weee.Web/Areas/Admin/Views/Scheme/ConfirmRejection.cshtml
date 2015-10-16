@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.ConfirmRejectionViewModel
 @{
     ViewBag.Title = "Confirm Rejection";
@@ -20,8 +21,8 @@
             <p>Please note that this change, once saved, cannot be undone.</p>
         </div>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.ConfirmRejectionOptions.SelectedValue)" id="ConfirmRejectionOptions">
-            @Html.EditorFor(m => m.ConfirmRejectionOptions)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmRejectionOptions">
+            @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "Are you sure you want to reject this PCS?", true);
         </div>
 
         <div class="form-group">
