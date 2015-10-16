@@ -52,7 +52,7 @@
     <Compile Include="Admin\GetAllApprovedSchemes.cs" />
     <Compile Include="Admin\GetAllComplianceYears.cs" />
     <Compile Include="Admin\GetSubmissionsHistoryResults.cs" />
-   <Compile Include="Admin\GetProducerDetails.cs" />
+    <Compile Include="Admin\GetProducerDetails.cs" />
     <Compile Include="Admin\GetUserData.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus.cs" />
     <Compile Include="Admin\UpdateUser.cs" />
@@ -63,6 +63,7 @@
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
     <Compile Include="Scheme\GetSchemeById.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo.cs" />
+    <Compile Include="Scheme\GetSubmissionsHistoryResults.cs" />
     <Compile Include="Scheme\MemberRegistration\GetComplianceYears.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadById.cs" />
     <Compile Include="Scheme\GetSchemes.cs">
