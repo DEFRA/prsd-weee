@@ -128,7 +128,7 @@
             return searchWords;
         }
 
-        public double Match(IList<SearchWord> searchPhrase, IList<ResultTerm> resultTerms)
+        public Rank Match(IList<SearchWord> searchPhrase, IList<ResultTerm> resultTerms)
         {
             double[,] ranks = new double[searchPhrase.Count, resultTerms.Count];
 
@@ -140,7 +140,8 @@
                 }
             }
 
-            double totalMatch = 0;
+            double relevance = 0;
+            double confidence = 0;
             List<int> matchedSearchWordIndexes = new List<int>();
             List<int> matchedResultTermIndexes = new List<int>();
             for (int index = 0; index < Math.Min(searchPhrase.Count, resultTerms.Count); ++index)
@@ -175,10 +176,13 @@
 
                 matchedSearchWordIndexes.Add(bestSearchRank.Value);
                 matchedResultTermIndexes.Add(bestResultRank.Value);
-                totalMatch += bestMatchSoFar * resultTerms[bestResultRank.Value].Relevance;
+                relevance += bestMatchSoFar * resultTerms[bestResultRank.Value].Relevance;
+                confidence += bestMatchSoFar;
             }
 
-            return totalMatch;
+            confidence /= searchPhrase.Count;
+
+            return new Rank(confidence, relevance);
         }
 
         public double Match(SearchWord searchWord, ResultTerm resultTerm)
@@ -220,20 +224,21 @@
 
             IList<SearchWord> searchPhrase = ParseSearchPhrase(searchTerm, asYouType);
 
-            var ranks = new Dictionary<T, double>();
+            var ranks = new Dictionary<T, Rank>();
 
             foreach (T result in await FetchResults())
             {
                 ResultMetadata resultMetadata = result.GetMetadata<ResultMetadata>(Algorithm);
-                double rank = Match(searchPhrase, resultMetadata.ResultTerms);
+                Rank rank = Match(searchPhrase, resultMetadata.ResultTerms);
                 ranks.Add(result, rank);
             }
 
-            return await Task.FromResult(ranks
-                .OrderByDescending(r => r.Value)
+            return ranks
+                .Where(r => r.Value.Confidence >= ConfidenceThreshold)
+                .OrderByDescending(r => r.Value.Relevance)
                 .Take(maxResults)
                 .Select(r => r.Key)
-                .ToList());
+                .ToList();
         }
 
         protected virtual void DefineSynonymsAndCommonTerms()
@@ -243,5 +248,13 @@
         public abstract IEnumerable<string> Split(T result);
 
         public abstract IEnumerable<string> Split(string phrase);
+
+        /// <summary>
+        /// A value between 0 and 1 which determines how confidence the match must be
+        /// for a result to be returned.
+        /// A threshold of 0 will return all results.
+        /// A threshold of 1 will reutrn only exact matches with no common terms.
+        /// </summary>
+        protected abstract double ConfidenceThreshold { get; }
     }
 }
