@@ -331,8 +331,11 @@
             Assert.IsType<OrganisationTypeViewModel>(model);
         }
 
-        [Fact]
-        public async Task PostType_SoleTraderDetailsSelectionWithoutOrganisationId_RedirectsToSoleTraderDetails()
+        [Theory]
+        [InlineData("Sole trader or individual", "SoleTraderDetails")]
+        [InlineData("Partnership", "PartnershipDetails")]
+        [InlineData("Registered company", "RegisteredCompanyDetails")]
+        public async Task PostType_TypeDetailsSelectionWithoutOrganisationId_RedirectsToCorrectControllerAction(string selection, string action)
         {
             // Arrange
             IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
@@ -343,7 +346,7 @@
                 organisationSearcher);
 
             OrganisationTypeViewModel model = new OrganisationTypeViewModel();
-            model.SelectedValue = "Sole trader or individual";
+            model.SelectedValue = selection;
             model.OrganisationId = null;
 
             // Act
@@ -352,16 +355,19 @@
             // Assert
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
-            Assert.Equal("SoleTraderDetails", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(action, redirectToRouteResult.RouteValues["action"]);
         }
 
-        [Fact]
-        public async Task PostType_SoleTraderDetailsSelectionWithOrganisationId_RedirectsToSoleTraderDetails()
+        [Theory]
+        [InlineData(OrganisationType.SoleTraderOrIndividual, "SoleTraderDetails")]
+        [InlineData(OrganisationType.Partnership, "PartnershipDetails")]
+        [InlineData(OrganisationType.RegisteredCompany, "RegisteredCompanyDetails")]
+        public async Task PostType_TypeDetailsSelectionWithOrganisationId_RedirectsToCorrectControllerAction(OrganisationType type, string action)
         {
             // Arrange
             OrganisationData orgData = new OrganisationData
             {
-                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                OrganisationType = type,
                 Id = Guid.NewGuid()
             };
 
@@ -378,7 +384,7 @@
                 organisationSearcher);
 
             OrganisationTypeViewModel model = new OrganisationTypeViewModel(
-                OrganisationType.SoleTraderOrIndividual,
+                type,
                 new Guid("35EFE82E-0706-4E80-8AFA-D81C4B58102A"));
 
             // Act
@@ -387,7 +393,7 @@
             // Assert
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
-            Assert.Equal("SoleTraderDetails", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(action, redirectToRouteResult.RouteValues["action"]);
         }
 
         [Fact]
@@ -624,6 +630,55 @@
 
             Assert.NotNull(model);
             Assert.IsType<JoinOrganisationViewModel>(model);
+        }
+
+        [Fact]
+        public async Task GetJoinOrganisation_UserAlreadyAssociated_ReturnsUserAlreadyAssociatedWithOrgansiationView()
+        {
+            // Arrange
+            Guid organisationId = new Guid("101F5E58-FEA3-4F59-9281-E543EDE5699F");
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            PublicOrganisationData organisation = new PublicOrganisationData()
+            {
+                Id = organisationId,
+                DisplayName = "Test Company"
+            };
+            
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
+                .Returns(organisation);
+
+            OrganisationUserData association = new OrganisationUserData()
+            {
+                OrganisationId = organisationId,
+                UserStatus = UserStatus.Active,
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
+                .Returns(new List<OrganisationUserData>() { association });
+
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = await controller.JoinOrganisation(organisationId);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.Equal("UserAlreadyAssociatedWithOrganisation", viewResult.ViewName);
+
+            UserAlreadyAssociatedWithOrganisationViewModel viewModel = viewResult.Model as UserAlreadyAssociatedWithOrganisationViewModel;
+            Assert.NotNull(viewModel);
+
+            Assert.Equal(organisationId, viewModel.OrganisationId);
+            Assert.Equal(UserStatus.Active, viewModel.Status);
+            Assert.Equal("Test Company", viewModel.OrganisationName);
         }
 
         [Fact]

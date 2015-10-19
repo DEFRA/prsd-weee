@@ -374,13 +374,43 @@
                     User.GetAccessToken(),
                     new GetPublicOrganisationInfo(organisationId));
 
-                var collection = new List<string> { "Yes - access " + organisationData.DisplayName, NoSearchAnotherOrganisation };
-                var model = new JoinOrganisationViewModel
+                var existingAssociations = await client.SendAsync(
+                     User.GetAccessToken(),
+                     new GetUserOrganisationsByStatus(
+                         new int[0],
+                         new int[1] { (int)OrganisationStatus.Complete }));
+
+                /* There should only ever be a single non-rejected association, but
+                 * during development this wasn't enforced. Using FirstOrDefault
+                 * instead of SingleOrDefault will avoid any issues being raised
+                 * due to bad data.
+                 */
+                OrganisationUserData existingAssociation = existingAssociations
+                    .Where(o => o.OrganisationId == organisationId)
+                    .Where(o => o.UserStatus != UserStatus.Rejected)
+                    .FirstOrDefault();
+
+                if (existingAssociation != null)
                 {
-                    OrganisationId = organisationId,
-                    PossibleValues = collection
-                };
-                return View(model);
+                    UserAlreadyAssociatedWithOrganisationViewModel viewModel = new UserAlreadyAssociatedWithOrganisationViewModel()
+                    {
+                        OrganisationId = organisationId,
+                        OrganisationName = organisationData.DisplayName,
+                        Status = existingAssociation.UserStatus
+                    };
+
+                    return View("UserAlreadyAssociatedWithOrganisation", viewModel);
+                }
+                else
+                {
+                    var collection = new List<string> { "Yes - access " + organisationData.DisplayName, NoSearchAnotherOrganisation };
+                    var model = new JoinOrganisationViewModel
+                    {
+                        OrganisationId = organisationId,
+                        PossibleValues = collection
+                    };
+                    return View(model);
+                }
             }
         }
 

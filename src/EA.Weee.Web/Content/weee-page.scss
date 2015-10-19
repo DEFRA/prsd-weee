@@ -411,6 +411,24 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
     vertical-align: top;
 }
 
+th.sorted-ascending, th.sorted-descending {
+	white-space: nowrap;
+}
+
+th.sorted-ascending:after {
+	content: "\A0\A0\A0\A0\A0\A0";
+	background-image: url(weee/images/sorted-ascending.png);
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+}
+
+th.sorted-descending:after {
+	content: "\A0\A0\A0\A0\A0\A0";
+	background-image: url(weee/images/sorted-descending.png);
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+}
+
 
 // 5. Data
 // ==========================================================================
