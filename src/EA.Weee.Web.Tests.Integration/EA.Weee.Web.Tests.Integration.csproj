@@ -171,12 +171,6 @@
     <Compile Include="RazorHelpers\MvcTemplateBase.cs" />
     <Compile Include="TestStartup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpecifyWhichOrganisationIWorkFor\SpecifyWhichTypeOfOrganisationIWorkFor.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SpecifyWhichTypeOfOrganisationIWorkFor.feature</DependentUpon>
-    </Compile>
-    <Compile Include="SpecifyWhichOrganisationIWorkFor\SpecifyWhichTypeOfOrganisationIWorkForSteps.cs" />
     <Compile Include="Views\ViewTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -204,14 +198,8 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="SpecifyWhichOrganisationIWorkFor\SpecifyWhichTypeOfOrganisationIWorkFor.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>SpecifyWhichTypeOfOrganisationIWorkFor.feature.cs</LastGenOutput>
-    </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
