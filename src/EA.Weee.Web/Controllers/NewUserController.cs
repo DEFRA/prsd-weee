@@ -24,16 +24,19 @@
         private readonly IAuthenticationManager authenticationManager;
         private readonly Func<IOAuthClient> oauthClient;
         private readonly IExternalRouteService externalRouteService;
+        private readonly IAppConfiguration appConfig;
 
         public NewUserController(Func<IOAuthClient> oauthClient,
             Func<IWeeeClient> apiClient,
             IAuthenticationManager authenticationManager,
-            IExternalRouteService externalRouteService)
+            IExternalRouteService externalRouteService,
+            IAppConfiguration appConfig)
         {
             this.oauthClient = oauthClient;
             this.apiClient = apiClient;
             this.authenticationManager = authenticationManager;
             this.externalRouteService = externalRouteService;
+            this.appConfig = appConfig;
         }
 
         [HttpGet]
@@ -197,6 +200,11 @@
         [AllowAnonymous]
         public ActionResult Feedback()
         {
+            if (!string.IsNullOrEmpty(appConfig.DonePageUrl))
+            {
+                return Redirect(appConfig.DonePageUrl);
+            }
+
             var collection = new List<string>
             {
                 FeedbackOptions.VerySatisfied, 
