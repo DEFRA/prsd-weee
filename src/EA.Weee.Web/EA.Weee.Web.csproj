@@ -395,7 +395,7 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Scripts\application.js" />
+    <Content Include="Scripts\weee-application.js" />
     <Content Include="Scripts\custom-validation.js" />
     <Content Include="Content\weee-page-ie6.scss" />
     <Content Include="Content\weee-page-ie7.scss" />
