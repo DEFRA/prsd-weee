@@ -2,23 +2,90 @@
 {
     using Core.Admin;
     using Prsd.Core.Mediator;
+    using System;
      
     public class FindMatchingUsers : IRequest<UserSearchDataResult>
     {
-         public bool Paged { get; private set; }
+        /// <summary>
+        /// Defines which page of results is returned.
+        /// Specifying a value that number that exceeds the number of pages will
+        /// result in the query returning an empty page.
+        /// The first page is 1.
+        /// </summary>
+        public int PageNumber { get; private set; }
 
-        public int Page { get; private set; }
+        /// <summary>
+        /// Defines how many users are returned for the requested page of results.
+        /// </summary>
+        public int PageSize { get; private set; }
 
-        public int UsersPerPage { get; set; }
+        /// <summary>
+        /// Defines how the results will be ordered.
+        /// </summary>
+        public OrderBy Ordering { get; private set; }
 
-        public FindMatchingUsers(int? page = null, int? usersPerPage = null)
+        public FindMatchingUsers(int pageNumber, int pageSize, OrderBy ordering)
         {
-            if (page.HasValue && usersPerPage.HasValue)
+            if (pageNumber < 1)
             {
-                Paged = true;
-                Page = page.Value;
-                UsersPerPage = usersPerPage.Value;
+                throw new ArgumentOutOfRangeException("pageNumber");
             }
+
+            if (pageSize < 1)
+            {
+                throw new ArgumentOutOfRangeException("pageSize");
+            }
+
+            PageNumber = pageNumber;
+            PageSize = pageSize;
+            Ordering = ordering;
+        }
+
+        public enum OrderBy
+        {
+            /// <summary>
+            /// Order results by full name from A to Z, where full name is a concatenation of "[First name] [Surname]".
+            /// Results with the order by criteria will sorted deterministically by user ID.
+            /// </summary>
+            FullNameAscending,
+
+            /// <summary>
+            /// Order results by full name from Z to A, where full name is a concatenation of "[First name] [Surname]".
+            /// Results with the order by criteria will sorted deterministically by user ID.
+            /// </summary>
+            FullNameDescending,
+
+            /// <summary>
+            /// Order results by organisation name from A to Z.
+            /// Results within the same organisation will be sorted by full name from A to Z,
+            /// where full name is a concatenation of "[First name] [Surname]".
+            /// Results with the order by criteria will sorted deterministically by user ID.
+            /// </summary>
+            OrganisationAscending,
+
+            /// <summary>
+            /// Order results by organisation name from Z to A.
+            /// Results within the same organisation will be sorted by full name from A to Z,
+            /// where full name is a concatenation of "[First name] [Surname]".
+            /// Results with the order by criteria will sorted deterministically by user ID.
+            /// </summary>
+            OrganisationDescending,
+
+            /// <summary>
+            /// Order results by status in the following order: "Active", "Inactive", "Pending", "Rejected".
+            /// Results with the same status will be sorted by full name from A to Z,
+            /// where full name is a concatenation of "[First name] [Surname]".
+            /// Results with the order by criteria will sorted deterministically by user ID.
+            /// </summary>
+            StatusAscending,
+
+            /// <summary>
+            /// Order results by status in the following order: "Rejected", "Pending", "Inactive", "Active".
+            /// Results with the same status will be sorted by full name from A to Z,
+            /// where full name is a concatenation of "[First name] [Surname]".
+            /// Results with the order by criteria will sorted deterministically by user ID.
+            /// </summary>
+            StatusDescending
         }
     }
 }

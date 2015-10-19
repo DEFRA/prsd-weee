@@ -19,7 +19,12 @@
         @Html.Gds().ValidationSummary()
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="InternalUserActivityOptions">
-            @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "What activity would you like to do?", true)
+            @Html.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "What activity would you like to do?",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
         </div>
 
         <div class="form-group">
