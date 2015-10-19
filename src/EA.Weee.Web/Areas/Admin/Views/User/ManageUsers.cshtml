@@ -9,7 +9,7 @@
 
 @section scripts{
     <script>
-        $('#idManageUsersTable tr').click(function () {
+        $('#idManageUsersTable tr').click(function() {
             $(this).find('td input[type=radio]').prop('checked', true);
         })
     </script>
@@ -115,7 +115,7 @@
             }
         </tbody>
     </table>
-    <br />
+    <br/>
 
     if (@Model.Users.PageCount > 1)
     {
