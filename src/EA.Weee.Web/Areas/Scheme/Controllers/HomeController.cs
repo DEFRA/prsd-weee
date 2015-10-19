@@ -331,7 +331,12 @@
 
             using (var client = apiClient())
             {
-                model.Results = await client.SendAsync(User.GetAccessToken(), new GetSubmissionsHistoryResults(pcsId));
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemePublicInfo(pcsId));
+
+                if (scheme != null)
+                {
+                    model.Results = await client.SendAsync(User.GetAccessToken(), new GetSubmissionsHistoryResults(scheme.SchemeId, 0, scheme.OrganisationId));
+                }
             }
             return View(model);
         }

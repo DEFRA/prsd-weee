@@ -16,14 +16,12 @@
     {
         private readonly DbContextHelper dbContextHelper = new DbContextHelper();
 
-        [Theory]
-        [InlineData(AuthorizationBuilder.UserType.Internal)]
-        [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
-        public async Task GetSubmissionHistoryResultHandler_InternalAndUnauthenticatedUser_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
-        {
+        [Fact]
+        public async Task GetSubmissionHistoryResultHandler_NoOrganisationUser_ThrowsSecurityException()
+        {   
             // Arrange
             IGetSubmissionsHistoryResultsDataAccess dataAccess = A.Dummy<IGetSubmissionsHistoryResultsDataAccess>();
-            IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
             GetSubmissionsHistoryResultsHandler handler = new GetSubmissionsHistoryResultsHandler(authorization, dataAccess);
 
@@ -64,7 +62,7 @@
                 new SubmissionsHistorySearchResult()
             };
 
-            A.CallTo(() => dataAccess.GetSubmissionsHistory(A<Guid>._)).Returns(results);
+            A.CallTo(() => dataAccess.GetSubmissionsHistory(A<Guid>._, A<int>._)).Returns(results);
             return dataAccess;
         }
     }

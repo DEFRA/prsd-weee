@@ -87,7 +87,6 @@
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Admin\GetAdminUserStatusHandlerTests.cs" />
     <Compile Include="Admin\Submissions\GetAllApprovedSchemesHandlerTests.cs" />
-    <Compile Include="Admin\Submissions\GetSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Admin\Submissions\GetAllComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandlerTests.cs" />
     <Compile Include="Admin\GetUserDataHandlerTests.cs" />

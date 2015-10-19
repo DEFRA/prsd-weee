@@ -7,10 +7,14 @@
 
     public class GetSubmissionsHistoryResults : IRequest<List<SubmissionsHistorySearchResult>>
     {
+        public Guid SchemeId { get; set; }
         public Guid OrganisationId { get; set; }
+        public int ComplianceYear { get; set; }
 
-        public GetSubmissionsHistoryResults(Guid orgId)
+        public GetSubmissionsHistoryResults(Guid id, int year = 0, Guid orgId = default(Guid))
         {
+            ComplianceYear = year;
+            SchemeId = id;
             OrganisationId = orgId;
         }
     }
