@@ -2,7 +2,9 @@
 {
     using Api.Client;
     using Base;
+    using Core.Shared;
     using Core.Shared.Paging;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
@@ -13,7 +15,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Core.Shared;
     using ViewModels;
     using ViewModels.User;
     using Weee.Requests.Admin;
@@ -36,8 +37,16 @@
 
         // GET: Admin/User
         [HttpGet]
-        public async Task<ActionResult> ManageUsers(int page = 1)
+        public async Task<ActionResult> ManageUsers(FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending, int page = 1)
         {
+            // Handle failures to parse the OrderBy enumeration by redirecting to 404.
+            if (!ModelState.IsValid)
+            {
+                return RedirectToRoute("Error404");
+            }
+
+            SetBreadcrumb();
+
             if (page < 1)
             {
                 page = 1;
@@ -45,46 +54,28 @@
 
             using (var client = apiClient())
             {
-                SetBreadcrumb();
+                FindMatchingUsers query = new FindMatchingUsers(page, DefaultPageSize, orderBy);
+                
+                UserSearchDataResult usersSearchResultData = await client.SendAsync(User.GetAccessToken(), query);
+                
+                ManageUsersViewModel model = new ManageUsersViewModel();
+                
+                model.Users = usersSearchResultData.Results.ToPagedList(page - 1, DefaultPageSize, usersSearchResultData.UsersCount);
+                model.OrderBy = orderBy;
 
-                try
-                {
-                    var usersSearchResultData = await client.SendAsync(User.GetAccessToken(), new FindMatchingUsers(page, DefaultPageSize));
-                    ManageUsersViewModel model = new ManageUsersViewModel();
-                    model.Users = usersSearchResultData.Results.ToPagedList(page - 1, DefaultPageSize, usersSearchResultData.UsersCount);
-                    return View(model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                    return View();
-                }
+                return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ManageUsers(ManageUsersViewModel model, int page = 1)
+        public async Task<ActionResult> ManageUsers(ManageUsersViewModel model, FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending, int page = 1)
         {
-            if (page < 1)
-            {
-                page = 1;
-            }
-
             if (!ModelState.IsValid)
             {
-                using (var client = apiClient())
-                {
-                    var usersSearchResultData = await client.SendAsync(User.GetAccessToken(), new FindMatchingUsers(page, DefaultPageSize));
-                    model.Users = usersSearchResultData.Results.ToPagedList(page - 1, DefaultPageSize, usersSearchResultData.UsersCount);
-                    SetBreadcrumb();
-                    return View(model);
-                }
+                return await ManageUsers(orderBy, page);
             }
+
             return RedirectToAction("EditUser", "User", new { orgUserId = model.SelectedUserId });
         }
 

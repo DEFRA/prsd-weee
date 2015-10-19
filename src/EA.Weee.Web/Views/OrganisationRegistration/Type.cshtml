@@ -42,7 +42,12 @@
     </div>
 
     <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
-        @Html.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "What type of organisation is your producer compliance scheme?", true)
+        @Html.WeeeGds().RadioButtonsFor(
+            m => m.SelectedValue,
+            Model.PossibleValues,
+            "What type of organisation is your producer compliance scheme?",
+            RadioButtonLegend.VisuallyHidden,
+            RadioButtonLayout.Stacked)
     </div>
 
     <div class="form-group">
