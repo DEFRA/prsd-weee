@@ -71,6 +71,9 @@
         </div>
 
         <p>
+            @Html.ActionLink("View organisation details", "ViewContactDetails", "Scheme", new { schemeId = @Model.SchemeId, orgId = @Model.OrganisationId }, null)
+        </p>
+        <p>
             @Html.ActionLink("View or edit organisation contact details", "ManageContactDetails", "Scheme", new { schemeId = @Model.SchemeId, orgId = @Model.OrganisationId }, null)
         </p>
 
