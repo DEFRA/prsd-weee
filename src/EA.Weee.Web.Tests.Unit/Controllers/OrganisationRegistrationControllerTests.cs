@@ -331,8 +331,11 @@
             Assert.IsType<OrganisationTypeViewModel>(model);
         }
 
-        [Fact]
-        public async Task PostType_SoleTraderDetailsSelectionWithoutOrganisationId_RedirectsToSoleTraderDetails()
+        [Theory]
+        [InlineData("Sole trader or individual", "SoleTraderDetails")]
+        [InlineData("Partnership", "PartnershipDetails")]
+        [InlineData("Registered company", "RegisteredCompanyDetails")]
+        public async Task PostType_TypeDetailsSelectionWithoutOrganisationId_RedirectsToCorrectControllerAction(string selection, string action)
         {
             // Arrange
             IWeeeClient weeeClient = A.Dummy<IWeeeClient>();
@@ -343,7 +346,7 @@
                 organisationSearcher);
 
             OrganisationTypeViewModel model = new OrganisationTypeViewModel();
-            model.SelectedValue = "Sole trader or individual";
+            model.SelectedValue = selection;
             model.OrganisationId = null;
 
             // Act
@@ -352,16 +355,19 @@
             // Assert
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
-            Assert.Equal("SoleTraderDetails", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(action, redirectToRouteResult.RouteValues["action"]);
         }
 
-        [Fact]
-        public async Task PostType_SoleTraderDetailsSelectionWithOrganisationId_RedirectsToSoleTraderDetails()
+        [Theory]
+        [InlineData(OrganisationType.SoleTraderOrIndividual, "SoleTraderDetails")]
+        [InlineData(OrganisationType.Partnership, "PartnershipDetails")]
+        [InlineData(OrganisationType.RegisteredCompany, "RegisteredCompanyDetails")]
+        public async Task PostType_TypeDetailsSelectionWithOrganisationId_RedirectsToCorrectControllerAction(OrganisationType type, string action)
         {
             // Arrange
             OrganisationData orgData = new OrganisationData
             {
-                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                OrganisationType = type,
                 Id = Guid.NewGuid()
             };
 
@@ -378,7 +384,7 @@
                 organisationSearcher);
 
             OrganisationTypeViewModel model = new OrganisationTypeViewModel(
-                OrganisationType.SoleTraderOrIndividual,
+                type,
                 new Guid("35EFE82E-0706-4E80-8AFA-D81C4B58102A"));
 
             // Act
@@ -387,7 +393,7 @@
             // Assert
             var redirectToRouteResult = ((RedirectToRouteResult)result);
 
-            Assert.Equal("SoleTraderDetails", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(action, redirectToRouteResult.RouteValues["action"]);
         }
 
         [Fact]
