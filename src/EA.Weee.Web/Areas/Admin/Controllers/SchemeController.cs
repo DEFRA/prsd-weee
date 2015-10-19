@@ -10,6 +10,7 @@
     using Core.Scheme;
     using Core.Shared;
     using Infrastructure;
+    using Scheme.ViewModels;
     using Services;
     using Services.Caching;
     using ViewModels.Scheme;
@@ -183,6 +184,32 @@
             }
 
             return RedirectToAction("EditScheme", new { schemeId = model.SchemeId });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ViewContactDetails(Guid schemeId, Guid orgId)
+        {
+            await SetBreadcrumb(schemeId);
+
+            using (var client = apiClient())
+            {
+                var organisationExists =
+                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(orgId));
+
+                if (!organisationExists)
+                {
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "orgId");
+                }
+
+                var orgDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(orgId));
+
+                var model = new ViewOrganisationDetailsViewModel
+                {
+                    OrganisationData = orgDetails
+                };
+
+                return View("ViewContactDetails", model);
+            }
         }
 
         private async Task<IEnumerable<UKCompetentAuthorityData>> GetCompetentAuthorities()
