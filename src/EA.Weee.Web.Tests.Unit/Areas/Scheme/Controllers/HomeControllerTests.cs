@@ -14,6 +14,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.Scheme;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -581,8 +582,26 @@
 
             var result = await controller.ViewSubmissionHistory(A<Guid>._);
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public async void GetViewSubmissionHistory_SchemeInfoIsNull_ShouldNotExecuteGetSubmissionsHistoryResultsAndReturnsView()
+        {
+            var controller = HomeController();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._)).Returns((SchemePublicInfo)null);
+
+            var result = await controller.ViewSubmissionHistory(A<Guid>._);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
+                .MustNotHaveHappened();
 
             Assert.IsType<ViewResult>(result);
         }

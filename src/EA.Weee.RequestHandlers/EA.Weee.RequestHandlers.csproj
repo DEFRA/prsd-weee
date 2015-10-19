@@ -86,16 +86,13 @@
     <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccess.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheHandler.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\IFetchProducerSearchResultsForCacheDataAccess.cs" />
-    <Compile Include="Admin\Submissions\GetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Admin\Submissions\GetAllApprovedSchemesDataAccess.cs" />
-    <Compile Include="Admin\Submissions\GetSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Admin\Submissions\GetAllComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\FindMatchingUsersDataAccess.cs" />
     <Compile Include="Admin\GetAdminUserStatusHandler.cs" />
     <Compile Include="Admin\GetAdminUserDataAccess.cs" />
     <Compile Include="Admin\Submissions\GetAllApprovedSchemesHandler.cs" />
     <Compile Include="Admin\Submissions\GetAllComplianceYearsHandler.cs" />
-    <Compile Include="Admin\Submissions\IGetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Admin\Submissions\IGetAllApprovedSchemesDataAccess.cs" />
     <Compile Include="Admin\Submissions\IGetAllComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsDataAccess.cs" />

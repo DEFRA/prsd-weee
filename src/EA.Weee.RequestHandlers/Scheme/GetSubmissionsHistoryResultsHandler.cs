@@ -21,8 +21,8 @@
 
         public async Task<List<SubmissionsHistorySearchResult>> HandleAsync(GetSubmissionsHistoryResults request)
         {   
-            authorization.EnsureCanAccessExternalArea();
-            var results = await dataAccess.GetSubmissionsHistory(request.OrganisationId);
+            authorization.EnsureInternalOrOrganisationAccess(request.OrganisationId);
+            var results = await dataAccess.GetSubmissionsHistory(request.SchemeId, request.ComplianceYear);
             return results.ToList();
         }
     }
