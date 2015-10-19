@@ -58,7 +58,7 @@
 	</xs:complexType>
 	<xs:simpleType name="XSDVersionType">
 		<xs:restriction base="xs:decimal">
-			<xs:minInclusive value="3.07"/>
+			<xs:minInclusive value="3.06"/>
 			<xs:maxInclusive value="3.07"/>
 		</xs:restriction>
 	</xs:simpleType>
