@@ -28,7 +28,7 @@
             <p>Your request to access @Model.OrganisationName is pending approval.</p>
 
             <p>
-                <a href="@Url.RouteUrl("SelectOrganisation")" class="button">Perform another activity</a>
+                <a href="@Url.Action("Index", "Organisation")" class="button">Perform another activity</a>
             </p>
 
             break;
@@ -39,7 +39,7 @@
             <p>You no longer have access to @Model.OrganisationName.</p>
 
             <p>
-                <a href="@Url.RouteUrl("SelectOrganisation")" class="button">Perform another activity</a>
+                <a href="@Url.Action("Index", "Organisation")" class="button">Perform another activity</a>
             </p>
 
             break;
