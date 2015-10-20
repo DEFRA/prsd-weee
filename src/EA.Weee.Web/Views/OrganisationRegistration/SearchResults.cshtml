@@ -25,18 +25,13 @@
 
             <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
                 @Html.Gds().ValidationMessageFor(m => m.SelectedOrganisationId)
-                <fieldset>
-                    <legend>
-                        @Html.Gds().LabelFor(m => m.SelectedOrganisationId)
-                    </legend>
-                    @foreach (var result in Model.Results)
-                    {
-                        <label class="block-label" for="@("SelectedOrganisationId_" + result.OrganisationId.ToString())">
-                            <input id="@("SelectedOrganisationId_" + result.OrganisationId.ToString())" type="radio" name="SelectedOrganisationId" value="@result.OrganisationId">
-                            @result.Name
-                        </label>
-                    }
-                </fieldset>
+                @Html.WeeeGds().RadioButtonsFor(
+                    m => m.SelectedOrganisationId,
+                    Model.Results,
+                    r => r.OrganisationId,
+                    r => r.Name,
+                    RadioButtonLegend.Displayed,
+                    RadioButtonLayout.Stacked)
             </div>
 
             <p>
