@@ -26,11 +26,19 @@
                 new { controller = "Home", action = "Robots" },
                 new[] { "EA.Weee.Web.Controllers" });
 
-            routes.MapRoute("SelectOrganisation", "select-organisation",
+            routes.MapRoute("Login", "select-organisation",
                 new { controller = "Organisation", action = "Index" });
 
+            routes.MapRoute(name: "InternalLogin",
+                url: "admin/home/index",
+                defaults: new { controller = "Home", action = "Index", area = "Admin" });
+
+            routes.MapRoute("LandingPage", string.Empty,
+                new { controller = "Account", action = "SignIn" },
+                namespaces: new[] { typeof(AccountController).Namespace });
+
             routes.MapLowercaseDashedRoute("Default", "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                defaults: new { action = "Index", id = UrlParameter.Optional },
                 namespaces: new[] { typeof(HomeController).Namespace });
         }
     }
