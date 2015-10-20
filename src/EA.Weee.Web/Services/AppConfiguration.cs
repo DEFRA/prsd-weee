@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Services
 {
-    using System;
     using System.ComponentModel;
 
     public class AppConfiguration : IAppConfiguration
@@ -35,5 +34,7 @@
         /// </summary>
         [DefaultValue(false)]
         public bool EnableTestArea { get; set; }
+
+        public string DonePageUrl { get; set; }
     }
 }
