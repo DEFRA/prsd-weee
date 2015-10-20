@@ -232,7 +232,7 @@
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
-    <Content Include="Areas\Admin\Views\Scheme\ViewContactDetails.cshtml">
+    <Content Include="Areas\Admin\Views\Scheme\ViewOrganisationDetails.cshtml">
       <SubType>Code</SubType>
     </Content>
     <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
