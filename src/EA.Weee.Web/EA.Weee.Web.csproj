@@ -388,38 +388,32 @@
     <Content Include="Content\weee\images\sorted-ascending.png" />
     <Content Include="Content\weee\images\sorted-descending.png" />
     <Content Include="Content\weee\images\spinner.gif" />
+    <Content Include="Content\weee\_buttons.scss" />
+    <Content Include="Content\weee\_forms.scss" />
+    <Content Include="Content\weee\_panels.scss" />
     <Content Include="Global.asax" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Scripts\application.js" />
+    <Content Include="Scripts\weee-application.js" />
     <Content Include="Scripts\custom-validation.js" />
     <Content Include="Content\weee-page-ie6.scss" />
     <Content Include="Content\weee-page-ie7.scss" />
     <Content Include="Content\weee-page-ie8.scss" />
     <Content Include="Content\weee-page.scss" />
-    <Content Include="Content\weee\forms\_form-block-labels.scss" />
-    <Content Include="Content\weee\forms\_form-date.scss" />
     <Content Include="Content\weee\forms\_form-validation.scss" />
-    <Content Include="Content\weee\_buttons.scss" />
     <Content Include="Content\weee\_details.scss" />
     <Content Include="Content\weee\_dialog.scss" />
     <Content Include="Content\weee\_display-elements.scss" />
     <Content Include="Content\weee\_errors.scss" />
-    <Content Include="Content\weee\_forms.scss" />
     <Content Include="Content\weee\_helpers.scss" />
-    <Content Include="Content\weee\_icons.scss" />
-    <Content Include="Content\weee\_weee-typography.scss" />
     <Content Include="Content\weee\_layout.scss" />
     <Content Include="Content\weee\_lists.scss" />
-    <Content Include="Content\weee\_panels.scss" />
-    <Content Include="Content\weee\_reset.scss" />
     <Content Include="Content\weee\_tables.scss" />
     <Content Include="Content\main-ie6.scss" />
     <Content Include="Content\main-ie7.scss" />
     <Content Include="Content\main-ie8.scss" />
     <Content Include="Content\main.scss" />
-    <Content Include="Content\prism.scss" />
     <Content Include="Content\service-design-manual\helpers\_breadcrumbs.scss" />
     <Content Include="Content\service-design-manual\helpers\_page-header.scss" />
     <Content Include="Content\service-design-manual\styleguide\_colours.scss" />
@@ -491,7 +485,25 @@
     <Content Include="Areas\Admin\Views\Account\ResetPasswordComplete.cshtml" />
     <Content Include="Areas\Test\Views\ManageCache\Index.cshtml" />
     <Content Include="Areas\Test\Views\ManageCache\CacheCleared.cshtml" />
+    <Content Include="Content\govuk_elements\forms\_form-validation.scss" />
+    <Content Include="Content\govuk_elements\forms\_form-date.scss" />
+    <Content Include="Content\govuk_elements\forms\_form-block-labels.scss" />
+    <Content Include="Content\govuk_elements\_tables.scss" />
+    <Content Include="Content\govuk_elements\_reset.scss" />
+    <Content Include="Content\govuk_elements\_panels.scss" />
+    <Content Include="Content\govuk_elements\_lists.scss" />
+    <Content Include="Content\govuk_elements\_layout.scss" />
+    <Content Include="Content\govuk_elements\_icons.scss" />
+    <Content Include="Content\govuk_elements\_helpers.scss" />
+    <Content Include="Content\govuk_elements\_forms.scss" />
+    <Content Include="Content\govuk_elements\_elements-typography.scss" />
+    <Content Include="Content\govuk_elements\_details.scss" />
+    <Content Include="Content\govuk_elements\_buttons.scss" />
+    <Content Include="Content\govuk_elements\_breadcrumb.scss" />
+    <Content Include="Content\weee\_footer.scss" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="Scripts\govuk_elements\application.js" />
+    <Content Include="Scripts\govuk_elements\vendor\details.polyfill.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\download-link-tracker.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\error-tracking.js" />
@@ -527,7 +539,6 @@
     <Content Include="Scripts\vendor\modernizr.custom.77028.js" />
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Shared\_Layout.GovUK.Sections.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
@@ -540,11 +551,7 @@
     <Content Include="Views\Account\SignIn.cshtml" />
     <Content Include="Views\NewUser\UserCreation.cshtml" />
     <Content Include="Views\OrganisationRegistration\SearchResults.cshtml" />
-    <Content Include="Views\Home\LandingPage.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressData.cshtml" />
-    <Content Include="Views\NewUser\AccountNotRequired.cshtml" />
-    <Content Include="Views\NewUser\CheckIsPcs.cshtml" />
-    <Content Include="Views\NewUser\CheckComplianceYear.cshtml" />
     <Content Include="Views\OrganisationRegistration\MainContactPerson.cshtml" />
     <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
@@ -653,10 +660,11 @@
     <Compile Include="Areas\Test\ViewModels\HomeViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SelectOrganisationViewModel.cs" />
     <Compile Include="Authorization\LoginResult.cs" />
-    <Compile Include="Authorization\LoginType.cs" />
+    <Compile Include="Authorization\AuthorizationState.cs" />
     <Compile Include="Controllers\Base\ExternalSiteController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
+    <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Filters\AuthorizeClaimsAttribute.cs" />
     <Compile Include="Infrastructure\AntiForgeryErrorFilter.cs" />
     <Compile Include="Infrastructure\AreaRegistrationContextExtensions.cs" />
@@ -707,7 +715,6 @@
     <Compile Include="Services\IExternalRouteService.cs" />
     <Compile Include="ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordRequestViewModel.cs" />
-    <Compile Include="ViewModels\Home\LandingPageViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\CreateGuidanceViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
@@ -774,7 +781,9 @@
       <Name>EA.Weee.Requests</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ViewModels\Home\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
