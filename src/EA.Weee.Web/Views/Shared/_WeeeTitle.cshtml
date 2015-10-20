@@ -42,7 +42,7 @@
                     <li>
                         @if (Model.ShowLinkToSelectOrganisation)
                         {
-                            @:<a href="@Url.RouteUrl("SelectOrganisation")">Organisation</a>: @Model.Breadcrumb.ExternalOrganisation
+                            @:<a href="@Url.Action("Index", "Organisation")">Organisation</a>: @Model.Breadcrumb.ExternalOrganisation
                         }
                         else
                         {

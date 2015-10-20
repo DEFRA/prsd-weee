@@ -11,6 +11,7 @@
     using Base;
     using Core.Routing;
     using Core.Shared;
+    using Extensions;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
@@ -70,7 +71,7 @@
                 using (var client = apiClient())
                 {
                     var userId = await client.User.CreateInternalUserAsync(userCreationData);
-                    var loginResult = await weeeAuthorization.SignIn(LoginType.Internal, model.Email, model.Password, false);
+                    var loginResult = await weeeAuthorization.SignIn(model.Email, model.Password, false);
 
                     if (loginResult.Successful)
                     {
@@ -186,12 +187,15 @@
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult SignIn(string returnUrl)
+        public async Task<ActionResult> SignIn(string returnUrl)
         {
-            if (User.Identity.IsAuthenticated)
+            var authorizationState = await weeeAuthorization.GetAuthorizationState();
+
+            if (authorizationState.IsLoggedIn)
             {
-                return RedirectToLocal(returnUrl);
+                return this.LoginRedirect(authorizationState.DefaultLoginAction, returnUrl);
             }
+
             ViewBag.ReturnUrl = returnUrl;
             return View("SignIn");
         }
@@ -204,11 +208,11 @@
             if (ModelState.IsValid)
             {
                 var loginResult =
-                await weeeAuthorization.SignIn(LoginType.Internal, model.Email, model.Password, model.RememberMe);
+                await weeeAuthorization.SignIn(model.Email, model.Password, model.RememberMe);
 
                 if (loginResult.Successful)
                 {
-                    return RedirectToLocal(returnUrl);
+                    return this.LoginRedirect(loginResult.DefaultLoginAction, returnUrl);
                 }
 
                 ModelState.AddModelError(string.Empty, loginResult.ErrorMessage);
@@ -225,16 +229,6 @@
             weeeAuthorization.SignOut();
 
             return RedirectToAction("SignIn");
-        }
-
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-
-            return RedirectToAction("Index", "Home", new { area = "Admin" });
         }
 
         [HttpGet]

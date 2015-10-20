@@ -14,11 +14,13 @@
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Core.Scheme;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
     using Web.ViewModels.Shared;
     using Weee.Requests.Organisations;
+    using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Users;
     using Weee.Requests.Users.GetManageableOrganisationUsers;
     using Xunit;
@@ -68,7 +70,7 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_DoNotHaveOrganisationUser_ReturnsViewWithOnlyThreeOption()
+        public async void GetChooseActivity_DoNotHaveOrganisationUser_ReturnsViewWithOnlyFourOption()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
@@ -80,7 +82,7 @@
 
             var model = (ChooseActivityViewModel)((ViewResult)result).Model;
 
-            Assert.Equal(model.PossibleValues.Count, 3);
+            Assert.Equal(model.PossibleValues.Count, 4);
 
             Assert.False(model.PossibleValues.Contains(PcsAction.ManageOrganisationUsers));
 
@@ -88,7 +90,7 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_HaveOrganisationUser_ReturnsViewWithFourOption()
+        public async void GetChooseActivity_HaveOrganisationUser_ReturnsViewWithFiveOption()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
@@ -110,7 +112,7 @@
 
             var model = (ChooseActivityViewModel)((ViewResult)result).Model;
 
-            Assert.Equal(model.PossibleValues.Count, 4);
+            Assert.Equal(model.PossibleValues.Count, 5);
 
             Assert.IsType<ViewResult>(result);
         }
@@ -182,6 +184,23 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("ManageOrganisationUsers", routeValues["action"]);
+        }
+
+        [Fact]
+        public async void PostChooseActivity_ModelIsInvalid_ShouldRedirectViewWithModel()
+        {
+            var controller = HomeController();
+            controller.ModelState.AddModelError("Key", "Any error");
+
+            var model = new ChooseActivityViewModel
+            {
+                SelectedValue = PcsAction.ManageOrganisationUsers
+            };
+            var result = await controller.ChooseActivity(model);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(model, ((ViewResult)(result)).Model);
+            Assert.False(controller.ModelState.IsValid);
         }
 
         [Fact]
@@ -346,6 +365,21 @@
         }
 
         [Fact]
+        public async void PostChooseActivity_SelectViewSubmissionHistory_RedirectsToViewSubmissionHistory()
+        {
+            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
+            {
+                SelectedValue = PcsAction.ViewSubmissionHistory
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ViewSubmissionHistory", routeValues["action"]);
+        }
+
+        [Fact]
         public async void GetViewOrganisationDetails_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
@@ -382,7 +416,7 @@
 
         private HomeController HomeController()
         {
-            var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
+            var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>(), A.Fake<CsvWriterFactory>());
             new HttpContextMocker().AttachToController(controller);
 
             return controller;
@@ -408,7 +442,7 @@
                 .Returns(organisationData);
 
             List<CountryData> countries = new List<CountryData>();
-            
+
             A.CallTo(() => client.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(countries);
 
@@ -418,7 +452,9 @@
 
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
 
-            HomeController controller = new HomeController(apiClient, cache, breadcrumb);
+            CsvWriterFactory csvWriterFactory = A.Dummy<CsvWriterFactory>();
+
+            HomeController controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory);
             new HttpContextMocker().AttachToController(controller);
 
             // Act
@@ -427,7 +463,7 @@
             // Assert
             A.CallTo(() => client.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
-            
+
             A.CallTo(() => client.SendAsync(A<string>._, A<GetCountries>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
@@ -435,7 +471,7 @@
 
             Assert.NotNull(result);
             Assert.IsType(typeof(ViewResult), result);
-            
+
             ViewResult viewResult = (ViewResult)result;
 
             Assert.Equal(string.Empty, viewResult.ViewName);
@@ -469,7 +505,9 @@
 
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
 
-            HomeController controller = new HomeController(apiClient, cache, breadcrumb);
+            CsvWriterFactory csvWriterFactory = A.Dummy<CsvWriterFactory>();
+
+            HomeController controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory);
             new HttpContextMocker().AttachToController(controller);
 
             controller.ModelState.AddModelError("SomeProperty", "IsInvalid");
@@ -517,7 +555,9 @@
 
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
 
-            HomeController controller = new HomeController(apiClient, cache, breadcrumb);
+            CsvWriterFactory csvWriterFactory = A.Dummy<CsvWriterFactory>();
+
+            HomeController controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory);
             new HttpContextMocker().AttachToController(controller);
 
             // Act
@@ -533,6 +573,50 @@
             RedirectToRouteResult redirectResult = (RedirectToRouteResult)result;
 
             Assert.Equal("ChooseActivity", redirectResult.RouteValues["Action"]);
+        }
+
+        [Fact]
+        public async void GetViewSubmissionHistory_ShouldExecuteGetSubmissionsHistoryResultsAndReturnsView()
+        {
+            var controller = HomeController();
+
+            var result = await controller.ViewSubmissionHistory(A<Guid>._);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public async void GetViewSubmissionHistory_SchemeInfoIsNull_ShouldNotExecuteGetSubmissionsHistoryResultsAndReturnsView()
+        {
+            var controller = HomeController();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._)).Returns((SchemePublicInfo)null);
+
+            var result = await controller.ViewSubmissionHistory(A<Guid>._);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
+                .MustNotHaveHappened();
+
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public async void GetDownloadCsv_ShouldExecuteGetMemberUploadDataAndReturnsCsvFile()
+        {
+            var controller = HomeController();
+
+            var result = await controller.DownloadCsv(A<Guid>._, A<int>._, A<Guid>._);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.IsType<FileContentResult>(result);
         }
     }
 }

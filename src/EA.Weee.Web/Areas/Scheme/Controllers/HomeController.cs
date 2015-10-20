@@ -13,12 +13,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels;
     using Web.Controllers.Base;
     using Web.ViewModels.Shared;
     using Weee.Requests.Organisations;
+    using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Users;
     using Weee.Requests.Users.GetManageableOrganisationUsers;
 
@@ -28,13 +30,15 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
+        private readonly CsvWriterFactory csvWriterFactory;
         private const string DoNotChange = "Do not change at this time";
 
-        public HomeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb)
+        public HomeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb, CsvWriterFactory csvWriterFactory)
         {
             this.apiClient = apiClient;
             this.cache = cache;
             this.breadcrumb = breadcrumb;
+            this.csvWriterFactory = csvWriterFactory;
         }
 
         [HttpGet]
@@ -100,6 +104,10 @@
                 if (viewModel.SelectedValue == PcsAction.ManageContactDetails)
                 {
                     return RedirectToAction("ManageContactDetails", new { pcsId = viewModel.OrganisationId });
+                }
+                if (viewModel.SelectedValue == PcsAction.ViewSubmissionHistory)
+                {
+                    return RedirectToAction("ViewSubmissionHistory", new { pcsId = viewModel.OrganisationId });
                 }
             }
 
@@ -264,7 +272,7 @@
                 {
                     OrganisationData = orgDetails
                 };
-                
+
                 return View("ViewOrganisationDetails", model);
             }
         }
@@ -312,6 +320,48 @@
             }
 
             return RedirectToAction("ChooseActivity", new { pcsId = model.Id });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ViewSubmissionHistory(Guid pcsId)
+        {
+            await SetBreadcrumb(pcsId, "View submission history");
+
+            var model = new SubmissionHistoryViewModel();
+
+            using (var client = apiClient())
+            {
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemePublicInfo(pcsId));
+
+                if (scheme != null)
+                {
+                    model.Results = await client.SendAsync(User.GetAccessToken(), new GetSubmissionsHistoryResults(scheme.SchemeId, 0, scheme.OrganisationId));
+                }
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadCsv(Guid schemeId, int year, Guid memberUploadId)
+        {
+            using (var client = apiClient())
+            {
+                IEnumerable<MemberUploadErrorData> errors =
+                    (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(schemeId, memberUploadId)))
+                    .OrderByDescending(e => e.ErrorLevel);
+
+                CsvWriter<MemberUploadErrorData> csvWriter = csvWriterFactory.Create<MemberUploadErrorData>();
+                csvWriter.DefineColumn("Description", e => e.Description);
+
+                string csv = csvWriter.Write(errors);
+
+                Encoding encoding = Encoding.UTF8;
+                byte[] bom = encoding.GetPreamble();
+                byte[] data = encoding.GetBytes(csv);
+                byte[] file = bom.Concat(data).ToArray();
+
+                return File(file, "text/csv", "XML warnings.csv");
+            }
         }
 
         private IList<string> GetUserPossibleStatusToBeChanged(UserStatus userStatus)
