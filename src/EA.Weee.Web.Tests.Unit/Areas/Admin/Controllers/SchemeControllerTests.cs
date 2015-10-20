@@ -368,16 +368,7 @@
         }
 
         [Fact]
-        public async void GetViewContactDetails_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-                .Returns(false);
-
-            await Assert.ThrowsAnyAsync<Exception>(() => SchemeController().ViewContactDetails(A<Guid>._, A<Guid>._));
-        }
-
-        [Fact]
-        public async void GetViewContactDetails_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        public async void GetViewOrganisationDetails_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
@@ -385,10 +376,10 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(new OrganisationData());
 
-            var result = await SchemeController().ViewContactDetails(A<Guid>._, A<Guid>._);
+            var result = await SchemeController().ViewOrganisationDetails(A<Guid>._, A<Guid>._);
 
             Assert.IsType<ViewResult>(result);
-            Assert.Equal(((ViewResult)result).ViewName, "ViewContactDetails");
+            Assert.Equal(((ViewResult)result).ViewName, "ViewOrganisationDetails");
         }
 
         private SchemeController SchemeController()
