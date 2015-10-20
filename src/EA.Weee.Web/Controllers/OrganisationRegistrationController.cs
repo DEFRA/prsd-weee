@@ -714,7 +714,7 @@
                             new CompleteRegistration(organisationId));
                 }
 
-                return RedirectToAction("RedirectProcess", "Account");
+                return RedirectToAction("Index", "Organisation");
             }
             catch (ApiBadRequestException ex)
             {

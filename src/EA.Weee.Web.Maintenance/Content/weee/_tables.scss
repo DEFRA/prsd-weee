@@ -1,36 +1,56 @@
-// Tables
-// ==========================================================================
-// GOV.UK front end toolkit dependencies
-@import "typography";
-@import "colours";
+.prsd-table
+{
+  background: $page-colour;
+  position: relative;
 
-
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-  width: 100%;
-
-  th,
-  td {
-    @include core-16;
-    padding: em(12, 16) em(20, 16) em(9, 16) 0;
-
-    text-align: left;
-    color: $black;
-    border-bottom: 1px solid $border-colour;
+  thead
+  {
+    th
+    {
+      background: $panel-colour;
+      padding-left: 15px;
+      border: 5px solid $page-colour;
+    }
+    tr
+    {
+      position: relative;
+    }
   }
 
-  th {
-    font-weight: 700;
-    // Right align headings for numeric content
-    &.numeric {
-      text-align: right;
-    } 
-  }
-
-  // Use tabular numbers for numeric table cells
-  td.numeric {
-    @include core-16($tabular-numbers: true);
-    text-align: right;
+  tbody
+  {
+    tr
+    {
+      &:hover
+      {
+        td
+        {
+          background: $page-colour;
+          cursor:default
+        }
+      }
+    }
+    td
+    {
+      background: $highlight-colour;
+      padding-left: 15px;
+      border-bottom: none;
+      border: 3px solid $page-colour;
+      &:last-child{
+        text-align: center;
+      }
+    }
+    label
+    {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      padding: 5px 0 10px 0;
+      margin-top: -10px;
+      text-indent: -10000px;
+      input{
+        text-align: right;
+      }
+    }
   }
 }

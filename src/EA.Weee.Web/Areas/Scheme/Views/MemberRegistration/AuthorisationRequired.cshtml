@@ -46,7 +46,7 @@
     @if (Model.ShowLinkToSelectOrganisation)
     {
         <div class="form-group">
-            <a href="@Url.RouteUrl("SelectOrganisation")">Select another organisation</a>
+            <a href="@Url.Action("Index", "Organisation")">Select another organisation</a>
         </div>
     }
 }
