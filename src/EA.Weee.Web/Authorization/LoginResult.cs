@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Web.Authorization
 {
-    using Core.Helpers;
+    using System.Web.Mvc;
 
     public class LoginResult
     {
@@ -10,21 +10,24 @@
 
         public string AccessToken { get; private set; }
 
-        private LoginResult(bool successful, string errorMessage, string accessToken)
+        public ActionResult DefaultLoginAction { get; private set; }
+
+        private LoginResult(bool successful, string errorMessage, string accessToken, ActionResult defaultLoginAction)
         {
             Successful = successful;
             ErrorMessage = errorMessage;
             AccessToken = accessToken;
+            DefaultLoginAction = defaultLoginAction;
         }
 
-        public static LoginResult Success(string accessToken)
+        public static LoginResult Success(string accessToken, ActionResult defaultLoginAction)
         {
-            return new LoginResult(true, null, accessToken);
+            return new LoginResult(true, null, accessToken, defaultLoginAction);
         }
 
         public static LoginResult Fail(string errorMessage)
         {
-            return new LoginResult(false, errorMessage, null);
+            return new LoginResult(false, errorMessage, null, null);
         }
     }
 }
