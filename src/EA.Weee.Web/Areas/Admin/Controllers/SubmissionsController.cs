@@ -19,7 +19,7 @@
     using ViewModels.Submissions;
     using Weee.Requests.Admin;
     using Weee.Requests.Scheme.MemberRegistration;
-    using GetSubmissionsHistoryResults = Weee.Requests.Scheme.GetSubmissionsHistoryResults;
+    using GetSubmissionsHistoryResults = Weee.Requests.Shared.GetSubmissionsHistoryResults;
 
     public class SubmissionsController : AdminController
     {

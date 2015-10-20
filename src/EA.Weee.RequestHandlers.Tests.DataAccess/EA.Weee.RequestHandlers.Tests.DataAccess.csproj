@@ -82,7 +82,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Scheme\GetSubmissionHistoryDataAcessTests.cs" />
+    <Compile Include="Shared\GetSubmissionHistoryDataAcessTests.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheDataAccessTests.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccessTests.cs" />
     <Compile Include="EventHandlers\MemberUploadSubmittedEventHandlerTests.cs" />
