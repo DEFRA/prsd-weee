@@ -673,6 +673,8 @@
     <Compile Include="Infrastructure\RouteCollectionExtensions.cs" />
     <Compile Include="Infrastructure\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
+    <Compile Include="RazorHelpers\RadioButtonLayout.cs" />
+    <Compile Include="RazorHelpers\RadioButtonLegend.cs" />
     <Compile Include="RazorHelpers\WeeeGds.ProgressiveDisclosure.cs" />
     <Compile Include="RazorHelpers\WeeeGds.ActionLink.cs" />
     <Compile Include="RazorHelpers\WeeeGds.cs" />

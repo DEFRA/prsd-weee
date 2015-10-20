@@ -3,7 +3,6 @@
     using Api.Client;
     using Api.Client.Actions;
     using Api.Client.Entities;
-    using Core;
     using FakeItEasy;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.OAuth;
@@ -13,9 +12,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Mvc;
-    using System.Web.Routing;
     using ViewModels.NewUser;
     using Web.Controllers;
     using Xunit;
@@ -26,6 +23,7 @@
         private readonly IWeeeClient weeeClient;
         private readonly IAuthenticationManager authenticationManager;
         private readonly IExternalRouteService externalRouteService;
+        private readonly IAppConfiguration appConfig;
 
         public NewUserControllerTests()
         {
@@ -33,6 +31,7 @@
             weeeClient = A.Fake<IWeeeClient>();
             authenticationManager = A.Fake<IAuthenticationManager>();
             externalRouteService = A.Fake<IExternalRouteService>();
+            appConfig = A.Fake<IAppConfiguration>();
         }
 
         [Fact]
@@ -111,9 +110,14 @@
             await NewUserController().UserCreation(userCreationViewModel);
         }
 
-        [Fact]
-        public void HttpGet_Feedback_ReturnsView()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void HttpGet_Feedback_NoDonePageUrlAvailable_ReturnsView(string donePageUrl)
         {
+            A.CallTo(() => appConfig.DonePageUrl)
+                .Returns(donePageUrl);
+
             var result = NewUserController().Feedback();
 
             var model = ((ViewResult)result).Model;
@@ -122,13 +126,29 @@
             Assert.IsType<FeedbackViewModel>(model);
         }
 
+        [Fact]
+        public void HttpGet_Feedback_DonePageUrlAvailable_ReturnsRedirectToPage()
+        {
+            const string url = "https://www.gov.uk/government/organisations/environment-agency";
+
+            A.CallTo(() => appConfig.DonePageUrl)
+                .Returns(url);
+
+            var result = NewUserController().Feedback();
+
+            Assert.IsType<RedirectResult>(result);
+
+            Assert.Equal(url, ((RedirectResult)result).Url);
+        }
+
         private NewUserController NewUserController()
         {
             return new NewUserController(
                 () => oathClient,
                 () => weeeClient,
                 authenticationManager,
-                externalRouteService);
+                externalRouteService,
+                appConfig);
         }
 
         private NewUserController GetMockNewUserController(object viewModel)
@@ -137,7 +157,8 @@
                 () => new OAuthClient("test", "test", "test"),
                 () => new WeeeClient("test", TimeSpan.FromSeconds(60)),
                 null,
-                externalRouteService);
+                externalRouteService,
+                appConfig);
 
             // Mimic the behaviour of the model binder which is responsible for Validating the Model
             var validationContext = new ValidationContext(viewModel, null, null);
