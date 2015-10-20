@@ -367,6 +367,21 @@
             Assert.Equal("EditScheme", redirectResult.RouteValues["Action"]);
         }
 
+        [Fact]
+        public async void GetViewOrganisationDetails_ReturnsView()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData());
+
+            var result = await SchemeController().ViewOrganisationDetails(A<Guid>._, A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(((ViewResult)result).ViewName, "ViewOrganisationDetails");
+        }
+
         private SchemeController SchemeController()
         {
             return new SchemeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
