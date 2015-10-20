@@ -1,48 +1,71 @@
+$path: "govuk_toolkit/images/";
+
 // Helpers
-@import "weee/helpers";
-@import "weee/pagination";
+@import "govuk_elements/helpers";
 
 // Reset
-@import "weee/reset";
+@import "govuk_elements/reset";
 
 // Typography
-@import "weee/weee-typography";
+@import "govuk_elements/elements-typography";
 
 // Layout
-@import "weee/layout";
+@import "govuk_elements/layout";
 
 // Modules
 // ==========================================================================
 
 // Forms
-@import "weee/forms";
+@import "govuk_elements/forms";
 
 // Tables
-@import "weee/tables";
+@import "govuk_elements/tables";
 
 // Buttons
-@import "weee/buttons";
+@import "govuk_elements/buttons";
 
 // Details
-@import "weee/details";
+@import "govuk_elements/details";
 
 // Lists
-@import "weee/lists";
+@import "govuk_elements/lists";
 
 // Panels
-@import "weee/panels";
+@import "govuk_elements/panels";
 
 // Icons
-@import "weee/icons";
+@import "govuk_elements/icons";
+
+
+//CUSTOM WEEE AND OVERRIDES
 
 @import "weee/errors";
 
 @import "weee/display-elements";
 
-// Dialog Box
 @import "weee/dialog";
+
+@import "weee/summary";
+
+@import "weee/helpers";
+
+@import "weee/display-elements";
+
+@import "weee/layout";
+
+@import "weee/forms/form-validation";
+
+@import "weee/tables";
+
+@import "weee/buttons";
+
+@import "weee/dialog";
+
+@import "weee/footer";
+
+@import "weee/panels";
 
 @import "jquery-autocomplete";
 
-// Summary page
-@import "weee/summary";
+@import "weee/pagination";
+

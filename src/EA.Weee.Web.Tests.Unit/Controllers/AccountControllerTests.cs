@@ -89,8 +89,8 @@
             A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
                 .Returns(true);
 
-            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Success("dshjkal"));
+            A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Success("dshjkal", A<ActionResult>._));
 
             A.CallTo(() => apiClient.User)
                 .Returns(unauthenticatedUserClient);
