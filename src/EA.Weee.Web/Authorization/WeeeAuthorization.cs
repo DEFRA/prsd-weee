@@ -2,11 +2,9 @@
 {
     using System;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using System.Web.Routing;
     using Core;
     using Infrastructure;
     using Microsoft.Owin.Security;
@@ -27,29 +25,35 @@
             this.userInfoClient = userInfoClient;
         }
 
-        public async Task<LoginResult> SignIn(LoginType loginType, string emailAddress, string password, bool rememberMe)
+        public async Task<AuthorizationState> GetAuthorizationState()
         {
-            var alreadySignedIn = HttpContext.Current.User != null && HttpContext.Current.User.Identity.IsAuthenticated;
+            if (!HttpContext.Current.User.Identity.IsAuthenticated)
+            {
+                return AuthorizationState.NotLoggedIn();
+            }
 
-            if (!alreadySignedIn)
+            var accessToken = HttpContext.Current.User.GetAccessToken();
+
+            return AuthorizationState.LoggedIn(accessToken, await GetLoginAction(accessToken));
+        }
+
+        public async Task<LoginResult> SignIn(string emailAddress, string password, bool rememberMe)
+        {
+            if (!(await GetAuthorizationState()).IsLoggedIn)
             {
                 var response = await oauthClient().GetAccessTokenAsync(emailAddress, password);
 
                 if (response.AccessToken == null)
                 {
-                    return LoginResult.Fail(this.ParseLoginError(response.Error));
-                }
-
-                if (loginType != await GetLoginType(response.AccessToken))
-                {
-                    return LoginResult.Fail("Invalid login details");
+                    return LoginResult.Fail(ParseLoginError(response.Error));
                 }
 
                 authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = rememberMe }, response.GenerateUserIdentity());
-                return LoginResult.Success(response.AccessToken);
+                return LoginResult.Success(response.AccessToken, await GetLoginAction(response.AccessToken));
             }
 
-            return LoginResult.Success(HttpContext.Current.User.GetAccessToken());
+            var accessToken = HttpContext.Current.User.GetAccessToken();
+            return LoginResult.Success(accessToken, await GetLoginAction(accessToken));
         }
 
         public void SignOut()
@@ -57,15 +61,15 @@
             authenticationManager.SignOut();
         }
 
-        private async Task<LoginType> GetLoginType(string accessToken)
+        private async Task<ActionResult> GetLoginAction(string accessToken)
         {
             var userInfo = await userInfoClient().GetUserInfoAsync(accessToken);
             if (userInfo.Claims.Any(p => p.Item2 == Claims.CanAccessInternalArea))
             {
-                return LoginType.Internal;
+                return new RedirectToRouteResult("InternalLogin", null);
             }
 
-            return LoginType.External;
+            return new RedirectToRouteResult("Login", null);
         }
 
         private string ParseLoginError(string error)

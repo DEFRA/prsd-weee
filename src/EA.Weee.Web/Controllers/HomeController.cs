@@ -4,7 +4,6 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.ViewModels.Home;
     using System;
     using System.Linq;
     using System.Security.Claims;
@@ -22,54 +21,6 @@
         {
             this.breadcrumb = breadcrumb;
             this.cache = cache;
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult Index()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                bool userIsInternal = ((ClaimsIdentity)User.Identity).HasClaim(
-                    ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea);
-
-                if (userIsInternal)
-                {
-                    return RedirectToAction("Index", "Home", new { Area = "Admin" });
-                }
-                else
-                {
-                    return RedirectToRoute("SelectOrganisation");
-                }
-            }
-
-            return View("Index");
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult LandingPage()
-        {
-            return View(new LandingPageViewModel());
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public ActionResult LandingPage(LandingPageViewModel viewModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(viewModel);
-            }
-
-            var selectedOption = viewModel.SelectedValue;
-            if (selectedOption.Equals("No"))
-            {
-                return RedirectToAction("CheckIsPcs", "NewUser");
-            }
-
-            return RedirectToAction("SignIn", "Account");
         }
 
         [AllowAnonymous]
