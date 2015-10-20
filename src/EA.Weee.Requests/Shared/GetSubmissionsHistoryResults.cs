@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests.Scheme
+﻿namespace EA.Weee.Requests.Shared
 {
     using System;
     using System.Collections.Generic;

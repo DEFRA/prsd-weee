@@ -1,7 +1,7 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme
+﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Shared
 {
     using System;
-    using RequestHandlers.Scheme;
+    using RequestHandlers.Shared;
     using Weee.Tests.Core.Model;
     using Xunit;
 
@@ -49,7 +49,7 @@
                 database.Model.SaveChanges();
                 
                 // Act
-                var result = await dataAccess.GetSubmissionsHistory(scheme1.Id, 0);
+                var result = await dataAccess.GetSubmissionsHistory(scheme1.Id);
 
                 // Assert
                 Assert.NotNull(result);
@@ -99,7 +99,7 @@
                 database.Model.SaveChanges();
 
                 // Act
-                var result = await dataAccess.GetSubmissionsHistory(scheme1.Id, 2015);
+                var result = await dataAccess.GetSubmissionHistoryForComplianceYear(scheme1.Id, 2015);
 
                 // Assert
                 Assert.NotNull(result);
