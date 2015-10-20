@@ -33,7 +33,7 @@
             bundles.Add(new ScriptBundle("~/bundles/govuk_weee").Include(
                       "~/Scripts/vendor/modernizr.custom.77028.js",
                       "~/Scripts/vendor/details.polyfill.js",
-                      "~/Scripts/application.js"));
+                      "~/Scripts/weee-application.js"));
 
             bundles.Add(new SassBundle("~/Content/weee-page-ie6", "~/Content/govuk_toolkit/stylesheets").Include(
                       "~/Content/weee-page-ie6.scss"));
@@ -46,9 +46,6 @@
 
             bundles.Add(new SassBundle("~/Content/weee-page", "~/Content/govuk_toolkit/stylesheets").Include(
                       "~/Content/weee-page.scss"));
-
-            bundles.Add(new SassBundle("~/Content/prism", "~/Content/govuk_toolkit/stylesheets").Include(
-                      "~/Content/prism.scss"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862

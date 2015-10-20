@@ -72,8 +72,8 @@
 
             A.CallTo(() => apiClient.User).Returns(newUser);
 
-            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Success("dshadjk"));
+            A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Success("dshadjk", A<ActionResult>._));
 
             await AccountController().Create(model);
 
@@ -91,15 +91,15 @@
 
             A.CallTo(() => apiClient.User).Returns(newUser);
 
-            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Success("dshadjk"));
+            A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Success("dshadjk", A<ActionResult>._));
 
             await AccountController().Create(model);
 
             A.CallTo(() => apiClient.User.CreateInternalUserAsync(A<InternalUserCreationData>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+            A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -112,7 +112,7 @@
 
             A.CallTo(() => apiClient.User).Returns(newUser);
 
-            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+            A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
                 .Returns(LoginResult.Fail(loginError));
 
             var controller = AccountController();
@@ -132,8 +132,8 @@
             var newUser = A.Fake<IUnauthenticatedUser>();
             A.CallTo(() => apiClient.User).Returns(newUser);
 
-            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Success("dshjk"));
+            A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Success("dshjk", A<ActionResult>._));
 
             var result = await AccountController().Create(ValidModel());
 
@@ -161,10 +161,13 @@
         }
 
         [Fact]
-        public void HttpGet_SignIn_ShouldReturnsLoginView()
+        public async void HttpGet_SignIn_IsNotSignedIn_ShouldReturnLoginView()
         {
+            A.CallTo(() => weeeAuthorization.GetAuthorizationState())
+                .Returns(AuthorizationState.NotLoggedIn());
+
             var controller = AccountController();
-            var result = controller.SignIn("AnyUrl");
+            var result = await controller.SignIn("AnyUrl");
             var viewResult = ((ViewResult)result);
             Assert.Equal("SignIn", viewResult.ViewName);
         }
@@ -246,7 +249,7 @@
         }
 
         [Fact]
-        public async void HttpPost_SignIn_ModelIsValid_AndSignInSucceeds_ShouldRedirectHomeIndex()
+        public async void HttpPost_SignIn_ModelIsValid_AndSignInSucceeds_ShouldRedirectToDefaultLoginAction()
         {
             var model = new InternalLoginViewModel
             {
@@ -255,20 +258,16 @@
                 RememberMe = false
             };
 
+            var defaultLoginAction = A<ActionResult>._;
+
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAdminUserStatus>._)).Returns(UserStatus.Active);
 
-            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
-              .Returns(LoginResult.Success("dsadsada"));
+            A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
+              .Returns(LoginResult.Success("dsadsada", defaultLoginAction));
 
             var result = await AccountController().SignIn(model, string.Empty);
 
-            Assert.IsType<RedirectToRouteResult>(result);
-
-            var redirectValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("Index", redirectValues["action"]);
-            Assert.Equal("Home", redirectValues["controller"]);
-            Assert.Equal("Admin", redirectValues["area"]);
+            Assert.Equal(defaultLoginAction, result);
         }
 
         [Fact]
@@ -282,7 +281,7 @@
                 RememberMe = false
             };
 
-            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
+            A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
                 .Returns(LoginResult.Fail(loginError));
 
             var controller = AccountController();
@@ -322,8 +321,8 @@
             A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._))
                 .Returns(true);
 
-            A.CallTo(() => weeeAuthorization.SignIn(A<LoginType>._, A<string>._, A<string>._, A<bool>._))
-                .Returns(LoginResult.Success("dshjkal"));
+            A.CallTo(() => weeeAuthorization.SignIn(A<string>._, A<string>._, A<bool>._))
+                .Returns(LoginResult.Success("dshjkal", A<ActionResult>._));
 
             A.CallTo(() => apiClient.User)
                 .Returns(unauthenticatedUserClient);
