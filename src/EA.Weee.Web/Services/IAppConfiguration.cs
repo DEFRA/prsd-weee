@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Web.Services
 {
-    using System;
-
     public interface IAppConfiguration
     {
         string Environment { get; set; }
@@ -25,5 +23,7 @@
         string TruncateEmailAfterPlus { get; set; }
 
         bool EnableTestArea { get; set; }
+
+        string DonePageUrl { get; set; }
     }
 }
