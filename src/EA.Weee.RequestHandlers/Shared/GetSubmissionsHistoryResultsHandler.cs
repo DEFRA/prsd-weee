@@ -1,11 +1,11 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.Submissions
+﻿namespace EA.Weee.RequestHandlers.Shared
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin;
     using Prsd.Core.Mediator;
-    using Requests.Admin;
+    using Requests.Shared;
     using Security;
 
     public class GetSubmissionsHistoryResultsHandler : IRequestHandler<GetSubmissionsHistoryResults, List<SubmissionsHistorySearchResult>>
@@ -21,8 +21,19 @@
 
         public async Task<List<SubmissionsHistorySearchResult>> HandleAsync(GetSubmissionsHistoryResults request)
         {
-            authorization.EnsureCanAccessInternalArea();
-            var results = await dataAccess.GetSubmissionsHistory(request.ComplianceYear, request.SchemeId);
+            authorization.EnsureInternalOrOrganisationAccess(request.OrganisationId);
+
+            List<SubmissionsHistorySearchResult> results;
+
+            if (request.ComplianceYear == 0)
+            {
+                results = await dataAccess.GetSubmissionsHistory(request.SchemeId);
+            }
+            else
+            {
+                results = await dataAccess.GetSubmissionHistoryForComplianceYear(request.SchemeId, request.ComplianceYear);
+            }
+
             return results.ToList();
         }
     }
