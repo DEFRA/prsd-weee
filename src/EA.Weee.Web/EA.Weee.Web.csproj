@@ -528,9 +528,6 @@
     <Content Include="Scripts\vendor\details.polyfill.js" />
     <Content Include="Scripts\vendor\jquery-1.11.0.min.js" />
     <Content Include="Scripts\vendor\modernizr.custom.77028.js" />
-    <Content Include="Views\Shared\EditorTemplates\OrganisationContactDetails.cshtml">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

@@ -367,6 +367,30 @@
             Assert.Equal("EditScheme", redirectResult.RouteValues["Action"]);
         }
 
+        [Fact]
+        public async void GetViewContactDetails_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(false);
+
+            await Assert.ThrowsAnyAsync<Exception>(() => SchemeController().ViewContactDetails(A<Guid>._, A<Guid>._));
+        }
+
+        [Fact]
+        public async void GetViewContactDetails_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData());
+
+            var result = await SchemeController().ViewContactDetails(A<Guid>._, A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(((ViewResult)result).ViewName, "ViewContactDetails");
+        }
+
         private SchemeController SchemeController()
         {
             return new SchemeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
