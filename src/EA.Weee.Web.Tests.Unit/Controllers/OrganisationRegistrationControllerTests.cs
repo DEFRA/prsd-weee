@@ -65,7 +65,7 @@
 
             // Act
             ActionResult result = await controller.RegisteredOfficeAddress(new Guid("1B7329B9-DC7F-4621-8E97-FD97CDDDBA10"));
-            
+
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
@@ -91,7 +91,7 @@
 
             var model = new AddressViewModel();
             controller.ModelState.AddModelError("Key", "Error"); // To make the model state invalid
-            
+
             // Act
             ActionResult result = await controller.RegisteredOfficeAddress(model);
 
@@ -162,7 +162,7 @@
 
             // Act
             ActionResult result = await controller.OrganisationAddress(A<Guid>._);
-            
+
             // Assert
             var model = ((ViewResult)result).Model;
 
@@ -325,7 +325,7 @@
 
             // Act
             ActionResult result = await controller.Type(A<string>._, A<Guid>._);
-            
+
             // Assert
             var model = ((ViewResult)result).Model;
             Assert.IsType<OrganisationTypeViewModel>(model);
@@ -569,10 +569,10 @@
 
             // Act
             ActionResult result = await controller.RegisteredCompanyDetails(model);
-            
+
             // Assert
             var viewmodel = ((ViewResult)result).Model;
-            
+
             Assert.NotNull(viewmodel);
             Assert.False(((ViewResult)result).ViewData.ModelState.IsValid);
         }
@@ -645,7 +645,7 @@
                 Id = organisationId,
                 DisplayName = "Test Company"
             };
-            
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
                 .Returns(organisation);
 
@@ -1008,6 +1008,53 @@
 
             Assert.Equal("JoinOrganisation", redirectResult.RouteValues["action"]);
             Assert.Equal(new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"), redirectResult.RouteValues["OrganisationId"]);
+        }
+
+        [Fact]
+        public void GetCreateGuidance_ReturnsViewWithModel()
+        {
+            // Arrange
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = controller.CreateGuidance("test");
+
+            // Assert
+            var model = ((ViewResult)result).Model;
+
+            Assert.NotNull(model);
+            Assert.IsType<CreateGuidanceViewModel>(model);
+        }
+
+        [Fact]
+        public void PostCreateGuidance_RedirectToTypeActionMethod()
+        {
+            // Arrange
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            var model = new CreateGuidanceViewModel
+            {
+                SearchedText = "test"
+            };
+
+            // Act
+            var result = controller.CreateGuidance(model);
+
+            // Assert
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Type", routeValues["action"]);
+            Assert.Equal("OrganisationRegistration", routeValues["controller"]);
         }
     }
 }

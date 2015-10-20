@@ -12,6 +12,7 @@
             <h1 class="heading-large">
                 Search results
             </h1>
+            <h2 class="heading-small">We found results for ‘@Model.SearchTerm’</h2>
         </header>
 
         using (Html.BeginForm())
@@ -19,9 +20,14 @@
             @Html.AntiForgeryToken()
             @Html.Gds().ValidationSummary()
 
-            <p>
-                We found results for '@Model.SearchTerm'.
-            </p>
+
+
+            <p>If your organisation is not listed, this may be because:</p>
+            <ul class="list-bullet">
+                <li>you mistyped the organisation’s name</li>
+                <li>your organisation has not yet been created in our service</li>
+                <li>you entered something other than the company name</li>
+            </ul>
 
             <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
                 @Html.Gds().ValidationMessageFor(m => m.SelectedOrganisationId)
@@ -30,7 +36,7 @@
                     Model.Results,
                     r => r.OrganisationId,
                     r => r.Name,
-                    RadioButtonLegend.Displayed,
+                    RadioButtonLegend.VisuallyHidden,
                     RadioButtonLayout.Stacked)
             </div>
 
@@ -39,14 +45,10 @@
             </p>
         }
 
-        <div class="form-group">
-            @using (Html.WeeeGds().ProgressiveDisclosure("My organisation is not listed"))
-            {
-                <p>
-                    If your organisation is not listed, @Html.ActionLink("create a new organisation", "Type", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, null).
-                </p>
-            }
-        </div>
+        <p>
+            @Html.ActionLink("Start another search", "Search", "OrganisationRegistration")<br />
+            @Html.ActionLink("Create a new organisation", "CreateGuidance", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, null)
+        </p>
     }
     else
     {
@@ -54,18 +56,26 @@
             <h1 class="heading-large">
                 No results found
             </h1>
+            <h2 class="heading-small">We found no results for ‘@Model.SearchTerm’</h2>
         </header>
 
-        <p>We found no search results for '@Model.SearchTerm'.</p>
+        <p>If your organisation is not listed, this may be because:</p>
 
+        <ul class="list-bullet">
+            <li>you mistyped the organisation’s name</li>
+            <li>your organisation has not yet been created in our service</li>
+            <li>you entered something other than the company name</li>
+        </ul>
+        
         <p>
-            @Html.ActionLink("Create a new organisation", "Type", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "button" })
+            @Html.ActionLink("Create a new organisation", "CreateGuidance", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "button" })
+        </p>
+        <p>
+            @Html.ActionLink("Start another search", "Search", "OrganisationRegistration")
         </p>
     }
 
-    <p>
-        @Html.ActionLink("Start new search", "Search", "OrganisationRegistration")
-    </p>
+
 }
 
 @section scripts{

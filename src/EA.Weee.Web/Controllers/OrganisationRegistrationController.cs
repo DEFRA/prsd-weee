@@ -729,6 +729,24 @@
             return await ReviewOrganisationDetails(organisationId);
         }
 
+        [HttpGet]
+        public ActionResult CreateGuidance(string searchedText)
+        {
+            var model = new CreateGuidanceViewModel
+            {
+                SearchedText = searchedText
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateGuidance(CreateGuidanceViewModel model)
+        {
+            return RedirectToAction("Type", "OrganisationRegistration", new { searchedText = model.SearchedText });
+        }
+
         private async Task<AddressViewModel> GetAddressViewModel(Guid organisationId, IWeeeClient client, bool regionsOfUKOnly, AddressType addressType)
         {
             // Check the organisation Id is valid

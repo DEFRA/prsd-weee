@@ -588,6 +588,7 @@
     <Content Include="Views\Account\ResetPasswordExpired.cshtml" />
     <Content Include="Views\Account\ResetPasswordComplete.cshtml" />
     <Content Include="Views\OrganisationRegistration\UserAlreadyAssociatedWithOrganisation.cshtml" />
+    <Content Include="Views\OrganisationRegistration\CreateGuidance.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -707,6 +708,7 @@
     <Compile Include="ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordRequestViewModel.cs" />
     <Compile Include="ViewModels\Home\LandingPageViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\CreateGuidanceViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\Scheme\SchemeAreaRegistration.cs" />

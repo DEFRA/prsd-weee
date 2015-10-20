@@ -1,0 +1,34 @@
+﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.CreateGuidanceViewModel
+@{
+    ViewBag.Title = "Create Guidance";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Create a new organisation
+        </h1>
+    </header>
+    @using (Html.BeginForm(actionName: "CreateGuidance", controllerName: "OrganisationRegistration", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.SearchedText)
+        
+        <p>When you create a new organisation, you are making a request for your organisation to perform WEEE activities using our online service.</p>
+
+        <div class="form-group">
+            <div class="panel-indent panel-indent-info">
+                <p>Your organisation can only exist once in our service.</p>
+                <p>We will check your identity against the details we hold for your organisation and notify you once access is granted.</p>
+                <p>
+                    Before creating a new organisation, @Html.ActionLink("search our service", "Search", "OrganisationRegistration") to check it does not already exist.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="button" value="Continue" />
+        </div>
+    }
+}
+
