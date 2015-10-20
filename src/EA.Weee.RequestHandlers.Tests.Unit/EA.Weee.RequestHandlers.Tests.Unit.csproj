@@ -87,7 +87,6 @@
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Admin\GetAdminUserStatusHandlerTests.cs" />
     <Compile Include="Admin\Submissions\GetAllApprovedSchemesHandlerTests.cs" />
-    <Compile Include="Admin\Submissions\GetSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Admin\Submissions\GetAllComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandlerTests.cs" />
     <Compile Include="Admin\GetUserDataHandlerTests.cs" />
@@ -109,6 +108,7 @@
     <Compile Include="Scheme\GetSchemeByIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemesHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandlerTests.cs" />
+    <Compile Include="Shared\GetSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateFromXmlTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GetComplianceYearsHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadByIdHandlerTests.cs" />
