@@ -19,7 +19,7 @@
         @Html.HiddenFor(m => m.MemberUploadId)
         @Html.HiddenFor(m => m.TotalCharges)
         
-        <p>Please note: Though your file has passed our technical validation checks, we can’t verify that all the information you submitted within it is correct.</p>
+        <p>Your file has passed our technical validation checks but we are unable to verify that all of the information you submitted is correct.</p>
 
         int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
         string warningText = numWarnings > 1 ? "warnings" : "warning";
