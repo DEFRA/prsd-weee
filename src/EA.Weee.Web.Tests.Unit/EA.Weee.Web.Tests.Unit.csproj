@@ -177,7 +177,6 @@
     <Compile Include="Areas\Scheme\ViewModels\SchemeViewModelTests.cs" />
     <Compile Include="Controllers\AccountControllerTests.cs" />
     <Compile Include="Controllers\ControllerTests.cs" />
-    <Compile Include="Controllers\HomeControllerTests.cs" />
     <Compile Include="Controllers\OrganisationControllerTests.cs" />
     <Compile Include="Controllers\OrganisationRegistrationControllerTests.cs" />
     <Compile Include="Requests\RequestCreatorTests.cs" />

@@ -6,15 +6,13 @@
     using EA.Weee.Core.Routing;
     using EA.Weee.Web.Controllers.Base;
     using Infrastructure;
-    using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
-    using Prsd.Core.Web.OAuth;
-    using Prsd.Core.Web.OpenId;
     using Services;
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Extensions;
     using ViewModels.Account;
 
     [Authorize]
@@ -35,11 +33,13 @@
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult SignIn(string returnUrl)
+        public async Task<ActionResult> SignIn(string returnUrl)
         {
-            if (User.Identity.IsAuthenticated)
+            var authorizationState = await weeeAuthorization.GetAuthorizationState();
+
+            if (authorizationState.IsLoggedIn)
             {
-                return RedirectToLocal(returnUrl);
+                return this.LoginRedirect(authorizationState.DefaultLoginAction, returnUrl);
             }
 
             return View(new LoginViewModel
@@ -55,11 +55,11 @@
         {
             if (ModelState.IsValid)
             {
-                var loginResult = await weeeAuthorization.SignIn(LoginType.External, model.Email, model.Password, model.RememberMe);
+                var loginResult = await weeeAuthorization.SignIn(model.Email, model.Password, model.RememberMe);
 
                 if (loginResult.Successful)
                 {
-                    return RedirectToLocal(model.ReturnUrl);
+                    return this.LoginRedirect(loginResult.DefaultLoginAction, model.ReturnUrl);
                 }
 
                 ModelState.AddModelError(string.Empty, loginResult.ErrorMessage);
@@ -76,22 +76,6 @@
             weeeAuthorization.SignOut();
 
             return RedirectToAction("SignIn");
-        }
-
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-
-            return RedirectToAction("RedirectProcess");
-        }
-
-        [HttpGet]
-        public ActionResult RedirectProcess()
-        {
-            return RedirectToRoute("SelectOrganisation");
         }
 
         [HttpGet]
