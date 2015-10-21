@@ -61,15 +61,15 @@
                             <span class="column-two-thirds">
                                 @if (Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
                                 {
-                                    <label>Sole trader or individual</label>
+                                    @:Sole trader or individual
                                 }
                                 else if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership)
                                 {
-                                    <label>Partnership</label>
+                                    @:Partnership
                                 }
                                 else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
                                 {
-                                    <label>Registered company</label>
+                                    @:Registered company
                                 }
                             </span>
                         </div>
