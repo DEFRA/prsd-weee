@@ -68,9 +68,19 @@
       <HintPath>..\packages\xunit.assert.2.0.0\lib\portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.assert.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="xunit.console, Version=2.1.0.3179, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\xunit.runner.console.2.1.0\tools\xunit.console.exe</HintPath>
+    </Reference>
     <Reference Include="xunit.core, Version=2.0.0.2929, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\packages\xunit.extensibility.core.2.0.0\lib\portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.runner.reporters.desktop">
+      <HintPath>..\packages\xunit.runner.console.2.1.0\tools\xunit.runner.reporters.desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.runner.utility.desktop">
+      <HintPath>..\packages\xunit.runner.console.2.1.0\tools\xunit.runner.utility.desktop.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

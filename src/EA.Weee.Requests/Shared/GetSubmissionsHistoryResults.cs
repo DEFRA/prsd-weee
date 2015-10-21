@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Requests.Admin
+﻿namespace EA.Weee.Requests.Shared
 {
     using System;
     using System.Collections.Generic;
@@ -8,12 +8,14 @@
     public class GetSubmissionsHistoryResults : IRequest<List<SubmissionsHistorySearchResult>>
     {
         public Guid SchemeId { get; set; }
+        public Guid OrganisationId { get; set; }
         public int ComplianceYear { get; set; }
 
-        public GetSubmissionsHistoryResults(int year, Guid id)
+        public GetSubmissionsHistoryResults(Guid id, int year = 0, Guid orgId = default(Guid))
         {
             ComplianceYear = year;
             SchemeId = id;
+            OrganisationId = orgId;
         }
     }
 }

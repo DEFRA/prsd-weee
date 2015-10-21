@@ -714,7 +714,7 @@
                             new CompleteRegistration(organisationId));
                 }
 
-                return RedirectToRoute("SelectOrganisation");
+                return RedirectToAction("Index", "Organisation");
             }
             catch (ApiBadRequestException ex)
             {
