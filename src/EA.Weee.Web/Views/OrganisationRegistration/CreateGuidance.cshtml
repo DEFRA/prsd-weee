@@ -1,4 +1,4 @@
-﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.CreateGuidanceViewModel
+﻿@model string
 @{
     ViewBag.Title = "Create Guidance";
 }
@@ -13,8 +13,7 @@
     @using (Html.BeginForm(actionName: "CreateGuidance", controllerName: "OrganisationRegistration", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.SearchedText)
-        
+
         <p>When you create a new organisation, you are making a request for your organisation to perform WEEE activities using our online service.</p>
 
         <div class="form-group">
@@ -27,7 +26,7 @@
             </div>
         </div>
         <div class="form-group">
-            <input type="submit" class="button" value="Continue" />
+            @Html.ActionLink("Continue", "Type", "OrganisationRegistration", new { searchedText = Model }, new { @class = "button" })
         </div>
     }
 }

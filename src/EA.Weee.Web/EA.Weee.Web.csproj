@@ -720,7 +720,6 @@
     <Compile Include="Services\IExternalRouteService.cs" />
     <Compile Include="ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="ViewModels\Account\ResetPasswordRequestViewModel.cs" />
-    <Compile Include="ViewModels\OrganisationRegistration\CreateGuidanceViewModel.cs" />
     <Compile Include="ViewModels\OrganisationRegistration\JoinOrganisationViewModel.cs" />
     <Compile Include="Controllers\OrganisationRegistrationController.cs" />
     <Compile Include="Areas\Scheme\SchemeAreaRegistration.cs" />

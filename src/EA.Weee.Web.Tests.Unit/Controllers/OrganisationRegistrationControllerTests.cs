@@ -1011,7 +1011,7 @@
         }
 
         [Fact]
-        public void GetCreateGuidance_ReturnsViewWithModel()
+        public void GetCreateGuidance_ReturnsView()
         {
             // Arrange
             ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
@@ -1025,36 +1025,7 @@
             ActionResult result = controller.CreateGuidance("test");
 
             // Assert
-            var model = ((ViewResult)result).Model;
-
-            Assert.NotNull(model);
-            Assert.IsType<CreateGuidanceViewModel>(model);
-        }
-
-        [Fact]
-        public void PostCreateGuidance_RedirectToTypeActionMethod()
-        {
-            // Arrange
-            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            OrganisationRegistrationController controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher);
-
-            var model = new CreateGuidanceViewModel
-            {
-                SearchedText = "test"
-            };
-
-            // Act
-            var result = controller.CreateGuidance(model);
-
-            // Assert
-            var routeValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("Type", routeValues["action"]);
-            Assert.Equal("OrganisationRegistration", routeValues["controller"]);
+            Assert.IsType<ViewResult>(result);
         }
     }
 }
