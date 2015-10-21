@@ -5,44 +5,46 @@
     ViewBag.Title = "Edit organisation contact details";
 }
 
-<header class="hgroup">
-    <h1 class="heading-large">Edit organisation contact details</h1>
-</header>
+@section main_content {
+    <header class="hgroup">
+        <h1 class="heading-large">Edit organisation contact details</h1>
+    </header>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.Gds().ValidationSummary()
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
 
-    @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.Id)
 
-    @Html.HiddenFor(model => model.Contact.RowVersion)
-    
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.Contact.FirstName)">
-        @Html.Gds().ValidationMessageFor(model => model.Contact.FirstName)
-        @Html.Gds().LabelFor(model => model.Contact.FirstName)
-        @Html.Gds().TextBoxFor(model => model.Contact.FirstName, new { @maxlength = "35" })
-    </div>
+        @Html.HiddenFor(model => model.Contact.RowVersion)
 
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.Contact.LastName)">
-        @Html.Gds().ValidationMessageFor(model => model.Contact.LastName)
-        @Html.Gds().LabelFor(model => model.Contact.LastName)
-        @Html.Gds().TextBoxFor(model => model.Contact.LastName, new { @maxlength = "35" })
-    </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Contact.FirstName)">
+            @Html.Gds().ValidationMessageFor(model => model.Contact.FirstName)
+            @Html.Gds().LabelFor(model => model.Contact.FirstName)
+            @Html.Gds().TextBoxFor(model => model.Contact.FirstName, new { @maxlength = "35" })
+        </div>
 
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.Contact.Position)">
-        @Html.Gds().ValidationMessageFor(model => model.Contact.Position)
-        @Html.Gds().LabelFor(model => model.Contact.Position)
-        @Html.Gds().TextBoxFor(model => model.Contact.Position, new { @maxlength = "35" })
-    </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Contact.LastName)">
+            @Html.Gds().ValidationMessageFor(model => model.Contact.LastName)
+            @Html.Gds().LabelFor(model => model.Contact.LastName)
+            @Html.Gds().TextBoxFor(model => model.Contact.LastName, new { @maxlength = "35" })
+        </div>
 
-    @Html.EditorFor(model => model.OrganisationAddress)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Contact.Position)">
+            @Html.Gds().ValidationMessageFor(model => model.Contact.Position)
+            @Html.Gds().LabelFor(model => model.Contact.Position)
+            @Html.Gds().TextBoxFor(model => model.Contact.Position, new { @maxlength = "35" })
+        </div>
 
-    <div class="form-group">
-        <button class="button">Save and Continue</button>
+        @Html.EditorFor(model => model.OrganisationAddress)
+
+        <div class="form-group">
+            <button class="button">Save and Continue</button>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Leave unchanged and perform another activity", "ChooseActivity", new { pcsId = Model.Id })
     </div>
 }
-
-<div>
-    @Html.ActionLink("Leave unchanged and perform another activity", "ChooseActivity", new { pcsId = Model.Id })
-</div>
