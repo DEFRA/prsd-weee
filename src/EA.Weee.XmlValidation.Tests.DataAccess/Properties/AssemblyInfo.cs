@@ -9,9 +9,9 @@ using Xunit;
 [assembly: AssemblyTitle("EA.Weee.XmlValidation.Tests.DataAccess")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SFW Ltd")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("EA.Weee.XmlValidation.Tests.DataAccess")]
-[assembly: AssemblyCopyright("Copyright © SFW Ltd 2015")]
+[assembly: AssemblyCopyright("Copyright © 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
