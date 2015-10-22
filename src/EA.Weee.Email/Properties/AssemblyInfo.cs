@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("EA.Weee.Email")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SFW Ltd")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("EA.Weee.Email")]
-[assembly: AssemblyCopyright("Copyright © SFW Ltd 2015")]
+[assembly: AssemblyCopyright("Copyright © 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
