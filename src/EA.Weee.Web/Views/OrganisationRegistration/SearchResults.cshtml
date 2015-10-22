@@ -46,7 +46,9 @@
         }
 
         <p>
-            @Html.ActionLink("Start another search", "Search", "OrganisationRegistration")<br />
+            @Html.ActionLink("Start another search", "Search", "OrganisationRegistration")
+        </p>
+        <p>
             @Html.ActionLink("Create a new organisation", "CreateGuidance", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, null)
         </p>
     }

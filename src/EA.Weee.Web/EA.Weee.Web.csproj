@@ -392,7 +392,6 @@
     <Content Include="Content\weee\images\sorted-ascending.png" />
     <Content Include="Content\weee\images\sorted-descending.png" />
     <Content Include="Content\weee\images\spinner.gif" />
-    <Content Include="Content\weee\_buttons.scss" />
     <Content Include="Content\weee\_forms.scss" />
     <Content Include="Content\weee\_panels.scss" />
     <Content Include="Global.asax" />
