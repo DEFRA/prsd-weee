@@ -166,7 +166,7 @@
             {
                 listName = listName.Substring(0, listName.Length - 4);
             }
-            return string.Format("There are no {0} details in XML file. Plesae provide details for at least one {0}.", listName);    
+            return string.Format("There are no {0} details in XML file. Please provide details for at least one {0}.", listName);    
         }
 
         private string MakeFriendlyErrorInXmlDocumentMessage(string message)
