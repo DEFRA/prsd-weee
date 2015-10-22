@@ -39,14 +39,13 @@
         </div>
             break;
     }
-
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @area = "Scheme" }, new { @class = "button" })
     </p>
     @if (Model.ShowLinkToSelectOrganisation)
     {
-        <div class="form-group">
-            <a href="@Url.Action("Index", "Organisation")">Select another organisation</a>
-        </div>
+        <p>
+            <a href="@Url.Action("Index", "Organisation", new { @area = "" })">Select another organisation</a>
+        </p>
     }
 }
