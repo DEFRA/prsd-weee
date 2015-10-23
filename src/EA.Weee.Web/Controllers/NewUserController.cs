@@ -86,6 +86,10 @@
 
                         foreach (var modelState in ViewData.ModelState.Values.ToList())
                         {
+                            if (modelState.Value == null)
+                            {
+                                modelState.Errors.Clear();
+                            }
                             for (var i = modelState.Errors.Count - 1; i >= 0; i--)
                             {
                                 if (modelState.Errors[i].ErrorMessage.Contains("is already taken"))
