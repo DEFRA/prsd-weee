@@ -26,7 +26,7 @@
             <ul class="list-bullet">
                 <li>you mistyped the organisation’s name</li>
                 <li>your organisation has not yet been created in our service</li>
-                <li>you entered something other than the company name</li>
+                <li>you entered something other than the organisation name</li>
             </ul>
 
             <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
@@ -46,7 +46,9 @@
         }
 
         <p>
-            @Html.ActionLink("Start another search", "Search", "OrganisationRegistration")<br />
+            @Html.ActionLink("Start another search", "Search", "OrganisationRegistration")
+        </p>
+        <p>
             @Html.ActionLink("Create a new organisation", "CreateGuidance", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, null)
         </p>
     }
@@ -64,7 +66,7 @@
         <ul class="list-bullet">
             <li>you mistyped the organisation’s name</li>
             <li>your organisation has not yet been created in our service</li>
-            <li>you entered something other than the company name</li>
+            <li>you entered something other than the organisation name</li>
         </ul>
         
         <p>
