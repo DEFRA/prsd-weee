@@ -16,7 +16,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
-        
+
         @Html.HiddenFor(m => m.Email)
         @Html.HiddenFor(m => m.OrganisationName)
         @Html.HiddenFor(m => m.Id)
@@ -68,5 +68,8 @@
         <div class="form-group">
             <button class="button" type="submit">Save and continue</button>
         </div>
+        <p>
+            <a href="javascript:history.back();">Back</a>
+        </p>
     }
 }

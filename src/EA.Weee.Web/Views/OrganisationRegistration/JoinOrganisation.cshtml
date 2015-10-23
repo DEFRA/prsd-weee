@@ -7,7 +7,7 @@
 @section main_content {
     <header class="hgroup">
         <h1 class="heading-large">
-            Confirm your organisation access request
+            Are you sure you want to request access to this organisation?
         </h1>
     </header>
 
@@ -16,9 +16,10 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
+        @Html.HiddenFor(m => m.OrganisationName)
 
-        <p>A request to access this organisation will be sent to their administrator.</p>
-        <p>If you do not wish to access this organisation, you can search for a different one.</p>
+        <p>We will send an access request to the administrator of @Model.OrganisationName.</p>
+        <p>You will not be able to perform activities on behalf of this organisation until your request is authorised.</p>
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="JoinOrganisationOptions">
             @Html.WeeeGds().RadioButtonsFor(
@@ -26,7 +27,7 @@
                 Model.PossibleValues,
                 "Confirm your organisation access request",
                 RadioButtonLegend.VisuallyHidden,
-                RadioButtonLayout.Stacked)
+                RadioButtonLayout.Inline)
         </div>
 
         <div class="form-group">
