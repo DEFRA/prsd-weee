@@ -10,6 +10,7 @@
     using Prsd.Core.Web.Mvc.Extensions;
     using Services;
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Extensions;
@@ -197,33 +198,30 @@
                     UserId = id
                 };
 
-                bool result;
                 try
                 {
-                    result = await client.User.ResetPasswordAsync(passwordResetData);
+                    bool result = await client.User.ResetPasswordAsync(passwordResetData);
+
+                    return View(!result ? "ResetPasswordExpired" : "ResetPasswordComplete");
                 }
                 catch (ApiBadRequestException ex)
                 {
                     this.HandleBadRequest(ex);
 
-                    if (!ModelState.IsValid)
-                    {
-                        return View(model);
-                    }
-                    else
+                    if (ModelState.IsValid)
                     {
                         throw;
                     }
+                    
+                    foreach (var modelState in ViewData.ModelState.Values.ToList())
+                    {
+                        if (modelState.Value == null)
+                        {
+                            modelState.Errors.Clear();
+                        }
+                    }
                 }
-
-                if (!result)
-                {
-                    return View("ResetPasswordExpired");
-                }
-                else
-                {
-                    return View("ResetPasswordComplete");
-                }
+                return View(model);
             }
         }
 
