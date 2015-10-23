@@ -91,7 +91,7 @@
                                 if (modelState.Errors[i].ErrorMessage.Contains("is already taken"))
                                 {
                                     modelState.Errors.Remove(modelState.Errors[i]);
-                                    modelState.Errors.Add("An account already exists with this email address. Sign in or reset your password.");
+                                    modelState.Errors.Add("An account already exists with this email address.");
                                 }
                             }
                         }
