@@ -10,6 +10,7 @@
     using Prsd.Core.Web.Mvc.Extensions;
     using Services;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -211,6 +212,22 @@
                     if (ModelState.IsValid)
                     {
                         throw;
+                    }
+
+                    List<int> errorsToRemoveIndex = new List<int>();
+                    foreach (var modelState in ViewData.ModelState.Values.ToList())
+                    {
+                        for (var i = modelState.Errors.Count - 1; i >= 0; i--)
+                        {
+                            if (modelState.Errors[i].ErrorMessage.Contains("Passwords") && modelState.Value == null)
+                            {
+                                errorsToRemoveIndex.Add(i);
+                            }
+                        }
+                        foreach (int index in errorsToRemoveIndex)
+                        {
+                            modelState.Errors.RemoveAt(index);
+                        }
                     }
                 }
                 return View(model);
