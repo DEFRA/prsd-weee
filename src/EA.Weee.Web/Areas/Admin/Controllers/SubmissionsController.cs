@@ -75,25 +75,6 @@
         }
 
         /// <summary>
-        /// This method is used by non-JS users to retrieve search results.
-        /// </summary>
-        /// <param name="viewModel"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SubmissionsHistory(SubmissionsHistoryViewModel viewModel)
-        {
-            await SetBreadcrumb();
-
-            if (!ModelState.IsValid)
-            {
-                return View(viewModel);
-            }
-            
-            return RedirectToAction("ChooseActivity", "Home");
-        }
-
-        /// <summary>
         /// This method is called using AJAX by JS-users.
         /// </summary>
         /// <param name="year"></param>

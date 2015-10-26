@@ -29,8 +29,6 @@
         private readonly ISearcher<OrganisationSearchResult> organisationSearcher;
         private const int maximumSearchResults = 5;
 
-        private const string NoSearchAnotherOrganisation = "No - search for another organisation";
-
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient, ISearcher<OrganisationSearchResult> organisationSearcher)
         {
             this.apiClient = apiClient;
@@ -403,11 +401,10 @@
                 }
                 else
                 {
-                    var collection = new List<string> { "Yes - access " + organisationData.DisplayName, NoSearchAnotherOrganisation };
                     var model = new JoinOrganisationViewModel
                     {
                         OrganisationId = organisationId,
-                        PossibleValues = collection
+                        OrganisationName = organisationData.DisplayName
                     };
                     return View(model);
                 }
@@ -423,7 +420,7 @@
                 return View(viewModel);
             }
 
-            if (viewModel.SelectedValue == NoSearchAnotherOrganisation)
+            if (viewModel.SelectedValue == "No")
             {
                 return RedirectToAction("Search", "OrganisationRegistration");
             }
