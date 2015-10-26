@@ -97,6 +97,7 @@
     <Content Include="scripts\Update\Sprint14\20151007-1323-AddIndex_MemberUploadError.sql" />
     <Content Include="scripts\Update\Sprint14\20151009-1010-UpdateMemberUploadTable.sql" />
     <Content Include="scripts\Update\Sprint14\20151008-2138-CreateAuditEventTable.sql" />
+    <Content Include="scripts\Update\Sprint15\20151026-0001-UpdateFirstnameLastnameLength.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
