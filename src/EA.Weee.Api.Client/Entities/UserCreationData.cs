@@ -5,12 +5,12 @@
     public abstract class UserCreationData
     {
         [Required]
-        [StringLength(50)]
+        [StringLength(35)]
         [DataType(DataType.Text)]
         public string FirstName { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(35)]
         [DataType(DataType.Text)]
         public string Surname { get; set; }
 
