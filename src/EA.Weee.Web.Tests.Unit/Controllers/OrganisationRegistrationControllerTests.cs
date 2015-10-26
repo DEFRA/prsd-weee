@@ -693,7 +693,7 @@
                 organisationSearcher);
 
             JoinOrganisationViewModel model = new JoinOrganisationViewModel();
-            model.SelectedValue = "No - search for another organisation";
+            model.SelectedValue = "No";
 
             // Act
             ActionResult result = await controller.JoinOrganisation(model);

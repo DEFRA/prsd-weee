@@ -98,12 +98,9 @@
             @Html.Gds().ValidationSummary()
 
             <p>To register or update your members' details, upload and submit an XML file.</p>
-            <hr class="grey"/>
             <p class="bold-small">
                 <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image" />Your XML file must use the version 3.07 schema.
             </p>
-            <hr class="grey" />
-            <br/>
             <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
                 @Html.WeeeGds().ScreenReaderLabelFor(m => m.File)
                 @Html.Gds().ValidationMessageFor(m => m.File)
@@ -111,11 +108,10 @@
             </div>
 
         </div>
-
-        <div>
-            <input id="submitButton" type="submit" value="Check file for errors" class="button" aria-live="off"/>
-            <img id="spinner" style="display: none;" src="~/Content/weee/images/spinner.gif" alt="Spinning graphic" class="important-image"/>
-        </div>
+    <div>
+        <input style="margin-top:20px;" id="submitButton" type="submit" value="Check file for errors" class="button" aria-live="off" />
+        <img id="spinner" style="display: none; margin-top:20px" src="~/Content/weee/images/spinner.gif" alt="Spinning graphic" class="important-image" />
+    </div>
 
     <div>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { id = "anotherActivitylink" })

@@ -27,12 +27,12 @@
 
         [Required(ErrorMessage = "First name is required.")]
         [Display(Name = "First name")]
-        [StringLength(256)]
+        [StringLength(35)]
         [DataType(DataType.Text)]
         public string FirstName { get; set; }
 
         [Required(ErrorMessage = "Last name is required.")]
-        [StringLength(256)]
+        [StringLength(35)]
         [DataType(DataType.Text)]
         [Display(Name = "Last name")]
         public string LastName { get; set; }

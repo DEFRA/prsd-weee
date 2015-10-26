@@ -83,20 +83,33 @@
                         {
                             throw;
                         }
-
+                      
                         foreach (var modelState in ViewData.ModelState.Values.ToList())
                         {
+                            List<int> errorsToRemoveIndex = new List<int>();
+                            List<String> errorsToAdd = new List<string>();
                             for (var i = modelState.Errors.Count - 1; i >= 0; i--)
                             {
-                                if (modelState.Errors[i].ErrorMessage.Contains("is already taken"))
+                                if (modelState.Errors[i].ErrorMessage.Contains("Passwords") && modelState.Value == null)
                                 {
-                                    modelState.Errors.Remove(modelState.Errors[i]);
-                                    modelState.Errors.Add("An account already exists with this email address. Sign in or reset your password.");
+                                    errorsToRemoveIndex.Add(i);
                                 }
+                                else if (modelState.Errors[i].ErrorMessage.Contains("is already taken"))
+                                {
+                                    errorsToRemoveIndex.Add(i);
+                                    errorsToAdd.Add("An account already exists with this email address. Sign in or reset your password.");
+                                }
+                            }
+                            foreach (int index in errorsToRemoveIndex)
+                            {
+                                modelState.Errors.RemoveAt(index);
+                            }
+                            foreach (string error in errorsToAdd)
+                            {
+                               modelState.Errors.Add(error);
                             }
                         }
                     }
-
                     return View(model);
                 }
             }
