@@ -94,7 +94,7 @@
                                 {
                                     errorsToRemoveIndex.Add(i);
                                 }
-                                if (modelState.Errors[i].ErrorMessage.Contains("is already taken"))
+                                else if (modelState.Errors[i].ErrorMessage.Contains("is already taken"))
                                 {
                                     errorsToRemoveIndex.Add(i);
                                     errorsToAdd.Add("An account already exists with this email address. Sign in or reset your password.");
