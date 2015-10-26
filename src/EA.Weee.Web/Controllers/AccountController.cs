@@ -212,14 +212,6 @@
                     {
                         throw;
                     }
-                    
-                    foreach (var modelState in ViewData.ModelState.Values.ToList())
-                    {
-                        if (modelState.Value == null)
-                        {
-                            modelState.Errors.Clear();
-                        }
-                    }
                 }
                 return View(model);
             }
