@@ -83,11 +83,11 @@
                         {
                             throw;
                         }
-
-                        List<int> errorsToRemoveIndex = new List<int>();
-                        List<String> errorsToAdd = new List<string>();
+                      
                         foreach (var modelState in ViewData.ModelState.Values.ToList())
                         {
+                            List<int> errorsToRemoveIndex = new List<int>();
+                            List<String> errorsToAdd = new List<string>();
                             for (var i = modelState.Errors.Count - 1; i >= 0; i--)
                             {
                                 if (modelState.Errors[i].ErrorMessage.Contains("Passwords") && modelState.Value == null)
