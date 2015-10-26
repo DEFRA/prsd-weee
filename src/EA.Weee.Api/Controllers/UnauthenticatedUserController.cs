@@ -182,6 +182,11 @@
             try
             {
                 result = await userManager.ResetPasswordAsync(model.UserId.ToString(), model.Token, model.Password);
+                
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
             }
             catch (InvalidOperationException)
             {
@@ -242,6 +247,11 @@
                 {
                     foreach (var error in result.Errors)
                     {
+                        //map the password error to password field
+                        if (error.StartsWith("Password"))
+                        {
+                            ModelState.AddModelError("Password", error);
+                        }
                         //We are using the email address as the username so this avoids duplicate validation error message
                         if (!error.StartsWith("Name"))
                         {
