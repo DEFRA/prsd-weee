@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.ViewModels.NewUser
 {
     using System.ComponentModel.DataAnnotations;
+    using Core.Validation;
     using Prsd.Core.Validation;
 
     public class UserCreationViewModel
@@ -19,6 +20,7 @@
 
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "The email address is not valid.")]
+        [ExternalEmailAddressAttribute(ErrorMessage = "This area is not for agency personnel.")]
         [StringLength(256)]
         [Display(Name = "Email")]
         public string Email { get; set; }
