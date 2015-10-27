@@ -82,15 +82,16 @@
         /// Returns friendly error message for invalid data types
         /// </summary>
         [Theory]
-        [InlineData("123456", "boolean", "Boolean")]
-        [InlineData("2106.9", "integer", "Integer")]
-        [InlineData("27/10/2015", "date", "Date")]
-        [InlineData("12", "decimal", "Decimal")]
-        public void MakeFriendlyErrorMessage_InvalidDataType_ReturnsFriendlyMessage(string value, string dataType, string xmlType)
+        [InlineData("123456", "Boolean")]
+        [InlineData("2106.9", "Integer")]
+        [InlineData("27/10/2015", "Date")]
+        [InlineData("12", "Decimal")]
+        [InlineData("One thousand pounds", "Single")]
+        public void MakeFriendlyErrorMessage_InvalidDataType_ReturnsFriendlyMessage(string value, string xmlType)
         {
             // Arrange
             string xmlMessage = string.Format(
-                "The 'http://www.environment-agency.gov.uk/WEEE/XMLSchema:fieldName' element is invalid - The value '{0}' is invalid according to its datatype 'http://www.environment-agency.gov.uk/WEEE/XMLSchema:{1}' - The string '{0}' is not a valid {2} value.", value, dataType, xmlType);
+                "The 'http://www.environment-agency.gov.uk/WEEE/XMLSchema:fieldName' element is invalid - The value '{0}' is invalid according to its datatype 'http://www.environment-agency.gov.uk/WEEE/XMLSchema:dataType' - The string '{0}' is not a valid {1} value.", value, xmlType);
             XmlErrorTranslator translator = new XmlErrorTranslator();
             XElement sender = new XElement("fieldName");
             sender.Value = value;
@@ -105,10 +106,10 @@
             Assert.Equal(expectedResult, result);
         }
 
-        private string GetFriendlyDataType(string dataType)
+        private string GetFriendlyDataType(string xmlType)
         {
             string friendlyDataTypeMessage = string.Empty;
-            switch (dataType)
+            switch (xmlType)
             {
                 case "Integer":
                     friendlyDataTypeMessage = "whole number";
@@ -125,6 +126,10 @@
 
                 case "Date":
                     friendlyDataTypeMessage = "date in the format YYYY-MM-DD";
+                    break;
+
+                case "Single":
+                    friendlyDataTypeMessage = "number";
                     break;
             }
             return friendlyDataTypeMessage;
