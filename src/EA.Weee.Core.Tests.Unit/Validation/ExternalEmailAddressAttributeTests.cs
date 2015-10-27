@@ -3,22 +3,22 @@
     using Core.Validation;
     using Xunit;
 
-    public class InternalEmailAddressAttributeTests
+    public class ExternalEmailAddressAttributeTests
     {
         [Theory]
         [InlineData("test@someotherdomain.com")]
         [InlineData("test@environment-agency.gov.uka")]
         [InlineData("test@aenvironment-agency.gov.uk")]
-        public void IsValid_EmailAddressDoesNotBelongToCompetentAuthority_ReturnsFalse(string emailAddress)
+        public void IsValid_EmailAddressDoesNotBelongToAuthorisedAuthority_ReturnsTrue(string emailAddress)
         {
             // Arrange
-            InternalEmailAddressAttribute attribute = new InternalEmailAddressAttribute();
+            ExternalEmailAddressAttribute attribute = new ExternalEmailAddressAttribute();
 
             // Act
             bool result = attribute.IsValid(emailAddress);
 
             // Assert
-            Assert.Equal(false, result);           
+            Assert.Equal(true, result);           
         }
 
         [Theory]
@@ -27,23 +27,23 @@
         [InlineData("test@naturalresourceswales.gov.uk")]
         [InlineData("test@sepa.org.uk")]
         [InlineData("test@doeni.gov.uk")]
-        public void IsValid_EmailAddressDoesBelongToCompetentAuthority_ReturnsTrue(string emailAddress)
+        public void IsValid_EmailAddressDoesBelongToAuthorisedAuthority_ReturnsFalse(string emailAddress)
         {
             // Arrange
-            InternalEmailAddressAttribute attribute = new InternalEmailAddressAttribute();
+            ExternalEmailAddressAttribute attribute = new ExternalEmailAddressAttribute();
 
             // Act
             bool result = attribute.IsValid(emailAddress);
 
             // Assert
-            Assert.Equal(true, result);
+            Assert.Equal(false, result);
         }
 
         /// <summary>
         /// This test ensures that null, empty or invalid email addresses do not fail validation.
         /// This is important otherwise a user may be overloaded with several error messages
         /// about the same input field.
-        /// The trade-off here is that the [InternalEmailAddress] attribute MUST be used
+        /// The trade-off here is that the [ExternalEmailAddress] attribute MUST be used
         /// in conjection with [Required].
         /// </summary>
         /// <param name="emailAddress"></param>
@@ -55,7 +55,7 @@
         public void IsValid_EmailAddressIsNullEmptyOrInvalid_ReturnsTrue(string emailAddress)
         {
             // Arrange
-            InternalEmailAddressAttribute attribute = new InternalEmailAddressAttribute();
+            ExternalEmailAddressAttribute attribute = new ExternalEmailAddressAttribute();
 
             // Act
             bool result = attribute.IsValid(emailAddress);
