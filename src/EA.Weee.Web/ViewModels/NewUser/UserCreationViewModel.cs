@@ -7,12 +7,12 @@
     {
         [Required(ErrorMessage = "Enter your first name")]
         [Display(Name = "First name")]
-        [StringLength(256)]
+        [StringLength(35)]
         [DataType(DataType.Text)]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Enter your last name")]
-        [StringLength(256)]
+        [StringLength(35)]
         [DataType(DataType.Text)]
         [Display(Name = "Last name")]
         public string Surname { get; set; }
