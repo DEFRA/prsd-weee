@@ -9,6 +9,8 @@
     using Security;
     using System;
     using System.Data.Entity;
+    using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
 
     internal class GetProducerCSVHandler : IRequestHandler<GetProducerCSV, ProducerCSVFileData>
@@ -53,14 +55,18 @@
             csvWriter.DefineColumn("Overseas producer", i => i.OverseasProducer);
 
             string fileContent = csvWriter.Write(items);
-
+            Encoding encoding = Encoding.UTF8;
+            byte[] bom = encoding.GetPreamble();
+            byte[] data = encoding.GetBytes(fileContent);
+            byte[] file = bom.Concat(data).ToArray();
+            
             var fileName = string.Format("{0:yyyy_MM_dd} - {1}.csv",
                 DateTime.Now,
                 request.ComplianceYear);
             
             return new ProducerCSVFileData
             {
-                FileContent = fileContent,
+                FileContent = file.ToString(),
                 FileName = fileName
             };
         }
