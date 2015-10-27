@@ -83,7 +83,7 @@
             OrganisationSearchResultList = new SingleItemCache<IList<OrganisationSearchResult>>(
                 provider,
                 "OrganisationPublicInfoList",
-                TimeSpan.FromDays(1),
+                TimeSpan.FromMinutes(15),
                 () => FetchOrganisationSearchResultListFromApi());
         }
 
