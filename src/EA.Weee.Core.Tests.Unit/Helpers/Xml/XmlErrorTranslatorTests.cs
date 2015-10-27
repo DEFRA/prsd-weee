@@ -79,17 +79,14 @@
         }
 
         /// <summary>
-        /// Returns friendly error message for invalid data types
+        /// Returns friendly error message for invalid boolean data type
         /// </summary>
-        [Theory]
-        [InlineData("123456", "Boolean")]
-        [InlineData("2106.9", "Integer")]
-        [InlineData("27/10/2015", "Date")]
-        [InlineData("12", "Decimal")]
-        [InlineData("One thousand pounds", "Single")]
-        public void MakeFriendlyErrorMessage_InvalidDataType_ReturnsFriendlyMessage(string value, string xmlType)
+        [Fact]
+        public void MakeFriendlyErrorMessage_InvalidBooleanDataType_ReturnsFriendlyMessage()
         {
             // Arrange
+            string value = "123456";
+            string xmlType = "Boolean";
             string xmlMessage = string.Format(
                 "The 'http://www.environment-agency.gov.uk/WEEE/XMLSchema:fieldName' element is invalid - The value '{0}' is invalid according to its datatype 'http://www.environment-agency.gov.uk/WEEE/XMLSchema:dataType' - The string '{0}' is not a valid {1} value.", value, xmlType);
             XmlErrorTranslator translator = new XmlErrorTranslator();
@@ -100,39 +97,105 @@
             string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
 
             // Assert
-            string dataTypeMessage = GetFriendlyDataType(xmlType);
-            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a {1}. (XML line 12)", value, dataTypeMessage);
+            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a true, false, 0 or 1. (XML line 12)", value);
 
             Assert.Equal(expectedResult, result);
         }
 
-        private string GetFriendlyDataType(string xmlType)
+        /// <summary>
+        /// Returns friendly error message for invalid Date data type
+        /// </summary>
+        [Fact]
+        public void MakeFriendlyErrorMessage_InvalidDateDataType_ReturnsFriendlyMessage()
         {
-            string friendlyDataTypeMessage = string.Empty;
-            switch (xmlType)
-            {
-                case "Integer":
-                    friendlyDataTypeMessage = "whole number";
-                    break;
+            // Arrange
+            string value = "27/10/2015";
+            string xmlType = "Date";
+            string xmlMessage = string.Format(
+                "The 'http://www.environment-agency.gov.uk/WEEE/XMLSchema:fieldName' element is invalid - The value '{0}' is invalid according to its datatype 'http://www.environment-agency.gov.uk/WEEE/XMLSchema:dataType' - The string '{0}' is not a valid {1} value.", value, xmlType);
+            XmlErrorTranslator translator = new XmlErrorTranslator();
+            XElement sender = new XElement("fieldName");
+            sender.Value = value;
 
-                case "Boolean":
-                    friendlyDataTypeMessage = "true, false, 0 or 1";
-                    break;
+            // Act
+            string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
 
-                case "Decimal":
-                case "Float":
-                    friendlyDataTypeMessage = "decimal";
-                    break;
+            // Assert
+            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a date in the format YYYY-MM-DD. (XML line 12)", value);
 
-                case "Date":
-                    friendlyDataTypeMessage = "date in the format YYYY-MM-DD";
-                    break;
+            Assert.Equal(expectedResult, result);
+        }
 
-                case "Single":
-                    friendlyDataTypeMessage = "number";
-                    break;
-            }
-            return friendlyDataTypeMessage;
+        /// <summary>
+        /// Returns friendly error message for invalid Integer data type
+        /// </summary>
+        [Fact]
+        public void MakeFriendlyErrorMessage_InvalidIntegerDataType_ReturnsFriendlyMessage()
+        {
+            // Arrange
+            string value = "2106.9";
+            string xmlType = "Integer";
+            string xmlMessage = string.Format(
+                "The 'http://www.environment-agency.gov.uk/WEEE/XMLSchema:fieldName' element is invalid - The value '{0}' is invalid according to its datatype 'http://www.environment-agency.gov.uk/WEEE/XMLSchema:dataType' - The string '{0}' is not a valid {1} value.", value, xmlType);
+            XmlErrorTranslator translator = new XmlErrorTranslator();
+            XElement sender = new XElement("fieldName");
+            sender.Value = value;
+
+            // Act
+            string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
+
+            // Assert
+            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a whole number. (XML line 12)", value);
+
+            Assert.Equal(expectedResult, result);
+        }
+
+        /// <summary>
+        /// Returns friendly error message for invalid decimal data type
+        /// </summary>
+        [Fact]
+        public void MakeFriendlyErrorMessage_InvalidDecimalDataType_ReturnsFriendlyMessage()
+        {
+            // Arrange
+            string value = "12";
+            string xmlType = "Decimal";
+            string xmlMessage = string.Format(
+                "The 'http://www.environment-agency.gov.uk/WEEE/XMLSchema:fieldName' element is invalid - The value '{0}' is invalid according to its datatype 'http://www.environment-agency.gov.uk/WEEE/XMLSchema:dataType' - The string '{0}' is not a valid {1} value.", value, xmlType);
+            XmlErrorTranslator translator = new XmlErrorTranslator();
+            XElement sender = new XElement("fieldName");
+            sender.Value = value;
+
+            // Act
+            string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
+
+            // Assert
+            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a decimal. (XML line 12)", value);
+
+            Assert.Equal(expectedResult, result);
+        }
+
+        /// <summary>
+        /// Returns friendly error message for invalid Single data type
+        /// </summary>
+        [Fact]
+        public void MakeFriendlyErrorMessage_InvalidSingleDataType_ReturnsFriendlyMessage()
+        {
+            // Arrange
+            string value = "One thousand pounds";
+            string xmlType = "Single";
+            string xmlMessage = string.Format(
+                "The 'http://www.environment-agency.gov.uk/WEEE/XMLSchema:fieldName' element is invalid - The value '{0}' is invalid according to its datatype 'http://www.environment-agency.gov.uk/WEEE/XMLSchema:dataType' - The string '{0}' is not a valid {1} value.", value, xmlType);
+            XmlErrorTranslator translator = new XmlErrorTranslator();
+            XElement sender = new XElement("fieldName");
+            sender.Value = value;
+
+            // Act
+            string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
+
+            // Assert
+            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a number. (XML line 12)", value);
+
+            Assert.Equal(expectedResult, result);
         }
     }
 }
