@@ -15,7 +15,7 @@
             @"^The '[^']*' element is invalid - The value '[^']*' is invalid according to its datatype '[^']*' - The actual length is (less|greater) than the (MinLength|MaxLength) value.$";
 
         private const string InvalidDataTypePattern =
-          @"^The '[^']*' element is invalid - The value '[^']*' is invalid according to its datatype '[^']*' - The string '[^']*' is not a valid (Boolean|Date|Decimal|Integer) value.$";
+          @"^The '[^']*' element is invalid - The value '[^']*' is invalid according to its datatype '[^']*' - The string '[^']*' is not a valid (Boolean|Date|Decimal|Integer|Single) value.$";
 
         private const string InvalidChildElementPattern =
             @"^The element '([^']*)' in namespace '[^']*' has invalid child element '([^']*)' in namespace '[^']*'. List of possible elements expected: '[^']*' in namespace '[^']*'.$";
@@ -177,12 +177,15 @@
                     break;
 
                 case "Decimal":
-                case "Float":
                     friendlyMessageTemplate = "decimal";
                     break;
 
                 case "Date":
                     friendlyMessageTemplate = "date in the format YYYY-MM-DD";
+                    break;
+
+                case "Single":
+                    friendlyMessageTemplate = "number";
                     break;
             }
 
