@@ -8,7 +8,7 @@
 @section main_content
 {
     <header class="hgroup">
-        <h1 class="heading-large">Check the information you have provided before creating your organisation</h1>
+        <h1 class="heading-large">Check your details before creating your organisation</h1>
     </header>
 
     @using (Html.BeginForm("ConfirmOrganisationDetails", "OrganisationRegistration", new { OrganisationId = Model.OrganisationData.Id }))
@@ -43,202 +43,174 @@
         @Html.HiddenFor(m => m.OrganisationData.BusinessAddress.Telephone)
         @Html.HiddenFor(m => m.OrganisationData.BusinessAddress.TownOrCity)
 
-                <!-- //////////// Main Accordion /////////////// -->
-        <section id="form-summary" role="main">
-            <div class="overview-summary">
-                <!-- //////////// About-your-organisation /////////////// -->
-                <details role="group">
-                    <summary role="button" aria-controls="details-content-1" tabindex="0" aria-expanded="false">
-                        <h2 title="About-your-organisation">About your organisation</h2>
-                        <a href="@Url.Action("Type", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit<span class="hidden-for-screen-reader"> organisation type</span></a>
-                    </summary>
-                    <div class="form-detail-cont" id="details-content-0" aria-hidden="true" style="display: block;">
-
-                        <div class="grid-row form-detail">
-                            <span class="column-third">
-                                Organisation type
-                            </span>
-                            <span class="column-two-thirds">
-                                @if (Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
-                                {
-                                    @:Sole trader or individual
-                                }
-                                else if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership)
-                                {
-                                    @:Partnership
-                                }
-                                else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
-                                {
-                                    @:Registered company
-                                }
-                            </span>
-                        </div>
-
-                        @if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+        <table>
+            <tbody>
+                <tr>
+                    <td colspan="2"><h2 class="heading-medium">Organisation details</h2></td>
+                </tr>
+                <tr>
+                    <th>Organisation type</th>
+                    <td>
+                        @if (Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
                         {
-                            <div class="grid-row form-detail">
-                                <span class="column-third">
-                                    Company name
-                                </span>
-                                <span class="column-two-thirds">
-                                    @Model.OrganisationData.Name
-                                </span>
-                            </div>
-                            <div class="grid-row form-detail">
-                                <span class="column-third">
-                                    Company registration number
-                                </span>
-                                <span class="column-two-thirds">
-                                    @Model.OrganisationData.CompanyRegistrationNumber
-                                </span>
-                            </div>
+                            @:Sole trader or individual
+                    }
+                        else if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership)
+                        {
+                            @:Partnership
+                    }
+                        else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+                        {
+                            @:Registered company
+                    }
+                    </td>
+                </tr>
+                @if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+                {
+                    <tr>
+                        <th>
+                            Company name
+                        </th>
+                        <td>@Model.OrganisationData.Name</td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Company registration number (CRN)
+                        </th>
+                        <td>@Model.OrganisationData.CompanyRegistrationNumber</td>
+                    </tr>
+                }
+                <tr>
+                    <th>
+                        Business trading name
+                    </th>
+                    <td>@Model.OrganisationData.TradingName</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="editLine">
+                        <a href="@Url.Action("Type", new { organisationId = Model.OrganisationData.Id })" title="Edit your organisation details">Edit your organisation details</a>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td colspan="2"><h2 class="heading-medium">Main contact</h2></td>
+                </tr>
+                <tr>
+                    <th>Full name</th>
+                    <td>@Model.OrganisationData.Contact.FirstName @Model.OrganisationData.Contact.LastName</td>
+                </tr>
+                <tr>
+                    <th>Position</th>
+                    <td>@Model.OrganisationData.Contact.Position</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="editLine">
+                        <a href="@Url.Action("MainContactPerson", new { organisationId = Model.OrganisationData.Id })" title="Edit main contact">Edit main contact</a>
+                    </td>
+                </tr>
+
+
+
+                <tr>
+                    <td colspan="2"><h2 class="heading-medium">Main contact details</h2></td>
+                </tr>
+                <tr>
+                    <th valign="top">Address</th>
+                    <td>
+                        @Model.OrganisationData.OrganisationAddress.Address1<br />
+                        @if (Model.OrganisationData.OrganisationAddress.Address2 != null)
+                        {
+                            @Model.OrganisationData.OrganisationAddress.Address2<br />
                         }
+                        @Model.OrganisationData.OrganisationAddress.TownOrCity<br />
+                        @if (Model.OrganisationData.OrganisationAddress.CountyOrRegion != null)
+                        {
+                            @Model.OrganisationData.OrganisationAddress.CountyOrRegion<br />
+                        }
+                        @if (Model.OrganisationData.OrganisationAddress.Postcode != null)
+                        {
+                            @Model.OrganisationData.OrganisationAddress.Postcode<br />
+                        }
+                        @Model.OrganisationData.OrganisationAddress.CountryName<br />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Telephone</th>
+                    <td>@Model.OrganisationData.OrganisationAddress.Telephone</td>
+                </tr>
+                <tr>
+                    <th>Email address</th>
+                    <td>@Model.OrganisationData.OrganisationAddress.Email</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="editLine">
+                        <a href="@Url.Action("OrganisationAddress", new { organisationId = Model.OrganisationData.Id })" title="Edit main contact details">Edit main contact details</a>
+                    </td>
+                </tr>
 
-                        <div class="grid-row form-detail">
-                            <span class="column-third">Business trading name</span>
-                            <span class="column-two-thirds">@Model.OrganisationData.TradingName</span>
-                        </div>
-                    </div>
-                </details>
 
-                <!-- //////////// The-main-contact-for-your-organisation /////////////// -->
-                <details role="group">
-                    <summary role="button" aria-controls="details-content-2" tabindex="0" aria-expanded="false">
-                        <h2 title="The-main-contact-for-your-organisation">The main contact for your organisation</h2>
-                        <a href="@Url.Action("MainContactPerson", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit<span class="hidden-for-screen-reader"> main contact for organisation</span></a>
-                    </summary>
-                    <div class="form-detail-cont" id="details-content-2" aria-hidden="true" style="display: block;">
 
-                        <div class="grid-row form-detail">
-                            <span class="column-third">
-                                Name
-                            </span>
-                            <span class="column-two-thirds">
-                                @Model.OrganisationData.Contact.FirstName @Model.OrganisationData.Contact.LastName
-                            </span>
-                        </div>
-
-                        <div class="grid-row form-detail">
-                            <span class="column-third">
-                                Position
-                            </span>
-                            <span class="column-two-thirds">
-                                @Model.OrganisationData.Contact.Position
-                            </span>
-                        </div>
-                    </div>
-                </details>
-
-                <!-- //////////// Your-organisation-details /////////////// -->
-                <details role="group">
-                    <summary role="button" aria-controls="details-content-3" tabindex="0" aria-expanded="false">
-                        <h2 title="Your-organisation-details">Your organisation contact details</h2>
-                        <a href="@Url.Action("OrganisationAddress", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit<span class="hidden-for-screen-reader"> organisation address, email and telephone details</span></a>
-                    </summary>
-                    <div class="form-detail-cont" id="details-content-3" aria-hidden="true" style="display: block;">
-
-                        <div class="grid-row form-detail">
-                            <span class="column-third">
-                                Address
-                            </span>
-                            <span class="column-two-thirds">
-                                @Model.OrganisationData.OrganisationAddress.Address1<br />
-                                @if (Model.OrganisationData.OrganisationAddress.Address2 != null)
-                                {
-                                    @Model.OrganisationData.OrganisationAddress.Address2<br />
-                                }
-                                @Model.OrganisationData.OrganisationAddress.TownOrCity<br />
-                                @if (Model.OrganisationData.OrganisationAddress.CountyOrRegion != null)
-                                {
-                                    @Model.OrganisationData.OrganisationAddress.CountyOrRegion<br />
-                                }
-                                @if (Model.OrganisationData.OrganisationAddress.Postcode != null)
-                                {
-                                    @Model.OrganisationData.OrganisationAddress.Postcode<br />
-                                }
-                                @Model.OrganisationData.OrganisationAddress.CountryName<br />
-                            </span>
-                        </div>
-
-                        <div class="grid-row form-detail">
-                            <span class="column-third">
-                                Phone
-                            </span>
-                            <span class="column-two-thirds">
-                                @Model.OrganisationData.OrganisationAddress.Telephone
-                            </span>
-                        </div>
-
-                        <div class="grid-row form-detail">
-                            <span class="column-third">Email</span>
-                            <span class="column-two-thirds">@Model.OrganisationData.OrganisationAddress.Email</span>
-                        </div>
-                    </div>
-                </details>
-
-                <!-- //////////// Your-principal-place-of-business or Your-registered-company /////////////// -->
-                <details role="group">
-                    <summary role="button" aria-controls="details-content-4" tabindex="0" aria-expanded="false">
+                <tr>
+                    <td colspan="2">
                         @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
                         {
-                            <h2 title="Your-principal-place-of-business">Your principal place of business</h2>
-                            <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit<span class="hidden-for-screen-reader"> principal place of business</span></a>
+                            <h2 class="heading-medium" title="Your-principal-place-of-business">Principal place of business</h2>
                         }
                         else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
                         {
-                            <h2 title="Your-registered-company">Your registered company details</h2>
-                            <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id })" title="Edit">Edit<span class="hidden-for-screen-reader"> registered company details</span></a>
+                            <h2 class="heading-medium" title="Your-registered-company">Registered company details</h2>
                         }
-
-                    </summary>
-                    <div class="form-detail-cont" id="details-content-4" aria-hidden="true" style="display: block;">
-
-                        <div class="grid-row form-detail">
-                            <span class="column-third">
-                                Address
-                            </span>
-                            <span class="column-two-thirds">
-                                @Model.OrganisationData.BusinessAddress.Address1<br />
-                                @if (Model.OrganisationData.BusinessAddress.Address2 != null)
-                                {
-                                    @Model.OrganisationData.BusinessAddress.Address2<br />
-                                }
-                                @Model.OrganisationData.BusinessAddress.TownOrCity<br />
-                                @if (Model.OrganisationData.BusinessAddress.CountyOrRegion != null)
-                                {
-                                    @Model.OrganisationData.BusinessAddress.CountyOrRegion<br />
-                                }
-                                @if (Model.OrganisationData.BusinessAddress.Postcode != null)
-                                {
-                                    @Model.OrganisationData.BusinessAddress.Postcode<br />
-                                }
-                                @Model.OrganisationData.BusinessAddress.CountryName<br />
-                            </span>
-                        </div>
-
-                        <div class="grid-row form-detail">
-                            <span class="column-third">
-                                Phone
-                            </span>
-                            <span class="column-two-thirds">
-                                @Model.OrganisationData.BusinessAddress.Telephone
-                            </span>
-                        </div>
-
-                        <div class="grid-row form-detail">
-                            <span class="column-third">Email</span>
-                            <span class="column-two-thirds">@Model.OrganisationData.BusinessAddress.Email</span>
-                        </div>
-                    </div>
-                </details>
-            </div>
-        </section>
+                    </td>
+                </tr>
+                <tr>
+                    <th valign="top">Address</th>
+                    <td>
+                        @Model.OrganisationData.BusinessAddress.Address1<br />
+                        @if (Model.OrganisationData.BusinessAddress.Address2 != null)
+                        {
+                            @Model.OrganisationData.BusinessAddress.Address2<br />
+                        }
+                        @Model.OrganisationData.BusinessAddress.TownOrCity<br />
+                        @if (Model.OrganisationData.BusinessAddress.CountyOrRegion != null)
+                        {
+                            @Model.OrganisationData.BusinessAddress.CountyOrRegion<br />
+                        }
+                        @if (Model.OrganisationData.BusinessAddress.Postcode != null)
+                        {
+                            @Model.OrganisationData.BusinessAddress.Postcode<br />
+                        }
+                        @Model.OrganisationData.BusinessAddress.CountryName<br />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Telephone</th>
+                    <td>@Model.OrganisationData.BusinessAddress.Telephone</td>
+                </tr>
+                <tr>
+                    <th>Email address</th>
+                    <td>@Model.OrganisationData.BusinessAddress.Email</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="editLine">
+                    @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+                    {
+                        <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id })" title="Edit principal place of business">Edit principal place of business</a>
+                    }
+                    else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
+                    {
+                        <a href="@Url.Action("RegisteredOfficeAddress", new { organisationId = Model.OrganisationData.Id })" title="Edit registered company details">Edit registered company details</a>
+                    }
+                </td>
+            </tr>
+        </tbody>
+    </table>
         <br />
 
         <p>By creating your organisation, you are confirming that the information you’ve provided is accurate and complete.</p>
 
         @Html.Partial("_PrivacyPolicy");
-        
+
         <div class="form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
             @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
             <label class="block-label" for="PrivacyPolicy">
@@ -248,7 +220,7 @@
         </div>
 
         <div>
-            <input type="submit" class="button" value="Create organisation"/>
+            <input type="submit" class="button" value="Create organisation" />
         </div>
     }
 }
