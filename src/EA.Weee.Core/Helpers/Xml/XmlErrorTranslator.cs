@@ -14,6 +14,9 @@
         private const string LengthConstraintFailurePattern =
             @"^The '[^']*' element is invalid - The value '[^']*' is invalid according to its datatype '[^']*' - The actual length is (less|greater) than the (MinLength|MaxLength) value.$";
 
+        private const string InvalidDataTypePattern =
+          @"^The '[^']*' element is invalid - The value '[^']*' is invalid according to its datatype '[^']*' - The string '[^']*' is not a valid (Boolean|Date|Decimal|Integer) value.$";
+
         private const string InvalidChildElementPattern =
             @"^The element '([^']*)' in namespace '[^']*' has invalid child element '([^']*)' in namespace '[^']*'. List of possible elements expected: '[^']*' in namespace '[^']*'.$";
 
@@ -56,6 +59,10 @@
             {
                 resultErrorMessage = MakeFriendlyLengthConstraintFailureMessage(sender, message);
             }
+            else if (Regex.IsMatch(message, InvalidDataTypePattern))
+            {
+                resultErrorMessage = MakeFriendlyInvalidDataTypeMessage(sender, message);
+            }
             else if (Regex.IsMatch(message, InvalidChildElementPattern))
             {
                 resultErrorMessage = MakeFriendlyInvalidChildElementMessage(sender, message);
@@ -83,7 +90,7 @@
                 lineNumber = int.Parse(match.Groups["LineNumber"].Value);
                 resultErrorMessage = "Your XML file is not encoded correctly. Check for any characters which need to be encoded. For example, replace ampersand (&) characters with &amp;.";
             }
-
+            
             var registrationNo = GetRegistrationNumber(sender);
             var registrationNoText = !string.IsNullOrEmpty(registrationNo) ? string.Format("Producer {0}: ", registrationNo) : string.Empty;
 
@@ -152,6 +159,37 @@
             }
 
             return exceptionMessage;
+        }
+
+        private string MakeFriendlyInvalidDataTypeMessage(XElement sender, string message)
+        {
+            var constraintWhichFailed = Regex.Match(message, InvalidDataTypePattern).Groups[1].ToString();
+
+            string friendlyMessageTemplate = string.Empty;
+            switch (constraintWhichFailed)
+            {
+                case "Integer":
+                    friendlyMessageTemplate = "whole number";
+                    break;
+
+                case "Boolean":
+                    friendlyMessageTemplate = "true, false, 0 or 1";
+                    break;
+
+                case "Decimal":
+                case "Float":
+                    friendlyMessageTemplate = "decimal";
+                    break;
+
+                case "Date":
+                    friendlyMessageTemplate = "date in the format YYYY-MM-DD";
+                    break;
+            }
+
+            return
+                string.Format(
+                    "The value '{0}' supplied for field '{1}' doesn't match the required data type. The value '{0}' must be a {2}.",
+                    sender.Value, sender.Name.LocalName, friendlyMessageTemplate);
         }
 
         private string MakeFriendlyInvalidChildElementMessage(XElement sender, string message)
