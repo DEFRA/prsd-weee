@@ -10,6 +10,6 @@
 
         bool HasKey(string key);
 
-        ITestInternalUserEmailDomains TestInternalUserEmailDomains { get; }
+        ITestUserEmailDomains TestInternalUserEmailDomains { get; }
     }
 }

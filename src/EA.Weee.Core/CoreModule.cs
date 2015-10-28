@@ -20,7 +20,7 @@
             builder.RegisterType<ConfigurationManagerWrapper>().As<IConfigurationManagerWrapper>();
 
             builder.Register(c => c.Resolve<IConfigurationManagerWrapper>().TestInternalUserEmailDomains)
-                .As<ITestInternalUserEmailDomains>();
+                .As<ITestUserEmailDomains>();
         }
     }
 }

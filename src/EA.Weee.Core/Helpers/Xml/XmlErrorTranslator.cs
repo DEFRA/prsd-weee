@@ -169,7 +169,7 @@
             switch (constraintWhichFailed)
             {
                 case "Integer":
-                    friendlyMessageTemplate = "whole number";
+                    friendlyMessageTemplate = "a whole number";
                     break;
 
                 case "Boolean":
@@ -177,21 +177,21 @@
                     break;
 
                 case "Decimal":
-                    friendlyMessageTemplate = "decimal";
+                    friendlyMessageTemplate = "a decimal";
                     break;
 
                 case "Date":
-                    friendlyMessageTemplate = "date in the format YYYY-MM-DD";
+                    friendlyMessageTemplate = "a date in the format YYYY-MM-DD";
                     break;
 
                 case "Single":
-                    friendlyMessageTemplate = "number";
+                    friendlyMessageTemplate = "a number";
                     break;
             }
 
             return
                 string.Format(
-                    "The value '{0}' supplied for field '{1}' doesn't match the required data type. The value '{0}' must be a {2}.",
+                    "The value '{0}' supplied for field '{1}' doesn't match the required data type. The value '{0}' must be {2}.",
                     sender.Value, sender.Name.LocalName, friendlyMessageTemplate);
         }
 
