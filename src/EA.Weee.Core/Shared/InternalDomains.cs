@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
+    using Configuration;
 
     public static class InternalDomains
     {
@@ -16,5 +17,7 @@
 
         public static readonly Regex EmailRegex = new Regex(@"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        public static ITestUserEmailDomains TestUserEmailDomains;
     }
 }
