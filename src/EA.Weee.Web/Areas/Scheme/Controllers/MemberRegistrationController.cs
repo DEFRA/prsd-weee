@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
     using Api.Client;
+    using Core.Scheme;
     using Core.Shared;
-    using EA.Weee.Core.Scheme;
-    using EA.Weee.Web.Services.Caching;
     using Infrastructure;
     using Services;
     using System;
@@ -12,6 +11,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Services.Caching;
     using ViewModels;
     using Web.Controllers.Base;
     using Weee.Requests.Organisations;
@@ -186,16 +186,8 @@
 
                 string csv = csvWriter.Write(errors);
 
-                /* Strictly speaking, UTF8 doesn't require a byte order mark,
-                 * however some legacy applications (especially Excel) use the
-                 * presence of a BOM to correctly identify the file as UTF-8.
-                 */
-                Encoding encoding = Encoding.UTF8;
-                byte[] bom = encoding.GetPreamble();
-                byte[] data = encoding.GetBytes(csv);
-                byte[] file = bom.Concat(data).ToArray();
-
-                return File(file, "text/csv", "XML warning and errors.csv");
+                byte[] fileContent = new UTF8Encoding().GetBytes(csv);
+                return File(fileContent, "text/csv", "XML warning and errors.csv");
             }
         }
 
@@ -258,7 +250,6 @@
                     new GetProducerCSV(pcsId, complianceYear));
 
                 byte[] data = new UTF8Encoding().GetBytes(producerCSVData.FileContent);
-
                 return File(data, "text/csv", producerCSVData.FileName);
             }
         }
