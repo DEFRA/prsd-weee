@@ -26,7 +26,7 @@
         public async Task<IList<UKCompetentAuthorityData>> HandleAsync(GetUKCompetentAuthorities message)
         {
             var ukcompetentauthorities =
-                await context.UKCompetentAuthorities.ToArrayAsync();
+                await context.UKCompetentAuthorities.OrderBy(c => c.Abbreviation).ToArrayAsync();
 
             return ukcompetentauthorities.Select(mapper.Map).ToArray();
         }

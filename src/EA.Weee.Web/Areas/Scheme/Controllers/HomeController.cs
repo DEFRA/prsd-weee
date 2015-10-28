@@ -355,12 +355,8 @@
 
                 string csv = csvWriter.Write(errors);
 
-                Encoding encoding = Encoding.UTF8;
-                byte[] bom = encoding.GetPreamble();
-                byte[] data = encoding.GetBytes(csv);
-                byte[] file = bom.Concat(data).ToArray();
-
-                return File(file, "text/csv", "XML warnings.csv");
+                byte[] fileContent = new UTF8Encoding().GetBytes(csv);
+                return File(fileContent, "text/csv", "XML warnings.csv");
             }
         }
 
