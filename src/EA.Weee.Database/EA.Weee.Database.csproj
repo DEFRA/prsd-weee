@@ -48,6 +48,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="scripts\AliaSQL.exe" />
     <Content Include="scripts\Create\placeholder.txt" />
+    <Content Include="scripts\Everytime\0001-Permissions-AppRole.sql" />
+    <Content Include="scripts\Everytime\0002-Permissions-Grants.sql" />
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
     <Content Include="scripts\Update\placeholder.txt" />
