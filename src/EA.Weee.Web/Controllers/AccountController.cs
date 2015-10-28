@@ -168,15 +168,7 @@
                 };
 
                 bool result = await client.User.IsPasswordResetTokenValidAsync(passwordResetData);
-
-                if (!result)
-                {
-                    return View("ResetPasswordExpired");
-                }
-                else
-                {
-                    return View("ResetPassword");
-                }
+                return View(!result ? "ResetPasswordExpired" : "ResetPassword");
             }
         }
 
@@ -202,7 +194,6 @@
                 try
                 {
                     bool result = await client.User.ResetPasswordAsync(passwordResetData);
-
                     return View(!result ? "ResetPasswordExpired" : "ResetPasswordComplete");
                 }
                 catch (ApiBadRequestException ex)

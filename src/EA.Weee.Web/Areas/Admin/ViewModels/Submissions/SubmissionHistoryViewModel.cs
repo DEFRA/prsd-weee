@@ -9,8 +9,8 @@
 
     public class SubmissionsHistoryViewModel
     {
-        [Required(ErrorMessage = "Year is required.")]
-        [DisplayName("Year")]
+        [Required(ErrorMessage = "Compliance year is required.")]
+        [DisplayName("Compliance year")]
         public int SelectedYear { get; set; }
 
         [Required(ErrorMessage = "PCS is required.")]
