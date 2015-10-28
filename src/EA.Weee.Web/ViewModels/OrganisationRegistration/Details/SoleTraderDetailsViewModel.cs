@@ -8,7 +8,7 @@
     {
         public Guid? OrganisationId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Enter the trading name for your business")]
         [DisplayName("Business trading name")]
         public virtual string BusinessTradingName { get; set; }
     }
