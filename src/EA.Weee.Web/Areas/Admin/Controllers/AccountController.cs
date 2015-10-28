@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Net.Mail;
     using System.Threading.Tasks;
@@ -91,17 +92,7 @@
                     throw;
                 }
 
-                foreach (var modelState in ViewData.ModelState.Values.ToList())
-                {
-                    for (var i = modelState.Errors.Count - 1; i >= 0; i--)
-                    {
-                        if (modelState.Errors[i].ErrorMessage.Contains("is already taken"))
-                        {
-                            modelState.Errors.Remove(modelState.Errors[i]);
-                            modelState.Errors.Add("An account already exists with this email address.");
-                        }
-                    }
-                }
+                AddRemoveModelStateErrors();
             }
             catch (SmtpException)
             {
@@ -261,15 +252,7 @@
                 };
 
                 bool result = await client.User.IsPasswordResetTokenValidAsync(passwordResetData);
-
-                if (!result)
-                {
-                    return View("ResetPasswordExpired");
-                }
-                else
-                {
-                    return View("ResetPassword");
-                }
+                return View(!result ? "ResetPasswordExpired" : "ResetPassword");
             }
         }
 
@@ -292,33 +275,23 @@
                     UserId = id
                 };
 
-                bool result;
                 try
                 {
-                    result = await client.User.ResetPasswordAsync(passwordResetData);
+                    bool result = await client.User.ResetPasswordAsync(passwordResetData);
+
+                    return View(!result ? "ResetPasswordExpired" : "ResetPasswordComplete");
                 }
                 catch (ApiBadRequestException ex)
                 {
                     this.HandleBadRequest(ex);
 
-                    if (!ModelState.IsValid)
-                    {
-                        return View(model);
-                    }
-                    else
+                    if (ModelState.IsValid)
                     {
                         throw;
                     }
+                    AddRemoveModelStateErrors();
                 }
-
-                if (!result)
-                {
-                    return View("ResetPasswordExpired");
-                }
-                else
-                {
-                    return View("ResetPasswordComplete");
-                }
+                return View(model);
             }
         }
 
@@ -351,10 +324,36 @@
                     ModelState.AddModelError("Email", "Email address not recognised.");
                     return View(model);
                 }
-                else
+                ViewBag.Email = model.Email;
+                return View("ResetPasswordInstruction");
+            }
+        }
+
+        private void AddRemoveModelStateErrors()
+        {
+            foreach (var modelState in ViewData.ModelState.Values.ToList())
+            {
+                List<int> errorsToRemoveIndex = new List<int>();
+                List<String> errorsToAdd = new List<string>();
+                for (var i = modelState.Errors.Count - 1; i >= 0; i--)
                 {
-                    ViewBag.Email = model.Email;
-                    return View("ResetPasswordInstruction");
+                    if (modelState.Errors[i].ErrorMessage.Contains("Passwords") && modelState.Value == null)
+                    {
+                        errorsToRemoveIndex.Add(i);
+                    }
+                    else if (modelState.Errors[i].ErrorMessage.Contains("is already taken"))
+                    {
+                        errorsToRemoveIndex.Add(i);
+                        errorsToAdd.Add("An account already exists with this email address. Sign in or reset your password.");
+                    }
+                }
+                foreach (int index in errorsToRemoveIndex)
+                {
+                    modelState.Errors.RemoveAt(index);
+                }
+                foreach (string error in errorsToAdd)
+                {
+                    modelState.Errors.Add(error);
                 }
             }
         }
