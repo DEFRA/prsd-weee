@@ -167,7 +167,7 @@
             return RegistrationNumber == other.RegistrationNumber &&
                    TradingName == other.TradingName &&
                    VATRegistered == other.VATRegistered &&
-                   AnnualTurnover == other.AnnualTurnover &&
+                   decimal.Round(AnnualTurnover, 12) == decimal.Round(other.AnnualTurnover, 12) &&
                    ObligationType == other.ObligationType &&
                    AnnualTurnOverBandType == other.AnnualTurnOverBandType &&
                    SellingTechniqueType == other.SellingTechniqueType &&
