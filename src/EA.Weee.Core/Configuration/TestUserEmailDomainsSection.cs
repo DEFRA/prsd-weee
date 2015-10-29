@@ -1,38 +1,34 @@
 ﻿namespace EA.Weee.Core.Configuration
 {
-    using System;
     using System.Collections.Generic;
     using System.Configuration;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// This configuration section allows additional email address domains
     /// to be considered as valid for internal users. This should only be
     /// used for testing.
     /// </summary>
-    public class TestInternalUserEmailDomainsSection : ConfigurationSection, ITestInternalUserEmailDomains
+    public class TestUserEmailDomainsSection : ConfigurationSection, ITestUserEmailDomains
     {
-        [ConfigurationProperty("enabled", IsRequired = true)]
-        public bool Enabled
+        [ConfigurationProperty("userTestModeEnabled", IsRequired = true)]
+        public bool UserTestModeEnabled
         {
             get
             {
-                return (bool)this["enabled"];
+                return (bool)this["userTestModeEnabled"];
             }
             set
             {
-                this["enabled"] = value;
+                this["userTestModeEnabled"] = value;
             }
         }
 
         [ConfigurationProperty("", IsRequired = true, IsDefaultCollection = true)]
-        public TestInternalUserEmailDomainElementCollection Domains
+        public TestUserEmailDomainElementCollection Domains
         {
             get
             {
-                return (TestInternalUserEmailDomainElementCollection)this[string.Empty];
+                return (TestUserEmailDomainElementCollection)this[string.Empty];
             }
             set
             {
@@ -40,7 +36,7 @@
             }
         }
 
-        IEnumerable<string> ITestInternalUserEmailDomains.Domains
+        IEnumerable<string> ITestUserEmailDomains.Domains
         {
             get
             {

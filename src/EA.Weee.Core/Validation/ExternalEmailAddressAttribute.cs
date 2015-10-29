@@ -1,14 +1,19 @@
 ﻿namespace EA.Weee.Core.Validation
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using System.Text.RegularExpressions;
+    using Configuration;
     using Shared;
 
     public class ExternalEmailAddressAttribute : ValidationAttribute
     {
+        public ExternalEmailAddressAttribute()
+        {
+            ConfigurationManagerWrapper configuration = new ConfigurationManagerWrapper();
+            InternalDomains.TestUserEmailDomains = configuration.TestInternalUserEmailDomains;
+        }
+
         public override bool IsValid(object value)
         {
             if (value == null)
@@ -34,11 +39,11 @@
 
             string domain = emailAddress.Split('@')[1];
 
+            //AA users will not be allowed to create account on external site unless "testInternalUserEmailDomains" is enabled.
             if (InternalDomains.InternalAllowedDomains.Any(notAllowedDomain => string.Equals(notAllowedDomain, domain, StringComparison.OrdinalIgnoreCase)))
             {
-                return false;
+                return InternalDomains.TestUserEmailDomains.UserTestModeEnabled;
             }
-            
             // If the domain didn't match any of the internal domains, then the validation passes.
             return true;
         }

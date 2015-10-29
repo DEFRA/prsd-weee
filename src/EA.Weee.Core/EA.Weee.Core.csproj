@@ -116,11 +116,11 @@
     <Compile Include="Admin\UserSearchDataResult.cs" />
     <Compile Include="Claims.cs" />
     <Compile Include="Configuration\IConfigurationManagerWrapper.cs" />
-    <Compile Include="Configuration\ITestInternalUserEmailDomains.cs" />
-    <Compile Include="Configuration\NoTestInternalUserEmailDomains.cs" />
-    <Compile Include="Configuration\TestInternalUserEmailDomainElement.cs" />
-    <Compile Include="Configuration\TestInternalUserEmailDomainElementCollection.cs" />
-    <Compile Include="Configuration\TestInternalUserEmailDomainsSection.cs" />
+    <Compile Include="Configuration\ITestUserEmailDomains.cs" />
+    <Compile Include="Configuration\NoTestUserEmailDomains.cs" />
+    <Compile Include="Configuration\TestUserEmailDomainElement.cs" />
+    <Compile Include="Configuration\TestUserEmailDomainElementCollection.cs" />
+    <Compile Include="Configuration\TestUserEmailDomainsSection.cs" />
     <Compile Include="CoreModule.cs" />
     <Compile Include="Exceptions\XmlDeserializationFailureException.cs" />
     <Compile Include="Helpers\Extensions.cs" />
