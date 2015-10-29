@@ -11,12 +11,10 @@
     [AttributeUsage(AttributeTargets.Property)]
     public class InternalEmailAddressAttribute : ValidationAttribute
     {
-        private readonly ITestInternalUserEmailDomains testInternalUserEmailDomains;
-
         public InternalEmailAddressAttribute()
         {
             ConfigurationManagerWrapper configuration = new ConfigurationManagerWrapper();
-            this.testInternalUserEmailDomains = configuration.TestInternalUserEmailDomains;
+            InternalDomains.TestUserEmailDomains = configuration.TestInternalUserEmailDomains;
         }
 
         public override bool IsValid(object value)
@@ -49,9 +47,9 @@
                 return true;
             }
 
-            if (testInternalUserEmailDomains.Enabled)
+            if (InternalDomains.TestUserEmailDomains.UserTestModeEnabled)
             {
-                return testInternalUserEmailDomains.Domains.Any(allowedDomain => string.Equals(allowedDomain, domain, StringComparison.OrdinalIgnoreCase));
+                return InternalDomains.TestUserEmailDomains.Domains.Any(allowedDomain => string.Equals(allowedDomain, domain, StringComparison.OrdinalIgnoreCase));
             }
 
             // If the domain didn't match any of the allowed domains, then the validation fails.

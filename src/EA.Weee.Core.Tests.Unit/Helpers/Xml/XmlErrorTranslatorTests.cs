@@ -97,7 +97,7 @@
             string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
 
             // Assert
-            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a true, false, 0 or 1. (XML line 12)", value);
+            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be true, false, 0 or 1. (XML line 12)", value);
 
             Assert.Equal(expectedResult, result);
         }

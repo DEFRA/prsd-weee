@@ -7,16 +7,15 @@
     using DataAccess;
     using Domain;
     using Domain.Admin;
-    using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Admin;
 
     public class AddCompetentAuthorityUserHandler : IRequestHandler<AddCompetentAuthorityUser, Guid>
     {
         private readonly WeeeContext context;
-        private readonly ITestInternalUserEmailDomains testInternalUserEmailDomains;
+        private readonly ITestUserEmailDomains testInternalUserEmailDomains;
 
-        public AddCompetentAuthorityUserHandler(WeeeContext context, ITestInternalUserEmailDomains testInternalUserEmailDomains)
+        public AddCompetentAuthorityUserHandler(WeeeContext context, ITestUserEmailDomains testInternalUserEmailDomains)
         {
             this.context = context;
             this.testInternalUserEmailDomains = testInternalUserEmailDomains;
@@ -74,7 +73,7 @@
 
                 default:
                     {
-                        if (testInternalUserEmailDomains.Enabled && IsDomainAllowedForTestUser(domain))
+                        if (testInternalUserEmailDomains.UserTestModeEnabled && IsDomainAllowedForTestUser(domain))
                         {
                             authorityName = "EA";
                             break;

@@ -1,22 +1,17 @@
 ﻿namespace EA.Weee.Core.Configuration
 {
-    using System;
-    using System.Collections.Generic;
     using System.Configuration;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
-    public class TestInternalUserEmailDomainElementCollection : ConfigurationElementCollection
+    public class TestUserEmailDomainElementCollection : ConfigurationElementCollection
     {
         protected override ConfigurationElement CreateNewElement()
         {
-            return new TestInternalUserEmailDomainElement();
+            return new TestUserEmailDomainElement();
         }
 
         protected override object GetElementKey(ConfigurationElement element)
         {
-            TestInternalUserEmailDomainElement myElement = element as TestInternalUserEmailDomainElement;
+            TestUserEmailDomainElement myElement = element as TestUserEmailDomainElement;
             if (myElement == null)
             {
                 return null;
@@ -25,9 +20,9 @@
             return myElement.Value.GetHashCode();
         }
 
-        public TestInternalUserEmailDomainElement this[int index]
+        public TestUserEmailDomainElement this[int index]
         {
-            get { return (TestInternalUserEmailDomainElement)BaseGet(index); }
+            get { return (TestUserEmailDomainElement)BaseGet(index); }
             set
             {
                 if (BaseGet(index) != null)
@@ -38,7 +33,7 @@
             }
         }
 
-        public void Add(TestInternalUserEmailDomainElement element)
+        public void Add(TestUserEmailDomainElement element)
         {
             BaseAdd(element);
         }
