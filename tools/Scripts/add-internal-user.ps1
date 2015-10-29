@@ -5,13 +5,13 @@
 
 param
 (
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory=$true)]
     [string]$ServerInstance = $null,
 
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory=$true)]
     [string]$Database = $null,
 
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory=$true)]
     [string]$Username = $null,
 
     [Parameter(Mandatory=$true)]
