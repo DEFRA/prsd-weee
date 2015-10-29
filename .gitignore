@@ -200,4 +200,3 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
-/src/EA.Weee.RequestHandlers.Tests.Unit/ExampleXML/producersThatFailEqualityChecks.xml
