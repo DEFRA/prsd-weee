@@ -13,12 +13,9 @@
 </header>
 
 @if (Model.Results.Any())
-{
-    <div class="form-group">
-        <div class="related-section">
+{   
             <div class="form-group">
-                <div class="table-hr"></div>
-                <table id="submissions" class="prsd-table">
+                <table id="submissions">
                     <thead>
                         <tr>
                             <th>Date and time (GMT)</th>
@@ -44,14 +41,12 @@
                                     }
                                 </td>
                                 <td>£@item.TotalCharges</td>
-                                <td style="padding-left: 15px; text-align: left">@item.SubmittedBy</td>
+                                <td>@item.SubmittedBy</td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
-        </div>
-    </div>
 }
 else
 {
