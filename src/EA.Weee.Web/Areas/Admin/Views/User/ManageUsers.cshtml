@@ -25,7 +25,7 @@
     @Html.AntiForgeryToken()
     @Html.Gds().ValidationSummary()
     <div class="table-hr"></div>
-    <table id="idManageUsersTable" class="prsd-table">
+    <table id="idManageUsersTable" class="prsd-table hover-effect">
         <thead>
             <tr>
                 @switch (@Model.OrderBy)
@@ -128,7 +128,10 @@
     }
 
     <div class="form-group">
-        <input type="submit" class="button" value="Continue" />
+        <input type="submit" class="button" value="Continue"/>
     </div>
+    <p>
+        <a href="javascript:history.back();">Back</a>
+    </p>
 }
 
