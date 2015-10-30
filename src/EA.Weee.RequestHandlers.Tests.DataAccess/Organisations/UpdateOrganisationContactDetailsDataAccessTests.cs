@@ -76,16 +76,8 @@
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
-                // Arranage
-                Guid countryId = new Guid("92D6441B-BD4E-4A63-A25C-A5846B95BDFA");
-                Country country = new Country()
-                {
-                    Id = countryId,
-                    Name = "Fictionland"
-                };
-                database.Model.Countries.Add(country);
-
-                database.Model.SaveChanges();
+                // Arrange
+                Guid countryId = new Guid("184E1785-26B4-4AE4-80D3-AE319B103ACB"); // ID for UK - England
 
                 UpdateOrganisationContactDetailsDataAccess dataAccess = new UpdateOrganisationContactDetailsDataAccess(database.WeeeContext);
 
@@ -95,6 +87,7 @@
                 // Assert
                 Assert.NotNull(result);
                 Assert.Equal(countryId, result.Id);
+                Assert.Equal(result.Name, "UK - England");
             }
         }
 
