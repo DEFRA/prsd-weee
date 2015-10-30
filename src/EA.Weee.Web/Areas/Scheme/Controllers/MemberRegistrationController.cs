@@ -149,9 +149,9 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> ViewErrorsAndWarnings(Guid pcsId, Guid memberUploadId)
+        public async Task<ActionResult> ViewErrorsAndWarnings(Guid pcsId, Guid memberUploadId)
         {
-            using (var client = apiClient())
+          using (var client = apiClient())
             {
                 var errors =
                     await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId));
@@ -161,13 +161,35 @@
                 if (errors.Any(e => e.ErrorLevel == ErrorLevel.Error))
                 {
                     await SetBreadcrumb(pcsId, ManageMembersActivity);
+
                     return View("ViewErrorsAndWarnings",
                         new MemberUploadResultViewModel { MemberUploadId = memberUploadId, ErrorData = errors, TotalCharges = memberUpload.TotalCharges });
                 }
 
+                return RedirectToAction("XmlHasNoErrors", new { pcsId, memberUploadId });
+            }
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> XmlHasNoErrors(Guid pcsId, Guid memberUploadId)
+        {
+           using (var client = apiClient())
+            {
+                var errors =
+                    await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId));
+
+                var memberUpload =
+                    await client.SendAsync(User.GetAccessToken(), new GetMemberUploadById(pcsId, memberUploadId));
+                
                 await SetBreadcrumb(pcsId, ManageMembersActivity);
-                return View("XmlHasNoErrors",
-                    new MemberUploadResultViewModel { MemberUploadId = memberUploadId, ErrorData = errors, TotalCharges = memberUpload.TotalCharges });
+                
+               return View("XmlHasNoErrors",
+                    new MemberUploadResultViewModel
+                    {
+                        MemberUploadId = memberUploadId,
+                        ErrorData = errors,
+                        TotalCharges = memberUpload.TotalCharges
+                    });
             }
         }
 
