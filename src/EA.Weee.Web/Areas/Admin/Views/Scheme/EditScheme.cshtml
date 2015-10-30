@@ -18,24 +18,6 @@
                 <h1 class="heading-large">Edit Scheme</h1>
             </header>
         </div>
-        <div class="column-third">
-            <div class="secondaryHeaderContent">
-                <div class="form-group @Html.Gds().FormGroupClass(m => m.Status)">
-                    @Html.Gds().ValidationMessageFor(m => m.Status)
-                    @if (Model.IsUnchangeableStatus)
-                    {
-                        <select class="form-control" disabled="disabled">
-                            <option>@Model.Status</option>
-                        </select>
-                        @Html.HiddenFor(m => m.Status)
-                    }
-                    else
-                    {
-                        @Html.Gds().DropDownListFor(m => m.Status, Model.StatusSelectList)
-                    }
-                </div>
-            </div>
-        </div>
     </div>
 
     @Html.Gds().ValidationSummary()
@@ -68,6 +50,21 @@
             @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
             @Html.Gds().ValidationMessageFor(m => m.CompetentAuthorityId)
             @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthorities, "Id", "Abbreviation"), string.Empty, new { autocomplete = "false" })
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Status)">
+            @Html.Gds().LabelFor(m => m.Status)
+            @Html.Gds().ValidationMessageFor(m => m.Status)
+            @if (Model.IsUnchangeableStatus)
+            {
+                <select class="form-control" disabled="disabled">
+                    <option>@Model.Status</option>
+                </select>
+                @Html.HiddenFor(m => m.Status)
+            }
+            else
+            {
+                @Html.Gds().DropDownListFor(m => m.Status, Model.StatusSelectList)
+            }
         </div>
 
         <p>
