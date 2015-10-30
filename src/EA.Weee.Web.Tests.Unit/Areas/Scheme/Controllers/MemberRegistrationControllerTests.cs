@@ -313,34 +313,56 @@
             Assert.IsType<List<int>>(((ViewResult)result).Model);
         }
 
-        private const string XmlHasErrorsViewName = "ViewErrorsAndWarnings";
-        private const string XmlHasNoErrorsViewName = "XmlHasNoErrors";
-
         [Fact]
-        public async Task GetViewErrorsOrWarnings_NoErrors_ShowsAcceptedPage()
+        public async Task GetViewErrorsOrWarnings_NoErrors_RedirectsToAcceptedPage()
         {
-            Assert.Equal(XmlHasNoErrorsViewName, await ViewAfterClientReturns(new List<MemberUploadErrorData> { }));
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
+            .Returns(new List<MemberUploadErrorData> { });
+
+            var result = await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
+            var redirect = (RedirectToRouteResult)result;
+
+            Assert.Equal("XmlHasNoErrors", redirect.RouteValues["action"]);
         }
 
         [Fact]
         public async Task GetViewErrorsOrWarnings_ErrorsPresent_ShowsErrorPage()
         {
-            Assert.Equal(XmlHasErrorsViewName, await ViewAfterClientReturns(new List<MemberUploadErrorData> { new MemberUploadErrorData { ErrorLevel = ErrorLevel.Error } }));
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
+            .Returns(new List<MemberUploadErrorData> { new MemberUploadErrorData { ErrorLevel = ErrorLevel.Error } });
+
+            var result = await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
+            
+            Assert.IsType<ViewResult>(result);
+            
+            var view = (ViewResult)result;
+
+            Assert.Equal("ViewErrorsAndWarnings", view.ViewName);
         }
 
         [Fact]
         public async Task GetViewErrorsOrWarnings_WarningPresent_ShowsAcceptedPage()
         {
-            Assert.Equal(XmlHasNoErrorsViewName, await ViewAfterClientReturns(new List<MemberUploadErrorData> { new MemberUploadErrorData { ErrorLevel = ErrorLevel.Warning } }));
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
+           .Returns(new List<MemberUploadErrorData> { new MemberUploadErrorData { ErrorLevel = ErrorLevel.Warning } });
+
+            var result = await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
+
+            var redirect = (RedirectToRouteResult)result;
+
+            Assert.Equal("XmlHasNoErrors", redirect.RouteValues["action"]);
         }
 
         [Fact]
-        public async Task GetViewErrorsOrWarnings_NoErrors_HasProvidedErrorData()
+        public async Task GetXmlHasNoErrors_NoErrors_HasProvidedErrorData()
         {
             var errors = new List<MemberUploadErrorData>();
 
-            var providedErrors = await ErrorsAfterClientReturns(errors);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
+             .Returns(errors);
 
+            var result = await MemberRegistrationController().XmlHasNoErrors(A<Guid>._, A<Guid>._);
+            var providedErrors = ((MemberUploadResultViewModel)((ViewResult)result).Model).ErrorData;
             Assert.Equal(errors, providedErrors);
         }
 
@@ -485,22 +507,12 @@
 
         private async Task<List<MemberUploadErrorData>> ErrorsAfterClientReturns(List<MemberUploadErrorData> memberUploadErrorDatas)
         {
-            var result = await GetViewResult(memberUploadErrorDatas);
-
-            return ((MemberUploadResultViewModel)result.Model).ErrorData;
-        }
-
-        private async Task<string> ViewAfterClientReturns(List<MemberUploadErrorData> list)
-        {
-            return (await GetViewResult(list)).ViewName;
-        }
-
-        private async Task<ViewResult> GetViewResult(List<MemberUploadErrorData> memberUploadErrorDatas)
-        {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
-                .Returns(memberUploadErrorDatas);
+              .Returns(memberUploadErrorDatas);
 
-            return await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
+            var result = await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
+     
+            return ((MemberUploadResultViewModel)((ViewResult)result).Model).ErrorData;
         }
 
         private MemberRegistrationController GetRealMemberRegistrationControllerWithFakeContext()
