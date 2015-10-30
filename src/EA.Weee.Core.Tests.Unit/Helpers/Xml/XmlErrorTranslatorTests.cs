@@ -25,7 +25,7 @@
             // Assert
 
             string expectedResult = "Your XML file is not encoded correctly. Check for any characters " +
-                "which need to be encoded. For example, replace ampersand (&) characters with &amp;. (XML line 123)";
+                "which need to be encoded. For example, replace ampersand (&) characters with &amp; (XML line 123).";
 
             Assert.Equal(expectedResult, result);
         }
@@ -49,7 +49,7 @@
             // Assert
 
             string expectedResult = "Your XML file is not encoded correctly. Check for any characters " +
-                "which need to be encoded. For example, replace ampersand (&) characters with &amp;. (XML line 123)";
+                "which need to be encoded. For example, replace ampersand (&) characters with &amp; (XML line 123).";
 
             Assert.Equal(expectedResult, result);
         }
@@ -73,7 +73,7 @@
             // Assert
 
             string expectedResult = "Your XML file is not encoded correctly. Check for any characters " +
-                "which need to be encoded. For example, replace ampersand (&) characters with &amp;. (XML line 123)";
+                "which need to be encoded. For example, replace ampersand (&) characters with &amp; (XML line 123).";
 
             Assert.Equal(expectedResult, result);
         }
@@ -97,7 +97,7 @@
             string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
 
             // Assert
-            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be true, false, 0 or 1. (XML line 12)", value);
+            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be true, false, 0 or 1 (XML line 12).", value);
 
             Assert.Equal(expectedResult, result);
         }
@@ -121,7 +121,7 @@
             string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
 
             // Assert
-            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a date in the format YYYY-MM-DD. (XML line 12)", value);
+            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a date in the format YYYY-MM-DD (XML line 12).", value);
 
             Assert.Equal(expectedResult, result);
         }
@@ -145,7 +145,7 @@
             string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
 
             // Assert
-            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a whole number. (XML line 12)", value);
+            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a whole number (XML line 12).", value);
 
             Assert.Equal(expectedResult, result);
         }
@@ -169,7 +169,7 @@
             string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
 
             // Assert
-            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a decimal. (XML line 12)", value);
+            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a decimal (XML line 12).", value);
 
             Assert.Equal(expectedResult, result);
         }
@@ -193,7 +193,7 @@
             string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
 
             // Assert
-            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a number. (XML line 12)", value);
+            string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a number (XML line 12).", value);
 
             Assert.Equal(expectedResult, result);
         }

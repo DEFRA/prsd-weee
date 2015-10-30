@@ -25,10 +25,10 @@
         
         case EA.Weee.Core.Shared.UserStatus.Pending:
         {
-            <p>Your request to access @Model.OrganisationName is pending approval.</p>
+            <p>Your request to access @Model.OrganisationName is pending.</p>
 
             <p>
-                <a href="@Url.Action("Index", "Organisation")" class="button">Perform another activity</a>
+                <a href="@Url.Action("Index", "Organisation")" class="button">Continue</a>
             </p>
 
             break;
@@ -39,7 +39,7 @@
             <p>You no longer have access to @Model.OrganisationName.</p>
 
             <p>
-                <a href="@Url.Action("Index", "Organisation")" class="button">Perform another activity</a>
+                <a href="@Url.Action("Index", "Organisation")" class="button">Continue</a>
             </p>
 
             break;
