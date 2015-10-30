@@ -47,9 +47,9 @@
 
         private async Task<Dictionary<OrganisationStatus, Scheme>> AddTestOrganisationsAndSchemes(WeeeContext context)
         {
-            var completeOrganisation = CreateTestOrganisation("GetSchemesDataAccessTests - Complete organisation");
+            var completeOrganisation = CreateTestOrganisation(context, "GetSchemesDataAccessTests - Complete organisation");
             completeOrganisation.CompleteRegistration();
-            var incompleteOrganisation = CreateTestOrganisation("GetSchemesDataAccessTests - Incomplete organisation");
+            var incompleteOrganisation = CreateTestOrganisation(context, "GetSchemesDataAccessTests - Incomplete organisation");
 
             context.Organisations.Add(completeOrganisation);
             context.Organisations.Add(incompleteOrganisation);
@@ -69,7 +69,7 @@
             };
         }
 
-        private Organisation CreateTestOrganisation(string tradingName)
+        private Organisation CreateTestOrganisation(WeeeContext context, string tradingName)
         {
             var organisation = Organisation.CreateSoleTrader(tradingName);
 
@@ -81,7 +81,7 @@
                     "Town",
                     "County",
                     "TEST123",
-                    new Country(Guid.NewGuid(), "Test country"),
+                    context.Countries.First(),
                     "01234 567890",
                     "test@test.test"));
 
