@@ -90,11 +90,18 @@
                 lineNumber = int.Parse(match.Groups["LineNumber"].Value);
                 resultErrorMessage = "Your XML file is not encoded correctly. Check for any characters which need to be encoded. For example, replace ampersand (&) characters with &amp;.";
             }
-            
+
             var registrationNo = GetRegistrationNumber(sender);
             var registrationNoText = !string.IsNullOrEmpty(registrationNo) ? string.Format("Producer {0}: ", registrationNo) : string.Empty;
 
-            var lineNumberText = lineNumber > 0 ? string.Format(" (XML line {0})", lineNumber) : string.Empty;
+            var lineNumberText = lineNumber > 0 ? string.Format(" (XML line {0}).", lineNumber) : string.Empty;
+
+            if (!string.IsNullOrEmpty(lineNumberText))
+            {
+                resultErrorMessage = resultErrorMessage.EndsWith(".")
+                    ? resultErrorMessage.Remove(resultErrorMessage.Length - 1)
+                    : resultErrorMessage;
+            }
 
             return string.Format("{0}{1}{2}", registrationNoText, resultErrorMessage, lineNumberText);
         }
@@ -116,7 +123,7 @@
                 case "MinInclusive":
                 case "MaxInclusive":
                     friendlyMessageTemplate =
-                        "The {1} you've provided is incorrect. Please make sure you enter the right value."; 
+                        "The {1} you've provided is incorrect. Please make sure you enter the right value.";
                     break;
                 case "Pattern":
                     friendlyMessageTemplate = string.IsNullOrEmpty(sender.Value) ? "You must provide a value for {1}." : "The value '{0}' supplied for field '{1}' doesn't match the required format.";
@@ -207,14 +214,14 @@
             {
                 listName = listName.Substring(0, listName.Length - 4);
             }
-            return string.Format("There are no {0} details in XML file. Please provide details for at least one {0}.", listName);    
+            return string.Format("There are no {0} details in XML file. Please provide details for at least one {0}.", listName);
         }
 
         private string MakeFriendlyErrorInXmlDocumentMessage(string message)
         {
             var lineNumber = Regex.Match(message, ErrorInXmlDocumentPattern).Groups[1].ToString();
 
-            return string.Format("{0} This can be caused by an error on this line, or before it. (XML line {1})", message, lineNumber);
+            return string.Format("{0} This can be caused by an error on this line, or before it (XML line {1}).", message, lineNumber);
         }
 
         private string GetRegistrationNumber(XElement sender)
