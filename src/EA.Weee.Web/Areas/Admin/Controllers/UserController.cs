@@ -38,13 +38,7 @@
         // GET: Admin/User
         [HttpGet]
         public async Task<ActionResult> ManageUsers(FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending, int page = 1)
-        {
-            // Handle failures to parse the OrderBy enumeration by redirecting to 404.
-            if (!ModelState.IsValid)
-            {
-                return RedirectToRoute("Error404");
-            }
-
+        {   
             SetBreadcrumb();
 
             if (page < 1)
