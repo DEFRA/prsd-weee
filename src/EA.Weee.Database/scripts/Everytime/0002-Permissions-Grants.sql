@@ -1,4 +1,8 @@
-﻿--Lookup schema
+﻿-- dbo schema
+-- select and update permissions
+GRANT SELECT, UPDATE ON SCHEMA::[dbo] TO [weee_application]
+
+--Lookup schema
 -- select permissions
 GRANT SELECT ON SCHEMA::[Lookup] TO [weee_application]
 
