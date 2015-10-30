@@ -85,7 +85,16 @@
 
         public bool VATRegistered { get; private set; }
 
-        public decimal AnnualTurnover { get; private set; }
+        private decimal AnnualTurnvoverValue { get; set; }
+    
+        public decimal AnnualTurnover
+        {
+            get { return AnnualTurnvoverValue; }
+            private set
+            {
+                AnnualTurnvoverValue = decimal.Round(value, 12);
+            }
+        }
 
         public DateTime? CeaseToExist { get; private set; }
 
