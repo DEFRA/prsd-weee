@@ -1,0 +1,15 @@
+﻿PRINT N'Altering [PCS].[MemberUpload]...';
+GO
+ALTER TABLE [PCS].[MemberUpload]
+  ALTER COLUMN [SchemeId] UNIQUEIDENTIFIER NOT NULL
+
+ALTER TABLE [PCS].[MemberUpload]
+  ALTER COLUMN [UserId] NVARCHAR(128) NOT NULL
+
+ALTER TABLE [PCS].[MemberUpload]
+  ALTER COLUMN [Date] DATETIME NOT NULL
+
+GO    
+PRINT N'Update complete.';
+
+GO
