@@ -26,7 +26,7 @@
 
         public async Task<List<int>> HandleAsync(GetComplianceYears request)
         {
-            authorization.EnsureOrganisationAccess(request.PcsId);
+            authorization.EnsureInternalOrOrganisationAccess(request.PcsId);
 
             var organisation = await context.Organisations.FindAsync(request.PcsId);
 
