@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -16,6 +17,7 @@
     using ViewModels.Scheme;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
+    using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Shared;
 
     public class SchemeController : AdminController
@@ -68,6 +70,8 @@
                 {
                     var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId.Value));
 
+                    List<int> years = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(scheme.OrganisationId));
+
                     var model = new SchemeViewModel
                     {
                         CompetentAuthorities = await GetCompetentAuthorities(),
@@ -80,7 +84,8 @@
                         Status = scheme.SchemeStatus,
                         IsUnchangeableStatus = scheme.SchemeStatus == SchemeStatus.Approved || scheme.SchemeStatus == SchemeStatus.Rejected,
                         OrganisationId = scheme.OrganisationId,
-                        SchemeId = schemeId.Value
+                        SchemeId = schemeId.Value,
+                        ComplianceYears = years
                     };
 
                     await SetBreadcrumb(schemeId);
@@ -133,6 +138,21 @@
                             model.ObligationType.Value, model.CompetentAuthorityId, model.Status));
 
                 return RedirectToAction("ManageSchemes");
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetProducerCSV(Guid orgId, int complianceYear, string approvalNumber)
+        {
+            using (var client = apiClient())
+            {
+                var csvFileName = approvalNumber.Replace("/", string.Empty) + "_fullmemberlist_" + complianceYear.ToString() + "_" + @DateTime.Now.ToString("ddMMyyyy_HHmm") + ".csv";
+
+                var producerCSVData = await client.SendAsync(User.GetAccessToken(),
+                    new GetProducerCSV(orgId, complianceYear));
+
+                byte[] data = new UTF8Encoding().GetBytes(producerCSVData.FileContent);
+                return File(data, "text/csv", csvFileName);
             }
         }
 
