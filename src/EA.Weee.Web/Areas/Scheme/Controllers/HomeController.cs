@@ -151,8 +151,6 @@
         [HttpGet]
         public async Task<ActionResult> ManageOrganisationUsers(Guid pcsId)
         {
-            var model = new OrganisationUsersViewModel();
-
             using (var client = apiClient())
             {
                 var organisationExists =
@@ -172,12 +170,15 @@
                                 ou.User.FirstName + " " + ou.User.Surname + " (" +
                                 ou.UserStatus.ToString() + ")", ou.Id));
 
-                var orgUserRadioButtons = new StringGuidRadioButtons(orgUsersKeyValuePairs);
-                model.OrganisationUsers = orgUserRadioButtons;
-            }
+                await SetBreadcrumb(pcsId, "Manage users");
 
-            await SetBreadcrumb(pcsId, "Manage users");
-            return View("ManageOrganisationUsers", model);
+                var model = new OrganisationUsersViewModel
+                {
+                    OrganisationUsers = orgUsersKeyValuePairs.ToList()
+                };
+
+                return View("ManageOrganisationUsers", model);
+            }           
         }
 
         [HttpPost]
@@ -192,7 +193,7 @@
             }
 
             return RedirectToAction("ManageOrganisationUser", "Home",
-                   new { area = "Scheme", pcsId, organisationUserId = model.OrganisationUsers.SelectedValue });
+                   new { area = "Scheme", pcsId, organisationUserId = model.SelectedOrganisationUser });
         }
 
         [HttpGet]
