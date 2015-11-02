@@ -13,6 +13,6 @@
         Task<IEnumerable<Producer>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Hashtable producerCharges);
 
         MemberUpload GenerateMemberUpload(ProcessXMLFile messageXmlFile, List<MemberUploadError> errors,
-            decimal totalCharges, Guid? schemeId);
+            decimal totalCharges, Guid schemeId);
     }
 }
