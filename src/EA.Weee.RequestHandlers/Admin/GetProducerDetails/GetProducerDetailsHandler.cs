@@ -74,7 +74,9 @@
                     RegistrationDate = registrationDate,
                     CompanyNumber = companyNumber,
                     ObligationType = (ObligationType)latestDetails.ObligationType,
-                    ChargeBandType = (ChargeBandType)latestDetails.ChargeBandType
+                    ChargeBandType = (ChargeBandType)latestDetails.ChargeBandType,
+                    CeasedToExist = latestDetails.CeaseToExist,
+                    IsAuthorisedRepresentative = latestDetails.AuthorisedRepresentativeId == null ? "No" : "Yes"
                 };
 
                 producerDetails.Schemes.Add(producerSchemeDetails);

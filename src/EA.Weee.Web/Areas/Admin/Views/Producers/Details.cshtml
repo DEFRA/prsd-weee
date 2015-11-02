@@ -55,9 +55,20 @@
                     <td>Charge band type</td>
                     <td>@scheme.ChargeBandType</td>
                 </tr>
+                @if (@scheme.CeasedToExist != null)
+                {
+                    <tr>
+                        <td>Ceased to exist</td>
+                        <td>@scheme.CeasedToExist.Value.ToString("dd MMMM yyyy")</td>
+                    </tr>
+                }
+                <tr>
+                    <td>Authorised representative</td>
+                    <td>@scheme.IsAuthorisedRepresentative</td>
+                </tr>
             </tbody>
         </table>
-        
+
         <br />
     }
 
