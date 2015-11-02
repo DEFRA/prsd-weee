@@ -66,6 +66,17 @@
                     companyNumber = latestDetails.ProducerBusiness.CompanyDetails.CompanyNumber;
                 }
 
+                // TODO : Needs to be change after updating XML schema validation for AR
+                var isAuthorisedRepresentative = "No";
+
+                if (latestDetails.AuthorisedRepresentativeId != null &&
+                    !string.IsNullOrEmpty(latestDetails.AuthorisedRepresentative.OverseasProducerName) &&
+                    latestDetails.AuthorisedRepresentative.OverseasContactId != null &&
+                    !string.IsNullOrEmpty(latestDetails.AuthorisedRepresentative.OverseasContact.Email))
+                {
+                    isAuthorisedRepresentative = "Yes";
+                }
+
                 ProducerDetailsScheme producerSchemeDetails = new ProducerDetailsScheme()
                 {
                     SchemeName = schemeGroup.Key.SchemeName,
@@ -76,7 +87,7 @@
                     ObligationType = (ObligationType)latestDetails.ObligationType,
                     ChargeBandType = (ChargeBandType)latestDetails.ChargeBandType,
                     CeasedToExist = latestDetails.CeaseToExist,
-                    IsAuthorisedRepresentative = latestDetails.AuthorisedRepresentativeId == null ? "No" : "Yes"
+                    IsAuthorisedRepresentative = isAuthorisedRepresentative
                 };
 
                 producerDetails.Schemes.Add(producerSchemeDetails);
