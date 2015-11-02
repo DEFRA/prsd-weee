@@ -103,14 +103,14 @@
     @RenderSection("scripts", required: false)
 }
 
-<main id="content">
+<main id="content" >
     @Html.Partial("_FeedbackBanner")
     @{ Html.RenderAction("_WeeeTitle", "Home", new { area = string.Empty });}
     @RenderBody()
     @if (IsSectionDefined("main_content"))
     {
         <div class="grid-row">
-            <section class="column-two-thirds">
+            <section id="main-content" class="column-two-thirds" tabindex="0">
                 @RenderSection("main_content", required: false)
             </section>
             @if (IsSectionDefined("related_content"))

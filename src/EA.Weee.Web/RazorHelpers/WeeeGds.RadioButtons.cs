@@ -11,8 +11,8 @@
         public MvcHtmlString RadioButtonsFor<TValue, T>(
             Expression<Func<TModel, TValue>> expression,
             IEnumerable<T> possibleValues,
-            Func<T, TValue> keySelector,
-            Func<T, string> valueSelector,
+            Func<T, object> keySelector,
+            Func<T, object> valueSelector,
             RadioButtonLegend legend,
             RadioButtonLayout layout)
         {
@@ -22,7 +22,7 @@
                 MvcHtmlString name = HtmlHelper.NameFor(expression);
 
                 string key = keySelector(possibleValue).ToString();
-                string value = valueSelector(possibleValue);
+                string value = valueSelector(possibleValue).ToString();
                 
                 string id = string.Format("{0}-{1}", name, key);
 
