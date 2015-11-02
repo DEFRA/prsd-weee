@@ -20,6 +20,7 @@
         private readonly DbContextHelper helper = new DbContextHelper();
 
         private readonly Guid pcsId = Guid.NewGuid();
+        private readonly Guid schemeId = Guid.NewGuid();
 
         [Fact]
         public async Task GetMemberUploadDataHandler_NotOrganisationUser_ThrowsSecurityException()
@@ -37,15 +38,21 @@
         {
             var memberUploadsWithSeveralErrors = new[]
             {
-                new MemberUpload(pcsId, "FAKE DATA", new List<MemberUploadError>
-                {
-                    new MemberUploadError(ErrorLevel.Warning, MemberUploadErrorType.Schema, "FAKE WARNING"),
-                    new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "FAKE ERROR"),
-                    new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "FAKE ERROR"),
-                    new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL"),
-                    new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Schema, "FAKE FATAL"),
-                    new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL")
-                }, 0, 2016)
+                new MemberUpload(
+                    pcsId,
+                    "FAKE DATA",
+                    new List<MemberUploadError>
+                        {
+                            new MemberUploadError(ErrorLevel.Warning, MemberUploadErrorType.Schema, "FAKE WARNING"),
+                            new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "FAKE ERROR"),
+                            new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "FAKE ERROR"),
+                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL"),
+                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Schema, "FAKE FATAL"),
+                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL")
+                        },
+                    0,
+                    2016,
+                    Guid.NewGuid())
             };
 
             var handler = GetPreparedHandler(memberUploadsWithSeveralErrors);
@@ -63,7 +70,7 @@
         {
             var memberUploadsWithNoErrors = new[]
             {
-                new MemberUpload(pcsId, "FAKE DATA")
+                new MemberUpload(pcsId, schemeId, "FAKE DATA")
             };
 
             var handler = GetPreparedHandler(memberUploadsWithNoErrors);
@@ -77,7 +84,7 @@
         [Fact]
         public async Task GetMemberUploadHandler_NonExistentMemberUpload_ArgumentNullException()
         {
-            var memberUploadsThatWontBeReturnedForRandomGuid = new[] { new MemberUpload(pcsId, "FAKE DATA") };
+            var memberUploadsThatWontBeReturnedForRandomGuid = new[] { new MemberUpload(pcsId, schemeId, "FAKE DATA") };
 
             var handler = GetPreparedHandler(memberUploadsThatWontBeReturnedForRandomGuid);
 
@@ -91,7 +98,7 @@
         {
             var someOtherPcsId = Guid.NewGuid();
 
-            var memberUploadsForSomeOtherPcs = new[] { new MemberUpload(someOtherPcsId, "FAKE DATA") };
+            var memberUploadsForSomeOtherPcs = new[] { new MemberUpload(someOtherPcsId, schemeId, "FAKE DATA") };
 
             var handler = GetPreparedHandler(memberUploadsForSomeOtherPcs);
 

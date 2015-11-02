@@ -35,12 +35,11 @@
         public async Task<IEnumerable<Producer>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Hashtable producerCharges)
         {
             var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
-            Guid schemeId = memberUpload.SchemeId.GetValueOrDefault();
-            var producers = await SetProducerData(deserializedXml, schemeId, memberUpload, producerCharges);
+            var producers = await SetProducerData(deserializedXml, memberUpload.SchemeId, memberUpload, producerCharges);
             return producers;
         }
 
-        public MemberUpload GenerateMemberUpload(ProcessXMLFile messageXmlFile, List<MemberUploadError> errors, decimal totalCharges, Guid? schemeId)
+        public MemberUpload GenerateMemberUpload(ProcessXMLFile messageXmlFile, List<MemberUploadError> errors, decimal totalCharges, Guid schemeId)
         {
             if (errors != null && errors.Any(e => e.ErrorType == MemberUploadErrorType.Schema))
             {
