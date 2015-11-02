@@ -110,7 +110,7 @@
     @if (IsSectionDefined("main_content"))
     {
         <div class="grid-row">
-            <section id="main-content" class="column-two-thirds" tabindex="0">
+            <section id="main-content" class="column-two-thirds">
                 @RenderSection("main_content", required: false)
             </section>
             @if (IsSectionDefined("related_content"))
