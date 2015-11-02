@@ -18,6 +18,7 @@
     using Web.Areas.Admin.ViewModels.Scheme;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
+    using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Shared;
     using Xunit;
 
@@ -67,6 +68,12 @@
 
             var result = await controller.EditScheme(schemeId);
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._))
+               .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetComplianceYears>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
             Assert.IsType<ViewResult>(result);
             var model = ((ViewResult)result).Model;
 
@@ -102,6 +109,24 @@
             var model = (SchemeViewModel)((ViewResult)result).Model;
 
             Assert.Equal(true, model.IsUnchangeableStatus);
+        }
+
+        [Fact]
+        public async void GetProducerCSV_ReturnsCSVFile()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerCSV>._))
+               .Returns(new ProducerCSVFileData
+               {
+                   FileName = "test.csv",
+                   FileContent = "test,test,test"
+               });
+
+            var result = await SchemeController().GetProducerCSV(Guid.NewGuid(), 2016, "WEE/FA9999KE/SCH");
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerCSV>._))
+               .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.IsType<FileContentResult>(result);
         }
 
         [Theory]
