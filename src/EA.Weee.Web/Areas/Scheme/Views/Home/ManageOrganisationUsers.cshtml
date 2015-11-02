@@ -13,20 +13,23 @@
 
    @using (Html.BeginForm(actionName: "ManageOrganisationUsers", controllerName: "Home", method: FormMethod.Post))
     {
-        @Html.Gds().ValidationSummary()
-        @Html.AntiForgeryToken()
+       @Html.Gds().ValidationSummary()
+       @Html.AntiForgeryToken()
 
-        @Html.WeeeGds().RadioButtonsFor(m => m.SelectedOrganisationUser, 
-            Model.OrganisationUsers, 
-            r => r.Value, 
-            r => r.Key, 
-            RadioButtonLegend.VisuallyHidden, 
-            RadioButtonLayout.Stacked)
-    <p>
-        <input type="submit" class="button" value="Continue" />
-    </p>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationUser)">
+            @Html.WeeeGds().RadioButtonsFor(m => m.SelectedOrganisationUser,
+                Model.OrganisationUsers,
+                r => r.Value,
+                r => r.Key,
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="button" value="Continue" />
+        </div>
     }
-<div>
-     @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
-</div>
+    <div>
+         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </div>
 }

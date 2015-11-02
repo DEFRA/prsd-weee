@@ -9,7 +9,7 @@
     {
         public IList<KeyValuePair<string, Guid>> OrganisationUsers { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please answer this question")]
         [DisplayName("Select a user to manage")]
         public Guid? SelectedOrganisationUser { get; set; }
     }

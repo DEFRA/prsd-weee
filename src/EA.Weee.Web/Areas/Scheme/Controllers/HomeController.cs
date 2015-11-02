@@ -189,6 +189,17 @@
 
             if (!ModelState.IsValid)
             {
+                var orgUsers = await GetOrganisationUsers(pcsId);
+
+                var orgUsersKeyValuePairs =
+                    orgUsers.Select(
+                        ou =>
+                            new KeyValuePair<string, Guid>(
+                                ou.User.FirstName + " " + ou.User.Surname + " (" +
+                                ou.UserStatus.ToString() + ")", ou.Id));
+
+                model.OrganisationUsers = orgUsersKeyValuePairs.ToList();
+
                 return View(model);
             }
 
