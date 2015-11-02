@@ -131,7 +131,11 @@
             context.Organisations.Add(org);
             context.SaveChanges();
 
-            MemberUpload memberUpload = new MemberUpload(org.Id, string.Empty);
+            Scheme scheme = new Scheme(org.Id);
+            context.Schemes.Add(scheme);
+            context.SaveChanges();
+
+            MemberUpload memberUpload = new MemberUpload(org.Id, scheme.Id, string.Empty);
             context.MemberUploads.Add(memberUpload);
             context.SaveChanges();
 
