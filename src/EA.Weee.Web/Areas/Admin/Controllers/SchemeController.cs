@@ -146,7 +146,7 @@
         {
             using (var client = apiClient())
             {
-                var csvFileName = approvalNumber.Replace("/", string.Empty) + "_fullmemberlist_" + complianceYear.ToString() + "_" + @DateTime.Now.ToString("ddMMyyyy_HHmm") + ".csv";
+                var csvFileName = approvalNumber.Replace("/", string.Empty) + "_fullmemberlist_" + complianceYear.ToString() + "_" + DateTime.Now.ToString("ddMMyyyy_HHmm") + ".csv";
 
                 var producerCSVData = await client.SendAsync(User.GetAccessToken(),
                     new GetProducerCSV(orgId, complianceYear));
