@@ -57,9 +57,6 @@
                 throw new InvalidOperationException("A legend should always be provided for a radio button selection");
             }
 
-            var validationMessage =
-                gdsHelper.ValidationMessageFor(expression, "Please answer this question");
-
             var radioButtonHtml = string.Empty;
             for (var i = 0; i < possibleValues.Count; i++)
             {

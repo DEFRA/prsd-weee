@@ -7,12 +7,17 @@
         });
     }
 
-    // When the skip to content link is clicked, move the focus to the main content too.
+    // When focus moves away from main content container, make main content unfocusable
+    $("#main-content").focusout(function () {
+        $(this).removeAttr("tabindex");
+    });
+
+    // When the skip to content link is clicked, move the focus to the main content.
     $(".skiplink").click(function () {
         focusMainContent();
     });
 
-    // When a validation error exists, focus the main content
+    // When a validation error exists, move the focus to the the main content
     if ($("#error_explanation").length) {
         focusMainContent();
     }
