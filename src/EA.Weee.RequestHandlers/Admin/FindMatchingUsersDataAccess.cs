@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
+    using System.Collections.Generic;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -41,7 +42,7 @@
 
         public async Task<UserSearchData[]> GetOrganisationUsers()
         {
-            var organisationsUsers = await(
+            var result = await(
                     from u in context.Users
                     join ou in context.OrganisationUsers on u.Id equals ou.UserId into idOrgUsers
                     from orgUser in idOrgUsers
@@ -56,10 +57,40 @@
                         OrganisationName = org.Name ?? org.TradingName,
                         Status = (UserStatus)orgUser.UserStatus.Value,
                         OrganisationUserId = orgUser.Id,
-                        IsCompetentAuthorityUser = false
-                    }).ToArrayAsync();
+                        IsCompetentAuthorityUser = false,
+                        OrganisationId = org.Id
+                    }).ToListAsync();
 
-            return organisationsUsers;
+            // If a user has been rejected previously, the organisation user record will still exist
+            // so we need to only include the relevent request to join an organisation
+            var organisationUsers = new List<UserSearchData>();
+            foreach (var organisationUser in result)
+            {
+                var potentialMultipleJoinRequests = result
+                    .Where(ou => ou.Id == organisationUser.Id && ou.OrganisationId == organisationUser.OrganisationId)
+                    .ToList();
+
+                if (potentialMultipleJoinRequests.Count > 1)
+                {
+                    var nonRejectedJoinRequest = potentialMultipleJoinRequests
+                        .SingleOrDefault(ou => ou.Status != UserStatus.Rejected);
+
+                    if (nonRejectedJoinRequest != null && !organisationUsers.Contains(nonRejectedJoinRequest))
+                    {
+                        organisationUsers.Add(nonRejectedJoinRequest);
+                    }
+                    else if (organisationUsers.All(ou => ou.OrganisationId != organisationUser.OrganisationId && ou.Id != organisationUser.Id))
+                    {
+                        organisationUsers.Add(organisationUser);
+                    }
+                }
+                else
+                {
+                    organisationUsers.Add(organisationUser);
+                }
+            }
+
+            return organisationUsers.ToArray();
         }
     }
 }
