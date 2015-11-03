@@ -24,7 +24,7 @@
                                  where mu.IsSubmitted & mu.SchemeId == schemeId
                                  select new SubmissionsHistorySearchResult
                                  {
-                                     SchemeId = mu.SchemeId.Value,
+                                     SchemeId = mu.SchemeId,
                                      OrganisationId = mu.OrganisationId,
                                      MemberUploadId = mu.Id,
                                      SubmittedBy = user.FirstName + " " + user.Surname,
@@ -45,7 +45,7 @@
                                  where mu.IsSubmitted & mu.SchemeId == schemeId & mu.ComplianceYear == complianceYear
                                  select new SubmissionsHistorySearchResult
                                  {
-                                     SchemeId = mu.SchemeId.Value,
+                                     SchemeId = mu.SchemeId,
                                      OrganisationId = mu.OrganisationId,
                                      MemberUploadId = mu.Id,
                                      SubmittedBy = user.FirstName + " " + user.Surname,
