@@ -25,7 +25,7 @@
             Guid pcsId = new Guid("62874744-6F52-4311-B4C0-3DD7767BEBF6");
             int complianceYear = 2016;
 
-            IWeeeAuthorization authorization  = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+            IWeeeAuthorization authorization  = new AuthorizationBuilder().DenyInternalOrOrganisationAccess().Build();
             WeeeContext context = A.Fake<WeeeContext>();
             CsvWriterFactory csvWriterFactory = A.Fake<CsvWriterFactory>();
 
