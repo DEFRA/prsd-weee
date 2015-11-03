@@ -53,7 +53,7 @@
     <Compile Include="IProducerChargeBandCalculator.cs" />
     <Compile Include="ProducerChargeBandCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Schemas\ProducerType.cs" />
+    <Compile Include="Schemas\producerType.cs" />
     <Compile Include="Schemas\schemaType.cs" />
     <Compile Include="Schemas\v3schema.cs">
       <DependentUpon>v3schema.xsd</DependentUpon>
