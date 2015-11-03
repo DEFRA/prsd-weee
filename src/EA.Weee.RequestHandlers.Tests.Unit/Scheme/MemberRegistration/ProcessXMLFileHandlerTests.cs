@@ -176,16 +176,13 @@
 
         public static Producer TestProducer(string tradingName)
         {
-            return new Producer(Guid.NewGuid(), FakeMemberUploadData(), null, null, SystemTime.UtcNow, 0, true,
+            var schemeId = Guid.NewGuid();
+
+            return new Producer(schemeId, new MemberUpload(organisationId, schemeId, "FAKE Member Upload DATA"), null, null, SystemTime.UtcNow, 0, true,
                 string.Empty, null, tradingName, EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
                 SellingTechniqueType.Both, ObligationType.Both,
                 AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(),
                 true, ChargeBandType.E, (decimal)30.0);
-        }
-
-        public static MemberUpload FakeMemberUploadData()
-        {
-            return new MemberUpload(organisationId, "FAKE Member Upload DATA");
         }
 
         public static Scheme FakeSchemeData()

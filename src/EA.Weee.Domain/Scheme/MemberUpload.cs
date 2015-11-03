@@ -11,7 +11,7 @@
     {
         public virtual Guid OrganisationId { get; private set; }
 
-        public virtual Guid? SchemeId { get; private set; }
+        public virtual Guid SchemeId { get; private set; }
 
         public virtual Organisation Organisation { get; private set; }
 
@@ -30,10 +30,10 @@
         public virtual MemberUploadRawData RawData { get; set; }
 
         public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors, decimal totalCharges,
-            int? complianceYear, Guid? schemeId = null, string userId = null)
+            int? complianceYear, Guid schemeId, string userId = null)
         {
             OrganisationId = organisationId;
-            SchemeId = schemeId.GetValueOrDefault();
+            SchemeId = schemeId;
             Errors = errors;
             IsSubmitted = false;
             TotalCharges = totalCharges;
@@ -42,9 +42,10 @@
             UserId = userId;
         }
 
-        public MemberUpload(Guid organisationId, string data)
+        public MemberUpload(Guid organisationId, Guid schemeId, string data)
         {
             OrganisationId = organisationId;
+            SchemeId = schemeId;
             Errors = new List<MemberUploadError>();
             RawData = new MemberUploadRawData() { Data = data };
         }

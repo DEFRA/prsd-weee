@@ -61,6 +61,24 @@
         }
 
         /// <summary>
+        /// Gets the user with the specified username. The user is created if it does not exist.
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        public AspNetUser GetOrCreateUser(string userName)
+        {
+            var user = model.AspNetUsers.SingleOrDefault(u => u.UserName == userName);
+
+            if (user == null)
+            {
+                user = CreateUser(userName);
+                model.SaveChanges();
+            }
+
+            return user;
+        }
+
+        /// <summary>
         /// Creates an organisation and a scheme.
         /// </summary>
         /// <returns></returns>
@@ -103,6 +121,8 @@
                 Scheme = scheme,
                 SchemeId = scheme.Id,
                 Data = string.Format("<memberUpload{0} />", memberUploadId),
+                UserId = GetOrCreateUser("Testuser").Id,
+                Date = DateTime.UtcNow
             };
             model.MemberUploads.Add(memberUpload);
 

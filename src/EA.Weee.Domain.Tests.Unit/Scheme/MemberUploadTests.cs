@@ -29,7 +29,7 @@
 
         private MemberUpload TestMemberUpload()
         {
-            return new MemberUpload(new Guid(orgGuid), "Test data", new List<MemberUploadError>(), 0, 2016);
+            return new MemberUpload(new Guid(orgGuid), "Test data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid());
         }
     }
 }
