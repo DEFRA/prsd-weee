@@ -9,17 +9,12 @@
         public readonly UrlHelper UrlHelper;
 
         private readonly Gds<TModel> gdsHelper;
-
-        public WeeeGds(HtmlHelper<TModel> htmlHelper)
-        {
-            HtmlHelper = htmlHelper;
-            gdsHelper = new Gds<TModel>(htmlHelper);
-        }
-
         public WeeeGds(WebViewPage<TModel> webViewPage)
-            : this(webViewPage.Html)
         {
+            HtmlHelper = webViewPage.Html;
             UrlHelper = webViewPage.Url;
+
+            gdsHelper = new Gds<TModel>(webViewPage.Html);
         }
 
         public ProgressiveDisclosure<TModel> ProgressiveDisclosure(string linkText)
