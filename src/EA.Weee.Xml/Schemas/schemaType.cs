@@ -9,7 +9,7 @@
     public partial class schemeType
     {
         [XmlElement("XSDVersion")]
-        public string xSDVersionField { get; set; }
+        public string xSDVersionString { get; set; }
 
         /// <remarks/>
         [XmlIgnore]
@@ -17,11 +17,11 @@
         {
             get
             {
-                if (string.IsNullOrEmpty(xSDVersionField))
+                if (string.IsNullOrEmpty(xSDVersionString))
                 {
                     return 3.07m;
                 }
-                return decimal.Parse(xSDVersionField);
+                return decimal.Parse(xSDVersionString);
             }
         }
     }
