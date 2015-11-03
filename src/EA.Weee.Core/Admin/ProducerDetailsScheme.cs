@@ -26,5 +26,9 @@
         public ObligationType ObligationType { get; set; }
         
         public ChargeBandType ChargeBandType { get; set; }
+
+        public DateTime? CeasedToExist { get; set; }
+
+        public string IsAuthorisedRepresentative { get; set; }
     }
 }
