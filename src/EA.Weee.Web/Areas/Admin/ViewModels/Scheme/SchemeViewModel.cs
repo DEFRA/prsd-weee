@@ -63,5 +63,7 @@
         public IEnumerable<SelectListItem> ObligationTypeSelectList { get; set; }
 
         public IEnumerable<SelectListItem> StatusSelectList { get; set; }
+
+        public List<int> ComplianceYears { get; set; }
     }
 }

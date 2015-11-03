@@ -23,7 +23,7 @@
             // Arrange
             Guid pcsId = new Guid("A7905BCD-8EE7-48E5-9E71-2B571F7BBC81");
 
-            IWeeeAuthorization authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+            IWeeeAuthorization authorization = new AuthorizationBuilder().DenyInternalOrOrganisationAccess().Build();
             WeeeContext context = A.Fake<WeeeContext>();
 
             GetComplianceYearsHandler handler = new GetComplianceYearsHandler(authorization, context);
