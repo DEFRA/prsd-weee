@@ -8,5 +8,10 @@
         {
             return new WeeeGds<TModel>(htmlHelper);
         }
+
+        public static WeeeGds<TModel> WeeeGds<TModel>(this WebViewPage<TModel> webViewPage)
+        {
+            return new WeeeGds<TModel>(webViewPage);
+        }
     }
 }
