@@ -8,7 +8,7 @@
     public partial class producerType
     {
         [XmlElement("annualTurnover")]
-        public string annualTurnoverField { get; set; }
+        public string annualTurnoverString { get; set; }
 
         /// <remarks/>
         [XmlIgnore]
@@ -16,13 +16,13 @@
         {
             get
             {
-                if (string.IsNullOrEmpty(annualTurnoverField))
+                if (string.IsNullOrEmpty(annualTurnoverString))
                 {
                     return 0F;
                 }
-                return float.Parse(annualTurnoverField);
+                return float.Parse(annualTurnoverString);
             }
-            set { annualTurnoverField = value.ToString(CultureInfo.InvariantCulture); }
+            set { annualTurnoverString = value.ToString(CultureInfo.InvariantCulture); }
         }
     }
 }
