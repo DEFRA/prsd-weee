@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Shared
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.MemberUploadResultViewModel
 @{
     ViewBag.Title = "View any warnings";
@@ -74,7 +75,8 @@
         </p>
 
         <p>
-            Make changes and @Html.ActionLink("upload a new file", "AddOrAmendMembers", "MemberRegistration").
+            Make changes and @this.WeeeGds().ActionLinkWithEventTracking("Upload a new file", "AddOrAmendMembers", "MemberRegistration",
+                     "Member registration loop", "Upload a new file", "Validation successful").
         </p>
     }
 }

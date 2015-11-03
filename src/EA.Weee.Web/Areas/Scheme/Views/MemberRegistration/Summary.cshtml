@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Helpers
+@using EA.Weee.Web.RazorHelpers
 @model System.Collections.Generic.List<System.Int32>
 @{
     ViewBag.Title = "Summary";
@@ -19,8 +20,11 @@
         @foreach (int complianceYear in Model)
         {
             var csvFileName = "Overview of current members " + complianceYear + ".csv";
-            <a href="@Url.Action("GetProducerCSV", "MemberRegistration", new { complianceYear })">@(csvFileName)</a><span style="color: #6f777b"> (less than 500KB).</span>
-            <br/>
+
+            @(this.WeeeGds().ActionLinkWithEventTracking(csvFileName, "GetProducerCSV", "MemberRegistration",
+                "Downloads", "Overview of current members", "Compliance year: " + complianceYear, new RouteValueDictionary(new { complianceYear = complianceYear })))
+            <span style="color: #6f777b"> (less than 500KB).</span>
+            <br />
         }
     </div>
 
