@@ -235,14 +235,12 @@
         {
             var model = new OrganisationUsersViewModel
             {
-                OrganisationUsers =
-                    new StringGuidRadioButtons
-                    {
-                        PossibleValues =
-                            new[] { new RadioButtonPair<string, Guid>("User (UserStatus)", Guid.NewGuid()), },
-                        Selected = new RadioButtonPair<string, Guid>("User (UserStatus)", Guid.NewGuid()),
-                        SelectedValue = Guid.NewGuid()
-                    }
+                OrganisationUsers = new List<KeyValuePair<string, Guid>>
+                {
+                    new KeyValuePair<string, Guid>("User (UserStatus)", Guid.NewGuid()),
+                    new KeyValuePair<string, Guid>("User (UserStatus)", Guid.NewGuid())
+                },
+                SelectedOrganisationUser = Guid.NewGuid()
             };
 
             var context = new ValidationContext(model, null, null);

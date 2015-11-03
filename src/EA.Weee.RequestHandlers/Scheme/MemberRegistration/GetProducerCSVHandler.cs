@@ -25,7 +25,7 @@
 
         public async Task<ProducerCSVFileData> HandleAsync(GetProducerCSV request)
         {
-            authorization.EnsureOrganisationAccess(request.OrganisationId);
+            authorization.EnsureInternalOrOrganisationAccess(request.OrganisationId);
 
             var organisation = await context.Organisations.FindAsync(request.OrganisationId);
 

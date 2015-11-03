@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.OrganisationUsersViewModel
 @{
     ViewBag.Title = "Manage Organisation Users";
@@ -12,17 +13,23 @@
 
    @using (Html.BeginForm(actionName: "ManageOrganisationUsers", controllerName: "Home", method: FormMethod.Post))
     {
-        @Html.Gds().ValidationSummary()
-        @Html.AntiForgeryToken()
+       @Html.Gds().ValidationSummary()
+       @Html.AntiForgeryToken()
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.OrganisationUsers.Selected)">
-            @Html.EditorFor(m => m.OrganisationUsers)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationUser)">
+            @Html.WeeeGds().RadioButtonsFor(m => m.SelectedOrganisationUser,
+                Model.OrganisationUsers,
+                r => r.Value,
+                r => r.Key,
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
         </div>
-    <p>
-        <input type="submit" class="button" value="Continue" />
-    </p>
+
+        <div class="form-group">
+            <input type="submit" class="button" value="Continue" />
+        </div>
     }
-<div>
-     @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
-</div>
+    <div>
+         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </div>
 }

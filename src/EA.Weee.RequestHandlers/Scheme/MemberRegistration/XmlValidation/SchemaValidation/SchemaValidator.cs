@@ -15,7 +15,7 @@
 
     public class SchemaValidator : ISchemaValidator
     {
-        private const string SchemaLocation = @"EA.Weee.Xml.v3schema.xsd";
+        private const string SchemaLocation = @"EA.Weee.Xml.Schemas.v3schema.xsd";
         private const string SchemaNamespace = @"http://www.environment-agency.gov.uk/WEEE/XMLSchema";
 
         private readonly IXmlErrorTranslator xmlErrorTranslator;
