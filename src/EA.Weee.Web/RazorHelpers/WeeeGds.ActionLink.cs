@@ -26,21 +26,29 @@
                  string eventCategory, string eventAction, string eventLabel = null, RouteValueDictionary routeValues = null, IDictionary<string, object> htmlAttributes = null)
         {
             StringBuilder attributes = new StringBuilder();
+            string additionalOnclickContent = string.Empty;
             if (htmlAttributes != null)
             {
                 foreach (var item in htmlAttributes)
                 {
-                    attributes.AppendFormat(@"{0}=""{1}"" ", HtmlHelper.Encode(item.Key), HtmlHelper.Encode(item.Value));
+                    if (string.Equals(item.Key, "onclick", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        additionalOnclickContent = item.Value.ToString();
+                    }
+                    else
+                    {
+                        attributes.AppendFormat(@"{0}=""{1}"" ", HtmlHelper.Encode(item.Key), HtmlHelper.Encode(item.Value));
+                    }
                 }
             }
 
             if (string.IsNullOrEmpty(eventLabel))
             {
-                attributes.AppendFormat(@"onclick=""ga('send', 'event', '{0}', '{1}');""", eventCategory, eventAction);
+                attributes.AppendFormat(@"onclick=""ga('send', 'event', '{0}', '{1}');{2}""", eventCategory, eventAction, additionalOnclickContent);
             }
             else
             {
-                attributes.AppendFormat(@"onclick=""ga('send', 'event', '{0}', '{1}', '{2}');""", eventCategory, eventAction, eventLabel);
+                attributes.AppendFormat(@"onclick=""ga('send', 'event', '{0}', '{1}', '{2}');{3}""", eventCategory, eventAction, eventLabel, additionalOnclickContent);
             }
 
             var action = UrlHelper.Action(actionName, controllerName, routeValues);

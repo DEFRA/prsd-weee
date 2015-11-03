@@ -102,7 +102,7 @@
                 <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image" />Your XML file must use the version 3.07 schema.
             </p>
             <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
-                @Html.WeeeGds().ScreenReaderLabelFor(m => m.File)
+                @this.WeeeGds().ScreenReaderLabelFor(m => m.File)
                 @Html.Gds().ValidationMessageFor(m => m.File)
                 @Html.Gds().TextBoxFor(m => m.File, new { type = "file", accept = ".xml" })
             </div>
