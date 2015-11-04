@@ -61,8 +61,8 @@
                         OrganisationId = org.Id
                     }).ToListAsync();
 
-            // If a user has been rejected previously, the organisation user record will still exist
-            // so we need to only include the relevent request to join an organisation
+            // If a user has been rejected previously, there can be multiple organisation user records for the same user and organisation
+            // so we need to only include the relevent (i.e the current status) organisation user
             var organisationUsers = new List<UserSearchData>();
             foreach (var organisationUser in result)
             {
