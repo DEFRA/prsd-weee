@@ -35,7 +35,7 @@
         @Html.HiddenFor(m => m.OrganisationType)
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ContactDetailsSameAs">
-            @Html.WeeeGds().RadioButtonsFor(
+            @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
                 "Are the details for your registered office and your organisation contact details the same?",

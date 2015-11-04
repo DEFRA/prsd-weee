@@ -1,8 +1,25 @@
 ﻿$(document).ready(function () {
 
-    // Focus on first validation error input, when validation errors occur
-    if ($("error_explanation") != null) {
-        $(".input-validation-error:input:first").focus();
+    function focusMainContent() {
+        $("#main-content").attr("tabindex", 1);
+        $("#main-content").focus(function () {
+            $(this).attr("tabindex", 0);
+        });
+    }
+
+    // When focus moves away from main content container, make main content unfocusable
+    $("#main-content").focusout(function () {
+        $(this).removeAttr("tabindex");
+    });
+
+    // When the skip to content link is clicked, move the focus to the main content.
+    $(".skiplink").click(function () {
+        focusMainContent();
+    });
+
+    // When a validation error exists, move the focus to the the main content
+    if ($("#error_explanation").length) {
+        focusMainContent();
     }
 
     // Generic double-click prevention script (used by every button)

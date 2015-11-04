@@ -80,16 +80,16 @@
         @if (ViewBag.ShowLinksToAgencies ?? true)
         {
             <li>
-                @Html.WeeeGds().ActionLinkToNewTab("Terms and conditions",
+                @this.WeeeGds().ActionLinkToNewTab("Terms and conditions",
                     "TermsAndConditions", "NewUser", new { area = string.Empty })
             </li>
             <li>
-                @Html.WeeeGds().ActionLinkToNewTab("Privacy",
+                @this.WeeeGds().ActionLinkToNewTab("Privacy",
                         "Privacy", "NewUser", new { area = string.Empty })
             </li>
         }
         <li>
-            @Html.WeeeGds().ActionLinkToNewTab("Cookies",
+            @this.WeeeGds().ActionLinkToNewTab("Cookies",
                 "Cookies", "NewUser", new { area = string.Empty })
         </li>
     </ul>
@@ -103,14 +103,14 @@
     @RenderSection("scripts", required: false)
 }
 
-<main id="content">
+<main id="content" >
     @Html.Partial("_FeedbackBanner")
     @{ Html.RenderAction("_WeeeTitle", "Home", new { area = string.Empty });}
     @RenderBody()
     @if (IsSectionDefined("main_content"))
     {
         <div class="grid-row">
-            <section class="column-two-thirds">
+            <section id="main-content" class="column-two-thirds">
                 @RenderSection("main_content", required: false)
             </section>
             @if (IsSectionDefined("related_content"))

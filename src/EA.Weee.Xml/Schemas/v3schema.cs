@@ -24,8 +24,6 @@ namespace EA.Weee.Xml.Schemas {
     [System.Xml.Serialization.XmlRootAttribute("scheme", Namespace="http://www.environment-agency.gov.uk/WEEE/XMLSchema", IsNullable=false)]
     public partial class schemeType {
         
-        private decimal xSDVersionField;
-        
         private string approvalNoField;
         
         private string complianceYearField;
@@ -36,20 +34,7 @@ namespace EA.Weee.Xml.Schemas {
         
         private producerType[] producerListField;
         
-        public schemeType() {
-            this.xSDVersionField = ((decimal)(3.07m));
-        }
-        
-        /// <remarks/>
-        public decimal XSDVersion {
-            get {
-                return this.xSDVersionField;
-            }
-            set {
-                this.xSDVersionField = value;
-            }
-        }
-        
+       
         /// <remarks/>
         public string approvalNo {
             get {
@@ -1502,8 +1487,6 @@ namespace EA.Weee.Xml.Schemas {
         
         private bool vATRegisteredField;
         
-        private float annualTurnoverField;
-        
         private annualTurnoverBandType annualTurnoverBandField;
         
         private eeePlacedOnMarketBandType eeePlacedOnMarketBandField;
@@ -1521,10 +1504,6 @@ namespace EA.Weee.Xml.Schemas {
         private bool ceaseToExistDateFieldSpecified;
         
         private sellingTechniqueType sellingTechniqueField;
-        
-        public producerType() {
-            this.annualTurnoverField = ((float)(0F));
-        }
         
         /// <remarks/>
         public statusType status {
@@ -1575,16 +1554,6 @@ namespace EA.Weee.Xml.Schemas {
             }
             set {
                 this.vATRegisteredField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public float annualTurnover {
-            get {
-                return this.annualTurnoverField;
-            }
-            set {
-                this.annualTurnoverField = value;
             }
         }
         
