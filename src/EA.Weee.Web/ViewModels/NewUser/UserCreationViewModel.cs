@@ -20,7 +20,7 @@
 
         [Required(ErrorMessage = "Enter your email address")]
         [EmailAddress(ErrorMessage = "The email address is not valid.")]
-        [ExternalEmailAddressAttribute(ErrorMessage = "This area is not for agency personnel.")]
+        [ExternalEmailAddressAttribute(ErrorMessage = "This area is not for regulatory staff.")]
         [StringLength(256)]
         [Display(Name = "Email")]
         public string Email { get; set; }
