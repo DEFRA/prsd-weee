@@ -75,11 +75,15 @@
         </p>
 
         <p>
-            @foreach (int complianceYear in Model.ComplianceYears)
+            @if (Model.ComplianceYears != null)
             {
-                var linkText = "Overview of current members " + complianceYear + ".csv";
-                <a href="@Url.Action("GetProducerCSV", "Scheme", new { orgId = @Model.OrganisationId, complianceYear = complianceYear, approvalNumber = @Model.ApprovalNumber })">@(linkText)</a><span style="color: #6f777b"> (less than 500KB).</span>
-                <br />
+                foreach (int complianceYear in Model.ComplianceYears)
+                 {
+                     var linkText = "Overview of current members " + complianceYear + ".csv";
+                     <a href="@Url.Action("GetProducerCSV", "Scheme", new { orgId = @Model.OrganisationId, complianceYear = complianceYear, approvalNumber = @Model.ApprovalNumber })">@(linkText)</a>
+                     <span style="color: #6f777b"> (less than 500KB).</span>
+                     <br/>
+                 }
             }
         </p>
 
