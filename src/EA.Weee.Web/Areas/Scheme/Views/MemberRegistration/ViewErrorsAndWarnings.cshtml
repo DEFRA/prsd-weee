@@ -1,4 +1,5 @@
 ﻿@using EA.Weee.Core.Shared
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.MemberUploadResultViewModel
 @{
     ViewBag.Title = "View errors and warnings";
@@ -75,11 +76,14 @@
     }
 
     <p>
-        To see your XML file’s full list, <a href="@Url.Action("DownloadErrorsAndWarnings", new { Model.MemberUploadId })">download your errors and warnings</a>.
+        To see your XML file’s full list,
+        @this.WeeeGds().ActionLinkWithEventTracking("download your errors and warnings", "DownloadErrorsAndWarnings", "MemberRegistration",
+            "Downloads", "Errors and warnings", routeValues: new RouteValueDictionary(new { memberUploadId = Model.MemberUploadId })).
     </p>
 
     <p>
-        @Html.ActionLink("Upload a new file", "AddOrAmendMembers", "MemberRegistration", null, new { @class = "button" })
+        @this.WeeeGds().ActionLinkWithEventTracking("Upload a new file", "AddOrAmendMembers", "MemberRegistration",
+             "Member registration loop", "Upload a new file", "Validation failed", null, new Dictionary<string, object>{{ "class", "button" }})
     </p>
 
     <div>
