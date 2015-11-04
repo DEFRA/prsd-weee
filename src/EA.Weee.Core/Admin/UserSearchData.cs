@@ -19,6 +19,8 @@
 
         public Guid OrganisationUserId { get; set; }
 
+        public Guid OrganisationId { get; set; }
+
         public bool IsCompetentAuthorityUser { get; set; }
 
         public string FullName
