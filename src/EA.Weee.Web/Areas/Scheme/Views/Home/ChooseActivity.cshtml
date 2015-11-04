@@ -20,7 +20,7 @@
         @Html.HiddenFor(m => m.OrganisationId)
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ActivityOptions">
-            @Html.WeeeGds().RadioButtonsFor(
+            @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
                 "What would you like to do?",

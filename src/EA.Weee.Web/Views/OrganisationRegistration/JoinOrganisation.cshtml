@@ -22,7 +22,7 @@
         <p>You will not be able to perform activities on behalf of this organisation until your request is authorised.</p>
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="JoinOrganisationOptions">
-            @Html.WeeeGds().RadioButtonsFor(
+            @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
                 "Confirm your organisation access request",

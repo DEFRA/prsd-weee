@@ -44,7 +44,7 @@
             <fieldset>
                 @Html.Gds().ValidationMessageFor(m => m.TermsAndConditions)
                 <p>
-                    @Html.WeeeGds().ActionLinkToNewTab("Read full terms and conditions of use",
+                    @this.WeeeGds().ActionLinkToNewTab("Read full terms and conditions of use",
                     "TermsAndConditions", "NewUser", new { area = string.Empty })
                 </p>
                 <label class="block-label" for="TermsAndConditions">
