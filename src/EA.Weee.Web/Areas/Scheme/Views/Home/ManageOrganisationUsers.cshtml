@@ -17,7 +17,7 @@
        @Html.AntiForgeryToken()
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationUser)">
-            @Html.WeeeGds().RadioButtonsFor(m => m.SelectedOrganisationUser,
+            @this.WeeeGds().RadioButtonsFor(m => m.SelectedOrganisationUser,
                 Model.OrganisationUsers,
                 r => r.Value,
                 r => r.Key,

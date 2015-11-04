@@ -6,13 +6,15 @@
     public partial class WeeeGds<TModel>
     {
         public readonly HtmlHelper<TModel> HtmlHelper;
+        public readonly UrlHelper UrlHelper;
 
         private readonly Gds<TModel> gdsHelper;
-
-        public WeeeGds(HtmlHelper<TModel> htmlHelper)
+        public WeeeGds(WebViewPage<TModel> webViewPage)
         {
-            HtmlHelper = htmlHelper;
-            gdsHelper = new Gds<TModel>(htmlHelper);
+            HtmlHelper = webViewPage.Html;
+            UrlHelper = webViewPage.Url;
+
+            gdsHelper = new Gds<TModel>(webViewPage.Html);
         }
 
         public ProgressiveDisclosure<TModel> ProgressiveDisclosure(string linkText)
