@@ -31,7 +31,7 @@
 
             <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
                 @Html.Gds().ValidationMessageFor(m => m.SelectedOrganisationId)
-                @Html.WeeeGds().RadioButtonsFor(
+                @this.WeeeGds().RadioButtonsFor(
                     m => m.SelectedOrganisationId,
                     Model.Results,
                     r => r.OrganisationId,
