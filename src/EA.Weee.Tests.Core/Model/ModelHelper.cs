@@ -46,11 +46,23 @@
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
-        public AspNetUser CreateUser(string userName)
+        public AspNetUser CreateUser(string userName, IdType idType = IdType.Integer)
         {
-            int userId = GetNextId(typeof(AspNetUser));
+            var userId = string.Empty;
+
+            switch (idType)
+            {
+                case IdType.Guid:
+                    userId = Guid.NewGuid().ToString();
+                    break;
+                case IdType.Integer:
+                default:
+                    userId = GetNextId(typeof(AspNetUser)).ToString();
+                    break;
+            }
+
             AspNetUser user = new AspNetUser();
-            user.Id = userId.ToString();
+            user.Id = userId;
             user.FirstName = "Test";
             user.Surname = "LastName";
             user.Email = userName;

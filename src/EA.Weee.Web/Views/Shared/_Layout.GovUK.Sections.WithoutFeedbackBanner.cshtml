@@ -49,17 +49,17 @@
         @if (ViewBag.ShowLinksToAgencies ?? true)
         {
             <li>
-                @Html.WeeeGds().ActionLinkToNewTab("Terms and conditions",
+                @this.WeeeGds().ActionLinkToNewTab("Terms and conditions",
                     "TermsAndConditions", "NewUser", new { area = string.Empty })
             </li>
             <li>
-                @Html.WeeeGds().ActionLinkToNewTab("Privacy",
+                @this.WeeeGds().ActionLinkToNewTab("Privacy",
                                  "Privacy", "NewUser", new { area = string.Empty })
             </li>
         }
        
         <li>
-            @Html.WeeeGds().ActionLinkToNewTab("Cookies",
+            @this.WeeeGds().ActionLinkToNewTab("Cookies",
                 "Cookies", "NewUser", new { area = string.Empty })
         </li>
     </ul>

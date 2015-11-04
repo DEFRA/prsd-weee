@@ -1,6 +1,6 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 <div class="form-group">
-    @using (Html.WeeeGds().ProgressiveDisclosure(ViewData["title"].ToString()))
+    @using (this.WeeeGds().ProgressiveDisclosure(ViewData["title"].ToString()))
     {
           <p>@ViewData["SubHeading"]</p>
             <p>
