@@ -53,13 +53,15 @@
     <Compile Include="IProducerChargeBandCalculator.cs" />
     <Compile Include="ProducerChargeBandCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="v3schema.cs">
+    <Compile Include="Schemas\producerType.cs" />
+    <Compile Include="Schemas\schemaType.cs" />
+    <Compile Include="Schemas\v3schema.cs">
       <DependentUpon>v3schema.xsd</DependentUpon>
     </Compile>
     <Compile Include="XmlModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="v3schema.xsd">
+    <EmbeddedResource Include="Schemas\v3schema.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
