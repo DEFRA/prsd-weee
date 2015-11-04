@@ -19,7 +19,7 @@
 
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress]
-        [InternalEmailAddress(ErrorMessage = "This area is for agency personnel. Please provide a recognised EA, SEPA, NIEA or NRW email address.")]
+        [InternalEmailAddress(ErrorMessage = "This area is for regulatory staff. Provide a recognised EA, SEPA, NIEA or NRW email address.")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
