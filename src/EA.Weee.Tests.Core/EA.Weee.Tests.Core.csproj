@@ -126,6 +126,7 @@
     <Compile Include="Model\Country.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\IdType.cs" />
     <Compile Include="Model\MemberUpload.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
