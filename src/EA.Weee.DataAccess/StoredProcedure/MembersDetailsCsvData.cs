@@ -23,7 +23,7 @@
 
         public string SICCodes { get; set; }
 
-        public bool VATRegisted { get; set; }
+        public bool VATRegistered { get; set; }
 
         public decimal AnnualTurnover { get; set; }
 
@@ -39,7 +39,7 @@
 
         public decimal ChargeThisUpdate { get; set; }
 
-        public DateTime CeaseToExist { get; set; }
+        public DateTime? CeaseToExist { get; set; }
 
         // Correspondence of Notices details
         public string CNTitle { get; set; }
@@ -139,34 +139,34 @@
         public string PPOBContactCountry { get; set; }
 
         //Overseas contact details
-        public string OCContactTitle { get; set; }
+        public string OverseasContactTitle { get; set; }
 
-        public string OCContactForename { get; set; }
+        public string OverseasContactForename { get; set; }
 
-        public string OCContactSurname { get; set; }
+        public string OverseasContactSurname { get; set; }
 
-        public string OCContactTelephone { get; set; }
+        public string OverseasContactTelephone { get; set; }
 
-        public string OCContactMobile { get; set; }
+        public string OverseasContactMobile { get; set; }
 
-        public string OCContactFax { get; set; }
+        public string OverseasContactFax { get; set; }
 
-        public string OCContactEmail { get; set; }
+        public string OverseasContactEmail { get; set; }
 
-        public string OCContactPrimaryName { get; set; }
+        public string OverseasContactPrimaryName { get; set; }
 
-        public string OCContactSecondaryName { get; set; }
+        public string OverseasContactSecondaryName { get; set; }
 
-        public string OCContactStreet { get; set; }
+        public string OverseasContactStreet { get; set; }
 
-        public string OCContactTown { get; set; }
+        public string OverseasContactTown { get; set; }
 
-        public string OCContactLocality { get; set; }
+        public string OverseasContactLocality { get; set; }
 
-        public string OCContactAdministravtiveArea { get; set; }
+        public string OverseasContactAdministravtiveArea { get; set; }
 
-        public string OCContactPostcode { get; set; }
+        public string OverseasContactPostcode { get; set; }
 
-        public string OCContactCountry { get; set; }
+        public string OverseasContactCountry { get; set; }
     }
 }
