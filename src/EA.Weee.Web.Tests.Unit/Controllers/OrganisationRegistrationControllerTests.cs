@@ -806,6 +806,32 @@
         }
 
         [Fact]
+        public async Task PostConfirmOrganisationDetails_ValidModel_ReturnsConfirmationView()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<CompleteRegistration>._))
+                .Returns(Guid.NewGuid());
+
+            OrganisationSummaryViewModel model = new OrganisationSummaryViewModel();
+
+            // Act
+            ActionResult result = await controller.ConfirmOrganisationDetails(model, Guid.NewGuid());
+
+            // Assert
+            var redirectToRouteResult = ((RedirectToRouteResult)result);
+
+            Assert.Equal("Confirmation", redirectToRouteResult.RouteValues["action"]);
+        }
+
+        [Fact]
         public async Task GetSearch_ReturnsSearchView()
         {
             // Arrange
@@ -1023,6 +1049,24 @@
 
             // Act
             ActionResult result = controller.CreateGuidance("test");
+
+            // Assert
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public void GetConfirmation_ReturnsView()
+        {
+            // Arrange
+            ISearcher<OrganisationSearchResult> organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            OrganisationRegistrationController controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher);
+
+            // Act
+            ActionResult result = controller.Confirmation("test");
 
             // Assert
             Assert.IsType<ViewResult>(result);
