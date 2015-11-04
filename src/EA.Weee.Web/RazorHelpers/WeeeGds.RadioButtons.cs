@@ -60,10 +60,9 @@
             var radioButtonHtml = string.Empty;
             for (var i = 0; i < possibleValues.Count; i++)
             {
-                var idForThisButton = HtmlHelper.NameFor(expression);
+                var idForThisButton = string.Format("{0}-{1}", HtmlHelper.NameFor(expression), i);
 
-                var div = string.Format("<div>{0}</div>",
-                    HtmlHelper.HiddenFor(m => possibleValues[i]));
+                var div = string.Format("<div>{0}</div>", HtmlHelper.HiddenFor(m => possibleValues[i]));
 
                 var radioButton = HtmlHelper.RadioButtonFor(expression,
                     possibleValues[i], new { id = idForThisButton }).ToString();
