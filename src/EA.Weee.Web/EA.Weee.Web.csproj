@@ -601,6 +601,7 @@
     <Content Include="Views\Account\ResetPasswordComplete.cshtml" />
     <Content Include="Views\OrganisationRegistration\UserAlreadyAssociatedWithOrganisation.cshtml" />
     <Content Include="Views\OrganisationRegistration\CreateGuidance.cshtml" />
+    <Content Include="Views\OrganisationRegistration\Confirmation.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
