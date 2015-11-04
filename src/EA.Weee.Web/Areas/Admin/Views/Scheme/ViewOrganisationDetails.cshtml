@@ -14,29 +14,29 @@
     @{
         if (Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
         {
-            @this.WeeeGds().DataTable("Organisation details", new Dictionary<string, object>
+            this.WeeeGds().DataTable("Organisation details", new Dictionary<string, object>
             {
                 { "Organisation type", "Sole trader or individual" },
                 { "Business trading name", Model.OrganisationData.TradingName }
-            })
+            });
         }
         else if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership)
         {
-            @this.WeeeGds().DataTable("Organisation details", new Dictionary<string, object>
+            this.WeeeGds().DataTable("Organisation details", new Dictionary<string, object>
             {
                 { "Organisation type", "Partnership" },
                 { "Business trading name", Model.OrganisationData.TradingName }
-            })
+            });
         }
         else
         {
-            @this.WeeeGds().DataTable("Organisation details", new Dictionary<string, object>
+            this.WeeeGds().DataTable("Organisation details", new Dictionary<string, object>
             {
                 { "Organisation type", "Registered company" },
                 { "Company name", Model.OrganisationData.Name },
                 { "Company number", Model.OrganisationData.CompanyRegistrationNumber },
                 { "Business trading name", Model.OrganisationData.TradingName }
-            })
+            });
         }
 
         if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
@@ -48,7 +48,7 @@
             <h2 class="heading-medium">Registered office details</h2>
         }
 
-        @this.WeeeGds().DataTable("Principal place of business details", new Dictionary<string, object>
+        this.WeeeGds().DataTable("Principal place of business details", new Dictionary<string, object>
         {
             { "Address line 1", Model.OrganisationData.BusinessAddress.Address1 },
             { "Address line 2", Model.OrganisationData.BusinessAddress.Address2 },
@@ -58,7 +58,7 @@
             { "Country", Model.OrganisationData.BusinessAddress.CountryName },
             { "Telephone number", Model.OrganisationData.BusinessAddress.Telephone },
             { "Email address", Model.OrganisationData.BusinessAddress.Email },
-        })
+        });
     }
     
     <p>
