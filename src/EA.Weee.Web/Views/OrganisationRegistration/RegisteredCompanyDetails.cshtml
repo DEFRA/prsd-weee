@@ -35,7 +35,7 @@
             @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = "10" })
         </div>
         <div class="form-group">
-            @using (Html.WeeeGds().ProgressiveDisclosure("Where can I find my company registration number?"))
+            @using (this.WeeeGds().ProgressiveDisclosure("Where can I find my company registration number?"))
             {
                 <p>
                     For companies registered in the UK, a company registration number (CRN) is allocated by Companies House when a company is registered.
