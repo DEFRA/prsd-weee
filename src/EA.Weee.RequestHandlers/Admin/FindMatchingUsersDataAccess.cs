@@ -62,7 +62,7 @@
                     }).ToListAsync();
 
             // If a user has been rejected previously, there can be multiple organisation user records for the same user and organisation
-            // so we need to only include the relevent (i.e the current status) organisation user
+            // so we need to only include the relevent (i.e. the current status for this user and this organisation) organisation user
             var organisationUsers = new List<UserSearchData>();
             foreach (var organisationUser in result)
             {
