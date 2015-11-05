@@ -12,4 +12,6 @@
 
 @Html.Partial("_CompetentAuthoritiesContactDetails", new ViewDataDictionary { { "title", "If you continue to see this message, contact us." } })
 
-<p><a href="@Url.Action("Index", "Home", new { area = "" })" class=" button">Continue</a></p>
+<p>
+    <a href="@Url.Action("ErrorRedirect", "Errors", new { area = "" })" class="button">Continue</a>
+</p>
