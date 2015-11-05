@@ -11,6 +11,8 @@
 
         public string ApprovalNumber { get; set; }
 
+        public string OrganisationType { get; set; }
+
         public string OrganisationName { get; set; }
 
         public string TradingName { get; set; }
@@ -36,8 +38,6 @@
         public string SellingTechniqueType { get; set; }
 
         public string ChargeBandType { get; set; }
-
-        public decimal ChargeThisUpdate { get; set; }
 
         public DateTime? CeaseToExist { get; set; }
 
@@ -139,6 +139,8 @@
         public string PPOBContactCountry { get; set; }
 
         //Overseas contact details
+        public string OverseasProducerName { get; set; }
+   
         public string OverseasContactTitle { get; set; }
 
         public string OverseasContactForename { get; set; }
