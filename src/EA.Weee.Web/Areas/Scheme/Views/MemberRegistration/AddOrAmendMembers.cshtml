@@ -2,7 +2,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.AddOrAmendMembersViewModel
 @{
-    ViewBag.Title = "Manage Members";
+    ViewBag.Title = "Manage PCS Members";
     HtmlHelper.ClientValidationEnabled = true;
     HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
 }
@@ -86,7 +86,7 @@
     {
         <header class="hgroup">
             <h1 id="title" class="heading-large" aria-live="off">
-                Register or update member details
+                Manage PCS members
             </h1>
         </header>
 
@@ -98,14 +98,14 @@
             <p class="bold-small">
                 <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image" />Your XML file must use the version 3.07 schema.
             </p>
-            <p @Html.Gds().FormGroupClass(m => m.File)>
+            <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
                 @(this.WeeeGds().ScreenReaderLabelFor(m => m.File))
                 @Html.Gds().ValidationMessageFor(m => m.File)
                 @Html.Gds().TextBoxFor(m => m.File, new { type = "file", accept = ".xml" })
-            </p>
+           </div>
 
         </div>
-        
+
         <p>
             <input style="margin-top: 20px;" id="submitButton" type="submit" value="Check file for errors" class="button" aria-live="off"/>
             <img id="spinner" style="display: none; margin-top: 20px" src="~/Content/weee/images/spinner.gif" alt="Spinning graphic" class="important-image"/>
