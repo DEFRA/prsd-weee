@@ -19,10 +19,10 @@ param
 $doc = (gc $configPath) -as [xml]
 $rulesNode = $doc.SelectSingleNode("//testInternalUserEmailDomains")
 
-if($rulesNode.Attributes["enabled"] -ne $null)
+if($rulesNode.Attributes["userTestModeEnabled"] -ne $null)
 {
     Write "Setting default email rule to $isEnabled"
-    $rulesNode.Attributes["enabled"].InnerText = $isEnabled
+    $rulesNode.Attributes["userTestModeEnabled"].InnerText = $isEnabled
 }
 
 if ($add -ne $null){
