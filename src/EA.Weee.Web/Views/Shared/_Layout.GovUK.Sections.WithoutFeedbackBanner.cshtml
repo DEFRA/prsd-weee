@@ -49,12 +49,12 @@
         @if (ViewBag.ShowLinksToAgencies ?? true)
         {
             <li>
-                @this.WeeeGds().ActionLinkToNewTab("Terms and conditions",
-                    "TermsAndConditions", "NewUser", new { area = string.Empty })
+                @this.WeeeGds().ActionLinkWithEventTracking("Terms and conditions", "TermsAndConditions", "NewUser",
+                     "Policies", "Terms and conditions", routeValues: new RouteValueDictionary { { "area", string.Empty } }, newTab: true)
             </li>
             <li>
-                @this.WeeeGds().ActionLinkToNewTab("Privacy",
-                                 "Privacy", "NewUser", new { area = string.Empty })
+                @this.WeeeGds().ActionLinkWithEventTracking("Privacy", "Privacy", "NewUser",
+                     "Policies", "Privacy", routeValues: new RouteValueDictionary { { "area", string.Empty } }, newTab: true)
             </li>
         }
        
