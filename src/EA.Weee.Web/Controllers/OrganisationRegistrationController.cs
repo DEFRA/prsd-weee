@@ -711,7 +711,10 @@
                             new CompleteRegistration(organisationId));
                 }
 
-                return RedirectToAction("Index", "Organisation");
+                return RedirectToAction("Confirmation", new
+                {
+                    organisationName = model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany ? model.OrganisationData.Name : model.OrganisationData.TradingName
+                });
             }
             catch (ApiBadRequestException ex)
             {
@@ -724,6 +727,12 @@
             }
 
             return await ReviewOrganisationDetails(organisationId);
+        }
+
+        [HttpGet]
+        public ActionResult Confirmation(string organisationName)
+        {
+            return View((object)organisationName);
         }
 
         [HttpGet]
