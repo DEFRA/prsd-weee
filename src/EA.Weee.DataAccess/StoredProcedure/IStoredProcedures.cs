@@ -11,6 +11,6 @@
         Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId, int complianceYear);
 
         Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
-            int complianceYear, string schmeName = "All", string authorisedAuthorityName = "All");
+            int complianceYear, Guid? schemeId = null, Guid? competentAuthorityId = null);
     }
 }
