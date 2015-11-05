@@ -102,6 +102,7 @@
     <Content Include="scripts\Update\Sprint16\20151102-1008-UpdateMemberUploadColumns.sql" />
     <Content Include="scripts\Update\Sprint16\20151028-0001-UpdateProducerAnnualturnoverDataType.sql" />
     <Content Include="scripts\Update\Sprint16\20151103-103500-AddStoredProcedureForMemberDetails.sql" />
+    <Content Include="scripts\Update\Sprint16\20151104-1725-UpdateCsvDataSp.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
