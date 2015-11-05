@@ -79,7 +79,7 @@
                     {
                         organisationUsers.Add(nonRejectedJoinRequest);
                     }
-                    else if (organisationUsers.All(ou => ou.OrganisationId != organisationUser.OrganisationId && ou.Id != organisationUser.Id))
+                    else if (!organisationUsers.Any(ou => ou.OrganisationId == organisationUser.OrganisationId && ou.Id == organisationUser.Id))
                     {
                         organisationUsers.Add(organisationUser);
                     }
