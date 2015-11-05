@@ -23,7 +23,8 @@
         }
 
         public MvcHtmlString ActionLinkWithEventTracking(string linkText, string actionName, string controllerName,
-                 string eventCategory, string eventAction, string eventLabel = null, RouteValueDictionary routeValues = null, IDictionary<string, object> htmlAttributes = null)
+                 string eventCategory, string eventAction, string eventLabel = null, RouteValueDictionary routeValues = null,
+                 IDictionary<string, object> htmlAttributes = null, bool newTab = false)
         {
             StringBuilder attributes = new StringBuilder();
             string additionalOnclickContent = string.Empty;
@@ -40,6 +41,17 @@
                         attributes.AppendFormat(@"{0}=""{1}"" ", HtmlHelper.Encode(item.Key), HtmlHelper.Encode(item.Value));
                     }
                 }
+            }
+
+            if (newTab)
+            {
+                if (htmlAttributes != null &&
+                    htmlAttributes.ContainsKey("target"))
+                {
+                    throw new InvalidOperationException("A value for the target attribute has already been specified");
+                }
+
+                attributes.Append(@" target=""_blank"" ");
             }
 
             if (string.IsNullOrEmpty(eventLabel))
