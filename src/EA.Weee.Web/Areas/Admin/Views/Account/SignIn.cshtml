@@ -1,4 +1,5 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+﻿@using EA.Weee.Web.RazorHelpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Account.InternalLoginViewModel
 
 @section main_content {
@@ -37,6 +38,7 @@
         @Html.ActionLink("Create a user account", "Create", "Account")
     </p>
     <p>
-        @Html.ActionLink("Reset password", "ResetPasswordRequest", "Account")
+        @this.WeeeGds().ActionLinkWithEventTracking("Reset password", "ResetPasswordRequest", "Account",
+            "User account", "Reset password", "Internal")
     </p>
 }
