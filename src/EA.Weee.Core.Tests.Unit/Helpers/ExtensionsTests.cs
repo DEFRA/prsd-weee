@@ -36,5 +36,56 @@
         {
             Assert.Equal(DomainEnumeration.Something, CoreEnumeration.Something.ToDomainEnumeration<DomainEnumeration>());
         }
+
+        [Fact]
+        public void MakeEmptyStringsNull_ObjectContainsEmptyStringInRoot_ConvertsToNull()
+        {
+            var simpleObject = new SimpleObject { MyString = string.Empty };
+
+            var result = simpleObject.MakeEmptyStringsNull();
+
+            Assert.Null(result.MyString);
+        }
+
+        [Fact]
+        public void MakeEmptyStringsNull_ObjectContainsNonEmptyStringInRoot_DoesNotChangeXml()
+        {
+            var myString = "something";
+            var simpleObject = new SimpleObject { MyString = myString };
+
+            var result = simpleObject.MakeEmptyStringsNull();
+
+            Assert.Equal(myString, result.MyString);
+        }
+
+        [Fact]
+        public void MakeEmptyStringsNull_ObjectContainsEmptyStringInNestedObject_ConvertsToNull()
+        {
+            var complexObject = new ComplexObject
+            {
+                InnerObject = new SimpleObject
+                {
+                    MyString = string.Empty
+                }
+            };
+
+            var result = complexObject.MakeEmptyStringsNull();
+
+            Assert.Null(result.InnerObject.MyString);
+        }
+
+        [Theory]
+        [InlineData(typeof(string))]
+        [InlineData(typeof(int))]
+        [InlineData(typeof(decimal))]
+        [InlineData(typeof(float))]
+        [InlineData(typeof(double))]
+        [InlineData(typeof(byte))]
+        [InlineData(typeof(bool))]
+        [InlineData(typeof(char))]
+        public void PrimitiveTypesAreNotCustom(Type type)
+        {
+            Assert.False(type.IsCustom());
+        }
     }
 }
