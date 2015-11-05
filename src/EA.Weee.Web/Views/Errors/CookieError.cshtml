@@ -9,4 +9,6 @@
     We can’t process your request due to a problem with your browser. Please ensure cookies are enabled in your browser settings.
 </p>
 
-<p><a href="@Url.Action("Index", "Home", new { area = "" })" class=" button">Continue</a></p>
+<p>
+    <a href="@Url.Action("ErrorRedirect", "Errors", new { area = ""})" class="button">Continue</a>
+</p>
