@@ -11,6 +11,9 @@
 
         public bool ShowLinkToCreateOrJoinOrganisation { get; set; }
 
+        [Required(ErrorMessage = "Select an activity")]
+        public override string SelectedValue { get; set; }
+
         public ChooseActivityViewModel() : base(new List<string>
             {
                 PcsAction.ManagePcsMembers,
