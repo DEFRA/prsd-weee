@@ -507,7 +507,7 @@
 
                 ProducerCsvData result = results[0];
 
-                Assert.Equal("Yes", result.AuthorisedRepresentative);
+                Assert.Equal("No", result.AuthorisedRepresentative);
                 Assert.Equal("Overseas Producer Name", result.OverseasProducer);
             }
         }
