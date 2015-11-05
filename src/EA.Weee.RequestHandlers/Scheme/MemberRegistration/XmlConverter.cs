@@ -6,6 +6,7 @@
     using System.Xml.Linq;
     using System.Xml.Serialization;
     using Core.Exceptions;
+    using Core.Helpers;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
     using Xml.Schemas;
@@ -37,7 +38,7 @@
             try
             {
                 schemeType scheme = (schemeType)new XmlSerializer(typeof(schemeType)).Deserialize(xdoc.CreateReader());
-
+                scheme.MakeEmptyStringsNull();
                 whiteSpaceCollapser.Collapse(scheme);
 
                 return scheme;
