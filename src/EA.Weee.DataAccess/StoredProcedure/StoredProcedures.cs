@@ -29,27 +29,28 @@
         }
 
         /// <summary>
-        ///     Gets all the member detail for specified compliance year for all schemes and all authorised authority.
-        ///     If scheme name is specified then filters on scheme Name
-        ///     If AA name is specified then filters on AA name
+        /// Gets all the member detail for specified compliance year for all schemes and all authorised authority.
+        ///     If scheme Id is specified then filters on scheme Id
+        ///     If AA Id is specified then filters on AA Id
         /// </summary>
         /// <param name="complianceYear"></param>
-        /// <param name="schmeName"></param>
-        /// <param name="authorisedAuthorityName"></param>
+        /// <param name="schemeId"></param>
+        /// <param name="competentAuthorityId"></param>
         /// <returns></returns>
         public async Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
-            int complianceYear, string schmeName = "All", string authorisedAuthorityName = "All")
+            int complianceYear, Guid? schemeId = null, Guid? competentAuthorityId = null)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-            var schemeNameParameter = new SqlParameter("@SchemeName", schmeName);
-            var authorisedAuthorityNameParameter = new SqlParameter("@AAName", authorisedAuthorityName);
 
+            SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
+            SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId",  (object)competentAuthorityId ?? DBNull.Value);
+            
             return await context.Database
                 .SqlQuery<MembersDetailsCsvData>(
-                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @SchemeName, @AAName",
-                    complianceYearParameter,
-                    schemeNameParameter,
-                    authorisedAuthorityNameParameter)
+                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @SchemeId, @CompetentAuthorityId",
+                    complianceYearParameter,                                     
+                    schemeIdParameter,
+                     competentAuthorityIdParameter)
                 .ToListAsync();
         }
     }
