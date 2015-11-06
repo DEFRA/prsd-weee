@@ -7,13 +7,14 @@
     using Prsd.Core.Mediator;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Home;
+    using Web.Areas.Admin.ViewModels.Reports;
     using Xunit;
 
-    public class HomeControllerTests
+    public class ReportsControllerTests
     {
         private readonly IWeeeClient apiClient;
 
-        public HomeControllerTests()
+        public ReportsControllerTests()
         {
             apiClient = A.Fake<IWeeeClient>();
         }
@@ -28,7 +29,7 @@
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<IRequest<UserStatus>>._))
                 .Returns(userStatus);
 
-            var result = await HomeController().Index();
+            var result = await ReportsController().Index();
 
             Assert.IsType<RedirectToRouteResult>(result);
 
@@ -40,55 +41,51 @@
         }
 
         [Fact]
-        public async void HttpGet_Index_IfUserIsActive_ShouldRedirectToChooseActivity()
+        public async void HttpGet_Index_IfUserIsActive_ShouldRedirectToChooseReport()
         {
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<IRequest<UserStatus>>._))
                 .Returns(UserStatus.Active);
 
-            var result = await HomeController().Index();
+            var result = await ReportsController().Index();
 
             Assert.IsType<RedirectToRouteResult>(result);
 
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("ChooseActivity", routeValues["action"]);
-            Assert.Equal("Home", routeValues["controller"]);
+            Assert.Equal("ChooseReport", routeValues["action"]);
+            Assert.Equal("Reports", routeValues["controller"]);
         }
 
         [Fact]
-        public void HttpGet_ChooseActivity_ShouldReturnsChooseActivityView()
+        public void HttpGet_ChooseReport_ShouldReturnsChooseReportView()
         {
-            var controller = HomeController();
-            var result = controller.ChooseActivity();
+            var controller = ReportsController();
+            var result = controller.ChooseReport();
             var viewResult = ((ViewResult)result);
-            Assert.Equal("ChooseActivity", viewResult.ViewName);
+            Assert.Equal("ChooseReport", viewResult.ViewName);
         }
 
         [Fact]
-        public void HttpPost_ChooseActivity_ModelIsInvalid_ShouldRedirectViewWithError()
+        public void HttpPost_ChooseReport_ModelIsInvalid_ShouldRedirectViewWithError()
         {
-            var controller = HomeController();
+            var controller = ReportsController();
             controller.ModelState.AddModelError("Key", "Any error");
 
-            var result = controller.ChooseActivity(new InternalUserActivityViewModel());
+            var result = controller.ChooseReport(new ChooseReportViewModel());
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
         }
 
         [Theory]
-        [InlineData(InternalUserActivity.ManageUsers, "ManageUsers")]
-        [InlineData(InternalUserActivity.ManageScheme, "ManageSchemes")]
-        [InlineData(InternalUserActivity.ViewProducerInformation, "Search")]
-        [InlineData(InternalUserActivity.SubmissionsHistory, "SubmissionsHistory")]
-        [InlineData(InternalUserActivity.ViewReports, "ChooseReport")]
+        [InlineData(Reports.ProducerDetails, "ProducerDetails")]
         public void HttpPost_ChooseActivity_RedirectsToCorrectControllerAction(string selection, string action)
         {
             // Arrange
-            InternalUserActivityViewModel model = new InternalUserActivityViewModel { SelectedValue = selection };
+            ChooseReportViewModel model = new ChooseReportViewModel { SelectedValue = selection };
 
             // Act
-            ActionResult result = HomeController().ChooseActivity(model);
+            ActionResult result = ReportsController().ChooseReport(model);
 
             // Assert
             var redirectToRouteResult = ((RedirectToRouteResult)result);
@@ -96,9 +93,9 @@
             Assert.Equal(action, redirectToRouteResult.RouteValues["action"]);
         }
 
-        private HomeController HomeController()
+        private ReportsController ReportsController()
         {
-            return new HomeController(() => apiClient);
+            return new ReportsController(() => apiClient);
         }
     }
 }

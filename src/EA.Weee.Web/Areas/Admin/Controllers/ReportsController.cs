@@ -8,18 +8,19 @@
     using Core.Shared;
     using Infrastructure;
     using ViewModels.Home;
+    using ViewModels.Reports;
     using Weee.Requests.Admin;
 
-    public class HomeController : AdminController
+    public class ReportsController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
 
-        public HomeController(Func<IWeeeClient> apiClient)
+        public ReportsController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
         }
 
-        // GET: Admin/Home
+        // GET: Admin/Reports
         public async Task<ActionResult> Index()
         {
             using (var client = apiClient())
@@ -29,7 +30,7 @@
                 switch (userStatus)
                 {
                     case UserStatus.Active:
-                        return RedirectToAction("ChooseActivity", "Home");
+                        return RedirectToAction("ChooseReport", "Reports");
                     case UserStatus.Inactive:
                     case UserStatus.Pending:
                     case UserStatus.Rejected:
@@ -42,15 +43,15 @@
         }
 
         [HttpGet]
-        public ActionResult ChooseActivity()
+        public ActionResult ChooseReport()
         {
-            var model = new InternalUserActivityViewModel();
-            return View("ChooseActivity", model);
+            var model = new ChooseReportViewModel();
+            return View("ChooseReport", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ChooseActivity(InternalUserActivityViewModel model)
+        public ActionResult ChooseReport(ChooseReportViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -59,24 +60,18 @@
 
             switch (model.SelectedValue)
             {
-                case InternalUserActivity.ManageUsers:
-                    return RedirectToAction("ManageUsers", "User");
-
-                case InternalUserActivity.ManageScheme:
-                    return RedirectToAction("ManageSchemes", "Scheme");
-
-                case InternalUserActivity.ViewProducerInformation:
-                    return RedirectToAction("Search", "Producers");
-
-                case InternalUserActivity.SubmissionsHistory:
-                    return RedirectToAction("SubmissionsHistory", "Submissions");
-
-                case InternalUserActivity.ViewReports:
-                    return RedirectToAction("ChooseReport", "Reports");
+                case Reports.ProducerDetails:
+                    return RedirectToAction("ProducerDetails", "Reports");
 
                 default:
                     throw new NotSupportedException();
             }
+        }
+
+        [HttpGet]
+        public ActionResult ProducerDetails()
+        {
+            return View();
         }
     }
 }
