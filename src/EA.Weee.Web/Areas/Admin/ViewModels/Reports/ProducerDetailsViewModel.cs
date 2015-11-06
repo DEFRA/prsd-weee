@@ -9,16 +9,16 @@
 
     public class ProducerDetailsViewModel
     {
-         [Required(ErrorMessage = "Compliance year is required.")]
+        [Required(ErrorMessage = "Compliance year is required.")]
         [DisplayName("Compliance year")]
-        public int SelectedYear { get; set; }
+        public string SelectedYear { get; set; }
 
         [DisplayName("Scheme name")]
-        public Guid? SelectedScheme { get; set; }
+        public string SelectedScheme { get; set; }
 
         [DisplayName("AA")]
-        public Guid? SelectedAA { get; set; }
-       
+        public string SelectedAA { get; set; }
+
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
         public IEnumerable<SelectListItem> SchemeNames { get; set; }
