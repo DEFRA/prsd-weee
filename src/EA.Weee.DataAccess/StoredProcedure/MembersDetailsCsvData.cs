@@ -11,7 +11,7 @@
 
         public string ApprovalNumber { get; set; }
 
-        public string OrganisationType { get; set; }
+        public string OrgType { get; set; }
 
         public string OrganisationName { get; set; }
 
@@ -66,7 +66,7 @@
 
         public string CNLocality { get; set; }
 
-        public string CNAdministravtiveArea { get; set; }
+        public string CNAdministrativeArea { get; set; }
 
         public string CNPostcode { get; set; }
 
@@ -91,7 +91,7 @@
 
         public string CompanyContactPrimaryName { get; set; }
 
-        public string CompanycontactSecondaryName { get; set; }
+        public string CompanyContactSecondaryName { get; set; }
 
         public string CompanyContactStreet { get; set; }
 
@@ -99,7 +99,7 @@
 
         public string CompanyContactLocality { get; set; }
 
-        public string CompanyContactAdministravtiveArea { get; set; }
+        public string CompanyContactAdministrativeArea { get; set; }
 
         public string CompanyContactPostcode { get; set; }
 
@@ -132,7 +132,7 @@
 
         public string PPOBContactLocality { get; set; }
 
-        public string PPOBContactAdministravtiveArea { get; set; }
+        public string PPOBContactAdministrativeArea { get; set; }
 
         public string PPOBContactPostcode { get; set; }
 
@@ -165,7 +165,7 @@
 
         public string OverseasContactLocality { get; set; }
 
-        public string OverseasContactAdministravtiveArea { get; set; }
+        public string OverseasContactAdministrativeArea { get; set; }
 
         public string OverseasContactPostcode { get; set; }
 
