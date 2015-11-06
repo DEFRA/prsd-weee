@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -83,11 +84,49 @@
                     var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
                     var appropriateauthorities = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
 
+                    List<SelectListItem> years = new List<SelectListItem>();
+                    years.Add(new SelectListItem
+                    {
+                        Text = "All",
+                        Value = "All"
+                    });
+
+                    years.AddRange(allYears.Select(item => new SelectListItem
+                    {
+                        Value = item.ToString(), Text = item.ToString()
+                    }));
+
+                    List<SelectListItem> schemes = new List<SelectListItem>();
+                    schemes.Add(new SelectListItem
+                    {
+                        Text = "All",
+                        Value = "All"
+                    });
+
+                    schemes.AddRange(allSchemes.Select(item => new SelectListItem
+                    {
+                        Value = item.Id.ToString(),
+                        Text = item.SchemeName
+                    }));
+
+                    List<SelectListItem> aas = new List<SelectListItem>();
+                    aas.Add(new SelectListItem
+                    {
+                        Text = "All",
+                        Value = "All"
+                    });
+
+                    aas.AddRange(appropriateauthorities.Select(item => new SelectListItem
+                    {
+                        Value = item.Id.ToString(),
+                        Text = item.Name
+                    }));
+
                     ProducerDetailsViewModel model = new ProducerDetailsViewModel
                     {
-                        ComplianceYears = new SelectList(allYears),
-                        SchemeNames = new SelectList(allSchemes, "Id", "SchemeName"),
-                        AppropriateAuthorities = new SelectList(appropriateauthorities, "Id", "Name")
+                        ComplianceYears = years,
+                        SchemeNames = schemes,
+                        AppropriateAuthorities = aas
                     };
                     return View("ProducerDetails", model);
                 }
@@ -104,6 +143,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ProducerDetails(ProducerDetailsViewModel model)
         {
             using (var client = apiClient())
@@ -112,9 +152,48 @@
                 var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
                 var appropriateauthorities = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
 
-                model.ComplianceYears = new SelectList(allYears);
-                model.SchemeNames = new SelectList(allSchemes, "Id", "SchemeName");
-                model.AppropriateAuthorities = new SelectList(appropriateauthorities, "Id", "Name");
+                List<SelectListItem> years = new List<SelectListItem>();
+                years.Add(new SelectListItem
+                {
+                    Text = "All",
+                    Value = "All"
+                });
+
+                years.AddRange(allYears.Select(item => new SelectListItem
+                {
+                    Value = item.ToString(),
+                    Text = item.ToString()
+                }));
+
+                List<SelectListItem> schemes = new List<SelectListItem>();
+                schemes.Add(new SelectListItem
+                {
+                    Text = "All",
+                    Value = "All"
+                });
+
+                schemes.AddRange(allSchemes.Select(item => new SelectListItem
+                {
+                    Value = item.Id.ToString(),
+                    Text = item.SchemeName
+                }));
+
+                List<SelectListItem> aas = new List<SelectListItem>();
+                aas.Add(new SelectListItem
+                {
+                    Text = "All",
+                    Value = "All"
+                });
+
+                aas.AddRange(appropriateauthorities.Select(item => new SelectListItem
+                {
+                    Value = item.Id.ToString(),
+                    Text = item.Name
+                }));
+
+                model.ComplianceYears = years;
+                model.SchemeNames = schemes;
+                model.AppropriateAuthorities = aas;
             }
             if (!ModelState.IsValid)
             {
