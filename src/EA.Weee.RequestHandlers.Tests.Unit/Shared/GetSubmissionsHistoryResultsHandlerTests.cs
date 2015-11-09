@@ -18,11 +18,11 @@
         [Fact]
         public async Task GetSubmissionHistoryResultHandler_RequestByExternalUser_ReturnSubmissionHistoryData()
         {
-            // Arrage
+            // Arrange
             IGetSubmissionsHistoryResultsDataAccess dataAccess = CreateFakeDataAccess();
-            IWeeeAuthorization authorization = A.Dummy<IWeeeAuthorization>();
+            IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
             GetSubmissionsHistoryResultsHandler handler = new GetSubmissionsHistoryResultsHandler(authorization, dataAccess);
-            GetSubmissionsHistoryResults request = new GetSubmissionsHistoryResults(A<Guid>._);
+            GetSubmissionsHistoryResults request = new GetSubmissionsHistoryResults(A<Guid>._, A<Guid>._, A<int>._);
 
             // Act
             List<SubmissionsHistorySearchResult> results = await handler.HandleAsync(request);
@@ -30,23 +30,6 @@
             // Assert
             A.CallTo(() => authorization.EnsureInternalOrOrganisationAccess(A<Guid>._)).MustHaveHappened();
             Assert.Equal(results.Count, 2);
-        }
-
-        [Fact]
-        public async Task GetSubmissionHistoryResultHandler_RequestByInternalUser_ReturnSubmissionHistoryDataByYear()
-        {
-            // Arrage
-            IGetSubmissionsHistoryResultsDataAccess dataAccess = CreateFakeDataAccess();
-            IWeeeAuthorization authorization = A.Dummy<IWeeeAuthorization>();
-            GetSubmissionsHistoryResultsHandler handler = new GetSubmissionsHistoryResultsHandler(authorization, dataAccess);
-            GetSubmissionsHistoryResults request = new GetSubmissionsHistoryResults(A<Guid>._, 2016, A<Guid>._);
-
-            // Act
-            List<SubmissionsHistorySearchResult> results = await handler.HandleAsync(request);
-
-            // Assert
-            A.CallTo(() => authorization.EnsureInternalOrOrganisationAccess(A<Guid>._)).MustHaveHappened();
-            Assert.Equal(results.Count, 3);
         }
 
         private IGetSubmissionsHistoryResultsDataAccess CreateFakeDataAccess()
@@ -59,16 +42,7 @@
                 new SubmissionsHistorySearchResult()
             };
 
-            var resultsForYear = new List<SubmissionsHistorySearchResult>()
-            { 
-                new SubmissionsHistorySearchResult(),
-                new SubmissionsHistorySearchResult(),
-                new SubmissionsHistorySearchResult()
-            };
-
-            A.CallTo(() => dataAccess.GetSubmissionsHistory(A<Guid>._)).Returns(results);
-
-            A.CallTo(() => dataAccess.GetSubmissionHistoryForComplianceYear(A<Guid>._, A<int>._)).Returns(resultsForYear);
+            A.CallTo(() => dataAccess.GetSubmissionsHistory(A<Guid>._, A<int>._)).Returns(results);
 
             return dataAccess;
         }

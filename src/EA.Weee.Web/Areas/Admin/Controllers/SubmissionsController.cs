@@ -18,6 +18,7 @@
     using Services.Caching;
     using ViewModels.Submissions;
     using Weee.Requests.Admin;
+    using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
     using GetSubmissionsHistoryResults = Weee.Requests.Shared.GetSubmissionsHistoryResults;
 
@@ -97,10 +98,9 @@
             {
                 try
                 {
-                    //Get all the compliance years currently in database and set it to latest one.
-                    //Get all the approved PCSs
-                    IList<SubmissionsHistorySearchResult> searchResults;
-                    searchResults = await client.SendAsync(User.GetAccessToken(), new GetSubmissionsHistoryResults(schemeId, year));
+                    var schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+
+                    IList<SubmissionsHistorySearchResult> searchResults = await client.SendAsync(User.GetAccessToken(), new GetSubmissionsHistoryResults(schemeId, schemeData.OrganisationId, year));
                     return PartialView("_submissionsResults", searchResults);
                 }
                 catch (ApiBadRequestException ex)
