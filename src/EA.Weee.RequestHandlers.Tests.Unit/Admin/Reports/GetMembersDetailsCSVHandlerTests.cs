@@ -20,7 +20,7 @@
             // Arrange
             var complianceYear = 0;
 
-            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+            var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
@@ -31,7 +31,7 @@
             Func<Task> action = async () => await handler.HandleAsync(request);
 
             // Assert
-            await Assert.ThrowsAsync<ArgumentException>(action);
+            await Assert.ThrowsAsync<SecurityException>(action);
         }
 
         [Fact]
@@ -40,7 +40,7 @@
             // Arrange
             var complianceYear = 2016;
 
-            var authorization = new AuthorizationBuilder().DenyOrganisationAccess().Build();
+            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
