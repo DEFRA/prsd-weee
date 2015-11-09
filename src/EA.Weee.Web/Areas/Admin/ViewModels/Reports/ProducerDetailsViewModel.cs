@@ -11,13 +11,13 @@
     {
         [Required(ErrorMessage = "Compliance year is required.")]
         [DisplayName("Compliance year")]
-        public string SelectedYear { get; set; }
+        public int SelectedYear { get; set; }
 
-        [DisplayName("Scheme name")]
-        public string SelectedScheme { get; set; }
+        [DisplayName("PCS name")]
+        public Guid? SelectedScheme { get; set; }
 
-        [DisplayName("AA")]
-        public string SelectedAA { get; set; }
+        [DisplayName("Appropriate authority")]
+        public Guid? SelectedAA { get; set; }
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 

@@ -1,25 +1,25 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
     using Base;
+    using Core.Scheme;
     using Core.Shared;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
-    using ViewModels.Home;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
+    using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
 
     public class ReportsController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
-
+  
         public ReportsController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
@@ -80,54 +80,8 @@
             {
                 try
                 {
-                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
-                    var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
-                    var appropriateauthorities = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
-
-                    List<SelectListItem> years = new List<SelectListItem>();
-                    years.Add(new SelectListItem
-                    {
-                        Text = "All",
-                        Value = "All"
-                    });
-
-                    years.AddRange(allYears.Select(item => new SelectListItem
-                    {
-                        Value = item.ToString(), Text = item.ToString()
-                    }));
-
-                    List<SelectListItem> schemes = new List<SelectListItem>();
-                    schemes.Add(new SelectListItem
-                    {
-                        Text = "All",
-                        Value = "All"
-                    });
-
-                    schemes.AddRange(allSchemes.Select(item => new SelectListItem
-                    {
-                        Value = item.Id.ToString(),
-                        Text = item.SchemeName
-                    }));
-
-                    List<SelectListItem> aas = new List<SelectListItem>();
-                    aas.Add(new SelectListItem
-                    {
-                        Text = "All",
-                        Value = "All"
-                    });
-
-                    aas.AddRange(appropriateauthorities.Select(item => new SelectListItem
-                    {
-                        Value = item.Id.ToString(),
-                        Text = item.Name
-                    }));
-
-                    ProducerDetailsViewModel model = new ProducerDetailsViewModel
-                    {
-                        ComplianceYears = years,
-                        SchemeNames = schemes,
-                        AppropriateAuthorities = aas
-                    };
+                    ProducerDetailsViewModel model = new ProducerDetailsViewModel();
+                    await SetReportsFilterLists(model, client);
                     return View("ProducerDetails", model);
                 }
                 catch (ApiBadRequestException ex)
@@ -137,7 +91,7 @@
                     {
                         throw;
                     }
-                    return View("ProducerDetails");
+                    return View();
                 }
             }
         }
@@ -148,59 +102,51 @@
         {
             using (var client = apiClient())
             {
-                var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
-                var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
-                var appropriateauthorities = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
-
-                List<SelectListItem> years = new List<SelectListItem>();
-                years.Add(new SelectListItem
+                await SetReportsFilterLists(model, client);
+                if (!ModelState.IsValid)
                 {
-                    Text = "All",
-                    Value = "All"
-                });
+                    return View(model);
+                }
 
-                years.AddRange(allYears.Select(item => new SelectListItem
+                //Download the csv based on the filters.
+                string approvalnumber = string.Empty;
+                string csvFileName = string.Format("{0}_producerdetails_{1}.csv", model.SelectedYear, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+                if (model.SelectedScheme.HasValue)
                 {
-                    Value = item.ToString(),
-                    Text = item.ToString()
-                }));
-
-                List<SelectListItem> schemes = new List<SelectListItem>();
-                schemes.Add(new SelectListItem
+                    SchemeData scheme =
+                        await client.SendAsync(User.GetAccessToken(), new GetSchemeById(model.SelectedScheme.Value));
+                    approvalnumber = scheme.ApprovalName.Replace("/", string.Empty);
+                    csvFileName = string.Format("{0}_{1}_producerdetails_{2}.csv", model.SelectedYear,
+                    approvalnumber, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+                }
+                if (model.SelectedAA.HasValue)
                 {
-                    Text = "All",
-                    Value = "All"
-                });
+                    UKCompetentAuthorityData authorityData =
+                        await
+                            client.SendAsync(User.GetAccessToken(),
+                                new GetUKCompetentAuthorityById(model.SelectedAA.Value));
+                    var authorisedAuthorityName = authorityData.Abbreviation;
+                    csvFileName = string.Format("{0}_{1}_{2}_producerdetails_{3}.csv", model.SelectedYear,
+                   approvalnumber, authorisedAuthorityName, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+                }
+             
+                var membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(),
+                    new GetMemberDetailsCSV(model.SelectedYear, model.SelectedScheme, model.SelectedAA));
 
-                schemes.AddRange(allSchemes.Select(item => new SelectListItem
-                {
-                    Value = item.Id.ToString(),
-                    Text = item.SchemeName
-                }));
-
-                List<SelectListItem> aas = new List<SelectListItem>();
-                aas.Add(new SelectListItem
-                {
-                    Text = "All",
-                    Value = "All"
-                });
-
-                aas.AddRange(appropriateauthorities.Select(item => new SelectListItem
-                {
-                    Value = item.Id.ToString(),
-                    Text = item.Name
-                }));
-
-                model.ComplianceYears = years;
-                model.SchemeNames = schemes;
-                model.AppropriateAuthorities = aas;
+                byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
+                return File(data, "text/csv", csvFileName);
             }
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+        }
 
-            return View(model);
+        private async Task SetReportsFilterLists(ProducerDetailsViewModel model, IWeeeClient client)
+        {
+            var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
+            var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
+            var appropriateAuthorities = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
+
+            model.ComplianceYears = new SelectList(allYears);
+            model.SchemeNames = new SelectList(allSchemes, "Id", "SchemeName");
+            model.AppropriateAuthorities = new SelectList(appropriateAuthorities, "Id", "Abbreviation");
         }
     }
 }
