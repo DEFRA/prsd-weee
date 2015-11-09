@@ -99,11 +99,14 @@
                 database.Model.SaveChanges();
 
                 // Act
-                var result = await dataAccess.GetSubmissionHistoryForComplianceYear(scheme1.Id, 2015);
+                var result = await dataAccess.GetSubmissionsHistory(scheme1.Id, 2015);
 
                 // Assert
                 Assert.NotNull(result);
                 Assert.Equal(result.Count, 2);
+                Assert.Collection(result,
+                                  r1 => Assert.Equal(r1.Year, 2015),
+                                  r2 => Assert.Equal(r2.Year, 2015));
             }
         }
     }
