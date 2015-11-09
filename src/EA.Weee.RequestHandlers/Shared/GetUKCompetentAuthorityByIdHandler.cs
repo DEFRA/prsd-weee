@@ -1,14 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
     using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
     using Domain;
-    using FluentValidation.Internal;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Shared;

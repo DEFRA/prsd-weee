@@ -148,7 +148,7 @@
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Scheme\IGetSchemeByIdDataAccess.cs" />
     <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
-    <Compile Include="Shared\GetUKCompetentAuthorityIdHandler.cs" />
+    <Compile Include="Shared\GetUKCompetentAuthorityByIdHandler.cs" />
     <Compile Include="Shared\IGetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\IProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXml.cs" />
