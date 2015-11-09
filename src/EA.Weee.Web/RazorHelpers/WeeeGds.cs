@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.RazorHelpers
 {
+    using System.Web;
     using System.Web.Mvc;
     using Prsd.Core.Web.Mvc.RazorHelpers;
 
@@ -20,6 +21,22 @@
         public ProgressiveDisclosure<TModel> ProgressiveDisclosure(string linkText)
         {
             return new ProgressiveDisclosure<TModel>(this, linkText);
+        }
+
+        public string EventTrackingFunction(string eventCategory, string eventAction, string eventLabel)
+        {
+            string result;
+
+            if (string.IsNullOrEmpty(eventLabel))
+            {
+                result = string.Format("ga('send', 'event', '{0}', '{1}');", HttpUtility.JavaScriptStringEncode(eventCategory), HttpUtility.JavaScriptStringEncode(eventAction));
+            }
+            else
+            {
+                result = string.Format("ga('send', 'event', '{0}', '{1}', '{2}');", HttpUtility.JavaScriptStringEncode(eventCategory), HttpUtility.JavaScriptStringEncode(eventAction), HttpUtility.JavaScriptStringEncode(eventLabel));
+            }
+
+            return result;
         }
     }
 }
