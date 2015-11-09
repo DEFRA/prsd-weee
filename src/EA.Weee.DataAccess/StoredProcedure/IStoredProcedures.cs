@@ -8,9 +8,9 @@
     
     public interface IStoredProcedures
     {
-        Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId, int complianceYear);
+        Task<List<ProducerCSVData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId, int complianceYear);
 
-        Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
+        Task<List<MembersDetailsCSVData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
             int complianceYear, Guid? schemeId = null, Guid? competentAuthorityId = null);
     }
 }
