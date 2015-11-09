@@ -11,7 +11,8 @@
             InternalUserActivity.ManageScheme,
             InternalUserActivity.SubmissionsHistory,
             InternalUserActivity.ViewProducerInformation,
-            InternalUserActivity.ManageUsers
+            InternalUserActivity.ManageUsers,
+            InternalUserActivity.ViewReports
         })
         {
         }
