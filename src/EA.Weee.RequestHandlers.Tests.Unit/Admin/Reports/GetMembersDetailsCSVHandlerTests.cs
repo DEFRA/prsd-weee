@@ -18,7 +18,7 @@
         public async Task GetMembersDetailsCSVHandler_NotInternalUser_ThrowsSecurityException()
         {
             // Arrange
-            var complianceYear = 0;
+            var complianceYear = 2016;
 
             var authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
             var context = A.Fake<WeeeContext>();
