@@ -71,6 +71,9 @@
                 case InternalUserActivity.SubmissionsHistory:
                     return RedirectToAction("SubmissionsHistory", "Submissions");
 
+                case InternalUserActivity.ViewReports:
+                    return RedirectToAction("ChooseReport", "Reports");
+
                 default:
                     throw new NotSupportedException();
             }
