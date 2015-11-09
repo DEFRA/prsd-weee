@@ -4,19 +4,21 @@
 }
 
 @section main_content {
+
+<header class="hgroup">
+        <h1 class="heading-large">Download PCS invoices</h1>
+    </header>
     @using (Html.BeginForm())
     {
-        <header class="hgroup">
-            <h1 class="heading-large">Download PCS invoices</h1>
-        </header>
+        @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
         <p>Filter results to show only invoices that match your interests. Your results will be provided as a CSV file download.</p>
 
         @Html.Partial("_ReportSearchFilters")
 
-        <div class="form-group">
+        <p>
             <input type="submit" value="Download" class="button" />
-        </div>
+        </p>
     }
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")

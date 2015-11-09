@@ -93,6 +93,7 @@
     <Compile Include="Scheme\VerifyApprovalNumberExists.cs" />
     <Compile Include="Scheme\SetSchemeStatus.cs" />
     <Compile Include="Shared\GetCountries.cs" />
+    <Compile Include="Shared\GetUKCompetentAuthorityById.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorities.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations.cs" />
     <Compile Include="Organisations\GetPublicOrganisationInfo.cs" />
