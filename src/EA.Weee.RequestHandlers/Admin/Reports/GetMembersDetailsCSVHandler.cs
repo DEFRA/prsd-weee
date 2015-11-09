@@ -35,7 +35,7 @@
             var items = await context.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
                        request.ComplianceYear, request.SchemeId, request.CompetentAuthorityId);
 
-            CsvWriter<MembersDetailsCsvData> csvWriter = csvWriterFactory.Create<MembersDetailsCsvData>();
+            CsvWriter<MembersDetailsCSVData> csvWriter = csvWriterFactory.Create<MembersDetailsCSVData>();
             csvWriter.DefineColumn(@"Scheme name", i => i.SchemeName);
             csvWriter.DefineColumn(@"Scheme approval number", i => i.ApprovalNumber);
             csvWriter.DefineColumn(@"Producer name", i => i.OrganisationName);
