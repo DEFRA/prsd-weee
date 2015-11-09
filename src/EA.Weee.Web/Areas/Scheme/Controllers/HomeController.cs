@@ -360,7 +360,7 @@
 
                 if (scheme != null)
                 {
-                    model.Results = await client.SendAsync(User.GetAccessToken(), new GetSubmissionsHistoryResults(scheme.SchemeId, 0, scheme.OrganisationId));
+                    model.Results = await client.SendAsync(User.GetAccessToken(), new GetSubmissionsHistoryResults(scheme.SchemeId, scheme.OrganisationId));
                 }
             }
             return View(model);
