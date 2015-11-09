@@ -14,14 +14,14 @@
             this.context = context;
         }
 
-        public async Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId,
+        public async Task<List<ProducerCSVData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId,
             int complianceYear)
         {
             var organisationIdParameter = new SqlParameter("@OrganisationId", organisationId);
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
             return await context.Database
-                .SqlQuery<ProducerCsvData>(
+                .SqlQuery<ProducerCSVData>(
                     "[Producer].[spgCSVDataByOrganisationIdAndComplianceYear] @OrganisationId, @ComplianceYear",
                     organisationIdParameter,
                     complianceYearParameter)
@@ -37,7 +37,7 @@
         /// <param name="schemeId"></param>
         /// <param name="competentAuthorityId"></param>
         /// <returns></returns>
-        public async Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
+        public async Task<List<MembersDetailsCSVData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
             int complianceYear, Guid? schemeId = null, Guid? competentAuthorityId = null)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
@@ -46,7 +46,7 @@
             SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId",  (object)competentAuthorityId ?? DBNull.Value);
             
             return await context.Database
-                .SqlQuery<MembersDetailsCsvData>(
+                .SqlQuery<MembersDetailsCSVData>(
                     "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @SchemeId, @CompetentAuthorityId",
                     complianceYearParameter,                                     
                     schemeIdParameter,
