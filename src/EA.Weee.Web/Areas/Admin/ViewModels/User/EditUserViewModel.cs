@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.User
 {
     using System;
     using System.Collections.Generic;
@@ -25,13 +25,13 @@
 
         public string UserId { get; set; }
 
-        [Required(ErrorMessage = "First name is required.")]
+        [Required]
         [Display(Name = "First name")]
         [StringLength(35)]
         [DataType(DataType.Text)]
         public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "Last name is required.")]
+        [Required]
         [StringLength(35)]
         [DataType(DataType.Text)]
         [Display(Name = "Last name")]
@@ -43,7 +43,7 @@
 
         public bool IsCompetentAuthorityUser { get; set; }
 
-        [Required(ErrorMessage = "Current status is required.")]
+        [Required]
         [Display(Name = "Current status")]
         public UserStatus UserStatus { get; set; }
 
