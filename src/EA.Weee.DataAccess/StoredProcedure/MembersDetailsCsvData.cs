@@ -5,17 +5,19 @@
     /// <summary>
     ///     This class maps to the results of [Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority].
     /// </summary>
-    public class MembersDetailsCsvData
+    public class MembersDetailsCSVData
     {
         public string SchemeName { get; set; }
 
         public string ApprovalNumber { get; set; }
 
-        public string OrganisationType { get; set; }
-
         public string OrganisationName { get; set; }
 
+        public string CompanyName { get; set; }
+
         public string TradingName { get; set; }
+
+        public string ProducerType { get; set; }
 
         public string PRN { get; set; }
 
@@ -31,7 +33,7 @@
 
         public string AnnualTurnoverBandType { get; set; }
 
-        public string EEPlacedOnMarketBandType { get; set; }
+        public string EEEPlacedOnMarketBandType { get; set; }
 
         public string ObligationType { get; set; }
 
@@ -66,7 +68,7 @@
 
         public string CNLocality { get; set; }
 
-        public string CNAdministravtiveArea { get; set; }
+        public string CNAdministrativeArea { get; set; }
 
         public string CNPostcode { get; set; }
 
@@ -91,7 +93,7 @@
 
         public string CompanyContactPrimaryName { get; set; }
 
-        public string CompanycontactSecondaryName { get; set; }
+        public string CompanyContactSecondaryName { get; set; }
 
         public string CompanyContactStreet { get; set; }
 
@@ -99,7 +101,7 @@
 
         public string CompanyContactLocality { get; set; }
 
-        public string CompanyContactAdministravtiveArea { get; set; }
+        public string CompanyContactAdministrativeArea { get; set; }
 
         public string CompanyContactPostcode { get; set; }
 
@@ -132,7 +134,7 @@
 
         public string PPOBContactLocality { get; set; }
 
-        public string PPOBContactAdministravtiveArea { get; set; }
+        public string PPOBContactAdministrativeArea { get; set; }
 
         public string PPOBContactPostcode { get; set; }
 
@@ -165,7 +167,7 @@
 
         public string OverseasContactLocality { get; set; }
 
-        public string OverseasContactAdministravtiveArea { get; set; }
+        public string OverseasContactAdministrativeArea { get; set; }
 
         public string OverseasContactPostcode { get; set; }
 
