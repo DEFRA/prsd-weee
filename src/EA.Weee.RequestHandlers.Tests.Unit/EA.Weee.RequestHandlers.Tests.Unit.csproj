@@ -113,6 +113,7 @@
     <Compile Include="Scheme\GetSchemeByIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemesHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandlerTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\DeserializerTests.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateFromXmlTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GetComplianceYearsHandlerTests.cs" />
