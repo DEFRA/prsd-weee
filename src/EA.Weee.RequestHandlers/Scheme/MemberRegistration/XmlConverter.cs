@@ -14,10 +14,12 @@
     public class XmlConverter : IXmlConverter
     {
         private readonly IWhiteSpaceCollapser whiteSpaceCollapser;
+        private readonly IDeserializer deserializer;
 
-        public XmlConverter(IWhiteSpaceCollapser whiteSpaceCollapser)
+        public XmlConverter(IWhiteSpaceCollapser whiteSpaceCollapser, IDeserializer deserializer)
         {
             this.whiteSpaceCollapser = whiteSpaceCollapser;
+            this.deserializer = deserializer;
         }
 
         public XDocument Convert(ProcessXMLFile message)
@@ -35,18 +37,11 @@
 
         public schemeType Deserialize(XDocument xdoc)
         {
-            try
-            {
-                schemeType scheme = (schemeType)new XmlSerializer(typeof(schemeType)).Deserialize(xdoc.CreateReader());
-                scheme.MakeEmptyStringsNull();
-                whiteSpaceCollapser.Collapse(scheme);
+            var scheme = deserializer.Deserialize<schemeType>(xdoc);
+            whiteSpaceCollapser.Collapse(scheme);
+            scheme.MakeEmptyStringsNull();
 
-                return scheme;
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new XmlDeserializationFailureException(ex);
-            }
+            return scheme;
         }
 
         private byte[] RemoveUtf8Bom(byte[] data)
