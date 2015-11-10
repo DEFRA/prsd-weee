@@ -88,7 +88,9 @@
                 {
                     property.SetValue(obj, null);
                 }
-                else if (property.PropertyType.IsCustom() && type.IsClass)
+                else if (property.PropertyType.IsCustom() 
+                    && type.IsClass
+                    && property.GetValue(obj) != null)
                 {
                     property.SetValue(obj, MakeEmptyStringsNull(property.GetValue(obj)));
                 }
