@@ -1,15 +1,11 @@
 ﻿namespace EA.Weee.DataAccess.StoredProcedure
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// This class maps to the results of [Producer].[spgCSVDataByOrganisationIdAndComplianceYear].
     /// </summary>
-    public class ProducerCsvData
+    public class ProducerCSVData
     {
         public string OrganisationName { get; set; }
         public string TradingName { get; set; }

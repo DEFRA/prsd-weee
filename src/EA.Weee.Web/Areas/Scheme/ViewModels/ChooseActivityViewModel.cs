@@ -11,14 +11,14 @@
 
         public bool ShowLinkToCreateOrJoinOrganisation { get; set; }
 
-        public ChooseActivityViewModel() : base(new List<string>
-            {
-                PcsAction.ManagePcsMembers,
-                PcsAction.ViewSubmissionHistory,
-                PcsAction.ManageOrganisationUsers,
-                PcsAction.ViewOrganisationDetails,
-                PcsAction.ManageContactDetails
-            })
+        [Required(ErrorMessage = "Select an activity")]
+        public override string SelectedValue { get; set; }
+
+        public ChooseActivityViewModel()
+        {
+        }
+
+        public ChooseActivityViewModel(List<string> activites) : base(activites)
         {
         }
     }

@@ -110,6 +110,7 @@
                 Id = IntegerToGuid(schemeId),
                 Organisation = organisation,
                 OrganisationId = organisation.Id,
+                SchemeName = "test scheme name"
             };
             model.Schemes.Add(scheme);
 
