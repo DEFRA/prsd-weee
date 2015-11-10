@@ -9,7 +9,7 @@
 
     public class ProducerDetailsViewModel
     {
-        [Required(ErrorMessage = "Compliance year is required.")]
+        [Required]
         [DisplayName("Compliance year")]
         public int SelectedYear { get; set; }
 

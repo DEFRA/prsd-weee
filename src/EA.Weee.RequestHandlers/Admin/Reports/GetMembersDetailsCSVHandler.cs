@@ -50,7 +50,7 @@
             csvWriter.DefineColumn(@"VAT registered", (i => i.VATRegistered ? "Yes" : "No"));
             csvWriter.DefineColumn(@"Annual turnover", i => i.AnnualTurnover);
             csvWriter.DefineColumn(@"Annual turnover band", i => i.AnnualTurnoverBandType);
-            csvWriter.DefineColumn(@"EEE placed on market", i => i.EEPlacedOnMarketBandType);
+            csvWriter.DefineColumn(@"EEE placed on market", i => i.EEEPlacedOnMarketBandType);
             csvWriter.DefineColumn(@"Obligation Type", i => i.ObligationType);
             csvWriter.DefineColumn(@"SIC codes", i => i.SICCodes);
             csvWriter.DefineColumn(@"Selling technique", i => i.SellingTechniqueType);
