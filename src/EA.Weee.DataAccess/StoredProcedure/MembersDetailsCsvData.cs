@@ -11,8 +11,6 @@
 
         public string ApprovalNumber { get; set; }
 
-        public string OrgType { get; set; }
-
         public string OrganisationName { get; set; }
 
         public string CompanyName { get; set; }
