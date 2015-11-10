@@ -1,0 +1,32 @@
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.ProducerDetailsViewModel
+@{
+    ViewBag.Title = "Producer Details";
+}
+
+@section main_content {
+
+<header class="hgroup">
+        <h1 class="heading-large">Download PCS invoices</h1>
+    </header>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        <p>Filter results to show only invoices that match your interests. Your results will be provided as a CSV file download.</p>
+
+        @Html.Partial("_ReportSearchFilters")
+    
+        <p class="small">
+            It may take a little while to download PCS invoices, so please bear with us.
+        </p>
+        <p>
+            <input type="submit" value="Download" class="button" />
+        </p>
+    }
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+    <p>
+        <a href="javascript:history.back();">Back</a>
+    </p>
+}
