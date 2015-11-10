@@ -83,11 +83,12 @@
             foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(type))
             {
                 if (property.PropertyType == typeof(string)
+                    && !property.IsReadOnly
                     && (string)property.GetValue(obj) == string.Empty)
                 {
                     property.SetValue(obj, null);
                 }
-                else if (type.IsCustom())
+                else if (property.PropertyType.IsCustom() && type.IsClass)
                 {
                     property.SetValue(obj, MakeEmptyStringsNull(property.GetValue(obj)));
                 }
