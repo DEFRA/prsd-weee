@@ -15,7 +15,11 @@
 
         public string OrganisationName { get; set; }
 
+        public string CompanyName { get; set; }
+
         public string TradingName { get; set; }
+
+        public string ProducerType { get; set; }
 
         public string PRN { get; set; }
 
