@@ -58,7 +58,7 @@
 
             IWhiteSpaceCollapser whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
 
-            XmlConverter xmlConverter = new XmlConverter(whiteSpaceCollapser);
+            XmlConverter xmlConverter = new XmlConverter(whiteSpaceCollapser, new Deserializer());
             var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
 
             var producerCharges = new Hashtable();
