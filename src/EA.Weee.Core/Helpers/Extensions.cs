@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.Core.Helpers
 {
     using System;
+    using System.ComponentModel;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Runtime.InteropServices.WindowsRuntime;
     using System.Web.Mvc;
     using Prsd.Core.Domain;
 
@@ -72,6 +74,39 @@
 
             throw new InvalidOperationException(string.Format("The type '{0}' is not an enum",
                 coreEnumeration.GetType().Name));
+        }
+
+        public static T MakeEmptyStringsNull<T>(this T obj)
+        {
+            var type = obj.GetType();
+
+            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(type))
+            {
+                if (property.PropertyType == typeof(string)
+                    && !property.IsReadOnly
+                    && (string)property.GetValue(obj) == string.Empty)
+                {
+                    property.SetValue(obj, null);
+                }
+                else if (property.PropertyType.IsCustom() 
+                    && type.IsClass
+                    && property.GetValue(obj) != null)
+                {
+                    property.SetValue(obj, MakeEmptyStringsNull(property.GetValue(obj)));
+                }
+            }
+
+            return obj;
+        }
+
+        public static bool IsCustom(this Type type)
+        {
+            if (type.Namespace != null && type.Namespace.StartsWith("EA.Weee"))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
