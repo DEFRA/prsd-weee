@@ -6,5 +6,6 @@
         public const string SubmissionsHistory = "Submissions history";
         public const string ViewProducerInformation = "View producer information";
         public const string ManageUsers = "Manage users";
+        public const string ViewReports = "View reports";
     }
 }

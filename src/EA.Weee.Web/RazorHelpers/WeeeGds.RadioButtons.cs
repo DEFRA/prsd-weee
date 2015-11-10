@@ -69,7 +69,7 @@
 
                 var display = HtmlHelper.DisplayFor(m => possibleValues[i]);
 
-                var label = string.Format("<label for={0} class=\"block-label\">{1}</label>", idForThisButton, radioButton + display);
+                var label = string.Format("<label for=\"{0}\" class=\"block-label\">{1}</label>", idForThisButton, radioButton + display);
 
                 radioButtonHtml += div + label;
             }

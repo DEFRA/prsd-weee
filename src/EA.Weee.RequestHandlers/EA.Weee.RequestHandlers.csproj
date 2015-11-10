@@ -80,6 +80,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
+    <Compile Include="Admin\Reports\GetMembersDetailsCSVHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\IDeserializer.cs" />
+    <Compile Include="Scheme\MemberRegistration\Deserializer.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheDataAccess.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheHandler.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\IFetchOrganisationSearchResultsForCacheDataAccess.cs" />
@@ -147,6 +150,7 @@
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Scheme\IGetSchemeByIdDataAccess.cs" />
     <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
+    <Compile Include="Shared\GetUKCompetentAuthorityByIdHandler.cs" />
     <Compile Include="Shared\IGetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\IProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXml.cs" />
