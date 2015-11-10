@@ -6,6 +6,7 @@
     using System.Xml.Linq;
     using System.Xml.Serialization;
     using Core.Exceptions;
+    using Core.Helpers;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
     using Xml.Schemas;
@@ -13,10 +14,12 @@
     public class XmlConverter : IXmlConverter
     {
         private readonly IWhiteSpaceCollapser whiteSpaceCollapser;
+        private readonly IDeserializer deserializer;
 
-        public XmlConverter(IWhiteSpaceCollapser whiteSpaceCollapser)
+        public XmlConverter(IWhiteSpaceCollapser whiteSpaceCollapser, IDeserializer deserializer)
         {
             this.whiteSpaceCollapser = whiteSpaceCollapser;
+            this.deserializer = deserializer;
         }
 
         public XDocument Convert(ProcessXMLFile message)
@@ -34,18 +37,11 @@
 
         public schemeType Deserialize(XDocument xdoc)
         {
-            try
-            {
-                schemeType scheme = (schemeType)new XmlSerializer(typeof(schemeType)).Deserialize(xdoc.CreateReader());
+            var scheme = deserializer.Deserialize<schemeType>(xdoc);
+            whiteSpaceCollapser.Collapse(scheme);
+            scheme.MakeEmptyStringsNull();
 
-                whiteSpaceCollapser.Collapse(scheme);
-
-                return scheme;
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new XmlDeserializationFailureException(ex);
-            }
+            return scheme;
         }
 
         private byte[] RemoveUtf8Bom(byte[] data)

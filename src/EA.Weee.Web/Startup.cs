@@ -5,6 +5,7 @@ using Microsoft.Owin;
 
 namespace EA.Weee.Web
 {
+    using System.ComponentModel.DataAnnotations;
     using System.Reflection;
     using System.Web;
     using System.Web.Helpers;
@@ -52,6 +53,7 @@ namespace EA.Weee.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             ModelBinders.Binders.DefaultBinder = new TrimModelBinder();
+            DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RequiredAttribute), typeof(WeeeRequiredAttributeAdapter));
 
             ApplicationVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
