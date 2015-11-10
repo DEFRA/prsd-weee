@@ -5,7 +5,7 @@
     /// <summary>
     /// This class maps to the results of [Producer].[spgCSVDataByOrganisationIdAndComplianceYear].
     /// </summary>
-    public class ProducerCsvData
+    public class ProducerCSVData
     {
         public string OrganisationName { get; set; }
         public string TradingName { get; set; }
