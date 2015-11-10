@@ -33,7 +33,7 @@
 
         public string AnnualTurnoverBandType { get; set; }
 
-        public string EEPlacedOnMarketBandType { get; set; }
+        public string EEEPlacedOnMarketBandType { get; set; }
 
         public string ObligationType { get; set; }
 
