@@ -10,10 +10,17 @@
     using System.IO;
     using System.Reflection;
     using System.Text;
+    using System.Xml.Linq;
     using Xunit;
 
     public class XmlChargeBandCalculatorTests
     {
+        private readonly IProducerChargeCalculator producerChargerCalculator;
+        public XmlChargeBandCalculatorTests()
+        {
+            producerChargerCalculator = A.Fake<IProducerChargeCalculator>();
+        }
+
         [Fact]
         public void Calculate_WithValidXml_GeneratesNoErrors()
         {
@@ -27,13 +34,10 @@
             byte[] xml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(absoluteFilePath).LocalPath));
             ProcessXMLFile request = new ProcessXMLFile(A<Guid>._, xml);
 
-            IProducerChargeCalculator calculator = A.Fake<IProducerChargeCalculator>();
-            IWhiteSpaceCollapser whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
-            XmlConverter xmlConverter = new XmlConverter(whiteSpaceCollapser);
-            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(xmlConverter, calculator);
+            var xmlChargeBandCalculator = XmlChargeBandCalculator();
 
             // Act
-            Hashtable producerCharges = xmlChargeBandCalculator.Calculate(request);
+            XmlChargeBandCalculator().Calculate(request);
 
             // Assert
             Assert.Empty(xmlChargeBandCalculator.ErrorsAndWarnings);
@@ -52,13 +56,10 @@
             byte[] xml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(absoluteFilePath).LocalPath));
             ProcessXMLFile request = new ProcessXMLFile(A<Guid>._, xml);
 
-            IProducerChargeCalculator calculator = A.Fake<IProducerChargeCalculator>();
-            IWhiteSpaceCollapser whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
-            XmlConverter xmlConverter = new XmlConverter(whiteSpaceCollapser);
-            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(xmlConverter, calculator);
+            var xmlChargeBandCalculator = XmlChargeBandCalculator();
 
             // Act
-            Hashtable producerCharges = xmlChargeBandCalculator.Calculate(request);
+            xmlChargeBandCalculator.Calculate(request);
 
             // Assert
             Assert.NotEmpty(xmlChargeBandCalculator.ErrorsAndWarnings);
@@ -83,15 +84,10 @@
             ProducerCharge producerCharge4 = A.Dummy<ProducerCharge>();
             ProducerCharge producerCharge5 = A.Dummy<ProducerCharge>();
 
-            IProducerChargeCalculator calculator = A.Fake<IProducerChargeCalculator>();
-
-            A.CallTo(() => calculator.CalculateCharge(A<producerType>._, A<int>._))
+            A.CallTo(() => producerChargerCalculator.CalculateCharge(A<producerType>._, A<int>._))
                 .ReturnsNextFromSequence(producerCharge1, producerCharge2, producerCharge3, producerCharge4, producerCharge5);
 
-            IWhiteSpaceCollapser whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
-            XmlConverter xmlConverter = new XmlConverter(whiteSpaceCollapser);
-
-            XmlChargeBandCalculator xmlChargeBandCalculator = new XmlChargeBandCalculator(xmlConverter, calculator);
+            var xmlChargeBandCalculator = XmlChargeBandCalculator();
 
             // Act
             Hashtable producerCharges = xmlChargeBandCalculator.Calculate(request);
@@ -110,6 +106,13 @@
             Assert.Equal(producerCharge3, producerCharges["The Empire 1"]);
             Assert.Equal(producerCharge4, producerCharges["The Empire 2"]);
             Assert.Equal(producerCharge5, producerCharges["The Empire 3"]);
+        }
+
+        private XmlChargeBandCalculator XmlChargeBandCalculator()
+        {
+            var xmlConverter = new XmlConverter(A.Fake<IWhiteSpaceCollapser>(), new Deserializer());
+
+            return new XmlChargeBandCalculator(xmlConverter, producerChargerCalculator);
         }
     }
 }

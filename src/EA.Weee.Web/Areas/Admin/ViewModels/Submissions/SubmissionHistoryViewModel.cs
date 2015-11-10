@@ -9,11 +9,11 @@
 
     public class SubmissionsHistoryViewModel
     {
-        [Required(ErrorMessage = "Compliance year is required.")]
+        [Required]
         [DisplayName("Compliance year")]
         public int SelectedYear { get; set; }
 
-        [Required(ErrorMessage = "PCS is required.")]
+        [Required(ErrorMessage = "Enter PCS")]
         [DisplayName("PCS")]
         public Guid SelectedScheme { get; set; }
     
