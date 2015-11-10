@@ -74,6 +74,19 @@
             Assert.Null(result.InnerObject.MyString);
         }
 
+        [Fact]
+        public void MakeEmptyStringsNull_ObjectContainsNullNestedObject_DoesNotThrowException()
+        {
+            var complexObject = new ComplexObject
+            {
+                InnerObject = null
+            };
+
+            var exception = Record.Exception(() => complexObject.MakeEmptyStringsNull());
+
+            Assert.Null(exception);           
+        }
+
         [Theory]
         [InlineData(typeof(string))]
         [InlineData(typeof(int))]
