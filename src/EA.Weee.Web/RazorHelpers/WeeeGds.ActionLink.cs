@@ -23,7 +23,8 @@
         }
 
         public MvcHtmlString ActionLinkWithEventTracking(string linkText, string actionName, string controllerName,
-                 string eventCategory, string eventAction, string eventLabel = null, RouteValueDictionary routeValues = null, IDictionary<string, object> htmlAttributes = null)
+                 string eventCategory, string eventAction, string eventLabel = null, RouteValueDictionary routeValues = null,
+                 IDictionary<string, object> htmlAttributes = null, bool newTab = false)
         {
             StringBuilder attributes = new StringBuilder();
             string additionalOnclickContent = string.Empty;
@@ -42,14 +43,18 @@
                 }
             }
 
-            if (string.IsNullOrEmpty(eventLabel))
+            if (newTab)
             {
-                attributes.AppendFormat(@"onclick=""ga('send', 'event', '{0}', '{1}');{2}""", eventCategory, eventAction, additionalOnclickContent);
+                if (htmlAttributes != null &&
+                    htmlAttributes.ContainsKey("target"))
+                {
+                    throw new InvalidOperationException("A value for the target attribute has already been specified");
+                }
+
+                attributes.Append(@" target=""_blank"" ");
             }
-            else
-            {
-                attributes.AppendFormat(@"onclick=""ga('send', 'event', '{0}', '{1}', '{2}');{3}""", eventCategory, eventAction, eventLabel, additionalOnclickContent);
-            }
+
+            attributes.AppendFormat(@"onclick=""{0};{1}""", EventTrackingFunction(eventCategory, eventAction, eventLabel), additionalOnclickContent);
 
             var action = UrlHelper.Action(actionName, controllerName, routeValues);
             string link = string.Format(@"<a href=""{0}"" {1}>{2}</a>", action, attributes.ToString(), linkText);

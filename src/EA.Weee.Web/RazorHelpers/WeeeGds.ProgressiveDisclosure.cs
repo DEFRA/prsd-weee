@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.RazorHelpers
 {
     using System;
+    using System.Web;
 
     public class ProgressiveDisclosure<TModel> : IDisposable
     {
@@ -11,7 +12,8 @@
             this.gdsHelper = gdsHelper;
 
             var html = string.Format(
-                @"<details><summary onclick=""if(this.getAttribute('aria-expanded') == 'true'){{ga('send', 'event', 'Hidden content', 'Progressive disclosure', '{0}');}}""><span class=""summary"">{0}<span class=""hidden-for-screen-reader"">This is an expandable link that will reveal more content upon activation</span></span></summary><div class=""panel-indent"">", linkText);
+                @"<details><summary onclick=""if(this.getAttribute('aria-expanded') == 'true'){{{0}}}""><span class=""summary"">{1}<span class=""hidden-for-screen-reader"">This is an expandable link that will reveal more content upon activation</span></span></summary><div class=""panel-indent"">",
+                gdsHelper.EventTrackingFunction("Hidden content", "Progressive disclosure", linkText), linkText);
 
             gdsHelper.HtmlHelper.ViewContext.Writer.Write(html);
         }

@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration.Type
 {
     using System;
+    using System.ComponentModel.DataAnnotations;
     using Core.Organisations;
     using Shared;
 
@@ -9,6 +10,9 @@
         public Guid? OrganisationId { get; set; }
 
         public string SearchedText { get; set; }
+
+        [Required(ErrorMessage = "Select the type of organisation that you work for")]
+        public override string SelectedValue { get; set; }
 
         public OrganisationTypeViewModel()
             : base(CreateFromEnum<OrganisationType>().PossibleValues)

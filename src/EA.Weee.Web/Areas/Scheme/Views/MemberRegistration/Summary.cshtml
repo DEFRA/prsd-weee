@@ -1,7 +1,5 @@
-﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
-@using EA.Weee.Core.Helpers
-@using EA.Weee.Web.RazorHelpers
-@model System.Collections.Generic.List<System.Int32>
+﻿@using EA.Weee.Web.RazorHelpers
+@model List<Int32>
 @{
     ViewBag.Title = "Summary";
 }
@@ -9,7 +7,7 @@
 @section main_content {
     <header class="hgroup">
         <div>
-            <h1 class="heading-large">Would you like to view, add or amend PCS members?</h1>
+            <h1 class="heading-large">Manage PCS members</h1>
         </div>
     </header>
 
@@ -28,11 +26,11 @@
         }
     </div>
 
-    <div>
+    <p>
         @Html.ActionLink("Add or amend", "AddOrAmendMembers", "MemberRegistration", new { @area = "Scheme" }, new { @class = "button" })
-    </div>
+    </p>
 
-    <div>
+    <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
-    </div>
+    </p>
 }

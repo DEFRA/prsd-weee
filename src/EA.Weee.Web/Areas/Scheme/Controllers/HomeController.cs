@@ -44,7 +44,6 @@
         [HttpGet]
         public async Task<ActionResult> ChooseActivity(Guid pcsId)
         {
-            var model = new ChooseActivityViewModel();
             using (var client = apiClient())
             {
                 var organisationExists =
@@ -54,6 +53,21 @@
                 {
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
+
+                var orgDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
+
+                string organisationDetailsActivityName = orgDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
+                
+                //get the organisation type based on organisation id
+                List<string> activities = new List<string>
+                    {
+                        PcsAction.ManagePcsMembers,
+                        PcsAction.ViewSubmissionHistory,
+                        organisationDetailsActivityName,
+                        PcsAction.ManageContactDetails,
+                        PcsAction.ManageOrganisationUsers
+                    };
+                var model = new ChooseActivityViewModel(activities);
 
                 var orgUsers = await GetOrganisationUsers(pcsId);
 
@@ -97,7 +111,7 @@
                 {
                     return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId });
                 }
-                if (viewModel.SelectedValue == PcsAction.ViewOrganisationDetails)
+                if (viewModel.SelectedValue == PcsAction.ViewRegisteredOfficeDetails || viewModel.SelectedValue == PcsAction.ViewPrinciplePlaceOfBusinessDetails)
                 {
                     return RedirectToAction("ViewOrganisationDetails", new { pcsId = viewModel.OrganisationId });
                 }
@@ -170,7 +184,7 @@
                                 ou.User.FirstName + " " + ou.User.Surname + " (" +
                                 ou.UserStatus.ToString() + ")", ou.Id));
 
-                await SetBreadcrumb(pcsId, "Manage users");
+                await SetBreadcrumb(pcsId, "Manage organisation users");
 
                 var model = new OrganisationUsersViewModel
                 {
@@ -185,7 +199,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageOrganisationUsers(Guid pcsId, OrganisationUsersViewModel model)
         {
-            await SetBreadcrumb(pcsId, "Manage users");
+            await SetBreadcrumb(pcsId, "Manage organisation users");
 
             if (!ModelState.IsValid)
             {
@@ -212,7 +226,7 @@
         {
             if (organisationUserId.HasValue)
             {
-                await SetBreadcrumb(pcsId, "Manage users");
+                await SetBreadcrumb(pcsId, "Manage organisation users");
 
                 using (var client = apiClient())
                 {
@@ -242,7 +256,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageOrganisationUser(Guid pcsId, OrganisationUserViewModel model)
         {
-            await SetBreadcrumb(pcsId, "Manage users");
+            await SetBreadcrumb(pcsId, "Manage organisation users");
 
             if (!ModelState.IsValid)
             {
@@ -266,8 +280,6 @@
         [HttpGet]
         public async Task<ActionResult> ViewOrganisationDetails(Guid pcsId)
         {
-            await SetBreadcrumb(pcsId, "Organisation details");
-
             using (var client = apiClient())
             {
                 var organisationExists =
@@ -284,7 +296,8 @@
                 {
                     OrganisationData = orgDetails
                 };
-
+                string organisationDetailsActivityName = orgDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
+                await SetBreadcrumb(pcsId, organisationDetailsActivityName);
                 return View("ViewOrganisationDetails", model);
             }
         }
@@ -299,7 +312,7 @@
         [HttpGet]
         public async Task<ActionResult> ManageContactDetails(Guid pcsId)
         {
-            await SetBreadcrumb(pcsId, "Organisation contact details");
+            await SetBreadcrumb(pcsId, "Manage organisation contact details");
 
             OrganisationData model;
             using (var client = apiClient())
@@ -315,7 +328,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManageContactDetails(OrganisationData model)
         {
-            await SetBreadcrumb(model.Id, "Organisation contact details");
+            await SetBreadcrumb(model.Id, "Manage organisation contact details");
 
             if (!ModelState.IsValid)
             {
