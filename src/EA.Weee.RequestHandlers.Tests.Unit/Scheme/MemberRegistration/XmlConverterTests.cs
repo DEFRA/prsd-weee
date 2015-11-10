@@ -4,13 +4,24 @@
     using System;
     using System.Linq;
     using System.Text;
+    using System.Xml.Linq;
     using Core.Exceptions;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
+    using Xml.Schemas;
     using Xunit;
 
     public class XmlConverterTests
     {
+        private readonly IDeserializer deserializer;
+        private readonly IWhiteSpaceCollapser whiteSpaceCollapser;
+
+        public XmlConverterTests()
+        {
+            deserializer = A.Fake<IDeserializer>();
+            whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
+        }
+
         [Fact]
         public void XmlWithoutBom_ReturnsXmlContent()
         {
@@ -34,19 +45,29 @@
         }
 
         [Fact]
-        public void InvalidXml_ThrowsXmlDeserializationFailureException()
+        public void DeserliazeXml_RemovesWhiteSpaceBeforeChangingEmptyStringsToNull()
         {
-            var data = Encoding.UTF8.GetPreamble().Concat(Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"UTF-16\"?><root></root>")).ToArray();
-            var document = XmlConverter().Convert(new ProcessXMLFile(Guid.NewGuid(), data));
+            var tradingName = string.Empty;
 
-            var exception = Assert.Throws<XmlDeserializationFailureException>(() => XmlConverter().Deserialize(document));
-            Assert.NotNull(exception.InnerException);
+            var deserializedXml = new schemeType()
+            {
+                tradingName = tradingName
+            };
+
+            A.CallTo(() => deserializer.Deserialize<schemeType>(A<XDocument>._))
+                .Returns(deserializedXml);
+
+            A.CallTo(() => whiteSpaceCollapser.Collapse(A<schemeType>._))
+                .Invokes(st => tradingName = ((schemeType)st.Arguments[0]).tradingName);
+
+            var result = XmlConverter().Deserialize(A<XDocument>._);
+
+            Assert.NotEqual(tradingName, result.tradingName);
         }
 
         private XmlConverter XmlConverter()
         {
-            IWhiteSpaceCollapser whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
-            return new XmlConverter(whiteSpaceCollapser);
+            return new XmlConverter(whiteSpaceCollapser, deserializer);
         }
     }
 }
