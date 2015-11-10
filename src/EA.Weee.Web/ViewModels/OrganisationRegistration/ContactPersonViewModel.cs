@@ -9,19 +9,19 @@
     {
         public Guid OrganisationId { get; set; }
 
-        [Required(ErrorMessage = "Enter the first name of your contact")]
+        [Required]
         [StringLength(35)]
         [Display(Name = "First name")]
         [DataType(DataType.Text)]
         public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "Enter the last name of your contact")]
+        [Required]
         [StringLength(35)]
         [Display(Name = "Last name")]
         [DataType(DataType.Text)]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Enter the position of your contact")]
+        [Required]
         [StringLength(35)]
         [Display(Name = "Position")]
         [DataType(DataType.Text)]
