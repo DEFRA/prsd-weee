@@ -6,32 +6,32 @@
 
     public class UserCreationViewModel
     {
-        [Required(ErrorMessage = "Enter your first name")]
+        [Required]
         [Display(Name = "First name")]
         [StringLength(35)]
         [DataType(DataType.Text)]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Enter your last name")]
+        [Required]
         [StringLength(35)]
         [DataType(DataType.Text)]
         [Display(Name = "Last name")]
         public string Surname { get; set; }
 
-        [Required(ErrorMessage = "Enter your email address")]
+        [Required]
         [EmailAddress(ErrorMessage = "The email address is not valid.")]
         [ExternalEmailAddressAttribute(ErrorMessage = "This area is not for regulatory staff.")]
         [StringLength(256)]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Create a password for your account")]
+        [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 8)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Retype your password")]
+        [Required(ErrorMessage = "Retype password")]
         [DataType(DataType.Password)]
         [Display(Name = "Retype password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
