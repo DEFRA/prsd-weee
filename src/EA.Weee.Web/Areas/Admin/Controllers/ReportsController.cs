@@ -11,6 +11,7 @@
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
+    using Services;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
     using Weee.Requests.Scheme;
@@ -19,15 +20,19 @@
     public class ReportsController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
-  
-        public ReportsController(Func<IWeeeClient> apiClient)
+        private readonly BreadcrumbService breadcrumb;
+
+        public ReportsController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb)
         {
             this.apiClient = apiClient;
+            this.breadcrumb = breadcrumb;
         }
 
         // GET: Admin/Reports
         public async Task<ActionResult> Index()
         {
+            SetBreadcrumb();
+
             using (var client = apiClient())
             {
                 var userStatus = await client.SendAsync(User.GetAccessToken(), new GetAdminUserStatus(User.GetUserId()));
@@ -50,6 +55,8 @@
         [HttpGet]
         public ActionResult ChooseReport()
         {
+            SetBreadcrumb();
+
             var model = new ChooseReportViewModel();
             return View("ChooseReport", model);
         }
@@ -62,6 +69,8 @@
             {
                 return View(model);
             }
+
+            SetBreadcrumb();
 
             switch (model.SelectedValue)
             {
@@ -76,6 +85,8 @@
         [HttpGet]
         public async Task<ActionResult> ProducerDetails()
         {
+            SetBreadcrumb();
+
             using (var client = apiClient())
             {
                 try
@@ -147,6 +158,11 @@
             model.ComplianceYears = new SelectList(allYears);
             model.SchemeNames = new SelectList(allSchemes, "Id", "SchemeName");
             model.AppropriateAuthorities = new SelectList(appropriateAuthorities, "Id", "Abbreviation");
+        }
+
+        private void SetBreadcrumb()
+        {
+            breadcrumb.InternalActivity = "View reports";
         }
     }
 }
