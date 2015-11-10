@@ -17,7 +17,7 @@
             IsUnchangeableStatus = false;
         }
 
-        [Required(ErrorMessage = "Approval number is required.")]
+        [Required]
         [RegularExpression(@"WEE/([A-Z]{2}[0-9]{4}[A-Z]{2})/SCH",
             ErrorMessage = "Approval number is not in correct format.")]
         [DataType(DataType.Text)]
@@ -26,7 +26,7 @@
 
         public string OldApprovalNumber { get; set; }
 
-        [Required(ErrorMessage = "Scheme name is required.")]
+        [Required]
         [StringLength(70)]
         [DataType(DataType.Text)]
         [Display(Name = "Scheme name")]
@@ -37,18 +37,18 @@
         [Display(Name = "Billing reference")]
         public string IbisCustomerReference { get; set; }
 
-        [Required(ErrorMessage = "Obligation type is required.")]
+        [Required]
         [Display(Name = "Obligation type")]
         public ObligationType? ObligationType { get; set; }
 
-        [Required(ErrorMessage = "Appropriate authority is required.")]
+        [Required]
         [Display(Name = "Appropriate authority")]
         public Guid CompetentAuthorityId { get; set; }
 
         [Display(Name = "Appropriate authority")]
         public string CompetentAuthorityName { get; set; }
 
-        [Required(ErrorMessage = "Status is required")]
+        [Required]
         [Display(Name = "Status")]
         public SchemeStatus Status { get; set; }
 

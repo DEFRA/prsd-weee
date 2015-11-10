@@ -657,7 +657,7 @@
     <Compile Include="Areas\Admin\ViewModels\Scheme\ManageContactDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ManageSchemesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\User\ManageUsersViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\EditUserViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\User\EditUserViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\MemberRegistrationController.cs" />
     <Compile Include="Areas\Scheme\ViewModels\AddOrAmendMembersViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\LatestMemberUploadViewModel.cs" />

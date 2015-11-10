@@ -7,6 +7,7 @@
     using Core.Shared;
     using FakeItEasy;
     using Prsd.Core.Mediator;
+    using Services;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Home;
     using Web.Areas.Admin.ViewModels.Reports;
@@ -131,7 +132,7 @@
 
         private ReportsController ReportsController()
         {
-            return new ReportsController(() => apiClient);
+            return new ReportsController(() => apiClient, A.Dummy<BreadcrumbService>());
         }
     }
 }
