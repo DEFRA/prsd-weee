@@ -44,8 +44,8 @@
             <fieldset>
                 @Html.Gds().ValidationMessageFor(m => m.TermsAndConditions)
                 <p>
-                    @this.WeeeGds().ActionLinkToNewTab("Read full terms and conditions of use",
-                    "TermsAndConditions", "NewUser", new { area = string.Empty })
+                    @this.WeeeGds().ActionLinkWithEventTracking("Read full terms and conditions of use", "TermsAndConditions", "NewUser",
+                         "Policies", "Terms and conditions", routeValues: new RouteValueDictionary { { "area", string.Empty } }, newTab: true)
                 </p>
                 <label class="block-label" for="TermsAndConditions">
                     @Html.CheckBoxFor(m => m.TermsAndConditions, new { @id = "TermsAndConditions" })

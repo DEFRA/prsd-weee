@@ -76,6 +76,26 @@
             Assert.False(controller.ModelState.IsValid);
         }
 
+        [Theory]
+        [InlineData(InternalUserActivity.ManageUsers, "ManageUsers")]
+        [InlineData(InternalUserActivity.ManageScheme, "ManageSchemes")]
+        [InlineData(InternalUserActivity.ViewProducerInformation, "Search")]
+        [InlineData(InternalUserActivity.SubmissionsHistory, "SubmissionsHistory")]
+        [InlineData(InternalUserActivity.ViewReports, "ChooseReport")]
+        public void HttpPost_ChooseActivity_RedirectsToCorrectControllerAction(string selection, string action)
+        {
+            // Arrange
+            InternalUserActivityViewModel model = new InternalUserActivityViewModel { SelectedValue = selection };
+
+            // Act
+            ActionResult result = HomeController().ChooseActivity(model);
+
+            // Assert
+            var redirectToRouteResult = ((RedirectToRouteResult)result);
+
+            Assert.Equal(action, redirectToRouteResult.RouteValues["action"]);
+        }
+
         private HomeController HomeController()
         {
             return new HomeController(() => apiClient);
