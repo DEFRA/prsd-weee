@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Rules.Producer
 {
+    using System.Globalization;
     using Xml.Schemas;
     using XmlValidation.BusinessValidation.Rules.Producer;
     using Xunit;
@@ -7,15 +8,15 @@
     public class AnnualTurnoverMismatchTests
     {
         [Theory]
-        [InlineData(annualTurnoverBandType.Lessthanorequaltoonemillionpounds, 1F)]
-        [InlineData(annualTurnoverBandType.Lessthanorequaltoonemillionpounds, 1000000F)] // Edge case
-        [InlineData(annualTurnoverBandType.Greaterthanonemillionpounds, 10000001F)] // Edge case
-        [InlineData(annualTurnoverBandType.Greaterthanonemillionpounds, 1000000000000F)]
-        public void AnnualTurnoverMatchesWithBand_ShouldReturnValidResult(annualTurnoverBandType annualTurnoverBand, float annualTurnover)
+        [InlineData(annualTurnoverBandType.Lessthanorequaltoonemillionpounds, 1)]
+        [InlineData(annualTurnoverBandType.Lessthanorequaltoonemillionpounds, 1000000)] // Edge case
+        [InlineData(annualTurnoverBandType.Greaterthanonemillionpounds, 10000001)] // Edge case
+        [InlineData(annualTurnoverBandType.Greaterthanonemillionpounds, 1000000000000)]
+        public void AnnualTurnoverMatchesWithBand_ShouldReturnValidResult(annualTurnoverBandType annualTurnoverBand, double annualTurnover)
         {
             var producer = new producerType
             {
-                annualTurnover = annualTurnover,
+                annualTurnover = decimal.Parse(annualTurnover.ToString(CultureInfo.InvariantCulture)),
                 annualTurnoverBand = annualTurnoverBand
             };
 
@@ -25,18 +26,18 @@
         }
 
         [Theory]
-        [InlineData(annualTurnoverBandType.Greaterthanonemillionpounds, 1F)]
-        [InlineData(annualTurnoverBandType.Greaterthanonemillionpounds, 1000000F)] // Edge case
-        [InlineData(annualTurnoverBandType.Lessthanorequaltoonemillionpounds, 1000001F)] // Edge case
-        [InlineData(annualTurnoverBandType.Lessthanorequaltoonemillionpounds, 1000000000000F)]
-        public void AnnualTurnoverDoesNotMatchWithBand_ShouldReturnInvalidResult_WithProducerName_AndProducerRegistrationNumber_AndWarningStatus(annualTurnoverBandType annualTurnoverBand, float annualTurnover)
+        [InlineData(annualTurnoverBandType.Greaterthanonemillionpounds, 1)]
+        [InlineData(annualTurnoverBandType.Greaterthanonemillionpounds, 1000000)] // Edge case
+        [InlineData(annualTurnoverBandType.Lessthanorequaltoonemillionpounds, 1000001)] // Edge case
+        [InlineData(annualTurnoverBandType.Lessthanorequaltoonemillionpounds, 1000000000000)]
+        public void AnnualTurnoverDoesNotMatchWithBand_ShouldReturnInvalidResult_WithProducerName_AndProducerRegistrationNumber_AndWarningStatus(annualTurnoverBandType annualTurnoverBand, double annualTurnover)
         {
             const string name = "Some company";
             const string prn = "ABC12345";
 
             var producer = new producerType
             {
-                annualTurnover = annualTurnover,
+                annualTurnover = decimal.Parse(annualTurnover.ToString(CultureInfo.InvariantCulture)),
                 annualTurnoverBand = annualTurnoverBand,
                 producerBusiness = new producerBusinessType
                 {
