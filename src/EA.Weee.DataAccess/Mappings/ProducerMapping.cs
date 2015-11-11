@@ -9,6 +9,7 @@
         {
             ToTable("Producer", "Producer");
             Ignore(p => p.OrganisationName);
+            Property(p => p.AnnualTurnover).HasPrecision(28, 12);
         }
     }
 }
