@@ -117,7 +117,7 @@
 
             using (var client = apiClient())
             {
-                validationId = await client.SendAsync(User.GetAccessToken(), new ProcessXMLFile(pcsId, fileData));
+                validationId = await client.SendAsync(User.GetAccessToken(), new ProcessXMLFile(pcsId, fileData, model.File.FileName));
             }
 
             if (Request.IsAjaxRequest())
