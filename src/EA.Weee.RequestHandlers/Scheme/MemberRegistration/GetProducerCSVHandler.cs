@@ -40,7 +40,7 @@
                 request.ComplianceYear);
 
             CsvWriter<ProducerCSVData> csvWriter = csvWriterFactory.Create<ProducerCSVData>();
-            csvWriter.DefineColumn("Organisation name", i => i.OrganisationName);
+            csvWriter.DefineColumn("Producer name", i => i.OrganisationName);
             csvWriter.DefineColumn("Trading name", i => i.TradingName);
             csvWriter.DefineColumn("Producer registration number", i => i.RegistrationNumber);
             csvWriter.DefineColumn("Company registration number", i => i.CompanyNumber);
