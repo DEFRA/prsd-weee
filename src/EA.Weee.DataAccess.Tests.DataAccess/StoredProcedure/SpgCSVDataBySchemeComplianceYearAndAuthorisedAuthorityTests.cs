@@ -188,7 +188,7 @@
 
                 MembersDetailsCSVData result = results[0];
 
-                Assert.Equal(string.Empty, result.ProducerName);
+                Assert.Null(result.ProducerName);
             }
         }
 
