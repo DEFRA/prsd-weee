@@ -12,15 +12,15 @@
 
         /// <remarks/>
         [XmlIgnore]
-        public float annualTurnover
+        public decimal annualTurnover
         {
             get
             {
                 if (string.IsNullOrEmpty(annualTurnoverString))
                 {
-                    return 0F;
+                    return 0M;
                 }
-                return float.Parse(annualTurnoverString);
+                return decimal.Parse(annualTurnoverString);
             }
             set { annualTurnoverString = value.ToString(CultureInfo.InvariantCulture); }
         }
