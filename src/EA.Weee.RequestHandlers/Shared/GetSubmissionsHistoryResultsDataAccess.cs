@@ -32,6 +32,7 @@
                                      SubmittedBy = user.FirstName + " " + user.Surname,
                                      Year = mu.ComplianceYear.Value,
                                      DateTime = mu.Date.Value,
+                                     TotalCharges = mu.TotalCharges,
                                      NoOfWarnings = (from me in context.MemberUploadErrors
                                                      where me.MemberUploadId == mu.Id && (me.ErrorLevel.Value == Domain.ErrorLevel.Warning.Value)
                                                      select me).Count()
