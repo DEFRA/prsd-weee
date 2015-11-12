@@ -13,6 +13,8 @@
     using Requests.Base;
     using System.Linq;
     using System.Reflection;
+    using Prsd.Core.Autofac;
+    using Prsd.Core.Mapper;
 
     public class AutofacBootstrapper
     {
@@ -41,6 +43,12 @@
             // Register request creators
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
                 .AsClosedTypesOf(typeof(IRequestCreator<,>));
+
+            // Register mappings
+            builder.RegisterModule(new MappingModule());
+
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                .AsClosedTypesOf(typeof(IMap<,>));
 
             // Register caching
             builder.RegisterType<InMemoryCacheProvider>().As<ICacheProvider>();

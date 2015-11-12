@@ -16,6 +16,7 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Prsd.Core.Mapper;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -27,22 +28,22 @@
     public class MemberRegistrationControllerTests
     {
         private readonly IWeeeClient weeeClient;
-        private readonly IFileConverterService fileConverter;
+        private readonly IMapper mapper;
 
         public MemberRegistrationControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
-            fileConverter = A.Fake<IFileConverterService>();
+            mapper = A.Fake<IMapper>();
         }
 
         private MemberRegistrationController MemberRegistrationController()
         {
             var controller = new MemberRegistrationController(
                 () => weeeClient,
-                fileConverter,
                 A.Fake<IWeeeCache>(),
                 A.Fake<BreadcrumbService>(),
-                A.Fake<CsvWriterFactory>());
+                A.Fake<CsvWriterFactory>(),
+                 mapper);
 
             new HttpContextMocker().AttachToController(controller);
 
@@ -53,10 +54,10 @@
         {
             var controller = new MemberRegistrationController(
                  () => weeeClient,
-                 fileConverter,
                  A.Fake<IWeeeCache>(),
                  A.Fake<BreadcrumbService>(),
-                 A.Fake<CsvWriterFactory>());
+                 A.Fake<CsvWriterFactory>(),
+                 mapper);
 
             new HttpContextMocker().AttachToController(controller);
 
@@ -75,11 +76,11 @@
         private FakeMemberRegistrationController BuildFakeMemberRegistrationController()
         {
             var controller = new FakeMemberRegistrationController
-                (weeeClient,
-                fileConverter,           
+                (weeeClient,   
                 A.Fake<IWeeeCache>(),
                 A.Fake<BreadcrumbService>(),
-                A.Fake<CsvWriterFactory>());
+                A.Fake<CsvWriterFactory>(),
+                A.Fake<IMapper>());
 
             new HttpContextMocker().AttachToController(controller);
 
@@ -201,47 +202,23 @@
         }
 
         [Fact]
-        public async void PostAddOrAmendMembers_ConvertsFileToString()
+        public async void PostAddOrAmendMembers_FileIsMappedSuccessfully_ValidateRequestSentWithConvertedFileDataAndOrganisationId()
         {
-            try
-            {
-                await MemberRegistrationController().AddOrAmendMembers(A<Guid>._, new AddOrAmendMembersViewModel());
-            }
-            catch (Exception)
-            {
-            }
-
-            A.CallTo(() => fileConverter.Convert(A<HttpPostedFileBase>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
-        public async void PostAddOrAmendMembers_FileIsConvertedSuccessfully_ValidateRequestSentWithConvertedFileDataAndOrganisationId()
-        {
-            var fileData = new byte[1];
-            var organisationId = Guid.NewGuid();
             var request = new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._);
 
-            A.CallTo(() => fileConverter.Convert(A<HttpPostedFileBase>._))
-                .Returns(fileData);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessXMLFile>._))
-                .Invokes((string token, IRequest<Guid> req) => request = (ProcessXMLFile)req);
+            A.CallTo(() => mapper.Map<AddOrAmendMembersViewModel, ProcessXMLFile>(A<AddOrAmendMembersViewModel>._))
+                .Returns(request);
 
             try
             {
-                await MemberRegistrationController().AddOrAmendMembers(organisationId, new AddOrAmendMembersViewModel());
+                await MemberRegistrationController().AddOrAmendMembers(Guid.NewGuid(), new AddOrAmendMembersViewModel());
             }
             catch (Exception)
             {
             }
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessXMLFile>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request))
                 .MustHaveHappened(Repeated.Exactly.Once);
-
-            Assert.NotNull(request);
-            Assert.Equal(fileData, request.Data);
-            Assert.Equal(organisationId, request.OrganisationId);
         }
 
         [Fact]
@@ -540,15 +517,15 @@
 
             public FakeMemberRegistrationController(
                 IWeeeClient apiClient,
-                IFileConverterService fileConverter,
                 IWeeeCache cache,
                 BreadcrumbService breadcrumb,
-                CsvWriterFactory csvWriterFactory)
+                CsvWriterFactory csvWriterFactory,
+                IMapper mapper)
                 : base(() => apiClient,
-                fileConverter,
                 cache,
                 breadcrumb,
-                csvWriterFactory)
+                csvWriterFactory,
+                 mapper)
             {
                 ApiClient = apiClient;
             }
