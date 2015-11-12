@@ -112,7 +112,7 @@
 
                 MembersDetailsCSVData result = results[0];
 
-                Assert.Equal(producer1.Business.Company.Name, result.OrganisationName);
+                Assert.Equal(producer1.Business.Company.Name, result.ProducerName);
             }
         }
 
@@ -150,7 +150,7 @@
 
                 MembersDetailsCSVData result = results[0];
 
-                Assert.Equal(producer1.Business.Partnership.Name, result.OrganisationName);
+                Assert.Equal(producer1.Business.Partnership.Name, result.ProducerName);
             }
         }
 
@@ -188,7 +188,7 @@
 
                 MembersDetailsCSVData result = results[0];
 
-                Assert.Equal(string.Empty, result.OrganisationName);
+                Assert.Equal(string.Empty, result.ProducerName);
             }
         }
 
@@ -231,7 +231,7 @@
 
                 MembersDetailsCSVData result = results[0];
 
-                Assert.Equal(producer1.Business.Partnership.Name, result.OrganisationName);
+                Assert.Equal(producer1.Business.Partnership.Name, result.ProducerName);
             }
         }
 
@@ -316,9 +316,9 @@
                 Assert.NotNull(results);
            
                 Assert.Collection(results,
-                    (r1) => Assert.Equal("AAAA", r1.OrganisationName),
-                    (r2) => Assert.Equal("ABCD", r2.OrganisationName),
-                    (r3) => Assert.Equal("ABCH", r3.OrganisationName));
+                    (r1) => Assert.Equal("AAAA", r1.ProducerName),
+                    (r2) => Assert.Equal("ABCD", r2.ProducerName),
+                    (r3) => Assert.Equal("ABCH", r3.ProducerName));
             }
         }
     }
