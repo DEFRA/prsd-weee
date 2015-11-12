@@ -53,6 +53,7 @@
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
     <Content Include="scripts\Update\Sprint16\20151110-154900-UpdateStoredProcedureForMemberDetails.sql" />
+    <Content Include="scripts\Update\Sprint16\20151110-183300-UpdateStoredProcedureForMemberDetails.sql" />
     <Content Include="scripts\Update\placeholder.txt" />
     <Content Include="scripts\Everytime\0004-InsertCompetentAuthorityData.sql" />
     <Content Include="scripts\Everytime\0003-InsertCountryData.sql" />
