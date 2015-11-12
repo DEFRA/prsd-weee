@@ -27,7 +27,7 @@
                 }
             }
 
-            attributes.AppendFormat(@"onclick=""{0};{1}""", EventTrackingFunction(eventCategory, eventAction, eventLabel), additionalOnclickContent);
+            attributes.AppendFormat(@"onclick=""{0}{1}""", EventTrackingFunction(eventCategory, eventAction, eventLabel), additionalOnclickContent);
 
             string html = string.Format(@"<input type=""submit"" value=""{0}"" {1}/>", text, attributes.ToString());
 
