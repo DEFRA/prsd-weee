@@ -34,7 +34,7 @@
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
         private static readonly Guid organisationId = Guid.NewGuid();
-        private static readonly ProcessXMLFile Message = new ProcessXMLFile(organisationId, new byte[1]);
+        private static readonly ProcessXMLFile Message = new ProcessXMLFile(organisationId, new byte[1], "File name");
 
         public ProcessXMLFileHandlerTests()
         {
@@ -178,7 +178,7 @@
         {
             var schemeId = Guid.NewGuid();
 
-            return new Producer(schemeId, new MemberUpload(organisationId, schemeId, "FAKE Member Upload DATA"), null, null, SystemTime.UtcNow, 0, true,
+            return new Producer(schemeId, new MemberUpload(organisationId, schemeId, "FAKE Member Upload DATA", "File name"), null, null, SystemTime.UtcNow, 0, true,
                 string.Empty, null, tradingName, EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
                 SellingTechniqueType.Both, ObligationType.Both,
                 AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(),
