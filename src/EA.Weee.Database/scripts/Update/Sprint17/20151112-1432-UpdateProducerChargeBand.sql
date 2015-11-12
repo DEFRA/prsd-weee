@@ -220,11 +220,12 @@ GO
 
 -- Update stored procedure [spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority]
 GO
-/****** Object:  StoredProcedure [Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority]    Script Date: 11/12/2015 14:54:31 ******/
+/****** Object:  StoredProcedure [Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority]    Script Date: 05/11/2015 14:31:47 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+-- =============================================
 -- Author:		Priety Mahajan
 -- Create date: 03 Nov 2015
 -- Description:	Returns data about all producers currently registered
@@ -253,7 +254,10 @@ SELECT
 	ELSE 'Registered company'
 	END as 'ProducerType',
 
-	COALESCE(PBC.Name, PBP.Name, '') AS 'OrganisationName',
+	CASE 
+	when PBC.Name is null then PBP.Name
+	else PBC.NAME
+	end as 'ProducerName',
 
 	 P.RegistrationNumber AS 'PRN',
 	 
@@ -287,7 +291,7 @@ SELECT
 			ELSE ''
 		END AS 'ObligationType',
   
-	CASE CBA.[ChargeBand]
+  CASE CBA.ChargeBand
 			WHEN 0 THEN 'A'
 			WHEN 1 THEN 'B'
 			WHEN 2 THEN 'C'
@@ -498,6 +502,6 @@ AND
       P.IsCurrentForComplianceYear = 1
 ORDER BY
 	S.SchemeName,
-     COALESCE(PBC.Name, PBP.Name, '')
+     ProducerName
 END
 GO
