@@ -70,22 +70,17 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_DoesNotHaveOrganisationUser_ReturnsViewWithOnlyFourOption()
+        public async void GetChooseActivity_DoesNotHaveMultipleOrganisationUsers_ReturnsViewWithOnlyFourOption()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetManageableOrganisationUsers>._))
-               .Returns(new List<OrganisationUserData>());
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._))
-               .Returns(A.Dummy<SchemePublicInfo>());
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
-                .Returns(new List<Core.Admin.SubmissionsHistorySearchResult>
-                {
-                    new Core.Admin.SubmissionsHistorySearchResult()
-                });
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+               .Returns(new OrganisationOverview()
+               {
+                   HasMemberSubmissions = true,
+                   HasMultipleOrganisationUsers = false
+               });
 
             var result = await HomeController().ChooseActivity(A<Guid>._);
 
@@ -104,24 +99,12 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetManageableOrganisationUsers>._))
-               .Returns(new List<OrganisationUserData>
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+               .Returns(new OrganisationOverview()
                {
-                   new OrganisationUserData
-                   {
-                       UserId = Guid.NewGuid().ToString()
-                   },
-                   new OrganisationUserData
-                   {
-                       UserId = Guid.NewGuid().ToString()
-                   }
+                   HasMemberSubmissions = false,
+                   HasMultipleOrganisationUsers = true
                });
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._))
-               .Returns(A.Dummy<SchemePublicInfo>());
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
-                .Returns(new List<Core.Admin.SubmissionsHistorySearchResult>());
 
             var result = await HomeController().ChooseActivity(A<Guid>._);
 
@@ -140,27 +123,12 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetManageableOrganisationUsers>._))
-               .Returns(new List<OrganisationUserData>
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+               .Returns(new OrganisationOverview()
                {
-                   new OrganisationUserData
-                   {
-                       UserId = Guid.NewGuid().ToString()
-                   },
-                   new OrganisationUserData
-                   {
-                       UserId = Guid.NewGuid().ToString()
-                   }
+                   HasMemberSubmissions = true,
+                   HasMultipleOrganisationUsers = true
                });
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._))
-                .Returns(A.Dummy<SchemePublicInfo>());
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSubmissionsHistoryResults>._))
-                .Returns(new List<Core.Admin.SubmissionsHistorySearchResult>
-                {
-                    new Core.Admin.SubmissionsHistorySearchResult()
-                });
 
             var result = await HomeController().ChooseActivity(A<Guid>._);
 

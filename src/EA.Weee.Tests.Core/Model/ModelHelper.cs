@@ -96,13 +96,7 @@
         /// <returns></returns>
         public Scheme CreateScheme()
         {
-            int organisationId = GetNextId(typeof(Organisation));
-            Organisation organisation = new Organisation
-            {
-                Id = IntegerToGuid(organisationId),
-                TradingName = string.Format("Organisation {0} Trading Name", organisationId),
-            };
-            model.Organisations.Add(organisation);
+            var organisation = CreateOrganisation();
 
             int schemeId = GetNextId(typeof(Scheme));
             Scheme scheme = new Scheme
@@ -115,6 +109,44 @@
             model.Schemes.Add(scheme);
 
             return scheme;
+        }
+
+        /// <summary>
+        /// Creates and organisation
+        /// </summary>
+        /// <returns></returns>
+        public Organisation CreateOrganisation()
+        {
+            int organisationId = GetNextId(typeof(Organisation));
+            Organisation organisation = new Organisation
+            {
+                Id = IntegerToGuid(organisationId),
+                TradingName = string.Format("Organisation {0} Trading Name", organisationId),
+            };
+            model.Organisations.Add(organisation);
+
+            return organisation;
+        }
+
+        /// <summary>
+        /// Associates a user with an organisation. The user is created if the specified username is not present. The status
+        /// of the user is set to active by default.
+        /// </summary>
+        /// <param name="organisation"></param>
+        /// <param name="username"></param>
+        /// <param name="userStatus"></param>
+        /// <returns></returns>
+        public OrganisationUser CreateOrganisationUser(Organisation organisation, string username, int userStatus = 2)
+        {
+            var organisationUser = new OrganisationUser();
+            organisationUser.Id = Guid.NewGuid();
+            organisationUser.OrganisationId = organisation.Id;
+            organisationUser.UserId = GetOrCreateUser(username).Id;
+            organisationUser.UserStatus = userStatus;
+
+            model.OrganisationUsers.Add(organisationUser);
+
+            return organisationUser;
         }
 
         /// <summary>
