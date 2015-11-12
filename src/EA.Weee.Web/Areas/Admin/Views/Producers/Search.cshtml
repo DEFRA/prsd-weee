@@ -45,8 +45,23 @@
             $("#introJavaScriptEnabled").show();
         });
 
+        @*  When a uer selects an item from the autocomplete, the ID is stored in the hidden input
+            called "SelectedRegistrationNumber". If the user changes the value of the search term
+            after making a selected, we need to clear this hidden value.
+
+            To do this, we cannot use the change event because FireFox fires this event
+            after the autocomplete's select event completes. This clears the value immediately
+            after it is set.
+
+            To avoid this, we can store the original search term in a variable and use the focus
+            and blur events to check for a change. The variable is updated by the autocomplete
+            select event to avoid the value being cleared after a selection is made.
+        *@
+        var searchTerm = '';
+
         $("#SearchTerm")
-            .keyup(function () { $("#SelectedRegistrationNumber").val(""); })
+            .focus(function () { searchTerm = $(this).val(); })
+            .blur(function () { if (searchTerm != $(this).val()) { $("#SelectedRegistrationNumber").val(""); } })
             .autocomplete({
             source: function (request, response) {
                 $.ajax({
@@ -63,6 +78,7 @@
             select: function (event, ui) {
                 $("#SearchTerm").val(ui.item.Name + ', ' + ui.item.RegistrationNumber);
                 $("#SelectedRegistrationNumber").val(ui.item.RegistrationNumber);
+                searchTerm = $("#SearchTerm").val();
                 return false;
             },
             open: function () {

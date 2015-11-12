@@ -108,7 +108,9 @@
     <Content Include="scripts\Update\Sprint16\20151110-113100-UpdateStoredProcedureForMemberDetails.sql" />
     <Content Include="scripts\Update\Sprint16\20151106-143100-UpdateStoredProcedureForMemberDetails.sql" />
     <Content Include="scripts\Update\Sprint16\20151104-1725-UpdateCsvDataSp.sql" />
-    <Content Include="scripts\Update\Sprint16\20151112-1432-UpdateProducerChargeBand.sql" />
+    <Content Include="scripts\Update\Sprint17\20151112-1334-UpdateStoredProcedureForProducerDetailsExtract.sql" />
+    <Content Include="scripts\Update\Sprint17\20151112-1328-AddNonClusteredIndexToTables.sql" />
+    <Content Include="scripts\Update\Sprint17\20151112-1432-UpdateProducerChargeBand.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
