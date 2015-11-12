@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme.MemberRegistration.XmlValidation
 {
+    using Domain.Lookup;
     using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.Scheme.MemberRegistration;
     using EA.Weee.Tests.Core.Model;
@@ -14,32 +15,22 @@
     public class ProducerChargeCalculatorDataAccessTests
     {
         /// <summary>
-        /// This test ensures that the charge band amount can be fetched from the database by name.
+        /// This test ensures that the charge band amount can be fetched from the database by type.
         /// </summary>
         [Fact]
-        public void FetchChargeBandAmount_WithValidChargeBand_ReturnsAmount()
+        public void FetchCurrentChargeBandAmount_WithChargeBandTypeA_ReturnsChargeBandAmountWithTypeA()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 // Arrange
-                ProducerChargeBand producerChargeBand = new ProducerChargeBand();
-                producerChargeBand.Id = new Guid("6F1D960C-D7BA-4930-A899-FE234F45E3BB");
-                producerChargeBand.Name = "TEST";
-                producerChargeBand.Amount = 123.45m;
-                database.Model.ProducerChargeBands.Add(producerChargeBand);
-                
-                database.Model.SaveChanges();
-
                 ProducerChargeCalculatorDataAccess dataAccess = new ProducerChargeCalculatorDataAccess(database.WeeeContext);
 
                 // Act
-                ChargeBandType chargeBand = (ChargeBandType)Activator.CreateInstance(typeof(ChargeBandType), true);
-                typeof(ChargeBandType).GetProperty("DisplayName").SetValue(chargeBand, "TEST");
-
-                decimal result = dataAccess.FetchChargeBandAmount(chargeBand);
+                var result = dataAccess.FetchCurrentChargeBandAmount(ChargeBand.A);
 
                 // Assert
-                Assert.Equal(123.45m, result);
+                Assert.NotNull(result);
+                Assert.Equal(ChargeBand.A, result.ChargeBand);
             }
         }
 
