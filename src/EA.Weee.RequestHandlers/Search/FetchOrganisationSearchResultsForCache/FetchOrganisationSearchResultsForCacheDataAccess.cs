@@ -39,6 +39,7 @@
                     OrganisationId = r.Id,
                     Name = r.OrganisationName
                 })
+                .OrderBy(r => r.Name)
                 .ToList();
         }
     }
