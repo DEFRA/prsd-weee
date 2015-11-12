@@ -88,7 +88,7 @@
     <Compile Include="Mappings\ProducerAuthorisedRepresentativeMapping.cs" />
     <Compile Include="Mappings\ProducerBrandNameMapping.cs" />
     <Compile Include="Mappings\ProducerBusinessMapping.cs" />
-    <Compile Include="Mappings\ProducerChargeBandMapping.cs" />
+    <Compile Include="Mappings\ChargeBandAmountMapping.cs" />
     <Compile Include="Mappings\ProducerContactMapping.cs" />
     <Compile Include="Mappings\ContactMapping.cs" />
     <Compile Include="Mappings\CountryMapping.cs" />
