@@ -20,12 +20,16 @@
 
         /// <summary>
         /// Returns a list of all complete organisations, ordered by organisation name.
+        /// For now, only organisations representing schemes will be returned, excluding
+        /// any scheme that has a status of rejected.
         /// </summary>
         /// <returns></returns>
         public async Task<IList<OrganisationSearchResult>> FetchCompleteOrganisations()
         {
             var results = await context
-                .Organisations
+                .Schemes
+                .Where(s => s.SchemeStatus.Value != Domain.Scheme.SchemeStatus.Rejected.Value)
+                .Select(s => s.Organisation)
                 .Where(o => o.OrganisationStatus.Value == Domain.Organisation.OrganisationStatus.Complete.Value)
                 .AsNoTracking()
                 .ToListAsync();
