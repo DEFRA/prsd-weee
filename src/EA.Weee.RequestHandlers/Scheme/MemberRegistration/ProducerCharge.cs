@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
-    using Domain;
+    using Domain.Lookup;
 
     public class ProducerCharge
     {
-        public ChargeBandType ChargeBandType { get; set; }
+        public ChargeBandAmount ChargeBandAmount { get; set; }
 
-        public decimal ChargeAmount { get; set; }
+        public decimal Amount { get; set; }
     }
 }
