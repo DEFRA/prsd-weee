@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using Domain.Lookup;
     using EA.Prsd.Core.Domain;
     using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.Tests.Core.Model;
@@ -35,7 +36,7 @@
 
                 Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
                 producer1.IsCurrentForComplianceYear = true;
-                producer1.ChargeBandType = 2; // 2 = "C"
+                producer1.ChargeBandAmount = helper.FetchChargeBandAmount(ChargeBand.C);
                 producer1.UpdatedDate = new DateTime(2015, 1, 1);
 
                 db.Model.SaveChanges();
@@ -405,12 +406,11 @@
         }
 
         /// <summary>
-        /// This test ensures that the charge band integer values are correctly mapped to
-        /// there single letter equivalents. E.g. 0 = "A", 1 = "B".
+        /// This test ensures that the single letter values are returned for the charge bands.
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task Execute_WithDifferentChargeBandTypes_MapsNumbersToLetters()
+        public async Task Execute_WithDifferentChargeBandTypes_ReturnsChargeBandLetters()
         {
             {
                 using (DatabaseWrapper db = new DatabaseWrapper())
@@ -426,23 +426,23 @@
 
                     Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
                     producer1.IsCurrentForComplianceYear = true;
-                    producer1.ChargeBandType = 0; // 0 = "A"
+                    producer1.ChargeBandAmount = helper.FetchChargeBandAmount(ChargeBand.A);
 
                     Producer producer2 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/22BBBB22");
                     producer2.IsCurrentForComplianceYear = true;
-                    producer2.ChargeBandType = 1; // 1 = "B"
+                    producer2.ChargeBandAmount = helper.FetchChargeBandAmount(ChargeBand.B);
 
                     Producer producer3 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/33CCCC33");
                     producer3.IsCurrentForComplianceYear = true;
-                    producer3.ChargeBandType = 2; // 2 = "C"
+                    producer3.ChargeBandAmount = helper.FetchChargeBandAmount(ChargeBand.C);
 
                     Producer producer4 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/44DDDD44");
                     producer4.IsCurrentForComplianceYear = true;
-                    producer4.ChargeBandType = 3; // 3 = "D"
+                    producer4.ChargeBandAmount = helper.FetchChargeBandAmount(ChargeBand.D);
 
                     Producer producer5 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/55EEEE55");
                     producer5.IsCurrentForComplianceYear = true;
-                    producer5.ChargeBandType = 4; // 4 = "E"
+                    producer5.ChargeBandAmount = helper.FetchChargeBandAmount(ChargeBand.E);
 
                     db.Model.SaveChanges();
 
