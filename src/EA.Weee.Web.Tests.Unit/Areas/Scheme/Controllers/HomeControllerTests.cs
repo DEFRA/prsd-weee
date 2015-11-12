@@ -70,13 +70,17 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_DoNotHaveOrganisationUser_ReturnsViewWithOnlyFourOption()
+        public async void GetChooseActivity_DoesNotHaveMultipleOrganisationUsers_ReturnsViewWithOnlyFourOption()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetManageableOrganisationUsers>._))
-               .Returns(new List<OrganisationUserData>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+               .Returns(new OrganisationOverview()
+               {
+                   HasMemberSubmissions = true,
+                   HasMultipleOrganisationUsers = false
+               });
 
             var result = await HomeController().ChooseActivity(A<Guid>._);
 
@@ -90,22 +94,40 @@
         }
 
         [Fact]
-        public async void GetChooseActivity_HaveOrganisationUser_ReturnsViewWithFiveOption()
+        public async void GetChooseActivity_DoesNotHaveMemberSubmissions_ReturnsViewWithOnlyFourOption()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                .Returns(true);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetManageableOrganisationUsers>._))
-               .Returns(new List<OrganisationUserData>
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+               .Returns(new OrganisationOverview()
                {
-                   new OrganisationUserData
-                   {
-                       UserId = Guid.NewGuid().ToString()
-                   },
-                   new OrganisationUserData
-                   {
-                       UserId = Guid.NewGuid().ToString()
-                   }
+                   HasMemberSubmissions = false,
+                   HasMultipleOrganisationUsers = true
+               });
+
+            var result = await HomeController().ChooseActivity(A<Guid>._);
+
+            var model = (ChooseActivityViewModel)((ViewResult)result).Model;
+
+            Assert.Equal(model.PossibleValues.Count, 4);
+
+            Assert.False(model.PossibleValues.Contains(PcsAction.ViewSubmissionHistory));
+
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public async void GetChooseActivity_HaveOrganisationUser_AndMemberSubmissions_ReturnsViewWithFiveOption()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+               .Returns(true);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+               .Returns(new OrganisationOverview()
+               {
+                   HasMemberSubmissions = true,
+                   HasMultipleOrganisationUsers = true
                });
 
             var result = await HomeController().ChooseActivity(A<Guid>._);

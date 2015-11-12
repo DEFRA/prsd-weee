@@ -23,18 +23,7 @@
         {
             authorization.EnsureInternalOrOrganisationAccess(request.OrganisationId);
 
-            List<SubmissionsHistorySearchResult> results;
-
-            if (request.ComplianceYear == 0)
-            {
-                results = await dataAccess.GetSubmissionsHistory(request.SchemeId);
-            }
-            else
-            {
-                results = await dataAccess.GetSubmissionHistoryForComplianceYear(request.SchemeId, request.ComplianceYear);
-            }
-
-            return results.ToList();
+            return await dataAccess.GetSubmissionsHistory(request.SchemeId, request.ComplianceYear);
         }
     }
 }

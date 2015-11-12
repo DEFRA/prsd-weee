@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\GetMemberDetailsCSV.cs" />
+    <Compile Include="Organisations\GetOrganisationOverview.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache.cs" />
     <Compile Include="Admin\FindMatchingUsers.cs" />
