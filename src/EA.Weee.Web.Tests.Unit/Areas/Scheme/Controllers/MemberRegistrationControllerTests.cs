@@ -220,7 +220,7 @@
         {
             var fileData = new byte[1];
             var organisationId = Guid.NewGuid();
-            var request = new ProcessXMLFile(A<Guid>._, A<byte[]>._);
+            var request = new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._);
 
             A.CallTo(() => fileConverter.Convert(A<HttpPostedFileBase>._))
                 .Returns(fileData);

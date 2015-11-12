@@ -43,13 +43,13 @@
         {
             if (errors != null && errors.Any(e => e.ErrorType == MemberUploadErrorType.Schema))
             {
-                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile), errors, totalCharges, null, schemeId);
+                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile), errors, totalCharges, null, schemeId, messageXmlFile.FileName);
             }
             else
             {
                 var xml = xmlConverter.XmlToUtf8String(messageXmlFile);
                 var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
-                return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), schemeId);
+                return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), schemeId, messageXmlFile.FileName);
             }
         }
 

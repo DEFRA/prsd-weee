@@ -28,7 +28,7 @@
             const string xml = "<root></root>";
 
             var data = Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"UTF-16\"?>" + xml);
-            var result = XmlConverter().Convert(new ProcessXMLFile(Guid.NewGuid(), data));
+            var result = XmlConverter().Convert(new ProcessXMLFile(Guid.NewGuid(), data, "File name"));
 
             Assert.Equal(xml, result.ToString());
         }
@@ -39,7 +39,7 @@
             const string xml = "<root></root>";
 
             var data = Encoding.UTF8.GetPreamble().Concat(Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"UTF-16\"?>" + xml)).ToArray();
-            var result = XmlConverter().Convert(new ProcessXMLFile(Guid.NewGuid(), data));
+            var result = XmlConverter().Convert(new ProcessXMLFile(Guid.NewGuid(), data, "File name"));
 
             Assert.Equal(xml, result.ToString());  
         }
