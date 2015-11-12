@@ -1,12 +1,9 @@
 ﻿namespace EA.Weee.DataAccess
 {
-    using System.Data.Common;
-    using System.Data.Entity;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Admin;
     using Domain.Audit;
+    using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Producer;
     using Domain.Scheme;
@@ -15,6 +12,10 @@
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
     using StoredProcedure;
+    using System.Data.Common;
+    using System.Data.Entity;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public class WeeeContext : DbContext
     {
@@ -45,7 +46,7 @@
 
         public virtual DbSet<MigratedProducer> MigratedProducers { get; set; }
 
-        public virtual DbSet<ProducerChargeBand> ProducerChargeBands { get; set; }
+        public virtual DbSet<ChargeBandAmount> ChargeBandAmounts { get; set; }
 
         public virtual DbSet<CompetentAuthorityUser> CompetentAuthorityUsers { get; set; }
 
