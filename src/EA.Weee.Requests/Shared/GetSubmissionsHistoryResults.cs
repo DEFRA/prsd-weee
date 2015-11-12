@@ -9,13 +9,13 @@
     {
         public Guid SchemeId { get; set; }
         public Guid OrganisationId { get; set; }
-        public int ComplianceYear { get; set; }
+        public int? ComplianceYear { get; set; }
 
-        public GetSubmissionsHistoryResults(Guid id, int year = 0, Guid orgId = default(Guid))
+        public GetSubmissionsHistoryResults(Guid schemeId, Guid organisationId, int? complianceYear = null)
         {
-            ComplianceYear = year;
-            SchemeId = id;
-            OrganisationId = orgId;
+            SchemeId = schemeId;
+            OrganisationId = organisationId;
+            ComplianceYear = complianceYear;
         }
     }
 }

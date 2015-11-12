@@ -106,6 +106,7 @@
     <Compile Include="Organisations\Create\CreateRegisteredCompanyRequestHandlerTests.cs" />
     <Compile Include="Organisations\Create\CreateSoleTraderRequestHandlerTests.cs" />
     <Compile Include="Organisations\FindMatchingOrganisations\DataAccess\FindMatchingOrganisationsDataAccessTests.cs" />
+    <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandlerTests.cs" />
     <Compile Include="Organisations\GetPublicOrganisationInfoHandlerTests.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationDataAccessTests.cs" />
     <Compile Include="Organisations\OrganisationByIdHandlerTests.cs" />

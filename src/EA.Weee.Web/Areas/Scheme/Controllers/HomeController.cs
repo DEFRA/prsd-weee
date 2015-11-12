@@ -54,28 +54,26 @@
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
 
-                var orgDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
-
-                string organisationDetailsActivityName = orgDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
-                
+                var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
                 //get the organisation type based on organisation id
-                List<string> activities = new List<string>
-                    {
-                        PcsAction.ManagePcsMembers,
-                        PcsAction.ViewSubmissionHistory,
-                        organisationDetailsActivityName,
-                        PcsAction.ManageContactDetails,
-                        PcsAction.ManageOrganisationUsers
-                    };
-                var model = new ChooseActivityViewModel(activities);
+                string organisationDetailsActivityName = organisationDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
 
-                var orgUsers = await GetOrganisationUsers(pcsId);
+                var organisationOverview = await client.SendAsync(User.GetAccessToken(), new GetOrganisationOverview(pcsId));
 
-                if (orgUsers.Count == 0)
+                List<string> activities = new List<string>();
+                activities.Add(PcsAction.ManagePcsMembers);
+                if (organisationOverview.HasMemberSubmissions)
                 {
-                    model.PossibleValues.Remove(PcsAction.ManageOrganisationUsers);
+                    activities.Add(PcsAction.ViewSubmissionHistory);
+                }
+                activities.Add(organisationDetailsActivityName);
+                activities.Add(PcsAction.ManageContactDetails);
+                if (organisationOverview.HasMultipleOrganisationUsers)
+                {
+                    activities.Add(PcsAction.ManageOrganisationUsers);
                 }
 
+                var model = new ChooseActivityViewModel(activities);
                 model.OrganisationId = pcsId;
                 await SetBreadcrumb(pcsId, null);
 
@@ -353,16 +351,17 @@
             await SetBreadcrumb(pcsId, "View submission history");
 
             var model = new SubmissionHistoryViewModel();
-
+            
             using (var client = apiClient())
             {
                 var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemePublicInfo(pcsId));
 
                 if (scheme != null)
                 {
-                    model.Results = await client.SendAsync(User.GetAccessToken(), new GetSubmissionsHistoryResults(scheme.SchemeId, 0, scheme.OrganisationId));
+                    model.Results = await client.SendAsync(User.GetAccessToken(), new GetSubmissionsHistoryResults(scheme.SchemeId, scheme.OrganisationId));
                 }
             }
+
             return View(model);
         }
 
