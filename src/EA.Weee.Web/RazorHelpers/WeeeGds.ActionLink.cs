@@ -54,7 +54,7 @@
                 attributes.Append(@" target=""_blank"" ");
             }
 
-            attributes.AppendFormat(@"onclick=""{0};{1}""", EventTrackingFunction(eventCategory, eventAction, eventLabel), additionalOnclickContent);
+            attributes.AppendFormat(@"onclick=""{0}{1}""", EventTrackingFunction(eventCategory, eventAction, eventLabel), additionalOnclickContent);
 
             var action = UrlHelper.Action(actionName, controllerName, routeValues);
             string link = string.Format(@"<a href=""{0}"" {1}>{2}</a>", action, attributes.ToString(), linkText);
