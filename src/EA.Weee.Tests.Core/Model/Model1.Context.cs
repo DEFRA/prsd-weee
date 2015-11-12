@@ -37,16 +37,16 @@ namespace EA.Weee.Tests.Core.Model
         public virtual DbSet<Scheme> Schemes { get; set; }
         public virtual DbSet<Address1> Address1 { get; set; }
         public virtual DbSet<AuthorisedRepresentative> AuthorisedRepresentatives { get; set; }
-        public virtual DbSet<BrandName> BrandNames { get; set; }
+        public virtual DbSet<BrandName_> BrandName_Set { get; set; }
         public virtual DbSet<Business> Businesses { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Contact1> Contact1 { get; set; }
-        public virtual DbSet<MigratedProducer> MigratedProducers { get; set; }
-        public virtual DbSet<Partner> Partners { get; set; }
+        public virtual DbSet<MigratedProducer_> MigratedProducer_Set { get; set; }
+        public virtual DbSet<Partner_> Partner_Set { get; set; }
         public virtual DbSet<Partnership> Partnerships { get; set; }
         public virtual DbSet<Producer> Producers { get; set; }
-        public virtual DbSet<ProducerChargeBand> ProducerChargeBands { get; set; }
-        public virtual DbSet<SICCode> SICCodes { get; set; }
+        public virtual DbSet<SICCode_> SICCode_Set { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+        public virtual DbSet<ChargeBandAmount> ChargeBandAmounts { get; set; }
     }
 }
