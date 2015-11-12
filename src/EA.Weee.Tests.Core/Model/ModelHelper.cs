@@ -1,10 +1,11 @@
 ﻿namespace EA.Weee.Tests.Core.Model
 {
+    using Domain;
+    using Domain.Lookup;
+    using Domain.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Domain;
-    using Domain.Scheme;
 
     /// <summary>
     /// This class provides helper methods for deterministically seeding a database.
@@ -251,6 +252,7 @@
             model.Businesses.Add(business);
 
             int producerId = GetNextId(typeof(Producer));
+            var chargeBandAmount = FetchChargeBandAmount(ChargeBand.A);
             Producer producer = new Producer
             {
                 Id = IntegerToGuid(producerId),
@@ -264,6 +266,7 @@
                 Scheme = memberUpload.Scheme,
                 SchemeId = memberUpload.Scheme.Id,
                 AuthorisedRepresentativeId = null,
+                ChargeBandAmountId = chargeBandAmount.Id
             };
             model.Producers.Add(producer);
 
@@ -342,6 +345,11 @@
             model.Contact1.Add(contact);
 
             return contact;
+        }
+
+        public ChargeBandAmount FetchChargeBandAmount(ChargeBand chargeBand)
+        {
+            return model.ChargeBandAmounts.First(pcb => pcb.ChargeBand == (int)chargeBand);
         }
     }
 }

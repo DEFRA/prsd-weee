@@ -16,8 +16,8 @@ namespace EA.Weee.Tests.Core.Model
     {
         public Producer()
         {
-            this.BrandNames = new HashSet<BrandName>();
-            this.SICCodes = new HashSet<SICCode>();
+            this.BrandNames = new HashSet<BrandName_>();
+            this.SICCodes = new HashSet<SICCode_>();
         }
     
         public System.Guid Id { get; set; }
@@ -30,7 +30,6 @@ namespace EA.Weee.Tests.Core.Model
         public int EEEPlacedOnMarketBandType { get; set; }
         public int AnnualTurnoverBandType { get; set; }
         public int SellingTechniqueType { get; set; }
-        public int ChargeBandType { get; set; }
         public decimal ChargeThisUpdate { get; set; }
         public System.Guid MemberUploadId { get; set; }
         public Nullable<System.Guid> AuthorisedRepresentativeId { get; set; }
@@ -39,12 +38,14 @@ namespace EA.Weee.Tests.Core.Model
         public string TradingName { get; set; }
         public System.Guid SchemeId { get; set; }
         public bool IsCurrentForComplianceYear { get; set; }
+        public System.Guid ChargeBandAmountId { get; set; }
     
         public virtual MemberUpload MemberUpload { get; set; }
         public virtual Scheme Scheme { get; set; }
         public virtual AuthorisedRepresentative AuthorisedRepresentative { get; set; }
-        public virtual ICollection<BrandName> BrandNames { get; set; }
+        public virtual ICollection<BrandName_> BrandNames { get; set; }
         public virtual Business Business { get; set; }
-        public virtual ICollection<SICCode> SICCodes { get; set; }
+        public virtual ICollection<SICCode_> SICCodes { get; set; }
+        public virtual ChargeBandAmount ChargeBandAmount { get; set; }
     }
 }
