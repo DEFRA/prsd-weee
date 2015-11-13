@@ -1,20 +1,21 @@
 ﻿namespace EA.Weee.Xml
 {
+    using Domain.Lookup;
+    using EA.Weee.Domain;
+    using EA.Weee.Xml.Schemas;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using EA.Weee.Domain;
-    using EA.Weee.Xml.Schemas;
 
     public class ProducerChargeBandCalculator : IProducerChargeBandCalculator
     {
-        public ChargeBandType GetProducerChargeBand(annualTurnoverBandType annualTurnoverBand, bool vatRegistered, eeePlacedOnMarketBandType eeePlacedOnMarketBand)
+        public ChargeBand GetProducerChargeBand(annualTurnoverBandType annualTurnoverBand, bool vatRegistered, eeePlacedOnMarketBandType eeePlacedOnMarketBand)
         {
             if (eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
             {
-                return ChargeBandType.E;
+                return ChargeBand.E;
             }
             else
             {
@@ -22,23 +23,23 @@
                     && vatRegistered
                     && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
-                    return ChargeBandType.A;
+                    return ChargeBand.A;
                 }
                 else if (annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
                          && vatRegistered
                          && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
-                    return ChargeBandType.B;
+                    return ChargeBand.B;
                 }
                 else if (annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
                          && !vatRegistered
                          && eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
                 {
-                    return ChargeBandType.D;
+                    return ChargeBand.D;
                 }
                 else
                 {
-                    return ChargeBandType.C;
+                    return ChargeBand.C;
                 }
             }
         }

@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
+    using Domain.Lookup;
     using EA.Weee.Domain;
     using System;
     using System.Collections.Generic;
@@ -9,7 +10,8 @@
 
     public interface IProducerChargeCalculatorDataAccess
     {
-        decimal FetchChargeBandAmount(ChargeBandType chargeBand);
+        ChargeBandAmount FetchCurrentChargeBandAmount(ChargeBand chargeBandType);
+
         decimal FetchSumOfExistingCharges(string registrationNumber, int complianceYear);
     }
 }
