@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
+    using Domain.Lookup;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.Scheme.Interfaces;
@@ -14,7 +15,7 @@
         private readonly WeeeContext context;
 
         private bool dataFetched = false;
-        private Dictionary<string, decimal> producerChargeBands;
+        private Dictionary<ChargeBand, ChargeBandAmount> currentProducerChargeBandAmounts;
         private Dictionary<ProducerYear, decimal> sumOfExistingChargesLookup;
 
         public ProducerChargeCalculatorDataAccess(WeeeContext context)
@@ -24,11 +25,14 @@
 
         private void FetchData()
         {
-            producerChargeBands = context
-                .ProducerChargeBands
-                .AsNoTracking()
-                .DefaultIfEmpty()
-                .ToDictionary(pcb => pcb.Name, pcb => pcb.Amount);
+            /* For now we only have one charge band amount for each type, so
+             * we can fetch them all. When new charge band amounts are added,
+             * this query will need to select only latest charge band amount
+             * for each charge band type.
+             */
+            currentProducerChargeBandAmounts = context
+                .ChargeBandAmounts
+                .ToDictionary(pcb => pcb.ChargeBand, pcb => pcb);
 
             sumOfExistingChargesLookup = context
                 .Producers
@@ -57,11 +61,11 @@
             }
         }
 
-        public decimal FetchChargeBandAmount(ChargeBandType chargeBand)
+        public ChargeBandAmount FetchCurrentChargeBandAmount(ChargeBand chargeBandType)
         {
             EnsureDataFetched();
 
-            return producerChargeBands[chargeBand.DisplayName];
+            return currentProducerChargeBandAmounts[chargeBandType];
         }
 
         public decimal FetchSumOfExistingCharges(string registrationNumber, int complianceYear)

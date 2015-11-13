@@ -2,6 +2,7 @@
 {
     using DataAccess;
     using Domain;
+    using Domain.Lookup;
     using Domain.Producer;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Scheme.Interfaces;
@@ -25,15 +26,18 @@
         public void CalculateCharge_ProducerIsAmendmentInChargeBandCosting25WithPreviousTotalChargesOf1_ReturnsChargeAmountOf24()
         {
             // Arrange
-            ChargeBandType chargeBand = A.Dummy<ChargeBandType>();
+            ChargeBandAmount chargeBandAmount = new ChargeBandAmount(
+                new Guid("65D9ADC8-B53F-4570-A1C7-F49B0503FA6A"),
+                ChargeBand.A,
+                25);
 
             IProducerChargeCalculatorDataAccess dataAccess = A.Fake<IProducerChargeCalculatorDataAccess>();
-            A.CallTo(() => dataAccess.FetchChargeBandAmount(chargeBand)).Returns(25);
+            A.CallTo(() => dataAccess.FetchCurrentChargeBandAmount(ChargeBand.A)).Returns(chargeBandAmount);
             A.CallTo(() => dataAccess.FetchSumOfExistingCharges("WEE/AB1234CD", 2016)).Returns(1);
 
             IProducerChargeBandCalculator bandCalculator = A.Fake<IProducerChargeBandCalculator>();
             A.CallTo(() => bandCalculator.GetProducerChargeBand(A<annualTurnoverBandType>._, A<bool>._, A<eeePlacedOnMarketBandType>._))
-                .Returns(chargeBand);
+                .Returns(ChargeBand.A);
 
             ProducerChargeCalculator calculator = new ProducerChargeCalculator(dataAccess, bandCalculator);
 
@@ -45,7 +49,7 @@
             ProducerCharge result = calculator.CalculateCharge(producer, 2016);
 
             // Assert
-            Assert.Equal(24, result.ChargeAmount);
+            Assert.Equal(24, result.Amount);
         }
 
         /// <summary>
@@ -55,15 +59,19 @@
         [Fact]
         public void CalculateCharge_ProducerIsAmendmentInChargeBandCosting1WithPreviousTotalChargesOf25_ReturnsChargeAmountOf0()
         {
-            ChargeBandType chargeBand = A.Dummy<ChargeBandType>();
+            // Arrange
+            ChargeBandAmount chargeBandAmount = new ChargeBandAmount(
+                new Guid("65D9ADC8-B53F-4570-A1C7-F49B0503FA6A"),
+                ChargeBand.A,
+                1);
 
             IProducerChargeCalculatorDataAccess dataAccess = A.Fake<IProducerChargeCalculatorDataAccess>();
-            A.CallTo(() => dataAccess.FetchChargeBandAmount(chargeBand)).Returns(1);
+            A.CallTo(() => dataAccess.FetchCurrentChargeBandAmount(ChargeBand.A)).Returns(chargeBandAmount);
             A.CallTo(() => dataAccess.FetchSumOfExistingCharges("WEE/AB1234CD", 2016)).Returns(25);
 
             IProducerChargeBandCalculator bandCalculator = A.Fake<IProducerChargeBandCalculator>();
             A.CallTo(() => bandCalculator.GetProducerChargeBand(A<annualTurnoverBandType>._, A<bool>._, A<eeePlacedOnMarketBandType>._))
-                .Returns(chargeBand);
+                .Returns(ChargeBand.A);
 
             ProducerChargeCalculator calculator = new ProducerChargeCalculator(dataAccess, bandCalculator);
 
@@ -75,7 +83,7 @@
             ProducerCharge result = calculator.CalculateCharge(producer, 2016);
 
             // Assert
-            Assert.Equal(0, result.ChargeAmount);
+            Assert.Equal(0, result.Amount);
         }
 
         /// <summary>
@@ -87,15 +95,18 @@
         public void CalculateCharge_ProducerIsAmendmentInChargeBandCosting25WithNoPrevoiusCharges_ReturnsChargeAmountOf25()
         {
             // Arrange
-            ChargeBandType chargeBand = A.Dummy<ChargeBandType>();
+            ChargeBandAmount chargeBandAmount = new ChargeBandAmount(
+                new Guid("65D9ADC8-B53F-4570-A1C7-F49B0503FA6A"),
+                ChargeBand.A,
+                25);
 
             IProducerChargeCalculatorDataAccess dataAccess = A.Fake<IProducerChargeCalculatorDataAccess>();
-            A.CallTo(() => dataAccess.FetchChargeBandAmount(chargeBand)).Returns(25);
+            A.CallTo(() => dataAccess.FetchCurrentChargeBandAmount(ChargeBand.A)).Returns(chargeBandAmount);
             A.CallTo(() => dataAccess.FetchSumOfExistingCharges("WEE/AB1234CD", 2016)).Returns(0);
 
             IProducerChargeBandCalculator bandCalculator = A.Fake<IProducerChargeBandCalculator>();
             A.CallTo(() => bandCalculator.GetProducerChargeBand(A<annualTurnoverBandType>._, A<bool>._, A<eeePlacedOnMarketBandType>._))
-                .Returns(chargeBand);
+                .Returns(ChargeBand.A);
 
             ProducerChargeCalculator calculator = new ProducerChargeCalculator(dataAccess, bandCalculator);
 
@@ -107,7 +118,7 @@
             ProducerCharge result = calculator.CalculateCharge(producer, 2016);
 
             // Assert
-            Assert.Equal(25, result.ChargeAmount);
+            Assert.Equal(25, result.Amount);
         }
 
         /// <summary>
@@ -117,15 +128,18 @@
         [Fact]
         public void CalculateCharge_ProducerIsInsertInChargeBandCosting25_ReturnsChargeAmountOf25()
         {
-            ChargeBandType chargeBand = A.Dummy<ChargeBandType>();
-            
+            ChargeBandAmount chargeBandAmount = new ChargeBandAmount(
+                new Guid("65D9ADC8-B53F-4570-A1C7-F49B0503FA6A"),
+                ChargeBand.A,
+                25);
+
             IProducerChargeCalculatorDataAccess dataAccess = A.Fake<IProducerChargeCalculatorDataAccess>();
-            A.CallTo(() => dataAccess.FetchChargeBandAmount(chargeBand)).Returns(25);
+            A.CallTo(() => dataAccess.FetchCurrentChargeBandAmount(ChargeBand.A)).Returns(chargeBandAmount);
             A.CallTo(() => dataAccess.FetchSumOfExistingCharges("WEE/AB1234CD", 2016)).Returns(0);
 
             IProducerChargeBandCalculator bandCalculator = A.Fake<IProducerChargeBandCalculator>();
             A.CallTo(() => bandCalculator.GetProducerChargeBand(A<annualTurnoverBandType>._, A<bool>._, A<eeePlacedOnMarketBandType>._))
-                .Returns(chargeBand);
+                .Returns(ChargeBand.A);
 
             ProducerChargeCalculator calculator = new ProducerChargeCalculator(dataAccess, bandCalculator);
 
@@ -136,7 +150,7 @@
             ProducerCharge result = calculator.CalculateCharge(producer, 2016);
 
             // Assert
-            Assert.Equal(25, result.ChargeAmount);
+            Assert.Equal(25, result.Amount);
         }
    }
 }
