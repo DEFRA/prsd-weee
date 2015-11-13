@@ -33,12 +33,12 @@
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 // Arrange
-                MigratedProducer migratedProducer1 = new MigratedProducer();
+                MigratedProducer_ migratedProducer1 = new MigratedProducer_();
                 migratedProducer1.Id = new Guid("B1750CCE-77D9-4A11-9ACC-D29D692FAA52");
                 migratedProducer1.ProducerRegistrationNumber = "ABC";
                 migratedProducer1.ProducerName = "Test Producer 1";
 
-                database.Model.MigratedProducers.Add(migratedProducer1);
+                database.Model.MigratedProducer_Set.Add(migratedProducer1);
                 database.Model.SaveChanges();
 
                 MigratedProducerQuerySet querySet = new MigratedProducerQuerySet(database.WeeeContext);

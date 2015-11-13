@@ -102,10 +102,13 @@
     <Compile Include="Model\AuthorisedRepresentative.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\BrandName.cs">
+    <Compile Include="Model\BrandName_.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Business.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ChargeBandAmount.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Company.cs">
@@ -133,7 +136,7 @@
     <Compile Include="Model\MemberUploadError.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\MigratedProducer.cs">
+    <Compile Include="Model\MigratedProducer_.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Model1.Context.cs">
@@ -152,29 +155,26 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Model\ModelHelper.cs" />
+    <Compile Include="Model\DatabaseWrapper.cs" />
     <Compile Include="Model\Organisation.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\OrganisationUser.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\Partner.cs">
+    <Compile Include="Model\Partnership.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\Partnership.cs">
+    <Compile Include="Model\Partner_.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Producer.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\ProducerChargeBand.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\DatabaseWrapper.cs" />
     <Compile Include="Model\Scheme.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\SICCode.cs">
+    <Compile Include="Model\SICCode_.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="ObjectInstantiator.cs" />

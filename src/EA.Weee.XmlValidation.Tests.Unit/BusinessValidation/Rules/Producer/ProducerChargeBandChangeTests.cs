@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Rules.Producer
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using EA.Weee.Domain;
     using EA.Weee.Xml;
     using EA.Weee.Xml.Schemas;
@@ -12,6 +7,12 @@
     using EA.Weee.XmlValidation.BusinessValidation.QuerySets;
     using EA.Weee.XmlValidation.BusinessValidation.Rules.Producer;
     using FakeItEasy;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Weee.Domain.Lookup;
     using Xunit;
     using Producer = EA.Weee.Domain.Producer.Producer;
 
@@ -20,7 +21,7 @@
         [Fact]
         public void Evaluate_Insert_ReturnsPass()
         {
-            var result = new ProducerChargeBandChangeEvaluator().Evaluate(ChargeBandType.B, statusType.I);
+            var result = new ProducerChargeBandChangeEvaluator().Evaluate(ChargeBand.B, statusType.I);
 
             Assert.True(result.IsValid);
         }
@@ -31,12 +32,19 @@
             var evaluator = new ProducerChargeBandChangeEvaluator();
 
             var fakeProducer = A.Fake<Producer>();
-            A.CallTo(() => fakeProducer.ChargeBandType).Returns(ChargeBandType.E.Value);
+
+            ChargeBandAmount producerChargeBand = new ChargeBandAmount(
+                new Guid("0B513437-2971-4C6C-B633-75216FAB6757"),
+                ChargeBand.E,
+                123);
+
+            A.CallTo(() => fakeProducer.ChargeBandAmount)
+                .Returns(producerChargeBand);
 
             A.CallTo(() => evaluator.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(fakeProducer);
 
-            var result = evaluator.Evaluate(ChargeBandType.E);
+            var result = evaluator.Evaluate(ChargeBand.E);
 
             Assert.True(result.IsValid);
         }
@@ -47,12 +55,19 @@
             var evaluator = new ProducerChargeBandChangeEvaluator();
 
             var fakeProducer = A.Fake<Producer>();
-            A.CallTo(() => fakeProducer.ChargeBandType).Returns(ChargeBandType.A.Value);
+
+            ChargeBandAmount chargeBandAmount = new ChargeBandAmount(
+                new Guid("0B513437-2971-4C6C-B633-75216FAB6757"),
+                ChargeBand.E,
+                123);
+
+            A.CallTo(() => fakeProducer.ChargeBandAmount)
+                .Returns(chargeBandAmount);
 
             A.CallTo(() => evaluator.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(fakeProducer);
 
-            var result = evaluator.Evaluate(ChargeBandType.B);
+            var result = evaluator.Evaluate(ChargeBand.B);
 
             Assert.False(result.IsValid);
             Assert.Equal(Core.Shared.ErrorLevel.Warning, result.ErrorLevel);
@@ -63,13 +78,19 @@
         {
             string producerName = "ProdA";
             string registrationNumber = "reg123";
-            var existingChargeBand = ChargeBandType.A;
-            var newChargeBand = ChargeBandType.B;
+            var existingChargeBand = ChargeBand.A;
+            var newChargeBand = ChargeBand.B;
 
             var evaluator = new ProducerChargeBandChangeEvaluator();
 
             var fakeProducer = A.Fake<Producer>();
-            A.CallTo(() => fakeProducer.ChargeBandType).Returns(existingChargeBand.Value);
+
+            ChargeBandAmount chargeBandAmount = new ChargeBandAmount(
+                new Guid("0B513437-2971-4C6C-B633-75216FAB6757"),
+                existingChargeBand,
+                123);
+
+            A.CallTo(() => fakeProducer.ChargeBandAmount).Returns(chargeBandAmount);
             A.CallTo(() => fakeProducer.OrganisationName).Returns(producerName);
             A.CallTo(() => fakeProducer.RegistrationNumber).Returns(registrationNumber);
 
@@ -82,8 +103,8 @@
             Assert.Equal(Core.Shared.ErrorLevel.Warning, result.ErrorLevel);
             Assert.Contains(producerName, result.Message);
             Assert.Contains(registrationNumber, result.Message);
-            Assert.Contains(existingChargeBand.DisplayName, result.Message);
-            Assert.Contains(newChargeBand.DisplayName, result.Message);
+            Assert.Contains(existingChargeBand.ToString(), result.Message);
+            Assert.Contains(newChargeBand.ToString(), result.Message);
         }
 
         private class ProducerChargeBandChangeEvaluator
@@ -100,7 +121,7 @@
                 producerChargeBandChange = new ProducerChargeBandChange(QuerySet, ProducerChargeBandCalculator);
             }
 
-            public RuleResult Evaluate(ChargeBandType producerChargeBand, statusType producerStatus = statusType.A)
+            public RuleResult Evaluate(ChargeBand producerChargeBand, statusType producerStatus = statusType.A)
             {
                 var producer = new producerType()
                 {

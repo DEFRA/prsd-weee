@@ -50,7 +50,7 @@
     <Compile Include="Audit\IAuditableEntity.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ChargeBandType.cs" />
+    <Compile Include="Lookup\ChargeBand.cs" />
     <Compile Include="Events\MemberUploadSubmittedEvent.cs" />
     <Compile Include="Events\OrganisationUserRequestEvent.cs" />
     <Compile Include="Events\OrganisationUserRequestCompletedEvent.cs" />
@@ -70,7 +70,7 @@
     <Compile Include="Country.cs" />
     <Compile Include="Producer\Business.cs" />
     <Compile Include="Producer\Company.cs" />
-    <Compile Include="Producer\ProducerChargeBand.cs" />
+    <Compile Include="Lookup\ChargeBandAmount.cs" />
     <Compile Include="Producer\ProducerContact.cs" />
     <Compile Include="EEEPlacedOnMarketBandType.cs" />
     <Compile Include="ErrorLevel.cs" />

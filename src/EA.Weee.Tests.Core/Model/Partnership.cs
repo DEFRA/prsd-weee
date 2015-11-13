@@ -17,7 +17,7 @@ namespace EA.Weee.Tests.Core.Model
         public Partnership()
         {
             this.Businesses = new HashSet<Business>();
-            this.Partners = new HashSet<Partner>();
+            this.Partners = new HashSet<Partner_>();
         }
     
         public System.Guid Id { get; set; }
@@ -27,6 +27,6 @@ namespace EA.Weee.Tests.Core.Model
     
         public virtual ICollection<Business> Businesses { get; set; }
         public virtual Contact1 Contact1 { get; set; }
-        public virtual ICollection<Partner> Partners { get; set; }
+        public virtual ICollection<Partner_> Partners { get; set; }
     }
 }
