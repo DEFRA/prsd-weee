@@ -43,13 +43,13 @@
         {
             if (errors != null && errors.Any(e => e.ErrorType == MemberUploadErrorType.Schema))
             {
-                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile), errors, totalCharges, null, schemeId);
+                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile), errors, totalCharges, null, schemeId, messageXmlFile.FileName);
             }
             else
             {
                 var xml = xmlConverter.XmlToUtf8String(messageXmlFile);
                 var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
-                return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), schemeId);
+                return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), schemeId, messageXmlFile.FileName);
             }
         }
 
@@ -72,8 +72,8 @@
                 {
                     throw new ApplicationException(string.Format("No charges have been supplied for the {0}.", producerName));
                 }
-                var producerChargeBandType = ((ProducerCharge)producerCharges[producerName]).ChargeBandType;
-                var producerChargeThisUpdate = ((ProducerCharge)producerCharges[producerName]).ChargeAmount;
+                var chargeBandAmount = ((ProducerCharge)producerCharges[producerName]).ChargeBandAmount;
+                var chargeThisUpdate = ((ProducerCharge)producerCharges[producerName]).ChargeBandAmount.Amount;
 
                 List<BrandName> brandNames = producerData.producerBrandNames.Select(name => new BrandName(name)).ToList();
 
@@ -120,8 +120,8 @@
                     brandNames,
                     codes,
                     false,
-                    producerChargeBandType,
-                    producerChargeThisUpdate);
+                    chargeBandAmount,
+                    chargeThisUpdate);
 
                 // modify producer data
                 switch (producerData.status)

@@ -1,13 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using DataAccess;
     using Domain;
+    using Domain.Lookup;
     using Domain.Producer;
     using EA.Weee.Xml;
     using RequestHandlers;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Xml.Schemas;
 
     public class ProducerChargeCalculator : IProducerChargeCalculator
@@ -29,7 +30,7 @@
             {
                 decimal sumOfExistingCharges = dataAccess.FetchSumOfExistingCharges(producer.registrationNo, complianceYear);
 
-                producerCharge.ChargeAmount = Math.Max(0, producerCharge.ChargeAmount - sumOfExistingCharges);
+                producerCharge.Amount = Math.Max(0, producerCharge.ChargeBandAmount.Amount - sumOfExistingCharges);
             }
 
             return producerCharge;
@@ -37,17 +38,18 @@
 
         private ProducerCharge GetProducerCharge(producerType producer)
         {
-            ChargeBandType chargeBandType = producerChargeBandCalculator.GetProducerChargeBand(
+            ChargeBand chargeBandType = producerChargeBandCalculator.GetProducerChargeBand(
                 producer.annualTurnoverBand,
                 producer.VATRegistered,
                 producer.eeePlacedOnMarketBand);
 
-            decimal chargeAmount = dataAccess.FetchChargeBandAmount(chargeBandType);
+            ChargeBandAmount currentChargeBandAmount =
+                dataAccess.FetchCurrentChargeBandAmount(chargeBandType);
 
             return new ProducerCharge()
             {
-                ChargeBandType = chargeBandType,
-                ChargeAmount = chargeAmount
+                ChargeBandAmount = currentChargeBandAmount,
+                Amount = currentChargeBandAmount.Amount
             };
         }
     }
