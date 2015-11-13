@@ -9,10 +9,13 @@
 
         public byte[] Data { get; private set; }
 
-        public ProcessXMLFile(Guid organisationId, byte[] data)
+        public string FileName { get; private set; }
+
+        public ProcessXMLFile(Guid organisationId, byte[] data, string fileName)
         {
             OrganisationId = organisationId;
             Data = data;
+            FileName = fileName;
         }
     }
 }

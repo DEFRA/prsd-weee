@@ -1,0 +1,56 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Organisations
+@model EA.Weee.Web.ViewModels.Shared.Scheme.ViewOrganisationDetailsViewModel
+@{ 
+    if (Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+    {
+        @(this.WeeeGds().DataTable("Principal place of business details", new Dictionary<string, object>
+                      {
+                        { "Organisation type", "Sole trader or individual" },
+                        { "Business trading name", Model.OrganisationData.TradingName },
+                        { "Address line 1", Model.OrganisationData.BusinessAddress.Address1 },
+                        { "Address line 2", Model.OrganisationData.BusinessAddress.Address2 },
+                        { "Town or city", Model.OrganisationData.BusinessAddress.TownOrCity },
+                        { "County or region", Model.OrganisationData.BusinessAddress.CountyOrRegion },
+                        { "Postcode", Model.OrganisationData.BusinessAddress.Postcode },
+                        { "Country", Model.OrganisationData.BusinessAddress.CountryName },
+                        { "Telephone number", Model.OrganisationData.BusinessAddress.Telephone },
+                        { "Email address", Model.OrganisationData.BusinessAddress.Email }
+                      }))
+    }
+    else if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership)
+    {
+        @(this.WeeeGds().DataTable("Principal place of business details", new Dictionary<string, object>
+                      {
+                        { "Organisation type", "Partnership" },
+                        { "Business trading name", Model.OrganisationData.TradingName },
+                        { "Address line 1", Model.OrganisationData.BusinessAddress.Address1 },
+                        { "Address line 2", Model.OrganisationData.BusinessAddress.Address2 },
+                        { "Town or city", Model.OrganisationData.BusinessAddress.TownOrCity },
+                        { "County or region", Model.OrganisationData.BusinessAddress.CountyOrRegion },
+                        { "Postcode", Model.OrganisationData.BusinessAddress.Postcode },
+                        { "Country", Model.OrganisationData.BusinessAddress.CountryName },
+                        { "Telephone number", Model.OrganisationData.BusinessAddress.Telephone },
+                        { "Email address", Model.OrganisationData.BusinessAddress.Email }
+                      }))
+    }
+    else
+    {
+        @(this.WeeeGds().DataTable("Registered office details", new Dictionary<string, object>
+                      {
+                        { "Organisation type", "Registered company" },
+                        { "Company name", Model.OrganisationData.Name },
+                        { "Company number", Model.OrganisationData.CompanyRegistrationNumber },
+                        { "Business trading name", Model.OrganisationData.TradingName },
+                        { "Address line 1", Model.OrganisationData.BusinessAddress.Address1 },
+                        { "Address line 2", Model.OrganisationData.BusinessAddress.Address2 },
+                        { "Town or city", Model.OrganisationData.BusinessAddress.TownOrCity },
+                        { "County or region", Model.OrganisationData.BusinessAddress.CountyOrRegion },
+                        { "Postcode", Model.OrganisationData.BusinessAddress.Postcode },
+                        { "Country", Model.OrganisationData.BusinessAddress.CountryName },
+                        { "Telephone number", Model.OrganisationData.BusinessAddress.Telephone },
+                        { "Email address", Model.OrganisationData.BusinessAddress.Email }
+                      }))
+    }
+}
+

@@ -19,5 +19,7 @@
         public string SubmittedBy { get; set; }
 
         public decimal TotalCharges { get; set; }
+
+        public string FileName { get; set; }
     }
 }

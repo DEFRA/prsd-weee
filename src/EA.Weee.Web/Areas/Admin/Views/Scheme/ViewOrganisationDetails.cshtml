@@ -1,65 +1,25 @@
 ﻿@using EA.Weee.Core.Organisations
-@using EA.Weee.Web.RazorHelpers
-@using EA.Weee.Web.Views.Shared
-@model EA.Weee.Web.Areas.Scheme.ViewModels.ViewOrganisationDetailsViewModel
+@model EA.Weee.Web.ViewModels.Shared.Scheme.ViewOrganisationDetailsViewModel
 @{
     ViewBag.Title = "View Organisation Details";
 }
 
 @section main_content
 {
-    <header class="hgroup">
-        <h1 class="heading-large">Organisation details</h1>
-    </header>
-    @{
-        if (Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
-        {
-            @(this.WeeeGds().DataTable("Organisation details", new Dictionary<string, object>
-            {
-                { "Organisation type", "Sole trader or individual" },
-                { "Business trading name", Model.OrganisationData.TradingName }
-            }))
-        }
-        else if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership)
-        {
-            @(this.WeeeGds().DataTable("Organisation details", new Dictionary<string, object>
-            {
-                { "Organisation type", "Partnership" },
-                { "Business trading name", Model.OrganisationData.TradingName }
-            }))
-        }
-        else
-        {
-            @(this.WeeeGds().DataTable("Organisation details", new Dictionary<string, object>
-            {
-                { "Organisation type", "Registered company" },
-                { "Company name", Model.OrganisationData.Name },
-                { "Company number", Model.OrganisationData.CompanyRegistrationNumber },
-                { "Business trading name", Model.OrganisationData.TradingName }
-            }))
-        }
-
-        if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
-        {
-            <h2 class="heading-medium">Principal place of business details</h2>
-        }
-        else if (Model.OrganisationData.OrganisationType == OrganisationType.RegisteredCompany)
-        {
-            <h2 class="heading-medium">Registered office details</h2>
-        }
-
-        @(this.WeeeGds().DataTable("Principal place of business details", new Dictionary<string, object>
-        {
-            { "Address line 1", Model.OrganisationData.BusinessAddress.Address1 },
-            { "Address line 2", Model.OrganisationData.BusinessAddress.Address2 },
-            { "Town or city", Model.OrganisationData.BusinessAddress.TownOrCity },
-            { "County or region", Model.OrganisationData.BusinessAddress.CountyOrRegion },
-            { "Postcode", Model.OrganisationData.BusinessAddress.Postcode },
-            { "Country", Model.OrganisationData.BusinessAddress.CountryName },
-            { "Telephone number", Model.OrganisationData.BusinessAddress.Telephone },
-            { "Email address", Model.OrganisationData.BusinessAddress.Email },
-        }))
+   <header class="hgroup">
+    @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+    {
+        <h1 class="heading-large">Principal place of business details</h1>
     }
+    else
+    {
+        <h1 class="heading-large">Registered office details</h1>
+    }
+    </header>
+
+    @{
+        @Html.Partial("_ViewOrganisationDetails")
+     }
     
     <p>
         <a href="javascript:history.back();">Back</a>
