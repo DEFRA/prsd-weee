@@ -77,6 +77,8 @@
                 case Reports.ProducerDetails:
                     return RedirectToAction("ProducerDetails", "Reports");
 
+                case Reports.PCSCharges:
+                    return RedirectToAction("PCSCharges", "Reports");
                 default:
                     throw new NotSupportedException();
             }
@@ -91,7 +93,7 @@
             {
                 try
                 {
-                    ProducerDetailsViewModel model = new ProducerDetailsViewModel();
+                    ReportsFilterViewModel model = new ReportsFilterViewModel();
                     await SetReportsFilterLists(model, client);
                     return View("ProducerDetails", model);
                 }
@@ -109,7 +111,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ProducerDetails(ProducerDetailsViewModel model)
+        public async Task<ActionResult> ProducerDetails(ReportsFilterViewModel model)
         {
             using (var client = apiClient())
             {
@@ -149,7 +151,49 @@
             }
         }
 
-        private async Task SetReportsFilterLists(ProducerDetailsViewModel model, IWeeeClient client)
+        [HttpGet]
+        public async Task<ActionResult> PCSCharges()
+        {
+            SetBreadcrumb();
+
+            using (var client = apiClient())
+            {
+                try
+                {
+                    ReportsFilterViewModel model = new ReportsFilterViewModel();
+                    await SetReportsFilterLists(model, client);
+                    return View("PCSCharges", model);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                    return View();
+                }
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> PCSCharges(ReportsFilterViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                await SetReportsFilterLists(model, client);
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
+                //Download the csv based on the filters.
+                return View(model);
+            }
+        }
+
+        private async Task SetReportsFilterLists(ReportsFilterViewModel model, IWeeeClient client)
         {
             var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
             var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
