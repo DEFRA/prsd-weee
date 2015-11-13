@@ -52,7 +52,7 @@
             var org = orgAndMemberUpload.Item1;
             var memberUpload = orgAndMemberUpload.Item2;
 
-            ProcessXMLFile message = new ProcessXMLFile(org.Id, validXmlBytes);
+            ProcessXMLFile message = new ProcessXMLFile(org.Id, validXmlBytes, "File name");
 
             long initialSeed = GetCurrentSeed();
             long expectedSeed = ExpectedSeedAfterThisXml(validXmlString, initialSeed);
@@ -136,7 +136,7 @@
             context.Schemes.Add(scheme);
             context.SaveChanges();
 
-            MemberUpload memberUpload = new MemberUpload(org.Id, scheme.Id, string.Empty);
+            MemberUpload memberUpload = new MemberUpload(org.Id, scheme.Id, string.Empty, "File name");
             context.MemberUploads.Add(memberUpload);
             context.SaveChanges();
 
