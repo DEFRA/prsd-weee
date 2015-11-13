@@ -124,7 +124,7 @@
             var controller = ReportsController();
             controller.ModelState.AddModelError("Key", "Any error");
 
-            var result = await controller.ProducerDetails(new ProducerDetailsViewModel());
+            var result = await controller.ProducerDetails(new ReportsFilterViewModel());
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
