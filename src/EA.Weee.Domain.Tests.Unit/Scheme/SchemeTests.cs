@@ -1,13 +1,14 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Scheme
 {
+    using Domain.Scheme;
+    using EA.Weee.Domain.Producer;
+    using FakeItEasy;
+    using Lookup;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.InteropServices.ComTypes;
     using System.Text.RegularExpressions;
-    using Domain.Scheme;
-    using EA.Weee.Domain.Producer;
-    using FakeItEasy;
     using Xunit;
 
     public class SchemeTests
@@ -238,7 +239,7 @@
 
         private static Producer GetTestProducer(string prn)
         {
-            var memberUpload = new MemberUpload(Guid.NewGuid(), "Test Data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid());
+            var memberUpload = new MemberUpload(Guid.NewGuid(), "Test Data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid(), "File name");
             var country = new Country(Guid.NewGuid(), "Country name");
             var producerAddress = new ProducerAddress("Primary name", "Secondary name", "Street", "Town", "Locality",
                 "Administrative area", country, "Postcode");
@@ -249,16 +250,33 @@
             var business = new ProducerBusiness(companyDetails, null, producerContact);
             var authorisedRepresentative = new AuthorisedRepresentative("Name", producerContact);
 
-            var producer = new Producer(Guid.NewGuid(), memberUpload, business, authorisedRepresentative, DateTime.Now, 1000000000, true,
-                prn, DateTime.Now.AddDays(10), "Trading name", EEEPlacedOnMarketBandType.Both, SellingTechniqueType.Both, ObligationType.Both,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), true, ChargeBandType.A, (decimal)5.0);
+            var producer = new Producer(
+                Guid.NewGuid(),
+                memberUpload,
+                business,
+                authorisedRepresentative,
+                DateTime.Now,
+                1000000000,
+                true,
+                prn,
+                DateTime.Now.AddDays(10),
+                "Trading name",
+                EEEPlacedOnMarketBandType.Both,
+                SellingTechniqueType.Both,
+                ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                new List<BrandName>(),
+                new List<SICCode>(),
+                true,
+                A.Dummy<ChargeBandAmount>(),
+                (decimal)5.0);
 
             return producer;
         }
 
-        private static Producer GetTestProducer(string prn, string tradingName, Company companyDetails, Partnership partnership, AuthorisedRepresentative authorisedRepresentative, ChargeBandType chargeBand)
+        private static Producer GetTestProducer(string prn, string tradingName, Company companyDetails, Partnership partnership, AuthorisedRepresentative authorisedRepresentative, ChargeBandAmount chargeBandAmount)
         {
-            var memberUpload = new MemberUpload(Guid.NewGuid(), "Test Data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid());
+            var memberUpload = new MemberUpload(Guid.NewGuid(), "Test Data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid(), "File name");
             var country = new Country(Guid.NewGuid(), "Country name");
             var producerAddress = new ProducerAddress("Primary name", "Secondary name", "Street", "Town", "Locality",
                 "Administrative area", country, "Postcode");
@@ -267,9 +285,26 @@
 
             var business = new ProducerBusiness(companyDetails, partnership, producerContact);
 
-            var producer = new Producer(Guid.NewGuid(), memberUpload, business, authorisedRepresentative, DateTime.Now, 1000000000, true,
-                prn, DateTime.Now.AddDays(10), tradingName, EEEPlacedOnMarketBandType.Both, SellingTechniqueType.Both, ObligationType.Both,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(), true, chargeBand, (decimal)5.0);
+            var producer = new Producer(
+                Guid.NewGuid(),
+                memberUpload,
+                business,
+                authorisedRepresentative,
+                DateTime.Now,
+                1000000000,
+                true,
+                prn,
+                DateTime.Now.AddDays(10),
+                tradingName,
+                EEEPlacedOnMarketBandType.Both,
+                SellingTechniqueType.Both,
+                ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                new List<BrandName>(),
+                new List<SICCode>(),
+                true,
+                chargeBandAmount,
+                (decimal)5.0);
 
             return producer;
         }

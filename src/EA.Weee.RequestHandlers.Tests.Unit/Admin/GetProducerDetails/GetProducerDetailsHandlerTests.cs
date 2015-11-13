@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetProducerDetails
 {
+    using Domain.Lookup;
     using EA.Weee.Core.Admin;
     using EA.Weee.RequestHandlers.Admin.GetProducerDetails;
     using EA.Weee.RequestHandlers.Security;
@@ -91,7 +92,7 @@
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 false,
-                Domain.ChargeBandType.A,
+                A.Dummy<ChargeBandAmount>(),
                 0);
             
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
@@ -147,7 +148,7 @@
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 false,
-                Domain.ChargeBandType.A,
+                A.Dummy<ChargeBandAmount>(),
                 0);
 
             var memberUpload2 = A.Fake<EA.Weee.Domain.Scheme.MemberUpload>();
@@ -172,7 +173,7 @@
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 false,
-                Domain.ChargeBandType.A,
+                A.Dummy<ChargeBandAmount>(),
                 0);
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
@@ -231,7 +232,7 @@
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 false,
-                Domain.ChargeBandType.A,
+                A.Dummy<ChargeBandAmount>(),
                 0);
 
             var memberUpload2 = A.Fake<EA.Weee.Domain.Scheme.MemberUpload>();
@@ -256,7 +257,7 @@
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 false,
-                Domain.ChargeBandType.A,
+                A.Dummy<ChargeBandAmount>(),
                 0);
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
@@ -313,7 +314,7 @@
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 false,
-                Domain.ChargeBandType.A,
+                A.Dummy<ChargeBandAmount>(),
                 0);
 
             var scheme2 = A.Fake<EA.Weee.Domain.Scheme.Scheme>();
@@ -341,7 +342,7 @@
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 false,
-                Domain.ChargeBandType.A,
+                A.Dummy<ChargeBandAmount>(),
                 0);
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();

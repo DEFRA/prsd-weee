@@ -1,5 +1,16 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
+    using Core.Helpers.PrnGeneration;
+    using Domain;
+    using Domain.Lookup;
+    using Domain.Organisation;
+    using Domain.Producer;
+    using Domain.Scheme;
+    using FakeItEasy;
+    using Prsd.Core.Domain;
+    using RequestHandlers.Scheme.MemberRegistration;
+    using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
+    using Requests.Scheme.MemberRegistration;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -10,16 +21,6 @@
     using System.Threading.Tasks;
     using System.Xml.Linq;
     using System.Xml.Serialization;
-    using Core.Helpers.PrnGeneration;
-    using Domain;
-    using Domain.Organisation;
-    using Domain.Producer;
-    using Domain.Scheme;
-    using FakeItEasy;
-    using Prsd.Core.Domain;
-    using RequestHandlers.Scheme.MemberRegistration;
-    using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
-    using Requests.Scheme.MemberRegistration;
     using Xml;
     using Xml.Schemas;
     using Xunit;
@@ -51,7 +52,7 @@
             var org = orgAndMemberUpload.Item1;
             var memberUpload = orgAndMemberUpload.Item2;
 
-            ProcessXMLFile message = new ProcessXMLFile(org.Id, validXmlBytes);
+            ProcessXMLFile message = new ProcessXMLFile(org.Id, validXmlBytes, "File name");
 
             long initialSeed = GetCurrentSeed();
             long expectedSeed = ExpectedSeedAfterThisXml(validXmlString, initialSeed);
@@ -62,8 +63,8 @@
             var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
 
             var producerCharges = new Hashtable();
-            var anyCharge = 30;
-            var anyChargeBand = ChargeBandType.E;
+            var anyAmount = 30;
+            var anyChargeBandAmount = A.Dummy<ChargeBandAmount>();
 
             foreach (var producerData in schemeType.producerList)
             {
@@ -71,7 +72,7 @@
                 if (!producerCharges.ContainsKey(producerName))
                 {
                     producerCharges.Add(producerName,
-                        new ProducerCharge { ChargeAmount = anyCharge, ChargeBandType = anyChargeBand });
+                        new ProducerCharge { Amount = anyAmount, ChargeBandAmount = anyChargeBandAmount });
                 }
             }
 
@@ -135,7 +136,7 @@
             context.Schemes.Add(scheme);
             context.SaveChanges();
 
-            MemberUpload memberUpload = new MemberUpload(org.Id, scheme.Id, string.Empty);
+            MemberUpload memberUpload = new MemberUpload(org.Id, scheme.Id, string.Empty, "File name");
             context.MemberUploads.Add(memberUpload);
             context.SaveChanges();
 

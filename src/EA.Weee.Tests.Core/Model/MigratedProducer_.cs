@@ -12,13 +12,12 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class SICCode
+    public partial class MigratedProducer_
     {
         public System.Guid Id { get; set; }
-        public System.Guid ProducerId { get; set; }
-        public string Name { get; set; }
         public byte[] RowVersion { get; set; }
-    
-        public virtual Producer Producer { get; set; }
+        public string ProducerRegistrationNumber { get; set; }
+        public string ProducerName { get; set; }
+        public string CompanyNumber { get; set; }
     }
 }
