@@ -35,7 +35,7 @@
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
         private static readonly Guid organisationId = Guid.NewGuid();
-        private static readonly ProcessXMLFile Message = new ProcessXMLFile(organisationId, new byte[1]);
+        private static readonly ProcessXMLFile Message = new ProcessXMLFile(organisationId, new byte[1], "File name");
 
         public ProcessXMLFileHandlerTests()
         {
@@ -194,7 +194,7 @@
 
             return new Producer(
                 schemeId,
-                new MemberUpload(organisationId, schemeId, "FAKE Member Upload DATA"),
+                new MemberUpload(organisationId, schemeId, "FAKE Member Upload DATA", "File name"),
                 null,
                 null,
                 SystemTime.UtcNow,
