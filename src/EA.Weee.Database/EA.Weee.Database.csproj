@@ -111,6 +111,7 @@
     <Content Include="scripts\Update\Sprint17\20151112-1334-UpdateStoredProcedureForProducerDetailsExtract.sql" />
     <Content Include="scripts\Update\Sprint17\20151112-1328-AddNonClusteredIndexToTables.sql" />
     <Content Include="scripts\Update\Sprint17\20151112-1432-UpdateProducerChargeBand.sql" />
+    <Content Include="scripts\Update\Sprint17\20151113-1105-AddValidationTimeToMemberUpload.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
