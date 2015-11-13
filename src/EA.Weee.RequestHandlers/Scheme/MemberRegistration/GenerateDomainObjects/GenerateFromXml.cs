@@ -108,7 +108,9 @@
                     producerBusiness,
                     authorisedRepresentative,
                     SystemTime.UtcNow,
-                    (decimal)producerData.annualTurnover,
+                    producerData.annualTurnover.HasValue
+                        ? producerData.annualTurnover.Value
+                        : (decimal?)null,
                     producerData.VATRegistered,
                     producerRegistrationNo,
                     ceaseDate,

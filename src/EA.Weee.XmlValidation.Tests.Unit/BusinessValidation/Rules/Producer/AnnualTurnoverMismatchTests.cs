@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Rules.Producer
 {
     using System.Globalization;
+    using Xml.CustomTypes;
     using Xml.Schemas;
     using XmlValidation.BusinessValidation.Rules.Producer;
     using Xunit;
@@ -16,7 +17,7 @@
         {
             var producer = new producerType
             {
-                annualTurnover = decimal.Parse(annualTurnover.ToString(CultureInfo.InvariantCulture)),
+                annualTurnover = new XmlNullable<decimal>(decimal.Parse(annualTurnover.ToString(CultureInfo.InvariantCulture))),
                 annualTurnoverBand = annualTurnoverBand
             };
 
@@ -37,7 +38,7 @@
 
             var producer = new producerType
             {
-                annualTurnover = decimal.Parse(annualTurnover.ToString(CultureInfo.InvariantCulture)),
+                annualTurnover = new XmlNullable<decimal>(decimal.Parse(annualTurnover.ToString(CultureInfo.InvariantCulture))),
                 annualTurnoverBand = annualTurnoverBand,
                 producerBusiness = new producerBusinessType
                 {
