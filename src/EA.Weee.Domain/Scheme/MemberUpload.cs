@@ -27,12 +27,14 @@
 
         public decimal TotalCharges { get; private set; }
 
+        public virtual string FileName { get; private set; }
+
         public virtual TimeSpan ProcessTime { get; private set; }
 
         public virtual MemberUploadRawData RawData { get; set; }
 
         public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors, decimal totalCharges,
-            int? complianceYear, Guid schemeId, string userId = null)
+            int? complianceYear, Guid schemeId, string fileName, string userId = null)
         {
             OrganisationId = organisationId;
             SchemeId = schemeId;
@@ -42,14 +44,16 @@
             ComplianceYear = complianceYear;
             RawData = new MemberUploadRawData() { Data = data };
             UserId = userId;
+            FileName = fileName;
         }
 
-        public MemberUpload(Guid organisationId, Guid schemeId, string data)
+        public MemberUpload(Guid organisationId, Guid schemeId, string data, string fileName)
         {
             OrganisationId = organisationId;
             SchemeId = schemeId;
             Errors = new List<MemberUploadError>();
             RawData = new MemberUploadRawData() { Data = data };
+            FileName = fileName;
         }
 
         public void Submit()
@@ -75,7 +79,7 @@
                 ProcessTime = processTime;
             }
             else
-            {
+        {
                 throw new InvalidOperationException("ProcessTime cannot be set for a MemberUpload that has already been given a ProcessTime value.");
             }
         }

@@ -239,7 +239,7 @@
 
         private static Producer GetTestProducer(string prn)
         {
-            var memberUpload = new MemberUpload(Guid.NewGuid(), "Test Data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid());
+            var memberUpload = new MemberUpload(Guid.NewGuid(), "Test Data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid(), "File name");
             var country = new Country(Guid.NewGuid(), "Country name");
             var producerAddress = new ProducerAddress("Primary name", "Secondary name", "Street", "Town", "Locality",
                 "Administrative area", country, "Postcode");
@@ -276,7 +276,7 @@
 
         private static Producer GetTestProducer(string prn, string tradingName, Company companyDetails, Partnership partnership, AuthorisedRepresentative authorisedRepresentative, ChargeBandAmount chargeBandAmount)
         {
-            var memberUpload = new MemberUpload(Guid.NewGuid(), "Test Data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid());
+            var memberUpload = new MemberUpload(Guid.NewGuid(), "Test Data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid(), "File name");
             var country = new Country(Guid.NewGuid(), "Country name");
             var producerAddress = new ProducerAddress("Primary name", "Secondary name", "Street", "Town", "Locality",
                 "Administrative area", country, "Postcode");
