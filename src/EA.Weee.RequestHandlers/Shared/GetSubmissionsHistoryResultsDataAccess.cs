@@ -35,7 +35,8 @@
                                      TotalCharges = mu.TotalCharges,
                                      NoOfWarnings = (from me in context.MemberUploadErrors
                                                      where me.MemberUploadId == mu.Id && (me.ErrorLevel.Value == Domain.ErrorLevel.Warning.Value)
-                                                     select me).Count()
+                                                     select me).Count(),
+                                     FileName = mu.FileName
                                  }).OrderByDescending(s => s.DateTime).ToListAsync();
             return results;
         }

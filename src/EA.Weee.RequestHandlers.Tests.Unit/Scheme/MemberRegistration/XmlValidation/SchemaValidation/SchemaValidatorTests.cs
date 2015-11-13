@@ -35,7 +35,7 @@
             A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
                 .Returns(XDocument.Parse(validXml));
 
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
+            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
 
             Assert.Empty(errors);
         }
@@ -50,7 +50,7 @@
             A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
                 .Returns(XDocument.Parse(wrongNamespaceXml));
 
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
+            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -65,7 +65,7 @@
             A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
                 .Returns(XDocument.Parse(invalidXml));
 
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
+            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -76,7 +76,7 @@
             A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
                 .Throws<XmlException>();
 
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._));
+            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -87,7 +87,7 @@
             A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._)).MustNotHaveHappened();
 
             var xmlData = new byte[0];
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, xmlData));
+            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, xmlData, A<string>._));
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }

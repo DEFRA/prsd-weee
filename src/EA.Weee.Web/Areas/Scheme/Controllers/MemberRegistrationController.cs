@@ -11,6 +11,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Prsd.Core.Mapper;
     using Services.Caching;
     using ViewModels;
     using Web.Controllers.Base;
@@ -21,24 +22,24 @@
     public class MemberRegistrationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private readonly IFileConverterService fileConverter;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
         private readonly CsvWriterFactory csvWriterFactory;
+        private readonly IMapper mapper;
         private const string ManageMembersActivity = "Manage members";
 
         public MemberRegistrationController(
             Func<IWeeeClient> apiClient,
-            IFileConverterService fileConverter,
             IWeeeCache cache,
             BreadcrumbService breadcrumb,
-            CsvWriterFactory csvWriterFactory)
+            CsvWriterFactory csvWriterFactory,
+            IMapper mapper)
         {
             this.apiClient = apiClient;
-            this.fileConverter = fileConverter;
             this.cache = cache;
             this.breadcrumb = breadcrumb;
             this.csvWriterFactory = csvWriterFactory;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -111,13 +112,13 @@
                 }
             }
 
-            var fileData = fileConverter.Convert(model.File);
-
             Guid validationId;
 
             using (var client = apiClient())
             {
-                validationId = await client.SendAsync(User.GetAccessToken(), new ProcessXMLFile(pcsId, fileData));
+                model.PcsId = pcsId;
+                var request = mapper.Map<AddOrAmendMembersViewModel, ProcessXMLFile>(model);
+                validationId = await client.SendAsync(User.GetAccessToken(), request);
             }
 
             if (Request.IsAjaxRequest())
