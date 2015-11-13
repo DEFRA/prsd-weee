@@ -12,11 +12,13 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class ProducerChargeBand
+    public partial class Partner_
     {
         public System.Guid Id { get; set; }
-        public string Name { get; set; }
-        public decimal Amount { get; set; }
         public byte[] RowVersion { get; set; }
+        public string Name { get; set; }
+        public System.Guid PartnershipId { get; set; }
+    
+        public virtual Partnership Partnership { get; set; }
     }
 }

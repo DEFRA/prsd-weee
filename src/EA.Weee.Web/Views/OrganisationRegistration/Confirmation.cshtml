@@ -1,4 +1,5 @@
-﻿@model string
+﻿@using EA.Weee.Web.RazorHelpers
+@model string
 @{
     ViewBag.Title = "Confirmation";
 }
@@ -21,6 +22,6 @@
         @Html.ActionLink("Continue", "Index", "Organisation", null, new { @class = "button" })
     </p>
 
-    <p>@Html.ActionLink("What did you think of this service?", "Feedback", "NewUser", new { @area = "" }, new { @target = "_blank" }) (takes 30 seconds)</p>
+    <p>@this.WeeeGds().ActionLinkWithEventTracking("What did you think of this service?", "Feedback", "NewUser", "Feedback", "Organisation registration confirmation", "What did you think of this service?", new RouteValueDictionary { { "area" , string.Empty } }, newTab: true) (takes 30 seconds)</p>
 }
 

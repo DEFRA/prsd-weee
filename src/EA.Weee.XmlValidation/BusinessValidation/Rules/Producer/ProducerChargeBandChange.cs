@@ -1,14 +1,15 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.Rules.Producer
 {
+    using Domain.Lookup;
+    using EA.Weee.Domain;
+    using EA.Weee.Xml;
+    using EA.Weee.Xml.Schemas;
+    using EA.Weee.XmlValidation.BusinessValidation.QuerySets;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using EA.Weee.Domain;
-    using EA.Weee.Xml;
-    using EA.Weee.Xml.Schemas;
-    using EA.Weee.XmlValidation.BusinessValidation.QuerySets;
 
     public class ProducerChargeBandChange : IProducerChargeBandChange
     {
@@ -32,15 +33,21 @@
 
                 if (existingProducer != null)
                 {
-                    var chargeBand = producerChargeBandCalculator.GetProducerChargeBand(element.annualTurnoverBand, element.VATRegistered, element.eeePlacedOnMarketBand);
+                    ChargeBand existingChargeBandType = existingProducer.ChargeBandAmount.ChargeBand;
 
-                    if (existingProducer.ChargeBandType != chargeBand.Value)
+                    ChargeBand newChargeBandType = producerChargeBandCalculator.GetProducerChargeBand(
+                        element.annualTurnoverBand,
+                        element.VATRegistered,
+                        element.eeePlacedOnMarketBand);
+
+                    if (existingChargeBandType != newChargeBandType)
                     {
                         result = RuleResult.Fail(
                            string.Format("The charge band of {0} {1} will change from '{2}' to '{3}'.",
-                              existingProducer.OrganisationName, existingProducer.RegistrationNumber,
-                              ChargeBandType.FromValue<ChargeBandType>(existingProducer.ChargeBandType).DisplayName,
-                              chargeBand.DisplayName),
+                              existingProducer.OrganisationName,
+                              existingProducer.RegistrationNumber,
+                              existingChargeBandType,
+                              newChargeBandType),
                            Core.Shared.ErrorLevel.Warning);
                     }
                 }

@@ -38,7 +38,7 @@
             CsvWriter<MembersDetailsCSVData> csvWriter = csvWriterFactory.Create<MembersDetailsCSVData>();
             csvWriter.DefineColumn(@"Scheme name", i => i.SchemeName);
             csvWriter.DefineColumn(@"Scheme approval number", i => i.ApprovalNumber);
-            csvWriter.DefineColumn(@"Producer name", i => i.OrganisationName);
+            csvWriter.DefineColumn(@"Producer name", i => i.ProducerName);
             csvWriter.DefineColumn(@"Producer type", i => i.ProducerType);
             csvWriter.DefineColumn(@"Company registration number", i => i.CompanyNumber);
             csvWriter.DefineColumn(@"Partnership names", i => i.Partners);

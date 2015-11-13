@@ -1,13 +1,14 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Producer
 {
+    using EA.Weee.Domain.Producer;
+    using EA.Weee.Domain.Scheme;
+    using FakeItEasy;
+    using Lookup;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using EA.Weee.Domain.Producer;
-    using EA.Weee.Domain.Scheme;
-    using FakeItEasy;
     using Xunit;
 
     public class ProducerTests
@@ -215,14 +216,6 @@
             }
         }
 
-        private class CustomChargeBandType : ChargeBandType
-        {
-            public CustomChargeBandType(int value)
-            {
-                Value = value;
-            }
-        }
-
         private class ProducerBuilder
         {
             private string registrationNumber = "registrationNumber";
@@ -235,7 +228,7 @@
             private AnnualTurnOverBandType annualTurnOverBandType = new CustomAnnualTurnOverBandType(0);
             private SellingTechniqueType sellingTechniqueType = new CustomSellingTechniqueType(0);
             private EEEPlacedOnMarketBandType eeePlacedOnMarketBandType = new CustomEEEPlacedOnMarketBandType(0);
-            private ChargeBandType chargeBandType = new CustomChargeBandType(0);
+            private ChargeBandAmount chargeBandAmount = A.Dummy<ChargeBandAmount>();
 
             private AuthorisedRepresentative authorisedRepresentative = new AlwaysEqualAuthorisedRepresentative();
             private ProducerBusiness producerBusiness = new AlwaysEqualProducerBusiness();
@@ -277,7 +270,7 @@
                     brandNames,
                     sicCodes,
                     isCurrentForComplianceYear,
-                    chargeBandType,
+                    chargeBandAmount,
                     (decimal)5.0);
             }
 
