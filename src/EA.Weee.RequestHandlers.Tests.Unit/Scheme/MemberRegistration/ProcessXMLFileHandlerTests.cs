@@ -1,13 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Security;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain;
+    using Domain.Lookup;
     using Domain.Producer;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
@@ -16,6 +11,12 @@
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -178,11 +179,26 @@
         {
             var schemeId = Guid.NewGuid();
 
-            return new Producer(schemeId, new MemberUpload(organisationId, schemeId, "FAKE Member Upload DATA", "File name"), null, null, SystemTime.UtcNow, 0, true,
-                string.Empty, null, tradingName, EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                SellingTechniqueType.Both, ObligationType.Both,
-                AnnualTurnOverBandType.Greaterthanonemillionpounds, new List<BrandName>(), new List<SICCode>(),
-                true, ChargeBandType.E, (decimal)30.0);
+            return new Producer(
+                schemeId,
+                new MemberUpload(organisationId, schemeId, "FAKE Member Upload DATA", "File name"),
+                null,
+                null,
+                SystemTime.UtcNow,
+                0,
+                true,
+                string.Empty,
+                null,
+                tradingName,
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                new List<BrandName>(),
+                new List<SICCode>(),
+                true,
+                A.Dummy<ChargeBandAmount>(),
+                (decimal)30.0);
         }
 
         public static Scheme FakeSchemeData()

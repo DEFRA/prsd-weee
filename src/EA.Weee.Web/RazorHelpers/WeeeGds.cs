@@ -23,7 +23,7 @@
             return new ProgressiveDisclosure<TModel>(this, linkText);
         }
 
-        public string EventTrackingFunction(string eventCategory, string eventAction, string eventLabel)
+        public string EventTrackingFunction(string eventCategory, string eventAction, string eventLabel = null)
         {
             string result;
 

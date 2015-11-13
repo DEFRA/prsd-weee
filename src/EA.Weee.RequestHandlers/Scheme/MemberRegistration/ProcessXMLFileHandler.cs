@@ -83,7 +83,7 @@
               
                 totalCharges = producerCharges.Cast<DictionaryEntry>()
                     .Aggregate(totalCharges,
-                        (current, producerCharge) => current + ((ProducerCharge)producerCharge.Value).ChargeAmount);
+                        (current, producerCharge) => current + ((ProducerCharge)producerCharge.Value).Amount);
             return producerCharges;
         }
     }

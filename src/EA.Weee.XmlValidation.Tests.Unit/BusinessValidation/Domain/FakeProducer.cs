@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Domain
 {
+    using FakeItEasy;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Weee.Domain;
+    using Weee.Domain.Lookup;
     using Weee.Domain.Producer;
     using Weee.Domain.Scheme;
 
@@ -46,7 +48,7 @@
             brandNames, 
             codes,
             isCurrentForComplianceYear,
-            Weee.Domain.ChargeBandType.E,
+            A.Dummy<ChargeBandAmount>(),
             (decimal)30.0)
         {
             this.schemeOrganisationId = schemeOrganisationId;
