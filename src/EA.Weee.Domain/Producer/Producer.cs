@@ -1,12 +1,13 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
+    using Domain;
+    using Lookup;
+    using Prsd.Core.Domain;
+    using Scheme;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Domain;
-    using Prsd.Core.Domain;
-    using Scheme;
 
     public class Producer : Entity, IEquatable<Producer>
     {
@@ -27,7 +28,7 @@
             List<BrandName> brandnames,
             List<SICCode> codes,
             bool isCurrentForComplianceYear,
-            ChargeBandType chargeBandType,
+            ChargeBandAmount chargeBandAmount,
             decimal chargeThisUpdate)
         {
             ProducerBusiness = producerBusiness;
@@ -53,7 +54,7 @@
 
             IsCurrentForComplianceYear = isCurrentForComplianceYear;
 
-            ChargeBandType = chargeBandType.Value;
+            ChargeBandAmount = chargeBandAmount;
             ChargeThisUpdate = chargeThisUpdate;
         }
 
@@ -117,7 +118,7 @@
 
         public int SellingTechniqueType { get; private set; }
 
-        public virtual int ChargeBandType { get; private set; }
+        public virtual ChargeBandAmount ChargeBandAmount { get; private set; }
 
         public decimal ChargeThisUpdate { get; private set; }
 

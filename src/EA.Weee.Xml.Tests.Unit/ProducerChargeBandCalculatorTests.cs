@@ -1,12 +1,13 @@
 ﻿namespace EA.Weee.Xml.Tests.Unit
 {
+    using Domain.Lookup;
+    using EA.Weee.Domain;
+    using EA.Weee.Xml.Schemas;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using EA.Weee.Domain;
-    using EA.Weee.Xml.Schemas;
     using Xunit;
 
     public class ProducerChargeBandCalculatorTests
@@ -24,13 +25,13 @@
             eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
 
             // Act
-            ChargeBandType result = new ProducerChargeBandCalculator().GetProducerChargeBand(
+            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
                 annualTurnoverBand,
                 vatRegistered,
                 eeePlacedOnMarketBand);
 
             // Assert
-            Assert.Equal(ChargeBandType.A, result);
+            Assert.Equal(ChargeBand.A, result);
         }
 
         /// <summary>
@@ -46,13 +47,13 @@
             eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
 
             // Act
-            ChargeBandType result = new ProducerChargeBandCalculator().GetProducerChargeBand(
+            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
                 annualTurnoverBand,
                 vatRegistered,
                 eeePlacedOnMarketBand);
 
             // Assert
-            Assert.Equal(ChargeBandType.B, result);
+            Assert.Equal(ChargeBand.B, result);
         }
 
         /// <summary>
@@ -68,13 +69,13 @@
             eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
 
             // Act
-            ChargeBandType result = new ProducerChargeBandCalculator().GetProducerChargeBand(
+            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
                 annualTurnoverBand,
                 vatRegistered,
                 eeePlacedOnMarketBand);
 
             // Assert
-            Assert.Equal(ChargeBandType.C, result);
+            Assert.Equal(ChargeBand.C, result);
         }
 
         /// <summary>
@@ -90,13 +91,13 @@
             eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
 
             // Act
-            ChargeBandType result = new ProducerChargeBandCalculator().GetProducerChargeBand(
+            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
                 annualTurnoverBand,
                 vatRegistered,
                 eeePlacedOnMarketBand);
 
             // Assert
-            Assert.Equal(ChargeBandType.D, result);
+            Assert.Equal(ChargeBand.D, result);
         }
 
         /// <summary>
@@ -112,13 +113,13 @@
             eeePlacedOnMarketBandType eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket;
 
             // Act
-            ChargeBandType result = new ProducerChargeBandCalculator().GetProducerChargeBand(
+            ChargeBand result = new ProducerChargeBandCalculator().GetProducerChargeBand(
                 annualTurnoverBand,
                 vatRegistered,
                 eeePlacedOnMarketBand);
 
             // Assert
-            Assert.Equal(ChargeBandType.E, result);
+            Assert.Equal(ChargeBand.E, result);
         }
     }
 }

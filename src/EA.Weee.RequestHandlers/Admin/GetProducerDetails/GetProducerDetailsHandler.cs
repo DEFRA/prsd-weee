@@ -84,7 +84,7 @@
                     RegistrationDate = registrationDate,
                     CompanyNumber = companyNumber,
                     ObligationType = (ObligationType)latestDetails.ObligationType,
-                    ChargeBandType = (ChargeBandType)latestDetails.ChargeBandType,
+                    ChargeBandType = (ChargeBandType)latestDetails.ChargeBandAmount.ChargeBand,
                     CeasedToExist = latestDetails.CeaseToExist,
                     IsAuthorisedRepresentative = isAuthorisedRepresentative
                 };
