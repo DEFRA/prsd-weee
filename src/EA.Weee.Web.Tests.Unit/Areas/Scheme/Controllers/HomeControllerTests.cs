@@ -2,6 +2,7 @@
 {
     using Api.Client;
     using Core.Organisations;
+    using Core.Scheme;
     using Core.Users;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
@@ -14,11 +15,10 @@
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Core.Scheme;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
-    using Web.ViewModels.Shared;
+    using Web.ViewModels.Shared.Scheme;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Users;
