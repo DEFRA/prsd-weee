@@ -24,7 +24,7 @@
         public GenerateFromXmlTests()
         {
             exampleSchemeGuid = Guid.NewGuid();
-            exampleMessage = new ProcessXMLFile(exampleSchemeGuid, new byte[1]);
+            exampleMessage = new ProcessXMLFile(exampleSchemeGuid, new byte[1], "File name");
 
             var fakeWeeeContext = A.Fake<WeeeContext>();
             var fakeXmlConverter = A.Fake<IXmlConverter>();

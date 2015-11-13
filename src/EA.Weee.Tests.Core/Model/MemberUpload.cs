@@ -25,11 +25,11 @@ namespace EA.Weee.Tests.Core.Model
         public System.Guid OrganisationId { get; set; }
         public string Data { get; set; }
         public Nullable<int> ComplianceYear { get; set; }
-        public Nullable<System.Guid> SchemeId { get; set; }
+        public System.Guid SchemeId { get; set; }
         public bool IsSubmitted { get; set; }
         public decimal TotalCharges { get; set; }
         public string UserId { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
+        public System.DateTime Date { get; set; }
     
         public virtual Organisation Organisation { get; set; }
         public virtual Scheme Scheme { get; set; }
