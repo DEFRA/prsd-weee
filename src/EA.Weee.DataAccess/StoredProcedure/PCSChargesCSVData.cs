@@ -9,6 +9,8 @@
     {
         public string SchemeName { get; set; }
 
+        public int ComplianceYear { get; set; }
+
         public string ProducerName { get; set; }
         
         public string PRN { get; set; }
