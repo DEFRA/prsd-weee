@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="Admin\FindMatchingUsersDataAccessTests.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccessTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\GenerateFromXmlDataAccessTests.cs" />
     <Compile Include="Shared\GetSubmissionHistoryDataAcessTests.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheDataAccessTests.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccessTests.cs" />
