@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Shared.Scheme
 {
     using Core.Organisations;
 

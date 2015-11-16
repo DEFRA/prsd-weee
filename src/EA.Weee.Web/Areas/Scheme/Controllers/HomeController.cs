@@ -3,7 +3,6 @@
     using Api.Client;
     using Core.Organisations;
     using EA.Weee.Core.Shared;
-    using EA.Weee.Requests;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Services;
@@ -19,6 +18,7 @@
     using ViewModels;
     using Web.Controllers.Base;
     using Web.ViewModels.Shared;
+    using Web.ViewModels.Shared.Scheme;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Users;
