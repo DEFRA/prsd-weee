@@ -75,7 +75,6 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="CustomTypes\XmlNullableTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="ProducerChargeBandCalculatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

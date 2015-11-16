@@ -49,7 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomTypes\XmlNullable.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IProducerChargeBandCalculator.cs" />
     <Compile Include="ProducerChargeBandCalculator.cs" />
