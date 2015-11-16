@@ -29,7 +29,7 @@
         [Required]
         [StringLength(70)]
         [DataType(DataType.Text)]
-        [Display(Name = "Scheme name")]
+        [Display(Name = "PCS name")]
         public string SchemeName { get; set; }
 
         [StringLength(10)]
