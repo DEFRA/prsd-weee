@@ -1,14 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects
 {
-    using Core.Helpers.PrnGeneration;
-    using DataAccess;
-    using Domain;
-    using Domain.Producer;
-    using Domain.Scheme;
-    using Interfaces;
-    using Prsd.Core;
-    using Prsd.Core.Domain;
-    using Requests.Scheme.MemberRegistration;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -18,21 +9,33 @@
     using System.Runtime.ExceptionServices;
     using System.Threading.Tasks;
     using System.Xml.Serialization;
+    using Core.Helpers.PrnGeneration;
+    using DataAccess;
+    using Domain;
+    using Domain.Producer;
+    using Domain.Scheme;
+    using GenerateDomainObjects.DataAccess;
+    using Interfaces;
+    using Prsd.Core;
+    using Prsd.Core.Domain;
+    using Requests.Scheme.MemberRegistration;
     using Xml;
     using Xml.Schemas;
 
     public class GenerateFromXml : IGenerateFromXml
     {
         private readonly IXmlConverter xmlConverter;
+        private readonly IGenerateFromXmlDataAccess dataAccess;
         private readonly WeeeContext context;
 
-        public GenerateFromXml(IXmlConverter xmlConverter, WeeeContext context)
+        public GenerateFromXml(IXmlConverter xmlConverter, IGenerateFromXmlDataAccess dataAccess)
         {
             this.xmlConverter = xmlConverter;
+            this.dataAccess = dataAccess;
             this.context = context;
         }
 
-        public async Task<IEnumerable<Producer>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Hashtable producerCharges)
+        public async Task<IEnumerable<Producer>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
         {
             var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
             var producers = await SetProducerData(deserializedXml, memberUpload.SchemeId, memberUpload, producerCharges);
@@ -53,12 +56,12 @@
             }
         }
 
-        private async Task<IEnumerable<Producer>> SetProducerData(schemeType scheme, Guid schemeId, MemberUpload memberUpload, Hashtable producerCharges)
+        private async Task<IEnumerable<Producer>> SetProducerData(schemeType scheme, Guid schemeId, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
         {
             List<Producer> producers = new List<Producer>();
 
             int numberOfPrnsNeeded = scheme.producerList.Count(p => p.status == statusType.I);
-            Queue<string> generatedPrns = await ComputePrns(context, numberOfPrnsNeeded);
+            Queue<string> generatedPrns = await dataAccess.ComputePrns(numberOfPrnsNeeded);
 
             foreach (producerType producerData in scheme.producerList)
             {
@@ -73,7 +76,7 @@
                     throw new ApplicationException(string.Format("No charges have been supplied for the {0}.", producerName));
                 }
                 var chargeBandAmount = ((ProducerCharge)producerCharges[producerName]).ChargeBandAmount;
-                var chargeThisUpdate = ((ProducerCharge)producerCharges[producerName]).ChargeBandAmount.Amount;
+                var chargeThisUpdate = ((ProducerCharge)producerCharges[producerName]).Amount;
 
                 List<BrandName> brandNames = producerData.producerBrandNames.Select(name => new BrandName(name)).ToList();
 
@@ -182,103 +185,6 @@
             }
 
             return producers;
-        }
-
-        /// <summary>
-        /// Generates unique, pseudorandom PRNs with minimal database interaction.
-        /// Works by:
-        /// a) uniquely mapping each unsigned integer to another pseudorandom unsigned integer
-        /// b) uniquely mapping each unsigned integer to a specific PRN
-        /// Combining those two mappings, and using a sequential seed, we can obtain pseudorandom PRNs
-        /// with assurance that we will not repeat ourselves for a very, very long time.
-        /// </summary>
-        /// <param name="context">The database context</param>
-        /// <param name="numberOfPrnsNeeded">A non-negative integer</param>
-        /// <returns></returns>
-        private static async Task<Queue<string>> ComputePrns(WeeeContext context, int numberOfPrnsNeeded)
-        {
-            bool succeeded = false;
-            bool retry = false;
-            IEnumerable<DbEntityEntry> staleValues = null;
-            List<PrnAsComponents> generatedPrns = new List<PrnAsComponents>();
-            ExceptionDispatchInfo exceptionDispatchInfo = null;
-
-            var prnHelper = new PrnHelper(new QuadraticResidueHelper());
-
-            try
-            {
-                succeeded = false;
-                retry = false;
-
-                // to avoid concurrency issues, we want to read the latest seed, 'reserve' some PRNs (figuring
-                // out the resulting final seed as we go), and write the final seed back as quickly as possible
-                uint originalLatestSeed = (uint)context.SystemData.Select(sd => sd.LatestPrnSeed).First();
-
-                uint currentSeed = originalLatestSeed;
-                for (int ii = 0; ii < numberOfPrnsNeeded; ii++)
-                {
-                    var prnFromSeed = new PrnAsComponents(currentSeed + 1);
-                    generatedPrns.Add(prnFromSeed);
-                    currentSeed = prnFromSeed.ToSeedValue();
-                }
-
-                // we write back the next acceptable seed to the database, for next time
-                // since there are some mathematical constraints on the acceptable values
-                context.SystemData.First().LatestPrnSeed = currentSeed;
-                await context.SaveChangesAsync();
-
-                succeeded = true;
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                staleValues = ex.Entries;
-                retry = true;
-            }
-            catch (Exception ex)
-            {
-                // In .NET 4.5 it is not allowed to use "await" within catch blocks; this forces us to put
-                // code after the catch block. As a result of that, we don't want to throw unhandled exceptions
-                // here, so we capture the dispatch info and thow it at the end of this method.
-                exceptionDispatchInfo = System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(ex);
-            }
-
-            if (succeeded)
-            {
-                // now we're done with the fairly time sensitive database read/write,
-                // we can 'randomise' the results at our leisure
-                return new Queue<string>(generatedPrns.Select(p => prnHelper.CreateUniqueRandomVersionOfPrn(p)));
-            }
-            else if (retry)
-            {
-                // If we need to rety, we are probably in a race condition with another thread.
-                // To avoid retrying indefinately, we'll wait a few milliseconds to get out of sync
-                // with the other thread.
-                await Task.Delay(TimeSpan.FromMilliseconds(new Random().Next(100)));
-
-                // If the database value for [LatestPrnSeed] was updated between the time we fetched the value
-                // tried to update it with our new value, we will get a DbConcurrencyException.
-                // To handle this we will just call this method again until it succeeds.
-                // However, as dependency injection forces us to reuse the same WeeeContext, the SystemData
-                // entity will already be attached to the context giving us the same stale value from when it
-                // was first fetched.
-                // The DbUpdateConcurrencyException gives us the ability to reload this entity from the database.
-                foreach (var entry in staleValues)
-                {
-                    if (entry.Entity is SystemData)
-                    {
-                        await entry.ReloadAsync();
-                    }
-                }
-
-                // Now that we have the latest value loaded, we'll try calling this method again.
-                return await ComputePrns(context, numberOfPrnsNeeded);
-            }
-            else
-            {
-                // Something else bad happened and it's not possible to fix that here.
-                exceptionDispatchInfo.Throw();
-                throw new Exception("This will never be thrown.");
-            }
         }
 
         private async Task<AuthorisedRepresentative> SetAuthorisedRepresentative(authorisedRepresentativeType representative)

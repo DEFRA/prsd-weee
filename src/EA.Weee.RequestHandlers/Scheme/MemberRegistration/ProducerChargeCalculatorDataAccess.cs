@@ -39,6 +39,7 @@
                 .Where(p => p.MemberUpload.IsSubmitted)
                 .GroupBy(p => new
                 {
+                    SchemeApprovalNumber = p.Scheme.ApprovalNumber,
                     RegistrationNumber = p.RegistrationNumber,
                     ComplianceYear = p.MemberUpload.ComplianceYear.Value
                 })
@@ -48,7 +49,7 @@
                     Total = g.Sum(i => i.ChargeThisUpdate)
                 })
                 .ToDictionary(
-                    g => new ProducerYear(g.Key.RegistrationNumber, g.Key.ComplianceYear),
+                    g => new ProducerYear(g.Key.SchemeApprovalNumber, g.Key.RegistrationNumber, g.Key.ComplianceYear),
                     g => g.Total);
         }
 
@@ -68,11 +69,11 @@
             return currentProducerChargeBandAmounts[chargeBandType];
         }
 
-        public decimal FetchSumOfExistingCharges(string registrationNumber, int complianceYear)
+        public decimal FetchSumOfExistingCharges(string schemeApprovalNumber, string registrationNumber, int complianceYear)
         {
             EnsureDataFetched();
 
-            ProducerYear key = new ProducerYear(registrationNumber, complianceYear);
+            ProducerYear key = new ProducerYear(schemeApprovalNumber, registrationNumber, complianceYear);
             if (sumOfExistingChargesLookup.ContainsKey(key))
             {
                 return sumOfExistingChargesLookup[key];
@@ -85,12 +86,14 @@
 
         private struct ProducerYear
         {
+            public string SchemeApprovalNumber { get; private set; }
             public string RegistrationNumber { get; private set; }
             public int ComplianceYear { get; private set; }
 
-            public ProducerYear(string registrationNumber, int complianceYear)
+            public ProducerYear(string schemeApprovalNumber, string registrationNumber, int complianceYear)
                 : this()
             {
+                SchemeApprovalNumber = schemeApprovalNumber;
                 RegistrationNumber = registrationNumber;
                 ComplianceYear = complianceYear;
             }

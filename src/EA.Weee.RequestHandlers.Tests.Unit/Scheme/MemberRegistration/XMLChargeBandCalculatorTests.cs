@@ -84,13 +84,13 @@
             ProducerCharge producerCharge4 = A.Dummy<ProducerCharge>();
             ProducerCharge producerCharge5 = A.Dummy<ProducerCharge>();
 
-            A.CallTo(() => producerChargerCalculator.CalculateCharge(A<producerType>._, A<int>._))
+            A.CallTo(() => producerChargerCalculator.CalculateCharge(A<string>._, A<producerType>._, A<int>._))
                 .ReturnsNextFromSequence(producerCharge1, producerCharge2, producerCharge3, producerCharge4, producerCharge5);
 
             var xmlChargeBandCalculator = XmlChargeBandCalculator();
 
             // Act
-            Hashtable producerCharges = xmlChargeBandCalculator.Calculate(request);
+            var producerCharges = xmlChargeBandCalculator.Calculate(request);
 
             // Assert
             Assert.NotNull(producerCharges);

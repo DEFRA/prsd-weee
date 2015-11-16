@@ -3,12 +3,13 @@
     using System.Collections;
     using System.Collections.Generic;
     using Domain.Scheme;
+    using MemberRegistration;
     using Requests.Scheme.MemberRegistration;
 
     public interface IXmlChargeBandCalculator
     {
         List<MemberUploadError> ErrorsAndWarnings { get; set; }
 
-        Hashtable Calculate(ProcessXMLFile message);
+        Dictionary<string, ProducerCharge> Calculate(ProcessXMLFile message);
     }
 }
