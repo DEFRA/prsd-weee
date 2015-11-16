@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="scripts\Update\Sprint17\20151116-1110-MakeAnnualTurnoverNullable.sql" />
     <Content Include="scripts\AliaSQL.exe" />
     <Content Include="scripts\Create\placeholder.txt" />
     <Content Include="scripts\Everytime\0001-Permissions-AppRole.sql" />
@@ -111,6 +112,8 @@
     <Content Include="scripts\Update\Sprint17\20151112-1334-UpdateStoredProcedureForProducerDetailsExtract.sql" />
     <Content Include="scripts\Update\Sprint17\20151112-1328-AddNonClusteredIndexToTables.sql" />
     <Content Include="scripts\Update\Sprint17\20151112-1432-UpdateProducerChargeBand.sql" />
+    <Content Include="scripts\Update\Sprint17\20151113-1105-AddValidationTimeToMemberUpload.sql" />
+    <Content Include="scripts\Update\Sprint17\20151113-1207-RenameValidationTimeToProcessTime.sql" />
     <Content Include="scripts\Update\Sprint17\20151111-172000-AddFileNameColumnToMemberUpload.sql">
       <SubType>Component</SubType>
     </Content>
