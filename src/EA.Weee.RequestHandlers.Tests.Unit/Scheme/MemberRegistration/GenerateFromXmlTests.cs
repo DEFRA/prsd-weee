@@ -8,6 +8,7 @@
     using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.Scheme.Interfaces;
+    using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
     using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using Requests.Scheme.MemberRegistration;
     using Xml.Schemas;
@@ -26,13 +27,12 @@
             exampleSchemeGuid = Guid.NewGuid();
             exampleMessage = new ProcessXMLFile(exampleSchemeGuid, new byte[1], "File name");
 
-            var fakeWeeeContext = A.Fake<WeeeContext>();
             var fakeXmlConverter = A.Fake<IXmlConverter>();
 
             A.CallTo(() => fakeXmlConverter.Deserialize(A<XDocument>.Ignored))
                 .Returns(new schemeType { complianceYear = ExampleComplianceYear.ToString() });
 
-            generateFromXml = new GenerateFromXml(fakeXmlConverter, fakeWeeeContext);
+            generateFromXml = new GenerateFromXml(fakeXmlConverter, A.Fake<IGenerateFromXmlDataAccess>());
         }
 
         [Fact]
