@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports
 {
     using System;
+    using System.Globalization;
     using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
@@ -48,7 +49,7 @@
             csvWriter.DefineColumn(@"Date & time (GMT) last updated", i => (i.DateRegistered.ToString("dd/MM/yyyy HH:mm:ss").Equals(i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss")) ? string.Empty : i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss")));
             csvWriter.DefineColumn(@"Charge band", i => i.ChargeBandType);
             csvWriter.DefineColumn(@"VAT registered", (i => i.VATRegistered ? "Yes" : "No"));
-            csvWriter.DefineColumn(@"Annual turnover", i => i.AnnualTurnover);
+            csvWriter.DefineColumn(@"Annual turnover", i => i.AnnualTurnover.HasValue ? i.AnnualTurnover.Value.ToString(CultureInfo.InvariantCulture) : string.Empty);
             csvWriter.DefineColumn(@"Annual turnover band", i => i.AnnualTurnoverBandType);
             csvWriter.DefineColumn(@"EEE placed on market", i => i.EEEPlacedOnMarketBandType);
             csvWriter.DefineColumn(@"Obligation Type", i => i.ObligationType);
