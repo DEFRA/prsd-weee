@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Core.Scheme;
@@ -12,6 +8,10 @@
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Services;
+    using System;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
     using Weee.Requests.Scheme;
@@ -115,6 +115,7 @@
         {
             using (var client = apiClient())
             {
+                SetBreadcrumb();
                 await SetReportsFilterLists(model, client);
                 if (!ModelState.IsValid)
                 {
@@ -179,9 +180,10 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> PCSCharges(ReportsFilterViewModel model)
-        {
+        {            
             using (var client = apiClient())
             {
+                SetBreadcrumb();
                 await SetReportsFilterLists(model, client);
                 if (!ModelState.IsValid)
                 {
@@ -189,7 +191,23 @@
                 }
 
                 //Download the csv based on the filters.
-                return View(model);
+                string approvalnumber = string.Empty;
+                string csvFileName = string.Format("{0}_pcschargebreakdown_{1}.csv", model.SelectedYear, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+                
+                if (model.SelectedAA.HasValue)
+                {
+                    UKCompetentAuthorityData authorityData =
+                        await
+                            client.SendAsync(User.GetAccessToken(),
+                                new GetUKCompetentAuthorityById(model.SelectedAA.Value));
+                    var authorisedAuthorityName = authorityData.Abbreviation;
+                    csvFileName = string.Format("{0}_{1}_pcschargebreakdown_{2}.csv", model.SelectedYear, authorisedAuthorityName, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+                }
+                
+                //TODO : Get the data for PCS charge breakdown, currently empty
+
+                byte[] data = new UTF8Encoding().GetBytes(string.Empty);
+                return File(data, "text/csv", csvFileName);                
             }
         }
 
