@@ -38,8 +38,8 @@
 
             CsvWriter<PCSChargesCSVData> csvWriter = csvWriterFactory.Create<PCSChargesCSVData>();
             csvWriter.DefineColumn(@"Scheme name", i => i.SchemeName);
-            csvWriter.DefineColumn(@"compliance year", i => i.ComplianceYear);
-            csvWriter.DefineColumn(@"submission date and time", i => i.SubmissionDate.ToString("dd/MM/yyyy HH:mm:ss"));
+            csvWriter.DefineColumn(@"Compliance year", i => i.ComplianceYear);
+            csvWriter.DefineColumn(@"Submission date and time (GMT)", i => i.SubmissionDate.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn(@"Producer name", i => i.ProducerName);
             csvWriter.DefineColumn(@"PRN", i => i.PRN);
             csvWriter.DefineColumn(@"Charge value", i => i.ChargeValue);
