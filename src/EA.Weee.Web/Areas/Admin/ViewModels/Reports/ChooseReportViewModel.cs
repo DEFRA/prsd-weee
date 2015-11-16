@@ -8,7 +8,8 @@
         public ChooseReportViewModel()
             : base(new List<string>
         {
-            Reports.ProducerDetails
+            Reports.ProducerDetails,
+            Reports.PCSCharges
         })
         {
         }

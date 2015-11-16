@@ -84,6 +84,7 @@
 
         [Theory]
         [InlineData(Reports.ProducerDetails, "ProducerDetails")]
+        [InlineData(Reports.PCSCharges, "PCSCharges")]
         public void HttpPost_ChooseActivity_RedirectsToCorrectControllerAction(string selection, string action)
         {
             // Arrange
@@ -124,7 +125,39 @@
             var controller = ReportsController();
             controller.ModelState.AddModelError("Key", "Any error");
 
-            var result = await controller.ProducerDetails(new ProducerDetailsViewModel());
+            var result = await controller.ProducerDetails(new ReportsFilterViewModel());
+
+            Assert.IsType<ViewResult>(result);
+            Assert.False(controller.ModelState.IsValid);
+        }
+
+        [Fact]
+        public async void HttpGet_PCSCharges_ShouldReturnsPCSChargesView()
+        {
+            var controller = ReportsController();
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAllComplianceYears>._))
+                .Returns(new List<int> { 2015, 2016 });
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAllApprovedSchemes>._))
+                .Returns(new List<SchemeData> { new SchemeData() });
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._))
+                .Returns(new List<UKCompetentAuthorityData> { new UKCompetentAuthorityData() });
+
+            var result = await controller.PCSCharges();
+
+            var viewResult = ((ViewResult)result);
+            Assert.Equal("PCSCharges", viewResult.ViewName);
+        }
+
+        [Fact]
+        public async void HttpPost_PCSCharges_ModelIsInvalid_ShouldRedirectViewWithError()
+        {
+            var controller = ReportsController();
+            controller.ModelState.AddModelError("Key", "Any error");
+
+            var result = await controller.PCSCharges(new ReportsFilterViewModel());
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);

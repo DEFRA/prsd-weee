@@ -1,5 +1,5 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Submissions
-{
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
+{ 
     using System;
     using System.Collections.Generic;
     using System.Security;
@@ -8,7 +8,7 @@
     using Domain.Scheme;
     using FakeItEasy;
     using Prsd.Core.Mapper;
-    using RequestHandlers.Admin.Submissions;
+    using RequestHandlers.Admin;
     using RequestHandlers.Security;
     using Requests.Admin;
     using Weee.Tests.Core;
