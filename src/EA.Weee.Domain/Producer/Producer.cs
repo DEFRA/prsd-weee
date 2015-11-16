@@ -85,24 +85,8 @@
         public string TradingName { get; private set; }
 
         public bool VATRegistered { get; private set; }
-
-        private decimal? AnnualTurnvoverValue { get; set; }
     
-        public decimal? AnnualTurnover
-        {
-            get { return AnnualTurnvoverValue; }
-            private set
-            {
-                if (value == null)
-                {
-                    AnnualTurnvoverValue = null;
-                }
-                else
-                {
-                    AnnualTurnvoverValue = decimal.Round(value.Value, 12);
-                }
-            }
-        }
+        public decimal? AnnualTurnover { get; private set; }
 
         public DateTime? CeaseToExist { get; private set; }
 
@@ -184,8 +168,7 @@
             return RegistrationNumber == other.RegistrationNumber &&
                    TradingName == other.TradingName &&
                    VATRegistered == other.VATRegistered &&
-                   (!AnnualTurnover.HasValue && !other.AnnualTurnover.HasValue
-                        || AnnualTurnover.HasValue && other.AnnualTurnover.HasValue && decimal.Round(AnnualTurnover.Value, 12) == decimal.Round(other.AnnualTurnover.Value, 12)) &&
+                   AnnualTurnover == other.AnnualTurnover &&
                    ObligationType == other.ObligationType &&
                    AnnualTurnOverBandType == other.AnnualTurnOverBandType &&
                    SellingTechniqueType == other.SellingTechniqueType &&
