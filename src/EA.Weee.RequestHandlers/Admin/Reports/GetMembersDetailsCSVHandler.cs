@@ -11,7 +11,7 @@
     using Requests.Admin; 
     using Security;
 
-    internal class GetMembersDetailsCSVHandler : IRequestHandler<GetMemberDetailsCSV, MembersDetailsCSVFileData>
+    internal class GetMembersDetailsCSVHandler : IRequestHandler<GetMemberDetailsCSV, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
@@ -24,7 +24,7 @@
             this.csvWriterFactory = csvWriterFactory;
         }
 
-        public async Task<MembersDetailsCSVFileData> HandleAsync(GetMemberDetailsCSV request)
+        public async Task<CSVFileData> HandleAsync(GetMemberDetailsCSV request)
         {
             authorization.EnsureCanAccessInternalArea();
             if (request.ComplianceYear == 0)
@@ -125,7 +125,7 @@
                 request.ComplianceYear,
                 DateTime.UtcNow);
 
-            return new MembersDetailsCSVFileData
+            return new CSVFileData
             {
                 FileContent = fileContent,
                 FileName = fileName

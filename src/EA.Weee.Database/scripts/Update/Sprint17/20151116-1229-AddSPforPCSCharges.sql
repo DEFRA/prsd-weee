@@ -20,7 +20,8 @@ BEGIN
 	SET NOCOUNT ON;
 	SELECT
 	S.SchemeName,
-	
+	@ComplianceYear as 'ComplianceYear',
+
 	CASE 
 	when PBC.Name is null then PBP.Name
 	else PBC.NAME
