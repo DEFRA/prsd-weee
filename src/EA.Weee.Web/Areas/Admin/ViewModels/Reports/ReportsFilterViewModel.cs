@@ -7,7 +7,7 @@
     using System.Web.Mvc;
     using Core.Admin;
 
-    public class ProducerDetailsViewModel
+    public class ReportsFilterViewModel
     {
         [Required]
         [DisplayName("Compliance year")]
