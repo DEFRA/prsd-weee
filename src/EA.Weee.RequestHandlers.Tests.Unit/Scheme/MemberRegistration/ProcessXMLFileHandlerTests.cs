@@ -139,11 +139,11 @@
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
 
-            A.CallTo(producersDbSet).WithAnyArguments().MustNotHaveHappened();
+            A.CallTo(generator).Where(g => g.Method.Name == "GenerateProducers").MustNotHaveHappened();
         }
 
         [Fact]
-        public async void ProcessXmlfile_XmlfileWithSameProducerName_NotGenerateProducerObjects()
+        public async void ProcessXmlfile_XmlfileWithBusinessError_NotGenerateProducerObjects()
         {
             var errors = new List<MemberUploadError>
             {
@@ -153,7 +153,7 @@
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(producersDbSet).WithAnyArguments().MustNotHaveHappened();
+            A.CallTo(generator).Where(g => g.Method.Name == "GenerateProducers").MustNotHaveHappened();
         }
 
         [Fact]
@@ -166,6 +166,19 @@
             A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
 
             await Assert.ThrowsAsync<ApplicationException>(async () => await handler.HandleAsync(Message));
+        }
+
+        [Fact]
+        public async void ProcessXmlfile_StoresProcessTime()
+        {
+            IEnumerable<MemberUploadError> errors = new List<MemberUploadError>();
+            A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
+            MemberUpload upload = A.Fake<MemberUpload>();
+            A.CallTo(() => generator.GenerateMemberUpload(Message, errors as List<MemberUploadError>, 0, organisationId)).WithAnyArguments().Returns(upload);
+
+            await handler.HandleAsync(Message);
+
+            A.CallTo(() => upload.SetProcessTime(new TimeSpan())).WithAnyArguments().MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

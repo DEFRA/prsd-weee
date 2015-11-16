@@ -4,10 +4,12 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain;
+    using Domain.Producer;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using GenerateProducerObjects;
@@ -39,15 +41,21 @@
         {
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
+            // record XML processing start time
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             var errors = xmlValidator.Validate(message);
 
             List<MemberUploadError> memberUploadErrors = errors as List<MemberUploadError> ?? errors.ToList();
-            
+            bool containsSchemaErrors = memberUploadErrors.Any(e => e.ErrorType == MemberUploadErrorType.Schema);
+            bool containsErrorOrFatal = memberUploadErrors.Any(e => (e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal));
+
             //calculate charge band for producers if no schema errors
             Hashtable producerCharges = null;
             decimal totalCharges = 0;
             
-            if (memberUploadErrors.All(e => e.ErrorType != MemberUploadErrorType.Schema))
+            if (!containsSchemaErrors)
             {
                 producerCharges = ProducerCharges(message, ref totalCharges);
                 if (xmlChargeBandCalculator.ErrorsAndWarnings.Any(e => e.ErrorLevel == ErrorLevel.Error)
@@ -61,18 +69,21 @@
 
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
             var upload = generateFromXml.GenerateMemberUpload(message, memberUploadErrors, totalCharges, scheme.Id);
+            IEnumerable<Producer> producers = Enumerable.Empty<Producer>();
 
-            //Build producers domain object if there are no errors(schema or business during validation of xml file.
-            if (!memberUploadErrors.Any(e => (e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal)))
+            //Build producers domain object if there are no errors (schema or business) during validation of xml file.
+            if (!containsErrorOrFatal)
             {
-                var producers = await generateFromXml.GenerateProducers(message, upload, producerCharges);
-                context.MemberUploads.Add(upload);
-                context.Producers.AddRange(producers);
+                producers = await generateFromXml.GenerateProducers(message, upload, producerCharges);
             }
-            else
-            {
-                context.MemberUploads.Add(upload);
-            }
+
+            // record XML processing end time
+            stopwatch.Stop();
+            upload.SetProcessTime(stopwatch.Elapsed);
+
+            context.MemberUploads.Add(upload);
+            context.Producers.AddRange(producers);
+
             await context.SaveChangesAsync();
             return upload.Id;
         }

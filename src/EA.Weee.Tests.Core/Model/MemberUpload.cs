@@ -30,6 +30,7 @@ namespace EA.Weee.Tests.Core.Model
         public decimal TotalCharges { get; set; }
         public string UserId { get; set; }
         public System.DateTime Date { get; set; }
+        public System.TimeSpan ProcessTime { get; set; }
     
         public virtual Organisation Organisation { get; set; }
         public virtual Scheme Scheme { get; set; }

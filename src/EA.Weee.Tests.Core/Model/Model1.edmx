@@ -123,6 +123,7 @@
           <Property Name="TotalCharges" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="ProcessTime" Type="time" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="MemberUploadError">
           <Key>
@@ -903,6 +904,7 @@
           <NavigationProperty Name="Producers" Relationship="Self.FK_Producer_MemberUpload" FromRole="MemberUpload" ToRole="Producer" />
           <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Date" Type="DateTime" Precision="3" Nullable="false" />
+          <Property Name="ProcessTime" Type="Time" Nullable="false" Precision="7" />
         </EntityType>
         <EntityType Name="MemberUploadError">
           <Key>
@@ -1718,6 +1720,7 @@
           <EntitySetMapping Name="MemberUploads">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.MemberUpload">
               <MappingFragment StoreEntitySet="MemberUpload">
+                <ScalarProperty Name="ProcessTime" ColumnName="ProcessTime" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

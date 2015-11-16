@@ -29,6 +29,8 @@
 
         public virtual string FileName { get; private set; }
 
+        public virtual TimeSpan ProcessTime { get; private set; }
+
         public virtual MemberUploadRawData RawData { get; set; }
 
         public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors, decimal totalCharges,
@@ -70,9 +72,16 @@
         {
         }
 
-        public void SetProducers(List<Producer> producers)
+        public virtual void SetProcessTime(TimeSpan processTime)
         {
-            Producers = producers;
+            if (ProcessTime.Ticks.Equals(0))
+            {
+                ProcessTime = processTime;
+            }
+            else
+        {
+                throw new InvalidOperationException("ProcessTime cannot be set for a MemberUpload that has already been given a ProcessTime value.");
+            }
         }
     }
 }
