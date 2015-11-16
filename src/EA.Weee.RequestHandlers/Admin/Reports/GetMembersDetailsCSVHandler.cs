@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports
 {
     using System;
+    using System.Globalization;
     using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
@@ -36,8 +37,8 @@
                        request.ComplianceYear, request.SchemeId, request.CompetentAuthorityId);
 
             CsvWriter<MembersDetailsCSVData> csvWriter = csvWriterFactory.Create<MembersDetailsCSVData>();
-            csvWriter.DefineColumn(@"Scheme name", i => i.SchemeName);
-            csvWriter.DefineColumn(@"Scheme approval number", i => i.ApprovalNumber);
+            csvWriter.DefineColumn(@"PCS name", i => i.SchemeName);
+            csvWriter.DefineColumn(@"PCS approval number", i => i.ApprovalNumber);
             csvWriter.DefineColumn(@"Producer name", i => i.ProducerName);
             csvWriter.DefineColumn(@"Producer type", i => i.ProducerType);
             csvWriter.DefineColumn(@"Company registration number", i => i.CompanyNumber);
@@ -48,7 +49,7 @@
             csvWriter.DefineColumn(@"Date & time (GMT) last updated", i => (i.DateRegistered.ToString("dd/MM/yyyy HH:mm:ss").Equals(i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss")) ? string.Empty : i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss")));
             csvWriter.DefineColumn(@"Charge band", i => i.ChargeBandType);
             csvWriter.DefineColumn(@"VAT registered", (i => i.VATRegistered ? "Yes" : "No"));
-            csvWriter.DefineColumn(@"Annual turnover", i => i.AnnualTurnover);
+            csvWriter.DefineColumn(@"Annual turnover", i => i.AnnualTurnover.HasValue ? i.AnnualTurnover.Value.ToString(CultureInfo.InvariantCulture) : string.Empty);
             csvWriter.DefineColumn(@"Annual turnover band", i => i.AnnualTurnoverBandType);
             csvWriter.DefineColumn(@"EEE placed on market", i => i.EEEPlacedOnMarketBandType);
             csvWriter.DefineColumn(@"Obligation Type", i => i.ObligationType);

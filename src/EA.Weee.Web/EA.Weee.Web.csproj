@@ -239,7 +239,7 @@
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\ProducerDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessXmlFileRequest.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
@@ -522,6 +522,12 @@
     <Content Include="Content\govuk_elements\_components.scss" />
     <Content Include="Content\govuk_elements\_buttons.scss" />
     <Content Include="Content\govuk_elements\_breadcrumb.scss" />
+    <Content Include="Content\weee\_footer.scss" />
+    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\PCSCharges.cshtml" />
     <Content Include="Content\govuk_elements\forms\_form-validation.scss" />
     <Content Include="Content\govuk_elements\forms\_form-date.scss" />
     <Content Include="Content\govuk_elements\forms\_form-block-labels.scss" />
