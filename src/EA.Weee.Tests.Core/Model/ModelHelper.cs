@@ -168,7 +168,8 @@
                 SchemeId = scheme.Id,
                 Data = string.Format("<memberUpload{0} />", memberUploadId),
                 UserId = GetOrCreateUser("Testuser").Id,
-                Date = DateTime.UtcNow
+                Date = DateTime.UtcNow,
+                ProcessTime = new TimeSpan(0)
             };
             model.MemberUploads.Add(memberUpload);
 
