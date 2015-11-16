@@ -3,5 +3,6 @@
     public static class Reports
     {
         public const string ProducerDetails = "Producer details";
+        public const string PCSCharges = "PCS charges";
     }
 }
