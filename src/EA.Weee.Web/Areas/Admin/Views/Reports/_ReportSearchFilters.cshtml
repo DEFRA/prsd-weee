@@ -6,7 +6,7 @@
     @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
     @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
 </div>
-@if (@ViewData["ReportName"].ToString() == Reports.ProducerDetails)
+@if (Model.FilterbyScheme)
 {
 <div class="form-group  @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
     @Html.Gds().LabelFor(m => m.SelectedScheme)
