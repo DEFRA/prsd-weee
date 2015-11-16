@@ -202,7 +202,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(2017);
+                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(2020);
 
                 // Assert
                 Assert.NotNull(results);
