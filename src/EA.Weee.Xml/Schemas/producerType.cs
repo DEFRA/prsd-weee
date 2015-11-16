@@ -20,7 +20,7 @@
             {
                 return string.IsNullOrEmpty(annualTurnoverString)
                     ? (decimal?)null
-                    : decimal.Parse(annualTurnoverString);
+                    : decimal.Round(decimal.Parse(annualTurnoverString), 12);
             }
             set
             {
