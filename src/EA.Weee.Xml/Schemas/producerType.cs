@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Xml.Schemas
 {
     using System.Diagnostics.CodeAnalysis;
+    using System.Dynamic;
     using System.Globalization;
     using System.Xml.Serialization;
 
@@ -17,21 +18,15 @@
         {
             get
             {
-                if (string.IsNullOrEmpty(annualTurnoverString))
-                {
-                    return null;
-                }
-
-                return decimal.Parse(annualTurnoverString);
+                return string.IsNullOrEmpty(annualTurnoverString)
+                    ? (decimal?)null
+                    : decimal.Parse(annualTurnoverString);
             }
             set
             {
-                if (value.HasValue)
-                {
-                    annualTurnoverString = value.Value.ToString(CultureInfo.InvariantCulture);
-                }
-
-                annualTurnoverString = null;
+                annualTurnoverString = value.HasValue 
+                    ? value.Value.ToString(CultureInfo.InvariantCulture) 
+                    : null;
             }
         }
     }
