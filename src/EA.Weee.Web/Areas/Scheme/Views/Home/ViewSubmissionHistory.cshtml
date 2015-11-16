@@ -18,12 +18,12 @@
                 <table id="submissions">
                     <thead>
                     <tr>
-                        <th>File name</th>
                         <th>Date and time (GMT)</th>
                         <th>Compliance year</th>
                         <th>Warnings</th>
                         <th>Charge amount</th>
                         <th>Submitted by</th>
+                        <th>File name</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -32,7 +32,6 @@
                             string datetimeValue = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
 
                             <tr>
-                                <td>@item.FileName</td>
                                 <td>@datetimeValue</td>
                                 <td>@item.Year</td>
                                 <td>
@@ -44,6 +43,7 @@
                                 </td>
                                 <td>£@item.TotalCharges</td>
                                 <td>@item.SubmittedBy</td>
+                                <td>@item.FileName</td>
                             </tr>
                         }
                     </tbody>

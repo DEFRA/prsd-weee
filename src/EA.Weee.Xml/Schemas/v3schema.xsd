@@ -146,8 +146,9 @@
 		</xs:sequence>
 	</xs:complexType>
 	<xs:simpleType name="annualTurnoverType">
-		<xs:restriction base="xs:float">
+		<xs:restriction base="xs:decimal">
 			<xs:minInclusive value="0"/>
+      <xs:maxInclusive value="9999999999999999.999999999999"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="annualTurnoverBandType">
