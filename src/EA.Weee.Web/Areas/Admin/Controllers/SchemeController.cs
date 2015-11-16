@@ -268,7 +268,7 @@
 
         private async Task SetBreadcrumb(Guid? schemeId)
         {
-            breadcrumb.InternalActivity = "Manage schemes";
+            breadcrumb.InternalActivity = "Manage PCSs";
 
             if (schemeId.HasValue)
             {

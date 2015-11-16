@@ -1,14 +1,14 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Submissions
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
+    using Domain.Scheme;
+    using FakeItEasy;
+    using RequestHandlers.Admin;
+    using RequestHandlers.Security;
+    using Requests.Admin;
     using System;
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
-    using Domain.Scheme;
-    using FakeItEasy;
-    using RequestHandlers.Admin.Submissions;
-    using RequestHandlers.Security;
-    using Requests.Admin;
     using Weee.Tests.Core;
     using Xunit;
 

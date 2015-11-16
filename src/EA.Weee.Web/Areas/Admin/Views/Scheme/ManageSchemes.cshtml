@@ -1,7 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.ManageSchemesViewModel
 @{
-    ViewBag.Title = "Manage schemes";
+    ViewBag.Title = "Manage PCSs";
 }
 
 @section scripts{
@@ -14,7 +14,7 @@
 
 <header class="hgroup">
     <h1 class="heading-large">
-        Which scheme would you like to manage?
+        Which PCS would you like to manage?
     </h1>
 </header>
 @using (Html.BeginForm(actionName: "ManageSchemes", controllerName: "Scheme", method: FormMethod.Post))
