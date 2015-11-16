@@ -1,4 +1,4 @@
-﻿/****** Object:  StoredProcedure [Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority]    Script Date: 16/11/2015 11:02:27 ******/
+﻿/****** Object:  StoredProcedure [Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority]    Script Date: 16/11/2015 13:28:25 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -224,11 +224,13 @@ LEFT JOIN
 				MU.ComplianceYear,
 				P.RegistrationNumber,
 				P.UpdatedDate,
+				P.SchemeId,
 				ROW_NUMBER() OVER
 				(
 					PARTITION BY
 						MU.ComplianceYear,
-						P.RegistrationNumber
+						P.RegistrationNumber,
+						P.SchemeId
 					ORDER BY P.UpdatedDate
 				) AS RowNumber
 			FROM
@@ -238,12 +240,11 @@ LEFT JOIN
 					ON P.MemberUploadId = MU.Id
 			WHERE
 				MU.IsSubmitted = 1
-			AND 
-				MU.SchemeId = @SchemeId 
 		) P_First
 			ON P.RegistrationNumber = P_First.RegistrationNumber
 			AND MU.ComplianceYear = P_First.ComplianceYear
 			AND P_First.RowNumber = 1
+			AND P_First.SchemeId = S.Id  
 
 
 LEFT JOIN
