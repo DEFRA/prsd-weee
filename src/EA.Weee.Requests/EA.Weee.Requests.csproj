@@ -45,7 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin\GetMemberDetailsCSV.cs" />
+    <Compile Include="Admin\Reports\GetMemberDetailsCSV.cs" />
+    <Compile Include="Admin\Reports\GetPCSChargesCSV.cs" />
     <Compile Include="Organisations\GetOrganisationOverview.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache.cs" />

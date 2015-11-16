@@ -110,6 +110,7 @@
     <Compile Include="RelationshipExtensions.cs" />
     <Compile Include="StoredProcedure\IStoredProcedures.cs" />
     <Compile Include="StoredProcedure\MembersDetailsCSVData.cs" />
+    <Compile Include="StoredProcedure\PCSChargesCSVData.cs" />
     <Compile Include="StoredProcedure\ProducerCSVData.cs" />
     <Compile Include="StoredProcedure\StoredProcedures.cs" />
     <Compile Include="WeeeContext.cs" />

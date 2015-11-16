@@ -117,6 +117,7 @@
     <Content Include="scripts\Update\Sprint17\20151111-172000-AddFileNameColumnToMemberUpload.sql">
       <SubType>Component</SubType>
     </Content>
+    <Content Include="scripts\Update\Sprint17\20151116-1229-AddSPforPCSCharges.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
