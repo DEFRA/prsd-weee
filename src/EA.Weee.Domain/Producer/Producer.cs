@@ -16,7 +16,7 @@
             ProducerBusiness producerBusiness,
             AuthorisedRepresentative authorisedRepresentative,
             DateTime updatedDate,
-            decimal annualTurnover,
+            decimal? annualTurnover,
             bool vatRegistered,
             string registrationNumber,
             DateTime? ceaseToExist,
@@ -85,17 +85,8 @@
         public string TradingName { get; private set; }
 
         public bool VATRegistered { get; private set; }
-
-        private decimal AnnualTurnvoverValue { get; set; }
     
-        public decimal AnnualTurnover
-        {
-            get { return AnnualTurnvoverValue; }
-            private set
-            {
-                AnnualTurnvoverValue = decimal.Round(value, 12);
-            }
-        }
+        public decimal? AnnualTurnover { get; private set; }
 
         public DateTime? CeaseToExist { get; private set; }
 
@@ -177,7 +168,7 @@
             return RegistrationNumber == other.RegistrationNumber &&
                    TradingName == other.TradingName &&
                    VATRegistered == other.VATRegistered &&
-                   decimal.Round(AnnualTurnover, 12) == decimal.Round(other.AnnualTurnover, 12) &&
+                   AnnualTurnover == other.AnnualTurnover &&
                    ObligationType == other.ObligationType &&
                    AnnualTurnOverBandType == other.AnnualTurnOverBandType &&
                    SellingTechniqueType == other.SellingTechniqueType &&

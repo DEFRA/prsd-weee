@@ -11,11 +11,13 @@
         {
             var higherBandThanExpected = producer.annualTurnoverBand ==
                                          annualTurnoverBandType.Greaterthanonemillionpounds &&
-                                         producer.annualTurnover <= 1000000;
+                                         producer.annualTurnover.HasValue &&
+                                         producer.annualTurnover.Value <= 1000000;
 
             var lowerBandThanExpected = producer.annualTurnoverBand ==
                                          annualTurnoverBandType.Lessthanorequaltoonemillionpounds &&
-                                         producer.annualTurnover > 1000000;
+                                         producer.annualTurnover.HasValue &&
+                                         producer.annualTurnover.Value > 1000000;
 
             if (higherBandThanExpected || lowerBandThanExpected)
             {

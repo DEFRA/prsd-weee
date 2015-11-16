@@ -29,7 +29,7 @@
 
         public bool VATRegistered { get; set; }
 
-        public decimal AnnualTurnover { get; set; }
+        public decimal? AnnualTurnover { get; set; }
 
         public string AnnualTurnoverBandType { get; set; }
 
