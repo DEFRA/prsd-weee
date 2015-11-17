@@ -14,8 +14,8 @@
     @using (Html.BeginForm("SignOut", "Account", new { Area = "" }, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        <p>You can now download an 
-           @(this.WeeeGds().ActionLinkWithEventTracking("overview of your current members (CSV, less than 500KB)", "GetProducerCSV", "MemberRegistration",
+        <p>You can now download an overview of your 
+           @(this.WeeeGds().ActionLinkWithEventTracking("current members (CSV, less than 500KB)", "GetProducerCSV", "MemberRegistration",
                            "Downloads", "Registered members CSV", routeValues: new RouteValueDictionary(new { pcsId = @Model.PcsId, complianceYear = @Model.ComplianceYear }))).
             In it you'll find the notification of all your registered PCS members and their producer registration numbers.</p>
         <p>We will invoice you for any producer registration charges that apply.</p>
