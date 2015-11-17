@@ -126,18 +126,6 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="LibSass.x64, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\libsassnet.x64.3.2.5\lib\net40\LibSass.x64.dll</HintPath>
-    </Reference>
-    <Reference Include="libsassnet">
-      <HintPath>..\packages\libsassnet.x64.3.2.5\lib\net40\libsassnet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="libsassnet.Web, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\libsassnet.Web.x64.2.1.3.1\lib\net40\libsassnet.Web.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Owin">
       <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
@@ -373,10 +361,7 @@
     <Content Include="Content\weee\_tables.scss" />
     <Content Include="Content\weee\forms\_form-validation.scss" />
     <Content Include="Content\jquery-autocomplete.scss" />
-    <Content Include="Content\main-ie6.scss" />
-    <Content Include="Content\main-ie7.scss" />
-    <Content Include="Content\main-ie8.scss" />
-    <Content Include="Content\main.scss" />
+    <Content Include="Content\_main.scss" />
     <Content Include="Content\weee-page-ie6.scss" />
     <Content Include="Content\weee-page-ie7.scss" />
     <Content Include="Content\weee-page-ie8.scss" />
@@ -511,10 +496,32 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
-  </Target> -->
+  </Target>
+  -->
+  <Target Name="BeforeBuild">
+    <!-- Compile sass files -->
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page.scss &gt; Content\weee-page.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie6.scss &gt; Content\weee-page-ie6.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie7.scss &gt; Content\weee-page-ie7.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie8.scss &gt; Content\weee-page-ie8.css" />
+    
+	<!-- Include css files as content -->
+    <CreateItem Include="Content\weee-page.css">
+      <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="Content\weee-page-ie6.css">
+      <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="Content\weee-page-ie7.css">
+      <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="Content\weee-page-ie8.css">
+      <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+  </Target>
 </Project>

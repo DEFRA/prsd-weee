@@ -1,6 +1,5 @@
 ﻿using System.Web;
 using System.Web.Optimization;
-using LibSassNet.Web;
 
 namespace EA.Weee.Web.Maintenance
 {
@@ -30,17 +29,17 @@ namespace EA.Weee.Web.Maintenance
                       "~/Scripts/vendor/details.polyfill.js",
                       "~/Scripts/weee-application.js"));
 
-           bundles.Add(new SassBundle("~/Content/weee-page-ie6", "~/Content/govuk_toolkit/stylesheets").Include(
-                      "~/Content/weee-page-ie6.scss"));
+           bundles.Add(new StyleBundle("~/Content/weee-page-ie6").Include(
+                      "~/Content/weee-page-ie6.css"));
 
-            bundles.Add(new SassBundle("~/Content/weee-page-ie7", "~/Content/govuk_toolkit/stylesheets").Include(
-                      "~/Content/weee-page-ie7.scss"));
+            bundles.Add(new StyleBundle("~/Content/weee-page-ie7").Include(
+                      "~/Content/weee-page-ie7.css"));
 
-            bundles.Add(new SassBundle("~/Content/weee-page-ie8", "~/Content/govuk_toolkit/stylesheets").Include(
-                      "~/Content/weee-page-ie8.scss"));
+            bundles.Add(new StyleBundle("~/Content/weee-page-ie8").Include(
+                      "~/Content/weee-page-ie8.css"));
 
-            bundles.Add(new SassBundle("~/Content/weee-page", "~/Content/govuk_toolkit/stylesheets").Include(
-                      "~/Content/weee-page.scss"));
+            bundles.Add(new StyleBundle("~/Content/weee-page").Include(
+                      "~/Content/weee-page.css"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
