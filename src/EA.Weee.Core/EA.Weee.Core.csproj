@@ -87,7 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
-    <Compile Include="Admin\MembersDetailsCSVFileData.cs" />
+    <Compile Include="Admin\Reports\CSVFileData.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
     <Compile Include="Search\Fuzzy\CommonTerm.cs" />
     <Compile Include="Search\Fuzzy\FuzzyOrganisationSearcher.cs">

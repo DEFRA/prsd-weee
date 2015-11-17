@@ -24,5 +24,16 @@
         public IEnumerable<SelectListItem> SchemeNames { get; set; }
 
         public IEnumerable<SelectListItem> AppropriateAuthorities { get; set; }
+
+        public bool FilterbyScheme { get; set; }
+
+        public ReportsFilterViewModel()
+        {
+            FilterbyScheme = true;
+        }
+        public ReportsFilterViewModel(bool filterbyScheme = true)
+        {
+            FilterbyScheme = filterbyScheme;
+        }
     }
 }
