@@ -4,7 +4,7 @@
     using Core.Admin;
     using Prsd.Core.Mediator;
 
-    public class GetMemberDetailsCSV : IRequest<MembersDetailsCSVFileData>
+    public class GetMemberDetailsCSV : IRequest<CSVFileData>
    {
         public int ComplianceYear { get; private set; }
 
