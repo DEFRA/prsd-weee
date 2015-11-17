@@ -460,9 +460,7 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
     font-family: $NTA-Light;
     cursor: pointer;
 
-    @include core-19() {
-        font-size: $font-size;
-    }
+    @include core-19;
 
     text-decoration: underline;
 }
@@ -472,9 +470,7 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 }
 
 #link-sign-out {
-    @include core-16() {
-        font-size: $font-size;
-    }
+    @include core-16;
 }
 
 .text-area {
