@@ -12,9 +12,10 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.FilterbyScheme)
         <p>Filter results to show only charges that match your interests. Your results will be provided as a CSV file download.</p>
     
-        @Html.Partial("_ReportSearchFilters", Model, new ViewDataDictionary { { "ReportName", "PCS charges" } })
+        @Html.Partial("_ReportSearchFilters")
        
         <p class="small">
             If your selection criteria is broad, it may take a while to download your results.

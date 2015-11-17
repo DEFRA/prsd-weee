@@ -93,7 +93,7 @@
             {
                 try
                 {
-                    ReportsFilterViewModel model = new ReportsFilterViewModel();
+                    ReportsFilterViewModel model = new ReportsFilterViewModel();                    
                     await SetReportsFilterLists(model, client);
                     return View("ProducerDetails", model);
                 }
@@ -123,32 +123,7 @@
                 }
 
                 //Download the csv based on the filters.
-                string approvalnumber = string.Empty;
-                string csvFileName = string.Format("{0}_producerdetails_{1}.csv", model.SelectedYear, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-                if (model.SelectedScheme.HasValue)
-                {
-                    SchemeData scheme =
-                        await client.SendAsync(User.GetAccessToken(), new GetSchemeById(model.SelectedScheme.Value));
-                    approvalnumber = scheme.ApprovalName.Replace("/", string.Empty);
-                    csvFileName = string.Format("{0}_{1}_producerdetails_{2}.csv", model.SelectedYear,
-                    approvalnumber, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-                }
-                if (model.SelectedAA.HasValue)
-                {
-                    UKCompetentAuthorityData authorityData =
-                        await
-                            client.SendAsync(User.GetAccessToken(),
-                                new GetUKCompetentAuthorityById(model.SelectedAA.Value));
-                    var authorisedAuthorityName = authorityData.Abbreviation;
-                    csvFileName = string.Format("{0}_{1}_{2}_producerdetails_{3}.csv", model.SelectedYear,
-                   approvalnumber, authorisedAuthorityName, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-                }
-             
-                var membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(),
-                    new GetMemberDetailsCSV(model.SelectedYear, model.SelectedScheme, model.SelectedAA));
-
-                byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
-                return File(data, "text/csv", csvFileName);
+                return await DownloadMembersDetailsCSV(model, client);
             }
         }
 
@@ -161,7 +136,7 @@
             {
                 try
                 {
-                    ReportsFilterViewModel model = new ReportsFilterViewModel();
+                    ReportsFilterViewModel model = new ReportsFilterViewModel(false);
                     await SetReportsFilterLists(model, client);
                     return View("PCSCharges", model);
                 }
@@ -191,40 +166,77 @@
                 }
 
                 //Download the csv based on the filters.
-                string approvalnumber = string.Empty;
-                string csvFileName = string.Format("{0}_pcschargebreakdown_{1}.csv", model.SelectedYear, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-                
-                if (model.SelectedAA.HasValue)
-                {
-                    UKCompetentAuthorityData authorityData =
-                        await
-                            client.SendAsync(User.GetAccessToken(),
-                                new GetUKCompetentAuthorityById(model.SelectedAA.Value));
-                    var authorisedAuthorityName = authorityData.Abbreviation;
-                    csvFileName = string.Format("{0}_{1}_pcschargebreakdown_{2}.csv", model.SelectedYear, authorisedAuthorityName, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-                }
-                
-                //TODO : Get the data for PCS charge breakdown, currently empty
-
-                byte[] data = new UTF8Encoding().GetBytes(string.Empty);
-                return File(data, "text/csv", csvFileName);                
+                return await DownloadPCSChargesCSV(model, client);
             }
         }
 
         private async Task SetReportsFilterLists(ReportsFilterViewModel model, IWeeeClient client)
         {
             var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
-            var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
             var appropriateAuthorities = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
-
             model.ComplianceYears = new SelectList(allYears);
-            model.SchemeNames = new SelectList(allSchemes, "Id", "SchemeName");
             model.AppropriateAuthorities = new SelectList(appropriateAuthorities, "Id", "Abbreviation");
+            if (model.FilterbyScheme)
+            {
+                var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
+                model.SchemeNames = new SelectList(allSchemes, "Id", "SchemeName");
+            }           
         }
-
         private void SetBreadcrumb()
         {
             breadcrumb.InternalActivity = "View reports";
+        }
+
+        private async Task<ActionResult> DownloadMembersDetailsCSV(ReportsFilterViewModel model, IWeeeClient client)
+        {
+            string approvalnumber = string.Empty;
+            string csvFileName = string.Format("{0}_producerdetails_{1}.csv", model.SelectedYear, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+            if (model.SelectedScheme.HasValue)
+            {
+                SchemeData scheme =
+                    await client.SendAsync(User.GetAccessToken(), new GetSchemeById(model.SelectedScheme.Value));
+                approvalnumber = scheme.ApprovalName.Replace("/", string.Empty);
+                csvFileName = string.Format("{0}_{1}_producerdetails_{2}.csv", model.SelectedYear,
+                approvalnumber, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+            }
+            if (model.SelectedAA.HasValue)
+            {
+                UKCompetentAuthorityData authorityData =
+                    await
+                        client.SendAsync(User.GetAccessToken(),
+                            new GetUKCompetentAuthorityById(model.SelectedAA.Value));
+                var authorisedAuthorityName = authorityData.Abbreviation;
+                csvFileName = string.Format("{0}_{1}_{2}_producerdetails_{3}.csv", model.SelectedYear,
+               approvalnumber, authorisedAuthorityName, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+            }
+
+            var membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(),
+                new GetMemberDetailsCSV(model.SelectedYear, model.SelectedScheme, model.SelectedAA));
+
+            byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
+            return File(data, "text/csv", csvFileName);
+        }
+
+        private async Task<ActionResult> DownloadPCSChargesCSV(ReportsFilterViewModel model, IWeeeClient client)
+        {
+            string approvalnumber = string.Empty;
+            string csvFileName = string.Format("{0}_pcschargebreakdown_{1}.csv", model.SelectedYear, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+
+            if (model.SelectedAA.HasValue)
+            {
+                UKCompetentAuthorityData authorityData =
+                    await
+                        client.SendAsync(User.GetAccessToken(),
+                            new GetUKCompetentAuthorityById(model.SelectedAA.Value));
+                var authorisedAuthorityName = authorityData.Abbreviation;
+                csvFileName = string.Format("{0}_{1}_pcschargebreakdown_{2}.csv", model.SelectedYear, authorisedAuthorityName, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+            }
+
+            //TGet the data for PCS charge breakdown
+            var pcsChargesCsvData = await client.SendAsync(User.GetAccessToken(), new GetPCSChargesCSV(model.SelectedYear, model.SelectedAA));
+
+            byte[] data = new UTF8Encoding().GetBytes(pcsChargesCsvData.FileContent);
+            return File(data, "text/csv", csvFileName);
         }
     }
 }
