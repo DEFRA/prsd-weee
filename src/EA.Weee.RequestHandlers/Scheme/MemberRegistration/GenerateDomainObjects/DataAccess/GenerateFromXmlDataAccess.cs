@@ -131,9 +131,21 @@
             return country;
         }
 
-        public Task<Producer> GetLatestProducerRecord(Guid schemeId, string producerRegistrationNumber)
+        public Task<Producer> GetLatestProducerRecord(Guid schemeId, string producerRegistrationNumber, bool excludeSpecifiedSchemeId = false)
         {
-            throw new NotImplementedException();
+            // Get the producers for scheme based on producer->prn and producer->lastsubmitted
+            // is latest date and memberupload ->IsSubmitted is true.
+            return context.MemberUploads
+                  .Where(member => member.IsSubmitted && ((member.SchemeId == schemeId) != excludeSpecifiedSchemeId))
+                  .SelectMany(p => p.Producers)
+                  .Where(p => p.RegistrationNumber == producerRegistrationNumber)
+                  .OrderByDescending(p => p.UpdatedDate)
+                  .FirstOrDefaultAsync();
+        }
+
+        public Task<MigratedProducer> GetMigratedProducer(string producerRegistrationNumber)
+        {
+            return context.MigratedProducers.FirstOrDefaultAsync(m => m.ProducerRegistrationNumber == producerRegistrationNumber);
         }
     }
 }

@@ -14,6 +14,8 @@
 
         Task<Queue<string>> ComputePrns(int numberOfPrnsNeeded);
 
-        Task<Producer> GetLatestProducerRecord(Guid schemeId, string producerRegistrationNumber);
+        Task<Producer> GetLatestProducerRecord(Guid schemeId, string producerRegistrationNumber, bool excludeSpecifiedSchemeId = false);
+
+        Task<MigratedProducer> GetMigratedProducer(string producerRegistrationNumber);
     }
 }
