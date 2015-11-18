@@ -12,10 +12,10 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class GetMembersDetailsCSVHandlerTests
+    public class GetPCSChargesCSVHandlerTests
     {
         [Fact]
-        public async Task GetMembersDetailsCSVHandler_NotInternalUser_ThrowsSecurityException()
+        public async Task GetPCSChargesCSVHandler_NotInternalUser_ThrowsSecurityException()
         {
             // Arrange
             var complianceYear = 2016;
@@ -24,8 +24,8 @@
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetMembersDetailsCSVHandler(authorization, context, csvWriterFactory);
-            var request = new GetMemberDetailsCSV(complianceYear);
+            var handler = new GetPCSChargesCSVHandler(authorization, context, csvWriterFactory);
+            var request = new GetPCSChargesCSV(complianceYear);
 
             // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
@@ -35,7 +35,7 @@
         }
 
         [Fact]
-        public async Task GetMembersDetailsCSVHandler_NoComplianceYear_ThrowsArgumentException()
+        public async Task GetPCSChargesCSVHandler_NoComplianceYear_ThrowsArgumentException()
         {
             // Arrange
             var complianceYear = 0;
@@ -44,8 +44,8 @@
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetMembersDetailsCSVHandler(authorization, context, csvWriterFactory);
-            var request = new GetMemberDetailsCSV(complianceYear);
+            var handler = new GetPCSChargesCSVHandler(authorization, context, csvWriterFactory);
+            var request = new GetPCSChargesCSV(complianceYear);
 
             // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
@@ -55,7 +55,7 @@
         }
         
         [Fact]
-        public async Task GetMembersDetailsCSVHandler_ComplianceYear_ReturnsFileContent()
+        public async Task GetPCSChargesCSVHandler_ComplianceYear_ReturnsFileContent()
         {
             // Arrange
             var complianceYear = 2016;
@@ -64,8 +64,8 @@
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetMembersDetailsCSVHandler(authorization, context, csvWriterFactory);
-            var request = new GetMemberDetailsCSV(complianceYear);
+            var handler = new GetPCSChargesCSVHandler(authorization, context, csvWriterFactory);
+            var request = new GetPCSChargesCSV(complianceYear);
 
             // Act
             CSVFileData data = await handler.HandleAsync(request);
