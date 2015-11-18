@@ -202,7 +202,7 @@
                 database.Model.SaveChanges();
 
                 var dataAccess = new GenerateFromXmlDataAccess(database.WeeeContext);
-                var result = await dataAccess.GetLatestProducerRecord(scheme1.Id, "AA", true);
+                var result = await dataAccess.GetLatestProducerRecordExcludeScheme(scheme1.Id, "AA");
 
                 Assert.Equal(producer3.Id, result.Id);
             }
