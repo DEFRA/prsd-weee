@@ -15,6 +15,11 @@
     using FakeItEasy;
     using Xunit;
 
+    /// <summary>
+    /// This class contains the tests for the <see cref="GenerateFromXml.GenerateProducerData"/> method.
+    /// The tests ensure that the <see cref="Producer"/> instances returned contain the expected data after they have been extracted from the <see cref="schemeType.producerList"/>
+    /// and the other parameters used when invoking the method.
+    /// </summary>
     public class GenerateFromXmlGenerateProducerDataTests
     {
         [Fact]
@@ -283,7 +288,7 @@
 
             var result = await builder.InvokeGenerateProducerData(10);
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._, A<bool>._)).MustNotHaveHappened();
+            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._)).MustNotHaveHappened();
 
             Assert.Equal(10, result.Count());
         }
@@ -295,7 +300,7 @@
             builder.Status = statusType.A;
             builder.RegistrationNumber = "Test Registration Number";
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._, false)).Returns(new AlwaysUnequalProducer());
+            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._)).Returns(new AlwaysUnequalProducer());
 
             var result = await builder.InvokeGenerateProducerData(1);
 
@@ -311,7 +316,7 @@
             var builder = new GenerateProducerDataTestsBuilder();
             builder.Status = statusType.A;
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._, false)).Returns(new AlwaysEqualProducer());
+            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._)).Returns(new AlwaysEqualProducer());
 
             var result = await builder.InvokeGenerateProducerData(1);
 
@@ -327,11 +332,11 @@
             builder.Status = statusType.A;
             builder.RegistrationNumber = "Test Registration Number";
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._, false)).Returns((Producer)null);
+            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._)).Returns((Producer)null);
 
             var result = await builder.InvokeGenerateProducerData(1);
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._, true)).MustNotHaveHappened();
+            A.CallTo(() => builder.DataAccess.GetLatestProducerRecordExcludeScheme(A<Guid>._, A<string>._)).MustNotHaveHappened();
 
             Assert.Equal(1, result.Count());
             Assert.Equal("Test Registration Number", result.Single().RegistrationNumber);
@@ -344,13 +349,13 @@
             builder.Status = statusType.A;
             builder.RegistrationNumber = "Test Registration Number";
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._, false)).Returns((Producer)null);
+            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._)).Returns((Producer)null);
             A.CallTo(() => builder.DataAccess.GetMigratedProducer(A<string>._)).Returns((MigratedProducer)null);
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._, true)).Returns(A.Dummy<Producer>());
+            A.CallTo(() => builder.DataAccess.GetLatestProducerRecordExcludeScheme(A<Guid>._, A<string>._)).Returns(A.Dummy<Producer>());
 
             var result = await builder.InvokeGenerateProducerData(1);
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._, true)).MustHaveHappened();
+            A.CallTo(() => builder.DataAccess.GetLatestProducerRecordExcludeScheme(A<Guid>._, A<string>._)).MustHaveHappened();
 
             Assert.Equal(1, result.Count());
             Assert.Equal("Test Registration Number", result.Single().RegistrationNumber);
@@ -362,13 +367,13 @@
             var builder = new GenerateProducerDataTestsBuilder();
             builder.Status = statusType.A;
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._, false)).Returns((Producer)null);
+            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._)).Returns((Producer)null);
             A.CallTo(() => builder.DataAccess.GetMigratedProducer(A<string>._)).Returns((MigratedProducer)null);
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._, true)).Returns((Producer)null);
+            A.CallTo(() => builder.DataAccess.GetLatestProducerRecordExcludeScheme(A<Guid>._, A<string>._)).Returns((Producer)null);
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await builder.InvokeGenerateProducerData(1));
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._, true)).MustHaveHappened();
+            A.CallTo(() => builder.DataAccess.GetLatestProducerRecordExcludeScheme(A<Guid>._, A<string>._)).MustHaveHappened();
         }
 
         private class GenerateProducerDataTestsBuilder
