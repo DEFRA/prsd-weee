@@ -11,7 +11,7 @@
     using Requests.Admin; 
     using Security;
 
-    internal class GetMembersDetailsCSVHandler : IRequestHandler<GetMemberDetailsCSV, MembersDetailsCSVFileData>
+    internal class GetMembersDetailsCSVHandler : IRequestHandler<GetMemberDetailsCSV, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
@@ -24,7 +24,7 @@
             this.csvWriterFactory = csvWriterFactory;
         }
 
-        public async Task<MembersDetailsCSVFileData> HandleAsync(GetMemberDetailsCSV request)
+        public async Task<CSVFileData> HandleAsync(GetMemberDetailsCSV request)
         {
             authorization.EnsureCanAccessInternalArea();
             if (request.ComplianceYear == 0)
@@ -37,8 +37,8 @@
                        request.ComplianceYear, request.SchemeId, request.CompetentAuthorityId);
 
             CsvWriter<MembersDetailsCSVData> csvWriter = csvWriterFactory.Create<MembersDetailsCSVData>();
-            csvWriter.DefineColumn(@"Scheme name", i => i.SchemeName);
-            csvWriter.DefineColumn(@"Scheme approval number", i => i.ApprovalNumber);
+            csvWriter.DefineColumn(@"PCS name", i => i.SchemeName);
+            csvWriter.DefineColumn(@"PCS approval number", i => i.ApprovalNumber);
             csvWriter.DefineColumn(@"Producer name", i => i.ProducerName);
             csvWriter.DefineColumn(@"Producer type", i => i.ProducerType);
             csvWriter.DefineColumn(@"Company registration number", i => i.CompanyNumber);
@@ -125,7 +125,7 @@
                 request.ComplianceYear,
                 DateTime.UtcNow);
 
-            return new MembersDetailsCSVFileData
+            return new CSVFileData
             {
                 FileContent = fileContent,
                 FileName = fileName

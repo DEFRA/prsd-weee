@@ -1,7 +1,8 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Shared
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModel
 @{
-    ViewBag.Title = "Edit Scheme";
+    ViewBag.Title = "Edit PCS";
 }
 
 @using (Html.BeginForm())
@@ -14,14 +15,15 @@
     <div class="grid-row">
         <div class="column-two-thirds">
             <header class="hgroup">
-                <h1 class="heading-large">Edit Scheme</h1>
+                <h1 class="heading-large">Edit PCS</h1>
             </header>
         </div>
     </div>
 
     @Html.Gds().ValidationSummary()
 
-
+    if (Model.Status != SchemeStatus.Rejected)
+    {
     @Html.HiddenFor(m => m.OldApprovalNumber)
 
     <div class="form-group @Html.Gds().FormGroupClass(m => m.SchemeName)">
@@ -49,6 +51,7 @@
         @Html.Gds().ValidationMessageFor(m => m.CompetentAuthorityId)
         @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthorities, "Id", "Abbreviation"), string.Empty, new { autocomplete = "false" })
     </div>
+    }
     <div class="form-group @Html.Gds().FormGroupClass(m => m.Status)">
         @Html.Gds().LabelFor(m => m.Status)
         @Html.Gds().ValidationMessageFor(m => m.Status)
@@ -83,15 +86,16 @@
             }
         }
     </p>
-
+    if (Model.Status != SchemeStatus.Rejected)
+    {
     <p>
         <input type="submit" value="Save and continue" class="button" />
     </p>
-
+    }
     <p>
         <a href="javascript:history.back();">Back</a>
     </p>
-}
+    }
 
 
 @section scripts {

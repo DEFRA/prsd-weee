@@ -7,7 +7,7 @@
     using System.Web.Mvc;
     using Core.Admin;
 
-    public class ProducerDetailsViewModel
+    public class ReportsFilterViewModel
     {
         [Required]
         [DisplayName("Compliance year")]
@@ -24,5 +24,16 @@
         public IEnumerable<SelectListItem> SchemeNames { get; set; }
 
         public IEnumerable<SelectListItem> AppropriateAuthorities { get; set; }
+
+        public bool FilterbyScheme { get; set; }
+
+        public ReportsFilterViewModel()
+        {
+            FilterbyScheme = true;
+        }
+        public ReportsFilterViewModel(bool filterbyScheme = true)
+        {
+            FilterbyScheme = filterbyScheme;
+        }
     }
 }
