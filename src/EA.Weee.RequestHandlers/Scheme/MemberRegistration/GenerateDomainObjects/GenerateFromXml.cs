@@ -1,16 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
     using System.Linq;
-    using System.Runtime.ExceptionServices;
     using System.Threading.Tasks;
     using System.Xml.Serialization;
-    using Core.Helpers.PrnGeneration;
-    using DataAccess;
     using Domain;
     using Domain.Producer;
     using Domain.Scheme;
@@ -26,19 +20,17 @@
     {
         private readonly IXmlConverter xmlConverter;
         private readonly IGenerateFromXmlDataAccess dataAccess;
-        private readonly WeeeContext context;
 
         public GenerateFromXml(IXmlConverter xmlConverter, IGenerateFromXmlDataAccess dataAccess)
         {
             this.xmlConverter = xmlConverter;
             this.dataAccess = dataAccess;
-            this.context = context;
         }
 
         public async Task<IEnumerable<Producer>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
         {
             var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
-            var producers = await SetProducerData(deserializedXml, memberUpload.SchemeId, memberUpload, producerCharges);
+            var producers = await GenerateProducerData(deserializedXml, memberUpload.SchemeId, memberUpload, producerCharges);
             return producers;
         }
 
@@ -56,7 +48,7 @@
             }
         }
 
-        private async Task<IEnumerable<Producer>> SetProducerData(schemeType scheme, Guid schemeId, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
+        public async Task<IEnumerable<Producer>> GenerateProducerData(schemeType scheme, Guid schemeId, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
         {
             List<Producer> producers = new List<Producer>();
 
@@ -71,12 +63,12 @@
                 {
                     throw new ApplicationException("No charges have been supplied");
                 }
-                if (producerCharges[producerName] == null)
+                if (!producerCharges.ContainsKey(producerName))
                 {
                     throw new ApplicationException(string.Format("No charges have been supplied for the {0}.", producerName));
                 }
-                var chargeBandAmount = ((ProducerCharge)producerCharges[producerName]).ChargeBandAmount;
-                var chargeThisUpdate = ((ProducerCharge)producerCharges[producerName]).Amount;
+                var chargeBandAmount = producerCharges[producerName].ChargeBandAmount;
+                var chargeThisUpdate = producerCharges[producerName].Amount;
 
                 List<BrandName> brandNames = producerData.producerBrandNames.Select(name => new BrandName(name)).ToList();
 
@@ -90,7 +82,7 @@
 
                 SellingTechniqueType sellingTechniqueType = Enumeration.FromValue<SellingTechniqueType>((int)producerData.sellingTechnique);
 
-                ObligationType obligationType = producerData.obligationType.ToDomainObligationType(); // Enumeration.FromValue<ObligationType>((int)producerData.obligationType);
+                ObligationType obligationType = producerData.obligationType.ToDomainObligationType();
 
                 AnnualTurnOverBandType annualturnoverType = Enumeration.FromValue<AnnualTurnOverBandType>((int)producerData.annualTurnoverBand);
 
@@ -131,30 +123,17 @@
                 {
                     case statusType.A:
 
-                        // get the producers for scheme based on producer->prn and producer->lastsubmitted
+                        // Get the producers for scheme based on producer->prn and producer->lastsubmitted
                         // is latest date and memberupload ->IsSubmitted is true.
-                        var producerDb =
-                            context.MemberUploads.Where(member => member.IsSubmitted && member.SchemeId == schemeId)
-                                .SelectMany(p => p.Producers)
-                                .Where(p => p.RegistrationNumber == producerRegistrationNo)
-                                .OrderByDescending(p => p.UpdatedDate)
-                                .FirstOrDefault();
+                        var producerDb = await dataAccess.GetLatestProducerRecord(schemeId, producerRegistrationNo);
                         if (producerDb == null)
                         {
-                            //check in migrated producers list
-                            var migratedProducers =
-                                context.MigratedProducers.FirstOrDefault(m => m.ProducerRegistrationNumber == producerRegistrationNo);
-
+                            // Check in migrated producers list
+                            var migratedProducers = await dataAccess.GetMigratedProducer(producerRegistrationNo);
                             if (migratedProducers == null)
                             {
-                                //check for producer in another scheme member uploads
-                                var anotherSchemeProducerDb =
-                                    context.MemberUploads.Where(
-                                        member => member.IsSubmitted && member.SchemeId != schemeId)
-                                        .SelectMany(p => p.Producers)
-                                        .Where(p => p.RegistrationNumber == producerRegistrationNo)
-                                        .OrderByDescending(p => p.UpdatedDate)
-                                        .FirstOrDefault();
+                                // Check for producer in another scheme member uploads
+                                var anotherSchemeProducerDb = await dataAccess.GetLatestProducerRecord(schemeId, producerRegistrationNo, true);
                                 if (anotherSchemeProducerDb == null)
                                 {
                                     throw new InvalidOperationException(
@@ -172,7 +151,7 @@
                                 producers.Add(producer);
                             }
                         }
-                        else if (!producer.Equals(producerDb))
+                        else if (!producerDb.Equals(producer))
                         {
                             producers.Add(producer);
                         }
@@ -187,28 +166,26 @@
             return producers;
         }
 
-        private async Task<AuthorisedRepresentative> SetAuthorisedRepresentative(authorisedRepresentativeType representative)
+        public async Task<AuthorisedRepresentative> SetAuthorisedRepresentative(authorisedRepresentativeType representative)
         {
-            if (representative == null)
+            AuthorisedRepresentative result = null;
+
+            if (representative != null &&
+                representative.overseasProducer != null)
             {
-                return null;
+                ProducerContact contact = null;
+                if (representative.overseasProducer.overseasContact != null)
+                {
+                    contact = await GetProducerContact(representative.overseasProducer.overseasContact);
+                }
+
+                result = new AuthorisedRepresentative(representative.overseasProducer.overseasProducerName, contact);
             }
 
-            if (representative.overseasProducer == null)
-            {
-                return null;
-            }
-            var contacts = new List<ProducerContact>();
-            if (representative.overseasProducer.overseasContact != null)
-            {
-                contacts.Add(await GetProducerContact(representative.overseasProducer.overseasContact));
-            }
-            AuthorisedRepresentative overSeasAuthorisedRepresentative =
-                new AuthorisedRepresentative(representative.overseasProducer.overseasProducerName, contacts.FirstOrDefault());
-            return overSeasAuthorisedRepresentative;
+            return result;
         }
 
-        private async Task<ProducerBusiness> SetProducerBusiness(producerBusinessType producerBusiness)
+        public async Task<ProducerBusiness> SetProducerBusiness(producerBusinessType producerBusiness)
         {
             object item = producerBusiness.Item;
             ProducerContact correspondentForNoticeContact = null;
@@ -220,13 +197,13 @@
 
             Company company = null;
             Partnership partnership = null;
-            if (item.GetType() == typeof(companyType))
+            if (item is companyType)
             {
                 companyType companyitem = (companyType)item;
                 ProducerContact contact = await GetProducerContact(companyitem.registeredOffice.contactDetails);
                 company = new Company(companyitem.companyName, companyitem.companyNumber, contact);
             }
-            else if (item.GetType() == typeof(partnershipType))
+            else if (item is partnershipType)
             {
                 partnershipType partnershipItem = (partnershipType)item;
                 string partnershipName = partnershipItem.partnershipName;
@@ -236,44 +213,44 @@
                 ProducerContact contact = await GetProducerContact(partnershipItem.principalPlaceOfBusiness.contactDetails);
                 partnership = new Partnership(partnershipName, contact, partners);
             }
-            ProducerBusiness business = new ProducerBusiness(company, partnership, correspondentForNoticeContact);
-            return business;
+
+            return new ProducerBusiness(company, partnership, correspondentForNoticeContact);
         }
 
-        private async Task<ProducerContact> GetProducerContact(contactDetailsType contactDetails)
+        public async Task<ProducerContact> GetProducerContact(contactDetailsType contactDetails)
         {
-            var country = await GetCountry(contactDetails);
+            var countryName = GetCountryName(contactDetails.address.country);
+            var country = await dataAccess.GetCountry(countryName);
+
             ProducerAddress address = new ProducerAddress(
                 contactDetails.address.primaryName,
-                    contactDetails.address.secondaryName,
-                    contactDetails.address.streetName,
-                    contactDetails.address.town,
-                    contactDetails.address.locality,
-                    contactDetails.address.administrativeArea,
+                contactDetails.address.secondaryName,
+                contactDetails.address.streetName,
+                contactDetails.address.town,
+                contactDetails.address.locality,
+                contactDetails.address.administrativeArea,
                 country,
                 contactDetails.address.Item);
 
             ProducerContact contact = new ProducerContact(
                 contactDetails.title,
-                    contactDetails.forename,
-                    contactDetails.surname,
-                    contactDetails.phoneLandLine,
-                    contactDetails.phoneMobile,
-                    contactDetails.fax,
+                contactDetails.forename,
+                contactDetails.surname,
+                contactDetails.phoneLandLine,
+                contactDetails.phoneMobile,
+                contactDetails.fax,
                 contactDetails.email,
                 address);
 
             return contact;
         }
 
-        private async Task<Country> GetCountry(contactDetailsType contactDetails)
+        public string GetCountryName(countryType country)
         {
-            var countrydetail = contactDetails.address.country;
-            var countryName = string.Empty;
-            var countryEnumType = typeof(countryType);
+            string countryName = null;
 
-            //Read the country name from xml attribute if defined
-            var countryFirstOrDefault = countryEnumType.GetMember(countrydetail.ToString()).FirstOrDefault();
+            // Read the country name from XML attribute if defined
+            var countryFirstOrDefault = typeof(countryType).GetMember(country.ToString()).FirstOrDefault();
             if (countryFirstOrDefault != null)
             {
                 var countryEnumAttribute = countryFirstOrDefault
@@ -283,12 +260,7 @@
                 countryName = countryEnumAttribute != null ? countryEnumAttribute.Name : countryFirstOrDefault.Name;
             }
 
-            Country country = null;
-            if (!string.IsNullOrEmpty(countryName))
-            {
-                country = await context.Countries.SingleAsync(c => c.Name == countryName);
-            }
-            return country;
+            return countryName;
         }
     }
 }
