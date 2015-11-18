@@ -131,7 +131,17 @@
             return country;
         }
 
-        public Task<Producer> GetLatestProducerRecord(Guid schemeId, string producerRegistrationNumber, bool excludeSpecifiedSchemeId = false)
+        public Task<Producer> GetLatestProducerRecord(Guid schemeId, string producerRegistrationNumber)
+        {
+            return GetLatestProducerRecord(schemeId, producerRegistrationNumber, false);
+        }
+
+        public Task<Producer> GetLatestProducerRecordExcludeScheme(Guid schemeId, string producerRegistrationNumber)
+        {
+            return GetLatestProducerRecord(schemeId, producerRegistrationNumber, true);
+        }
+
+        private Task<Producer> GetLatestProducerRecord(Guid schemeId, string producerRegistrationNumber, bool excludeSpecifiedSchemeId)
         {
             // Get the producers for scheme based on producer->prn and producer->lastsubmitted
             // is latest date and memberupload ->IsSubmitted is true.

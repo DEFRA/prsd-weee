@@ -133,7 +133,7 @@
                             if (migratedProducers == null)
                             {
                                 // Check for producer in another scheme member uploads
-                                var anotherSchemeProducerDb = await dataAccess.GetLatestProducerRecord(schemeId, producerRegistrationNo, true);
+                                var anotherSchemeProducerDb = await dataAccess.GetLatestProducerRecordExcludeScheme(schemeId, producerRegistrationNo);
                                 if (anotherSchemeProducerDb == null)
                                 {
                                     throw new InvalidOperationException(
