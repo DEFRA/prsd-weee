@@ -1,6 +1,6 @@
-﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.ProducerDetailsViewModel
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.ReportsFilterViewModel
 @{
-    ViewBag.Title = "Producer Details";
+    ViewBag.Title = "Producer details";
 }
 
 @section main_content {
@@ -12,6 +12,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.FilterbyScheme)
         <p>Your report will contain the latest details registered for each producer based on the criteria you select. All producer details provided by the PCS in their XML file will be available.</p>
         <p>Select the relevant criteria for your report. Your results will be provided as a CSV file download.</p>
 
