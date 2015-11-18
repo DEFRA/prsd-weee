@@ -189,30 +189,34 @@
         /// This test ensures that the sum of existing charges is calculated on a per scheme basis.
         /// </summary>
         [Fact]
-        public void FetchSumOfExistingCharges_WithProducerWithDifferentSchemesInSameYear_ReturnsChargesForEachScheme()
+        public void FetchSumOfExistingCharges_WithSameProducerWithDifferentSchemesInSameYear_ReturnsChargesPerScheme()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 // Arrange
                 ModelHelper helper = new ModelHelper(database.Model);
 
+                string producerRegistrationNumber = "AAAAA";
+
                 Scheme scheme1 = helper.CreateScheme();
+                scheme1.ApprovalNumber = "FirstScheme";
 
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAA");
+                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, producerRegistrationNumber);
                 producer1.IsCurrentForComplianceYear = true;
                 producer1.ChargeThisUpdate = 210;
                 
                 Scheme scheme2 = helper.CreateScheme();
+                scheme2.ApprovalNumber = "SecondScheme";
 
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme2);
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;
 
-                Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "BBBBB");
+                Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, producerRegistrationNumber);
                 producer2.IsCurrentForComplianceYear = true;
                 producer2.ChargeThisUpdate = 210;
 
