@@ -267,7 +267,8 @@
                 Scheme = memberUpload.Scheme,
                 SchemeId = memberUpload.Scheme.Id,
                 AuthorisedRepresentativeId = null,
-                ChargeBandAmountId = chargeBandAmount.Id
+                ChargeBandAmountId = chargeBandAmount.Id,
+                ChargeThisUpdate = 445
             };
             model.Producers.Add(producer);
 

@@ -53,5 +53,25 @@
                      competentAuthorityIdParameter)
                 .ToListAsync();
         }
+
+        /// <summary>
+        /// Gets all the PCS charges for the compliance year and specified AA
+        /// </summary>
+        /// <param name="complianceYear"></param>
+        /// <param name="competentAuthorityId"></param>
+        /// <returns></returns>
+        public async Task<List<PCSChargesCSVData>> SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(int complianceYear, Guid? competentAuthorityId = null)
+        {
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            
+            SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", (object)competentAuthorityId ?? DBNull.Value);
+
+            return await context.Database
+                .SqlQuery<PCSChargesCSVData>(
+                    "[Producer].[spgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority] @ComplianceYear, @CompetentAuthorityId",
+                    complianceYearParameter,
+                     competentAuthorityIdParameter)
+                .ToListAsync();
+        }
     }
 }

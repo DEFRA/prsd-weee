@@ -17,11 +17,10 @@
     <div class="form-group">
         @foreach (int complianceYear in Model)
         {
-            var csvFileName = "Overview of current members " + complianceYear + ".csv";
+            var csvFileName = "Overview of current members for " + complianceYear + " (CSV, less than 500KB)";
 
             @(this.WeeeGds().ActionLinkWithEventTracking(csvFileName, "GetProducerCSV", "MemberRegistration",
                 "Downloads", "Overview of current members", "Compliance year: " + complianceYear, new RouteValueDictionary(new { complianceYear = complianceYear })))
-            <span style="color: #6f777b"> (less than 500KB).</span>
             <br />
         }
     </div>

@@ -71,19 +71,19 @@
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
     <Reference Include="EA.Prsd.Core, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.15310-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15310-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15310-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15259.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15259-develop2\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15310-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15259.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15259-develop2\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15310-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
@@ -93,18 +93,6 @@
     <Reference Include="Elmah.Mvc, Version=2.1.2.1389, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Elmah.Mvc.2.1.2\lib\net40\Elmah.Mvc.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="LibSass.x64, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\libsassnet.x64.3.2.5\lib\net40\LibSass.x64.dll</HintPath>
-    </Reference>
-    <Reference Include="libsassnet">
-      <HintPath>..\packages\libsassnet.x64.3.2.5\lib\net40\libsassnet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="libsassnet.Web, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\libsassnet.Web.x64.2.1.3.1\lib\net40\libsassnet.Web.dll</HintPath>
     </Reference>
     <Reference Include="LowercaseDashedRouting">
       <HintPath>..\packages\LowercaseDashedRouteExt.1.2\lib\net40\LowercaseDashedRouting.dll</HintPath>
@@ -239,7 +227,7 @@
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\ProducerDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessXmlFileRequest.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
@@ -409,6 +397,23 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\govuk_elements\application.js" />
+    <Content Include="Scripts\govuk_elements\vendor\details.polyfill.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\analytics\download-link-tracker.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\analytics\error-tracking.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\analytics\external-link-tracker.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\analytics\google-analytics-universal-tracker.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\analytics\print-intent.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\multivariate-test.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\primary-links.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\selection-buttons.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\stick-at-top-when-scrolling.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\stop-scrolling-at-footer.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk_toolkit.js" />
+    <Content Include="Scripts\govuk_toolkit\stageprompt.js" />
+    <Content Include="Scripts\govuk_toolkit\vendor\jquery\jquery.player.min.js" />
+    <Content Include="Scripts\govuk_toolkit\vendor\polyfills\bind.js" />
     <Content Include="Scripts\weee-application.js" />
     <Content Include="Scripts\custom-validation.js" />
     <Content Include="Content\weee-page-ie6.scss" />
@@ -424,10 +429,7 @@
     <Content Include="Content\weee\_layout.scss" />
     <Content Include="Content\weee\_lists.scss" />
     <Content Include="Content\weee\_tables.scss" />
-    <Content Include="Content\main-ie6.scss" />
-    <Content Include="Content\main-ie7.scss" />
-    <Content Include="Content\main-ie8.scss" />
-    <Content Include="Content\main.scss" />
+    <Content Include="Content\_main.scss" />
     <Content Include="Content\service-design-manual\helpers\_breadcrumbs.scss" />
     <Content Include="Content\service-design-manual\helpers\_page-header.scss" />
     <Content Include="Content\service-design-manual\styleguide\_colours.scss" />
@@ -468,19 +470,6 @@
     <Content Include="Areas\Admin\Views\Scheme\ConfirmRejection.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ManageOrganisationUser.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ViewOrganisationDetails.cshtml" />
-    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_media-player.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_url-helpers.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_typography.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_shims.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_measurements.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_grid_layout.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_font_stack.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_device-pixels.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_css3.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_conditionals.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\_colours.scss" />
     <Content Include="Areas\Admin\Views\Account\InternalUserAuthorisationRequired.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPassword.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPasswordInstruction.cshtml" />
@@ -499,9 +488,12 @@
     <Content Include="Areas\Admin\Views\Account\ResetPasswordComplete.cshtml" />
     <Content Include="Areas\Test\Views\ManageCache\Index.cshtml" />
     <Content Include="Areas\Test\Views\ManageCache\CacheCleared.cshtml" />
-    <Content Include="Content\govuk_elements\forms\_form-validation.scss" />
-    <Content Include="Content\govuk_elements\forms\_form-date.scss" />
-    <Content Include="Content\govuk_elements\forms\_form-block-labels.scss" />
+    <Content Include="Content\weee\_footer.scss" />
+    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
+    <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\govuk_elements\_tables.scss" />
     <Content Include="Content\govuk_elements\_reset.scss" />
     <Content Include="Content\govuk_elements\_panels.scss" />
@@ -512,6 +504,7 @@
     <Content Include="Content\govuk_elements\_forms.scss" />
     <Content Include="Content\govuk_elements\_elements-typography.scss" />
     <Content Include="Content\govuk_elements\_details.scss" />
+    <Content Include="Content\govuk_elements\_components.scss" />
     <Content Include="Content\govuk_elements\_buttons.scss" />
     <Content Include="Content\govuk_elements\_breadcrumb.scss" />
     <Content Include="Content\weee\_footer.scss" />
@@ -519,25 +512,25 @@
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
-    <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
+    <Content Include="Areas\Admin\Views\Reports\PCSCharges.cshtml" />
+    <Content Include="Content\govuk_elements\forms\_form-validation.scss" />
+    <Content Include="Content\govuk_elements\forms\_form-date.scss" />
+    <Content Include="Content\govuk_elements\forms\_form-block-labels.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_url-helpers.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_typography.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_shims.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_measurements.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_helpers.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_grid_layout.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_font_stack.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_device-pixels.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_css3.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_conditionals.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_colours.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_media-player.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
-    <Content Include="Scripts\govuk_elements\application.js" />
-    <Content Include="Scripts\govuk_elements\vendor\details.polyfill.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\analytics\download-link-tracker.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\analytics\error-tracking.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\analytics\external-link-tracker.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\analytics\google-analytics-universal-tracker.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\analytics\print-intent.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\multivariate-test.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\primary-links.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\selection-buttons.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\stick-at-top-when-scrolling.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\stop-scrolling-at-footer.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk_toolkit.js" />
-    <Content Include="Scripts\govuk_toolkit\stageprompt.js" />
-    <Content Include="Scripts\govuk_toolkit\vendor\jquery\jquery.player.min.js" />
-    <Content Include="Scripts\govuk_toolkit\vendor\polyfills\bind.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
@@ -865,4 +858,25 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="BeforeBuild">
+    <!-- Compile sass files -->
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page.scss &gt; Content\weee-page.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie6.scss &gt; Content\weee-page-ie6.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie7.scss &gt; Content\weee-page-ie7.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie8.scss &gt; Content\weee-page-ie8.css" />
+    
+	<!-- Include css files as content -->
+    <CreateItem Include="Content\weee-page.css">
+      <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="Content\weee-page-ie6.css">
+      <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="Content\weee-page-ie7.css">
+      <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="Content\weee-page-ie8.css">
+      <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+  </Target>
 </Project>

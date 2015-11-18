@@ -68,7 +68,7 @@
             var request = new GetMemberDetailsCSV(complianceYear);
 
             // Act
-            MembersDetailsCSVFileData data = await handler.HandleAsync(request);
+            CSVFileData data = await handler.HandleAsync(request);
 
             // Assert
             Assert.NotEmpty(data.FileContent);

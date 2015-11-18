@@ -14,10 +14,10 @@
     @using (Html.BeginForm("SignOut", "Account", new { Area = "" }, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        <p>You can now 
-           @(this.WeeeGds().ActionLinkWithEventTracking("download this CSV file", "GetProducerCSV", "MemberRegistration",
+        <p>You can now download an overview of your 
+           @(this.WeeeGds().ActionLinkWithEventTracking("current members (CSV, less than 500KB)", "GetProducerCSV", "MemberRegistration",
                            "Downloads", "Registered members CSV", routeValues: new RouteValueDictionary(new { pcsId = @Model.PcsId, complianceYear = @Model.ComplianceYear }))).
-           In it you'll find the notification of all your registered PCS members and their producer registration numbers.</p>
+            In it you'll find the notification of all your registered PCS members and their producer registration numbers.</p>
         <p>We will invoice you for any producer registration charges that apply.</p>
         <p>If you have finished performing tasks you can <span id="log-off-link"><noscript><input type="submit" value="sign out" /></noscript></span> or proceed to perform more activities.</p>
     }
