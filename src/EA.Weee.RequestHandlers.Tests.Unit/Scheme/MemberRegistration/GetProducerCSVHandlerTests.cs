@@ -9,8 +9,10 @@
     using Requests.Scheme.MemberRegistration;
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Security;
     using System.Threading.Tasks;
+    using Domain.Scheme;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -52,6 +54,9 @@
             var organisations = dbContextHelper.GetAsyncEnabledDbSet<Organisation>(new List<Organisation>());
             A.CallTo(() => organisations.FindAsync(pcsId)).Returns((Organisation)null);
             A.CallTo(() => context.Organisations).Returns(organisations);
+
+            var schemes = dbContextHelper.GetAsyncEnabledDbSet<Scheme>(new List<Scheme>());
+            A.CallTo(() => context.Schemes).Returns(schemes);
 
             CsvWriterFactory csvWriterFactory = A.Fake<CsvWriterFactory>();
 
