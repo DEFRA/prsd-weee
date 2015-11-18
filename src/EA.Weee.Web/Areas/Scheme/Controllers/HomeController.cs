@@ -53,7 +53,23 @@
                 {
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
+                               
+                List<string> activities = await GetActivities(pcsId);
 
+                var model = new ChooseActivityViewModel(activities);
+                model.OrganisationId = pcsId;
+                await SetBreadcrumb(pcsId, null);
+
+                await SetShowLinkToCreateOrJoinOrganisation(model);
+
+                return View(model);
+            }
+        }
+
+        private async Task<List<string>> GetActivities(Guid pcsId)
+        {
+            using (var client = apiClient())
+            {
                 var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
                 //get the organisation type based on organisation id
                 string organisationDetailsActivityName = organisationDetails.OrganisationType == OrganisationType.RegisteredCompany ? PcsAction.ViewRegisteredOfficeDetails : PcsAction.ViewPrinciplePlaceOfBusinessDetails;
@@ -73,13 +89,7 @@
                     activities.Add(PcsAction.ManageOrganisationUsers);
                 }
 
-                var model = new ChooseActivityViewModel(activities);
-                model.OrganisationId = pcsId;
-                await SetBreadcrumb(pcsId, null);
-
-                await SetShowLinkToCreateOrJoinOrganisation(model);
-
-                return View(model);
+                return activities;
             }
         }
 
@@ -124,6 +134,7 @@
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, null);
+            viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId);
             await SetShowLinkToCreateOrJoinOrganisation(viewModel);
             return View(viewModel);
         }
