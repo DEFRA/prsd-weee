@@ -3,12 +3,13 @@
     using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using Core.DataStandards;
 
     public class SearchViewModel
     {
         [Required]
         [DisplayName("Search term")]
-        [MaxLength(100, ErrorMessage = "The field Search term must be a string with a maximum length of 100")]
+        [MaxLength(CommonMaxFieldLengths.DefaultString)]
         public string SearchTerm { get; set; }
 
         public Guid? SelectedOrganisationId { get; set; }

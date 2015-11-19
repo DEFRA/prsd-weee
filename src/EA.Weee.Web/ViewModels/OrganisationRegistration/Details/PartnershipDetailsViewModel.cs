@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using Core.DataStandards;
 
     public class PartnershipDetailsViewModel 
     {
@@ -10,6 +11,7 @@
 
         [Required]
         [DisplayName("Business trading name")]
+        [StringLength(CommonMaxFieldLengths.DefaultString)]
         public virtual string BusinessTradingName { get; set; }
     }
 }

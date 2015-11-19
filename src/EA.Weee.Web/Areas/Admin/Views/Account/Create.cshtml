@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
 @model EA.Weee.Web.Areas.Admin.ViewModels.Account.InternalUserCreationViewModel
 @{
     ViewBag.Title = "Register";
@@ -35,28 +36,28 @@
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Name)">
             @Html.Gds().LabelFor(m => m.Name)
             @Html.Gds().ValidationMessageFor(m => m.Name)
-            @Html.Gds().TextBoxFor(m => m.Name, new { @maxlength = "35" })
+            @Html.Gds().TextBoxFor(m => m.Name, new { @maxlength = CommonMaxFieldLengths.FirstName })
         </div>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Surname)">
             @Html.Gds().LabelFor(m => m.Surname)
             @Html.Gds().ValidationMessageFor(m => m.Surname)
-            @Html.Gds().TextBoxFor(m => m.Surname, new { @maxlength = "35" })
+            @Html.Gds().TextBoxFor(m => m.Surname, new { @maxlength = CommonMaxFieldLengths.LastName })
         </div>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Email)">
             @Html.Gds().LabelFor(m => m.Email)
             @Html.Gds().ValidationMessageFor(m => m.Email)
-            @Html.Gds().TextBoxFor(m => m.Email, new { @maxlength = "256" })
+            @Html.Gds().TextBoxFor(m => m.Email, new { @maxlength = CommonMaxFieldLengths.EmailAddress })
         </div>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Password)">
             @Html.Gds().LabelFor(m => m.Password)
             @Html.Gds().ValidationMessageFor(m => m.Password)
             <p class="form-hint text">Your password has to be at least 8 characters long and must contain at least 1 lower-case letter, 1 upper-case letter and 1 number.</p>
-            @Html.Gds().PasswordFor(m => m.Password)
+            @Html.Gds().PasswordFor(m => m.Password, new { @maxlength = CommonMaxFieldLengths.Password })
         </div>
         <div class="form-group @Html.Gds().FormGroupClass(m => m.ConfirmPassword)">
             @Html.Gds().LabelFor(m => m.ConfirmPassword)
             @Html.Gds().ValidationMessageFor(m => m.ConfirmPassword)
-            @Html.Gds().PasswordFor(m => m.ConfirmPassword)
+            @Html.Gds().PasswordFor(m => m.ConfirmPassword, new { @maxlength = CommonMaxFieldLengths.Password })
         </div>
         <p>
             <input type="submit" class="button" value="Create a user account" />

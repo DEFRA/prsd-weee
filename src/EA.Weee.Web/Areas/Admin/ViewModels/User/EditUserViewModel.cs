@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Web.Mvc;
     using Core.Admin;
+    using Core.DataStandards;
     using Core.Shared;
     using Microsoft.Ajax.Utilities;
     using Prsd.Core.Helpers;
@@ -27,12 +28,12 @@
 
         [Required]
         [Display(Name = "First name")]
-        [StringLength(35)]
+        [StringLength(CommonMaxFieldLengths.FirstName)]
         [DataType(DataType.Text)]
         public string FirstName { get; set; }
 
         [Required]
-        [StringLength(35)]
+        [StringLength(CommonMaxFieldLengths.LastName)]
         [DataType(DataType.Text)]
         [Display(Name = "Last name")]
         public string LastName { get; set; }

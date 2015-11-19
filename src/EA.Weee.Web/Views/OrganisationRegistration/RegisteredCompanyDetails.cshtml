@@ -1,4 +1,5 @@
-﻿@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.ViewModels.OrganisationRegistration.Details.RegisteredCompanyDetailsViewModel
 @{
     ViewBag.Title = "Registered company";
@@ -21,18 +22,18 @@
         <div class="form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
             @Html.Gds().LabelFor(m => m.CompanyName)
             @Html.Gds().ValidationMessageFor(m => m.CompanyName)
-            @Html.Gds().TextBoxFor(m => m.CompanyName, new { @maxlength = "2048" })
+            @Html.Gds().TextBoxFor(m => m.CompanyName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
             @Html.Gds().LabelFor(m => m.BusinessTradingName)
-            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = "2048" })
+            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
             @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
             @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
-            @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = "10" })
+            @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
         </div>
         <div class="form-group">
             @using (this.WeeeGds().ProgressiveDisclosure("Where can I find my company registration number?"))
