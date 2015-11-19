@@ -52,7 +52,7 @@
             bool containsErrorOrFatal = memberUploadErrors.Any(e => (e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal));
 
             //calculate charge band for producers if no schema errors
-            Hashtable producerCharges = null;
+            Dictionary<string, ProducerCharge> producerCharges = null;
             decimal totalCharges = 0;
             
             if (!containsSchemaErrors)
@@ -88,7 +88,7 @@
             return upload.Id;
         }
 
-        private Hashtable ProducerCharges(ProcessXMLFile message, ref decimal totalCharges)
+        private Dictionary<string, ProducerCharge> ProducerCharges(ProcessXMLFile message, ref decimal totalCharges)
         {
             var producerCharges = xmlChargeBandCalculator.Calculate(message);
               
