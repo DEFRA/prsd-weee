@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.SearchViewModel
+﻿@using EA.Weee.Core.DataStandards
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.SearchViewModel
 @{
     ViewBag.Title = "Search Organisation";
 }
@@ -22,7 +23,7 @@
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SearchTerm) form-search">
             @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "visuallyhidden" })
             @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
-            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { @class = "form-control", @maxLength=100 })
+            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { @class = "form-control", @maxLength=CommonMaxFieldLengths.DefaultString })
             <button type="submit" class="button">
                 <img src="@Url.Content("~/Content/govuk_toolkit/images/icon-search.png")" alt="Search" />
             </button>

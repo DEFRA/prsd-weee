@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.SearchViewModel
+﻿@using EA.Weee.Core.DataStandards
+@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.SearchViewModel
 @{
     ViewBag.Title = "Find producer";
 }
@@ -26,7 +27,7 @@
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SearchTerm)">
             @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "visuallyhidden" })
             @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
-            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { style = "width:100%"})
+            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { style = "width:100%", maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
         
         <p>
