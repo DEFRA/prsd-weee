@@ -151,7 +151,7 @@
             // Assert
             Assert.NotNull(producers);
             Assert.Equal(1, producers.Count);
-            Assert.Equal(producers.Single(), producer2);
+            Assert.True(ReferenceEquals(producers.Single(), producer2));
         }
 
         [Fact]
