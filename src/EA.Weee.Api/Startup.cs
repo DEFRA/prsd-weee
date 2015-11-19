@@ -67,6 +67,7 @@ namespace EA.Weee.Api
             return new IdentityServerOptions
             {
                 Factory = factory,
+                RequireSsl = false,
                 EventsOptions = new EventsOptions()
                 {
                     RaiseSuccessEvents = true,
