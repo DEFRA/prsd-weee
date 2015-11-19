@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
     using Core;
@@ -14,6 +9,12 @@
     using Prsd.Core.Web.Mvc.Extensions;
     using Prsd.Core.Web.OAuth;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Principal;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.NewUser;
     using ViewModels.Shared;
 
@@ -43,6 +44,15 @@
         [AllowAnonymous]
         public ActionResult UserCreation()
         {
+            // If the user is currently signed-in, we don't want to confuse them
+            // by showing their current user name whilst they create a new user.
+            // Therefore we need to sign them out and clear the user from the
+            // current HttpContet.
+            authenticationManager.SignOut();
+            WindowsIdentity identity = WindowsIdentity.GetAnonymous();
+            WindowsPrincipal principal = new WindowsPrincipal(identity);
+            HttpContext.User = principal;
+
             return View(new UserCreationViewModel());
         }
 
