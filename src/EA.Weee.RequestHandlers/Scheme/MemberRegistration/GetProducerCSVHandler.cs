@@ -56,7 +56,7 @@
 
             string fileContent = csvWriter.Write(items);
 
-            var fileName = string.Format("{0}_fullmemberlist_{1}_{2}.csv", scheme.ApprovalNumber.Replace("/", string.Empty), request.ComplianceYear, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+            var fileName = string.Format("{0}_fullmemberlist_{1}_{2}.csv", scheme.ApprovalNumber, request.ComplianceYear, DateTime.Now.ToString("ddMMyyyy_HHmm"));
             
             return new ProducerCSVFileData
             {
