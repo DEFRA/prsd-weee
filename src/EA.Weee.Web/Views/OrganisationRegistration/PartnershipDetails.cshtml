@@ -1,4 +1,5 @@
-﻿@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.ViewModels.OrganisationRegistration.Details.PartnershipDetailsViewModel
 @{
     ViewBag.Title = "Partnership";
@@ -26,7 +27,7 @@
         <div class="form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
             @Html.Gds().LabelFor(m => m.BusinessTradingName)
             @Html.Gds().ValidationMessageFor(m => m.BusinessTradingName)
-            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = "2048" })
+            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
         </div>
 
         <div class="form-group">

@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using Core.DataStandards;
     using Core.Organisations;
     using Weee.Requests.Organisations;
 
@@ -10,19 +11,19 @@
         public Guid OrganisationId { get; set; }
 
         [Required]
-        [StringLength(35)]
+        [StringLength(CommonMaxFieldLengths.FirstName)]
         [Display(Name = "First name")]
         [DataType(DataType.Text)]
         public string FirstName { get; set; }
 
         [Required]
-        [StringLength(35)]
+        [StringLength(CommonMaxFieldLengths.LastName)]
         [Display(Name = "Last name")]
         [DataType(DataType.Text)]
         public string LastName { get; set; }
 
         [Required]
-        [StringLength(35)]
+        [StringLength(CommonMaxFieldLengths.Position)]
         [Display(Name = "Position")]
         [DataType(DataType.Text)]
         public string Position { get; set; }

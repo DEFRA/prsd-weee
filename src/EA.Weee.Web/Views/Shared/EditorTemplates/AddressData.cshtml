@@ -1,35 +1,36 @@
-﻿@model EA.Weee.Core.Shared.AddressData
+﻿@using EA.Weee.Core.DataStandards
+@model EA.Weee.Core.Shared.AddressData
 
 @Html.HiddenFor(m => m.RowVersion)
 
 <div class="form-group @Html.Gds().FormGroupClass(m => m.Address1)">
     @Html.Gds().LabelFor(m => m.Address1)
     @Html.Gds().ValidationMessageFor(m => m.Address1)
-    @Html.Gds().TextBoxFor(m => m.Address1, new { @maxlength = "35" })
+    @Html.Gds().TextBoxFor(m => m.Address1, new { @maxlength = CommonMaxFieldLengths.AddressLine })
 </div>
 
 <div class="form-group @Html.Gds().FormGroupClass(m => m.Address2)">
     @Html.Gds().LabelFor(m => m.Address2)
     @Html.Gds().ValidationMessageFor(m => m.Address2)
-    @Html.Gds().TextBoxFor(m => m.Address2, new { @maxlength = "35" })
+    @Html.Gds().TextBoxFor(m => m.Address2, new { @maxlength = CommonMaxFieldLengths.AddressLine })
 </div>
 
 <div class="form-group @Html.Gds().FormGroupClass(m => m.TownOrCity)">
     @Html.Gds().LabelFor(m => m.TownOrCity)
     @Html.Gds().ValidationMessageFor(m => m.TownOrCity)
-    @Html.Gds().TextBoxFor(m => m.TownOrCity, new { @maxlength = "35" })
+    @Html.Gds().TextBoxFor(m => m.TownOrCity, new { @maxlength = CommonMaxFieldLengths.AddressLine })
 </div>
 
 <div class="form-group @Html.Gds().FormGroupClass(m => m.CountyOrRegion)">
     @Html.Gds().LabelFor(m => m.CountyOrRegion)
     @Html.Gds().ValidationMessageFor(m => m.CountyOrRegion)
-    @Html.Gds().TextBoxFor(m => m.CountyOrRegion, new { @maxlength = "35" })
+    @Html.Gds().TextBoxFor(m => m.CountyOrRegion, new { @maxlength = CommonMaxFieldLengths.AddressLine })
 </div>
 
 <div class="form-group @Html.Gds().FormGroupClass(m => m.Postcode)">
     @Html.Gds().LabelFor(m => m.Postcode)
     @Html.Gds().ValidationMessageFor(m => m.Postcode)
-    @Html.Gds().TextBoxFor(m => m.Postcode, new { @maxlength = "10" })
+    @Html.Gds().TextBoxFor(m => m.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
 </div>
 
 <div class="form-group countries @Html.Gds().FormGroupClass(m => m.CountryId)">
@@ -41,11 +42,11 @@
 <div class="form-group @Html.Gds().FormGroupClass(m => m.Telephone)">
     @Html.Gds().LabelFor(m => m.Telephone)
     @Html.Gds().ValidationMessageFor(m => m.Telephone)
-    @Html.Gds().TextBoxFor(m => m.Telephone, new { @maxlength = "20" })
+    @Html.Gds().TextBoxFor(m => m.Telephone, new { @maxlength = CommonMaxFieldLengths.Telephone })
 </div>
 
 <div class="form-group @Html.Gds().FormGroupClass(m => m.Email)">
     @Html.Gds().LabelFor(m => m.Email)
     @Html.Gds().ValidationMessageFor(m => m.Email)
-    @Html.Gds().TextBoxFor(m => m.Email, new { @maxlength = "256" })
+    @Html.Gds().TextBoxFor(m => m.Email, new { @maxlength = CommonMaxFieldLengths.EmailAddress })
 </div>

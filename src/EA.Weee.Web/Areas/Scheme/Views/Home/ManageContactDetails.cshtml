@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
 @model EA.Weee.Core.Organisations.OrganisationData
 
 @{
@@ -22,19 +23,19 @@
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Contact.FirstName)">
             @Html.Gds().ValidationMessageFor(model => model.Contact.FirstName)
             @Html.Gds().LabelFor(model => model.Contact.FirstName)
-            @Html.Gds().TextBoxFor(model => model.Contact.FirstName, new { @maxlength = "35" })
+            @Html.Gds().TextBoxFor(model => model.Contact.FirstName, new { @maxlength = CommonMaxFieldLengths.FirstName })
         </div>
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Contact.LastName)">
             @Html.Gds().ValidationMessageFor(model => model.Contact.LastName)
             @Html.Gds().LabelFor(model => model.Contact.LastName)
-            @Html.Gds().TextBoxFor(model => model.Contact.LastName, new { @maxlength = "35" })
+            @Html.Gds().TextBoxFor(model => model.Contact.LastName, new { @maxlength = CommonMaxFieldLengths.LastName })
         </div>
 
         <div class="form-group @Html.Gds().FormGroupClass(m => m.Contact.Position)">
             @Html.Gds().ValidationMessageFor(model => model.Contact.Position)
             @Html.Gds().LabelFor(model => model.Contact.Position)
-            @Html.Gds().TextBoxFor(model => model.Contact.Position, new { @maxlength = "35" })
+            @Html.Gds().TextBoxFor(model => model.Contact.Position, new { @maxlength = CommonMaxFieldLengths.Position })
         </div>
 
         @Html.EditorFor(model => model.OrganisationAddress)

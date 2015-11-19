@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
+    using Core.DataStandards;
     using Core.Shared;
     using Prsd.Core.Helpers;
 
@@ -20,6 +21,7 @@
         [Required]
         [RegularExpression(@"WEE/([A-Z]{2}[0-9]{4}[A-Z]{2})/SCH",
             ErrorMessage = "Approval number is not in correct format.")]
+        [StringLength(EnvironmentAgencyMaxFieldLengths.SchemeApprovalNumber)]
         [DataType(DataType.Text)]
         [Display(Name = "Approval number")]
         public string ApprovalNumber { get; set; }
@@ -27,12 +29,12 @@
         public string OldApprovalNumber { get; set; }
 
         [Required]
-        [StringLength(70)]
+        [StringLength(EnvironmentAgencyMaxFieldLengths.SchemeName)]
         [DataType(DataType.Text)]
         [Display(Name = "PCS name")]
         public string SchemeName { get; set; }
 
-        [StringLength(10)]
+        [StringLength(EnvironmentAgencyMaxFieldLengths.IbisBillingReference)]
         [DataType(DataType.Text)]
         [Display(Name = "Billing reference")]
         public string IbisCustomerReference { get; set; }

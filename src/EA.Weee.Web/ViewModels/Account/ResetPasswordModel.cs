@@ -1,12 +1,13 @@
 ﻿namespace EA.Weee.Web.ViewModels.Account
 {
     using System.ComponentModel.DataAnnotations;
+    using Core.DataStandards;
 
     public class ResetPasswordModel
     {
         [Required(ErrorMessage = "Enter password")]
         [DataType(DataType.Password)]
-        [StringLength(maximumLength: 100, ErrorMessage = "Password must be at least {2} characters long.", MinimumLength = 8)]
+        [StringLength(maximumLength: CommonMaxFieldLengths.DefaultString, ErrorMessage = "Password must be at least {2} characters long.", MinimumLength = 8)]
         [Display(Name = "Create your new password")]
         public string Password { get; set; }
 

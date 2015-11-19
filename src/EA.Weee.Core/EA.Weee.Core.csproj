@@ -88,6 +88,8 @@
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
     <Compile Include="Admin\Reports\CSVFileData.cs" />
+    <Compile Include="DataStandards\CommonMaxFieldLengths.cs" />
+    <Compile Include="DataStandards\EnvironmentAgencyMaxFieldLengths.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
     <Compile Include="Search\Fuzzy\CommonTerm.cs" />
     <Compile Include="Search\Fuzzy\FuzzyOrganisationSearcher.cs">
