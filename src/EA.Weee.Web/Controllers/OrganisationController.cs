@@ -56,7 +56,7 @@
                     model.AccessibleOrganisations.PossibleValues.Add(item);
                 }
 
-                ViewBag.InaccessibleOrganisations = inaccessibleOrganisations;
+                ViewBag.InaccessibleOrganisations = inaccessibleOrganisations.Where(o => o.UserStatus == UserStatus.Pending);
                 return View("YourOrganisations", model);
             }
             
@@ -99,7 +99,7 @@
                 IEnumerable<OrganisationUserData> organisations = task.Result;
 
                 inaccessibleOrganisations = organisations
-                    .Where(o => o.UserStatus != UserStatus.Active);
+                    .Where(o => o.UserStatus == UserStatus.Pending);
             }
 
             return PartialView(inaccessibleOrganisations);
