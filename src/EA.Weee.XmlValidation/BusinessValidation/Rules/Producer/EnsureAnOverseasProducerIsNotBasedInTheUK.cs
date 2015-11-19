@@ -40,8 +40,8 @@
                 case countryType.UKWALES:
 
                     string errorMessage = string.Format(
-                        "You have entered {0} as an authorised representative of an organisation with a UK address. Authorised representatives cannot represent producers based in the UK. Review your file.",
-                        producer.GetProducerName());
+                        "You have entered {0} {1} as an authorised representative of an organisation with a UK address. Authorised representatives cannot represent producers based in the UK. Review your file.",
+                        producer.GetProducerName(), producer.registrationNo);
 
                     return RuleResult.Fail(errorMessage, Core.Shared.ErrorLevel.Error);
 
