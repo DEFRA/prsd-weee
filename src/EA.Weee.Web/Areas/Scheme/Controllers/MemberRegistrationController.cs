@@ -211,10 +211,10 @@
 
                 string csv = csvWriter.Write(errors);
 
-                var csvFilename = string.Format("{0}_memberregistration_errors_warnings_{1}.csv", schemePublicInfo.ApprovalNo.Replace("/", string.Empty), DateTime.Now.ToString("ddMMyyyy_HHmm"));
+                var csvFilename = string.Format("{0}_memberregistration_errors_warnings_{1}.csv", schemePublicInfo.ApprovalNo, DateTime.Now.ToString("ddMMyyyy_HHmm"));
 
                 byte[] fileContent = new UTF8Encoding().GetBytes(csv);
-                return File(fileContent, "text/csv", csvFilename);
+                return File(fileContent, "text/csv", csvFilename.RemoveSlash());
             }
         }
 
@@ -277,7 +277,7 @@
                     new GetProducerCSV(pcsId, complianceYear));
 
                 byte[] data = new UTF8Encoding().GetBytes(producerCSVData.FileContent);
-                return File(data, "text/csv", producerCSVData.FileName);
+                return File(data, "text/csv", producerCSVData.FileName.RemoveSlash());
             }
         }
 

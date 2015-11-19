@@ -493,6 +493,7 @@
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
+    <Compile Include="Infrastructure\CsvFilenameFormat.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\govuk_elements\_tables.scss" />
     <Content Include="Content\govuk_elements\_reset.scss" />
@@ -864,8 +865,7 @@
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie6.scss &gt; Content\weee-page-ie6.css" />
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie7.scss &gt; Content\weee-page-ie7.css" />
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie8.scss &gt; Content\weee-page-ie8.css" />
-    
-	<!-- Include css files as content -->
+    <!-- Include css files as content -->
     <CreateItem Include="Content\weee-page.css">
       <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
