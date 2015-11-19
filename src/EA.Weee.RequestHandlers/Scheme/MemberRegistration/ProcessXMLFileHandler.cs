@@ -91,10 +91,10 @@
         private Dictionary<string, ProducerCharge> ProducerCharges(ProcessXMLFile message, ref decimal totalCharges)
         {
             var producerCharges = xmlChargeBandCalculator.Calculate(message);
-              
-                totalCharges = producerCharges.Cast<DictionaryEntry>()
-                    .Aggregate(totalCharges,
-                        (current, producerCharge) => current + ((ProducerCharge)producerCharge.Value).Amount);
+
+            totalCharges = producerCharges
+                .Aggregate(totalCharges, (current, producerCharge) => current + producerCharge.Value.Amount);
+
             return producerCharges;
         }
     }
