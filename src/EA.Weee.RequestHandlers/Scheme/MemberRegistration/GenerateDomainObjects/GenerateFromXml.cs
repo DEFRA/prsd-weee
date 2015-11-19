@@ -1,41 +1,36 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects
 {
-    using Core.Helpers.PrnGeneration;
-    using DataAccess;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Xml.Serialization;
     using Domain;
     using Domain.Producer;
     using Domain.Scheme;
+    using GenerateDomainObjects.DataAccess;
     using Interfaces;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Requests.Scheme.MemberRegistration;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
-    using System.Linq;
-    using System.Runtime.ExceptionServices;
-    using System.Threading.Tasks;
-    using System.Xml.Serialization;
     using Xml;
     using Xml.Schemas;
 
     public class GenerateFromXml : IGenerateFromXml
     {
         private readonly IXmlConverter xmlConverter;
-        private readonly WeeeContext context;
+        private readonly IGenerateFromXmlDataAccess dataAccess;
 
-        public GenerateFromXml(IXmlConverter xmlConverter, WeeeContext context)
+        public GenerateFromXml(IXmlConverter xmlConverter, IGenerateFromXmlDataAccess dataAccess)
         {
             this.xmlConverter = xmlConverter;
-            this.context = context;
+            this.dataAccess = dataAccess;
         }
 
-        public async Task<IEnumerable<Producer>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Hashtable producerCharges)
+        public async Task<IEnumerable<Producer>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
         {
             var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
-            var producers = await SetProducerData(deserializedXml, memberUpload.SchemeId, memberUpload, producerCharges);
+            var producers = await GenerateProducerData(deserializedXml, memberUpload.SchemeId, memberUpload, producerCharges);
             return producers;
         }
 
@@ -53,12 +48,12 @@
             }
         }
 
-        private async Task<IEnumerable<Producer>> SetProducerData(schemeType scheme, Guid schemeId, MemberUpload memberUpload, Hashtable producerCharges)
+        public async Task<IEnumerable<Producer>> GenerateProducerData(schemeType scheme, Guid schemeId, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
         {
             List<Producer> producers = new List<Producer>();
 
             int numberOfPrnsNeeded = scheme.producerList.Count(p => p.status == statusType.I);
-            Queue<string> generatedPrns = await ComputePrns(context, numberOfPrnsNeeded);
+            Queue<string> generatedPrns = await dataAccess.ComputePrns(numberOfPrnsNeeded);
 
             foreach (producerType producerData in scheme.producerList)
             {
@@ -68,12 +63,12 @@
                 {
                     throw new ApplicationException("No charges have been supplied");
                 }
-                if (producerCharges[producerName] == null)
+                if (!producerCharges.ContainsKey(producerName))
                 {
                     throw new ApplicationException(string.Format("No charges have been supplied for the {0}.", producerName));
                 }
-                var chargeBandAmount = ((ProducerCharge)producerCharges[producerName]).ChargeBandAmount;
-                var chargeThisUpdate = ((ProducerCharge)producerCharges[producerName]).ChargeBandAmount.Amount;
+                var chargeBandAmount = producerCharges[producerName].ChargeBandAmount;
+                var chargeThisUpdate = producerCharges[producerName].Amount;
 
                 List<BrandName> brandNames = producerData.producerBrandNames.Select(name => new BrandName(name)).ToList();
 
@@ -87,7 +82,7 @@
 
                 SellingTechniqueType sellingTechniqueType = Enumeration.FromValue<SellingTechniqueType>((int)producerData.sellingTechnique);
 
-                ObligationType obligationType = producerData.obligationType.ToDomainObligationType(); // Enumeration.FromValue<ObligationType>((int)producerData.obligationType);
+                ObligationType obligationType = producerData.obligationType.ToDomainObligationType();
 
                 AnnualTurnOverBandType annualturnoverType = Enumeration.FromValue<AnnualTurnOverBandType>((int)producerData.annualTurnoverBand);
 
@@ -128,30 +123,17 @@
                 {
                     case statusType.A:
 
-                        // get the producers for scheme based on producer->prn and producer->lastsubmitted
+                        // Get the producers for scheme based on producer->prn and producer->lastsubmitted
                         // is latest date and memberupload ->IsSubmitted is true.
-                        var producerDb =
-                            context.MemberUploads.Where(member => member.IsSubmitted && member.SchemeId == schemeId)
-                                .SelectMany(p => p.Producers)
-                                .Where(p => p.RegistrationNumber == producerRegistrationNo)
-                                .OrderByDescending(p => p.UpdatedDate)
-                                .FirstOrDefault();
+                        var producerDb = await dataAccess.GetLatestProducerRecord(schemeId, producerRegistrationNo);
                         if (producerDb == null)
                         {
-                            //check in migrated producers list
-                            var migratedProducers =
-                                context.MigratedProducers.FirstOrDefault(m => m.ProducerRegistrationNumber == producerRegistrationNo);
-
+                            // Check in migrated producers list
+                            var migratedProducers = await dataAccess.GetMigratedProducer(producerRegistrationNo);
                             if (migratedProducers == null)
                             {
-                                //check for producer in another scheme member uploads
-                                var anotherSchemeProducerDb =
-                                    context.MemberUploads.Where(
-                                        member => member.IsSubmitted && member.SchemeId != schemeId)
-                                        .SelectMany(p => p.Producers)
-                                        .Where(p => p.RegistrationNumber == producerRegistrationNo)
-                                        .OrderByDescending(p => p.UpdatedDate)
-                                        .FirstOrDefault();
+                                // Check for producer in another scheme member uploads
+                                var anotherSchemeProducerDb = await dataAccess.GetLatestProducerRecordExcludeScheme(schemeId, producerRegistrationNo);
                                 if (anotherSchemeProducerDb == null)
                                 {
                                     throw new InvalidOperationException(
@@ -169,7 +151,7 @@
                                 producers.Add(producer);
                             }
                         }
-                        else if (!producer.Equals(producerDb))
+                        else if (!producerDb.Equals(producer))
                         {
                             producers.Add(producer);
                         }
@@ -184,125 +166,26 @@
             return producers;
         }
 
-        /// <summary>
-        /// Generates unique, pseudorandom PRNs with minimal database interaction.
-        /// Works by:
-        /// a) uniquely mapping each unsigned integer to another pseudorandom unsigned integer
-        /// b) uniquely mapping each unsigned integer to a specific PRN
-        /// Combining those two mappings, and using a sequential seed, we can obtain pseudorandom PRNs
-        /// with assurance that we will not repeat ourselves for a very, very long time.
-        /// </summary>
-        /// <param name="context">The database context</param>
-        /// <param name="numberOfPrnsNeeded">A non-negative integer</param>
-        /// <returns></returns>
-        private static async Task<Queue<string>> ComputePrns(WeeeContext context, int numberOfPrnsNeeded)
+        public async Task<AuthorisedRepresentative> SetAuthorisedRepresentative(authorisedRepresentativeType representative)
         {
-            bool succeeded = false;
-            bool retry = false;
-            IEnumerable<DbEntityEntry> staleValues = null;
-            List<PrnAsComponents> generatedPrns = new List<PrnAsComponents>();
-            ExceptionDispatchInfo exceptionDispatchInfo = null;
+            AuthorisedRepresentative result = null;
 
-            var prnHelper = new PrnHelper(new QuadraticResidueHelper());
-
-            try
+            if (representative != null &&
+                representative.overseasProducer != null)
             {
-                succeeded = false;
-                retry = false;
-
-                // to avoid concurrency issues, we want to read the latest seed, 'reserve' some PRNs (figuring
-                // out the resulting final seed as we go), and write the final seed back as quickly as possible
-                uint originalLatestSeed = (uint)context.SystemData.Select(sd => sd.LatestPrnSeed).First();
-
-                uint currentSeed = originalLatestSeed;
-                for (int ii = 0; ii < numberOfPrnsNeeded; ii++)
+                ProducerContact contact = null;
+                if (representative.overseasProducer.overseasContact != null)
                 {
-                    var prnFromSeed = new PrnAsComponents(currentSeed + 1);
-                    generatedPrns.Add(prnFromSeed);
-                    currentSeed = prnFromSeed.ToSeedValue();
+                    contact = await GetProducerContact(representative.overseasProducer.overseasContact);
                 }
 
-                // we write back the next acceptable seed to the database, for next time
-                // since there are some mathematical constraints on the acceptable values
-                context.SystemData.First().LatestPrnSeed = currentSeed;
-                await context.SaveChangesAsync();
-
-                succeeded = true;
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                staleValues = ex.Entries;
-                retry = true;
-            }
-            catch (Exception ex)
-            {
-                // In .NET 4.5 it is not allowed to use "await" within catch blocks; this forces us to put
-                // code after the catch block. As a result of that, we don't want to throw unhandled exceptions
-                // here, so we capture the dispatch info and thow it at the end of this method.
-                exceptionDispatchInfo = System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(ex);
+                result = new AuthorisedRepresentative(representative.overseasProducer.overseasProducerName, contact);
             }
 
-            if (succeeded)
-            {
-                // now we're done with the fairly time sensitive database read/write,
-                // we can 'randomise' the results at our leisure
-                return new Queue<string>(generatedPrns.Select(p => prnHelper.CreateUniqueRandomVersionOfPrn(p)));
-            }
-            else if (retry)
-            {
-                // If we need to rety, we are probably in a race condition with another thread.
-                // To avoid retrying indefinately, we'll wait a few milliseconds to get out of sync
-                // with the other thread.
-                await Task.Delay(TimeSpan.FromMilliseconds(new Random().Next(100)));
-
-                // If the database value for [LatestPrnSeed] was updated between the time we fetched the value
-                // tried to update it with our new value, we will get a DbConcurrencyException.
-                // To handle this we will just call this method again until it succeeds.
-                // However, as dependency injection forces us to reuse the same WeeeContext, the SystemData
-                // entity will already be attached to the context giving us the same stale value from when it
-                // was first fetched.
-                // The DbUpdateConcurrencyException gives us the ability to reload this entity from the database.
-                foreach (var entry in staleValues)
-                {
-                    if (entry.Entity is SystemData)
-                    {
-                        await entry.ReloadAsync();
-                    }
-                }
-
-                // Now that we have the latest value loaded, we'll try calling this method again.
-                return await ComputePrns(context, numberOfPrnsNeeded);
-            }
-            else
-            {
-                // Something else bad happened and it's not possible to fix that here.
-                exceptionDispatchInfo.Throw();
-                throw new Exception("This will never be thrown.");
-            }
+            return result;
         }
 
-        private async Task<AuthorisedRepresentative> SetAuthorisedRepresentative(authorisedRepresentativeType representative)
-        {
-            if (representative == null)
-            {
-                return null;
-            }
-
-            if (representative.overseasProducer == null)
-            {
-                return null;
-            }
-            var contacts = new List<ProducerContact>();
-            if (representative.overseasProducer.overseasContact != null)
-            {
-                contacts.Add(await GetProducerContact(representative.overseasProducer.overseasContact));
-            }
-            AuthorisedRepresentative overSeasAuthorisedRepresentative =
-                new AuthorisedRepresentative(representative.overseasProducer.overseasProducerName, contacts.FirstOrDefault());
-            return overSeasAuthorisedRepresentative;
-        }
-
-        private async Task<ProducerBusiness> SetProducerBusiness(producerBusinessType producerBusiness)
+        public async Task<ProducerBusiness> SetProducerBusiness(producerBusinessType producerBusiness)
         {
             object item = producerBusiness.Item;
             ProducerContact correspondentForNoticeContact = null;
@@ -314,13 +197,13 @@
 
             Company company = null;
             Partnership partnership = null;
-            if (item.GetType() == typeof(companyType))
+            if (item is companyType)
             {
                 companyType companyitem = (companyType)item;
                 ProducerContact contact = await GetProducerContact(companyitem.registeredOffice.contactDetails);
                 company = new Company(companyitem.companyName, companyitem.companyNumber, contact);
             }
-            else if (item.GetType() == typeof(partnershipType))
+            else if (item is partnershipType)
             {
                 partnershipType partnershipItem = (partnershipType)item;
                 string partnershipName = partnershipItem.partnershipName;
@@ -330,44 +213,44 @@
                 ProducerContact contact = await GetProducerContact(partnershipItem.principalPlaceOfBusiness.contactDetails);
                 partnership = new Partnership(partnershipName, contact, partners);
             }
-            ProducerBusiness business = new ProducerBusiness(company, partnership, correspondentForNoticeContact);
-            return business;
+
+            return new ProducerBusiness(company, partnership, correspondentForNoticeContact);
         }
 
-        private async Task<ProducerContact> GetProducerContact(contactDetailsType contactDetails)
+        public async Task<ProducerContact> GetProducerContact(contactDetailsType contactDetails)
         {
-            var country = await GetCountry(contactDetails);
+            var countryName = GetCountryName(contactDetails.address.country);
+            var country = await dataAccess.GetCountry(countryName);
+
             ProducerAddress address = new ProducerAddress(
                 contactDetails.address.primaryName,
-                    contactDetails.address.secondaryName,
-                    contactDetails.address.streetName,
-                    contactDetails.address.town,
-                    contactDetails.address.locality,
-                    contactDetails.address.administrativeArea,
+                contactDetails.address.secondaryName,
+                contactDetails.address.streetName,
+                contactDetails.address.town,
+                contactDetails.address.locality,
+                contactDetails.address.administrativeArea,
                 country,
                 contactDetails.address.Item);
 
             ProducerContact contact = new ProducerContact(
                 contactDetails.title,
-                    contactDetails.forename,
-                    contactDetails.surname,
-                    contactDetails.phoneLandLine,
-                    contactDetails.phoneMobile,
-                    contactDetails.fax,
+                contactDetails.forename,
+                contactDetails.surname,
+                contactDetails.phoneLandLine,
+                contactDetails.phoneMobile,
+                contactDetails.fax,
                 contactDetails.email,
                 address);
 
             return contact;
         }
 
-        private async Task<Country> GetCountry(contactDetailsType contactDetails)
+        public string GetCountryName(countryType country)
         {
-            var countrydetail = contactDetails.address.country;
-            var countryName = string.Empty;
-            var countryEnumType = typeof(countryType);
+            string countryName = null;
 
-            //Read the country name from xml attribute if defined
-            var countryFirstOrDefault = countryEnumType.GetMember(countrydetail.ToString()).FirstOrDefault();
+            // Read the country name from XML attribute if defined
+            var countryFirstOrDefault = typeof(countryType).GetMember(country.ToString()).FirstOrDefault();
             if (countryFirstOrDefault != null)
             {
                 var countryEnumAttribute = countryFirstOrDefault
@@ -377,12 +260,7 @@
                 countryName = countryEnumAttribute != null ? countryEnumAttribute.Name : countryFirstOrDefault.Name;
             }
 
-            Country country = null;
-            if (!string.IsNullOrEmpty(countryName))
-            {
-                country = await context.Countries.SingleAsync(c => c.Name == countryName);
-            }
-            return country;
+            return countryName;
         }
     }
 }

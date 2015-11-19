@@ -105,7 +105,8 @@
                 Id = IntegerToGuid(schemeId),
                 Organisation = organisation,
                 OrganisationId = organisation.Id,
-                SchemeName = "test scheme name"
+                SchemeName = "test scheme name",
+                ApprovalNumber = schemeId.ToString()
             };
             model.Schemes.Add(scheme);
 
