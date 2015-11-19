@@ -23,17 +23,17 @@
             ErrorsAndWarnings = new List<MemberUploadError>();
         }
 
-        public Hashtable Calculate(ProcessXMLFile message)
+        public Dictionary<string, ProducerCharge> Calculate(ProcessXMLFile message)
         {
             var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
 
-            var producerCharges = new Hashtable();
+            var producerCharges = new Dictionary<string, ProducerCharge>();
             var complianceYear = Int32.Parse(schemeType.complianceYear);
 
             foreach (var producer in schemeType.producerList)
             {
                 var producerName = producer.GetProducerName();
-                var producerCharge = producerChargeCalculator.CalculateCharge(producer, complianceYear);
+                var producerCharge = producerChargeCalculator.CalculateCharge(schemeType.approvalNo, producer, complianceYear);
                 if (producerCharge != null)
                 {
                     if (!producerCharges.ContainsKey(producerName))

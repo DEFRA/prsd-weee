@@ -1,16 +1,5 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
-    using Core.Helpers.PrnGeneration;
-    using Domain;
-    using Domain.Lookup;
-    using Domain.Organisation;
-    using Domain.Producer;
-    using Domain.Scheme;
-    using FakeItEasy;
-    using Prsd.Core.Domain;
-    using RequestHandlers.Scheme.MemberRegistration;
-    using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
-    using Requests.Scheme.MemberRegistration;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -21,6 +10,18 @@
     using System.Threading.Tasks;
     using System.Xml.Linq;
     using System.Xml.Serialization;
+    using Core.Helpers.PrnGeneration;
+    using Domain;
+    using Domain.Lookup;
+    using Domain.Organisation;
+    using Domain.Producer;
+    using Domain.Scheme;
+    using FakeItEasy;
+    using Prsd.Core.Domain;
+    using RequestHandlers.Scheme.MemberRegistration;
+    using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
+    using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
+    using Requests.Scheme.MemberRegistration;
     using Xml;
     using Xml.Schemas;
     using Xunit;
@@ -62,7 +63,7 @@
             XmlConverter xmlConverter = new XmlConverter(whiteSpaceCollapser, new Deserializer());
             var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
 
-            var producerCharges = new Hashtable();
+            var producerCharges = new Dictionary<string, ProducerCharge>();
             var anyAmount = 30;
             var anyChargeBandAmount = A.Dummy<ChargeBandAmount>();
 
@@ -77,7 +78,7 @@
             }
 
             // act
-            IEnumerable<Producer> producers = await new GenerateFromXml(xmlConverter, context).GenerateProducers(message, memberUpload, producerCharges);
+            IEnumerable<Producer> producers = await new GenerateFromXml(xmlConverter, new GenerateFromXmlDataAccess(context)).GenerateProducers(message, memberUpload, producerCharges);
 
             // assert
             long newSeed = GetCurrentSeed();

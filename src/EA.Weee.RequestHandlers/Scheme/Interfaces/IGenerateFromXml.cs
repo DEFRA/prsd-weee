@@ -6,11 +6,12 @@
     using System.Threading.Tasks;
     using Domain.Producer;
     using Domain.Scheme;
+    using MemberRegistration;
     using Requests.Scheme.MemberRegistration;
 
     public interface IGenerateFromXml
     {
-        Task<IEnumerable<Producer>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Hashtable producerCharges);
+        Task<IEnumerable<Producer>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges);
 
         MemberUpload GenerateMemberUpload(ProcessXMLFile messageXmlFile, List<MemberUploadError> errors,
             decimal totalCharges, Guid schemeId);

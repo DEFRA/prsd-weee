@@ -22,13 +22,13 @@
             this.producerChargeBandCalculator = producerChargeBandCalculator;
         }
 
-        public ProducerCharge CalculateCharge(producerType producer, int complianceYear)
+        public ProducerCharge CalculateCharge(string schemeApprovalNumber, producerType producer, int complianceYear)
         {
             ProducerCharge producerCharge = GetProducerCharge(producer);
 
             if (producer.status == statusType.A)
             {
-                decimal sumOfExistingCharges = dataAccess.FetchSumOfExistingCharges(producer.registrationNo, complianceYear);
+                decimal sumOfExistingCharges = dataAccess.FetchSumOfExistingCharges(schemeApprovalNumber, producer.registrationNo, complianceYear);
 
                 producerCharge.Amount = Math.Max(0, producerCharge.ChargeBandAmount.Amount - sumOfExistingCharges);
             }

@@ -12,6 +12,6 @@
     {
         ChargeBandAmount FetchCurrentChargeBandAmount(ChargeBand chargeBandType);
 
-        decimal FetchSumOfExistingCharges(string registrationNumber, int complianceYear);
+        decimal FetchSumOfExistingCharges(string schemeApprovalNumber, string registrationNumber, int complianceYear);
     }
 }

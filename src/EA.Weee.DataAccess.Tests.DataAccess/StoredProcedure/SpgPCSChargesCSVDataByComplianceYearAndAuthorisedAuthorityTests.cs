@@ -114,9 +114,65 @@
                 // Assert
                 Assert.NotNull(results);
               
-                PCSChargesCSVData result = results.Find(x => (x.PRN == "WEE/11AAAA11"));
+                PCSChargesCSVData result1 = results.Find(x => (x.PRN == "WEE/11AAAA11"));
 
-                Assert.Equal(producer1.Business.Partnership.Name, result.ProducerName);
+                Assert.Equal(producer1.Business.Partnership.Name, result1.ProducerName);
+
+                PCSChargesCSVData result2 = results.Find(x => (x.PRN == "WEE/11AAAA12"));
+
+                Assert.Null(result2);
+            }
+        }
+
+        /// <summary>
+        /// This test ensures the correct data is returned for the specified authorised authority
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task Execute_WithOneCurrentInSeveralYearsProducer_ReturnsTheCorrectYearandAAData()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+
+                //EA Scheme
+                var authorityId = new Guid("A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8");
+                Scheme scheme1 = helper.CreateScheme();
+                scheme1.CompetentAuthorityId = authorityId;
+
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2016;
+                memberUpload1.IsSubmitted = true;
+
+                Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                producer1.IsCurrentForComplianceYear = true;
+
+                //SEPA Scheme
+                var sepaId = new Guid("78F37814-364B-4FAE-BEB5-DB0439CBF177");
+                Scheme scheme2 = helper.CreateScheme();
+                scheme2.CompetentAuthorityId = sepaId;
+                MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme2);
+                memberUpload2.ComplianceYear = 2016;
+                memberUpload2.IsSubmitted = true;
+
+                Producer producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/11AAAA12");
+                producer2.IsCurrentForComplianceYear = true;
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(2016, authorityId);
+                // Assert
+                Assert.NotNull(results);
+
+                PCSChargesCSVData result1 = results.Find(x => (x.PRN == "WEE/11AAAA11"));
+
+                Assert.Equal(producer1.Business.Partnership.Name, result1.ProducerName);
+
+                PCSChargesCSVData result2 = results.Find(x => (x.PRN == "WEE/11AAAA12"));
+
+                Assert.Null(result2);
             }
         }
 

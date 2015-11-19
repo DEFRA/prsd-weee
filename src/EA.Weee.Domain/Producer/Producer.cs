@@ -158,7 +158,7 @@
             return base.GetHashCode();
         }
 
-        public bool Equals(Producer other)
+        public virtual bool Equals(Producer other)
         {
             if (other == null)
             {

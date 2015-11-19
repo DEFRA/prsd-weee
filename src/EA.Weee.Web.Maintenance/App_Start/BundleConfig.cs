@@ -24,6 +24,10 @@ namespace EA.Weee.Web.Maintenance
                       "~/Scripts/govuk_toolkit/vendor/polyfills/bind.js",
                       "~/Scripts/govuk_toolkit/govuk/selection-buttons.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/govuk_elements").Include(
+                     "~/Scripts/govuk_elements/vendor/polyfills/bind.js",
+                     "~/Scripts/govuk_elements/application.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/govuk_weee").Include(
                       "~/Scripts/vendor/modernizr.custom.77028.js",
                       "~/Scripts/vendor/details.polyfill.js",

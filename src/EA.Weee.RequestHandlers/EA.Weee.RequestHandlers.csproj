@@ -85,6 +85,8 @@
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
+    <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\GenerateFromXmlDataAccess.cs" />
+    <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\IGenerateFromXmlDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\IDeserializer.cs" />
     <Compile Include="Scheme\MemberRegistration\Deserializer.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheDataAccess.cs" />

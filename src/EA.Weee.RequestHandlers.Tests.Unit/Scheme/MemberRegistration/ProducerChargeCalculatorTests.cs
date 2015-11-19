@@ -33,7 +33,7 @@
 
             IProducerChargeCalculatorDataAccess dataAccess = A.Fake<IProducerChargeCalculatorDataAccess>();
             A.CallTo(() => dataAccess.FetchCurrentChargeBandAmount(ChargeBand.A)).Returns(chargeBandAmount);
-            A.CallTo(() => dataAccess.FetchSumOfExistingCharges("WEE/AB1234CD", 2016)).Returns(1);
+            A.CallTo(() => dataAccess.FetchSumOfExistingCharges(A<string>._, "WEE/AB1234CD", 2016)).Returns(1);
 
             IProducerChargeBandCalculator bandCalculator = A.Fake<IProducerChargeBandCalculator>();
             A.CallTo(() => bandCalculator.GetProducerChargeBand(A<annualTurnoverBandType>._, A<bool>._, A<eeePlacedOnMarketBandType>._))
@@ -46,7 +46,7 @@
             producer.registrationNo = "WEE/AB1234CD";
 
             // Act
-            ProducerCharge result = calculator.CalculateCharge(producer, 2016);
+            ProducerCharge result = calculator.CalculateCharge(A<string>._, producer, 2016);
 
             // Assert
             Assert.Equal(24, result.Amount);
@@ -67,7 +67,7 @@
 
             IProducerChargeCalculatorDataAccess dataAccess = A.Fake<IProducerChargeCalculatorDataAccess>();
             A.CallTo(() => dataAccess.FetchCurrentChargeBandAmount(ChargeBand.A)).Returns(chargeBandAmount);
-            A.CallTo(() => dataAccess.FetchSumOfExistingCharges("WEE/AB1234CD", 2016)).Returns(25);
+            A.CallTo(() => dataAccess.FetchSumOfExistingCharges(A<string>._, "WEE/AB1234CD", 2016)).Returns(25);
 
             IProducerChargeBandCalculator bandCalculator = A.Fake<IProducerChargeBandCalculator>();
             A.CallTo(() => bandCalculator.GetProducerChargeBand(A<annualTurnoverBandType>._, A<bool>._, A<eeePlacedOnMarketBandType>._))
@@ -80,7 +80,7 @@
             producer.registrationNo = "WEE/AB1234CD";
             
             // Act
-            ProducerCharge result = calculator.CalculateCharge(producer, 2016);
+            ProducerCharge result = calculator.CalculateCharge(A<string>._, producer, 2016);
 
             // Assert
             Assert.Equal(0, result.Amount);
@@ -102,7 +102,7 @@
 
             IProducerChargeCalculatorDataAccess dataAccess = A.Fake<IProducerChargeCalculatorDataAccess>();
             A.CallTo(() => dataAccess.FetchCurrentChargeBandAmount(ChargeBand.A)).Returns(chargeBandAmount);
-            A.CallTo(() => dataAccess.FetchSumOfExistingCharges("WEE/AB1234CD", 2016)).Returns(0);
+            A.CallTo(() => dataAccess.FetchSumOfExistingCharges(A<string>._, "WEE/AB1234CD", 2016)).Returns(0);
 
             IProducerChargeBandCalculator bandCalculator = A.Fake<IProducerChargeBandCalculator>();
             A.CallTo(() => bandCalculator.GetProducerChargeBand(A<annualTurnoverBandType>._, A<bool>._, A<eeePlacedOnMarketBandType>._))
@@ -115,7 +115,7 @@
             producer.registrationNo = "WEE/AB1234CD";
 
             // Act
-            ProducerCharge result = calculator.CalculateCharge(producer, 2016);
+            ProducerCharge result = calculator.CalculateCharge(A<string>._, producer, 2016);
 
             // Assert
             Assert.Equal(25, result.Amount);
@@ -135,7 +135,7 @@
 
             IProducerChargeCalculatorDataAccess dataAccess = A.Fake<IProducerChargeCalculatorDataAccess>();
             A.CallTo(() => dataAccess.FetchCurrentChargeBandAmount(ChargeBand.A)).Returns(chargeBandAmount);
-            A.CallTo(() => dataAccess.FetchSumOfExistingCharges("WEE/AB1234CD", 2016)).Returns(0);
+            A.CallTo(() => dataAccess.FetchSumOfExistingCharges(A<string>._, "WEE/AB1234CD", 2016)).Returns(0);
 
             IProducerChargeBandCalculator bandCalculator = A.Fake<IProducerChargeBandCalculator>();
             A.CallTo(() => bandCalculator.GetProducerChargeBand(A<annualTurnoverBandType>._, A<bool>._, A<eeePlacedOnMarketBandType>._))
@@ -147,7 +147,7 @@
             producer.status = statusType.I;
 
             // Act
-            ProducerCharge result = calculator.CalculateCharge(producer, 2016);
+            ProducerCharge result = calculator.CalculateCharge(A<string>._, producer, 2016);
 
             // Assert
             Assert.Equal(25, result.Amount);

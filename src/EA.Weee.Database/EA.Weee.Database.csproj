@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="scripts\Everytime\0006-MigratedProducers.sql" />
     <Content Include="scripts\Update\Sprint17\20151116-1150-UpdateStoredProcedureForProducerDetailsReport.sql" />
     <Content Include="scripts\Update\Sprint17\20151116-1110-MakeAnnualTurnoverNullable.sql" />
     <Content Include="scripts\AliaSQL.exe" />
