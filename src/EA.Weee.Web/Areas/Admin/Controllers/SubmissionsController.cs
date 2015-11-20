@@ -128,7 +128,7 @@
 
                 string csv = csvWriter.Write(errors);
                 byte[] fileContent = new UTF8Encoding().GetBytes(csv);
-                return File(fileContent, "text/csv", csvFileName.RemoveSlash());
+                return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
             }
         }
 
