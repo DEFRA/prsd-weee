@@ -30,7 +30,7 @@
 
             var organisation = await context.Organisations.FindAsync(request.OrganisationId);
 
-            var scheme = await context.Schemes.SingleOrDefaultAsync(s => s.OrganisationId == request.OrganisationId);
+            var scheme = await context.Schemes.SingleAsync(s => s.OrganisationId == request.OrganisationId);
 
             if (organisation == null)
             {
