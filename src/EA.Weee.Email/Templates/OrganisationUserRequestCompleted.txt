@@ -17,6 +17,6 @@ This is an automated email; do not reply.
 - Northern Ireland Environment Agency: 02 809 569338
 
 - Natural Resources Wales: 03000 65 3096
-C:\SFW Projects\EA_PRSD\weee\src\EA.Weee.Email\Templates\OrganisationUserRequestCompleted.txt
+
 Regards,
 WEEE Team
