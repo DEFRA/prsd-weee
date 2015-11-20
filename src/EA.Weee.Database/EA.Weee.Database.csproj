@@ -125,6 +125,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="schema_compare.ps1" />
+    <None Include="scripts\Update\Sprint17\20151120-165509-AddLineNumberToMemberUploadError.sql" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />
