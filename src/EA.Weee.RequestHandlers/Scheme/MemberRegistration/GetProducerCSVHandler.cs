@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
     using System;
+    using System.Data.Entity;
     using System.Threading.Tasks;
     using Core.Scheme;
     using Core.Shared;
@@ -29,6 +30,8 @@
 
             var organisation = await context.Organisations.FindAsync(request.OrganisationId);
 
+            var scheme = await context.Schemes.SingleAsync(s => s.OrganisationId == request.OrganisationId);
+
             if (organisation == null)
             {
                 string message = string.Format("An organisation could not be found with ID \"{0}\".", request.OrganisationId);
@@ -52,10 +55,8 @@
             csvWriter.DefineColumn("Overseas producer", i => i.OverseasProducer);
 
             string fileContent = csvWriter.Write(items);
-    
-            var fileName = string.Format("{0:yyyy_MM_dd} - {1}.csv",
-                DateTime.Now,
-                request.ComplianceYear);
+
+            var fileName = string.Format("{0}_fullmemberlist_{1}_{2}.csv", scheme.ApprovalNumber, request.ComplianceYear, DateTime.Now.ToString("ddMMyyyy_HHmm"));
             
             return new ProducerCSVFileData
             {

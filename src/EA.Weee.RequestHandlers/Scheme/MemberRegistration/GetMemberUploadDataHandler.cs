@@ -42,7 +42,7 @@
                 throw new ArgumentException(string.Format("Member upload {0} is not owned by PCS {1}", message.MemberUploadId, message.PcsId));
             }
 
-            return memberUpload.Errors.Select(e => memberUploadErrorMap.Map(e)).ToList();
+            return memberUpload.Errors.OrderBy(e => e.LineNumber).Select(e => memberUploadErrorMap.Map(e)).ToList();
         }
     }
 }
