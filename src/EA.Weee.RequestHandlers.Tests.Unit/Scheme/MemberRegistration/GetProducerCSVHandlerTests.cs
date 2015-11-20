@@ -9,8 +9,10 @@
     using Requests.Scheme.MemberRegistration;
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Security;
     using System.Threading.Tasks;
+    using Domain.Scheme;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -25,7 +27,7 @@
             Guid pcsId = new Guid("62874744-6F52-4311-B4C0-3DD7767BEBF6");
             int complianceYear = 2016;
 
-            IWeeeAuthorization authorization  = new AuthorizationBuilder().DenyInternalOrOrganisationAccess().Build();
+            IWeeeAuthorization authorization = new AuthorizationBuilder().DenyInternalOrOrganisationAccess().Build();
             WeeeContext context = A.Fake<WeeeContext>();
             CsvWriterFactory csvWriterFactory = A.Fake<CsvWriterFactory>();
 
@@ -47,11 +49,17 @@
             int complianceYear = 2016;
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
-            
+
             WeeeContext context = A.Fake<WeeeContext>();
             var organisations = dbContextHelper.GetAsyncEnabledDbSet<Organisation>(new List<Organisation>());
             A.CallTo(() => organisations.FindAsync(pcsId)).Returns((Organisation)null);
             A.CallTo(() => context.Organisations).Returns(organisations);
+
+            var schemes = dbContextHelper.GetAsyncEnabledDbSet<Scheme>(new List<Scheme>
+            {
+                new Scheme(pcsId)
+            });
+            A.CallTo(() => context.Schemes).Returns(schemes);
 
             CsvWriterFactory csvWriterFactory = A.Fake<CsvWriterFactory>();
 
