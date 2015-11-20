@@ -152,7 +152,7 @@
                     new GetProducerCSV(orgId, complianceYear));
 
                 byte[] data = new UTF8Encoding().GetBytes(producerCSVData.FileContent);
-                return File(data, "text/csv", csvFileName.RemoveSlash());
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
             }
         }
 
