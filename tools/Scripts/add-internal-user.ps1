@@ -1,4 +1,4 @@
-﻿# EXAMPLE USAGE: .\add-internal-user.ps1 -ServerInstance 'MYCOMPUTER\SQLEXPRESS' -Database 'WeeeDB' -Username MyUser -Password MyPassword -ScriptPath 'C:\ScriptLocation' -FirstName 'John' -Surname 'Doe' -Email 'john.doe@test.co.uk' -HashedPassword 'AM1w5UflwOQIjwFTBqS1uRIiChX2vTRoya/Ca54BwKOwpgXUQRRmpwW8y7sVw3suNQ' -SecurityStamp 'a88ee2c3-3b73-43a0-ae25-78917e3b5cc1'
+# EXAMPLE USAGE: .\add-internal-user.ps1 -ConnectionString 'Server=MyServer;Database=MyDB;Integrated Security=True' -FirstName 'John' -Surname 'Doe' -Email 'john.doe@test.co.uk' -HashedPassword 'MyHashedPassword' -SecurityStamp 'MySecurityStamp'
 
 # Enable -Verbose option
 [CmdletBinding()]
@@ -6,19 +6,7 @@
 param
 (
     [Parameter(Mandatory=$true)]
-    [string]$ServerInstance = $null,
-
-    [Parameter(Mandatory=$true)]
-    [string]$Database = $null,
-
-    [Parameter(Mandatory=$true)]
-    [string]$Username = $null,
-
-    [Parameter(Mandatory=$true)]
-    [string]$Password = $null,
-
-    [Parameter(Mandatory=$true)]
-    [string]$ScriptPath = $null,
+    [string]$ConnectionString = $null,
 
     [Parameter(Mandatory=$true)]
     [string]$FirstName = $null,
@@ -36,12 +24,8 @@ param
     [string]$SecurityStamp = $null
 )
 
-if ($HashedPassword.Contains("="))
-{
-    Write-Error "The parameters passed to the stored procedure cannot contain the equals symbol (=). Remove the == from the end of the HashedPassword value. This will be reinserted by the SQL script"
-}
-else
-{
-    $sqlParams = @("FirstName = '$FirstName'", "Surname = '$Surname'", "Email = '$Email'", "HashedPassword = '$HashedPassword'", "SecurityStamp = '$SecurityStamp'")
-    Invoke-Sqlcmd -ServerInstance $ServerInstance -Database $Database -Username $Username -Password $Password -InputFile "$ScriptPath\AddInternalUser.sql" -Variable $sqlParams
-}
+. "$PSScriptRoot\sql\RunQuery.ps1"
+
+Run-Query -ConnectionString $ConnectionString -QueryFile $PSScriptRoot\sql\ClaimsIdInsertOn.sql
+Run-Query -ConnectionString $ConnectionString -QueryFile $PSScriptRoot\sql\AddInternalUser.sql -Parameters "@FirstName=$FirstName", "@Surname=$Surname", "@Email=$Email", "@HashedPassword=$HashedPassword", "@SecurityStamp=$SecurityStamp"
+Run-Query -ConnectionString $ConnectionString -QueryFile $PSScriptRoot\sql\ClaimsIdInsertOff.sql

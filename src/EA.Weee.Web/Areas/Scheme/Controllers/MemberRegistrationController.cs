@@ -152,7 +152,7 @@
         [HttpGet]
         public async Task<ActionResult> ViewErrorsAndWarnings(Guid pcsId, Guid memberUploadId)
         {
-          using (var client = apiClient())
+            using (var client = apiClient())
             {
                 var errors =
                     await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId));
@@ -174,23 +174,23 @@
         [HttpGet]
         public async Task<ViewResult> XmlHasNoErrors(Guid pcsId, Guid memberUploadId)
         {
-           using (var client = apiClient())
+            using (var client = apiClient())
             {
                 var errors =
                     await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId));
 
                 var memberUpload =
                     await client.SendAsync(User.GetAccessToken(), new GetMemberUploadById(pcsId, memberUploadId));
-                
+
                 await SetBreadcrumb(pcsId, ManageMembersActivity);
-                
-               return View("XmlHasNoErrors",
-                    new MemberUploadResultViewModel
-                    {
-                        MemberUploadId = memberUploadId,
-                        ErrorData = errors,
-                        TotalCharges = memberUpload.TotalCharges
-                    });
+
+                return View("XmlHasNoErrors",
+                     new MemberUploadResultViewModel
+                     {
+                         MemberUploadId = memberUploadId,
+                         ErrorData = errors,
+                         TotalCharges = memberUpload.TotalCharges
+                     });
             }
         }
 
@@ -203,14 +203,18 @@
                     (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId)))
                     .OrderByDescending(e => e.ErrorLevel);
 
+                var schemePublicInfo = await cache.FetchSchemePublicInfo(pcsId);
+
                 CsvWriter<MemberUploadErrorData> csvWriter = csvWriterFactory.Create<MemberUploadErrorData>();
                 csvWriter.DefineColumn("Type", e => (int)e.ErrorLevel >= 5 ? "Error" : "Warning");
                 csvWriter.DefineColumn("Description", e => e.Description);
 
                 string csv = csvWriter.Write(errors);
 
+                var csvFilename = string.Format("{0}_memberregistration_errors_warnings_{1}.csv", schemePublicInfo.ApprovalNo, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+
                 byte[] fileContent = new UTF8Encoding().GetBytes(csv);
-                return File(fileContent, "text/csv", "XML warning and errors.csv");
+                return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(csvFilename));
             }
         }
 
@@ -273,7 +277,7 @@
                     new GetProducerCSV(pcsId, complianceYear));
 
                 byte[] data = new UTF8Encoding().GetBytes(producerCSVData.FileContent);
-                return File(data, "text/csv", producerCSVData.FileName);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerCSVData.FileName));
             }
         }
 
