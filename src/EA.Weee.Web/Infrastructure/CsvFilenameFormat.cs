@@ -2,7 +2,7 @@
 {
     public static class CsvFilenameFormat
     {
-        public static string RemoveSlash(this string filename)
+        public static string FormatFileName(string filename)
         {
             return filename.Replace("/", string.Empty);
         }
