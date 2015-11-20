@@ -37,11 +37,21 @@
     {
         <p><a href="@Model.ExternalUserLoginUrl">Sign in to the WEEE online service</a> to perform activities.</p>
     }
-
+    else
+    {
+        <p>If you have any queries about this rejection, please contact the organisation's administrator.</p>
+    }
     @*@(Model.Approved ? "<a href=\"@Model.ExternalUserLoginUrl\">Sign in to the WEEE online service</a> to perform activities." : "")*@
 
     <p>This is an automated email; do not reply.</p>
-    <p>If you have any enquiries, contact your relevant helpline:</p>
+    @if (Model.Approved)
+    {
+        <p>If you have any enquiries, contact your relevant helpline:</p>
+    }
+    else
+    {
+        <p>If you have any other enquiries, contact your relevant helpline:</p>
+    }
     <ul>
         <li><span>Environment Agency (England): 03708 506506</span></li>
         <li><span>Scottish Environment Protection Agency: 01786 457700</span></li>
