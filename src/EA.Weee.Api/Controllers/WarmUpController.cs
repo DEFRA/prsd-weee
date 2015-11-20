@@ -22,13 +22,19 @@
         {
             try
             {
+                string username = ConfigurationManager.AppSettings["Weee.WarmUpUserUsername"];
+                string password = ConfigurationManager.AppSettings["Weee.WarmUpUserPassword"];
+
+                if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                {
+                    return "Skipping warm-up - No user details provided.";
+                }
+
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
                 string baseUrl = ConfigurationManager.AppSettings["Weee.SiteRoot"];
                 string clientId = ConfigurationManager.AppSettings["Weee.ApiClientID"];
                 string clientSecret = ConfigurationManager.AppSettings["Weee.ApiSecret"];
-                string username = ConfigurationManager.AppSettings["Weee.WarmUpUserUsername"];
-                string password = ConfigurationManager.AppSettings["Weee.WarmUpUserPassword"];
 
                 // Fetch an access token for the warm-up user.
                 IOAuthClient client = new OAuthClient(baseUrl, clientId, clientSecret);
