@@ -195,7 +195,7 @@
             {
                 SchemeData scheme =
                     await client.SendAsync(User.GetAccessToken(), new GetSchemeById(model.SelectedScheme.Value));
-                approvalnumber = scheme.ApprovalName.Replace("/", string.Empty);
+                approvalnumber = scheme.ApprovalName;
                 csvFileName = string.Format("{0}_{1}_producerdetails_{2}.csv", model.SelectedYear,
                 approvalnumber, DateTime.Now.ToString("ddMMyyyy_HHmm"));
             }
@@ -214,7 +214,7 @@
                 new GetMemberDetailsCSV(model.SelectedYear, model.SelectedScheme, model.SelectedAA));
 
             byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
-            return File(data, "text/csv", csvFileName);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
         }
 
         private async Task<ActionResult> DownloadPCSChargesCSV(ReportsFilterViewModel model, IWeeeClient client)
@@ -236,7 +236,7 @@
             var pcsChargesCsvData = await client.SendAsync(User.GetAccessToken(), new GetPCSChargesCSV(model.SelectedYear, model.SelectedAA));
 
             byte[] data = new UTF8Encoding().GetBytes(pcsChargesCsvData.FileContent);
-            return File(data, "text/csv", csvFileName);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
         }
     }
 }
