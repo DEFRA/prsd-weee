@@ -1,17 +1,8 @@
-SET IDENTITY_INSERT [Identity].[AspNetUserClaims] ON
-GO
-
-DECLARE @Email nvarchar(255) = $(Email)
-
 IF NOT EXISTS(SELECT TOP 1 * FROM [Identity].[AspNetUsers] WHERE Email=@Email) 
 BEGIN
 
 	BEGIN TRANSACTION
 
-	DECLARE @FirstName nvarchar(255) = $(FirstName)
-	DECLARE @Surname nvarchar(255) = $(Surname)
-	DECLARE @HashedPassword nvarchar(255) = $(HashedPassword)
-	DECLARE @SecurityStamp uniqueidentifier = $(SecurityStamp)
 	DECLARE @UserId uniqueidentifier = NEWID()
 
 	INSERT INTO [Identity].[AspNetUsers] (
@@ -35,7 +26,7 @@ BEGIN
 	, 0
 	, 0
 	, 0
-	, @HashedPassword + '=='
+	, @HashedPassword
 	, @SecurityStamp
 	, 1
 	, @Email
@@ -78,5 +69,3 @@ BEGIN
 		COMMIT TRANSACTION
 	  END
 END
-
-SET IDENTITY_INSERT [Identity].[AspNetUserClaims] OFF
