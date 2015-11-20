@@ -73,8 +73,8 @@
                             asXElement != null
                                 ? new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema,
                                     xmlErrorTranslator.MakeFriendlyErrorMessage(asXElement, args.Exception.Message,
-                                        args.Exception.LineNumber))
-                                : new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, args.Exception.Message));
+                                        args.Exception.LineNumber), args.Exception.LineNumber)
+                                : new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, args.Exception.Message, args.Exception.LineNumber));
                     });
             }
             catch (XmlException ex)
