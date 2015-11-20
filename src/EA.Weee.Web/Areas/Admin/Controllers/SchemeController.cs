@@ -146,13 +146,13 @@
         {
             using (var client = apiClient())
             {
-                var csvFileName = approvalNumber.Replace("/", string.Empty) + "_fullmemberlist_" + complianceYear.ToString() + "_" + DateTime.Now.ToString("ddMMyyyy_HHmm") + ".csv";
-
+                var csvFileName = approvalNumber + "_fullmemberlist_" + complianceYear + "_" + DateTime.Now.ToString("ddMMyyyy_HHmm") + ".csv";
+                
                 var producerCSVData = await client.SendAsync(User.GetAccessToken(),
                     new GetProducerCSV(orgId, complianceYear));
 
                 byte[] data = new UTF8Encoding().GetBytes(producerCSVData.FileContent);
-                return File(data, "text/csv", csvFileName);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
             }
         }
 
