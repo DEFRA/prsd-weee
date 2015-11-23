@@ -409,11 +409,13 @@
 
                 CsvWriter<MemberUploadErrorData> csvWriter = csvWriterFactory.Create<MemberUploadErrorData>();
                 csvWriter.DefineColumn("Description", e => e.Description);
+                
+                var schemePublicInfo = await cache.FetchSchemePublicInfo(schemeId);
+                var csvFileName = string.Format("{0}_memberregistration_{1}_warnings_{2}.csv", schemePublicInfo.ApprovalNo, year, DateTime.Now.ToString("ddMMyyyy_HHmm"));
 
                 string csv = csvWriter.Write(errors);
-
                 byte[] fileContent = new UTF8Encoding().GetBytes(csv);
-                return File(fileContent, "text/csv", "XML warnings.csv");
+                return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
             }
         }
 
