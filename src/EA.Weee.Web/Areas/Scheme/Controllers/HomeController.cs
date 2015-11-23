@@ -32,13 +32,15 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly CsvWriterFactory csvWriterFactory;
         private const string DoNotChange = "Do not change at this time";
+        private readonly ConfigurationService configurationService;
 
-        public HomeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb, CsvWriterFactory csvWriterFactory)
+        public HomeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb, CsvWriterFactory csvWriterFactory, ConfigurationService configService)
         {
             this.apiClient = apiClient;
             this.cache = cache;
             this.breadcrumb = breadcrumb;
             this.csvWriterFactory = csvWriterFactory;
+            this.configurationService = configService;
         }
 
         [HttpGet]
@@ -78,6 +80,10 @@
 
                 List<string> activities = new List<string>();
                 activities.Add(PcsAction.ManagePcsMembers);
+                if (configurationService.CurrentConfiguration.EnableDataReturns)
+                {
+                    activities.Add(PcsAction.SubmitPcsDataReturns);
+                }
                 if (organisationOverview.HasMemberSubmissions)
                 {
                     activities.Add(PcsAction.ViewSubmissionHistory);
@@ -130,6 +136,22 @@
                 if (viewModel.SelectedValue == PcsAction.ViewSubmissionHistory)
                 {
                     return RedirectToAction("ViewSubmissionHistory", new { pcsId = viewModel.OrganisationId });
+                }
+                if (viewModel.SelectedValue == PcsAction.SubmitPcsDataReturns)
+                {
+                    using (var client = apiClient())
+                    {
+                        var status = await client.SendAsync(User.GetAccessToken(), new GetSchemeStatus(viewModel.OrganisationId));
+
+                        if (status == SchemeStatus.Approved)
+                        {
+                            return RedirectToAction("SubmitDataReturns", "DataReturns", new { pcsId = viewModel.OrganisationId });
+                        }
+                        else
+                        {
+                            return RedirectToAction("AuthorisationRequired", "MemberRegistration", new { pcsId = viewModel.OrganisationId });
+                        }
+                    }
                 }
             }
 
