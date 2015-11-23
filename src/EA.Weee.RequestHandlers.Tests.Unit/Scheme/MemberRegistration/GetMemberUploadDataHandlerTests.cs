@@ -66,6 +66,41 @@
         }
 
         [Fact]
+        public async Task GetMemberUploadDataHandler_WithSeveralErrorsWithLineNumber_ShouldbeOrderByLineNumber()
+        {
+            var memberUploadsWithSeveralErrors = new[]
+            {
+                new MemberUpload(
+                    pcsId,
+                    "FAKE DATA",
+                    new List<MemberUploadError>
+                        {
+                            new MemberUploadError(ErrorLevel.Warning, MemberUploadErrorType.Schema, "FAKE WARNING 250", 250),
+                            new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "FAKE ERROR 50", 50),
+                            new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "FAKE ERROR 5", 5),
+                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL 28", 28),
+                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Schema, "FAKE FATAL 178", 178),
+                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL")
+                        },
+                    0,
+                    2016,
+                    Guid.NewGuid(), "File name")
+            };
+
+            var handler = GetPreparedHandler(memberUploadsWithSeveralErrors);
+
+            var memberUploadErrorDataList =
+                await handler.HandleAsync(new GetMemberUploadData(pcsId, memberUploadsWithSeveralErrors.First().Id));
+
+            Assert.True(memberUploadErrorDataList[0].Description == "FAKE FATAL");
+            Assert.True(memberUploadErrorDataList[1].Description == "FAKE ERROR 5");
+            Assert.True(memberUploadErrorDataList[2].Description == "FAKE FATAL 28");
+            Assert.True(memberUploadErrorDataList[3].Description == "FAKE ERROR 50");
+            Assert.True(memberUploadErrorDataList[4].Description == "FAKE FATAL 178");
+            Assert.True(memberUploadErrorDataList[5].Description == "FAKE WARNING 250");
+        }
+
+        [Fact]
         public async Task GetMemberUploadDataHandler_WithNoErrors_MappedCorrectly()
         {
             var memberUploadsWithNoErrors = new[]
