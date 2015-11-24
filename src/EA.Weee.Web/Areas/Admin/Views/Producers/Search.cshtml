@@ -27,7 +27,7 @@
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SearchTerm)">
             @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "visuallyhidden" })
             @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
-            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { style = "width:100%", maxlength = CommonMaxFieldLengths.DefaultString })
+            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { style = "width:100%", maxlength = EnvironmentAgencyMaxFieldLengths.ProducerSearchTerm })
         </div>
         
         <p>
