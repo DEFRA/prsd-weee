@@ -25,5 +25,7 @@
         bool EnableTestArea { get; set; }
 
         string DonePageUrl { get; set; }
+
+        bool EnableDataReturns { get; set; }
     }
 }
