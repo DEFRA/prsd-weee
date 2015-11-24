@@ -178,6 +178,7 @@
     <Compile Include="Areas\Admin\Controllers\UserControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\SchemeControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\HomeControllerTests.cs" />
+    <Compile Include="Areas\Scheme\Controllers\DataReturnsControllerTests.cs" />
     <Compile Include="Areas\Scheme\Controllers\MemberRegistrationControllerTests.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessXmlFileRequestTests.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SchemeViewModelTests.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="Controllers\OrganisationRegistrationControllerTests.cs" />
     <Compile Include="Requests\RequestCreatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestHelpers\ActionExecutingContextHelper.cs" />
     <Compile Include="TestHelpers\Factories\AutofacContainerFactory.cs" />
     <Compile Include="TestHelpers\HttpContextMocker.cs" />
     <Compile Include="TestHelpers\ViewModelValidator.cs" />
