@@ -34,6 +34,17 @@
       <TonnesReturnValue>0</TonnesReturnValue>
     </Return>
   </DeliveredToAE>
+  <DeliveredToAE>
+    <DeliveredToOperator>
+      <AEApprovalNo>WEE/AA0000AA/AE</AEApprovalNo>
+      <OperatorName>Dummy2</OperatorName>
+    </DeliveredToOperator>
+    <Return>
+      <CategoryName>Large Household Appliances</CategoryName>
+      <ObligationType>B2C</ObligationType>
+      <TonnesReturnValue>0</TonnesReturnValue>
+    </Return>
+  </DeliveredToAE>
   <B2CWEEEFromDistributors>
     <Return>
       <CategoryName>Large Household Appliances</CategoryName>
@@ -56,11 +67,6 @@
         <CategoryName>Large Household Appliances</CategoryName>
         <ObligationType>B2B</ObligationType>
         <TonnesReturnValue>1</TonnesReturnValue>
-      </Return>
-      <Return>
-        <CategoryName>Large Household Appliances</CategoryName>
-        <ObligationType>B2B</ObligationType>
-        <TonnesReturnValue>10</TonnesReturnValue>
       </Return>
     </Producer>
   </ProducerList>

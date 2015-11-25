@@ -96,6 +96,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DataReturn\XmlFiles\v3-DeliveredToAE-DuplicateAEApprovalNo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-DeliveredToATF-DuplicateAATFApprovalNo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-ProducerList-DuplicateRegistrationNo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="DataReturn\XmlFiles\v3-ProducerList-DuplicateCategoryObligationType.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
