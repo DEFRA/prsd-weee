@@ -129,6 +129,7 @@
     <Compile Include="Model\Country.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\Entities.cs" />
     <Compile Include="Model\IdType.cs" />
     <Compile Include="Model\MemberUpload.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -168,7 +169,10 @@
     <Compile Include="Model\Partner_.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\Producer.cs">
+    <Compile Include="Model\ProducerSubmission.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\RegisteredProducer.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Scheme.cs">

@@ -12,30 +12,22 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class MemberUpload
+    public partial class RegisteredProducer
     {
-        public MemberUpload()
+        public RegisteredProducer()
         {
-            this.MemberUploadErrors = new HashSet<MemberUploadError>();
             this.ProducerSubmissions = new HashSet<ProducerSubmission>();
         }
     
         public System.Guid Id { get; set; }
         public byte[] RowVersion { get; set; }
-        public System.Guid OrganisationId { get; set; }
-        public string Data { get; set; }
-        public Nullable<int> ComplianceYear { get; set; }
+        public string ProducerRegistrationNumber { get; set; }
         public System.Guid SchemeId { get; set; }
-        public bool IsSubmitted { get; set; }
-        public decimal TotalCharges { get; set; }
-        public string UserId { get; set; }
-        public System.DateTime Date { get; set; }
-        public System.TimeSpan ProcessTime { get; set; }
-        public string FileName { get; set; }
+        public int ComplianceYear { get; set; }
+        public Nullable<System.Guid> CurrentSubmissionId { get; set; }
     
-        public virtual Organisation Organisation { get; set; }
         public virtual Scheme Scheme { get; set; }
-        public virtual ICollection<MemberUploadError> MemberUploadErrors { get; set; }
         public virtual ICollection<ProducerSubmission> ProducerSubmissions { get; set; }
+        public virtual ProducerSubmission ProducerSubmission { get; set; }
     }
 }
