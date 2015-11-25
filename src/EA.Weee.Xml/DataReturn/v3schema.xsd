@@ -33,6 +33,7 @@
                                                   - Additional unique constraints for AATF, AE and Producer identifiers.
                                                   - Rename WEEEReturnedReg43 to B2CWEEEFromDistributors.
                                                   - Rename WEEETakenBackReg50 to B2CWEEEFromFinalHolders.
+                                                  - Make DeliveredToAE optional.
 ================================================================================
 -->
   <xs:element name="SchemeReturn">
@@ -98,7 +99,7 @@
             <xs:field xpath="tns:ObligationType"/>
           </xs:unique>
         </xs:element>
-        <xs:element name="DeliveredToAE" maxOccurs="unbounded">
+        <xs:element name="DeliveredToAE" minOccurs="0" maxOccurs="unbounded">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="DeliveredToOperator">
