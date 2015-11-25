@@ -47,6 +47,13 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="scripts\Everytime\0006-MigratedProducers.sql" />
+    <Content Include="scripts\Update\Sprint17-ProducerRefactoring\20151125-1557-CreateTables.sql" />
+    <Content Include="scripts\Update\Sprint17-ProducerRefactoring\20151125-1626-PopulateTables.sql" />
+    <Content Include="scripts\Update\Sprint17-ProducerRefactoring\20151125-1717-UpdateDependentTables.sql" />
+    <Content Include="scripts\Update\Sprint17-ProducerRefactoring\20151125-1815-Update-spgCSVDataByOrganisationIdAndComplianceYear.sql" />
+    <Content Include="scripts\Update\Sprint17-ProducerRefactoring\20151125-1859-Update-spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority.sql" />
+    <Content Include="scripts\Update\Sprint17-ProducerRefactoring\20151125-1921-Update-spgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority.sql" />
+    <Content Include="scripts\Update\Sprint17-ProducerRefactoring\20151125-1937-DropProducerTable.sql" />
     <Content Include="scripts\Update\Sprint17\20151116-1150-UpdateStoredProcedureForProducerDetailsReport.sql" />
     <Content Include="scripts\Update\Sprint17\20151116-1110-MakeAnnualTurnoverNullable.sql" />
     <Content Include="scripts\AliaSQL.exe" />
