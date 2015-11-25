@@ -181,6 +181,10 @@
               </xs:element>
             </xs:sequence>
           </xs:complexType>
+          <xs:unique name="uniqueProducerRegistrationNo">
+            <xs:selector xpath="tns:Producer"/>
+            <xs:field xpath="tns:RegistrationNo"/>
+          </xs:unique>
         </xs:element>
       </xs:sequence>
     </xs:complexType>
@@ -191,10 +195,6 @@
     <xs:unique name="uniqueAEApprovalNo">
       <xs:selector xpath="tns:DeliveredToAE/tns:DeliveredToOperator"/>
       <xs:field xpath="tns:AEApprovalNo"/>
-    </xs:unique>
-    <xs:unique name="uniqueProducerRegistrationNo">
-      <xs:selector xpath="tns:ProducerList/tns:Producer"/>
-      <xs:field xpath="tns:RegistrationNo"/>
     </xs:unique>
   </xs:element>
   <xs:simpleType name="XSDVersionType">
