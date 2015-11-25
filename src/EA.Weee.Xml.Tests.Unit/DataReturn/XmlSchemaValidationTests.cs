@@ -11,6 +11,9 @@
     using System.Xml.Schema;
     using Xunit;
 
+    /// <summary>
+    /// Includes tests to verify that the validation elements and constraints added to the data returns schema work as intended.
+    /// </summary>
     public class XmlSchemaValidationTests
     {
         [Fact]
@@ -65,6 +68,33 @@
 
             Assert.Equal(XmlSeverityType.Error, result.Severity);
             Assert.Contains("uniqueCategoryObligationProducerReturn", result.Message);
+        }
+
+        [Fact]
+        public void DataReturnSchemaValidation_DeliveredToATF_ContainsDuplicateAATFApprovalNo_ReturnsValidationError()
+        {
+            var result = new XmlFileLoad().ValidateDataReturnXmlWithSingleResult(@"DataReturn\XmlFiles\v3-DeliveredToATF-DuplicateAATFApprovalNo.xml");
+
+            Assert.Equal(XmlSeverityType.Error, result.Severity);
+            Assert.Contains("uniqueAATFApprovalNo", result.Message);
+        }
+
+        [Fact]
+        public void DataReturnSchemaValidation_DeliveredToAE_ContainsDuplicateAEApprovalNo_ReturnsValidationError()
+        {
+            var result = new XmlFileLoad().ValidateDataReturnXmlWithSingleResult(@"DataReturn\XmlFiles\v3-DeliveredToAE-DuplicateAEApprovalNo.xml");
+
+            Assert.Equal(XmlSeverityType.Error, result.Severity);
+            Assert.Contains("uniqueAEApprovalNo", result.Message);
+        }
+
+        [Fact]
+        public void DataReturnSchemaValidation_ProducerList_ContainsDuplicateRegistrationNo_ReturnsValidationError()
+        {
+            var result = new XmlFileLoad().ValidateDataReturnXmlWithSingleResult(@"DataReturn\XmlFiles\v3-ProducerList-DuplicateRegistrationNo.xml");
+
+            Assert.Equal(XmlSeverityType.Error, result.Severity);
+            Assert.Contains("uniqueProducerRegistrationNo", result.Message);
         }
 
         private class XmlFileLoad
