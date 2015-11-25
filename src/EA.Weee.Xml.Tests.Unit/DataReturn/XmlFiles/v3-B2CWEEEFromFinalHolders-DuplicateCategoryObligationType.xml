@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <SchemeReturn xmlns="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <XSDVersion>3.0</XSDVersion>
+  <XSDVersion></XSDVersion>
   <ApprovalNo>WEE/FA0000KE/SCH</ApprovalNo>
   <ComplianceYear>2015</ComplianceYear>
   <ReturnPeriod>Quarter 1: January - March</ReturnPeriod>

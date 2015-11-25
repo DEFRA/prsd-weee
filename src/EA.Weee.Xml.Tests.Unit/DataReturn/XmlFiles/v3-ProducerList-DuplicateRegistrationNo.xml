@@ -57,9 +57,13 @@
         <ObligationType>B2B</ObligationType>
         <TonnesReturnValue>1</TonnesReturnValue>
       </Return>
+    </Producer>
+    <Producer>
+      <RegistrationNo>WEE/AA1111AA</RegistrationNo>
+      <ProducerCompanyName>One</ProducerCompanyName>
       <Return>
         <CategoryName>Large Household Appliances</CategoryName>
-        <ObligationType>B2B</ObligationType>
+        <ObligationType>B2C</ObligationType>
         <TonnesReturnValue>10</TonnesReturnValue>
       </Return>
     </Producer>

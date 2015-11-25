@@ -29,7 +29,10 @@
 =   15/02/2008   Colin McDonald     1.3           Minor amendments.
 =   29/01/2010   Jacqui Spencer			2.0           Amended due to 2010 regulation changes.
 =   01/11/2015   Dave A             3.1           Updated categories.
-=   24/11/2015   Muhammad I         3.2           Update to unique XPath expressions.
+=   24/11/2015   Muhammad I         3.2           - Updates to the unique constraints XPath expressions.
+                                                  - Additional unique constraints for AATF, AE and Producer identifiers.
+                                                  - Rename WEEEReturnedReg43 to B2CWEEEFromDistributors.
+                                                  - Rename WEEETakenBackReg50 to B2CWEEEFromFinalHolders.
 ================================================================================
 -->
   <xs:element name="SchemeReturn">
@@ -38,10 +41,10 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="XSDVersion" default="3.0">
+        <xs:element name="XSDVersion" default="3.2">
           <xs:simpleType>
             <xs:restriction base="xs:string">
-              <xs:enumeration value="3.0"/>
+              <xs:enumeration value="3.2"/>
             </xs:restriction>
           </xs:simpleType>
         </xs:element>
@@ -180,6 +183,18 @@
         </xs:element>
       </xs:sequence>
     </xs:complexType>
+    <xs:unique name="uniqueAATFApprovalNo">
+      <xs:selector xpath="tns:DeliveredToATF/tns:DeliveredToFacility"/>
+      <xs:field xpath="tns:AATFApprovalNo"/>
+    </xs:unique>
+    <xs:unique name="uniqueAEApprovalNo">
+      <xs:selector xpath="tns:DeliveredToAE/tns:DeliveredToOperator"/>
+      <xs:field xpath="tns:AEApprovalNo"/>
+    </xs:unique>
+    <xs:unique name="uniqueProducerRegistrationNo">
+      <xs:selector xpath="tns:ProducerList/tns:Producer"/>
+      <xs:field xpath="tns:RegistrationNo"/>
+    </xs:unique>
   </xs:element>
   <xs:simpleType name="XSDVersionType">
     <xs:restriction base="xs:decimal">
