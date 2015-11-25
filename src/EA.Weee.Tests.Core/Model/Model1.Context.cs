@@ -44,9 +44,10 @@ namespace EA.Weee.Tests.Core.Model
         public virtual DbSet<MigratedProducer_> MigratedProducer_Set { get; set; }
         public virtual DbSet<Partner_> Partner_Set { get; set; }
         public virtual DbSet<Partnership> Partnerships { get; set; }
-        public virtual DbSet<Producer> Producers { get; set; }
         public virtual DbSet<SICCode_> SICCode_Set { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<ChargeBandAmount> ChargeBandAmounts { get; set; }
+        public virtual DbSet<ProducerSubmission> ProducerSubmissions { get; set; }
+        public virtual DbSet<RegisteredProducer> RegisteredProducers { get; set; }
     }
 }
