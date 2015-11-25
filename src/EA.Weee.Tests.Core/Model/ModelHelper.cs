@@ -205,15 +205,15 @@
         /// </summary>
         /// <param name="memberUpload"></param>
         /// <returns></returns>
-        public Producer CreateProducerAsCompany(MemberUpload memberUpload, string registrationNumber)
+        public ProducerSubmission CreateProducerAsCompany(MemberUpload memberUpload, string registrationNumber)
         {
-            Producer producer = CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
+            ProducerSubmission producerSubsmission = CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
             Company company = CreateCompany();
 
-            producer.Business.Company = company;
-            producer.Business.CompanyId = company.Id;
+            producerSubsmission.Business.Company = company;
+            producerSubsmission.Business.CompanyId = company.Id;
 
-            return producer;
+            return producerSubsmission;
         }
 
         /// <summary>
@@ -222,15 +222,15 @@
         /// </summary>
         /// <param name="memberUpload"></param>
         /// <returns></returns>
-        public Producer CreateProducerAsPartnership(MemberUpload memberUpload, string registrationNumber)
+        public ProducerSubmission CreateProducerAsPartnership(MemberUpload memberUpload, string registrationNumber)
         {
-            Producer producer = CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
+            ProducerSubmission producerSubmission = CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
             Partnership partnership = CreatePartnership();
 
-            producer.Business.Partnership = partnership;
-            producer.Business.PartnershipId = partnership.Id;
+            producerSubmission.Business.Partnership = partnership;
+            producerSubmission.Business.PartnershipId = partnership.Id;
 
-            return producer;
+            return producerSubmission;
         }
 
         /// <summary>
@@ -239,12 +239,12 @@
         /// </summary>
         /// <param name="memberUpload"></param>
         /// <returns></returns>
-        public Producer CreateProducerAsSoleTrader(MemberUpload memberUpload, string registrationNumber)
+        public ProducerSubmission CreateProducerAsSoleTrader(MemberUpload memberUpload, string registrationNumber)
         {
             return CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
         }
 
-        private Producer CreateProducerWithEmptyBusiness(MemberUpload memberUpload, string registrationNumber)
+        private ProducerSubmission CreateProducerWithEmptyBusiness(MemberUpload memberUpload, string registrationNumber)
         {
             int businessId = GetNextId(typeof(Business));
             Business business = new Business
@@ -253,27 +253,58 @@
             };
             model.Businesses.Add(business);
 
-            int producerId = GetNextId(typeof(Producer));
-            var chargeBandAmount = FetchChargeBandAmount(ChargeBand.A);
-            Producer producer = new Producer
+            int registeredProducerId = GetNextId(typeof(RegisteredProducer));
+            int producerSubmissionId = GetNextId(typeof(ProducerSubmission));
+
+            RegisteredProducer registeredProducer;
+
+            // Try to find a RegisteredProducer that has already been created, otherwise create a new one.
+            registeredProducer = model.ChangeTracker.Entries<RegisteredProducer>()
+                .Select(e => e.Entity)
+                .Where(rp => rp.ProducerRegistrationNumber == registrationNumber)
+                .Where(rp => rp.ComplianceYear == memberUpload.ComplianceYear.Value)
+                .Where(rp => rp.SchemeId == memberUpload.SchemeId)
+                .SingleOrDefault();
+
+            if (registeredProducer == null)
             {
-                Id = IntegerToGuid(producerId),
+                registeredProducer = new RegisteredProducer
+                {
+                    Id = IntegerToGuid(registeredProducerId),
+                    Scheme = memberUpload.Scheme,
+                    SchemeId = memberUpload.Scheme.Id,
+                    ComplianceYear = memberUpload.ComplianceYear.Value,
+                    ProducerRegistrationNumber = registrationNumber,
+                    CurrentSubmissionId = null
+                };
+                model.RegisteredProducers.Add(registeredProducer);
+            }
+
+            if (memberUpload.IsSubmitted)
+            {
+                registeredProducer.CurrentSubmissionId = IntegerToGuid(producerSubmissionId);
+            }
+
+            var chargeBandAmount = FetchChargeBandAmount(ChargeBand.A);
+            ProducerSubmission producerSubmission = new ProducerSubmission
+            {
+                Id = IntegerToGuid(producerSubmissionId),
+                RegisteredProducer = registeredProducer,
+                RegisteredProducerId = registeredProducer.Id,
                 MemberUpload = memberUpload,
                 MemberUploadId = memberUpload.Id,
-                RegistrationNumber = registrationNumber,
-                TradingName = string.Format("Producer {0} Trading Name", producerId),
+                TradingName = string.Format("Producer {0} Trading Name", producerSubmissionId),
                 UpdatedDate = new DateTime(2015, 1, 1, 0, 0, 0),
                 Business = business,
                 ProducerBusinessId = business.Id,
-                Scheme = memberUpload.Scheme,
-                SchemeId = memberUpload.Scheme.Id,
                 AuthorisedRepresentativeId = null,
                 ChargeBandAmountId = chargeBandAmount.Id,
-                ChargeThisUpdate = 445
+                ChargeThisUpdate = 0,
+                ObligationType = "B2B"
             };
-            model.Producers.Add(producer);
+            model.ProducerSubmissions.Add(producerSubmission);
 
-            return producer;
+            return producerSubmission;
         }
 
         private Company CreateCompany()
