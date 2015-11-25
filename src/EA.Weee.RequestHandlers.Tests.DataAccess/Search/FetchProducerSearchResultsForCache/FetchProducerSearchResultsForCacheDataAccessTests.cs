@@ -31,15 +31,13 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                Model.Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAA");
-                producer1.IsCurrentForComplianceYear = true;
+                Model.ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAA");
 
                 Model.MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;
 
-                Model.Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAA");
-                producer2.IsCurrentForComplianceYear = true;
+                Model.ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAA");
 
                 database.Model.SaveChanges();
 
@@ -73,17 +71,15 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                Model.Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAA");
+                Model.ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAA");
                 producer1.UpdatedDate = new DateTime(2015, 1, 1);
-                producer1.IsCurrentForComplianceYear = false;
 
                 Model.MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2015;
                 memberUpload2.IsSubmitted = true;
 
-                Model.Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAA");
+                Model.ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAA");
                 producer2.UpdatedDate = new DateTime(2015, 1, 2);
-                producer2.IsCurrentForComplianceYear = true;
 
                 database.Model.SaveChanges();
 
@@ -116,22 +112,19 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                Model.Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAA");
-                producer1.IsCurrentForComplianceYear = true;
+                Model.ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAA");
 
                 Model.MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2015;
                 memberUpload2.IsSubmitted = true;
 
-                Model.Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "CCCCC");
-                producer2.IsCurrentForComplianceYear = true;
+                Model.ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "CCCCC");
 
                 Model.MemberUpload memberUpload3 = helper.CreateMemberUpload(scheme);
                 memberUpload3.ComplianceYear = 2015;
                 memberUpload3.IsSubmitted = true;
 
-                Model.Producer producer3 = helper.CreateProducerAsCompany(memberUpload3, "BBBBB");
-                producer3.IsCurrentForComplianceYear = true;
+                Model.ProducerSubmission producer3 = helper.CreateProducerAsCompany(memberUpload3, "BBBBB");
 
                 database.Model.SaveChanges();
 
