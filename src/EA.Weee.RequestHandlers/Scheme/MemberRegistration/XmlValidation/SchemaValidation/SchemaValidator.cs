@@ -6,11 +6,11 @@
     using System.Xml;
     using System.Xml.Linq;
     using System.Xml.Schema;
-    using Core.Helpers.Xml;
     using Domain;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
+    using Weee.XmlValidation.Errors;
     using Xml.Schemas;
 
     public class SchemaValidator : ISchemaValidator

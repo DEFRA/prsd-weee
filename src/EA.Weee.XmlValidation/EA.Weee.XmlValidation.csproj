@@ -109,6 +109,8 @@
     <Compile Include="BusinessValidation\Rules\Scheme\DuplicateProducerRegistrationNumbers.cs" />
     <Compile Include="BusinessValidation\XmlBusinessValidator.cs" />
     <Compile Include="XmlValidationModule.cs" />
+    <Compile Include="Errors\IXmlErrorTranslator.cs" />
+    <Compile Include="Errors\XmlErrorTranslator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
