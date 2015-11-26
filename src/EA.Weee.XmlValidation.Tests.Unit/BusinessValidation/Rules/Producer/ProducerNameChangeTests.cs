@@ -5,10 +5,11 @@
     using FakeItEasy;
     using Weee.Domain;
     using Weee.Domain.Producer;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
     using XmlValidation.BusinessValidation.QuerySets;
     using XmlValidation.BusinessValidation.Rules.Producer;
     using Xunit;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public class ProducerNameChangeTests
     {

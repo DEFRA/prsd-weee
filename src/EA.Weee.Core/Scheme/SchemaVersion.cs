@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core.Scheme.MemberUploadTesting
+﻿namespace EA.Weee.Core.Scheme
 {
     using System.ComponentModel.DataAnnotations;
 

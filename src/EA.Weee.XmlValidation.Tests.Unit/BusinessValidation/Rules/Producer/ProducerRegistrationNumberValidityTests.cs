@@ -4,7 +4,7 @@
     using Core.Shared;
     using FakeItEasy;
     using Xml;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
     using XmlValidation.BusinessValidation.QuerySets;
     using XmlValidation.BusinessValidation.Rules.Producer;
     using Xunit;

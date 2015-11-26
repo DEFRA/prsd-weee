@@ -25,8 +25,9 @@
     using Xml;
     using Xml.Converter;
     using Xml.Deserialization;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
     using Xunit;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public class PrnGenerationIntegration
     {

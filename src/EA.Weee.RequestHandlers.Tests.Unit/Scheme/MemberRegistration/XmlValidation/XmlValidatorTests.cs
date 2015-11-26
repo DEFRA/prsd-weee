@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
+    using Core.Scheme;
+    using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
     using FakeItEasy;
     using RequestHandlers.Scheme.Interfaces;
@@ -14,8 +16,8 @@
     using Weee.XmlValidation.SchemaValidation;
     using Xml.Converter;
     using Xml.Deserialization;
-    using Xml.Schemas;
     using Xunit;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public class XmlValidatorTests
     {
@@ -35,7 +37,7 @@
         [Fact]
         public void SchemaValidatorHasErrors_ShouldNotCallBusinessValidator()
         {
-            A.CallTo(() => schemaValidator.Validate(A<byte[]>._))
+            A.CallTo(() => schemaValidator.Validate(A<byte[]>._, string.Empty, string.Empty, A<SchemaVersion>._))
                 .Returns(new List<XmlValidationError>
                 {
                     new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "An error occurred")
@@ -50,7 +52,7 @@
         [Fact]
         public void SchemaValidatorHasNoErrors_AndBusinessValidatorDoes_ShouldReturnErrors()
         {
-            A.CallTo(() => schemaValidator.Validate(A<byte[]>._))
+            A.CallTo(() => schemaValidator.Validate(A<byte[]>._, string.Empty, string.Empty, A<SchemaVersion>._))
                 .Returns(new List<XmlValidationError>());
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._))
@@ -67,7 +69,7 @@
         [Fact]
         public void SchemaValidatorHasNoErrors_DeserializationException_ShouldReturnError()
         {
-            A.CallTo(() => schemaValidator.Validate(A<byte[]>._))
+            A.CallTo(() => schemaValidator.Validate(A<byte[]>._, string.Empty, string.Empty, A<SchemaVersion>._))
                 .Returns(new List<XmlValidationError>());
 
             A.CallTo(() => xmlConverter.Deserialize(A<XDocument>._))

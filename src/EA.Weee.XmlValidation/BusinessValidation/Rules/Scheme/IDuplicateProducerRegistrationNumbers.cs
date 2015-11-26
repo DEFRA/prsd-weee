@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using BusinessValidation;
-    using Xml.Schemas;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public interface IDuplicateProducerRegistrationNumbers
     {

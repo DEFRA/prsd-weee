@@ -99,6 +99,7 @@
     <Compile Include="BusinessValidation\Rules\Scheme\DuplicateProducerNamesTests.cs" />
     <Compile Include="BusinessValidation\Rules\Scheme\DuplicateProducerRegistrationNumbersTests.cs" />
     <Compile Include="BusinessValidation\XmlBusinessValidatorTests.cs" />
+    <Compile Include="DataReturn\XmlSchemaValidationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\AnnualTurnoverMismatchTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\ProducerAlreadyRegisteredTests.cs" />
@@ -135,7 +136,35 @@
       <Name>EA.Weee.Xml</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="DataReturn\XmlFiles\v3-B2CWEEEFromDistributors-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-B2CWEEEFromFinalHolders-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-CollectedFromDCF-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-DeliveredToAE-DuplicateAEApprovalNo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-DeliveredToAE-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-DeliveredToATF-DuplicateAATFApprovalNo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-DeliveredToATF-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-ProducerList-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-ProducerList-DuplicateRegistrationNo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -1,7 +1,6 @@
-﻿namespace EA.Weee.Xml.Schemas
+﻿namespace EA.Weee.Xml.MemberUpload
 {
     using System.Diagnostics.CodeAnalysis;
-    using System.Dynamic;
     using System.Globalization;
     using System.Xml.Serialization;
 

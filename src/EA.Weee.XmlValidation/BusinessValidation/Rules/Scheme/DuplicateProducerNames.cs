@@ -5,7 +5,7 @@
     using System.Linq;
     using BusinessValidation;
     using Xml;
-    using Xml.Schemas;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public class DuplicateProducerNames : IDuplicateProducerNames
     {

@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.Rules.Producer
 {
-    using EA.Weee.Xml.Schemas;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Xml.MemberUpload;
 
     /// <summary>
     /// This rules ensures that an overseas producer does not have an address based in the UK.

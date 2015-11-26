@@ -2,7 +2,8 @@
 {
     using System;
     using BusinessValidation;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public interface IProducerAlreadyRegistered
     {
