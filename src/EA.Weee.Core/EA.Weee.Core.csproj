@@ -126,15 +126,12 @@
     <Compile Include="Configuration\TestUserEmailDomainElementCollection.cs" />
     <Compile Include="Configuration\TestUserEmailDomainsSection.cs" />
     <Compile Include="CoreModule.cs" />
-    <Compile Include="Exceptions\XmlDeserializationFailureException.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\PrnGeneration\IPrnHelper.cs" />
     <Compile Include="Helpers\PrnGeneration\IQuadraticResidueHelper.cs" />
     <Compile Include="Helpers\PrnGeneration\PrnAsComponents.cs" />
     <Compile Include="Helpers\PrnGeneration\PrnHelper.cs" />
     <Compile Include="Helpers\PrnGeneration\QuadraticResidueHelper.cs" />
-    <Compile Include="Helpers\Xml\IXmlErrorTranslator.cs" />
-    <Compile Include="Helpers\Xml\XmlErrorTranslator.cs" />
     <Compile Include="Routing\ExternalRoute.cs" />
     <Compile Include="Routing\ResetPasswordRoute.cs" />
     <Compile Include="Scheme\SchemePublicInfo.cs" />

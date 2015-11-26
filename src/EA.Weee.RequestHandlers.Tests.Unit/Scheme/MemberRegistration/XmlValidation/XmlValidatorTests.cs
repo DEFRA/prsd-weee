@@ -4,15 +4,16 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
-    using Core.Exceptions;
-    using Core.Helpers.Xml;
-    using Domain;
-    using Domain.Scheme;
+    using Core.Shared;
     using FakeItEasy;
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation;
     using Requests.Scheme.MemberRegistration;
     using Weee.XmlValidation.BusinessValidation;
+    using Weee.XmlValidation.Errors;
+    using Weee.XmlValidation.SchemaValidation;
+    using Xml.Converter;
+    using Xml.Deserialization;
     using Xml.Schemas;
     using Xunit;
 
@@ -34,10 +35,10 @@
         [Fact]
         public void SchemaValidatorHasErrors_ShouldNotCallBusinessValidator()
         {
-            A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
-                .Returns(new List<MemberUploadError>
+            A.CallTo(() => schemaValidator.Validate(A<byte[]>._))
+                .Returns(new List<XmlValidationError>
                 {
-                    new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "An error occurred")
+                    new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "An error occurred")
                 });
 
             XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
@@ -49,8 +50,8 @@
         [Fact]
         public void SchemaValidatorHasNoErrors_AndBusinessValidatorDoes_ShouldReturnErrors()
         {
-            A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
-                .Returns(new List<MemberUploadError>());
+            A.CallTo(() => schemaValidator.Validate(A<byte[]>._))
+                .Returns(new List<XmlValidationError>());
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._))
                 .Returns(new List<RuleResult>
@@ -66,8 +67,8 @@
         [Fact]
         public void SchemaValidatorHasNoErrors_DeserializationException_ShouldReturnError()
         {
-            A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
-                .Returns(new List<MemberUploadError>());
+            A.CallTo(() => schemaValidator.Validate(A<byte[]>._))
+                .Returns(new List<XmlValidationError>());
 
             A.CallTo(() => xmlConverter.Deserialize(A<XDocument>._))
                 .Throws(new XmlDeserializationFailureException(new Exception("Test exception")));
