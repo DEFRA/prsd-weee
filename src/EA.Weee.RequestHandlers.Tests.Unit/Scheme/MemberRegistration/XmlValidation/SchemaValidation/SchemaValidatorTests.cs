@@ -87,8 +87,7 @@
         {
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._)).MustNotHaveHappened();
 
-            var xmlData = new byte[0];
-            var errors = SchemaValidator().Validate(A<byte[]>._);
+            var errors = SchemaValidator().Validate(new byte[0]);
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
