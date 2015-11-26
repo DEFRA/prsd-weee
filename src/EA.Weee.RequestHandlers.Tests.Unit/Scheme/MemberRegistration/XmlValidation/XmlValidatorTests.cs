@@ -17,7 +17,6 @@
     using Xml.Converter;
     using Xml.Deserialization;
     using Xunit;
-    using schemeType = Xml.MemberRegistration.schemeType;
 
     public class XmlValidatorTests
     {

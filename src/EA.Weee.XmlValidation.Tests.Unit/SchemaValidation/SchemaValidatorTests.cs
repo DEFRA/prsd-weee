@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.XmlValidation.SchemaValidation
+﻿namespace EA.Weee.XmlValidation.Tests.Unit.SchemaValidation
 {
     using System;
     using System.IO;
@@ -7,11 +7,8 @@
     using System.Xml;
     using System.Xml.Linq;
     using Core.Scheme;
-    using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
     using FakeItEasy;
-    using RequestHandlers.Scheme.Interfaces;
-    using Requests.Scheme.MemberRegistration;
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;
     using Xml.Converter;

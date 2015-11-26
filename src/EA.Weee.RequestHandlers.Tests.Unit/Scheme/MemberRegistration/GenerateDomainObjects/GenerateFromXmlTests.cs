@@ -12,7 +12,6 @@
     using Xml.Converter;
     using Xml.MemberRegistration;
     using Xunit;
-    using schemeType = Xml.MemberRegistration.schemeType;
 
     public class GenerateFromXmlTests
     {

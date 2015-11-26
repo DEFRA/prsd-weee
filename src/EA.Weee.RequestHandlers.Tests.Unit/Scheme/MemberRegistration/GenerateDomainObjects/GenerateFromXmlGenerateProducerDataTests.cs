@@ -14,7 +14,6 @@
     using Xml.Converter;
     using Xml.MemberRegistration;
     using Xunit;
-    using schemeType = Xml.MemberRegistration.schemeType;
 
     /// <summary>
     /// This class contains the tests for the <see cref="GenerateFromXml.GenerateProducerData"/> method.
