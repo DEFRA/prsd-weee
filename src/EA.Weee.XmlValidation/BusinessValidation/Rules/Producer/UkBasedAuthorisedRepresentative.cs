@@ -5,7 +5,7 @@
     using System.Linq;
     using BusinessValidation;
     using Xml;
-    using Xml.MemberUpload;
+    using Xml.MemberRegistration;
 
     public class UkBasedAuthorisedRepresentative : IUkBasedAuthorisedRepresentative
     {

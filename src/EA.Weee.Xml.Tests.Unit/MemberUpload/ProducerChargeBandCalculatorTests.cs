@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Xml.Tests.Unit.MemberUpload
 {
     using Domain.Lookup;
-    using Xml.MemberUpload;
+    using MemberRegistration;
     using Xunit;
 
     public class ProducerChargeBandCalculatorTests

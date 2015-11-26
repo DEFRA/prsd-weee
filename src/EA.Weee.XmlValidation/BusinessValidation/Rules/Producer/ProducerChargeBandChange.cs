@@ -9,8 +9,8 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Xml.MemberUpload;
-    using schemeType = Xml.MemberUpload.schemeType;
+    using Xml.MemberRegistration;
+    using schemeType = Xml.MemberRegistration.schemeType;
 
     public class ProducerChargeBandChange : IProducerChargeBandChange
     {

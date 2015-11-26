@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Xml.MemberUpload;
+    using Xml.MemberRegistration;
 
     /// <summary>
     /// This rules ensures that an overseas producer does not have an address based in the UK.

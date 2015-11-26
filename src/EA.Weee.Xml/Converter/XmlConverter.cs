@@ -5,7 +5,7 @@
     using System.Xml.Linq;
     using Core.Helpers;
     using Deserialization;
-    using schemeType = MemberUpload.schemeType;
+    using schemeType = MemberRegistration.schemeType;
 
     public class XmlConverter : IXmlConverter
     {

@@ -6,8 +6,8 @@
     using Deserialization;
     using FakeItEasy;
     using Xml.Converter;
-    using Xml.MemberUpload;
     using Xunit;
+    using schemeType = MemberRegistration.schemeType;
 
     public class XmlConverterTests
     {

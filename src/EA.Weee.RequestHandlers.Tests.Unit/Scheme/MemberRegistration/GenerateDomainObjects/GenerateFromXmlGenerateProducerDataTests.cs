@@ -13,9 +13,9 @@
     using EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using FakeItEasy;
     using Xml.Converter;
-    using Xml.MemberUpload;
+    using Xml.MemberRegistration;
     using Xunit;
-    using schemeType = Xml.MemberUpload.schemeType;
+    using schemeType = Xml.MemberRegistration.schemeType;
 
     /// <summary>
     /// This class contains the tests for the <see cref="GenerateFromXml.GenerateProducerData"/> method.

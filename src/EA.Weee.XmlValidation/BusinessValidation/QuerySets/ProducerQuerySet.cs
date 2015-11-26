@@ -8,7 +8,7 @@
     using Domain.Producer;
     using Queries.Producer;
     using Xml;
-    using Xml.MemberUpload;
+    using Xml.MemberRegistration;
 
     public class ProducerQuerySet : IProducerQuerySet
     {
