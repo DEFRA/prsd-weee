@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Rules.Producer
 {
-    using System.Collections.Generic;
     using Core.Shared;
     using FakeItEasy;
-    using Xml;
-    using Xml.Schemas;
+    using System.Collections.Generic;
+    using Xml.MemberRegistration;
     using XmlValidation.BusinessValidation.QuerySets;
     using XmlValidation.BusinessValidation.Rules.Producer;
     using Xunit;

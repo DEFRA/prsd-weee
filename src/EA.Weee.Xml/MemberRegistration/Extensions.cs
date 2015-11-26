@@ -1,9 +1,7 @@
-﻿namespace EA.Weee.Xml
+﻿namespace EA.Weee.Xml.MemberRegistration
 {
-    using System;
     using Domain;
-    using Schemas;
-
+    
     public static class Extensions
     {
         public static string GetProducerName(this producerType producer)

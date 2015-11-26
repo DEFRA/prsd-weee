@@ -1,17 +1,6 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Threading.Tasks;
-    using System.Xml.Linq;
-    using System.Xml.Serialization;
     using Core.Helpers.PrnGeneration;
-    using Domain;
     using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Producer;
@@ -22,8 +11,16 @@
     using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
     using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using Requests.Scheme.MemberRegistration;
-    using Xml;
-    using Xml.Schemas;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Threading.Tasks;
+    using System.Xml.Linq;
+    using System.Xml.Serialization;
+    using Xml.MemberRegistration;
     using Xunit;
 
     public class PrnGenerationIntegration

@@ -3,12 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using DataAccess;
     using Domain;
     using Domain.Producer;
     using Queries.Producer;
-    using Xml;
-    using Xml.Schemas;
+    using Xml.MemberRegistration;
 
     public class ProducerQuerySet : IProducerQuerySet
     {

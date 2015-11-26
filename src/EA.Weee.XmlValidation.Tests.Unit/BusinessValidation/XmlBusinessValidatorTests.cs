@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation
 {
+    using Core.Shared;
+    using FakeItEasy;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Core.Shared;
-    using FakeItEasy;
-    using Xml.Schemas;
+    using Xml.MemberRegistration;
     using XmlValidation.BusinessValidation;
     using XmlValidation.BusinessValidation.Rules.Producer;
     using XmlValidation.BusinessValidation.Rules.Scheme;

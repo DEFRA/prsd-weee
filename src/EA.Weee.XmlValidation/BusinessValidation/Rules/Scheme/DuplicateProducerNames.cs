@@ -5,7 +5,7 @@
     using System.Linq;
     using BusinessValidation;
     using Xml;
-    using Xml.Schemas;
+    using Xml.MemberRegistration;
 
     public class DuplicateProducerNames : IDuplicateProducerNames
     {

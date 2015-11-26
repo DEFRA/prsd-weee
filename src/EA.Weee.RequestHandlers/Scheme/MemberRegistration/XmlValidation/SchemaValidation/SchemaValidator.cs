@@ -1,21 +1,19 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation.SchemaValidation
 {
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using System.Xml;
-    using System.Xml.Linq;
-    using System.Xml.Schema;
     using Core.Helpers.Xml;
     using Domain;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
-    using Xml.Schemas;
+    using System.Collections.Generic;
+    using System.Xml;
+    using System.Xml.Linq;
+    using System.Xml.Schema;
+    using Xml.MemberRegistration;
 
     public class SchemaValidator : ISchemaValidator
     {
-        private const string SchemaLocation = @"EA.Weee.Xml.Schemas.v3schema.xsd";
+        private const string SchemaLocation = @"EA.Weee.Xml.MemberRegistration.v3schema.xsd";
         private const string SchemaNamespace = @"http://www.environment-agency.gov.uk/WEEE/XMLSchema";
 
         private readonly IXmlErrorTranslator xmlErrorTranslator;

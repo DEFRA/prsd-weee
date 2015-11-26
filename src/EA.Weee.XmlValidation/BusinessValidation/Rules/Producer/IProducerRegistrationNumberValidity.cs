@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.Rules.Producer
 {
     using BusinessValidation;
-    using Xml.Schemas;
+    using Xml.MemberRegistration;
 
     public interface IProducerRegistrationNumberValidity
     {
