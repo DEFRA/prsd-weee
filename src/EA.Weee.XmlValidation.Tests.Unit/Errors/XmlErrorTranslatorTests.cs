@@ -1,6 +1,9 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.Errors
 {
     using System.Xml.Linq;
+    using Core.Scheme;
+    using Core.Scheme.MemberUploadTesting;
+    using FakeItEasy;
     using XmlValidation.Errors;
     using Xunit;
 
@@ -32,7 +35,7 @@
             XmlErrorTranslator translator = new XmlErrorTranslator();
 
             // Act
-            string result = translator.MakeFriendlyErrorMessage(xmlValidationErrorMessage);
+            string result = translator.MakeFriendlyErrorMessage(xmlValidationErrorMessage, A<SchemaVersion>._);
 
             // Assert
 
@@ -56,7 +59,7 @@
             XmlErrorTranslator translator = new XmlErrorTranslator();
 
             // Act
-            string result = translator.MakeFriendlyErrorMessage(xmlValidationErrorMessage);
+            string result = translator.MakeFriendlyErrorMessage(xmlValidationErrorMessage, A<SchemaVersion>._);
 
             // Assert
 
@@ -80,7 +83,7 @@
             XmlErrorTranslator translator = new XmlErrorTranslator();
 
             // Act
-            string result = translator.MakeFriendlyErrorMessage(xmlValidationErrorMessage);
+            string result = translator.MakeFriendlyErrorMessage(xmlValidationErrorMessage, A<SchemaVersion>._);
 
             // Assert
 
@@ -106,7 +109,7 @@
             sender.Value = value;
 
             // Act
-            string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
+            string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12, A<SchemaVersion>._);
 
             // Assert
             string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be true, false, 0 or 1 (XML line 12).", value);
@@ -130,7 +133,7 @@
             sender.Value = value;
 
             // Act
-            string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
+            string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12, A<SchemaVersion>._);
 
             // Assert
             string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a date in the format YYYY-MM-DD (XML line 12).", value);
@@ -154,7 +157,7 @@
             sender.Value = value;
 
             // Act
-            string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
+            string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12, A<SchemaVersion>._);
 
             // Assert
             string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a whole number (XML line 12).", value);
@@ -178,7 +181,7 @@
             sender.Value = value;
 
             // Act
-            string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
+            string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12, A<SchemaVersion>._);
 
             // Assert
             string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a decimal (XML line 12).", value);
@@ -202,7 +205,7 @@
             sender.Value = value;
 
             // Act
-            string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12);
+            string result = translator.MakeFriendlyErrorMessage(sender, xmlMessage, 12, A<SchemaVersion>._);
 
             // Assert
             string expectedResult = string.Format("The value '{0}' supplied for field 'fieldName' doesn't match the required data type. The value '{0}' must be a number (XML line 12).", value);
@@ -283,7 +286,7 @@
 
             var translator = new XmlErrorTranslator();
 
-            var friendlyMessage = translator.MakeFriendlyErrorMessage(providedException);
+            var friendlyMessage = translator.MakeFriendlyErrorMessage(providedException, A<SchemaVersion>._);
 
             Assert.Equal(expectedFriendlyMessage, friendlyMessage);
         }
@@ -296,7 +299,7 @@
 
             var translator = new XmlErrorTranslator();
 
-            var friendlyMessage = translator.MakeFriendlyErrorMessage(providedException);
+            var friendlyMessage = translator.MakeFriendlyErrorMessage(providedException, A<SchemaVersion>._);
 
             Assert.Equal(expectedFriendlyMessage, friendlyMessage);
         }
@@ -316,7 +319,7 @@
             XmlErrorTranslator translator = new XmlErrorTranslator();
 
             // Act
-            string result = translator.MakeFriendlyErrorMessage(schemaValidationErrorMessage);
+            string result = translator.MakeFriendlyErrorMessage(schemaValidationErrorMessage, A<SchemaVersion>._);
 
             // Assert
             Assert.Equal("The file you're trying to upload is not a correctly formatted XML file. Please make sure you're uploading a valid XML file.", result);
@@ -343,7 +346,7 @@
             var translator = new XmlErrorTranslator();
             var testXElement = GetTestXElement();
 
-            var friendlyMessage = translator.MakeFriendlyErrorMessage(testXElement, providedException, TestLineNumber);
+            var friendlyMessage = translator.MakeFriendlyErrorMessage(testXElement, providedException, TestLineNumber, A<SchemaVersion>._);
 
             Assert.Equal(expectedFriendlyMessage, friendlyMessage);
         }

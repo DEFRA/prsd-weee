@@ -6,6 +6,8 @@
     using System.Reflection;
     using System.Xml;
     using System.Xml.Linq;
+    using Core.Scheme;
+    using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
     using FakeItEasy;
     using RequestHandlers.Scheme.Interfaces;
@@ -36,7 +38,7 @@
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Returns(XDocument.Parse(validXml));
 
-            var errors = SchemaValidator().Validate(A<byte[]>._);
+            var errors = SchemaValidator().Validate(A<byte[]>._, string.Empty, string.Empty, A<SchemaVersion>._);
 
             Assert.Empty(errors);
         }
@@ -51,7 +53,7 @@
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Returns(XDocument.Parse(wrongNamespaceXml));
 
-            var errors = SchemaValidator().Validate(A<byte[]>._);
+            var errors = SchemaValidator().Validate(A<byte[]>._, string.Empty, string.Empty, A<SchemaVersion>._);
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -66,7 +68,7 @@
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Returns(XDocument.Parse(invalidXml));
 
-            var errors = SchemaValidator().Validate(A<byte[]>._);
+            var errors = SchemaValidator().Validate(A<byte[]>._, string.Empty, string.Empty, A<SchemaVersion>._);
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -77,7 +79,7 @@
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Throws<XmlException>();
 
-            var errors = SchemaValidator().Validate(A<byte[]>._);
+            var errors = SchemaValidator().Validate(A<byte[]>._, string.Empty, string.Empty, A<SchemaVersion>._);
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -87,7 +89,7 @@
         {
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._)).MustNotHaveHappened();
 
-            var errors = SchemaValidator().Validate(new byte[0]);
+            var errors = SchemaValidator().Validate(new byte[0], string.Empty, string.Empty, A<SchemaVersion>._);
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }

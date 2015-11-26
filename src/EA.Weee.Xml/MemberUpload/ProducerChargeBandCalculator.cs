@@ -1,13 +1,6 @@
-﻿namespace EA.Weee.Xml
+﻿namespace EA.Weee.Xml.MemberUpload
 {
     using Domain.Lookup;
-    using EA.Weee.Domain;
-    using EA.Weee.Xml.Schemas;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class ProducerChargeBandCalculator : IProducerChargeBandCalculator
     {

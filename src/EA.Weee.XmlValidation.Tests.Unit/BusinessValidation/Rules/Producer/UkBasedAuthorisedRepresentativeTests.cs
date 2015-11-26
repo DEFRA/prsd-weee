@@ -3,7 +3,7 @@
     using System;
     using Core.Shared;
     using Xml;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
     using XmlValidation.BusinessValidation.Rules.Producer;
     using Xunit;
 

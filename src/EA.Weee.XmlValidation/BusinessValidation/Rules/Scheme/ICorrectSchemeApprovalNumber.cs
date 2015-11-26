@@ -2,7 +2,7 @@
 {
     using System;
     using BusinessValidation;
-    using Xml.Schemas;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public interface ICorrectSchemeApprovalNumber
     {

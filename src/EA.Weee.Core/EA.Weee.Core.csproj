@@ -91,6 +91,7 @@
     <Compile Include="DataStandards\CommonMaxFieldLengths.cs" />
     <Compile Include="DataStandards\EnvironmentAgencyMaxFieldLengths.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
+    <Compile Include="Scheme\SchemaVersion.cs" />
     <Compile Include="Search\Fuzzy\CommonTerm.cs" />
     <Compile Include="Search\Fuzzy\FuzzyOrganisationSearcher.cs">
       <SubType>Code</SubType>
@@ -174,7 +175,6 @@
     <Compile Include="Scheme\MemberUploadTesting\ProducerSettings.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerStatus.cs" />
     <Compile Include="Scheme\MemberUploadTesting\RandomHelper.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\SchemaVersion.cs" />
     <Compile Include="Scheme\MemberUploadTesting\SchemeBusiness.cs" />
     <Compile Include="Scheme\MemberUploadTesting\SchemeCompany.cs" />
     <Compile Include="Scheme\MemberUploadTesting\SchemePartnership.cs" />

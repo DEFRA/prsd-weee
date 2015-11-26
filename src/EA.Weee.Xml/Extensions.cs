@@ -2,7 +2,7 @@
 {
     using System;
     using Domain;
-    using Schemas;
+    using MemberUpload;
 
     public static class Extensions
     {

@@ -15,7 +15,7 @@
     using Requests.Scheme.MemberRegistration;
     using Xml;
     using Xml.Converter;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
 
     public class GenerateFromXml : IGenerateFromXml
     {

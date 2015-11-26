@@ -3,9 +3,10 @@
     using System;
     using System.Linq;
     using Core.Shared;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
     using XmlValidation.BusinessValidation.Rules.Scheme;
     using Xunit;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public class DuplicateProducerNamesTests
     {

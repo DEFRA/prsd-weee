@@ -5,11 +5,12 @@
     using System.Linq;
     using Core.Shared;
     using FakeItEasy;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
     using XmlValidation.BusinessValidation;
     using XmlValidation.BusinessValidation.Rules.Producer;
     using XmlValidation.BusinessValidation.Rules.Scheme;
     using Xunit;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public class XmlBusinessValidatorTests
     {

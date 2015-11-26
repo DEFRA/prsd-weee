@@ -2,7 +2,6 @@
 {
     using EA.Weee.Domain;
     using EA.Weee.Xml;
-    using EA.Weee.Xml.Schemas;
     using EA.Weee.XmlValidation.BusinessValidation;
     using EA.Weee.XmlValidation.BusinessValidation.QuerySets;
     using EA.Weee.XmlValidation.BusinessValidation.Rules.Producer;
@@ -13,8 +12,10 @@
     using System.Text;
     using System.Threading.Tasks;
     using Weee.Domain.Lookup;
+    using Xml.MemberUpload;
     using Xunit;
     using Producer = EA.Weee.Domain.Producer.Producer;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public class ProducerChargeBandChangeTests
     {

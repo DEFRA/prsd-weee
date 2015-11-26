@@ -1,8 +1,12 @@
 ﻿namespace EA.Weee.XmlValidation.Errors
 {
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Xml.Linq;
+    using Core.Helpers;
+    using Core.Scheme;
+    using Core.Scheme.MemberUploadTesting;
 
     public class XmlErrorTranslator : IXmlErrorTranslator
     {
@@ -37,12 +41,12 @@
 
         private const string ErrorInXmlDocumentPattern = @"^There is an error in XML document \(([0-9]*)\,\s([0-9]*)\)\.$";
 
-        public string MakeFriendlyErrorMessage(string message)
+        public string MakeFriendlyErrorMessage(string message, SchemaVersion schemaVersion)
         {
-            return MakeFriendlyErrorMessage(null, message, -1);
+            return MakeFriendlyErrorMessage(null, message, -1, schemaVersion);
         }
 
-        public string MakeFriendlyErrorMessage(XElement sender, string message, int lineNumber)
+        public string MakeFriendlyErrorMessage(XElement sender, string message, int lineNumber, SchemaVersion schemaVersion)
         {
             string resultErrorMessage = message;
             Match match = null;
@@ -65,7 +69,7 @@
             }
             else if (Regex.IsMatch(message, InvalidChildElementPattern))
             {
-                resultErrorMessage = MakeFriendlyInvalidChildElementMessage(sender, message);
+                resultErrorMessage = MakeFriendlyInvalidChildElementMessage(sender, message, schemaVersion);
             }
             else if (Regex.IsMatch(message, IncompleteContentPattern))
             {
@@ -202,9 +206,9 @@
                     sender.Value, sender.Name.LocalName, friendlyMessageTemplate);
         }
 
-        private string MakeFriendlyInvalidChildElementMessage(XElement sender, string message)
+        private string MakeFriendlyInvalidChildElementMessage(XElement sender, string message, SchemaVersion schemaVersion)
         {
-            return string.Format("The field {0} isn't expected here. Please check that you are using v3.0.7 of the XSD schema (XML template).", sender.Name.LocalName);
+            return string.Format("The field {0} isn't expected here. Please check that you are using v{1} of the XSD schema (XML template).", sender.Name.LocalName, schemaVersion.GetAttribute<DisplayAttribute>().Name);
         }
 
         private string MakeFriendlyIncompleteContentMessage(XElement sender, string message)

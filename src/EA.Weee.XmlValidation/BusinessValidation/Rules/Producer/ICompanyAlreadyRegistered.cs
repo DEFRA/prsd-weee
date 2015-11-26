@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using EA.Weee.Xml.Schemas;
+    using Xml.MemberUpload;
 
     public interface ICompanyAlreadyRegistered
     {

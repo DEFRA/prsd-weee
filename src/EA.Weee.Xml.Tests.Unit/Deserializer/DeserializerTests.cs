@@ -2,7 +2,7 @@
 {
     using System.Xml.Linq;
     using Deserialization;
-    using Schemas;
+    using Xml.MemberUpload;
     using Xunit;
 
     public class DeserializerTests
