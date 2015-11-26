@@ -5,7 +5,7 @@
     using System.Linq;
     using Rules.Producer;
     using Rules.Scheme;
-    using schemeType = Xml.MemberUpload.schemeType;
+    using schemeType = Xml.MemberRegistration.schemeType;
 
     public class XmlBusinessValidator : IXmlBusinessValidator
     {

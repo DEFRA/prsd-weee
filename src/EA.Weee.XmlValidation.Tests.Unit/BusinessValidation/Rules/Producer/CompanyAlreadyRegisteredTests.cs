@@ -11,7 +11,7 @@
     using EA.Weee.XmlValidation.BusinessValidation.Rules.Producer;
     using EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Domain;
     using FakeItEasy;
-    using Xml.MemberUpload;
+    using Xml.MemberRegistration;
     using Xunit;
 
     public class CompanyAlreadyRegisteredTests

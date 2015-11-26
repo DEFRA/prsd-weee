@@ -2,8 +2,8 @@
 {
     using System;
     using BusinessValidation;
-    using Xml.MemberUpload;
-    using schemeType = Xml.MemberUpload.schemeType;
+    using Xml.MemberRegistration;
+    using schemeType = Xml.MemberRegistration.schemeType;
 
     public interface IProducerNameChange
     {

@@ -2,8 +2,8 @@
 {
     using System.Xml.Linq;
     using Deserialization;
-    using Xml.MemberUpload;
     using Xunit;
+    using schemeType = MemberRegistration.schemeType;
 
     public class DeserializerTests
     {

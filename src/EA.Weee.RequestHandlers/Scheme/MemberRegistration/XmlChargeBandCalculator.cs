@@ -10,7 +10,7 @@
     using Requests.Scheme.MemberRegistration;
     using Xml;
     using Xml.Converter;
-    using Xml.MemberUpload;
+    using Xml.MemberRegistration;
 
     public class XmlChargeBandCalculator : IXmlChargeBandCalculator
     {

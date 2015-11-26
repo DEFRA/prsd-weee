@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using EA.Weee.Xml;
     using EA.Weee.XmlValidation.BusinessValidation.QuerySets;
-    using Xml.MemberUpload;
+    using Xml.MemberRegistration;
 
     public class CompanyAlreadyRegistered : ICompanyAlreadyRegistered
     {
