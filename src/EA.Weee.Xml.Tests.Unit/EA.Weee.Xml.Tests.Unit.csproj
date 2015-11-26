@@ -76,6 +76,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Converter\WhiteSpaceCollapserTests.cs" />
+    <Compile Include="Converter\XmlConverterTests.cs" />
     <Compile Include="Deserializer\DeserializerTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="ProducerChargeBandCalculatorTests.cs" />

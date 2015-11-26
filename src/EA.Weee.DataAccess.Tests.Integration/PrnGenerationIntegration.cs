@@ -23,6 +23,7 @@
     using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using Requests.Scheme.MemberRegistration;
     using Xml;
+    using Xml.Converter;
     using Xml.Deserializer;
     using Xml.Schemas;
     using Xunit;
@@ -62,7 +63,7 @@
             IWhiteSpaceCollapser whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
 
             XmlConverter xmlConverter = new XmlConverter(whiteSpaceCollapser, new Deserializer());
-            var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
+            var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
 
             var producerCharges = new Dictionary<string, ProducerCharge>();
             var anyAmount = 30;
