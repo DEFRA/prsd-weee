@@ -24,7 +24,6 @@
     using Xml.Deserialization;
     using Xml.MemberRegistration;
     using Xunit;
-    using schemeType = Xml.MemberRegistration.schemeType;
 
     public class PrnGenerationIntegration
     {
