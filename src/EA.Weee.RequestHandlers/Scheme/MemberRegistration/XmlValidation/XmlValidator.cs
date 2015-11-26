@@ -9,6 +9,7 @@
     using Requests.Scheme.MemberRegistration;
     using Weee.XmlValidation.BusinessValidation;
     using Weee.XmlValidation.Errors;
+    using Weee.XmlValidation.SchemaValidation;
     using Xml.Converter;
     using Xml.Deserializer;
     using Xml.Schemas;
@@ -32,7 +33,7 @@
         public IEnumerable<MemberUploadError> Validate(ProcessXMLFile message)
         {
             // Validate against the schema
-            var errors = schemaValidator.Validate(message)
+            var errors = schemaValidator.Validate(message.Data)
                 .Select(e => e.ToMemberUploadError())
                 .ToList();
 

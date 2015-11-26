@@ -1,14 +1,10 @@
-﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation.SchemaValidation
+﻿namespace EA.Weee.XmlValidation.SchemaValidation
 {
     using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
     using System.Xml;
     using System.Xml.Linq;
     using System.Xml.Schema;
     using Core.Shared;
-    using Interfaces;
-    using Requests.Scheme.MemberRegistration;
     using Weee.XmlValidation.Errors;
     using Xml.Converter;
     using Xml.Schemas;
@@ -27,21 +23,21 @@
             this.xmlConverter = xmlConverter;
         }
 
-        public IEnumerable<XmlValidationError> Validate(ProcessXMLFile message)
+        public IEnumerable<XmlValidationError> Validate(byte[] data)
         {
             var errors = new List<XmlValidationError>();
 
             try
             {
                 //check if the xml is not blank before doing any validations
-                if (message.Data != null && message.Data.Length == 0)
+                if (data != null && data.Length == 0)
                 {
                     errors.Add(new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "The file you're trying to upload is not a correctly formatted XML file. Please make sure you're uploading a valid XML file."));
                     return errors;
                 }
 
                 // Validate against the schema
-                var source = xmlConverter.Convert(message.Data);
+                var source = xmlConverter.Convert(data);
                 var schemas = new XmlSchemaSet();
 
                 using (var stream = typeof(schemeType).Assembly.GetManifestResourceStream(SchemaLocation))
@@ -51,10 +47,6 @@
                         schemas.Add(null, schemaReader);
                     }
                 }
-
-                //var absoluteSchemaLocation =
-                //    Path.Combine(Path.GetDirectoryName(), SchemaLocation);
-                //schemas.Add(SchemaNamespace, absoluteSchemaLocation);
 
                 string sourceNamespace = source.Root.GetDefaultNamespace().NamespaceName;
                 if (sourceNamespace != SchemaNamespace)
