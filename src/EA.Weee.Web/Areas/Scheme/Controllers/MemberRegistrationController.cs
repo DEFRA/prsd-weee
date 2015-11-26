@@ -4,15 +4,15 @@
     using Core.Scheme;
     using Core.Shared;
     using Infrastructure;
+    using Prsd.Core.Mapper;
     using Services;
+    using Services.Caching;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Prsd.Core.Mapper;
-    using Services.Caching;
     using ViewModels;
     using Web.Controllers.Base;
     using Weee.Requests.Organisations;
@@ -97,7 +97,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddOrAmendMembers(Guid pcsId, AddOrAmendMembersViewModel model)
+        public async Task<ActionResult> AddOrAmendMembers(Guid pcsId, PCSFileUploadViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -117,7 +117,7 @@
             using (var client = apiClient())
             {
                 model.PcsId = pcsId;
-                var request = mapper.Map<AddOrAmendMembersViewModel, ProcessXMLFile>(model);
+                var request = mapper.Map<PCSFileUploadViewModel, ProcessXMLFile>(model);
                 validationId = await client.SendAsync(User.GetAccessToken(), request);
             }
 
