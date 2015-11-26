@@ -1,13 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
-    using System;
-    using System.Linq;
-    using System.Text;
-    using System.Xml.Linq;
     using Core.Exceptions;
     using RequestHandlers.Scheme.MemberRegistration;
-    using Requests.Scheme.MemberRegistration;
-    using Xml.Schemas;
+    using System.Xml.Linq;
+    using Xml.MemberRegistration;
     using Xunit;
 
     public class DeserializerTests

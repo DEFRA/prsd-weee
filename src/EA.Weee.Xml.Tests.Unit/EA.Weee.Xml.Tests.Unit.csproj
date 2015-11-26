@@ -76,9 +76,9 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="DataReturn\XmlSchemaValidationTests.cs" />
-    <Compile Include="ExtensionsTests.cs" />
-    <Compile Include="ProducerChargeBandCalculatorTests.cs" />
+    <Compile Include="DataReturns\XmlSchemaValidationTests.cs" />
+    <Compile Include="MemberRegistration\ExtensionsTests.cs" />
+    <Compile Include="MemberRegistration\ProducerChargeBandCalculatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -96,31 +96,31 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DataReturn\XmlFiles\v3-DeliveredToAE-DuplicateAEApprovalNo.xml">
+    <Content Include="DataReturns\XmlFiles\v3-DeliveredToAE-DuplicateAEApprovalNo.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="DataReturn\XmlFiles\v3-DeliveredToATF-DuplicateAATFApprovalNo.xml">
+    <Content Include="DataReturns\XmlFiles\v3-DeliveredToATF-DuplicateAATFApprovalNo.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="DataReturn\XmlFiles\v3-ProducerList-DuplicateRegistrationNo.xml">
+    <Content Include="DataReturns\XmlFiles\v3-ProducerList-DuplicateRegistrationNo.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="DataReturn\XmlFiles\v3-ProducerList-DuplicateCategoryObligationType.xml">
+    <Content Include="DataReturns\XmlFiles\v3-ProducerList-DuplicateCategoryObligationType.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="DataReturn\XmlFiles\v3-B2CWEEEFromFinalHolders-DuplicateCategoryObligationType.xml">
+    <Content Include="DataReturns\XmlFiles\v3-B2CWEEEFromFinalHolders-DuplicateCategoryObligationType.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="DataReturn\XmlFiles\v3-B2CWEEEFromDistributors-DuplicateCategoryObligationType.xml">
+    <Content Include="DataReturns\XmlFiles\v3-B2CWEEEFromDistributors-DuplicateCategoryObligationType.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="DataReturn\XmlFiles\v3-DeliveredToAE-DuplicateCategoryObligationType.xml">
+    <Content Include="DataReturns\XmlFiles\v3-DeliveredToAE-DuplicateCategoryObligationType.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="DataReturn\XmlFiles\v3-DeliveredToATF-DuplicateCategoryObligationType.xml">
+    <Content Include="DataReturns\XmlFiles\v3-DeliveredToATF-DuplicateCategoryObligationType.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="DataReturn\XmlFiles\v3-CollectedFromDCF-DuplicateCategoryObligationType.xml">
+    <Content Include="DataReturns\XmlFiles\v3-CollectedFromDCF-DuplicateCategoryObligationType.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

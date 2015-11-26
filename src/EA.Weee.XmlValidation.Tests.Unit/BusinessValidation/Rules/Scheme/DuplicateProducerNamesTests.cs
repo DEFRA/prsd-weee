@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Rules.Scheme
 {
-    using System;
-    using System.Linq;
     using Core.Shared;
-    using Xml.Schemas;
+    using System.Linq;
+    using Xml.MemberRegistration;
     using XmlValidation.BusinessValidation.Rules.Scheme;
     using Xunit;
 

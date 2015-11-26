@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.Interfaces
 {
-    using System.Xml.Linq;
     using Requests.Scheme.MemberRegistration;
-    using Xml.Schemas;
+    using System.Xml.Linq;
+    using Xml.MemberRegistration;
 
     public interface IXmlConverter
     {

@@ -10,7 +10,7 @@
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
     using Weee.XmlValidation.BusinessValidation;
-    using Xml.Schemas;
+    using Xml.MemberRegistration;
 
     public class XmlValidator : IXmlValidator
     {
