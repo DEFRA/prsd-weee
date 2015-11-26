@@ -56,6 +56,7 @@
     <Compile Include="DataReturns\SchemaReturn.cs" />
     <Compile Include="DataReturns\v3schema.cs">
       <DependentUpon>v3schema.xsd</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Deserialization\Deserializer.cs" />
     <Compile Include="Deserialization\IDeserializer.cs" />
@@ -84,6 +85,7 @@
   <ItemGroup>
     <EmbeddedResource Include="DataReturns\v3schema.xsd">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="MemberRegistration\v3schema.xsd">
       <SubType>Designer</SubType>
