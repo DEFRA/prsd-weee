@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Rules.Producer
 {
     using Core.Shared;
-    using Xml;
     using Xml.MemberRegistration;
     using XmlValidation.BusinessValidation.Rules.Producer;
     using Xunit;

@@ -1,17 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.GenerateDomainObjects
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Xml.Linq;
     using Domain;
-    using Domain.Producer;
     using Domain.Scheme;
     using FakeItEasy;
-    using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
     using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using Requests.Scheme.MemberRegistration;
+    using System;
+    using System.Collections.Generic;
+    using System.Xml.Linq;
     using Xml.Converter;
     using Xml.MemberRegistration;
     using Xunit;

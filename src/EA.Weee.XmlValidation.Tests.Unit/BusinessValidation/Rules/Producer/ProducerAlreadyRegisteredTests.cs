@@ -1,16 +1,12 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Rules.Producer
 {
-    using System;
-    using Core.Helpers;
     using Domain;
     using FakeItEasy;
-    using Weee.Domain;
-    using Xml;
+    using System;
     using Xml.MemberRegistration;
     using XmlValidation.BusinessValidation.QuerySets;
     using XmlValidation.BusinessValidation.Rules.Producer;
     using Xunit;
-    using schemeType = Xml.MemberRegistration.schemeType;
 
     public class ProducerAlreadyRegisteredEvaluatorTests
     {

@@ -1,25 +1,21 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using Core.Helpers;
-    using Core.Scheme;
-    using Core.Scheme.MemberUploadTesting;
     using Domain;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
+    using System.Collections.Generic;
+    using System.Linq;
     using Weee.XmlValidation.BusinessValidation;
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;
     using Xml.Converter;
     using Xml.Deserialization;
-    using schemeType = Xml.MemberRegistration.schemeType;
+    using Xml.MemberRegistration;
 
     public class XmlValidator : IXmlValidator
     {
-        private readonly SchemaVersion schemaVersion;
-
         private readonly ISchemaValidator schemaValidator;
         private readonly IXmlBusinessValidator businessValidator;
 
@@ -32,14 +28,12 @@
             this.businessValidator = businessValidator;
             this.errorTranslator = errorTranslator;
             this.xmlConverter = xmlConverter;
-
-            schemaVersion = SchemaVersion.Version_3_07;
         }
 
         public IEnumerable<MemberUploadError> Validate(ProcessXMLFile message)
         {
             // Validate against the schema
-            var errors = schemaValidator.Validate(message.Data, @"EA.Weee.Xml.Schemas.v3schema.xsd", @"http://www.environment-agency.gov.uk/WEEE/XMLSchema", schemaVersion)
+            var errors = schemaValidator.Validate(message.Data)
                 .Select(e => e.ToMemberUploadError())
                 .ToList();
 
@@ -59,7 +53,7 @@
             {
                 // Couldn't deserialise - can't go any further, add an error and bail out here
                 var exceptionMessage = e.InnerException != null ? e.InnerException.Message : e.Message;
-                var friendlyMessage = errorTranslator.MakeFriendlyErrorMessage(exceptionMessage, schemaVersion);
+                var friendlyMessage = errorTranslator.MakeFriendlyErrorMessage(exceptionMessage);
                 errors.Add(new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, friendlyMessage));
 
                 return errors;

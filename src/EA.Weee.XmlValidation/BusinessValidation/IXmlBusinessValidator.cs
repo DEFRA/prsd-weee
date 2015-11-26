@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using schemeType = Xml.MemberRegistration.schemeType;
+    using Xml.MemberRegistration;
 
     public interface IXmlBusinessValidator
     {
