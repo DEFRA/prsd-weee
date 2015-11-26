@@ -14,7 +14,7 @@
     using Weee.XmlValidation.SchemaValidation;
     using Xml.Converter;
     using Xml.Deserialization;
-    using schemeType = Xml.MemberUpload.schemeType;
+    using schemeType = Xml.MemberRegistration.schemeType;
 
     public class XmlValidator : IXmlValidator
     {

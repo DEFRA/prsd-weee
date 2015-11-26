@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Xml.MemberUpload
+﻿namespace EA.Weee.Xml.MemberRegistration
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;

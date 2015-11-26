@@ -12,10 +12,10 @@
     using System.Text;
     using System.Threading.Tasks;
     using Weee.Domain.Lookup;
-    using Xml.MemberUpload;
+    using Xml.MemberRegistration;
     using Xunit;
     using Producer = EA.Weee.Domain.Producer.Producer;
-    using schemeType = Xml.MemberUpload.schemeType;
+    using schemeType = Xml.MemberRegistration.schemeType;
 
     public class ProducerChargeBandChangeTests
     {

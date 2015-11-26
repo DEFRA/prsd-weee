@@ -2,7 +2,7 @@
 {
     using BusinessValidation;
     using Xml;
-    using Xml.MemberUpload;
+    using Xml.MemberRegistration;
 
     public class InsertHasProducerRegistrationNumber : IInsertHasProducerRegistrationNumber
     {

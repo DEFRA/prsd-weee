@@ -13,9 +13,9 @@
     using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using Requests.Scheme.MemberRegistration;
     using Xml.Converter;
-    using Xml.MemberUpload;
+    using Xml.MemberRegistration;
     using Xunit;
-    using schemeType = Xml.MemberUpload.schemeType;
+    using schemeType = Xml.MemberRegistration.schemeType;
 
     public class GenerateFromXmlTests
     {

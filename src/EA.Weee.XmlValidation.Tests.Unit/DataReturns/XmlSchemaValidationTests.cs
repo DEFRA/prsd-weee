@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.XmlValidation.Tests.Unit.DataReturn
+﻿namespace EA.Weee.XmlValidation.Tests.Unit.DataReturns
 {
     using System.Collections.Generic;
     using System.IO;

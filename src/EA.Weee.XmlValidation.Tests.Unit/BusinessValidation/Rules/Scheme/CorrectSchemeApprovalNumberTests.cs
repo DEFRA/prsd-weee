@@ -5,7 +5,7 @@
     using XmlValidation.BusinessValidation.QuerySets;
     using XmlValidation.BusinessValidation.Rules.Scheme;
     using Xunit;
-    using schemeType = Xml.MemberUpload.schemeType;
+    using schemeType = Xml.MemberRegistration.schemeType;
 
     public class CorrectSchemeApprovalNumberTests
     {

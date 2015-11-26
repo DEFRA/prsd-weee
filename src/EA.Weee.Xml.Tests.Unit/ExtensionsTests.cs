@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Xml.Tests.Unit
 {
-    using Xml.MemberUpload;
+    using MemberRegistration;
     using Xunit;
 
     public class ExtensionsTests

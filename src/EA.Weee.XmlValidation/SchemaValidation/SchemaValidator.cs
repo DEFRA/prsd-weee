@@ -9,7 +9,7 @@
     using Core.Shared;
     using Weee.XmlValidation.Errors;
     using Xml.Converter;
-    using schemeType = Xml.MemberUpload.schemeType;
+    using schemeType = Xml.MemberRegistration.schemeType;
 
     public class SchemaValidator : ISchemaValidator
     {

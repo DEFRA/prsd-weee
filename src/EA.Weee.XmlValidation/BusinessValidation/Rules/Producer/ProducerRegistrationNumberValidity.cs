@@ -4,7 +4,7 @@
     using BusinessValidation;
     using QuerySets;
     using Xml;
-    using Xml.MemberUpload;
+    using Xml.MemberRegistration;
 
     public class ProducerRegistrationNumberValidity : IProducerRegistrationNumberValidity
     {

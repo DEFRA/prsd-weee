@@ -6,7 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using Xml;
-    using Xml.MemberUpload;
+    using Xml.MemberRegistration;
 
     /// <summary>
     /// This rules ensures that an overseas producer is not based in the UK.
