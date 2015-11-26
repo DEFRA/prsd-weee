@@ -24,7 +24,7 @@
     using Requests.Scheme.MemberRegistration;
     using Xml;
     using Xml.Converter;
-    using Xml.Deserializer;
+    using Xml.Deserialization;
     using Xml.Schemas;
     using Xunit;
 

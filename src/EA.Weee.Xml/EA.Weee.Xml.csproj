@@ -53,9 +53,9 @@
     <Compile Include="Converter\IXmlConverter.cs" />
     <Compile Include="Converter\WhiteSpaceCollapser.cs" />
     <Compile Include="Converter\XmlConverter.cs" />
-    <Compile Include="Deserializer\Deserializer.cs" />
-    <Compile Include="Deserializer\IDeserializer.cs" />
-    <Compile Include="Deserializer\XmlDeserializationFailureException.cs" />
+    <Compile Include="Deserialization\Deserializer.cs" />
+    <Compile Include="Deserialization\IDeserializer.cs" />
+    <Compile Include="Deserialization\XmlDeserializationFailureException.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IProducerChargeBandCalculator.cs" />
     <Compile Include="ProducerChargeBandCalculator.cs" />

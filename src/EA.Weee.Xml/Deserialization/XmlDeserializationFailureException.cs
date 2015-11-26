@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Xml.Deserializer
+﻿namespace EA.Weee.Xml.Deserialization
 {
     using System;
 

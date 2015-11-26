@@ -3,9 +3,9 @@
     using System.Linq;
     using System.Text;
     using System.Xml.Linq;
+    using Deserialization;
     using FakeItEasy;
     using Xml.Converter;
-    using Xml.Deserializer;
     using Xml.Schemas;
     using Xunit;
 
