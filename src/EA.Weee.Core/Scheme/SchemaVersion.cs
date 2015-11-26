@@ -4,13 +4,13 @@
 
     public enum SchemaVersion
     {
-        [Display(Name = "3.04")]
+        [Display(Name = "3.0.4")]
         Version_3_04,
 
-        [Display(Name = "3.06")]
+        [Display(Name = "3.0.6")]
         Version_3_06,
 
-        [Display(Name = "3.07")]
+        [Display(Name = "3.0.7")]
         Version_3_07,
     }
 }
