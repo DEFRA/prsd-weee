@@ -346,7 +346,7 @@
             var translator = new XmlErrorTranslator();
             var testXElement = GetTestXElement();
 
-            var friendlyMessage = translator.MakeFriendlyErrorMessage(testXElement, providedException, TestLineNumber, A<SchemaVersion>._);
+            var friendlyMessage = translator.MakeFriendlyErrorMessage(testXElement, providedException, TestLineNumber, SchemaVersion.Version_3_07);
 
             Assert.Equal(expectedFriendlyMessage, friendlyMessage);
         }

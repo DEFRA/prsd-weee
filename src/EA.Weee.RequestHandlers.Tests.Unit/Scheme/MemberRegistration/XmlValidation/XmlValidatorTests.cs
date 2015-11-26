@@ -37,7 +37,7 @@
         [Fact]
         public void SchemaValidatorHasErrors_ShouldNotCallBusinessValidator()
         {
-            A.CallTo(() => schemaValidator.Validate(A<byte[]>._, string.Empty, string.Empty, A<SchemaVersion>._))
+            A.CallTo(() => schemaValidator.Validate(A<byte[]>._, A<string>._, A<string>._, A<SchemaVersion>._))
                 .Returns(new List<XmlValidationError>
                 {
                     new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "An error occurred")
