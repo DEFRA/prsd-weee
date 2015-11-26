@@ -76,6 +76,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="DataReturn\XmlSchemaValidationTests.cs" />
     <Compile Include="Converter\WhiteSpaceCollapserTests.cs" />
     <Compile Include="Converter\XmlConverterTests.cs" />
     <Compile Include="Deserializer\DeserializerTests.cs" />
@@ -96,6 +97,35 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DataReturn\XmlFiles\v3-DeliveredToAE-DuplicateAEApprovalNo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-DeliveredToATF-DuplicateAATFApprovalNo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-ProducerList-DuplicateRegistrationNo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-ProducerList-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-B2CWEEEFromFinalHolders-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-B2CWEEEFromDistributors-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-DeliveredToAE-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-DeliveredToATF-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturn\XmlFiles\v3-CollectedFromDCF-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
