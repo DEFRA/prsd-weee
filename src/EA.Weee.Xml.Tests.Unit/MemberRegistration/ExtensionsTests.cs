@@ -1,6 +1,6 @@
-﻿namespace EA.Weee.Xml.Tests.Unit
+﻿namespace EA.Weee.Xml.Tests.Unit.MemberRegistration
 {
-    using MemberRegistration;
+    using Xml.MemberRegistration;
     using Xunit;
 
     public class ExtensionsTests
