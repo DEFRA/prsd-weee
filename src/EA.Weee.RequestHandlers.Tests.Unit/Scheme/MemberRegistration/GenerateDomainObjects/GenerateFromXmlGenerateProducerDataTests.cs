@@ -13,6 +13,7 @@
     using EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using EA.Weee.Xml.Schemas;
     using FakeItEasy;
+    using Xml.Converter;
     using Xunit;
 
     /// <summary>

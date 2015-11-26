@@ -49,6 +49,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converter\IWhiteSpaceCollapser.cs" />
+    <Compile Include="Converter\IXmlConverter.cs" />
+    <Compile Include="Converter\WhiteSpaceCollapser.cs" />
+    <Compile Include="Converter\XmlConverter.cs" />
+    <Compile Include="Deserialization\Deserializer.cs" />
+    <Compile Include="Deserialization\IDeserializer.cs" />
+    <Compile Include="Deserialization\XmlDeserializationFailureException.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IProducerChargeBandCalculator.cs" />
     <Compile Include="ProducerChargeBandCalculator.cs" />
@@ -67,6 +74,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
+      <Project>{75EFEE66-9358-4DE4-9A84-E7191EEC7DB8}</Project>
+      <Name>EA.Weee.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
       <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>
       <Name>EA.Weee.Domain</Name>

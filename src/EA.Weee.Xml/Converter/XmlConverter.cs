@@ -1,15 +1,11 @@
-﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
+﻿namespace EA.Weee.Xml.Converter
 {
-    using System;
     using System.Linq;
     using System.Text;
     using System.Xml.Linq;
-    using System.Xml.Serialization;
-    using Core.Exceptions;
     using Core.Helpers;
-    using Interfaces;
-    using Requests.Scheme.MemberRegistration;
-    using Xml.Schemas;
+    using Deserialization;
+    using Schemas;
 
     public class XmlConverter : IXmlConverter
     {
@@ -22,16 +18,14 @@
             this.deserializer = deserializer;
         }
 
-        public XDocument Convert(ProcessXMLFile message)
+        public XDocument Convert(byte[] data)
         {
-            return XDocument.Parse(XmlToUtf8String(message), LoadOptions.SetLineInfo);          
+            return XDocument.Parse(XmlToUtf8String(data), LoadOptions.SetLineInfo);          
         }
 
-        public string XmlToUtf8String(ProcessXMLFile message)
+        public string XmlToUtf8String(byte[] data)
         {
-            var data = message.Data;
             data = RemoveUtf8Bom(data);
-
             return Encoding.UTF8.GetString(data);
         }
 

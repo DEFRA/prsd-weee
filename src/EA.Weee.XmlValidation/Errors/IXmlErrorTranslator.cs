@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core.Helpers.Xml
+﻿namespace EA.Weee.XmlValidation.Errors
 {
     using System.Xml.Linq;
 

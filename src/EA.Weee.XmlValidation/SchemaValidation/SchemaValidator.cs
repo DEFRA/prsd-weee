@@ -1,16 +1,12 @@
-﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation.SchemaValidation
+﻿namespace EA.Weee.XmlValidation.SchemaValidation
 {
     using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
     using System.Xml;
     using System.Xml.Linq;
     using System.Xml.Schema;
-    using Core.Helpers.Xml;
-    using Domain;
-    using Domain.Scheme;
-    using Interfaces;
-    using Requests.Scheme.MemberRegistration;
+    using Core.Shared;
+    using Weee.XmlValidation.Errors;
+    using Xml.Converter;
     using Xml.Schemas;
 
     public class SchemaValidator : ISchemaValidator
@@ -27,21 +23,21 @@
             this.xmlConverter = xmlConverter;
         }
 
-        public IEnumerable<MemberUploadError> Validate(ProcessXMLFile message)
+        public IEnumerable<XmlValidationError> Validate(byte[] data)
         {
-            var errors = new List<MemberUploadError>();
+            var errors = new List<XmlValidationError>();
 
             try
             {
                 //check if the xml is not blank before doing any validations
-                if (message.Data != null && message.Data.Length == 0)
+                if (data != null && data.Length == 0)
                 {
-                    errors.Add(new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "The file you're trying to upload is not a correctly formatted XML file. Please make sure you're uploading a valid XML file."));
+                    errors.Add(new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "The file you're trying to upload is not a correctly formatted XML file. Please make sure you're uploading a valid XML file."));
                     return errors;
                 }
 
                 // Validate against the schema
-                var source = xmlConverter.Convert(message);
+                var source = xmlConverter.Convert(data);
                 var schemas = new XmlSchemaSet();
 
                 using (var stream = typeof(schemeType).Assembly.GetManifestResourceStream(SchemaLocation))
@@ -52,14 +48,10 @@
                     }
                 }
 
-                //var absoluteSchemaLocation =
-                //    Path.Combine(Path.GetDirectoryName(), SchemaLocation);
-                //schemas.Add(SchemaNamespace, absoluteSchemaLocation);
-
                 string sourceNamespace = source.Root.GetDefaultNamespace().NamespaceName;
                 if (sourceNamespace != SchemaNamespace)
                 {
-                    errors.Add(new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema,
+                    errors.Add(new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema,
                         string.Format("The namespace of the provided XML file ({0}) doesn't match the namespace of the WEEE schema ({1}).", sourceNamespace, SchemaNamespace)));
                     return errors;
                 }
@@ -71,17 +63,17 @@
                         var asXElement = sender as XElement;
                         errors.Add(
                             asXElement != null
-                                ? new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema,
+                                ? new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema,
                                     xmlErrorTranslator.MakeFriendlyErrorMessage(asXElement, args.Exception.Message,
                                         args.Exception.LineNumber), args.Exception.LineNumber)
-                                : new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, args.Exception.Message, args.Exception.LineNumber));
+                                : new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, args.Exception.Message, args.Exception.LineNumber));
                     });
             }
             catch (XmlException ex)
             {
                 string friendlyMessage = xmlErrorTranslator.MakeFriendlyErrorMessage(ex.Message);
 
-                errors.Add(new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, friendlyMessage));
+                errors.Add(new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, friendlyMessage));
             }
             return errors;
         }
