@@ -11,6 +11,7 @@
     using Requests.Scheme.MemberRegistration;
     using Weee.XmlValidation.BusinessValidation;
     using Weee.XmlValidation.Errors;
+    using Weee.XmlValidation.SchemaValidation;
     using Xml.Converter;
     using Xml.Deserializer;
     using Xml.Schemas;
@@ -34,7 +35,7 @@
         [Fact]
         public void SchemaValidatorHasErrors_ShouldNotCallBusinessValidator()
         {
-            A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
+            A.CallTo(() => schemaValidator.Validate(A<byte[]>._))
                 .Returns(new List<XmlValidationError>
                 {
                     new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "An error occurred")
@@ -49,7 +50,7 @@
         [Fact]
         public void SchemaValidatorHasNoErrors_AndBusinessValidatorDoes_ShouldReturnErrors()
         {
-            A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
+            A.CallTo(() => schemaValidator.Validate(A<byte[]>._))
                 .Returns(new List<XmlValidationError>());
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._))
@@ -66,7 +67,7 @@
         [Fact]
         public void SchemaValidatorHasNoErrors_DeserializationException_ShouldReturnError()
         {
-            A.CallTo(() => schemaValidator.Validate(A<ProcessXMLFile>._))
+            A.CallTo(() => schemaValidator.Validate(A<byte[]>._))
                 .Returns(new List<XmlValidationError>());
 
             A.CallTo(() => xmlConverter.Deserialize(A<XDocument>._))

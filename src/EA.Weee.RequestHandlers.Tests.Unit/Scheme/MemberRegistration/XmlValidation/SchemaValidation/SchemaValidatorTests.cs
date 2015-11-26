@@ -9,9 +9,9 @@
     using Core.Shared;
     using FakeItEasy;
     using RequestHandlers.Scheme.Interfaces;
-    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.SchemaValidation;
     using Requests.Scheme.MemberRegistration;
     using Weee.XmlValidation.Errors;
+    using Weee.XmlValidation.SchemaValidation;
     using Xml.Converter;
     using Xunit;
 
@@ -36,7 +36,7 @@
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Returns(XDocument.Parse(validXml));
 
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var errors = SchemaValidator().Validate(A<byte[]>._);
 
             Assert.Empty(errors);
         }
@@ -51,7 +51,7 @@
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Returns(XDocument.Parse(wrongNamespaceXml));
 
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var errors = SchemaValidator().Validate(A<byte[]>._);
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -66,7 +66,7 @@
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Returns(XDocument.Parse(invalidXml));
 
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var errors = SchemaValidator().Validate(A<byte[]>._);
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -77,7 +77,7 @@
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Throws<XmlException>();
 
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var errors = SchemaValidator().Validate(A<byte[]>._);
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -88,7 +88,7 @@
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._)).MustNotHaveHappened();
 
             var xmlData = new byte[0];
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, xmlData, A<string>._));
+            var errors = SchemaValidator().Validate(A<byte[]>._);
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }

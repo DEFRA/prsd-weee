@@ -110,6 +110,8 @@
     <Compile Include="BusinessValidation\Rules\Scheme\IDuplicateProducerRegistrationNumbers.cs" />
     <Compile Include="BusinessValidation\Rules\Scheme\DuplicateProducerRegistrationNumbers.cs" />
     <Compile Include="BusinessValidation\XmlBusinessValidator.cs" />
+    <Compile Include="SchemaValidation\ISchemaValidator.cs" />
+    <Compile Include="SchemaValidation\SchemaValidator.cs" />
     <Compile Include="XmlValidationModule.cs" />
     <Compile Include="Errors\IXmlErrorTranslator.cs" />
     <Compile Include="Errors\XmlErrorTranslator.cs" />
@@ -134,7 +136,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Deserialization\" />
-    <Folder Include="SchemaValidation\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
