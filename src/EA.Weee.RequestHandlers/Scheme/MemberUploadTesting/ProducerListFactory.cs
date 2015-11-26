@@ -64,11 +64,11 @@
             int numberOfExistingProducersToInclude = listSettings.NumberOfExistingProducers;
 
             List<string> registrationNumbers = await context
-                .Producers
-                .Where(p => p.IsCurrentForComplianceYear)
-                .Where(p => p.MemberUpload.ComplianceYear == listSettings.ComplianceYear)
-                .Where(p => p.Scheme.OrganisationId == listSettings.OrganisationID)
-                .Select(p => p.RegistrationNumber)
+                .RegisteredProducers
+                .Where(rp => rp.CurrentSubmission != null)
+                .Where(rp => rp.Scheme.OrganisationId == listSettings.OrganisationID)
+                .Where(rp => rp.ComplianceYear == listSettings.ComplianceYear)
+                .Select(rp => rp.ProducerRegistrationNumber)
                 .Take(numberOfExistingProducersToInclude)
                 .ToListAsync();
 

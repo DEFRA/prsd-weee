@@ -47,15 +47,6 @@
         }
 
         [Fact]
-        public void Producer_EqualsProducerDifferentRegistrationNumber_ReturnsFalse()
-        {
-            var producer = ProducerBuilder.NewProducer;
-            var producer2 = ProducerBuilder.WithRegistrationNumber("test registration number");
-
-            Assert.NotEqual(producer, producer2);
-        }
-
-        [Fact]
         public void Producer_EqualsProducerDifferentTradingName_ReturnsFalse()
         {
             var producer = ProducerBuilder.NewProducer;
@@ -222,7 +213,6 @@
             private string tradingName = "tradingName";
             private bool vatRegistered = true;
             private decimal annualTurnover = 0;
-            private bool isCurrentForComplianceYear = true;
 
             private ObligationType obligationType = ObligationType.B2B;
             private AnnualTurnOverBandType annualTurnOverBandType = new CustomAnnualTurnOverBandType(0);
@@ -246,21 +236,37 @@
                 sicCodes.Add(new SICCode("SICCode2"));
             }
 
-            private Producer Build()
+            private ProducerSubmission Build()
             {
-                var schemeId = A.Dummy<Guid>();
-                var memberUpload = A.Dummy<MemberUpload>();
+                Scheme scheme = new Scheme(
+                    A.Dummy<Guid>());
+
+                var memberUpload = new MemberUpload(
+                    A.Dummy<Guid>(),
+                    A.Dummy<string>(),
+                    A.Dummy<List<MemberUploadError>>(),
+                    A.Dummy<decimal>(),
+                    2017,
+                    scheme,
+                    A.Dummy<string>(),
+                    A.Dummy<string>());
+
                 var updatedDate = A.Dummy<DateTime>();
                 var ceaseToExist = A.Dummy<DateTime?>();
 
-                return new Producer(schemeId,
+                RegisteredProducer registeredProducer = new RegisteredProducer(
+                    registrationNumber,
+                    2017,
+                    scheme);
+
+                ProducerSubmission producerSubmission = new ProducerSubmission(
+                    registeredProducer,
                     memberUpload,
                     producerBusiness,
                     authorisedRepresentative,
                     updatedDate,
                     annualTurnover,
                     vatRegistered,
-                    registrationNumber,
                     ceaseToExist,
                     tradingName,
                     eeePlacedOnMarketBandType,
@@ -269,25 +275,20 @@
                     annualTurnOverBandType,
                     brandNames,
                     sicCodes,
-                    isCurrentForComplianceYear,
                     chargeBandAmount,
                     (decimal)5.0);
+
+                registeredProducer.CurrentSubmission = producerSubmission;
+
+                return producerSubmission;
             }
 
-            public static Producer NewProducer
+            public static ProducerSubmission NewProducer
             {
                 get { return new ProducerBuilder().Build(); }
             }
 
-            public static Producer WithRegistrationNumber(string registrationNumber)
-            {
-                var builder = new ProducerBuilder();
-                builder.registrationNumber = registrationNumber;
-
-                return builder.Build();
-            }
-
-            public static Producer WithTradingName(string tradingName)
+            public static ProducerSubmission WithTradingName(string tradingName)
             {
                 var builder = new ProducerBuilder();
                 builder.tradingName = tradingName;
@@ -295,7 +296,7 @@
                 return builder.Build();
             }
 
-            public static Producer VatRegistered(bool vatRegistered)
+            public static ProducerSubmission VatRegistered(bool vatRegistered)
             {
                 var builder = new ProducerBuilder();
                 builder.vatRegistered = vatRegistered;
@@ -303,7 +304,7 @@
                 return builder.Build();
             }
 
-            public static Producer WithAnnualTurnover(int annualTurnover)
+            public static ProducerSubmission WithAnnualTurnover(int annualTurnover)
             {
                 var builder = new ProducerBuilder();
                 builder.annualTurnover = annualTurnover;
@@ -311,7 +312,7 @@
                 return builder.Build();
             }
 
-            public static Producer WithObligationType(ObligationType obligationType)
+            public static ProducerSubmission WithObligationType(ObligationType obligationType)
             {
                 var builder = new ProducerBuilder();
                 builder.obligationType = obligationType;
@@ -319,7 +320,7 @@
                 return builder.Build();
             }
 
-            public static Producer WithAnnualTurnOverBandType(AnnualTurnOverBandType annualTurnOverBandType)
+            public static ProducerSubmission WithAnnualTurnOverBandType(AnnualTurnOverBandType annualTurnOverBandType)
             {
                 var builder = new ProducerBuilder();
                 builder.annualTurnOverBandType = annualTurnOverBandType;
@@ -327,7 +328,7 @@
                 return builder.Build();
             }
 
-            public static Producer WithSellingTechniqueType(SellingTechniqueType sellingTechniqueType)
+            public static ProducerSubmission WithSellingTechniqueType(SellingTechniqueType sellingTechniqueType)
             {
                 var builder = new ProducerBuilder();
                 builder.sellingTechniqueType = sellingTechniqueType;
@@ -335,7 +336,7 @@
                 return builder.Build();
             }
 
-            public static Producer WithEEEPlacedOnMarketBandType(EEEPlacedOnMarketBandType eeePlacedOnMarketBandType)
+            public static ProducerSubmission WithEEEPlacedOnMarketBandType(EEEPlacedOnMarketBandType eeePlacedOnMarketBandType)
             {
                 var builder = new ProducerBuilder();
                 builder.eeePlacedOnMarketBandType = eeePlacedOnMarketBandType;
@@ -343,7 +344,7 @@
                 return builder.Build();
             }
 
-            public static Producer WithAuthorisedRepresentative(AuthorisedRepresentative authorisedRepresentative)
+            public static ProducerSubmission WithAuthorisedRepresentative(AuthorisedRepresentative authorisedRepresentative)
             {
                 var builder = new ProducerBuilder();
                 builder.authorisedRepresentative = authorisedRepresentative;
@@ -351,7 +352,7 @@
                 return builder.Build();
             }
 
-            public static Producer WithProducerBusiness(ProducerBusiness producerBusiness)
+            public static ProducerSubmission WithProducerBusiness(ProducerBusiness producerBusiness)
             {
                 var builder = new ProducerBuilder();
                 builder.producerBusiness = producerBusiness;
@@ -359,7 +360,7 @@
                 return builder.Build();
             }
 
-            public static Producer WithBrandNames(List<BrandName> brandNames)
+            public static ProducerSubmission WithBrandNames(List<BrandName> brandNames)
             {
                 var builder = new ProducerBuilder();
                 builder.brandNames = brandNames;
@@ -367,7 +368,7 @@
                 return builder.Build();
             }
 
-            public static Producer WithSICCodes(List<SICCode> sicCodes)
+            public static ProducerSubmission WithSICCodes(List<SICCode> sicCodes)
             {
                 var builder = new ProducerBuilder();
                 builder.sicCodes = sicCodes;

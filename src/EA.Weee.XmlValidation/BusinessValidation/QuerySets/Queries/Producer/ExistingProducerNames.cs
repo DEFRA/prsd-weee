@@ -10,7 +10,7 @@
         public ExistingProducerNames(WeeeContext context)
         {
             query = () => context
-                .Producers
+                .ProducerSubmissions
                 .ProducerNames()
                 .ToList();
         }

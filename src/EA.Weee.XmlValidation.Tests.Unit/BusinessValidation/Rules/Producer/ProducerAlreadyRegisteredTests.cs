@@ -28,7 +28,7 @@
                 .Returns(null);
             A.CallTo(() => migratedProducerQuerySet.GetMigratedProducer(A<string>._))
                 .Returns(null);
-            A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, A<Guid>._, A<int>._))
+            A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, A<Guid>._, A<ObligationType>._))
                 .Returns(null);
         }
 
@@ -45,7 +45,7 @@
         {
             var schemeId = Guid.NewGuid();
 
-            A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, schemeId, A<int>._))
+            A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, schemeId, A<ObligationType>._))
                 .Returns(FakeProducer.Create(existingObligationType.ToDomainObligationType(), "ABC12345"));
 
             const string complianceYear = "2016";
@@ -88,7 +88,7 @@
         public void ProducerAlreadyRegisteredForSameComplianceYearButObligationTypeDiffers_ValidationSucceeds(
             obligationTypeType existingObligationType, obligationTypeType xmlObligationType)
         {
-            A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, A<Guid>._, A<int>._))
+            A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, A<Guid>._, A<ObligationType>._))
                .Returns(FakeProducer.Create(existingObligationType.ToDomainObligationType(), "ABC12345"));
 
             const string complianceYear = "2016";
@@ -132,7 +132,7 @@
         public void ProducerRegisteredForDifferentComplianceYearButObligationTypeMatches_ValidationSucceeds(
             obligationTypeType existingObligationType, obligationTypeType xmlObligationType)
         {
-            A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, A<Guid>._, A<int>._))
+            A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, A<Guid>._, A<ObligationType>._))
                 .Returns(FakeProducer.Create(existingObligationType.ToDomainObligationType(), "ABC12345"));
 
             const string complianceYear = "2015";
@@ -173,7 +173,7 @@
             var organisationId = Guid.NewGuid();
             const obligationTypeType obligationType = obligationTypeType.B2B;
 
-            A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, A<Guid>._, A<int>._))
+            A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, A<Guid>._, A<ObligationType>._))
               .Returns(FakeProducer.Create(obligationType.ToDomainObligationType(), "ABC12345", organisationId));
 
             producerType producer = new producerType()
@@ -215,7 +215,7 @@
             const string complianceYear = "2016";
             const obligationTypeType obligationType = obligationTypeType.B2B;
 
-            A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, A<Guid>._, A<int>._))
+            A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, A<Guid>._, A<ObligationType>._))
               .Returns(FakeProducer.Create(obligationType.ToDomainObligationType(), registrationNumber));
 
             producerType producer = new producerType()
