@@ -123,7 +123,6 @@
     <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerChargeCalculatorTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\WhiteSpaceCollapserTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidatorTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\ValidationContext.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\XmlValidatorTests.cs" />
@@ -131,7 +130,6 @@
     <Compile Include="Scheme\MemberUploadTesting\XmlGeneratorTests.cs" />
     <Compile Include="Scheme\PrnGeneration\PrnHelperTests.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandlerTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlConverterTests.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlErrorTranslatorTests.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandlerTests.cs" />
     <Compile Include="Organisations\GetUserOrganisationsByStatusHandlerTests.cs" />

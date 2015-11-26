@@ -11,6 +11,7 @@
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
     using Weee.XmlValidation.Errors;
+    using Xml.Converter;
     using Xml.Schemas;
 
     public class SchemaValidator : ISchemaValidator
@@ -41,7 +42,7 @@
                 }
 
                 // Validate against the schema
-                var source = xmlConverter.Convert(message);
+                var source = xmlConverter.Convert(message.Data);
                 var schemas = new XmlSchemaSet();
 
                 using (var stream = typeof(schemeType).Assembly.GetManifestResourceStream(SchemaLocation))

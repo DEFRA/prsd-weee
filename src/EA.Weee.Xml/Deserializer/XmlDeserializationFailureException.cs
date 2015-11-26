@@ -6,7 +6,7 @@
     {
         private const string XmlDeserializationFailureMessage = "Unable to deserialize XML. See inner exception for details.";
 
-        public XmlDeserializationFailureException(Exception innerException)
+        internal XmlDeserializationFailureException(Exception innerException)
             : base(XmlDeserializationFailureMessage, innerException)
         {
         }

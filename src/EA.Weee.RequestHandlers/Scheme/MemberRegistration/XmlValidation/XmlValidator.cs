@@ -9,6 +9,7 @@
     using Requests.Scheme.MemberRegistration;
     using Weee.XmlValidation.BusinessValidation;
     using Weee.XmlValidation.Errors;
+    using Xml.Converter;
     using Xml.Deserializer;
     using Xml.Schemas;
 
@@ -42,7 +43,7 @@
             try
             {
                 // Validate deserialized XML against business rules
-                deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(message));
+                deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
             }
             catch (XmlDeserializationFailureException e)
             {
