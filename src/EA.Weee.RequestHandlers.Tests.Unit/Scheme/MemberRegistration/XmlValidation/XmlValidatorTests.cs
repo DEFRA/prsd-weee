@@ -5,30 +5,30 @@
     using System.Linq;
     using System.Xml.Linq;
     using Core.Scheme;
-    using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
     using FakeItEasy;
-    using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation;
     using Requests.Scheme.MemberRegistration;
     using Weee.XmlValidation.BusinessValidation;
+    using Weee.XmlValidation.BusinessValidation.MemberRegistration;
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;
     using Xml.Converter;
     using Xml.Deserialization;
+    using Xml.MemberRegistration;
     using Xunit;
 
     public class XmlValidatorTests
     {
         private readonly ISchemaValidator schemaValidator;
-        private readonly IXmlBusinessValidator businessValidator;
+        private readonly IMemberRegistrationBusinessValidator businessValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
 
         public XmlValidatorTests()
         {
             schemaValidator = A.Fake<ISchemaValidator>();
-            businessValidator = A.Fake<IXmlBusinessValidator>();
+            businessValidator = A.Fake<IMemberRegistrationBusinessValidator>();
             xmlConverter = A.Fake<IXmlConverter>();
             errorTranslator = A.Fake<IXmlErrorTranslator>();
         }

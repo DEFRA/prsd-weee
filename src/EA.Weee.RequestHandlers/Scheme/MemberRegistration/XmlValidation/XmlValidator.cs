@@ -9,6 +9,7 @@
     using System.Linq;
     using Core.Scheme;
     using Weee.XmlValidation.BusinessValidation;
+    using Weee.XmlValidation.BusinessValidation.MemberRegistration;
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;
     using Xml.Converter;
@@ -18,12 +19,12 @@
     public class XmlValidator : IXmlValidator
     {
         private readonly ISchemaValidator schemaValidator;
-        private readonly IXmlBusinessValidator businessValidator;
+        private readonly IMemberRegistrationBusinessValidator businessValidator;
 
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
 
-        public XmlValidator(ISchemaValidator schemaValidator, IXmlConverter xmlConverter, IXmlBusinessValidator businessValidator, IXmlErrorTranslator errorTranslator)
+        public XmlValidator(ISchemaValidator schemaValidator, IXmlConverter xmlConverter, IMemberRegistrationBusinessValidator businessValidator, IXmlErrorTranslator errorTranslator)
         {
             this.schemaValidator = schemaValidator;
             this.businessValidator = businessValidator;

@@ -2,11 +2,12 @@
 {
     using Autofac;
     using BusinessValidation;
-    using BusinessValidation.Helpers;
-    using BusinessValidation.QuerySets;
-    using BusinessValidation.QuerySets.Queries.Producer;
-    using BusinessValidation.Rules.Producer;
-    using BusinessValidation.Rules.Scheme;
+    using BusinessValidation.MemberRegistration;
+    using BusinessValidation.MemberRegistration.Helpers;
+    using BusinessValidation.MemberRegistration.QuerySets;
+    using BusinessValidation.MemberRegistration.QuerySets.Queries.Producer;
+    using BusinessValidation.MemberRegistration.Rules.Producer;
+    using BusinessValidation.MemberRegistration.Rules.Scheme;
     using Errors;
     using SchemaValidation;
 
@@ -16,8 +17,8 @@
         {
             // TODO: Autoscan
 
-            builder.RegisterType<XmlBusinessValidator>()
-                .As<IXmlBusinessValidator>()
+            builder.RegisterType<MemberRegistrationBusinessValidator>()
+                .As<IMemberRegistrationBusinessValidator>()
                 .InstancePerRequest();
 
             builder.RegisterType<MigratedProducerQuerySet>()
