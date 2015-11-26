@@ -32,7 +32,10 @@
         public IEnumerable<MemberUploadError> Validate(ProcessXMLFile message)
         {
             // Validate against the schema
-            var errors = schemaValidator.Validate(message).ToList();
+            var errors = schemaValidator.Validate(message)
+                .Select(e => e.ToMemberUploadError())
+                .ToList();
+
             if (errors.Any())
             {
                 return errors;
