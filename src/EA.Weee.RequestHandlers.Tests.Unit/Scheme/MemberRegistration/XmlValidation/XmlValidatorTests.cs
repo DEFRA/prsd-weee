@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
-    using Core.Exceptions;
     using Core.Helpers.Xml;
     using Domain;
     using Domain.Scheme;
@@ -13,6 +12,7 @@
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation;
     using Requests.Scheme.MemberRegistration;
     using Weee.XmlValidation.BusinessValidation;
+    using Xml.Deserializer;
     using Xml.Schemas;
     using Xunit;
 

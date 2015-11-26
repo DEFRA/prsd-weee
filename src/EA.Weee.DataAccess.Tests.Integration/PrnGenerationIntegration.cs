@@ -23,6 +23,7 @@
     using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using Requests.Scheme.MemberRegistration;
     using Xml;
+    using Xml.Deserializer;
     using Xml.Schemas;
     using Xunit;
 

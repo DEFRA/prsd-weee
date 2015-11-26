@@ -126,7 +126,6 @@
     <Compile Include="Configuration\TestUserEmailDomainElementCollection.cs" />
     <Compile Include="Configuration\TestUserEmailDomainsSection.cs" />
     <Compile Include="CoreModule.cs" />
-    <Compile Include="Exceptions\XmlDeserializationFailureException.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\PrnGeneration\IPrnHelper.cs" />
     <Compile Include="Helpers\PrnGeneration\IQuadraticResidueHelper.cs" />

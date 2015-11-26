@@ -11,6 +11,7 @@
     using System.Reflection;
     using System.Text;
     using System.Xml.Linq;
+    using Xml.Deserializer;
     using Xunit;
 
     public class XmlChargeBandCalculatorTests

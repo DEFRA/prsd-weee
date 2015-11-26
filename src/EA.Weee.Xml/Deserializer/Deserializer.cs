@@ -1,9 +1,9 @@
-﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
+﻿namespace EA.Weee.Xml.Deserializer
 {
     using System;
     using System.Xml.Linq;
     using System.Xml.Serialization;
-    using Core.Exceptions;
+    using RequestHandlers.Scheme.MemberRegistration;
 
     public class Deserializer : IDeserializer
     {
