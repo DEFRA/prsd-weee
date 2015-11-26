@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Xml
 {
     using Autofac;
+    using MemberRegistration;
 
     public class XmlModule : Module
     {

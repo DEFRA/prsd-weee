@@ -1,13 +1,7 @@
-﻿namespace EA.Weee.Xml.Tests.Unit
+﻿namespace EA.Weee.Xml.Tests.Unit.MemberRegistration
 {
     using Domain.Lookup;
-    using EA.Weee.Domain;
-    using EA.Weee.Xml.Schemas;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using EA.Weee.Xml.MemberRegistration;
     using Xunit;
 
     public class ProducerChargeBandCalculatorTests

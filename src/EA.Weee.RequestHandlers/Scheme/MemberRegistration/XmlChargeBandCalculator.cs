@@ -1,14 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using DataAccess;
     using Domain;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
-    using Xml;
+    using System;
+    using System.Collections.Generic;
+    using Xml.MemberRegistration;
 
     public class XmlChargeBandCalculator : IXmlChargeBandCalculator
     {

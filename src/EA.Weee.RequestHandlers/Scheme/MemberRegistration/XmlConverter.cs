@@ -1,15 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
-    using System;
-    using System.Linq;
-    using System.Text;
-    using System.Xml.Linq;
-    using System.Xml.Serialization;
-    using Core.Exceptions;
     using Core.Helpers;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
-    using Xml.Schemas;
+    using System.Linq;
+    using System.Text;
+    using System.Xml.Linq;
+    using Xml.MemberRegistration;
 
     public class XmlConverter : IXmlConverter
     {

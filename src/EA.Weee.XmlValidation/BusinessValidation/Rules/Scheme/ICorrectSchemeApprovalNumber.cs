@@ -2,7 +2,7 @@
 {
     using System;
     using BusinessValidation;
-    using Xml.Schemas;
+    using Xml.MemberRegistration;
 
     public interface ICorrectSchemeApprovalNumber
     {

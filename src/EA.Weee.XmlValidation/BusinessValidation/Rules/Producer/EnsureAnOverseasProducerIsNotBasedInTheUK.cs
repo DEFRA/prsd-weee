@@ -1,12 +1,6 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.Rules.Producer
 {
-    using EA.Weee.Xml.Schemas;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Xml;
+    using EA.Weee.Xml.MemberRegistration;
 
     /// <summary>
     /// This rules ensures that an overseas producer is not based in the UK.

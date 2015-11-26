@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using BusinessValidation;
-    using Xml.Schemas;
+    using Xml.MemberRegistration;
 
     public interface IDuplicateProducerNames
     {

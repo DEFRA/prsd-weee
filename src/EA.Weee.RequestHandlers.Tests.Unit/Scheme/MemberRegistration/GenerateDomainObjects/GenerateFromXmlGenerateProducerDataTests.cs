@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.GenerateDomainObjects
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Scheme;
@@ -11,8 +7,12 @@
     using EA.Weee.RequestHandlers.Scheme.MemberRegistration;
     using EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
     using EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
-    using EA.Weee.Xml.Schemas;
+    using EA.Weee.Xml.MemberRegistration;
     using FakeItEasy;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
 
     /// <summary>

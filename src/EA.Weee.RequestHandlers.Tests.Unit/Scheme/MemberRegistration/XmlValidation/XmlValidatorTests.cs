@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.XmlValidation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Xml.Linq;
     using Core.Exceptions;
     using Core.Helpers.Xml;
     using Domain;
@@ -12,8 +8,12 @@
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation;
     using Requests.Scheme.MemberRegistration;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Xml.Linq;
     using Weee.XmlValidation.BusinessValidation;
-    using Xml.Schemas;
+    using Xml.MemberRegistration;
     using Xunit;
 
     public class XmlValidatorTests

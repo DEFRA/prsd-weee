@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.Rules.Producer
 {
-    using System;
     using BusinessValidation;
     using QuerySets;
-    using Xml;
-    using Xml.Schemas;
+    using System;
+    using Xml.MemberRegistration;
 
     public class ProducerNameChange : IProducerNameChange
     {
