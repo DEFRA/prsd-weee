@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Core.Exceptions;
     using Core.Helpers;
     using Core.Helpers.Xml;
     using Domain;
@@ -10,6 +9,7 @@
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
     using Weee.XmlValidation.BusinessValidation;
+    using Xml.Deserializer;
     using Xml.Schemas;
 
     public class XmlValidator : IXmlValidator

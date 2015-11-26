@@ -5,7 +5,6 @@
     using System.Text;
     using System.Xml.Linq;
     using System.Xml.Serialization;
-    using Core.Exceptions;
     using Core.Helpers;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
