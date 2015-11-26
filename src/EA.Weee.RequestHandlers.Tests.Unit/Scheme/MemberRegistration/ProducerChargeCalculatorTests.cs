@@ -4,8 +4,6 @@
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
     using System;
-    using System.Collections.Generic;
-    using Weee.Tests.Core;
     using Xml.MemberRegistration;
     using Xunit;
 

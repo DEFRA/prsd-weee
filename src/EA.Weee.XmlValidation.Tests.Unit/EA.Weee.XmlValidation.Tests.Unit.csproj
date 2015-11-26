@@ -105,6 +105,7 @@
     <Compile Include="BusinessValidation\Rules\Producer\ProducerAlreadyRegisteredTests.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\ProducerNameChangeTests.cs" />
     <Compile Include="Errors\XmlErrorTranslatorTests.cs" />
+    <Compile Include="SchemaValidation\SchemaValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -162,6 +163,34 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="DataReturns\XmlFiles\v3-ProducerList-DuplicateRegistrationNo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\not-xml.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v2-valid.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-badly-damaged.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-noproducers.xml" />
+    <Content Include="ExampleXML\v3-same-producer-name.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-slightly-invalid.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-valid-AmendmentBandC.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-valid-ChargeBand.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-valid.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-wrong-namespace.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
