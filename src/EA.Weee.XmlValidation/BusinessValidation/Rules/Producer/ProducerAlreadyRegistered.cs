@@ -22,14 +22,15 @@
             {
                 var existingProducer =
                     querySet.GetProducerForOtherSchemeAndObligationType(producer.registrationNo,
-                        scheme.complianceYear, schemeId, (int)producer.obligationType.ToDomainObligationType());
+                        scheme.complianceYear, schemeId, producer.obligationType.ToDomainObligationType());
 
                 if (existingProducer != null)
                 {
                     string schemeName = "another scheme";
-                    if (existingProducer.Scheme != null && !string.IsNullOrEmpty(existingProducer.Scheme.SchemeName))
+                    if (existingProducer.RegisteredProducer.Scheme != null
+                        && !string.IsNullOrEmpty(existingProducer.RegisteredProducer.Scheme.SchemeName))
                     {
-                        schemeName = existingProducer.Scheme.SchemeName;
+                        schemeName = existingProducer.RegisteredProducer.Scheme.SchemeName;
                     }
            
                     var errorMessage = string.Format(

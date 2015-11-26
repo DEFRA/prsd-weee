@@ -14,10 +14,10 @@
 
         Task<Queue<string>> ComputePrns(int numberOfPrnsNeeded);
 
-        Task<Producer> GetLatestProducerRecord(Guid schemeId, string producerRegistrationNumber);
+        Task<bool> MigratedProducerExists(string producerRegistrationNumber);
 
-        Task<Producer> GetLatestProducerRecordExcludeScheme(Guid schemeId, string producerRegistrationNumber);
+        Task<bool> ProducerRegistrationExists(string producerRegistrationNumber);
 
-        Task<MigratedProducer> GetMigratedProducer(string producerRegistrationNumber);
+        Task<RegisteredProducer> FetchRegisteredProducerOrDefault(string producerRegistrationNumber, int complianceYear, Guid schemeId);
     }
 }

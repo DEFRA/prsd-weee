@@ -21,6 +21,6 @@
         /// </summary>
         /// <param name="registrationNumber"></param>
         /// <returns></returns>
-        Task<List<Producer>> Fetch(string registrationNumber);
+        Task<List<ProducerSubmission>> Fetch(string registrationNumber);
     }
 }

@@ -1,21 +1,22 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.QuerySets
 {
+    using Domain;
+    using Domain.Producer;
     using System;
     using System.Collections.Generic;
-    using Domain.Producer;
 
     public interface IProducerQuerySet
     {
-        Producer GetLatestProducerForComplianceYearAndScheme(string registrationNo, string schemeComplianceYear, Guid schemeOrgId);
+        ProducerSubmission GetLatestProducerForComplianceYearAndScheme(string registrationNo, string schemeComplianceYear, Guid schemeOrgId);
 
-        Producer GetLatestProducerFromPreviousComplianceYears(string registrationNo);
+        ProducerSubmission GetLatestProducerFromPreviousComplianceYears(string registrationNo);
 
-        Producer GetProducerForOtherSchemeAndObligationType(string registrationNo, string schemeComplianceYear, Guid schemeOrgId, int obligationType);
+        ProducerSubmission GetProducerForOtherSchemeAndObligationType(string registrationNo, string schemeComplianceYear, Guid schemeOrgId, ObligationType obligationType);
 
         List<string> GetAllRegistrationNumbers(); 
 
         bool ProducerNameAlreadyRegisteredForComplianceYear(string producerName, string schemeComplianceYear);
 
-        List<Producer> GetLatestCompanyProducers();
+        List<ProducerSubmission> GetLatestCompanyProducers();
     }
 }

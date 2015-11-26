@@ -28,7 +28,7 @@
             this.currentCompanyProducers = currentCompanyProducers;
         }
 
-        public Producer GetLatestProducerForComplianceYearAndScheme(string registrationNo, string schemeComplianceYear, Guid schemeOrgId)
+        public ProducerSubmission GetLatestProducerForComplianceYearAndScheme(string registrationNo, string schemeComplianceYear, Guid schemeOrgId)
         {
             int complianceYear = int.Parse(schemeComplianceYear);
 
@@ -39,11 +39,11 @@
 
             return currentProducersByRegistrationNumber.Run()[registrationNo]
                 .Where(p => p.MemberUpload.ComplianceYear == complianceYear)
-                .Where(p => p.Scheme.OrganisationId == schemeOrgId)
+                .Where(p => p.RegisteredProducer.Scheme.OrganisationId == schemeOrgId)
                 .SingleOrDefault();
         }
 
-        public Producer GetLatestProducerFromPreviousComplianceYears(string registrationNo)
+        public ProducerSubmission GetLatestProducerFromPreviousComplianceYears(string registrationNo)
         {
             if (!currentProducersByRegistrationNumber.Run().ContainsKey(registrationNo))
             {
@@ -55,7 +55,7 @@
                 .FirstOrDefault();
         }
 
-        public Producer GetProducerForOtherSchemeAndObligationType(string registrationNo, string schemeComplianceYear, Guid schemeOrgId, int obligationType)
+        public ProducerSubmission GetProducerForOtherSchemeAndObligationType(string registrationNo, string schemeComplianceYear, Guid schemeOrgId, ObligationType obligationType)
         {
             int complianceYear = int.Parse(schemeComplianceYear);
 
@@ -65,11 +65,11 @@
             }
 
             return currentProducersByRegistrationNumber.Run()[registrationNo]
-                .FirstOrDefault(p => p.Scheme.OrganisationId != schemeOrgId
+                .FirstOrDefault(p => p.RegisteredProducer.Scheme.OrganisationId != schemeOrgId
                     && p.MemberUpload.ComplianceYear == complianceYear
                     && (p.ObligationType == obligationType || 
-                    p.ObligationType == (int)ObligationType.Both ||
-                    obligationType == (int)(obligationTypeType.Both.ToDomainObligationType())));
+                    p.ObligationType == ObligationType.Both ||
+                    obligationType == (obligationTypeType.Both.ToDomainObligationType())));
         }
 
         public bool ProducerNameAlreadyRegisteredForComplianceYear(string producerName, string schemeComplianceYear)
@@ -88,7 +88,7 @@
             return existingProducerRegistrationNumbers.Run();
         }
 
-        public List<Producer> GetLatestCompanyProducers()
+        public List<ProducerSubmission> GetLatestCompanyProducers()
         {
             return currentCompanyProducers.Run();
         }

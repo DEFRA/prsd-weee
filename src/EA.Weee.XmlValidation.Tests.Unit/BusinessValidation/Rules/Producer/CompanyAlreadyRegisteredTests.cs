@@ -61,10 +61,10 @@
                 }
             };
 
-            var existingProducer = FakeProducer.Create(ObligationType.Both, "prn", true,
+            var existingProducer = FakeProducer.Create(ObligationType.Both, "prn",
                 producerBusiness: new ProducerBusiness(new Company("Company", companyNumber, null)));
 
-            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<Producer>() { existingProducer });
+            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<ProducerSubmission>() { existingProducer });
 
             var result = new CompanyAlreadyRegistered(producerQuerySet, migratedProducerQuerySet).Evaluate(newProducer);
 
@@ -86,7 +86,7 @@
                 }
             };
 
-            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<Producer>());
+            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<ProducerSubmission>());
 
             var migratedProducer = A.Fake<MigratedProducer>();
             A.CallTo(() => migratedProducer.CompanyNumber).Returns(companyNumber);
@@ -114,10 +114,10 @@
                 }
             };
 
-            var existingProducer = FakeProducer.Create(ObligationType.Both, "prn", true,
+            var existingProducer = FakeProducer.Create(ObligationType.Both, "prn",
                 producerBusiness: new ProducerBusiness(new Company(companyName, companyNumber, null)));
 
-            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<Producer>() { existingProducer });
+            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<ProducerSubmission>() { existingProducer });
 
             var result = new CompanyAlreadyRegistered(producerQuerySet, migratedProducerQuerySet).Evaluate(newProducer);
 
@@ -142,7 +142,7 @@
                 }
             };
 
-            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<Producer>());
+            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<ProducerSubmission>());
 
             var migratedProducer = A.Fake<MigratedProducer>();
             A.CallTo(() => migratedProducer.CompanyNumber).Returns(companyNumber);
@@ -172,10 +172,10 @@
                 }
             };
 
-            var existingProducer = FakeProducer.Create(ObligationType.Both, "prn", true,
+            var existingProducer = FakeProducer.Create(ObligationType.Both, "prn",
                 producerBusiness: new ProducerBusiness(new Company(companyName, companyNumber, null)));
 
-            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<Producer>() { existingProducer });
+            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<ProducerSubmission>() { existingProducer });
 
             new CompanyAlreadyRegistered(producerQuerySet, migratedProducerQuerySet).Evaluate(newProducer);
 
@@ -225,10 +225,10 @@
                 }
             };
 
-            var existingProducer = FakeProducer.Create(ObligationType.Both, "prn", true,
+            var existingProducer = FakeProducer.Create(ObligationType.Both, "prn",
                 producerBusiness: new ProducerBusiness(new Company("companyName", existingCompanyNumber, null)));
 
-            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<Producer>() { existingProducer });
+            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<ProducerSubmission>() { existingProducer });
 
             var result = new CompanyAlreadyRegistered(producerQuerySet, migratedProducerQuerySet).Evaluate(newProducer);
             
@@ -253,7 +253,7 @@
                 }
             };
 
-            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<Producer>());
+            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<ProducerSubmission>());
 
             var migratedProducer = A.Fake<MigratedProducer>();
             A.CallTo(() => migratedProducer.CompanyNumber).Returns(migratedProducerCompanyNumber);
@@ -285,10 +285,10 @@
                 }
             };
 
-            var existingProducer = FakeProducer.Create(ObligationType.Both, "prn", true,
+            var existingProducer = FakeProducer.Create(ObligationType.Both, "prn",
                 producerBusiness: new ProducerBusiness(new Company("Company", existingCompanyNumber, null)));
 
-            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<Producer>() { existingProducer });
+            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<ProducerSubmission>() { existingProducer });
 
             var result = new CompanyAlreadyRegistered(producerQuerySet, migratedProducerQuerySet).Evaluate(newProducer);
 
@@ -315,7 +315,7 @@
                 }
             };
 
-            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<Producer>());
+            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<ProducerSubmission>());
 
             var migratedProducer = A.Fake<MigratedProducer>();
             A.CallTo(() => migratedProducer.CompanyNumber).Returns(migratedProducerCompanyNumber);
@@ -347,10 +347,10 @@
                 }
             };
 
-            var existingProducer = FakeProducer.Create(ObligationType.Both, "prn", true,
+            var existingProducer = FakeProducer.Create(ObligationType.Both, "prn",
                 producerBusiness: new ProducerBusiness(new Company("Company", existingCompanyNumber, null)));
 
-            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<Producer>() { existingProducer });
+            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<ProducerSubmission>() { existingProducer });
 
             var result = new CompanyAlreadyRegistered(producerQuerySet, migratedProducerQuerySet).Evaluate(newProducer);
 
@@ -378,7 +378,7 @@
                 }
             };
 
-            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<Producer>());
+            A.CallTo(() => producerQuerySet.GetLatestCompanyProducers()).Returns(new List<ProducerSubmission>());
 
             var migratedProducer = A.Fake<MigratedProducer>();
             A.CallTo(() => migratedProducer.CompanyNumber).Returns(migratedProducerCompanyNumber);

@@ -46,13 +46,13 @@
             if (!sumOfExistingChargesLookup.TryGetValue(schemeApprovalNumber, out schemeProducerYear))
             {
                 schemeProducerYear = context
-                    .Producers
+                    .ProducerSubmissions
                     .Where(p => p.MemberUpload.IsSubmitted)
-                    .Where(p => p.Scheme.ApprovalNumber == schemeApprovalNumber)
+                    .Where(p => p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber)
                     .GroupBy(p => new
                     {
-                        RegistrationNumber = p.RegistrationNumber,
-                        ComplianceYear = p.MemberUpload.ComplianceYear.Value
+                        RegistrationNumber = p.RegisteredProducer.ProducerRegistrationNumber,
+                        ComplianceYear = p.RegisteredProducer.ComplianceYear
                     })
                     .Select(g => new
                     {

@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Domain.Producer;
 
-    public interface ICurrentCompanyProducers : IQuery<List<Producer>>
+    public interface ICurrentCompanyProducers : IQuery<List<ProducerSubmission>>
     {
     }
 }
