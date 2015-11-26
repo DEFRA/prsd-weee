@@ -56,7 +56,7 @@
     <Compile Include="Deserialization\Deserializer.cs" />
     <Compile Include="Deserialization\IDeserializer.cs" />
     <Compile Include="Deserialization\XmlDeserializationFailureException.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="MemberUpload\Extensions.cs" />
     <Compile Include="MemberUpload\IProducerChargeBandCalculator.cs" />
     <Compile Include="MemberUpload\ProducerChargeBandCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
