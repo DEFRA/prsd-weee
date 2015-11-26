@@ -1,11 +1,10 @@
-﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
+﻿namespace EA.Weee.Xml.Deserialization
 {
     using System;
     using System.Xml.Linq;
     using System.Xml.Serialization;
-    using Core.Exceptions;
 
-    public class Deserializer : IDeserializer
+    internal class Deserializer : IDeserializer
     {
         public T Deserialize<T>(XDocument document)
         {

@@ -1,15 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using Core.Exceptions;
     using Core.Helpers;
-    using Core.Helpers.Xml;
     using Domain;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
+    using System.Collections.Generic;
+    using System.Linq;
     using Weee.XmlValidation.BusinessValidation;
+    using Weee.XmlValidation.Errors;
+    using Weee.XmlValidation.SchemaValidation;
+    using Xml.Converter;
+    using Xml.Deserialization;
     using Xml.MemberRegistration;
 
     public class XmlValidator : IXmlValidator
@@ -31,7 +33,10 @@
         public IEnumerable<MemberUploadError> Validate(ProcessXMLFile message)
         {
             // Validate against the schema
-            var errors = schemaValidator.Validate(message).ToList();
+            var errors = schemaValidator.Validate(message.Data)
+                .Select(e => e.ToMemberUploadError())
+                .ToList();
+
             if (errors.Any())
             {
                 return errors;
@@ -42,7 +47,7 @@
             try
             {
                 // Validate deserialized XML against business rules
-                deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(message));
+                deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
             }
             catch (XmlDeserializationFailureException e)
             {

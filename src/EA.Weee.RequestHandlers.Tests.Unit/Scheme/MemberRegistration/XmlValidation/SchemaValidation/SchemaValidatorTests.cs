@@ -6,12 +6,13 @@
     using System.Reflection;
     using System.Xml;
     using System.Xml.Linq;
-    using Core.Helpers.Xml;
-    using Domain;
+    using Core.Shared;
     using FakeItEasy;
     using RequestHandlers.Scheme.Interfaces;
-    using RequestHandlers.Scheme.MemberRegistration.XmlValidation.SchemaValidation;
     using Requests.Scheme.MemberRegistration;
+    using Weee.XmlValidation.Errors;
+    using Weee.XmlValidation.SchemaValidation;
+    using Xml.Converter;
     using Xunit;
 
     public class SchemaValidatorTests
@@ -32,10 +33,10 @@
                 @"ExampleXML\v3-valid.xml");
             var validXml = File.ReadAllText(new Uri(validXmlLocation).LocalPath);
 
-            A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
+            A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Returns(XDocument.Parse(validXml));
 
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var errors = SchemaValidator().Validate(A<byte[]>._);
 
             Assert.Empty(errors);
         }
@@ -47,10 +48,10 @@
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-wrong-namespace.xml");
             var wrongNamespaceXml = File.ReadAllText(new Uri(wrongNamespaceXmlLocation).LocalPath);
 
-            A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
+            A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Returns(XDocument.Parse(wrongNamespaceXml));
 
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var errors = SchemaValidator().Validate(A<byte[]>._);
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -62,10 +63,10 @@
                 @"ExampleXML\v3-slightly-invalid.xml");
             var invalidXml = File.ReadAllText(new Uri(invalidXmlLocation).LocalPath);
 
-            A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
+            A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Returns(XDocument.Parse(invalidXml));
 
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var errors = SchemaValidator().Validate(A<byte[]>._);
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -73,10 +74,10 @@
         [Fact]
         public void SchemaValidation_Corrupt_AddsError()
         {
-            A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._))
+            A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Throws<XmlException>();
 
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var errors = SchemaValidator().Validate(A<byte[]>._);
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }
@@ -84,10 +85,9 @@
         [Fact]
         public void SchemaValidation_EmptyXml_AddsError()
         {
-            A.CallTo(() => xmlConverter.Convert(A<ProcessXMLFile>._)).MustNotHaveHappened();
+            A.CallTo(() => xmlConverter.Convert(A<byte[]>._)).MustNotHaveHappened();
 
-            var xmlData = new byte[0];
-            var errors = SchemaValidator().Validate(new ProcessXMLFile(A<Guid>._, xmlData, A<string>._));
+            var errors = SchemaValidator().Validate(new byte[0]);
 
             Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
         }

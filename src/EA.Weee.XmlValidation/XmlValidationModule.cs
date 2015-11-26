@@ -7,6 +7,8 @@
     using BusinessValidation.QuerySets.Queries.Producer;
     using BusinessValidation.Rules.Producer;
     using BusinessValidation.Rules.Scheme;
+    using Errors;
+    using SchemaValidation;
 
     public class XmlValidationModule : Module
     {
@@ -95,14 +97,8 @@
             builder.RegisterType<ExistingProducerRegistrationNumbers>().As<IExistingProducerRegistrationNumbers>().InstancePerRequest();
             builder.RegisterType<CurrentProducersByRegistrationNumber>().As<ICurrentProducersByRegistrationNumber>().InstancePerRequest();
 
-            //builder.RegisterAssemblyTypes(GetType().Assembly)
-            //    .Where(t => t.Name.StartsWith("BusinessValidation"))
-            //    .AsImplementedInterfaces();
-            //    .InstancePerRequest();
-
-            //builder.RegisterType<XmlBusinessValidator>()
-            //    .As<IXmlBusinessValidator>()
-            //    .InstancePerRequest();
+            builder.RegisterType<XmlErrorTranslator>().As<IXmlErrorTranslator>().InstancePerRequest();
+            builder.RegisterType<SchemaValidator>().As<ISchemaValidator>().InstancePerRequest();
         }
     }
 }

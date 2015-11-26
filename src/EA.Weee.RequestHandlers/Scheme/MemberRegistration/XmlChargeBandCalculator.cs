@@ -6,6 +6,7 @@
     using Requests.Scheme.MemberRegistration;
     using System;
     using System.Collections.Generic;
+    using Xml.Converter;
     using Xml.MemberRegistration;
 
     public class XmlChargeBandCalculator : IXmlChargeBandCalculator
@@ -23,7 +24,7 @@
 
         public Dictionary<string, ProducerCharge> Calculate(ProcessXMLFile message)
         {
-            var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
+            var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
 
             var producerCharges = new Dictionary<string, ProducerCharge>();
             var complianceYear = Int32.Parse(schemeType.complianceYear);
