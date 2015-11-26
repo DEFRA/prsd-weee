@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using BusinessValidation;
-    using schemeType = Xml.MemberRegistration.schemeType;
+    using Xml.MemberRegistration;
 
     public class DuplicateProducerRegistrationNumbers : IDuplicateProducerRegistrationNumbers
     {

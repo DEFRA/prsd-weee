@@ -3,7 +3,6 @@
     using System;
     using BusinessValidation;
     using Xml.MemberRegistration;
-    using schemeType = Xml.MemberRegistration.schemeType;
 
     public interface IProducerAlreadyRegistered
     {

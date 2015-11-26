@@ -3,7 +3,7 @@
     using System;
     using BusinessValidation;
     using QuerySets;
-    using schemeType = Xml.MemberRegistration.schemeType;
+    using Xml.MemberRegistration;
 
     public class CorrectSchemeApprovalNumber : ICorrectSchemeApprovalNumber
     {
