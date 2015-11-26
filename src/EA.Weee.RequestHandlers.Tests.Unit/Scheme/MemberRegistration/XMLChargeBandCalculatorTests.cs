@@ -12,7 +12,7 @@
     using System.Text;
     using System.Xml.Linq;
     using Xml.Converter;
-    using Xml.Deserializer;
+    using Xml.Deserialization;
     using Xunit;
 
     public class XmlChargeBandCalculatorTests
