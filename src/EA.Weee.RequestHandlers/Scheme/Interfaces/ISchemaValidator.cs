@@ -3,9 +3,10 @@
     using System.Collections.Generic;
     using Domain.Scheme;
     using Requests.Scheme.MemberRegistration;
+    using XmlValidation.Errors;
 
     public interface ISchemaValidator
     {
-        IEnumerable<MemberUploadError> Validate(ProcessXMLFile message);
+        IEnumerable<XmlValidationError> Validate(ProcessXMLFile message);
     }
 }

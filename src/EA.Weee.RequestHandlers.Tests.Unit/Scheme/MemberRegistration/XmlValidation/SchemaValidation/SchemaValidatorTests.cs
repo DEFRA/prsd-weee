@@ -6,7 +6,7 @@
     using System.Reflection;
     using System.Xml;
     using System.Xml.Linq;
-    using Domain;
+    using Core.Shared;
     using FakeItEasy;
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.SchemaValidation;
