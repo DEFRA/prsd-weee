@@ -45,7 +45,7 @@
                         result = RuleResult.Fail(
                            string.Format("The charge band of {0} {1} will change from '{2}' to '{3}'.",
                               existingProducer.OrganisationName,
-                              existingProducer.RegistrationNumber,
+                              existingProducer.RegisteredProducer.ProducerRegistrationNumber,
                               existingChargeBandType,
                               newChargeBandType),
                            Core.Shared.ErrorLevel.Warning);

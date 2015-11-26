@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetProducerDetails
 {
     using Domain.Lookup;
+    using Domain.Producer;
+    using Domain.Scheme;
     using EA.Weee.Core.Admin;
     using EA.Weee.RequestHandlers.Admin.GetProducerDetails;
     using EA.Weee.RequestHandlers.Security;
@@ -45,7 +47,7 @@
             // Arrange
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
             A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA"))
-                .Returns(new List<Domain.Producer.Producer>());
+                .Returns(new List<Domain.Producer.ProducerSubmission>());
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
@@ -67,22 +69,32 @@
         public async Task HandleAsync_ProducerRegisteredIn2017_ReturnsProducerDetailsFor2017()
         {
             // Arrange
-            var scheme = A.Fake<EA.Weee.Domain.Scheme.Scheme>();
-            A.CallTo(() => scheme.SchemeName).Returns("Scheme Name");
+            Scheme scheme = new Scheme(
+                A.Dummy<Guid>());
 
-           var memberUpload = A.Fake<EA.Weee.Domain.Scheme.MemberUpload>();
-            A.CallTo(() => memberUpload.ComplianceYear).Returns(2017); 
-            A.CallTo(() => memberUpload.Scheme).Returns(scheme);
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                2017,
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>());
 
-            var producer = new EA.Weee.Domain.Producer.Producer(
-                new Guid(),
+            RegisteredProducer registeredProducer = new RegisteredProducer(
+                "WEE/AA1111AA",
+                2017,
+                scheme);
+
+            var producer = new ProducerSubmission(
+                registeredProducer,
                 memberUpload,
                 new EA.Weee.Domain.Producer.ProducerBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
                 false,
-                "WEE/AA1111AA",
                 null,
                 "Trading Name 1",
                 Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
@@ -91,13 +103,14 @@
                 Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
-                false,
                 A.Dummy<ChargeBandAmount>(),
                 0);
-            
+
+            registeredProducer.CurrentSubmission = producer;
+
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
             A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA"))
-                .Returns(new List<Domain.Producer.Producer>() { producer });
+                .Returns(new List<Domain.Producer.ProducerSubmission>() { producer });
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
@@ -116,7 +129,7 @@
             Assert.Equal("WEE/AA1111AA", result.RegistrationNumber);
             Assert.Equal(2017, result.ComplianceYear);
             Assert.Equal(1, result.Schemes.Count);
-            Assert.Equal("Scheme Name", result.Schemes[0].SchemeName);
+            Assert.Equal(scheme.SchemeName, result.Schemes[0].SchemeName);
         }
 
         [Fact]
@@ -130,15 +143,14 @@
             A.CallTo(() => memberUpload1.ComplianceYear).Returns(2016);
             A.CallTo(() => memberUpload1.Scheme).Returns(scheme);
 
-            var producer1 = new EA.Weee.Domain.Producer.Producer(
-                new Guid(),
+            var producer1 = new EA.Weee.Domain.Producer.ProducerSubmission(
+                new Domain.Producer.RegisteredProducer("WEE/AA1111AA", 2016, scheme),
                 memberUpload1,
                 new EA.Weee.Domain.Producer.ProducerBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
                 false,
-                "WEE/AA1111AA",
                 null,
                 "Trading Name 1",
                 Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
@@ -147,7 +159,6 @@
                 Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
-                false,
                 A.Dummy<ChargeBandAmount>(),
                 0);
 
@@ -155,15 +166,14 @@
             A.CallTo(() => memberUpload2.ComplianceYear).Returns(2017);
             A.CallTo(() => memberUpload2.Scheme).Returns(scheme);
 
-            var producer2 = new EA.Weee.Domain.Producer.Producer(
-                new Guid(),
+            var producer2 = new EA.Weee.Domain.Producer.ProducerSubmission(
+                new Domain.Producer.RegisteredProducer("WEE/AA1111AA", 2017, scheme),
                 memberUpload2,
                 new EA.Weee.Domain.Producer.ProducerBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
                 false,
-                "WEE/AA1111AA",
                 null,
                 "Trading Name 1",
                 Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
@@ -172,12 +182,11 @@
                 Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
-                false,
                 A.Dummy<ChargeBandAmount>(),
                 0);
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
-            A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA")).Returns(new List<Domain.Producer.Producer>() 
+            A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA")).Returns(new List<Domain.Producer.ProducerSubmission>() 
             {
                 producer1,
                 producer2
@@ -214,15 +223,14 @@
             A.CallTo(() => memberUpload1.ComplianceYear).Returns(2017);
             A.CallTo(() => memberUpload1.Scheme).Returns(scheme);
 
-            var producer1 = new EA.Weee.Domain.Producer.Producer(
-                new Guid(),
+            var producer1 = new EA.Weee.Domain.Producer.ProducerSubmission(
+                new Domain.Producer.RegisteredProducer("WEE/AA1111AA", 2017, scheme),
                 memberUpload1,
                 new EA.Weee.Domain.Producer.ProducerBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
                 false,
-                "WEE/AA1111AA",
                 null,
                 "Trading Name 1",
                 Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
@@ -231,7 +239,6 @@
                 Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
-                false,
                 A.Dummy<ChargeBandAmount>(),
                 0);
 
@@ -239,15 +246,14 @@
             A.CallTo(() => memberUpload2.ComplianceYear).Returns(2017);
             A.CallTo(() => memberUpload2.Scheme).Returns(scheme);
 
-            var producer2 = new EA.Weee.Domain.Producer.Producer(
-                new Guid(),
+            var producer2 = new EA.Weee.Domain.Producer.ProducerSubmission(
+                new Domain.Producer.RegisteredProducer("WEE/AA1111AA", 2017, scheme),
                 memberUpload2,
                 new EA.Weee.Domain.Producer.ProducerBusiness(),
                 null,
                 new DateTime(2015, 1, 2),
                 0,
                 false,
-                "WEE/AA1111AA",
                 null,
                 "Trading Name 2",
                 Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
@@ -256,12 +262,11 @@
                 Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
-                false,
                 A.Dummy<ChargeBandAmount>(),
                 0);
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
-            A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA")).Returns(new List<Domain.Producer.Producer>() 
+            A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA")).Returns(new List<Domain.Producer.ProducerSubmission>() 
             {
                 producer1,
                 producer2
@@ -296,15 +301,14 @@
             A.CallTo(() => memberUpload1.ComplianceYear).Returns(2017);
             A.CallTo(() => memberUpload1.Scheme).Returns(scheme1);
 
-            var producer1 = new EA.Weee.Domain.Producer.Producer(
-                new Guid(),
+            var producer1 = new EA.Weee.Domain.Producer.ProducerSubmission(
+                new Domain.Producer.RegisteredProducer("WEE/AA1111AA", 2017, scheme1),
                 memberUpload1,
                 new EA.Weee.Domain.Producer.ProducerBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
                 false,
-                "WEE/AA1111AA",
                 null,
                 "Trading Name 1",
                 Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
@@ -313,7 +317,6 @@
                 Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
-                false,
                 A.Dummy<ChargeBandAmount>(),
                 0);
 
@@ -324,15 +327,14 @@
             A.CallTo(() => memberUpload2.ComplianceYear).Returns(2017);
             A.CallTo(() => memberUpload2.Scheme).Returns(scheme2);
 
-            var producer2 = new EA.Weee.Domain.Producer.Producer(
-                new Guid(),
+            var producer2 = new EA.Weee.Domain.Producer.ProducerSubmission(
+                new Domain.Producer.RegisteredProducer("WEE/AA1111AA", 2017, scheme2),
                 memberUpload2,
                 new EA.Weee.Domain.Producer.ProducerBusiness(),
                 null,
                 new DateTime(2015, 1, 1),
                 0,
                 false,
-                "WEE/AA1111AA",
                 null,
                 "Trading Name 2",
                 Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
@@ -341,12 +343,11 @@
                 Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
-                false,
                 A.Dummy<ChargeBandAmount>(),
                 0);
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
-            A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA")).Returns(new List<Domain.Producer.Producer>() 
+            A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA")).Returns(new List<Domain.Producer.ProducerSubmission>() 
             {
                 producer1,
                 producer2

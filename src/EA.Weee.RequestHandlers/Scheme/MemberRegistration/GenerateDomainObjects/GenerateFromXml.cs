@@ -27,30 +27,37 @@
             this.dataAccess = dataAccess;
         }
 
-        public async Task<IEnumerable<Producer>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
+        public async Task<IEnumerable<ProducerSubmission>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
         {
             var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
-            var producers = await GenerateProducerData(deserializedXml, memberUpload.SchemeId, memberUpload, producerCharges);
+            var producers = await GenerateProducerData(deserializedXml, memberUpload, producerCharges);
             return producers;
         }
 
-        public MemberUpload GenerateMemberUpload(ProcessXMLFile messageXmlFile, List<MemberUploadError> errors, decimal totalCharges, Guid schemeId)
+        public MemberUpload GenerateMemberUpload(ProcessXMLFile messageXmlFile, List<MemberUploadError> errors, decimal totalCharges, Scheme scheme)
         {
             if (errors != null && errors.Any(e => e.ErrorType == MemberUploadErrorType.Schema))
             {
-                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile), errors, totalCharges, null, schemeId, messageXmlFile.FileName);
+                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile), errors, totalCharges, null, scheme, messageXmlFile.FileName);
             }
             else
             {
                 var xml = xmlConverter.XmlToUtf8String(messageXmlFile);
                 var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
-                return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), schemeId, messageXmlFile.FileName);
+                return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), scheme, messageXmlFile.FileName);
             }
         }
 
-        public async Task<IEnumerable<Producer>> GenerateProducerData(schemeType scheme, Guid schemeId, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
+        public async Task<IEnumerable<ProducerSubmission>> GenerateProducerData(schemeType scheme, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
         {
-            List<Producer> producers = new List<Producer>();
+            if (memberUpload.ComplianceYear == null)
+            {
+                string errorMessage = "Producers cannot be generated for a member upload "
+                    + "that does not have a compliance year.";
+                throw new InvalidOperationException(errorMessage);
+            }
+
+            List<ProducerSubmission> producers = new List<ProducerSubmission>();
 
             int numberOfPrnsNeeded = scheme.producerList.Count(p => p.status == statusType.I);
             Queue<string> generatedPrns = await dataAccess.ComputePrns(numberOfPrnsNeeded);
@@ -92,20 +99,46 @@
                     ceaseDate = producerData.ceaseToExistDate;
                 }
 
-                string producerRegistrationNo = producerData.registrationNo;
-                if (producerData.status == statusType.I)
+                RegisteredProducer registeredProducer = null;
+
+                string producerRegistrationNo;
+                switch (producerData.status)
                 {
-                    producerRegistrationNo = generatedPrns.Dequeue();
+                    case statusType.I:
+                        producerRegistrationNo = generatedPrns.Dequeue();
+                        break;
+
+                    case statusType.A:
+                        producerRegistrationNo = producerData.registrationNo;
+
+                        await EnsureProducerRegistrationNumberExists(producerRegistrationNo);
+
+                        registeredProducer = await dataAccess.FetchRegisteredProducerOrDefault(
+                            producerRegistrationNo,
+                            memberUpload.ComplianceYear.Value,
+                            memberUpload.SchemeId);
+                        break;
+
+                    default:
+                        throw new NotSupportedException();
                 }
 
-                Producer producer = new Producer(schemeId,
+                if (registeredProducer == null)
+                {
+                    registeredProducer = new RegisteredProducer(
+                        producerRegistrationNo,
+                        memberUpload.ComplianceYear.Value,
+                        memberUpload.Scheme);
+                }
+
+                ProducerSubmission producer = new ProducerSubmission(
+                    registeredProducer,
                     memberUpload,
                     producerBusiness,
                     authorisedRepresentative,
                     SystemTime.UtcNow,
                     producerData.annualTurnover,
                     producerData.VATRegistered,
-                    producerRegistrationNo,
                     ceaseDate,
                     producerData.tradingName,
                     eeebandType,
@@ -114,7 +147,6 @@
                     annualturnoverType,
                     brandNames,
                     codes,
-                    false,
                     chargeBandAmount,
                     chargeThisUpdate);
 
@@ -123,37 +155,23 @@
                 {
                     case statusType.A:
 
-                        // Get the producers for scheme based on producer->prn and producer->lastsubmitted
-                        // is latest date and memberupload ->IsSubmitted is true.
-                        var producerDb = await dataAccess.GetLatestProducerRecord(schemeId, producerRegistrationNo);
-                        if (producerDb == null)
+                        if (registeredProducer.CurrentSubmission == null)
                         {
-                            // Check in migrated producers list
-                            var migratedProducers = await dataAccess.GetMigratedProducer(producerRegistrationNo);
-                            if (migratedProducers == null)
-                            {
-                                // Check for producer in another scheme member uploads
-                                var anotherSchemeProducerDb = await dataAccess.GetLatestProducerRecordExcludeScheme(schemeId, producerRegistrationNo);
-                                if (anotherSchemeProducerDb == null)
-                                {
-                                    throw new InvalidOperationException(
-                                        string.Format(
-                                            "PRN: {0} does not exists in current data set.",
-                                            producerRegistrationNo));
-                                }
-                                else
-                                {
-                                    producers.Add(producer);
-                                }
-                            }
-                            else
+                            producers.Add(producer);
+                        }
+                        else
+                        {
+                            if (!registeredProducer.CurrentSubmission.Equals(producer))
                             {
                                 producers.Add(producer);
                             }
-                        }
-                        else if (!producerDb.Equals(producer))
-                        {
-                            producers.Add(producer);
+                            else
+                            {
+                                /*
+                                 * The producer's details are the same as the current submission for this
+                                 * registration so we don't need to update them.
+                                 */
+                            }
                         }
                         break;
 
@@ -164,6 +182,20 @@
             }
 
             return producers;
+        }
+
+        private async Task EnsureProducerRegistrationNumberExists(string producerRegistrationNumber)
+        {
+            bool producerRegistrationExists = await dataAccess.ProducerRegistrationExists(producerRegistrationNumber);
+            bool migratedProducerExists = await dataAccess.MigratedProducerExists(producerRegistrationNumber);
+
+            if (!producerRegistrationExists && !migratedProducerExists)
+            {
+                string errorMessage = string.Format(
+                    "PRN: {0} does not exists in current data set.",
+                    producerRegistrationNumber);
+                throw new InvalidOperationException(errorMessage);
+            }
         }
 
         public async Task<AuthorisedRepresentative> SetAuthorisedRepresentative(authorisedRepresentativeType representative)

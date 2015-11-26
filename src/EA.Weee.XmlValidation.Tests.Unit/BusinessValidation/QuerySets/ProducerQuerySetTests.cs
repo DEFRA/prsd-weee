@@ -34,12 +34,12 @@
             var registrationNumber = "ABC12345";
             var complianceYear = 2016;
 
-            var producer = FakeProducer.Create(ObligationType.Both, registrationNumber, true, schemeOrganisationId, complianceYear);
+            var producer = FakeProducer.Create(ObligationType.Both, registrationNumber, schemeOrganisationId, complianceYear);
 
             A.CallTo(() => currentProducersByRegistrationNumber.Run())
-                .Returns(new Dictionary<string, List<Producer>>
+                .Returns(new Dictionary<string, List<ProducerSubmission>>
                 {
-                    { registrationNumber, new List<Producer> { producer }}
+                    { registrationNumber, new List<ProducerSubmission> { producer }}
                 });
 
             var result = ProducerQuerySet().GetLatestProducerForComplianceYearAndScheme(registrationNumber, complianceYear.ToString(), schemeOrganisationId);
@@ -55,12 +55,12 @@
             var schemeOrganisationId = Guid.NewGuid();
             var registrationNumber = "ABC12345";
 
-            var producer = FakeProducer.Create(ObligationType.Both, registrationNumber, true, schemeOrganisationId, existingComplianceYear);
+            var producer = FakeProducer.Create(ObligationType.Both, registrationNumber, schemeOrganisationId, existingComplianceYear);
 
             A.CallTo(() => currentProducersByRegistrationNumber.Run())
-                .Returns(new Dictionary<string, List<Producer>>
+                .Returns(new Dictionary<string, List<ProducerSubmission>>
                 {
-                    { registrationNumber, new List<Producer> { producer }}
+                    { registrationNumber, new List<ProducerSubmission> { producer }}
                 });
 
             var result = ProducerQuerySet().GetLatestProducerForComplianceYearAndScheme(registrationNumber, thisComplianceYear.ToString(), schemeOrganisationId);
@@ -76,12 +76,12 @@
             var schemeOrganisationId = Guid.NewGuid();
             var complianceYear = 2016;
 
-            var producer = FakeProducer.Create(ObligationType.Both, existingPrn, true, schemeOrganisationId, complianceYear);
+            var producer = FakeProducer.Create(ObligationType.Both, existingPrn, schemeOrganisationId, complianceYear);
 
             A.CallTo(() => currentProducersByRegistrationNumber.Run())
-                .Returns(new Dictionary<string, List<Producer>>
+                .Returns(new Dictionary<string, List<ProducerSubmission>>
                 {
-                    { existingPrn, new List<Producer> { producer }}
+                    { existingPrn, new List<ProducerSubmission> { producer }}
                 });
 
             var result = ProducerQuerySet().GetLatestProducerForComplianceYearAndScheme(thisPrn, complianceYear.ToString(), schemeOrganisationId);
@@ -94,12 +94,12 @@
         [InlineData("ABC12346", "ABC12345")]
         public void GetLatestProducerFromPreviousComplianceYears_PrnDoesNotMatch_ReturnsNull(string thisPrn, string existingPrn)
         {
-            var producer = FakeProducer.Create(ObligationType.Both, existingPrn, true, Guid.NewGuid(), 2016);
+            var producer = FakeProducer.Create(ObligationType.Both, existingPrn, Guid.NewGuid(), 2016);
 
             A.CallTo(() => currentProducersByRegistrationNumber.Run())
-                .Returns(new Dictionary<string, List<Producer>>
+                .Returns(new Dictionary<string, List<ProducerSubmission>>
                 {
-                    { existingPrn, new List<Producer> { producer }}
+                    { existingPrn, new List<ProducerSubmission> { producer }}
                 });
 
             var result = ProducerQuerySet().GetLatestProducerFromPreviousComplianceYears(thisPrn);
@@ -112,13 +112,13 @@
         {
             const string prn = "ABC12345";
 
-            var oldestProducer = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2014);
-            var newestProducer = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
+            var oldestProducer = FakeProducer.Create(ObligationType.Both, prn, Guid.NewGuid(), 2014);
+            var newestProducer = FakeProducer.Create(ObligationType.Both, prn, Guid.NewGuid(), 2015);
 
             A.CallTo(() => currentProducersByRegistrationNumber.Run())
-                .Returns(new Dictionary<string, List<Producer>>
+                .Returns(new Dictionary<string, List<ProducerSubmission>>
                 {
-                    { prn, new List<Producer> { oldestProducer, newestProducer }}
+                    { prn, new List<ProducerSubmission> { oldestProducer, newestProducer }}
                 });
 
             var result = ProducerQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
@@ -131,16 +131,16 @@
         {
             const string prn = "ABC12345";
             Guid schemeOrgId = Guid.NewGuid();
-            var anotherSchemeProducer = FakeProducer.Create(ObligationType.B2B, prn, true, schemeOrgId, 2016);
-            var currentSchemeProducer = FakeProducer.Create(ObligationType.B2B, prn, true, Guid.NewGuid(), 2016);
+            var anotherSchemeProducer = FakeProducer.Create(ObligationType.B2B, prn, schemeOrgId, 2016);
+            var currentSchemeProducer = FakeProducer.Create(ObligationType.B2B, prn, Guid.NewGuid(), 2016);
 
             A.CallTo(() => currentProducersByRegistrationNumber.Run())
-                .Returns(new Dictionary<string, List<Producer>>
+                .Returns(new Dictionary<string, List<ProducerSubmission>>
                 {
-                    { prn, new List<Producer> { anotherSchemeProducer, currentSchemeProducer }}
+                    { prn, new List<ProducerSubmission> { anotherSchemeProducer, currentSchemeProducer }}
                 });
 
-            var result = ProducerQuerySet().GetProducerForOtherSchemeAndObligationType(prn, "2016", schemeOrgId, 1);
+            var result = ProducerQuerySet().GetProducerForOtherSchemeAndObligationType(prn, "2016", schemeOrgId, ObligationType.B2B);
 
             Assert.Equal(anotherSchemeProducer, result);
         }
@@ -150,13 +150,13 @@
         {
             const string prn = "ABC12345";
 
-            var oldestProducer = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
-            var newestProducer = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
+            var oldestProducer = FakeProducer.Create(ObligationType.Both, prn, Guid.NewGuid(), 2015);
+            var newestProducer = FakeProducer.Create(ObligationType.Both, prn, Guid.NewGuid(), 2015);
 
             A.CallTo(() => currentProducersByRegistrationNumber.Run())
-                .Returns(new Dictionary<string, List<Producer>>
+                .Returns(new Dictionary<string, List<ProducerSubmission>>
                 {
-                    { prn, new List<Producer> { oldestProducer, newestProducer }},
+                    { prn, new List<ProducerSubmission> { oldestProducer, newestProducer }},
                 });
 
             var result = ProducerQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
@@ -170,14 +170,14 @@
         {
             const string prn = "ABC12345";
 
-            var producer2014 = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2014);
-            var oldestProducer2015 = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
-            var newestProducer2015 = FakeProducer.Create(ObligationType.Both, prn, true, Guid.NewGuid(), 2015);
+            var producer2014 = FakeProducer.Create(ObligationType.Both, prn, Guid.NewGuid(), 2014);
+            var oldestProducer2015 = FakeProducer.Create(ObligationType.Both, prn, Guid.NewGuid(), 2015);
+            var newestProducer2015 = FakeProducer.Create(ObligationType.Both, prn, Guid.NewGuid(), 2015);
 
             A.CallTo(() => currentProducersByRegistrationNumber.Run())
-                .Returns(new Dictionary<string, List<Producer>>
+                .Returns(new Dictionary<string, List<ProducerSubmission>>
                 {
-                    { prn, new List<Producer> { producer2014, oldestProducer2015, newestProducer2015 }}
+                    { prn, new List<ProducerSubmission> { producer2014, oldestProducer2015, newestProducer2015 }}
                 });
 
             var result = ProducerQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);
@@ -198,13 +198,13 @@
             var producer = FakeProducer.Create(existingProducerObligationType, prn, Guid.NewGuid());
 
             A.CallTo(() => currentProducersByRegistrationNumber.Run())
-                .Returns(new Dictionary<string, List<Producer>>
+                .Returns(new Dictionary<string, List<ProducerSubmission>>
                 {
-                    { prn, new List<Producer> { producer } }
+                    { prn, new List<ProducerSubmission> { producer } }
                 });
 
             var result = ProducerQuerySet()
-                .GetProducerForOtherSchemeAndObligationType(prn, "2016", schemeOrgansationId, (int)obligationType);
+                .GetProducerForOtherSchemeAndObligationType(prn, "2016", schemeOrgansationId, obligationType);
 
             Assert.Null(result);
         }
@@ -226,13 +226,13 @@
             var producer = FakeProducer.Create(existingProducerObligationType, prn, Guid.NewGuid());
 
             A.CallTo(() => currentProducersByRegistrationNumber.Run())
-                .Returns(new Dictionary<string, List<Producer>>
+                .Returns(new Dictionary<string, List<ProducerSubmission>>
                 {
-                    { prn, new List<Producer> { producer } }
+                    { prn, new List<ProducerSubmission> { producer } }
                 });
 
             var result = ProducerQuerySet()
-                .GetProducerForOtherSchemeAndObligationType(prn, "2016", schemeOrgansationId, (int)obligationType);
+                .GetProducerForOtherSchemeAndObligationType(prn, "2016", schemeOrgansationId, obligationType);
 
             Assert.NotNull(result);
         }
@@ -250,13 +250,13 @@
             var producer2 = FakeProducer.Create(ObligationType.B2C, prn, Guid.NewGuid());
 
             A.CallTo(() => currentProducersByRegistrationNumber.Run())
-                .Returns(new Dictionary<string, List<Producer>>
+                .Returns(new Dictionary<string, List<ProducerSubmission>>
                 {
-                    { prn, new List<Producer> { producer1, producer2 } }
+                    { prn, new List<ProducerSubmission> { producer1, producer2 } }
                 });
 
             var result = ProducerQuerySet()
-                .GetProducerForOtherSchemeAndObligationType(prn, "2016", Guid.NewGuid(), (int)obligationType);
+                .GetProducerForOtherSchemeAndObligationType(prn, "2016", Guid.NewGuid(), obligationType);
 
             Assert.NotNull(result);
         }

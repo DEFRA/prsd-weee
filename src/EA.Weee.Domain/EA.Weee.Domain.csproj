@@ -51,13 +51,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Lookup\ChargeBand.cs" />
-    <Compile Include="Events\MemberUploadSubmittedEvent.cs" />
     <Compile Include="Events\OrganisationUserRequestEvent.cs" />
     <Compile Include="Events\OrganisationUserRequestCompletedEvent.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="ObligationType.cs" />
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
+    <Compile Include="Producer\RegisteredProducer.cs" />
     <Compile Include="Scheme\MemberUploadRawData.cs" />
     <Compile Include="Scheme\MemberUploadErrorType.cs" />
     <Compile Include="Scheme\SchemeStatus.cs" />
@@ -95,7 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Compile Include="Producer\Producer.cs" />
+    <Compile Include="Producer\ProducerSubmission.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

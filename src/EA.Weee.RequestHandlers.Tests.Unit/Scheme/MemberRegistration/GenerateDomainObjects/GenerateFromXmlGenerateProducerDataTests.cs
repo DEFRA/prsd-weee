@@ -17,7 +17,7 @@
 
     /// <summary>
     /// This class contains the tests for the <see cref="GenerateFromXml.GenerateProducerData"/> method.
-    /// The tests ensure that the <see cref="Producer"/> instances returned contain the expected data after they have been extracted from the <see cref="schemeType.producerList"/>
+    /// The tests ensure that the <see cref="ProducerSubmission"/> instances returned contain the expected data after they have been extracted from the <see cref="schemeType.producerList"/>
     /// and the other parameters used when invoking the method.
     /// </summary>
     public class GenerateFromXmlGenerateProducerDataTests
@@ -32,7 +32,7 @@
 
             var result = await builder.InvokeGenerateProducerDataWithSingleResult();
 
-            Assert.Equal(schemeId, result.SchemeId);
+            Assert.Equal(schemeId, result.RegisteredProducer.Scheme.Id);
         }
 
         [Fact]
@@ -42,7 +42,7 @@
 
             var data = "Test data";
             var fileName = "Test filename";
-            var memberUpload = new MemberUpload(Guid.NewGuid(), builder.SchemeId, data, fileName);
+            var memberUpload = new MemberUpload(Guid.NewGuid(), A.Dummy<Scheme>(), data, fileName);
 
             builder.MemberUpload = memberUpload;
 
@@ -194,7 +194,7 @@
 
             var result = await builder.InvokeGenerateProducerDataWithSingleResult();
 
-            Assert.Equal(1, result.ObligationType); // The domain obligation type has a value of 1 for B2B
+            Assert.Equal(Domain.ObligationType.B2B, result.ObligationType);
         }
 
         [Fact]
@@ -228,7 +228,7 @@
 
             var result = await builder.InvokeGenerateProducerDataWithSingleResult();
 
-            Assert.Equal("Test Registration Number", result.RegistrationNumber);
+            Assert.Equal("Test Registration Number", result.RegisteredProducer.ProducerRegistrationNumber);
         }
 
         [Fact]
@@ -241,7 +241,7 @@
 
             var result = await builder.InvokeGenerateProducerDataWithSingleResult();
 
-            Assert.Equal("Test Generated Registration Number", result.RegistrationNumber);
+            Assert.Equal("Test Generated Registration Number", result.RegisteredProducer.ProducerRegistrationNumber);
         }
 
         [Fact]
@@ -288,8 +288,6 @@
 
             var result = await builder.InvokeGenerateProducerData(10);
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._)).MustNotHaveHappened();
-
             Assert.Equal(10, result.Count());
         }
 
@@ -300,14 +298,17 @@
             builder.Status = statusType.A;
             builder.RegistrationNumber = "Test Registration Number";
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._)).Returns(new AlwaysUnequalProducer());
+            RegisteredProducer registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => registeredProducer.CurrentSubmission)
+                .Returns(new AlwaysUnequalProducer());
+
+            A.CallTo(() => builder.DataAccess.FetchRegisteredProducerOrDefault(A<string>._, A<int>._, A<Guid>._))
+                .Returns(registeredProducer);
 
             var result = await builder.InvokeGenerateProducerData(1);
 
-            A.CallTo(() => builder.DataAccess.GetMigratedProducer(A<string>._)).MustNotHaveHappened();
-
             Assert.Equal(1, result.Count());
-            Assert.Equal("Test Registration Number", result.Single().RegistrationNumber);
+            Assert.Equal("Test Registration Number", result.Single().RegisteredProducer.ProducerRegistrationNumber);
         }
 
         [Fact]
@@ -316,11 +317,14 @@
             var builder = new GenerateProducerDataTestsBuilder();
             builder.Status = statusType.A;
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._)).Returns(new AlwaysEqualProducer());
+            RegisteredProducer registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => registeredProducer.CurrentSubmission)
+                .Returns(new AlwaysEqualProducer());
+
+            A.CallTo(() => builder.DataAccess.FetchRegisteredProducerOrDefault(A<string>._, A<int>._, A<Guid>._))
+                .Returns(registeredProducer);
 
             var result = await builder.InvokeGenerateProducerData(1);
-
-            A.CallTo(() => builder.DataAccess.GetMigratedProducer(A<string>._)).MustNotHaveHappened();
 
             Assert.Equal(0, result.Count());
         }
@@ -332,14 +336,13 @@
             builder.Status = statusType.A;
             builder.RegistrationNumber = "Test Registration Number";
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._)).Returns((Producer)null);
+            A.CallTo(() => builder.DataAccess.FetchRegisteredProducerOrDefault(A<string>._, A<int>._, A<Guid>._))
+                .Returns((RegisteredProducer)null);
 
             var result = await builder.InvokeGenerateProducerData(1);
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecordExcludeScheme(A<Guid>._, A<string>._)).MustNotHaveHappened();
-
             Assert.Equal(1, result.Count());
-            Assert.Equal("Test Registration Number", result.Single().RegistrationNumber);
+            Assert.Equal("Test Registration Number", result.Single().RegisteredProducer.ProducerRegistrationNumber);
         }
 
         [Fact]
@@ -349,16 +352,13 @@
             builder.Status = statusType.A;
             builder.RegistrationNumber = "Test Registration Number";
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._)).Returns((Producer)null);
-            A.CallTo(() => builder.DataAccess.GetMigratedProducer(A<string>._)).Returns((MigratedProducer)null);
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecordExcludeScheme(A<Guid>._, A<string>._)).Returns(A.Dummy<Producer>());
+            A.CallTo(() => builder.DataAccess.FetchRegisteredProducerOrDefault(A<string>._, A<int>._, A<Guid>._))
+                .Returns((RegisteredProducer)null);
 
             var result = await builder.InvokeGenerateProducerData(1);
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecordExcludeScheme(A<Guid>._, A<string>._)).MustHaveHappened();
-
             Assert.Equal(1, result.Count());
-            Assert.Equal("Test Registration Number", result.Single().RegistrationNumber);
+            Assert.Equal("Test Registration Number", result.Single().RegisteredProducer.ProducerRegistrationNumber);
         }
 
         [Fact]
@@ -367,13 +367,15 @@
             var builder = new GenerateProducerDataTestsBuilder();
             builder.Status = statusType.A;
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecord(A<Guid>._, A<string>._)).Returns((Producer)null);
-            A.CallTo(() => builder.DataAccess.GetMigratedProducer(A<string>._)).Returns((MigratedProducer)null);
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecordExcludeScheme(A<Guid>._, A<string>._)).Returns((Producer)null);
+            A.CallTo(() => builder.DataAccess.MigratedProducerExists(A<string>._))
+                .Returns(false);
 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await builder.InvokeGenerateProducerData(1));
+            A.CallTo(() => builder.DataAccess.ProducerRegistrationExists(A<string>._))
+                .Returns(false);
 
-            A.CallTo(() => builder.DataAccess.GetLatestProducerRecordExcludeScheme(A<Guid>._, A<string>._)).MustHaveHappened();
+            Func<Task> action = async () => await builder.InvokeGenerateProducerData(1);
+
+            await Assert.ThrowsAsync<InvalidOperationException>(action);
         }
 
         private class GenerateProducerDataTestsBuilder
@@ -411,8 +413,19 @@
             private void InstantiateProducerParameters()
             {
                 TradingName = "Test trading name";
-                SchemeId = Guid.NewGuid();
-                MemberUpload = A.Fake<MemberUpload>();
+
+                Scheme scheme = new Scheme(
+                    A.Dummy<Guid>());
+
+                MemberUpload = new MemberUpload(
+                    A.Dummy<Guid>(),
+                    A.Dummy<string>(),
+                    A.Dummy<List<MemberUploadError>>(),
+                    A.Dummy<decimal>(),
+                    A.Dummy<int>(),
+                    scheme,
+                    A.Dummy<string>(),
+                    A.Dummy<string>());
 
                 ProducerCharges = new Dictionary<string, ProducerCharge>();
                 ProducerCharges.Add(TradingName, new ProducerCharge());
@@ -479,7 +492,7 @@
                 return producer;
             }
 
-            public async Task<IEnumerable<Producer>> InvokeGenerateProducerData(int numberOfProducers)
+            public async Task<IEnumerable<ProducerSubmission>> InvokeGenerateProducerData(int numberOfProducers)
             {
                 var producers = new List<producerType>();
                 for (int i = 0; i < numberOfProducers; i++)
@@ -493,10 +506,10 @@
 
                 var generateFromXml = new GenerateFromXml(XmlConverter, DataAccess);
 
-                return await generateFromXml.GenerateProducerData(scheme, SchemeId, MemberUpload, ProducerCharges);
+                return await generateFromXml.GenerateProducerData(scheme, MemberUpload, ProducerCharges);
             }
 
-            public async Task<Producer> InvokeGenerateProducerDataWithSingleResult()
+            public async Task<ProducerSubmission> InvokeGenerateProducerDataWithSingleResult()
             {
                 var result = await InvokeGenerateProducerData(1);
 
@@ -504,17 +517,17 @@
             }
         }
 
-        private class AlwaysEqualProducer : Producer
+        private class AlwaysEqualProducer : ProducerSubmission
         {
-            public override bool Equals(Producer other)
+            public override bool Equals(ProducerSubmission other)
             {
                 return true;
             }
         }
 
-        private class AlwaysUnequalProducer : Producer
+        private class AlwaysUnequalProducer : ProducerSubmission
         {
-            public override bool Equals(Producer other)
+            public override bool Equals(ProducerSubmission other)
             {
                 return false;
             }

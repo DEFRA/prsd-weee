@@ -27,7 +27,7 @@
                 .Returns(null);
             A.CallTo(() => migratedProducerQuerySet.GetMigratedProducer(A<string>._))
                 .Returns(null);
-            A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, A<Guid>._, A<int>._))
+            A.CallTo(() => producerQuerySet.GetProducerForOtherSchemeAndObligationType(A<string>._, A<string>._, A<Guid>._, A<ObligationType>._))
                 .Returns(null);
         }
 

@@ -6,6 +6,7 @@
     using Events;
     using Organisation;
     using Producer;
+    using Prsd.Core;
 
     public class MemberUpload : AuditableEntity
     {
@@ -23,7 +24,7 @@
 
         public virtual bool IsSubmitted { get; private set; }
 
-        public virtual List<Producer> Producers { get; private set; }
+        public virtual List<ProducerSubmission> ProducerSubmissions { get; private set; }
 
         public decimal TotalCharges { get; private set; }
 
@@ -33,11 +34,20 @@
 
         public virtual MemberUploadRawData RawData { get; set; }
 
-        public MemberUpload(Guid organisationId, string data, List<MemberUploadError> errors, decimal totalCharges,
-            int? complianceYear, Guid schemeId, string fileName, string userId = null)
+        public MemberUpload(
+            Guid organisationId,
+            string data,
+            List<MemberUploadError> errors,
+            decimal totalCharges,
+            int? complianceYear,
+            Scheme scheme,
+            string fileName,
+            string userId = null)
         {
+            Guard.ArgumentNotNull(() => scheme, scheme);
+
             OrganisationId = organisationId;
-            SchemeId = schemeId;
+            Scheme = scheme;
             Errors = errors;
             IsSubmitted = false;
             TotalCharges = totalCharges;
@@ -45,15 +55,23 @@
             RawData = new MemberUploadRawData() { Data = data };
             UserId = userId;
             FileName = fileName;
+            ProducerSubmissions = new List<ProducerSubmission>();
         }
 
-        public MemberUpload(Guid organisationId, Guid schemeId, string data, string fileName)
+        public MemberUpload(
+            Guid organisationId,
+            Scheme scheme,
+            string data,
+            string fileName)
         {
+            Guard.ArgumentNotNull(() => scheme, scheme);
+
             OrganisationId = organisationId;
-            SchemeId = schemeId;
+            Scheme = scheme;
             Errors = new List<MemberUploadError>();
             RawData = new MemberUploadRawData() { Data = data };
             FileName = fileName;
+            ProducerSubmissions = new List<ProducerSubmission>();
         }
 
         public void Submit()
@@ -65,7 +83,10 @@
 
             IsSubmitted = true;
 
-            RaiseEvent(new MemberUploadSubmittedEvent(this));
+            foreach (ProducerSubmission producerSubmission in ProducerSubmissions)
+            {
+                producerSubmission.RegisteredProducer.CurrentSubmission = producerSubmission;
+            }
         }
 
         protected MemberUpload()
