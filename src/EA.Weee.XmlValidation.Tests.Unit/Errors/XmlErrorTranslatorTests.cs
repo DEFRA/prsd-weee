@@ -1,7 +1,7 @@
-﻿namespace EA.Weee.Core.Tests.Unit.Helpers.Xml
+﻿namespace EA.Weee.XmlValidation.Tests.Unit.Errors
 {
     using System.Xml.Linq;
-    using Core.Helpers.Xml;
+    using XmlValidation.Errors;
     using Xunit;
 
     public class XmlErrorTranslatorTests

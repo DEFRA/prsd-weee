@@ -3,12 +3,12 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core.Helpers;
-    using Core.Helpers.Xml;
     using Domain;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
     using Weee.XmlValidation.BusinessValidation;
+    using Weee.XmlValidation.Errors;
     using Xml.Deserializer;
     using Xml.Schemas;
 
