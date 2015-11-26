@@ -6,12 +6,12 @@
     using System.Reflection;
     using System.Xml;
     using System.Xml.Linq;
-    using Core.Helpers.Xml;
     using Domain;
     using FakeItEasy;
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation.SchemaValidation;
     using Requests.Scheme.MemberRegistration;
+    using Weee.XmlValidation.Errors;
     using Xunit;
 
     public class SchemaValidatorTests

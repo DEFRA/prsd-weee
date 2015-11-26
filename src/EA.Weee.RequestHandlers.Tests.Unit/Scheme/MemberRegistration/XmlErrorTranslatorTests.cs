@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
     using System.Xml.Linq;
-    using Core.Helpers.Xml;
+    using Weee.XmlValidation.Errors;
     using Xunit;
 
     public class XmlErrorTranslatorTests
