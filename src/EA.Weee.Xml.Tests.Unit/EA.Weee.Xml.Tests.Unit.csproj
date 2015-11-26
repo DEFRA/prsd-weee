@@ -79,8 +79,8 @@
     <Compile Include="Converter\WhiteSpaceCollapserTests.cs" />
     <Compile Include="Converter\XmlConverterTests.cs" />
     <Compile Include="Deserializer\DeserializerTests.cs" />
-    <Compile Include="ExtensionsTests.cs" />
-    <Compile Include="MemberUpload\ProducerChargeBandCalculatorTests.cs" />
+    <Compile Include="MemberRegistration\ExtensionsTests.cs" />
+    <Compile Include="MemberRegistration\ProducerChargeBandCalculatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +97,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.XmlValidation.SchemaValidation
 {
-    using Core.Shared;
     using Core.Scheme;
+    using Core.Shared;
+    using Errors;
     using System.Collections.Generic;
     using System.Xml;
     using System.Xml.Linq;
     using System.Xml.Schema;
     using Xml.Converter;
     using Xml.MemberRegistration;
-    using Errors;
 
     public class SchemaValidator : ISchemaValidator
     {

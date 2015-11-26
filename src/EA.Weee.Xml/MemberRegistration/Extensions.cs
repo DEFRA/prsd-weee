@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
     using Domain;
-
     
     public static class Extensions
     {
