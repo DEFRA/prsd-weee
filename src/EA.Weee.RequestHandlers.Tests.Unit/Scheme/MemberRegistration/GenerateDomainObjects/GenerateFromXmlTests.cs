@@ -12,6 +12,7 @@
     using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
     using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using Requests.Scheme.MemberRegistration;
+    using Xml.Converter;
     using Xml.Schemas;
     using Xunit;
 
@@ -80,7 +81,7 @@
             var builder = new GenerateFromXmlBuilder();
 
             string xml = "Test xml contents";
-            A.CallTo(() => builder.XmlConverter.XmlToUtf8String(A<ProcessXMLFile>._)).Returns(xml);
+            A.CallTo(() => builder.XmlConverter.XmlToUtf8String(A<byte[]>._)).Returns(xml);
 
             schemeType scheme = new schemeType() { complianceYear = "2015" };
             A.CallTo(() => builder.XmlConverter.Deserialize(A<XDocument>._)).Returns(scheme);

@@ -1,11 +1,6 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
+﻿namespace EA.Weee.Xml.Tests.Unit.Converter
 {
-    using EA.Weee.RequestHandlers.Scheme.MemberRegistration;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using Xml.Converter;
     using Xunit;
 
     public class WhiteSpaceCollapserTests

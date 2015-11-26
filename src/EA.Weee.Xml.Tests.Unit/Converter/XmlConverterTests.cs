@@ -1,13 +1,11 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
+﻿namespace EA.Weee.Xml.Tests.Unit.Converter
 {
-    using FakeItEasy;
-    using System;
     using System.Linq;
     using System.Text;
     using System.Xml.Linq;
-    using Core.Exceptions;
-    using RequestHandlers.Scheme.MemberRegistration;
-    using Requests.Scheme.MemberRegistration;
+    using Deserialization;
+    using FakeItEasy;
+    using Xml.Converter;
     using Xml.Schemas;
     using Xunit;
 
@@ -28,7 +26,7 @@
             const string xml = "<root></root>";
 
             var data = Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"UTF-16\"?>" + xml);
-            var result = XmlConverter().Convert(new ProcessXMLFile(Guid.NewGuid(), data, "File name"));
+            var result = XmlConverter().Convert(data);
 
             Assert.Equal(xml, result.ToString());
         }
@@ -39,7 +37,7 @@
             const string xml = "<root></root>";
 
             var data = Encoding.UTF8.GetPreamble().Concat(Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"UTF-16\"?>" + xml)).ToArray();
-            var result = XmlConverter().Convert(new ProcessXMLFile(Guid.NewGuid(), data, "File name"));
+            var result = XmlConverter().Convert(data);
 
             Assert.Equal(xml, result.ToString());  
         }

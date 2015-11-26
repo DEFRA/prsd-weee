@@ -77,6 +77,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DataReturn\XmlSchemaValidationTests.cs" />
+    <Compile Include="Converter\WhiteSpaceCollapserTests.cs" />
+    <Compile Include="Converter\XmlConverterTests.cs" />
+    <Compile Include="Deserializer\DeserializerTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="ProducerChargeBandCalculatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
