@@ -3,9 +3,8 @@
     using System;
     using System.Xml.Linq;
     using System.Xml.Serialization;
-    using RequestHandlers.Scheme.MemberRegistration;
 
-    public class Deserializer : IDeserializer
+    internal class Deserializer : IDeserializer
     {
         public T Deserialize<T>(XDocument document)
         {
