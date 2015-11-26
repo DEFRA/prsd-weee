@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!-- edited with XMLSpy v2007 rel. 3 sp1 (http://www.altova.com) by Environment Agency (Environment Agency) -->
+<scheme xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.environment-agency.gov.uk/WEEE/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.environment-agency.gov.uk/WEEE/XMLSchema G:\NOTSFI~1\ENVIRO~1\WEEE\XMLFIL~1\RETURN~1\XSDSCH~2.XSD">
+	<XSDVersion>2.2</XSDVersion>
+	<approvalNo>WEE/AB1234CD/SCH</approvalNo>
+	<complianceYear>2009</complianceYear>
+	<tradingName>WEEE Producer Compliance Scheme</tradingName>
+	<schemeBusiness>
+		<company>
+			<companyName>WEEE Producer Compliance Scheme Ltd</companyName>
+			<companyNumber>12345678</companyNumber>
+		</company>
+	</schemeBusiness>
+	<producerList>
+		<producer>
+			<status>I</status>
+			<registrationNo/>
+			<tradingName>WEEE Producer</tradingName>
+			<SICCodeList>
+				<SICCode>11.10</SICCode>
+			</SICCodeList>
+			<VATRegistered>true</VATRegistered>
+			<annualTurnover>0</annualTurnover>
+			<annualTurnoverBand>Greater than one million pounds</annualTurnoverBand>
+			<obligationType>B2C</obligationType>
+			<producerIdentificationMark>
+				<graphic>weeeproducer.jpg</graphic>
+			</producerIdentificationMark>
+			<producerBusiness>
+				<correspondentForNotices/>
+				<company>
+					<companyName>WEEE Producer Ltd</companyName>
+					<companyNumber>87654321</companyNumber>
+					<registeredOffice>
+						<contactDetails>
+							<title>Mr</title>
+							<forename>John</forename>
+							<surname>Smith</surname>
+							<phoneLandLine>01215682202</phoneLandLine>
+							<phoneMobile/>
+							<fax/>
+							<email>johnsmith@weeeproducer.com</email>
+							<address>
+								<primaryName>1</primaryName>
+								<secondaryName/>
+								<streetName>Main Street</streetName>
+								<town/>
+								<postTown>Sheffield</postTown>
+								<locality/>
+								<administrativeArea>South Yorkshire</administrativeArea>
+								<country>ENGLAND</country>
+								<postCode>S1 1AB</postCode>
+							</address>
+						</contactDetails>
+					</registeredOffice>
+				</company>
+			</producerBusiness>
+		</producer>
+	</producerList>
+</scheme>
