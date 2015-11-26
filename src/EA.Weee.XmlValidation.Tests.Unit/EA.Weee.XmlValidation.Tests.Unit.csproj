@@ -84,26 +84,26 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="BusinessValidation\Domain\FakeProducer.cs" />
-    <Compile Include="BusinessValidation\Helpers\SearchMatcherTests.cs" />
-    <Compile Include="BusinessValidation\QuerySets\ProducerQuerySetTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\AmendmentHasNoProducerRegistrationNumberTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\CompanyAlreadyRegisteredTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\EnsureAnOverseasProducerIsNotBasedInTheUKTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\InsertHasProducerRegistrationNumberTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\ProducerChargeBandChangeTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\ProducerNameAlreadyRegisteredTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\ProducerRegistrationNumberValidityTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\UkBasedAuthorisedRepresentativeTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Scheme\CorrectSchemeApprovalNumberTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Scheme\DuplicateProducerNamesTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Scheme\DuplicateProducerRegistrationNumbersTests.cs" />
-    <Compile Include="BusinessValidation\XmlBusinessValidatorTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Domain\FakeProducer.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Helpers\SearchMatcherTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\QuerySets\ProducerQuerySetTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\AmendmentHasNoProducerRegistrationNumberTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\CompanyAlreadyRegisteredTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\EnsureAnOverseasProducerIsNotBasedInTheUKTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\InsertHasProducerRegistrationNumberTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerChargeBandChangeTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerNameAlreadyRegisteredTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerRegistrationNumberValidityTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\UkBasedAuthorisedRepresentativeTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Scheme\CorrectSchemeApprovalNumberTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Scheme\DuplicateProducerNamesTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Scheme\DuplicateProducerRegistrationNumbersTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\MemberRegistrationBusinessValidatorTests.cs" />
     <Compile Include="DataReturns\XmlSchemaValidationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\AnnualTurnoverMismatchTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\ProducerAlreadyRegisteredTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\ProducerNameChangeTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\AnnualTurnoverMismatchTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerAlreadyRegisteredTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerNameChangeTests.cs" />
     <Compile Include="Errors\XmlErrorTranslatorTests.cs" />
     <Compile Include="SchemaValidation\SchemaValidatorTests.cs" />
   </ItemGroup>
