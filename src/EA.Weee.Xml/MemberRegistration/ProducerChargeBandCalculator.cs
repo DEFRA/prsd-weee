@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
-    using Domain.Lookup;
+    using Domain.Lookup;    
 
     public class ProducerChargeBandCalculator : IProducerChargeBandCalculator
     {

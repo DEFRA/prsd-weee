@@ -6,7 +6,6 @@
     using BusinessValidation;
     using Xml;
     using Xml.MemberRegistration;
-    using schemeType = Xml.MemberRegistration.schemeType;
 
     public class DuplicateProducerNames : IDuplicateProducerNames
     {

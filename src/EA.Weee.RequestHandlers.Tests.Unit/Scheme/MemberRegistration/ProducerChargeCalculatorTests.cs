@@ -1,12 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
-    using DataAccess;
-    using Domain;
     using Domain.Lookup;
-    using Domain.Producer;
-    using Domain.Scheme;
-    using EA.Weee.RequestHandlers.Scheme.Interfaces;
-    using EA.Weee.Xml;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
     using System;

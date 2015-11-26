@@ -1,12 +1,10 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.Rules.Producer
 {
-    using System;
     using BusinessValidation;
     using Domain;
     using QuerySets;
-    using Xml;
+    using System;
     using Xml.MemberRegistration;
-    using schemeType = Xml.MemberRegistration.schemeType;
 
     public class ProducerAlreadyRegistered : IProducerAlreadyRegistered
     {

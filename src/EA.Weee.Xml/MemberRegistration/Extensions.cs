@@ -2,6 +2,7 @@
 {
     using Domain;
 
+    
     public static class Extensions
     {
         public static string GetProducerName(this producerType producer)

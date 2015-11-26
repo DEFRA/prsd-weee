@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Xml.Converter
 {
+    using MemberRegistration;
     using System.Xml.Linq;
-    using schemeType = MemberRegistration.schemeType;
 
     public interface IXmlConverter
     {
