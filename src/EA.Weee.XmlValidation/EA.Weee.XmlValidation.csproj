@@ -76,6 +76,8 @@
     <Compile Include="BusinessValidation\Rules\Producer\ICompanyAlreadyRegistered.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\ProducerChargeBandChange.cs" />
     <Compile Include="BusinessValidation\Rules\Producer\CompanyAlreadyRegistered.cs" />
+    <Compile Include="Errors\XmlErrorType.cs" />
+    <Compile Include="Errors\XmlValidationError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BusinessValidation\QuerySets\IMigratedProducerQuerySet.cs" />
     <Compile Include="BusinessValidation\QuerySets\ISchemeQuerySet.cs" />
