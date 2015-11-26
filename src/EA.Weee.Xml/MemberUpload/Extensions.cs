@@ -1,8 +1,6 @@
-﻿namespace EA.Weee.Xml
+﻿namespace EA.Weee.Xml.MemberUpload
 {
-    using System;
     using Domain;
-    using MemberUpload;
 
     public static class Extensions
     {
