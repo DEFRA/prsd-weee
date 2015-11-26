@@ -13,6 +13,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Xml.Serialization;
+    using Xml.Converter;
     using Xml.MemberRegistration;
 
     public class GenerateFromXml : IGenerateFromXml
@@ -28,7 +29,7 @@
 
         public async Task<IEnumerable<Producer>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
         {
-            var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
+            var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile.Data));
             var producers = await GenerateProducerData(deserializedXml, memberUpload.SchemeId, memberUpload, producerCharges);
             return producers;
         }
@@ -37,12 +38,12 @@
         {
             if (errors != null && errors.Any(e => e.ErrorType == MemberUploadErrorType.Schema))
             {
-                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile), errors, totalCharges, null, schemeId, messageXmlFile.FileName);
+                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile.Data), errors, totalCharges, null, schemeId, messageXmlFile.FileName);
             }
             else
             {
-                var xml = xmlConverter.XmlToUtf8String(messageXmlFile);
-                var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
+                var xml = xmlConverter.XmlToUtf8String(messageXmlFile.Data);
+                var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile.Data));
                 return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), schemeId, messageXmlFile.FileName);
             }
         }

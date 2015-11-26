@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
+﻿namespace EA.Weee.Xml.Deserialization
 {
     using System.Xml.Linq;
 

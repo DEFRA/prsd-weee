@@ -20,6 +20,8 @@
     using System.Threading.Tasks;
     using System.Xml.Linq;
     using System.Xml.Serialization;
+    using Xml.Converter;
+    using Xml.Deserialization;
     using Xml.MemberRegistration;
     using Xunit;
 
@@ -58,7 +60,7 @@
             IWhiteSpaceCollapser whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
 
             XmlConverter xmlConverter = new XmlConverter(whiteSpaceCollapser, new Deserializer());
-            var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
+            var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
 
             var producerCharges = new Dictionary<string, ProducerCharge>();
             var anyAmount = 30;
