@@ -34,3 +34,7 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+[assembly: InternalsVisibleTo("EA.Weee.DataAccess.Tests.Integration")]
+[assembly: InternalsVisibleTo("EA.Weee.RequestHandlers.Tests.Unit")]
+[assembly: InternalsVisibleTo("EA.Weee.Xml.Tests.Unit")]

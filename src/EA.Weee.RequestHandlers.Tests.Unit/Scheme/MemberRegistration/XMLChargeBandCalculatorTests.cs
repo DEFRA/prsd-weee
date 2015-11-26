@@ -7,6 +7,8 @@
     using System.IO;
     using System.Reflection;
     using System.Text;
+    using Xml.Converter;
+    using Xml.Deserialization;
     using Xml.MemberRegistration;
     using Xunit;
 
