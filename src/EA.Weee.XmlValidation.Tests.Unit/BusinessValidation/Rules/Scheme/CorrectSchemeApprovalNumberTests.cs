@@ -2,10 +2,10 @@
 {
     using System;
     using FakeItEasy;
-    using Xml.Schemas;
     using XmlValidation.BusinessValidation.QuerySets;
     using XmlValidation.BusinessValidation.Rules.Scheme;
     using Xunit;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public class CorrectSchemeApprovalNumberTests
     {

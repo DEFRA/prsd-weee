@@ -6,7 +6,7 @@
     using Deserialization;
     using FakeItEasy;
     using Xml.Converter;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
     using Xunit;
 
     public class XmlConverterTests

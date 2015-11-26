@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.Rules.Producer
 {
     using System.Globalization;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
     using XmlValidation.BusinessValidation.Rules.Producer;
     using Xunit;
 

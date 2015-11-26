@@ -3,6 +3,7 @@
     using Autofac;
     using Converter;
     using Deserialization;
+    using MemberUpload;
 
     public class XmlModule : Module
     {

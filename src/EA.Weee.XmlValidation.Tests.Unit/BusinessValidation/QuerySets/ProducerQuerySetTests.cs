@@ -7,7 +7,6 @@
     using FakeItEasy;
     using Weee.Domain;
     using Weee.Domain.Producer;
-    using Xml.Schemas;
     using XmlValidation.BusinessValidation.QuerySets;
     using XmlValidation.BusinessValidation.QuerySets.Queries.Producer;
     using Xunit;

@@ -5,7 +5,8 @@
     using Domain;
     using QuerySets;
     using Xml;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public class ProducerAlreadyRegistered : IProducerAlreadyRegistered
     {

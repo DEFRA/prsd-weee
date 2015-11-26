@@ -3,7 +3,7 @@
     using BusinessValidation;
     using Core.Shared;
     using Xml;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
 
     public class AnnualTurnoverMismatch : IAnnualTurnoverMismatch
     {

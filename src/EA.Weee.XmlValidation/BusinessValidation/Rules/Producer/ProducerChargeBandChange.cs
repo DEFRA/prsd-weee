@@ -3,13 +3,14 @@
     using Domain.Lookup;
     using EA.Weee.Domain;
     using EA.Weee.Xml;
-    using EA.Weee.Xml.Schemas;
     using EA.Weee.XmlValidation.BusinessValidation.QuerySets;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Xml.MemberUpload;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public class ProducerChargeBandChange : IProducerChargeBandChange
     {

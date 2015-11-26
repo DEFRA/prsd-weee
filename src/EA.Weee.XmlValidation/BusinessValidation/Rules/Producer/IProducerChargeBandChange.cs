@@ -5,7 +5,8 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using EA.Weee.Xml.Schemas;
+    using Xml.MemberUpload;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public interface IProducerChargeBandChange
     {

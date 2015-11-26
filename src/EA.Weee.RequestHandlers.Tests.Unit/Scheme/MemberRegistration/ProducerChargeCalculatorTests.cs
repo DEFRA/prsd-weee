@@ -12,7 +12,7 @@
     using System;
     using System.Collections.Generic;
     using Weee.Tests.Core;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
     using Xunit;
 
     public class ProducerChargeCalculatorTests

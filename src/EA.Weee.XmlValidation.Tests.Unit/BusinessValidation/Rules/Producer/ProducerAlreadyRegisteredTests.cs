@@ -6,10 +6,11 @@
     using FakeItEasy;
     using Weee.Domain;
     using Xml;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
     using XmlValidation.BusinessValidation.QuerySets;
     using XmlValidation.BusinessValidation.Rules.Producer;
     using Xunit;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public class ProducerAlreadyRegisteredEvaluatorTests
     {

@@ -9,7 +9,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
 
     public class ProducerChargeCalculator : IProducerChargeCalculator
     {

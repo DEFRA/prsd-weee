@@ -4,16 +4,15 @@
     using System.Xml;
     using System.Xml.Linq;
     using System.Xml.Schema;
+    using Core.Scheme;
+    using Core.Scheme.MemberUploadTesting;
     using Core.Shared;
     using Weee.XmlValidation.Errors;
     using Xml.Converter;
-    using Xml.Schemas;
+    using schemeType = Xml.MemberUpload.schemeType;
 
     public class SchemaValidator : ISchemaValidator
     {
-        private const string SchemaLocation = @"EA.Weee.Xml.Schemas.v3schema.xsd";
-        private const string SchemaNamespace = @"http://www.environment-agency.gov.uk/WEEE/XMLSchema";
-
         private readonly IXmlErrorTranslator xmlErrorTranslator;
         private readonly IXmlConverter xmlConverter;
 
@@ -23,7 +22,7 @@
             this.xmlConverter = xmlConverter;
         }
 
-        public IEnumerable<XmlValidationError> Validate(byte[] data)
+        public IEnumerable<XmlValidationError> Validate(byte[] data, string schemaName, string schemaNamespace, SchemaVersion schemaVersion)
         {
             var errors = new List<XmlValidationError>();
 
@@ -40,7 +39,7 @@
                 var source = xmlConverter.Convert(data);
                 var schemas = new XmlSchemaSet();
 
-                using (var stream = typeof(schemeType).Assembly.GetManifestResourceStream(SchemaLocation))
+                using (var stream = typeof(schemeType).Assembly.GetManifestResourceStream(schemaName))
                 {
                     using (var schemaReader = XmlReader.Create(stream))
                     {
@@ -49,10 +48,10 @@
                 }
 
                 string sourceNamespace = source.Root.GetDefaultNamespace().NamespaceName;
-                if (sourceNamespace != SchemaNamespace)
+                if (sourceNamespace != schemaNamespace)
                 {
                     errors.Add(new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema,
-                        string.Format("The namespace of the provided XML file ({0}) doesn't match the namespace of the WEEE schema ({1}).", sourceNamespace, SchemaNamespace)));
+                        string.Format("The namespace of the provided XML file ({0}) doesn't match the namespace of the WEEE schema ({1}).", sourceNamespace, schemaNamespace)));
                     return errors;
                 }
 
@@ -65,13 +64,13 @@
                             asXElement != null
                                 ? new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema,
                                     xmlErrorTranslator.MakeFriendlyErrorMessage(asXElement, args.Exception.Message,
-                                        args.Exception.LineNumber), args.Exception.LineNumber)
+                                        args.Exception.LineNumber, schemaVersion), args.Exception.LineNumber)
                                 : new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, args.Exception.Message, args.Exception.LineNumber));
                     });
             }
             catch (XmlException ex)
             {
-                string friendlyMessage = xmlErrorTranslator.MakeFriendlyErrorMessage(ex.Message);
+                string friendlyMessage = xmlErrorTranslator.MakeFriendlyErrorMessage(ex.Message, schemaVersion);
 
                 errors.Add(new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, friendlyMessage));
             }

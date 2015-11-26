@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
     using EA.Weee.RequestHandlers.Scheme.Interfaces;
-    using EA.Weee.Xml.Schemas;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
@@ -13,6 +12,7 @@
     using System.Xml.Linq;
     using Xml.Converter;
     using Xml.Deserialization;
+    using Xml.MemberUpload;
     using Xunit;
 
     public class XmlChargeBandCalculatorTests

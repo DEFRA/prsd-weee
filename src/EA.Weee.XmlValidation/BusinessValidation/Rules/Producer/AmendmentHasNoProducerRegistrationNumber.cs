@@ -2,7 +2,7 @@
 {
     using BusinessValidation;
     using Xml;
-    using Xml.Schemas;
+    using Xml.MemberUpload;
 
     public class AmendmentHasNoProducerRegistrationNumber : IAmendmentHasNoProducerRegistrationNumber
     {
