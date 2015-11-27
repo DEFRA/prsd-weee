@@ -5,9 +5,11 @@
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Reflection;
     using System.Runtime.InteropServices.WindowsRuntime;
     using System.Web.Mvc;
     using Prsd.Core.Domain;
+    using Scheme;
 
     public static class Extensions
     {
@@ -107,6 +109,15 @@
             }
 
             return false;
+        }
+
+        public static TAttribute GetAttribute<TAttribute>(this Enum enumValue)
+                where TAttribute : Attribute
+        {
+            return enumValue.GetType()
+                            .GetMember(enumValue.ToString())
+                            .First()
+                            .GetCustomAttribute<TAttribute>();
         }
     }
 }

@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SchemeReturn xmlns="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <XSDVersion></XSDVersion>
+  <ApprovalNo>WEE/FA0000KE/SCH</ApprovalNo>
+  <ComplianceYear>2015</ComplianceYear>
+  <ReturnPeriod>Quarter 1: January - March</ReturnPeriod>
+  <CollectedFromDCF>
+    <Return>
+      <CategoryName>Large Household Appliances</CategoryName>
+      <ObligationType>B2C</ObligationType>
+      <TonnesReturnValue>1</TonnesReturnValue>
+    </Return>
+  </CollectedFromDCF>
+  <DeliveredToATF>
+    <DeliveredToFacility>
+      <AATFApprovalNo>WEE/TE0001ST/ATF</AATFApprovalNo>
+      <FacilityName>Test 1</FacilityName>
+    </DeliveredToFacility>
+    <Return>
+      <CategoryName>Large Household Appliances</CategoryName>
+      <ObligationType>B2B</ObligationType>
+      <TonnesReturnValue>1</TonnesReturnValue>
+    </Return>
+  </DeliveredToATF>
+  <DeliveredToAE>
+    <DeliveredToOperator>
+      <AEApprovalNo>WEE/AA0000AA/AE</AEApprovalNo>
+      <OperatorName>Dummy</OperatorName>
+    </DeliveredToOperator>
+    <Return>
+      <CategoryName>Large Household Appliances</CategoryName>
+      <ObligationType>B2B</ObligationType>
+      <TonnesReturnValue>0</TonnesReturnValue>
+    </Return>
+  </DeliveredToAE>
+  <B2CWEEEFromDistributors>
+    <Return>
+      <CategoryName>Large Household Appliances</CategoryName>
+      <ObligationType>B2C</ObligationType>
+      <TonnesReturnValue>1</TonnesReturnValue>
+    </Return>
+  </B2CWEEEFromDistributors>
+  <B2CWEEEFromFinalHolders>
+    <Return>
+      <CategoryName>Large Household Appliances</CategoryName>
+      <ObligationType>B2C</ObligationType>
+      <TonnesReturnValue>1</TonnesReturnValue>
+    </Return>
+  </B2CWEEEFromFinalHolders>
+  <ProducerList>
+    <Producer>
+      <RegistrationNo>WEE/AA1111AA</RegistrationNo>
+      <ProducerCompanyName>One</ProducerCompanyName>
+      <Return>
+        <CategoryName>Large Household Appliances</CategoryName>
+        <ObligationType>B2B</ObligationType>
+        <TonnesReturnValue>1</TonnesReturnValue>
+      </Return>
+    </Producer>
+    <Producer>
+      <RegistrationNo>WEE/AA1111AA</RegistrationNo>
+      <ProducerCompanyName>One</ProducerCompanyName>
+      <Return>
+        <CategoryName>Large Household Appliances</CategoryName>
+        <ObligationType>B2C</ObligationType>
+        <TonnesReturnValue>10</TonnesReturnValue>
+      </Return>
+    </Producer>
+  </ProducerList>
+</SchemeReturn>
