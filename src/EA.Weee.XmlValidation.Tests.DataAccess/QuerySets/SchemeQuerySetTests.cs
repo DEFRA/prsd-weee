@@ -6,7 +6,7 @@
     using System;
     using System.Collections.Generic;
     using Weee.Tests.Core;
-    using XmlValidation.BusinessValidation.QuerySets;
+    using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
     using Xunit;
 
     public class SchemeQuerySetTests

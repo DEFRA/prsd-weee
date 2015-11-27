@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Xml.Serialization;
     using Domain;
     using Domain.Producer;
     using Domain.Scheme;
@@ -13,8 +8,13 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Requests.Scheme.MemberRegistration;
-    using Xml;
-    using Xml.Schemas;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Xml.Serialization;
+    using Xml.Converter;
+    using Xml.MemberRegistration;
 
     public class GenerateFromXml : IGenerateFromXml
     {
@@ -29,7 +29,7 @@
 
         public async Task<IEnumerable<ProducerSubmission>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
         {
-            var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
+            var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile.Data));
             var producers = await GenerateProducerData(deserializedXml, memberUpload, producerCharges);
             return producers;
         }
@@ -38,12 +38,12 @@
         {
             if (errors != null && errors.Any(e => e.ErrorType == MemberUploadErrorType.Schema))
             {
-                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile), errors, totalCharges, null, scheme, messageXmlFile.FileName);
+                return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile.Data), errors, totalCharges, null, scheme, messageXmlFile.FileName);
             }
             else
             {
-                var xml = xmlConverter.XmlToUtf8String(messageXmlFile);
-                var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile));
+                var xml = xmlConverter.XmlToUtf8String(messageXmlFile.Data);
+                var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile.Data));
                 return new MemberUpload(messageXmlFile.OrganisationId, xml, errors, totalCharges, int.Parse(deserializedXml.complianceYear), scheme, messageXmlFile.FileName);
             }
         }
@@ -105,7 +105,7 @@
                 switch (producerData.status)
                 {
                     case statusType.I:
-                        producerRegistrationNo = generatedPrns.Dequeue();
+                    producerRegistrationNo = generatedPrns.Dequeue();
                         break;
 
                     case statusType.A:
@@ -158,13 +158,13 @@
                         if (registeredProducer.CurrentSubmission == null)
                         {
                             producers.Add(producer);
-                        }
-                        else
-                        {
+                                }
+                                else
+                                {
                             if (!registeredProducer.CurrentSubmission.Equals(producer))
                             {
-                                producers.Add(producer);
-                            }
+                                    producers.Add(producer);
+                                }
                             else
                             {
                                 /*

@@ -1,18 +1,16 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.GenerateDomainObjects
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Xml.Linq;
     using Domain;
-    using Domain.Producer;
     using Domain.Scheme;
     using FakeItEasy;
-    using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
     using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using Requests.Scheme.MemberRegistration;
-    using Xml.Schemas;
+    using System;
+    using System.Collections.Generic;
+    using System.Xml.Linq;
+    using Xml.Converter;
+    using Xml.MemberRegistration;
     using Xunit;
 
     public class GenerateFromXmlTests
@@ -84,7 +82,7 @@
             var builder = new GenerateFromXmlBuilder();
 
             string xml = "Test xml contents";
-            A.CallTo(() => builder.XmlConverter.XmlToUtf8String(A<ProcessXMLFile>._)).Returns(xml);
+            A.CallTo(() => builder.XmlConverter.XmlToUtf8String(A<byte[]>._)).Returns(xml);
 
             schemeType xmlScheme = new schemeType() { complianceYear = "2015" };
             A.CallTo(() => builder.XmlConverter.Deserialize(A<XDocument>._)).Returns(xmlScheme);
