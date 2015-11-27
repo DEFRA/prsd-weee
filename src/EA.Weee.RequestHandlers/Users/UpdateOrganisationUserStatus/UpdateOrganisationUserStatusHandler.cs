@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Users.UpdateOrganisationUserStatus
 {
+    using System;
+    using System.Threading.Tasks;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Users;
     using Security;
-    using System;
-    using System.Threading.Tasks;
 
     internal class UpdateOrganisationUserStatusHandler : IRequestHandler<UpdateOrganisationUserStatus, int>
     {

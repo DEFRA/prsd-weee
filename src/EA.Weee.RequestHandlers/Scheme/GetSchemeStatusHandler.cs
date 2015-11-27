@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme
 {
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
     using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
 
     public class GetSchemeStatusHandler : IRequestHandler<GetSchemeStatus, SchemeStatus>
     {

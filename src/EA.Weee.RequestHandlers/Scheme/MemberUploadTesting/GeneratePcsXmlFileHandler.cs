@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberUploadTesting
 {
-    using Core.Scheme.MemberUploadTesting;
-    using Prsd.Core;
-    using Prsd.Core.Mediator;
-    using Requests.Scheme.MemberUploadTesting;
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
     using System.Xml.Linq;
+    using Core.Scheme.MemberUploadTesting;
+    using Prsd.Core;
+    using Prsd.Core.Mediator;
+    using Requests.Scheme.MemberUploadTesting;
 
     /// <summary>
     /// Handles requests to generate XML files that can be used to test the PCS

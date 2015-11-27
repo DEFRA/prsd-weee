@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.Rules.Producer
 {
+    using System.Linq;
     using BusinessValidation;
     using QuerySets;
-    using System.Linq;
     using Xml.MemberRegistration;
 
     public class ProducerRegistrationNumberValidity : IProducerRegistrationNumberValidity

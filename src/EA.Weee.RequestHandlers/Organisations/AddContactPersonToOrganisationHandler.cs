@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
     using DataAccess;
     using Mappings;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Security;
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
 
     internal class AddContactPersonToOrganisationHandler : IRequestHandler<AddContactPersonToOrganisation, Guid>
     {

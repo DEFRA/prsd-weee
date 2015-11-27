@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.FindMatchingOrganisations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Domain.Organisation;
     using FakeItEasy;
     using Prsd.Core;
@@ -7,10 +11,6 @@
     using RequestHandlers.Organisations.FindMatchingOrganisations;
     using RequestHandlers.Organisations.FindMatchingOrganisations.DataAccess;
     using Requests.Organisations;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

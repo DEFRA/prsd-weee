@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Tests.Core
 {
+    using System;
     using Domain;
     using Domain.Organisation;
-    using System;
 
     public class OrganisationUserHelper
     {

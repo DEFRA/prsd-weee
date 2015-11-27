@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.Interfaces
 {
+    using System.Collections.Generic;
     using Domain.Scheme;
     using Requests.Scheme.MemberRegistration;
-    using System.Collections.Generic;
 
     public interface IXmlValidator
     {

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
-    using EA.Weee.Domain.Producer;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using EA.Weee.Domain.Producer;
 
     public interface IGetProducerDetailsDataAccess
     {

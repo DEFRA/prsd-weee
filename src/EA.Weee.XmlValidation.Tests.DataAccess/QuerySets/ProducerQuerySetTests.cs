@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.DataAccess.BusinessValidation.Rules.QuerySets
 {
-    using Domain;
-    using EA.Weee.Tests.Core.Model;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Domain;
+    using EA.Weee.Tests.Core.Model;
     using Weee.DataAccess;
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets.Queries.Producer;

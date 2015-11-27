@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.MemberRegistration.Rules.Scheme
 {
-    using FakeItEasy;
     using System;
+    using FakeItEasy;
     using Xml.MemberRegistration;
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
     using XmlValidation.BusinessValidation.MemberRegistration.Rules.Scheme;

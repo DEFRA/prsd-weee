@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Web.Modules
 {
+    using System;
     using Api.Client;
     using Autofac;
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Services;
-    using System;
 
     public class ApiClientModule : Module
     {

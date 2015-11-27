@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
-    using Domain.Organisation;
     using System.Data.Entity.ModelConfiguration;
+    using Domain.Organisation;
 
     internal class ContactMapping : EntityTypeConfiguration<Contact>
     {

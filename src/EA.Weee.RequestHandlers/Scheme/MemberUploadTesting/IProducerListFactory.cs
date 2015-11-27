@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberUploadTesting
 {
-    using Core.Scheme.MemberUploadTesting;
     using System.Threading.Tasks;
+    using Core.Scheme.MemberUploadTesting;
 
     /// <summary>
     /// Creates a <see cref="ProducerList"/> based on a collection of settings specifying the

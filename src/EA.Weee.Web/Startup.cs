@@ -5,11 +5,6 @@ using Microsoft.Owin;
 
 namespace EA.Weee.Web
 {
-    using Autofac;
-    using Autofac.Integration.Mvc;
-    using Infrastructure;
-    using Owin;
-    using Services;
     using System.ComponentModel.DataAnnotations;
     using System.Reflection;
     using System.Web;
@@ -17,6 +12,11 @@ namespace EA.Weee.Web
     using System.Web.Mvc;
     using System.Web.Optimization;
     using System.Web.Routing;
+    using Autofac;
+    using Autofac.Integration.Mvc;
+    using Infrastructure;
+    using Owin;
+    using Services;
     using Thinktecture.IdentityModel.Client;
 
     public partial class Startup

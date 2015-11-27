@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Api.Client.Entities
 {
-    using EA.Weee.Core.Validation;
     using System.ComponentModel.DataAnnotations;
+    using EA.Weee.Core.Validation;
 
     public class InternalUserCreationData : UserCreationData
     {

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets
 {
-    using DataAccess;
     using System;
     using System.Linq;
+    using DataAccess;
 
     public class SchemeQuerySet : ISchemeQuerySet
     {

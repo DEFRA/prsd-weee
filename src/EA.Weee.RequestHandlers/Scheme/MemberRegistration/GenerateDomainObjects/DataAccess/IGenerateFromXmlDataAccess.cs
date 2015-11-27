@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess
 {
-    using Domain;
-    using Domain.Producer;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Domain;
+    using Domain.Producer;
 
     public interface IGenerateFromXmlDataAccess
     {

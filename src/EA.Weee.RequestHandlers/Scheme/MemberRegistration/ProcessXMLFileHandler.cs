@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading.Tasks;
     using DataAccess;
     using Domain;
     using Domain.Producer;
@@ -8,12 +14,6 @@
     using Interfaces;
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Xml.Converter;
 
     internal class ProcessXMLFileHandler : IRequestHandler<ProcessXMLFile, Guid>

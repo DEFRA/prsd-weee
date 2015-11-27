@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Core.Validation
 {
-    using Configuration;
-    using Shared;
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using Configuration;
+    using Shared;
 
     [AttributeUsage(AttributeTargets.Property)]
     public class InternalEmailAddressAttribute : ValidationAttribute

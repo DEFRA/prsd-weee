@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Core.Scheme;
     using Domain.Scheme;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class GetAllApprovedSchemesHandler : IRequestHandler<GetAllApprovedSchemes, List<SchemeData>>
     {

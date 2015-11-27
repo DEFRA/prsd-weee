@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using Api.Client;
-    using Base;
-    using Core.Organisations;
-    using Core.Shared;
-    using Infrastructure;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Api.Client;
+    using Base;
+    using Core.Organisations;
+    using Core.Shared;
+    using Infrastructure;
     using ViewModels.Organisation;
     using ViewModels.Shared;
     using Weee.Requests.Organisations;

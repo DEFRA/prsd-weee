@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Principal;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
     using Infrastructure;
@@ -8,12 +14,6 @@
     using Prsd.Core.Web.Mvc.Extensions;
     using Prsd.Core.Web.OAuth;
     using Services;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Principal;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using ViewModels.NewUser;
 
     [Authorize]

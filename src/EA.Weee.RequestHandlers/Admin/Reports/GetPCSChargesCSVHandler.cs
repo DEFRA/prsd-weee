@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports
 {
+    using System;
+    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
@@ -7,8 +9,6 @@
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
-    using System;
-    using System.Threading.Tasks;
 
     internal class GetPCSChargesCSVHandler : IRequestHandler<GetPCSChargesCSV, CSVFileData>
     {

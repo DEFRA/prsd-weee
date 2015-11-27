@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
+    using System;
+    using System.Threading.Tasks;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
-    using System;
-    using System.Threading.Tasks;
 
     public class UpdateOrganisationContactDetailsDataAccess : IUpdateOrganisationContactDetailsDataAccess
     {

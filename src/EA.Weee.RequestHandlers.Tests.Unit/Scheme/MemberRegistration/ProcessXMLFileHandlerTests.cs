@@ -1,5 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Security;
+    using System.Threading.Tasks;
     using DataAccess;
     using Domain;
     using Domain.Lookup;
@@ -11,11 +16,6 @@
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Security;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xml.Converter;
     using Xunit;

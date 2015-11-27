@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.GetOrganisationOverview
 {
+    using System.Threading.Tasks;
     using Core.Organisations;
     using DataAccess;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Requests.Organisations;
     using Security;
-    using System.Threading.Tasks;
 
     public class GetOrganisationOverviewHandler : IRequestHandler<GetOrganisationOverview, OrganisationOverview>
     {

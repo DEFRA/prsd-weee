@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.MemberRegistration.Domain
 {
-    using FakeItEasy;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using FakeItEasy;
     using Weee.Domain;
     using Weee.Domain.Lookup;
     using Weee.Domain.Producer;

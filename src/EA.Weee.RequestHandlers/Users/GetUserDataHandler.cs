@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Users
 {
+    using System;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Core.Users;
     using DataAccess;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Users;
     using Security;
-    using System;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     internal class GetUserDataHandler : IRequestHandler<GetUserData, UserData>
     {

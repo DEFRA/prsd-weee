@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Scheme.MemberRegistration
 {
+    using System;
     using Core.Scheme;
     using Prsd.Core.Mediator;
-    using System;
 
     public class GetMemberUploadById : IRequest<MemberUploadData>
     {

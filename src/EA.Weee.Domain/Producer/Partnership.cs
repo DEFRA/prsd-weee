@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
-    using EA.Weee.Domain;
-    using Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
+    using EA.Weee.Domain;
+    using Prsd.Core.Domain;
 
     public class Partnership : Entity, IEquatable<Partnership>
     {

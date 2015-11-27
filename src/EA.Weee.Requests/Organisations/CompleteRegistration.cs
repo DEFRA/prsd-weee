@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Requests.Organisations
 {
-    using Prsd.Core.Mediator;
     using System;
+    using Prsd.Core.Mediator;
 
     public class CompleteRegistration : IRequest<Guid>
     {

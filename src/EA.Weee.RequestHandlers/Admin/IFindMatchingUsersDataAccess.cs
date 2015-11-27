@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
-    using Core.Admin;
     using System.Threading.Tasks;
+    using Core.Admin;
 
     public interface IFindMatchingUsersDataAccess
     {

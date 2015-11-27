@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using FakeItEasy;
@@ -7,9 +10,6 @@
     using RequestHandlers.Admin;
     using RequestHandlers.Security;
     using Requests.Admin;
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

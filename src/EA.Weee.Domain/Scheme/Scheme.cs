@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Domain.Scheme
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Organisation;
     using Producer;
     using Prsd.Core;
     using Prsd.Core.Domain;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     public class Scheme : Entity
     {

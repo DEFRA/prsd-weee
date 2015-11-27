@@ -5,6 +5,8 @@ using Microsoft.Owin;
 
 namespace EA.Weee.Api
 {
+    using System.Web.Http;
+    using System.Web.Http.ExceptionHandling;
     using Autofac;
     using Autofac.Integration.WebApi;
     using Elmah.Contrib.WebApi;
@@ -12,8 +14,6 @@ namespace EA.Weee.Api
     using Microsoft.Owin.Security.DataProtection;
     using Owin;
     using Services;
-    using System.Web.Http;
-    using System.Web.Http.ExceptionHandling;
     using Thinktecture.IdentityServer.AccessTokenValidation;
     using Thinktecture.IdentityServer.Core.Configuration;
     using Thinktecture.IdentityServer.Core.Logging;

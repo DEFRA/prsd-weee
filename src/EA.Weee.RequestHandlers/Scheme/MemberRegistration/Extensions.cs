@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
+    using System;
     using Core.Helpers;
     using Domain;
     using Domain.Scheme;
-    using System;
     using Weee.XmlValidation.Errors;
 
     public static class Extensions

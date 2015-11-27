@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Test.ViewModels
 {
-    using EA.Weee.Web.ViewModels.Shared;
     using System.Collections.Generic;
+    using EA.Weee.Web.ViewModels.Shared;
 
     public class HomeViewModel : RadioButtonStringCollectionViewModel
     {

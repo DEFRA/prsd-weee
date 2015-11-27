@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
-    using Prsd.Core.Domain;
     using System;
+    using Prsd.Core.Domain;
 
     public class SICCode : Entity, IEquatable<SICCode>, IComparable<SICCode>
     {

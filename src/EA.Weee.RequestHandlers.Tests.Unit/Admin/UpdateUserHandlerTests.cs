@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using EA.Weee.DataAccess.Identity;
     using FakeItEasy;
     using Microsoft.AspNet.Identity;
     using RequestHandlers.Admin;
     using RequestHandlers.Security;
     using Requests.Admin;
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

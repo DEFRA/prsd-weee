@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.Create
 {
+    using System.Security;
+    using System.Threading.Tasks;
     using DataAccess;
     using Domain.Organisation;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Organisations.Create;
     using Requests.Organisations.Create;
-    using System.Security;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class CreateSoleTraderRequestHandlerTests : CreateOrganisationRequestHandlerTestsBase

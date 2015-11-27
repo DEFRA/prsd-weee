@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Email.EventHandlers
 {
-    using Domain.Organisation;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Domain.Organisation;
 
     public interface IOrganisationUserRequestEventHandlerDataAccess
     {

@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using Core.Helpers;
     using Core.Scheme;
     using Domain;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
-    using System.Collections.Generic;
-    using System.Linq;
     using Weee.XmlValidation.BusinessValidation.MemberRegistration;
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;

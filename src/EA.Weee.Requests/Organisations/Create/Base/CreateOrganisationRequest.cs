@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Requests.Organisations.Create.Base
 {
-    using Prsd.Core.Mediator;
     using System;
+    using Prsd.Core.Mediator;
 
     public abstract class CreateOrganisationRequest : IRequest<Guid>
     {

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
-    using Prsd.Core.Domain;
     using System;
+    using Prsd.Core.Domain;
 
     public class BrandName : Entity, IEquatable<BrandName>, IComparable<BrandName>
     {

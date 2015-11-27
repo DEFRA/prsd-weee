@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Tests.Core.Model
 {
-    using Domain;
-    using Domain.Lookup;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Domain;
+    using Domain.Lookup;
 
     /// <summary>
     /// This class provides helper methods for deterministically seeding a database.

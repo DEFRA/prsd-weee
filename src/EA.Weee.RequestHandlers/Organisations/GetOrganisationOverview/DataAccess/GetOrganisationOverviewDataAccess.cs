@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.GetOrganisationOverview.DataAccess
 {
-    using Domain;
     using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain;
     using Weee.DataAccess;
 
     public class GetOrganisationOverviewDataAccess : IGetOrganisationOverviewDataAccess

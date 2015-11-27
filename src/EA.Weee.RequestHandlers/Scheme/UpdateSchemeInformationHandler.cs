@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme
 {
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
     using Core.Helpers;
     using DataAccess;
     using Domain.Scheme;
@@ -7,9 +10,6 @@
     using Mappings;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
 
     internal class UpdateSchemeInformationHandler : IRequestHandler<UpdateSchemeInformation, Guid>
     {

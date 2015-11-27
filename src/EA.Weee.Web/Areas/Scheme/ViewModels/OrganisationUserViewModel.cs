@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
+    using System;
     using Core.Organisations;
     using Core.Shared;
-    using System;
     using Web.ViewModels.Shared;
 
     public class OrganisationUserViewModel : RadioButtonGenericStringCollectionViewModel<UserStatus>

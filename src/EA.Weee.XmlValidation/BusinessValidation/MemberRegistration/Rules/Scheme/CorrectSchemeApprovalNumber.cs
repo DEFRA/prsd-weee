@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.Rules.Scheme
 {
+    using System;
     using BusinessValidation;
     using QuerySets;
-    using System;
     using Xml.MemberRegistration;
 
     public class CorrectSchemeApprovalNumber : ICorrectSchemeApprovalNumber

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared
 {
+    using System;
     using Core.Organisations;
     using Core.Shared;
-    using System;
     using Weee.Requests.Organisations;
 
     public class AddressViewModel

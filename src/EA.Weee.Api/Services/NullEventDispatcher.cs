@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Api.Services
 {
-    using Prsd.Core.Domain;
     using System.Threading.Tasks;
+    using Prsd.Core.Domain;
 
     internal class NullEventDispatcher : IEventDispatcher
     {

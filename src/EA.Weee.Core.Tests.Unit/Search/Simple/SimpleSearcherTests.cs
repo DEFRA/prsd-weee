@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Search.Simple
 {
-    using EA.Weee.Core.Search;
-    using EA.Weee.Core.Search.Simple;
-    using FakeItEasy;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using EA.Weee.Core.Search;
+    using EA.Weee.Core.Search.Simple;
+    using FakeItEasy;
     using Xunit;
 
     public class SimpleSearcherTests

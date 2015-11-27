@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Core.Admin;
     using EA.Weee.Core.Shared;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
  
     internal class FindMatchingUsersHandler : IRequestHandler<FindMatchingUsers, UserSearchDataResult>
     {

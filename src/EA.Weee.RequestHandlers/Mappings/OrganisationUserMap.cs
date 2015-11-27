@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
+    using System;
     using Core.Organisations;
     using Core.Users;
     using Domain;
     using Domain.Organisation;
     using Prsd.Core.Mapper;
-    using System;
     using OrganisationUserStatus = Core.Shared.UserStatus;
 
     public class OrganisationUserMap : IMap<OrganisationUser, OrganisationUserData>

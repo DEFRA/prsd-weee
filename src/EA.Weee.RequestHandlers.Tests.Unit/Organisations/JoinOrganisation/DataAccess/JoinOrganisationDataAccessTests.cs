@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.JoinOrganisation.DataAccess
 {
+    using System;
+    using System.Collections.Generic;
     using Core.Helpers;
     using Domain;
     using Domain.Organisation;
     using FakeItEasy;
     using RequestHandlers.Organisations.JoinOrganisation.DataAccess;
-    using System;
-    using System.Collections.Generic;
     using Weee.DataAccess;
     using Weee.Tests.Core;
     using Xunit;

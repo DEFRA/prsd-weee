@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
-    using FakeItEasy;
-    using Prsd.Core.Domain;
     using System;
     using System.Linq;
+    using FakeItEasy;
+    using Prsd.Core.Domain;
     using Xunit;
 
     public class MigratedProducersIntegration

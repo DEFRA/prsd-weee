@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Api.Identity
 {
-    using EA.Prsd.Core;
-    using Microsoft.AspNet.Identity;
-    using Newtonsoft.Json;
     using System;
     using System.Data.SqlClient;
     using System.Threading.Tasks;
+    using EA.Prsd.Core;
+    using Microsoft.AspNet.Identity;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// An implementation of the ISecurityEventAuditor interface which

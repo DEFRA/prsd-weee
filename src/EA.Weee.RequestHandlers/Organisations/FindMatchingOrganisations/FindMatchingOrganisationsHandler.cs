@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.FindMatchingOrganisations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Core.Organisations;
     using Core.Shared;
     using DataAccess;
@@ -8,10 +12,6 @@
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using OrganisationType = Domain.Organisation.OrganisationType;
 
     internal class FindMatchingOrganisationsHandler :
