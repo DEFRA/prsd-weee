@@ -230,6 +230,7 @@
     <Compile Include="Areas\Admin\ViewModels\Reports\ProducerPublicRegisterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
+    <Compile Include="Areas\Scheme\Controllers\DataReturnsController.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessXmlFileRequest.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
@@ -532,6 +533,7 @@
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_media-player.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
+    <Content Include="Areas\Scheme\Views\DataReturns\SubmitDataReturns.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerPublicRegister.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
@@ -662,7 +664,7 @@
     <Compile Include="Areas\Admin\ViewModels\User\ManageUsersViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\User\EditUserViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\MemberRegistrationController.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\AddOrAmendMembersViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\PCSFileUploadViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\LatestMemberUploadViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\AuthorizationRequiredViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\OrganisationUserViewModel.cs" />

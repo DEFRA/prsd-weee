@@ -11,8 +11,8 @@
     using Weee.DataAccess;
     using Weee.Domain.Producer;
     using Weee.Tests.Core;
-    using XmlValidation.BusinessValidation.QuerySets;
-    using XmlValidation.BusinessValidation.QuerySets.Queries.Producer;
+    using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
+    using XmlValidation.BusinessValidation.MemberRegistration.QuerySets.Queries.Producer;
     using Xunit;
     using Assert = Xunit.Assert;
 

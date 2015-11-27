@@ -86,10 +86,9 @@
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
+    <Compile Include="Scheme\MemberRegistration\Extensions.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\GenerateFromXmlDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\IGenerateFromXmlDataAccess.cs" />
-    <Compile Include="Scheme\MemberRegistration\IDeserializer.cs" />
-    <Compile Include="Scheme\MemberRegistration\Deserializer.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheDataAccess.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheHandler.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\IFetchOrganisationSearchResultsForCacheDataAccess.cs" />
@@ -166,10 +165,8 @@
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadByIdHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadDataHandler.cs" />
     <Compile Include="Scheme\Interfaces\IXmlChargeBandCalculator.cs" />
-    <Compile Include="Scheme\Interfaces\IXmlConverter.cs" />
     <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\IProducerChargeCalculator.cs" />
-    <Compile Include="Scheme\MemberRegistration\IWhiteSpaceCollapser.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandler.cs" />
     <Compile Include="Scheme\GetSchemesHandler.cs" />
@@ -187,13 +184,9 @@
     <Compile Include="Organisations\VerifyOrganisationExistsHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerChargeCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerChargeCalculatorDataAccess.cs" />
-    <Compile Include="Scheme\MemberRegistration\WhiteSpaceCollapser.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlChargeBandCalculator.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlConverter.cs" />
     <Compile Include="Scheme\Interfaces\IXmlValidator.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerCharge.cs" />
-    <Compile Include="Scheme\Interfaces\ISchemaValidator.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidator.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\XmlValidator.cs" />
     <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
     <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />

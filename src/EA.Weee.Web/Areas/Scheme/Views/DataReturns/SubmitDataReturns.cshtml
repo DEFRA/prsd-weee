@@ -1,0 +1,66 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.PCSFileUploadViewModel
+@{
+    ViewBag.Title = "Submit data returns";
+    HtmlHelper.ClientValidationEnabled = true;
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+}
+
+@section main_content
+{
+    @using (Html.BeginForm("SubmitDataReturns", "DataReturns", FormMethod.Post,
+        new
+        {
+            id = "form1",
+            enctype = "multipart/form-data",          
+            autocomplete = "off"
+        }))
+    {
+        <header class="hgroup">
+            <h1 id="title" class="heading-large" aria-live="off">
+                Submit a data return
+            </h1>
+        </header>
+
+        <div id="preSubmissionContent">
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+            <p>A data return contains information about:</p>
+            <ul class="list-bullet">
+                <li>Waste Electrical and Electronic Equipment (WEEE) your PCS has collected</li>
+                <li>Electrical and Electronic Equipment (EEE) your producers have placed on the market</li>
+            </ul>
+            
+            <p>To submit your data return, upload an XML file.</p>
+            <p class="bold-small">
+                <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image" />Your XML file must use the version 3.1 schema.
+            </p>
+            <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
+                @(this.WeeeGds().ScreenReaderLabelFor(m => m.File))
+                @Html.Gds().ValidationMessageFor(m => m.File)
+                @Html.Gds().TextBoxFor(m => m.File, new { type = "file", accept = ".xml" })
+           </div>
+
+        </div>
+
+        <p>
+            <input style="margin-top: 20px;" id="submitButton" type="submit" value="Check file for errors" class="button" aria-live="off"/>
+            <img id="spinner" style="display: none; margin-top: 20px" src="~/Content/weee/images/spinner.gif" alt="Spinning graphic" class="important-image"/>
+        </p>
+
+        <p>
+            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { id = "anotherActivitylink" })
+        </p>
+    }
+
+    <noscript>
+        <p class="bold-small">
+            It may take a minute or two to check your file for errors, so please bear with us.
+        </p>
+    </noscript>
+
+    <p class="bold-small" style="display: none;" id="processingTimeMessage" aria-live="polite">
+        It may take a minute or two to check your file for errors, so please bear with us.
+    </p>
+}
