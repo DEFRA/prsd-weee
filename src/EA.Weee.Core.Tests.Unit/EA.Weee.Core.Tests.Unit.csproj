@@ -102,7 +102,6 @@
     <Compile Include="Helpers\DomainEnumeration.cs" />
     <Compile Include="Helpers\ExtensionsTests.cs" />
     <Compile Include="Helpers\SimpleObject.cs" />
-    <Compile Include="Helpers\Xml\XmlErrorTranslatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\ExternalRouteTests.cs" />
     <Compile Include="Routing\ResetPasswordRouteTests.cs" />
@@ -131,6 +130,10 @@
     <ProjectReference Include="..\EA.Weee.Email\EA.Weee.Email.csproj">
       <Project>{22dd3186-14ce-41e6-916d-643d4dee8b48}</Project>
       <Name>EA.Weee.Email</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.XmlValidation\EA.Weee.XmlValidation.csproj">
+      <Project>{DE6EA3D2-5F5F-4DA6-B3A2-DA97B757096C}</Project>
+      <Name>EA.Weee.XmlValidation</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

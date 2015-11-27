@@ -2,13 +2,8 @@
 {
     using Domain.Lookup;
     using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.RequestHandlers.Scheme.Interfaces;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class ProducerChargeCalculatorDataAccess : IProducerChargeCalculatorDataAccess
     {

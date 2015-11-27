@@ -5,7 +5,7 @@
     using Core.Shared;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
-    using Prsd.Core.Mediator;
+    using Prsd.Core.Mapper;
     using Services;
     using System;
     using System.Collections.Generic;
@@ -16,7 +16,6 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using Prsd.Core.Mapper;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -184,7 +183,7 @@
 
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
 
-            var result = await controller.AddOrAmendMembers(A<Guid>._, new AddOrAmendMembersViewModel());
+            var result = await controller.AddOrAmendMembers(A<Guid>._, new PCSFileUploadViewModel());
 
             Assert.IsType<ViewResult>(result);
         }
@@ -196,7 +195,7 @@
 
             controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
 
-            var result = await controller.AddOrAmendMembers(A<Guid>._, new AddOrAmendMembersViewModel());
+            var result = await controller.AddOrAmendMembers(A<Guid>._, new PCSFileUploadViewModel());
 
             Assert.IsType<HttpStatusCodeResult>(result);
         }
@@ -206,12 +205,12 @@
         {
             var request = new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._);
 
-            A.CallTo(() => mapper.Map<AddOrAmendMembersViewModel, ProcessXMLFile>(A<AddOrAmendMembersViewModel>._))
+            A.CallTo(() => mapper.Map<PCSFileUploadViewModel, ProcessXMLFile>(A<PCSFileUploadViewModel>._))
                 .Returns(request);
 
             try
             {
-                await MemberRegistrationController().AddOrAmendMembers(Guid.NewGuid(), new AddOrAmendMembersViewModel());
+                await MemberRegistrationController().AddOrAmendMembers(Guid.NewGuid(), new PCSFileUploadViewModel());
             }
             catch (Exception)
             {
@@ -230,7 +229,7 @@
 
             var controller = GetRealMemberRegistrationControllerWithFakeContext();
 
-            var result = await controller.AddOrAmendMembers(A<Guid>._, new AddOrAmendMembersViewModel());
+            var result = await controller.AddOrAmendMembers(A<Guid>._, new PCSFileUploadViewModel());
 
             var redirect = (RedirectToRouteResult)result;
 
@@ -248,7 +247,7 @@
 
             var controller = GetRealMemberRegistrationControllerWithAjaxRequest();
 
-            var result = await controller.AddOrAmendMembers(A<Guid>._, new AddOrAmendMembersViewModel());
+            var result = await controller.AddOrAmendMembers(A<Guid>._, new PCSFileUploadViewModel());
 
             Assert.IsType<JsonResult>(result);
         }
@@ -533,34 +532,6 @@
             public void InvokeOnActionExecuting(ActionExecutingContext filterContext)
             {
                 OnActionExecuting(filterContext);
-            }
-        }
-
-        private class ActionExecutingContextHelper
-        {
-            public static ActionDescriptor FakeActionDescriptorWithActionName(string actionName)
-            {
-                var fakeActionDescriptor = A.Fake<ActionDescriptor>();
-                A.CallTo(() => fakeActionDescriptor.ActionName).Returns(actionName);
-
-                return fakeActionDescriptor;
-            }
-
-            public static IDictionary<string, object> FakeActionParameters()
-            {
-                return A.Fake<IDictionary<string, object>>();
-            }
-
-            public static IDictionary<string, object> FakeActionParameters(bool retrievalResult, Guid outValue)
-            {
-                var fakeActionParameters = FakeActionParameters();
-
-                object dummyObject;
-                A.CallTo(() => fakeActionParameters.TryGetValue(A<string>._, out dummyObject))
-                    .Returns(retrievalResult)
-                    .AssignsOutAndRefParameters(outValue);
-
-                return fakeActionParameters;
             }
         }
     }

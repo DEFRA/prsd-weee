@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Core.Scheme;
     using Core.Scheme.MemberUploadTesting;
     using DataAccess;
     using Domain.Organisation;
