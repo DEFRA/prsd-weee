@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.Errors
 {
-    using System.Xml.Linq;
     using Core.Scheme;
-    using Core.Scheme.MemberUploadTesting;
+    using System.Xml.Linq;
 
     public interface IXmlErrorTranslator
     {

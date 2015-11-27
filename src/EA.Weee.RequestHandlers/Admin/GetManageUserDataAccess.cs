@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
+    using Core.Admin;
+    using Core.Shared;
+    using DataAccess;
     using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.Admin;
-    using Core.Shared;
-    using DataAccess;
     using OrganisationStatus = Domain.Organisation.OrganisationStatus;
 
     public class GetManageUserDataAccess : IGetManageUserDataAccess

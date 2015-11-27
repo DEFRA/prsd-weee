@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using System;
     using Core.Organisations;
     using Core.Shared;
     using Domain;
     using Domain.Organisation;
+    using System;
     using AddressType = Domain.AddressType;
     using ObligationType = Domain.ObligationType;
     using UserStatus = Domain.UserStatus;

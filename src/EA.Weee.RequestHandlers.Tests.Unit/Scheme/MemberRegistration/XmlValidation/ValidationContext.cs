@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.XmlValidation
 {
-    using System.Collections.Generic;
     using DataAccess;
     using Domain.Producer;
     using Domain.Scheme;
     using FakeItEasy;
+    using System.Collections.Generic;
     using Weee.Tests.Core;
 
     public class ValidationContext

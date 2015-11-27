@@ -5,7 +5,6 @@
     using Core;
     using DataAccess;
     using DataAccess.Identity;
-    using EA.Weee.Api.Services;
     using EA.Weee.Email;
     using EA.Weee.Xml;
     using Identity;

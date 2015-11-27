@@ -1,15 +1,13 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.User
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Web.Mvc;
     using Core.Admin;
     using Core.DataStandards;
     using Core.Shared;
-    using Microsoft.Ajax.Utilities;
     using Prsd.Core.Helpers;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Web.Mvc;
 
     public class EditUserViewModel
     {

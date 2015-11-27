@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.SchemaValidation
 {
-    using System.Collections.Generic;
     using Core.Scheme;
-    using Core.Scheme.MemberUploadTesting;
+    using System.Collections.Generic;
     using XmlValidation.Errors;
 
     public interface ISchemaValidator

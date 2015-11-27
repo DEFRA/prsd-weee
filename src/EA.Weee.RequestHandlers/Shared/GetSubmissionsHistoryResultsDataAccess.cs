@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
+    using Core.Admin;
+    using DataAccess;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.Admin;
-    using DataAccess;
 
     public class GetSubmissionsHistoryResultsDataAccess : IGetSubmissionsHistoryResultsDataAccess
     {

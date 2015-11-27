@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Users.GetManageableOrganisationUsers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Organisations;
     using Domain;
     using Domain.Organisation;
@@ -12,6 +8,10 @@
     using RequestHandlers.Security;
     using RequestHandlers.Users.GetManageableOrganisationUsers;
     using Requests.Users.GetManageableOrganisationUsers;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetUsersByOrganisationIdHandlerTests

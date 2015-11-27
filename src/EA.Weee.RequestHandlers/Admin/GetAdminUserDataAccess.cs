@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
+    using DataAccess;
+    using Domain.Admin;
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
-    using DataAccess;
-    using Domain.Admin;
 
     public class GetAdminUserDataAccess : IGetAdminUserDataAccess
     {

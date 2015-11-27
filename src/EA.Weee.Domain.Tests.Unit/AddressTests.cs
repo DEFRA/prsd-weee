@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit
 {
-    using System;
     using Helpers;
+    using System;
     using Xunit;
     using Address = Domain.Organisation.Address;
 

@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using System;
+    using Authorization;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Authorization;
 
     [AllowAnonymous]
     public class ErrorsController : Controller

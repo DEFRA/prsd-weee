@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Infrastructure
 {
-    using System.Web.Routing;
     using LowercaseDashedRouting;
+    using System.Web.Routing;
 
     public static class RouteCollectionExtensions
     {

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Helpers
 {
-    using System;
     using Domain;
+    using System;
  
     public class CountryFactory
     {

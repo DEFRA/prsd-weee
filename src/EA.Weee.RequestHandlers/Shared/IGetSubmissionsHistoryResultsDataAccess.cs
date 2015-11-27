@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
+    using Core.Admin;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Core.Admin;
 
     public interface IGetSubmissionsHistoryResultsDataAccess
     {

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Shared
 {
-    using System;
     using RequestHandlers.Shared;
+    using System;
     using Weee.Tests.Core.Model;
     using Xunit;
 

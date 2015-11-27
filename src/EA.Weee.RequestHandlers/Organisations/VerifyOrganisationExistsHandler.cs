@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
-    using System.Linq;
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
     using EA.Weee.Requests.Organisations;
     using Security;
+    using System.Linq;
+    using System.Threading.Tasks;
     
     internal class VerifyOrganisationExistsHandler : IRequestHandler<VerifyOrganisationExists, bool>
     {

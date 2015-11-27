@@ -1,12 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Producers
 {
     using EA.Weee.Core.Search;
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Web;
 
     public class SearchResultsViewModel
     {

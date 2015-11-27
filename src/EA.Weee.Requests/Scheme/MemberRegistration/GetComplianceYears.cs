@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Requests.Scheme.MemberRegistration
 {
-    using System;
-    using Core.Scheme;
     using Prsd.Core.Mediator;
-using System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 
     public class GetComplianceYears : IRequest<List<int>>
     {

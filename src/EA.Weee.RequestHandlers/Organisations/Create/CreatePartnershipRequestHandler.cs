@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.Create
 {
-    using System;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain;
     using Domain.Organisation;
@@ -9,6 +7,8 @@
     using Prsd.Core.Mediator;
     using Requests.Organisations.Create;
     using Security;
+    using System;
+    using System.Threading.Tasks;
 
     public class CreatePartnershipRequestHandler : IRequestHandler<CreatePartnershipRequest, Guid>
     {

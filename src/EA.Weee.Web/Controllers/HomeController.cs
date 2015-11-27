@@ -5,9 +5,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using System;
-    using System.Linq;
     using System.Security.Claims;
-    using System.Threading;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels.Shared;

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Audit
 {
-    using System;
     using Prsd.Core.Domain;
+    using System;
 
     public abstract class AuditableEntity : Entity, IAuditableEntity
     {

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
-    using System.Data.Entity.ModelConfiguration;
     using Domain.Admin;
+    using System.Data.Entity.ModelConfiguration;
 
     public class CompetentAuthorityUserMapping : EntityTypeConfiguration<CompetentAuthorityUser>
     {

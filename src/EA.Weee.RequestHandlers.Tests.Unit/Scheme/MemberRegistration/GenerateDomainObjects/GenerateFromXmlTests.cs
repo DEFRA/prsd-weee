@@ -25,7 +25,7 @@
             var result = generateFromXml.GenerateMemberUpload(message,
                 new List<MemberUploadError>
                 {
-                    new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "Some schema error")
+                    new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Some schema error")
                 },
                 A<decimal>._, A<Guid>._);
 
@@ -72,7 +72,7 @@
             var schemeId = Guid.NewGuid();
             var errors = new List<MemberUploadError>
                 {
-                    new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "Some schema error")
+                    new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "Some schema error")
                 };
 
             var builder = new GenerateFromXmlBuilder();

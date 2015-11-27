@@ -1,15 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme
 {
     using Core.Scheme;
-    using DataAccess;
-    using Domain.Organisation;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
 

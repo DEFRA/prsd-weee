@@ -2,7 +2,6 @@
 {
     using Core.Helpers;
     using DataAccess;
-    using Domain;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using Mappings;

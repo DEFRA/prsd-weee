@@ -4,7 +4,6 @@
     using EA.Weee.Core;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
-    using EA.Weee.Domain.Organisation;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security.DataProtection;

@@ -1,7 +1,7 @@
 namespace EA.Weee.Requests.Organisations
 {
-    using System;
     using EA.Prsd.Core.Mediator;
+    using System;
 
     public class JoinOrganisation : IRequest<Guid>
     {

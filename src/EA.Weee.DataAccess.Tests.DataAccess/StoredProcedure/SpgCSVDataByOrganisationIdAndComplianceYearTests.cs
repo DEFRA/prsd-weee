@@ -1,15 +1,10 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
     using Domain.Lookup;
-    using EA.Prsd.Core.Domain;
     using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.Tests.Core.Model;
-    using FakeItEasy;
     using System;
     using System.Collections.Generic;
-    using System.Configuration;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 

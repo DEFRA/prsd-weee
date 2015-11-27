@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Helpers;
     using Core.Shared;
     using DataAccess;
@@ -13,6 +7,12 @@
     using FakeItEasy;
     using RequestHandlers.Scheme;
     using Requests.Scheme;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using SchemeStatus = Core.Shared.SchemeStatus;

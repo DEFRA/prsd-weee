@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.Api.Client
 {
-    using System;
-    using System.Net.Http;
-    using System.Threading.Tasks;
     using Actions;
     using Newtonsoft.Json;
     using Prsd.Core.Mediator;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Extensions;
+    using System;
+    using System.Net.Http;
+    using System.Threading.Tasks;
 
     public class WeeeClient : IWeeeClient
     {

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Shared
 {
+    using Core.Shared;
     using Prsd.Core.Mediator;
     using System.Collections.Generic;
-    using Core.Shared;
 
     public class GetCountries : IRequest<IList<CountryData>>
     {

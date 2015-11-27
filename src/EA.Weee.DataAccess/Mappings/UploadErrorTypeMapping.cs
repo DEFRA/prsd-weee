@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
+    using Domain;
     using System.Data.Entity.ModelConfiguration;
-    using Domain.Scheme;
 
-    internal class MemberUploadErrorTypeMapping : ComplexTypeConfiguration<MemberUploadErrorType>
+    internal class UploadErrorTypeMapping : ComplexTypeConfiguration<UploadErrorType>
     {
-        public MemberUploadErrorTypeMapping()
+        public UploadErrorTypeMapping()
         {
             Ignore(x => x.DisplayName);
             Property(x => x.Value).HasColumnName("ErrorType");

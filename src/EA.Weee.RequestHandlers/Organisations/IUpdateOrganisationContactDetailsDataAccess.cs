@@ -1,12 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
     using EA.Weee.Domain;
-using EA.Weee.Domain.Organisation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+    using EA.Weee.Domain.Organisation;
+    using System;
+    using System.Threading.Tasks;
 
     public interface IUpdateOrganisationContactDetailsDataAccess
     {

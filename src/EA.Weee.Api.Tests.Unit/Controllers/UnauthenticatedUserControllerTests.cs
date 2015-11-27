@@ -1,14 +1,5 @@
 ﻿namespace EA.Weee.Api.Tests.Unit.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using System.Web.Http.Results;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Api.Client.Entities;
     using EA.Weee.Api.Controllers;
@@ -18,7 +9,10 @@
     using EA.Weee.Email;
     using FakeItEasy;
     using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.EntityFramework;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using System.Web.Http.Results;
     using Xunit;
 
     public class UnauthenticatedUserControllerTests

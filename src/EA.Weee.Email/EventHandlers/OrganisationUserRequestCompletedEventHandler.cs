@@ -2,10 +2,6 @@
 {
     using EA.Prsd.Core.Domain;
     using EA.Weee.Domain.Events;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class OrganisationUserRequestCompletedEventHandler : IEventHandler<OrganisationUserRequestCompletedEvent>

@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Domain.Scheme
 {
-    using System;
-    using System.Collections.Generic;
     using Audit;
     using Events;
     using Organisation;
     using Producer;
+    using System;
+    using System.Collections.Generic;
 
     public class MemberUpload : AuditableEntity
     {

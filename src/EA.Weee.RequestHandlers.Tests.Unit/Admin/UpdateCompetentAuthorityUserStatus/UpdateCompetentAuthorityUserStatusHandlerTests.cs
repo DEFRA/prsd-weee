@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.UpdateCompetentAuthorityUserStatus
 {
-    using System;
-    using System.Threading.Tasks;
     using Domain.Admin;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Admin.UpdateCompetentAuthorityUserStatus;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using System;
+    using System.Threading.Tasks;
     using Xunit;
     using UserStatus = Core.Shared.UserStatus;
 

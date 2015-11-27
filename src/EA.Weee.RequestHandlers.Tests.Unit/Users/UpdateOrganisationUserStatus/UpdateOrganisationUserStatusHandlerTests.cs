@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Users.UpdateOrganisationUserStatus
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Helpers;
     using Domain.Organisation;
     using FakeItEasy;
@@ -9,6 +7,8 @@
     using RequestHandlers.Security;
     using RequestHandlers.Users.UpdateOrganisationUserStatus;
     using Requests.Users;
+    using System;
+    using System.Threading.Tasks;
     using Xunit;
     using UserStatus = Core.Shared.UserStatus;
 
