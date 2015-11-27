@@ -18,6 +18,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using Weee.Tests.Core;
+    using Xml.Converter;
     using Xunit;
 
     public class ProcessXMLFileHandlerTests
@@ -103,7 +104,7 @@
             await handler.HandleAsync(Message);
 
             A.CallTo(() => xmlChargeBandCalculator.Calculate(Message)).MustNotHaveHappened();
-            A.CallTo(() => xmlConverter.Convert(Message)).MustNotHaveHappened();
+            A.CallTo(() => xmlConverter.Convert(Message.Data)).MustNotHaveHappened();
         }
 
         [Fact]

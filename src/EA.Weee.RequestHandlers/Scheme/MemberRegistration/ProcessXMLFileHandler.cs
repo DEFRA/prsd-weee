@@ -16,6 +16,7 @@
     using Interfaces;
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
+    using Xml.Converter;
     using XmlValidation;
 
     internal class ProcessXMLFileHandler : IRequestHandler<ProcessXMLFile, Guid>
