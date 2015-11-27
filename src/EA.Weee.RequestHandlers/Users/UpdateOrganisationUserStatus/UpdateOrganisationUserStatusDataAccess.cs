@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Users.UpdateOrganisationUserStatus
 {
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
     using Core.Helpers;
     using DataAccess;
     using Domain;
     using Domain.Organisation;
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
 
     public class UpdateOrganisationUserStatusDataAccess : IUpdateOrganisationUserStatusDataAccess
     {

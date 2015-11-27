@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Core.Scheme;
     using Core.Shared;
@@ -7,12 +13,6 @@
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using ViewModels;
     using Web.Controllers.Base;
     using Weee.Requests.Organisations;

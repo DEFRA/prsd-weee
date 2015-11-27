@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.FindMatchingOrganisations.DataAccess
 {
-    using Domain.Organisation;
     using System;
     using System.Threading.Tasks;
+    using Domain.Organisation;
 
     public interface IFindMatchingOrganisationsDataAccess
     {

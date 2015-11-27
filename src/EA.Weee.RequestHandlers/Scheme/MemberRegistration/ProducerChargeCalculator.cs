@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
-    using Domain.Lookup;
     using System;
+    using Domain.Lookup;
     using Xml.MemberRegistration;
 
     public class ProducerChargeCalculator : IProducerChargeCalculator

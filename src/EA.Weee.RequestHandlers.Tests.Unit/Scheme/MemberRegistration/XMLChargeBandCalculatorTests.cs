@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
-    using FakeItEasy;
-    using RequestHandlers.Scheme.MemberRegistration;
-    using Requests.Scheme.MemberRegistration;
     using System;
     using System.IO;
     using System.Reflection;
     using System.Text;
+    using FakeItEasy;
+    using RequestHandlers.Scheme.MemberRegistration;
+    using Requests.Scheme.MemberRegistration;
     using Xml.Converter;
     using Xml.Deserialization;
     using Xml.MemberRegistration;

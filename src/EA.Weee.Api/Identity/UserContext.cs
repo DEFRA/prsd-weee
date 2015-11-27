@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Api.Identity
 {
-    using Prsd.Core.Domain;
     using System;
     using System.Security.Claims;
     using System.Web;
+    using Prsd.Core.Domain;
 
     public class UserContext : IUserContext
     {

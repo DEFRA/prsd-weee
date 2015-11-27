@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.Interfaces
 {
+    using System.Collections.Generic;
     using Domain.Scheme;
     using MemberRegistration;
     using Requests.Scheme.MemberRegistration;
-    using System.Collections.Generic;
 
     public interface IXmlChargeBandCalculator
     {

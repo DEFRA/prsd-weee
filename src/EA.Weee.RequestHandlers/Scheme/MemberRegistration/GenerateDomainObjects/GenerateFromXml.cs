@@ -1,5 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Xml.Serialization;
     using Domain;
     using Domain.Producer;
     using Domain.Scheme;
@@ -8,11 +13,6 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Requests.Scheme.MemberRegistration;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Xml.Serialization;
     using Xml.Converter;
     using Xml.MemberRegistration;
 

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Domain.Scheme
 {
-    using Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
+    using Prsd.Core.Domain;
 
     public class DataReturnsUpload : Entity
     {

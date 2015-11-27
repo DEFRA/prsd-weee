@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.Email.EventHandlers
 {
-    using DataAccess;
-    using Domain;
-    using Domain.Organisation;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using DataAccess;
+    using Domain;
+    using Domain.Organisation;
 
     public class OrganisationUserRequestEventHandlerDataAccess : IOrganisationUserRequestEventHandlerDataAccess
     {

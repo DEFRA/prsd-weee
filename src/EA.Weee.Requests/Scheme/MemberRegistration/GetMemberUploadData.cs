@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Requests.Scheme.MemberRegistration
 {
-    using Core.Shared;
-    using Prsd.Core.Mediator;
     using System;
     using System.Collections.Generic;
+    using Core.Shared;
+    using Prsd.Core.Mediator;
 
     public class GetMemberUploadData : IRequest<List<MemberUploadErrorData>>
     {

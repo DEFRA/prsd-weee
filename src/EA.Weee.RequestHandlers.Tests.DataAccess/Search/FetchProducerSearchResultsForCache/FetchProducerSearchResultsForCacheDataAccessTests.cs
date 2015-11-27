@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Search.FetchProducerSearchResultsForCache
 {
-    using EA.Weee.RequestHandlers.Search.FetchProducerSearchResultsForCache;
-    using EA.Weee.Tests.Core.Model;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using EA.Weee.RequestHandlers.Search.FetchProducerSearchResultsForCache;
+    using EA.Weee.Tests.Core.Model;
     using Xunit;
     using Model = EA.Weee.Tests.Core.Model;
 

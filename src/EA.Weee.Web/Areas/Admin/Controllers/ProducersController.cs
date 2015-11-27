@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Search;
@@ -8,10 +12,6 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
 
     public class ProducersController : AdminController
     {

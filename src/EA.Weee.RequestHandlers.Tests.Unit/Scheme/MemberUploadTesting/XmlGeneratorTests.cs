@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberUploadTesting
 {
+    using System.IO;
+    using System.Xml.Linq;
     using Core.Scheme;
     using Core.Scheme.MemberUploadTesting;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberUploadTesting;
-    using System.IO;
-    using System.Xml.Linq;
     using Xunit;
 
     public class XmlGeneratorTests

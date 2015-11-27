@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Email
 {
-    using Domain.Organisation;
     using System.Threading.Tasks;
+    using Domain.Organisation;
 
     public interface IWeeeEmailService
     {

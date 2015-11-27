@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
+    using System;
+    using System.Collections.Generic;
     using Domain;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
-    using System;
-    using System.Collections.Generic;
     using Xml.Converter;
     using Xml.MemberRegistration;
 

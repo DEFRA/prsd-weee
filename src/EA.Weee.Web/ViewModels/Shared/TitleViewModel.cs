@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared
 {
-    using EA.Weee.Web.Services;
     using System.Security.Principal;
+    using EA.Weee.Web.Services;
 
     public class TitleViewModel
     {

@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin
 {
-    using Core.Helpers;
-    using Domain;
-    using RequestHandlers.Admin;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Helpers;
+    using Domain;
+    using RequestHandlers.Admin;
     using Weee.Tests.Core.Model;
     using Xunit;
 

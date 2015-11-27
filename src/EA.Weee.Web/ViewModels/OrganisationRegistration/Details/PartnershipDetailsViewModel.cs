@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration.Details
 {
-    using Core.DataStandards;
     using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using Core.DataStandards;
 
     public class PartnershipDetailsViewModel 
     {

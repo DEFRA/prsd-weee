@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Organisation
 {
+    using System;
     using Domain.Organisation;
     using EA.Weee.Domain.Tests.Unit.Helpers;
-    using System;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
 

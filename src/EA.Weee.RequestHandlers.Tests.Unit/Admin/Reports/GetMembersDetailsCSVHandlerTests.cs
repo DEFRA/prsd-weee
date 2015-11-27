@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Reports
 {
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
     using FakeItEasy;
     using RequestHandlers.Admin.Reports;
     using Requests.Admin;
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

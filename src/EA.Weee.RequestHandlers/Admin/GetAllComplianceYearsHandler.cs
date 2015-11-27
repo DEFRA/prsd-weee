@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 { 
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
 
     public class GetAllComplianceYearsHandler : IRequestHandler<GetAllComplianceYears, List<int>>
     {

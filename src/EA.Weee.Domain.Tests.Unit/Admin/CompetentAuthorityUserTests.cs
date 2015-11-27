@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Admin
 {
-    using Domain.Admin;
     using System;
+    using Domain.Admin;
     using Xunit;
 
     public class CompetentAuthorityUserTests

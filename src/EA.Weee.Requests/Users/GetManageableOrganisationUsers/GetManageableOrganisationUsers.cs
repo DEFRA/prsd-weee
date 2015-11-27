@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Requests.Users.GetManageableOrganisationUsers
 {
-    using Core.Organisations;
-    using Prsd.Core.Mediator;
     using System;
     using System.Collections.Generic;
+    using Core.Organisations;
+    using Prsd.Core.Mediator;
 
     public class GetManageableOrganisationUsers : IRequest<List<OrganisationUserData>>
     {

@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Core.Organisations;
     using DataAccess;
     using Domain.Organisation;
@@ -8,9 +11,6 @@
     using Prsd.Core.Mapper;
     using RequestHandlers.Organisations;
     using Requests.Organisations;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

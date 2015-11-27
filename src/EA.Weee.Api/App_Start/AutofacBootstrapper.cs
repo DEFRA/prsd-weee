@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Api
 {
+    using System.Web.Http;
     using Autofac;
     using Autofac.Integration.WebApi;
     using Core;
@@ -11,7 +12,6 @@
     using Microsoft.AspNet.Identity;
     using Prsd.Core.Autofac;
     using RequestHandlers;
-    using System.Web.Http;
     using XmlValidation;
 
     public class AutofacBootstrapper

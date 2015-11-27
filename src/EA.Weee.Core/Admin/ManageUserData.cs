@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Core.Admin
 {
-    using Shared;
     using System;
+    using Shared;
 
     public class ManageUserData
     {

@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Email.EventHandlers
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Domain.Events;
     using Domain.Organisation;
     using Prsd.Core.Domain;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
 
     public class OrganisationUserRequestEventHandler : IEventHandler<OrganisationUserRequestEvent>
     {

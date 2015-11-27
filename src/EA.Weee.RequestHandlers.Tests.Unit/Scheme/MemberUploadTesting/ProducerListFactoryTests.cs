@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberUploadTesting
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Core.Scheme;
     using Core.Scheme.MemberUploadTesting;
     using DataAccess;
@@ -7,9 +10,6 @@
     using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberUploadTesting;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

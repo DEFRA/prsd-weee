@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
+    using System;
+    using System.Threading.Tasks;
     using Domain;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
-    using System;
-    using System.Threading.Tasks;
 
     public class GetAdminUserStatusHandler : IRequestHandler<GetAdminUserStatus, Core.Shared.UserStatus>
     {

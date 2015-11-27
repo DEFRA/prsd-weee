@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Shared
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Core.Admin;
     using FakeItEasy;
     using RequestHandlers.Security;
     using RequestHandlers.Shared;
     using Requests.Shared;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

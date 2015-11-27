@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Requests.Admin
 {
-    using Prsd.Core.Mediator;
     using System;
+    using Prsd.Core.Mediator;
 
     public class AddCompetentAuthorityUser : IRequest<Guid>
     {

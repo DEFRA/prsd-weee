@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Infrastructure
 {
-    using EA.Weee.Core;
     using System;
     using System.Linq;
     using System.Security.Claims;
     using System.Web.Mvc;
+    using EA.Weee.Core;
     using Thinktecture.IdentityModel.Client;
     using AuthorizationContext = System.Web.Mvc.AuthorizationContext;
 

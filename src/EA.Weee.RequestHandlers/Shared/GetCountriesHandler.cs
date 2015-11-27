@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
     using Domain;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Shared;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     internal class GetCountriesHandler : IRequestHandler<GetCountries, IList<CountryData>>
     {

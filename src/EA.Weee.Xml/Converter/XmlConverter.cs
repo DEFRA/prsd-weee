@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Xml.Converter
 {
-    using Core.Helpers;
-    using Deserialization;
-    using MemberRegistration;
     using System.Linq;
     using System.Text;
     using System.Xml.Linq;
+    using Core.Helpers;
+    using Deserialization;
+    using MemberRegistration;
 
     public class XmlConverter : IXmlConverter
     {

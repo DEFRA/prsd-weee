@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
-    using Domain.Scheme;
     using System.Data.Entity.ModelConfiguration;
+    using Domain.Scheme;
 
     internal class DataReturnsUploadRawDataMapping : EntityTypeConfiguration<DataReturnsUploadRawData>
     {

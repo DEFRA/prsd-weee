@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.UpdateCompetentAuthorityUserStatus
 {
+    using System;
+    using System.Collections.Generic;
     using DataAccess;
     using Domain.Admin;
     using FakeItEasy;
     using RequestHandlers.Admin.UpdateCompetentAuthorityUserStatus;
-    using System;
-    using System.Collections.Generic;
     using Weee.Tests.Core;
     using Xunit;
 

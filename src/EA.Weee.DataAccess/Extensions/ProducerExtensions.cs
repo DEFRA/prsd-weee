@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.DataAccess.Extensions
 {
-    using Domain.Producer;
     using System.Data.Entity;
     using System.Linq;
+    using Domain.Producer;
 
     public static class ProducerExtensions
     {

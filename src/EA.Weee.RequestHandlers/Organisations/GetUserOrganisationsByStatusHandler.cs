@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Core.Organisations;
     using DataAccess;
     using Domain.Organisation;
@@ -7,10 +11,6 @@
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     internal class GetUserOrganisationsByStatusHandler :
         IRequestHandler<GetUserOrganisationsByStatus, List<OrganisationUserData>>
