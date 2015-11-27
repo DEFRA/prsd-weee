@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.GetSchemePublicInfo
 {
-    using EA.Weee.DataAccess;
     using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using EA.Weee.DataAccess;
 
     public class GetSchemePublicInfoDataAccess : IGetSchemePublicInfoDataAccess
     {

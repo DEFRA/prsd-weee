@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Admin
 {
+    using System.Collections.Generic;
     using Core.Scheme;
     using Prsd.Core.Mediator;
-    using System.Collections.Generic;
 
     public class GetAllApprovedSchemes : IRequest<List<SchemeData>>
     {

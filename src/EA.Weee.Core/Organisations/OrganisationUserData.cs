@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Core.Organisations
 {
-    using Shared;
     using System;
+    using Shared;
     using Users;
 
     public class OrganisationUserData

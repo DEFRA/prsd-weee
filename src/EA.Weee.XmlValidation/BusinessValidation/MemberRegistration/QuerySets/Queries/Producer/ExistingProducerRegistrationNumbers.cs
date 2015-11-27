@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets.Queries.Producer
 {
-    using DataAccess;
     using System.Collections.Generic;
     using System.Linq;
+    using DataAccess;
 
     public class ExistingProducerRegistrationNumbers : Query<List<string>>, IExistingProducerRegistrationNumbers
     {

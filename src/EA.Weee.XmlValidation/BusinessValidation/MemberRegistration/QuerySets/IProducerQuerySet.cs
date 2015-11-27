@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets
 {
-    using Domain.Producer;
     using System;
     using System.Collections.Generic;
+    using Domain.Producer;
 
     public interface IProducerQuerySet
     {

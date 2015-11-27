@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.MemberRegistration.Rules.Producer
 {
+    using System.Collections.Generic;
     using Core.Shared;
     using FakeItEasy;
-    using System.Collections.Generic;
     using Xml.MemberRegistration;
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
     using XmlValidation.BusinessValidation.MemberRegistration.Rules.Producer;

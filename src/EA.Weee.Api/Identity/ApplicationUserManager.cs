@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.Api.Identity
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
     using DataAccess.Identity;
     using EA.Weee.Core;
     using EA.Weee.Core.Shared;
@@ -8,12 +14,6 @@
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security.DataProtection;
     using Services;
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
 
     public class ApplicationUserManager : ApplicationUserManagerBase<ApplicationUser>
     {

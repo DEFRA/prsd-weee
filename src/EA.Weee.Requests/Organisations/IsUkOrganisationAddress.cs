@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Requests.Organisations
 {
-    using EA.Prsd.Core.Mediator;
     using System;
+    using EA.Prsd.Core.Mediator;
 
     public class IsUkOrganisationAddress : IRequest<bool>
     {

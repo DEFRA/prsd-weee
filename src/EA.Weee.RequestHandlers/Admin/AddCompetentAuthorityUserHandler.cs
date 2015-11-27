@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
     using Core.Configuration;
     using DataAccess;
     using Domain;
     using Domain.Admin;
     using Prsd.Core.Mediator;
     using Requests.Admin;
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
 
     public class AddCompetentAuthorityUserHandler : IRequestHandler<AddCompetentAuthorityUser, Guid>
     {

@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets
 {
-    using DataAccess;
-    using Domain.Producer;
     using System.Collections.Generic;
     using System.Linq;
+    using DataAccess;
+    using Domain.Producer;
 
     public class MigratedProducerQuerySet : IMigratedProducerQuerySet
     {

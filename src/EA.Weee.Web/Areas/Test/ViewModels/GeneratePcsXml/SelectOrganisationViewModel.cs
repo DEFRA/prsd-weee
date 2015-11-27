@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml
 {
-    using Core.Organisations;
-    using Core.Shared.Paging;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using Core.Organisations;
+    using Core.Shared.Paging;
 
     public class SelectOrganisationViewModel
     {

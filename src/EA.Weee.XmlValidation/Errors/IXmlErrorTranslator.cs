@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.Errors
 {
-    using Core.Scheme;
     using System.Xml.Linq;
+    using Core.Scheme;
 
     public interface IXmlErrorTranslator
     {

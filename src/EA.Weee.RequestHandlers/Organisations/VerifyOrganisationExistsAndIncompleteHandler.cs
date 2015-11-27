@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
+    using System.Linq;
+    using System.Threading.Tasks;
     using DataAccess;
     using Domain.Organisation;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Security;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     internal class VerifyOrganisationExistsAndIncompleteHandler : IRequestHandler<VerifyOrganisationExistsAndIncomplete, bool>
     {

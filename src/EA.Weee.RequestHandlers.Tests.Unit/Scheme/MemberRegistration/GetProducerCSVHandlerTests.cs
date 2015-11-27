@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using DataAccess;
     using Domain.Scheme;
     using EA.Weee.Core.Shared;
@@ -8,10 +12,6 @@
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

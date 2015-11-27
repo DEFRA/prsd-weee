@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Email.EventHandlers
 {
+    using System.Threading.Tasks;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Domain.Events;
-    using System.Threading.Tasks;
 
     public class OrganisationUserRequestCompletedEventHandler : IEventHandler<OrganisationUserRequestCompletedEvent>
     {

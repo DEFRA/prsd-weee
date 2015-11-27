@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration.Auditing
 {
+    using System;
+    using System.Data.Entity;
+    using System.Linq;
     using Domain;
     using Domain.Organisation;
     using FakeItEasy;
     using Prsd.Core.Domain;
-    using System;
-    using System.Data.Entity;
-    using System.Linq;
     using Xunit;
 
     public class AuditingTests

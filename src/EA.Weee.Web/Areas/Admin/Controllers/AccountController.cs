@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Mail;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Api.Client.Entities;
     using Authorization;
@@ -12,12 +18,6 @@
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Services;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net.Mail;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using ViewModels.Account;
     using Weee.Requests.Admin;
 

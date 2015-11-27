@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration
 {
-    using EA.Weee.Core.Shared;
     using System;
+    using EA.Weee.Core.Shared;
 
     public class UserAlreadyAssociatedWithOrganisationViewModel
     {

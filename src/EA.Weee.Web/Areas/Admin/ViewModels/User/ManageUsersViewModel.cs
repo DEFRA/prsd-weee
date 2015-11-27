@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.User
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
     using Core.Admin;
     using Core.Shared.Paging;
     using EA.Weee.Requests.Admin;
-    using System;
-    using System.ComponentModel.DataAnnotations;
 
     public class ManageUsersViewModel
     {

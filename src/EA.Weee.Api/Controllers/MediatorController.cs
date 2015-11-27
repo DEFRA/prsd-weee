@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Api.Controllers
 {
-    using EA.Prsd.Core.Mediator;
-    using EA.Prsd.Core.Web.ApiClient;
-    using Elmah;
-    using Infrastructure;
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -13,6 +8,11 @@
     using System.Security.Authentication;
     using System.Threading.Tasks;
     using System.Web.Http;
+    using EA.Prsd.Core.Mediator;
+    using EA.Prsd.Core.Web.ApiClient;
+    using Elmah;
+    using Infrastructure;
+    using Newtonsoft.Json;
 
     [RoutePrefix("api")]
     public class MediatorController : ApiController

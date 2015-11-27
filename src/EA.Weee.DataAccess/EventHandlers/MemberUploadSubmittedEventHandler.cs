@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.DataAccess.EventHandlers
 {
-    using Domain.Events;
-    using Domain.Producer;
-    using Prsd.Core.Domain;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain.Events;
+    using Domain.Producer;
+    using Prsd.Core.Domain;
 
     public class MemberUploadSubmittedEventHandler : IEventHandler<MemberUploadSubmittedEvent>
     {

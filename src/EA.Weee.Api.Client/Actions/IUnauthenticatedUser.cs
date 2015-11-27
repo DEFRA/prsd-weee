@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Api.Client.Actions
 {
-    using Entities;
     using System.Threading.Tasks;
+    using Entities;
 
     public interface IUnauthenticatedUser
     {

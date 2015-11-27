@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Identity
 {
-    using Microsoft.AspNet.Identity.EntityFramework;
     using System.Data.Entity;
+    using Microsoft.AspNet.Identity.EntityFramework;
 
     public class WeeeIdentityContext : IdentityDbContext<ApplicationUser>
     {

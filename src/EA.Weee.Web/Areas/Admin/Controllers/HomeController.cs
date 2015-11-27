@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Core.Shared;
     using Infrastructure;
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using ViewModels.Home;
     using Weee.Requests.Admin;
 

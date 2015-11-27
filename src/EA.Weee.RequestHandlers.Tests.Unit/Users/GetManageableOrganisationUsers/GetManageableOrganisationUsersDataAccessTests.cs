@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Users.GetManageableOrganisationUsers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
     using Core.Helpers;
     using DataAccess;
     using Domain;
@@ -7,10 +11,6 @@
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Users.GetManageableOrganisationUsers;
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
     using Weee.Tests.Core;
     using Xunit;
 

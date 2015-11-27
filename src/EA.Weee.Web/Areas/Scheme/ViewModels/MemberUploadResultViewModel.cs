@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
-    using Core.Shared;
-    using Prsd.Core.Validation;
     using System;
     using System.Collections.Generic;
+    using Core.Shared;
+    using Prsd.Core.Validation;
 
     public class MemberUploadResultViewModel
     {

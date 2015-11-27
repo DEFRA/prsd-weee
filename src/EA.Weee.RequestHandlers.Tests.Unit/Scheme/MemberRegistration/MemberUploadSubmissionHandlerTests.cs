@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
-    using DataAccess;
-    using Domain.Scheme;
-    using FakeItEasy;
-    using RequestHandlers.Scheme.MemberRegistration;
-    using Requests.Scheme.MemberRegistration;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using DataAccess;
+    using Domain.Scheme;
+    using FakeItEasy;
+    using RequestHandlers.Scheme.MemberRegistration;
+    using Requests.Scheme.MemberRegistration;
     using Weee.Tests.Core;
     using Xunit;
 

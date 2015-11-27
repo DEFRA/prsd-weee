@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Admin
 {
-    using Prsd.Core.Domain;
     using System;
+    using Prsd.Core.Domain;
 
     public class CompetentAuthorityUser : Entity
     {

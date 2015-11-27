@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Api.Identity
 {
-    using Microsoft.AspNet.Identity;
     using System;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web;
+    using Microsoft.AspNet.Identity;
 
     /// <summary>
     /// A base class which raises events on an IAuditSecurityAuditor relating to user creation,

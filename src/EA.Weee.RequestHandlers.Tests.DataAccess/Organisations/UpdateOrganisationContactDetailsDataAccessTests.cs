@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Organisations
 {
+    using System;
+    using System.Threading.Tasks;
     using EA.Weee.DataAccess;
     using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
-    using System;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class UpdateOrganisationContactDetailsDataAccessTests

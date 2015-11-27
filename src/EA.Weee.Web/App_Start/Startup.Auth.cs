@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web
 {
+    using System;
     using EA.Weee.Web.App_Start;
     using Infrastructure;
     using Microsoft.Owin;
@@ -7,7 +8,6 @@
     using Owin;
     using Prsd.Core.Web.Mvc.Owin;
     using Services;
-    using System;
 
     public partial class Startup
     {

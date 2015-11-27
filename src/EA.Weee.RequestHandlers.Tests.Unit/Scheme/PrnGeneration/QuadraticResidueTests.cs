@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.PrnGeneration
 {
-    using Core.Helpers.PrnGeneration;
     using System;
     using System.Collections.Generic;
+    using Core.Helpers.PrnGeneration;
     using Xunit;
 
     public class QuadraticResidueTests

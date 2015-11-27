@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Helpers
 {
-    using Domain;
     using System;
+    using Domain;
 
     public class UKCompetentAuthorityFactory
     {

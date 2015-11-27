@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Api.Identity
 {
-    using Microsoft.AspNet.Identity;
     using System.Threading.Tasks;
+    using Microsoft.AspNet.Identity;
 
     /// <summary>
     /// Defines events relating to security that can be audited.

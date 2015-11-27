@@ -1,5 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
     using Domain.Scheme;
@@ -7,11 +12,6 @@
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
     using Security;
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     internal class GetMemberUploadDataHandler : IRequestHandler<GetMemberUploadData, List<MemberUploadErrorData>>
     {

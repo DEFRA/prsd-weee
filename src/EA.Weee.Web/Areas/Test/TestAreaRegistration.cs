@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Test
 {
+    using System.Web.Mvc;
     using Controllers;
     using Infrastructure;
     using Services;
-    using System.Web.Mvc;
     
     /// <summary>
     /// Registration for the "Test" area.

@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Test.Controllers
 {
-    using EA.Weee.Web.Services.Caching;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using EA.Weee.Web.Services.Caching;
 
     [Authorize]
     public class ManageCacheController : Controller

@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Search.FetchProducerSearchResultsForCache
 {
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.Search;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.Search;
 
     public class FetchProducerSearchResultsForCacheHandler : IRequestHandler<Requests.Search.FetchProducerSearchResultsForCache, IList<ProducerSearchResult>>
     {

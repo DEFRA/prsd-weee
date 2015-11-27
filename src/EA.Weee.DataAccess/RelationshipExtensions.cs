@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.DataAccess
 {
-    using EA.Prsd.Core.Domain;
     using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
+    using EA.Prsd.Core.Domain;
 
     public static class RelationshipExtensions
     {

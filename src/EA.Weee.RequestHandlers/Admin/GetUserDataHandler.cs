@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
+    using System.Threading.Tasks;
     using Core.Admin;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
-    using System.Threading.Tasks;
 
     internal class GetUserDataHandler : IRequestHandler<GetUserData, ManageUserData>
     {

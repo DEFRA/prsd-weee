@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Core.Shared;
     using Infrastructure;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using ViewModels;
     using Web.Controllers.Base;
     using Weee.Requests.Organisations;

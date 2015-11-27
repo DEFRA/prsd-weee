@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Core.Shared
 {
-    using Configuration;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
+    using Configuration;
 
     public static class InternalDomains
     {

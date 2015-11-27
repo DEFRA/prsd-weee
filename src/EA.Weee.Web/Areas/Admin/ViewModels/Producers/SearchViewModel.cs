@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Producers
 {
-    using Core.DataStandards;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using Core.DataStandards;
 
     public class SearchViewModel
     {

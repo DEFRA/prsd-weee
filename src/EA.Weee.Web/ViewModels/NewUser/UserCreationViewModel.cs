@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.ViewModels.NewUser
 {
+    using System.ComponentModel.DataAnnotations;
     using Core.DataStandards;
     using Core.Validation;
     using Prsd.Core.Validation;
-    using System.ComponentModel.DataAnnotations;
 
     public class UserCreationViewModel
     {

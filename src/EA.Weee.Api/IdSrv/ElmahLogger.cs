@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Api.IdSrv
 {
-    using Elmah;
     using System;
+    using Elmah;
     using Thinktecture.IdentityServer.Core.Logging;
 
     internal class ElmahLogger : ILogProvider

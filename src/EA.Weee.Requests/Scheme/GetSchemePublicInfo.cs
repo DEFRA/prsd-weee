@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Scheme
 {
+    using System;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Scheme;
-    using System;
 
     public class GetSchemePublicInfo : IRequest<SchemePublicInfo>
     {

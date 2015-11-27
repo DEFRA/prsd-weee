@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
-    using Domain.Lookup;
-    using EA.Weee.DataAccess.StoredProcedure;
-    using EA.Weee.Tests.Core.Model;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Domain.Lookup;
+    using EA.Weee.DataAccess.StoredProcedure;
+    using EA.Weee.Tests.Core.Model;
     using Xunit;
 
     public class SpgCSVDataByOrganisationIdAndComplianceYearTests

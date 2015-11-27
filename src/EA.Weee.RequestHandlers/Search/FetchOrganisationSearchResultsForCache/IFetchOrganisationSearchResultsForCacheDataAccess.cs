@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Search.FetchOrganisationSearchResultsForCache
 {
-    using EA.Weee.Core.Search;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using EA.Weee.Core.Search;
 
     public interface IFetchOrganisationSearchResultsForCacheDataAccess
     {
