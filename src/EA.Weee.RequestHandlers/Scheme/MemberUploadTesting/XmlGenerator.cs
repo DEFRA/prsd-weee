@@ -2,6 +2,7 @@
 {
     using System;
     using System.Xml.Linq;
+    using Core.Scheme;
     using Core.Scheme.MemberUploadTesting;
     using Prsd.Core;
 
