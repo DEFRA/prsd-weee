@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Events
 {
-    using System;
     using Prsd.Core.Domain;
+    using System;
    
     public class OrganisationUserRequestEvent : IEvent
     {

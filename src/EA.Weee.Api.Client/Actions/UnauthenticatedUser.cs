@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.Api.Client.Actions
 {
-    using System.ComponentModel;
-    using System.Net.Http;
-    using System.Threading.Tasks;
     using Entities;
     using Prsd.Core.Web.Extensions;
+    using System.Net.Http;
+    using System.Threading.Tasks;
 
     public class UnauthenticatedUser : IUnauthenticatedUser
     {

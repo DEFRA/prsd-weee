@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
-    using System.Collections.Generic;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;

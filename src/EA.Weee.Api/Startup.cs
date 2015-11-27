@@ -7,7 +7,6 @@ namespace EA.Weee.Api
 {
     using Autofac;
     using Autofac.Integration.WebApi;
-    using EA.Weee.DataAccess;
     using Elmah.Contrib.WebApi;
     using IdSrv;
     using Microsoft.Owin.Security.DataProtection;

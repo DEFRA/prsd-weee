@@ -5,13 +5,9 @@
     using EA.Weee.DataAccess.StoredProcedure;
     using FakeItEasy;
     using System;
-    using System.Collections.Generic;
     using System.Data.Common;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Transactions;
-    
+
     /// <summary>
     /// Provides a disposable wrapper for integration tests against a real
     /// database.

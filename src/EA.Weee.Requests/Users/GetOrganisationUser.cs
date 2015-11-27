@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Requests.Users
 {
-    using System;
     using Core.Organisations;
     using Prsd.Core.Mediator;
+    using System;
     
     public class GetOrganisationUser : IRequest<OrganisationUserData>
     {

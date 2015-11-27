@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Users.UpdateOrganisationUserStatus
 {
-    using System;
-    using System.Collections.Generic;
-    using Core.Shared;
     using DataAccess;
     using Domain.Organisation;
     using FakeItEasy;
     using RequestHandlers.Users.UpdateOrganisationUserStatus;
+    using System;
+    using System.Collections.Generic;
     using Weee.Tests.Core;
     using Xunit;
 

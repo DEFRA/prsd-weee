@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.JoinOrganisation.DataAccess
 {
+    using Domain.Organisation;
     using System;
     using System.Threading.Tasks;
-    using Domain;
-    using Domain.Organisation;
 
     public interface IJoinOrganisationDataAccess
     {

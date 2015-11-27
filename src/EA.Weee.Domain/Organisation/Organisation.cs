@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Domain.Organisation
 {
-    using System;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
+    using System;
 
     public partial class Organisation : Entity
     {

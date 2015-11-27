@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Defines the list of domain-specific resources/properties which can be represented
     /// by claims within WEEE.

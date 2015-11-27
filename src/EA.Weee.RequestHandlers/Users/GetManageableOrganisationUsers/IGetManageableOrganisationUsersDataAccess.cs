@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Users.GetManageableOrganisationUsers
 {
+    using Domain.Organisation;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.Organisation;
 
     public interface IGetManageableOrganisationUsersDataAccess
     {

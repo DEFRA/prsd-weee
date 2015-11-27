@@ -5,6 +5,7 @@
     using Authorization;
     using EA.Weee.Core.Routing;
     using EA.Weee.Web.Controllers.Base;
+    using Extensions;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
@@ -14,7 +15,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Extensions;
     using ViewModels.Account;
 
     [Authorize]

@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberUploadTesting
 {
+    using Core.Scheme.MemberUploadTesting;
+    using DataAccess;
+    using Prsd.Core;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
-    using Core.Scheme.MemberUploadTesting;
-    using DataAccess;
-    using Prsd.Core;
 
     /// <summary>
     /// Creates a <see cref="ProducerList"/> based on a collection of settings specifying the

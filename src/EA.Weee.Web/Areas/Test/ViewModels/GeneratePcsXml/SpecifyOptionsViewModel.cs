@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml
 {
+    using Core.Scheme;
     using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-    using Core.Scheme;
-    using Core.Scheme.MemberUploadTesting;
 
     public class SpecifyOptionsViewModel
     {

@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
     using DataAccess;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
+    using System;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
 
     internal class IsUkOrganisationAddressHandler : IRequestHandler<IsUkOrganisationAddress, bool>
     {

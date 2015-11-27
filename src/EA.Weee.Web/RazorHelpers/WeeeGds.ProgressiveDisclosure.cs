@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.RazorHelpers
 {
     using System;
-    using System.Web;
 
     public class ProgressiveDisclosure<TModel> : IDisposable
     {

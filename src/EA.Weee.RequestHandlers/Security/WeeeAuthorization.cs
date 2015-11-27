@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Security
 {
+    using DataAccess;
+    using Domain;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Core;
@@ -7,8 +9,6 @@
     using System.Linq;
     using System.Security;
     using System.Security.Claims;
-    using DataAccess;
-    using Domain;
 
     /// <summary>
     /// Provides evaluation of claims-based authorisation for WEEE resources.

@@ -1,17 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
+    using DataAccess;
+    using Prsd.Core.Mediator;
+    using Requests.Scheme.MemberRegistration;
+    using Security;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.Scheme;
-    using DataAccess;
-    using Domain.Scheme;
-    using Prsd.Core.Mapper;
-    using Prsd.Core.Mediator;
-    using Requests.Scheme.MemberRegistration;
-    using Security;
 
     public class GetComplianceYearsHandler : IRequestHandler<GetComplianceYears, List<int>>
     {

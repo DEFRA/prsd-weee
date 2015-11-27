@@ -5,7 +5,6 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Writes a set of data to a string of comma separated variables.

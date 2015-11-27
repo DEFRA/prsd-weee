@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration
 {
+    using Rules.Producer;
+    using Rules.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Rules.Producer;
-    using Rules.Scheme;
     using Xml.MemberRegistration;
 
     public class MemberRegistrationBusinessValidator : IMemberRegistrationBusinessValidator

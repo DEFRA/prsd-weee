@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.Interfaces
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Domain.Producer;
     using Domain.Scheme;
     using MemberRegistration;
     using Requests.Scheme.MemberRegistration;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface IGenerateFromXml
     {

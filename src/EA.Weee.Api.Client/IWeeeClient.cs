@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Api.Client
 {
-    using System;
-    using System.Threading.Tasks;
     using Actions;
     using Prsd.Core.Mediator;
+    using System;
+    using System.Threading.Tasks;
 
     public interface IWeeeClient : IDisposable
     {

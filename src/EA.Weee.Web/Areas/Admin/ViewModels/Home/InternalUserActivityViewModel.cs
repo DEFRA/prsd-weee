@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Home
 {
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using Web.ViewModels.Shared;
 
     public class InternalUserActivityViewModel : RadioButtonStringCollectionViewModel

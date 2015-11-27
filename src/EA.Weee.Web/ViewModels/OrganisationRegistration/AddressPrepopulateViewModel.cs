@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
     using Core.Organisations;
     using Shared;
+    using System;
+    using System.ComponentModel.DataAnnotations;
 
     public class AddressPrepopulateViewModel : YesNoChoiceViewModel
     {

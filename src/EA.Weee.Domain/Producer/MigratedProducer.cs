@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
-    using System;
     using Prsd.Core.Domain;
 
     public class MigratedProducer : Entity

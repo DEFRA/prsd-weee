@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.Rules.Producer
 {
-    using System;
     using Domain.Lookup;
     using QuerySets;
+    using System;
     using Xml.MemberRegistration;
 
     public class ProducerChargeBandChange : IProducerChargeBandChange

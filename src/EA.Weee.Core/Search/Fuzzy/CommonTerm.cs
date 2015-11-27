@@ -1,10 +1,6 @@
 ﻿namespace EA.Weee.Core.Search.Fuzzy
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Terms which appear often in many results may be devalued compared to unique terms.

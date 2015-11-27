@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Admin
 {
-    using System.Web.Mvc;
     using Controllers;
     using Infrastructure;
+    using System.Web.Mvc;
 
     public class AdminAreaRegistration : AreaRegistration 
     {

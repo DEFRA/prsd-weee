@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web
 {
-    using System.Web.Mvc;
-    using System.Web.Routing;
     using Controllers;
     using Infrastructure;
+    using System.Web.Mvc;
+    using System.Web.Routing;
 
     public class RouteConfig
     {

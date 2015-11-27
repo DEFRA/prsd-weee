@@ -2,7 +2,6 @@
 {
     using Api.Client;
     using Api.Client.Entities;
-    using Core;
     using Infrastructure;
     using Microsoft.Owin.Security;
     using Prsd.Core.Web.ApiClient;
@@ -16,7 +15,6 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels.NewUser;
-    using ViewModels.Shared;
 
     [Authorize]
     public class NewUserController : Controller

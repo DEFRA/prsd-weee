@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using Core.Scheme;
     using Domain.Scheme;
     using Prsd.Core.Mapper;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class LatestMemberUploadListMap : IMap<IEnumerable<MemberUpload>, LatestMemberUploadList>
     {

@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Tests.Core
 {
-    using System;
-    using System.Security;
     using FakeItEasy;
     using RequestHandlers.Security;
+    using System;
+    using System.Security;
 
     /// <summary>
     /// This helper class creates a fake instance of an IWeeeAutorization

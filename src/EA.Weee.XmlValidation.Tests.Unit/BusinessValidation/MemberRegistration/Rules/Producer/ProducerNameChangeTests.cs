@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.MemberRegistration.Rules.Producer
 {
-    using System;
     using Domain;
     using FakeItEasy;
+    using System;
     using Weee.Domain;
     using Weee.Domain.Producer;
     using Xml.MemberRegistration;

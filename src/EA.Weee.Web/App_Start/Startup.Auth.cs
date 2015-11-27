@@ -8,7 +8,6 @@
     using Prsd.Core.Web.Mvc.Owin;
     using Services;
     using System;
-    using System.Threading.Tasks;
 
     public partial class Startup
     {

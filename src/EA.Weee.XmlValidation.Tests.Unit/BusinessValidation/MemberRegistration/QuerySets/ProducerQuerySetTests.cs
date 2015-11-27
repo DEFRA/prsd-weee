@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.BusinessValidation.MemberRegistration.QuerySets
 {
-    using System;
-    using System.Collections.Generic;
     using Domain;
     using FakeItEasy;
+    using System;
+    using System.Collections.Generic;
     using Weee.Domain;
     using Weee.Domain.Producer;
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;

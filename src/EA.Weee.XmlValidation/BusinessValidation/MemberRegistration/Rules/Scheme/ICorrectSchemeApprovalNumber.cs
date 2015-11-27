@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.Rules.Scheme
 {
-    using System;
     using BusinessValidation;
+    using System;
     using Xml.MemberRegistration;
 
     public interface ICorrectSchemeApprovalNumber

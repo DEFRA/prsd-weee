@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Core.Scheme
 {
-    using System;
     using Shared;
+    using System;
 
     public class SchemeData
     {

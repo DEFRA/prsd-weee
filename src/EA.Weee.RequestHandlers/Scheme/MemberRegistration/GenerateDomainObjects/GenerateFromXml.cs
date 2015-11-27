@@ -36,7 +36,7 @@
 
         public MemberUpload GenerateMemberUpload(ProcessXMLFile messageXmlFile, List<MemberUploadError> errors, decimal totalCharges, Guid schemeId)
         {
-            if (errors != null && errors.Any(e => e.ErrorType == MemberUploadErrorType.Schema))
+            if (errors != null && errors.Any(e => e.ErrorType == UploadErrorType.Schema))
             {
                 return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile.Data), errors, totalCharges, null, schemeId, messageXmlFile.FileName);
             }

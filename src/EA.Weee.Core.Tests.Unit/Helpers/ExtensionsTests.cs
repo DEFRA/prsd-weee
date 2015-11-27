@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Helpers
 {
-    using System;
     using Core.Helpers;
+    using System;
     using Xunit;
 
     public class ExtensionsTests

@@ -1,9 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
     using Domain;
@@ -12,6 +8,10 @@
     using RequestHandlers.Organisations;
     using RequestHandlers.Security;
     using Requests.Organisations;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using AddressType = Core.Shared.AddressType;

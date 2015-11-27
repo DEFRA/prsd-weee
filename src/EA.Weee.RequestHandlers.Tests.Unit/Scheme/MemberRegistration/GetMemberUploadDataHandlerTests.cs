@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using DataAccess;
     using Domain;
     using Domain.Scheme;
@@ -12,6 +7,11 @@
     using Mappings;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -43,12 +43,12 @@
                     "FAKE DATA",
                     new List<MemberUploadError>
                         {
-                            new MemberUploadError(ErrorLevel.Warning, MemberUploadErrorType.Schema, "FAKE WARNING"),
-                            new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "FAKE ERROR"),
-                            new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "FAKE ERROR"),
-                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL"),
-                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Schema, "FAKE FATAL"),
-                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL")
+                            new MemberUploadError(ErrorLevel.Warning, UploadErrorType.Schema, "FAKE WARNING"),
+                            new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "FAKE ERROR"),
+                            new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "FAKE ERROR"),
+                            new MemberUploadError(ErrorLevel.Fatal, UploadErrorType.Business, "FAKE FATAL"),
+                            new MemberUploadError(ErrorLevel.Fatal, UploadErrorType.Schema, "FAKE FATAL"),
+                            new MemberUploadError(ErrorLevel.Fatal, UploadErrorType.Business, "FAKE FATAL")
                         },
                     0,
                     2016,
@@ -75,12 +75,12 @@
                     "FAKE DATA",
                     new List<MemberUploadError>
                         {
-                            new MemberUploadError(ErrorLevel.Warning, MemberUploadErrorType.Schema, "FAKE WARNING 250", 250),
-                            new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "FAKE ERROR 50", 50),
-                            new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "FAKE ERROR 5", 5),
-                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL 28", 28),
-                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Schema, "FAKE FATAL 178", 178),
-                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL")
+                            new MemberUploadError(ErrorLevel.Warning, UploadErrorType.Schema, "FAKE WARNING 250", 250),
+                            new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "FAKE ERROR 50", 50),
+                            new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "FAKE ERROR 5", 5),
+                            new MemberUploadError(ErrorLevel.Fatal, UploadErrorType.Business, "FAKE FATAL 28", 28),
+                            new MemberUploadError(ErrorLevel.Fatal, UploadErrorType.Schema, "FAKE FATAL 178", 178),
+                            new MemberUploadError(ErrorLevel.Fatal, UploadErrorType.Business, "FAKE FATAL")
                         },
                     0,
                     2016,
