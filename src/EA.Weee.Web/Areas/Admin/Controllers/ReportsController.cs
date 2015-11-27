@@ -14,6 +14,7 @@
     using System.Web.Mvc;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
+    using Weee.Requests.Admin.Reports;
     using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
 
@@ -294,10 +295,10 @@
         private async Task<ActionResult> DownloadProducerPublicRegisterCSV(ProducerPublicRegisterViewModel model, IWeeeClient client)
         {
             var membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(),
-               new GetMemberDetailsCSV(model.SelectedYear, model.SelectedScheme, model.SelectedAA));
+               new GetProducerPublicRegisterCSV(model.SelectedYear));
 
             byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(membersDetailsCsvData.FileName));
         }
     }
 }
