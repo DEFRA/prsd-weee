@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
-    using System;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Organisation;
     using FakeItEasy;
     using Prsd.Core.Domain;
+    using System;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class OrganisationIntegration : IDisposable

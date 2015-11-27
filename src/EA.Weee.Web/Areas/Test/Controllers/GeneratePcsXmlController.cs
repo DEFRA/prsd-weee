@@ -1,16 +1,15 @@
 ﻿namespace EA.Weee.Web.Areas.Test.Controllers
 {
-    using System;
-    using System.Net.Mime;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
     using Core.Scheme.MemberUploadTesting;
     using Core.Shared.Paging;
     using Infrastructure;
+    using System;
+    using System.Net.Mime;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.GeneratePcsXml;
-    using Web.ViewModels.Shared;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme.MemberUploadTesting;
 

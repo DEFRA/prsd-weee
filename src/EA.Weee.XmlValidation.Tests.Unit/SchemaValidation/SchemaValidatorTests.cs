@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.SchemaValidation
 {
+    using Core.Scheme;
+    using Core.Shared;
+    using FakeItEasy;
     using System;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Xml;
     using System.Xml.Linq;
-    using Core.Scheme;
-    using Core.Shared;
-    using FakeItEasy;
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;
     using Xml.Converter;

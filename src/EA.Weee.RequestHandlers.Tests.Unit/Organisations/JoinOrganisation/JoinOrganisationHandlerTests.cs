@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.JoinOrganisation
 {
-    using System;
-    using System.Threading.Tasks;
     using Domain.Organisation;
     using FakeItEasy;
     using Prsd.Core.Domain;
@@ -9,6 +7,8 @@
     using RequestHandlers.Organisations.JoinOrganisation.DataAccess;
     using RequestHandlers.Security;
     using Requests.Organisations;
+    using System;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class JoinOrganisationHandlerTests

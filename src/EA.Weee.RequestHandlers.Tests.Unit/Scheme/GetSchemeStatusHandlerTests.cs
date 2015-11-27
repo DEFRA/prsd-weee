@@ -1,8 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
     using DataAccess;
     using Domain.Scheme;
     using FakeItEasy;
@@ -10,6 +7,9 @@
     using RequestHandlers.Scheme;
     using RequestHandlers.Security;
     using Requests.Scheme;
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
     using Weee.Tests.Core;
     using Xunit;
     using SchemeStatus = Core.Shared.SchemeStatus;

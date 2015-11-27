@@ -4,10 +4,10 @@
     using Mappings;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
+    using Security;
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
-    using Security;
 
     internal class AddContactPersonToOrganisationHandler : IRequestHandler<AddContactPersonToOrganisation, Guid>
     {

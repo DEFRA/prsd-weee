@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Tests.Core
 {
+    using FakeItEasy;
+    using Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
-    using FakeItEasy;
-    using Prsd.Core.Domain;
 
     public class DbContextHelper
     {

@@ -122,6 +122,7 @@
     <Content Include="scripts\Update\Sprint17\20151120-1005-UpdateSPforPCSCharges.sql" />
     <Content Include="scripts\Update\Sprint17\20151116-1229-AddSPforPCSCharges.sql" />
     <Content Include="scripts\Update\Sprint17\20151125-1530-DataStandards-UpdateOrganisationFieldLengths.sql" />
+    <Content Include="scripts\Update\Sprint18\20151126-1142-AddDataReturnsUploadAndErrorsTables.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

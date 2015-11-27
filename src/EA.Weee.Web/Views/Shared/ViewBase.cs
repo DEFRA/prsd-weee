@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Views.Shared
 {
+    using Services;
     using System.Diagnostics.CodeAnalysis;
     using System.Web.Mvc;
-    using Services;
 
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass",
         Justification = "File contains generic and non-generic of the same class.")]

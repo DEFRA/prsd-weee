@@ -1,19 +1,18 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Core.Organisations;
     using Core.Shared;
     using Infrastructure;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.Organisation;
     using ViewModels.Shared;
     using Weee.Requests.Organisations;
-    using Weee.Requests.Users;
 
     public class OrganisationController : ExternalSiteController
     {

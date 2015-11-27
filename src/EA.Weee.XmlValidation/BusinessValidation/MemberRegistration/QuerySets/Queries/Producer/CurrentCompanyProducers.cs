@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets.Queries.Producer
 {
+    using DataAccess;
+    using Domain.Producer;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using DataAccess;
-    using Domain.Producer;
 
     public class CurrentCompanyProducers : Query<List<Producer>>, ICurrentCompanyProducers
     {

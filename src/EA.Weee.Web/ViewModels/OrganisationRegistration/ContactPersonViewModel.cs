@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
     using Core.DataStandards;
     using Core.Organisations;
+    using System;
+    using System.ComponentModel.DataAnnotations;
     using Weee.Requests.Organisations;
 
     public class ContactPersonViewModel

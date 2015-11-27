@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Email
 {
-    using System.Net.Mail;
-    using System.Threading.Tasks;
     using Domain;
     using Prsd.Email;
+    using System.Net.Mail;
+    using System.Threading.Tasks;
 
     public class WeeeEmailService : IWeeeEmailService
     {

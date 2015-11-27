@@ -80,7 +80,10 @@
     <Compile Include="Identity\ApplicationUserStore.cs" />
     <Compile Include="Identity\WeeeIdentityContext.cs" />
     <Compile Include="Mappings\CompetentAuthorityUserMapping.cs" />
-    <Compile Include="Mappings\MemberUploadErrorTypeMapping.cs" />
+    <Compile Include="Mappings\DataReturnsUploadErrorMapping.cs" />
+    <Compile Include="Mappings\DataReturnsUploadMapping.cs" />
+    <Compile Include="Mappings\DataRetunsUploadRawDataMapping.cs" />
+    <Compile Include="Mappings\UploadErrorTypeMapping.cs" />
     <Compile Include="Mappings\MemberUploadRawDataMapping.cs" />
     <Compile Include="Mappings\MigratedProducerMapping.cs" />
     <Compile Include="Mappings\SchemeStatusMapping.cs" />

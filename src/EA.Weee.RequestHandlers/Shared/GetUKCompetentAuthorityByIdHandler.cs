@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess;
     using Domain;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Shared;
+    using System;
+    using System.Threading.Tasks;
 
     internal class GetUKCompetentAuthorityByIdHandler :
         IRequestHandler<GetUKCompetentAuthorityById, UKCompetentAuthorityData>

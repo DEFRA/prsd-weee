@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.FindMatchingOrganisations.DataAccess
 {
+    using Domain;
+    using Domain.Organisation;
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain;
-    using Domain.Organisation;
     using Weee.DataAccess;
 
     public class FindMatchingOrganisationsDataAccess : IFindMatchingOrganisationsDataAccess

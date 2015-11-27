@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
-    using DataAccess;
     using EA.Weee.DataAccess.Identity;
     using FakeItEasy;
     using Microsoft.AspNet.Identity;

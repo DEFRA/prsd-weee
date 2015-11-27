@@ -1,8 +1,8 @@
 namespace EA.Weee.Web.ViewModels.OrganisationRegistration
 {
+    using Shared;
     using System;
     using System.ComponentModel.DataAnnotations;
-    using Shared;
 
     public class JoinOrganisationViewModel : YesNoChoiceViewModel
     {

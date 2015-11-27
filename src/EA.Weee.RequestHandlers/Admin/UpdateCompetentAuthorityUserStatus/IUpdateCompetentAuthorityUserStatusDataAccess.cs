@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.UpdateCompetentAuthorityUserStatus
 {
-    using System;
-    using System.Threading.Tasks;
     using Core.Shared;
     using Domain.Admin;
+    using System;
+    using System.Threading.Tasks;
 
     public interface IUpdateCompetentAuthorityUserStatusDataAccess
     {

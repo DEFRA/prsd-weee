@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.UpdateCompetentAuthorityUserStatus
 {
-    using System;
-    using System.Threading.Tasks;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
+    using System;
+    using System.Threading.Tasks;
 
     internal class UpdateCompetentAuthorityUserStatusHandler : IRequestHandler<UpdateCompetentAuthorityUserStatus, Guid>
     {

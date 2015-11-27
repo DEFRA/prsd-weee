@@ -1,16 +1,11 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.DataAccess.BusinessValidation.Rules.QuerySets
 {
-    using DataAccess;
     using Domain;
     using EA.Weee.Tests.Core.Model;
-    using FakeItEasy;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Weee.DataAccess;
-    using Weee.Domain.Producer;
-    using Weee.Tests.Core;
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets.Queries.Producer;
     using Xunit;

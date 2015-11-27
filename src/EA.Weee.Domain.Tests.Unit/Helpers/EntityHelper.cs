@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Helpers
 {
-    using System;
     using Prsd.Core.Domain;
     using Prsd.Core.Identity;
+    using System;
 
     public static class EntityHelper
     {

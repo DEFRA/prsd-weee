@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.XmlValidation.Errors
 {
+    using Core.Helpers;
+    using Core.Scheme;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Xml.Linq;
-    using Core.Helpers;
-    using Core.Scheme;
-    using Core.Scheme.MemberUploadTesting;
 
     public class XmlErrorTranslator : IXmlErrorTranslator
     {

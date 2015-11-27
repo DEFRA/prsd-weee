@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Scheme
 {
-    using System;
     using Core.Organisations;
     using Core.Shared;
+    using System;
 
     public class ManageContactDetailsViewModel
     {   

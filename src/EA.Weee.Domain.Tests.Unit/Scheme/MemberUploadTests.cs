@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Scheme
 {
+    using Domain.Scheme;
     using System;
     using System.Collections.Generic;
-    using Domain.Scheme;
     using Xunit;
 
     public class MemberUploadTests

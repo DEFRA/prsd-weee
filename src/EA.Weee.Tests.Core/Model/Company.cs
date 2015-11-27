@@ -9,9 +9,8 @@
 
 namespace EA.Weee.Tests.Core.Model
 {
-    using System;
     using System.Collections.Generic;
-    
+
     public partial class Company
     {
         public Company()

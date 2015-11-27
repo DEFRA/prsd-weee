@@ -1,12 +1,8 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Producer
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using EA.Weee.Domain.Producer;
     using FakeItEasy;
+    using System;
     using Xunit;
 
     public class AuthorisedRepresentativeTests

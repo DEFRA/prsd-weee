@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Domain;
     using Domain.Producer;
     using Queries.Producer;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Xml.MemberRegistration;
 
     public class ProducerQuerySet : IProducerQuerySet

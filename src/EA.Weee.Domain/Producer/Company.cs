@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
-    using System;
     using Prsd.Core.Domain;
+    using System;
 
     public class Company : Entity, IEquatable<Company>
     {

@@ -1,15 +1,11 @@
 ﻿namespace EA.Weee.Core.Helpers
 {
+    using Prsd.Core.Domain;
     using System;
     using System.ComponentModel;
     using System.Globalization;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Reflection;
-    using System.Runtime.InteropServices.WindowsRuntime;
-    using System.Web.Mvc;
-    using Prsd.Core.Domain;
-    using Scheme;
 
     public static class Extensions
     {
