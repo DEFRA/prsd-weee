@@ -296,11 +296,6 @@
                 model.RegisteredProducers.Add(registeredProducer);
             }
 
-            if (memberUpload.IsSubmitted)
-            {
-                registeredProducer.CurrentSubmissionId = IntegerToGuid(producerSubmissionId);
-            }
-
             var chargeBandAmount = FetchChargeBandAmount(ChargeBand.A);
             ProducerSubmission producerSubmission = new ProducerSubmission
             {
@@ -319,6 +314,12 @@
                 ObligationType = "B2B"
             };
             model.ProducerSubmissions.Add(producerSubmission);
+
+            if (memberUpload.IsSubmitted)
+            {
+                registeredProducer.CurrentSubmissionId = IntegerToGuid(producerSubmissionId);
+                registeredProducer.ProducerSubmission = producerSubmission;
+            }
 
             return producerSubmission;
         }

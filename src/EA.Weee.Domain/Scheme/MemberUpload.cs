@@ -85,7 +85,7 @@
 
             foreach (ProducerSubmission producerSubmission in ProducerSubmissions)
             {
-                producerSubmission.RegisteredProducer.CurrentSubmission = producerSubmission;
+                producerSubmission.RegisteredProducer.SetCurrentSubmission(producerSubmission);
             }
         }
 

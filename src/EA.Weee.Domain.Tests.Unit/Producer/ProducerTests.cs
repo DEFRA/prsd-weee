@@ -275,7 +275,7 @@
                     chargeBandAmount,
                     (decimal)5.0);
 
-                registeredProducer.CurrentSubmission = producerSubmission;
+                registeredProducer.SetCurrentSubmission(producerSubmission);
 
                 return producerSubmission;
             }
