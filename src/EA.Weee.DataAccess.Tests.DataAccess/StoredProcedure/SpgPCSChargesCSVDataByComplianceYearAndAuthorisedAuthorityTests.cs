@@ -61,15 +61,15 @@
                 Scheme scheme1 = helper.CreateScheme();
 
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
-                memberUpload1.ComplianceYear = 2016;
-                memberUpload1.IsSubmitted = false;
+                memberUpload1.ComplianceYear = 2000;
+                memberUpload1.IsSubmitted = true;
 
                 ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
                 producer1.ChargeThisUpdate = 0;
                 db.Model.SaveChanges();
 
                 // Act
-                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(2016);
+                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(2000);
 
                 // Assert
                 Assert.NotNull(results);
