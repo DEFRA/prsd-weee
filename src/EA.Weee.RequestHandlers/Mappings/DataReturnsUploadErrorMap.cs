@@ -4,9 +4,9 @@
     using Domain.Scheme;
     using Prsd.Core.Mapper;
 
-    public class MemberUploadErrorMap : IMap<MemberUploadError, UploadErrorData>
+    public class DataReturnsUploadErrorMap : IMap<DataReturnsUploadError, UploadErrorData>
     {
-        public UploadErrorData Map(MemberUploadError source)
+        public UploadErrorData Map(DataReturnsUploadError source)
         {
             return new UploadErrorData
             {

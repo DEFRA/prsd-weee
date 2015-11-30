@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    public enum SchemaVersion
+    public enum MemberRegistrationSchemaVersion
     {
         [Display(Name = "3.0.4")]
         Version_3_04,

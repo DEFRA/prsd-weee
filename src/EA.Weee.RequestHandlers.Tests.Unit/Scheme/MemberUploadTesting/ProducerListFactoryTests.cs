@@ -256,14 +256,14 @@
             ProducerListSettings listSettings = new ProducerListSettings()
             {
                 OrganisationID = new Guid("20C569E6-C4A0-40C2-9D87-120906D5434B"),
-                SchemaVersion = SchemaVersion.Version_3_06
+                SchemaVersion = MemberRegistrationSchemaVersion.Version_3_06
             };
 
             // Act
             ProducerList producerList = await producerListFactory.CreateAsync(listSettings);
 
             // Assert
-            Xunit.Assert.Equal(SchemaVersion.Version_3_06, producerList.SchemaVersion);
+            Xunit.Assert.Equal(MemberRegistrationSchemaVersion.Version_3_06, producerList.SchemaVersion);
         }
 
         [Fact]

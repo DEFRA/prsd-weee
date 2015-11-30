@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
+﻿namespace EA.Weee.RequestHandlers.Shared
 {
     using System;
     using Core.Helpers;
@@ -15,7 +15,7 @@
                 error.LineNumber.HasValue ? error.LineNumber.Value : 0);
         }
 
-        public static DataReturnsUploadError ToMemberDataReturnsUploadError(this XmlValidationError error)
+        public static DataReturnsUploadError ToDataReturnsUploadError(this XmlValidationError error)
         {
             return new DataReturnsUploadError(error.ErrorLevel.ToDomainEnumeration<ErrorLevel>(),
                 error.ErrorType.ToUploadErrorType(), error.Message,

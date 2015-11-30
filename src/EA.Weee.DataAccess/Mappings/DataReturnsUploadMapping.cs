@@ -9,7 +9,7 @@
         {
             HasRequired(e => e.RawData).WithRequiredPrincipal();
 
-            ToTable("DataReturns", "PCS");
+            ToTable("DataReturnsUpload", "PCS");
         }
     }
 }
