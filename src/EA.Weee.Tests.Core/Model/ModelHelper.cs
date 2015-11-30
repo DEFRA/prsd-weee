@@ -277,11 +277,10 @@
             RegisteredProducer registeredProducer;
 
             // Try to find a RegisteredProducer that has already been created, otherwise create a new one.
-            registeredProducer = model.RegisteredProducers
-                .Where(rp => rp.ProducerRegistrationNumber == registrationNumber)
-                .Where(rp => rp.ComplianceYear == memberUpload.ComplianceYear.Value)
-                .Where(rp => rp.SchemeId == memberUpload.SchemeId)
-                .SingleOrDefault();
+            registeredProducer = model.RegisteredProducers.Local
+                .SingleOrDefault(rp => rp.ProducerRegistrationNumber == registrationNumber &&
+                                       rp.ComplianceYear == memberUpload.ComplianceYear.Value &&
+                                       rp.SchemeId == memberUpload.SchemeId);
 
             if (registeredProducer == null)
             {
