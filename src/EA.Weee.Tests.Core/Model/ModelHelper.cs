@@ -259,8 +259,7 @@
             RegisteredProducer registeredProducer;
 
             // Try to find a RegisteredProducer that has already been created, otherwise create a new one.
-            registeredProducer = model.ChangeTracker.Entries<RegisteredProducer>()
-                .Select(e => e.Entity)
+            registeredProducer = model.RegisteredProducers
                 .Where(rp => rp.ProducerRegistrationNumber == registrationNumber)
                 .Where(rp => rp.ComplianceYear == memberUpload.ComplianceYear.Value)
                 .Where(rp => rp.SchemeId == memberUpload.SchemeId)

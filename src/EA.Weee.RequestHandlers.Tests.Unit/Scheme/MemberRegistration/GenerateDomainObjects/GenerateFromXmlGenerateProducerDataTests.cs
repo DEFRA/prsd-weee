@@ -23,11 +23,12 @@
     public class GenerateFromXmlGenerateProducerDataTests
     {
         [Fact]
-        public async void GenerateProducerData_WithSchemeId_ReturnsProducerWithMatchingSchemeId()
+        public async void GenerateProducerData_InsertProducer_WithScheme_ReturnsRegisteredProducerWithMatchingSchemeId()
         {
             var schemeId = Guid.NewGuid();
 
             var builder = new GenerateProducerDataTestsBuilder();
+            builder.Status = statusType.I;
             builder.SchemeId = schemeId;
 
             var result = await builder.InvokeGenerateProducerDataWithSingleResult();
@@ -42,7 +43,7 @@
 
             var data = "Test data";
             var fileName = "Test filename";
-            var memberUpload = new MemberUpload(Guid.NewGuid(), A.Dummy<Scheme>(), data, fileName);
+            var memberUpload = new MemberUpload(Guid.NewGuid(), data, A.Dummy<List<MemberUploadError>>(), 0, 2015, A.Dummy<Scheme>(), fileName);
 
             builder.MemberUpload = memberUpload;
 
@@ -226,6 +227,16 @@
             builder.Status = statusType.A;
             builder.RegistrationNumber = "Test Registration Number";
 
+            RegisteredProducer registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => registeredProducer.ProducerRegistrationNumber)
+                .Returns("Test Registration Number");
+
+            A.CallTo(() => builder.DataAccess.ProducerRegistrationExists(A<string>._))
+                .Returns(true);
+
+            A.CallTo(() => builder.DataAccess.FetchRegisteredProducerOrDefault(A<string>._, A<int>._, A<Guid>._))
+                .Returns(registeredProducer);
+
             var result = await builder.InvokeGenerateProducerDataWithSingleResult();
 
             Assert.Equal("Test Registration Number", result.RegisteredProducer.ProducerRegistrationNumber);
@@ -302,6 +313,12 @@
             A.CallTo(() => registeredProducer.CurrentSubmission)
                 .Returns(new AlwaysUnequalProducer());
 
+            A.CallTo(() => registeredProducer.ProducerRegistrationNumber)
+                .Returns("Test Registration Number");
+
+            A.CallTo(() => builder.DataAccess.ProducerRegistrationExists(A<string>._))
+                .Returns(true);
+
             A.CallTo(() => builder.DataAccess.FetchRegisteredProducerOrDefault(A<string>._, A<int>._, A<Guid>._))
                 .Returns(registeredProducer);
 
@@ -321,6 +338,9 @@
             A.CallTo(() => registeredProducer.CurrentSubmission)
                 .Returns(new AlwaysEqualProducer());
 
+            A.CallTo(() => builder.DataAccess.ProducerRegistrationExists(A<string>._))
+                .Returns(true);
+
             A.CallTo(() => builder.DataAccess.FetchRegisteredProducerOrDefault(A<string>._, A<int>._, A<Guid>._))
                 .Returns(registeredProducer);
 
@@ -336,10 +356,19 @@
             builder.Status = statusType.A;
             builder.RegistrationNumber = "Test Registration Number";
 
+            A.CallTo(() => builder.DataAccess.ProducerRegistrationExists(A<string>._))
+                .Returns(false);
+
+            A.CallTo(() => builder.DataAccess.MigratedProducerExists(A<string>._))
+                .Returns(true);
+
             A.CallTo(() => builder.DataAccess.FetchRegisteredProducerOrDefault(A<string>._, A<int>._, A<Guid>._))
                 .Returns((RegisteredProducer)null);
 
             var result = await builder.InvokeGenerateProducerData(1);
+
+            A.CallTo(() => builder.DataAccess.MigratedProducerExists(A<string>._))
+                .MustHaveHappened();
 
             Assert.Equal(1, result.Count());
             Assert.Equal("Test Registration Number", result.Single().RegisteredProducer.ProducerRegistrationNumber);
@@ -384,7 +413,6 @@
             public IGenerateFromXmlDataAccess DataAccess;
 
             public string TradingName;
-            public Guid SchemeId;
             public MemberUpload MemberUpload;
             public Dictionary<string, ProducerCharge> ProducerCharges;
             public string[] BrandNames;
@@ -402,6 +430,19 @@
             public bool VatRegistered;
             public Queue<string> GeneratedPrns;
 
+            private Scheme scheme;
+
+            private Guid schemeId;
+            public Guid SchemeId
+            {
+                get { return schemeId; }
+                set
+                {
+                    schemeId = value;
+                    A.CallTo(() => scheme.Id).Returns(SchemeId);
+                }
+            }
+
             public GenerateProducerDataTestsBuilder()
             {
                 XmlConverter = A.Fake<IXmlConverter>();
@@ -414,8 +455,7 @@
             {
                 TradingName = "Test trading name";
 
-                Scheme scheme = new Scheme(
-                    A.Dummy<Guid>());
+                scheme = A.Fake<Scheme>();
 
                 MemberUpload = new MemberUpload(
                     A.Dummy<Guid>(),
@@ -428,7 +468,7 @@
                     A.Dummy<string>());
 
                 ProducerCharges = new Dictionary<string, ProducerCharge>();
-                ProducerCharges.Add(TradingName, new ProducerCharge());
+                ProducerCharges.Add(TradingName, new ProducerCharge() { ChargeBandAmount = new ChargeBandAmount() });
 
                 GeneratedPrns = new Queue<string>();
                 A.CallTo(() => DataAccess.ComputePrns(A<int>._)).Returns(GeneratedPrns);

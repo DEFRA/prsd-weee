@@ -36,7 +36,7 @@
             Guard.ArgumentNotNull(() => producerBusiness, producerBusiness);
             Guard.ArgumentNotNull(() => chargeBandAmount, chargeBandAmount);
 
-            if (registeredProducer.Scheme != memberUpload.Scheme)
+            if (registeredProducer.Scheme.Id != memberUpload.Scheme.Id)
             {
                 string errorMessage = "A producer submission can only be associated "
                     + "with a registered producer in the same scheme.";
