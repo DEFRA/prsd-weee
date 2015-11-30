@@ -1,5 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Xml.Serialization;
     using Domain;
     using Domain.Producer;
     using Domain.Scheme;
@@ -8,11 +13,6 @@
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Requests.Scheme.MemberRegistration;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Xml.Serialization;
     using Xml.Converter;
     using Xml.MemberRegistration;
 
@@ -36,7 +36,7 @@
 
         public MemberUpload GenerateMemberUpload(ProcessXMLFile messageXmlFile, List<MemberUploadError> errors, decimal totalCharges, Scheme scheme)
         {
-            if (errors != null && errors.Any(e => e.ErrorType == MemberUploadErrorType.Schema))
+            if (errors != null && errors.Any(e => e.ErrorType == UploadErrorType.Schema))
             {
                 return new MemberUpload(messageXmlFile.OrganisationId, xmlConverter.XmlToUtf8String(messageXmlFile.Data), errors, totalCharges, null, scheme, messageXmlFile.FileName);
             }

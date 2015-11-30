@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Domain;
     using Domain.Organisation;
     using Domain.Scheme;
@@ -7,10 +11,6 @@
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Scheme;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class GetSchemesDataAccessTests

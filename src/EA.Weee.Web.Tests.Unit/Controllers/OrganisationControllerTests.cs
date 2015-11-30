@@ -1,22 +1,16 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
-    using EA.Prsd.Core.Web.OAuth;
-    using EA.Prsd.Core.Web.OpenId;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Controllers;
-    using EA.Weee.Web.Services;
     using EA.Weee.Web.ViewModels.Organisation;
     using FakeItEasy;
-    using Microsoft.Owin.Security;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Xunit;
 
     public class OrganisationControllerTests

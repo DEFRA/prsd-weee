@@ -1,14 +1,12 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
+    using System;
+    using System.Collections.Generic;
     using Domain;
     using Lookup;
     using Prsd.Core;
     using Prsd.Core.Domain;
     using Scheme;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     public class ProducerSubmission : Entity, IEquatable<ProducerSubmission>
     {

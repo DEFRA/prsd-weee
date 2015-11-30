@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme
 {
-    using Controllers;
     using System.Web.Mvc;
+    using Controllers;
     using Infrastructure;
 
     public class SchemeAreaRegistration : AreaRegistration 

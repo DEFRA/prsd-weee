@@ -1,15 +1,10 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Email
 {
+    using System.Net.Mail;
+    using System.Threading.Tasks;
     using EA.Prsd.Email;
-    using EA.Weee.Domain;
     using EA.Weee.Email;
     using FakeItEasy;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net.Mail;
-    using System.Text;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class WeeeEmailServiceTests

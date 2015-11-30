@@ -3,12 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
     using System.Web.Mvc;
     using Core.Admin;
     using Core.DataStandards;
     using Core.Shared;
-    using Microsoft.Ajax.Utilities;
     using Prsd.Core.Helpers;
 
     public class EditUserViewModel

@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration.GenerateDomainObjects
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Xml.Linq;
     using Domain;
     using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
     using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using Requests.Scheme.MemberRegistration;
-    using System;
-    using System.Collections.Generic;
-    using System.Xml.Linq;
     using Xml.Converter;
     using Xml.MemberRegistration;
     using Xunit;
@@ -25,7 +25,7 @@
             var result = generateFromXml.GenerateMemberUpload(message,
                 new List<MemberUploadError>
                 {
-                    new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "Some schema error")
+                    new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Some schema error")
                 },
                 A<decimal>._, A.Fake<Scheme>());
 
@@ -76,7 +76,7 @@
 
             var errors = new List<MemberUploadError>
                 {
-                    new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "Some schema error")
+                    new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "Some schema error")
                 };
 
             var builder = new GenerateFromXmlBuilder();

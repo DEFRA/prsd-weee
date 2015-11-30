@@ -5,9 +5,7 @@
     using System.Linq;
     using Core.Helpers;
     using Domain;
-    using Domain.Organisation;
     using RequestHandlers.Admin;
-    using Weee.DataAccess;
     using Weee.Tests.Core.Model;
     using Xunit;
 

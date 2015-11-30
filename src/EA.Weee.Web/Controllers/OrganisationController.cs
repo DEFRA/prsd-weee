@@ -13,7 +13,6 @@
     using ViewModels.Organisation;
     using ViewModels.Shared;
     using Weee.Requests.Organisations;
-    using Weee.Requests.Users;
 
     public class OrganisationController : ExternalSiteController
     {

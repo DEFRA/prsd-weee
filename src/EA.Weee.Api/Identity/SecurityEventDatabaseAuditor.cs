@@ -1,18 +1,11 @@
 ﻿namespace EA.Weee.Api.Identity
 {
+    using System;
+    using System.Data.SqlClient;
+    using System.Threading.Tasks;
     using EA.Prsd.Core;
-    using EA.Weee.DataAccess;
-    using EA.Weee.DataAccess.Identity;
-    using EA.Weee.Domain;
     using Microsoft.AspNet.Identity;
     using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data.SqlClient;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web;
 
     /// <summary>
     /// An implementation of the ISecurityEventAuditor interface which

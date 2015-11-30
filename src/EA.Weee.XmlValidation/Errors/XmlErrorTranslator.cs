@@ -6,7 +6,6 @@
     using System.Xml.Linq;
     using Core.Helpers;
     using Core.Scheme;
-    using Core.Scheme.MemberUploadTesting;
 
     public class XmlErrorTranslator : IXmlErrorTranslator
     {

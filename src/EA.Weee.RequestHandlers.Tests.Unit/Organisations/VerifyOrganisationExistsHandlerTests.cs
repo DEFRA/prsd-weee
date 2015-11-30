@@ -2,14 +2,12 @@
 {
     using System;
     using System.Data.Entity;
-    using System.Diagnostics;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.Organisation;
     using FakeItEasy;
-    using FakeItEasy.ExtensionSyntax.Full;
     using RequestHandlers.Organisations;
     using RequestHandlers.Security;
     using Requests.Organisations;

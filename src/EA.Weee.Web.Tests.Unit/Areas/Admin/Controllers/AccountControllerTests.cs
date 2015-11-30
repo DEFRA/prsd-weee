@@ -1,16 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
-    using Api.Client;
-    using Api.Client.Actions;
-    using Api.Client.Entities;
-    using Authorization;
-    using FakeItEasy;
-    using Microsoft.Owin.Security;
-    using Prsd.Core.Mediator;
-    using Prsd.Core.Web.ApiClient;
-    using Prsd.Core.Web.OAuth;
-    using Prsd.Core.Web.OpenId;
-    using Services;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -20,7 +9,18 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Api.Client;
+    using Api.Client.Actions;
+    using Api.Client.Entities;
+    using Authorization;
     using Core.Shared;
+    using FakeItEasy;
+    using Microsoft.Owin.Security;
+    using Prsd.Core.Mediator;
+    using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.OAuth;
+    using Prsd.Core.Web.OpenId;
+    using Services;
     using Thinktecture.IdentityModel.Client;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Account;

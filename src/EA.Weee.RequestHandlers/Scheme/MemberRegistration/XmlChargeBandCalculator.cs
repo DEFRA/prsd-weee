@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
+    using System;
+    using System.Collections.Generic;
     using Domain;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
-    using System;
-    using System.Collections.Generic;
     using Xml.Converter;
     using Xml.MemberRegistration;
 
@@ -44,7 +44,7 @@
                         ErrorsAndWarnings.Add(
                             new MemberUploadError(
                                 ErrorLevel.Error,
-                                MemberUploadErrorType.Business,
+                                UploadErrorType.Business,
                                 string.Format(
                                     "We are unable to check for warnings associated with the charge band of the producer {0} until the duplicate name has been fixed.",
                                     producerName)));
