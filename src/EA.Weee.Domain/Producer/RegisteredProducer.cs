@@ -21,6 +21,7 @@
             ProducerRegistrationNumber = producerRegistrationNumber;
             ComplianceYear = complianceYear;
             Scheme = scheme;
+            CurrentSubmission = null;
         }
 
         /// <summary>
@@ -36,8 +37,19 @@
 
         public virtual Scheme Scheme { get; private set; }
 
-        public virtual ProducerSubmission CurrentSubmission { get; set; }
+        public virtual ProducerSubmission CurrentSubmission { get; private set; }
 
         public virtual ICollection<ProducerSubmission> ProducerSubmissions { get; private set; }
+
+        public void SetCurrentSubmission(ProducerSubmission producerSubmission)
+        {
+            Guard.ArgumentNotNull(() => producerSubmission, producerSubmission);
+
+            if (producerSubmission.RegisteredProducer != this)
+            {
+                throw new InvalidOperationException();
+            }
+            CurrentSubmission = producerSubmission;
+        }
     }
 }
