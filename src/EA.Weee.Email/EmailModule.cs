@@ -1,17 +1,11 @@
 ﻿namespace EA.Weee.Email
 {
+    using System.Configuration;
     using Autofac;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Email;
     using EA.Prsd.Email.Rules;
-    using EA.Prsd.Email.Rules.Configuration;
     using EA.Weee.Email.EventHandlers;
-    using System;
-    using System.Collections.Generic;
-    using System.Configuration;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class EmailModule : Module
     {

@@ -1,15 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme
 {
+    using System;
+    using System.Threading.Tasks;
     using Core.Scheme;
-    using DataAccess;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Scheme;
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
 
     internal class GetSchemeByIdHandler : IRequestHandler<GetSchemeById, SchemeData>
     {

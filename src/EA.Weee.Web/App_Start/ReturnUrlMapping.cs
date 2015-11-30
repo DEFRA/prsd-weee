@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.Web.App_Start
 {
-    using EA.Prsd.Core;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Web;
+    using EA.Prsd.Core;
 
     /// <summary>
     /// Provides a mapping for the ReturnUrl parameter used following a successful sign-in.

@@ -2,10 +2,6 @@
 {
     using System;
     using System.Threading.Tasks;
-    using DataAccess;
-    using Domain;
-    using Domain.Organisation;
-    using Mappings;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Users;

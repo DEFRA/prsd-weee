@@ -1,11 +1,9 @@
 ﻿namespace EA.Weee.Core.Validation
 {
-    using Configuration;
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using System.Text.RegularExpressions;
+    using Configuration;
     using Shared;
 
     [AttributeUsage(AttributeTargets.Property)]

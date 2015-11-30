@@ -1,14 +1,11 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Producer
 {
+    using System;
+    using System.Collections.Generic;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Scheme;
     using FakeItEasy;
     using Lookup;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class ProducerTests

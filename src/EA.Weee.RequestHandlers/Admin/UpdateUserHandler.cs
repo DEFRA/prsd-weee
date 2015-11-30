@@ -1,14 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin
 {
-    using DataAccess;
+    using System;
+    using System.Threading.Tasks;
     using EA.Weee.DataAccess.Identity;
     using Microsoft.AspNet.Identity;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
-    using System;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
 
     internal class UpdateUserHandler : IRequestHandler<UpdateUser, Guid>
     {

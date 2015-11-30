@@ -1,14 +1,13 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.Scheme
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text.RegularExpressions;
     using Domain.Scheme;
     using EA.Weee.Domain.Producer;
     using FakeItEasy;
     using Lookup;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.InteropServices.ComTypes;
-    using System.Text.RegularExpressions;
     using Xunit;
 
     public class SchemeTests

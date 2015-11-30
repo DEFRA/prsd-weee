@@ -1,5 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Core.Organisations;
@@ -8,11 +13,6 @@
     using Infrastructure;
     using Services;
     using Services.Caching;
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using ViewModels.Scheme;
     using Web.ViewModels.Shared.Scheme;
     using Weee.Requests.Organisations;

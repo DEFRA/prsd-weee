@@ -70,7 +70,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCSVData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, scheme1.Id);
+                List<MembersDetailsCSVData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, scheme1.Id, null);
 
                 // Assert
                 Assert.NotNull(results);
@@ -103,8 +103,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCSVData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016,
-                            scheme1.Id);
+                List<MembersDetailsCSVData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, scheme1.Id, null);
                     
                 // Assert
                 Assert.NotNull(results);
@@ -141,8 +140,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCSVData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016,
-                            scheme1.Id);
+                List<MembersDetailsCSVData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, scheme1.Id, null);
                     
                 // Assert
                 Assert.NotNull(results);
@@ -179,8 +177,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCSVData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016,
-                            scheme1.Id);
+                List<MembersDetailsCSVData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, scheme1.Id, null);
 
                 // Assert
                 Assert.NotNull(results);
@@ -224,7 +221,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCSVData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, scheme1.Id);
+                List<MembersDetailsCSVData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, scheme1.Id, null);
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
@@ -310,7 +307,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCSVData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, scheme1.Id);
+                List<MembersDetailsCSVData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, scheme1.Id, null);
 
                 // Assert
                 Assert.NotNull(results);

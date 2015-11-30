@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Diagnostics;
@@ -12,12 +11,10 @@
     using Domain.Producer;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
-    using GenerateProducerObjects;
     using Interfaces;
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
     using Xml.Converter;
-    using XmlValidation;
 
     internal class ProcessXMLFileHandler : IRequestHandler<ProcessXMLFile, Guid>
     {
@@ -49,7 +46,7 @@
             var errors = xmlValidator.Validate(message);
 
             List<MemberUploadError> memberUploadErrors = errors as List<MemberUploadError> ?? errors.ToList();
-            bool containsSchemaErrors = memberUploadErrors.Any(e => e.ErrorType == MemberUploadErrorType.Schema);
+            bool containsSchemaErrors = memberUploadErrors.Any(e => e.ErrorType == UploadErrorType.Schema);
             bool containsErrorOrFatal = memberUploadErrors.Any(e => (e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal));
 
             //calculate charge band for producers if no schema errors

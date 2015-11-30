@@ -1,10 +1,6 @@
 ﻿namespace EA.Weee.Core.Scheme
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// A DTO providing information about a scheme that is publically available.
