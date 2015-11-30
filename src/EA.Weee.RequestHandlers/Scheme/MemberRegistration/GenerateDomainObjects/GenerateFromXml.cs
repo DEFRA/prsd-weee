@@ -158,13 +158,13 @@
                         if (registeredProducer.CurrentSubmission == null)
                         {
                             producers.Add(producer);
-                                }
-                                else
-                                {
+                        }
+                        else
+                        {
                             if (!registeredProducer.CurrentSubmission.Equals(producer))
                             {
-                                    producers.Add(producer);
-                                }
+                                producers.Add(producer);
+                            }
                             else
                             {
                                 /*
@@ -187,14 +187,18 @@
         private async Task EnsureProducerRegistrationNumberExists(string producerRegistrationNumber)
         {
             bool producerRegistrationExists = await dataAccess.ProducerRegistrationExists(producerRegistrationNumber);
-            bool migratedProducerExists = await dataAccess.MigratedProducerExists(producerRegistrationNumber);
 
-            if (!producerRegistrationExists && !migratedProducerExists)
+            if (!producerRegistrationExists)
             {
-                string errorMessage = string.Format(
-                    "PRN: {0} does not exists in current data set.",
-                    producerRegistrationNumber);
-                throw new InvalidOperationException(errorMessage);
+                bool migratedProducerExists = await dataAccess.MigratedProducerExists(producerRegistrationNumber);
+
+                if (!migratedProducerExists)
+                {
+                    string errorMessage = string.Format(
+                        "PRN: {0} does not exists in current data set.",
+                        producerRegistrationNumber);
+                    throw new InvalidOperationException(errorMessage);
+                }
             }
         }
 

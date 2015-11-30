@@ -21,7 +21,6 @@
             ProducerRegistrationNumber = producerRegistrationNumber;
             ComplianceYear = complianceYear;
             Scheme = scheme;
-            currentSubmission = null;
         }
 
         /// <summary>
@@ -31,34 +30,14 @@
         {
         }
 
-        public string ProducerRegistrationNumber { get; private set; }
+        public virtual string ProducerRegistrationNumber { get; private set; }
 
-        public int ComplianceYear { get; private set; }
+        public virtual int ComplianceYear { get; private set; }
 
-        public Scheme Scheme { get; private set; }
+        public virtual Scheme Scheme { get; private set; }
 
-        private ProducerSubmission currentSubmission;
-        public ProducerSubmission CurrentSubmission
-        {
-            get { return currentSubmission; }
-            set
-            {
-                if (currentSubmission != null && value == null)
-                {
-                    string errorMessage = "Once a registration has been submitted, the current submission cannot be unset.";
-                    throw new InvalidOperationException(errorMessage);
-                }
+        public virtual ProducerSubmission CurrentSubmission { get; set; }
 
-                if (value != null && value.RegisteredProducer != this)
-                {
-                    string errorMessage = "The current producer submission for a registered producer can only be set to "
-                        + "a submission that is already associated with the registered producer.";
-                    throw new InvalidOperationException(errorMessage);
-                }
-
-                currentSubmission = value;
-            }
-        }
-        public ICollection<ProducerSubmission> ProducerSubmissions { get; private set; }
+        public virtual ICollection<ProducerSubmission> ProducerSubmissions { get; private set; }
     }
 }

@@ -27,7 +27,7 @@
                 {
                     new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "Some schema error")
                 },
-                A<decimal>._, A<Scheme>._);
+                A<decimal>._, A.Fake<Scheme>());
 
             Assert.Null(result.ComplianceYear);
         }
@@ -42,7 +42,7 @@
             var message = new ProcessXMLFile(Guid.NewGuid(), new byte[1], "File name");
             var generateFromXml = builder.Build();
 
-            var result = generateFromXml.GenerateMemberUpload(message, new List<MemberUploadError>(), 2015, A<Scheme>._);
+            var result = generateFromXml.GenerateMemberUpload(message, new List<MemberUploadError>(), 2015, A.Fake<Scheme>());
 
             Assert.NotNull(result.ComplianceYear);
             Assert.Equal(2015, result.ComplianceYear.Value);
@@ -58,7 +58,7 @@
             var message = new ProcessXMLFile(Guid.NewGuid(), new byte[1], "File name");
             var generateFromXml = builder.Build();
 
-            var result = generateFromXml.GenerateMemberUpload(message, null, 2015, A<Scheme>._);
+            var result = generateFromXml.GenerateMemberUpload(message, null, 2015, A.Fake<Scheme>());
 
             Assert.NotNull(result.ComplianceYear);
             Assert.Equal(2015, result.ComplianceYear.Value);
