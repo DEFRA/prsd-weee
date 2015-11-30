@@ -104,7 +104,7 @@
                 A.Dummy<ChargeBandAmount>(),
                 0);
 
-            registeredProducer.CurrentSubmission = producer;
+            registeredProducer.SetCurrentSubmission(producer);
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
             A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA"))
