@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using Core.Helpers;
     using Core.Scheme;
@@ -8,6 +9,7 @@
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
+    using Shared;
     using Weee.XmlValidation.BusinessValidation.MemberRegistration;
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;
@@ -33,8 +35,9 @@
 
         public IEnumerable<MemberUploadError> Validate(ProcessXMLFile message)
         {
+            string schemaVersion = MemberRegistrationSchemaVersion.Version_3_07.GetAttribute<DisplayAttribute>().Name;
             // Validate against the schema
-            var errors = schemaValidator.Validate(message.Data, @"EA.Weee.Xml.MemberRegistration.v3schema.xsd", @"http://www.environment-agency.gov.uk/WEEE/XMLSchema", SchemaVersion.Version_3_07)
+            var errors = schemaValidator.Validate(message.Data, @"EA.Weee.Xml.MemberRegistration.v3schema.xsd", @"http://www.environment-agency.gov.uk/WEEE/XMLSchema", schemaVersion)
                 .Select(e => e.ToMemberUploadError())
                 .ToList();
 
@@ -54,7 +57,7 @@
             {
                 // Couldn't deserialise - can't go any further, add an error and bail out here
                 var exceptionMessage = e.InnerException != null ? e.InnerException.Message : e.Message;
-                var friendlyMessage = errorTranslator.MakeFriendlyErrorMessage(exceptionMessage, SchemaVersion.Version_3_07);
+                var friendlyMessage = errorTranslator.MakeFriendlyErrorMessage(exceptionMessage, schemaVersion);
                 errors.Add(new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, friendlyMessage));
 
                 return errors;

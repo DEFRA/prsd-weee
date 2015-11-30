@@ -82,10 +82,18 @@
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
     <Compile Include="Admin\Reports\GetPCSChargesCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandler.cs" />
+    <Compile Include="DataReturns\GenerateDomainObjects\GenerateFromDataReturnsXML.cs" />
+    <Compile Include="DataReturns\GenerateDomainObjects\IGenerateFromDataReturnsXML.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnsXMLFileHandler.cs" />
+    <Compile Include="DataReturns\XmlValidation\DataReturnsXMLValidator.cs" />
+    <Compile Include="DataReturns\XmlValidation\IDataReturnsXMLValidator.cs" />
+    <Compile Include="Mappings\DataReturnsUploadErrorMap.cs" />
+    <Compile Include="Mappings\DataReturnsUploadMap.cs" />
+    <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
-    <Compile Include="Scheme\MemberRegistration\Extensions.cs" />
+    <Compile Include="Shared\Extensions.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\GenerateFromXmlDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\IGenerateFromXmlDataAccess.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheDataAccess.cs" />
@@ -120,7 +128,6 @@
     <Compile Include="Mappings\ContactMap.cs" />
     <Compile Include="Mappings\CountryMap.cs" />
     <Compile Include="Mappings\LatestMemberUploadListMap.cs" />
-    <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\MemberUploadMap.cs" />
     <Compile Include="Mappings\PublicOrganisationMap.cs" />
     <Compile Include="Mappings\OrganisationMap.cs" />

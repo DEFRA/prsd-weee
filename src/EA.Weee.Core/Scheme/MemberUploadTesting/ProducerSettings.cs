@@ -2,7 +2,7 @@
 {
     public class ProducerSettings : ISettings
     {
-        public SchemaVersion SchemaVersion { get; set; }
+        public MemberRegistrationSchemaVersion SchemaVersion { get; set; }
 
         public bool IsNew { get; set; }
 

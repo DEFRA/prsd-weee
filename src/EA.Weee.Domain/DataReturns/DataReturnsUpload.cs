@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Prsd.Core;
     using Prsd.Core.Domain;
 
     public class DataReturnsUpload : Entity
@@ -18,8 +19,7 @@
 
         public virtual string FileName { get; private set; }
 
-        public virtual TimeSpan ProcessTime { get; private set; }
-
+        public virtual DateTime Date { get; private set; }
         public virtual DataReturnsUploadRawData RawData { get; set; }
 
         public DataReturnsUpload(string data, List<DataReturnsUploadError> errors, int? complianceYear, Guid schemeId, string fileName)
@@ -29,6 +29,7 @@
             IsSubmitted = false;
             ComplianceYear = complianceYear;
             RawData = new DataReturnsUploadRawData() { Data = data };
+            this.Date = SystemTime.UtcNow;     
         }
         public DataReturnsUpload(Guid organisationId, Guid schemeId, string data, string fileName)
         {
@@ -36,6 +37,7 @@
             Errors = new List<DataReturnsUploadError>();
             RawData = new DataReturnsUploadRawData { Data = data };
             FileName = fileName;
+            this.Date = SystemTime.UtcNow;
         }
         public void Submit()
         {
@@ -49,18 +51,7 @@
 
         protected DataReturnsUpload()
         {
-        }
-
-        public virtual void SetProcessTime(TimeSpan processTime)
-        {
-            if (ProcessTime.Ticks.Equals(0))
-            {
-                ProcessTime = processTime;
-            }
-            else
-        {
-                throw new InvalidOperationException("ProcessTime cannot be set for a upload that has already been given a ProcessTime value.");
-            }
+            this.Date = SystemTime.UtcNow;
         }
     }
 }

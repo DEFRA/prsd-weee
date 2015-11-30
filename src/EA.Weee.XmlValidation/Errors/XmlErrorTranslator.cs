@@ -1,11 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.Errors
 {
-    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Xml.Linq;
-    using Core.Helpers;
-    using Core.Scheme;
 
     public class XmlErrorTranslator : IXmlErrorTranslator
     {
@@ -40,12 +37,12 @@
 
         private const string ErrorInXmlDocumentPattern = @"^There is an error in XML document \(([0-9]*)\,\s([0-9]*)\)\.$";
 
-        public string MakeFriendlyErrorMessage(string message, SchemaVersion schemaVersion)
+        public string MakeFriendlyErrorMessage(string message, string schemaVersion)
         {
             return MakeFriendlyErrorMessage(null, message, -1, schemaVersion);
         }
 
-        public string MakeFriendlyErrorMessage(XElement sender, string message, int lineNumber, SchemaVersion schemaVersion)
+        public string MakeFriendlyErrorMessage(XElement sender, string message, int lineNumber, string schemaVersion)
         {
             string resultErrorMessage = message;
             Match match = null;
@@ -205,9 +202,9 @@
                     sender.Value, sender.Name.LocalName, friendlyMessageTemplate);
         }
 
-        private string MakeFriendlyInvalidChildElementMessage(XElement sender, string message, SchemaVersion schemaVersion)
+        private string MakeFriendlyInvalidChildElementMessage(XElement sender, string message, string schemaVersion)
         {
-            return string.Format("The field {0} isn't expected here. Please check that you are using v{1} of the XSD schema (XML template).", sender.Name.LocalName, schemaVersion.GetAttribute<DisplayAttribute>().Name);
+            return string.Format("The field {0} isn't expected here. Please check that you are using v{1} of the XSD schema (XML template).", sender.Name.LocalName, schemaVersion);
         }
 
         private string MakeFriendlyIncompleteContentMessage(XElement sender, string message)

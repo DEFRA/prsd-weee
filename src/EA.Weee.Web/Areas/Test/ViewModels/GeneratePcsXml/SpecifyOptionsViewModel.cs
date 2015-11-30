@@ -12,7 +12,7 @@
 
         [Required]
         [DisplayName("Schema Version")]
-        public SchemaVersion SchemaVersion { get; set; }
+        public MemberRegistrationSchemaVersion SchemaVersion { get; set; }
 
         [Required]
         [Range(2016, 2099, ErrorMessage = "The compliance year must be between 2016 and 2099.")]
@@ -44,8 +44,8 @@
         public SpecifyOptionsViewModel()
         {
             // Default to the latest schema version.
-            Array schemaVersions = Enum.GetValues(typeof(SchemaVersion));
-            SchemaVersion = (SchemaVersion)schemaVersions.GetValue(schemaVersions.Length - 1);
+            Array schemaVersions = Enum.GetValues(typeof(MemberRegistrationSchemaVersion));
+            SchemaVersion = (MemberRegistrationSchemaVersion)schemaVersions.GetValue(schemaVersions.Length - 1);
 
             // If acceptable, default to the current year.
             int year = DateTime.UtcNow.Year;
