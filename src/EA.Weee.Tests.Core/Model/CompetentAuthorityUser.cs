@@ -9,9 +9,7 @@
 
 namespace EA.Weee.Tests.Core.Model
 {
-    using System;
-    using System.Collections.Generic;
-    
+
     public partial class CompetentAuthorityUser
     {
         public System.Guid Id { get; set; }

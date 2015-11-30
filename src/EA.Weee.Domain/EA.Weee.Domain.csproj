@@ -50,6 +50,9 @@
     <Compile Include="Audit\IAuditableEntity.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataReturns\DataReturnsUpload.cs" />
+    <Compile Include="DataReturns\DataReturnsUploadError.cs" />
+    <Compile Include="DataReturns\DataReturnsUploadRawData.cs" />
     <Compile Include="Lookup\ChargeBand.cs" />
     <Compile Include="Events\OrganisationUserRequestEvent.cs" />
     <Compile Include="Events\OrganisationUserRequestCompletedEvent.cs" />
@@ -59,7 +62,7 @@
     <Compile Include="AddressType.cs" />
     <Compile Include="Producer\RegisteredProducer.cs" />
     <Compile Include="Scheme\MemberUploadRawData.cs" />
-    <Compile Include="Scheme\MemberUploadErrorType.cs" />
+    <Compile Include="UploadErrorType.cs" />
     <Compile Include="Scheme\SchemeStatus.cs" />
     <Compile Include="Producer\MigratedProducer.cs" />
     <Compile Include="Producer\ProducerAddress.cs" />

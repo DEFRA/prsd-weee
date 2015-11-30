@@ -1,10 +1,5 @@
 ﻿namespace EA.Weee.Web.Services.Caching
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
-
     /// <summary>
     /// Represents the result of an attempt to retrieve an item from a cache.
     /// </summary>

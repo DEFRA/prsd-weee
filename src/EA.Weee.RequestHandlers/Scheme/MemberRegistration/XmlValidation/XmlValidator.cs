@@ -1,14 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using Core.Helpers;
+    using Core.Scheme;
     using Domain;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Core.Scheme;
-    using Weee.XmlValidation.BusinessValidation;
     using Weee.XmlValidation.BusinessValidation.MemberRegistration;
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;
@@ -56,13 +55,13 @@
                 // Couldn't deserialise - can't go any further, add an error and bail out here
                 var exceptionMessage = e.InnerException != null ? e.InnerException.Message : e.Message;
                 var friendlyMessage = errorTranslator.MakeFriendlyErrorMessage(exceptionMessage, SchemaVersion.Version_3_07);
-                errors.Add(new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, friendlyMessage));
+                errors.Add(new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, friendlyMessage));
 
                 return errors;
             }
 
             errors = businessValidator.Validate(deserializedXml, message.OrganisationId)
-                .Select(err => new MemberUploadError(err.ErrorLevel.ToDomainEnumeration<ErrorLevel>(), MemberUploadErrorType.Business, err.Message))
+                .Select(err => new MemberUploadError(err.ErrorLevel.ToDomainEnumeration<ErrorLevel>(), UploadErrorType.Business, err.Message))
                 .ToList();
 
             return errors;

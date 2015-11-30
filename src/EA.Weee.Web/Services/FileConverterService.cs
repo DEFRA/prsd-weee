@@ -1,8 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
     using System.IO;
-    using System.Linq;
-    using System.Text;
     using System.Web;
 
     public class FileConverterService : IFileConverterService

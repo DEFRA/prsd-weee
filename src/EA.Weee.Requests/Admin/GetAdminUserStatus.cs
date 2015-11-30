@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Requests.Admin
 {
-    using System;
     using Core.Shared;
     using Prsd.Core.Mediator;
 

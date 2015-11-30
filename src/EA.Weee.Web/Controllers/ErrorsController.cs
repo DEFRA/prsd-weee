@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Authorization;

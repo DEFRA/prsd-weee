@@ -1,9 +1,8 @@
 ﻿namespace EA.Weee.Requests.Organisations
 {
-    using System;
-    using Prsd.Core.Mediator;
     using System.Collections.Generic;
     using Core.Organisations;
+    using Prsd.Core.Mediator;
 
     public class GetUserOrganisationsByStatus : IRequest<List<OrganisationUserData>>
     {

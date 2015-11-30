@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.DataAccess
 {
+    using System.Data.Common;
+    using System.Data.Entity;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Domain;
     using Domain.Admin;
     using Domain.Audit;
@@ -12,10 +16,6 @@
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
     using StoredProcedure;
-    using System.Data.Common;
-    using System.Data.Entity;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     public class WeeeContext : DbContext
     {

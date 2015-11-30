@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.Core.Search.Fuzzy
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     public class Rank
     {
         public double Confidence { get; private set; }
