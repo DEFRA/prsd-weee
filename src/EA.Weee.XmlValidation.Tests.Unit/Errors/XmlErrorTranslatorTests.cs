@@ -2,7 +2,6 @@
 {
     using System.Xml.Linq;
     using Core.Scheme;
-    using Core.Scheme.MemberUploadTesting;
     using FakeItEasy;
     using XmlValidation.Errors;
     using Xunit;

@@ -1,17 +1,13 @@
 ﻿namespace EA.Weee.Tests.Core.Model
 {
+    using System;
+    using System.Data.Common;
+    using System.Transactions;
     using EA.Prsd.Core.Domain;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.StoredProcedure;
     using FakeItEasy;
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Common;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    
+
     /// <summary>
     /// Provides a disposable wrapper for integration tests against a real
     /// database.

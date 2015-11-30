@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.Tests.Core.Model
 {
-    using Domain;
-    using Domain.Lookup;
-    using Domain.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Domain;
+    using Domain.Lookup;
 
     /// <summary>
     /// This class provides helper methods for deterministically seeding a database.
@@ -151,6 +150,25 @@
             return organisationUser;
         }
 
+        public Address CreateOrganisationAddress()
+        {
+            Country england = model.Countries.Single(c => c.Name == "UK - England");
+            int addressId = GetNextId(typeof(Address));
+            return new Address
+            {
+                Id = IntegerToGuid(addressId),
+                Address1 = string.Format("Address {0} Address1", addressId),
+                Address2 = string.Format("Address {0} Address2", addressId),
+                Postcode = "458 5256",
+                TownOrCity = string.Format("Address {0} TownOrCity", addressId),
+                CountyOrRegion = string.Format("Address {0} CountyOrRegion", addressId),
+                Email = "test@test.com",
+                Telephone = "123 456 7890",
+                Country = england,
+                CountryId = england.Id
+            };
+        }
+
         /// <summary>
         /// Cretates a member upload associated with the specified scheme.
         /// After creation, the ComplianceYear and IsSubmitted properties
@@ -190,10 +208,10 @@
                 Id = IntegerToGuid(memberUploadErrorId),
                 MemberUploadId = memberUpload.Id,
                 ErrorLevel = ErrorLevel.Warning.Value,
-                ErrorType = MemberUploadErrorType.Business.Value,
+                ErrorType = UploadErrorType.Business.Value,
                 Description = "Test Warning"
             };
-         
+
             model.MemberUploadErrors.Add(memberUploadError);
 
             return memberUploadError;

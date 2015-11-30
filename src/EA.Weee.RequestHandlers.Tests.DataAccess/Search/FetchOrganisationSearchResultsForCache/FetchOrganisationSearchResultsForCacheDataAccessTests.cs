@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Search.FetchOrganisationSearchResultsForCache
 {
-    using EA.Weee.Core.Search;
-    using EA.Weee.RequestHandlers.Search.FetchOrganisationSearchResultsForCache;
-    using EA.Weee.Tests.Core.Model;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
+    using EA.Weee.Core.Search;
+    using EA.Weee.RequestHandlers.Search.FetchOrganisationSearchResultsForCache;
+    using EA.Weee.Tests.Core.Model;
     using Xunit;
 
     public class FetchOrganisationSearchResultsForCacheDataAccessTests

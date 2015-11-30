@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.TestHelpers
 {
-    using FakeItEasy;
     using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
+    using FakeItEasy;
 
     public class ActionExecutingContextHelper
     {

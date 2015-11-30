@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
+    using System;
     using Domain.Lookup;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
-    using System;
     using Xml.MemberRegistration;
     using Xunit;
 

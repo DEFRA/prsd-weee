@@ -1,17 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
-    using EA.Prsd.Core.Mapper;
+    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.Organisations;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
-    using EA.Weee.Requests;
     using EA.Weee.Requests.Organisations;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class UpdateOrganisationContactDetailsHandler : IRequestHandler<UpdateOrganisationContactDetails, bool>
     {

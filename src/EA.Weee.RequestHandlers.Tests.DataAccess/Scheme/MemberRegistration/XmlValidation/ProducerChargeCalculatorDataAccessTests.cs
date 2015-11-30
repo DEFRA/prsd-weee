@@ -1,15 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme.MemberRegistration.XmlValidation
 {
     using Domain.Lookup;
-    using EA.Weee.Domain;
     using EA.Weee.RequestHandlers.Scheme.MemberRegistration;
     using EA.Weee.Tests.Core.Model;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class ProducerChargeCalculatorDataAccessTests

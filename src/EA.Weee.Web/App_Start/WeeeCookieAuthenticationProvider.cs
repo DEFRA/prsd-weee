@@ -1,12 +1,10 @@
 ﻿namespace EA.Weee.Web.App_Start
 {
-    using Microsoft.Owin;
-using Microsoft.Owin.Security.Cookies;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Web;
-using System.Web.Routing;
+    using System;
+    using System.IO;
+    using System.Web;
+    using System.Web.Routing;
+    using Microsoft.Owin.Security.Cookies;
 
     /// <summary>
     /// This cookie authentication provider overrides the default "redirect to login page" behaviour.
