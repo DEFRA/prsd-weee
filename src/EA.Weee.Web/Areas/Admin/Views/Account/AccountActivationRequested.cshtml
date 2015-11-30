@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Account activation requested";
+}
+
+@section main_content
+{
+    <h2 class="heading-large">Account activation requested</h2>
+
+    <p>We have sent you another email.</p>
+
+    <p>
+        @Html.ActionLink("Continue", "Index", "Home", new { Area = "Admin" }, new { @class = "button" })
+    </p>
+}

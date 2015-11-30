@@ -1,0 +1,35 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Home.InternalUserActivityViewModel
+@{
+    ViewBag.Title = "Choose Activity";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            What activity would you like to do?
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "ChooseActivity", controllerName: "Home", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="InternalUserActivityOptions">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "What activity would you like to do?",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="button" value="Continue" />
+        </div>
+    }
+}
+

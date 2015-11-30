@@ -1,0 +1,54 @@
+﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.Details.RegisteredCompanyDetailsViewModel
+@{
+    ViewBag.Title = "Registered company";
+}
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">Tell us about your registered company</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div style="margin-bottom: 1.66667em;">
+            <p>Enter the name of your registered company. For companies registered in the UK, these details must be the same as those registered with Companies House.</p>
+        </div>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
+            @Html.Gds().LabelFor(m => m.CompanyName)
+            @Html.Gds().ValidationMessageFor(m => m.CompanyName)
+            @Html.Gds().TextBoxFor(m => m.CompanyName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
+            @Html.Gds().LabelFor(m => m.BusinessTradingName)
+            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
+            @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
+            @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
+            @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber })
+        </div>
+        <div class="form-group">
+            @using (this.WeeeGds().ProgressiveDisclosure("Where can I find my company registration number?"))
+            {
+                <p>
+                    For companies registered in the UK, a company registration number (CRN) is allocated by Companies House when a company is registered.
+                </p>
+                <p>
+                    You can search <a href="https://www.gov.uk/get-information-about-a-company" target="_blank" rel="external">Companies House online services</a> to find your CRN.
+                </p>
+            }
+        </div>
+
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+    }
+}

@@ -6,7 +6,7 @@
 // Override here until updated in the GOV.UK template
 
 #global-header-bar {
-    @include site-width-container;
+    @extend %site-width-container;
 }
 
 #global-header-bar .inner-block {
@@ -32,7 +32,7 @@
 // Elements page styles
 // ==========================================================================
 
-// These are example styles, used only for the Elements page example boxes
+// These are example styles, used only for the Elements index page
 
 // Headings
 // Used with heading-large = 36px
@@ -41,8 +41,8 @@
     padding-top: em(45, 36);
 }
 
-// Text
-.tight {
+// Use for paragraphs before lists
+.lead-in {
     margin-bottom: 0;
 }
 
@@ -56,7 +56,7 @@
 // ==========================================================================
 
 .example {
-    @include contain-floats;
+    @extend %contain-floats;
     position: relative;
     overflow: hidden;
     border: 1px solid $grey-2;
@@ -90,27 +90,56 @@
         font-style: normal;
         color: $hm-government;
     }
+    // Fix grid layout within example boxes for IE7 and below
+    // where box-sizing isn't supported: http://caniuse.com/#search=box-sizing
+    @mixin example-box-column($width) {
+        width: (($site-width - $gutter) * $width) - $gutter;
+    }
+
+    @include ie-lte(7) {
+        // Set example box width to 900px (removing left and right padding)
+        $example-box-width: $site-width - ($gutter * 2);
+        width: $example-box-width;
+        // Recalculate grid column widths
+        .column-quarter {
+            @include example-box-column( 1/4 );
+        }
+
+        .column-half {
+            @include example-box-column( 1/2 );
+        }
+
+        .column-third {
+            @include example-box-column( 1/3 );
+        }
+
+        .column-two-thirds {
+            @include example-box-column( 2/3 );
+        }
+        // Scale images to fit grid columns
+        img {
+            width: 100%;
+        }
+    }
 }
 
 
 // 1. Layout
 // ==========================================================================
 
-// Grid layout boxes
 .example-grid p {
     width: 100%;
-    background: url("images/examples/grid.png") 0 0 repeat;
-    min-height: 30px;
+    background: file-url("examples/grid.png") 0 0 repeat;
     margin-bottom: 0;
+    height: 30px;
 
     @include media(tablet) {
-        min-height: 60px;
+        height: 60px;
     }
 
     overflow: hidden;
     text-indent: -999em;
 }
-
 
 // 2. Typography
 // ==========================================================================
@@ -162,12 +191,20 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
     background-color: $beta-colour;
 }
 
+.swatch-discovery {
+    background-color: $discovery-colour;
+}
+
+.swatch-live {
+    background-color: $live-colour;
+}
+
 .swatch-error {
     background-color: $error-colour;
 }
 
 .swatch-focus {
-    background-color: $yellow;
+    background-color: $focus-colour;
 }
 
 .swatch-button-colour {
@@ -280,6 +317,24 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
     vertical-align: top;
 }
 
+th.sorted-ascending, th.sorted-descending {
+	white-space: nowrap;
+}
+
+th.sorted-ascending:after {
+	content: "\A0\A0\A0\A0\A0\A0";
+	background-image: url(weee/images/sorted-ascending.png);
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+}
+
+th.sorted-descending:after {
+	content: "\A0\A0\A0\A0\A0\A0";
+	background-image: url(weee/images/sorted-descending.png);
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+}
+
 
 // 5. Data
 // ==========================================================================
@@ -296,14 +351,19 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 
 // 6. Forms
 // ==========================================================================
+
 .progress-indicator {
-    font-family: "nta",Arial,sans-serif;
+    font-family: $NTA-Light;
     font-size: 16px;
     line-height: 1.25;
     font-weight: 400;
     text-transform: none;
     color: #6f777b;
     margin: 30px 0 15px;
+}
+
+input[type="file"].form-control {
+	border: 0px;
 }
 
 // 7. Buttons
@@ -327,6 +387,37 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
 // Remove bottom padding to keep "Creating buttons" example
 .example-button ul {
     padding-bottom: 0;
+}
+
+
+// 9. Alpha beta banners
+// ==========================================================================
+
+// Alpha
+.phase-banner-alpha {
+    @include phase-banner($state: alpha);
+}
+
+// Beta
+.phase-banner-beta {
+    @include phase-banner($state: beta);
+}
+
+// Related Content
+// ==========================================================================
+
+.related {
+    border-top: 10px solid $govuk-blue;
+    margin-top: 1.6em;
+
+    .related-section {
+        padding-right: 1em;
+
+        .related-section-title {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+    }
 }
 
 // Custom
@@ -355,12 +446,12 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
             width: auto;
             padding: 3px 12px;
 
-            a{
+            a {
                 @include core-16();
             }
         }
 
-        li:first-child{
+        li:first-child {
             font-weight: 600;
         }
 
@@ -383,13 +474,256 @@ $palette: ( ("purple", $purple), ("mauve", $mauve), ("fuschia", $fuschia), ("pin
     }
 }
 
-.return-link{
+.return-link {
     margin-top: $gutter;
 }
 
-.table-divider{
+.table-divider {
     color: $border-colour;
 }
 
-.validation-summary-errors{
+.validation-summary-errors {
+}
+
+.field-validation-valid {
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+.link-submit {
+    background: none;
+    border: none;
+    padding: 0;
+    color: $govuk-blue;
+    font-family: $NTA-Light;
+    cursor: pointer;
+
+    @include core-19;
+
+    text-decoration: underline;
+}
+
+.link-submit:hover {
+    color: #2E8ACA;
+}
+
+#link-sign-out {
+    @include core-16;
+}
+
+.text-area {
+    height: 200px;
+}
+
+.full-width {
+    width: $full-width;
+}
+
+.grid-view:last-child {
+    float: none;
+    margin-bottom: 10px;
+}
+
+.two-thirds {
+    width: $two-thirds;
+}
+
+.important-image {
+    vertical-align: middle;
+    margin-right: 20px;
+}
+
+.panel-indent-danger {
+    clear: both;
+    border-left: 4px solid red;
+    padding: 10px;
+    margin: 10px;
+}
+
+.panel-indent-warning {
+    clear: both;
+    border-left: 4px solid #ffd800;
+    padding: 10px;
+    margin: 10px;
+}
+
+.warning-details-summary {
+    width: 100%;
+    color: $black;
+    background-color: $yellow-50;
+    border-left: 3px solid $yellow;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 3px;
+}
+
+.warning-details-summary:hover {
+    color: $black;
+}
+
+.warning-list-container {
+    width: 100%;
+    background-color: $yellow-25;
+    padding-bottom: 10px;
+    border-left: 3px solid $yellow-25;
+    padding-left: 3px;
+    margin-bottom:5px;
+}
+
+.warning-list-item {
+    padding-left: 10px;
+    padding-top: 10px;
+    word-wrap: break-word;
+    padding-bottom: 15px;
+}
+
+.error-details-summary {
+    width: 100%;
+    color: $black;
+    background-color: $mellow-red-50;
+    border-left: 3px solid $mellow-red;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 3px;
+}
+
+.error-details-summary:hover {
+    color: $black;
+}
+
+.error-list-container {
+    width: 100%;
+    background-color: $mellow-red-25;
+    padding-bottom: 10px;
+    border-left: 3px solid $mellow-red-25;
+    padding-left: 3px;
+    margin-bottom:5px;
+}
+
+.error-list-item {
+    padding-left: 10px;
+    padding-top: 10px;
+    word-wrap: break-word;
+    padding-bottom: 15px;
+}
+
+.highlight-section {
+    background-color: $turquoise;
+    text-align: center;
+}
+
+.highlight-section-text {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 19px;
+    color: $white;
+    font-weight: 700;
+}
+
+.highlight-section-amount {
+    white-space: nowrap;
+    font-size: 48px;
+    color: $white;
+    font-weight: 700;
+}
+
+.username-title-display {
+    text-align: right;
+    padding: 5px;
+
+    .username-format {
+        font-weight: bold;
+        color: $black;
+    }
+}
+
+.breadcrumb-title-display {
+    padding: 5px;
+
+    .username-format {
+        font-weight: bold;
+        color: $black;
+    }
+}
+
+// Used to right-align the registration numbers on the admin's find producer page.
+.ui-autocomplete .ui-menu-item span.registrationNumber {
+    float:right;
+    font-family: monospace;
+}
+
+/*
+	Items shown by jQuery UI autocomplete that are too long will be truncated with an ellipsis.
+	See: http://stackoverflow.com/questions/17459422/jquery-autocomplete-no-word-wrap
+*/
+.ui-autocomplete .ui-menu-item {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.grey-text {
+    word-wrap: break-word;
+    font-size: 16px;
+    color: #6F777B;
+    font-family: 'Arial Regular', 'Arial';
+    font-weight: 400;
+    font-style: normal;
+    text-align: left;
+}
+.black-text {
+    word-wrap: break-word;
+    font-size: 16px;
+    color: #0B0C0C;
+    font-family: 'Arial Regular', 'Arial';
+    font-weight: 400;
+    font-style: normal;
+    text-align: left;
+}
+
+/* Taken from http://www.paciellogroup.com/blog/2012/05/html5-accessibility-chops-hidden-and-aria-hidden/ */
+
+.hidden-for-screen-reader {
+	position: absolute;
+	clip: rect(1px 1px 1px 1px); /* for Internet Explorer */
+	clip: rect(1px, 1px, 1px, 1px);
+	padding: 0;
+	border: 0;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+}
+
+.text-area {
+    height: 200px;
+}
+
+.full-width {
+    width: $full-width;
+}
+
+.checkbox-inherit{
+    position: inherit;
+}
+
+.checkbox-inherit input{
+    position: inherit;
+}
+
+#schemeBanner {
+	margin-top: 3px;
+	padding: 5px 10px;
+	background: $grey-3;
+	font-size: 16px;
+}
+
+.secondaryHeaderContent {
+	margin-top: 45px;
+    margin-bottom: 20px;
+}
+
+.related-section-title {
+    font-weight: 700;
+    font-size: 19px;
 }

@@ -1,0 +1,1956 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="EA.Weee.TestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CompetentAuthorityUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="CompetentAuthorityId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserStatus" Type="int" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Surname" Type="nvarchar" MaxLength="35" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChargeBandAmount">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ChargeBand" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CompetentAuthority">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="1023" Nullable="false" />
+          <Property Name="Abbreviation" Type="nvarchar" MaxLength="65" Nullable="false" />
+          <Property Name="CountryId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="2048" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Address">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Address1" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Address2" Type="nvarchar" MaxLength="35" />
+          <Property Name="TownOrCity" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="CountyOrRegion" Type="nvarchar" MaxLength="35" />
+          <Property Name="Postcode" Type="nvarchar" MaxLength="10" />
+          <Property Name="CountryId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Telephone" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Contact">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Position" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Organisation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="2048" />
+          <Property Name="OrganisationType" Type="int" Nullable="false" />
+          <Property Name="OrganisationStatus" Type="int" Nullable="false" />
+          <Property Name="TradingName" Type="nvarchar" MaxLength="2048" />
+          <Property Name="CompanyRegistrationNumber" Type="nvarchar" MaxLength="64" />
+          <Property Name="ContactId" Type="uniqueidentifier" />
+          <Property Name="OrganisationAddressId" Type="uniqueidentifier" />
+          <Property Name="BusinessAddressId" Type="uniqueidentifier" />
+          <Property Name="NotificationAddressId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="OrganisationUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="OrganisationId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserStatus" Type="int" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MemberUpload">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="OrganisationId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Data" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ComplianceYear" Type="int" />
+          <Property Name="SchemeId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsSubmitted" Type="bit" Nullable="false" />
+          <Property Name="TotalCharges" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="ProcessTime" Type="time" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MemberUploadError">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="ErrorLevel" Type="int" Nullable="false" />
+          <Property Name="ErrorType" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="MemberUploadId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Scheme">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="SchemeStatus" Type="int" Nullable="false" />
+          <Property Name="ApprovalNumber" Type="nvarchar" MaxLength="16" />
+          <Property Name="OrganisationId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SchemeName" Type="nvarchar" MaxLength="70" />
+          <Property Name="IbisCustomerReference" Type="nvarchar" MaxLength="10" />
+          <Property Name="ObligationType" Type="int" />
+          <Property Name="CompetentAuthorityId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="Address1">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="PrimaryName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="SecondaryName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Street" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Town" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Locality" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="AdministrativeArea" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CountryId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PostCode" Type="nvarchar" MaxLength="35" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AuthorisedRepresentative">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="OverseasProducerName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="OverseasContactId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="BrandName">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="ProducerId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Business">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="CorrespondentForNoticesContactId" Type="uniqueidentifier" />
+          <Property Name="CompanyId" Type="uniqueidentifier" />
+          <Property Name="PartnershipId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="CompanyNumber" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="RegisteredOfficeContactId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Contact1">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Forename" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Surname" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Telephone" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Mobile" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Fax" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="AddressId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MigratedProducer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="ProducerRegistrationNumber" Type="nvarchar" MaxLength="255" />
+          <Property Name="ProducerName" Type="nvarchar" MaxLength="255" />
+          <Property Name="CompanyNumber" Type="nvarchar" MaxLength="8" />
+        </EntityType>
+        <EntityType Name="Partner">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="70" Nullable="false" />
+          <Property Name="PartnershipId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Partnership">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="PrincipalPlaceOfBusinessId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Producer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="RegistrationNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="VATRegistered" Type="bit" Nullable="false" />
+          <Property Name="AnnualTurnover" Type="decimal" Precision="28" Scale="12" Nullable="false" />
+          <Property Name="CeaseToExist" Type="datetime" />
+          <Property Name="ObligationType" Type="int" Nullable="false" />
+          <Property Name="EEEPlacedOnMarketBandType" Type="int" Nullable="false" />
+          <Property Name="AnnualTurnoverBandType" Type="int" Nullable="false" />
+          <Property Name="SellingTechniqueType" Type="int" Nullable="false" />
+          <Property Name="ChargeThisUpdate" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="MemberUploadId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AuthorisedRepresentativeId" Type="uniqueidentifier" />
+          <Property Name="ProducerBusinessId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" Nullable="false" />
+          <Property Name="TradingName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="SchemeId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsCurrentForComplianceYear" Type="bit" Nullable="false" />
+          <Property Name="ChargeBandAmountId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SICCode">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProducerId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Address_Country">
+          <End Role="Country" Type="Self.Country" Multiplicity="1" />
+          <End Role="Address" Type="Self.Address" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Address">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Address_Country1">
+          <End Role="Country" Type="Self.Country" Multiplicity="1" />
+          <End Role="Address1" Type="Self.Address1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Address1">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AuthorisedRepresentative_OverseasContact">
+          <End Role="Contact1" Type="Self.Contact1" Multiplicity="0..1" />
+          <End Role="AuthorisedRepresentative" Type="Self.AuthorisedRepresentative" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact1">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AuthorisedRepresentative">
+              <PropertyRef Name="OverseasContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BrandNameList_Producer">
+          <End Role="Producer" Type="Self.Producer" Multiplicity="1" />
+          <End Role="BrandName" Type="Self.BrandName" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BrandName">
+              <PropertyRef Name="ProducerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Business_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="Business" Type="Self.Business" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Business">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Business_Contact">
+          <End Role="Contact1" Type="Self.Contact1" Multiplicity="0..1" />
+          <End Role="Business" Type="Self.Business" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact1">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Business">
+              <PropertyRef Name="CorrespondentForNoticesContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Business_Partnership">
+          <End Role="Partnership" Type="Self.Partnership" Multiplicity="0..1" />
+          <End Role="Business" Type="Self.Business" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Partnership">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Business">
+              <PropertyRef Name="PartnershipId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Company_Contact">
+          <End Role="Contact1" Type="Self.Contact1" Multiplicity="1" />
+          <End Role="Company" Type="Self.Company" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact1">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Company">
+              <PropertyRef Name="RegisteredOfficeContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompetentAuthority_Country">
+          <End Role="Country" Type="Self.Country" Multiplicity="1" />
+          <End Role="CompetentAuthority" Type="Self.CompetentAuthority" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetentAuthority">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompetentAuthorityUser_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="CompetentAuthorityUser" Type="Self.CompetentAuthorityUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetentAuthorityUser">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompetentAuthorityUser_CompetentAuthority">
+          <End Role="CompetentAuthority" Type="Self.CompetentAuthority" Multiplicity="1" />
+          <End Role="CompetentAuthorityUser" Type="Self.CompetentAuthorityUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompetentAuthority">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetentAuthorityUser">
+              <PropertyRef Name="CompetentAuthorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Contact_Address">
+          <End Role="Address1" Type="Self.Address1" Multiplicity="1" />
+          <End Role="Contact1" Type="Self.Contact1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address1">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Contact1">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberUpload_Organisation">
+          <End Role="Organisation" Type="Self.Organisation" Multiplicity="1" />
+          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organisation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="OrganisationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberUpload_Scheme">
+          <End Role="Scheme" Type="Self.Scheme" Multiplicity="1" />
+          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Scheme">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="SchemeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberUploadError_MemberUpload">
+          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="1" />
+          <End Role="MemberUploadError" Type="Self.MemberUploadError" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MemberUpload">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUploadError">
+              <PropertyRef Name="MemberUploadId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Organisation_BusinessAddress">
+          <End Role="Address" Type="Self.Address" Multiplicity="0..1" />
+          <End Role="Organisation" Type="Self.Organisation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Organisation">
+              <PropertyRef Name="BusinessAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Organisation_Contact">
+          <End Role="Contact" Type="Self.Contact" Multiplicity="0..1" />
+          <End Role="Organisation" Type="Self.Organisation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Organisation">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Organisation_NotificationAddress">
+          <End Role="Address" Type="Self.Address" Multiplicity="0..1" />
+          <End Role="Organisation" Type="Self.Organisation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Organisation">
+              <PropertyRef Name="NotificationAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Organisation_OrganisationAddress">
+          <End Role="Address" Type="Self.Address" Multiplicity="0..1" />
+          <End Role="Organisation" Type="Self.Organisation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Organisation">
+              <PropertyRef Name="OrganisationAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrganisationUser_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="OrganisationUser" Type="Self.OrganisationUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OrganisationUser">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrganisationUser_Organisation">
+          <End Role="Organisation" Type="Self.Organisation" Multiplicity="1" />
+          <End Role="OrganisationUser" Type="Self.OrganisationUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organisation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OrganisationUser">
+              <PropertyRef Name="OrganisationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Partner_Partnership">
+          <End Role="Partnership" Type="Self.Partnership" Multiplicity="1" />
+          <End Role="Partner" Type="Self.Partner" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Partnership">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Partner">
+              <PropertyRef Name="PartnershipId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Partnership_Contact">
+          <End Role="Contact1" Type="Self.Contact1" Multiplicity="1" />
+          <End Role="Partnership" Type="Self.Partnership" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact1">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Partnership">
+              <PropertyRef Name="PrincipalPlaceOfBusinessId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Producer_AuthorisedRepresentative">
+          <End Role="AuthorisedRepresentative" Type="Self.AuthorisedRepresentative" Multiplicity="0..1" />
+          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AuthorisedRepresentative">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Producer">
+              <PropertyRef Name="AuthorisedRepresentativeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Producer_Business">
+          <End Role="Business" Type="Self.Business" Multiplicity="1" />
+          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Business">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Producer">
+              <PropertyRef Name="ProducerBusinessId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Producer_ChargeBandAmount">
+          <End Role="ChargeBandAmount" Type="Self.ChargeBandAmount" Multiplicity="1" />
+          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChargeBandAmount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Producer">
+              <PropertyRef Name="ChargeBandAmountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Producer_MemberUpload">
+          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="1" />
+          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MemberUpload">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Producer">
+              <PropertyRef Name="MemberUploadId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Producer_Scheme">
+          <End Role="Scheme" Type="Self.Scheme" Multiplicity="1" />
+          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Scheme">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Producer">
+              <PropertyRef Name="SchemeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Scheme_Organisation">
+          <End Role="Organisation" Type="Self.Organisation" Multiplicity="1" />
+          <End Role="Scheme" Type="Self.Scheme" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organisation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Scheme">
+              <PropertyRef Name="OrganisationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SICCodeList_Producer">
+          <End Role="Producer" Type="Self.Producer" Multiplicity="1" />
+          <End Role="SICCode" Type="Self.SICCode" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SICCode">
+              <PropertyRef Name="ProducerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EAWeeeTestModelStoreContainer">
+          <EntitySet Name="CompetentAuthorityUser" EntityType="Self.CompetentAuthorityUser" Schema="Admin" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="Identity" store:Type="Tables" />
+          <EntitySet Name="ChargeBandAmount" EntityType="Self.ChargeBandAmount" Schema="Lookup" store:Type="Tables" />
+          <EntitySet Name="CompetentAuthority" EntityType="Self.CompetentAuthority" Schema="Lookup" store:Type="Tables" />
+          <EntitySet Name="Country" EntityType="Self.Country" Schema="Lookup" store:Type="Tables" />
+          <EntitySet Name="Address" EntityType="Self.Address" Schema="Organisation" store:Type="Tables" />
+          <EntitySet Name="Contact" EntityType="Self.Contact" Schema="Organisation" store:Type="Tables" />
+          <EntitySet Name="Organisation" EntityType="Self.Organisation" Schema="Organisation" store:Type="Tables" />
+          <EntitySet Name="OrganisationUser" EntityType="Self.OrganisationUser" Schema="Organisation" store:Type="Tables" />
+          <EntitySet Name="MemberUpload" EntityType="Self.MemberUpload" Schema="PCS" store:Type="Tables" />
+          <EntitySet Name="MemberUploadError" EntityType="Self.MemberUploadError" Schema="PCS" store:Type="Tables" />
+          <EntitySet Name="Scheme" EntityType="Self.Scheme" Schema="PCS" store:Type="Tables" />
+          <EntitySet Name="Address1" EntityType="Self.Address1" Schema="Producer" Table="Address" store:Type="Tables" />
+          <EntitySet Name="AuthorisedRepresentative" EntityType="Self.AuthorisedRepresentative" Schema="Producer" store:Type="Tables" />
+          <EntitySet Name="BrandName" EntityType="Self.BrandName" Schema="Producer" store:Type="Tables" />
+          <EntitySet Name="Business" EntityType="Self.Business" Schema="Producer" store:Type="Tables" />
+          <EntitySet Name="Company" EntityType="Self.Company" Schema="Producer" store:Type="Tables" />
+          <EntitySet Name="Contact1" EntityType="Self.Contact1" Schema="Producer" Table="Contact" store:Type="Tables" />
+          <EntitySet Name="MigratedProducer" EntityType="Self.MigratedProducer" Schema="Producer" store:Type="Tables" />
+          <EntitySet Name="Partner" EntityType="Self.Partner" Schema="Producer" store:Type="Tables" />
+          <EntitySet Name="Partnership" EntityType="Self.Partnership" Schema="Producer" store:Type="Tables" />
+          <EntitySet Name="Producer" EntityType="Self.Producer" Schema="Producer" store:Type="Tables" />
+          <EntitySet Name="SICCode" EntityType="Self.SICCode" Schema="Producer" store:Type="Tables" />
+          <AssociationSet Name="FK_Address_Country" Association="Self.FK_Address_Country">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Address" EntitySet="Address" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Address_Country1" Association="Self.FK_Address_Country1">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Address1" EntitySet="Address1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AuthorisedRepresentative_OverseasContact" Association="Self.FK_AuthorisedRepresentative_OverseasContact">
+            <End Role="Contact1" EntitySet="Contact1" />
+            <End Role="AuthorisedRepresentative" EntitySet="AuthorisedRepresentative" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BrandNameList_Producer" Association="Self.FK_BrandNameList_Producer">
+            <End Role="Producer" EntitySet="Producer" />
+            <End Role="BrandName" EntitySet="BrandName" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Business_Company" Association="Self.FK_Business_Company">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="Business" EntitySet="Business" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Business_Contact" Association="Self.FK_Business_Contact">
+            <End Role="Contact1" EntitySet="Contact1" />
+            <End Role="Business" EntitySet="Business" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Business_Partnership" Association="Self.FK_Business_Partnership">
+            <End Role="Partnership" EntitySet="Partnership" />
+            <End Role="Business" EntitySet="Business" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Company_Contact" Association="Self.FK_Company_Contact">
+            <End Role="Contact1" EntitySet="Contact1" />
+            <End Role="Company" EntitySet="Company" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompetentAuthority_Country" Association="Self.FK_CompetentAuthority_Country">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="CompetentAuthority" EntitySet="CompetentAuthority" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompetentAuthorityUser_AspNetUsers" Association="Self.FK_CompetentAuthorityUser_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="CompetentAuthorityUser" EntitySet="CompetentAuthorityUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompetentAuthorityUser_CompetentAuthority" Association="Self.FK_CompetentAuthorityUser_CompetentAuthority">
+            <End Role="CompetentAuthority" EntitySet="CompetentAuthority" />
+            <End Role="CompetentAuthorityUser" EntitySet="CompetentAuthorityUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Contact_Address" Association="Self.FK_Contact_Address">
+            <End Role="Address1" EntitySet="Address1" />
+            <End Role="Contact1" EntitySet="Contact1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberUpload_Organisation" Association="Self.FK_MemberUpload_Organisation">
+            <End Role="Organisation" EntitySet="Organisation" />
+            <End Role="MemberUpload" EntitySet="MemberUpload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberUpload_Scheme" Association="Self.FK_MemberUpload_Scheme">
+            <End Role="Scheme" EntitySet="Scheme" />
+            <End Role="MemberUpload" EntitySet="MemberUpload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberUploadError_MemberUpload" Association="Self.FK_MemberUploadError_MemberUpload">
+            <End Role="MemberUpload" EntitySet="MemberUpload" />
+            <End Role="MemberUploadError" EntitySet="MemberUploadError" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Organisation_BusinessAddress" Association="Self.FK_Organisation_BusinessAddress">
+            <End Role="Address" EntitySet="Address" />
+            <End Role="Organisation" EntitySet="Organisation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Organisation_Contact" Association="Self.FK_Organisation_Contact">
+            <End Role="Contact" EntitySet="Contact" />
+            <End Role="Organisation" EntitySet="Organisation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Organisation_NotificationAddress" Association="Self.FK_Organisation_NotificationAddress">
+            <End Role="Address" EntitySet="Address" />
+            <End Role="Organisation" EntitySet="Organisation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Organisation_OrganisationAddress" Association="Self.FK_Organisation_OrganisationAddress">
+            <End Role="Address" EntitySet="Address" />
+            <End Role="Organisation" EntitySet="Organisation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrganisationUser_AspNetUsers" Association="Self.FK_OrganisationUser_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="OrganisationUser" EntitySet="OrganisationUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrganisationUser_Organisation" Association="Self.FK_OrganisationUser_Organisation">
+            <End Role="Organisation" EntitySet="Organisation" />
+            <End Role="OrganisationUser" EntitySet="OrganisationUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Partner_Partnership" Association="Self.FK_Partner_Partnership">
+            <End Role="Partnership" EntitySet="Partnership" />
+            <End Role="Partner" EntitySet="Partner" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Partnership_Contact" Association="Self.FK_Partnership_Contact">
+            <End Role="Contact1" EntitySet="Contact1" />
+            <End Role="Partnership" EntitySet="Partnership" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producer_AuthorisedRepresentative" Association="Self.FK_Producer_AuthorisedRepresentative">
+            <End Role="AuthorisedRepresentative" EntitySet="AuthorisedRepresentative" />
+            <End Role="Producer" EntitySet="Producer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producer_Business" Association="Self.FK_Producer_Business">
+            <End Role="Business" EntitySet="Business" />
+            <End Role="Producer" EntitySet="Producer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producer_ChargeBandAmount" Association="Self.FK_Producer_ChargeBandAmount">
+            <End Role="ChargeBandAmount" EntitySet="ChargeBandAmount" />
+            <End Role="Producer" EntitySet="Producer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producer_MemberUpload" Association="Self.FK_Producer_MemberUpload">
+            <End Role="MemberUpload" EntitySet="MemberUpload" />
+            <End Role="Producer" EntitySet="Producer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producer_Scheme" Association="Self.FK_Producer_Scheme">
+            <End Role="Scheme" EntitySet="Scheme" />
+            <End Role="Producer" EntitySet="Producer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Scheme_Organisation" Association="Self.FK_Scheme_Organisation">
+            <End Role="Organisation" EntitySet="Organisation" />
+            <End Role="Scheme" EntitySet="Scheme" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SICCodeList_Producer" Association="Self.FK_SICCodeList_Producer">
+            <End Role="Producer" EntitySet="Producer" />
+            <End Role="SICCode" EntitySet="SICCode" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EA.Weee.TestModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CompetentAuthorityUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CompetentAuthorityId" Type="Guid" Nullable="false" />
+          <Property Name="UserStatus" Type="Int32" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="CompetentAuthority" Relationship="Self.FK_CompetentAuthorityUser_CompetentAuthority" FromRole="CompetentAuthorityUser" ToRole="CompetentAuthority" />
+          <NavigationProperty Name="AspNetUser" Relationship="EA.Weee.TestModel.FK_CompetentAuthorityUser_AspNetUsers" FromRole="CompetentAuthorityUser" ToRole="AspNetUser" />
+        </EntityType>
+        <EntityType Name="CompetentAuthority">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="1023" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Abbreviation" Type="String" MaxLength="65" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CountryId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="CompetentAuthorityUsers" Relationship="Self.FK_CompetentAuthorityUser_CompetentAuthority" FromRole="CompetentAuthority" ToRole="CompetentAuthorityUser" />
+          <NavigationProperty Name="Country" Relationship="Self.FK_CompetentAuthority_Country" FromRole="CompetentAuthority" ToRole="Country" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="CompetentAuthorities" Relationship="Self.FK_CompetentAuthority_Country" FromRole="Country" ToRole="CompetentAuthority" />
+          <NavigationProperty Name="Addresses" Relationship="Self.FK_Address_Country" FromRole="Country" ToRole="Address" />
+          <NavigationProperty Name="Address1" Relationship="Self.FK_Address_Country1" FromRole="Country" ToRole="Address1" />
+        </EntityType>
+        <EntityType Name="Address">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Address1" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address2" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="TownOrCity" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CountyOrRegion" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="Postcode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CountryId" Type="Guid" Nullable="false" />
+          <Property Name="Telephone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Country" Relationship="Self.FK_Address_Country" FromRole="Address" ToRole="Country" />
+          <NavigationProperty Name="Organisations" Relationship="Self.FK_Organisation_BusinessAddress" FromRole="Address" ToRole="Organisation" />
+          <NavigationProperty Name="Organisations1" Relationship="Self.FK_Organisation_NotificationAddress" FromRole="Address" ToRole="Organisation" />
+          <NavigationProperty Name="Organisations2" Relationship="Self.FK_Organisation_OrganisationAddress" FromRole="Address" ToRole="Organisation" />
+        </EntityType>
+        <EntityType Name="Contact">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Position" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Organisations" Relationship="Self.FK_Organisation_Contact" FromRole="Contact" ToRole="Organisation" />
+        </EntityType>
+        <EntityType Name="Organisation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Name" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
+          <Property Name="OrganisationType" Type="Int32" Nullable="false" />
+          <Property Name="OrganisationStatus" Type="Int32" Nullable="false" />
+          <Property Name="TradingName" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyRegistrationNumber" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="ContactId" Type="Guid" />
+          <Property Name="OrganisationAddressId" Type="Guid" />
+          <Property Name="BusinessAddressId" Type="Guid" />
+          <Property Name="NotificationAddressId" Type="Guid" />
+          <NavigationProperty Name="Address" Relationship="Self.FK_Organisation_BusinessAddress" FromRole="Organisation" ToRole="Address" />
+          <NavigationProperty Name="Address1" Relationship="Self.FK_Organisation_NotificationAddress" FromRole="Organisation" ToRole="Address" />
+          <NavigationProperty Name="Address2" Relationship="Self.FK_Organisation_OrganisationAddress" FromRole="Organisation" ToRole="Address" />
+          <NavigationProperty Name="Contact" Relationship="Self.FK_Organisation_Contact" FromRole="Organisation" ToRole="Contact" />
+          <NavigationProperty Name="MemberUploads" Relationship="Self.FK_MemberUpload_Organisation" FromRole="Organisation" ToRole="MemberUpload" />
+          <NavigationProperty Name="OrganisationUsers" Relationship="Self.FK_OrganisationUser_Organisation" FromRole="Organisation" ToRole="OrganisationUser" />
+          <NavigationProperty Name="Schemes" Relationship="Self.FK_Scheme_Organisation" FromRole="Organisation" ToRole="Scheme" />
+        </EntityType>
+        <EntityType Name="OrganisationUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OrganisationId" Type="Guid" Nullable="false" />
+          <Property Name="UserStatus" Type="Int32" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Organisation" Relationship="Self.FK_OrganisationUser_Organisation" FromRole="OrganisationUser" ToRole="Organisation" />
+          <NavigationProperty Name="AspNetUser" Relationship="EA.Weee.TestModel.FK_OrganisationUser_AspNetUsers" FromRole="OrganisationUser" ToRole="AspNetUser" />
+        </EntityType>
+        <EntityType Name="MemberUpload">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="OrganisationId" Type="Guid" Nullable="false" />
+          <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ComplianceYear" Type="Int32" />
+          <Property Name="SchemeId" Type="Guid" Nullable="false" />
+          <Property Name="IsSubmitted" Type="Boolean" Nullable="false" />
+          <Property Name="TotalCharges" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <NavigationProperty Name="Organisation" Relationship="Self.FK_MemberUpload_Organisation" FromRole="MemberUpload" ToRole="Organisation" />
+          <NavigationProperty Name="Scheme" Relationship="Self.FK_MemberUpload_Scheme" FromRole="MemberUpload" ToRole="Scheme" />
+          <NavigationProperty Name="MemberUploadErrors" Relationship="Self.FK_MemberUploadError_MemberUpload" FromRole="MemberUpload" ToRole="MemberUploadError" />
+          <NavigationProperty Name="Producers" Relationship="Self.FK_Producer_MemberUpload" FromRole="MemberUpload" ToRole="Producer" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Precision="3" Nullable="false" />
+          <Property Name="ProcessTime" Type="Time" Nullable="false" Precision="7" />
+        </EntityType>
+        <EntityType Name="MemberUploadError">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ErrorLevel" Type="Int32" Nullable="false" />
+          <Property Name="ErrorType" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MemberUploadId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="MemberUpload" Relationship="Self.FK_MemberUploadError_MemberUpload" FromRole="MemberUploadError" ToRole="MemberUpload" />
+        </EntityType>
+        <EntityType Name="Scheme">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="SchemeStatus" Type="Int32" Nullable="false" />
+          <Property Name="ApprovalNumber" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="OrganisationId" Type="Guid" Nullable="false" />
+          <Property Name="SchemeName" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
+          <Property Name="IbisCustomerReference" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ObligationType" Type="Int32" />
+          <Property Name="CompetentAuthorityId" Type="Guid" />
+          <NavigationProperty Name="Organisation" Relationship="Self.FK_Scheme_Organisation" FromRole="Scheme" ToRole="Organisation" />
+          <NavigationProperty Name="MemberUploads" Relationship="Self.FK_MemberUpload_Scheme" FromRole="Scheme" ToRole="MemberUpload" />
+          <NavigationProperty Name="Producers" Relationship="Self.FK_Producer_Scheme" FromRole="Scheme" ToRole="Producer" />
+        </EntityType>
+        <EntityType Name="Address1">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="PrimaryName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SecondaryName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Street" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Town" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Locality" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AdministrativeArea" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CountryId" Type="Guid" Nullable="false" />
+          <Property Name="PostCode" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Country" Relationship="Self.FK_Address_Country1" FromRole="Address1" ToRole="Country" />
+          <NavigationProperty Name="Contact1" Relationship="Self.FK_Contact_Address" FromRole="Address1" ToRole="Contact1" />
+        </EntityType>
+        <EntityType Name="AuthorisedRepresentative">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="OverseasProducerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OverseasContactId" Type="Guid" />
+          <NavigationProperty Name="Contact1" Relationship="Self.FK_AuthorisedRepresentative_OverseasContact" FromRole="AuthorisedRepresentative" ToRole="Contact1" />
+          <NavigationProperty Name="Producers" Relationship="Self.FK_Producer_AuthorisedRepresentative" FromRole="AuthorisedRepresentative" ToRole="Producer" />
+        </EntityType>
+        <EntityType Name="BrandName_">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ProducerId" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Producer" Relationship="Self.FK_BrandNameList_Producer" FromRole="BrandName" ToRole="Producer" />
+        </EntityType>
+        <EntityType Name="Business">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="CorrespondentForNoticesContactId" Type="Guid" />
+          <Property Name="CompanyId" Type="Guid" />
+          <Property Name="PartnershipId" Type="Guid" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_Business_Company" FromRole="Business" ToRole="Company" />
+          <NavigationProperty Name="Contact1" Relationship="Self.FK_Business_Contact" FromRole="Business" ToRole="Contact1" />
+          <NavigationProperty Name="Partnership" Relationship="Self.FK_Business_Partnership" FromRole="Business" ToRole="Partnership" />
+          <NavigationProperty Name="Producers" Relationship="Self.FK_Producer_Business" FromRole="Business" ToRole="Producer" />
+        </EntityType>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CompanyNumber" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RegisteredOfficeContactId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Businesses" Relationship="Self.FK_Business_Company" FromRole="Company" ToRole="Business" />
+          <NavigationProperty Name="Contact1" Relationship="Self.FK_Company_Contact" FromRole="Company" ToRole="Contact1" />
+        </EntityType>
+        <EntityType Name="Contact1">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Title" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Forename" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Surname" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Telephone" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Mobile" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Fax" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AddressId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Address1" Relationship="Self.FK_Contact_Address" FromRole="Contact1" ToRole="Address1" />
+          <NavigationProperty Name="AuthorisedRepresentatives" Relationship="Self.FK_AuthorisedRepresentative_OverseasContact" FromRole="Contact1" ToRole="AuthorisedRepresentative" />
+          <NavigationProperty Name="Businesses" Relationship="Self.FK_Business_Contact" FromRole="Contact1" ToRole="Business" />
+          <NavigationProperty Name="Companies" Relationship="Self.FK_Company_Contact" FromRole="Contact1" ToRole="Company" />
+          <NavigationProperty Name="Partnerships" Relationship="Self.FK_Partnership_Contact" FromRole="Contact1" ToRole="Partnership" />
+        </EntityType>
+        <EntityType Name="MigratedProducer_">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ProducerRegistrationNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ProducerName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyNumber" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Partner_">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Name" Type="String" MaxLength="70" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PartnershipId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Partnership" Relationship="Self.FK_Partner_Partnership" FromRole="Partner" ToRole="Partnership" />
+        </EntityType>
+        <EntityType Name="Partnership">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PrincipalPlaceOfBusinessId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Businesses" Relationship="Self.FK_Business_Partnership" FromRole="Partnership" ToRole="Business" />
+          <NavigationProperty Name="Contact1" Relationship="Self.FK_Partnership_Contact" FromRole="Partnership" ToRole="Contact1" />
+          <NavigationProperty Name="Partners" Relationship="Self.FK_Partner_Partnership" FromRole="Partnership" ToRole="Partner" />
+        </EntityType>
+        <EntityType Name="Producer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="RegistrationNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="VATRegistered" Type="Boolean" Nullable="false" />
+          <Property Name="AnnualTurnover" Type="Decimal" Precision="28" Scale="12" Nullable="false" />
+          <Property Name="CeaseToExist" Type="DateTime" Precision="3" />
+          <Property Name="ObligationType" Type="Int32" Nullable="false" />
+          <Property Name="EEEPlacedOnMarketBandType" Type="Int32" Nullable="false" />
+          <Property Name="AnnualTurnoverBandType" Type="Int32" Nullable="false" />
+          <Property Name="SellingTechniqueType" Type="Int32" Nullable="false" />
+          <Property Name="ChargeThisUpdate" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="MemberUploadId" Type="Guid" Nullable="false" />
+          <Property Name="AuthorisedRepresentativeId" Type="Guid" />
+          <Property Name="ProducerBusinessId" Type="Guid" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TradingName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SchemeId" Type="Guid" Nullable="false" />
+          <Property Name="IsCurrentForComplianceYear" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="MemberUpload" Relationship="Self.FK_Producer_MemberUpload" FromRole="Producer" ToRole="MemberUpload" />
+          <NavigationProperty Name="Scheme" Relationship="Self.FK_Producer_Scheme" FromRole="Producer" ToRole="Scheme" />
+          <NavigationProperty Name="AuthorisedRepresentative" Relationship="Self.FK_Producer_AuthorisedRepresentative" FromRole="Producer" ToRole="AuthorisedRepresentative" />
+          <NavigationProperty Name="BrandNames" Relationship="Self.FK_BrandNameList_Producer" FromRole="Producer" ToRole="BrandName" />
+          <NavigationProperty Name="Business" Relationship="Self.FK_Producer_Business" FromRole="Producer" ToRole="Business" />
+          <NavigationProperty Name="SICCodes" Relationship="Self.FK_SICCodeList_Producer" FromRole="Producer" ToRole="SICCode" />
+          <NavigationProperty Name="ChargeBandAmount" Relationship="EA.Weee.TestModel.FK_Producer_ChargeBandAmount" FromRole="Producer" ToRole="ChargeBandAmount" />
+          <Property Name="ChargeBandAmountId" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SICCode_">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="ProducerId" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Producer" Relationship="Self.FK_SICCodeList_Producer" FromRole="SICCode" ToRole="Producer" />
+        </EntityType>
+        <Association Name="FK_CompetentAuthorityUser_CompetentAuthority">
+          <End Role="CompetentAuthority" Type="Self.CompetentAuthority" Multiplicity="1" />
+          <End Role="CompetentAuthorityUser" Type="Self.CompetentAuthorityUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompetentAuthority">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetentAuthorityUser">
+              <PropertyRef Name="CompetentAuthorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompetentAuthority_Country">
+          <End Role="Country" Type="Self.Country" Multiplicity="1" />
+          <End Role="CompetentAuthority" Type="Self.CompetentAuthority" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetentAuthority">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Address_Country">
+          <End Role="Country" Type="Self.Country" Multiplicity="1" />
+          <End Role="Address" Type="Self.Address" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Address">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Address_Country1">
+          <End Role="Country" Type="Self.Country" Multiplicity="1" />
+          <End Role="Address1" Type="Self.Address1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Address1">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Organisation_BusinessAddress">
+          <End Role="Address" Type="Self.Address" Multiplicity="0..1" />
+          <End Role="Organisation" Type="Self.Organisation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Organisation">
+              <PropertyRef Name="BusinessAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Organisation_NotificationAddress">
+          <End Role="Address" Type="Self.Address" Multiplicity="0..1" />
+          <End Role="Organisation" Type="Self.Organisation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Organisation">
+              <PropertyRef Name="NotificationAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Organisation_OrganisationAddress">
+          <End Role="Address" Type="Self.Address" Multiplicity="0..1" />
+          <End Role="Organisation" Type="Self.Organisation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Organisation">
+              <PropertyRef Name="OrganisationAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Organisation_Contact">
+          <End Role="Contact" Type="Self.Contact" Multiplicity="0..1" />
+          <End Role="Organisation" Type="Self.Organisation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Organisation">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberUpload_Organisation">
+          <End Role="Organisation" Type="Self.Organisation" Multiplicity="1" />
+          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organisation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="OrganisationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrganisationUser_Organisation">
+          <End Role="Organisation" Type="Self.Organisation" Multiplicity="1" />
+          <End Role="OrganisationUser" Type="Self.OrganisationUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organisation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OrganisationUser">
+              <PropertyRef Name="OrganisationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Scheme_Organisation">
+          <End Role="Organisation" Type="Self.Organisation" Multiplicity="1" />
+          <End Role="Scheme" Type="Self.Scheme" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organisation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Scheme">
+              <PropertyRef Name="OrganisationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberUpload_Scheme">
+          <End Role="Scheme" Type="Self.Scheme" Multiplicity="1" />
+          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Scheme">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="SchemeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberUploadError_MemberUpload">
+          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="1" />
+          <End Role="MemberUploadError" Type="Self.MemberUploadError" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MemberUpload">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUploadError">
+              <PropertyRef Name="MemberUploadId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Producer_MemberUpload">
+          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="1" />
+          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MemberUpload">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Producer">
+              <PropertyRef Name="MemberUploadId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Producer_Scheme">
+          <End Role="Scheme" Type="Self.Scheme" Multiplicity="1" />
+          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Scheme">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Producer">
+              <PropertyRef Name="SchemeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Contact_Address">
+          <End Role="Address1" Type="Self.Address1" Multiplicity="1" />
+          <End Role="Contact1" Type="Self.Contact1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address1">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Contact1">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AuthorisedRepresentative_OverseasContact">
+          <End Role="Contact1" Type="Self.Contact1" Multiplicity="0..1" />
+          <End Role="AuthorisedRepresentative" Type="Self.AuthorisedRepresentative" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact1">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AuthorisedRepresentative">
+              <PropertyRef Name="OverseasContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Producer_AuthorisedRepresentative">
+          <End Role="AuthorisedRepresentative" Type="Self.AuthorisedRepresentative" Multiplicity="0..1" />
+          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AuthorisedRepresentative">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Producer">
+              <PropertyRef Name="AuthorisedRepresentativeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BrandNameList_Producer">
+          <End Role="Producer" Type="Self.Producer" Multiplicity="1" />
+          <End Role="BrandName" Type="EA.Weee.TestModel.BrandName_" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BrandName">
+              <PropertyRef Name="ProducerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Business_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="Business" Type="Self.Business" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Business">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Business_Contact">
+          <End Role="Contact1" Type="Self.Contact1" Multiplicity="0..1" />
+          <End Role="Business" Type="Self.Business" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact1">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Business">
+              <PropertyRef Name="CorrespondentForNoticesContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Business_Partnership">
+          <End Role="Partnership" Type="Self.Partnership" Multiplicity="0..1" />
+          <End Role="Business" Type="Self.Business" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Partnership">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Business">
+              <PropertyRef Name="PartnershipId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Producer_Business">
+          <End Role="Business" Type="Self.Business" Multiplicity="1" />
+          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Business">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Producer">
+              <PropertyRef Name="ProducerBusinessId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Company_Contact">
+          <End Role="Contact1" Type="Self.Contact1" Multiplicity="1" />
+          <End Role="Company" Type="Self.Company" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact1">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Company">
+              <PropertyRef Name="RegisteredOfficeContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Partnership_Contact">
+          <End Role="Contact1" Type="Self.Contact1" Multiplicity="1" />
+          <End Role="Partnership" Type="Self.Partnership" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact1">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Partnership">
+              <PropertyRef Name="PrincipalPlaceOfBusinessId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Partner_Partnership">
+          <End Role="Partnership" Type="Self.Partnership" Multiplicity="1" />
+          <End Role="Partner" Type="EA.Weee.TestModel.Partner_" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Partnership">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Partner">
+              <PropertyRef Name="PartnershipId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SICCodeList_Producer">
+          <End Role="Producer" Type="Self.Producer" Multiplicity="1" />
+          <End Role="SICCode" Type="EA.Weee.TestModel.SICCode_" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SICCode">
+              <PropertyRef Name="ProducerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CompetentAuthorityUsers" EntityType="Self.CompetentAuthorityUser" />
+          <EntitySet Name="CompetentAuthorities" EntityType="Self.CompetentAuthority" />
+          <EntitySet Name="Countries" EntityType="Self.Country" />
+          <EntitySet Name="Addresses" EntityType="Self.Address" />
+          <EntitySet Name="Contacts" EntityType="Self.Contact" />
+          <EntitySet Name="Organisations" EntityType="Self.Organisation" />
+          <EntitySet Name="OrganisationUsers" EntityType="Self.OrganisationUser" />
+          <EntitySet Name="MemberUploads" EntityType="Self.MemberUpload" />
+          <EntitySet Name="MemberUploadErrors" EntityType="Self.MemberUploadError" />
+          <EntitySet Name="Schemes" EntityType="Self.Scheme" />
+          <EntitySet Name="Address1" EntityType="Self.Address1" />
+          <EntitySet Name="AuthorisedRepresentatives" EntityType="Self.AuthorisedRepresentative" />
+          <EntitySet Name="BrandName_Set" EntityType="EA.Weee.TestModel.BrandName_" />
+          <EntitySet Name="Businesses" EntityType="Self.Business" />
+          <EntitySet Name="Companies" EntityType="Self.Company" />
+          <EntitySet Name="Contact1" EntityType="Self.Contact1" />
+          <EntitySet Name="MigratedProducer_Set" EntityType="EA.Weee.TestModel.MigratedProducer_" />
+          <EntitySet Name="Partner_Set" EntityType="EA.Weee.TestModel.Partner_" />
+          <EntitySet Name="Partnerships" EntityType="Self.Partnership" />
+          <EntitySet Name="Producers" EntityType="Self.Producer" />
+          <EntitySet Name="SICCode_Set" EntityType="EA.Weee.TestModel.SICCode_" />
+          <AssociationSet Name="FK_CompetentAuthorityUser_CompetentAuthority" Association="Self.FK_CompetentAuthorityUser_CompetentAuthority">
+            <End Role="CompetentAuthority" EntitySet="CompetentAuthorities" />
+            <End Role="CompetentAuthorityUser" EntitySet="CompetentAuthorityUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompetentAuthority_Country" Association="Self.FK_CompetentAuthority_Country">
+            <End Role="Country" EntitySet="Countries" />
+            <End Role="CompetentAuthority" EntitySet="CompetentAuthorities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Address_Country" Association="Self.FK_Address_Country">
+            <End Role="Country" EntitySet="Countries" />
+            <End Role="Address" EntitySet="Addresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Address_Country1" Association="Self.FK_Address_Country1">
+            <End Role="Country" EntitySet="Countries" />
+            <End Role="Address1" EntitySet="Address1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Organisation_BusinessAddress" Association="Self.FK_Organisation_BusinessAddress">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Organisation" EntitySet="Organisations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Organisation_NotificationAddress" Association="Self.FK_Organisation_NotificationAddress">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Organisation" EntitySet="Organisations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Organisation_OrganisationAddress" Association="Self.FK_Organisation_OrganisationAddress">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="Organisation" EntitySet="Organisations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Organisation_Contact" Association="Self.FK_Organisation_Contact">
+            <End Role="Contact" EntitySet="Contacts" />
+            <End Role="Organisation" EntitySet="Organisations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberUpload_Organisation" Association="Self.FK_MemberUpload_Organisation">
+            <End Role="Organisation" EntitySet="Organisations" />
+            <End Role="MemberUpload" EntitySet="MemberUploads" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrganisationUser_Organisation" Association="Self.FK_OrganisationUser_Organisation">
+            <End Role="Organisation" EntitySet="Organisations" />
+            <End Role="OrganisationUser" EntitySet="OrganisationUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Scheme_Organisation" Association="Self.FK_Scheme_Organisation">
+            <End Role="Organisation" EntitySet="Organisations" />
+            <End Role="Scheme" EntitySet="Schemes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberUpload_Scheme" Association="Self.FK_MemberUpload_Scheme">
+            <End Role="Scheme" EntitySet="Schemes" />
+            <End Role="MemberUpload" EntitySet="MemberUploads" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberUploadError_MemberUpload" Association="Self.FK_MemberUploadError_MemberUpload">
+            <End Role="MemberUpload" EntitySet="MemberUploads" />
+            <End Role="MemberUploadError" EntitySet="MemberUploadErrors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producer_MemberUpload" Association="Self.FK_Producer_MemberUpload">
+            <End Role="MemberUpload" EntitySet="MemberUploads" />
+            <End Role="Producer" EntitySet="Producers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producer_Scheme" Association="Self.FK_Producer_Scheme">
+            <End Role="Scheme" EntitySet="Schemes" />
+            <End Role="Producer" EntitySet="Producers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Contact_Address" Association="Self.FK_Contact_Address">
+            <End Role="Address1" EntitySet="Address1" />
+            <End Role="Contact1" EntitySet="Contact1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AuthorisedRepresentative_OverseasContact" Association="Self.FK_AuthorisedRepresentative_OverseasContact">
+            <End Role="Contact1" EntitySet="Contact1" />
+            <End Role="AuthorisedRepresentative" EntitySet="AuthorisedRepresentatives" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producer_AuthorisedRepresentative" Association="Self.FK_Producer_AuthorisedRepresentative">
+            <End Role="AuthorisedRepresentative" EntitySet="AuthorisedRepresentatives" />
+            <End Role="Producer" EntitySet="Producers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BrandNameList_Producer" Association="Self.FK_BrandNameList_Producer">
+            <End Role="Producer" EntitySet="Producers" />
+            <End Role="BrandName" EntitySet="BrandName_Set" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Business_Company" Association="Self.FK_Business_Company">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="Business" EntitySet="Businesses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Business_Contact" Association="Self.FK_Business_Contact">
+            <End Role="Contact1" EntitySet="Contact1" />
+            <End Role="Business" EntitySet="Businesses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Business_Partnership" Association="Self.FK_Business_Partnership">
+            <End Role="Partnership" EntitySet="Partnerships" />
+            <End Role="Business" EntitySet="Businesses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Producer_Business" Association="Self.FK_Producer_Business">
+            <End Role="Business" EntitySet="Businesses" />
+            <End Role="Producer" EntitySet="Producers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Company_Contact" Association="Self.FK_Company_Contact">
+            <End Role="Contact1" EntitySet="Contact1" />
+            <End Role="Company" EntitySet="Companies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Partnership_Contact" Association="Self.FK_Partnership_Contact">
+            <End Role="Contact1" EntitySet="Contact1" />
+            <End Role="Partnership" EntitySet="Partnerships" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Partner_Partnership" Association="Self.FK_Partner_Partnership">
+            <End Role="Partnership" EntitySet="Partnerships" />
+            <End Role="Partner" EntitySet="Partner_Set" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SICCodeList_Producer" Association="Self.FK_SICCodeList_Producer">
+            <End Role="Producer" EntitySet="Producers" />
+            <End Role="SICCode" EntitySet="SICCode_Set" />
+          </AssociationSet>
+          <EntitySet Name="AspNetUsers" EntityType="EA.Weee.TestModel.AspNetUser" />
+          <AssociationSet Name="FK_CompetentAuthorityUser_AspNetUsers" Association="EA.Weee.TestModel.FK_CompetentAuthorityUser_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="CompetentAuthorityUser" EntitySet="CompetentAuthorityUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrganisationUser_AspNetUsers" Association="EA.Weee.TestModel.FK_OrganisationUser_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="OrganisationUser" EntitySet="OrganisationUsers" />
+          </AssociationSet>
+          <EntitySet Name="ChargeBandAmounts" EntityType="EA.Weee.TestModel.ChargeBandAmount" />
+          <AssociationSet Name="FK_Producer_ChargeBandAmount" Association="EA.Weee.TestModel.FK_Producer_ChargeBandAmount">
+            <End Role="ChargeBandAmount" EntitySet="ChargeBandAmounts" />
+            <End Role="Producer" EntitySet="Producers" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Surname" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="CompetentAuthorityUsers" Relationship="EA.Weee.TestModel.FK_CompetentAuthorityUser_AspNetUsers" FromRole="AspNetUser" ToRole="CompetentAuthorityUser" />
+          <NavigationProperty Name="OrganisationUsers" Relationship="EA.Weee.TestModel.FK_OrganisationUser_AspNetUsers" FromRole="AspNetUser" ToRole="OrganisationUser" />
+        </EntityType>
+        <Association Name="FK_CompetentAuthorityUser_AspNetUsers">
+          <End Type="EA.Weee.TestModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.CompetentAuthorityUser" Role="CompetentAuthorityUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetentAuthorityUser">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrganisationUser_AspNetUsers">
+          <End Type="EA.Weee.TestModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.OrganisationUser" Role="OrganisationUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OrganisationUser">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ChargeBandAmount">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <NavigationProperty Name="Producers" Relationship="EA.Weee.TestModel.FK_Producer_ChargeBandAmount" FromRole="ChargeBandAmount" ToRole="Producer" />
+          <Property Name="ChargeBand" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Producer_ChargeBandAmount">
+          <End Type="EA.Weee.TestModel.ChargeBandAmount" Role="ChargeBandAmount" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.Producer" Role="Producer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChargeBandAmount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Producer">
+              <PropertyRef Name="ChargeBandAmountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EAWeeeTestModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="CompetentAuthorityUsers">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.CompetentAuthorityUser">
+              <MappingFragment StoreEntitySet="CompetentAuthorityUser">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CompetentAuthorityId" ColumnName="CompetentAuthorityId" />
+                <ScalarProperty Name="UserStatus" ColumnName="UserStatus" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CompetentAuthorities">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.CompetentAuthority">
+              <MappingFragment StoreEntitySet="CompetentAuthority">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Abbreviation" ColumnName="Abbreviation" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Countries">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.Country">
+              <MappingFragment StoreEntitySet="Country">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Addresses">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.Address">
+              <MappingFragment StoreEntitySet="Address">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Address1" ColumnName="Address1" />
+                <ScalarProperty Name="Address2" ColumnName="Address2" />
+                <ScalarProperty Name="TownOrCity" ColumnName="TownOrCity" />
+                <ScalarProperty Name="CountyOrRegion" ColumnName="CountyOrRegion" />
+                <ScalarProperty Name="Postcode" ColumnName="Postcode" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="Telephone" ColumnName="Telephone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Contacts">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.Contact">
+              <MappingFragment StoreEntitySet="Contact">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Organisations">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.Organisation">
+              <MappingFragment StoreEntitySet="Organisation">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="OrganisationType" ColumnName="OrganisationType" />
+                <ScalarProperty Name="OrganisationStatus" ColumnName="OrganisationStatus" />
+                <ScalarProperty Name="TradingName" ColumnName="TradingName" />
+                <ScalarProperty Name="CompanyRegistrationNumber" ColumnName="CompanyRegistrationNumber" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="OrganisationAddressId" ColumnName="OrganisationAddressId" />
+                <ScalarProperty Name="BusinessAddressId" ColumnName="BusinessAddressId" />
+                <ScalarProperty Name="NotificationAddressId" ColumnName="NotificationAddressId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrganisationUsers">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.OrganisationUser">
+              <MappingFragment StoreEntitySet="OrganisationUser">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="OrganisationId" ColumnName="OrganisationId" />
+                <ScalarProperty Name="UserStatus" ColumnName="UserStatus" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MemberUploads">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.MemberUpload">
+              <MappingFragment StoreEntitySet="MemberUpload">
+                <ScalarProperty Name="ProcessTime" ColumnName="ProcessTime" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="OrganisationId" ColumnName="OrganisationId" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="ComplianceYear" ColumnName="ComplianceYear" />
+                <ScalarProperty Name="SchemeId" ColumnName="SchemeId" />
+                <ScalarProperty Name="IsSubmitted" ColumnName="IsSubmitted" />
+                <ScalarProperty Name="TotalCharges" ColumnName="TotalCharges" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MemberUploadErrors">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.MemberUploadError">
+              <MappingFragment StoreEntitySet="MemberUploadError">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="ErrorLevel" ColumnName="ErrorLevel" />
+                <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="MemberUploadId" ColumnName="MemberUploadId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Schemes">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.Scheme">
+              <MappingFragment StoreEntitySet="Scheme">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="SchemeStatus" ColumnName="SchemeStatus" />
+                <ScalarProperty Name="ApprovalNumber" ColumnName="ApprovalNumber" />
+                <ScalarProperty Name="OrganisationId" ColumnName="OrganisationId" />
+                <ScalarProperty Name="SchemeName" ColumnName="SchemeName" />
+                <ScalarProperty Name="IbisCustomerReference" ColumnName="IbisCustomerReference" />
+                <ScalarProperty Name="ObligationType" ColumnName="ObligationType" />
+                <ScalarProperty Name="CompetentAuthorityId" ColumnName="CompetentAuthorityId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Address1">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.Address1">
+              <MappingFragment StoreEntitySet="Address1">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="PrimaryName" ColumnName="PrimaryName" />
+                <ScalarProperty Name="SecondaryName" ColumnName="SecondaryName" />
+                <ScalarProperty Name="Street" ColumnName="Street" />
+                <ScalarProperty Name="Town" ColumnName="Town" />
+                <ScalarProperty Name="Locality" ColumnName="Locality" />
+                <ScalarProperty Name="AdministrativeArea" ColumnName="AdministrativeArea" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="PostCode" ColumnName="PostCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AuthorisedRepresentatives">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.AuthorisedRepresentative">
+              <MappingFragment StoreEntitySet="AuthorisedRepresentative">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="OverseasProducerName" ColumnName="OverseasProducerName" />
+                <ScalarProperty Name="OverseasContactId" ColumnName="OverseasContactId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BrandName_Set">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.BrandName_">
+              <MappingFragment StoreEntitySet="BrandName">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="ProducerId" ColumnName="ProducerId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Businesses">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.Business">
+              <MappingFragment StoreEntitySet="Business">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="CorrespondentForNoticesContactId" ColumnName="CorrespondentForNoticesContactId" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="PartnershipId" ColumnName="PartnershipId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Companies">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.Company">
+              <MappingFragment StoreEntitySet="Company">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CompanyNumber" ColumnName="CompanyNumber" />
+                <ScalarProperty Name="RegisteredOfficeContactId" ColumnName="RegisteredOfficeContactId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Contact1">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.Contact1">
+              <MappingFragment StoreEntitySet="Contact1">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Forename" ColumnName="Forename" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Telephone" ColumnName="Telephone" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="Fax" ColumnName="Fax" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MigratedProducer_Set">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.MigratedProducer_">
+              <MappingFragment StoreEntitySet="MigratedProducer">
+                <ScalarProperty Name="CompanyNumber" ColumnName="CompanyNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="ProducerRegistrationNumber" ColumnName="ProducerRegistrationNumber" />
+                <ScalarProperty Name="ProducerName" ColumnName="ProducerName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Partner_Set">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.Partner_">
+              <MappingFragment StoreEntitySet="Partner">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PartnershipId" ColumnName="PartnershipId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Partnerships">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.Partnership">
+              <MappingFragment StoreEntitySet="Partnership">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PrincipalPlaceOfBusinessId" ColumnName="PrincipalPlaceOfBusinessId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Producers">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.Producer">
+              <MappingFragment StoreEntitySet="Producer">
+                <ScalarProperty Name="ChargeBandAmountId" ColumnName="ChargeBandAmountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="RegistrationNumber" ColumnName="RegistrationNumber" />
+                <ScalarProperty Name="VATRegistered" ColumnName="VATRegistered" />
+                <ScalarProperty Name="AnnualTurnover" ColumnName="AnnualTurnover" />
+                <ScalarProperty Name="CeaseToExist" ColumnName="CeaseToExist" />
+                <ScalarProperty Name="ObligationType" ColumnName="ObligationType" />
+                <ScalarProperty Name="EEEPlacedOnMarketBandType" ColumnName="EEEPlacedOnMarketBandType" />
+                <ScalarProperty Name="AnnualTurnoverBandType" ColumnName="AnnualTurnoverBandType" />
+                <ScalarProperty Name="SellingTechniqueType" ColumnName="SellingTechniqueType" />
+                <ScalarProperty Name="ChargeThisUpdate" ColumnName="ChargeThisUpdate" />
+                <ScalarProperty Name="MemberUploadId" ColumnName="MemberUploadId" />
+                <ScalarProperty Name="AuthorisedRepresentativeId" ColumnName="AuthorisedRepresentativeId" />
+                <ScalarProperty Name="ProducerBusinessId" ColumnName="ProducerBusinessId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="TradingName" ColumnName="TradingName" />
+                <ScalarProperty Name="SchemeId" ColumnName="SchemeId" />
+                <ScalarProperty Name="IsCurrentForComplianceYear" ColumnName="IsCurrentForComplianceYear" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SICCode_Set">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.SICCode_">
+              <MappingFragment StoreEntitySet="SICCode">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProducerId" ColumnName="ProducerId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChargeBandAmounts">
+            <EntityTypeMapping TypeName="IsTypeOf(EA.Weee.TestModel.ChargeBandAmount)">
+              <MappingFragment StoreEntitySet="ChargeBandAmount">
+                <ScalarProperty Name="ChargeBand" ColumnName="ChargeBand" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

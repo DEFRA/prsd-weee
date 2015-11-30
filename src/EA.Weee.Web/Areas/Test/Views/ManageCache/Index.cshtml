@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Manage Cache";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Manage Cache
+        </h1>
+    </header>
+
+    <p>Use this page to clear the cache of producer search results.</p>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <p>
+            <input type="submit" class="button" value="Continue" />
+        </p>
+    }
+
+    <p>
+        @Html.ActionLink("Back", "Index", "Home", null, null)
+    </p>
+}

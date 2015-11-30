@@ -1,0 +1,79 @@
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.DetailsViewModel
+@{
+    string schemePlural = Model.Details.Schemes.Count != 1 ? "PCSs" : "PCS";
+    ViewBag.Title = "Details";
+}
+
+@section main_content {
+
+    <header class="hgroup">
+        <h1 class="heading-large">Producer details</h1>
+    </header>
+
+    <p>
+        @Model.Details.RegistrationNumber is registered with the
+        following @schemePlural in @Model.Details.ComplianceYear:
+    </p>
+
+    @foreach (var scheme in Model.Details.Schemes)
+    {
+        <h2 class="heading-small">
+            @scheme.SchemeName
+        </h2>
+
+        <table>
+            <thead>
+                <tr class="visuallyhidden">
+                    <th colspan="2">Producer Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Producer name</td>
+                    <td>@scheme.ProducerName</td>
+                </tr>
+                <tr>
+                    <td>Trading name</td>
+                    <td>@scheme.TradingName</td>
+                </tr>
+                <tr>
+                    <td>Registration date</td>
+                    <td>@scheme.RegistrationDate.ToString("dd MMMM yyyy")</td>
+                </tr>
+                @if (@scheme.CompanyNumber != null)
+                {
+                    <tr>
+                        <td>Company registration number</td>
+                        <td>@scheme.CompanyNumber</td>
+                    </tr>
+                }
+                <tr>
+                    <td>Obligation type</td>
+                    <td>@scheme.ObligationType</td>
+                </tr>
+                <tr>
+                    <td>Charge band type</td>
+                    <td>@scheme.ChargeBandType</td>
+                </tr>
+                <tr>
+                    <td>Authorised representative</td>
+                    <td>@scheme.IsAuthorisedRepresentative</td>
+                </tr>
+                @if (@scheme.CeasedToExist != null)
+                {
+                    <tr>
+                        <td>Ceased to exist</td>
+                        <td>@scheme.CeasedToExist.Value.ToString("dd MMMM yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <br />
+    }
+
+    <p>
+        <a href="javascript:history.back();">Back</a>
+    </p>
+}
+

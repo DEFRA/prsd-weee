@@ -1,0 +1,76 @@
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.SearchResultsViewModel
+@{
+    ViewBag.Title = "Search results";
+}
+
+@section main_content {
+
+    <header class="hgroup">
+        <h1 class="heading-large">Search results</h1>
+    </header>
+
+    @if (Model.Results.Count > 0)
+    {
+        using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+
+            <p>
+                Here are some producers that matched your search:
+            </p>
+
+            <div class="table-hr"></div>
+            <table id="producers" class="prsd-table hover-effect">
+                <thead>
+                    <tr>
+                        <th>Producer</th>
+                        <th>Registration Number</th>
+                        <th>Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.Results)
+                    {
+                        <tr>
+                            <td>@result.Name</td>
+                            <td>@result.RegistrationNumber</td>
+                            <td>
+                                @Html.RadioButtonFor(m => m.SelectedRegistrationNumber, result.RegistrationNumber)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br/>
+
+            <div class="form-group">
+                <input type="submit" class="button" value="Continue" />
+            </div>
+        }
+    }
+    else
+    {
+        <p>We didn't find any producers that matched your search.</p>
+    }
+
+    <p>
+        <a href="javascript:history.back();">Back</a>
+    </p>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $('#producers tr').click(function () {
+            $(this).find('td input[type=radio]').prop('checked', true);
+        })
+    </script>
+}
+
+
+
+
+
+
+
+

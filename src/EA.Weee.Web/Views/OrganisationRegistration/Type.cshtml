@@ -1,0 +1,56 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.Type.OrganisationTypeViewModel
+@{
+    ViewBag.Title = "Organisation Type";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.SearchedText)
+    <header class="hgroup">
+        <h1 class="heading-large">
+            What type of organisation is your producer compliance scheme (PCS)?
+        </h1>
+    </header>
+    
+    @Html.Gds().ValidationSummary()
+
+    <div class="form-group">
+        @using (this.WeeeGds().ProgressiveDisclosure("What is a registered company partnership or sole trader?"))
+        {
+            <p>
+                <h2 class="heading-small">
+                    Registered company
+                </h2>
+                This may be a limited company, limited liability partnership, or similar business that has a separate legal entity to its owners. For UK companies, it must be formed and registered at Companies House. Such corporate bodies have a unique company registration number (CRN).
+            </p>
+            <p>
+                <h2 class="heading-small">
+                    Partnership
+                </h2>
+                You and one or more others (partners of the business) are self-employed, work for yourselves and run and own the business together. All partners own a specified percentage of the profits and liabilities of the business. This excludes limited partnerships and limited liability partnerships, which are registered companies.
+            </p>
+            <p>
+                <h2 class="heading-small">
+                    Sole trader or individual
+                </h2>
+                You are self-employed, work for yourself and run and own your own business as an individual. You own all the profits and liabilities of your business and you may or may not have staff working for you.
+            </p>
+        }
+    </div>
+
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+        @this.WeeeGds().RadioButtonsFor(
+            m => m.SelectedValue,
+            Model.PossibleValues,
+            "What type of organisation is your producer compliance scheme?",
+            RadioButtonLegend.VisuallyHidden,
+            RadioButtonLayout.Stacked)
+    </div>
+
+    <div class="form-group">
+        <button class="button" type="submit">Continue</button>
+    </div>
+}

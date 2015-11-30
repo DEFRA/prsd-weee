@@ -1,0 +1,44 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Account.InternalLoginViewModel
+
+@section main_content {
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Sign in to your account
+        </h1>
+    </header>
+
+    @using (Html.BeginForm("SignIn", "Account", new { ReturnUrl = Request.QueryString["ReturnUrl"] }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <p>
+            This area is reserved for the use of regulatory staff only.
+        </p>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Email)">
+            @Html.Gds().LabelFor(m => m.Email)
+            @Html.Gds().ValidationMessageFor(m => m.Email)
+            @Html.Gds().TextBoxFor(m => m.Email, new { autocomplete = "off" })
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Password)">
+            @Html.Gds().LabelFor(m => m.Password)
+            @Html.Gds().ValidationMessageFor(m => m.Password)
+            @Html.Gds().PasswordFor(m => m.Password)
+        </div>
+
+        <p>
+            <input type="submit" value="Continue" class="button" />
+        </p>
+    }
+
+    <p>
+        @Html.ActionLink("Create a user account", "Create", "Account")
+    </p>
+    <p>
+        @this.WeeeGds().ActionLinkWithEventTracking("Reset password", "ResetPasswordRequest", "Account",
+            "User account", "Reset password", "Internal")
+    </p>
+}

@@ -1,0 +1,38 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.ChooseReportViewModel
+@{
+    ViewBag.Title = "Choose Report";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Which report would you like to view?
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "ChooseReport", controllerName: "Reports", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ReportOptions">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Which report would you like to view?",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        <p>
+            <input type="submit" class="button" value="Continue" />
+        </p>
+
+        <p>
+            <a href="javascript:history.back();">Back</a>
+        </p>
+    }
+}
