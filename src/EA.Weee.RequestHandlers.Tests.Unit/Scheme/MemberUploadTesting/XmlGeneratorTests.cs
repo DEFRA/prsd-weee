@@ -20,7 +20,7 @@
             ProducerList producerList = new ProducerList();
             producerList.ApprovalNumber = "Approval Number";
             producerList.ComplianceYear = 2015;
-            producerList.SchemaVersion = SchemaVersion.Version_3_06;
+            producerList.SchemaVersion = MemberRegistrationSchemaVersion.Version_3_06;
             producerList.SchemeBusiness.Company = new SchemeCompany();
             producerList.SchemeBusiness.Company.CompanyName = "Company Name";
             producerList.SchemeBusiness.Company.CompanyNumber = "Company Number";
