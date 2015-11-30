@@ -1,11 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
     using EA.Weee.Core.Routing;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Provides resolution of routes that are used externally to the WEEE website.

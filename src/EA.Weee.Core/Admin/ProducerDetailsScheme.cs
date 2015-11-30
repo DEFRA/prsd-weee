@@ -1,11 +1,7 @@
 ﻿namespace EA.Weee.Core.Admin
 {
-    using EA.Weee.Core.Shared;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using EA.Weee.Core.Shared;
 
     /// <summary>
     /// Provides scheme-specific details about a producer (identified by their

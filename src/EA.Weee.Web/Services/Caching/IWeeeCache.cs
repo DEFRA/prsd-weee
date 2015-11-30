@@ -1,12 +1,10 @@
 ﻿namespace EA.Weee.Web.Services.Caching
 {
-    using EA.Weee.Core.Scheme;
-    using EA.Weee.Core.Search;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
+    using EA.Weee.Core.Scheme;
+    using EA.Weee.Core.Search;
 
     public interface IWeeeCache : ISearchResultProvider<ProducerSearchResult>, ISearchResultProvider<OrganisationSearchResult>
     {

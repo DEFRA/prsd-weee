@@ -1,21 +1,15 @@
 ﻿namespace EA.Weee.Web.Tests.Integration.Views
 {
-    using FakeItEasy;
     using System;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Web;
-    using System.Web.Mvc;
-    using System.Web.Routing;
-    using System.Web.UI;
+    using FakeItEasy;
     using Microsoft.Build.Evaluation;
     using Microsoft.Owin.Builder;
     using RazorEngine;
     using RazorEngine.Configuration;
     using RazorEngine.Templating;
-    using RazorHelpers;
     using Xunit;
 
     public class ViewTests

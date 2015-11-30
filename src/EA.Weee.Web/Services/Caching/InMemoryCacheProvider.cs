@@ -1,11 +1,8 @@
 ﻿namespace EA.Weee.Web.Services.Caching
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Runtime.Caching;
     using System.Threading.Tasks;
-    using System.Web;
 
     /// <summary>
     /// This provider uses the caching classes from the .NET framework's

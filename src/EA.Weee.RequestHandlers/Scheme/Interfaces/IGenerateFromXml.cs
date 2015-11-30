@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.Interfaces
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.Producer;

@@ -1,18 +1,17 @@
 ﻿namespace EA.Weee.Web.Services.Caching
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Requests.Search;
-    using EA.Weee.Requests.Users;
     using Infrastructure;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web;
 
     public class WeeeCache : IWeeeCache
     {

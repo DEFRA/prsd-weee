@@ -1,10 +1,6 @@
 ﻿namespace EA.Weee.Core.Shared
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// This implementation of <see cref="IExcelSanitizer"/> removes all leading equals signs

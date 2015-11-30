@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
-    using Api.Client;
-    using Core.Shared;
-    using EA.Weee.Web.Services.Caching;
-    using FakeItEasy;
-    using Prsd.Core.Mapper;
-    using Services;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -14,6 +8,12 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Api.Client;
+    using Core.Shared;
+    using EA.Weee.Web.Services.Caching;
+    using FakeItEasy;
+    using Prsd.Core.Mapper;
+    using Services;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;

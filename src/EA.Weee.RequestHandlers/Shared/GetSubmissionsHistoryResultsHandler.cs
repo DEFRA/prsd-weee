@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin;
     using Prsd.Core.Mediator;

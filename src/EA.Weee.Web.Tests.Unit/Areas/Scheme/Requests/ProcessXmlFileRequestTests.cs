@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Requests
 {
+    using System.Web;
     using FakeItEasy;
     using Services;
-    using System.Web;
     using Web.Areas.Scheme.Requests;
     using Web.Areas.Scheme.ViewModels;
     using Xunit;

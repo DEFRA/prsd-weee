@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.GetSchemePublicInfo
 {
+    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Scheme;
-    using System.Threading.Tasks;
 
     public class GetSchemePublicInfoHandler : IRequestHandler<Requests.Scheme.GetSchemePublicInfo, SchemePublicInfo>
     {

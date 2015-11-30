@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.Tests.Core.Model
 {
-    using Domain;
-    using Domain.Lookup;
-    using Domain.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Domain;
+    using Domain.Lookup;
 
     /// <summary>
     /// This class provides helper methods for deterministically seeding a database.
@@ -209,7 +208,7 @@
                 Id = IntegerToGuid(memberUploadErrorId),
                 MemberUploadId = memberUpload.Id,
                 ErrorLevel = ErrorLevel.Warning.Value,
-                ErrorType = MemberUploadErrorType.Business.Value,
+                ErrorType = UploadErrorType.Business.Value,
                 Description = "Test Warning"
             };
 

@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.XmlValidation
 {
     using Autofac;
-    using BusinessValidation;
     using BusinessValidation.MemberRegistration;
     using BusinessValidation.MemberRegistration.Helpers;
     using BusinessValidation.MemberRegistration.QuerySets;

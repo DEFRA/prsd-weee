@@ -1,10 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
     using Weee.Tests.Core.Model;
