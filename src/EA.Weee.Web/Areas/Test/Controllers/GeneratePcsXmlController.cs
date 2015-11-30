@@ -10,7 +10,6 @@
     using Core.Shared.Paging;
     using Infrastructure;
     using ViewModels.GeneratePcsXml;
-    using Web.ViewModels.Shared;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme.MemberUploadTesting;
 

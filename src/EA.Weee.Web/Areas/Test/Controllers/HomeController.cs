@@ -1,12 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Test.Controllers
 {
-    using EA.Weee.Web.Areas.Test.ViewModels;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
     using System.Web.Mvc;
-    
+    using EA.Weee.Web.Areas.Test.ViewModels;
+
     public class HomeController : Controller
     {
         [HttpGet]

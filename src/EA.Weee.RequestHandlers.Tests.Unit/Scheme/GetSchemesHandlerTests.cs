@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
+    using System.Threading.Tasks;
     using Core.Scheme;
     using Domain.Scheme;
     using EA.Prsd.Core.Mapper;
@@ -7,10 +11,6 @@
     using FakeItEasy;
     using RequestHandlers.Scheme;
     using Requests.Scheme;
-    using System;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 

@@ -5,7 +5,6 @@
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.Scheme;
-    using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
     using Security;

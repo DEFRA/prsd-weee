@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using Core.Scheme;
-    using Core.Scheme.MemberUploadTesting;
     using XmlValidation.Errors;
 
     public interface ISchemaValidator

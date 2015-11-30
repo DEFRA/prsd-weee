@@ -1,18 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.EventHandlers
 {
+    using System;
+    using System.Linq;
     using EA.Weee.DataAccess.EventHandlers;
     using EA.Weee.Domain.Events;
     using EA.Weee.Tests.Core.Model;
-    using FakeItEasy;
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class MemberUploadSubmittedEventHandlerTests

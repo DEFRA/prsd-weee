@@ -2,7 +2,6 @@
 {
     using System.Xml.Linq;
     using Core.Scheme;
-    using Core.Scheme.MemberUploadTesting;
 
     public interface IXmlErrorTranslator
     {

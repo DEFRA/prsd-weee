@@ -1,22 +1,20 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using Api.Client;
-    using Api.Client.Entities;
-    using Core;
-    using Infrastructure;
-    using Microsoft.Owin.Security;
-    using Prsd.Core.Web.ApiClient;
-    using Prsd.Core.Web.Mvc.Extensions;
-    using Prsd.Core.Web.OAuth;
-    using Services;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Principal;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Api.Client;
+    using Api.Client.Entities;
+    using Infrastructure;
+    using Microsoft.Owin.Security;
+    using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
+    using Prsd.Core.Web.OAuth;
+    using Services;
     using ViewModels.NewUser;
-    using ViewModels.Shared;
 
     [Authorize]
     public class NewUserController : Controller

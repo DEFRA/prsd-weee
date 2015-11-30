@@ -1,20 +1,20 @@
 ﻿namespace EA.Weee.Web.Controllers
 {
-    using Api.Client;
-    using Api.Client.Entities;
-    using Authorization;
-    using EA.Weee.Core.Routing;
-    using EA.Weee.Web.Controllers.Base;
-    using Infrastructure;
-    using Prsd.Core.Web.ApiClient;
-    using Prsd.Core.Web.Mvc.Extensions;
-    using Services;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Api.Client;
+    using Api.Client.Entities;
+    using Authorization;
+    using EA.Weee.Core.Routing;
+    using EA.Weee.Web.Controllers.Base;
     using Extensions;
+    using Infrastructure;
+    using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
+    using Services;
     using ViewModels.Account;
 
     [Authorize]

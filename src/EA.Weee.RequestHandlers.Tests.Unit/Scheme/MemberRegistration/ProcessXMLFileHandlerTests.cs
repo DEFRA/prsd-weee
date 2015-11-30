@@ -1,5 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Security;
+    using System.Threading.Tasks;
     using DataAccess;
     using Domain;
     using Domain.Lookup;
@@ -11,12 +16,6 @@
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Security;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xml.Converter;
     using Xunit;
@@ -98,7 +97,7 @@
         {
             IEnumerable<MemberUploadError> errors = new[]
             {
-                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "any description")
+                new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "any description")
             };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
@@ -112,7 +111,7 @@
         {
             IEnumerable<MemberUploadError> errors = new[]
             {
-                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
+                new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description")
             };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
@@ -135,7 +134,7 @@
         {
             IEnumerable<MemberUploadError> errors = new[]
             {
-                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "any description")
+                new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "any description")
             };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
@@ -148,7 +147,7 @@
         {
             var errors = new List<MemberUploadError>
             {
-                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
+                new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description")
             };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
 
@@ -162,7 +161,7 @@
         {
             var errors = new List<MemberUploadError>
             {
-                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
+                new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description")
             };
             A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
 

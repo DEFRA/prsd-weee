@@ -6,13 +6,13 @@
     public class MemberUploadError : Entity
     {
         public ErrorLevel ErrorLevel { get; private set; }
-        public MemberUploadErrorType ErrorType { get; private set; }
+        public UploadErrorType ErrorType { get; private set; }
         public string Description { get; private set; }
         public int LineNumber { get; private set; }
         public Guid MemberUploadId { get; private set; }
         public virtual MemberUpload MemberUpload { get; private set; }
         
-        public MemberUploadError(ErrorLevel errorLevel, MemberUploadErrorType errorType, string description, int lineNumber = 0)
+        public MemberUploadError(ErrorLevel errorLevel, UploadErrorType errorType, string description, int lineNumber = 0)
         {
             ErrorType = errorType;
             ErrorLevel = errorLevel;

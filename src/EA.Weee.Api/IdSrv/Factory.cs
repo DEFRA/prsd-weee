@@ -1,8 +1,6 @@
 ﻿namespace EA.Weee.Api.IdSrv
 {
     using EA.Weee.Api.Identity;
-    using EA.Weee.Api.Services;
-    using EA.Weee.DataAccess;
     using Thinktecture.IdentityServer.Core.Configuration;
     using Thinktecture.IdentityServer.Core.Services;
     using Thinktecture.IdentityServer.Core.Services.InMemory;

@@ -1,11 +1,6 @@
 ﻿namespace EA.Weee.Core.Routing
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web;
 
     /// <summary>
     /// Represents a route that can be expressed as an absolute URL outside of

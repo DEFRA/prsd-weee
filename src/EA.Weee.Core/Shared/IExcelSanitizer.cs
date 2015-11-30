@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.Core.Shared
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Provides methods for sanitizing strings that may pose a threat to Excel.
     /// </summary>

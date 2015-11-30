@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.FindMatchingOrganisations.DataAccess
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;

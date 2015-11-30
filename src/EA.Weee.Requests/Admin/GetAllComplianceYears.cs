@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Requests.Admin
 {
-    using Prsd.Core.Mediator;
     using System.Collections.Generic;
+    using Prsd.Core.Mediator;
 
     public class GetAllComplianceYears : IRequest<List<int>>
     {

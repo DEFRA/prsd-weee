@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations
 {
     using System.Data.Entity;
+    using System.Threading.Tasks;
+    using Core.Organisations;
     using DataAccess;
+    using Domain.Organisation;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
-    using System.Threading.Tasks;
-    using Core.Organisations;
-    using Domain.Organisation;
     using Security;
 
     internal class GetContactPersonByOrganisationIdHandler : IRequestHandler<GetContactPersonByOrganisationId, ContactData>

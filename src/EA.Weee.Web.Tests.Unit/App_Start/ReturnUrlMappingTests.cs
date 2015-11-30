@@ -1,11 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.App_Start
 {
     using EA.Weee.Web.App_Start;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class ReturnUrlMappingTests

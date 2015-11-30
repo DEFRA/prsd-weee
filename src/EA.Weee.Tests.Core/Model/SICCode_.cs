@@ -9,9 +9,7 @@
 
 namespace EA.Weee.Tests.Core.Model
 {
-    using System;
-    using System.Collections.Generic;
-    
+
     public partial class SICCode_
     {
         public System.Guid Id { get; set; }
