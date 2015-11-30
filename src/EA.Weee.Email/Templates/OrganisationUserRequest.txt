@@ -1,0 +1,22 @@
+﻿New request to access your organisation
+
+Hello,
+
+You're receiving this email because a Waste Electrical and Electronic Equipment (WEEE) user has asked for the right to access @Model.OrganisationName.
+
+Sign in to the WEEE online service to action this request at @Model.ExternalUserLoginUrl
+
+This is an automated email; do not reply.
+
+If you have any enquiries, contact your relevant helpline:
+
+- Environment Agency (England): 03708 506506
+
+- Scottish Environment Protection Agency: 01786 457700
+
+- Northern Ireland Environment Agency: 02 890 569338
+
+- Natural Resources Wales: 03000 65 3096
+ 
+Regards,
+WEEE Team

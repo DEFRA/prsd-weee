@@ -1,0 +1,14 @@
+﻿@{
+    Page.Title = "Invalid Request";
+    Response.TrySkipIisCustomErrors = true;
+    Response.StatusCode = 400;
+}
+
+<h1 class="heading-large">Sorry, there is a problem</h1>
+<p>
+    We can’t process your request due to a problem with your browser. Please ensure cookies are enabled in your browser settings.
+</p>
+
+<p>
+    <a href="@Url.Action("ErrorRedirect", "Errors", new { area = ""})" class="button">Continue</a>
+</p>

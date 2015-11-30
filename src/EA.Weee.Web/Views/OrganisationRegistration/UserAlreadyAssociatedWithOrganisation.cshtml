@@ -1,0 +1,51 @@
+﻿@model EA.Weee.Web.ViewModels.OrganisationRegistration.UserAlreadyAssociatedWithOrganisationViewModel
+@{
+    ViewBag.Title = "Access Organisation";
+}
+
+@section main_content {
+    <header class="hgroup">
+        <h1 class="heading-large">
+            You have already added this organisation
+        </h1>
+    </header>
+
+    @switch (@Model.Status)
+    {
+        case EA.Weee.Core.Shared.UserStatus.Active:
+        { 
+            <p>You already have access to @Model.OrganisationName.</p>
+        
+            <p>
+                <a href="@Url.Action("ChooseActivity", "Home", new { area = "Scheme", pcsId = @Model.OrganisationId })" class="button">Perform activities</a>
+            </p>
+
+            break;
+        }
+        
+        case EA.Weee.Core.Shared.UserStatus.Pending:
+        {
+            <p>Your request to access @Model.OrganisationName is pending.</p>
+
+            <p>
+                <a href="@Url.Action("Index", "Organisation")" class="button">Continue</a>
+            </p>
+
+            break;
+        }
+        
+        case EA.Weee.Core.Shared.UserStatus.Inactive:
+        {
+            <p>You no longer have access to @Model.OrganisationName. To reinstate your access, contact the organisation's administrator.</p>
+
+            <p>
+                <a href="@Url.Action("Index", "Organisation")" class="button">Continue</a>
+            </p>
+
+            break;
+        }
+        
+        default:
+            throw new NotSupportedException();
+    }
+}

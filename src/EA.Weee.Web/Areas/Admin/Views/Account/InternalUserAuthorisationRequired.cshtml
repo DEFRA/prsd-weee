@@ -1,0 +1,52 @@
+﻿@using EA.Weee.Core.Shared
+@model EA.Weee.Web.Areas.Admin.ViewModels.Account.InternalUserAuthorizationRequiredViewModel
+@{
+    ViewBag.Title = "Internal User Authorisation Required";
+}
+
+@section main_content {
+
+    @switch (Model.Status)
+    {
+        case UserStatus.Pending:
+            <div class="form-group">
+                <header class="hgroup">
+                    <div>
+                        <h1 class="heading-large">Authorisation pending</h1>
+                    </div>
+                </header>
+                <p>At present your account is not authorised; please check back soon.</p>
+            </div>
+            break;
+
+        case UserStatus.Inactive:
+        <div class="form-group">
+            <header class="hgroup">
+                <div>
+                    <h1 class="heading-large">Account Inactive</h1>
+                </div>
+            </header>
+            <p>At present your account is not active. Please contact your administrator for more information.</p>
+        </div>
+            break;
+            
+        case UserStatus.Rejected:
+        <div class="form-group">
+            <header class="hgroup">
+                <div>
+                    <h1 class="heading-large">Authorisation rejected</h1>
+                </div>
+            </header>
+            <p>Unfortunately, your request for access has been rejected. Please contact your administrator for more information.</p>
+        </div>
+            break;
+    }
+
+    @using (Html.BeginForm("SignOut", "Account", new { @area = "Admin" }, FormMethod.Post, new { id = "signoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <div>
+            <input type="submit" class="button" value="Sign out" />
+        </div>
+    }
+}

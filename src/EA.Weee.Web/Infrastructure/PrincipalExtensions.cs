@@ -56,5 +56,15 @@
 
             return claim != null ? claim.Value : null;
         }
+
+        public static string GetEmailAddress(this IPrincipal principal)
+        {
+            var claimsPrincipal = principal as ClaimsPrincipal;
+            if (claimsPrincipal != null)
+            {
+                return GetClaimValue(claimsPrincipal, JwtClaimTypes.Email);
+            }
+            return null;
+        }
     }
 }

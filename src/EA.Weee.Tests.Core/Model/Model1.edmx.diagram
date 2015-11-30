@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="796e1b539f8b49b9a1a9e808863e5de0" Name="Diagram1" ZoomLevel="62">
+        <EntityTypeShape EntityType="EA.Weee.TestModel.CompetentAuthorityUser" Width="1.5" PointX="5.25" PointY="10.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.CompetentAuthority" Width="1.5" PointX="3" PointY="10.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.Country" Width="1.5" PointX="0.75" PointY="17.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.Address" Width="1.5" PointX="3" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.Contact" Width="1.5" PointX="3" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.Organisation" Width="1.5" PointX="5.25" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.OrganisationUser" Width="1.5" PointX="7.5" PointY="12.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.MemberUpload" Width="1.5" PointX="12.75" PointY="22.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.MemberUploadError" Width="1.5" PointX="15" PointY="22.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.Scheme" Width="1.5" PointX="7.5" PointY="30.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.Address1" Width="1.5" PointX="3" PointY="20.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.AuthorisedRepresentative" Width="1.5" PointX="7.5" PointY="17.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.BrandName_" Width="1.5" PointX="17.25" PointY="26.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.Business" Width="1.5" PointX="9.75" PointY="23.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.Company" Width="1.5" PointX="7.5" PointY="24.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.Contact1" Width="1.5" PointX="5.25" PointY="19.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.MigratedProducer_" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.Partner_" Width="1.5" PointX="9.75" PointY="27.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.Partnership" Width="1.5" PointX="7.5" PointY="27.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.Producer" Width="1.5" PointX="15" PointY="26" IsExpanded="true" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.SICCode_" Width="1.5" PointX="17.25" PointY="29.375" IsExpanded="true" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_CompetentAuthorityUser_CompetentAuthority" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_CompetentAuthority_Country" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Address_Country" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Address_Country1" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Organisation_BusinessAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Organisation_NotificationAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Organisation_OrganisationAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Organisation_Contact" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_MemberUpload_Organisation" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_OrganisationUser_Organisation" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Scheme_Organisation" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_MemberUpload_Scheme" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_MemberUploadError_MemberUpload" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Producer_MemberUpload" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Producer_Scheme" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Contact_Address" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_AuthorisedRepresentative_OverseasContact" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Producer_AuthorisedRepresentative" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_BrandNameList_Producer" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Business_Company" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Business_Contact" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Business_Partnership" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Producer_Business" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Company_Contact" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Partnership_Contact" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Partner_Partnership" ManuallyRouted="false" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_SICCodeList_Producer" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.AspNetUser" Width="1.5" PointX="5.375" PointY="1" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_CompetentAuthorityUser_AspNetUsers" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_OrganisationUser_AspNetUsers" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.ChargeBandAmount" Width="1.5" PointX="0.75" PointY="3.875" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_Producer_ChargeBandAmount" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

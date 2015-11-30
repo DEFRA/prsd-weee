@@ -1,0 +1,17 @@
+﻿@{
+    Page.Title = "Internal Server Error";
+    Response.TrySkipIisCustomErrors = true;
+    Response.StatusCode = 500;
+}
+
+<h1 class="heading-large">
+    Sorry, we are experiencing technical problems
+</h1>
+
+<p>Please try again in a few moments.</p>
+
+@Html.Partial("_CompetentAuthoritiesContactDetails", new ViewDataDictionary { { "title", "If you continue to see this message, contact us." } })
+
+<p>
+    <a href="@Url.Action("ErrorRedirect", "Errors", new { area = "" })" class="button">Continue</a>
+</p>

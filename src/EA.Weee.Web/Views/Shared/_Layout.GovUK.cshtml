@@ -1,11 +1,11 @@
-@RenderSection("top_of_page", required: false)
+﻿@RenderSection("top_of_page", required: false)
 <!DOCTYPE html>
-<!--[if lt IE 9]><html class="lte-ie8" lang="@(ViewBag.HtmlLang ?? "en")"><![endif]-->
-<!--[if gt IE 8]><!--><html lang="@(ViewBag.HtmlLang ?? "en")"><!--<![endif]-->
+<!--[if lt IE 9]><html class="lte-ie8" lang="@Html.Raw(ViewBag.HtmlLang ?? "en")"><![endif]-->
+<!--[if gt IE 8]><!--><html lang="@Html.Raw(ViewBag.HtmlLang ?? "en")"><!--<![endif]-->
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
-    <title>@(ViewBag.Title ?? "GOV.UK - The best place to find government services and information")</title>
+    <title>@Html.Raw(ViewBag.Title ?? "GOV.UK - The best place to find government services and information")</title>
 
     <script type="text/javascript">
       (function(){if(navigator.userAgent.match(/IEMobile\/10\.0/)){var d=document,c="appendChild",a=d.createElement("style");a[c](d.createTextNode("@@-ms-viewport{width:auto!important}"));d.getElementsByTagName("head")[0][c](a);}})();
@@ -42,45 +42,41 @@
     <link rel="shortcut icon" href="@Url.Content("~/Content/govuk/images/favicon.ico")" type="image/x-icon" />
 
     <!-- Size for iPad and iPad mini (high resolution) -->
-    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-152x152.png")">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-152x152.png")"/>
     <!-- Size for iPhone and iPod touch (high resolution) -->
-    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-120x120.png")">
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-120x120.png")"/>
     <!-- Size for iPad 2 and iPad mini (standard resolution) -->
-    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-76x76.png")">
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-76x76.png")"/>
     <!-- Default non-defined size, also used for Android 2.1+ devices -->
-    <link rel="apple-touch-icon-precomposed" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-60x60.png")">
+    <link rel="apple-touch-icon-precomposed" href="@Url.Content("~/Content/govuk/images/apple-touch-icon-60x60.png")"/>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:image" content="@Url.Content("~/Content/govuk/images/opengraph-image.png")">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:image" content="@Url.Content("~/Content/govuk/images/opengraph-image.png")"/>
 
     @RenderSection("head", required: false)
   </head>
 
-  <body class="@(ViewBag.BodyClasses ?? string.Empty)">
+  <body class="@Html.Raw(ViewBag.BodyClasses ?? string.Empty)">
     <script type="text/javascript">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
-    
+    @RenderSection("body_start", required: false)
 
     <div id="skiplink-container">
       <div>
-        <a href="#content" class="skiplink">Skip to main content</a>
+        <a href="#content" class="skiplink">@Html.Raw(ViewBag.SkipLinkMessage ?? "Skip to main content")</a>
       </div>
     </div>
-
-    <div id="global-cookie-message">
-      
-        <p>GOV.UK uses cookies to make the site simpler. <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a></p>
-      
+  <div id="global-cookie-message">
+        @Html.Raw(ViewBag.CookieMessage ?? "<p>" + @Html.ActionLink("GOV.UK uses cookies to make the site simpler. Find out more about cookies", "Cookies", "NewUser", new { area = string.Empty }, new { rel = "external"}) + "</p>") 
     </div>
     <!--end global-cookie-message-->
-
     
-    <header role="banner" id="global-header" class="@(ViewBag.HeaderClass ?? string.Empty)">
+    <header id="global-header" class="@Html.Raw(ViewBag.HeaderClass ?? string.Empty)">
       <div class="header-wrapper">
         <div class="header-global">
           <div class="header-logo">
-            <a href="https://www.gov.uk/" title="Go to the GOV.UK homepage" id="logo" class="content">
-              <img src="@Url.Content("~/Content/govuk/images/gov.uk_logotype_crown.png")" width="35" height="31" alt=""> GOV.UK
+            <a href="@Html.Raw(ViewBag.HomepageUrl ?? "https://www.gov.uk/")" title="@Html.Raw(ViewBag.LogoLinkTitle ?? "Go to the GOV.UK homepage")" id="logo" class="content">
+              <img src="@Url.Content("~/Content/govuk/images/gov.uk_logotype_crown.png")" width="35" height="31" alt="*" /> @Html.Raw(ViewBag.GlobalHeaderText ?? "GOV.UK")
             </a>
           </div>
           @RenderSection("inside_header", required: false)
@@ -98,7 +94,7 @@
 
     @RenderBody()
 
-    <footer class="group js-footer" id="footer" role="contentinfo">
+    <footer class="group js-footer" id="footer">
 
       <div class="footer-wrapper">
         @RenderSection("footer_top", required: false)
@@ -109,18 +105,24 @@
 
             <div class="open-government-licence">
               <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
-              <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
+              
+                @Html.Raw(ViewBag.LicenceMessage ?? "<p>All content is available under the <a href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\">Open Government Licence v3.0</a>, except where otherwise stated</p>")
+              
             </div>
           </div>
 
           <div class="copyright">
-            <a href="https://www.nationalarchives.gov.uk/information-management/our-services/crown-copyright.htm">&copy; Crown copyright</a>
+            <a href="https://www.nationalarchives.gov.uk/information-management/our-services/crown-copyright.htm">@Html.Raw(ViewBag.CrownCopyrightMessage ?? "&copy; Crown copyright")</a>
           </div>
         </div>
       </div>
     </footer>
 
     <!--end footer-->
+
+    <div aria-hidden="true" hidden="hidden" class="hidden-for-screen-reader">
+        Version: @Startup.ApplicationVersion
+    </div>
 
     <div id="global-app-error" class="app-error hidden"></div>
 

@@ -1,0 +1,43 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@model EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml.SpecifyOptionsViewModel
+
+@{
+    ViewBag.Title = "Download File";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Download your file
+        </h1>
+    </header>
+
+    @using (Html.BeginForm("DownloadFile", "GeneratePcsXml", FormMethod.Post, new { id = "downloadFileForm" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        @Html.HiddenFor(model => model.OrganisationID);
+        @Html.HiddenFor(model => model.SchemaVersion);
+        @Html.HiddenFor(model => model.ComplianceYear);
+        @Html.HiddenFor(model => model.NumberOfNewProducers);
+        @Html.HiddenFor(model => model.NumberOfExistingProducers);
+        @Html.HiddenFor(model => model.NoCompaniesForNewProducers);
+        @Html.HiddenFor(model => model.IncludeMalformedSchema);
+        @Html.HiddenFor(model => model.IncludeUnexpectedFooElement);
+        @Html.HiddenFor(model => model.IgnoreStringLengthConditions);
+
+        <p>If your file does not download automatically, use the button below.</p>
+
+        <div class="form-group">
+            <input type="submit" class="button" value="Download file" />
+        </div>
+        
+        @Html.ActionLink("Create another file", "SpecifyOptions", "GeneratePcsXml", new { OrganisationID = Model.OrganisationID }, new { @class = "button" })
+
+        <script type="text/javascript">
+            document.getElementById("downloadFileForm").submit();
+        </script>
+    }
+}

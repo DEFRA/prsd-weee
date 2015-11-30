@@ -1,0 +1,114 @@
+﻿@model EA.Weee.Web.ViewModels.Shared.TitleViewModel
+@{
+    bool showBreadcrumb =
+           (Model.Breadcrumb.ExternalOrganisation != null)
+        || (Model.Breadcrumb.ExternalActivity != null)
+        || (Model.Breadcrumb.InternalActivity != null)
+        || (Model.Breadcrumb.InternalOrganisation != null)
+        || (Model.Breadcrumb.InternalUser != null);
+        
+    bool showIdentity = Model.User.Identity.IsAuthenticated;
+    
+    bool showTitle = showBreadcrumb || showIdentity;
+
+    int columnCount = (showBreadcrumb ? 1 : 0) + (showIdentity ? 1 : 0);
+    
+    string columnClass;
+    switch (columnCount)
+    {
+        default:
+        case 0:
+        case 1:
+            columnClass = "column-whole";
+            break;
+            
+        case 2:
+            columnClass = "column-half";
+            break;
+    }
+}
+
+@if (showTitle)
+{
+<div class="grid-row">
+
+    @if (showBreadcrumb)
+    {
+    <div class="@columnClass">
+        <div class="breadcrumb-title-display font-xsmall">
+            <ul>
+                @if (Model.Breadcrumb.ExternalOrganisation != null)
+                {
+                    <li>
+                        @if (Model.ShowLinkToSelectOrganisation)
+                        {
+                            @:<a href="@Url.Action("Index", "Organisation")">Organisation</a>: @Model.Breadcrumb.ExternalOrganisation
+                        }
+                        else
+                        {
+                            @:Organisation: @Model.Breadcrumb.ExternalOrganisation
+                        }
+                    </li>
+                }
+                
+                @if (Model.Breadcrumb.ExternalActivity != null)
+                {
+                    <li>
+                        <a href="@Url.Action("ChooseActivity", "Home", new { Area = "scheme" })">Activity</a>: @Model.Breadcrumb.ExternalActivity
+                    </li>
+                }
+                
+                @if (Model.Breadcrumb.InternalActivity != null)
+                {
+                    <li>
+                        <a href="@Url.Action("ChooseActivity", "Home", new { Area = "admin" })">Activity</a>: @Model.Breadcrumb.InternalActivity
+                    </li>
+                }
+
+                @if (Model.Breadcrumb.InternalOrganisation != null)
+                {
+                    <li>
+                        <a href="@Url.Action("ManageSchemes", "Scheme", new { Area = "admin" })">Organisation</a>: @Model.Breadcrumb.InternalOrganisation
+                    </li>
+                }
+
+                @if (Model.Breadcrumb.InternalUser != null)
+                {
+                    <li>
+                        <a href="@Url.Action("ManageUsers", "User", new { Area = "admin" })">User</a>: @Model.Breadcrumb.InternalUser
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    }
+    
+    @if (showIdentity)
+    {
+    <div class="@columnClass">
+        <div class="username-title-display font-xsmall">
+            <ul>
+                <li>
+                    <div class="text-secondary">Signed in as: <span class="username-format">@Model.User.Identity.Name</span></div>
+                </li>
+                <li>
+                    @using (Html.BeginForm("SignOut", "Account", routeValues: new { area = (Model.UserIsInternal ? "admin" : string.Empty) }, method: FormMethod.Post, htmlAttributes: new { id = "logoutForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input class="link-submit" id="link-sign-out" type="submit" value="Sign out"/>
+                    }
+                </li>
+            </ul>
+        </div>
+    </div>
+    }
+    
+</div>
+    
+<div class="account-link-banner"></div>
+}
+
+@if (Model.Breadcrumb.SchemeInfo != null && (Model.Breadcrumb.SchemeInfo.StatusName != "Pending" && Model.Breadcrumb.SchemeInfo.StatusName != "Rejected"))
+{
+    <div id="schemeBanner">@(Model.Breadcrumb.SchemeInfo.Name): @(Model.Breadcrumb.SchemeInfo.ApprovalNo) Status: @(Model.Breadcrumb.SchemeInfo.StatusName)</div>
+}

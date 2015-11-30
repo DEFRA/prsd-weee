@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Mark Buttle (Environment Agency) -->
+<xs:schema xmlns="http://www.environment-agency.gov.uk/WEEE/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.environment-agency.gov.uk/WEEE/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<!--
+================================================================================
+=   
+=   APPLICATION: Waste Electronic and Electrical Equipment Regulations 2006
+=   MODULE: Scheme/Producer Registration (2008 onwards)
+=   FILE: XSD Schema - Producer Registration v3.07.xsd
+=   DESCRIPTION: Schema to validate WEEE Scheme and Producer Registration
+=   
+================================================================================
+=   
+=   CHANGE HISTORY
+=   
+=   Date             Author              Version    Purpose of Change
+=_______________________________________________________________________________
+=   
+=   25/08/2007      Jacqui Spencer       2.0        Initial release of 2008 producer registration schema.
+=   08/02/2008      Colin McDonald       2.1        Amended Phone number to allow foreign numbers,
+=                                                   remove registered address and phone number of company.
+=   07/03/2008      Jim King             2.2        Removed the Address Elements from schemeBusinessType.
+=   24/04/2014      Shawkat              2.3        Added [Authorised Representative] Block for overseas producer details.
+=   12/09/2014      PJC/UCD Solutions    3.0        Simplified authorisedRepresentativeType for overseas producer details,
+=                                                   amended 3.0 draft changes for ceaseToExistDate and sellingTechnique.
+=   19/05/2015      Rick P               3.01       Amended casing convention inconsistencies for all new elements 
+=                                                   added since version 2.2 (current live version).
+=   21/05/2015      Rick P               3.02       Reverted ChargeBandType back to annualTurnoverBand and separated waste produce 
+=                                                   into a separate element.
+=   29/06/2015      Owen H               3.03       Renamed wasteProduceBandType to eeePlacedOnMarketBandType, extended
+=                                                   email TLD length limit to 63 per standard, removed textType and producerWeightType.
+=   01/07/2015      Owen H               3.04       Updated compliance year minimum to 2016, producerList to minimum occurrence of 1,
+=                                                   country list to match PRSD WEEE system, country mandatory in address types,
+=                                                   removed postTown from address types.
+=   06/07/2015      Owen H               3.05       Removed unbounded maxOccurs constraint from overseasContact on overseasProducerType.
+=   15/07/2015      Owen H               3.06       Removed unused billingAddressType.
+=   07/10/2015      Graham A-T           3.07       Updated producerType to make authorisedRepresentative optional.
+================================================================================
+-->
+	<xs:element name="scheme" type="schemeType">
+		<xs:annotation>
+			<xs:documentation>WEEE Producer Compliance Scheme - Member Registration</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="schemeType">
+		<xs:sequence>
+			<xs:element name="XSDVersion" default="3.07">
+				<xs:simpleType>
+					<xs:restriction base="XSDVersionType"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="approvalNo" type="approvalNoType"/>
+			<xs:element name="complianceYear" type="complianceYearType"/>
+			<xs:element name="tradingName" type="tradingNameType"/>
+			<xs:element name="schemeBusiness" type="schemeBusinessType"/>
+			<xs:element name="producerList" type="producerListType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="XSDVersionType">
+		<xs:restriction base="xs:decimal">
+			<xs:minInclusive value="3.06"/>
+			<xs:maxInclusive value="3.07"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="approvalNoType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(WEE/)[A-Z]{2}[0-9]{4}[A-Z]{2}(/SCH)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="complianceYearType">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="2016"/>
+			<xs:maxInclusive value="3000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tradingNameType">
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="70"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="schemeBusinessType">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="company" type="schemeCompanyType"/>
+				<xs:element name="partnership" type="schemePartnershipType"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="producerListType">
+		<xs:sequence>
+			<xs:element name="producer" type="producerType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="producerType">
+		<xs:sequence>
+			<xs:element name="status" type="statusType"/>
+			<xs:element name="registrationNo" type="registrationNoType"/>
+			<xs:element name="tradingName" type="nameType"/>
+			<xs:element name="SICCodeList" type="SICCodeListType"/>
+			<xs:element name="VATRegistered" type="xs:boolean"/>
+			<xs:element name="annualTurnover" type="annualTurnoverType" default="0"/>
+			<xs:element name="annualTurnoverBand" type="annualTurnoverBandType"/>
+			<xs:element name="eeePlacedOnMarketBand" type="eeePlacedOnMarketBandType"/>
+			<xs:element name="obligationType" type="obligationTypeType"/>
+			<xs:element name="producerBrandNames" type="producerBrandNameType"/>
+			<xs:element name="producerBusiness" type="producerBusinessType"/>
+			<xs:element name="authorisedRepresentative" type="authorisedRepresentativeType" minOccurs="0"/>
+			<xs:element name="ceaseToExistDate" type="xs:date" nillable="false" minOccurs="0"/>
+			<xs:element name="sellingTechnique" type="sellingTechniqueType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="statusType">
+		<xs:annotation>
+			<xs:documentation>I = Insert, A = Amend</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="I"/>
+			<xs:enumeration value="A"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="registrationNoType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="((WEE/)[A-Z]{2}[0-9]{4}[A-Z]{2})?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="nameType">
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="mandatoryNameType">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SICCodeType">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SICCodeListType">
+		<xs:sequence>
+			<xs:element name="SICCode" type="SICCodeType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="annualTurnoverType">
+		<xs:restriction base="xs:decimal">
+			<xs:minInclusive value="0"/>
+      <xs:maxInclusive value="9999999999999999.999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="annualTurnoverBandType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Less than or equal to one million pounds"/>
+			<xs:enumeration value="Greater than one million pounds"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="eeePlacedOnMarketBandType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="More than or equal to 5T EEE placed on market"/>
+			<xs:enumeration value="Less than 5T EEE placed on market"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="obligationTypeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="B2B"/>
+			<xs:enumeration value="B2C"/>
+			<xs:enumeration value="Both"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="authorisedRepresentativeType">
+		<xs:sequence>
+			<xs:element name="overseasProducer" type="overseasProducerType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="overseasProducerType">
+		<xs:sequence>
+			<xs:element name="overseasProducerName" type="tradingNameType"/>
+			<xs:element name="overseasContact" type="contactDetailsType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="producerBrandNameType">
+		<xs:sequence>
+			<xs:element name="brandname" type="brandnameType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="producerBusinessType">
+		<xs:sequence>
+			<xs:element name="correspondentForNotices" type="optionalContactDetailsContainerType"/>
+			<xs:choice>
+				<xs:element name="partnership" type="partnershipType"/>
+				<xs:element name="company" type="companyType"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="brandnameType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="schemeCompanyType">
+		<xs:sequence>
+			<xs:element name="companyName" type="mandatoryNameType"/>
+			<xs:element name="companyNumber" type="companyNumberType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="schemePartnershipType">
+		<xs:sequence>
+			<xs:element name="partnershipName" type="mandatoryNameType"/>
+			<xs:element name="partnershipList" type="partnershipListType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="companyType">
+		<xs:sequence>
+			<xs:element name="companyName" type="mandatoryNameType"/>
+			<xs:element name="companyNumber" type="companyNumberType"/>
+			<xs:element name="registeredOffice" type="contactDetailsContainerType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="partnershipType">
+		<xs:sequence>
+			<xs:element name="partnershipName" type="mandatoryNameType"/>
+			<xs:element name="partnershipList" type="partnershipListType"/>
+			<xs:element name="principalPlaceOfBusiness" type="contactDetailsContainerType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="partnershipListType">
+		<xs:sequence>
+			<xs:element name="partner" type="partnerType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="partnerType">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="70"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="companyNumberType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="contactDetailsContainerType">
+		<xs:sequence>
+			<xs:element name="contactDetails" type="contactDetailsType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="optionalContactDetailsContainerType">
+		<xs:sequence>
+			<xs:element name="contactDetails" type="contactDetailsType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="contactDetailsType">
+		<xs:sequence>
+			<xs:element name="title" type="contactNameType"/>
+			<xs:element name="forename" type="contactNameType"/>
+			<xs:element name="surname" type="contactNameType"/>
+			<xs:element name="phoneLandLine" type="contactChannelMandatoryType"/>
+			<xs:element name="phoneMobile" type="contactChannelOptionalType"/>
+			<xs:element name="fax" type="contactChannelOptionalType"/>
+			<xs:element name="email" type="emailType"/>
+			<xs:element name="address" type="addressType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="contactNameType">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="35"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="contactChannelMandatoryType">
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="35"/>
+			<xs:pattern value="[0-9]{10,35}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="contactChannelOptionalType">
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="35"/>
+			<xs:pattern value="([0-9]{10,35})?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="emailType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+			<xs:pattern value="[a-zA-Z0-9_%-]+(\.[a-zA-Z0-9_%-]+)*@[a-zA-Z0-9_%-]+(\.[a-zA-Z0-9_%-]+)*\.[a-zA-Z]{2,63}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="addressType">
+		<xs:sequence>
+			<xs:element name="primaryName" type="addressPrimaryNameType"/>
+			<xs:element name="secondaryName" type="addressNameType"/>
+			<xs:element name="streetName" type="addressNameType"/>
+			<xs:element name="town" type="addressTownType"/>
+			<xs:element name="locality" type="localityType"/>
+			<xs:element name="administrativeArea" type="addressTownType"/>
+			<xs:element name="country" type="countryType"/>
+			<xs:choice>
+				<xs:element name="postCode" type="postCodeType"/>
+				<xs:element name="internationalPostCode" type="internationalPostCodeType"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="addressPrimaryNameType">
+		<xs:restriction base="addressNameType">
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="addressNameType">
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="addressTownType">
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="30"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="localityType">
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="35"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="internationalPostCodeType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="35"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="postCodeType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Z]{1,2}[0-9R][0-9A-Z]? [0-9][A-Z]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="sellingTechniqueType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Direct Selling to End User"/>
+			<xs:enumeration value="Indirect Selling to End User"/>
+			<xs:enumeration value="Both"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="countryType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="UK - ENGLAND"/>
+			<xs:enumeration value="UK - SCOTLAND"/>
+			<xs:enumeration value="UK - WALES"/>
+			<xs:enumeration value="UK - NORTHERN IRELAND"/>
+			<xs:enumeration value="ISLE OF MAN"/>
+			<xs:enumeration value="GUERNSEY"/>
+			<xs:enumeration value="AFGHANISTAN"/>
+			<xs:enumeration value="ÅLAND ISLANDS"/>
+			<xs:enumeration value="ALBANIA"/>
+			<xs:enumeration value="ALGERIA"/>
+			<xs:enumeration value="AMERICAN SAMOA"/>
+			<xs:enumeration value="ANDORRA"/>
+			<xs:enumeration value="ANGOLA"/>
+			<xs:enumeration value="ANGUILLA"/>
+			<xs:enumeration value="ANTARCTICA"/>
+			<xs:enumeration value="ANTIGUA AND BARBUDA"/>
+			<xs:enumeration value="ARGENTINA"/>
+			<xs:enumeration value="ARMENIA"/>
+			<xs:enumeration value="ARUBA"/>
+			<xs:enumeration value="AUSTRALIA"/>
+			<xs:enumeration value="AUSTRIA"/>
+			<xs:enumeration value="AZERBAIJAN"/>
+			<xs:enumeration value="BAHAMAS"/>
+			<xs:enumeration value="BAHRAIN"/>
+			<xs:enumeration value="BANGLADESH"/>
+			<xs:enumeration value="BARBADOS"/>
+			<xs:enumeration value="BELARUS"/>
+			<xs:enumeration value="BELGIUM"/>
+			<xs:enumeration value="BELIZE"/>
+			<xs:enumeration value="BENIN"/>
+			<xs:enumeration value="BERMUDA"/>
+			<xs:enumeration value="BHUTAN"/>
+			<xs:enumeration value="BOLIVIA"/>
+			<xs:enumeration value="BONAIRE, SINT EUSTATIUS AND SABA"/>
+			<xs:enumeration value="BOSNIA AND HERZEGOVINA"/>
+			<xs:enumeration value="BOTSWANA"/>
+			<xs:enumeration value="BOUVET ISLAND"/>
+			<xs:enumeration value="BRAZIL"/>
+			<xs:enumeration value="BRITISH INDIAN OCEAN TERRITORY"/>
+			<xs:enumeration value="BRUNEI DARUSSALAM"/>
+			<xs:enumeration value="BULGARIA"/>
+			<xs:enumeration value="BURKINA FASO"/>
+			<xs:enumeration value="BURUNDI"/>
+			<xs:enumeration value="CABO VERDE"/>
+			<xs:enumeration value="CAMBODIA"/>
+			<xs:enumeration value="CAMEROON"/>
+			<xs:enumeration value="CANADA"/>
+			<xs:enumeration value="CAYMAN ISLANDS"/>
+			<xs:enumeration value="CENTRAL AFRICAN REPUBLIC"/>
+			<xs:enumeration value="CHAD"/>
+			<xs:enumeration value="CHILE"/>
+			<xs:enumeration value="CHINA"/>
+			<xs:enumeration value="CHRISTMAS ISLAND"/>
+			<xs:enumeration value="COCOS (KEELING) ISLANDS"/>
+			<xs:enumeration value="COLOMBIA"/>
+			<xs:enumeration value="COMOROS"/>
+			<xs:enumeration value="CONGO"/>
+			<xs:enumeration value="CONGO, DEMOCRATIC REPUBLIC OF"/>
+			<xs:enumeration value="COOK ISLANDS"/>
+			<xs:enumeration value="COSTA RICA"/>
+			<xs:enumeration value="CÔTE D&apos;IVOIRE"/>
+			<xs:enumeration value="CROATIA"/>
+			<xs:enumeration value="CUBA"/>
+			<xs:enumeration value="CURAÇAO"/>
+			<xs:enumeration value="CYPRUS"/>
+			<xs:enumeration value="CZECH REPUBLIC"/>
+			<xs:enumeration value="DENMARK"/>
+			<xs:enumeration value="DJIBOUTI"/>
+			<xs:enumeration value="DOMINICA"/>
+			<xs:enumeration value="DOMINICAN REPUBLIC"/>
+			<xs:enumeration value="ECUADOR"/>
+			<xs:enumeration value="EGYPT"/>
+			<xs:enumeration value="EL SALVADOR"/>
+			<xs:enumeration value="EQUATORIAL GUINEA"/>
+			<xs:enumeration value="ERITREA"/>
+			<xs:enumeration value="ESTONIA"/>
+			<xs:enumeration value="ETHIOPIA"/>
+			<xs:enumeration value="FALKLAND ISLANDS, THE MALVINAS"/>
+			<xs:enumeration value="FAROE ISLANDS"/>
+			<xs:enumeration value="FIJI"/>
+			<xs:enumeration value="FINLAND"/>
+			<xs:enumeration value="FRANCE"/>
+			<xs:enumeration value="FRENCH GUIANA"/>
+			<xs:enumeration value="FRENCH POLYNESIA"/>
+			<xs:enumeration value="FRENCH SOUTHERN TERRITORIES"/>
+			<xs:enumeration value="GABON"/>
+			<xs:enumeration value="GAMBIA"/>
+			<xs:enumeration value="GEORGIA"/>
+			<xs:enumeration value="GERMANY"/>
+			<xs:enumeration value="GHANA"/>
+			<xs:enumeration value="GIBRALTAR"/>
+			<xs:enumeration value="GREECE"/>
+			<xs:enumeration value="GREENLAND"/>
+			<xs:enumeration value="GRENADA"/>
+			<xs:enumeration value="GUADELOUPE"/>
+			<xs:enumeration value="GUAM"/>
+			<xs:enumeration value="GUATEMALA"/>
+			<xs:enumeration value="GUINEA"/>
+			<xs:enumeration value="GUINEA-BISSAU"/>
+			<xs:enumeration value="GUYANA"/>
+			<xs:enumeration value="HAITI"/>
+			<xs:enumeration value="HEARD ISLAND AND MCDONALD ISLANDS"/>
+			<xs:enumeration value="HOLY SEE"/>
+			<xs:enumeration value="HONDURAS"/>
+			<xs:enumeration value="HONG KONG"/>
+			<xs:enumeration value="HUNGARY"/>
+			<xs:enumeration value="ICELAND"/>
+			<xs:enumeration value="INDIA"/>
+			<xs:enumeration value="INDONESIA"/>
+			<xs:enumeration value="IRAN, ISLAMIC REPUBLIC OF"/>
+			<xs:enumeration value="IRAQ"/>
+			<xs:enumeration value="IRELAND"/>
+			<xs:enumeration value="ISRAEL"/>
+			<xs:enumeration value="ITALY"/>
+			<xs:enumeration value="JAMAICA"/>
+			<xs:enumeration value="JAPAN"/>
+			<xs:enumeration value="JERSEY"/>
+			<xs:enumeration value="JORDAN"/>
+			<xs:enumeration value="KAZAKHSTAN"/>
+			<xs:enumeration value="KENYA"/>
+			<xs:enumeration value="KIRIBATI"/>
+			<xs:enumeration value="KOREA, THE DEMOCRATIC PEOPLE&apos;S REPUBLIC OF"/>
+			<xs:enumeration value="KOREA, THE REPUBLIC OF"/>
+			<xs:enumeration value="KUWAIT"/>
+			<xs:enumeration value="KYRGYZSTAN"/>
+			<xs:enumeration value="LAO PEOPLE&apos;S DEMOCRATIC REPUBLIC"/>
+			<xs:enumeration value="LATVIA"/>
+			<xs:enumeration value="LEBANON"/>
+			<xs:enumeration value="LESOTHO"/>
+			<xs:enumeration value="LIBERIA"/>
+			<xs:enumeration value="LIBYA"/>
+			<xs:enumeration value="LIECHTENSTEIN"/>
+			<xs:enumeration value="LITHUANIA"/>
+			<xs:enumeration value="LUXEMBOURG"/>
+			<xs:enumeration value="MACAU"/>
+			<xs:enumeration value="MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF"/>
+			<xs:enumeration value="MADAGASCAR"/>
+			<xs:enumeration value="MALAWI"/>
+			<xs:enumeration value="MALAYSIA"/>
+			<xs:enumeration value="MALDIVES"/>
+			<xs:enumeration value="MALI"/>
+			<xs:enumeration value="MALTA"/>
+			<xs:enumeration value="MARSHALL ISLANDS"/>
+			<xs:enumeration value="MARTINIQUE"/>
+			<xs:enumeration value="MAURITANIA"/>
+			<xs:enumeration value="MAURITIUS"/>
+			<xs:enumeration value="MAYOTTE"/>
+			<xs:enumeration value="MEXICO"/>
+			<xs:enumeration value="MICRONESIA, FEDERATED STATES OF"/>
+			<xs:enumeration value="MOLDOVA"/>
+			<xs:enumeration value="MONACO"/>
+			<xs:enumeration value="MONGOLIA"/>
+			<xs:enumeration value="MONTENEGRO"/>
+			<xs:enumeration value="MONTSERRAT"/>
+			<xs:enumeration value="MOROCCO"/>
+			<xs:enumeration value="MOZAMBIQUE"/>
+			<xs:enumeration value="MYANMAR"/>
+			<xs:enumeration value="NAMIBIA"/>
+			<xs:enumeration value="NAURU"/>
+			<xs:enumeration value="NEPAL"/>
+			<xs:enumeration value="NETHERLANDS"/>
+			<xs:enumeration value="NEW CALEDONIA"/>
+			<xs:enumeration value="NEW ZEALAND"/>
+			<xs:enumeration value="NICARAGUA"/>
+			<xs:enumeration value="NIGER"/>
+			<xs:enumeration value="NIGERIA"/>
+			<xs:enumeration value="NIUE"/>
+			<xs:enumeration value="NORFOLK ISLAND"/>
+			<xs:enumeration value="NORTHERN MARIANA ISLANDS"/>
+			<xs:enumeration value="NORWAY"/>
+			<xs:enumeration value="OMAN"/>
+			<xs:enumeration value="PAKISTAN"/>
+			<xs:enumeration value="PALAU"/>
+			<xs:enumeration value="PALESTINE, STATE OF"/>
+			<xs:enumeration value="PANAMA"/>
+			<xs:enumeration value="PAPUA NEW GUINEA"/>
+			<xs:enumeration value="PARAGUAY"/>
+			<xs:enumeration value="PERU"/>
+			<xs:enumeration value="PHILIPPINES"/>
+			<xs:enumeration value="PITCAIRN"/>
+			<xs:enumeration value="POLAND"/>
+			<xs:enumeration value="PORTUGAL"/>
+			<xs:enumeration value="PUERTO RICO"/>
+			<xs:enumeration value="QATAR"/>
+			<xs:enumeration value="RÉUNION"/>
+			<xs:enumeration value="ROMANIA"/>
+			<xs:enumeration value="RUSSIAN FEDERATION"/>
+			<xs:enumeration value="RWANDA"/>
+			<xs:enumeration value="SAINT BARTHÉLEMY"/>
+			<xs:enumeration value="SAINT HELENA, ASCENSION AND TRISTAN DA CUNHA"/>
+			<xs:enumeration value="SAINT KITTS AND NEVIS"/>
+			<xs:enumeration value="SAINT LUCIA"/>
+			<xs:enumeration value="SAINT PIERRE AND MIQUELON"/>
+			<xs:enumeration value="SAINT VINCENT AND THE GRENADINES"/>
+			<xs:enumeration value="SAINT-MARTIN (FRANCE)"/>
+			<xs:enumeration value="SAMOA"/>
+			<xs:enumeration value="SAN MARINO"/>
+			<xs:enumeration value="SAO TOME AND PRINCIPE"/>
+			<xs:enumeration value="SAUDI ARABIA"/>
+			<xs:enumeration value="SENEGAL"/>
+			<xs:enumeration value="SERBIA"/>
+			<xs:enumeration value="SEYCHELLES"/>
+			<xs:enumeration value="SIERRA LEONE"/>
+			<xs:enumeration value="SINGAPORE"/>
+			<xs:enumeration value="SINT MAARTEN (DUTCH PART)"/>
+			<xs:enumeration value="SLOVAKIA"/>
+			<xs:enumeration value="SLOVENIA"/>
+			<xs:enumeration value="SOLOMON ISLANDS"/>
+			<xs:enumeration value="SOMALIA"/>
+			<xs:enumeration value="SOUTH AFRICA"/>
+			<xs:enumeration value="SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS"/>
+			<xs:enumeration value="SOUTH SUDAN"/>
+			<xs:enumeration value="SPAIN"/>
+			<xs:enumeration value="SRI LANKA"/>
+			<xs:enumeration value="SUDAN"/>
+			<xs:enumeration value="SURINAME"/>
+			<xs:enumeration value="SVALBARD AND JAN MAYEN ISLANDS"/>
+			<xs:enumeration value="SWAZILAND"/>
+			<xs:enumeration value="SWEDEN"/>
+			<xs:enumeration value="SWITZERLAND"/>
+			<xs:enumeration value="SYRIA ARAB REPUBLIC"/>
+			<xs:enumeration value="TAIWAN (PROVINCE OF CHINA)"/>
+			<xs:enumeration value="TAJIKISTAN"/>
+			<xs:enumeration value="TANZANIA, UNITED REPUBLIC OF"/>
+			<xs:enumeration value="THAILAND"/>
+			<xs:enumeration value="TIMOR-LESTE"/>
+			<xs:enumeration value="TOGO"/>
+			<xs:enumeration value="TOKELAU"/>
+			<xs:enumeration value="TONGA"/>
+			<xs:enumeration value="TRINIDAD AND TOBAGO"/>
+			<xs:enumeration value="TUNISIA"/>
+			<xs:enumeration value="TURKEY"/>
+			<xs:enumeration value="TURKMENISTAN"/>
+			<xs:enumeration value="TURKS AND CAICOS ISLANDS"/>
+			<xs:enumeration value="TUVALU"/>
+			<xs:enumeration value="UGANDA"/>
+			<xs:enumeration value="UKRAINE"/>
+			<xs:enumeration value="UNITED ARAB EMIRATES"/>
+			<xs:enumeration value="UNITED STATES OF AMERICA"/>
+			<xs:enumeration value="UNITED STATES MINOR OUTLYING ISLANDS"/>
+			<xs:enumeration value="URUGUAY"/>
+			<xs:enumeration value="UZBEKISTAN"/>
+			<xs:enumeration value="VANUATU"/>
+			<xs:enumeration value="VENEZUELA (BOLIVARIAN REPUBLIC OF)"/>
+			<xs:enumeration value="VIET NAM"/>
+			<xs:enumeration value="VIRGIN ISLANDS (BRITISH)"/>
+			<xs:enumeration value="VIRGIN ISLANDS (U.S.)"/>
+			<xs:enumeration value="WALLIS AND FUTUNA"/>
+			<xs:enumeration value="WESTERN SAHARA"/>
+			<xs:enumeration value="YEMEN"/>
+			<xs:enumeration value="ZAMBIA"/>
+			<xs:enumeration value="ZIMBABWE"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

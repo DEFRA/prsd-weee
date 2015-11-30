@@ -35,13 +35,20 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15149.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15149-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15149.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15149-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+    <Reference Include="AutoMapper.Net4">
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
+    </Reference>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.15310-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15310-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -50,6 +57,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.5.6.2.0\lib\Net45\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -69,13 +79,151 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Organisations\FindMatchingOrganisationsHandler.cs" />
+    <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
+    <Compile Include="Admin\Reports\GetPCSChargesCSVHandler.cs" />
+    <Compile Include="Admin\Reports\GetMembersDetailsCSVHandler.cs" />
+    <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
+    <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
+    <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
+    <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\GenerateFromXmlDataAccess.cs" />
+    <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\IGenerateFromXmlDataAccess.cs" />
+    <Compile Include="Scheme\MemberRegistration\IDeserializer.cs" />
+    <Compile Include="Scheme\MemberRegistration\Deserializer.cs" />
+    <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheDataAccess.cs" />
+    <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheHandler.cs" />
+    <Compile Include="Search\FetchOrganisationSearchResultsForCache\IFetchOrganisationSearchResultsForCacheDataAccess.cs" />
+    <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccess.cs" />
+    <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheHandler.cs" />
+    <Compile Include="Search\FetchProducerSearchResultsForCache\IFetchProducerSearchResultsForCacheDataAccess.cs" />
+    <Compile Include="Admin\GetAllApprovedSchemesDataAccess.cs" />
+    <Compile Include="Admin\GetAllComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\FindMatchingUsersDataAccess.cs" />
+    <Compile Include="Admin\GetAdminUserStatusHandler.cs" />
+    <Compile Include="Admin\GetAdminUserDataAccess.cs" />
+    <Compile Include="Admin\GetAllApprovedSchemesHandler.cs" />
+    <Compile Include="Admin\GetAllComplianceYearsHandler.cs" />
+    <Compile Include="Admin\IGetAllApprovedSchemesDataAccess.cs" />
+    <Compile Include="Admin\IGetAllComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerDetailsDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandler.cs" />
+    <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsDataAccess.cs" />
+    <Compile Include="Admin\IFindMatchingUsersDataAccess.cs" />
+    <Compile Include="Admin\IGetAdminUserDataAccess.cs" />
+    <Compile Include="Admin\GetManageUserDataAccess.cs" />
+    <Compile Include="Admin\GetUserDataHandler.cs" />
+    <Compile Include="Admin\IGetManageUserDataAccess.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccess.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\IUpdateCompetentAuthorityUserStatusDataAccess.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandler.cs" />
+    <Compile Include="Admin\UpdateUserHandler.cs" />
+    <Compile Include="Mappings\AddressMap.cs" />
+    <Compile Include="Mappings\CompetentAuthorityUserMap.cs" />
+    <Compile Include="Mappings\ContactMap.cs" />
+    <Compile Include="Mappings\CountryMap.cs" />
+    <Compile Include="Mappings\LatestMemberUploadListMap.cs" />
+    <Compile Include="Mappings\MemberUploadErrorMap.cs" />
+    <Compile Include="Mappings\MemberUploadMap.cs" />
+    <Compile Include="Mappings\PublicOrganisationMap.cs" />
+    <Compile Include="Mappings\OrganisationMap.cs" />
+    <Compile Include="Mappings\OrganisationUserMap.cs" />
+    <Compile Include="Mappings\SchemeMap.cs" />
+    <Compile Include="Mappings\UserStatusMap.cs" />
+    <Compile Include="Mappings\SchemeStatusMap.cs" />
+    <Compile Include="Mappings\UKCompetentAuthorityMap.cs" />
+    <Compile Include="Mappings\UserMap.cs" />
+    <Compile Include="Mappings\ValueObjectInitializer.cs" />
+    <Compile Include="Organisations\FindMatchingOrganisations\FindMatchingOrganisationsHandler.cs" />
+    <Compile Include="Organisations\FindMatchingOrganisations\DataAccess\FindMatchingOrganisationsDataAccess.cs" />
+    <Compile Include="Organisations\FindMatchingOrganisations\DataAccess\IFindMatchingOrganisationsDataAccess.cs" />
+    <Compile Include="Organisations\GetContactPersonByOrganisationIdHandler.cs" />
+    <Compile Include="Organisations\GetPublicOrganisationInfoHandler.cs" />
+    <Compile Include="Organisations\IUpdateOrganisationContactDetailsDataAccess.cs" />
+    <Compile Include="Organisations\JoinOrganisation\DataAccess\IJoinOrganisationDataAccess.cs" />
+    <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationDataAccess.cs" />
+    <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationResult.cs" />
+    <Compile Include="Organisations\UpdateOrganisationContactDetailsDataAccess.cs" />
+    <Compile Include="Organisations\UpdateOrganisationContactDetailsHandler.cs" />
+    <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
+    <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
+    <Compile Include="Scheme\GetSchemeByIdDataAccess.cs" />
+    <Compile Include="Scheme\GetSchemeByIdHandler.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfo\GetSchemePublicInfoDataAccess.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfo\GetSchemePublicInfoHandler.cs" />
+    <Compile Include="Scheme\GetSchemePublicInfo\IGetSchemePublicInfoDataAccess.cs" />
+    <Compile Include="Scheme\GetSchemesDataAccess.cs" />
+    <Compile Include="Scheme\GetSchemeStatusHandler.cs" />
+    <Compile Include="Shared\GetSubmissionsHistoryResultsDataAccess.cs" />
+    <Compile Include="Shared\GetSubmissionsHistoryResultsHandler.cs" />
+    <Compile Include="Scheme\IGetSchemeByIdDataAccess.cs" />
+    <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
+    <Compile Include="Shared\GetUKCompetentAuthorityByIdHandler.cs" />
+    <Compile Include="Shared\IGetSubmissionsHistoryResultsDataAccess.cs" />
+    <Compile Include="Scheme\MemberRegistration\IProducerChargeCalculatorDataAccess.cs" />
+    <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXml.cs" />
+    <Compile Include="Scheme\Interfaces\IGenerateFromXml.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetComplianceYearsHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetMemberUploadByIdHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetMemberUploadDataHandler.cs" />
+    <Compile Include="Scheme\Interfaces\IXmlChargeBandCalculator.cs" />
+    <Compile Include="Scheme\Interfaces\IXmlConverter.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\IProducerChargeCalculator.cs" />
+    <Compile Include="Scheme\MemberRegistration\IWhiteSpaceCollapser.cs" />
+    <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandler.cs" />
+    <Compile Include="Scheme\GetSchemesHandler.cs" />
+    <Compile Include="Organisations\AddAddressToOrganisationHandler.cs" />
+    <Compile Include="Organisations\AddContactPersonToOrganisationHandler.cs" />
+    <Compile Include="Organisations\CompleteRegistrationHandler.cs" />
+    <Compile Include="Organisations\CopyOrganisationAddressIntoRegisteredOfficeHandler.cs" />
+    <Compile Include="Organisations\Create\CreateRegisteredCompanyRequestHandler.cs" />
+    <Compile Include="Organisations\Create\CreateSoleTraderRequestHandler.cs" />
+    <Compile Include="Organisations\Create\CreatePartnershipRequestHandler.cs" />
+    <Compile Include="Organisations\GetUserOrganisationsByStatusHandler.cs" />
+    <Compile Include="Organisations\IsUkOrganisationAddressHandler.cs" />
+    <Compile Include="Organisations\JoinOrganisation\JoinOrganisationHandler.cs" />
     <Compile Include="Organisations\OrganisationByIdHandler.cs" />
+    <Compile Include="Organisations\VerifyOrganisationExistsHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\ProducerChargeCalculator.cs" />
+    <Compile Include="Scheme\MemberRegistration\ProducerChargeCalculatorDataAccess.cs" />
+    <Compile Include="Scheme\MemberRegistration\WhiteSpaceCollapser.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlChargeBandCalculator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlConverter.cs" />
+    <Compile Include="Scheme\Interfaces\IXmlValidator.cs" />
+    <Compile Include="Scheme\MemberRegistration\ProducerCharge.cs" />
+    <Compile Include="Scheme\Interfaces\ISchemaValidator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\XmlValidator.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IProducerListFactory.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IXmlGenerator.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerListFactory.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestHandlerModule.cs" />
-    <Compile Include="Users\UserByIdHandler.cs" />
+    <Compile Include="Scheme\UpdateSchemeInformationHandler.cs" />
+    <Compile Include="Scheme\VerifyApprovalNumberExistsHandler.cs" />
+    <Compile Include="Scheme\SetSchemeStatusHandler.cs" />
+    <Compile Include="Security\IWeeeAuthorization.cs" />
+    <Compile Include="Security\WeeeAuthorization.cs" />
+    <Compile Include="Shared\GetCountriesHandler.cs" />
+    <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
+    <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsersDataAccess.cs" />
+    <Compile Include="Users\GetManageableOrganisationUsers\IGetManageableOrganisationUsersDataAccess.cs" />
+    <Compile Include="Users\GetOrganisationUserHandler.cs" />
+    <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsersHandler.cs" />
+    <Compile Include="Admin\FindMatchingUsersHandler.cs" />
+    <Compile Include="Users\GetUserDataHandler.cs" />
+    <Compile Include="Users\UpdateOrganisationUserStatus\IUpdateOrganisationUserStatusDataAccess.cs" />
+    <Compile Include="Users\UpdateOrganisationUserStatus\UpdateOrganisationUserStatusDataAccess.cs" />
+    <Compile Include="Users\UpdateOrganisationUserStatus\UpdateOrganisationUserStatusHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
+      <Project>{75efee66-9358-4de4-9a84-e7191eec7db8}</Project>
+      <Name>EA.Weee.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.DataAccess\EA.Weee.DataAccess.csproj">
       <Project>{46300373-D7AE-40AA-BF96-3FC3889825A4}</Project>
       <Name>EA.Weee.DataAccess</Name>
@@ -88,14 +236,21 @@
       <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
       <Name>EA.Weee.Requests</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.XmlValidation\EA.Weee.XmlValidation.csproj">
+      <Project>{de6ea3d2-5f5f-4da6-b3a2-da97b757096c}</Project>
+      <Name>EA.Weee.XmlValidation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Xml\EA.Weee.Xml.csproj">
+      <Project>{a0c346a3-f2cc-4acd-80a3-0e99c3dc1c03}</Project>
+      <Name>EA.Weee.Xml</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="GenerateSchemaCs.ps1" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Mappings\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -106,6 +261,7 @@
     <Error Condition="!Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets'))" />
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
+  <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

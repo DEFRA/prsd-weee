@@ -1,0 +1,19 @@
+﻿@{
+    Page.Title = "Page Not Found";
+    var errorPath = Request.QueryString["aspxerrorpath"];
+    if (String.IsNullOrEmpty(errorPath))
+    {
+        errorPath = Request.RawUrl;
+    }
+    errorPath = Path.GetFileNameWithoutExtension(errorPath);
+    Response.TrySkipIisCustomErrors = true;
+    Response.StatusCode = 404;
+}
+
+<h1 class="heading-large">This page cannot be found</h1>
+
+<p>Check that you have entered the correct web address.</p>
+
+<p>
+    <a href="@Url.Action("ErrorRedirect", "Errors", new { area = ""})" class="button">Continue</a>
+</p>
