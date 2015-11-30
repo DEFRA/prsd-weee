@@ -216,7 +216,7 @@
             return new ProducerSubmission(
                 registeredProducer,
                 memberUpload,
-                null,
+                A.Fake<ProducerBusiness>(),
                 null,
                 SystemTime.UtcNow,
                 0,

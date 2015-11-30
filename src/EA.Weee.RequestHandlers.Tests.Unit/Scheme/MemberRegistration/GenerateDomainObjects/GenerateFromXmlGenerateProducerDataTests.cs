@@ -322,10 +322,9 @@
             A.CallTo(() => builder.DataAccess.FetchRegisteredProducerOrDefault(A<string>._, A<int>._, A<Guid>._))
                 .Returns(registeredProducer);
 
-            var result = await builder.InvokeGenerateProducerData(1);
+            var result = await builder.InvokeGenerateProducerDataWithSingleResult();
 
-            Assert.Equal(1, result.Count());
-            Assert.Equal("Test Registration Number", result.Single().RegisteredProducer.ProducerRegistrationNumber);
+            Assert.Equal("Test Registration Number", result.RegisteredProducer.ProducerRegistrationNumber);
         }
 
         [Fact]
@@ -365,29 +364,12 @@
             A.CallTo(() => builder.DataAccess.FetchRegisteredProducerOrDefault(A<string>._, A<int>._, A<Guid>._))
                 .Returns((RegisteredProducer)null);
 
-            var result = await builder.InvokeGenerateProducerData(1);
+            var result = await builder.InvokeGenerateProducerDataWithSingleResult();
 
             A.CallTo(() => builder.DataAccess.MigratedProducerExists(A<string>._))
                 .MustHaveHappened();
 
-            Assert.Equal(1, result.Count());
-            Assert.Equal("Test Registration Number", result.Single().RegisteredProducer.ProducerRegistrationNumber);
-        }
-
-        [Fact]
-        public async void GenerateProducerData_AmendProducer_WithMatchingExistingProducerFromAnotherScheme_ReturnsNewProducer()
-        {
-            var builder = new GenerateProducerDataTestsBuilder();
-            builder.Status = statusType.A;
-            builder.RegistrationNumber = "Test Registration Number";
-
-            A.CallTo(() => builder.DataAccess.FetchRegisteredProducerOrDefault(A<string>._, A<int>._, A<Guid>._))
-                .Returns((RegisteredProducer)null);
-
-            var result = await builder.InvokeGenerateProducerData(1);
-
-            Assert.Equal(1, result.Count());
-            Assert.Equal("Test Registration Number", result.Single().RegisteredProducer.ProducerRegistrationNumber);
+            Assert.Equal("Test Registration Number", result.RegisteredProducer.ProducerRegistrationNumber);
         }
 
         [Fact]

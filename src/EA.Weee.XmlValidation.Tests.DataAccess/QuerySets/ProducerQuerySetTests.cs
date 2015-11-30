@@ -162,7 +162,7 @@
         }
 
         [Fact]
-        public void GetLatestProducerFromPreviousComplianceYears_TwoProducerEntriesIn2015_ReturnsLatestProducerByUdatedDate()
+        public void GetLatestProducerFromPreviousComplianceYears_TwoProducerEntriesIn2015_ReturnsLatestProducerByUpdatedDate()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -175,14 +175,14 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
+                ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
                 producer1.UpdatedDate = new DateTime(2015, 1, 1);
 
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2015;
                 memberUpload2.IsSubmitted = true;
 
-                Weee.Tests.Core.Model.ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
+                ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
                 producer2.UpdatedDate = new DateTime(2015, 1, 2);
 
                 database.Model.SaveChanges();
@@ -329,7 +329,7 @@
 
                 Weee.Tests.Core.Model.ProducerSubmission soleTraderProducer = helper.CreateProducerAsSoleTrader(memberUpload1, "SSS1");
 
-                Weee.Tests.Core.Model.ProducerSubmission companyProducer2 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
+                Weee.Tests.Core.Model.ProducerSubmission companyProducer2 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAB");
 
                 database.Model.SaveChanges();
 
@@ -358,11 +358,11 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                Weee.Tests.Core.Model.ProducerSubmission companyProducer1 = helper.CreateProducerAsCompany(memberUpload1, "AA");
+                ProducerSubmission companyProducer1 = helper.CreateProducerAsCompany(memberUpload1, "AA");
 
-                Weee.Tests.Core.Model.ProducerSubmission companyProducer2 = helper.CreateProducerAsCompany(memberUpload1, "BB");
+                ProducerSubmission companyProducer2 = helper.CreateProducerAsCompany(memberUpload1, "BB");
 
-                Weee.Tests.Core.Model.ProducerSubmission companyProducer3 = helper.CreateProducerAsCompany(memberUpload1, "CC");
+                ProducerSubmission companyProducer3 = helper.CreateProducerAsCompany(memberUpload1, "AA");
 
                 database.Model.SaveChanges();
 
@@ -370,9 +370,9 @@
                 var result = ProducerQuerySet(database.WeeeContext).GetLatestCompanyProducers();
 
                 // Assert
-                Assert.Contains(result, p => p.Id == companyProducer1.Id);
+                Assert.DoesNotContain(result, p => p.Id == companyProducer1.Id);
+                Assert.Contains(result, p => p.Id == companyProducer2.Id);
                 Assert.Contains(result, p => p.Id == companyProducer3.Id);
-                Assert.DoesNotContain(result, p => p.Id == companyProducer2.Id);
             }
         }
 
