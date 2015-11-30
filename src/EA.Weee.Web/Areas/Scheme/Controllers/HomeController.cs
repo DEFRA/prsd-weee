@@ -381,7 +381,7 @@
         [HttpGet]
         public async Task<ActionResult> ViewSubmissionHistory(Guid pcsId)
         {
-            await SetBreadcrumb(pcsId, "View submission history");
+            await SetBreadcrumbAndPcsBanner(pcsId, "View submission history");
 
             var model = new SubmissionHistoryViewModel();
             
@@ -462,6 +462,13 @@
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
+        }
+
+        private async Task SetBreadcrumbAndPcsBanner(Guid organisationId, string activity)
+        {
+            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
+            breadcrumb.ExternalActivity = activity;
+            breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
     }
 }
