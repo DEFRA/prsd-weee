@@ -26,19 +26,13 @@
         {
             SchemeId = schemeId;
             Errors = errors;
-            IsSubmitted = false;
-            ComplianceYear = complianceYear;
             RawData = new DataReturnsUploadRawData() { Data = data };
-            this.Date = SystemTime.UtcNow;     
-        }
-        public DataReturnsUpload(Guid organisationId, Guid schemeId, string data, string fileName)
-        {
-            SchemeId = schemeId;
-            Errors = new List<DataReturnsUploadError>();
-            RawData = new DataReturnsUploadRawData { Data = data };
-            FileName = fileName;
             this.Date = SystemTime.UtcNow;
+            FileName = fileName;
+            IsSubmitted = false;
+            ComplianceYear = complianceYear;            
         }
+        
         public void Submit()
         {
             if (IsSubmitted)

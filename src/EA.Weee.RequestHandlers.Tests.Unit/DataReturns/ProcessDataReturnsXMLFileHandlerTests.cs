@@ -61,21 +61,6 @@
                 Assert.ThrowsAsync<SecurityException>(
                     async () => await authorisationDeniedHandler.HandleAsync(Message));
         }
-               
-        [Fact]
-        public async void ProcessDataReturnsXMLFile_StoresProcessTime()
-        {
-            IEnumerable<DataReturnsUploadError> errors = new List<DataReturnsUploadError>();
-            A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
-            DataReturnsUpload upload = A.Fake<DataReturnsUpload>();
-            A.CallTo(() => generator.GenerateDataReturnsUpload(Message, errors as List<DataReturnsUploadError>, organisationId)).WithAnyArguments().Returns(upload);
-
-            await handler.HandleAsync(Message);
-
-            A.CallTo(() => upload.SetProcessTime(new TimeSpan())).WithAnyArguments().MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
         public async void ProcessDataReturnsXMLFile_SavesDataReturnsUpload()
         {
             var id = await handler.HandleAsync(Message);
