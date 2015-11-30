@@ -1,0 +1,62 @@
+﻿@using System.Globalization
+@using EA.Weee.Core.Admin
+@model EA.Weee.Web.Areas.Scheme.ViewModels.SubmissionHistoryViewModel
+@{
+    ViewBag.Title = "View submission history";
+}
+
+
+<header class="hgroup">
+    <h1 class="heading-large">
+        View submission history
+    </h1>
+</header>
+
+@if (Model.Results.Any())
+{   
+            <div class="form-group">
+                <table id="submissions">
+                    <thead>
+                    <tr>
+                        <th>Date and time (GMT)</th>
+                        <th>Compliance year</th>
+                        <th>Warnings</th>
+                        <th>Charge amount</th>
+                        <th>Submitted by</th>
+                        <th>File name</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (SubmissionsHistorySearchResult item in Model.Results)
+                        {
+                            string datetimeValue = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
+
+                            <tr>
+                                <td>@datetimeValue</td>
+                                <td>@item.Year</td>
+                                <td>
+                                    @if (item.NoOfWarnings > 0)
+                                    {
+                                        string warningText = (item.NoOfWarnings > 1 ? "warnings (CSV)" : "warning (CSV)");
+                                        <a href="@Url.Action("DownloadCsv", "Home", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId })">@item.NoOfWarnings @warningText</a>
+                                    }
+                                </td>
+                                <td>£@item.TotalCharges</td>
+                                <td>@item.SubmittedBy</td>
+                                <td>@item.FileName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+}
+else
+{
+    <div class="form-group">
+        <p>There are no submissions to view.</p>
+    </div>
+}
+
+<div class="form-group">
+    @Html.ActionLink("Continue", "ChooseActivity", "Home", new { @class = "button" })
+</div>

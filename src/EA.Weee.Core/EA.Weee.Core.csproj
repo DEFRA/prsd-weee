@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{75EFEE66-9358-4DE4-9A84-E7191EEC7DB8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EA.Weee.Core</RootNamespace>
+    <AssemblyName>EA.Weee.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>d672c622</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc">
+      <HintPath>..\packages\Autofac.Mvc5.3.3.4\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.15310-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15310-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Admin\CompetentAuthorityUserData.cs" />
+    <Compile Include="Admin\Reports\CSVFileData.cs" />
+    <Compile Include="DataStandards\CommonMaxFieldLengths.cs" />
+    <Compile Include="DataStandards\EnvironmentAgencyMaxFieldLengths.cs" />
+    <Compile Include="Organisations\OrganisationOverview.cs" />
+    <Compile Include="Search\Fuzzy\CommonTerm.cs" />
+    <Compile Include="Search\Fuzzy\FuzzyOrganisationSearcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Search\Fuzzy\FuzzySearcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Search\Fuzzy\ITerm.cs" />
+    <Compile Include="Search\Fuzzy\LevenshteinDistance.cs" />
+    <Compile Include="Search\Fuzzy\Rank.cs" />
+    <Compile Include="Search\Fuzzy\ResultMetadata.cs" />
+    <Compile Include="Search\Fuzzy\ResultTerm.cs" />
+    <Compile Include="Search\Fuzzy\SearchWord.cs" />
+    <Compile Include="Search\Fuzzy\Synonym.cs" />
+    <Compile Include="Search\Fuzzy\Word.cs" />
+    <Compile Include="Admin\ManageUserData.cs" />
+    <Compile Include="Admin\SubmissionsHistorySearchResult.cs" />
+    <Compile Include="Admin\ProducerDetails.cs" />
+    <Compile Include="Admin\ProducerDetailsScheme.cs" />
+    <Compile Include="Search\ISearcher.cs" />
+    <Compile Include="Search\ISearchResultProvider.cs" />
+    <Compile Include="Search\OrganisationSearchResult.cs" />
+    <Compile Include="Search\SearchResult.cs" />
+    <Compile Include="Search\Simple\SimpleOrganisationSearcher.cs" />
+    <Compile Include="Search\Simple\SimpleProducerSearcher.cs" />
+    <Compile Include="Search\ProducerSearchResult.cs" />
+    <Compile Include="Admin\UserSearchDataResult.cs" />
+    <Compile Include="Claims.cs" />
+    <Compile Include="Configuration\IConfigurationManagerWrapper.cs" />
+    <Compile Include="Configuration\ITestUserEmailDomains.cs" />
+    <Compile Include="Configuration\NoTestUserEmailDomains.cs" />
+    <Compile Include="Configuration\TestUserEmailDomainElement.cs" />
+    <Compile Include="Configuration\TestUserEmailDomainElementCollection.cs" />
+    <Compile Include="Configuration\TestUserEmailDomainsSection.cs" />
+    <Compile Include="CoreModule.cs" />
+    <Compile Include="Exceptions\XmlDeserializationFailureException.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Helpers\PrnGeneration\IPrnHelper.cs" />
+    <Compile Include="Helpers\PrnGeneration\IQuadraticResidueHelper.cs" />
+    <Compile Include="Helpers\PrnGeneration\PrnAsComponents.cs" />
+    <Compile Include="Helpers\PrnGeneration\PrnHelper.cs" />
+    <Compile Include="Helpers\PrnGeneration\QuadraticResidueHelper.cs" />
+    <Compile Include="Helpers\Xml\IXmlErrorTranslator.cs" />
+    <Compile Include="Helpers\Xml\XmlErrorTranslator.cs" />
+    <Compile Include="Routing\ExternalRoute.cs" />
+    <Compile Include="Routing\ResetPasswordRoute.cs" />
+    <Compile Include="Scheme\SchemePublicInfo.cs" />
+    <Compile Include="Search\Simple\SimpleSearcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Shared\ChargeBandType.cs" />
+    <Compile Include="Shared\CsvWriter.cs" />
+    <Compile Include="Shared\CsvWriterFactory.cs" />
+    <Compile Include="Shared\InternalDomains.cs" />
+    <Compile Include="Shared\NoFormulaeExcelSanitizer.cs" />
+    <Compile Include="Shared\IExcelSanitizer.cs" />
+    <Compile Include="Users\UserData.cs" />
+    <Compile Include="Admin\UserSearchData.cs" />
+    <Compile Include="Organisations\ContactData.cs" />
+    <Compile Include="Organisations\OrganisationData.cs" />
+    <Compile Include="Organisations\PublicOrganisationData.cs" />
+    <Compile Include="Organisations\OrganisationSearchDataResult.cs" />
+    <Compile Include="Organisations\OrganisationType.cs" />
+    <Compile Include="Organisations\OrganisationUserData.cs" />
+    <Compile Include="Shared\ObligationType.cs" />
+    <Compile Include="Scheme\LatestMemberUpload.cs" />
+    <Compile Include="Scheme\LatestMemberUploadList.cs" />
+    <Compile Include="Scheme\MemberUploadData.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\Address.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\AnnualTurnoverBand.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\AuthorizedRepresentative.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\Company.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ContactDetails.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\CorrespondentForNotices.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\EEEPlacedOnMarketBand.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ISettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ObligationType.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\OverseasProducer.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\Partnership.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\Producer.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerBusiness.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerList.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerListSettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerSettings.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerStatus.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\RandomHelper.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\SchemaVersion.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\SchemeBusiness.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\SchemeCompany.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\SchemePartnership.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\SellingTechnique.cs" />
+    <Compile Include="Scheme\ProducerCSVFileData.cs" />
+    <Compile Include="Scheme\SchemeData.cs" />
+    <Compile Include="Configuration\ConfigurationManagerWrapper.cs" />
+    <Compile Include="Shared\AddressData.cs" />
+    <Compile Include="Shared\AddressType.cs" />
+    <Compile Include="Shared\CommonRegexPatterns.cs" />
+    <Compile Include="Shared\CompetentAuthority.cs" />
+    <Compile Include="Shared\CountryData.cs" />
+    <Compile Include="Shared\ErrorLevel.cs" />
+    <Compile Include="Shared\MemberUploadErrorData.cs" />
+    <Compile Include="Shared\OrganisationStatus.cs" />
+    <Compile Include="Shared\Paging\IPagedList.cs" />
+    <Compile Include="Shared\Paging\PagedList.cs" />
+    <Compile Include="Shared\Paging\PagingExtension.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Shared\SchemeStatus.cs" />
+    <Compile Include="Shared\UKCompetentAuthorityData.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\UserStatus.cs" />
+    <Compile Include="Validation\ExternalEmailAddressAttribute.cs" />
+    <Compile Include="Validation\GenericPhoneNumberAttribute.cs" />
+    <Compile Include="Validation\InternalEmailAddressAttribute.cs" />
+    <Compile Include="WeeeClaimTypes.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets'))" />
+    <Error Condition="!Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets'))" />
+  </Target>
+  <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

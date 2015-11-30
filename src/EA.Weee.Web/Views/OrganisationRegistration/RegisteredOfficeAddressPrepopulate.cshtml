@@ -1,0 +1,50 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.AddressPrepopulateViewModel
+
+@section main_content
+{
+    @if (@Model.OrganisationType.ToString().ToLower() == "partnership" || @Model.OrganisationType.ToString().ToLower() == "soletraderorindividual")
+    {
+        ViewBag.Title = "Principal place of business";
+
+        <header class="hgroup">
+            <h1 class="heading-large">
+                Are the details for your principal place of business and your organisation contact details the same?
+            </h1>
+        </header>
+    }
+    else
+    {
+        ViewBag.Title = "Registered office";
+
+        <header class="hgroup">
+            <h1 class="heading-large">
+                Are the details for your registered office and your main contact person the same?
+            </h1>
+        </header>
+
+        <div style="margin-bottom: 1.66667em;">
+            <p>For UK companies, your registered office details must be the same as those listed with Companies House.</p>
+        </div>
+    }
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationType)
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ContactDetailsSameAs">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Are the details for your registered office and your organisation contact details the same?",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Inline)
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="button" value="Continue" />
+        </div>
+    }
+}

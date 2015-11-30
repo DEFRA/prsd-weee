@@ -1,0 +1,24 @@
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Account.AccountActivationRequestViewModel
+@{
+    ViewBag.Title = "Account activation request expired";
+}
+
+<h2 class="heading-large">Your request to activate your account has expired</h2>
+
+@using (Html.BeginForm("AdminAccountActivationFailed", "Account", new { id = ViewContext.RouteData.Values["id"] }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
+
+    <p>To request another activation email, enter the email address associated with your account.</p>
+
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.Email)">
+        @Html.Gds().LabelFor(m => m.Email)
+        @Html.Gds().ValidationMessageFor(m => m.Email)
+        @Html.Gds().TextBoxFor(m => m.Email, new { autocomplete = "off" })
+    </div>
+
+    <p>
+        <input type="submit" value="Continue" class="button" />
+    </p>
+}

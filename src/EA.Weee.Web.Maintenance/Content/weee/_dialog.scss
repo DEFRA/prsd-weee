@@ -1,0 +1,25 @@
+﻿.fadeBackground {
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: block;
+        position: fixed;
+        background-color: rgba(11,12,12,0.5);
+    }
+
+.confirmDialog {
+        padding: 25px;
+        background-color: #fff;
+        border: 10px solid #fff;
+        display: inline-block;
+        margin: auto;
+        max-width: 530px;
+        position: absolute;
+        vertical-align: middle;
+        z-index: 5;
+        left: 35%;
+        top: 35%;
+    }

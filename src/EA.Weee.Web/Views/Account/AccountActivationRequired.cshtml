@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "User Account activation required";
+}
+
+@section main_content
+{
+    <h1 class="heading-large">Activate your user account</h1>
+
+    <p class="lede">
+        In order to use this service, please activate your user account.
+    </p>
+
+    <p>
+        We have sent your activation email to <span class="email">@ViewBag.UserEmailAddress</span>.
+        You need to use the link in the email to activate your user account.
+    </p>
+
+    <p>If the email address shown above is wrong then you will need to create another user account using the correct email address.</p>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <p>
+            <button class="button" type="submit">Request another email</button>        
+        </p>
+        <p>
+            @Html.ActionLink("Create another user account", "UserCreation", "NewUser")
+        </p>
+    }
+}

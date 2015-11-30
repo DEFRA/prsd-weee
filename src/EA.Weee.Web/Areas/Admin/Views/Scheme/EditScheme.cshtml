@@ -1,0 +1,110 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Core.Shared
+@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModel
+@{
+    ViewBag.Title = "Edit PCS";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.IsUnchangeableStatus)
+    @Html.HiddenFor(m => m.OrganisationId)
+    @Html.HiddenFor(m => m.SchemeId)
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <header class="hgroup">
+                <h1 class="heading-large">Edit PCS</h1>
+            </header>
+        </div>
+    </div>
+
+    @Html.Gds().ValidationSummary()
+
+    if (Model.Status != SchemeStatus.Rejected)
+    {
+    @Html.HiddenFor(m => m.OldApprovalNumber)
+
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.SchemeName)">
+        @Html.Gds().LabelFor(m => m.SchemeName)
+        @Html.Gds().ValidationMessageFor(m => m.SchemeName)
+        @Html.Gds().TextBoxFor(m => m.SchemeName, new { @maxlength = EnvironmentAgencyMaxFieldLengths.SchemeName })
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.ApprovalNumber)">
+        @Html.Gds().LabelFor(m => m.ApprovalNumber)
+        @Html.Gds().ValidationMessageFor(m => m.ApprovalNumber)
+        @Html.Gds().TextBoxFor(m => m.ApprovalNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.SchemeApprovalNumber })
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.IbisCustomerReference)">
+        @Html.Gds().LabelFor(m => m.IbisCustomerReference)
+        @Html.Gds().ValidationMessageFor(m => m.IbisCustomerReference)
+        @Html.Gds().TextBoxFor(m => m.IbisCustomerReference, new { @maxlength = EnvironmentAgencyMaxFieldLengths.IbisBillingReference })
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.ObligationType)">
+        @Html.Gds().LabelFor(m => m.ObligationType)
+        @Html.Gds().ValidationMessageFor(m => m.ObligationType)
+        @Html.Gds().DropDownListFor(m => m.ObligationType, Model.ObligationTypeSelectList, string.Empty, new { autocomplete = "false" })
+    </div>
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.CompetentAuthorityId)">
+        @Html.Gds().LabelFor(m => m.CompetentAuthorityId)
+        @Html.Gds().ValidationMessageFor(m => m.CompetentAuthorityId)
+        @Html.Gds().DropDownListFor(m => m.CompetentAuthorityId, new SelectList(Model.CompetentAuthorities, "Id", "Abbreviation"), string.Empty, new { autocomplete = "false" })
+    </div>
+    }
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.Status)">
+        @Html.Gds().LabelFor(m => m.Status)
+        @Html.Gds().ValidationMessageFor(m => m.Status)
+        @if (Model.IsUnchangeableStatus)
+        {
+            <select class="form-control" disabled="disabled">
+                <option>@Model.Status</option>
+            </select>
+            @Html.HiddenFor(m => m.Status)
+        }
+        else
+        {
+            @Html.Gds().DropDownListFor(m => m.Status, Model.StatusSelectList)
+        }
+    </div>
+
+    <p>
+        @Html.ActionLink("View organisation details", "ViewOrganisationDetails", "Scheme", new { schemeId = @Model.SchemeId, orgId = @Model.OrganisationId }, null)
+    </p>
+    <p>
+        @Html.ActionLink("View or edit organisation contact details", "ManageContactDetails", "Scheme", new { schemeId = @Model.SchemeId, orgId = @Model.OrganisationId }, null)
+    </p>
+
+    <p>
+        @if (Model.ComplianceYears != null)
+        {
+            foreach (int complianceYear in Model.ComplianceYears)
+            {
+                var linkText = "Overview of current members " + complianceYear + ".csv";
+                <a href="@Url.Action("GetProducerCSV", "Scheme", new { orgId = @Model.OrganisationId, complianceYear, approvalNumber = @Model.ApprovalNumber })">@(linkText)</a><span style="color: #6f777b"> (less than 500KB).</span>
+                <br />
+            }
+        }
+    </p>
+    if (Model.Status != SchemeStatus.Rejected)
+    {
+    <p>
+        <input type="submit" value="Save and continue" class="button" />
+    </p>
+    }
+    <p>
+        <a href="javascript:history.back();">Back</a>
+    </p>
+    }
+
+
+@section scripts {
+    <script>
+        $("#Status").change(function () {
+            if ($(this).val() === "3") /* Rejected status */ {
+                document.forms[1].submit(); // Submit the form immediately
+            }
+        });
+    </script>
+    }

@@ -1,0 +1,128 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.AddOrAmendMembersViewModel
+@{
+    ViewBag.Title = "Manage PCS Members";
+    HtmlHelper.ClientValidationEnabled = true;
+    HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
+}
+
+@section main_content
+{
+    <script type="text/javascript">
+        @*
+            Prevent FireFox from using it's bfcache for this page
+            by adding an empty event handler to the "beforeunload"
+            window event.
+        *@
+        if (window.addEventListener) {
+            window.addEventListener("beforeunload", function() {});
+        }
+
+        function ajaxSubmit() {
+
+            if (!$("#form1").valid()) {
+                return false;
+            }
+
+            $("#title")
+                .html('Checking your file for errors');
+
+            $("#preSubmissionContent")
+                .hide();
+
+            $("#anotherActivitylink")
+                .hide();
+
+            $("#submitButton")
+                .prop('disabled', true)
+                .prop('value', 'Checking file for errors...');
+
+            setTimeout(function() {
+                $("#processingTimeMessage")
+                    .fadeIn("slow");
+            }, 5000);
+
+            @*
+                Without the FormData API, doing an AJAX upload of a file is really hard.
+                This only affects IE9 and earlier, so we'll fall back to a non-AJAX submission.
+            *@
+            if (typeof FormData == 'undefined') {
+                return true;
+            } else {
+                $("#spinner")
+                    .show();
+
+                $.ajax({
+                    url: "@Url.Action("AddOrAmendMembers", "MemberRegistration")",
+                    type: "POST",
+                    data: $("#form1").serializeFiles(),
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        var placeHolderLocation = "@Url.Action("ViewErrorsAndWarnings", "MemberRegistration", new { memberUploadId = Guid.Empty })";
+                        window.location = placeHolderLocation.replace("@Guid.Empty", response);
+                    },
+                    statusCode: {
+                        500: function(response) {
+                            window.location = "@Url.Action("InternalError", "Errors", new { area = string.Empty })";
+                        }
+                    },
+                });
+
+                return false;
+            }
+        }
+    </script>
+
+    @using (Html.BeginForm("AddOrAmendMembers", "MemberRegistration", FormMethod.Post,
+        new
+        {
+            id = "form1",
+            enctype = "multipart/form-data",
+            onsubmit = string.Format("{0} return ajaxSubmit();", this.WeeeGds().EventTrackingFunction("Uploads", "Check file for errors")),
+            autocomplete = "off"
+        }))
+    {
+        <header class="hgroup">
+            <h1 id="title" class="heading-large" aria-live="off">
+                Manage PCS members
+            </h1>
+        </header>
+
+        <div id="preSubmissionContent">
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+
+            <p>To register or update your members' details, upload and submit an XML file.</p>
+            <p class="bold-small">
+                <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image" />Your XML file must use the version 3.07 schema.
+            </p>
+            <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
+                @(this.WeeeGds().ScreenReaderLabelFor(m => m.File))
+                @Html.Gds().ValidationMessageFor(m => m.File)
+                @Html.Gds().TextBoxFor(m => m.File, new { type = "file", accept = ".xml" })
+           </div>
+
+        </div>
+
+        <p>
+            <input style="margin-top: 20px;" id="submitButton" type="submit" value="Check file for errors" class="button" aria-live="off"/>
+            <img id="spinner" style="display: none; margin-top: 20px" src="~/Content/weee/images/spinner.gif" alt="Spinning graphic" class="important-image"/>
+        </p>
+
+        <p>
+            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { id = "anotherActivitylink" })
+        </p>
+    }
+
+    <noscript>
+        <p class="bold-small">
+            It may take a minute or two to check your file for errors, so please bear with us.
+        </p>
+    </noscript>
+
+    <p class="bold-small" style="display: none;" id="processingTimeMessage" aria-live="polite">
+        It may take a minute or two to check your file for errors, so please bear with us.
+    </p>
+}
