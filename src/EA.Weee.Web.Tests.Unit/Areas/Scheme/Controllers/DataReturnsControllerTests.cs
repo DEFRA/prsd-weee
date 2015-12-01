@@ -88,11 +88,11 @@
         }
 
         [Fact]
-        public async void GetSubmitDataReturns_ChecksForValidityOfOrganisation()
+        public async void GetUpload_ChecksForValidityOfOrganisation()
         {
             try
             {
-                await DataReturnsController().SubmitDataReturns(A<Guid>._);
+                await DataReturnsController().Upload(A<Guid>._);
             }
             catch (Exception)
             {
@@ -103,21 +103,21 @@
         }
 
         [Fact]
-        public async void GetSubmitDataReturns_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
+        public async void GetUpload_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<Exception>(() => DataReturnsController().SubmitDataReturns(A<Guid>._));
+            await Assert.ThrowsAnyAsync<Exception>(() => DataReturnsController().Upload(A<Guid>._));
         }
 
         [Fact]
-        public async void GetSubmitDataReturns_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        public async void GetUpload_IdDoesBelongToAnExistingOrganisation_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
 
-            var result = await DataReturnsController().SubmitDataReturns(A<Guid>._);
+            var result = await DataReturnsController().Upload(A<Guid>._);
 
             Assert.IsType<ViewResult>(result);
         }
