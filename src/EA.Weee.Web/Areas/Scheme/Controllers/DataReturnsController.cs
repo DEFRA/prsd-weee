@@ -1,14 +1,15 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
+    using Core.DataReturns;
     using Core.Shared;
     using Infrastructure;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels;
     using Web.Controllers.Base;
     using Weee.Requests.DataReturns;
@@ -22,7 +23,6 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly CsvWriterFactory csvWriterFactory;
         private readonly IMapper mapper;
-        private const string SubmitDataReturnsActivity = "Submit data returns";
 
         public DataReturnsController(
             Func<IWeeeClient> apiClient,
@@ -66,7 +66,8 @@
                     showLinkToSelectOrganisation = (task.Result > 1);
                 }
 
-                await SetBreadcrumb(pcsId, SubmitDataReturnsActivity);
+                await SetBreadcrumb(pcsId);
+
                 return View(new AuthorizationRequiredViewModel
                 {
                     Status = status,
@@ -76,14 +77,14 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> SubmitDataReturns(Guid pcsId)
+        public async Task<ViewResult> Upload(Guid pcsId)
         {
             using (var client = apiClient())
             {
                 var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
                 if (orgExists)
                 {
-                    await SetBreadcrumb(pcsId, SubmitDataReturnsActivity);
+                    await SetBreadcrumb(pcsId);
                     return View();
                 }
             }
@@ -93,25 +94,51 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SubmitDataReturns(Guid pcsId, PCSFileUploadViewModel model)
+        public async Task<ActionResult> Upload(Guid pcsId, PCSFileUploadViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                await SetBreadcrumb(pcsId, SubmitDataReturnsActivity);
+                await SetBreadcrumb(pcsId);
                 return View(model);
             }
 
+            Guid dataReturnId;
             using (var client = apiClient())
             {
                 model.PcsId = pcsId;
                 var request = mapper.Map<PCSFileUploadViewModel, ProcessDataReturnsXMLFile>(model);
-                await client.SendAsync(User.GetAccessToken(), request);
+                dataReturnId = await client.SendAsync(User.GetAccessToken(), request);
             }
 
-            //TODO: Redirect to errors or warnings page if any else summary page.
-            await SetBreadcrumb(pcsId, SubmitDataReturnsActivity);
-            return View(model);
+            return RedirectToAction("Submit", new { pcsId = pcsId, dataReturnId = dataReturnId });
         }
+
+        [HttpGet]
+        public async Task<ActionResult> Submit(Guid pcsId, Guid dataReturnId)
+        {
+            DataReturnForSubmission dataReturn;
+            using (var client = apiClient())
+            {
+                FetchDataReturnForSubmission request = new FetchDataReturnForSubmission(dataReturnId);
+                dataReturn = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            if (dataReturn.OrganisationId != pcsId)
+            {
+                string errorMessage = "The specified data return was not uploaded for the current organisation.";
+                throw new InvalidOperationException(errorMessage);
+            }
+
+            return View(dataReturn);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<Action> Submit(Guid pcsId, Guid dataReturnId, object viewModel)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (filterContext.ActionDescriptor.ActionName == "AuthorisationRequired")
@@ -150,10 +177,10 @@
             }
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        private async Task SetBreadcrumb(Guid organisationId)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
-            breadcrumb.ExternalActivity = activity;
+            breadcrumb.ExternalActivity = "Submit data returns";
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
     }
