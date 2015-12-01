@@ -11,6 +11,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels;
+    using ViewModels.DataReturns;
     using Web.Controllers.Base;
     using Weee.Requests.DataReturns;
     using Weee.Requests.Organisations;
@@ -116,27 +117,34 @@
         [HttpGet]
         public async Task<ActionResult> Submit(Guid pcsId, Guid dataReturnId)
         {
-            DataReturnForSubmission dataReturn;
-            using (var client = apiClient())
-            {
-                FetchDataReturnForSubmission request = new FetchDataReturnForSubmission(dataReturnId);
-                dataReturn = await client.SendAsync(User.GetAccessToken(), request);
-            }
+            DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
 
-            if (dataReturn.OrganisationId != pcsId)
+            SubmitViewModel viewModel = new SubmitViewModel()
             {
-                string errorMessage = "The specified data return was not uploaded for the current organisation.";
-                throw new InvalidOperationException(errorMessage);
-            }
+                DataReturn = dataReturn
+            };
 
-            return View(dataReturn);
+            await SetBreadcrumb(pcsId);
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<Action> Submit(Guid pcsId, Guid dataReturnId, object viewModel)
+        public async Task<ActionResult> Submit(Guid pcsId, Guid dataReturnId, SubmitViewModel viewModel)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+            {
+                DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+
+                viewModel.DataReturn = dataReturn;
+
+                return View(viewModel);
+            }
+
+            // TODO: Submit the data return.
+
+            return View("Submitted");
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -180,8 +188,27 @@
         private async Task SetBreadcrumb(Guid organisationId)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
-            breadcrumb.ExternalActivity = "Submit data returns";
+            breadcrumb.ExternalActivity = "Submit a data return";
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
+        }
+
+        private async Task<DataReturnForSubmission> FetchDataReturn(Guid pcsId, Guid dataReturnId)
+        {
+            DataReturnForSubmission dataReturn;
+
+            using (var client = apiClient())
+            {
+                FetchDataReturnForSubmission request = new FetchDataReturnForSubmission(dataReturnId);
+                dataReturn = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            if (dataReturn.OrganisationId != pcsId)
+            {
+                string errorMessage = "The specified data return was not uploaded for the current organisation.";
+                throw new InvalidOperationException(errorMessage);
+            }
+
+            return dataReturn;
         }
     }
 }
