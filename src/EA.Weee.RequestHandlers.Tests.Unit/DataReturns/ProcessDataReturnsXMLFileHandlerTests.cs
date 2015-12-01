@@ -61,6 +61,8 @@
                 Assert.ThrowsAsync<SecurityException>(
                     async () => await authorisationDeniedHandler.HandleAsync(Message));
         }
+
+        [Fact]
         public async void ProcessDataReturnsXMLFile_SavesDataReturnsUpload()
         {
             var id = await handler.HandleAsync(Message);
