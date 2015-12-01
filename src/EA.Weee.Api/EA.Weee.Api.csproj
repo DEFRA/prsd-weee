@@ -250,14 +250,14 @@
     <Compile Include="App_Start\AutofacBootstrapper.cs" />
     <Compile Include="App_Start\Modules\SecurityModule.cs" />
     <Compile Include="App_Start\Modules\UserContextModule.cs" />
-    <Compile Include="App_Start\Controllers\WarmUpController.cs" />
+    <Compile Include="Controllers\WarmUpController.cs" />
     <Compile Include="Identity\ApplicationUserManagerBase.cs" />
     <Compile Include="Identity\ISecurityEventAuditor.cs" />
     <Compile Include="Identity\SecurityEventService.cs" />
     <Compile Include="Infrastructure\HttpStatusCodeResult.cs" />
-    <Compile Include="App_Start\Controllers\MediatorController.cs" />
+    <Compile Include="Controllers\MediatorController.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
-    <Compile Include="App_Start\Controllers\UnauthenticatedUserController.cs" />
+    <Compile Include="Controllers\UnauthenticatedUserController.cs" />
     <Compile Include="Identity\UserContext.cs" />
     <Compile Include="IdSrv\Clients.cs" />
     <Compile Include="IdSrv\DebugLogger.cs" />
