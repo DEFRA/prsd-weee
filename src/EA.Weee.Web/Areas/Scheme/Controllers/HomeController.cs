@@ -466,8 +466,7 @@
 
         private async Task SetBreadcrumbAndPcsBanner(Guid organisationId, string activity)
         {
-            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
-            breadcrumb.ExternalActivity = activity;
+            await SetBreadcrumb(organisationId, activity);
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
     }
