@@ -58,10 +58,13 @@
                 // Arrange
                 ModelHelper helper = new ModelHelper(db.Model);
 
+                // Use a year for which there is unlikely to be any data stored for that year in the database.
+                int year = 2000;
+
                 Scheme scheme1 = helper.CreateScheme();
 
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
-                memberUpload1.ComplianceYear = 2000;
+                memberUpload1.ComplianceYear = year;
                 memberUpload1.IsSubmitted = true;
 
                 ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
@@ -69,7 +72,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(2000);
+                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(year);
 
                 // Assert
                 Assert.NotNull(results);
