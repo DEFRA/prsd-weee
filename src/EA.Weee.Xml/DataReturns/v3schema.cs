@@ -165,8 +165,9 @@ namespace EA.Weee.Xml.DataReturns
         [System.Xml.Serialization.XmlEnumAttribute("Quarter 4: October - December")]
         Quarter4OctoberDecember,
     }
-    
+
     /// <remarks/>
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(B2CTonnageReturnType))]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -286,7 +287,17 @@ namespace EA.Weee.Xml.DataReturns
         /// <remarks/>
         B2C,
     }
-    
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
+    public partial class B2CTonnageReturnType : TonnageReturnType
+    {
+    }
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
     [System.SerializableAttribute()]
