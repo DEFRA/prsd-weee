@@ -96,6 +96,7 @@
     <Compile Include="Admin\GetAllComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandlerTests.cs" />
     <Compile Include="Admin\GetUserDataHandlerTests.cs" />
+    <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandlerTest.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccessTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
     <Compile Include="Admin\UpdateUserHandlerTests.cs" />

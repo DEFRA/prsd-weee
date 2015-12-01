@@ -90,6 +90,7 @@
     <Compile Include="StoredProcedure\SpgCSVDataByOrganisationIdAndComplianceYearTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StoredProcedure\SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthorityTests.cs" />
+    <Compile Include="StoredProcedure\SpgProducerPublicRegisterCSVDataByComplianceYearTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.DataAccess\EA.Weee.DataAccess.csproj">

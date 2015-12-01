@@ -64,11 +64,11 @@
 
             SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
             SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", (object)competentAuthorityId ?? DBNull.Value);
-
+            
             return await context.Database
                 .SqlQuery<MembersDetailsCSVData>(
                     "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @SchemeId, @CompetentAuthorityId",
-                    complianceYearParameter,
+                    complianceYearParameter,                                     
                     schemeIdParameter,
                      competentAuthorityIdParameter)
                 .ToListAsync();
@@ -83,7 +83,7 @@
         public async Task<List<PCSChargesCSVData>> SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(int complianceYear, Guid? competentAuthorityId)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-
+            
             SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", (object)competentAuthorityId ?? DBNull.Value);
 
             return await context.Database
@@ -111,6 +111,21 @@
                     complianceYearParameter,
                      competentAuthorityIdParameter)
                 .ToListAsync();
+        }
+
+        /// <summary>
+        /// Gets Producer public register data by compliance year
+        /// </summary>
+        /// <param name="complianceYear"></param>
+        /// <returns></returns>
+        public async Task<List<ProducerPublicRegisterCSVData>> SpgProducerPublicRegisterCSVDataByComplianceYear(int complianceYear)
+        {
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+
+            return await context.Database
+                .SqlQuery<ProducerPublicRegisterCSVData>(
+                    "[Producer].[spgProducerPublicRegisterCSVDataByComplianceYear] @ComplianceYear",
+                    complianceYearParameter).ToListAsync();
         }
     }
 }
