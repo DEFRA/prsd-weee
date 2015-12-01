@@ -1,48 +1,65 @@
-﻿@model EA.Weee.Web.ViewModels.NewUser.UserCreationViewModel
+﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.NewUser.UserCreationViewModel
 @{
     ViewBag.Title = "Register";
-    var signin = Request.QueryString["signin"];
 }
-<h1 class="heading-large">
-    About you and your organisation
-</h1>
-<p>
-    Enter your contact details and the name of your organisation
-</p>
-<h1 class="heading-large"></h1>
 
-@using (Html.BeginForm("CreateUser", "NewUser"))
+@section main_content
 {
-    @Html.AntiForgeryToken()
-    @Html.Gds().ValidationSummary()
+    <header class="hgroup">
+        <h1 class="heading-large">Create your user account</h1>
+    </header>
+    @using (Html.BeginForm("UserCreation", "NewUser"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
 
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.Name)">
-        @Html.ValidationMessageFor(m => m.Name)
-        @Html.Gds().LabelFor(m => m.Name)
-        @Html.Gds().TextBoxFor(m => m.Name)
-    </div>
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.Surname)">
-        @Html.ValidationMessageFor(m => m.Surname)
-        @Html.Gds().LabelFor(m => m.Surname)
-        @Html.Gds().TextBoxFor(m => m.Surname)
-    </div>
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.Email)">
-        @Html.ValidationMessageFor(m => m.Email)
-        @Html.Gds().LabelFor(m => m.Email)
-        @Html.Gds().TextBoxFor(m => m.Email)
-    </div>
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.Password)">
-        @Html.ValidationMessageFor(m => m.Password)
-        @Html.Gds().LabelFor(m => m.Password)
-        <p class="form-hint text">Password must be at least 6 characters and contain at least 1 uppercase letter, 1 lowercase letter and 1 number</p>
-        @Html.Gds().PasswordFor(m => m.Password)
-    </div>
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.ConfirmPassword)">
-        @Html.ValidationMessageFor(m => m.ConfirmPassword)
-        @Html.Gds().LabelFor(m => m.ConfirmPassword)
-        @Html.Gds().PasswordFor(m => m.ConfirmPassword)
-    </div>
-    <div class="form-group">
-        <input type="submit" class="button" value="Continue" />
-    </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Name)">
+            @Html.Gds().LabelFor(m => m.Name)
+            @Html.Gds().ValidationMessageFor(m => m.Name)
+            @Html.Gds().TextBoxFor(m => m.Name, new { @maxlength = CommonMaxFieldLengths.FirstName })
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Surname)">
+            @Html.Gds().LabelFor(m => m.Surname)
+            @Html.Gds().ValidationMessageFor(m => m.Surname)
+            @Html.Gds().TextBoxFor(m => m.Surname, new { @maxlength = CommonMaxFieldLengths.LastName })
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Email)">
+            @Html.Gds().LabelFor(m => m.Email)
+            @Html.Gds().ValidationMessageFor(m => m.Email)
+            @Html.Gds().TextBoxFor(m => m.Email, new { @maxlength = CommonMaxFieldLengths.EmailAddress })
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Password)">
+            @Html.Gds().LabelFor(m => m.Password)
+            @Html.Gds().ValidationMessageFor(m => m.Password)
+            <p class="form-hint text">Your password has to be at least 8 characters long and must contain at least 1 lower-case letter, 1 upper-case letter and 1 number.</p>
+            @Html.Gds().PasswordFor(m => m.Password, new { @maxlength = CommonMaxFieldLengths.Password })
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.ConfirmPassword)">
+            @Html.Gds().LabelFor(m => m.ConfirmPassword)
+            @Html.Gds().ValidationMessageFor(m => m.ConfirmPassword)
+            @Html.Gds().PasswordFor(m => m.ConfirmPassword, new { @maxlength = CommonMaxFieldLengths.Password })
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.TermsAndConditions)">
+            <fieldset>
+                @Html.Gds().ValidationMessageFor(m => m.TermsAndConditions)
+                <p>
+                    @this.WeeeGds().ActionLinkWithEventTracking("Read full terms and conditions of use", "TermsAndConditions", "NewUser",
+                         "Policies", "Terms and conditions", routeValues: new RouteValueDictionary { { "area", string.Empty } }, newTab: true)
+                </p>
+                <label class="block-label" for="TermsAndConditions">
+                    @Html.CheckBoxFor(m => m.TermsAndConditions, new { @id = "TermsAndConditions" })
+                    Accept terms and conditions of use
+                </label>
+            </fieldset>
+        </div>
+
+        <p>
+            <input type="submit" class="button" value="Create a user account" />
+        </p>
+        <p>
+            @Html.ActionLink("Sign in to your account", "SignIn", "Account")
+        </p>
+    }
 }

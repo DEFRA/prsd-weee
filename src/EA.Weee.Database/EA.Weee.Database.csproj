@@ -7,8 +7,8 @@
     <ProjectGuid>{756BF689-A8AB-4CA7-869C-7ED95D7AA80B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EA.Iws.Database</RootNamespace>
-    <AssemblyName>EA.Iws.Database</AssemblyName>
+    <RootNamespace>EA.Weee.Database</RootNamespace>
+    <AssemblyName>EA.Weee.Database</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -46,20 +46,106 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="scripts\Everytime\0006-MigratedProducers.sql" />
+    <Content Include="scripts\Update\Sprint17\20151116-1150-UpdateStoredProcedureForProducerDetailsReport.sql" />
+    <Content Include="scripts\Update\Sprint17\20151116-1110-MakeAnnualTurnoverNullable.sql" />
+    <Content Include="scripts\AliaSQL.exe" />
+    <Content Include="scripts\Create\placeholder.txt" />
+    <Content Include="scripts\Everytime\0001-Permissions-AppRole.sql" />
+    <Content Include="scripts\Everytime\0002-Permissions-Grants.sql" />
+    <Content Include="scripts\Everytime\0004-InsertCompetentAuthorityData.sql" />
+    <Content Include="scripts\Everytime\placeholder.txt" />
+    <Content Include="scripts\TestData\placeholder.txt" />
+    <Content Include="scripts\Update\Sprint16\20151110-154900-UpdateStoredProcedureForMemberDetails.sql" />
+    <Content Include="scripts\Update\Sprint16\20151110-183300-UpdateStoredProcedureForMemberDetails.sql" />
+    <Content Include="scripts\Update\placeholder.txt" />
+    <Content Include="scripts\Everytime\0005-ChargeBandAmountData.sql" />
+    <Content Include="scripts\Everytime\0003-InsertCountryData.sql" />
+    <Content Include="scripts\Update\Sprint07\20150619-1023-UpdateCATable-AddCountryId.sql" />
+    <Content Include="scripts\Update\Sprint07\20150619-1013-AddCountryTable.sql" />
+    <Content Include="scripts\Update\Sprint07\20150619-130853-RemoveAspNetUserOrganisationFK.sql" />
+    <Content Include="scripts\Update\Sprint07\20150622-124955-UpdateAddressTable.sql" />
+    <Content Include="scripts\Update\Sprint08\20150702-105353-AddMemberUploadTables.sql" />
+    <Content Include="scripts\Update\Sprint09\20150710-1534-AddSchemeProducerTables.sql" />
+    <Content Include="scripts\Update\Sprint09\20150715-1632-UpdateProducerTables.sql" />
+    <Content Include="scripts\Update\Sprint10\20150721-1638-MigratedProducers.sql" />
+    <Content Include="scripts\Update\Sprint10\20150723-1006-UpdateProducerTables.sql" />
+    <Content Include="scripts\Update\Sprint10\20150723-1419-MigratedProducers.sql" />
+    <Content Include="scripts\Update\Sprint10\20150729-122655-UpdateMemberUploadAndAddChargeBand.sql" />
+    <Content Include="scripts\Update\Sprint10\20150730-1253-UpdateClaimsForExternalUsers.sql" />
+    <Content Include="scripts\Update\Sprint09\20150728-1216-SystemDataTable.sql" />
+    <Content Include="scripts\Update\Sprint10\20150730-1942-AddIsCurrentForComplianceYear.sql" />
+    <Content Include="scripts\Update\Sprint10\20150730-1953-AddIndexForProducerIsCurrent.sql" />
+    <Content Include="scripts\Update\Sprint10\20150730-1956-AddSppRefreshProducerIsCurrent.sql" />
+    <Content Include="scripts\Update\Sprint10\20150731-1309-PopulateSystemData.sql" />
+    <Content Include="scripts\Update\Sprint10\20150803-1016-AddMemberUploadErrorType.sql" />
+    <Content Include="scripts\Update\Sprint11\20150806-141430-AddPcsStatus.sql" />
+    <Content Include="scripts\Update\Sprint11\20150807-093358-ChangeToSchemeStatus.sql" />
+    <Content Include="scripts\Update\Sprint11\20150807-1202-UpdateSppRefreshProducerIsCurrent.sql" />
+    <Content Include="scripts\Update\Sprint11\20150806-1632-UpdateProducerTable.sql" />
+    <Content Include="scripts\Update\Sprint11\20150811-1039-AddCompetentAuthorityUserTable.sql" />
+    <Content Include="scripts\Update\Sprint11\20150811-1040-UpdateCompetentAuthorityUserTable.sql" />
+    <Content Include="scripts\Update\Sprint11\20150811-1557-UpdateOrganisationUserTable.sql" />
+    <Content Include="scripts\Update\Sprint11\20150811-151242-NullableComplianceYear.sql" />
+    <Content Include="scripts\Update\Sprint11\20150811-162438-UpdateSchemeTable.sql" />
+    <Content Include="scripts\Update\Sprint11\20150812-0937-UpdateDataInCompetentAuthorityUserTable.sql" />
+    <Content Include="scripts\Update\Sprint11\20150818-140014-UpdateSchemeTable.sql" />
+    <Content Include="scripts\Update\Sprint12\20150825-132948-AddChargeThisUpdate.sql" />
+    <Content Include="scripts\Update\Sprint12\20150826-185300-AddStoredProcedureForProducerCsv.sql" />
+    <Content Include="scripts\Update\Sprint13\20150911-1756-DropSppRefreshProducerIsCurrent.sql" />
+    <Content Include="scripts\Update\Sprint13\20150911-1233-UpdateSppRefreshProducerIsCurrent.sql" />
+    <Content Include="scripts\Update\Sprint13\20150903-162000-ResetPrnSeed.sql" />
+    <Content Include="scripts\Update\Sprint13\20150911-UpdateStoredProcedureForProducerCsv.sql" />
+    <Content Include="scripts\Update\Sprint14\20151006-1938-AddPRNIndexToProducerTable.sql" />
+    <Content Include="scripts\Update\Sprint14\20151012-1633-AddSchemeIdIndexToProducerTable.sql" />
+    <Content Include="scripts\Update\Sprint14\20151005-1510-MigratedProducers.sql" />
+    <Content Include="scripts\Update\Sprint14\20151002-1303-MigratedProducers.sql" />
+    <Content Include="scripts\Update\Sprint14\20151002-1716-DropUnusedMigrationProducersTable.sql" />
+    <Content Include="scripts\Update\Sprint14\20151007-1323-AddIndex_MemberUploadError.sql" />
+    <Content Include="scripts\Update\Sprint14\20151009-1010-UpdateMemberUploadTable.sql" />
+    <Content Include="scripts\Update\Sprint14\20151008-2138-CreateAuditEventTable.sql" />
+    <Content Include="scripts\Update\Sprint15\20151026-0001-UpdateFirstnameLastnameLength.sql" />
+    <Content Include="scripts\Update\Sprint16\20151102-1008-UpdateMemberUploadColumns.sql" />
+    <Content Include="scripts\Update\Sprint16\20151028-0001-UpdateProducerAnnualturnoverDataType.sql" />
+    <Content Include="scripts\Update\Sprint16\20151103-103500-AddStoredProcedureForMemberDetails.sql" />
+    <Content Include="scripts\Update\Sprint16\20151110-113100-UpdateStoredProcedureForMemberDetails.sql" />
+    <Content Include="scripts\Update\Sprint16\20151106-143100-UpdateStoredProcedureForMemberDetails.sql" />
+    <Content Include="scripts\Update\Sprint16\20151104-1725-UpdateCsvDataSp.sql" />
+    <Content Include="scripts\Update\Sprint17\20151112-1334-UpdateStoredProcedureForProducerDetailsExtract.sql" />
+    <Content Include="scripts\Update\Sprint17\20151112-1328-AddNonClusteredIndexToTables.sql" />
+    <Content Include="scripts\Update\Sprint17\20151112-1432-UpdateProducerChargeBand.sql" />
+    <Content Include="scripts\Update\Sprint17\20151113-1105-AddValidationTimeToMemberUpload.sql" />
+    <Content Include="scripts\Update\Sprint17\20151113-1207-RenameValidationTimeToProcessTime.sql" />
+    <Content Include="scripts\Update\Sprint17\20151111-172000-AddFileNameColumnToMemberUpload.sql">
+      <SubType>Component</SubType>
+    </Content>
+    <Content Include="scripts\Update\Sprint17\20151120-1005-UpdateSPforPCSCharges.sql" />
+    <Content Include="scripts\Update\Sprint17\20151116-1229-AddSPforPCSCharges.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="schema_compare.ps1" />
+    <None Include="scripts\Update\Sprint17\20151120-165509-AddLineNumberToMemberUploadError.sql" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />
-    <Content Include="scripts\AliaSQL.exe" />
-    <Content Include="scripts\Create\placeholder.txt" />
-    <Content Include="scripts\Everytime\placeholder.txt" />
-    <Content Include="scripts\TestData\placeholder.txt" />
-    <Content Include="scripts\Update\placeholder.txt" />
-    <Content Include="scripts\Update\Sprint0-IWS\20150526-164637-IntialiseFromIws.sql" />
+    <Content Include="scripts\Update\Sprint00-IWS\20150526-164637-IntialiseFromIws.sql" />
+    <Content Include="scripts\Update\Sprint06-WEEE\20150603-161233-UpdateOrganisationTable.sql" />
+    <Content Include="scripts\Update\Sprint06-WEEE\20150604-093607-AddContactTable.sql" />
+    <Content Include="scripts\Update\Sprint06-WEEE\20150604-100316-AddContactTableRowVersion.sql" />
+    <Content Include="scripts\Update\Sprint06-WEEE\20150604-120420-EnumerateStatusAndType.sql" />
+    <Content Include="scripts\Update\Sprint06-WEEE\20150604-142422-UpdateAddressTable.sql" />
+    <Content Include="scripts\Update\Sprint07\20150612-164414-NullableOrganisationName.sql" />
+    <Content Include="scripts\Update\Sprint07\20150615-1100-AddCompetentAuthorityData.sql" />
+    <Content Include="scripts\Update\Sprint06-WEEE\20150609-151300-UpdateOrganisationTable.sql" />
+    <Content Include="scripts\Update\Sprint07\20150615-0852-AddContactTableRowVersion.sql" />
+    <Content Include="scripts\Update\Sprint07\20150610-1546-UpdateContactTable.sql" />
+    <Content Include="scripts\Update\Sprint07\20150610-1618-UpdateAddressTable.sql" />
+    <Content Include="scripts\Update\Sprint07\20150615-1043-UpdateCompetentAuthorityTable.sql" />
+    <Content Include="scripts\Update\Sprint07\20150616-163500-UpdateAddressTable.sql" />
+    <Content Include="scripts\Update\Sprint07\20150616-UpdateCATable-Remove_IsSysetmUser.sql" />
+    <Content Include="scripts\Update\Sprint07\20150618-162503-AddOrganisationUserTable.sql" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

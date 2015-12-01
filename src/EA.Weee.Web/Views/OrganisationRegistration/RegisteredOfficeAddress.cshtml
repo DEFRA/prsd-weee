@@ -1,0 +1,41 @@
+﻿@model EA.Weee.Web.ViewModels.Shared.AddressViewModel
+
+@section main_content
+    {
+    @if (@Model.OrganisationType.ToString().ToLower() == "partnership" || @Model.OrganisationType.ToString().ToLower() == "soletraderorindividual")
+    {
+        ViewBag.Title = "Principal place of business";
+        <header class="hgroup">
+            <h1 class="heading-large">Principal place of business</h1>
+        </header>
+        <p>
+            The contact details for your principal place of business.
+        </p>
+    }
+    else
+    {
+        ViewBag.Title = "Registered office";
+        <header class="hgroup">
+            <h1 class="heading-large">
+                What are the details for your registered office?
+            </h1>
+        </header>
+       
+        <div style="margin-bottom: 1.66667em;">
+            <p>For companies registered in the UK, these details must be the same as those registered with Companies House.</p>
+        </div>
+    }
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationType)
+
+        @Html.EditorFor(m => m.Address)
+
+        <div class="form-group">
+            <input type="submit" class="button" value="Continue" />
+        </div>
+    }
+}

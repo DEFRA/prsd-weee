@@ -1,0 +1,89 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.SearchResultsViewModel
+@{
+    ViewBag.Title = "Choose your organisation";
+}
+
+@section main_content
+{
+    @if (Model.Results.Count > 0)
+    {
+        <header class="hgroup">
+            <h1 class="heading-large">
+                Search results
+            </h1>
+            <h2 class="heading-small">We found results for ‘@Model.SearchTerm’</h2>
+        </header>
+
+        using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.Gds().ValidationSummary()
+
+
+
+            <p>If your organisation is not listed, this may be because:</p>
+            <ul class="list-bullet">
+                <li>you mistyped the organisation’s name</li>
+                <li>your organisation has not yet been created in our service</li>
+                <li>you entered something other than the organisation name</li>
+            </ul>
+
+            <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
+                @Html.Gds().ValidationMessageFor(m => m.SelectedOrganisationId)
+                @this.WeeeGds().RadioButtonsFor(
+                    m => m.SelectedOrganisationId,
+                    Model.Results,
+                    r => r.OrganisationId,
+                    r => r.Name,
+                    RadioButtonLegend.VisuallyHidden,
+                    RadioButtonLayout.Stacked)
+            </div>
+
+            <p>
+                <input type="submit" class="button" value="Continue" />
+            </p>
+        }
+
+        <p>
+            @Html.ActionLink("Start another search", "Search", "OrganisationRegistration")
+        </p>
+        <p>
+            @Html.ActionLink("Create a new organisation", "CreateGuidance", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, null)
+        </p>
+    }
+    else
+    {
+        <header class="hgroup">
+            <h1 class="heading-large">
+                No results found
+            </h1>
+            <h2 class="heading-small">We found no results for ‘@Model.SearchTerm’</h2>
+        </header>
+
+        <p>If your organisation is not listed, this may be because:</p>
+
+        <ul class="list-bullet">
+            <li>you mistyped the organisation’s name</li>
+            <li>your organisation has not yet been created in our service</li>
+            <li>you entered something other than the organisation name</li>
+        </ul>
+        
+        <p>
+            @Html.ActionLink("Create a new organisation", "CreateGuidance", "OrganisationRegistration", new { searchedText = @Model.SearchTerm }, new { @class = "button" })
+        </p>
+        <p>
+            @Html.ActionLink("Start another search", "Search", "OrganisationRegistration")
+        </p>
+    }
+
+
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $('#organisations tr').click(function () {
+            $(this).find('td input[type=radio]').prop('checked', true);
+        })
+    </script>
+}

@@ -1,0 +1,34 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Organisations
+@model EA.Weee.Web.ViewModels.Shared.Scheme.ViewOrganisationDetailsViewModel
+@{
+    ViewBag.Title = "View organisation details";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        @if (Model.OrganisationData.OrganisationType == OrganisationType.Partnership || Model.OrganisationData.OrganisationType == OrganisationType.SoleTraderOrIndividual)
+        {
+        <h1 class="heading-large">Principal place of business details</h1>
+        }
+        else
+        {
+        <h1 class="heading-large">Registered office details</h1>
+        }
+    </header>
+
+    @using (Html.BeginForm(actionName: "ViewOrganisationDetails", controllerName: "Home", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        @Html.Partial("_ViewOrganisationDetails")
+
+        @Html.Partial("_CompetentAuthoritiesContactDetails", new ViewDataDictionary { { "title", "Contact us to change your details" } })
+
+        <div class="form-group">
+            <button class="button" type="submit">Perform another activity</button>
+        </div>
+    }
+}

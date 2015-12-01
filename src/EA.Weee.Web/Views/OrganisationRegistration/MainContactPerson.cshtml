@@ -1,0 +1,42 @@
+﻿@using EA.Weee.Core.DataStandards
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.ContactPersonViewModel
+@{
+    ViewBag.Title = "Organisation Main Contact Person";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">Who is your main contact person?</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div style="margin-bottom: 1.66667em;">
+            <p>We're looking for the details of your nominated day-to-day contact for the producer compliance scheme (PCS).</p>
+        </div>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
+            @Html.Gds().LabelFor(m => m.FirstName)
+            @Html.Gds().ValidationMessageFor(m => m.FirstName)
+            @Html.Gds().TextBoxFor(m => m.FirstName, new { @maxlength = CommonMaxFieldLengths.FirstName })
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.LastName)">
+            @Html.Gds().LabelFor(m => m.LastName)
+            @Html.Gds().ValidationMessageFor(m => m.LastName)
+            @Html.Gds().TextBoxFor(m => m.LastName, new { @maxlength = CommonMaxFieldLengths.LastName })
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.Position)">
+            @Html.Gds().LabelFor(m => m.Position)
+            @Html.Gds().ValidationMessageFor(m => m.Position)
+            @Html.Gds().TextBoxFor(m => m.Position, new { @maxlength = CommonMaxFieldLengths.Position })
+        </div>
+
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+    }
+}

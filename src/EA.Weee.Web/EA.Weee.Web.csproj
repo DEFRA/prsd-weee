@@ -15,11 +15,12 @@
     <AssemblyName>EA.Weee.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
+    <IISExpressSSLPort>44300</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <NuGetPackageImportStamp>3ad0f99b</NuGetPackageImportStamp>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -63,17 +64,27 @@
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15149.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15149-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15149.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15149-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+    <Reference Include="AutoMapper.Net4">
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15149.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="EA.Prsd.Core, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15310-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15149-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15310-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15310-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15310-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
@@ -83,17 +94,8 @@
       <HintPath>..\packages\Elmah.Mvc.2.1.2\lib\net40\Elmah.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="LibSass.x64, Version=0.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\libsassnet.x64.3.0.1.1\lib\net40\LibSass.x64.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="libsassnet, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\libsassnet.x64.3.0.1.1\lib\net40\libsassnet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="libsassnet.Web, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\libsassnet.Web.x64.1.9\lib\net40\libsassnet.Web.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="LowercaseDashedRouting">
+      <HintPath>..\packages\LowercaseDashedRouteExt.1.2\lib\net40\LowercaseDashedRouting.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -124,19 +126,22 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RazorEngine, Version=3.7.3.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.7.3\lib\net45\RazorEngine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Collections" />
     <Reference Include="System.IdentityModel" />
-    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20511.1437, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.205111437\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20622.1351, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.206221351\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
     <Reference Include="System.Linq" />
     <Reference Include="System.Net.Http" />
@@ -154,6 +159,7 @@
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -217,6 +223,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
+    <Compile Include="Areas\Scheme\Requests\ProcessXmlFileRequest.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
+    <Content Include="Areas\Admin\Views\Scheme\ViewOrganisationDetails.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Content\govuk\images\apple-touch-icon-120x120.png" />
     <Content Include="Content\govuk\images\apple-touch-icon-152x152.png" />
     <Content Include="Content\govuk\images\apple-touch-icon-60x60.png" />
@@ -225,6 +246,7 @@
     <Content Include="Content\govuk\images\gov.uk_logotype_crown.png" />
     <Content Include="Content\govuk\images\gov.uk_logotype_crown_invert.png" />
     <Content Include="Content\govuk\images\gov.uk_logotype_crown_invert_trans.png" />
+    <Content Include="Content\govuk\images\govuk_logotype_email.png" />
     <Content Include="Content\govuk\images\opengraph-image.png" />
     <Content Include="Content\govuk\stylesheets\external-links\external-link-24x24.png" />
     <Content Include="Content\govuk\stylesheets\external-links\external-link-black-12x12.png" />
@@ -243,198 +265,283 @@
     <Content Include="Content\govuk\stylesheets\images\govuk-crest.png" />
     <Content Include="Content\govuk\stylesheets\images\open-government-licence.png" />
     <Content Include="Content\govuk\stylesheets\images\open-government-licence_2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\accordian-arrow-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\accordian-arrow.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\arrow-sprite.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\bis_crest_13px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\bis_crest_13px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\bis_crest_18px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\bis_crest_18px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\bis_crest_27px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\bis_crest_27px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\coastguard_13px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\coastguard_13px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\coastguard_18px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\coastguard_18px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\coastguard_27px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\coastguard_27px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\hmrc_crest_13px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\hmrc_crest_13px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\hmrc_crest_18px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\hmrc_crest_18px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\hmrc_crest_27px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\hmrc_crest_27px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ho_crest_13px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ho_crest_13px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ho_crest_18px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ho_crest_18px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ho_crest_27px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ho_crest_27px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\mod_crest_13px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\mod_crest_13px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\mod_crest_18px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\mod_crest_18px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\mod_crest_27px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\mod_crest_27px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\org_crest_13px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\org_crest_13px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\org_crest_18px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\org_crest_18px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\org_crest_27px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\org_crest_27px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\portcullis_13px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\portcullis_13px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\portcullis_18px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\portcullis_18px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\portcullis_27px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\portcullis_27px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\so_crest_13px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\so_crest_13px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\so_crest_18px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\so_crest_18px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\so_crest_27px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\so_crest_27px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ukaea_crest_13px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ukaea_crest_13px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ukaea_crest_18px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ukaea_crest_18px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ukaea_crest_27px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ukaea_crest_27px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ukho_13px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ukho_13px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ukho_18px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ukho_18px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ukho_27px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\ukho_27px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\wales_crest_13px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\wales_crest_13px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\wales_crest_18px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\wales_crest_18px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\wales_crest_27px.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\crests\wales_crest_27px_x2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\external-links\external-link-24x24.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\external-links\external-link-black-12x12.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\external-links\external-link-black-24x24.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\external-links\external-link.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-calendar-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-calendar.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-file-download-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-file-download.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-important-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-important.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-information-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-information.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-locator-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-locator.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-pointer-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-pointer-black-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-pointer-black.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-pointer-indexed.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-pointer.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-search-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-search.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-1-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-1.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-10-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-10.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-11-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-11.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-12-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-12.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-13-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-13.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-14-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-14.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-2-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-2.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-3-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-3.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-4-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-4.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-5-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-5.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-6-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-6.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-7-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-7.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-8-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-8.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-9-2x.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\icon-steps\icon-step-9.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\player-icon-forward.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\player-icon-pause.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\player-icon-play.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\player-icon-rewind.png" />
-    <Content Include="Content\govuk_toolkit\images\app\assets\images\player-icon-volume.png" />
+    <Content Include="Content\govuk_toolkit\images\accordian-arrow-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\accordian-arrow.png" />
+    <Content Include="Content\govuk_toolkit\images\arrow-sprite.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\bis_crest_13px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\bis_crest_13px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\bis_crest_18px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\bis_crest_18px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\bis_crest_27px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\bis_crest_27px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\coastguard_13px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\coastguard_13px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\coastguard_18px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\coastguard_18px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\coastguard_27px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\coastguard_27px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\hmrc_crest_13px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\hmrc_crest_13px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\hmrc_crest_18px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\hmrc_crest_18px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\hmrc_crest_27px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\hmrc_crest_27px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ho_crest_13px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ho_crest_13px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ho_crest_18px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ho_crest_18px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ho_crest_27px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ho_crest_27px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\mod_crest_13px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\mod_crest_13px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\mod_crest_18px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\mod_crest_18px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\mod_crest_27px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\mod_crest_27px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\org_crest_13px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\org_crest_13px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\org_crest_18px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\org_crest_18px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\org_crest_27px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\org_crest_27px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\portcullis_13px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\portcullis_13px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\portcullis_18px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\portcullis_18px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\portcullis_27px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\portcullis_27px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\so_crest_13px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\so_crest_13px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\so_crest_18px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\so_crest_18px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\so_crest_27px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\so_crest_27px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ukaea_crest_13px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ukaea_crest_13px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ukaea_crest_18px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ukaea_crest_18px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ukaea_crest_27px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ukaea_crest_27px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ukho_13px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ukho_13px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ukho_18px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ukho_18px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ukho_27px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\ukho_27px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\wales_crest_13px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\wales_crest_13px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\wales_crest_18px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\wales_crest_18px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\wales_crest_27px.png" />
+    <Content Include="Content\govuk_toolkit\images\crests\wales_crest_27px_x2.png" />
+    <Content Include="Content\govuk_toolkit\images\external-links\external-link-24x24.png" />
+    <Content Include="Content\govuk_toolkit\images\external-links\external-link-black-12x12.png" />
+    <Content Include="Content\govuk_toolkit\images\external-links\external-link-black-24x24.png" />
+    <Content Include="Content\govuk_toolkit\images\external-links\external-link.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-calendar-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-calendar.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-file-download-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-file-download.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-important-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-important.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-information-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-information.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-locator-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-locator.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-pointer-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-pointer-black-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-pointer-black.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-pointer-indexed.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-pointer.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-search-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-search.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-1-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-1.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-10-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-10.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-11-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-11.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-12-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-12.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-13-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-13.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-14-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-14.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-2-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-2.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-3-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-3.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-4-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-4.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-5-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-5.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-6-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-6.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-7-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-7.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-8-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-8.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-9-2x.png" />
+    <Content Include="Content\govuk_toolkit\images\icon-steps\icon-step-9.png" />
+    <Content Include="Content\govuk_toolkit\images\player-icon-forward.png" />
+    <Content Include="Content\govuk_toolkit\images\player-icon-pause.png" />
+    <Content Include="Content\govuk_toolkit\images\player-icon-play.png" />
+    <Content Include="Content\govuk_toolkit\images\player-icon-rewind.png" />
+    <Content Include="Content\govuk_toolkit\images\player-icon-volume.png" />
+    <Content Include="Content\weee\images\sorted-ascending.png" />
+    <Content Include="Content\weee\images\sorted-descending.png" />
+    <Content Include="Content\weee\images\spinner.gif" />
+    <Content Include="Content\weee\_forms.scss" />
+    <Content Include="Content\weee\_panels.scss" />
     <Content Include="Global.asax" />
-    <Content Include="packages.config" />
-    <Content Include="Scripts\application.js" />
-    <Content Include="Scripts\govuk\govuk-template.js" />
-    <Content Include="Scripts\govuk\ie.js" />
-    <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Scripts\govuk_elements\application.js" />
+    <Content Include="Scripts\govuk_elements\vendor\details.polyfill.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\analytics\analytics.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\analytics\download-link-tracker.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\analytics\error-tracking.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\analytics\external-link-tracker.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\analytics\google-analytics-universal-tracker.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\analytics\print-intent.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\multivariate-test.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\primary-links.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\selection-buttons.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\stick-at-top-when-scrolling.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\stop-scrolling-at-footer.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk_toolkit.js" />
+    <Content Include="Scripts\govuk_toolkit\stageprompt.js" />
+    <Content Include="Scripts\govuk_toolkit\vendor\jquery\jquery.player.min.js" />
+    <Content Include="Scripts\govuk_toolkit\vendor\polyfills\bind.js" />
+    <Content Include="Scripts\weee-application.js" />
+    <Content Include="Scripts\custom-validation.js" />
     <Content Include="Content\weee-page-ie6.scss" />
     <Content Include="Content\weee-page-ie7.scss" />
     <Content Include="Content\weee-page-ie8.scss" />
     <Content Include="Content\weee-page.scss" />
-    <Content Include="Content\weee\forms\_form-block-labels.scss" />
-    <Content Include="Content\weee\forms\_form-date.scss" />
     <Content Include="Content\weee\forms\_form-validation.scss" />
-    <Content Include="Content\weee\_buttons.scss" />
     <Content Include="Content\weee\_details.scss" />
     <Content Include="Content\weee\_dialog.scss" />
     <Content Include="Content\weee\_display-elements.scss" />
     <Content Include="Content\weee\_errors.scss" />
-    <Content Include="Content\weee\_forms.scss" />
     <Content Include="Content\weee\_helpers.scss" />
-    <Content Include="Content\weee\_icons.scss" />
-    <Content Include="Content\weee\_weee-typography.scss" />
     <Content Include="Content\weee\_layout.scss" />
     <Content Include="Content\weee\_lists.scss" />
-    <Content Include="Content\weee\_panels.scss" />
-    <Content Include="Content\weee\_reset.scss" />
     <Content Include="Content\weee\_tables.scss" />
-    <Content Include="Content\main-ie6.scss" />
-    <Content Include="Content\main-ie7.scss" />
-    <Content Include="Content\main-ie8.scss" />
-    <Content Include="Content\main.scss" />
-    <Content Include="Content\prism.scss" />
+    <Content Include="Content\_main.scss" />
     <Content Include="Content\service-design-manual\helpers\_breadcrumbs.scss" />
     <Content Include="Content\service-design-manual\helpers\_page-header.scss" />
     <Content Include="Content\service-design-manual\styleguide\_colours.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\app\assets\stylesheets\design-patterns\_media-player.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\app\assets\stylesheets\design-patterns\_buttons.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\app\assets\stylesheets\design-patterns\_alpha-beta.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\app\assets\stylesheets\_url-helpers.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\app\assets\stylesheets\_typography.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\app\assets\stylesheets\_shims.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\app\assets\stylesheets\_measurements.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\app\assets\stylesheets\_grid_layout.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\app\assets\stylesheets\_font_stack.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\app\assets\stylesheets\_device-pixels.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\app\assets\stylesheets\_css3.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\app\assets\stylesheets\_conditionals.scss" />
-    <Content Include="Content\govuk_toolkit\stylesheets\app\assets\stylesheets\_colours.scss" />
-    <None Include="Scripts\jquery-2.1.3.intellisense.js" />
-    <Content Include="Scripts\govuk_toolkit\app\assets\javascripts\govuk\analytics\analytics.js" />
-    <Content Include="Scripts\govuk_toolkit\app\assets\javascripts\govuk\analytics\error-tracking.js" />
-    <Content Include="Scripts\govuk_toolkit\app\assets\javascripts\govuk\analytics\google-analytics-universal-tracker.js" />
-    <Content Include="Scripts\govuk_toolkit\app\assets\javascripts\govuk\analytics\print-intent.js" />
-    <Content Include="Scripts\govuk_toolkit\app\assets\javascripts\govuk\multivariate-test.js" />
-    <Content Include="Scripts\govuk_toolkit\app\assets\javascripts\govuk\primary-links.js" />
-    <Content Include="Scripts\govuk_toolkit\app\assets\javascripts\govuk\selection-buttons.js" />
-    <Content Include="Scripts\govuk_toolkit\app\assets\javascripts\govuk\stick-at-top-when-scrolling.js" />
-    <Content Include="Scripts\govuk_toolkit\app\assets\javascripts\govuk\stop-scrolling-at-footer.js" />
-    <Content Include="Scripts\govuk_toolkit\app\assets\javascripts\govuk_toolkit.js" />
-    <Content Include="Scripts\govuk_toolkit\app\assets\javascripts\stageprompt.js" />
-    <Content Include="Scripts\govuk_toolkit\app\assets\javascripts\vendor\jquery\jquery.player.min.js" />
-    <Content Include="Scripts\govuk_toolkit\app\assets\javascripts\vendor\polyfills\bind.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\stop-scrolling-at-footer.js" />
-    <Content Include="Scripts\govuk_toolkit\vendor\jquery\jquery.player.min.js" />
-    <Content Include="Scripts\govuk_toolkit\vendor\polyfills\bind.js" />
-    <Content Include="Scripts\jquery-2.1.3.js" />
-    <Content Include="Scripts\jquery-2.1.3.min.js" />
+    <Content Include="Areas\Scheme\Views\web.config" />
+    <Content Include="Content\weee\_pagination.scss" />
+    <Content Include="Content\jquery-autocomplete.scss" />
+    <Content Include="Content\weee\_summary.scss" />
+    <Content Include="Content\govuk\stylesheets\fonts\GDSTransportWebsite-Bold.eot" />
+    <Content Include="Content\govuk\stylesheets\fonts\GDSTransportWebsite.eot" />
+    <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Light.eot" />
+    <Content Include="Content\govuk\stylesheets\fonts\GDSTransportTabular-Bold.eot" />
+    <Content Include="Areas\Scheme\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Scheme\Views\MemberRegistration\SuccessfulSubmission.cshtml" />
+    <Content Include="Areas\Scheme\Views\MemberRegistration\ViewErrorsAndWarnings.cshtml" />
+    <Content Include="Areas\Admin\Views\web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\Create.cshtml" />
+    <Content Include="Areas\Test\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Test\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Test\Views\web.config" />
+    <Content Include="Areas\Test\Views\GeneratePcsXml\SelectOrganisation.cshtml" />
+    <Content Include="Areas\Test\Views\GeneratePcsXml\SpecifyOptions.cshtml" />
+    <Content Include="Areas\Test\Views\GeneratePcsXml\DownloadFile.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\AccountActivationRequired.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\AccountActivated.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\SignIn.cshtml" />
+    <Content Include="Scripts\govuk\govuk-template.js" />
+    <Content Include="Scripts\govuk\ie.js" />
+    <Content Include="Scripts\govuk\vendor\goog\webfont-debug.js" />
+    <Content Include="Areas\Admin\Views\Home\ChooseActivity.cshtml" />
+    <Content Include="Areas\Admin\Views\User\ManageUsers.cshtml" />
+    <Content Include="Areas\Admin\Views\Scheme\ManageSchemes.cshtml" />
+    <Content Include="Areas\Scheme\Views\MemberRegistration\Summary.cshtml" />
+    <Content Include="Areas\Scheme\Views\MemberRegistration\AuthorisationRequired.cshtml" />
+    <Content Include="Areas\Admin\Views\Scheme\EditScheme.cshtml" />
+    <Content Include="Areas\Admin\Views\Scheme\ConfirmRejection.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\ManageOrganisationUser.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\ViewOrganisationDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\InternalUserAuthorisationRequired.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\ResetPassword.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\ResetPasswordInstruction.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\ResetPasswordRequest.cshtml" />
+    <Content Include="Areas\Admin\Views\User\EditUser.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\ManageContactDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\AccountActivationRequested.cshtml" />
+    <Content Include="Areas\Admin\Views\Producers\Search.cshtml" />
+    <Content Include="Areas\Admin\Views\Producers\SearchResults.cshtml" />
+    <Content Include="Areas\Admin\Views\Producers\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Submissions\SubmissionsHistory.cshtml" />
+    <Content Include="Areas\Admin\Views\Submissions\_submissionsResults.cshtml" />
+    <Content Include="Areas\Admin\Views\Scheme\ManageContactDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\AccountActivationFailed.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\ResetPasswordExpired.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\ResetPasswordComplete.cshtml" />
+    <Content Include="Areas\Test\Views\ManageCache\Index.cshtml" />
+    <Content Include="Areas\Test\Views\ManageCache\CacheCleared.cshtml" />
+    <Content Include="Content\weee\_footer.scss" />
+    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
+    <Compile Include="Infrastructure\CsvFilenameFormat.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
+    <Content Include="Content\govuk_elements\_tables.scss" />
+    <Content Include="Content\govuk_elements\_reset.scss" />
+    <Content Include="Content\govuk_elements\_panels.scss" />
+    <Content Include="Content\govuk_elements\_lists.scss" />
+    <Content Include="Content\govuk_elements\_layout.scss" />
+    <Content Include="Content\govuk_elements\_icons.scss" />
+    <Content Include="Content\govuk_elements\_helpers.scss" />
+    <Content Include="Content\govuk_elements\_forms.scss" />
+    <Content Include="Content\govuk_elements\_elements-typography.scss" />
+    <Content Include="Content\govuk_elements\_details.scss" />
+    <Content Include="Content\govuk_elements\_components.scss" />
+    <Content Include="Content\govuk_elements\_buttons.scss" />
+    <Content Include="Content\govuk_elements\_breadcrumb.scss" />
+    <Content Include="Content\weee\_footer.scss" />
+    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\PCSCharges.cshtml" />
+    <Content Include="Content\govuk_elements\forms\_form-validation.scss" />
+    <Content Include="Content\govuk_elements\forms\_form-date.scss" />
+    <Content Include="Content\govuk_elements\forms\_form-block-labels.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_url-helpers.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_typography.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_shims.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_measurements.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_helpers.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_grid_layout.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_font_stack.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_device-pixels.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_css3.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_conditionals.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\_colours.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_media-player.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
+    <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
+    <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="Scripts\jquery-1.11.3.js" />
+    <Content Include="Scripts\jquery-1.11.3.min.js" />
+    <Content Include="Scripts\jquery-2.1.4.js" />
+    <Content Include="Scripts\jquery-2.1.4.min.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.min.js" />
+    <Content Include="Scripts\jquery.select-to-autocomplete.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery-2.1.4.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -443,19 +550,8 @@
     <Content Include="Scripts\vendor\details.polyfill.js" />
     <Content Include="Scripts\vendor\jquery-1.11.0.min.js" />
     <Content Include="Scripts\vendor\modernizr.custom.77028.js" />
-    <Content Include="Scripts\vendor\prism.js" />
     <Content Include="Views\Shared\_Layout.GovUK.cshtml" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTATabularNumbers-Light.woff" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTATabularNumbers-Light.eot" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTATabularNumbers-Bold.woff" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTATabularNumbers-Bold.eot" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTA-Light-20130221.woff" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTA-Light-20130221.eot" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTA-Bold-20130221.woff" />
-    <Content Include="Content\govuk\stylesheets\fonts\NTA-Bold-20130221.eot" />
-    <Content Include="Scripts\jquery-2.1.3.min.map" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Shared\_Layout.GovUK.Sections.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
@@ -465,13 +561,56 @@
     <Content Include="Views\Shared\_WeeeHeader.cshtml" />
     <Content Include="Views\Shared\_WeeeNavigation.cshtml" />
     <Content Include="Views\Shared\_WeeeTracking.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\RadioButtonStringCollectionBaseViewModel.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\SignIn.cshtml" />
     <Content Include="Views\NewUser\UserCreation.cshtml" />
-    <Content Include="Views\JoinOrganisation\SelectOrganisation.cshtml" />
-    <Content Include="Views\Home\LandingPage.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
+    <Content Include="Views\OrganisationRegistration\SearchResults.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressData.cshtml" />
+    <Content Include="Views\OrganisationRegistration\MainContactPerson.cshtml" />
+    <Content Include="Views\OrganisationRegistration\PartnershipDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\RegisteredCompanyDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\Type.cshtml" />
+    <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddress.cshtml" />
+    <Content Include="Views\OrganisationRegistration\OrganisationAddress.cshtml" />
+    <Content Include="Views\OrganisationRegistration\JoinOrganisation.cshtml" />
+    <Content Include="Views\OrganisationRegistration\JoinOrganisationConfirmation.cshtml" />
+    <Content Include="Views\OrganisationRegistration\ReviewOrganisationDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\RegisteredOfficeAddressPrepopulate.cshtml" />
+    <Content Include="Views\Account\AccountActivated.cshtml" />
+    <Content Include="Views\Account\AccountActivationRequired.cshtml" />
+    <Content Include="Views\Organisation\PendingOrganisations.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\ChooseActivity.cshtml" />
+    <Content Include="Areas\Scheme\Views\MemberRegistration\XmlHasNoErrors.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\StringGuidRadioButtons.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\ManageOrganisationUsers.cshtml" />
+    <Content Include="Views\Errors\CookieError.cshtml" />
+    <Content Include="Views\Errors\InternalError.cshtml" />
+    <Content Include="Views\Errors\NotFound.cshtml" />
+    <Content Include="Views\Errors\AccessDenied.cshtml" />
+    <Content Include="Views\Errors\Error.cshtml" />
+    <Content Include="Views\Shared\_WeeeTitle.cshtml" />
+    <Content Include="Views\NewUser\TermsAndConditions.cshtml" />
+    <Content Include="Views\NewUser\Privacy.cshtml" />
+    <Content Include="Views\Home\Robots.cshtml" />
+    <Content Include="Views\Organisation\YourOrganisations.cshtml" />
+    <Content Include="Views\Organisation\_Pending.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordRequest.cshtml" />
+    <Content Include="Views\Account\ResetPasswordInstruction.cshtml" />
+    <Content Include="Views\NewUser\Cookies.cshtml" />
+    <Content Include="Views\NewUser\Feedback.cshtml" />
+    <Content Include="Views\Shared\_Layout.GovUK.Sections.WithoutFeedbackBanner.cshtml" />
+    <Content Include="Views\Shared\_PrivacyPolicy.cshtml" />
+    <Content Include="Views\Shared\_CompetentAuthoritiesContactDetails.cshtml" />
+    <Content Include="Views\OrganisationRegistration\Search.cshtml" />
+    <Content Include="Views\Account\AccountActivationRequested.cshtml" />
+    <Content Include="Views\Account\AccountActivationFailed.cshtml" />
+    <Content Include="Views\Account\ResetPasswordExpired.cshtml" />
+    <Content Include="Views\Account\ResetPasswordComplete.cshtml" />
+    <Content Include="Views\OrganisationRegistration\UserAlreadyAssociatedWithOrganisation.cshtml" />
+    <Content Include="Views\OrganisationRegistration\CreateGuidance.cshtml" />
+    <Content Include="Views\OrganisationRegistration\Confirmation.cshtml" />
+    <Content Include="Views\Shared\_ViewOrganisationDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -480,26 +619,125 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\govuk_toolkit\govuk\multivariate-test.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\primary-links.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\selection-buttons.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk\stick-at-top-when-scrolling.js" />
-    <Content Include="Scripts\govuk_toolkit\govuk_toolkit.js" />
-    <Content Include="Scripts\govuk_toolkit\stageprompt.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutofacBootstrapper.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IReturnUrlMapping.cs" />
     <Compile Include="App_Start\Modules\ApiClientModule.cs" />
+    <Compile Include="App_Start\Modules\FileConverterModule.cs" />
+    <Compile Include="App_Start\PrsdCookieAuthenticationProvider.cs" />
+    <Compile Include="App_Start\ReturnUrlMapping.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Infrastructure\OrganisationRequiredAttribute.cs" />
+    <Compile Include="App_Start\TrimModelBinder.cs" />
+    <Compile Include="App_Start\WeeeCookieAuthenticationProvider.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
+    <Compile Include="Areas\Admin\Controllers\Base\AdminController.cs" />
+    <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProducersController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Account\InternalUserAuthorizationRequiredViewModel.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SchemeController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Account\InternalLoginViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Account\InternalUserCreationViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Home\InternalUserActivity.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Home\InternalUserActivityViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Account\ResetPasswordModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Account\ResetPasswordRequestViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\DetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\SearchResultsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\SearchViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmRejectionViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmSchemeRejection.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Scheme\ManageContactDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Scheme\ManageSchemesViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\User\ManageUsersViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\User\EditUserViewModel.cs" />
+    <Compile Include="Areas\Scheme\Controllers\MemberRegistrationController.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\AddOrAmendMembersViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\LatestMemberUploadViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\AuthorizationRequiredViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\OrganisationUserViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\SuccessfulSubmissionViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Scheme\SchemeViewModel.cs" />
+    <Compile Include="ViewModels\Shared\Scheme\ViewOrganisationDetailsViewModel.cs" />
+    <Compile Include="Areas\Test\Controllers\ManageCacheController.cs" />
+    <Compile Include="Areas\Test\Controllers\GeneratePcsXmlController.cs" />
+    <Compile Include="Areas\Test\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Test\TestAreaRegistration.cs" />
+    <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SpecifyOptionsViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\HomeViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SelectOrganisationViewModel.cs" />
+    <Compile Include="Authorization\LoginResult.cs" />
+    <Compile Include="Authorization\AuthorizationState.cs" />
+    <Compile Include="Controllers\Base\ExternalSiteController.cs" />
+    <Compile Include="Controllers\ErrorsController.cs" />
+    <Compile Include="Controllers\OrganisationController.cs" />
+    <Compile Include="Extensions\ControllerExtensions.cs" />
+    <Compile Include="Filters\AuthorizeClaimsAttribute.cs" />
+    <Compile Include="Infrastructure\AntiForgeryErrorFilter.cs" />
+    <Compile Include="Infrastructure\AreaRegistrationContextExtensions.cs" />
+    <Compile Include="Infrastructure\AuthorizationContextExtensions.cs" />
+    <Compile Include="Infrastructure\Paging\GenericPager.cs" />
+    <Compile Include="Infrastructure\Paging\GenericPagerOptionsBuilder.cs" />
+    <Compile Include="Infrastructure\Paging\Pager.cs" />
+    <Compile Include="Infrastructure\Paging\PagerOptionsBuilder.cs" />
+    <Compile Include="Infrastructure\Paging\PagerOptions.cs" />
+    <Compile Include="Infrastructure\Paging\PaginationLink.cs" />
+    <Compile Include="Infrastructure\Paging\PagerExtension.cs" />
+    <Compile Include="Infrastructure\RouteCollectionExtensions.cs" />
+    <Compile Include="Infrastructure\RouteValueDictionaryExtensions.cs" />
+    <Compile Include="Infrastructure\UserAccountActivationAttribute.cs" />
+    <Compile Include="Infrastructure\WeeeRequiredAttributeAdapter.cs" />
+    <Compile Include="RazorHelpers\RadioButtonLayout.cs" />
+    <Compile Include="RazorHelpers\RadioButtonLegend.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.ProgressiveDisclosure.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.ActionLink.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.Label.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.RadioButtons.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.Tables.cs" />
+    <Compile Include="RazorHelpers\WeeeGdsExtensions.cs" />
+    <Compile Include="Requests\Base\IRequestCreator.cs" />
+    <Compile Include="Requests\Base\RequestCreator.cs" />
+    <Compile Include="Requests\IPartnershipDetailsRequestCreator.cs" />
+    <Compile Include="Requests\IRegisteredCompanyDetailsRequestCreator.cs" />
+    <Compile Include="Requests\ISoleTraderDetailsRequestCreator.cs" />
+    <Compile Include="Requests\PartnershipDetailsRequestCreator.cs" />
+    <Compile Include="Requests\RegisteredCompanyDetailsRequestCreator.cs" />
+    <Compile Include="Requests\SoleTraderDetailsRequestCreator.cs" />
+    <Compile Include="Services\BreadcrumbService.cs" />
+    <Compile Include="Services\Caching\Cache.cs" />
+    <Compile Include="Services\Caching\CacheResult.cs" />
+    <Compile Include="Services\Caching\ICacheProvider.cs" />
+    <Compile Include="Services\Caching\InMemoryCacheProvider.cs" />
+    <Compile Include="Services\Caching\IWeeeCache.cs" />
+    <Compile Include="Services\Caching\SingleItemCache.cs" />
+    <Compile Include="Services\Caching\WeeeCache.cs" />
+    <Compile Include="Services\ExternalRouteService.cs" />
+    <Compile Include="Services\FileConverterService.cs" />
+    <Compile Include="Services\IAppConfiguration.cs" />
+    <Compile Include="Areas\Scheme\Controllers\HomeController.cs" />
+    <Compile Include="Services\IFileConverterService.cs" />
+    <Compile Include="Authorization\IWeeeAuthorization.cs" />
+    <Compile Include="Authorization\WeeeAuthorization.cs" />
+    <Compile Include="ViewModels\Account\ResetPasswordModel.cs" />
+    <Compile Include="Services\IExternalRouteService.cs" />
+    <Compile Include="ViewModels\Account\AccountActivationRequestViewModel.cs" />
+    <Compile Include="ViewModels\Account\ResetPasswordRequestViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\JoinOrganisationViewModel.cs" />
+    <Compile Include="Controllers\OrganisationRegistrationController.cs" />
+    <Compile Include="Areas\Scheme\SchemeAreaRegistration.cs" />
     <Compile Include="Infrastructure\TokenResponseExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\RegistrationController.cs" />
+    <Compile Include="Controllers\NewUserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -510,23 +748,48 @@
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
-    <Compile Include="ViewModels\Home\IndexViewModel.cs" />
+    <Compile Include="ViewModels\NewUser\FeedbackOptions.cs" />
+    <Compile Include="ViewModels\NewUser\FeedbackViewModel.cs" />
     <Compile Include="ViewModels\NewUser\UserCreationViewModel.cs" />
-    <Compile Include="ViewModels\JoinOrganisation\OrganisationViewModel.cs" />
-    <Compile Include="ViewModels\JoinOrganisation\SelectOrganisationViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\PartnershipDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\RegisteredCompanyDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Details\SoleTraderDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\ContactPersonViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\JoinOrganisationConfirmationViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\SearchResultsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\SearchViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\OrganisationSummaryViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\AddressPrepopulateViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\UserAlreadyAssociatedWithOrganisationViewModel.cs" />
+    <Compile Include="ViewModels\Organisation\PendingOrganisationsViewModel.cs" />
+    <Compile Include="ViewModels\Organisation\YourOrganisationsViewModel.cs" />
+    <Compile Include="ViewModels\OrganisationRegistration\Type\OrganisationTypeViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\ChooseActivityViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\PcsAction.cs" />
+    <Compile Include="Infrastructure\Paging\PaginationModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\OrganisationUsersViewModel.cs" />
+    <Compile Include="ViewModels\Shared\KeyValueRadioButtons.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonCollectionViewModel.cs" />
+    <Compile Include="ViewModels\Shared\RadioButtonGenericStringCollectionViewModel.cs" />
+    <Compile Include="ViewModels\Shared\RadioButtonPair.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionBaseViewModel.cs" />
     <Compile Include="ViewModels\Shared\AddressViewModel.cs" />
-    <Compile Include="ViewModels\Shared\ContactPersonViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionOptionalViewModel.cs" />
+    <Compile Include="ViewModels\Shared\StringGuidRadioButtons.cs" />
+    <Compile Include="ViewModels\Shared\TitleViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\MemberUploadResultViewModel.cs" />
     <Compile Include="Views\Shared\ViewBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.Api.Client\EA.Weee.Api.Client.csproj">
       <Project>{b772429d-709e-4978-b105-a54606acc29a}</Project>
       <Name>EA.Weee.Api.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
+      <Project>{75EFEE66-9358-4DE4-9A84-E7191EEC7DB8}</Project>
+      <Name>EA.Weee.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
       <Project>{87FBB5CC-A732-4363-A158-39DBF3707407}</Project>
@@ -567,7 +830,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52657</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:52655/</IISUrl>
+          <IISUrl>https://localhost:44300/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -588,6 +851,7 @@
   </Target>
   <Import Project="..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.Error.MSBuild.1.0.0\build\StyleCop.Error.MSBuild.Targets')" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -595,4 +859,24 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="BeforeBuild">
+    <!-- Compile sass files -->
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page.scss &gt; Content\weee-page.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie6.scss &gt; Content\weee-page-ie6.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie7.scss &gt; Content\weee-page-ie7.css" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie8.scss &gt; Content\weee-page-ie8.css" />
+    <!-- Include css files as content -->
+    <CreateItem Include="Content\weee-page.css">
+      <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="Content\weee-page-ie6.css">
+      <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="Content\weee-page-ie7.css">
+      <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="Content\weee-page-ie8.css">
+      <Output ItemName="Content" TaskParameter="Include" />
+    </CreateItem>
+  </Target>
 </Project>

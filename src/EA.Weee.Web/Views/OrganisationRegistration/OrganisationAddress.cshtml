@@ -1,0 +1,29 @@
+﻿@model EA.Weee.Web.ViewModels.Shared.AddressViewModel
+@{
+    ViewBag.Title = "Organisation contact details";
+}
+@section main_content
+    {
+    <header class="hgroup">
+        <h1 class="heading-large">
+            How can we get in touch with your main contact person?
+        </h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div style="margin-bottom: 1.66667em;">
+            <p>We need the contact details for your nominated day-to-day contact person.</p>
+        </div>
+
+
+        @Html.EditorFor(m => m.Address)
+
+        <div class="form-group">
+            <input id="continue" type="submit" class="button" value="Continue" />
+        </div>
+    }
+}

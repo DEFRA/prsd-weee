@@ -12,21 +12,22 @@
     public class WeeeClient : IWeeeClient
     {
         private readonly HttpClient httpClient;
-        private INewUser newUser;
+        private IUnauthenticatedUser user;
 
-        public WeeeClient(string baseUrl)
+        public WeeeClient(string baseUrl, TimeSpan timeout)
         {
             var baseUri = new Uri(baseUrl);
 
             httpClient = new HttpClient
             {
-                BaseAddress = new Uri(baseUri, "/api/")
+                BaseAddress = new Uri(baseUri, "/api/"),
+                Timeout = timeout
             };
         }
 
-        public INewUser NewUser
+        public IUnauthenticatedUser User
         {
-            get { return newUser ?? (newUser = new NewUser(httpClient)); }
+            get { return user ?? (user = new UnauthenticatedUser(httpClient)); }
         }
 
         public async Task<TResult> SendAsync<TResult>(IRequest<TResult> request)
@@ -55,7 +56,16 @@
 
             var response = await httpClient.PostAsJsonAsync("Send", apiRequest).ConfigureAwait(false);
 
-            var result = await response.CreateResponseAsync<TResult>().ConfigureAwait(false);
+            TResult result;
+            try
+            {
+                result = await response.CreateResponseAsync<TResult>().ConfigureAwait(false);
+            }
+            catch (ApiException ex)
+            {
+                string message = string.Format("{0}: {1}", ex.Message, ex.ErrorData.ExceptionMessage);
+                throw new Exception(message);
+            }
 
             return result;
         }
