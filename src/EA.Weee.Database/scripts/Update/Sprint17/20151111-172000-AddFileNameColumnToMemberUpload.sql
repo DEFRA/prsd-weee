@@ -1,0 +1,2 @@
+﻿ALTER TABLE [PCS].MemberUpload
+ADD FileName NVARCHAR(MAX) 

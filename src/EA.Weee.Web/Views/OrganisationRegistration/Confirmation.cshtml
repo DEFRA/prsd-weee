@@ -1,0 +1,27 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model string
+@{
+    ViewBag.Title = "Confirmation";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Your organisation is awaiting authorisation
+        </h1>
+    </header>
+
+    <p>You have successfully created '@Model'.</p>
+
+    <p>We will check your identity against the details we hold for your organisation and notify you once access is authorised.</p>
+
+    <p>You will not be able to register PCS members until your organisation has been authorised to use this service.</p>
+
+    <p>
+        @Html.ActionLink("Continue", "Index", "Organisation", null, new { @class = "button" })
+    </p>
+
+    <p>@this.WeeeGds().ActionLinkWithEventTracking("What did you think of this service?", "Feedback", "NewUser", "Feedback", "Organisation registration confirmation", "What did you think of this service?", new RouteValueDictionary { { "area" , string.Empty } }, newTab: true) (takes 30 seconds)</p>
+}
+

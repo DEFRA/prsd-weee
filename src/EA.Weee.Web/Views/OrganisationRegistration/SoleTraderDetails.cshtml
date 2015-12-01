@@ -1,0 +1,37 @@
+﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.Details.SoleTraderDetailsViewModel
+@{
+    ViewBag.Title = "Sole trader or individual";
+}
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">What is your business trading name?</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div class="form-group">
+            @using (this.WeeeGds().ProgressiveDisclosure("What does business trading name mean?"))
+            {
+                <p>
+                    This is either your individual name or your business name. A business name is is any name under which someone carries on business. In the case of a sole trader, it means a name other than a surname with or without forenames or initials.
+                </p> 
+            }
+        </div>
+        
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
+            @Html.Gds().LabelFor(m => m.BusinessTradingName)
+            @Html.Gds().ValidationMessageFor(m => m.BusinessTradingName)
+            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+
+        <div class="form-group">
+            <button class="button" type="submit">Continue</button>
+        </div>
+    }
+}

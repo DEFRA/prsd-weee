@@ -5,8 +5,8 @@
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
+        [Display(Name = "Email address")]
+        [EmailAddress(ErrorMessage = "The email address is not valid.")]
         public string Email { get; set; }
 
         [Required]
@@ -16,5 +16,7 @@
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+
+        public string ReturnUrl { get; set; }
     }
 }

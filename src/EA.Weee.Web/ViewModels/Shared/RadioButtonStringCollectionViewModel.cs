@@ -3,13 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Diagnostics.Eventing.Reader;
     using System.Linq;
     using System.Reflection;
 
-    public sealed class RadioButtonStringCollectionViewModel : RadioButtonStringCollectionBaseViewModel
+    public class RadioButtonStringCollectionViewModel : RadioButtonStringCollectionBaseViewModel
     {
-        [Required(ErrorMessage = "This answer is required.")]
+        [Required(ErrorMessage = "Please answer this question")]
         public override string SelectedValue { get; set; }
 
         public override IList<string> PossibleValues { get; set; }

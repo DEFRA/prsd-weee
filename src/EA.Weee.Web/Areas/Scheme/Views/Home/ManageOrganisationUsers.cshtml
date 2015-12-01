@@ -1,0 +1,35 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.OrganisationUsersViewModel
+@{
+    ViewBag.Title = "Manage organisation users";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">Which user would you like to manage?</h1>
+    </header>
+
+   @using (Html.BeginForm(actionName: "ManageOrganisationUsers", controllerName: "Home", method: FormMethod.Post))
+    {
+       @Html.Gds().ValidationSummary()
+       @Html.AntiForgeryToken()
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationUser)">
+            @this.WeeeGds().RadioButtonsFor(m => m.SelectedOrganisationUser,
+                Model.OrganisationUsers,
+                r => r.Value,
+                r => r.Key,
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        <p>
+            <input type="submit" class="button" value="Continue" />
+        </p>
+    }
+    <div>
+         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </div>
+}

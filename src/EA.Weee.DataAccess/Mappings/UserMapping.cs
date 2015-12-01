@@ -7,7 +7,9 @@
     {
         public UserMapping()
         {
-            ToTable("AspNetUsers", "Identity");
+            ToTable("AspNetUsers", "Identity")
+                .Property(p => p.Id)
+                .HasColumnName("Id");
         }
     }
 }

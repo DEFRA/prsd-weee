@@ -37,12 +37,12 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15149.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.15149-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.15310-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core.DataAccess">
-      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.15149-develop1\lib\net452\EA.Prsd.Core.DataAccess.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.DataAccess, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.15310-develop1\lib\net452\EA.Prsd.Core.DataAccess.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -59,9 +59,9 @@
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -74,9 +74,45 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntityFrameworkModule.cs" />
+    <Compile Include="EventHandlers\MemberUploadSubmittedEventHandler.cs" />
+    <Compile Include="Extensions\ProducerExtensions.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
     <Compile Include="Identity\WeeeIdentityContext.cs" />
+    <Compile Include="Mappings\CompetentAuthorityUserMapping.cs" />
+    <Compile Include="Mappings\MemberUploadErrorTypeMapping.cs" />
+    <Compile Include="Mappings\MemberUploadRawDataMapping.cs" />
+    <Compile Include="Mappings\MigratedProducerMapping.cs" />
+    <Compile Include="Mappings\SchemeStatusMapping.cs" />
+    <Compile Include="Mappings\ProducerAddressMapping.cs" />
+    <Compile Include="Mappings\ProducerAuthorisedRepresentativeMapping.cs" />
+    <Compile Include="Mappings\ProducerBrandNameMapping.cs" />
+    <Compile Include="Mappings\ProducerBusinessMapping.cs" />
+    <Compile Include="Mappings\ChargeBandAmountMapping.cs" />
+    <Compile Include="Mappings\ProducerContactMapping.cs" />
+    <Compile Include="Mappings\ContactMapping.cs" />
+    <Compile Include="Mappings\CountryMapping.cs" />
+    <Compile Include="Mappings\ErrorLevelMapping.cs" />
+    <Compile Include="Mappings\MemberUploadErrorMapping.cs" />
+    <Compile Include="Mappings\MemberUploadMapping.cs" />
+    <Compile Include="Mappings\OrganisationMapping.cs" />
+    <Compile Include="Mappings\OrganisationStatusMapping.cs" />
+    <Compile Include="Mappings\OrganisationTypeMapping.cs" />
+    <Compile Include="Mappings\OrganisationUserMapping.cs" />
+    <Compile Include="Mappings\UserStatusMapping.cs" />
+    <Compile Include="Mappings\ProducerMapping.cs" />
+    <Compile Include="Mappings\ProducerCompany.cs" />
+    <Compile Include="Mappings\ProducerPartnerMapping.cs" />
+    <Compile Include="Mappings\ProducerPartnershipMapping.cs" />
+    <Compile Include="Mappings\ProducerSISCodeMapping.cs" />
+    <Compile Include="Mappings\SchemeMapping.cs" />
+    <Compile Include="Mappings\SystemDataMapping.cs" />
+    <Compile Include="RelationshipExtensions.cs" />
+    <Compile Include="StoredProcedure\IStoredProcedures.cs" />
+    <Compile Include="StoredProcedure\MembersDetailsCSVData.cs" />
+    <Compile Include="StoredProcedure\PCSChargesCSVData.cs" />
+    <Compile Include="StoredProcedure\ProducerCSVData.cs" />
+    <Compile Include="StoredProcedure\StoredProcedures.cs" />
     <Compile Include="WeeeContext.cs" />
     <Compile Include="Mappings\AddressMapping.cs" />
     <Compile Include="Mappings\UKCompetentAuthorityMapping.cs" />

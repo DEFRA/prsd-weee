@@ -14,9 +14,9 @@
     {
         private const string SettingPrefix = "Weee.";
 
-        private AppConfiguration currentConfiguration;
+        private IAppConfiguration currentConfiguration;
 
-        public AppConfiguration CurrentConfiguration
+        public virtual IAppConfiguration CurrentConfiguration
         {
             get { return currentConfiguration ?? ResolveSettings(); }
             set { currentConfiguration = value; }

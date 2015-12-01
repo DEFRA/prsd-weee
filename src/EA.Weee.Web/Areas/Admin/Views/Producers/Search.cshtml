@@ -1,0 +1,102 @@
+﻿@using EA.Weee.Core.DataStandards
+@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.SearchViewModel
+@{
+    ViewBag.Title = "Find producer";
+}
+
+@section main_content {
+
+    <header class="hgroup">
+        <h1 class="heading-large">Find producer</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        @Html.HiddenFor(m => m.SelectedRegistrationNumber);
+        
+        <p id="introJavaScriptEnabled" style="display:none;">
+            Start typing the name or producer registration number to find a match.
+        </p>
+        <noscript>
+            <p>Type the name or producer registration number to find a match.</p>
+        </noscript>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SearchTerm)">
+            @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "visuallyhidden" })
+            @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
+            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { style = "width:100%", maxlength = CommonMaxFieldLengths.DefaultString })
+        </div>
+        
+        <p>
+            <button class="button" type="submit">Continue</button>
+        </p>
+    }
+
+    <p>
+        <a href="javascript:history.back();">Back</a>
+    </p>
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#introJavaScriptEnabled").show();
+        });
+
+        @*  When a uer selects an item from the autocomplete, the ID is stored in the hidden input
+            called "SelectedRegistrationNumber". If the user changes the value of the search term
+            after making a selected, we need to clear this hidden value.
+
+            To do this, we cannot use the change event because FireFox fires this event
+            after the autocomplete's select event completes. This clears the value immediately
+            after it is set.
+
+            To avoid this, we can store the original search term in a variable and use the focus
+            and blur events to check for a change. The variable is updated by the autocomplete
+            select event to avoid the value being cleared after a selection is made.
+        *@
+        var searchTerm = '';
+
+        $("#SearchTerm")
+            .focus(function () { searchTerm = $(this).val(); })
+            .blur(function () { if (searchTerm != $(this).val()) { $("#SelectedRegistrationNumber").val(""); } })
+            .autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("FetchSearchResultsJson")",
+                    context: document.body,
+                    data: { SearchTerm : request.term, __RequestVerificationToken : $("[name=__RequestVerificationToken]").val() },
+                    success: function (data) {
+                        response($.map(data, function (item) { return item }))
+                    }
+                });
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                $("#SearchTerm").val(ui.item.Name + ', ' + ui.item.RegistrationNumber);
+                $("#SelectedRegistrationNumber").val(ui.item.RegistrationNumber);
+                searchTerm = $("#SearchTerm").val();
+                return false;
+            },
+            open: function () {
+                $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+            },
+            close: function () {
+                $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                // Do nothing.
+            },
+
+        }).autocomplete("instance")._renderItem = function (ul, item) {
+            return $("<li></li>")
+                .data("item.autocomplete", item)
+                .append("<span>" + item.Name + "</span><span class=\"registrationNumber\">" + item.RegistrationNumber + "</span>")
+                .appendTo(ul);
+        };
+    </script>
+}

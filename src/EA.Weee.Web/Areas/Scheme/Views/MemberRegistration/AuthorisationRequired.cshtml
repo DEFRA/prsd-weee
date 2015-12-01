@@ -1,0 +1,46 @@
+﻿@using EA.Weee.Core.Shared
+@model EA.Weee.Web.Areas.Scheme.ViewModels.AuthorizationRequiredViewModel
+@{
+    ViewBag.Title = "Authorisation Required";
+}
+
+@section main_content {
+
+    @switch (Model.Status)
+    {
+        case SchemeStatus.Pending:
+            <div class="form-group">
+                <header class="hgroup">
+                    <div>
+                        <h1 class="heading-large">Your organisation is awaiting authorisation</h1>
+                    </div>
+                </header>
+                <p>
+                    You will not be able to register PCS members until your organisation has been authorised to use this service. You will be contacted by phone or email with the outcome of your request.
+                </p>
+            </div>
+            break;
+
+        case SchemeStatus.Rejected:
+        <div class="form-group">
+            <header class="hgroup">
+                <div>
+                    <h1 class="heading-large">Your organisation's authorisation has been rejected</h1>
+                </div>
+            </header>
+            <p>Unfortunately, your organisation's request to perform activities as a PCS has been rejected. Please contact us for more information.</p>
+            @Html.Partial("_CompetentAuthoritiesContactDetails", new ViewDataDictionary { { "title", "Who should I contact?" } })
+            <hr />
+        </div>
+            break;
+    }
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @area = "Scheme" }, new { @class = "button" })
+    </p>
+    @if (Model.ShowLinkToSelectOrganisation)
+    {
+        <p>
+            <a href="@Url.Action("Index", "Organisation", new { @area = "" })">Select another organisation</a>
+        </p>
+    }
+}
