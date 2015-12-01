@@ -16,6 +16,7 @@
     public class WeeeCache : IWeeeCache
     {
         private readonly ICacheProvider provider;
+        private readonly ConfigurationService configurationService;
         private readonly Func<IWeeeClient> apiClient;
 
         public Cache<Guid, string> UserNames { get; private set; }
@@ -28,10 +29,11 @@
 
         private string accessToken;
 
-        public WeeeCache(ICacheProvider provider, Func<IWeeeClient> apiClient)
+        public WeeeCache(ICacheProvider provider, Func<IWeeeClient> apiClient, ConfigurationService configService)
         {
             this.provider = provider;
             this.apiClient = apiClient;
+            this.configurationService = configService;
 
             if (HttpContext.Current.User.Identity.IsAuthenticated)
             {
@@ -48,7 +50,7 @@
             OrganisationNames = new Cache<Guid, string>(
                 provider,
                 "OrganisationName",
-                TimeSpan.FromMinutes(15),
+                TimeSpan.FromMinutes(configurationService.CurrentConfiguration.OrganisationNamesCacheDurationMins),
                 (key) => key.ToString(),
                 (key) => FetchOrganisationNameFromApi(key));
 
