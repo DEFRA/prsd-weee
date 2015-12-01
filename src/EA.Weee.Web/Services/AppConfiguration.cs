@@ -39,5 +39,8 @@
 
         [DefaultValue("false")]
         public bool EnableDataReturns { get; set; }
+
+        [DefaultValue(15.0)]
+        public double OrganisationNamesCacheDurationMins { get; set; }
     }
 }
