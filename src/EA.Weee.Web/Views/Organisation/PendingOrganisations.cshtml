@@ -1,0 +1,48 @@
+﻿@using EA.Weee.Core.Organisations
+@model EA.Weee.Web.ViewModels.Organisation.PendingOrganisationsViewModel
+@{
+    ViewBag.Title = "Organisations pending";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Your organisations:
+        </h1>
+    </header>
+
+    <table title="This table lists the organisation you have applied to perform activities for.">
+        <thead>
+            <tr>
+                <th>Organisation name</th>
+                <th>Your account status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (OrganisationUserData item in Model.InaccessibleOrganisations)
+            {
+                <tr>
+                    <td>@item.Organisation.OrganisationName</td>
+                    <td>@item.UserStatus</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br/>
+    <p>
+        If your account status is incorrect, contact your organisation's administrator.
+    </p>
+
+    @using (Html.BeginForm("SignOut", "Account", FormMethod.Post, new { id = "logoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <div>
+            <input type="submit" class="button" value="Sign out" />
+        </div>
+    }
+    <p>
+        <a href="@Url.Action("Search", "OrganisationRegistration")">Create or access another organisation</a>
+    </p>
+   
+}

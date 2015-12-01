@@ -1,0 +1,23 @@
+﻿@model EA.Weee.Web.ViewModels.Shared.PagingViewModel
+
+<ul class="previous-next-navigation">
+    @if (Model.PreviousPage >= 1)
+    {
+        <li class="previous">
+            <a href="@Model.PreviousPageLink">
+                Previous page
+                <span class="page-numbers">@Model.PreviousPage of @Model.TotalPages</span>
+            </a>
+        </li>
+    }
+
+    @if (Model.NextPage <= Model.TotalPages)
+    {
+        <li class="next">
+            <a href="@Model.NextPageLink">
+                Next page
+                <span class="page-numbers">@Model.NextPage of @Model.TotalPages</span>
+            </a>
+        </li>
+    }
+</ul>

@@ -1,0 +1,61 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.OrganisationUserViewModel
+@{
+    ViewBag.Title = "Manage organisation user";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">Change the user's status</h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "ManageOrganisationUser", controllerName: "Home", method: FormMethod.Post))
+    {  
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        @Html.HiddenFor(m => m.UserId)
+        @Html.HiddenFor(m => m.OrganisationUserId)
+        @Html.HiddenFor(m => m.Firstname)
+        @Html.HiddenFor(m => m.Lastname)
+        @Html.HiddenFor(m => m.Username)
+        @Html.HiddenFor(m => m.UserStatus)
+
+        <div class="form-group">
+            <table>
+                <caption><span class="hidden-for-screen-reader">User Details</span></caption>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Current status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span style="font-family: 'Arial Bold', 'Arial'; font-weight: 700; color: #0B0C0C;">@Html.DisplayFor(m => m.Firstname) @Html.DisplayFor(m => m.Lastname)</span></td>
+                    <td>
+                        <a href="mailto:@Html.DisplayFor(m => m.Username)" target="_top">@Html.DisplayFor(m => m.Username)</a>
+                    </td>
+                    <td><span style="font-family: 'Arial'; font-weight: 400; color: #6F777B;">@Html.DisplayFor(m => m.UserStatus)</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Change the user's status",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        <p>
+            <button class="button" type="submit">Continue</button>
+        </p>
+    }
+}

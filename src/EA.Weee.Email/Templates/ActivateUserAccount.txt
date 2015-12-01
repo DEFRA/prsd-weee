@@ -1,0 +1,24 @@
+﻿Activate your user account
+
+Hello,
+
+Your user account has been created on the Waste Electrical and Electronic Equipment (WEEE) service.
+
+To use this service you need to click activate your account: @Model.ActivationUrl 
+
+If you didn’t create a user account you don’t need to take any action.
+
+This is an automated email; do not reply.
+
+If you have any enquiries, contact your relevant helpline:
+
+- Environment Agency (England): 03708 506506
+
+- Scottish Environment Protection Agency: 01786 457700
+
+- Northern Ireland Environment Agency: 02 890 569338
+
+- Natural Resources Wales: 03000 65 3096
+
+Regards,
+WEEE Team

@@ -1,0 +1,60 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Shared
+@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.ManageSchemesViewModel
+@{
+    ViewBag.Title = "Manage PCSs";
+}
+
+@section scripts{
+    <script>
+        $('#idManageSchemesTable tr').click(function () {
+            $(this).find('td input[type=radio]').prop('checked', true);
+        })
+    </script>
+}
+
+<header class="hgroup">
+    <h1 class="heading-large">
+        Which PCS would you like to manage?
+    </h1>
+</header>
+@using (Html.BeginForm(actionName: "ManageSchemes", controllerName: "Scheme", method: FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.Gds().ValidationSummary()
+    <div class="table-hr"></div>
+    <table id="idManageSchemesTable" class="prsd-table hover-effect">
+        <thead>
+            <tr>
+                <th>Organisation name</th>
+                <th>Scheme name</th>
+                <th>Status</th>
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var scheme in Model.Schemes)
+            {
+                <tr>
+                    <td width="100%">@scheme.Name</td>
+                    <td>
+                        @if (scheme.SchemeStatus == SchemeStatus.Approved)
+                        {
+                            @scheme.SchemeName
+                        }
+                    </td>
+                    <td>@scheme.SchemeStatus</td>
+                    <td>@Html.RadioButtonFor(m => m.Selected, @scheme.Id)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    <div class="form-group">
+        <input type="submit" class="button" value="Continue" />
+    </div>
+    <p>
+        <a href="javascript:history.back();">Back</a>
+    </p>
+}
+

@@ -1,33 +1,26 @@
 ﻿namespace EA.Weee.Domain
 {
-    using Prsd.Core.Domain;
-
-    public class UKCompetentAuthority : Enumeration
+    using System;
+    public class UKCompetentAuthority
     {
-        public static readonly UKCompetentAuthority England = new UKCompetentAuthority(1, "Environment Agency", "EA");
+        public Guid Id { get; private set; }
 
-        public static readonly UKCompetentAuthority Scotland = new UKCompetentAuthority(2,
-            "Scottish Environment Protection Agency", "SEPA");
+        public string Name { get; private set; }
 
-        public static readonly UKCompetentAuthority NorthernIreland = new UKCompetentAuthority(3,
-            "Northern Ireland Environment Agency", "NIEA");
+        public string Abbreviation { get; private set; }
+ 
+        public virtual Country Country { get; protected set; }
 
-        public static readonly UKCompetentAuthority Wales = new UKCompetentAuthority(4, "Natural Resources Wales", "NRW");
-        private readonly string shortName;
-
-        private UKCompetentAuthority()
+        protected UKCompetentAuthority()
         {
         }
 
-        private UKCompetentAuthority(int value, string displayName, string shortName)
-            : base(value, displayName)
+        public UKCompetentAuthority(Guid id, string name, string abbreviation, Country country)
         {
-            this.shortName = shortName;
-        }
-
-        public string ShortName
-        {
-            get { return shortName; }
+            Id = id;
+            Name = name;
+            Abbreviation = abbreviation;
+            Country = country;
         }
     }
 }

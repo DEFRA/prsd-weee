@@ -42,6 +42,7 @@
           <Value>to</Value>
           <Value>ui</Value>
           <Value>vs</Value>
+	  <Value>uk</Value>
         </CollectionProperty>
       </AnalyzerSettings>
     </Analyzer>

@@ -1,0 +1,30 @@
+﻿@model EA.Weee.Web.Maintenance.ViewModels.MaintenanceViewModel
+
+<p hidden="hidden">Maintenance mode: @System.Configuration.ConfigurationManager.AppSettings["Weee.MaintenanceMode"]</p>
+
+@section main_content {
+
+    <header class="hgroup">
+        <div>
+            <h1 class="heading-large">Sorry, the WEEE service is unavailable</h1>
+        </div>
+    </header>
+    <p class="text">Our service will be available again shortly. If you have an urgent query, please contact us.</p>
+
+    <details>
+        <summary>
+            <span class="summary">Who should I contact?</span>
+        </summary>
+        <div class="panel-indent">
+            <h2 class="heading-small">England</h2>
+            <p>Environment Agency<br />Producer Responsibility Regulatory Services<br />Telephone:03708 506 506</p>
+
+            <h2 class="heading-small">Northern Ireland</h2>
+            <p>Northern Ireland Environment Agency<br />Producer Responsibility Unit<br />Telephone: 02 890 569338</p>
+            <h2 class="heading-small">Scotland</h2>
+            <p>Scottish Environment Protection Agency<br />Producer Compliance and Waste Shipments Unit<br />Telephone: 01786 457700</p>
+            <h2 class="heading-small">Wales</h2>
+            <p>Natural Resources Wales<br />Producer Responsibility Unit<br />Telephone: 03000 65 3096</p>
+        </div>
+    </details>
+}

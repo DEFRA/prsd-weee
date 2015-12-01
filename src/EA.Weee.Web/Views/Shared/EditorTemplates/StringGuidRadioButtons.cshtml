@@ -1,0 +1,29 @@
+﻿@model EA.Weee.Web.ViewModels.Shared.StringGuidRadioButtons
+@{
+    var modelMetadata = ViewData.ModelMetadata;
+}
+@if (Model != null)
+{
+    @Html.Gds().ValidationMessageFor(model => model.Selected, "Please answer this question")
+    <fieldset>
+        @if (!String.IsNullOrEmpty(modelMetadata.DisplayName))
+        {
+            <legend>@modelMetadata.DisplayName</legend>
+        }
+
+        @for (int i = 0; i < Model.PossibleValues.Count; i++)
+        {
+            MvcHtmlString nameForThisValue = Html.NameFor(m => m.PossibleValues[i].Value);
+
+            <label for="@nameForThisValue" class="block-label">
+                @Html.HiddenFor(m => m.PossibleValues[i].Key)
+                @Html.HiddenFor(m => m.PossibleValues[i].Value)
+
+                @Html.RadioButtonFor(m => m.SelectedValue, Model.PossibleValues[i].Value,
+                 htmlAttributes: new { id = nameForThisValue })
+
+                @Html.DisplayFor(m => m.PossibleValues[i].Key)
+            </label>
+        }
+    </fieldset>
+}

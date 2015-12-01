@@ -1,17 +1,20 @@
 ﻿namespace EA.Weee.Api.Controllers
 {
-    using System;
-    using System.Net;
-    using System.Security;
-    using System.Security.Authentication;
-    using System.Threading.Tasks;
-    using System.Web.Http;
     using EA.Prsd.Core.Mediator;
     using EA.Prsd.Core.Web.ApiClient;
     using Elmah;
     using Infrastructure;
     using Newtonsoft.Json;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Security;
+    using System.Security.Authentication;
+    using System.Threading.Tasks;
+    using System.Web.Http;
 
+    [RoutePrefix("api")]
     public class MediatorController : ApiController
     {
         private readonly IMediator mediator;
@@ -30,6 +33,20 @@
         [Route("Send")]
         public async Task<IHttpActionResult> Send(ApiRequest apiRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                // We need to check here that the ModelState is valid. Some infrastructury low-level
+                // wizardry may have caused the apiRequest parameter to be provided as null.
+                // For example, if the JSON request exceeds the maximum request size.
+                IEnumerable<string> errorMessages = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => (e.Exception != null) ? e.Exception.Message : e.ErrorMessage);
+
+                string message = string.Join(" ", errorMessages);
+
+                throw new Exception(message);
+            }
+            
             var typeInformation = new RequestTypeInformation(apiRequest);
 
             var result = JsonConvert.DeserializeObject(apiRequest.RequestJson, typeInformation.RequestType);

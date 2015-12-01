@@ -1,0 +1,22 @@
+﻿Your request to access a WEEE organisation
+
+Hello,
+
+@Model.OrganisationName has @(Model.Approved ? "authorised" : "rejected") your request to access the Waste Electrical and Electronic Equipment (WEEE) online service on their behalf.
+
+@(Model.Approved ? string.Format("Sign in to the WEEE online service to perform activities at {0}", @Model.ExternalUserLoginUrl) : "If you have any queries about this rejection, please contact the organisation's administrator.") 
+
+This is an automated email; do not reply.
+
+@(Model.Approved ? "If you have any enquiries, contact your relevant helpline:" : "If you have any other enquiries, contact your relevant helpline:") 
+
+- Environment Agency (England): 03708 506506
+
+- Scottish Environment Protection Agency: 01786 457700
+
+- Northern Ireland Environment Agency: 02 890 569338
+
+- Natural Resources Wales: 03000 65 3096
+
+Regards,
+WEEE Team

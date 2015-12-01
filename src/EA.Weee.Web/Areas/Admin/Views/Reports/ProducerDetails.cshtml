@@ -1,0 +1,34 @@
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.ReportsFilterViewModel
+@{
+    ViewBag.Title = "Producer details";
+}
+
+@section main_content {
+
+<header class="hgroup">
+        <h1 class="heading-large">Download producer details</h1>
+    </header>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.FilterbyScheme)
+        <p>Your report will contain the latest details registered for each producer based on the criteria you select. All producer details provided by the PCS in their XML file will be available.</p>
+        <p>Select the relevant criteria for your report. Your results will be provided as a CSV file download.</p>
+
+        @Html.Partial("_ReportSearchFilters")
+    
+        <p class="small">
+            If your selection criteria is broad, it may take a while to download your results.
+        </p>
+        <p>
+            <input type="submit" value="Download" class="button" />
+        </p>
+    }
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+    <p>
+        <a href="javascript:history.back();">Back</a>
+    </p>
+}

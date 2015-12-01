@@ -1,0 +1,23 @@
+﻿namespace EA.Weee.Web.Infrastructure
+{
+    using System.Web.Mvc;
+
+    public sealed class AntiForgeryErrorFilter : FilterAttribute, IExceptionFilter
+    {
+        public void OnException(ExceptionContext context)
+        {
+            if (context.Exception is HttpAntiForgeryException)
+            {
+                context.HttpContext.Response.Clear();
+                context.HttpContext.Response.TrySkipIisCustomErrors = true;
+                context.HttpContext.Response.StatusCode = 400;
+                context.Result = new ViewResult
+                {
+                    ViewName = "~/Views/Errors/CookieError.cshtml"
+                };
+
+                context.ExceptionHandled = true;
+            }
+        }
+    }
+}

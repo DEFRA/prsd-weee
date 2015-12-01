@@ -1,0 +1,37 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.SuccessfulSubmissionViewModel
+@{
+    ViewBag.Title = "Successful Submission";
+}
+
+@section main_content {
+    <header class="hgroup">
+        <div>
+            <h1 class="heading-large">You have successfully submitted your XML file</h1>
+        </div>
+    </header>
+
+    @using (Html.BeginForm("SignOut", "Account", new { Area = "" }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <p>You can now download an overview of your 
+           @(this.WeeeGds().ActionLinkWithEventTracking("current members (CSV, less than 500KB)", "GetProducerCSV", "MemberRegistration",
+                           "Downloads", "Registered members CSV", routeValues: new RouteValueDictionary(new { pcsId = @Model.PcsId, complianceYear = @Model.ComplianceYear }))).
+            In it you'll find the notification of all your registered PCS members and their producer registration numbers.</p>
+        <p>We will send an invoice for any producer registration charges to your organisation's contact.</p>
+        <p>If you have finished performing tasks you can <span id="log-off-link"><noscript><input type="submit" value="sign out" /></noscript></span> or proceed to perform more activities.</p>
+    }
+
+    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
+
+    <p>
+        @this.WeeeGds().ActionLinkWithEventTracking("What did you think of this service?", "Feedback", "NewUser", "Feedback", "Successful XML submission", "What did you think of this service?", new RouteValueDictionary { { "area", string.Empty } }, newTab: true)
+        (takes 30 seconds)
+    </p>
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $("#log-off-link").html("<a href=\"#\" onclick=\"$(this).closest('form').submit();\">sign out</a>");
+    </script>
+}
