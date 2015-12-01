@@ -27,5 +27,7 @@
         string DonePageUrl { get; set; }
 
         bool EnableDataReturns { get; set; }
+
+        double OrganisationNamesCacheDurationMins { get; set; }
     }
 }
