@@ -37,6 +37,8 @@
 
         private const string ErrorInXmlDocumentPattern = @"^There is an error in XML document \(([0-9]*)\,\s([0-9]*)\)\.$";
 
+        private const string UniqueKeyConstraintPattern = @"There is a duplicate key sequence '[^']*' for the '[^']*' key or unique identity constraint.$";
+
         public string MakeFriendlyErrorMessage(string message, string schemaVersion)
         {
             return MakeFriendlyErrorMessage(null, message, -1, schemaVersion);
@@ -90,6 +92,10 @@
                 lineNumber = int.Parse(match.Groups["LineNumber"].Value);
                 resultErrorMessage = "Your XML file is not encoded correctly. Check for any characters which need to be encoded. For example, replace ampersand (&) characters with &amp;.";
             }
+            else if (Regex.IsMatch(message, UniqueKeyConstraintPattern))
+            {
+                resultErrorMessage = MakeFriendlyErrorUniqueKeyMessage(sender, message);
+            }
 
             var registrationNo = GetRegistrationNumber(sender);
             var registrationNoText = !string.IsNullOrEmpty(registrationNo) ? string.Format("Producer {0}: ", registrationNo) : string.Empty;
@@ -104,6 +110,12 @@
             }
 
             return string.Format("{0}{1}{2}", registrationNoText, resultErrorMessage, lineNumberText);
+        }
+
+        private string MakeFriendlyErrorUniqueKeyMessage(XElement sender, string message)
+        {
+            var constraintWhichFailed = Regex.Match(message, UniqueKeyConstraintPattern).Groups[0].ToString();
+            return string.Format("There is duplicate value '{0}' for child element of '{1}'.", sender.Value, sender.Name.LocalName);
         }
 
         private static bool TestRegex(string message, Regex regex, out Match match)
