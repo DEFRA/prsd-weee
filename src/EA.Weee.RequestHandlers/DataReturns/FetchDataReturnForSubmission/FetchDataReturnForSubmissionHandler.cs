@@ -49,9 +49,13 @@
                 .Select(e => new DataReturnError(e.Description))
                 .ToList();
 
+            // TODO: Determine the correct quarter for the data return.
+            Quarter quarter = new Quarter(2016, QuarterType.Q2);
+
             return new DataReturnForSubmission(
                 dataReturn.Id,
                 dataReturn.Scheme.OrganisationId,
+                quarter,
                 warnings,
                 errors);
         }

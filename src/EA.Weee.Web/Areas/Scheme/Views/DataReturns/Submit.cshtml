@@ -1,7 +1,193 @@
-﻿
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.DataReturns
+@model EA.Weee.Web.Areas.Scheme.ViewModels.DataReturns.SubmitViewModel
 @{
-    ViewBag.Title = "Submit";
+    ViewBag.Title = "Submit Data Return";
+
+    bool hasErrors = Model.DataReturn.Errors.Any();
+    bool hasWarnings = Model.DataReturn.Warnings.Any();
+
+    int errorCount = Model.DataReturn.Errors.Count;
+    int warningCount = Model.DataReturn.Warnings.Count;
+
+    string errorText = (errorCount != 1 ? "errors" : "error");
+    string warningText = (warningCount != 1 ? "warnings" : "warning");
 }
 
-<h2>Submit</h2>
+@section main_content {
 
+    <header class="hgroup">
+        @if (hasErrors)
+        {
+            if (hasWarnings)
+            {
+                <h1 class="heading-large">
+                    Your XML file contains @errorCount @errorText and @warningCount @warningText
+                </h1>
+            }
+            else
+            {
+                <h1 class="heading-large">
+                    Your XML file contains @errorCount @errorText
+                </h1>
+            }
+        }
+        else
+        {
+            <h1 class="heading-large">
+                Your file has passed our validation checks
+            </h1>
+        }
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        if (hasErrors)
+        {
+            <h2 class="heading-medium">You must rectify all errors in order to successfully upload your file.</h2>
+            <p>
+                Errors are problems with the XML file structure and content, which prevent our system from validating your file.
+                All errors must be rectified before we can continue our validation process. You may see several error messages
+                before you can submit your file.
+            </p>
+        }
+        else
+        {
+            <p>
+                Your XML file has passed our technical validation checks but we are unable to verify that all of the information in your file is correct.
+            </p>
+        }
+
+        if (hasWarnings)
+        {
+            <p>
+                @if (!hasErrors)
+                {
+                    <span>Your XML file contains @warningCount @warningText.</span>
+                }
+                <span>
+                    Warnings are displayed when your file contains an unexpected value. You must review all warnings.
+                    Make any necessary corrections to your file before trying to submit again, or if you are happy with
+                    its content, you can submit your file with warnings.
+                </span>
+            </p>
+        }
+
+        if (hasErrors)
+        {
+            <details>
+                <summary class="error-details-summary bold-small">View @errorCount @errorText</summary>
+                <div class="error-list-container">
+                    <ul>
+                        @foreach (DataReturnError error in Model.DataReturn.Errors)
+                        {
+                            <li class="error-list-item font-xsmall">@error.Description</li>
+                        }
+                    </ul>
+                </div>
+            </details>
+        }
+
+        if (hasWarnings)
+        {
+            <details>
+                <summary class="warning-details-summary bold-small">View @warningCount @warningText</summary>
+                <div class="warning-list-container">
+                    <ul>
+                        @foreach (DataReturnWarning warning in Model.DataReturn.Warnings)
+                        {
+                            <li class="error-list-item font-xsmall">@warning.Description</li>
+                        }
+                    </ul>
+                </div>
+            </details>
+        }
+
+        if (hasErrors)
+        {
+            <p>
+                To see your XML file’s full list,
+                @this.WeeeGds().ActionLinkWithEventTracking(
+                    "download your errors and warnings (CSV)",
+                    "DownloadErrorsAndWarnings",
+                    "DataReturns",
+                    "Downloads",
+                    "Errors and warnings",
+                    routeValues: new RouteValueDictionary(new { dataReturnId = Model.DataReturn.DataReturnId })).
+            </p>
+
+            <p>
+                @this.WeeeGds().ActionLinkWithEventTracking(
+                    "Upload a new file",
+                    "Upload",
+                    "DataReturns",
+                    "Data return loop",
+                    "Upload a new file",
+                    "Validation failed",
+                    null,
+                    new Dictionary<string, object> { { "class", "button" } })
+            </p>
+
+            <div>
+                @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+            </div>
+        }
+        else
+        {
+            <div class="highlight-section">
+                <div class="highlight-section-text">
+                    The XML file you are submitting is for:
+                </div>
+                <div class="highlight-section-amount">
+                    @{
+                        Dictionary<QuarterType, string> quarterNames = new Dictionary<QuarterType, string>()
+                        {
+                            { QuarterType.Q1, "Quarter 1" },
+                            { QuarterType.Q2, "Quarter 2" },
+                            { QuarterType.Q3, "Quarter 3" },
+                            { QuarterType.Q4, "Quarter 4" },
+                        };
+                        int year = Model.DataReturn.Quarter.Year;
+                        string quarter = quarterNames[Model.DataReturn.Quarter.Q];
+                    }
+                    @year @quarter
+                </div>
+            </div>
+                
+            <p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete.</p>
+
+            @Html.Partial("_PrivacyPolicy");
+
+            <div class="form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
+                @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
+                <label class="block-label" for="PrivacyPolicy">
+                    @Html.CheckBoxFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy" })
+                    Confirm you have read our privacy policy
+                </label>
+            </div>
+
+            <p>
+                @this.WeeeGds().SubmitWithEventTracking(
+                    "Submit",
+                    "Uploads",
+                    "XML submission",
+                    htmlAttributes: new Dictionary<string, object> { { "class", "button" } })
+            </p>
+
+            <p>
+                Make changes and
+                @this.WeeeGds().ActionLinkWithEventTracking(
+                    "upload a new file",
+                    "Upload",
+                    "DataReturns",
+                    "Data return loop",
+                    "Upload a new file",
+                    "Validation successful").
+            </p>
+        }
+    }
+}
