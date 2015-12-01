@@ -31,9 +31,10 @@
 =   01/11/2015   Dave A             3.1           Updated categories.
 =   24/11/2015   Muhammad I         3.2           - Updates to the unique constraints XPath expressions.
                                                   - Additional unique constraints for AATF, AE and Producer identifiers.
-                                                  - Rename WEEEReturnedReg43 to B2CWEEEFromDistributors.
-                                                  - Rename WEEETakenBackReg50 to B2CWEEEFromFinalHolders.
+                                                  - Rename WEEEReturnedReg43 to B2CWEEEFromDistributors and enforce B2C obligation type for returns.
+                                                  - Rename WEEETakenBackReg50 to B2CWEEEFromFinalHolders and enforce B2C obligation type for returns.
                                                   - Make DeliveredToAE optional.
+                                                  - XSD version restriction changed.
 ================================================================================
 -->
   <xs:element name="SchemeReturn">
@@ -125,11 +126,11 @@
         </xs:element>
         <xs:element name="B2CWEEEFromDistributors">
           <xs:annotation>
-            <xs:documentation>WEEE Returned under regulation 43 </xs:documentation>
+            <xs:documentation>WEEE Returned under regulation 43.</xs:documentation>
           </xs:annotation>
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Return" type="TonnageReturnType" maxOccurs="28"/>
+              <xs:element name="Return" type="B2CTonnageReturnType" maxOccurs="28"/>
             </xs:sequence>
           </xs:complexType>
           <xs:unique name="uniqueCategoryObligationB2CWEEEFromDistributors">
@@ -144,7 +145,7 @@
           </xs:annotation>
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Return" type="TonnageReturnType" maxOccurs="28"/>
+              <xs:element name="Return" type="B2CTonnageReturnType" maxOccurs="28"/>
             </xs:sequence>
           </xs:complexType>
           <xs:unique name="uniqueCategoryObligationB2CWEEEFromFinalHolders">
@@ -248,6 +249,17 @@
       <xs:element name="ObligationType" type="obligationTypeType"/>
       <xs:element name="TonnesReturnValue" type="returnValueTonnageType"/>
     </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="B2CTonnageReturnType">
+    <xs:complexContent>
+      <xs:restriction base="TonnageReturnType">
+        <xs:sequence>
+          <xs:element name="CategoryName" type="categoryNameType"/>
+          <xs:element name="ObligationType" type="obligationTypeType" fixed="B2C"/>
+          <xs:element name="TonnesReturnValue" type="returnValueTonnageType"/>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
   </xs:complexType>
   <xs:simpleType name="registrationNoType">
     <xs:restriction base="xs:string">
