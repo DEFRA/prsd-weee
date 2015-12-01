@@ -15,14 +15,14 @@
     using Xml.Converter;
     using XmlValidation;
 
-    public class ProcessDataReturnsXMLFileHandler : IRequestHandler<ProcessDataReturnsXMLFile, Guid>
+    internal class ProcessDataReturnsXMLFileHandler : IRequestHandler<ProcessDataReturnsXMLFile, Guid>
     {
         private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
         private readonly IDataReturnsXMLValidator xmlValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IGenerateFromDataReturnsXML xmlGenerator;
-      
+
         public ProcessDataReturnsXMLFileHandler(WeeeContext context, IWeeeAuthorization authorization, IDataReturnsXMLValidator xmlValidator, 
                 IXmlConverter xmlConverter, IGenerateFromDataReturnsXML xmlGenerator)
         {
