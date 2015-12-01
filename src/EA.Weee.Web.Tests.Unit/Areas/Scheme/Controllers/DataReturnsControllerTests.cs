@@ -1,22 +1,26 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Net;
-    using System.Web;
-    using System.Web.Mvc;
-    using System.Web.Routing;
     using Api.Client;
+    using Core.DataReturns;
     using Core.Shared;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using Prsd.Core.Mapper;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Net;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Routing;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
+    using Web.Areas.Scheme.ViewModels.DataReturns;
+    using Weee.Requests.DataReturns;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
     using Xunit;
@@ -196,7 +200,177 @@
 
             Assert.Null(context.Result);
         }
-        
+
+        /// <summary>
+        /// This test ensures that an exception is thrown when the pcsId (organisation ID) provided
+        /// to the controller action does not match the organisation ID of the specified data return.
+        /// </summary>
+        [Fact]
+        public async void GetSubmit_WithDataReturnWithDifferentOrganisationId_ThrowsAnException()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
+                new Quarter(2015, QuarterType.Q4),
+                A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
+                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .Returns(dataReturnForSubmission);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            // Act
+            Func<Task<ActionResult>> testCode = async () =>
+                await controller.Submit(
+                    new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
+                    new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
+
+            // Assert
+            await Assert.ThrowsAnyAsync<Exception>(testCode);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET Submit action returns the "Submit" view with a populated
+        /// view model when a data return is sucessfully requested.
+        /// </summary>
+        [Fact]
+        public async void GetSubmit_HappyPath_ReturnsSubmitViewWithPopulatedViewModel()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
+                new Quarter(2015, QuarterType.Q4),
+                A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
+                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .Returns(dataReturnForSubmission);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            // Act
+            ActionResult result = await controller.Submit(
+                    new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
+                    new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
+
+            // Assert
+            Assert.IsAssignableFrom<ViewResultBase>(result);
+            ViewResultBase viewResult = result as ViewResultBase;
+
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "Submit",
+                "The GET Submit action must return the view called \"Submit\".");
+
+            Assert.IsAssignableFrom<SubmitViewModel>(viewResult.Model);
+            SubmitViewModel viewModel = viewResult.Model as SubmitViewModel;
+
+            Assert.Equal(dataReturnForSubmission, viewModel.DataReturn);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST Submit action returns the "Submit" view with a populated
+        /// view model when the model state is invalid.
+        /// </summary>
+        [Fact]
+        public async void PostSubmit_WithInvalidModelState_ReturnsSubmitViewWithPopulatedViewModel()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
+                new Quarter(2015, QuarterType.Q4),
+                A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
+                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .Returns(dataReturnForSubmission);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            controller.ModelState.AddModelError("Key", "Some Error");
+
+            // Act
+            ActionResult result = await controller.Submit(
+                    new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
+                    new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                    new SubmitViewModel());
+
+            // Assert
+            Assert.IsAssignableFrom<ViewResultBase>(result);
+            ViewResultBase viewResult = result as ViewResultBase;
+
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "Submit",
+                "The POST Submit action must return the view called \"Submit\" when the model state is invalid.");
+
+            Assert.IsAssignableFrom<SubmitViewModel>(viewResult.Model);
+            SubmitViewModel viewModel = viewResult.Model as SubmitViewModel;
+
+            Assert.Equal(dataReturnForSubmission, viewModel.DataReturn);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST Submit action returns the "Submitted" view after
+        /// a successful submission.
+        /// </summary>
+        [Fact]
+        public async void PostSubmit_HappyPath_ReturnsSubmittedView()
+        {
+            // Arrange
+            DataReturnsController controller = new DataReturnsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            // Act
+            ActionResult result = await controller.Submit(
+                    new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
+                    new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                    new SubmitViewModel());
+
+            // Assert
+            Assert.IsAssignableFrom<ViewResultBase>(result);
+            ViewResultBase viewResult = result as ViewResultBase;
+
+            Assert.True(viewResult.ViewName == "Submitted",
+                "The POST Submit action must return the view called \"Submitted\" after a successful submission.");
+        }
+
         private DataReturnsController GetRealDataReturnsControllerWithFakeContext()
         {
             var controller = DataReturnsController();
@@ -266,6 +440,7 @@
 
             return controller;
         }
+
         private class FakeDataReturnsController : DataReturnsController
         {
             public IWeeeClient ApiClient { get; private set; }
