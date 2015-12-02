@@ -7,7 +7,7 @@
     using Domain.DataReturns;
     using Domain.Scheme;
     using FakeItEasy;
-    using RequestHandlers.DataReturns.GenerateDomainObjects;
+    using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using Requests.DataReturns;
     using Xml.Converter;
     using Xml.MemberRegistration;
@@ -56,9 +56,9 @@
                 XmlConverter = A.Fake<IXmlConverter>();
             }
 
-            public GenerateFromDataReturnsXML Build()
+            public GenerateFromDataReturnsXml Build()
             {
-                return new GenerateFromDataReturnsXML(XmlConverter);
+                return new GenerateFromDataReturnsXml(XmlConverter);
             }
         }
     }

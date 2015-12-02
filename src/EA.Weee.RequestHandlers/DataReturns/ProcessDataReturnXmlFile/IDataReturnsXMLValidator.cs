@@ -1,10 +1,10 @@
-﻿namespace EA.Weee.RequestHandlers.DataReturns.XmlValidation
+﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
 {
     using System.Collections.Generic;
     using Domain.DataReturns;
     using Requests.DataReturns;
 
-    public interface IDataReturnsXMLValidator
+    public interface IDataReturnsXmlValidator
     {
         IEnumerable<DataReturnsUploadError> Validate(ProcessDataReturnsXMLFile message);
     }

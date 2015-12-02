@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.DataReturns.XmlValidation
+﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -11,13 +11,13 @@
     using Xml.Converter;
     using Xml.Deserialization;
 
-    public class DataReturnsXMLValidator : IDataReturnsXMLValidator
+    public class DataReturnsXmlValidator : IDataReturnsXmlValidator
     {
         private readonly ISchemaValidator schemaValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
 
-        public DataReturnsXMLValidator(ISchemaValidator schemaValidator, IXmlConverter xmlConverter, IXmlErrorTranslator errorTranslator)
+        public DataReturnsXmlValidator(ISchemaValidator schemaValidator, IXmlConverter xmlConverter, IXmlErrorTranslator errorTranslator)
         {
             this.schemaValidator = schemaValidator;
             this.errorTranslator = errorTranslator;
