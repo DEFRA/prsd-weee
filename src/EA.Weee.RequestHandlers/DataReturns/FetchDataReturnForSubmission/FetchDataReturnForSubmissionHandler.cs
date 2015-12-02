@@ -38,14 +38,28 @@
                     dataReturn.Id);
                 throw new InvalidOperationException(errorMessage);
             }
-            
+
+            List<ErrorLevel> errorLevelsWhichAreWarnings = new List<ErrorLevel>()
+            {
+                ErrorLevel.Debug,
+                ErrorLevel.Info,
+                ErrorLevel.Trace,
+                ErrorLevel.Warning
+            };
+
+            List<ErrorLevel> errorLevelsWhichAreErrors = new List<ErrorLevel>()
+            {
+                ErrorLevel.Error,
+                ErrorLevel.Fatal,
+            };
+
             List<DataReturnWarning> warnings = dataReturn.Errors
-                .Where(e => e.ErrorLevel == ErrorLevel.Warning)
+                .Where(e => errorLevelsWhichAreWarnings.Contains(e.ErrorLevel))
                 .Select(e => new DataReturnWarning(e.Description))
                 .ToList();
 
             List<DataReturnError> errors = dataReturn.Errors
-                .Where(e => e.ErrorLevel == ErrorLevel.Error)
+                .Where(e => errorLevelsWhichAreErrors.Contains(e.ErrorLevel))
                 .Select(e => new DataReturnError(e.Description))
                 .ToList();
 
