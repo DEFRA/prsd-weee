@@ -111,13 +111,46 @@
                 dataReturnId = await client.SendAsync(User.GetAccessToken(), request);
             }
 
-            return RedirectToAction("Submit", new { pcsId = pcsId, dataReturnId = dataReturnId });
+            DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+            if (dataReturn.Errors.Count == 0)
+            {
+                return RedirectToAction("Submit", new { pcsId = pcsId, dataReturnId = dataReturnId });
+            }
+            else
+            {
+                return RedirectToAction("Review", new { pcsId = pcsId, dataReturnId = dataReturnId });
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Review(Guid pcsId, Guid dataReturnId)
+        {
+            DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+
+            if (dataReturn.Errors.Count == 0)
+            {
+                return RedirectToAction("Submit");
+            }
+
+            SubmitViewModel viewModel = new SubmitViewModel()
+            {
+                DataReturn = dataReturn
+            };
+
+            await SetBreadcrumb(pcsId);
+
+            return View("Submit", viewModel);
         }
 
         [HttpGet]
         public async Task<ActionResult> Submit(Guid pcsId, Guid dataReturnId)
         {
             DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+
+            if (dataReturn.Errors.Count != 0)
+            {
+                return RedirectToAction("Review");
+            }
 
             SubmitViewModel viewModel = new SubmitViewModel()
             {
