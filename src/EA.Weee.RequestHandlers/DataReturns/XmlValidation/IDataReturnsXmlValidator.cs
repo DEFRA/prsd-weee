@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.XmlValidation
 {
     using System.Collections.Generic;
-    using Domain.Scheme;
+    using Domain.DataReturns;
     using Requests.DataReturns;
 
     public interface IDataReturnsXMLValidator

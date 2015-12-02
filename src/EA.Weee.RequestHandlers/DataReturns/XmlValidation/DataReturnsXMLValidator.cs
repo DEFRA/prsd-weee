@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Domain;
-    using Domain.Scheme;
+    using Domain.DataReturns;
     using Requests.DataReturns;
     using Shared;
     using Weee.XmlValidation.Errors;

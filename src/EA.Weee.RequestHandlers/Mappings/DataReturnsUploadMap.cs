@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using Core.DataReturns;
-    using Domain.Scheme;
+    using Domain.DataReturns;
     using Prsd.Core.Mapper;
 
     public class DataReturnsUploadMap : IMap<DataReturnsUpload, DataReturnsUploadData>
@@ -12,7 +12,7 @@
             {
                 Id = source.Id,
                 ComplianceYear = source.ComplianceYear,
-                SchemeId = source.SchemeId,
+                SchemeId = source.Scheme.Id,
                 IsSubmitted = source.IsSubmitted
             };
         }

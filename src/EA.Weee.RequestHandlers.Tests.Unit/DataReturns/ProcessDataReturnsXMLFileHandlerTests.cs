@@ -5,6 +5,7 @@
     using System.Data.Entity;
     using System.Security;
     using DataAccess;
+    using Domain.DataReturns;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
