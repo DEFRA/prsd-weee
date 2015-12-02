@@ -13,10 +13,10 @@
             this.context = context;
         }
 
-        public string GetSchemeApprovalNumber(Guid schemeId)
+        public string GetSchemeApprovalNumberByOrganisationId(Guid organisationId)
         {
             return context.Schemes
-                .Where(s => s.OrganisationId == schemeId)
+                .Where(s => s.OrganisationId == organisationId)
                 .Select(s => s.ApprovalNumber)
                 .SingleOrDefault();
         }

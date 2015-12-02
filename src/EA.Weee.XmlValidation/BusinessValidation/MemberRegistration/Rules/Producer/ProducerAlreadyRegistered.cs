@@ -15,13 +15,13 @@
             this.querySet = querySet;
         }
 
-        public RuleResult Evaluate(schemeType scheme, producerType producer, Guid schemeId)
+        public RuleResult Evaluate(schemeType scheme, producerType producer, Guid organisationId)
         {
             if (producer.status == statusType.A)
             {
                 var existingProducer =
                     querySet.GetProducerForOtherSchemeAndObligationType(producer.registrationNo,
-                        scheme.complianceYear, schemeId, producer.obligationType.ToDomainObligationType());
+                        scheme.complianceYear, organisationId, producer.obligationType.ToDomainObligationType());
 
                 if (existingProducer != null)
                 {
