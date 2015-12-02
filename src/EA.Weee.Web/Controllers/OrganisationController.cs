@@ -63,7 +63,7 @@
             {
                 PendingOrganisationsViewModel model = new PendingOrganisationsViewModel();
 
-                model.InaccessibleOrganisations = inaccessibleOrganisations;
+                model.InaccessibleOrganisations = FilterOutDuplicateOrganisations(inaccessibleOrganisations);
 
                 return View("PendingOrganisations", model);
             }
@@ -124,6 +124,52 @@
             return organisations
                 .Where(o => o.Organisation.OrganisationStatus == OrganisationStatus.Complete)
                 .OrderBy(o => o.Organisation.OrganisationName);
+        }
+
+        /// <summary>
+        /// Where a user has multiple associations with an organisation, only the current association
+        /// should be displayed. The order of perference is "Active", "Inactive", "Pending", "Rejected".
+        /// </summary>
+        /// <param name="organisations"></param>
+        /// <returns></returns>
+        private IEnumerable<OrganisationUserData> FilterOutDuplicateOrganisations(IEnumerable<OrganisationUserData> organisations)
+        {
+            List<UserStatus> userStatuesInOrderOfPreference = new List<UserStatus>()
+            {
+                UserStatus.Active,
+                UserStatus.Inactive,
+                UserStatus.Pending,
+                UserStatus.Rejected
+            };
+
+            List<OrganisationUserData> results = new List<OrganisationUserData>();
+
+            foreach (UserStatus userStatus in userStatuesInOrderOfPreference)
+            {
+                var organisationsWithMatchingUserStatus = organisations.Where(o => o.UserStatus == userStatus);
+
+                foreach (OrganisationUserData organistion in organisationsWithMatchingUserStatus)
+                {
+                    bool alreadyAdded = results
+                        .Where(r => r.OrganisationId == organistion.OrganisationId)
+                        .Where(r => r.UserId == organistion.UserId)
+                        .Any();
+
+                    if (!alreadyAdded)
+                    {
+                        results.Add(organistion);
+                    }
+                }
+            }
+
+            // Now return the results in the same order that they were supplied to this method.
+            foreach (OrganisationUserData organisation in organisations)
+            {
+                if (results.Contains(organisation))
+                {
+                    yield return organisation;
+                }
+            }
         }
     }
 }
