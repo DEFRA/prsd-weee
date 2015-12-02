@@ -89,6 +89,7 @@
     <Compile Include="Admin\FindMatchingUsersDataAccessTests.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccessTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\GenerateFromXmlDataAccessTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
     <Compile Include="Shared\GetSubmissionHistoryDataAcessTests.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheDataAccessTests.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheDataAccessTests.cs" />
@@ -114,6 +115,10 @@
     <ProjectReference Include="..\EA.Weee.RequestHandlers\EA.Weee.RequestHandlers.csproj">
       <Project>{575a5355-b008-422a-b9b6-535ca2b5cc26}</Project>
       <Name>EA.Weee.RequestHandlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
+      <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
+      <Name>EA.Weee.Requests</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Tests.Core\EA.Weee.Tests.Core.csproj">
       <Project>{0162d3e9-cd9b-478d-a6b4-0638c96bcf14}</Project>

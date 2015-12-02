@@ -4,7 +4,6 @@
     using Prsd.Core.Autofac;
     using Prsd.Core.Decorators;
     using Prsd.Core.Mediator;
-    using Scheme.MemberUploadTesting;
 
     public class RequestHandlerModule : Module
     {
@@ -37,10 +36,6 @@
             builder.RegisterAssemblyTypes(GetType().Assembly)
                 .Where(t => t.Namespace.Contains("MemberRegistration"))
                 .AsImplementedInterfaces();
-
-            // Register singleton types relating to PCS member upload testing.
-            builder.RegisterType<ProducerListFactory>().As<IProducerListFactory>();
-            builder.RegisterType<XmlGenerator>().As<IXmlGenerator>();
         }
     }
 }

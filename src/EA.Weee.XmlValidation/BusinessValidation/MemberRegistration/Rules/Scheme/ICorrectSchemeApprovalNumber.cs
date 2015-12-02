@@ -6,6 +6,6 @@
 
     public interface ICorrectSchemeApprovalNumber
     {
-        RuleResult Evaluate(schemeType scheme, Guid schemeId);
+        RuleResult Evaluate(schemeType scheme, Guid organisationId);
     }
 }

@@ -91,11 +91,5 @@
             // Assert
             Assert.Throws<InvalidOperationException>(action);
         }
-
-        /*
-         * TODO: Add tests to ensure that all producer submission linked to the member upload
-         * are set as the current submission for their respective registered producers when the
-         * member upload is submitted.
-         */     
     }
 }
