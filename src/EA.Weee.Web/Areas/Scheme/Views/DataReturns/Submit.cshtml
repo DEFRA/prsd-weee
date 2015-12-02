@@ -138,26 +138,6 @@
         }
         else
         {
-            <div class="highlight-section">
-                <div class="highlight-section-text">
-                    The XML file you are submitting is for:
-                </div>
-                <div class="highlight-section-amount">
-                    @{
-                        Dictionary<QuarterType, string> quarterNames = new Dictionary<QuarterType, string>()
-                        {
-                            { QuarterType.Q1, "Quarter 1" },
-                            { QuarterType.Q2, "Quarter 2" },
-                            { QuarterType.Q3, "Quarter 3" },
-                            { QuarterType.Q4, "Quarter 4" },
-                        };
-                        int year = Model.DataReturn.Quarter.Year;
-                        string quarter = quarterNames[Model.DataReturn.Quarter.Q];
-                    }
-                    @year @quarter
-                </div>
-            </div>
-                
             <p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete.</p>
 
             @Html.Partial("_PrivacyPolicy");

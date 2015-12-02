@@ -129,7 +129,7 @@
 
             if (dataReturn.Errors.Count == 0)
             {
-                return RedirectToAction("Submit");
+                return RedirectToAction("Submit", new { pcsId, dataReturnId });
             }
 
             SubmitViewModel viewModel = new SubmitViewModel()
@@ -149,7 +149,7 @@
 
             if (dataReturn.Errors.Count != 0)
             {
-                return RedirectToAction("Review");
+                return RedirectToAction("Review", new { pcsId,  dataReturnId });
             }
 
             SubmitViewModel viewModel = new SubmitViewModel()
@@ -177,7 +177,14 @@
 
             // TODO: Submit the data return.
 
-            return View("Submitted");
+            return RedirectToAction("SuccessfulSubmission", new { pcsId });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SuccessfulSubmission(Guid pcsId)
+        {
+            await SetBreadcrumb(pcsId);
+            return View();
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
