@@ -16,14 +16,14 @@
             this.producerChargeBandCalculator = producerChargeBandCalculator;
         }
 
-        public RuleResult Evaluate(schemeType root, producerType element, Guid schemeId)
+        public RuleResult Evaluate(schemeType root, producerType element, Guid organisationId)
         {
             var result = RuleResult.Pass();
 
             if (element.status == statusType.A)
             {
                 var existingProducer =
-                    querySet.GetLatestProducerForComplianceYearAndScheme(element.registrationNo, root.complianceYear, schemeId);
+                    querySet.GetLatestProducerForComplianceYearAndScheme(element.registrationNo, root.complianceYear, organisationId);
 
                 if (existingProducer != null)
                 {

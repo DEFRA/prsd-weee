@@ -7,11 +7,11 @@
 
     public interface IProducerQuerySet
     {
-        ProducerSubmission GetLatestProducerForComplianceYearAndScheme(string registrationNo, string schemeComplianceYear, Guid schemeOrgId);
+        ProducerSubmission GetLatestProducerForComplianceYearAndScheme(string registrationNo, string schemeComplianceYear, Guid organisationId);
 
         ProducerSubmission GetLatestProducerFromPreviousComplianceYears(string registrationNo);
 
-        ProducerSubmission GetProducerForOtherSchemeAndObligationType(string registrationNo, string schemeComplianceYear, Guid schemeOrgId, ObligationType obligationType);
+        ProducerSubmission GetProducerForOtherSchemeAndObligationType(string registrationNo, string schemeComplianceYear, Guid organisationId, ObligationType obligationType);
 
         List<string> GetAllRegistrationNumbers(); 
 

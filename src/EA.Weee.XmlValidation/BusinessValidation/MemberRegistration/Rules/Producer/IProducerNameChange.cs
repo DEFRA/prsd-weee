@@ -6,6 +6,6 @@
 
     public interface IProducerNameChange
     {
-        RuleResult Evaluate(schemeType root, producerType element, Guid schemeId);
+        RuleResult Evaluate(schemeType root, producerType element, Guid organisationId);
     }
 }

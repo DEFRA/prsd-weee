@@ -26,7 +26,7 @@
             this.currentCompanyProducers = currentCompanyProducers;
         }
 
-        public ProducerSubmission GetLatestProducerForComplianceYearAndScheme(string registrationNo, string schemeComplianceYear, Guid schemeOrgId)
+        public ProducerSubmission GetLatestProducerForComplianceYearAndScheme(string registrationNo, string schemeComplianceYear, Guid organisationId)
         {
             int complianceYear = int.Parse(schemeComplianceYear);
 
@@ -37,7 +37,7 @@
 
             return currentProducersByRegistrationNumber.Run()[registrationNo]
                 .Where(p => p.MemberUpload.ComplianceYear == complianceYear)
-                .Where(p => p.RegisteredProducer.Scheme.OrganisationId == schemeOrgId)
+                .Where(p => p.RegisteredProducer.Scheme.OrganisationId == organisationId)
                 .SingleOrDefault();
         }
 
@@ -53,7 +53,7 @@
                 .FirstOrDefault();
         }
 
-        public ProducerSubmission GetProducerForOtherSchemeAndObligationType(string registrationNo, string schemeComplianceYear, Guid schemeOrgId, ObligationType obligationType)
+        public ProducerSubmission GetProducerForOtherSchemeAndObligationType(string registrationNo, string schemeComplianceYear, Guid organisationId, ObligationType obligationType)
         {
             int complianceYear = int.Parse(schemeComplianceYear);
 
@@ -63,7 +63,7 @@
             }
 
             return currentProducersByRegistrationNumber.Run()[registrationNo]
-                .FirstOrDefault(p => p.RegisteredProducer.Scheme.OrganisationId != schemeOrgId
+                .FirstOrDefault(p => p.RegisteredProducer.Scheme.OrganisationId != organisationId
                     && p.MemberUpload.ComplianceYear == complianceYear
                     && (p.ObligationType == obligationType || 
                     p.ObligationType == ObligationType.Both ||

@@ -188,12 +188,6 @@
     <Compile Include="Scheme\Interfaces\IXmlValidator.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerCharge.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\XmlValidator.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\IProducerListFactory.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\IXmlGenerator.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\ProducerListFactory.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestHandlerModule.cs" />
     <Compile Include="Scheme\UpdateSchemeInformationHandler.cs" />

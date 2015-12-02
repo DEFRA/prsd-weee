@@ -345,6 +345,9 @@
 
             var result = await builder.InvokeGenerateProducerData(1);
 
+            A.CallTo(() => builder.DataAccess.MigratedProducerExists(A<string>._))
+                .MustNotHaveHappened();
+
             Assert.Equal(0, result.Count());
         }
 
@@ -373,15 +376,37 @@
         }
 
         [Fact]
-        public async void GenerateProducerData_AmendProducer_WithNoMatchingExistingProducerFromAnotherScheme_ThrowsInvalidOperationException()
+        public async void GenerateProducerData_AmendProducer_WithMatchingExistingProducerFromAnotherScheme_ReturnsNewProducer()
+        {
+            var schemeId = Guid.NewGuid();
+
+            var builder = new GenerateProducerDataTestsBuilder();
+            builder.Status = statusType.A;
+            builder.RegistrationNumber = "Test Registration Number";
+            builder.SchemeId = schemeId;
+
+            A.CallTo(() => builder.DataAccess.ProducerRegistrationExists(A<string>._))
+                .Returns(true);
+
+            A.CallTo(() => builder.DataAccess.FetchRegisteredProducerOrDefault(A<string>._, A<int>._, A<Guid>._))
+                .Returns((RegisteredProducer)null);
+
+            var result = await builder.InvokeGenerateProducerDataWithSingleResult();
+
+            Assert.Equal("Test Registration Number", result.RegisteredProducer.ProducerRegistrationNumber);
+            Assert.Equal(schemeId, result.RegisteredProducer.Scheme.Id);
+        }
+
+        [Fact]
+        public async void GenerateProducerData_AmendProducer_WithNoMatchingExistingProducer_AndMigratedProducer_ThrowsInvalidOperationException()
         {
             var builder = new GenerateProducerDataTestsBuilder();
             builder.Status = statusType.A;
 
-            A.CallTo(() => builder.DataAccess.MigratedProducerExists(A<string>._))
+            A.CallTo(() => builder.DataAccess.ProducerRegistrationExists(A<string>._))
                 .Returns(false);
 
-            A.CallTo(() => builder.DataAccess.ProducerRegistrationExists(A<string>._))
+            A.CallTo(() => builder.DataAccess.MigratedProducerExists(A<string>._))
                 .Returns(false);
 
             Func<Task> action = async () => await builder.InvokeGenerateProducerData(1);
