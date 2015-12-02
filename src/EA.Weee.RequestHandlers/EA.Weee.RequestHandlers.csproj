@@ -91,8 +91,6 @@
     <Compile Include="DataReturns\ProcessDataReturnsXMLFileHandler.cs" />
     <Compile Include="DataReturns\XmlValidation\DataReturnsXMLValidator.cs" />
     <Compile Include="DataReturns\XmlValidation\IDataReturnsXMLValidator.cs" />
-    <Compile Include="Mappings\DataReturnsUploadErrorMap.cs" />
-    <Compile Include="Mappings\DataReturnsUploadMap.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />

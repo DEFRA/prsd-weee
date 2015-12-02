@@ -90,7 +90,6 @@
     <Compile Include="Admin\Reports\CSVFileData.cs" />
     <Compile Include="DataReturns\DataReturnError.cs" />
     <Compile Include="DataReturns\DataReturnForSubmission.cs" />
-    <Compile Include="DataReturns\DataReturnsUploadData.cs" />
     <Compile Include="DataReturns\DataReturnWarning.cs" />
     <Compile Include="DataReturns\Quarter.cs" />
     <Compile Include="DataReturns\QuarterType.cs" />
