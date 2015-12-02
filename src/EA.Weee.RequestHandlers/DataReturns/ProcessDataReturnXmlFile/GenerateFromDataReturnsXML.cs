@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.DataReturns.GenerateDomainObjects
+﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
 {
     using System;
     using System.Collections.Generic;
@@ -10,11 +10,11 @@
     using Requests.DataReturns;
     using Xml.Converter;
 
-    public class GenerateFromDataReturnsXML : IGenerateFromDataReturnsXML
+    public class GenerateFromDataReturnsXml : IGenerateFromDataReturnsXml
     {
         private readonly IXmlConverter xmlConverter;
 
-        public GenerateFromDataReturnsXML(IXmlConverter xmlConverter)
+        public GenerateFromDataReturnsXml(IXmlConverter xmlConverter)
         {
             this.xmlConverter = xmlConverter;
         }
