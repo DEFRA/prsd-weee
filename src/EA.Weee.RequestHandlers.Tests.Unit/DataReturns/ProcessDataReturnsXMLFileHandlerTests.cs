@@ -55,7 +55,9 @@
         [Fact]
         public async void NotOrganisationUser_ThrowsSecurityException()
         {
-            var authorisationDeniedHandler = new ProcessDataReturnsXMLFileHandler(context, denyingAuthorization, xmlValidator, xmlConverter, generator);
+            var denySchemeAuthorization = new AuthorizationBuilder().DenySchemeAccess().Build();
+                          
+            var authorisationDeniedHandler = new ProcessDataReturnsXMLFileHandler(context, denySchemeAuthorization, xmlValidator, xmlConverter, generator);
 
             await
                 Assert.ThrowsAsync<SecurityException>(
