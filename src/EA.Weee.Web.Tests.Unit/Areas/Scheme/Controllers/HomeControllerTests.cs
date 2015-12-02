@@ -634,7 +634,7 @@
         {
             var controller = HomeController();
 
-            var result = await controller.DownloadCsv(A<Guid>._, A<int>._, A<Guid>._);
+            var result = await controller.DownloadCsv(A<Guid>._, A<int>._, A<Guid>._, A<DateTime>._);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
                 .MustHaveHappened(Repeated.Exactly.Once);

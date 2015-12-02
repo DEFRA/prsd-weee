@@ -7,7 +7,7 @@
 
     public class MemberUploadResultViewModel
     {
-        public List<MemberUploadErrorData> ErrorData { get; set; }
+        public List<UploadErrorData> ErrorData { get; set; }
 
         public Guid MemberUploadId { get; set; }
 
