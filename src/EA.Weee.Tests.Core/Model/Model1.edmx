@@ -89,10 +89,10 @@
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="2048" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" />
           <Property Name="OrganisationType" Type="int" Nullable="false" />
           <Property Name="OrganisationStatus" Type="int" Nullable="false" />
-          <Property Name="TradingName" Type="nvarchar" MaxLength="2048" />
+          <Property Name="TradingName" Type="nvarchar" MaxLength="256" />
           <Property Name="CompanyRegistrationNumber" Type="nvarchar" MaxLength="64" />
           <Property Name="ContactId" Type="uniqueidentifier" />
           <Property Name="OrganisationAddressId" Type="uniqueidentifier" />
@@ -227,7 +227,7 @@
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="ProducerRegistrationNumber" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="ProducerName" Type="nvarchar" MaxLength="255" />
+          <Property Name="ProducerName" Type="nvarchar" MaxLength="256" />
           <Property Name="CompanyNumber" Type="nvarchar" MaxLength="8" />
         </EntityType>
         <EntityType Name="Partner">
@@ -901,10 +901,10 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="Name" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="OrganisationType" Type="Int32" Nullable="false" />
           <Property Name="OrganisationStatus" Type="Int32" Nullable="false" />
-          <Property Name="TradingName" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
+          <Property Name="TradingName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="CompanyRegistrationNumber" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Name="ContactId" Type="Guid" />
           <Property Name="OrganisationAddressId" Type="Guid" />
@@ -1072,7 +1072,7 @@
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="ProducerRegistrationNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ProducerName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ProducerName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="CompanyNumber" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Partner_">
@@ -1609,7 +1609,7 @@
           <Property Name="CurrentSubmissionId" Type="Guid" />
           <NavigationProperty Name="Scheme" Relationship="EA.Weee.TestModel.FK_RegisteredProducer_Scheme" FromRole="RegisteredProducer" ToRole="Scheme" />
           <NavigationProperty Name="ProducerSubmissions" Relationship="EA.Weee.TestModel.FK_ProducerSubmission_RegisteredProducer" FromRole="RegisteredProducer" ToRole="ProducerSubmission" />
-          <NavigationProperty Name="ProducerSubmission" Relationship="EA.Weee.TestModel.FK_RegisteredProducer_ProducerSubmission" FromRole="RegisteredProducer" ToRole="ProducerSubmission" />
+          <NavigationProperty Name="CurrentSubmission" Relationship="EA.Weee.TestModel.FK_RegisteredProducer_ProducerSubmission" FromRole="RegisteredProducer" ToRole="ProducerSubmission" />
         </EntityType>
         <Association Name="FK_ProducerSubmission_ChargeBandAmount">
           <End Type="EA.Weee.TestModel.ChargeBandAmount" Role="ChargeBandAmount" Multiplicity="1" />
