@@ -322,7 +322,7 @@
             if (memberUpload.IsSubmitted)
             {
                 registeredProducer.CurrentSubmissionId = IntegerToGuid(producerSubmissionId);
-                registeredProducer.ProducerSubmission = producerSubmission;
+                registeredProducer.CurrentSubmission = producerSubmission;
             }
 
             return producerSubmission;
