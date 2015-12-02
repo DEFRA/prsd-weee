@@ -244,6 +244,8 @@
             RedirectToRouteResult redirectToRouteResult = result as RedirectToRouteResult;
 
             Assert.Equal("Submit", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), redirectToRouteResult.RouteValues["pcsId"]);
+            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnId"]);
         }
 
         /// <summary>
@@ -291,6 +293,8 @@
             RedirectToRouteResult redirectToRouteResult = result as RedirectToRouteResult;
 
             Assert.Equal("Review", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), redirectToRouteResult.RouteValues["pcsId"]);
+            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnId"]);
         }
 
         /// <summary>
@@ -373,6 +377,8 @@
             RedirectToRouteResult redirectToRouteResult = result as RedirectToRouteResult;
 
             Assert.Equal("Submit", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), redirectToRouteResult.RouteValues["pcsId"]);
+            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnId"]);
         }
 
         /// <summary>
@@ -507,6 +513,8 @@
             RedirectToRouteResult redirectToRouteResult = result as RedirectToRouteResult;
 
             Assert.Equal("Review", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), redirectToRouteResult.RouteValues["pcsId"]);
+            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnId"]);
         }
 
         /// <summary>
@@ -609,11 +617,11 @@
         }
 
         /// <summary>
-        /// This test ensures that the POST Submit action returns the "Submitted" view after
-        /// a successful submission.
+        /// This test ensures that the POST Submit action redirects the user to the GET SuccessfulSubmission
+        /// action after a successful submission.
         /// </summary>
         [Fact]
-        public async void PostSubmit_HappyPath_ReturnsSubmittedView()
+        public async void PostSubmit_HappyPath_RedirectsToSuccessfulSubmission()
         {
             // Arrange
             DataReturnsController controller = new DataReturnsController(
@@ -632,11 +640,11 @@
                     new SubmitViewModel());
 
             // Assert
-            Assert.IsAssignableFrom<ViewResultBase>(result);
-            ViewResultBase viewResult = result as ViewResultBase;
+            Assert.IsAssignableFrom<RedirectToRouteResult>(result);
+            RedirectToRouteResult redirectToRouteResult = result as RedirectToRouteResult;
 
-            Assert.True(viewResult.ViewName == "Submitted",
-                "The POST Submit action must return the view called \"Submitted\" after a successful submission.");
+            Assert.Equal("SuccessfulSubmission", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"), redirectToRouteResult.RouteValues["pcsId"]);
         }
 
         private DataReturnsController GetRealDataReturnsControllerWithFakeContext()
