@@ -225,7 +225,7 @@
                 Scheme scheme1 = helper.CreateScheme();
 
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
-                memberUpload1.ComplianceYear = 2020;
+                memberUpload1.ComplianceYear = 2005;
                 memberUpload1.IsSubmitted = true;
                 memberUpload1.Date = new DateTime(2015, 11, 4);
 
@@ -233,7 +233,7 @@
                 producer1.ChargeThisUpdate = 999;
 
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme1);
-                memberUpload2.ComplianceYear = 2020;
+                memberUpload2.ComplianceYear = 2005;
                 memberUpload2.IsSubmitted = true;
                 memberUpload2.Date = new DateTime(2015, 11, 1);
 
@@ -241,7 +241,7 @@
                 producer2.ChargeThisUpdate = 999;
 
                 MemberUpload memberUpload3 = helper.CreateMemberUpload(scheme1);
-                memberUpload3.ComplianceYear = 2020;
+                memberUpload3.ComplianceYear = 2005;
                 memberUpload3.IsSubmitted = true;
                 memberUpload3.Date = new DateTime(2015, 10, 4);
 
@@ -251,7 +251,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(2020);
+                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(2005);
 
                 // Assert
                 Assert.NotNull(results);

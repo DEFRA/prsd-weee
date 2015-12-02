@@ -230,7 +230,7 @@
         }
 
         [Fact]
-        public async void FetchRegisteredProducerOrDefault_WithNoCurrentSubmissionForProducer_ReturnsNull()
+        public async void FetchRegisteredProducerOrDefault_WithNoCurrentSubmissionForProducer_ReturnsRegisteredProducerRecord()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -238,18 +238,16 @@
 
                 var scheme = helper.CreateScheme();
 
-                var memberUpload1 = helper.CreateMemberUpload(scheme);
-                memberUpload1.IsSubmitted = false;
-                memberUpload1.ComplianceYear = 2015;
-
-                helper.CreateProducerAsCompany(memberUpload1, "1234");
+                helper.GerOrCreateRegisteredProducer(scheme, 2015, "1234");
 
                 database.Model.SaveChanges();
 
                 var dataAccess = new GenerateFromXmlDataAccess(database.WeeeContext);
                 var result = await dataAccess.FetchRegisteredProducerOrDefault("1234", 2015, scheme.Id);
 
-                Assert.Null(result);
+                Assert.Equal("1234", result.ProducerRegistrationNumber);
+                Assert.Equal(2015, result.ComplianceYear);
+                Assert.Equal(scheme.Id, result.Scheme.Id);
             }
         }
     }
