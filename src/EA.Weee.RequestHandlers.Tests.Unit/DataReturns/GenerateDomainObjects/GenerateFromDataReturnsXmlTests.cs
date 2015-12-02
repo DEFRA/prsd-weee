@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Xml.Linq;
     using Domain;
+    using Domain.DataReturns;
     using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.DataReturns.GenerateDomainObjects;
@@ -25,7 +26,7 @@
                 new List<DataReturnsUploadError>
                 {
                     new DataReturnsUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Some schema error")
-                }, A<Guid>._);
+                }, A.Dummy<Scheme>());
 
             Assert.Null(result.ComplianceYear);
         }
@@ -40,7 +41,7 @@
             var message = new ProcessDataReturnsXMLFile(Guid.NewGuid(), new byte[1], "File name");
             var generateFromXml = builder.Build();
 
-            var result = generateFromXml.GenerateDataReturnsUpload(message, new List<DataReturnsUploadError>(), A<Guid>._);
+            var result = generateFromXml.GenerateDataReturnsUpload(message, new List<DataReturnsUploadError>(), A.Dummy<Scheme>());
 
             Assert.NotNull(result.ComplianceYear);
             Assert.Equal(2015, result.ComplianceYear.Value);

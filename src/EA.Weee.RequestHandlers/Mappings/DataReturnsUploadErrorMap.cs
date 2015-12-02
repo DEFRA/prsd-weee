@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using Core.Shared;
-    using Domain.Scheme;
+    using Domain.DataReturns;
     using Prsd.Core.Mapper;
 
     public class DataReturnsUploadErrorMap : IMap<DataReturnsUploadError, UploadErrorData>
