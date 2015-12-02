@@ -38,7 +38,7 @@
                                     @if (item.NoOfWarnings > 0)
                                     {
                                         string warningText = (item.NoOfWarnings > 1 ? "warnings (CSV)" : "warning (CSV)");
-                                        <a href="@Url.Action("DownloadCsv", "Home", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId })">@item.NoOfWarnings @warningText</a>
+                                        <a href="@Url.Action("DownloadCsv", "Home", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
                                     }
                                 </td>
                                 <td>£@item.TotalCharges</td>

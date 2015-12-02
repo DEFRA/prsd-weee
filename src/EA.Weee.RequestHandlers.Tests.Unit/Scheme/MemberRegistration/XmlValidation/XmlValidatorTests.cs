@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
-    using Core.Scheme;
     using Core.Shared;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration.XmlValidation;
@@ -36,7 +35,7 @@
         [Fact]
         public void SchemaValidatorHasErrors_ShouldNotCallBusinessValidator()
         {
-            A.CallTo(() => schemaValidator.Validate(A<byte[]>._, A<string>._, A<string>._, A<SchemaVersion>._))
+            A.CallTo(() => schemaValidator.Validate(A<byte[]>._, A<string>._, A<string>._, A<string>._))
                 .Returns(new List<XmlValidationError>
                 {
                     new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "An error occurred")
@@ -51,7 +50,7 @@
         [Fact]
         public void SchemaValidatorHasNoErrors_AndBusinessValidatorDoes_ShouldReturnErrors()
         {
-            A.CallTo(() => schemaValidator.Validate(A<byte[]>._, string.Empty, string.Empty, A<SchemaVersion>._))
+            A.CallTo(() => schemaValidator.Validate(A<byte[]>._, string.Empty, string.Empty, A<string>._))
                 .Returns(new List<XmlValidationError>());
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._))
@@ -68,7 +67,7 @@
         [Fact]
         public void SchemaValidatorHasNoErrors_DeserializationException_ShouldReturnError()
         {
-            A.CallTo(() => schemaValidator.Validate(A<byte[]>._, string.Empty, string.Empty, A<SchemaVersion>._))
+            A.CallTo(() => schemaValidator.Validate(A<byte[]>._, string.Empty, string.Empty, A<string>._))
                 .Returns(new List<XmlValidationError>());
 
             A.CallTo(() => xmlConverter.Deserialize(A<XDocument>._))

@@ -21,7 +21,7 @@
             this.xmlConverter = xmlConverter;
         }
 
-        public IEnumerable<XmlValidationError> Validate(byte[] data, string schemaName, string schemaNamespace, SchemaVersion schemaVersion)
+        public IEnumerable<XmlValidationError> Validate(byte[] data, string schemaName, string schemaNamespace, string schemaVersion)
         {
             var errors = new List<XmlValidationError>();
 
@@ -30,7 +30,8 @@
                 //check if the xml is not blank before doing any validations
                 if (data != null && data.Length == 0)
                 {
-                    errors.Add(new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "The file you're trying to upload is not a correctly formatted XML file. Please make sure you're uploading a valid XML file."));
+                    string errorMsg = "The file you're trying to upload is not a correctly formatted XML file. Please make sure you're uploading a valid XML file.";
+                    errors.Add(new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, errorMsg));
                     return errors;
                 }
 

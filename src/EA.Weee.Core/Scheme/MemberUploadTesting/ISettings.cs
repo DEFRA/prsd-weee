@@ -2,7 +2,7 @@
 {
     public interface ISettings
     {
-        SchemaVersion SchemaVersion { get; }
+        MemberRegistrationSchemaVersion SchemaVersion { get; }
         bool IgnoreStringLengthConditions { get; }
     }
 }

@@ -48,7 +48,11 @@
     <Compile Include="Admin\Reports\GetMemberDetailsCSV.cs" />
     <Compile Include="Admin\Reports\GetPCSChargesCSV.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSV.cs" />
+
+    <Compile Include="DataReturns\ProcessDataReturnsXMLFile.cs" />
+
     <Compile Include="Organisations\GetOrganisationOverview.cs" />
+    <Compile Include="Scheme\MemberRegistration\ProcessXMLFile.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache.cs" />
     <Compile Include="Admin\FindMatchingUsers.cs" />
@@ -89,7 +93,6 @@
     <Compile Include="Scheme\MemberRegistration\GetProducerCSV.cs" />
     <Compile Include="Scheme\GetSchemeStatus.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmission.cs" />
-    <Compile Include="Scheme\MemberRegistration\ProcessXMLFile.cs" />
     <Compile Include="Scheme\MemberUploadTesting\PcsXmlFile.cs" />
     <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFile.cs" />
     <Compile Include="Scheme\UpdateSchemeInformation.cs" />

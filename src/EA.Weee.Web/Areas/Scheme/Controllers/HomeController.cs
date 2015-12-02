@@ -381,7 +381,7 @@
         [HttpGet]
         public async Task<ActionResult> ViewSubmissionHistory(Guid pcsId)
         {
-            await SetBreadcrumb(pcsId, "View submission history");
+            await SetBreadcrumbAndPcsBanner(pcsId, "View submission history");
 
             var model = new SubmissionHistoryViewModel();
             
@@ -399,19 +399,19 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadCsv(Guid schemeId, int year, Guid memberUploadId)
+        public async Task<ActionResult> DownloadCsv(Guid schemeId, int year, Guid memberUploadId, DateTime submissionDateTime)
         {
             using (var client = apiClient())
             {
-                IEnumerable<MemberUploadErrorData> errors =
+                IEnumerable<UploadErrorData> errors =
                     (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(schemeId, memberUploadId)))
                     .OrderByDescending(e => e.ErrorLevel);
 
-                CsvWriter<MemberUploadErrorData> csvWriter = csvWriterFactory.Create<MemberUploadErrorData>();
+                CsvWriter<UploadErrorData> csvWriter = csvWriterFactory.Create<UploadErrorData>();
                 csvWriter.DefineColumn("Description", e => e.Description);
-                
+    
                 var schemePublicInfo = await cache.FetchSchemePublicInfo(schemeId);
-                var csvFileName = string.Format("{0}_memberregistration_{1}_warnings_{2}.csv", schemePublicInfo.ApprovalNo, year, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+                var csvFileName = string.Format("{0}_memberregistration_{1}_warnings_{2}.csv", schemePublicInfo.ApprovalNo, year, submissionDateTime.ToString("ddMMyyyy_HHmm"));
 
                 string csv = csvWriter.Write(errors);
                 byte[] fileContent = new UTF8Encoding().GetBytes(csv);
@@ -462,6 +462,12 @@
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
+        }
+
+        private async Task SetBreadcrumbAndPcsBanner(Guid organisationId, string activity)
+        {
+            await SetBreadcrumb(organisationId, activity);
+            breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
     }
 }

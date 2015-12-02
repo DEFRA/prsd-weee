@@ -25,7 +25,9 @@
         private readonly IGenerateFromXml generateFromXml;
         private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
 
-        public ProcessXMLFileHandler(WeeeContext context, IWeeeAuthorization authorization, IXmlValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, IXmlChargeBandCalculator xmlChargeBandCalculator)
+        public ProcessXMLFileHandler(WeeeContext context, IWeeeAuthorization authorization, 
+            IXmlValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, 
+            IXmlChargeBandCalculator xmlChargeBandCalculator)
         {
             this.context = context;
             this.authorization = authorization;
