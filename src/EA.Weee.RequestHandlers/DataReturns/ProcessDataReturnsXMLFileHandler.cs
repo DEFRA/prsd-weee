@@ -34,19 +34,16 @@
         }
 
         public async Task<Guid> HandleAsync(ProcessDataReturnsXMLFile message)
-        {
-            authorization.EnsureOrganisationAccess(message.OrganisationId);
+        {            
+            var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
+            authorization.EnsureSchemeAccess(scheme.Id);
 
             // record XML processing start time
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
             var errors = xmlValidator.Validate(message);
-
-            List<DataReturnsUploadError> datareturnsUploadErrors = errors as List<DataReturnsUploadError> ?? errors.ToList();
-
-            var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-            
+            List<DataReturnsUploadError> datareturnsUploadErrors = errors as List<DataReturnsUploadError> ?? errors.ToList();                        
             var upload = xmlGenerator.GenerateDataReturnsUpload(message, datareturnsUploadErrors, scheme.Id);
 
             // record XML processing end time
@@ -54,14 +51,7 @@
         
             context.DataReturnsUploads.Add(upload);
 
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                return Guid.NewGuid();
-            }
+            await context.SaveChangesAsync();
             return upload.Id;
         }
     }
