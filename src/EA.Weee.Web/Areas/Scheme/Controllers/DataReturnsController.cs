@@ -11,6 +11,7 @@
     using Services.Caching;
     using ViewModels;
     using Web.Controllers.Base;
+    using Weee.Requests.DataReturns;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
 
@@ -94,6 +95,20 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SubmitDataReturns(Guid pcsId, PCSFileUploadViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                await SetBreadcrumb(pcsId, SubmitDataReturnsActivity);
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                model.PcsId = pcsId;
+                var request = mapper.Map<PCSFileUploadViewModel, ProcessDataReturnsXMLFile>(model);
+                await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            //TODO: Redirect to errors or warnings page if any else summary page.
             await SetBreadcrumb(pcsId, SubmitDataReturnsActivity);
             return View(model);
         }

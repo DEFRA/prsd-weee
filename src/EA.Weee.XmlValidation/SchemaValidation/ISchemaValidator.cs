@@ -6,6 +6,6 @@
 
     public interface ISchemaValidator
     {
-        IEnumerable<XmlValidationError> Validate(byte[] data, string schemaName, string schemaNamespace, SchemaVersion schemaVersion);
+        IEnumerable<XmlValidationError> Validate(byte[] data, string schemaName, string schemaNamespace, string schemaVersion);
     }
 }

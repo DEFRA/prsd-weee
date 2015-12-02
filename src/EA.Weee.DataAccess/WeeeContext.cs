@@ -52,6 +52,10 @@
 
         public virtual DbSet<CompetentAuthorityUser> CompetentAuthorityUsers { get; set; }
 
+        public virtual DbSet<DataReturnsUpload> DataReturnsUploads { get; set; }
+
+        public virtual DbSet<DataReturnsUploadError> DataReturnsUploadErrors { get; set; }
+
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
         public WeeeContext(IUserContext userContext, IEventDispatcher dispatcher)
