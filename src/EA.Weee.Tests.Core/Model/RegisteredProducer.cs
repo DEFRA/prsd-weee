@@ -28,6 +28,6 @@ namespace EA.Weee.Tests.Core.Model
     
         public virtual Scheme Scheme { get; set; }
         public virtual ICollection<ProducerSubmission> ProducerSubmissions { get; set; }
-        public virtual ProducerSubmission ProducerSubmission { get; set; }
+        public virtual ProducerSubmission CurrentSubmission { get; set; }
     }
 }
