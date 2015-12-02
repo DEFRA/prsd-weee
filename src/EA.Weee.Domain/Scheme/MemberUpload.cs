@@ -12,8 +12,6 @@
     {
         public virtual Guid OrganisationId { get; private set; }
 
-        public virtual Guid SchemeId { get; private set; }
-
         public virtual Organisation Organisation { get; private set; }
 
         public virtual Scheme Scheme { get; private set; }
