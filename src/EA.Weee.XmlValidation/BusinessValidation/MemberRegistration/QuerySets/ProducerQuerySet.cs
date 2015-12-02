@@ -36,7 +36,7 @@
             }
 
             return currentProducersByRegistrationNumber.Run()[registrationNo]
-                .Where(p => p.MemberUpload.ComplianceYear == complianceYear)
+                .Where(p => p.RegisteredProducer.ComplianceYear == complianceYear)
                 .Where(p => p.RegisteredProducer.Scheme.OrganisationId == organisationId)
                 .SingleOrDefault();
         }

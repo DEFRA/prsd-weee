@@ -125,7 +125,6 @@
                 .Where(rp => rp.ProducerRegistrationNumber == producerRegistrationNumber)
                 .Where(rp => rp.ComplianceYear == complianceYear)
                 .Where(rp => rp.Scheme.Id == schemeId)
-                .Where(rp => rp.CurrentSubmission != null)
                 .SingleOrDefaultAsync();
         }
 

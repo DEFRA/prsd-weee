@@ -116,7 +116,7 @@
                         registeredProducer = await dataAccess.FetchRegisteredProducerOrDefault(
                             producerRegistrationNo,
                             memberUpload.ComplianceYear.Value,
-                            memberUpload.SchemeId);
+                            memberUpload.Scheme.Id);
                         break;
 
                     default:
