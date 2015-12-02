@@ -22,6 +22,7 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly CsvWriterFactory csvWriterFactory;
         private readonly IMapper mapper;
+        private readonly ConfigurationService configurationService;
         private const string SubmitDataReturnsActivity = "Submit data returns";
 
         public DataReturnsController(
@@ -29,13 +30,15 @@
             IWeeeCache cache,
             BreadcrumbService breadcrumb,
             CsvWriterFactory csvWriterFactory,
-            IMapper mapper)
+            IMapper mapper,
+            ConfigurationService configurationService)
         {
             this.apiClient = apiClient;
             this.cache = cache;
             this.breadcrumb = breadcrumb;
             this.csvWriterFactory = csvWriterFactory;
             this.mapper = mapper;
+            this.configurationService = configurationService;
         }
 
         [HttpGet]
@@ -78,6 +81,11 @@
         [HttpGet]
         public async Task<ViewResult> SubmitDataReturns(Guid pcsId)
         {
+            if (!configurationService.CurrentConfiguration.EnableDataReturns)
+            {
+                throw new InvalidOperationException("unable to submit data returns.");
+            }
+
             using (var client = apiClient())
             {
                 var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
@@ -112,6 +120,7 @@
             await SetBreadcrumb(pcsId, SubmitDataReturnsActivity);
             return View(model);
         }
+
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (filterContext.ActionDescriptor.ActionName == "AuthorisationRequired")
@@ -136,7 +145,7 @@
 
                     if (status != SchemeStatus.Approved)
                     {
-                        filterContext.Result = RedirectToAction("AuthorisationRequired", new { pcsID = pcsId });
+                        filterContext.Result = RedirectToAction("AuthorisationRequired", "DataReturns", new { pcsID = pcsId });
                     }
                     else
                     {

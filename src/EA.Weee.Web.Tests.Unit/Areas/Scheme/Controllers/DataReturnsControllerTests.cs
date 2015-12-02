@@ -88,18 +88,9 @@
         }
 
         [Fact]
-        public async void GetSubmitDataReturns_ChecksForValidityOfOrganisation()
-        {
-            try
-            {
-                await DataReturnsController().SubmitDataReturns(A<Guid>._);
-            }
-            catch (Exception)
-            {
-            }
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+        public async void GetSubmitDataReturns_ConfigSettingIsFalse_ThrowsException()
+        {           
+            await Assert.ThrowsAnyAsync<InvalidOperationException>(() => DataReturnsController().SubmitDataReturns(A<Guid>._));
         }
 
         [Fact]
@@ -109,17 +100,6 @@
                 .Returns(false);
 
             await Assert.ThrowsAnyAsync<Exception>(() => DataReturnsController().SubmitDataReturns(A<Guid>._));
-        }
-
-        [Fact]
-        public async void GetSubmitDataReturns_IdDoesBelongToAnExistingOrganisation_ReturnsView()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-                .Returns(true);
-
-            var result = await DataReturnsController().SubmitDataReturns(A<Guid>._);
-
-            Assert.IsType<ViewResult>(result);
         }
 
         [Fact]
@@ -215,32 +195,11 @@
             A.CallTo(() => controllerContext.Request).Returns(request);
             return controller;
         }
-
-        private DataReturnsController DataReturnsController()
-        {
-            var controller = new DataReturnsController(
-                () => weeeClient,
-                A.Fake<IWeeeCache>(),
-                A.Fake<BreadcrumbService>(),
-                A.Fake<CsvWriterFactory>(),
-                 mapper);
-
-            new HttpContextMocker().AttachToController(controller);
-
-            return controller;
-        }
-
+                
         private DataReturnsController DataReturnsController(object viewModel)
         {
-            var controller = new DataReturnsController(
-                 () => weeeClient,
-                 A.Fake<IWeeeCache>(),
-                 A.Fake<BreadcrumbService>(),
-                 A.Fake<CsvWriterFactory>(),
-                 mapper);
-
-            new HttpContextMocker().AttachToController(controller);
-
+            DataReturnsController controller = DataReturnsController();
+            
             // Mimic the behaviour of the model binder which is responsible for Validating the Model
             var validationContext = new ValidationContext(viewModel, null, null);
             var validationResults = new List<ValidationResult>();
@@ -253,19 +212,36 @@
             return controller;
         }
 
-        private FakeDataReturnsController BuildFakeDataReturnsController()
+        private DataReturnsController DataReturnsController()
         {
-            var controller = new FakeDataReturnsController
-               (weeeClient,
-                A.Fake<IWeeeCache>(),
-                A.Fake<BreadcrumbService>(),
-                A.Fake<CsvWriterFactory>(),
-                A.Fake<IMapper>());
+            DataReturnsController controller = new DataReturnsController(
+                 () => weeeClient,
+                 A.Fake<IWeeeCache>(),
+                 A.Fake<BreadcrumbService>(),
+                 A.Fake<CsvWriterFactory>(),
+                 mapper,
+                 A.Fake<ConfigurationService>());
 
             new HttpContextMocker().AttachToController(controller);
 
             return controller;
         }
+
+        private static DataReturnsController GetDummyDataReturnsController(IWeeeClient weeeClient)
+        {
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                A.Dummy<ConfigurationService>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            return controller;
+        }
+
         private class FakeDataReturnsController : DataReturnsController
         {
             public IWeeeClient ApiClient { get; private set; }
@@ -275,12 +251,14 @@
                 IWeeeCache cache,
                 BreadcrumbService breadcrumb,
                 CsvWriterFactory csvWriterFactory,
-                IMapper mapper)
+                IMapper mapper,
+                ConfigurationService configurationService)
                 : base(() => apiClient,
                 cache,
                 breadcrumb,
                 csvWriterFactory,
-                 mapper)
+                 mapper,
+                 configurationService)
             {
                 ApiClient = apiClient;
             }
@@ -289,6 +267,21 @@
             {
                 OnActionExecuting(filterContext);
             }
+        }
+
+        private FakeDataReturnsController BuildFakeDataReturnsController()
+        {
+            var controller = new FakeDataReturnsController
+               (weeeClient,
+                A.Fake<IWeeeCache>(),
+                A.Fake<BreadcrumbService>(),
+                A.Fake<CsvWriterFactory>(),
+                A.Fake<IMapper>(),
+                A.Fake<ConfigurationService>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            return controller;
         }
     }
 }
