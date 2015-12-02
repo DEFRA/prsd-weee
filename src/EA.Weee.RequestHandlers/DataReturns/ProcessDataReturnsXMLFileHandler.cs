@@ -7,8 +7,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
-    using DataReturns.GenerateDomainObjects;
-    using Domain.Scheme;
+    using Domain.DataReturns;
+    using GenerateDomainObjects;
     using Prsd.Core.Mediator;
     using Requests.DataReturns;
     using Security;
@@ -44,7 +44,7 @@
 
             var errors = xmlValidator.Validate(message);
             List<DataReturnsUploadError> datareturnsUploadErrors = errors as List<DataReturnsUploadError> ?? errors.ToList();                        
-            var upload = xmlGenerator.GenerateDataReturnsUpload(message, datareturnsUploadErrors, scheme.Id);
+            var upload = xmlGenerator.GenerateDataReturnsUpload(message, datareturnsUploadErrors, scheme);
 
             // record XML processing end time
             stopwatch.Stop();

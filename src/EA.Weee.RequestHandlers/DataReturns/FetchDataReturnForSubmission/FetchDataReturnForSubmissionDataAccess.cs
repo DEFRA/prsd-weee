@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.FetchDataReturnForSubmission
 {
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using DataAccess;
+    using Domain.DataReturns;
 
     public class FetchDataReturnForSubmissionDataAccess : IFetchDataReturnForSubmissionDataAccess
     {

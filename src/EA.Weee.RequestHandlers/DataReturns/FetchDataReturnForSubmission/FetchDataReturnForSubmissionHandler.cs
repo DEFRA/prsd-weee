@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.FetchDataReturnForSubmission
 {
-    using Domain;
-    using EA.Prsd.Core.Mediator;
-    using EA.Weee.Core.DataReturns;
-    using EA.Weee.RequestHandlers.Security;
-    using EA.Weee.Requests.DataReturns;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Core.DataReturns;
+    using Domain;
+    using Domain.DataReturns;
+    using EA.Prsd.Core.Mediator;
+    using Security;
     using Request = EA.Weee.Requests.DataReturns.FetchDataReturnForSubmission;
 
     public class FetchDataReturnForSubmissionHandler : IRequestHandler<Request, DataReturnForSubmission>
@@ -27,9 +27,9 @@
 
         public async Task<DataReturnForSubmission> HandleAsync(Request message)
         {
-            Domain.Scheme.DataReturnsUpload dataReturn = await dataAccess.FetchDataReturnAsync(message.DataReturnId);
+            DataReturnsUpload dataReturn = await dataAccess.FetchDataReturnAsync(message.DataReturnId);
 
-            authorization.EnsureSchemeAccess(dataReturn.SchemeId);
+            authorization.EnsureSchemeAccess(dataReturn.Scheme.Id);
 
             if (dataReturn.IsSubmitted)
             {
@@ -38,7 +38,7 @@
                     dataReturn.Id);
                 throw new InvalidOperationException(errorMessage);
             }
-
+            
             List<DataReturnWarning> warnings = dataReturn.Errors
                 .Where(e => e.ErrorLevel == ErrorLevel.Warning)
                 .Select(e => new DataReturnWarning(e.Description))
