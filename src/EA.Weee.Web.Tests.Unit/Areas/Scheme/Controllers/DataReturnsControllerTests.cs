@@ -416,8 +416,8 @@
             Assert.IsAssignableFrom<ViewResultBase>(result);
             ViewResultBase viewResult = result as ViewResultBase;
 
-            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "Review",
-                "The GET Review action must return the view called \"Review\" when the data return has no errors.");
+            Assert.True(viewResult.ViewName == "Submit",
+                "The GET Review action must return the view called \"Submit\" when the data return has no errors.");
 
             Assert.IsAssignableFrom<SubmitViewModel>(viewResult.Model);
             SubmitViewModel viewModel = viewResult.Model as SubmitViewModel;
