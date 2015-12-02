@@ -1,15 +1,19 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Core.DataReturns;
+    using Core.Scheme;
     using Core.Shared;
     using Infrastructure;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
-    using System;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using ViewModels;
     using ViewModels.DataReturns;
     using Web.Controllers.Base;
@@ -185,6 +189,35 @@
         {
             await SetBreadcrumb(pcsId);
             return View();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadErrorsAndWarnings(Guid pcsId, Guid dataReturnId)
+        {
+            SchemePublicInfo scheme = await cache.FetchSchemePublicInfo(pcsId);
+
+            DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+
+            CsvWriter<IErrorOrWarning> csvWriter = csvWriterFactory.Create<IErrorOrWarning>();
+            csvWriter.DefineColumn("Type", e => e.TypeName);
+            csvWriter.DefineColumn("Description", e => e.Description);
+
+            List<IErrorOrWarning> errorsAndWarnings = new List<IErrorOrWarning>();
+            errorsAndWarnings.AddRange(dataReturn.Errors);
+            errorsAndWarnings.AddRange(dataReturn.Warnings);
+
+            string csv = csvWriter.Write(errorsAndWarnings);
+
+            string filename = string.Format(
+                "{0}_{1}{2}_data_return_errors_and_warnings_{3}.csv",
+                scheme.ApprovalNo,
+                dataReturn.Quarter.Year,
+                dataReturn.Quarter.Q,
+                DateTime.Now.ToString("ddMMyyyy_HHmm"));
+
+            byte[] fileContent = Encoding.UTF8.GetBytes(csv);
+
+            return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(filename));
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)

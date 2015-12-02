@@ -6,9 +6,14 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class DataReturnWarning
+    public class DataReturnWarning : IErrorOrWarning
     {
         public string Description { get; private set; }
+
+        public string TypeName
+        {
+            get { return "Warning"; }
+        }
 
         public DataReturnWarning(string description)
         {
