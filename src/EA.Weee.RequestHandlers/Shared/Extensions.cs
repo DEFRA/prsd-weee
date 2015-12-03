@@ -3,6 +3,7 @@
     using System;
     using Core.Helpers;
     using Domain;
+    using Domain.DataReturns;
     using Domain.Scheme;
     using Weee.XmlValidation.Errors;
 

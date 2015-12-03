@@ -6,7 +6,7 @@
     using System.Xml.Linq;
     using Core.Shared;
     using FakeItEasy;
-    using RequestHandlers.DataReturns.XmlValidation;
+    using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using Requests.DataReturns;
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;
@@ -56,9 +56,9 @@
             Assert.NotEmpty(result);
         }
 
-        private DataReturnsXMLValidator XmlValidator()
+        private DataReturnsXmlValidator XmlValidator()
         {
-            return new DataReturnsXMLValidator(schemaValidator, xmlConverter, errorTranslator);
+            return new DataReturnsXmlValidator(schemaValidator, xmlConverter, errorTranslator);
         }
     }
 }
