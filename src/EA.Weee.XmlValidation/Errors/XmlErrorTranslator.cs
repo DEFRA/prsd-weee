@@ -104,7 +104,7 @@
 
             if (!string.IsNullOrEmpty(lineNumberText))
             {
-                resultErrorMessage = resultErrorMessage.EndsWith(".")
+                resultErrorMessage = resultErrorMessage.EndsWith(".", System.StringComparison.CurrentCulture)
                     ? resultErrorMessage.Remove(resultErrorMessage.Length - 1)
                     : resultErrorMessage;
             }
@@ -113,9 +113,9 @@
         }
 
         private string MakeFriendlyErrorUniqueKeyMessage(XElement sender, string message)
-        {
-            var constraintWhichFailed = Regex.Match(message, UniqueKeyConstraintPattern).Groups[0].ToString();
-            return string.Format("There is duplicate value '{0}' for child element of '{1}'.", sender.Value, sender.Name.LocalName);
+        { 
+            var element = sender.Descendants().First();
+            return string.Format("There is duplicate value '{0}' for field '{1}' of parent field '{2}'.", element.Value, element.Name.LocalName, sender.Name.LocalName);
         }
 
         private static bool TestRegex(string message, Regex regex, out Match match)

@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Domain.Scheme
+﻿namespace EA.Weee.Domain.DataReturns
 {
     using System;
     using System.ComponentModel.DataAnnotations;
