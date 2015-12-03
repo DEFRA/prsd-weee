@@ -22,6 +22,8 @@
 
         public virtual DataReturnsUploadRawData RawData { get; set; }
 
+        public virtual TimeSpan ProcessTime { get; private set; }
+
         public DataReturnsUpload(string data, List<DataReturnsUploadError> errors, int? complianceYear, Scheme scheme, string fileName)
         {
             Scheme = scheme;
@@ -46,6 +48,18 @@
         protected DataReturnsUpload()
         {
             this.Date = SystemTime.UtcNow;
+        }
+
+        public virtual void SetProcessTime(TimeSpan processTime)
+        {
+            if (ProcessTime.Ticks.Equals(0))
+            {
+                ProcessTime = processTime;
+            }
+            else
+            {
+                throw new InvalidOperationException("ProcessTime cannot be set for a Data returns upload that has already been given a ProcessTime value.");
+            }
         }
     }
 }
