@@ -55,7 +55,7 @@
 
             // record XML processing end time
             stopwatch.Stop();
-
+            dataReturn.SetProcessTime(stopwatch.Elapsed);
             await dataAccess.SaveAsync(dataReturn);
 
             return dataReturn.Id;

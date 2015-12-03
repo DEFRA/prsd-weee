@@ -139,7 +139,19 @@
                 }
                 if (viewModel.SelectedValue == PcsAction.SubmitPcsDataReturns)
                 {
-                    return RedirectToAction("Upload", "DataReturns", new { pcsId = viewModel.OrganisationId });
+                    using (var client = apiClient())
+                    {
+                        var status = await client.SendAsync(User.GetAccessToken(), new GetSchemeStatus(viewModel.OrganisationId));
+
+                        if (status == SchemeStatus.Approved)
+                        {
+                            return RedirectToAction("Upload", "DataReturns", new { pcsId = viewModel.OrganisationId });
+                        }
+                        else
+                        {
+                            return RedirectToAction("AuthorisationRequired", "DataReturns", new { pcsId = viewModel.OrganisationId });
+                        }
+                    }                    
                 }
             }
 

@@ -123,6 +123,7 @@
     <Content Include="scripts\Update\Sprint17\20151116-1229-AddSPforPCSCharges.sql" />
     <Content Include="scripts\Update\Sprint17\20151127-1853-CreateProducerPublicRegisterReportSP.sql" />
     <Content Include="scripts\Update\Sprint17\20151125-1530-DataStandards-UpdateOrganisationFieldLengths.sql" />
+    <Content Include="scripts\Update\Sprint18\20151202-1015-AddProcessTimeToDataReturnsUpload.sql" />
     <Content Include="scripts\Update\Sprint18\20151126-1142-AddDataReturnsUploadAndErrorsTables.sql" />
   </ItemGroup>
   <ItemGroup>
