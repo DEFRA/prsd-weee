@@ -47,7 +47,7 @@
         {
             var memberUploads = new[]
             {
-                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid(), "File name")
+                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, A.Dummy<Scheme>(), "File name")
             };
 
             var handler = GetPreparedHandler(memberUploads);
@@ -62,7 +62,7 @@
         {
             var memberUploads = new[]
             {
-                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid(), "File name")
+                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, A.Dummy<Scheme>(), "File name")
             };
 
             var otherPcsId = Guid.NewGuid();
@@ -82,7 +82,7 @@
         {
             var memberUploads = new[]
             {
-                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, Guid.NewGuid(), "File name")
+                new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, A.Dummy<Scheme>(), "File name")
             };
 
             var handler = GetPreparedHandler(memberUploads);

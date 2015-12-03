@@ -17,7 +17,7 @@ namespace EA.Weee.Tests.Core.Model
         public MemberUpload()
         {
             this.MemberUploadErrors = new HashSet<MemberUploadError>();
-            this.Producers = new HashSet<Producer>();
+            this.ProducerSubmissions = new HashSet<ProducerSubmission>();
         }
     
         public System.Guid Id { get; set; }
@@ -31,10 +31,11 @@ namespace EA.Weee.Tests.Core.Model
         public string UserId { get; set; }
         public System.DateTime Date { get; set; }
         public System.TimeSpan ProcessTime { get; set; }
+        public string FileName { get; set; }
     
         public virtual Organisation Organisation { get; set; }
         public virtual Scheme Scheme { get; set; }
         public virtual ICollection<MemberUploadError> MemberUploadErrors { get; set; }
-        public virtual ICollection<Producer> Producers { get; set; }
+        public virtual ICollection<ProducerSubmission> ProducerSubmissions { get; set; }
     }
 }
