@@ -1,22 +1,26 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Net;
-    using System.Web;
-    using System.Web.Mvc;
-    using System.Web.Routing;
     using Api.Client;
+    using Core.DataReturns;
     using Core.Shared;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using Prsd.Core.Mapper;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Net;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Routing;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
+    using Web.Areas.Scheme.ViewModels.DataReturns;
+    using Weee.Requests.DataReturns;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
     using Xunit;
@@ -88,11 +92,11 @@
         }
 
         [Fact]
-        public async void GetSubmitDataReturns_ChecksForValidityOfOrganisation()
+        public async void GetUpload_ChecksForValidityOfOrganisation()
         {
             try
             {
-                await DataReturnsController().SubmitDataReturns(A<Guid>._);
+                await DataReturnsController().Upload(A<Guid>._);
             }
             catch (Exception)
             {
@@ -103,21 +107,21 @@
         }
 
         [Fact]
-        public async void GetSubmitDataReturns_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
+        public async void GetUpload_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<Exception>(() => DataReturnsController().SubmitDataReturns(A<Guid>._));
+            await Assert.ThrowsAnyAsync<Exception>(() => DataReturnsController().Upload(A<Guid>._));
         }
 
         [Fact]
-        public async void GetSubmitDataReturns_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        public async void GetUpload_IdDoesBelongToAnExistingOrganisation_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(true);
 
-            var result = await DataReturnsController().SubmitDataReturns(A<Guid>._);
+            var result = await DataReturnsController().Upload(A<Guid>._);
 
             Assert.IsType<ViewResult>(result);
         }
@@ -196,7 +200,453 @@
 
             Assert.Null(context.Result);
         }
-        
+
+        /// <summary>
+        /// This test ensures that the user is redireted to the GET Submit action
+        /// following the upload of a data return that generates no errors during processing.
+        /// </summary>
+        [Fact]
+        public async void PostUpload_WithDataReturnWithNoErrors_RedirectsToSubmit()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnsXMLFile>._))
+                .Returns(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
+
+            DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
+                new Quarter(2015, QuarterType.Q4),
+                A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
+                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .Returns(dataReturnForSubmission);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            PCSFileUploadViewModel viewModel = new PCSFileUploadViewModel();
+
+            // Act
+            ActionResult result = await controller.Upload(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), viewModel);
+
+            // Assert
+            Assert.IsAssignableFrom<RedirectToRouteResult>(result);
+            RedirectToRouteResult redirectToRouteResult = result as RedirectToRouteResult;
+
+            Assert.Equal("Submit", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), redirectToRouteResult.RouteValues["pcsId"]);
+            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnId"]);
+        }
+
+        /// <summary>
+        /// This test ensures that the user is redireted to the GET Review action
+        /// following the upload of a data return that generates errors during processing.
+        /// </summary>
+        [Fact]
+        public async void PostUpload_WithDataReturnWithErrors_RedirectsToReview()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnsXMLFile>._))
+                .Returns(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
+
+            DataReturnError error = new DataReturnError("Test Error");
+
+            DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
+                new Quarter(2015, QuarterType.Q4),
+                A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
+                new List<DataReturnError>() { error });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .Returns(dataReturnForSubmission);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            PCSFileUploadViewModel viewModel = new PCSFileUploadViewModel();
+
+            // Act
+            ActionResult result = await controller.Upload(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), viewModel);
+
+            // Assert
+            Assert.IsAssignableFrom<RedirectToRouteResult>(result);
+            RedirectToRouteResult redirectToRouteResult = result as RedirectToRouteResult;
+
+            Assert.Equal("Review", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), redirectToRouteResult.RouteValues["pcsId"]);
+            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnId"]);
+        }
+
+        /// <summary>
+        /// This test ensures that an exception is thrown when the pcsId (organisation ID) provided
+        /// to the controller action does not match the organisation ID of the specified data return.
+        /// </summary>
+        [Fact]
+        public async void GetReview_WithDataReturnWithDifferentOrganisationId_ThrowsAnException()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
+                new Quarter(2015, QuarterType.Q4),
+                A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
+                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .Returns(dataReturnForSubmission);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            // Act
+            Func<Task<ActionResult>> testCode = async () =>
+                await controller.Review(
+                    new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
+                    new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
+
+            // Assert
+            await Assert.ThrowsAnyAsync<Exception>(testCode);
+        }
+
+        /// <summary>
+        /// This test ensures that the user is redirected to the GET Submit action
+        /// if they use the GET Review action for a data return with no errors.
+        /// </summary>
+        [Fact]
+        public async void GetReview_WithDataReturnWithNoErrors_RedirectsToSubmit()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
+                new Quarter(2015, QuarterType.Q4),
+                A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
+                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .Returns(dataReturnForSubmission);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            // Act
+            ActionResult result = await controller.Review(
+                new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
+
+            // Assert
+            Assert.IsAssignableFrom<RedirectToRouteResult>(result);
+            RedirectToRouteResult redirectToRouteResult = result as RedirectToRouteResult;
+
+            Assert.Equal("Submit", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), redirectToRouteResult.RouteValues["pcsId"]);
+            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnId"]);
+        }
+
+        /// <summary>
+        /// This test ensures that the user is shown the Submit view when they use the
+        /// GET Review action for a data return with errors.
+        /// </summary>
+        [Fact]
+        public async void GetReview_HappyPath_ReturnsSubmitViewWithPopulatedViewModel()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            DataReturnError error = new DataReturnError("Test Error");
+
+            DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
+                new Quarter(2015, QuarterType.Q4),
+                A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
+                new List<DataReturnError>() { error });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .Returns(dataReturnForSubmission);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            // Act
+            ActionResult result = await controller.Review(
+                new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
+
+            // Assert
+            Assert.IsAssignableFrom<ViewResultBase>(result);
+            ViewResultBase viewResult = result as ViewResultBase;
+
+            Assert.True(viewResult.ViewName == "Submit",
+                "The GET Review action must return the view called \"Submit\" when the data return has no errors.");
+
+            Assert.IsAssignableFrom<SubmitViewModel>(viewResult.Model);
+            SubmitViewModel viewModel = viewResult.Model as SubmitViewModel;
+
+            Assert.Equal(dataReturnForSubmission, viewModel.DataReturn);
+        }
+
+        /// <summary>
+        /// This test ensures that an exception is thrown when the pcsId (organisation ID) provided
+        /// to the controller action does not match the organisation ID of the specified data return.
+        /// </summary>
+        [Fact]
+        public async void GetSubmit_WithDataReturnWithDifferentOrganisationId_ThrowsAnException()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
+                new Quarter(2015, QuarterType.Q4),
+                A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
+                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .Returns(dataReturnForSubmission);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            // Act
+            Func<Task<ActionResult>> testCode = async () =>
+                await controller.Submit(
+                    new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
+                    new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
+
+            // Assert
+            await Assert.ThrowsAnyAsync<Exception>(testCode);
+        }
+
+        /// <summary>
+        /// This test ensures that the user is redirected to the GET Review action
+        /// if they use the GET Submit action for a data return with one or more errors.
+        /// </summary>
+        [Fact]
+        public async void GetSubmit_WithDataReturnWithErrors_RedirectsToReview()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            DataReturnError error = new DataReturnError("Test Error");
+
+            DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
+                new Quarter(2015, QuarterType.Q4),
+                A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
+                new List<DataReturnError>() { error });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .Returns(dataReturnForSubmission);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            // Act
+            ActionResult result = await controller.Submit(
+                new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
+
+            // Assert
+            Assert.IsAssignableFrom<RedirectToRouteResult>(result);
+            RedirectToRouteResult redirectToRouteResult = result as RedirectToRouteResult;
+
+            Assert.Equal("Review", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), redirectToRouteResult.RouteValues["pcsId"]);
+            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnId"]);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET Submit action returns the "Submit" view with a populated
+        /// view model when a data return is sucessfully requested.
+        /// </summary>
+        [Fact]
+        public async void GetSubmit_HappyPath_ReturnsSubmitViewWithPopulatedViewModel()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
+                new Quarter(2015, QuarterType.Q4),
+                A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
+                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .Returns(dataReturnForSubmission);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            // Act
+            ActionResult result = await controller.Submit(
+                    new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
+                    new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
+
+            // Assert
+            Assert.IsAssignableFrom<ViewResultBase>(result);
+            ViewResultBase viewResult = result as ViewResultBase;
+
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "Submit",
+                "The GET Submit action must return the view called \"Submit\".");
+
+            Assert.IsAssignableFrom<SubmitViewModel>(viewResult.Model);
+            SubmitViewModel viewModel = viewResult.Model as SubmitViewModel;
+
+            Assert.Equal(dataReturnForSubmission, viewModel.DataReturn);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST Submit action returns the "Submit" view with a populated
+        /// view model when the model state is invalid.
+        /// </summary>
+        [Fact]
+        public async void PostSubmit_WithInvalidModelState_ReturnsSubmitViewWithPopulatedViewModel()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
+                new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
+                new Quarter(2015, QuarterType.Q4),
+                A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
+                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .Returns(dataReturnForSubmission);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            controller.ModelState.AddModelError("Key", "Some Error");
+
+            // Act
+            ActionResult result = await controller.Submit(
+                    new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
+                    new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                    new SubmitViewModel());
+
+            // Assert
+            Assert.IsAssignableFrom<ViewResultBase>(result);
+            ViewResultBase viewResult = result as ViewResultBase;
+
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "Submit",
+                "The POST Submit action must return the view called \"Submit\" when the model state is invalid.");
+
+            Assert.IsAssignableFrom<SubmitViewModel>(viewResult.Model);
+            SubmitViewModel viewModel = viewResult.Model as SubmitViewModel;
+
+            Assert.Equal(dataReturnForSubmission, viewModel.DataReturn);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST Submit action redirects the user to the GET SuccessfulSubmission
+        /// action after a successful submission.
+        /// </summary>
+        [Fact]
+        public async void PostSubmit_HappyPath_RedirectsToSuccessfulSubmission()
+        {
+            // Arrange
+            DataReturnsController controller = new DataReturnsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>());
+
+            new HttpContextMocker().AttachToController(controller);
+
+            // Act
+            ActionResult result = await controller.Submit(
+                    new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
+                    new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
+                    new SubmitViewModel());
+
+            // Assert
+            Assert.IsAssignableFrom<RedirectToRouteResult>(result);
+            RedirectToRouteResult redirectToRouteResult = result as RedirectToRouteResult;
+
+            Assert.Equal("SuccessfulSubmission", redirectToRouteResult.RouteValues["action"]);
+            Assert.Equal(new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"), redirectToRouteResult.RouteValues["pcsId"]);
+        }
+
         private DataReturnsController GetRealDataReturnsControllerWithFakeContext()
         {
             var controller = DataReturnsController();
@@ -266,6 +716,7 @@
 
             return controller;
         }
+
         private class FakeDataReturnsController : DataReturnsController
         {
             public IWeeeClient ApiClient { get; private set; }

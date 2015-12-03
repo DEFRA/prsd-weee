@@ -1,15 +1,21 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.DataReturns;
+    using Core.Scheme;
     using Core.Shared;
     using Infrastructure;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
     using ViewModels;
+    using ViewModels.DataReturns;
     using Web.Controllers.Base;
     using Weee.Requests.DataReturns;
     using Weee.Requests.Organisations;
@@ -22,7 +28,6 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly CsvWriterFactory csvWriterFactory;
         private readonly IMapper mapper;
-        private const string SubmitDataReturnsActivity = "Submit data returns";
 
         public DataReturnsController(
             Func<IWeeeClient> apiClient,
@@ -66,7 +71,8 @@
                     showLinkToSelectOrganisation = (task.Result > 1);
                 }
 
-                await SetBreadcrumb(pcsId, SubmitDataReturnsActivity);
+                await SetBreadcrumb(pcsId);
+
                 return View(new AuthorizationRequiredViewModel
                 {
                     Status = status,
@@ -76,14 +82,14 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> SubmitDataReturns(Guid pcsId)
+        public async Task<ViewResult> Upload(Guid pcsId)
         {
             using (var client = apiClient())
             {
                 var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
                 if (orgExists)
                 {
-                    await SetBreadcrumb(pcsId, SubmitDataReturnsActivity);
+                    await SetBreadcrumb(pcsId);
                     return View();
                 }
             }
@@ -93,25 +99,127 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SubmitDataReturns(Guid pcsId, PCSFileUploadViewModel model)
+        public async Task<ActionResult> Upload(Guid pcsId, PCSFileUploadViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                await SetBreadcrumb(pcsId, SubmitDataReturnsActivity);
+                await SetBreadcrumb(pcsId);
                 return View(model);
             }
 
+            Guid dataReturnId;
             using (var client = apiClient())
             {
                 model.PcsId = pcsId;
                 var request = mapper.Map<PCSFileUploadViewModel, ProcessDataReturnsXMLFile>(model);
-                await client.SendAsync(User.GetAccessToken(), request);
+                dataReturnId = await client.SendAsync(User.GetAccessToken(), request);
             }
 
-            //TODO: Redirect to errors or warnings page if any else summary page.
-            await SetBreadcrumb(pcsId, SubmitDataReturnsActivity);
-            return View(model);
+            DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+            if (dataReturn.Errors.Count == 0)
+            {
+                return RedirectToAction("Submit", new { pcsId = pcsId, dataReturnId = dataReturnId });
+            }
+            else
+            {
+                return RedirectToAction("Review", new { pcsId = pcsId, dataReturnId = dataReturnId });
+            }
         }
+
+        [HttpGet]
+        public async Task<ActionResult> Review(Guid pcsId, Guid dataReturnId)
+        {
+            DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+
+            if (dataReturn.Errors.Count == 0)
+            {
+                return RedirectToAction("Submit", new { pcsId, dataReturnId });
+            }
+
+            SubmitViewModel viewModel = new SubmitViewModel()
+            {
+                DataReturn = dataReturn
+            };
+
+            await SetBreadcrumb(pcsId);
+
+            return View("Submit", viewModel);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Submit(Guid pcsId, Guid dataReturnId)
+        {
+            DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+
+            if (dataReturn.Errors.Count != 0)
+            {
+                return RedirectToAction("Review", new { pcsId,  dataReturnId });
+            }
+
+            SubmitViewModel viewModel = new SubmitViewModel()
+            {
+                DataReturn = dataReturn
+            };
+
+            await SetBreadcrumb(pcsId);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Submit(Guid pcsId, Guid dataReturnId, SubmitViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+
+                viewModel.DataReturn = dataReturn;
+
+                return View(viewModel);
+            }
+
+            // TODO: Submit the data return.
+
+            return RedirectToAction("SuccessfulSubmission", new { pcsId });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SuccessfulSubmission(Guid pcsId)
+        {
+            await SetBreadcrumb(pcsId);
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadErrorsAndWarnings(Guid pcsId, Guid dataReturnId)
+        {
+            SchemePublicInfo scheme = await cache.FetchSchemePublicInfo(pcsId);
+
+            DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+
+            CsvWriter<IErrorOrWarning> csvWriter = csvWriterFactory.Create<IErrorOrWarning>();
+            csvWriter.DefineColumn("Type", e => e.TypeName);
+            csvWriter.DefineColumn("Description", e => e.Description);
+
+            List<IErrorOrWarning> errorsAndWarnings = new List<IErrorOrWarning>();
+            errorsAndWarnings.AddRange(dataReturn.Errors);
+            errorsAndWarnings.AddRange(dataReturn.Warnings);
+
+            string csv = csvWriter.Write(errorsAndWarnings);
+
+            string filename = string.Format(
+                "{0}_{1}{2}_data_return_errors_and_warnings_{3}.csv",
+                scheme.ApprovalNo,
+                dataReturn.Quarter.Year,
+                dataReturn.Quarter.Q,
+                DateTime.Now.ToString("ddMMyyyy_HHmm"));
+
+            byte[] fileContent = Encoding.UTF8.GetBytes(csv);
+
+            return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(filename));
+        }
+
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (filterContext.ActionDescriptor.ActionName == "AuthorisationRequired")
@@ -150,11 +258,30 @@
             }
         }
 
-        private async Task SetBreadcrumb(Guid organisationId, string activity)
+        private async Task SetBreadcrumb(Guid organisationId)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
-            breadcrumb.ExternalActivity = activity;
+            breadcrumb.ExternalActivity = "Submit a data return";
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
+        }
+
+        private async Task<DataReturnForSubmission> FetchDataReturn(Guid pcsId, Guid dataReturnId)
+        {
+            DataReturnForSubmission dataReturn;
+
+            using (var client = apiClient())
+            {
+                FetchDataReturnForSubmission request = new FetchDataReturnForSubmission(dataReturnId);
+                dataReturn = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            if (dataReturn.OrganisationId != pcsId)
+            {
+                string errorMessage = "The specified data return was not uploaded for the current organisation.";
+                throw new InvalidOperationException(errorMessage);
+            }
+
+            return dataReturn;
         }
     }
 }
