@@ -127,5 +127,20 @@
                     "[Producer].[spgProducerPublicRegisterCSVDataByComplianceYear] @ComplianceYear",
                     complianceYearParameter).ToListAsync();
         }
+
+        /// <summary>
+        /// Gets producer amendments history
+        /// </summary>
+        /// <param name="prn"></param>
+        /// <returns></returns>
+        public async Task<List<ProducerAmendmentsHistoryCSVData>> SpgProducerAmendmentsCSVDataByPRN(string prn)
+        {
+            var prnParameter = new SqlParameter("@PRN", prn);
+
+            return await context.Database
+                .SqlQuery<ProducerAmendmentsHistoryCSVData>(
+                    "[Producer].[spgProducerAmendmentsCSVDataByPRN] @PRN",
+                    prnParameter).ToListAsync();
+        }
     }
 }

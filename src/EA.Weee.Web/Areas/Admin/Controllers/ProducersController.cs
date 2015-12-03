@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
@@ -152,6 +153,19 @@
             viewModel.Details = producerDetails;
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadProducerAmendmentsCsv(string registrationNumber)
+        {
+            using (IWeeeClient client = apiClient())
+            {
+                var producerAmendmentsCsvData = await client.SendAsync(User.GetAccessToken(),
+                    new GetProducerAmendmentsHistoryCSV(registrationNumber));
+
+                byte[] data = new UTF8Encoding().GetBytes(producerAmendmentsCsvData.FileContent);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerAmendmentsCsvData.FileName));
+            }
         }
 
         private async Task SetBreadcrumb()
