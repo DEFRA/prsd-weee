@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns
 {
     using System;
     using System.Security;
