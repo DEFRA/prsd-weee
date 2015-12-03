@@ -71,7 +71,9 @@
 
         <br />
     }
-
+    <p>
+        @Html.ActionLink("Download amendment history (CSV)", "DownloadProducerAmendmentsCsv", "Producers", new { registrationNumber = @Model.Details.RegistrationNumber }, null)
+    </p>
     <p>
         <a href="javascript:history.back();">Back</a>
     </p>

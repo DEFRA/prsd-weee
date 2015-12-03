@@ -103,6 +103,7 @@
     <Compile Include="DataReturns\GenerateDomainObjects\GenerateFromDataReturnsXmlTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnsXMLFileHandlerTests.cs" />
     <Compile Include="DataReturns\XmlValidation\DataReturnsXmlValidatorTests.cs" />
+    <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandlerTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandlerTests.cs" />
