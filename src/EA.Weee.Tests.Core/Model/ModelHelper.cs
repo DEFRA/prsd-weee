@@ -180,6 +180,7 @@
             {
                 Id = IntegerToGuid(memberUploadId),
                 OrganisationId = scheme.OrganisationId,
+                Organisation = scheme.Organisation,
                 Scheme = scheme,
                 SchemeId = scheme.Id,
                 Data = string.Format("<memberUpload{0} />", memberUploadId),

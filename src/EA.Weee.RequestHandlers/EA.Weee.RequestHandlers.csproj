@@ -97,8 +97,11 @@
     <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
     <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
     <Compile Include="Scheme\MemberUploadTesting\IProducerListFactory.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IProducerListFactoryDataAccess.cs" />
     <Compile Include="Scheme\MemberUploadTesting\IXmlGenerator.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactory.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryDataAccess.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\SchemeInfo.cs" />
     <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
     <Compile Include="Shared\Extensions.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\GenerateFromXmlDataAccess.cs" />
