@@ -9867,7 +9867,7 @@ INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerN
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/BF5696TS', 'Poundworld Retail Ltd', '2215564', 'e3a6cca7-f7db-4db1-b06c-e1e145dd3655')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/BH5697TT', 'Brother Max Trading Ltd', '9750832', '793930de-8da4-491b-867b-ecf487f13012')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/AC5687ST', 'iON Cameras Limited', '7279494', 'c9550894-3849-493f-8ea3-e5aeb6784c83')
-INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/AD5687ST', 'Canon Europa NV	', 'FC012104', 'aea34694-ab35-4f6b-95b9-8c41054022c9')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/AD5687ST', 'Canon Europa NV', 'FC012104', 'aea34694-ab35-4f6b-95b9-8c41054022c9')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/JC5673RQ', 'Luxform Global BV', '17174349', '03ec9856-8e7b-48c8-92ca-887c90bf0310')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/JD5673RQ', 'Procure Direct Ltd', '5518077', '77ce3251-356e-408e-a385-74ff6048f372')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/JH5676RT', 'Verasonics Inc.', NULL, '319956d7-1cd3-40cd-9288-b34ce021c5b4')
