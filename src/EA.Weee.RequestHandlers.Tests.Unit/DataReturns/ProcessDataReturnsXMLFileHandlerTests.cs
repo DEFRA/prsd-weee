@@ -4,13 +4,11 @@
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Security;
+    using System.Threading.Tasks;
     using DataAccess;
-    using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
-    using RequestHandlers.DataReturns;
-    using RequestHandlers.DataReturns.GenerateDomainObjects;
-    using RequestHandlers.DataReturns.XmlValidation;
+    using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using Requests.DataReturns;
     using Weee.Tests.Core;
     using Xml.Converter;
@@ -18,60 +16,32 @@
 
     public class ProcessDataReturnsXMLFileHandlerTests
     {
-        private readonly IWeeeAuthorization permissiveAuthorization = AuthorizationBuilder.CreateUserAllowedToAccessOrganisation();
-        private readonly IWeeeAuthorization denyingAuthorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
-        private readonly DbContextHelper helper = new DbContextHelper();
-        private readonly ProcessDataReturnsXMLFileHandler handler;
-        private readonly IGenerateFromDataReturnsXML generator;
-        private readonly WeeeContext context;
-        private readonly DbSet<Scheme> schemesDbSet;
-        private readonly DbSet<DataReturnsUpload> datareturnsUploadsDbSet;
-        private readonly IDataReturnsXMLValidator xmlValidator;
-        private readonly IXmlConverter xmlConverter;
-        private static readonly Guid organisationId = Guid.NewGuid();
-        private static readonly ProcessDataReturnsXMLFile Message = new ProcessDataReturnsXMLFile(organisationId, new byte[1], "File name");
-
-        public ProcessDataReturnsXMLFileHandlerTests()
-        {
-            datareturnsUploadsDbSet = A.Fake<DbSet<DataReturnsUpload>>();
-            xmlConverter = A.Fake<IXmlConverter>();
-            var schemes = new[]
-            {
-                FakeSchemeData()
-            };
-
-            schemesDbSet = helper.GetAsyncEnabledDbSet(schemes);
-
-            context = A.Fake<WeeeContext>();
-            A.CallTo(() => context.Schemes).Returns(schemesDbSet);
-            A.CallTo(() => context.DataReturnsUploads).Returns(datareturnsUploadsDbSet);
-
-            generator = A.Fake<IGenerateFromDataReturnsXML>();
-            xmlValidator = A.Fake<IDataReturnsXMLValidator>();
-         
-            handler = new ProcessDataReturnsXMLFileHandler(context, permissiveAuthorization, xmlValidator, xmlConverter, generator);
-        }
-
+        /// <summary>
+        /// This test ensures that a user with no access to a scheme cannot create
+        /// a data return.
+        /// </summary>
         [Fact]
-        public async void NotOrganisationUser_ThrowsSecurityException()
+        public async void HandleAsync_UserNotAssociatedWithScheme_ThrowsSecurityException()
         {
-            var authorisationDeniedHandler = new ProcessDataReturnsXMLFileHandler(context, denyingAuthorization, xmlValidator, xmlConverter, generator);
+            // Arrange
+            IWeeeAuthorization authorization = new AuthorizationBuilder()
+                .DenySchemeAccess()
+                .Build();
 
-            await
-                Assert.ThrowsAsync<SecurityException>(
-                    async () => await authorisationDeniedHandler.HandleAsync(Message));
-        }
+            ProcessDataReturnsXmlFileHandler handler = new ProcessDataReturnsXmlFileHandler(
+                A.Dummy<IProcessDataReturnXmlFileDataAccess>(),
+                authorization,
+                A.Dummy<IDataReturnsXmlValidator>(),
+                A.Dummy<IXmlConverter>(),
+                A.Dummy<IGenerateFromDataReturnsXml>());
 
-        [Fact]
-        public async void ProcessDataReturnsXMLFile_SavesDataReturnsUpload()
-        {
-            var id = await handler.HandleAsync(Message);
-            Assert.NotNull(id);
-        }
-        
-        public static Scheme FakeSchemeData()
-        {
-            return new Scheme(organisationId);
+            ProcessDataReturnsXMLFile message = A.Dummy<ProcessDataReturnsXMLFile>();
+
+            // Act
+            Func<Task<Guid>> testCode = async () => await handler.HandleAsync(message);
+
+            // Assert
+            await Assert.ThrowsAsync<SecurityException>(testCode);
         }
     }
 }
