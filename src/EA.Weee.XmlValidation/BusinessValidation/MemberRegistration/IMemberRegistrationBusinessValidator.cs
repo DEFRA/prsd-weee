@@ -6,6 +6,6 @@
 
     public interface IMemberRegistrationBusinessValidator
     {
-        IEnumerable<RuleResult> Validate(schemeType scheme, Guid schemeId);
+        IEnumerable<RuleResult> Validate(schemeType scheme, Guid organisationId);
     }
 }

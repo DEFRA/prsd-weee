@@ -16,7 +16,7 @@ namespace EA.Weee.Tests.Core.Model
     {
         public AuthorisedRepresentative()
         {
-            this.Producers = new HashSet<Producer>();
+            this.ProducerSubmissions = new HashSet<ProducerSubmission>();
         }
     
         public System.Guid Id { get; set; }
@@ -25,6 +25,6 @@ namespace EA.Weee.Tests.Core.Model
         public Nullable<System.Guid> OverseasContactId { get; set; }
     
         public virtual Contact1 Contact1 { get; set; }
-        public virtual ICollection<Producer> Producers { get; set; }
+        public virtual ICollection<ProducerSubmission> ProducerSubmissions { get; set; }
     }
 }

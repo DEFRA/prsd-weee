@@ -68,8 +68,8 @@
             }
 
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-            var upload = generateFromXml.GenerateMemberUpload(message, memberUploadErrors, totalCharges, scheme.Id);
-            IEnumerable<Producer> producers = Enumerable.Empty<Producer>();
+            var upload = generateFromXml.GenerateMemberUpload(message, memberUploadErrors, totalCharges, scheme);
+            IEnumerable<ProducerSubmission> producers = Enumerable.Empty<ProducerSubmission>();
 
             //Build producers domain object if there are no errors (schema or business) during validation of xml file.
             if (!containsErrorOrFatal)
@@ -82,7 +82,7 @@
             upload.SetProcessTime(stopwatch.Elapsed);
 
             context.MemberUploads.Add(upload);
-            context.Producers.AddRange(producers);
+            context.ProducerSubmissions.AddRange(producers);
 
             await context.SaveChangesAsync();
             return upload.Id;

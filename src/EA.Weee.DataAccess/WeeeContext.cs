@@ -41,7 +41,9 @@
 
         public virtual DbSet<Scheme> Schemes { get; set; }
 
-        public virtual DbSet<Producer> Producers { get; set; }
+        public virtual DbSet<RegisteredProducer> RegisteredProducers { get; set; }
+
+        public virtual DbSet<ProducerSubmission> ProducerSubmissions { get; set; }
 
         public virtual DbSet<SystemData> SystemData { get; set; }
 
