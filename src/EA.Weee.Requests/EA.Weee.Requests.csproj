@@ -49,6 +49,7 @@
     <Compile Include="Admin\Reports\GetPCSChargesCSV.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSV.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSV.cs" />
+    <Compile Include="DataReturns\FetchDataReturnForSubmission.cs" />
     <Compile Include="DataReturns\ProcessDataReturnsXMLFile.cs" />
     <Compile Include="Organisations\GetOrganisationOverview.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFile.cs" />

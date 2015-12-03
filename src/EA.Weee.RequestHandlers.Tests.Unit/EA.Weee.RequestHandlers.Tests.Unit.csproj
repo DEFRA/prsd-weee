@@ -100,6 +100,7 @@
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccessTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
     <Compile Include="Admin\UpdateUserHandlerTests.cs" />
+    <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandlerTests.cs" />
     <Compile Include="DataReturns\GenerateDomainObjects\GenerateFromDataReturnsXmlTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnsXMLFileHandlerTests.cs" />
     <Compile Include="DataReturns\XmlValidation\DataReturnsXmlValidatorTests.cs" />
