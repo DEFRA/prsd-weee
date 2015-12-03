@@ -2,12 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using Core.Scheme.MemberUploadTesting;
-    using DataAccess;
     using Prsd.Core;
 
     /// <summary>
@@ -16,19 +14,11 @@
     /// </summary>
     public class ProducerListFactory : IProducerListFactory
     {
-        private struct SchemeInfo
+        private readonly IProducerListFactoryDataAccess dataAccess;
+
+        public ProducerListFactory(IProducerListFactoryDataAccess dataAccess)
         {
-            public string TradingName { get; set; }
-            public string ApprovalNumber { get; set; }
-        }
-
-        private WeeeContext context;
-
-        public ProducerListFactory(WeeeContext context)
-        {
-            Guard.ArgumentNotNull(() => context, context);
-
-            this.context = context;
+            this.dataAccess = dataAccess;
         }
 
         public async Task<ProducerList> CreateAsync(ProducerListSettings listSettings)
@@ -63,14 +53,8 @@
 
             int numberOfExistingProducersToInclude = listSettings.NumberOfExistingProducers;
 
-            List<string> registrationNumbers = await context
-                .RegisteredProducers
-                .Where(p => p.CurrentSubmission != null)
-                .Where(p => p.ComplianceYear == listSettings.ComplianceYear)
-                .Where(p => p.Scheme.OrganisationId == listSettings.OrganisationID)
-                .Select(p => p.ProducerRegistrationNumber)
-                .Take(numberOfExistingProducersToInclude)
-                .ToListAsync();
+            List<string> registrationNumbers = await 
+                dataAccess.GetRegistrationNumbers(listSettings.OrganisationID, listSettings.ComplianceYear, numberOfExistingProducersToInclude);
 
             int numberOfExistingProducers = registrationNumbers.Count;
 
@@ -129,11 +113,7 @@
 
         private async Task<SchemeInfo> FetchSchemeInfo(Guid organisationId)
         {
-            var schemeInfos = await context
-                .Schemes
-                .Where(s => s.OrganisationId == organisationId)
-                .Select(s => new { s.Organisation.TradingName, s.ApprovalNumber })
-                .ToListAsync();
+            var schemeInfos = await dataAccess.FetchSchemeInfo(organisationId);
 
             if (schemeInfos.Count == 0)
             {
@@ -141,7 +121,7 @@
                     "No scheme was found in the database with an organisation ID of \"{0}\".",
                     organisationId);
 
-                throw new Exception(message);
+                throw new ArgumentException(message);
             }
 
             if (schemeInfos.Count > 1)
@@ -150,16 +130,10 @@
                     "More than one scheme was found in the database with an organisation ID of \"{0}\".",
                     organisationId);
 
-                throw new Exception(message);
+                throw new ArgumentException(message);
             }
 
-            var schemeInfo = schemeInfos.Single();
-
-            return new SchemeInfo()
-            {
-                TradingName = schemeInfo.TradingName,
-                ApprovalNumber = schemeInfo.ApprovalNumber
-            };
+            return schemeInfos.Single();
         }
     }
 }
