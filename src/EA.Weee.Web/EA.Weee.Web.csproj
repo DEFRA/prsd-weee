@@ -496,6 +496,7 @@
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
+    <Compile Include="Areas\Scheme\ViewModels\DataReturns\SubmitViewModel.cs" />
     <Compile Include="Infrastructure\CsvFilenameFormat.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\govuk_elements\_tables.scss" />
@@ -534,8 +535,11 @@
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_media-player.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
-    <Content Include="Areas\Scheme\Views\DataReturns\SubmitDataReturns.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\Upload.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerPublicRegister.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\Submit.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\SuccessfulSubmission.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\AuthorisationRequired.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />

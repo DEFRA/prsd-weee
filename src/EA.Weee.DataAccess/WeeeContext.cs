@@ -7,6 +7,7 @@
     using Domain;
     using Domain.Admin;
     using Domain.Audit;
+    using Domain.DataReturns;
     using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Producer;
