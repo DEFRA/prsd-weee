@@ -145,13 +145,13 @@
 
                         if (status == SchemeStatus.Approved)
                         {
-                            return RedirectToAction("SubmitDataReturns", "DataReturns", new { pcsId = viewModel.OrganisationId });
+                            return RedirectToAction("Upload", "DataReturns", new { pcsId = viewModel.OrganisationId });
                         }
                         else
                         {
                             return RedirectToAction("AuthorisationRequired", "DataReturns", new { pcsId = viewModel.OrganisationId });
                         }
-                    }
+                    }                    
                 }
             }
 
