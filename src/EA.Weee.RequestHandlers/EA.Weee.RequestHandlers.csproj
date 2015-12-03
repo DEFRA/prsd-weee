@@ -83,16 +83,17 @@
     <Compile Include="Admin\Reports\GetPCSChargesCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
-    
-    <Compile Include="DataReturns\GenerateDomainObjects\GenerateFromDataReturnsXML.cs" />
-    <Compile Include="DataReturns\GenerateDomainObjects\IGenerateFromDataReturnsXML.cs" />
-    <Compile Include="DataReturns\ProcessDataReturnsXMLFileHandler.cs" />
-    <Compile Include="DataReturns\XmlValidation\DataReturnsXMLValidator.cs" />
-    <Compile Include="DataReturns\XmlValidation\IDataReturnsXMLValidator.cs" />
-    <Compile Include="Mappings\DataReturnsUploadErrorMap.cs" />
-    <Compile Include="Mappings\DataReturnsUploadMap.cs" />
-    <Compile Include="Mappings\MemberUploadErrorMap.cs" />  
-
+    <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionDataAccess.cs" />
+    <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandler.cs" />
+    <Compile Include="DataReturns\FetchDataReturnForSubmission\IFetchDataReturnForSubmissionDataAccess.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\GenerateFromDataReturnsXml.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\IGenerateFromDataReturnsXml.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\IProcessDataReturnXmlFileDataAccess.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnsXmlFileHandler.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnsXmlFileDataAccess.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnsXmlValidator.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\IDataReturnsXmlValidator.cs" />
+    <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />

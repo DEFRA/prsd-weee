@@ -1,14 +1,13 @@
-﻿namespace EA.Weee.Domain.Scheme
+﻿namespace EA.Weee.Domain.DataReturns
 {
     using System;
     using System.Collections.Generic;
     using Prsd.Core;
     using Prsd.Core.Domain;
+    using Scheme;
 
     public class DataReturnsUpload : Entity
     {
-        public virtual Guid SchemeId { get; private set; }
-             
         public virtual Scheme Scheme { get; private set; }
 
         public virtual List<DataReturnsUploadError> Errors { get; private set; }
@@ -20,13 +19,14 @@
         public virtual string FileName { get; private set; }
 
         public virtual DateTime Date { get; private set; }
+
         public virtual DataReturnsUploadRawData RawData { get; set; }
 
         public virtual TimeSpan ProcessTime { get; private set; }
 
-        public DataReturnsUpload(string data, List<DataReturnsUploadError> errors, int? complianceYear, Guid schemeId, string fileName)
+        public DataReturnsUpload(string data, List<DataReturnsUploadError> errors, int? complianceYear, Scheme scheme, string fileName)
         {
-            SchemeId = schemeId;
+            Scheme = scheme;
             Errors = errors;
             RawData = new DataReturnsUploadRawData() { Data = data };
             this.Date = SystemTime.UtcNow;
