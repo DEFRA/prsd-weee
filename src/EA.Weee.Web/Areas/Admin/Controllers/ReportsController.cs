@@ -66,12 +66,12 @@
         [ValidateAntiForgeryToken]
         public ActionResult ChooseReport(ChooseReportViewModel model)
         {
+            SetBreadcrumb();
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
-            SetBreadcrumb();
 
             switch (model.SelectedValue)
             {
@@ -117,9 +117,10 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ProducerDetails(ReportsFilterViewModel model)
         {
+            SetBreadcrumb();
+
             using (var client = apiClient())
             {
-                SetBreadcrumb();
                 await SetReportsFilterLists(model, client);
                 if (!ModelState.IsValid)
                 {
@@ -159,10 +160,11 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> PCSCharges(ReportsFilterViewModel model)
-        {            
+        {
+            SetBreadcrumb();
+
             using (var client = apiClient())
             {
-                SetBreadcrumb();
                 await SetReportsFilterLists(model, client);
                 if (!ModelState.IsValid)
                 {
@@ -203,9 +205,10 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ProducerPublicRegister(ProducerPublicRegisterViewModel model)
         {
+            SetBreadcrumb();
+
             using (var client = apiClient())
             {
-                SetBreadcrumb();
                 await SetReportsFilterLists(model, client);
                 if (!ModelState.IsValid)
                 {
