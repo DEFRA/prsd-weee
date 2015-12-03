@@ -539,6 +539,7 @@
     <Content Include="Areas\Admin\Views\Reports\ProducerPublicRegister.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\Submit.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\SuccessfulSubmission.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\AuthorisationRequired.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />

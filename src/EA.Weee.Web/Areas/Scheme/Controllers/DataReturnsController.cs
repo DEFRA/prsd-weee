@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -28,19 +27,22 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly CsvWriterFactory csvWriterFactory;
         private readonly IMapper mapper;
+        private readonly ConfigurationService configService;
 
         public DataReturnsController(
             Func<IWeeeClient> apiClient,
             IWeeeCache cache,
             BreadcrumbService breadcrumb,
             CsvWriterFactory csvWriterFactory,
-            IMapper mapper)
+            IMapper mapper,
+            ConfigurationService configService)
         {
             this.apiClient = apiClient;
             this.cache = cache;
             this.breadcrumb = breadcrumb;
             this.csvWriterFactory = csvWriterFactory;
             this.mapper = mapper;
+            this.configService = configService;
         }
 
         [HttpGet]
@@ -52,7 +54,7 @@
 
                 if (status == SchemeStatus.Approved)
                 {
-                    return RedirectToAction("SubmitDataReturns", "DataReturns");
+                    return RedirectToAction("Upload", "DataReturns");
                 }
 
                 var userIdString = User.GetUserId();
@@ -84,6 +86,10 @@
         [HttpGet]
         public async Task<ViewResult> Upload(Guid pcsId)
         {
+            if (!configService.CurrentConfiguration.EnableDataReturns)
+            {
+                throw new InvalidOperationException("Unable to submit data returns.");
+            }
             using (var client = apiClient())
             {
                 var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
@@ -101,9 +107,9 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Upload(Guid pcsId, PCSFileUploadViewModel model)
         {
+            await SetBreadcrumb(pcsId);
             if (!ModelState.IsValid)
-            {
-                await SetBreadcrumb(pcsId);
+            {                
                 return View(model);
             }
 
@@ -129,6 +135,7 @@
         [HttpGet]
         public async Task<ActionResult> Review(Guid pcsId, Guid dataReturnId)
         {
+            await SetBreadcrumb(pcsId);
             DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
 
             if (dataReturn.Errors.Count == 0)
@@ -141,14 +148,13 @@
                 DataReturn = dataReturn
             };
 
-            await SetBreadcrumb(pcsId);
-
             return View("Submit", viewModel);
         }
 
         [HttpGet]
         public async Task<ActionResult> Submit(Guid pcsId, Guid dataReturnId)
         {
+            await SetBreadcrumb(pcsId);
             DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
 
             if (dataReturn.Errors.Count != 0)
@@ -159,9 +165,7 @@
             SubmitViewModel viewModel = new SubmitViewModel()
             {
                 DataReturn = dataReturn
-            };
-
-            await SetBreadcrumb(pcsId);
+            };          
 
             return View(viewModel);
         }
@@ -170,6 +174,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Submit(Guid pcsId, Guid dataReturnId, SubmitViewModel viewModel)
         {
+            await SetBreadcrumb(pcsId);
             if (!ModelState.IsValid)
             {
                 DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);

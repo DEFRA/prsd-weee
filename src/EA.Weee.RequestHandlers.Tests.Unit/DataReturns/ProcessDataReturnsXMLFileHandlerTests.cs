@@ -1,11 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns
 {
     using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Security;
     using System.Threading.Tasks;
-    using DataAccess;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
@@ -29,14 +26,13 @@
                 .Build();
 
             ProcessDataReturnsXmlFileHandler handler = new ProcessDataReturnsXmlFileHandler(
-                A.Dummy<IProcessDataReturnXmlFileDataAccess>(),
-                authorization,
-                A.Dummy<IDataReturnsXmlValidator>(),
-                A.Dummy<IXmlConverter>(),
-                A.Dummy<IGenerateFromDataReturnsXml>());
+                                             A.Dummy<IProcessDataReturnXmlFileDataAccess>(),
+                                             authorization,
+                                             A.Dummy<IDataReturnsXmlValidator>(),
+                                             A.Dummy<IXmlConverter>(),
+                                             A.Dummy<IGenerateFromDataReturnsXml>());
 
             ProcessDataReturnsXMLFile message = A.Dummy<ProcessDataReturnsXMLFile>();
-
             // Act
             Func<Task<Guid>> testCode = async () => await handler.HandleAsync(message);
 
