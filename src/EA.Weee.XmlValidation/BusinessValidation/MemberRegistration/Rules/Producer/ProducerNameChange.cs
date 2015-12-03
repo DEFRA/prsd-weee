@@ -16,7 +16,7 @@
             this.migratedProducerQuerySet = migratedProducerQuerySet;
         }
 
-        public RuleResult Evaluate(schemeType scheme, producerType producer, Guid schemeId)
+        public RuleResult Evaluate(schemeType scheme, producerType producer, Guid organisationId)
         {
             if (producer.status == statusType.A)
             {
@@ -24,7 +24,7 @@
 
                 var existingProducer =
                     producerQuerySet.GetLatestProducerForComplianceYearAndScheme(producer.registrationNo,
-                        scheme.complianceYear, schemeId) ??
+                        scheme.complianceYear, organisationId) ??
                     producerQuerySet.GetLatestProducerFromPreviousComplianceYears(producer.registrationNo);
 
                 if (existingProducer != null)

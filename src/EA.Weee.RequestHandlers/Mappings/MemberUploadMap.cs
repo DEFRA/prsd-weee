@@ -13,7 +13,7 @@
                 OrganisationId = source.OrganisationId,
                 Id = source.Id,
                 ComplianceYear = source.ComplianceYear,
-                SchemeId = source.SchemeId,
+                SchemeId = source.Scheme.Id,
                 IsSubmitted = source.IsSubmitted,
                 TotalCharges = source.TotalCharges
             };

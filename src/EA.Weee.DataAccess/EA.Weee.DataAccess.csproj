@@ -37,8 +37,8 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.15310-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15334.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.15334-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EA.Prsd.Core.DataAccess, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
@@ -74,7 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntityFrameworkModule.cs" />
-    <Compile Include="EventHandlers\MemberUploadSubmittedEventHandler.cs" />
     <Compile Include="Extensions\ProducerExtensions.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
@@ -86,6 +85,7 @@
     <Compile Include="Mappings\UploadErrorTypeMapping.cs" />
     <Compile Include="Mappings\MemberUploadRawDataMapping.cs" />
     <Compile Include="Mappings\MigratedProducerMapping.cs" />
+    <Compile Include="Mappings\RegisteredProducerMapping.cs" />
     <Compile Include="Mappings\SchemeStatusMapping.cs" />
     <Compile Include="Mappings\ProducerAddressMapping.cs" />
     <Compile Include="Mappings\ProducerAuthorisedRepresentativeMapping.cs" />
@@ -103,7 +103,7 @@
     <Compile Include="Mappings\OrganisationTypeMapping.cs" />
     <Compile Include="Mappings\OrganisationUserMapping.cs" />
     <Compile Include="Mappings\UserStatusMapping.cs" />
-    <Compile Include="Mappings\ProducerMapping.cs" />
+    <Compile Include="Mappings\ProducerSubmissionMapping.cs" />
     <Compile Include="Mappings\ProducerCompany.cs" />
     <Compile Include="Mappings\ProducerPartnerMapping.cs" />
     <Compile Include="Mappings\ProducerPartnershipMapping.cs" />
@@ -125,7 +125,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
@@ -133,7 +135,9 @@
       <Name>EA.Weee.Domain</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="EventHandlers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

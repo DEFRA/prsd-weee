@@ -89,10 +89,10 @@
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="2048" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" />
           <Property Name="OrganisationType" Type="int" Nullable="false" />
           <Property Name="OrganisationStatus" Type="int" Nullable="false" />
-          <Property Name="TradingName" Type="nvarchar" MaxLength="2048" />
+          <Property Name="TradingName" Type="nvarchar" MaxLength="256" />
           <Property Name="CompanyRegistrationNumber" Type="nvarchar" MaxLength="64" />
           <Property Name="ContactId" Type="uniqueidentifier" />
           <Property Name="OrganisationAddressId" Type="uniqueidentifier" />
@@ -123,6 +123,7 @@
           <Property Name="TotalCharges" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar(max)" />
           <Property Name="ProcessTime" Type="time" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="MemberUploadError">
@@ -135,6 +136,7 @@
           <Property Name="ErrorType" Type="int" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
           <Property Name="MemberUploadId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="LineNumber" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Scheme">
           <Key>
@@ -180,8 +182,8 @@
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
-          <Property Name="ProducerId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ProducerSubmissionId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="Business">
           <Key>
@@ -224,8 +226,8 @@
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
-          <Property Name="ProducerRegistrationNumber" Type="nvarchar" MaxLength="255" />
-          <Property Name="ProducerName" Type="nvarchar" MaxLength="255" />
+          <Property Name="ProducerRegistrationNumber" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ProducerName" Type="nvarchar" MaxLength="256" />
           <Property Name="CompanyNumber" Type="nvarchar" MaxLength="8" />
         </EntityType>
         <EntityType Name="Partner">
@@ -246,38 +248,47 @@
           <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="PrincipalPlaceOfBusinessId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
-        <EntityType Name="Producer">
+        <EntityType Name="ProducerSubmission">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
-          <Property Name="RegistrationNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" Nullable="false" />
+          <Property Name="RegisteredProducerId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ObligationType" Type="nvarchar" MaxLength="4" Nullable="false" />
+          <Property Name="TradingName" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="VATRegistered" Type="bit" Nullable="false" />
-          <Property Name="AnnualTurnover" Type="decimal" Precision="28" Scale="12" Nullable="false" />
-          <Property Name="CeaseToExist" Type="datetime" />
-          <Property Name="ObligationType" Type="int" Nullable="false" />
           <Property Name="EEEPlacedOnMarketBandType" Type="int" Nullable="false" />
-          <Property Name="AnnualTurnoverBandType" Type="int" Nullable="false" />
           <Property Name="SellingTechniqueType" Type="int" Nullable="false" />
-          <Property Name="ChargeThisUpdate" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="MemberUploadId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="AuthorisedRepresentativeId" Type="uniqueidentifier" />
           <Property Name="ProducerBusinessId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="UpdatedDate" Type="datetime" Nullable="false" />
-          <Property Name="TradingName" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="SchemeId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="IsCurrentForComplianceYear" Type="bit" Nullable="false" />
+          <Property Name="AnnualTurnover" Type="decimal" Precision="28" Scale="12" />
+          <Property Name="AnnualTurnoverBandType" Type="int" Nullable="false" />
           <Property Name="ChargeBandAmountId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ChargeThisUpdate" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CeaseToExist" Type="datetime" />
+        </EntityType>
+        <EntityType Name="RegisteredProducer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="ProducerRegistrationNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SchemeId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ComplianceYear" Type="int" Nullable="false" />
+          <Property Name="CurrentSubmissionId" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="SICCode">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="ProducerId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="8" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="ProducerSubmissionId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <Association Name="FK_Address_Country">
           <End Role="Country" Type="Self.Country" Multiplicity="1" />
@@ -315,15 +326,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_BrandNameList_Producer">
-          <End Role="Producer" Type="Self.Producer" Multiplicity="1" />
+        <Association Name="FK_BrandName_ProducerSubmission">
+          <End Role="ProducerSubmission" Type="Self.ProducerSubmission" Multiplicity="1" />
           <End Role="BrandName" Type="Self.BrandName" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Producer">
+            <Principal Role="ProducerSubmission">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="BrandName">
-              <PropertyRef Name="ProducerId" />
+              <PropertyRef Name="ProducerSubmissionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -555,62 +566,86 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Producer_AuthorisedRepresentative">
+        <Association Name="FK_ProducerSubmission_AuthorisedRepresentative">
           <End Role="AuthorisedRepresentative" Type="Self.AuthorisedRepresentative" Multiplicity="0..1" />
-          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
+          <End Role="ProducerSubmission" Type="Self.ProducerSubmission" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AuthorisedRepresentative">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Producer">
+            <Dependent Role="ProducerSubmission">
               <PropertyRef Name="AuthorisedRepresentativeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Producer_Business">
+        <Association Name="FK_ProducerSubmission_Business">
           <End Role="Business" Type="Self.Business" Multiplicity="1" />
-          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
+          <End Role="ProducerSubmission" Type="Self.ProducerSubmission" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Business">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Producer">
+            <Dependent Role="ProducerSubmission">
               <PropertyRef Name="ProducerBusinessId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Producer_ChargeBandAmount">
+        <Association Name="FK_ProducerSubmission_ChargeBandAmount">
           <End Role="ChargeBandAmount" Type="Self.ChargeBandAmount" Multiplicity="1" />
-          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
+          <End Role="ProducerSubmission" Type="Self.ProducerSubmission" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ChargeBandAmount">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Producer">
+            <Dependent Role="ProducerSubmission">
               <PropertyRef Name="ChargeBandAmountId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Producer_MemberUpload">
+        <Association Name="FK_ProducerSubmission_MemberUpload">
           <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="1" />
-          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
+          <End Role="ProducerSubmission" Type="Self.ProducerSubmission" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MemberUpload">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Producer">
+            <Dependent Role="ProducerSubmission">
               <PropertyRef Name="MemberUploadId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Producer_Scheme">
+        <Association Name="FK_ProducerSubmission_RegisteredProducer">
+          <End Role="RegisteredProducer" Type="Self.RegisteredProducer" Multiplicity="1" />
+          <End Role="ProducerSubmission" Type="Self.ProducerSubmission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RegisteredProducer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProducerSubmission">
+              <PropertyRef Name="RegisteredProducerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RegisteredProducer_ProducerSubmission">
+          <End Role="ProducerSubmission" Type="Self.ProducerSubmission" Multiplicity="0..1" />
+          <End Role="RegisteredProducer" Type="Self.RegisteredProducer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProducerSubmission">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RegisteredProducer">
+              <PropertyRef Name="CurrentSubmissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RegisteredProducer_Scheme">
           <End Role="Scheme" Type="Self.Scheme" Multiplicity="1" />
-          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
+          <End Role="RegisteredProducer" Type="Self.RegisteredProducer" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Scheme">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Producer">
+            <Dependent Role="RegisteredProducer">
               <PropertyRef Name="SchemeId" />
             </Dependent>
           </ReferentialConstraint>
@@ -627,15 +662,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SICCodeList_Producer">
-          <End Role="Producer" Type="Self.Producer" Multiplicity="1" />
+        <Association Name="FK_SICCode_ProducerSubmission">
+          <End Role="ProducerSubmission" Type="Self.ProducerSubmission" Multiplicity="1" />
           <End Role="SICCode" Type="Self.SICCode" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Producer">
+            <Principal Role="ProducerSubmission">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="SICCode">
-              <PropertyRef Name="ProducerId" />
+              <PropertyRef Name="ProducerSubmissionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -661,7 +696,8 @@
           <EntitySet Name="MigratedProducer" EntityType="Self.MigratedProducer" Schema="Producer" store:Type="Tables" />
           <EntitySet Name="Partner" EntityType="Self.Partner" Schema="Producer" store:Type="Tables" />
           <EntitySet Name="Partnership" EntityType="Self.Partnership" Schema="Producer" store:Type="Tables" />
-          <EntitySet Name="Producer" EntityType="Self.Producer" Schema="Producer" store:Type="Tables" />
+          <EntitySet Name="ProducerSubmission" EntityType="Self.ProducerSubmission" Schema="Producer" store:Type="Tables" />
+          <EntitySet Name="RegisteredProducer" EntityType="Self.RegisteredProducer" Schema="Producer" store:Type="Tables" />
           <EntitySet Name="SICCode" EntityType="Self.SICCode" Schema="Producer" store:Type="Tables" />
           <AssociationSet Name="FK_Address_Country" Association="Self.FK_Address_Country">
             <End Role="Country" EntitySet="Country" />
@@ -675,8 +711,8 @@
             <End Role="Contact1" EntitySet="Contact1" />
             <End Role="AuthorisedRepresentative" EntitySet="AuthorisedRepresentative" />
           </AssociationSet>
-          <AssociationSet Name="FK_BrandNameList_Producer" Association="Self.FK_BrandNameList_Producer">
-            <End Role="Producer" EntitySet="Producer" />
+          <AssociationSet Name="FK_BrandName_ProducerSubmission" Association="Self.FK_BrandName_ProducerSubmission">
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmission" />
             <End Role="BrandName" EntitySet="BrandName" />
           </AssociationSet>
           <AssociationSet Name="FK_Business_Company" Association="Self.FK_Business_Company">
@@ -755,32 +791,40 @@
             <End Role="Contact1" EntitySet="Contact1" />
             <End Role="Partnership" EntitySet="Partnership" />
           </AssociationSet>
-          <AssociationSet Name="FK_Producer_AuthorisedRepresentative" Association="Self.FK_Producer_AuthorisedRepresentative">
+          <AssociationSet Name="FK_ProducerSubmission_AuthorisedRepresentative" Association="Self.FK_ProducerSubmission_AuthorisedRepresentative">
             <End Role="AuthorisedRepresentative" EntitySet="AuthorisedRepresentative" />
-            <End Role="Producer" EntitySet="Producer" />
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmission" />
           </AssociationSet>
-          <AssociationSet Name="FK_Producer_Business" Association="Self.FK_Producer_Business">
+          <AssociationSet Name="FK_ProducerSubmission_Business" Association="Self.FK_ProducerSubmission_Business">
             <End Role="Business" EntitySet="Business" />
-            <End Role="Producer" EntitySet="Producer" />
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmission" />
           </AssociationSet>
-          <AssociationSet Name="FK_Producer_ChargeBandAmount" Association="Self.FK_Producer_ChargeBandAmount">
+          <AssociationSet Name="FK_ProducerSubmission_ChargeBandAmount" Association="Self.FK_ProducerSubmission_ChargeBandAmount">
             <End Role="ChargeBandAmount" EntitySet="ChargeBandAmount" />
-            <End Role="Producer" EntitySet="Producer" />
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmission" />
           </AssociationSet>
-          <AssociationSet Name="FK_Producer_MemberUpload" Association="Self.FK_Producer_MemberUpload">
+          <AssociationSet Name="FK_ProducerSubmission_MemberUpload" Association="Self.FK_ProducerSubmission_MemberUpload">
             <End Role="MemberUpload" EntitySet="MemberUpload" />
-            <End Role="Producer" EntitySet="Producer" />
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmission" />
           </AssociationSet>
-          <AssociationSet Name="FK_Producer_Scheme" Association="Self.FK_Producer_Scheme">
+          <AssociationSet Name="FK_ProducerSubmission_RegisteredProducer" Association="Self.FK_ProducerSubmission_RegisteredProducer">
+            <End Role="RegisteredProducer" EntitySet="RegisteredProducer" />
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RegisteredProducer_ProducerSubmission" Association="Self.FK_RegisteredProducer_ProducerSubmission">
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmission" />
+            <End Role="RegisteredProducer" EntitySet="RegisteredProducer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RegisteredProducer_Scheme" Association="Self.FK_RegisteredProducer_Scheme">
             <End Role="Scheme" EntitySet="Scheme" />
-            <End Role="Producer" EntitySet="Producer" />
+            <End Role="RegisteredProducer" EntitySet="RegisteredProducer" />
           </AssociationSet>
           <AssociationSet Name="FK_Scheme_Organisation" Association="Self.FK_Scheme_Organisation">
             <End Role="Organisation" EntitySet="Organisation" />
             <End Role="Scheme" EntitySet="Scheme" />
           </AssociationSet>
-          <AssociationSet Name="FK_SICCodeList_Producer" Association="Self.FK_SICCodeList_Producer">
-            <End Role="Producer" EntitySet="Producer" />
+          <AssociationSet Name="FK_SICCode_ProducerSubmission" Association="Self.FK_SICCode_ProducerSubmission">
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmission" />
             <End Role="SICCode" EntitySet="SICCode" />
           </AssociationSet>
         </EntityContainer>
@@ -857,10 +901,10 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="Name" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="OrganisationType" Type="Int32" Nullable="false" />
           <Property Name="OrganisationStatus" Type="Int32" Nullable="false" />
-          <Property Name="TradingName" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
+          <Property Name="TradingName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="CompanyRegistrationNumber" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Name="ContactId" Type="Guid" />
           <Property Name="OrganisationAddressId" Type="Guid" />
@@ -901,10 +945,11 @@
           <NavigationProperty Name="Organisation" Relationship="Self.FK_MemberUpload_Organisation" FromRole="MemberUpload" ToRole="Organisation" />
           <NavigationProperty Name="Scheme" Relationship="Self.FK_MemberUpload_Scheme" FromRole="MemberUpload" ToRole="Scheme" />
           <NavigationProperty Name="MemberUploadErrors" Relationship="Self.FK_MemberUploadError_MemberUpload" FromRole="MemberUpload" ToRole="MemberUploadError" />
-          <NavigationProperty Name="Producers" Relationship="Self.FK_Producer_MemberUpload" FromRole="MemberUpload" ToRole="Producer" />
           <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Date" Type="DateTime" Precision="3" Nullable="false" />
           <Property Name="ProcessTime" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ProducerSubmissions" Relationship="EA.Weee.TestModel.FK_ProducerSubmission_MemberUpload" FromRole="MemberUpload" ToRole="ProducerSubmission" />
         </EntityType>
         <EntityType Name="MemberUploadError">
           <Key>
@@ -917,6 +962,7 @@
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MemberUploadId" Type="Guid" Nullable="false" />
           <NavigationProperty Name="MemberUpload" Relationship="Self.FK_MemberUploadError_MemberUpload" FromRole="MemberUploadError" ToRole="MemberUpload" />
+          <Property Name="LineNumber" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Scheme">
           <Key>
@@ -933,7 +979,7 @@
           <Property Name="CompetentAuthorityId" Type="Guid" />
           <NavigationProperty Name="Organisation" Relationship="Self.FK_Scheme_Organisation" FromRole="Scheme" ToRole="Organisation" />
           <NavigationProperty Name="MemberUploads" Relationship="Self.FK_MemberUpload_Scheme" FromRole="Scheme" ToRole="MemberUpload" />
-          <NavigationProperty Name="Producers" Relationship="Self.FK_Producer_Scheme" FromRole="Scheme" ToRole="Producer" />
+          <NavigationProperty Name="RegisteredProducers" Relationship="EA.Weee.TestModel.FK_RegisteredProducer_Scheme" FromRole="Scheme" ToRole="RegisteredProducer" />
         </EntityType>
         <EntityType Name="Address1">
           <Key>
@@ -961,7 +1007,7 @@
           <Property Name="OverseasProducerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="OverseasContactId" Type="Guid" />
           <NavigationProperty Name="Contact1" Relationship="Self.FK_AuthorisedRepresentative_OverseasContact" FromRole="AuthorisedRepresentative" ToRole="Contact1" />
-          <NavigationProperty Name="Producers" Relationship="Self.FK_Producer_AuthorisedRepresentative" FromRole="AuthorisedRepresentative" ToRole="Producer" />
+          <NavigationProperty Name="ProducerSubmissions" Relationship="EA.Weee.TestModel.FK_ProducerSubmission_AuthorisedRepresentative" FromRole="AuthorisedRepresentative" ToRole="ProducerSubmission" />
         </EntityType>
         <EntityType Name="BrandName_">
           <Key>
@@ -969,9 +1015,9 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="ProducerId" Type="Guid" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Producer" Relationship="Self.FK_BrandNameList_Producer" FromRole="BrandName" ToRole="Producer" />
+          <Property Name="ProducerSubmissionId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="ProducerSubmission" Relationship="EA.Weee.TestModel.FK_BrandName_ProducerSubmission" FromRole="BrandName_" ToRole="ProducerSubmission" />
         </EntityType>
         <EntityType Name="Business">
           <Key>
@@ -985,7 +1031,7 @@
           <NavigationProperty Name="Company" Relationship="Self.FK_Business_Company" FromRole="Business" ToRole="Company" />
           <NavigationProperty Name="Contact1" Relationship="Self.FK_Business_Contact" FromRole="Business" ToRole="Contact1" />
           <NavigationProperty Name="Partnership" Relationship="Self.FK_Business_Partnership" FromRole="Business" ToRole="Partnership" />
-          <NavigationProperty Name="Producers" Relationship="Self.FK_Producer_Business" FromRole="Business" ToRole="Producer" />
+          <NavigationProperty Name="ProducerSubmissions" Relationship="EA.Weee.TestModel.FK_ProducerSubmission_Business" FromRole="Business" ToRole="ProducerSubmission" />
         </EntityType>
         <EntityType Name="Company">
           <Key>
@@ -1025,8 +1071,8 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="ProducerRegistrationNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="ProducerName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ProducerRegistrationNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProducerName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="CompanyNumber" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Partner_">
@@ -1051,46 +1097,15 @@
           <NavigationProperty Name="Contact1" Relationship="Self.FK_Partnership_Contact" FromRole="Partnership" ToRole="Contact1" />
           <NavigationProperty Name="Partners" Relationship="Self.FK_Partner_Partnership" FromRole="Partnership" ToRole="Partner" />
         </EntityType>
-        <EntityType Name="Producer">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="RegistrationNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="VATRegistered" Type="Boolean" Nullable="false" />
-          <Property Name="AnnualTurnover" Type="Decimal" Precision="28" Scale="12" Nullable="false" />
-          <Property Name="CeaseToExist" Type="DateTime" Precision="3" />
-          <Property Name="ObligationType" Type="Int32" Nullable="false" />
-          <Property Name="EEEPlacedOnMarketBandType" Type="Int32" Nullable="false" />
-          <Property Name="AnnualTurnoverBandType" Type="Int32" Nullable="false" />
-          <Property Name="SellingTechniqueType" Type="Int32" Nullable="false" />
-          <Property Name="ChargeThisUpdate" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="MemberUploadId" Type="Guid" Nullable="false" />
-          <Property Name="AuthorisedRepresentativeId" Type="Guid" />
-          <Property Name="ProducerBusinessId" Type="Guid" Nullable="false" />
-          <Property Name="UpdatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="TradingName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="SchemeId" Type="Guid" Nullable="false" />
-          <Property Name="IsCurrentForComplianceYear" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="MemberUpload" Relationship="Self.FK_Producer_MemberUpload" FromRole="Producer" ToRole="MemberUpload" />
-          <NavigationProperty Name="Scheme" Relationship="Self.FK_Producer_Scheme" FromRole="Producer" ToRole="Scheme" />
-          <NavigationProperty Name="AuthorisedRepresentative" Relationship="Self.FK_Producer_AuthorisedRepresentative" FromRole="Producer" ToRole="AuthorisedRepresentative" />
-          <NavigationProperty Name="BrandNames" Relationship="Self.FK_BrandNameList_Producer" FromRole="Producer" ToRole="BrandName" />
-          <NavigationProperty Name="Business" Relationship="Self.FK_Producer_Business" FromRole="Producer" ToRole="Business" />
-          <NavigationProperty Name="SICCodes" Relationship="Self.FK_SICCodeList_Producer" FromRole="Producer" ToRole="SICCode" />
-          <NavigationProperty Name="ChargeBandAmount" Relationship="EA.Weee.TestModel.FK_Producer_ChargeBandAmount" FromRole="Producer" ToRole="ChargeBandAmount" />
-          <Property Name="ChargeBandAmountId" Type="Guid" Nullable="false" />
-        </EntityType>
         <EntityType Name="SICCode_">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="ProducerId" Type="Guid" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="Producer" Relationship="Self.FK_SICCodeList_Producer" FromRole="SICCode" ToRole="Producer" />
+          <Property Name="ProducerSubmissionId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="ProducerSubmission" Relationship="EA.Weee.TestModel.FK_SICCode_ProducerSubmission" FromRole="SICCode_" ToRole="ProducerSubmission" />
         </EntityType>
         <Association Name="FK_CompetentAuthorityUser_CompetentAuthority">
           <End Role="CompetentAuthority" Type="Self.CompetentAuthority" Multiplicity="1" />
@@ -1248,30 +1263,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Producer_MemberUpload">
-          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="1" />
-          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="MemberUpload">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Producer">
-              <PropertyRef Name="MemberUploadId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Producer_Scheme">
-          <End Role="Scheme" Type="Self.Scheme" Multiplicity="1" />
-          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Scheme">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Producer">
-              <PropertyRef Name="SchemeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Contact_Address">
           <End Role="Address1" Type="Self.Address1" Multiplicity="1" />
           <End Role="Contact1" Type="Self.Contact1" Multiplicity="*" />
@@ -1293,30 +1284,6 @@
             </Principal>
             <Dependent Role="AuthorisedRepresentative">
               <PropertyRef Name="OverseasContactId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Producer_AuthorisedRepresentative">
-          <End Role="AuthorisedRepresentative" Type="Self.AuthorisedRepresentative" Multiplicity="0..1" />
-          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AuthorisedRepresentative">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Producer">
-              <PropertyRef Name="AuthorisedRepresentativeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_BrandNameList_Producer">
-          <End Role="Producer" Type="Self.Producer" Multiplicity="1" />
-          <End Role="BrandName" Type="EA.Weee.TestModel.BrandName_" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Producer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="BrandName">
-              <PropertyRef Name="ProducerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1356,18 +1323,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Producer_Business">
-          <End Role="Business" Type="Self.Business" Multiplicity="1" />
-          <End Role="Producer" Type="Self.Producer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Business">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Producer">
-              <PropertyRef Name="ProducerBusinessId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Company_Contact">
           <End Role="Contact1" Type="Self.Contact1" Multiplicity="1" />
           <End Role="Company" Type="Self.Company" Multiplicity="*" />
@@ -1404,18 +1359,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SICCodeList_Producer">
-          <End Role="Producer" Type="Self.Producer" Multiplicity="1" />
-          <End Role="SICCode" Type="EA.Weee.TestModel.SICCode_" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Producer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SICCode">
-              <PropertyRef Name="ProducerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="CompetentAuthorityUsers" EntityType="Self.CompetentAuthorityUser" />
           <EntitySet Name="CompetentAuthorities" EntityType="Self.CompetentAuthority" />
@@ -1436,7 +1379,6 @@
           <EntitySet Name="MigratedProducer_Set" EntityType="EA.Weee.TestModel.MigratedProducer_" />
           <EntitySet Name="Partner_Set" EntityType="EA.Weee.TestModel.Partner_" />
           <EntitySet Name="Partnerships" EntityType="Self.Partnership" />
-          <EntitySet Name="Producers" EntityType="Self.Producer" />
           <EntitySet Name="SICCode_Set" EntityType="EA.Weee.TestModel.SICCode_" />
           <AssociationSet Name="FK_CompetentAuthorityUser_CompetentAuthority" Association="Self.FK_CompetentAuthorityUser_CompetentAuthority">
             <End Role="CompetentAuthority" EntitySet="CompetentAuthorities" />
@@ -1490,14 +1432,6 @@
             <End Role="MemberUpload" EntitySet="MemberUploads" />
             <End Role="MemberUploadError" EntitySet="MemberUploadErrors" />
           </AssociationSet>
-          <AssociationSet Name="FK_Producer_MemberUpload" Association="Self.FK_Producer_MemberUpload">
-            <End Role="MemberUpload" EntitySet="MemberUploads" />
-            <End Role="Producer" EntitySet="Producers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Producer_Scheme" Association="Self.FK_Producer_Scheme">
-            <End Role="Scheme" EntitySet="Schemes" />
-            <End Role="Producer" EntitySet="Producers" />
-          </AssociationSet>
           <AssociationSet Name="FK_Contact_Address" Association="Self.FK_Contact_Address">
             <End Role="Address1" EntitySet="Address1" />
             <End Role="Contact1" EntitySet="Contact1" />
@@ -1505,14 +1439,6 @@
           <AssociationSet Name="FK_AuthorisedRepresentative_OverseasContact" Association="Self.FK_AuthorisedRepresentative_OverseasContact">
             <End Role="Contact1" EntitySet="Contact1" />
             <End Role="AuthorisedRepresentative" EntitySet="AuthorisedRepresentatives" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Producer_AuthorisedRepresentative" Association="Self.FK_Producer_AuthorisedRepresentative">
-            <End Role="AuthorisedRepresentative" EntitySet="AuthorisedRepresentatives" />
-            <End Role="Producer" EntitySet="Producers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BrandNameList_Producer" Association="Self.FK_BrandNameList_Producer">
-            <End Role="Producer" EntitySet="Producers" />
-            <End Role="BrandName" EntitySet="BrandName_Set" />
           </AssociationSet>
           <AssociationSet Name="FK_Business_Company" Association="Self.FK_Business_Company">
             <End Role="Company" EntitySet="Companies" />
@@ -1526,10 +1452,6 @@
             <End Role="Partnership" EntitySet="Partnerships" />
             <End Role="Business" EntitySet="Businesses" />
           </AssociationSet>
-          <AssociationSet Name="FK_Producer_Business" Association="Self.FK_Producer_Business">
-            <End Role="Business" EntitySet="Businesses" />
-            <End Role="Producer" EntitySet="Producers" />
-          </AssociationSet>
           <AssociationSet Name="FK_Company_Contact" Association="Self.FK_Company_Contact">
             <End Role="Contact1" EntitySet="Contact1" />
             <End Role="Company" EntitySet="Companies" />
@@ -1542,10 +1464,6 @@
             <End Role="Partnership" EntitySet="Partnerships" />
             <End Role="Partner" EntitySet="Partner_Set" />
           </AssociationSet>
-          <AssociationSet Name="FK_SICCodeList_Producer" Association="Self.FK_SICCodeList_Producer">
-            <End Role="Producer" EntitySet="Producers" />
-            <End Role="SICCode" EntitySet="SICCode_Set" />
-          </AssociationSet>
           <EntitySet Name="AspNetUsers" EntityType="EA.Weee.TestModel.AspNetUser" />
           <AssociationSet Name="FK_CompetentAuthorityUser_AspNetUsers" Association="EA.Weee.TestModel.FK_CompetentAuthorityUser_AspNetUsers">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
@@ -1556,9 +1474,43 @@
             <End Role="OrganisationUser" EntitySet="OrganisationUsers" />
           </AssociationSet>
           <EntitySet Name="ChargeBandAmounts" EntityType="EA.Weee.TestModel.ChargeBandAmount" />
-          <AssociationSet Name="FK_Producer_ChargeBandAmount" Association="EA.Weee.TestModel.FK_Producer_ChargeBandAmount">
+          <EntitySet Name="ProducerSubmissions" EntityType="EA.Weee.TestModel.ProducerSubmission" />
+          <EntitySet Name="RegisteredProducers" EntityType="EA.Weee.TestModel.RegisteredProducer" />
+          <AssociationSet Name="FK_ProducerSubmission_ChargeBandAmount" Association="EA.Weee.TestModel.FK_ProducerSubmission_ChargeBandAmount">
             <End Role="ChargeBandAmount" EntitySet="ChargeBandAmounts" />
-            <End Role="Producer" EntitySet="Producers" />
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProducerSubmission_MemberUpload" Association="EA.Weee.TestModel.FK_ProducerSubmission_MemberUpload">
+            <End Role="MemberUpload" EntitySet="MemberUploads" />
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RegisteredProducer_Scheme" Association="EA.Weee.TestModel.FK_RegisteredProducer_Scheme">
+            <End Role="Scheme" EntitySet="Schemes" />
+            <End Role="RegisteredProducer" EntitySet="RegisteredProducers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProducerSubmission_AuthorisedRepresentative" Association="EA.Weee.TestModel.FK_ProducerSubmission_AuthorisedRepresentative">
+            <End Role="AuthorisedRepresentative" EntitySet="AuthorisedRepresentatives" />
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BrandName_ProducerSubmission" Association="EA.Weee.TestModel.FK_BrandName_ProducerSubmission">
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmissions" />
+            <End Role="BrandName_" EntitySet="BrandName_Set" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProducerSubmission_Business" Association="EA.Weee.TestModel.FK_ProducerSubmission_Business">
+            <End Role="Business" EntitySet="Businesses" />
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProducerSubmission_RegisteredProducer" Association="EA.Weee.TestModel.FK_ProducerSubmission_RegisteredProducer">
+            <End Role="RegisteredProducer" EntitySet="RegisteredProducers" />
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RegisteredProducer_ProducerSubmission" Association="EA.Weee.TestModel.FK_RegisteredProducer_ProducerSubmission">
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmissions" />
+            <End Role="RegisteredProducer" EntitySet="RegisteredProducers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SICCode_ProducerSubmission" Association="EA.Weee.TestModel.FK_SICCode_ProducerSubmission">
+            <End Role="ProducerSubmission" EntitySet="ProducerSubmissions" />
+            <End Role="SICCode_" EntitySet="SICCode_Set" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AspNetUser">
@@ -1612,18 +1564,158 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <NavigationProperty Name="Producers" Relationship="EA.Weee.TestModel.FK_Producer_ChargeBandAmount" FromRole="ChargeBandAmount" ToRole="Producer" />
           <Property Name="ChargeBand" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ProducerSubmissions" Relationship="EA.Weee.TestModel.FK_ProducerSubmission_ChargeBandAmount" FromRole="ChargeBandAmount" ToRole="ProducerSubmission" />
         </EntityType>
-        <Association Name="FK_Producer_ChargeBandAmount">
+        <EntityType Name="ProducerSubmission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="UpdatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RegisteredProducerId" Type="Guid" Nullable="false" />
+          <Property Name="ObligationType" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="TradingName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="VATRegistered" Type="Boolean" Nullable="false" />
+          <Property Name="EEEPlacedOnMarketBandType" Type="Int32" Nullable="false" />
+          <Property Name="SellingTechniqueType" Type="Int32" Nullable="false" />
+          <Property Name="MemberUploadId" Type="Guid" Nullable="false" />
+          <Property Name="AuthorisedRepresentativeId" Type="Guid" />
+          <Property Name="ProducerBusinessId" Type="Guid" Nullable="false" />
+          <Property Name="AnnualTurnover" Type="Decimal" Precision="28" Scale="12" />
+          <Property Name="AnnualTurnoverBandType" Type="Int32" Nullable="false" />
+          <Property Name="ChargeBandAmountId" Type="Guid" Nullable="false" />
+          <Property Name="ChargeThisUpdate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CeaseToExist" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ChargeBandAmount" Relationship="EA.Weee.TestModel.FK_ProducerSubmission_ChargeBandAmount" FromRole="ProducerSubmission" ToRole="ChargeBandAmount" />
+          <NavigationProperty Name="MemberUpload" Relationship="EA.Weee.TestModel.FK_ProducerSubmission_MemberUpload" FromRole="ProducerSubmission" ToRole="MemberUpload" />
+          <NavigationProperty Name="AuthorisedRepresentative" Relationship="EA.Weee.TestModel.FK_ProducerSubmission_AuthorisedRepresentative" FromRole="ProducerSubmission" ToRole="AuthorisedRepresentative" />
+          <NavigationProperty Name="BrandNames" Relationship="EA.Weee.TestModel.FK_BrandName_ProducerSubmission" FromRole="ProducerSubmission" ToRole="BrandName_" />
+          <NavigationProperty Name="Business" Relationship="EA.Weee.TestModel.FK_ProducerSubmission_Business" FromRole="ProducerSubmission" ToRole="Business" />
+          <NavigationProperty Name="RegisteredProducer" Relationship="EA.Weee.TestModel.FK_ProducerSubmission_RegisteredProducer" FromRole="ProducerSubmission" ToRole="RegisteredProducer" />
+          <NavigationProperty Name="RegisteredProducers" Relationship="EA.Weee.TestModel.FK_RegisteredProducer_ProducerSubmission" FromRole="ProducerSubmission" ToRole="RegisteredProducer" />
+          <NavigationProperty Name="SICCodes" Relationship="EA.Weee.TestModel.FK_SICCode_ProducerSubmission" FromRole="ProducerSubmission" ToRole="SICCode_" />
+        </EntityType>
+        <EntityType Name="RegisteredProducer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ProducerRegistrationNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SchemeId" Type="Guid" Nullable="false" />
+          <Property Name="ComplianceYear" Type="Int32" Nullable="false" />
+          <Property Name="CurrentSubmissionId" Type="Guid" />
+          <NavigationProperty Name="Scheme" Relationship="EA.Weee.TestModel.FK_RegisteredProducer_Scheme" FromRole="RegisteredProducer" ToRole="Scheme" />
+          <NavigationProperty Name="ProducerSubmissions" Relationship="EA.Weee.TestModel.FK_ProducerSubmission_RegisteredProducer" FromRole="RegisteredProducer" ToRole="ProducerSubmission" />
+          <NavigationProperty Name="CurrentSubmission" Relationship="EA.Weee.TestModel.FK_RegisteredProducer_ProducerSubmission" FromRole="RegisteredProducer" ToRole="ProducerSubmission" />
+        </EntityType>
+        <Association Name="FK_ProducerSubmission_ChargeBandAmount">
           <End Type="EA.Weee.TestModel.ChargeBandAmount" Role="ChargeBandAmount" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.Producer" Role="Producer" Multiplicity="*" />
+          <End Type="EA.Weee.TestModel.ProducerSubmission" Role="ProducerSubmission" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ChargeBandAmount">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Producer">
+            <Dependent Role="ProducerSubmission">
               <PropertyRef Name="ChargeBandAmountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProducerSubmission_MemberUpload">
+          <End Type="EA.Weee.TestModel.MemberUpload" Role="MemberUpload" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.ProducerSubmission" Role="ProducerSubmission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MemberUpload">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProducerSubmission">
+              <PropertyRef Name="MemberUploadId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RegisteredProducer_Scheme">
+          <End Type="EA.Weee.TestModel.Scheme" Role="Scheme" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.RegisteredProducer" Role="RegisteredProducer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Scheme">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RegisteredProducer">
+              <PropertyRef Name="SchemeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProducerSubmission_AuthorisedRepresentative">
+          <End Type="EA.Weee.TestModel.AuthorisedRepresentative" Role="AuthorisedRepresentative" Multiplicity="0..1" />
+          <End Type="EA.Weee.TestModel.ProducerSubmission" Role="ProducerSubmission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AuthorisedRepresentative">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProducerSubmission">
+              <PropertyRef Name="AuthorisedRepresentativeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BrandName_ProducerSubmission">
+          <End Type="EA.Weee.TestModel.ProducerSubmission" Role="ProducerSubmission" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.BrandName_" Role="BrandName_" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProducerSubmission">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BrandName_">
+              <PropertyRef Name="ProducerSubmissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProducerSubmission_Business">
+          <End Type="EA.Weee.TestModel.Business" Role="Business" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.ProducerSubmission" Role="ProducerSubmission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Business">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProducerSubmission">
+              <PropertyRef Name="ProducerBusinessId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProducerSubmission_RegisteredProducer">
+          <End Type="EA.Weee.TestModel.RegisteredProducer" Role="RegisteredProducer" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.ProducerSubmission" Role="ProducerSubmission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RegisteredProducer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProducerSubmission">
+              <PropertyRef Name="RegisteredProducerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RegisteredProducer_ProducerSubmission">
+          <End Type="EA.Weee.TestModel.ProducerSubmission" Role="ProducerSubmission" Multiplicity="0..1" />
+          <End Type="EA.Weee.TestModel.RegisteredProducer" Role="RegisteredProducer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProducerSubmission">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RegisteredProducer">
+              <PropertyRef Name="CurrentSubmissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SICCode_ProducerSubmission">
+          <End Type="EA.Weee.TestModel.ProducerSubmission" Role="ProducerSubmission" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.SICCode_" Role="SICCode_" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProducerSubmission">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SICCode_">
+              <PropertyRef Name="ProducerSubmissionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1720,6 +1812,7 @@
           <EntitySetMapping Name="MemberUploads">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.MemberUpload">
               <MappingFragment StoreEntitySet="MemberUpload">
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="ProcessTime" ColumnName="ProcessTime" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -1737,6 +1830,7 @@
           <EntitySetMapping Name="MemberUploadErrors">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.MemberUploadError">
               <MappingFragment StoreEntitySet="MemberUploadError">
+                <ScalarProperty Name="LineNumber" ColumnName="LineNumber" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="ErrorLevel" ColumnName="ErrorLevel" />
@@ -1790,9 +1884,9 @@
           <EntitySetMapping Name="BrandName_Set">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.BrandName_">
               <MappingFragment StoreEntitySet="BrandName">
+                <ScalarProperty Name="ProducerSubmissionId" ColumnName="ProducerSubmissionId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
-                <ScalarProperty Name="ProducerId" ColumnName="ProducerId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1866,36 +1960,11 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Producers">
-            <EntityTypeMapping TypeName="EA.Weee.TestModel.Producer">
-              <MappingFragment StoreEntitySet="Producer">
-                <ScalarProperty Name="ChargeBandAmountId" ColumnName="ChargeBandAmountId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
-                <ScalarProperty Name="RegistrationNumber" ColumnName="RegistrationNumber" />
-                <ScalarProperty Name="VATRegistered" ColumnName="VATRegistered" />
-                <ScalarProperty Name="AnnualTurnover" ColumnName="AnnualTurnover" />
-                <ScalarProperty Name="CeaseToExist" ColumnName="CeaseToExist" />
-                <ScalarProperty Name="ObligationType" ColumnName="ObligationType" />
-                <ScalarProperty Name="EEEPlacedOnMarketBandType" ColumnName="EEEPlacedOnMarketBandType" />
-                <ScalarProperty Name="AnnualTurnoverBandType" ColumnName="AnnualTurnoverBandType" />
-                <ScalarProperty Name="SellingTechniqueType" ColumnName="SellingTechniqueType" />
-                <ScalarProperty Name="ChargeThisUpdate" ColumnName="ChargeThisUpdate" />
-                <ScalarProperty Name="MemberUploadId" ColumnName="MemberUploadId" />
-                <ScalarProperty Name="AuthorisedRepresentativeId" ColumnName="AuthorisedRepresentativeId" />
-                <ScalarProperty Name="ProducerBusinessId" ColumnName="ProducerBusinessId" />
-                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
-                <ScalarProperty Name="TradingName" ColumnName="TradingName" />
-                <ScalarProperty Name="SchemeId" ColumnName="SchemeId" />
-                <ScalarProperty Name="IsCurrentForComplianceYear" ColumnName="IsCurrentForComplianceYear" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="SICCode_Set">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.SICCode_">
               <MappingFragment StoreEntitySet="SICCode">
+                <ScalarProperty Name="ProducerSubmissionId" ColumnName="ProducerSubmissionId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="ProducerId" ColumnName="ProducerId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
               </MappingFragment>
@@ -1926,6 +1995,41 @@
               <MappingFragment StoreEntitySet="ChargeBandAmount">
                 <ScalarProperty Name="ChargeBand" ColumnName="ChargeBand" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProducerSubmissions">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.ProducerSubmission">
+              <MappingFragment StoreEntitySet="ProducerSubmission">
+                <ScalarProperty Name="CeaseToExist" ColumnName="CeaseToExist" />
+                <ScalarProperty Name="ChargeThisUpdate" ColumnName="ChargeThisUpdate" />
+                <ScalarProperty Name="ChargeBandAmountId" ColumnName="ChargeBandAmountId" />
+                <ScalarProperty Name="AnnualTurnoverBandType" ColumnName="AnnualTurnoverBandType" />
+                <ScalarProperty Name="AnnualTurnover" ColumnName="AnnualTurnover" />
+                <ScalarProperty Name="ProducerBusinessId" ColumnName="ProducerBusinessId" />
+                <ScalarProperty Name="AuthorisedRepresentativeId" ColumnName="AuthorisedRepresentativeId" />
+                <ScalarProperty Name="MemberUploadId" ColumnName="MemberUploadId" />
+                <ScalarProperty Name="SellingTechniqueType" ColumnName="SellingTechniqueType" />
+                <ScalarProperty Name="EEEPlacedOnMarketBandType" ColumnName="EEEPlacedOnMarketBandType" />
+                <ScalarProperty Name="VATRegistered" ColumnName="VATRegistered" />
+                <ScalarProperty Name="TradingName" ColumnName="TradingName" />
+                <ScalarProperty Name="ObligationType" ColumnName="ObligationType" />
+                <ScalarProperty Name="RegisteredProducerId" ColumnName="RegisteredProducerId" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RegisteredProducers">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.RegisteredProducer">
+              <MappingFragment StoreEntitySet="RegisteredProducer">
+                <ScalarProperty Name="CurrentSubmissionId" ColumnName="CurrentSubmissionId" />
+                <ScalarProperty Name="ComplianceYear" ColumnName="ComplianceYear" />
+                <ScalarProperty Name="SchemeId" ColumnName="SchemeId" />
+                <ScalarProperty Name="ProducerRegistrationNumber" ColumnName="ProducerRegistrationNumber" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

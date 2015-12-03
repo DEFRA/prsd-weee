@@ -55,7 +55,7 @@
             this.companyAlreadyRegistered = companyAlreadyRegistered;
         }
 
-        public IEnumerable<RuleResult> Validate(schemeType scheme, Guid schemeId)
+        public IEnumerable<RuleResult> Validate(schemeType scheme, Guid organisationId)
         {
             var result = new List<RuleResult>();
 
@@ -64,7 +64,7 @@
             result.AddRange(duplicateProducerNames.Evaluate(scheme));
 
             // Now comparing against existing data...
-            result.Add(correctSchemeApprovalNumber.Evaluate(scheme, schemeId));
+            result.Add(correctSchemeApprovalNumber.Evaluate(scheme, organisationId));
 
             // Validate producers
             foreach (var producer in scheme.producerList)
@@ -73,15 +73,15 @@
                 result.Add(amendmentHasNoProducerRegistrationNumber.Evaluate(producer));
                 result.Add(insertHasProducerRegistrationNumber.Evaluate(producer));
                 result.Add(ukBasedAuthorisedRepresentative.Evaluate(producer));
-                result.Add(producerNameWarning.Evaluate(scheme, producer, schemeId));
+                result.Add(producerNameWarning.Evaluate(scheme, producer, organisationId));
                 result.Add(annualTurnoverMismatch.Evaluate(producer));
                 result.Add(ensureAnOverseasProducerIsNotBasedInTheUK.Evaluate(producer));
 
                 // Now comparing against existing data...
                 result.Add(producerRegistrationNumberValidity.Evaluate(producer));
-                result.Add(producerAlreadyRegistered.Evaluate(scheme, producer, schemeId));
+                result.Add(producerAlreadyRegistered.Evaluate(scheme, producer, organisationId));
                 result.Add(producerNameAlreadyRegistered.Evaluate());
-                result.Add(producerChargeBandChangeWarning.Evaluate(scheme, producer, schemeId));
+                result.Add(producerChargeBandChangeWarning.Evaluate(scheme, producer, organisationId));
                 result.Add(companyAlreadyRegistered.Evaluate(producer));
             }
 
