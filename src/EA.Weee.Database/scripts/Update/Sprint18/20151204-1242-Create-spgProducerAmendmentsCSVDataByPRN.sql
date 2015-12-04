@@ -19,10 +19,7 @@ SELECT
  	PS.UpdatedDate AS 'DateAmended',
 	S.SchemeName AS 'PCSName',
 	S.ApprovalNumber,
-	CASE 
-	when PBC.Name is null then PBP.Name
-	else PBC.NAME
-	end as 'ProducerName',
+	COALESCE(PBC.Name, PBP.Name, '') AS 'ProducerName',
 
 	CASE 
 	WHEN PBC.Name is null then 'Partnership'
