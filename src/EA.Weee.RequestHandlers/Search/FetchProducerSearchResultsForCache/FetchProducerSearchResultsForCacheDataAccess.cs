@@ -28,22 +28,23 @@
         public async Task<IList<ProducerSearchResult>> FetchLatestProducers()
         {
             var results = await context
-                .Producers
-                .Where(p => p.IsCurrentForComplianceYear)
-                .GroupBy(p => p.RegistrationNumber)
-                .Select(group => group.OrderByDescending(p => p.MemberUpload.ComplianceYear).FirstOrDefault())
-                .OrderBy(p => p.RegistrationNumber)
-                .Include(p => p.MemberUpload)
-                .Include(p => p.ProducerBusiness)
-                .Include(p => p.ProducerBusiness.CompanyDetails)
-                .Include(p => p.ProducerBusiness.Partnership)
+                .RegisteredProducers
+                .Where(rp => rp.CurrentSubmission != null)
+                .GroupBy(rp => rp.ProducerRegistrationNumber)
+                .Select(group => group.OrderByDescending(rp => rp.ComplianceYear).FirstOrDefault())
+                .OrderBy(rp => rp.ProducerRegistrationNumber)
+                .Include(rp => rp.CurrentSubmission)
+                .Include(rp => rp.CurrentSubmission.MemberUpload)
+                .Include(rp => rp.CurrentSubmission.ProducerBusiness)
+                .Include(rp => rp.CurrentSubmission.ProducerBusiness.CompanyDetails)
+                .Include(rp => rp.CurrentSubmission.ProducerBusiness.Partnership)
                 .AsNoTracking()
                 .ToListAsync();
 
             return results.Select(r => new ProducerSearchResult()
                 {
-                    RegistrationNumber = r.RegistrationNumber,
-                    Name = r.OrganisationName
+                    RegistrationNumber = r.ProducerRegistrationNumber,
+                    Name = r.CurrentSubmission.OrganisationName
                 })
                 .ToList();
         }

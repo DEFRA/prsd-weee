@@ -8,7 +8,7 @@
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
     using XmlValidation.BusinessValidation.MemberRegistration.Rules.Producer;
     using Xunit;
-    using Producer = Weee.Domain.Producer.Producer;
+    using ProducerSubmission = EA.Weee.Domain.Producer.ProducerSubmission;
 
     public class ProducerChargeBandChangeTests
     {
@@ -25,7 +25,7 @@
         {
             var evaluator = new ProducerChargeBandChangeEvaluator();
 
-            var fakeProducer = A.Fake<Producer>();
+            var fakeProducer = A.Fake<ProducerSubmission>();
 
             ChargeBandAmount producerChargeBand = new ChargeBandAmount(
                 new Guid("0B513437-2971-4C6C-B633-75216FAB6757"),
@@ -48,7 +48,7 @@
         {
             var evaluator = new ProducerChargeBandChangeEvaluator();
 
-            var fakeProducer = A.Fake<Producer>();
+            var fakeProducer = A.Fake<ProducerSubmission>();
 
             ChargeBandAmount chargeBandAmount = new ChargeBandAmount(
                 new Guid("0B513437-2971-4C6C-B633-75216FAB6757"),
@@ -77,7 +77,7 @@
 
             var evaluator = new ProducerChargeBandChangeEvaluator();
 
-            var fakeProducer = A.Fake<Producer>();
+            var fakeProducer = A.Fake<ProducerSubmission>();
 
             ChargeBandAmount chargeBandAmount = new ChargeBandAmount(
                 new Guid("0B513437-2971-4C6C-B633-75216FAB6757"),
@@ -86,7 +86,7 @@
 
             A.CallTo(() => fakeProducer.ChargeBandAmount).Returns(chargeBandAmount);
             A.CallTo(() => fakeProducer.OrganisationName).Returns(producerName);
-            A.CallTo(() => fakeProducer.RegistrationNumber).Returns(registrationNumber);
+            A.CallTo(() => fakeProducer.RegisteredProducer.ProducerRegistrationNumber).Returns(registrationNumber);
 
             A.CallTo(() => evaluator.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(fakeProducer);

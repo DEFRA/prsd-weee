@@ -27,8 +27,7 @@
                 memberUpload.ComplianceYear = 2016;
                 memberUpload.IsSubmitted = true;
 
-                EA.Weee.Tests.Core.Model.Producer producer = helper.CreateProducerAsCompany(memberUpload, "AAAAAAA");
-                producer.IsCurrentForComplianceYear = true;
+                Weee.Tests.Core.Model.ProducerSubmission producer = helper.CreateProducerAsCompany(memberUpload, "AAAAAAA");
 
                 database.Model.SaveChanges();
 
@@ -57,8 +56,7 @@
                 memberUpload.ComplianceYear = 2016;
                 memberUpload.IsSubmitted = true;
 
-                EA.Weee.Tests.Core.Model.Producer producer = helper.CreateProducerAsCompany(memberUpload, "AAAAAAA");
-                producer.IsCurrentForComplianceYear = true;
+                Weee.Tests.Core.Model.ProducerSubmission producer = helper.CreateProducerAsCompany(memberUpload, "AAAAAAA");
 
                 database.Model.SaveChanges();
 
@@ -86,8 +84,7 @@
                 memberUpload.ComplianceYear = 2016;
                 memberUpload.IsSubmitted = true;
 
-                EA.Weee.Tests.Core.Model.Producer producer = helper.CreateProducerAsCompany(memberUpload, "AAAAAAAA");
-                producer.IsCurrentForComplianceYear = true;
+                Weee.Tests.Core.Model.ProducerSubmission producer = helper.CreateProducerAsCompany(memberUpload, "AAAAAAAA");
 
                 database.Model.SaveChanges();
 
@@ -115,8 +112,7 @@
                 memberUpload.ComplianceYear = 2016;
                 memberUpload.IsSubmitted = true;
 
-                EA.Weee.Tests.Core.Model.Producer producer = helper.CreateProducerAsCompany(memberUpload, "AAAAAAA");
-                producer.IsCurrentForComplianceYear = true;
+                Weee.Tests.Core.Model.ProducerSubmission producer = helper.CreateProducerAsCompany(memberUpload, "AAAAAAA");
 
                 database.Model.SaveChanges();
 
@@ -144,15 +140,13 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                EA.Weee.Tests.Core.Model.Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
-                producer1.IsCurrentForComplianceYear = true;
+                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
 
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;
 
-                EA.Weee.Tests.Core.Model.Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
-                producer2.IsCurrentForComplianceYear = true;
+                Weee.Tests.Core.Model.ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
 
                 database.Model.SaveChanges();
 
@@ -168,7 +162,7 @@
         }
 
         [Fact]
-        public void GetLatestProducerFromPreviousComplianceYears_TwoProducerEntriesIn2015_ReturnsLatestProducerByUdatedDate()
+        public void GetLatestProducerFromPreviousComplianceYears_TwoProducerEntriesIn2015_ReturnsLatestProducerByUpdatedDate()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -181,17 +175,15 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                EA.Weee.Tests.Core.Model.Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
+                ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
                 producer1.UpdatedDate = new DateTime(2015, 1, 1);
-                producer1.IsCurrentForComplianceYear = false;
 
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2015;
                 memberUpload2.IsSubmitted = true;
 
-                EA.Weee.Tests.Core.Model.Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
+                ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
                 producer2.UpdatedDate = new DateTime(2015, 1, 2);
-                producer2.IsCurrentForComplianceYear = true;
 
                 database.Model.SaveChanges();
 
@@ -220,25 +212,22 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                EA.Weee.Tests.Core.Model.Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
+                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
                 producer1.UpdatedDate = new DateTime(2015, 1, 1);
-                producer1.IsCurrentForComplianceYear = false;
 
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2015;
                 memberUpload2.IsSubmitted = true;
 
-                EA.Weee.Tests.Core.Model.Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
+                Weee.Tests.Core.Model.ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
                 producer2.UpdatedDate = new DateTime(2015, 1, 2);
-                producer2.IsCurrentForComplianceYear = true;
 
                 MemberUpload memberUpload3 = helper.CreateMemberUpload(scheme);
                 memberUpload3.ComplianceYear = 2014;
                 memberUpload3.IsSubmitted = true;
 
-                EA.Weee.Tests.Core.Model.Producer producer3 = helper.CreateProducerAsCompany(memberUpload3, "AAAAAAA");
+                Weee.Tests.Core.Model.ProducerSubmission producer3 = helper.CreateProducerAsCompany(memberUpload3, "AAAAAAA");
                 producer3.UpdatedDate = new DateTime(2014, 1, 1);
-                producer3.IsCurrentForComplianceYear = true;
 
                 database.Model.SaveChanges();
 
@@ -267,15 +256,13 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = false;
 
-                EA.Weee.Tests.Core.Model.Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
-                producer1.IsCurrentForComplianceYear = true;
+                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
 
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2015;
                 memberUpload2.IsSubmitted = true;
 
-                EA.Weee.Tests.Core.Model.Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
-                producer2.IsCurrentForComplianceYear = true;
+                Weee.Tests.Core.Model.ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
 
                 database.Model.SaveChanges();
 
@@ -306,16 +293,15 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                EA.Weee.Tests.Core.Model.Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
-                producer1.ObligationType = (int)ObligationType.B2C;
-                producer1.IsCurrentForComplianceYear = true;
+                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
+                producer1.ObligationType = "B2C";
 
                 database.Model.SaveChanges();
 
                 ProducerQuerySet querySet = ProducerQuerySet(database.WeeeContext);
 
                 // Act
-                var result = querySet.GetProducerForOtherSchemeAndObligationType("AAAAAAA", "2015", scheme1.OrganisationId, (int)ObligationType.B2C);
+                var result = querySet.GetProducerForOtherSchemeAndObligationType("AAAAAAA", "2015", scheme1.OrganisationId, ObligationType.B2C);
 
                 // Assert
                 Assert.NotNull(result);
@@ -337,17 +323,13 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                var companyProducer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
-                companyProducer1.IsCurrentForComplianceYear = true;
+                Weee.Tests.Core.Model.ProducerSubmission companyProducer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
 
-                var partnershipProducer = helper.CreateProducerAsPartnership(memberUpload1, "PPP1");
-                partnershipProducer.IsCurrentForComplianceYear = true;
+                Weee.Tests.Core.Model.ProducerSubmission partnershipProducer = helper.CreateProducerAsPartnership(memberUpload1, "PPP1");
 
-                var soleTraderProducer = helper.CreateProducerAsSoleTrader(memberUpload1, "SSS1");
-                soleTraderProducer.IsCurrentForComplianceYear = true;
+                Weee.Tests.Core.Model.ProducerSubmission soleTraderProducer = helper.CreateProducerAsSoleTrader(memberUpload1, "SSS1");
 
-                var companyProducer2 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
-                companyProducer2.IsCurrentForComplianceYear = true;
+                Weee.Tests.Core.Model.ProducerSubmission companyProducer2 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAB");
 
                 database.Model.SaveChanges();
 
@@ -376,14 +358,11 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                var companyProducer1 = helper.CreateProducerAsCompany(memberUpload1, "AA");
-                companyProducer1.IsCurrentForComplianceYear = true;
+                ProducerSubmission companyProducer1 = helper.CreateProducerAsCompany(memberUpload1, "AA");
 
-                var companyProducer2 = helper.CreateProducerAsCompany(memberUpload1, "BB");
-                companyProducer2.IsCurrentForComplianceYear = false;
+                ProducerSubmission companyProducer2 = helper.CreateProducerAsCompany(memberUpload1, "BB");
 
-                var companyProducer3 = helper.CreateProducerAsCompany(memberUpload1, "CC");
-                companyProducer3.IsCurrentForComplianceYear = true;
+                ProducerSubmission companyProducer3 = helper.CreateProducerAsCompany(memberUpload1, "AA");
 
                 database.Model.SaveChanges();
 
@@ -391,9 +370,9 @@
                 var result = ProducerQuerySet(database.WeeeContext).GetLatestCompanyProducers();
 
                 // Assert
-                Assert.Contains(result, p => p.Id == companyProducer1.Id);
+                Assert.DoesNotContain(result, p => p.Id == companyProducer1.Id);
+                Assert.Contains(result, p => p.Id == companyProducer2.Id);
                 Assert.Contains(result, p => p.Id == companyProducer3.Id);
-                Assert.DoesNotContain(result, p => p.Id == companyProducer2.Id);
             }
         }
 

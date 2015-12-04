@@ -4,6 +4,6 @@
 
     public interface ISchemeQuerySet
     {
-        string GetSchemeApprovalNumber(Guid schemeId);
+        string GetSchemeApprovalNumberByOrganisationId(Guid organisationId);
     }
 }

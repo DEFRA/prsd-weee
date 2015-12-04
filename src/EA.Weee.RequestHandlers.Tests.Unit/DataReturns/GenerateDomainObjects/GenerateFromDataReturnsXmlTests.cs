@@ -10,7 +10,8 @@
     using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using Requests.DataReturns;
     using Xml.Converter;
-    using Xml.MemberRegistration;
+    using Xml.DataReturns;
+    using Xml.Deserialization;
     using Xunit;
 
     public class GenerateFromDataReturnsXmlTest
@@ -35,8 +36,8 @@
         public void GenerateDataReturnsUpload_NoSchemaErrors_ComplianceYearObtained()
         {
             var builder = new GenerateFromXmlBuilder();
-            A.CallTo(() => builder.XmlConverter.Deserialize(A<XDocument>._))
-                .Returns(new schemeType { complianceYear = "2015" });
+            A.CallTo(() => builder.XmlDeserializer.Deserialize<SchemeReturn>(A<XDocument>._))
+                .Returns(new SchemeReturn { ComplianceYear = "2015" });
 
             var message = new ProcessDataReturnsXMLFile(Guid.NewGuid(), new byte[1], "File name");
             var generateFromXml = builder.Build();
@@ -50,15 +51,17 @@
         private class GenerateFromXmlBuilder
         {
             public IXmlConverter XmlConverter;
-          
+            public IDeserializer XmlDeserializer;
+
             public GenerateFromXmlBuilder()
             {
                 XmlConverter = A.Fake<IXmlConverter>();
+                XmlDeserializer = A.Fake<IDeserializer>();
             }
 
             public GenerateFromDataReturnsXml Build()
             {
-                return new GenerateFromDataReturnsXml(XmlConverter);
+                return new GenerateFromDataReturnsXml(XmlConverter, XmlDeserializer);
             }
         }
     }

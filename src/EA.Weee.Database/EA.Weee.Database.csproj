@@ -47,6 +47,14 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="scripts\Everytime\0006-MigratedProducers.sql" />
+    <Content Include="scripts\Update\Sprint18\20151202-1530-AddUniqueSchemeIdPRNYearConstraintToRegisteredProducer.sql" />
+    <Content Include="scripts\Update\Sprint18\20151125-1557-CreateTables.sql" />
+    <Content Include="scripts\Update\Sprint18\20151125-1626-PopulateTables.sql" />
+    <Content Include="scripts\Update\Sprint18\20151125-1717-UpdateDependentTables.sql" />
+    <Content Include="scripts\Update\Sprint18\20151125-1815-Update-spgCSVDataByOrganisationIdAndComplianceYear.sql" />
+    <Content Include="scripts\Update\Sprint18\20151125-1859-Update-spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority.sql" />
+    <Content Include="scripts\Update\Sprint18\20151125-1921-Update-spgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority.sql" />
+    <Content Include="scripts\Update\Sprint18\20151125-1937-DropProducerTable.sql" />
     <Content Include="scripts\Update\Sprint17\20151116-1150-UpdateStoredProcedureForProducerDetailsReport.sql" />
     <Content Include="scripts\Update\Sprint17\20151116-1110-MakeAnnualTurnoverNullable.sql" />
     <Content Include="scripts\AliaSQL.exe" />
@@ -121,7 +129,8 @@
     </Content>
     <Content Include="scripts\Update\Sprint17\20151120-1005-UpdateSPforPCSCharges.sql" />
     <Content Include="scripts\Update\Sprint17\20151116-1229-AddSPforPCSCharges.sql" />
-    <Content Include="scripts\Update\Sprint17\20151127-1853-CreateProducerPublicRegisterReportSP.sql" />
+    <Content Include="scripts\Update\Sprint18\20151130-1025-Update-spgProducerPublicRegisterCSVDataByComplianceYear.sql" />
+    <Content Include="scripts\Update\Sprint18\20151127-1853-CreateProducerPublicRegisterReportSP.sql" />
     <Content Include="scripts\Update\Sprint17\20151125-1530-DataStandards-UpdateOrganisationFieldLengths.sql" />
     <Content Include="scripts\Update\Sprint18\20151202-1015-AddProcessTimeToDataReturnsUpload.sql" />
     <Content Include="scripts\Update\Sprint18\20151126-1142-AddDataReturnsUploadAndErrorsTables.sql" />
