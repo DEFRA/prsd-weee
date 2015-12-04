@@ -12,40 +12,40 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Producer
+    public partial class ProducerSubmission
     {
-        public Producer()
+        public ProducerSubmission()
         {
             this.BrandNames = new HashSet<BrandName_>();
+            this.RegisteredProducers = new HashSet<RegisteredProducer>();
             this.SICCodes = new HashSet<SICCode_>();
         }
     
         public System.Guid Id { get; set; }
         public byte[] RowVersion { get; set; }
-        public string RegistrationNumber { get; set; }
+        public System.DateTime UpdatedDate { get; set; }
+        public System.Guid RegisteredProducerId { get; set; }
+        public string ObligationType { get; set; }
+        public string TradingName { get; set; }
         public bool VATRegistered { get; set; }
-        public decimal AnnualTurnover { get; set; }
-        public Nullable<System.DateTime> CeaseToExist { get; set; }
-        public int ObligationType { get; set; }
         public int EEEPlacedOnMarketBandType { get; set; }
-        public int AnnualTurnoverBandType { get; set; }
         public int SellingTechniqueType { get; set; }
-        public decimal ChargeThisUpdate { get; set; }
         public System.Guid MemberUploadId { get; set; }
         public Nullable<System.Guid> AuthorisedRepresentativeId { get; set; }
         public System.Guid ProducerBusinessId { get; set; }
-        public System.DateTime UpdatedDate { get; set; }
-        public string TradingName { get; set; }
-        public System.Guid SchemeId { get; set; }
-        public bool IsCurrentForComplianceYear { get; set; }
+        public Nullable<decimal> AnnualTurnover { get; set; }
+        public int AnnualTurnoverBandType { get; set; }
         public System.Guid ChargeBandAmountId { get; set; }
+        public decimal ChargeThisUpdate { get; set; }
+        public Nullable<System.DateTime> CeaseToExist { get; set; }
     
+        public virtual ChargeBandAmount ChargeBandAmount { get; set; }
         public virtual MemberUpload MemberUpload { get; set; }
-        public virtual Scheme Scheme { get; set; }
         public virtual AuthorisedRepresentative AuthorisedRepresentative { get; set; }
         public virtual ICollection<BrandName_> BrandNames { get; set; }
         public virtual Business Business { get; set; }
+        public virtual RegisteredProducer RegisteredProducer { get; set; }
+        public virtual ICollection<RegisteredProducer> RegisteredProducers { get; set; }
         public virtual ICollection<SICCode_> SICCodes { get; set; }
-        public virtual ChargeBandAmount ChargeBandAmount { get; set; }
     }
 }
