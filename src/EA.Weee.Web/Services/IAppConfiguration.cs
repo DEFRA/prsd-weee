@@ -28,6 +28,6 @@
 
         bool EnableDataReturns { get; set; }
 
-        double OrganisationNamesCacheDurationMins { get; set; }
+        double OrganisationCacheDurationMins { get; set; }
     }
 }

@@ -94,6 +94,24 @@
             Assert.Contains("uniqueProducerRegistrationNo", result.Message);
         }
 
+        [Fact]
+        public void DataReturnSchemaValidation_B2CWEEEFromDistributors_ContainsReturnWithB2BObligationType_ReturnsValidationError()
+        {
+            var result = new XmlFileLoad().ValidateDataReturnXmlWithSingleResult(@"DataReturns\XmlFiles\v3-B2CWEEEFromDistributors-ReturnWithB2BObligationType.xml");
+
+            Assert.Equal(XmlSeverityType.Error, result.Severity);
+            Assert.Equal("The value of the 'http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns:ObligationType' element does not equal its fixed value.", result.Message);
+        }
+
+        [Fact]
+        public void DataReturnSchemaValidation_B2CWEEEFromFinalHolders_ContainsReturnWithB2BObligationType_ReturnsValidationError()
+        {
+            var result = new XmlFileLoad().ValidateDataReturnXmlWithSingleResult(@"DataReturns\XmlFiles\v3-B2CWEEEFromFinalHolders-ReturnWithB2BObligationType.xml");
+
+            Assert.Equal(XmlSeverityType.Error, result.Severity);
+            Assert.Equal("The value of the 'http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns:ObligationType' element does not equal its fixed value.", result.Message);
+        }
+
         private class XmlFileLoad
         {
             private const string schemaFile = @"DataReturns\v3schema.xsd";
