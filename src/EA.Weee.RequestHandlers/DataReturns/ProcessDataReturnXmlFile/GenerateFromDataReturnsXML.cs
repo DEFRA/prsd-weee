@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Domain;
@@ -9,14 +8,18 @@
     using Prsd.Core;
     using Requests.DataReturns;
     using Xml.Converter;
+    using Xml.DataReturns;
+    using Xml.Deserialization;
 
     public class GenerateFromDataReturnsXml : IGenerateFromDataReturnsXml
     {
         private readonly IXmlConverter xmlConverter;
+        private readonly IDeserializer deserializer;
 
-        public GenerateFromDataReturnsXml(IXmlConverter xmlConverter)
+        public GenerateFromDataReturnsXml(IXmlConverter xmlConverter, IDeserializer deserializer)
         {
             this.xmlConverter = xmlConverter;
+            this.deserializer = deserializer;
         }
 
         public DataReturnsUpload GenerateDataReturnsUpload(
@@ -35,8 +38,8 @@
             else
             {
                 var xml = xmlConverter.XmlToUtf8String(messageXmlFile.Data);
-                var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile.Data));
-                return new DataReturnsUpload(xml, errors, int.Parse(deserializedXml.complianceYear), scheme, messageXmlFile.FileName);
+                SchemeReturn deserializedXml = deserializer.Deserialize<SchemeReturn>(xmlConverter.Convert(messageXmlFile.Data));
+                return new DataReturnsUpload(xml, errors, int.Parse(deserializedXml.ComplianceYear), scheme, messageXmlFile.FileName);
             }
         }
     }

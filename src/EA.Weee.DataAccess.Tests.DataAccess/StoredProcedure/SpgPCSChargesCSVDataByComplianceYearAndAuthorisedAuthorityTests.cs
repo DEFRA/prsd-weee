@@ -26,8 +26,8 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
-                producer1.IsCurrentForComplianceYear = true;
+                ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
+                producer1.ChargeThisUpdate = 999;
 
                 db.Model.SaveChanges();
 
@@ -40,8 +40,8 @@
 
                 PCSChargesCSVData result = results.Find(x => (x.PRN == "WEE/11AAAA11"));
 
-                Assert.Equal(producer1.RegistrationNumber, result.PRN);
-                Assert.Equal(producer1.ChargeThisUpdate, result.ChargeValue);
+                Assert.Equal("WEE/11AAAA11", result.PRN);
+                Assert.Equal(999, result.ChargeValue);
             }
         }
 
@@ -58,23 +58,25 @@
                 // Arrange
                 ModelHelper helper = new ModelHelper(db.Model);
 
+                // Use a year for which there is unlikely to be any data stored for that year in the database.
+                int year = 2000;
+
                 Scheme scheme1 = helper.CreateScheme();
 
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
-                memberUpload1.ComplianceYear = 2016;
-                memberUpload1.IsSubmitted = false;
+                memberUpload1.ComplianceYear = year;
+                memberUpload1.IsSubmitted = true;
 
-                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
+                ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
                 producer1.ChargeThisUpdate = 0;
                 db.Model.SaveChanges();
 
                 // Act
-                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(2016);
+                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(year);
 
                 // Assert
                 Assert.NotNull(results);
-                PCSChargesCSVData result = results.Find(x => (x.PRN == "WEE/11AAAA11"));
-                Assert.Null(result);
+                Assert.Equal(0, results.Count);
             }
         }
 
@@ -97,30 +99,25 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
-                producer1.IsCurrentForComplianceYear = true;
+                ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                producer1.ChargeThisUpdate = 999;
 
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme1);
                 memberUpload2.ComplianceYear = 2017;
                 memberUpload2.IsSubmitted = true;
 
-                Producer producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/11AAAA12");
-                producer2.IsCurrentForComplianceYear = true;
+                ProducerSubmission producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/11AAAA12");
+                producer2.ChargeThisUpdate = 999;
 
                 db.Model.SaveChanges();
 
                 // Act
                 List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(2016);
+
                 // Assert
                 Assert.NotNull(results);
-
-                PCSChargesCSVData result1 = results.Find(x => (x.PRN == "WEE/11AAAA11"));
-
-                Assert.Equal(producer1.Business.Partnership.Name, result1.ProducerName);
-
-                PCSChargesCSVData result2 = results.Find(x => (x.PRN == "WEE/11AAAA12"));
-
-                Assert.Null(result2);
+                Assert.True(results.Any(r => r.PRN == "WEE/11AAAA11"), "Producers registered in the year specified should be returned.");
+                Assert.False(results.Any(r => r.PRN == "WEE/11AAAA12"), "Producers not registered in the year specified should not be returned.");
             }
         }
 
@@ -136,43 +133,37 @@
                 // Arrange
                 ModelHelper helper = new ModelHelper(db.Model);
 
-                //EA Scheme
-                var authorityId = new Guid("A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8");
                 Scheme scheme1 = helper.CreateScheme();
-                scheme1.CompetentAuthorityId = authorityId;
+                scheme1.CompetentAuthorityId = new Guid("A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8");
 
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
-                producer1.IsCurrentForComplianceYear = true;
+                ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                producer1.ChargeThisUpdate = 999;
 
-                //SEPA Scheme
-                var sepaId = new Guid("78F37814-364B-4FAE-BEB5-DB0439CBF177");
                 Scheme scheme2 = helper.CreateScheme();
-                scheme2.CompetentAuthorityId = sepaId;
+                scheme2.CompetentAuthorityId = new Guid("78F37814-364B-4FAE-BEB5-DB0439CBF177");
+
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme2);
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;
 
-                Producer producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/11AAAA12");
-                producer2.IsCurrentForComplianceYear = true;
+                ProducerSubmission producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/11AAAA12");
+                producer2.ChargeThisUpdate = 999;
 
                 db.Model.SaveChanges();
 
                 // Act
-                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(2016, authorityId);
+                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(
+                    2016,
+                    new Guid("A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8"));
+                
                 // Assert
                 Assert.NotNull(results);
-
-                PCSChargesCSVData result1 = results.Find(x => (x.PRN == "WEE/11AAAA11"));
-
-                Assert.Equal(producer1.Business.Partnership.Name, result1.ProducerName);
-
-                PCSChargesCSVData result2 = results.Find(x => (x.PRN == "WEE/11AAAA12"));
-
-                Assert.Null(result2);
+                Assert.True(results.Any(r => r.PRN == "WEE/11AAAA11"), "Producers registered in the specified year for a scheme with the specified AA should be returned.");
+                Assert.False(results.Any(r => r.PRN == "WEE/11AAAA12"), "Producers registered in the specified year for a scheme with an AA other than the one specified should not be returned.");
             }
         }
 
@@ -194,8 +185,8 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
-                producer1.IsCurrentForComplianceYear = true;
+                ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                producer1.ChargeThisUpdate = 999;
 
                 Scheme scheme2 = helper.CreateScheme();
 
@@ -203,8 +194,8 @@
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;
 
-                Producer producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/22BBBB22");
-                producer2.IsCurrentForComplianceYear = true;
+                ProducerSubmission producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/22BBBB22");
+                producer2.ChargeThisUpdate = 999;
 
                 db.Model.SaveChanges();
 
@@ -213,17 +204,18 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(producer1.RegistrationNumber, results.SingleOrDefault(p => p.PRN == producer1.RegistrationNumber).PRN);
-                Assert.Equal(producer2.RegistrationNumber, results.SingleOrDefault(p => p.PRN == producer2.RegistrationNumber).PRN);
+                Assert.True(results.Any(r => r.PRN == "WEE/11AAAA11"), "Producers in all schemes should be returned when no scheme ID is specified.");
+                Assert.True(results.Any(r => r.PRN == "WEE/22BBBB22"), "Producers in all schemes should be returned when no scheme ID is specified.");
             }
         }
 
         /// <summary>
-        /// This test ensures that the results are ordered by organisation name.
+        /// This test ensures that the results are ordered by the date upon which the member upload
+        /// was uploaded.
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task Execute_WithSeveralProducers_ReturnsResultsOrderedBySchemeNameAndSubmissionDate()
+        public async Task Execute_WithSeveralProducers_ReturnsResultsOrderedByDateOfMemberUpload()
         {
             using (DatabaseWrapper db = new DatabaseWrapper())
             {
@@ -233,40 +225,41 @@
                 Scheme scheme1 = helper.CreateScheme();
 
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
-                memberUpload1.ComplianceYear = 2020;
+                memberUpload1.ComplianceYear = 2005;
                 memberUpload1.IsSubmitted = true;
                 memberUpload1.Date = new DateTime(2015, 11, 4);
-                Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11BBBB11");
-                producer1.IsCurrentForComplianceYear = true;
-                producer1.Business.Partnership.Name = "ABCH";
+
+                ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11BBBB11");
+                producer1.ChargeThisUpdate = 999;
 
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme1);
-                memberUpload2.ComplianceYear = 2020;
+                memberUpload2.ComplianceYear = 2005;
                 memberUpload2.IsSubmitted = true;
                 memberUpload2.Date = new DateTime(2015, 11, 1);
-                Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "WEE/22AAAA22");
-                producer2.IsCurrentForComplianceYear = true;
-                producer2.Business.Company.Name = "AAAA";
+
+                ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "WEE/22AAAA22");
+                producer2.ChargeThisUpdate = 999;
+
                 MemberUpload memberUpload3 = helper.CreateMemberUpload(scheme1);
-                memberUpload3.ComplianceYear = 2020;
+                memberUpload3.ComplianceYear = 2005;
                 memberUpload3.IsSubmitted = true;
                 memberUpload3.Date = new DateTime(2015, 10, 4);
-                Producer producer3 = helper.CreateProducerAsPartnership(memberUpload3, "WEE/33CCCC33");
-                producer3.IsCurrentForComplianceYear = true;
-                producer3.Business.Partnership.Name = "ABCD";
+
+                ProducerSubmission producer3 = helper.CreateProducerAsPartnership(memberUpload3, "WEE/33CCCC33");
+                producer3.ChargeThisUpdate = 999;
 
                 db.Model.SaveChanges();
 
                 // Act
-                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(2020);
+                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(2005);
 
                 // Assert
                 Assert.NotNull(results);
 
                 Assert.Collection(results,
-                    (r1) => Assert.Equal("04/10/2015", r1.SubmissionDate.ToShortDateString()),
-                    (r2) => Assert.Equal("01/11/2015", r2.SubmissionDate.ToShortDateString()),
-                    (r3) => Assert.Equal("04/11/2015", r3.SubmissionDate.ToShortDateString()));
+                    (r1) => Assert.Equal(new DateTime(2015, 10, 4), r1.SubmissionDate),
+                    (r2) => Assert.Equal(new DateTime(2015, 11, 1), r2.SubmissionDate),
+                    (r3) => Assert.Equal(new DateTime(2015, 11, 4), r3.SubmissionDate));
             }
         }
 
@@ -282,42 +275,33 @@
                 // Arrange
                 ModelHelper helper = new ModelHelper(db.Model);
 
-                //EA Scheme
-                var authorityId = new Guid("A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8");
                 Scheme scheme1 = helper.CreateScheme();
-                scheme1.CompetentAuthorityId = authorityId;
+                scheme1.CompetentAuthorityId = new Guid("A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8");
 
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
                 producer1.ChargeThisUpdate = 60;
 
-                MemberUpload memberUpload12 = helper.CreateMemberUpload(scheme1);
-                memberUpload12.ComplianceYear = 2016;
-                memberUpload12.IsSubmitted = true;
+                MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme1);
+                memberUpload2.ComplianceYear = 2016;
+                memberUpload2.IsSubmitted = true;
 
-                Producer producer12 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
-                producer12.ChargeThisUpdate = 30;
+                ProducerSubmission producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/11AAAA11");
+                producer2.ChargeThisUpdate = 30;
 
-                Producer producer13 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
-                producer13.IsCurrentForComplianceYear = true;
-                producer13.ChargeThisUpdate = 0;
                 db.Model.SaveChanges();
 
                 // Act
-                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(2016, authorityId);
+                List<PCSChargesCSVData> results = await db.StoredProcedures.SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(
+                    2016,
+                    new Guid("A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8"));
 
                 // Assert
-                Assert.NotNull(results);
-
-                List<PCSChargesCSVData> resultHistory = results.FindAll(x => (x.PRN == "WEE/11AAAA11" && x.ChargeValue != 0));
-
-                Assert.Equal(2, resultHistory.Count);
-                Assert.Collection(resultHistory,
-                   (r1) => Assert.Equal(60, r1.ChargeValue),
-                   (r2) => Assert.Equal(30, r2.ChargeValue));
+                Assert.True(results.Any(r => r.PRN == "WEE/11AAAA11" && r.ChargeValue == 60), "The charge of 60 should have been returned.");
+                Assert.True(results.Any(r => r.PRN == "WEE/11AAAA11" && r.ChargeValue == 30), "The charge of 30 should have been returned.");
             }
         }
     }

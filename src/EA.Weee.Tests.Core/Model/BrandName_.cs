@@ -14,9 +14,9 @@ namespace EA.Weee.Tests.Core.Model
     {
         public System.Guid Id { get; set; }
         public byte[] RowVersion { get; set; }
-        public System.Guid ProducerId { get; set; }
         public string Name { get; set; }
+        public System.Guid ProducerSubmissionId { get; set; }
     
-        public virtual Producer Producer { get; set; }
+        public virtual ProducerSubmission ProducerSubmission { get; set; }
     }
 }
