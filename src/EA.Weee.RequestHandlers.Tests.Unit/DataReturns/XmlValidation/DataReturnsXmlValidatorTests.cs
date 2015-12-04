@@ -19,12 +19,14 @@
         private readonly ISchemaValidator schemaValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
+        private readonly IDeserializer deserializer;
 
         public DataReturnsXmlValidatorTests()
         {
             schemaValidator = A.Fake<ISchemaValidator>();
             xmlConverter = A.Fake<IXmlConverter>();
             errorTranslator = A.Fake<IXmlErrorTranslator>();
+            deserializer = A.Fake<IDeserializer>();
         }
                
         [Fact]
@@ -58,7 +60,7 @@
 
         private DataReturnsXmlValidator XmlValidator()
         {
-            return new DataReturnsXmlValidator(schemaValidator, xmlConverter, errorTranslator);
+            return new DataReturnsXmlValidator(schemaValidator, xmlConverter, errorTranslator, deserializer);
         }
     }
 }
