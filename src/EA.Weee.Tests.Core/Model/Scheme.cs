@@ -17,7 +17,7 @@ namespace EA.Weee.Tests.Core.Model
         public Scheme()
         {
             this.MemberUploads = new HashSet<MemberUpload>();
-            this.Producers = new HashSet<Producer>();
+            this.RegisteredProducers = new HashSet<RegisteredProducer>();
         }
     
         public System.Guid Id { get; set; }
@@ -32,6 +32,6 @@ namespace EA.Weee.Tests.Core.Model
     
         public virtual Organisation Organisation { get; set; }
         public virtual ICollection<MemberUpload> MemberUploads { get; set; }
-        public virtual ICollection<Producer> Producers { get; set; }
+        public virtual ICollection<RegisteredProducer> RegisteredProducers { get; set; }
     }
 }

@@ -77,13 +77,15 @@
             }
 
             // act
-            IEnumerable<Producer> producers = await new GenerateFromXml(xmlConverter, new GenerateFromXmlDataAccess(context)).GenerateProducers(message, memberUpload, producerCharges);
+            IEnumerable<ProducerSubmission> producers = await new GenerateFromXml(
+                xmlConverter,
+                new GenerateFromXmlDataAccess(context)).GenerateProducers(message, memberUpload, producerCharges);
 
             // assert
             long newSeed = GetCurrentSeed();
             Assert.Equal(expectedSeed, newSeed);
 
-            var prns = producers.Select(p => p.RegistrationNumber);
+            var prns = producers.Select(p => p.RegisteredProducer.ProducerRegistrationNumber);
             Assert.Equal(prns.Distinct(), prns); // all prns should be unique
         }
 
@@ -136,7 +138,16 @@
             context.Schemes.Add(scheme);
             context.SaveChanges();
 
-            MemberUpload memberUpload = new MemberUpload(org.Id, scheme.Id, string.Empty, "File name");
+            MemberUpload memberUpload = new MemberUpload(
+                org.Id,
+                "<xml />",
+                new List<MemberUploadError>(),
+                0,
+                2017,
+                scheme,
+                "File name",
+                "user 1");
+
             context.MemberUploads.Add(memberUpload);
             context.SaveChanges();
 
