@@ -53,7 +53,7 @@
     <Compile Include="Converter\IXmlConverter.cs" />
     <Compile Include="Converter\WhiteSpaceCollapser.cs" />
     <Compile Include="Converter\XmlConverter.cs" />
-    <Compile Include="DataReturns\SchemaReturn.cs" />
+    <Compile Include="DataReturns\SchemeReturn.cs" />
     <Compile Include="DataReturns\v3schema.cs">
       <DependentUpon>v3schema.xsd</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

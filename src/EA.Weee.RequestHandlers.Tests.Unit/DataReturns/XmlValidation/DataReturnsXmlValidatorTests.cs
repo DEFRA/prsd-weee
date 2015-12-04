@@ -11,6 +11,7 @@
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;
     using Xml.Converter;
+    using Xml.DataReturns;
     using Xml.Deserialization;
     using Xunit;
 
@@ -19,12 +20,14 @@
         private readonly ISchemaValidator schemaValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
+        private readonly IDeserializer deserializer;
 
         public DataReturnsXmlValidatorTests()
         {
             schemaValidator = A.Fake<ISchemaValidator>();
             xmlConverter = A.Fake<IXmlConverter>();
             errorTranslator = A.Fake<IXmlErrorTranslator>();
+            deserializer = A.Fake<IDeserializer>();
         }
                
         [Fact]
@@ -33,7 +36,7 @@
             A.CallTo(() => schemaValidator.Validate(A<byte[]>._, string.Empty, string.Empty, A<string>._))
                 .Returns(new List<XmlValidationError>());
 
-            A.CallTo(() => xmlConverter.Deserialize(A<XDocument>._))
+            A.CallTo(() => deserializer.Deserialize<SchemeReturn>(A<XDocument>._))
                 .Throws(new XmlDeserializationFailureException(new Exception("Test exception")));
 
             var result = XmlValidator().Validate(new ProcessDataReturnsXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
@@ -58,7 +61,7 @@
 
         private DataReturnsXmlValidator XmlValidator()
         {
-            return new DataReturnsXmlValidator(schemaValidator, xmlConverter, errorTranslator);
+            return new DataReturnsXmlValidator(schemaValidator, xmlConverter, errorTranslator, deserializer);
         }
     }
 }

@@ -9,6 +9,7 @@
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;
     using Xml.Converter;
+    using Xml.DataReturns;
     using Xml.Deserialization;
 
     public class DataReturnsXmlValidator : IDataReturnsXmlValidator
@@ -16,12 +17,14 @@
         private readonly ISchemaValidator schemaValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
+        private readonly IDeserializer deserializer;
 
-        public DataReturnsXmlValidator(ISchemaValidator schemaValidator, IXmlConverter xmlConverter, IXmlErrorTranslator errorTranslator)
+        public DataReturnsXmlValidator(ISchemaValidator schemaValidator, IXmlConverter xmlConverter, IXmlErrorTranslator errorTranslator, IDeserializer deserializer)
         {
             this.schemaValidator = schemaValidator;
             this.errorTranslator = errorTranslator;
             this.xmlConverter = xmlConverter;
+            this.deserializer = deserializer;
         }
 
         public IEnumerable<DataReturnsUploadError> Validate(ProcessDataReturnsXMLFile message)
@@ -40,7 +43,7 @@
             try
             {
                 // Validate deserialized XML against business rules
-               xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
+                deserializer.Deserialize<SchemeReturn>(xmlConverter.Convert(message.Data));
             }
             catch (XmlDeserializationFailureException e)
             {
