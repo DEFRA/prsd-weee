@@ -143,6 +143,9 @@
     <Content Include="DataReturns\XmlFiles\v3-B2CWEEEFromDistributors-DuplicateCategoryObligationType.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="DataReturns\XmlFiles\v3-B2CWEEEFromFinalHolders-ReturnWithB2BObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="DataReturns\XmlFiles\v3-B2CWEEEFromFinalHolders-DuplicateCategoryObligationType.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -159,6 +162,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="DataReturns\XmlFiles\v3-DeliveredToATF-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturns\XmlFiles\v3-B2CWEEEFromDistributors-ReturnWithB2BObligationType.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="DataReturns\XmlFiles\v3-ProducerList-DuplicateCategoryObligationType.xml">
