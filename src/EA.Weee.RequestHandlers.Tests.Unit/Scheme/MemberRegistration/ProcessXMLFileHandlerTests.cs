@@ -29,7 +29,7 @@
         private readonly IGenerateFromXml generator;
         private readonly WeeeContext context;
         private readonly DbSet<Scheme> schemesDbSet;
-        private readonly DbSet<Producer> producersDbSet;
+        private readonly DbSet<ProducerSubmission> producersDbSet;
         private readonly DbSet<MemberUpload> memberUploadsDbSet;
         private readonly IXmlValidator xmlValidator;
         private readonly IXmlConverter xmlConverter;
@@ -40,7 +40,7 @@
         public ProcessXMLFileHandlerTests()
         {
             memberUploadsDbSet = A.Fake<DbSet<MemberUpload>>();
-            producersDbSet = A.Fake<DbSet<Producer>>();
+            producersDbSet = A.Fake<DbSet<ProducerSubmission>>();
             xmlConverter = A.Fake<IXmlConverter>();
             var schemes = new[]
             {
@@ -51,7 +51,7 @@
 
             context = A.Fake<WeeeContext>();
             A.CallTo(() => context.Schemes).Returns(schemesDbSet);
-            A.CallTo(() => context.Producers).Returns(producersDbSet);
+            A.CallTo(() => context.ProducerSubmissions).Returns(producersDbSet);
             A.CallTo(() => context.MemberUploads).Returns(memberUploadsDbSet);
 
             generator = A.Fake<IGenerateFromXml>();
@@ -73,7 +73,7 @@
         [Fact]
         public async void ProcessXmlfile_ParsesXMLFile_SavesValidProducers()
         {
-            IEnumerable<Producer> generatedProducers = new[] { TestProducer("ForestMoonOfEndor") };
+            IEnumerable<ProducerSubmission> generatedProducers = new[] { TestProducer("ForestMoonOfEndor") };
 
             A.CallTo(() => generator.GenerateProducers(Message, A<MemberUpload>.Ignored, A<Dictionary<string, ProducerCharge>>.Ignored))
                 .Returns(Task.FromResult(generatedProducers));
@@ -172,13 +172,24 @@
         public async void ProcessXmlfile_StoresProcessTime()
         {
             IEnumerable<MemberUploadError> errors = new List<MemberUploadError>();
-            A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
+            A.CallTo(() => xmlValidator.Validate(Message))
+                .Returns(errors);
+
             MemberUpload upload = A.Fake<MemberUpload>();
-            A.CallTo(() => generator.GenerateMemberUpload(Message, errors as List<MemberUploadError>, 0, organisationId)).WithAnyArguments().Returns(upload);
+
+            A.CallTo(() => generator.GenerateMemberUpload(
+                Message,
+                errors as List<MemberUploadError>,
+                0,
+                A.Dummy<Scheme>()))
+                .WithAnyArguments()
+                .Returns(upload);
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => upload.SetProcessTime(new TimeSpan())).WithAnyArguments().MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => upload.SetProcessTime(new TimeSpan()))
+                .WithAnyArguments()
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -188,19 +199,28 @@
             Assert.NotNull(id);
         }
 
-        public static Producer TestProducer(string tradingName)
+        public static ProducerSubmission TestProducer(string tradingName)
         {
-            var schemeId = Guid.NewGuid();
+            var scheme = A.Fake<EA.Weee.Domain.Scheme.Scheme>();
+            A.CallTo(() => scheme.SchemeName).Returns("Scheme Name");
 
-            return new Producer(
-                schemeId,
-                new MemberUpload(organisationId, schemeId, "FAKE Member Upload DATA", "File name"),
-                null,
+            var memberUpload = A.Fake<EA.Weee.Domain.Scheme.MemberUpload>();
+            A.CallTo(() => memberUpload.ComplianceYear).Returns(2017);
+            A.CallTo(() => memberUpload.Scheme).Returns(scheme);
+
+            var registeredProducer = A.Fake<EA.Weee.Domain.Producer.RegisteredProducer>();
+            A.CallTo(() => registeredProducer.ComplianceYear).Returns(2017);
+            A.CallTo(() => registeredProducer.Scheme).Returns(scheme);
+            A.CallTo(() => registeredProducer.ProducerRegistrationNumber).Returns("WEE/AA1111AA");
+
+            return new ProducerSubmission(
+                registeredProducer,
+                memberUpload,
+                A.Fake<ProducerBusiness>(),
                 null,
                 SystemTime.UtcNow,
                 0,
                 true,
-                string.Empty,
                 null,
                 tradingName,
                 EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
@@ -209,7 +229,6 @@
                 AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<BrandName>(),
                 new List<SICCode>(),
-                true,
                 A.Dummy<ChargeBandAmount>(),
                 (decimal)30.0);
         }

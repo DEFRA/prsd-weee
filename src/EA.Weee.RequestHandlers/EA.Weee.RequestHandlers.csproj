@@ -42,8 +42,8 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.15310-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15334.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.15334-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
@@ -98,6 +98,15 @@
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IProducerListFactory.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IProducerListFactoryDataAccess.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IXmlGenerator.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerListFactory.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryDataAccess.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\SchemeInfo.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
     <Compile Include="Shared\Extensions.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\GenerateFromXmlDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\IGenerateFromXmlDataAccess.cs" />
@@ -199,12 +208,6 @@
     <Compile Include="Scheme\Interfaces\IXmlValidator.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerCharge.cs" />
     <Compile Include="Scheme\MemberRegistration\XmlValidation\XmlValidator.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\IProducerListFactory.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\IXmlGenerator.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\ProducerListFactory.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestHandlerModule.cs" />
     <Compile Include="Scheme\UpdateSchemeInformationHandler.cs" />
@@ -253,7 +256,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="GenerateSchemaCs.ps1" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -10,9 +10,9 @@
 
     public interface IGenerateFromXml
     {
-        Task<IEnumerable<Producer>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges);
+        Task<IEnumerable<ProducerSubmission>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges);
 
         MemberUpload GenerateMemberUpload(ProcessXMLFile messageXmlFile, List<MemberUploadError> errors,
-            decimal totalCharges, Guid schemeId);
+            decimal totalCharges, Scheme scheme);
     }
 }

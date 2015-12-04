@@ -1,0 +1,2 @@
+﻿ALTER TABLE [Producer].[RegisteredProducer]
+ADD CONSTRAINT CN_RegisteredProducer_Unique_SchemeId_ProducerRegistrationNumber_ComplianceYear UNIQUE(SchemeId, ProducerRegistrationNumber, ComplianceYear);

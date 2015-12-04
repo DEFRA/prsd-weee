@@ -15,13 +15,13 @@ namespace EA.Weee.Tests.Core.Model
     {
         public ChargeBandAmount()
         {
-            this.Producers = new HashSet<Producer>();
+            this.ProducerSubmissions = new HashSet<ProducerSubmission>();
         }
     
         public System.Guid Id { get; set; }
         public decimal Amount { get; set; }
         public int ChargeBand { get; set; }
     
-        public virtual ICollection<Producer> Producers { get; set; }
+        public virtual ICollection<ProducerSubmission> ProducerSubmissions { get; set; }
     }
 }

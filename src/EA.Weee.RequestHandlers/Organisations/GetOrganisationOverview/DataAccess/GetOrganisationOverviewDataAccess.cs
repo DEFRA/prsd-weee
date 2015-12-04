@@ -18,14 +18,9 @@
 
         public async Task<bool> HasMemberSubmissions(Guid organisationId)
         {
-            var query =
-                from schemes in context.Schemes
-                join organisations in context.Organisations on schemes.OrganisationId equals organisations.Id
-                join memberUploads in context.MemberUploads on schemes.Id equals memberUploads.SchemeId
-                where organisations.Id == organisationId && memberUploads.IsSubmitted
-                select schemes;
-
-            return await query.AnyAsync();
+            return await context.MemberUploads.AnyAsync(
+                            m => m.IsSubmitted &&
+                            m.Organisation.Id == organisationId);
         }
 
         public async Task<bool> HasMultipleManageableOrganisationUsers(Guid organisationId)

@@ -28,11 +28,11 @@
         /// </summary>
         /// <param name="registrationNumber"></param>
         /// <returns></returns>
-        public async Task<List<Producer>> Fetch(string registrationNumber)
+        public async Task<List<ProducerSubmission>> Fetch(string registrationNumber)
         {
-            return await context.Producers
+            return await context.ProducerSubmissions
                 .Where(p => p.MemberUpload.IsSubmitted)
-                .Where(p => p.RegistrationNumber == registrationNumber)
+                .Where(p => p.RegisteredProducer.ProducerRegistrationNumber == registrationNumber)
                 .Include(p => p.MemberUpload)
                 .Include(p => p.ProducerBusiness)
                 .Include(p => p.ProducerBusiness.CompanyDetails)

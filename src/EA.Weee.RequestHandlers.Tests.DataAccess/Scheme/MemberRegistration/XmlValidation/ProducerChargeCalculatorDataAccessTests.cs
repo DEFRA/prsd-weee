@@ -71,8 +71,7 @@
                 memberUpload.ComplianceYear = 2015;
                 memberUpload.IsSubmitted = true;
 
-                Producer producer = helper.CreateProducerAsCompany(memberUpload, "AAAAA");
-                producer.IsCurrentForComplianceYear = true;
+                ProducerSubmission producer = helper.CreateProducerAsCompany(memberUpload, "AAAAA");
                 producer.ChargeThisUpdate = 1;
 
                 database.Model.SaveChanges();
@@ -105,16 +104,14 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAA");
-                producer1.IsCurrentForComplianceYear = true;
+                ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAA");
                 producer1.ChargeThisUpdate = 1;
 
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;
 
-                Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAA");
-                producer2.IsCurrentForComplianceYear = true;
+                ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAA");
                 producer2.ChargeThisUpdate = 2;
 
                 database.Model.SaveChanges();
@@ -146,24 +143,21 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAA");
-                producer1.IsCurrentForComplianceYear = false;
+                ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAA");
                 producer1.ChargeThisUpdate = 1;
 
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;
 
-                Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAA");
-                producer2.IsCurrentForComplianceYear = false;
+                ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAA");
                 producer2.ChargeThisUpdate = 2;
 
                 MemberUpload memberUpload3 = helper.CreateMemberUpload(scheme);
                 memberUpload3.ComplianceYear = 2016;
                 memberUpload3.IsSubmitted = true;
 
-                Producer producer3 = helper.CreateProducerAsCompany(memberUpload3, "AAAAA");
-                producer3.IsCurrentForComplianceYear = true;
+                ProducerSubmission producer3 = helper.CreateProducerAsCompany(memberUpload3, "AAAAA");
                 producer3.ChargeThisUpdate = 3;
 
                 database.Model.SaveChanges();
@@ -189,8 +183,6 @@
                 // Arrange
                 ModelHelper helper = new ModelHelper(database.Model);
 
-                string producerRegistrationNumber = "AAAAA";
-
                 Scheme scheme1 = helper.CreateScheme();
                 scheme1.ApprovalNumber = "FirstScheme";
 
@@ -198,9 +190,8 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, producerRegistrationNumber);
-                producer1.IsCurrentForComplianceYear = true;
-                producer1.ChargeThisUpdate = 210;
+                ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAA");
+                producer1.ChargeThisUpdate = 1;
                 
                 Scheme scheme2 = helper.CreateScheme();
                 scheme2.ApprovalNumber = "SecondScheme";
@@ -209,21 +200,20 @@
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;
 
-                Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, producerRegistrationNumber);
-                producer2.IsCurrentForComplianceYear = true;
-                producer2.ChargeThisUpdate = 210;
+                ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAA");
+                producer2.ChargeThisUpdate = 2;
 
                 database.Model.SaveChanges();
 
                 ProducerChargeCalculatorDataAccess dataAccess = new ProducerChargeCalculatorDataAccess(database.WeeeContext);
 
                 // Act
-                decimal producer1Charge = dataAccess.FetchSumOfExistingCharges(scheme1.ApprovalNumber, producer1.RegistrationNumber, 2016);
-                decimal producer2Charge = dataAccess.FetchSumOfExistingCharges(scheme2.ApprovalNumber, producer2.RegistrationNumber, 2016);
+                decimal producer1Charge = dataAccess.FetchSumOfExistingCharges("FirstScheme", "AAAAA", 2016);
+                decimal producer2Charge = dataAccess.FetchSumOfExistingCharges("SecondScheme", "AAAAA", 2016);
 
                 // Assert
-                Assert.Equal(210, producer1Charge);
-                Assert.Equal(210, producer2Charge);
+                Assert.Equal(1, producer1Charge);
+                Assert.Equal(2, producer2Charge);
             }
         }
     }

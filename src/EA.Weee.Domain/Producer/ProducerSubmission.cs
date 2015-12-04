@@ -4,19 +4,20 @@
     using System.Collections.Generic;
     using Domain;
     using Lookup;
+    using Prsd.Core;
     using Prsd.Core.Domain;
     using Scheme;
 
-    public class Producer : Entity, IEquatable<Producer>
+    public class ProducerSubmission : Entity, IEquatable<ProducerSubmission>
     {
-        public Producer(Guid schemeId,
+        public ProducerSubmission(
+            RegisteredProducer registeredProducer,
             MemberUpload memberUpload,
             ProducerBusiness producerBusiness,
             AuthorisedRepresentative authorisedRepresentative,
             DateTime updatedDate,
             decimal? annualTurnover,
             bool vatRegistered,
-            string registrationNumber,
             DateTime? ceaseToExist,
             string tradingName,
             EEEPlacedOnMarketBandType eeePlacedOnMarketBandType,
@@ -25,46 +26,52 @@
             AnnualTurnOverBandType annualTurnOverBandType,
             List<BrandName> brandnames,
             List<SICCode> codes,
-            bool isCurrentForComplianceYear,
             ChargeBandAmount chargeBandAmount,
             decimal chargeThisUpdate)
         {
+            Guard.ArgumentNotNull(() => registeredProducer, registeredProducer);
+            Guard.ArgumentNotNull(() => memberUpload, memberUpload);
+            Guard.ArgumentNotNull(() => producerBusiness, producerBusiness);
+            Guard.ArgumentNotNull(() => chargeBandAmount, chargeBandAmount);
+
+            if (registeredProducer.Scheme.Id != memberUpload.Scheme.Id)
+            {
+                string errorMessage = "A producer submission can only be associated "
+                    + "with a registered producer in the same scheme.";
+                throw new InvalidOperationException(errorMessage);
+            }
+
+            if (registeredProducer.ComplianceYear != memberUpload.ComplianceYear)
+            {
+                string errorMessage = "A producer submission can only be associated "
+                    + "with a registered producer in the same compliance year.";
+                throw new InvalidOperationException(errorMessage);
+            }
+
+            RegisteredProducer = registeredProducer;
             ProducerBusiness = producerBusiness;
             AuthorisedRepresentative = authorisedRepresentative;
-
             UpdatedDate = updatedDate;
-
             AnnualTurnover = annualTurnover;
             VATRegistered = vatRegistered;
-            RegistrationNumber = registrationNumber;
             CeaseToExist = ceaseToExist;
             TradingName = tradingName;
-
             EEEPlacedOnMarketBandType = eeePlacedOnMarketBandType.Value;
             SellingTechniqueType = sellingTechniqueType.Value;
-            ObligationType = (int)obligationType;
+            ObligationType = obligationType;
             AnnualTurnOverBandType = annualTurnOverBandType.Value;
-
             BrandNames = brandnames;
             SICCodes = codes;
-            SchemeId = schemeId;
             MemberUpload = memberUpload;
-
-            IsCurrentForComplianceYear = isCurrentForComplianceYear;
-
             ChargeBandAmount = chargeBandAmount;
             ChargeThisUpdate = chargeThisUpdate;
         }
 
-        protected Producer()
+        protected ProducerSubmission()
         {
         }
 
-        public virtual Guid SchemeId { get; private set; }
-
-        public virtual Scheme Scheme { get; private set; }
-
-        public virtual Guid MemberUploadId { get; private set; }
+        public virtual RegisteredProducer RegisteredProducer { get; private set; }
 
         public virtual MemberUpload MemberUpload { get; private set; }
 
@@ -78,8 +85,6 @@
 
         public DateTime UpdatedDate { get; private set; }
 
-        public virtual string RegistrationNumber { get; private set; }
-
         public string TradingName { get; private set; }
 
         public bool VATRegistered { get; private set; }
@@ -88,15 +93,15 @@
 
         public DateTime? CeaseToExist { get; private set; }
 
-        public virtual List<BrandName> BrandNames { get; private set; }
+        public virtual ICollection<BrandName> BrandNames { get; private set; }
 
-        public virtual List<SICCode> SICCodes { get; private set; }
+        public virtual ICollection<SICCode> SICCodes { get; private set; }
 
         public int AnnualTurnOverBandType { get; private set; }
 
         public int EEEPlacedOnMarketBandType { get; private set; }
 
-        public int ObligationType { get; private set; }
+        public ObligationType ObligationType { get; private set; }
 
         public int SellingTechniqueType { get; private set; }
 
@@ -104,51 +109,29 @@
 
         public decimal ChargeThisUpdate { get; private set; }
 
-        private string OrgName { get; set; }
-
+        private string organisationName;
         public virtual string OrganisationName
         {
             get
             {
-                if (OrgName != null)
+                if (organisationName != null)
                 {
-                    return OrgName;
+                    return organisationName;
                 }
                 if (ProducerBusiness != null)
                 {
                     if (ProducerBusiness.CompanyDetails != null && ProducerBusiness.CompanyDetails.Name != null)
                     {
-                        OrgName = ProducerBusiness.CompanyDetails.Name;
+                        organisationName = ProducerBusiness.CompanyDetails.Name;
                     }
                     else if (ProducerBusiness.Partnership != null && ProducerBusiness.Partnership.Name != null)
                     {
-                        OrgName = ProducerBusiness.Partnership.Name;
+                        organisationName = ProducerBusiness.Partnership.Name;
                     }
-                    return OrgName;
+                    return organisationName;
                 }
                 return null;
             }
-        }
-
-        /// <summary>
-        /// Indicates whether this data is current. I.e. no data has been submitted
-        /// for a producer with the same registration number, scheme and compliance year
-        /// since this data was submitted.
-        /// 
-        /// If results are filtered by this property, the results are guarenteed to
-        /// be unique accross registration number, scheme and compliance year.
-        /// 
-        /// A filtered index in the database has been provided to ensure that such queries
-        /// are efficient at including only current producers.
-        /// 
-        /// This property is kept up to date by the MemberUploadSubmittedEventHandler
-        /// and should not be changed anywhere else.
-        /// </summary>
-        public virtual bool IsCurrentForComplianceYear { get; set; }
-
-        public void SetScheme(Scheme scheme)
-        {
-            Scheme = scheme;
         }
 
         public override int GetHashCode()
@@ -156,15 +139,14 @@
             return base.GetHashCode();
         }
 
-        public virtual bool Equals(Producer other)
+        public virtual bool Equals(ProducerSubmission other)
         {
             if (other == null)
             {
                 return false;
             }
 
-            return RegistrationNumber == other.RegistrationNumber &&
-                   TradingName == other.TradingName &&
+            return TradingName == other.TradingName &&
                    VATRegistered == other.VATRegistered &&
                    AnnualTurnover == other.AnnualTurnover &&
                    ObligationType == other.ObligationType &&
@@ -179,7 +161,17 @@
         
         public override bool Equals(object obj)
         {
-            return Equals(obj as Producer);
+            return Equals(obj as ProducerSubmission);
+        }
+
+        /// <summary>
+        /// This column should only be used by Entity Framework. it provides a mapping between the
+        /// <see cref="ObligationType"/> enum and the NVARCHAR(4) stored in the database.
+        /// </summary>
+        public string DatabaseObligationType
+        {
+            get { return ObligationType.ToString(); }
+            set { ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), value); }
         }
     }
 }
