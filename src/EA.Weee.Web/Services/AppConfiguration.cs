@@ -41,6 +41,6 @@
         public bool EnableDataReturns { get; set; }
 
         [DefaultValue(15.0)]
-        public double OrganisationNamesCacheDurationMins { get; set; }
+        public double OrganisationCacheDurationMins { get; set; }
     }
 }

@@ -14,9 +14,9 @@
             this.schemeQuerySet = schemeQuerySet;
         }
 
-        public RuleResult Evaluate(schemeType scheme, Guid schemeId)
+        public RuleResult Evaluate(schemeType scheme, Guid organisationId)
         {
-            var approvalNumber = schemeQuerySet.GetSchemeApprovalNumber(schemeId);
+            var approvalNumber = schemeQuerySet.GetSchemeApprovalNumberByOrganisationId(organisationId);
             if (!string.Equals(approvalNumber, scheme.approvalNo, StringComparison.InvariantCultureIgnoreCase))
             {
                 return

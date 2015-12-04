@@ -9,8 +9,9 @@
         public ExistingProducerRegistrationNumbers(WeeeContext context)
         {
             query = () => context
-                .Producers
-                .Select(p => p.RegistrationNumber)
+                .RegisteredProducers
+                .Where(rp => rp.CurrentSubmission != null)
+                .Select(p => p.ProducerRegistrationNumber)
                 .Distinct()
                 .ToList();
         }

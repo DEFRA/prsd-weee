@@ -6,16 +6,17 @@
     using DataAccess;
     using Domain.Producer;
 
-    public class CurrentCompanyProducers : Query<List<Producer>>, ICurrentCompanyProducers
+    public class CurrentCompanyProducers : Query<List<ProducerSubmission>>, ICurrentCompanyProducers
     {
         public CurrentCompanyProducers(WeeeContext context)
         {
             query = () => context
-                .Producers
+                .RegisteredProducers
+                .Where(rp => rp.CurrentSubmission != null)
+                .Select(rp => rp.CurrentSubmission)
                 .Include(p => p.ProducerBusiness)
                 .Include(p => p.ProducerBusiness.CompanyDetails)
-                .Where(p => p.IsCurrentForComplianceYear &&
-                            p.ProducerBusiness != null &&
+                .Where(p => p.ProducerBusiness != null &&
                             p.ProducerBusiness.CompanyDetails != null)
                 .AsNoTracking()
                 .ToList();

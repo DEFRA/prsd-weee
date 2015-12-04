@@ -5,6 +5,6 @@
 
     public interface IProducerChargeBandChange
     {
-        RuleResult Evaluate(schemeType root, producerType element, Guid schemeId);
+        RuleResult Evaluate(schemeType root, producerType element, Guid organisationId);
     }
 }

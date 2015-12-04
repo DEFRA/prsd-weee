@@ -18,6 +18,7 @@ namespace EA.Weee.Tests.Core.Model
         public int ErrorType { get; set; }
         public string Description { get; set; }
         public System.Guid MemberUploadId { get; set; }
+        public int LineNumber { get; set; }
     
         public virtual MemberUpload MemberUpload { get; set; }
     }

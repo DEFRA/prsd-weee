@@ -27,7 +27,7 @@
                 {
                     new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Some schema error")
                 },
-                A<decimal>._, A<Guid>._);
+                A<decimal>._, A.Fake<Scheme>());
 
             Assert.Null(result.ComplianceYear);
         }
@@ -42,7 +42,7 @@
             var message = new ProcessXMLFile(Guid.NewGuid(), new byte[1], "File name");
             var generateFromXml = builder.Build();
 
-            var result = generateFromXml.GenerateMemberUpload(message, new List<MemberUploadError>(), 2015, A<Guid>._);
+            var result = generateFromXml.GenerateMemberUpload(message, new List<MemberUploadError>(), 2015, A.Fake<Scheme>());
 
             Assert.NotNull(result.ComplianceYear);
             Assert.Equal(2015, result.ComplianceYear.Value);
@@ -58,7 +58,7 @@
             var message = new ProcessXMLFile(Guid.NewGuid(), new byte[1], "File name");
             var generateFromXml = builder.Build();
 
-            var result = generateFromXml.GenerateMemberUpload(message, null, 2015, A<Guid>._);
+            var result = generateFromXml.GenerateMemberUpload(message, null, 2015, A.Fake<Scheme>());
 
             Assert.NotNull(result.ComplianceYear);
             Assert.Equal(2015, result.ComplianceYear.Value);
@@ -67,9 +67,13 @@
         [Fact]
         public void GenerateMemberUpload_ReturnsNewMemberUpload_WithCorrectValues()
         {
-            var message = new ProcessXMLFile(Guid.NewGuid(), new byte[1], "File name");
-            decimal totalCharges = 1000M;
-            var schemeId = Guid.NewGuid();
+            var message = new ProcessXMLFile(
+                new Guid("4CAD6CA3-E4E7-4D1A-BAAB-8C454EECF109"),
+                new byte[1],
+                "File name");
+
+            Scheme scheme = A.Dummy<Scheme>();
+
             var errors = new List<MemberUploadError>
                 {
                     new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "Some schema error")
@@ -80,18 +84,18 @@
             string xml = "Test xml contents";
             A.CallTo(() => builder.XmlConverter.XmlToUtf8String(A<byte[]>._)).Returns(xml);
 
-            schemeType scheme = new schemeType() { complianceYear = "2015" };
-            A.CallTo(() => builder.XmlConverter.Deserialize(A<XDocument>._)).Returns(scheme);
+            schemeType xmlScheme = new schemeType() { complianceYear = "2015" };
+            A.CallTo(() => builder.XmlConverter.Deserialize(A<XDocument>._)).Returns(xmlScheme);
 
-            var result = builder.Build().GenerateMemberUpload(message, errors, totalCharges, schemeId);
+            var result = builder.Build().GenerateMemberUpload(message, errors, 1000, scheme);
 
-            Assert.Equal(message.OrganisationId, result.OrganisationId);
+            Assert.Equal(new Guid("4CAD6CA3-E4E7-4D1A-BAAB-8C454EECF109"), result.OrganisationId);
             Assert.Equal(xml, result.RawData.Data);
             Assert.Equal(errors, result.Errors);
-            Assert.Equal(totalCharges, result.TotalCharges);
-            Assert.Equal(scheme.complianceYear, result.ComplianceYear.Value.ToString());
-            Assert.Equal(schemeId, result.SchemeId);
-            Assert.Equal(message.FileName, result.FileName);
+            Assert.Equal(1000, result.TotalCharges);
+            Assert.Equal(2015, result.ComplianceYear);
+            Assert.Equal(scheme, result.Scheme);
+            Assert.Equal("File name", result.FileName);
         }
         
         [Theory]

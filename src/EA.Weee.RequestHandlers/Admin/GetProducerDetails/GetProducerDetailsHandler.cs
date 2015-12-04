@@ -25,7 +25,7 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            List<Producer> producers = await dataAccess.Fetch(request.RegistrationNumber);
+            List<ProducerSubmission> producers = await dataAccess.Fetch(request.RegistrationNumber);
 
             if (producers.Count == 0)
             {
@@ -55,7 +55,7 @@
                     .First()
                     .UpdatedDate;
 
-                Producer latestDetails = schemeGroup
+                ProducerSubmission latestDetails = schemeGroup
                     .OrderBy(p => p.UpdatedDate)
                     .Last();
 

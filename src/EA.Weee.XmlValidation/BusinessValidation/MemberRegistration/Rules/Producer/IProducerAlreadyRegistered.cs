@@ -6,6 +6,6 @@
 
     public interface IProducerAlreadyRegistered
     {
-        RuleResult Evaluate(schemeType scheme, producerType producer, Guid schemeId);
+        RuleResult Evaluate(schemeType scheme, producerType producer, Guid organisationId);
     }
 }

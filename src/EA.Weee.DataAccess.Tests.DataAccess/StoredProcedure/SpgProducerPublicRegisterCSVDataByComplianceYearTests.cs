@@ -33,10 +33,9 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
                 
-                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
-                producer1.IsCurrentForComplianceYear = true;
-                producer1.Business.Company.Contact1.Telephone = "55 5555 5555";
-                producer1.Business.Company.Contact1.Email = "email@test.com";
+                ProducerSubmission producerSubmission1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
+                producerSubmission1.Business.Company.Contact1.Telephone = "55 5555 5555";
+                producerSubmission1.Business.Company.Contact1.Email = "email@test.com";
 
                 Scheme scheme2 = helper.CreateScheme();
 
@@ -53,10 +52,9 @@
                 memberUpload2.ComplianceYear = 2017;
                 memberUpload2.IsSubmitted = true;
 
-                Producer producer2 = helper.CreateProducerAsCompany(memberUpload2, "WEE/11ZZZZ11");
-                producer2.IsCurrentForComplianceYear = true;
-                producer2.Business.Company.Contact1.Telephone = "55 5555 5555";
-                producer2.Business.Company.Contact1.Email = "email@test.com";
+                ProducerSubmission producerSubmission2 = helper.CreateProducerAsCompany(memberUpload2, "WEE/11ZZZZ11");
+                producerSubmission2.Business.Company.Contact1.Telephone = "55 5555 5555";
+                producerSubmission2.Business.Company.Contact1.Email = "email@test.com";
 
                 db.Model.SaveChanges();
 
@@ -79,8 +77,8 @@
                 Assert.Equal(result.SchemeName, scheme1.SchemeName);
                 Assert.Equal(result.SchemeOperator, scheme1.Organisation.Name);
 
-                Assert.Equal(result.ROATelephone, producer1.Business.Company.Contact1.Telephone);
-                Assert.Equal(result.ROAEmail, producer1.Business.Company.Contact1.Email);
+                Assert.Equal(result.ROATelephone, producerSubmission1.Business.Company.Contact1.Telephone);
+                Assert.Equal(result.ROAEmail, producerSubmission1.Business.Company.Contact1.Email);
             }
         }
 
@@ -105,8 +103,7 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = false;
 
-                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
-                producer1.IsCurrentForComplianceYear = true;
+                ProducerSubmission producerSubmission = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
 
                 db.Model.SaveChanges();
 
@@ -140,8 +137,7 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
-                producer1.IsCurrentForComplianceYear = true;
+                ProducerSubmission producerSubmission = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
 
                 db.Model.SaveChanges();
 
@@ -153,7 +149,7 @@
                 var result = results.SingleOrDefault(i => i.PRN == "WEE/99ZZZZ99");
 
                 Assert.NotNull(result);
-                Assert.Equal(result.ProducerName, producer1.Business.Company.Name);
+                Assert.Equal(result.ProducerName, producerSubmission.Business.Company.Name);
             }
         }
 
@@ -178,8 +174,7 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                Producer producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/99ZZZZ99");
-                producer1.IsCurrentForComplianceYear = true;
+                ProducerSubmission producerSubmission = helper.CreateProducerAsPartnership(memberUpload1, "WEE/99ZZZZ99");
 
                 db.Model.SaveChanges();
 
@@ -191,7 +186,7 @@
                 var result = results.SingleOrDefault(i => i.PRN == "WEE/99ZZZZ99");
 
                 Assert.NotNull(result);
-                Assert.Equal(result.ProducerName, producer1.Business.Partnership.Name);
+                Assert.Equal(result.ProducerName, producerSubmission.Business.Partnership.Name);
             }
         }
 
@@ -218,13 +213,11 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                Producer producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
-                producer1.IsCurrentForComplianceYear = true;
-                producer1.Business.Company.Name = "A company name";
+                ProducerSubmission producerSubmission1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
+                producerSubmission1.Business.Company.Name = "A company name";
 
-                Producer producer2 = helper.CreateProducerAsCompany(memberUpload1, "WEE/88ZZZZ88");
-                producer2.IsCurrentForComplianceYear = true;
-                producer2.Business.Company.Name = "B company name";
+                ProducerSubmission producerSubmission2 = helper.CreateProducerAsCompany(memberUpload1, "WEE/88ZZZZ88");
+                producerSubmission2.Business.Company.Name = "B company name";
 
                 Scheme scheme2 = helper.CreateScheme();
 
@@ -241,13 +234,11 @@
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;
 
-                Producer producer3 = helper.CreateProducerAsCompany(memberUpload2, "WEE/11ZZZZ11");
-                producer3.IsCurrentForComplianceYear = true;
-                producer3.Business.Company.Name = "C company name";
+                ProducerSubmission producerSubmission3 = helper.CreateProducerAsCompany(memberUpload2, "WEE/11ZZZZ11");
+                producerSubmission3.Business.Company.Name = "C company name";
 
-                Producer producer4 = helper.CreateProducerAsCompany(memberUpload2, "WEE/22ZZZZ22");
-                producer4.IsCurrentForComplianceYear = true;
-                producer4.Business.Company.Name = "D company name";
+                ProducerSubmission producerSubmission4 = helper.CreateProducerAsCompany(memberUpload2, "WEE/22ZZZZ22");
+                producerSubmission4.Business.Company.Name = "D company name";
 
                 db.Model.SaveChanges();
 
