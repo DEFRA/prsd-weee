@@ -50,7 +50,7 @@
             OrganisationNames = new Cache<Guid, string>(
                 provider,
                 "OrganisationName",
-                TimeSpan.FromMinutes(configurationService.CurrentConfiguration.OrganisationNamesCacheDurationMins),
+                TimeSpan.FromMinutes(configurationService.CurrentConfiguration.OrganisationCacheDurationMins),
                 (key) => key.ToString(),
                 (key) => FetchOrganisationNameFromApi(key));
 
@@ -84,7 +84,7 @@
             OrganisationSearchResultList = new SingleItemCache<IList<OrganisationSearchResult>>(
                 provider,
                 "OrganisationPublicInfoList",
-                TimeSpan.FromMinutes(15),
+                TimeSpan.FromMinutes(configurationService.CurrentConfiguration.OrganisationCacheDurationMins),
                 () => FetchOrganisationSearchResultListFromApi());
         }
 
