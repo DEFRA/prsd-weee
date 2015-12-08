@@ -61,7 +61,10 @@
             @Html.Gds().PasswordFor(m => m.ConfirmPassword, new { @maxlength = CommonMaxFieldLengths.Password })
         </div>
 
-        @(this.WeeeGds().Submit("Create a user account", new { @class="button" }))
-        @Html.ActionLink("Sign in to your account", "SignIn", "Account")
+        @(this.WeeeGds().Submit("Create a user account", new { @class = "button" }))
+
+        <p>
+            @Html.ActionLink("Sign in to your account", "SignIn", "Account")
+        </p>
     }
 }
