@@ -35,18 +35,18 @@
             return new MvcHtmlString(html);
         }
 
-        public MvcHtmlString Submit(string text, IDictionary<string, object> htmlAttributes = null)
+        public MvcHtmlString Submit(string value, IDictionary<string, object> htmlAttributes = null)
         {
             var html = string.Format(@"<div class=""form-submit""><input type=""submit"" value=""{0}"" {1}/></div>",
-                text, AttributesHtml(htmlAttributes));
+                value, AttributesHtml(htmlAttributes));
 
             return new MvcHtmlString(html);
         }
 
-        public MvcHtmlString Submit(string text, object htmlAttributes = null)
+        public MvcHtmlString Submit(string value, object htmlAttributes = null)
         {
             var html = string.Format(@"<div class=""form-submit""><input type=""submit"" value=""{0}"" {1}/></div>",
-                text, AttributesHtml(htmlAttributes));
+                value, AttributesHtml(htmlAttributes));
 
             return new MvcHtmlString(html);
         }
