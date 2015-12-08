@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Reflection;
     using System.Text;
+    using System.Web;
     using System.Web.Mvc;
 
     public partial class WeeeGds<TModel>
@@ -35,18 +36,18 @@
             return new MvcHtmlString(html);
         }
 
-        public MvcHtmlString Submit(string value, IDictionary<string, object> htmlAttributes = null)
+        public MvcHtmlString Submit(string value, IDictionary<string, object> htmlAttributes = null, bool withSpinner = false)
         {
-            var html = string.Format(@"<div class=""form-submit""><input type=""submit"" value=""{0}"" {1}/></div>",
-                value, AttributesHtml(htmlAttributes));
+            var html = string.Format(@"<div class=""form-submit""><input type=""submit"" value=""{0}"" {1}/>{2}</div>",
+                value, AttributesHtml(htmlAttributes), SpinnerHtml(withSpinner));
 
             return new MvcHtmlString(html);
         }
 
-        public MvcHtmlString Submit(string value, object htmlAttributes = null)
+        public MvcHtmlString Submit(string value, object htmlAttributes = null, bool withSpinner = false)
         {
-            var html = string.Format(@"<div class=""form-submit""><input type=""submit"" value=""{0}"" {1}/></div>",
-                value, AttributesHtml(htmlAttributes));
+            var html = string.Format(@"<div class=""form-submit""><input type=""submit"" value=""{0}"" {1}/>{2}</div>",
+                value, AttributesHtml(htmlAttributes), SpinnerHtml(withSpinner));
 
             return new MvcHtmlString(html);
         }
@@ -85,6 +86,22 @@
             }
 
             return attributeBuilder.ToString();
+        }
+
+        private string SpinnerHtml(bool withSpinner)
+        {
+            if (!withSpinner)
+            {
+                return string.Empty;
+            }
+
+            var img = new TagBuilder("img");
+            img.Attributes.Add("id", "spinner");
+            img.Attributes.Add("style", "display:none; margin-top: 20px");
+            img.Attributes.Add("src", VirtualPathUtility.ToAbsolute(@"~/Content/weee/images/spinner.gif"));
+            img.Attributes.Add("class", "important-image");
+
+            return img.ToString(TagRenderMode.SelfClosing);
         }
     }
 }
