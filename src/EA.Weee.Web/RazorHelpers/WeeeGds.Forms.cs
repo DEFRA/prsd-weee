@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Text;
     using System.Web.Mvc;
 
@@ -32,6 +33,58 @@
             string html = string.Format(@"<input type=""submit"" value=""{0}"" {1}/>", text, attributes.ToString());
 
             return new MvcHtmlString(html);
+        }
+
+        public MvcHtmlString Submit(string text, IDictionary<string, object> htmlAttributes = null)
+        {
+            var html = string.Format(@"<div class=""form-submit""><input type=""submit"" value=""{0}"" {1}/></div>",
+                text, AttributesHtml(htmlAttributes));
+
+            return new MvcHtmlString(html);
+        }
+
+        public MvcHtmlString Submit(string text, object htmlAttributes = null)
+        {
+            var html = string.Format(@"<div class=""form-submit""><input type=""submit"" value=""{0}"" {1}/></div>",
+                text, AttributesHtml(htmlAttributes));
+
+            return new MvcHtmlString(html);
+        }
+
+        private string AttributesHtml(object htmlAttributes)
+        {
+            if (htmlAttributes == null)
+            {
+                return string.Empty;
+            }
+
+            var attributeBuilder = new StringBuilder();
+            foreach (var prop in htmlAttributes.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            {
+                attributeBuilder.Append(string.Format(@"{0}=""{1}"" ", 
+                    HtmlHelper.Encode(prop.Name),
+                    HtmlHelper.Encode(prop.GetValue(htmlAttributes, null))));
+            }
+
+            return attributeBuilder.ToString();
+        }
+
+        private string AttributesHtml(IDictionary<string, object> htmlAttributes)
+        {
+            if (htmlAttributes == null)
+            {
+                return string.Empty;
+            }
+
+            var attributeBuilder = new StringBuilder();
+            foreach (var attribute in htmlAttributes)
+            {
+                attributeBuilder.AppendFormat(@"{0}=""{1}"" ", 
+                    HtmlHelper.Encode(attribute.Key),
+                    HtmlHelper.Encode(attribute.Value));
+            }
+
+            return attributeBuilder.ToString();
         }
     }
 }
