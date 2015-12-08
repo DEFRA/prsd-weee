@@ -243,5 +243,43 @@
             // Assert
             Assert.Equal(1, result.Warnings.Count);
         }
+
+        [Fact]
+        public async Task HandleAsync_ForDataReturnWithMultipleErrors_ReturnsErrorsByLineNumberOrder()
+        {
+            // Arrange
+            DataReturnsUpload dataReturnsUpload = new DataReturnsUpload(
+                A.Dummy<string>(),
+                new List<DataReturnsUploadError>()
+                {
+                  new DataReturnsUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Error on 55 line no", 55),
+                  new DataReturnsUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Error on 5 line no", 5),
+                  new DataReturnsUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Error on 75 line no", 75),
+                  new DataReturnsUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Error without line no")
+                },
+                null,
+                A.Dummy<Scheme>(),
+                A.Dummy<string>());
+
+            IFetchDataReturnForSubmissionDataAccess dataAccess = A.Fake<IFetchDataReturnForSubmissionDataAccess>();
+            A.CallTo(() => dataAccess.FetchDataReturnAsync(A<Guid>._)).Returns(dataReturnsUpload);
+
+            FetchDataReturnForSubmissionHandler handler = new FetchDataReturnForSubmissionHandler(
+                A.Dummy<IWeeeAuthorization>(),
+                dataAccess);
+
+            Requests.DataReturns.FetchDataReturnForSubmission request = new Requests.DataReturns.FetchDataReturnForSubmission(
+                A.Dummy<Guid>());
+
+            // Act
+            DataReturnForSubmission result = await handler.HandleAsync(request);
+
+            // Assert
+            Assert.Equal(4, result.Errors.Count);
+            Assert.True(result.Errors.ElementAt(0).Description == "Error without line no"
+                && result.Errors.ElementAt(1).Description == "Error on 5 line no"
+                && result.Errors.ElementAt(2).Description == "Error on 55 line no"
+                && result.Errors.ElementAt(3).Description == "Error on 75 line no");
+        }
     }
 }
