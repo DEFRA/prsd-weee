@@ -60,6 +60,7 @@
 
             List<DataReturnError> errors = dataReturn.Errors
                 .Where(e => errorLevelsWhichAreErrors.Contains(e.ErrorLevel))
+                .OrderBy(e => e.LineNumber)
                 .Select(e => new DataReturnError(e.Description))
                 .ToList();
 
