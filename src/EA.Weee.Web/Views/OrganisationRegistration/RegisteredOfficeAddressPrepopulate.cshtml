@@ -43,8 +43,6 @@
                 RadioButtonLayout.Inline)
         </div>
 
-        <div class="form-group">
-            <input type="submit" class="button" value="Continue" />
-        </div>
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
     }
 }

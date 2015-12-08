@@ -259,9 +259,7 @@
             </label>
         </div>
 
-        <div>
-            <input type="submit" class="button" value="Create organisation" />
-        </div>
+        @(this.WeeeGds().Submit("Create organisation", new { @class = "button" }))
     }
 }
 

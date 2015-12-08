@@ -27,12 +27,8 @@
                 RadioButtonLayout.Stacked)
         </div>
 
-        <p>
-            <input type="submit" class="button" value="Continue" />
-        </p>
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
 
-        <p>
-            <a href="javascript:history.back();">Back</a>
-        </p>
+        <a href="javascript:history.back();">Back</a>
     }
 }
