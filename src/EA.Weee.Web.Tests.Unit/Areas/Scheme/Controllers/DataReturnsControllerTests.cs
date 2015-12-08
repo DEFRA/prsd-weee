@@ -1,12 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
-    using Api.Client;
-    using Core.DataReturns;
-    using Core.Shared;
-    using EA.Weee.Web.Services.Caching;
-    using FakeItEasy;
-    using Prsd.Core.Mapper;
-    using Services;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -16,6 +9,13 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Api.Client;
+    using Core.DataReturns;
+    using Core.Shared;
+    using EA.Weee.Web.Services.Caching;
+    using FakeItEasy;
+    using Prsd.Core.Mapper;
+    using Services;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -29,13 +29,43 @@
     {
         private readonly IWeeeClient weeeClient;
         private readonly IMapper mapper;
+        private readonly ConfigurationService configService;
 
         public DataReturnsControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
             mapper = A.Fake<IMapper>();
+            configService = A.Fake<ConfigurationService>();
         }
-        
+
+        [Fact]
+        public async void GetUpload_ChecksForValidityOfOrganisation()
+        {
+            // Act           
+            try
+            {
+                await DataReturnsController().Upload(A<Guid>._);
+            }
+            catch (Exception ex)
+            {
+            }
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+
+        public async void GetUpload_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+
+            var result = await DataReturnsController().Upload(A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+        }
+
         [Fact]
         public async void GetAuthorisationRequired_ChecksStatusOfScheme()
         {
@@ -188,9 +218,7 @@
         [Fact]
         public async void PostUpload_WithDataReturnWithNoErrors_RedirectsToSubmit()
         {
-            // Arrange
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-
+            // Arrange   
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnsXMLFile>._))
                 .Returns(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
 
@@ -228,9 +256,7 @@
         [Fact]
         public async void PostUpload_WithDataReturnWithErrors_RedirectsToReview()
         {
-            // Arrange
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-
+            // Arrange   
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnsXMLFile>._))
                 .Returns(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
 
@@ -271,8 +297,6 @@
         public async void GetReview_WithDataReturnWithDifferentOrganisationId_ThrowsAnException()
         {
             // Arrange
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
                 new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
                 new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
@@ -304,8 +328,6 @@
         public async void GetReview_WithDataReturnWithNoErrors_RedirectsToSubmit()
         {
             // Arrange
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
                 new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
                 new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
@@ -340,9 +362,7 @@
         [Fact]
         public async void GetReview_HappyPath_ReturnsSubmitViewWithPopulatedViewModel()
         {
-            // Arrange
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-
+            // Arrange           
             DataReturnError error = new DataReturnError("Test Error");
 
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
@@ -383,9 +403,7 @@
         [Fact]
         public async void GetSubmit_WithDataReturnWithDifferentOrganisationId_ThrowsAnException()
         {
-            // Arrange
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-
+            // Arrange           
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
                 new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
                 new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
@@ -415,9 +433,7 @@
         [Fact]
         public async void GetSubmit_WithDataReturnWithErrors_RedirectsToReview()
         {
-            // Arrange
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-
+            // Arrange            
             DataReturnError error = new DataReturnError("Test Error");
 
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
@@ -454,9 +470,7 @@
         [Fact]
         public async void GetSubmit_HappyPath_ReturnsSubmitViewWithPopulatedViewModel()
         {
-            // Arrange
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-
+            // Arrange          
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
                 new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
                 new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
@@ -496,8 +510,6 @@
         public async void PostSubmit_WithInvalidModelState_ReturnsSubmitViewWithPopulatedViewModel()
         {
             // Arrange
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
                 new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
                 new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
@@ -593,13 +605,14 @@
 
         private DataReturnsController DataReturnsController()
         {
+            configService.CurrentConfiguration.EnableDataReturns = true;
             DataReturnsController controller = new DataReturnsController(
                  () => weeeClient,
                  A.Fake<IWeeeCache>(),
                  A.Fake<BreadcrumbService>(),
                  A.Fake<CsvWriterFactory>(),
                  mapper,
-                 A.Fake<ConfigurationService>());
+                 configService);
 
             new HttpContextMocker().AttachToController(controller);
 
@@ -655,41 +668,12 @@
                 A.Fake<IWeeeCache>(),
                 A.Fake<BreadcrumbService>(),
                 A.Fake<CsvWriterFactory>(),
-                A.Fake<IMapper>(),
-                A.Fake<ConfigurationService>());
+                mapper,
+                configService);
 
             new HttpContextMocker().AttachToController(controller);
 
             return controller;
-        }
-
-        //TODO: Revisit these tests if we know the way to mock config setting values
-        
-            //[Fact]
-        //public async void GetUpload_ChecksForValidityOfOrganisation()
-        //{
-        //    try
-        //    {
-        //        await DataReturnsController().Upload(A<Guid>._);
-        //    }
-        //    catch (Exception)
-        //    {
-        //    }
-
-        //    A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-        //        .MustHaveHappened(Repeated.Exactly.Once);
-        //}
-
-        //[Fact]
-
-        //public async void GetUpload_IdDoesBelongToAnExistingOrganisation_ReturnsView()
-        //{
-        //    A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-        //        .Returns(true);
-
-        //    var result = await DataReturnsController().Upload(A<Guid>._);
-
-        //    Assert.IsType<ViewResult>(result);
-        //}
+        }  
     }
 }
