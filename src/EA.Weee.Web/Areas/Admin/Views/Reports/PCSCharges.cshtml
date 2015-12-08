@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.ReportsFilterViewModel
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.ReportsFilterViewModel
 @{
     ViewBag.Title = "PCS charges";
 }
@@ -16,13 +17,12 @@
         <p>Filter results to show only charges that match your interests. Your results will be provided as a CSV file download.</p>
     
         @Html.Partial("_ReportSearchFilters")
-       
+
         <p class="small">
             If your selection criteria is broad, it may take a while to download your results.
         </p>
-        <p>
-            <input type="submit" value="Download" class="button" />
-        </p>
+
+        @(this.WeeeGds().Submit("Download", new { @class = "button" }))
     }
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")

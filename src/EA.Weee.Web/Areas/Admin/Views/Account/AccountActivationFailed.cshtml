@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Account.AccountActivationRequestViewModel
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Account.AccountActivationRequestViewModel
 @{
     ViewBag.Title = "Account activation request expired";
 }
@@ -18,7 +19,5 @@
         @Html.Gds().TextBoxFor(m => m.Email, new { autocomplete = "off" })
     </div>
 
-    <p>
-        <input type="submit" value="Continue" class="button" />
-    </p>
+    @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
 }
