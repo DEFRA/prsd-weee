@@ -85,6 +85,12 @@
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\CreateTestXmlFileHandler.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\DataReturnContentsGenerator.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\DataReturnContentsGeneratorDataAccess.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\IDataReturnContentsGenerator.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\IDataReturnContentsGeneratorDataAccess.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\XmlGenerator.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\IXmlGenerator.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionDataAccess.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\IFetchDataReturnForSubmissionDataAccess.cs" />
