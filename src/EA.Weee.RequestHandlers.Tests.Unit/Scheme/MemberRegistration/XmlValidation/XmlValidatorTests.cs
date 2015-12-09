@@ -17,14 +17,14 @@
     using Xml.MemberRegistration;
     using Xunit;
 
-    public class XmlValidatorTests
+    public class XMLValidatorTests
     {
         private readonly ISchemaValidator schemaValidator;
         private readonly IMemberRegistrationBusinessValidator businessValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
 
-        public XmlValidatorTests()
+        public XMLValidatorTests()
         {
             schemaValidator = A.Fake<ISchemaValidator>();
             businessValidator = A.Fake<IMemberRegistrationBusinessValidator>();
@@ -81,9 +81,9 @@
             A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._)).MustNotHaveHappened();
         }
 
-        private XmlValidator XmlValidator()
+        private XMLValidator XmlValidator()
         {
-            return new XmlValidator(schemaValidator, xmlConverter, businessValidator, errorTranslator);
+            return new XMLValidator(schemaValidator, xmlConverter, businessValidator, errorTranslator);
         }
     }
 }

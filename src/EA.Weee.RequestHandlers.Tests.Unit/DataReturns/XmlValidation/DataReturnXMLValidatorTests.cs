@@ -15,14 +15,14 @@
     using Xml.Deserialization;
     using Xunit;
 
-    public class DataReturnsXmlValidatorTests
+    public class DataReturnXMLValidatorTests
     {
         private readonly ISchemaValidator schemaValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
         private readonly IDeserializer deserializer;
 
-        public DataReturnsXmlValidatorTests()
+        public DataReturnXMLValidatorTests()
         {
             schemaValidator = A.Fake<ISchemaValidator>();
             xmlConverter = A.Fake<IXmlConverter>();
@@ -59,9 +59,9 @@
             Assert.NotEmpty(result);
         }
 
-        private DataReturnsXmlValidator XmlValidator()
+        private DataReturnXMLValidator XmlValidator()
         {
-            return new DataReturnsXmlValidator(schemaValidator, xmlConverter, errorTranslator, deserializer);
+            return new DataReturnXMLValidator(schemaValidator, xmlConverter, errorTranslator, deserializer);
         }
     }
 }

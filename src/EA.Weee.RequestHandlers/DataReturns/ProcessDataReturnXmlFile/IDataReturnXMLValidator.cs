@@ -4,8 +4,8 @@
     using Domain.DataReturns;
     using Requests.DataReturns;
 
-    public interface IDataReturnsXmlValidator
+    public interface IDataReturnXMLValidator
     {
-        IEnumerable<DataReturnsUploadError> Validate(ProcessDataReturnsXMLFile message);
+        IEnumerable<DataReturnUploadError> Validate(ProcessDataReturnsXMLFile message);
     }
 }

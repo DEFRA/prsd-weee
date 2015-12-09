@@ -9,13 +9,13 @@
     using Xml.Converter;
     using Xml.MemberRegistration;
 
-    public class XmlChargeBandCalculator : IXmlChargeBandCalculator
+    public class XMLChargeBandCalculator : IXMLChargeBandCalculator
     {
         private readonly IXmlConverter xmlConverter;
         private readonly IProducerChargeCalculator producerChargeCalculator;
         public List<MemberUploadError> ErrorsAndWarnings { get; set; }
 
-        public XmlChargeBandCalculator(IXmlConverter xmlConverter, IProducerChargeCalculator producerChargeCalculator)
+        public XMLChargeBandCalculator(IXmlConverter xmlConverter, IProducerChargeCalculator producerChargeCalculator)
         {
             this.xmlConverter = xmlConverter;
             this.producerChargeCalculator = producerChargeCalculator;

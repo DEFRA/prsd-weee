@@ -53,9 +53,12 @@
 
         public virtual DbSet<CompetentAuthorityUser> CompetentAuthorityUsers { get; set; }
 
-        public virtual DbSet<DataReturnsUpload> DataReturnsUploads { get; set; }
+        public virtual DbSet<DataReturnUpload> DataReturnsUploads { get; set; }
 
-        public virtual DbSet<DataReturnsUploadError> DataReturnsUploadErrors { get; set; }
+        public virtual DbSet<DataReturnUploadError> DataReturnsUploadErrors { get; set; }
+        public virtual DbSet<DataReturnVersion> DataReturnVersions { get; set; }
+
+        public virtual DbSet<DataReturn> DataReturns { get; set; }
 
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 

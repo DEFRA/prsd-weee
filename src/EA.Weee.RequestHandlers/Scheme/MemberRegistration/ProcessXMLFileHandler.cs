@@ -20,14 +20,14 @@
     {
         private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
-        private readonly IXmlValidator xmlValidator;
+        private readonly IXMLValidator xmlValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IGenerateFromXml generateFromXml;
-        private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
+        private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
 
         public ProcessXMLFileHandler(WeeeContext context, IWeeeAuthorization authorization, 
-            IXmlValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, 
-            IXmlChargeBandCalculator xmlChargeBandCalculator)
+            IXMLValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, 
+            IXMLChargeBandCalculator xmlChargeBandCalculator)
         {
             this.context = context;
             this.authorization = authorization;
