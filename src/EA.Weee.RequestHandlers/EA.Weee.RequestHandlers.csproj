@@ -84,6 +84,7 @@
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandler.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\CreateTestXmlFileHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionDataAccess.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\IFetchDataReturnForSubmissionDataAccess.cs" />
@@ -94,7 +95,7 @@
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnsXmlFileDataAccess.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnsXmlValidator.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\IDataReturnsXmlValidator.cs" />
-    <Compile Include="Mappings\MemberUploadErrorMap.cs" />  
+    <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />

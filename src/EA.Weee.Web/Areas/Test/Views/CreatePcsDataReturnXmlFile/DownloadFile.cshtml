@@ -1,0 +1,38 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Test.ViewModels.CreatePcsDataReturnXmlFile.SpecifyOptionsViewModel
+
+@{
+    ViewBag.Title = "Download File";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Download your file
+        </h1>
+    </header>
+
+    @using (Html.BeginForm("DownloadFile", "CreatePcsDataReturnXmlFile", FormMethod.Post, new { id = "downloadFileForm" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        @Html.HiddenFor(model => model.OrganisationID);
+        @Html.HiddenFor(model => model.ComplianceYear);
+        @Html.HiddenFor(model => model.Quarter);
+
+        // TODO: Add hidden fields for options.
+
+        <p>If your file does not download automatically, use the button below.</p>
+
+        @(this.WeeeGds().Submit("Download file", new { @class = "button" }))
+        
+        @Html.ActionLink("Create another file", "SpecifyOptions", "CreatePcsDataReturnXmlFile", new { OrganisationID = Model.OrganisationID }, null)
+
+        <script type="text/javascript">
+            document.getElementById("downloadFileForm").submit();
+        </script>
+    }
+}
