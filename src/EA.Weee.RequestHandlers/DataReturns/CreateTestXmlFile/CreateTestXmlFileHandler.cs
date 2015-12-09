@@ -5,10 +5,10 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Prsd.Core;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.DataReturns;
+    using Prsd.Core;
 
     public class CreateTestXmlFileHandler : IRequestHandler<CreateTestXmlFile, FileInfo>
     {

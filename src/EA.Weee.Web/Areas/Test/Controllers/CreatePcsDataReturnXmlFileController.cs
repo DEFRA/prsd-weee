@@ -107,7 +107,10 @@
                 viewModel.OrganisationID,
                 new Quarter(viewModel.ComplianceYear, viewModel.Quarter));
 
-            // TODO: Populate settings with values from the view model.
+            settings.NumberOfAatfs = viewModel.NumberOfAatfs;
+            settings.NumberOfAes = viewModel.NumberOfAes;
+            settings.AllProducers = viewModel.AllProducers;
+            settings.NumberOfProduces = viewModel.NumberOfProducers;
 
             FileInfo xmlFile = await GenerateXml(settings);
 
