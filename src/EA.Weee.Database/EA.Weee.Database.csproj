@@ -47,6 +47,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="scripts\Everytime\0006-MigratedProducers.sql" />
+    <Content Include="scripts\Update\Sprint18\20151207-1450-UpdataDataReturnTables.sql" />
     <Content Include="scripts\Update\Sprint18\20151204-1242-Create-spgProducerAmendmentsCSVDataByPRN.sql" />
     <Content Include="scripts\Update\Sprint18\20151202-1530-AddUniqueSchemeIdPRNYearConstraintToRegisteredProducer.sql" />
     <Content Include="scripts\Update\Sprint18\20151125-1557-CreateTables.sql" />

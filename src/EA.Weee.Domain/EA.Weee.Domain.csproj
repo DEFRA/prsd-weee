@@ -50,10 +50,12 @@
     <Compile Include="Audit\IAuditableEntity.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataReturns\DataReturnsUpload.cs" />
-    <Compile Include="DataReturns\DataReturnsUploadError.cs" />
-    <Compile Include="DataReturns\DataReturnsUploadRawData.cs" />
-    <Compile Include="Lookup\ChargeBand.cs" />
+    <Compile Include="DataReturns\DataReturn.cs" />
+    <Compile Include="DataReturns\DataReturnVersion.cs" />
+    <Compile Include="DataReturns\DataReturnUpload.cs" />
+    <Compile Include="DataReturns\DataReturnUploadError.cs" />
+    <Compile Include="DataReturns\DataReturnUploadRawData.cs" />
+    <Compile Include="obj\Lookup\ChargeBand.cs" />
     <Compile Include="Events\OrganisationUserRequestEvent.cs" />
     <Compile Include="Events\OrganisationUserRequestCompletedEvent.cs" />
     <Compile Include="ExtensionMethods.cs" />
@@ -73,7 +75,7 @@
     <Compile Include="Country.cs" />
     <Compile Include="Producer\Business.cs" />
     <Compile Include="Producer\Company.cs" />
-    <Compile Include="Lookup\ChargeBandAmount.cs" />
+    <Compile Include="obj\Lookup\ChargeBandAmount.cs" />
     <Compile Include="Producer\ProducerContact.cs" />
     <Compile Include="EEEPlacedOnMarketBandType.cs" />
     <Compile Include="ErrorLevel.cs" />

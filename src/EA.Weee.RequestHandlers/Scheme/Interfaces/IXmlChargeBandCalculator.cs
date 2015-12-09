@@ -5,7 +5,7 @@
     using MemberRegistration;
     using Requests.Scheme.MemberRegistration;
 
-    public interface IXmlChargeBandCalculator
+    public interface IXMLChargeBandCalculator
     {
         List<MemberUploadError> ErrorsAndWarnings { get; set; }
 
