@@ -8,6 +8,10 @@
     using EA.Prsd.Core.Domain;
     using Prsd.Core;
 
+    /// <summary>
+    /// This entity provides the content for a data return. Each data return may have
+    /// any number of versions of the contents, but only one will be the "current" version.
+    /// </summary>
     public class DataReturnContents : Entity
     {
         public DataReturn DataReturn { get; private set; }
