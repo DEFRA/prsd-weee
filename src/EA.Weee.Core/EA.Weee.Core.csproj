@@ -94,6 +94,7 @@
     <Compile Include="DataReturns\IErrorOrWarning.cs" />
     <Compile Include="DataReturns\Quarter.cs" />
     <Compile Include="DataReturns\QuarterType.cs" />
+    <Compile Include="DataReturns\TestFileSettings.cs" />
     <Compile Include="DataStandards\CommonMaxFieldLengths.cs" />
     <Compile Include="DataStandards\EnvironmentAgencyMaxFieldLengths.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Shared\ChargeBandType.cs" />
     <Compile Include="Shared\CsvWriter.cs" />
     <Compile Include="Shared\CsvWriterFactory.cs" />
+    <Compile Include="Shared\FileInfo.cs" />
     <Compile Include="Shared\InternalDomains.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizer.cs" />
     <Compile Include="Shared\IExcelSanitizer.cs" />
