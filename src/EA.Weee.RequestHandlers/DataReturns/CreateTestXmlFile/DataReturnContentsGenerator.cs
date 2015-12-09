@@ -42,27 +42,27 @@
                 dataReturnContents.AddReturnItemCollectedFromDcf(returnItem);
             }
 
-            int numberOfDeliveredToAatfs = r.Next(20);
+            int numberOfDeliveredToAatfs = settings.NumberOfAatfs;
             for (int index = 0; index < numberOfDeliveredToAatfs; ++index)
             {
                 DeliveredToAtf deliveredToAatf = CreateDeliveredToAtf();
                 dataReturnContents.DeliveredToAatf.Add(deliveredToAatf);
             }
 
-            int numberOfDeliveredToAes = r.Next(20);
+            int numberOfDeliveredToAes = settings.NumberOfAes;
             for (int index = 0; index < numberOfDeliveredToAes; ++index)
             {
                 DeliveredToAe deliveredToAe = CreateDeliveredToAe();
                 dataReturnContents.DeliveredToAe.Add(deliveredToAe);
             }
 
-            IEnumerable<ReturnItem> b2cWeeeFromDistributors = CreateReturnItems(null);
+            IEnumerable<ReturnItem> b2cWeeeFromDistributors = CreateReturnItems(ObligationType.B2C);
             foreach (ReturnItem returnItem in b2cWeeeFromDistributors)
             {
                 dataReturnContents.AddB2cWeeeFromDistributor(returnItem);
             }
 
-            IEnumerable<ReturnItem> b2cWeeeFromFinalHolders = CreateReturnItems(null);
+            IEnumerable<ReturnItem> b2cWeeeFromFinalHolders = CreateReturnItems(ObligationType.B2C);
             foreach (ReturnItem returnItem in b2cWeeeFromFinalHolders)
             {
                 dataReturnContents.B2cWeeeFromFinalHolders.Add(returnItem);
@@ -178,7 +178,7 @@
                 }
             }
 
-            int numberOfResults = r.Next(returnItems.Count);
+            int numberOfResults = 1 + r.Next(returnItems.Count - 1);
 
             return returnItems
                 .Shuffle()
