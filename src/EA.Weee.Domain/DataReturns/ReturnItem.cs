@@ -27,6 +27,13 @@
             {
                 throw new ArgumentOutOfRangeException("amountInTonnes");
             }
+
+            if (obligationType != ObligationType.B2B && obligationType != ObligationType.B2C)
+            {
+                string errorMessage = "The obligation type of a return item must be either B2B or B2C.";
+                throw new InvalidOperationException(errorMessage);
+            }
+
             AmountInTonnes = amountInTonnes;
         }
     }

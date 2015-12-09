@@ -57,6 +57,12 @@
         {
             Guard.ArgumentNotNull(() => returnItem, returnItem);
 
+            if (returnItem.ObligationType != ObligationType.B2C)
+            {
+                string errorMessage = "Only return items with an obligation type of B2C can be added under \"B2C WEEE from distributors\".";
+                throw new InvalidOperationException(errorMessage);
+            }
+
             if (B2cWeeeFromDistributors
                 .Where(r => r.Category == returnItem.Category)
                 .Where(r => (r.ObligationType & returnItem.ObligationType) != ObligationType.None)
@@ -72,6 +78,12 @@
         public void AddB2cWeeeFromFinalHolder(ReturnItem returnItem)
         {
             Guard.ArgumentNotNull(() => returnItem, returnItem);
+
+            if (returnItem.ObligationType != ObligationType.B2C)
+            {
+                string errorMessage = "Only return items with an obligation type of B2C can be added under \"B2C WEEE from final holders\".";
+                throw new InvalidOperationException(errorMessage);
+            }
 
             if (B2cWeeeFromFinalHolders
                 .Where(r => r.Category == returnItem.Category)
