@@ -27,6 +27,16 @@
         {
             Guard.ArgumentNotNull(() => returnItem, returnItem);
 
+            if ((returnItem.ObligationType & RegisteredProducer.CurrentSubmission.ObligationType) == ObligationType.None)
+            {
+                string errorMessage = string.Format(
+                    "A return item with obligation type {0} cannot be added to a producer " +
+                    "that is registered with obligation type of {1}.",
+                    returnItem.ObligationType,
+                    RegisteredProducer.CurrentSubmission.ObligationType);
+                throw new InvalidOperationException(errorMessage);
+            }
+
             if (ReturnItems
                 .Where(r => r.Category == returnItem.Category)
                 .Where(r => (r.ObligationType & returnItem.ObligationType) != ObligationType.None)
