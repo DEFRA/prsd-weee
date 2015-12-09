@@ -1,6 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml.SpecifyOptionsViewModel
+@model EA.Weee.Web.Areas.Test.ViewModels.CreatePcsMemberXmlFile.SpecifyOptionsViewModel
 
 @{
     ViewBag.Title = "Specify Options";
@@ -61,6 +61,6 @@
 
         @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
 
-        @Html.ActionLink("Select a different PCS", "SelectOrganisation", "GeneratePcsXml", null, new { @class = "button" })
+        @Html.ActionLink("Select a different PCS", "SelectOrganisation", "CreatePcsMemberXmlFile", null, null)
     }
 }

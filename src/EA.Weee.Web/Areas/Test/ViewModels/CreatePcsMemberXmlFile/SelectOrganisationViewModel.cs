@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml
+﻿namespace EA.Weee.Web.Areas.Test.ViewModels.CreatePcsMemberXmlFile
 {
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
