@@ -19,7 +19,24 @@
         [DisplayName("Quarter")]
         public QuarterType Quarter { get; set; }
 
-        // TODO: Add options.
+        [Required]
+        [Range(0, 10000)]
+        [DisplayName("Number of AATFs")]
+        public int NumberOfAatfs{ get; set; }
+
+        [Required]
+        [Range(0, 10000)]
+        [DisplayName("Number of AEs")]
+        public int NumberOfAes { get; set; }
+
+        [Required]
+        [DisplayName("Producers")]
+        public bool AllProducers { get; set; }
+
+        [Required]
+        [Range(0, 10000)]
+        [DisplayName("Number of Producers")]
+        public int NumberOfProducers { get; set; }
 
         public SpecifyOptionsViewModel()
         {
@@ -38,6 +55,7 @@
 
             ComplianceYear = year;
             Quarter = QuarterType.Q1;
+            AllProducers = true;
         }
     }
 }

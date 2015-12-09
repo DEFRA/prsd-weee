@@ -22,8 +22,10 @@
         @Html.HiddenFor(model => model.OrganisationID);
         @Html.HiddenFor(model => model.ComplianceYear);
         @Html.HiddenFor(model => model.Quarter);
-
-        // TODO: Add hidden fields for options.
+        @Html.HiddenFor(model => model.NumberOfAatfs);
+        @Html.HiddenFor(model => model.NumberOfAes);
+        @Html.HiddenFor(model => model.AllProducers);
+        @Html.HiddenFor(model => model.NumberOfProducers);
 
         <p>If your file does not download automatically, use the button below.</p>
 
