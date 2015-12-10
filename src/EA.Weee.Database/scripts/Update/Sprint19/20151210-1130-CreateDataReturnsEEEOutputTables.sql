@@ -1,5 +1,5 @@
-﻿-- Create [PCS].[EEEOutputAmount]
-CREATE TABLE [PCS].[EEEOutputAmount]
+﻿-- Create [PCS].[EeeOutputAmount]
+CREATE TABLE [PCS].[EeeOutputAmount]
 (
 	[Id] [uniqueidentifier] NOT NULL,
 	[RegisteredProducerId] [uniqueidentifier] NOT NULL,
@@ -7,81 +7,81 @@ CREATE TABLE [PCS].[EEEOutputAmount]
 	[ObligationType] [nvarchar](4) NOT NULL,
 	[Tonnage] [decimal](38, 3) NOT NULL,
 	
-	CONSTRAINT [PK_EEEOutputAmount] PRIMARY KEY CLUSTERED ([Id] ASC)
+	CONSTRAINT [PK_EeeOutputAmount] PRIMARY KEY CLUSTERED ([Id] ASC)
 	WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
 GO
 
 -- This check constraint ensures that the obligation type can only have values of 'B2B' or 'B2C'.
-ALTER TABLE [PCS].[EEEOutputAmount]  WITH CHECK ADD
-	CONSTRAINT [CK_EEEOutputAmount_ObligationType] CHECK ([ObligationType] IN ('B2B', 'B2C'))
+ALTER TABLE [PCS].[EeeOutputAmount]  WITH CHECK ADD
+	CONSTRAINT [CK_EeeOutputAmount_ObligationType] CHECK ([ObligationType] IN ('B2B', 'B2C'))
 GO
 
-ALTER TABLE [PCS].[EEEOutputAmount]
-	CHECK CONSTRAINT [CK_EEEOutputAmount_ObligationType]
+ALTER TABLE [PCS].[EeeOutputAmount]
+	CHECK CONSTRAINT [CK_EeeOutputAmount_ObligationType]
 GO
 
 -- Add Foreign Key constraints.
-ALTER TABLE [PCS].[EEEOutputAmount]  WITH CHECK ADD CONSTRAINT [FK_EEEOutputAmount_Category] FOREIGN KEY([CategoryId])
+ALTER TABLE [PCS].[EeeOutputAmount]  WITH CHECK ADD CONSTRAINT [FK_EeeOutputAmount_Category] FOREIGN KEY([CategoryId])
 REFERENCES [Lookup].[Category] ([Id])
 GO
 
-ALTER TABLE [PCS].[EEEOutputAmount] CHECK CONSTRAINT [FK_EEEOutputAmount_Category]
+ALTER TABLE [PCS].[EeeOutputAmount] CHECK CONSTRAINT [FK_EeeOutputAmount_Category]
 GO
 
-ALTER TABLE [PCS].[EEEOutputAmount]  WITH CHECK ADD CONSTRAINT [FK_EEEOutputAmount_RegisteredProducer] FOREIGN KEY([RegisteredProducerId])
+ALTER TABLE [PCS].[EeeOutputAmount]  WITH CHECK ADD CONSTRAINT [FK_EeeOutputAmount_RegisteredProducer] FOREIGN KEY([RegisteredProducerId])
 REFERENCES [Producer].[RegisteredProducer] ([Id])
 GO
 
-ALTER TABLE [PCS].[EEEOutputAmount] CHECK CONSTRAINT [FK_EEEOutputAmount_RegisteredProducer]
+ALTER TABLE [PCS].[EeeOutputAmount] CHECK CONSTRAINT [FK_EeeOutputAmount_RegisteredProducer]
 GO
 
--- Create [PCS].[EEEOutputReturnVersion]
-CREATE TABLE [PCS].[EEEOutputReturnVersion]
+-- Create [PCS].[EeeOutputReturnVersion]
+CREATE TABLE [PCS].[EeeOutputReturnVersion]
 (
 	[Id] [uniqueidentifier] NOT NULL,
-	CONSTRAINT [PK_EEEOutputReturnVersion] PRIMARY KEY CLUSTERED([Id] ASC)
+	CONSTRAINT [PK_EeeOutputReturnVersion] PRIMARY KEY CLUSTERED([Id] ASC)
 	WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
 GO
 
--- Create [PCS].[EEEOutputReturnVersionAmount]
-CREATE TABLE [PCS].[EEEOutputReturnVersionAmount]
+-- Create [PCS].[EeeOutputReturnVersionAmount]
+CREATE TABLE [PCS].[EeeOutputReturnVersionAmount]
 (
 	[Id] [uniqueidentifier] NOT NULL,
-	[EEEOutputReturnVersionId] [uniqueidentifier] NOT NULL,
-	[EEEOuputAmountId] [uniqueidentifier] NOT NULL,
-	CONSTRAINT [PK_EEEOutputReturnVersionAmount] PRIMARY KEY CLUSTERED ([Id] ASC)
+	[EeeOutputReturnVersionId] [uniqueidentifier] NOT NULL,
+	[EeeOuputAmountId] [uniqueidentifier] NOT NULL,
+	CONSTRAINT [PK_EeeOutputReturnVersionAmount] PRIMARY KEY CLUSTERED ([Id] ASC)
 	WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
 GO
 
 -- Add Foreign Key constraints.
-ALTER TABLE [PCS].[EEEOutputReturnVersionAmount]  WITH CHECK ADD CONSTRAINT [FK_EEEOutputReturnVersionAmount_EEEOutputAmount] FOREIGN KEY([EEEOuputAmountId])
-REFERENCES [PCS].[EEEOutputAmount] ([Id])
+ALTER TABLE [PCS].[EeeOutputReturnVersionAmount]  WITH CHECK ADD CONSTRAINT [FK_EeeOutputReturnVersionAmount_EeeOutputAmount] FOREIGN KEY([EeeOuputAmountId])
+REFERENCES [PCS].[EeeOutputAmount] ([Id])
 GO
 
-ALTER TABLE [PCS].[EEEOutputReturnVersionAmount] CHECK CONSTRAINT [FK_EEEOutputReturnVersionAmount_EEEOutputAmount]
+ALTER TABLE [PCS].[EeeOutputReturnVersionAmount] CHECK CONSTRAINT [FK_EeeOutputReturnVersionAmount_EeeOutputAmount]
 GO
 
-ALTER TABLE [PCS].[EEEOutputReturnVersionAmount]  WITH CHECK ADD CONSTRAINT [FK_EEEOutputReturnVersionAmount_EEEOutputReturnVersion] FOREIGN KEY([EEEOutputReturnVersionId])
-REFERENCES [PCS].[EEEOutputReturnVersion] ([Id])
+ALTER TABLE [PCS].[EeeOutputReturnVersionAmount]  WITH CHECK ADD CONSTRAINT [FK_EeeOutputReturnVersionAmount_EeeOutputReturnVersion] FOREIGN KEY([EeeOutputReturnVersionId])
+REFERENCES [PCS].[EeeOutputReturnVersion] ([Id])
 GO
 
-ALTER TABLE [PCS].[EEEOutputReturnVersionAmount] CHECK CONSTRAINT [FK_EEEOutputReturnVersionAmount_EEEOutputReturnVersion]
+ALTER TABLE [PCS].[EeeOutputReturnVersionAmount] CHECK CONSTRAINT [FK_EeeOutputReturnVersionAmount_EeeOutputReturnVersion]
 GO
 
--- Add [EEEOutputReturnVersionId] column to [PCS].[DataReturnVersion]
+-- Add [EeeOutputReturnVersionId] column to [PCS].[DataReturnVersion]
 ALTER TABLE [PCS].[DataReturnVersion]
-ADD EEEOutputReturnVersionId [uniqueidentifier] NOT NULL
+ADD EeeOutputReturnVersionId [uniqueidentifier] NOT NULL
 GO
 
-ALTER TABLE [PCS].[DataReturnVersion]  WITH CHECK ADD CONSTRAINT [FK_DataReturnVersion_EEEOutputReturnVersion] FOREIGN KEY([EEEOutputReturnVersionId])
-REFERENCES [PCS].[EEEOutputReturnVersion] ([Id])
+ALTER TABLE [PCS].[DataReturnVersion]  WITH CHECK ADD CONSTRAINT [FK_DataReturnVersion_EeeOutputReturnVersion] FOREIGN KEY([EeeOutputReturnVersionId])
+REFERENCES [PCS].[EeeOutputReturnVersion] ([Id])
 GO
 
-ALTER TABLE [PCS].[DataReturnVersion] CHECK CONSTRAINT [FK_DataReturnVersion_EEEOutputReturnVersion]
+ALTER TABLE [PCS].[DataReturnVersion] CHECK CONSTRAINT [FK_DataReturnVersion_EeeOutputReturnVersion]
 GO
