@@ -141,7 +141,7 @@ lines.";
         }
 
         [Fact]
-        public void CsvWriter_WithFormatAsTExt_PrependsApostropeToValueStartingWithZero()
+        public void CsvWriter_WithFormatAsText_EscapesValuesAndWritesAsFormula()
         {
             // Arrange
             CsvWriter<string> writer = new CsvWriter<string>();
