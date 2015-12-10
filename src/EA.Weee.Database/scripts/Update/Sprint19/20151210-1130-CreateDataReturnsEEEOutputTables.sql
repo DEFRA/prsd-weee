@@ -19,7 +19,7 @@ ALTER TABLE [PCS].[EEEOutputAmount]  WITH CHECK ADD
 GO
 
 ALTER TABLE [PCS].[EEEOutputAmount]
-	CHECK CONSTRAINT [CK_EEEOutputAmount_ObligationType]
+	CHECK CONSTRAINT [CK_ProducerSubmission_ObligationType]
 GO
 
 -- Add Foreign Key constraints.
@@ -72,4 +72,16 @@ REFERENCES [PCS].[EEEOutputReturnVersion] ([Id])
 GO
 
 ALTER TABLE [PCS].[EEEOutputReturnVersionAmount] CHECK CONSTRAINT [FK_EEEOutputReturnVersionAmount_EEEOutputReturnVersion]
+GO
+
+-- Add [EEEOutputReturnVersionId] column to [PCS].[DataReturnVersion]
+ALTER TABLE [PCS].[DataReturnVersion]
+ADD EEEOutputReturnVersionId [uniqueidentifier] NOT NULL
+GO
+
+ALTER TABLE [PCS].[DataReturnVersion]  WITH CHECK ADD CONSTRAINT [FK_DataReturnVersion_EEEOutputReturnVersion] FOREIGN KEY([EEEOutputReturnVersionId])
+REFERENCES [PCS].[EEEOutputReturnVersion] ([Id])
+GO
+
+ALTER TABLE [PCS].[DataReturnVersion] CHECK CONSTRAINT [FK_DataReturnVersion_EEEOutputReturnVersion]
 GO
