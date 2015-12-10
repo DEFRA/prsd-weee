@@ -55,9 +55,11 @@
     <Compile Include="DataReturns\DataReturnUpload.cs" />
     <Compile Include="DataReturns\DataReturnUploadError.cs" />
     <Compile Include="DataReturns\DataReturnUploadRawData.cs" />
+    <Compile Include="DataReturns\EeeOutputAmount.cs" />
     <Compile Include="Events\OrganisationUserRequestEvent.cs" />
     <Compile Include="Events\OrganisationUserRequestCompletedEvent.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Lookup\Category.cs" />
     <Compile Include="Lookup\ChargeBand.cs" />
     <Compile Include="Lookup\ChargeBandAmount.cs" />
     <Compile Include="ObligationType.cs" />
