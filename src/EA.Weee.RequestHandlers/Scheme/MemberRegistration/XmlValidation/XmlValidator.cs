@@ -17,7 +17,7 @@
     using Xml.Deserialization;
     using Xml.MemberRegistration;
 
-    public class XmlValidator : IXmlValidator
+    public class XMLValidator : IXMLValidator
     {
         private readonly ISchemaValidator schemaValidator;
         private readonly IMemberRegistrationBusinessValidator businessValidator;
@@ -25,7 +25,7 @@
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
 
-        public XmlValidator(ISchemaValidator schemaValidator, IXmlConverter xmlConverter, IMemberRegistrationBusinessValidator businessValidator, IXmlErrorTranslator errorTranslator)
+        public XMLValidator(ISchemaValidator schemaValidator, IXmlConverter xmlConverter, IMemberRegistrationBusinessValidator businessValidator, IXmlErrorTranslator errorTranslator)
         {
             this.schemaValidator = schemaValidator;
             this.businessValidator = businessValidator;

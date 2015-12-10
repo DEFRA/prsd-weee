@@ -79,9 +79,11 @@
     <Compile Include="Identity\ApplicationUserStore.cs" />
     <Compile Include="Identity\WeeeIdentityContext.cs" />
     <Compile Include="Mappings\CompetentAuthorityUserMapping.cs" />
-    <Compile Include="Mappings\DataReturnsUploadErrorMapping.cs" />
-    <Compile Include="Mappings\DataReturnsUploadMapping.cs" />
-    <Compile Include="Mappings\DataRetunsUploadRawDataMapping.cs" />
+    <Compile Include="Mappings\DataReturnUploadErrorMapping.cs" />
+    <Compile Include="Mappings\DataReturnMapping.cs" />
+    <Compile Include="Mappings\DataReturnVersionMapping.cs" />
+    <Compile Include="Mappings\DataReturnUploadMapping.cs" />
+    <Compile Include="Mappings\DataRetunUploadRawDataMapping.cs" />
     <Compile Include="Mappings\UploadErrorTypeMapping.cs" />
     <Compile Include="Mappings\MemberUploadRawDataMapping.cs" />
     <Compile Include="Mappings\MigratedProducerMapping.cs" />

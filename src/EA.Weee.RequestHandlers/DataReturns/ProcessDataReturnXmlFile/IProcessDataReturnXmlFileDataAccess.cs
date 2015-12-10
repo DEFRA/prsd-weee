@@ -1,17 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Domain.DataReturns;
     using EA.Weee.Domain.Scheme;
 
-    public interface IProcessDataReturnXmlFileDataAccess
+    public interface IProcessDataReturnXMLFileDataAccess
     {
         Task<Scheme> FetchSchemeByOrganisationIdAsync(Guid organisationId);
-
-        Task SaveAsync(DataReturnsUpload dataReturn);
+        Task<DataReturn> FetchDataReturnAsync(Guid schemeId, int complianceYear, int quarter);
+        Task SaveDataReturnsUploadAsync(DataReturnUpload dataReturnUpload);
+        Task SaveSuccessfulReturnsDataAsync(DataReturnUpload dataUpload, DataReturn dataReturn, DataReturnVersion version);
     }
 }
