@@ -44,10 +44,7 @@
 
         </div>
 
-        <p>
-            <input style="margin-top: 20px;" id="submitButton" type="submit" value="Check file for errors" class="button" aria-live="off"/>
-            <img id="spinner" style="display: none; margin-top: 20px" src="~/Content/weee/images/spinner.gif" alt="Spinning graphic" class="important-image"/>
-        </p>
+        @(this.WeeeGds().Submit("Check file for errors", new { id = "submitButton", @class = "button", aria_live = "off", style = "margin-top: 20px" }, true))
 
         <p>
             @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { id = "anotherActivitylink" })

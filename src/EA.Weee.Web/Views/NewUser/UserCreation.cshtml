@@ -55,9 +55,8 @@
             </fieldset>
         </div>
 
-        <p>
-            <input type="submit" class="button" value="Create a user account" />
-        </p>
+        @(this.WeeeGds().Submit("Create a user account", new { @class = "button" }))
+
         <p>
             @Html.ActionLink("Sign in to your account", "SignIn", "Account")
         </p>

@@ -34,9 +34,6 @@
             <p>Please don't include any personal or financial information, for example your National Insurance or credit card numbers.</p>
         </div>
 
-        <div class="form-group">
-            <input type="submit" class="button" value="Send feedback" />
-        </div>
+        @(this.WeeeGds().Submit("Send feedback", new { @class = "button" }))
     }
-
 }
