@@ -10,11 +10,11 @@
 
     public class FetchDataReturnForSubmission : IRequest<DataReturnForSubmission>
     {
-        public Guid DataReturnId { get; private set; }
+        public Guid DataReturnUploadId { get; private set; }
 
-        public FetchDataReturnForSubmission(Guid dataReturnId)
+        public FetchDataReturnForSubmission(Guid dataReturnUploadId)
         {
-            DataReturnId = dataReturnId;
+            DataReturnUploadId = dataReturnUploadId;
         }
     }
 }
