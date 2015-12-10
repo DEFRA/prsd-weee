@@ -2,6 +2,7 @@
 CREATE TABLE [Lookup].[Category]
 (
 	[Id] [uniqueidentifier] NOT NULL,
+	[Number] [int] NOT NULL,  
 	[Name] [nvarchar](255) NOT NULL,
 	
 	CONSTRAINT [PK_Category] PRIMARY KEY CLUSTERED ([Id] ASC)
