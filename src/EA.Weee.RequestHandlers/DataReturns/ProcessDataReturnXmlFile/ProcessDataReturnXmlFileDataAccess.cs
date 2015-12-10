@@ -24,30 +24,24 @@
 
         public async Task<DataReturn> FetchDataReturnAsync(Guid schemeId, int complianceYear, int quarter)
         {
-            try
-            {
-                var result = await context
+            var result = await context
                     .DataReturns
                     .Where(dr => dr.Scheme.Id == schemeId && dr.ComplianceYear == complianceYear && dr.Quarter == quarter)
                   .SingleOrDefaultAsync();
-                return result;
-            }
-            catch (Exception ex)
-            {
-                string msg = ex.Message;
-            }
-            return null;
+            return result;
         }
 
-        public async Task SaveAsync(DataReturnUpload dataUpload)
+        public async Task SaveDataReturnsUploadAsync(DataReturnUpload dataUpload)
         {
             context.DataReturnsUploads.Add(dataUpload);
             await context.SaveChangesAsync();
         }
 
-        public async Task SaveAsync(DataReturn dataReturn)
+        public async Task SaveSuccessfulReturnsDataAsync(DataReturnUpload dataUpload, DataReturn dataReturn, DataReturnVersion version)
         {
+            context.DataReturnsUploads.Add(dataUpload);
             context.DataReturns.Add(dataReturn);
+            context.DataReturnVersions.Add(version);
             await context.SaveChangesAsync();
         }
     }

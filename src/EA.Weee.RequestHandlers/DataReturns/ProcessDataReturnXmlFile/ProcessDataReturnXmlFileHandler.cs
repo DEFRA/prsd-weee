@@ -51,30 +51,28 @@
             // record XML processing end time
             stopwatch.Stop();
             dataReturnUpload.SetProcessTime(stopwatch.Elapsed);
-            try
+           
+            if (!errors.Any())
             {
-                if (!errors.Any())
+                DataReturn dataReturn = null;
+                //check if data return exists for scheme, compliance year and quarter
+                //get that return 
+                //otherwise create a new return
+                dataReturn = await dataAccess.FetchDataReturnAsync(scheme.Id, dataReturnUpload.ComplianceYear.Value, dataReturnUpload.Quarter.Value);
+                if (dataReturn == null)
                 {
-                    DataReturn dataReturn = null;
-                    //check if data return exists for scheme, compliance year and quarter
-                    //get that return 
-                    //otherwise create a new return
-                    dataReturn = await dataAccess.FetchDataReturnAsync(scheme.Id, dataReturnUpload.ComplianceYear.Value, dataReturnUpload.Quarter.Value);
-                    if (dataReturn == null)
-                    {
-                        dataReturn = new DataReturn(scheme, dataReturnUpload.ComplianceYear.Value, dataReturnUpload.Quarter.Value);
-                        await dataAccess.SaveAsync(dataReturn);
-                    }
-                    DataReturnVersion version = new DataReturnVersion(dataReturn);
-                    dataReturnUpload.SetDataReturnsVersion(version);
+                    dataReturn = new DataReturn(scheme, dataReturnUpload.ComplianceYear.Value, dataReturnUpload.Quarter.Value);
                 }
-                await dataAccess.SaveAsync(dataReturnUpload);
+                DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
+                dataReturnUpload.SetDataReturnsVersion(dataReturnVersion);
+                await dataAccess.SaveSuccessfulReturnsDataAsync(dataReturnUpload, dataReturn, dataReturnVersion);
             }
-            catch (Exception ex)
+            else 
             {
-                string msg = ex.Message;
+                // errors
+                await dataAccess.SaveDataReturnsUploadAsync(dataReturnUpload);
             }
-
+           
             return dataReturnUpload.Id;
         }
     }
