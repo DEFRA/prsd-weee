@@ -160,6 +160,15 @@
             Entry(entity).State = EntityState.Deleted;
         }
 
+        public string GetCurrentUser()
+        {
+            if (userContext != null)
+            {
+                return userContext.UserId.ToString();
+            }
+            return null;
+        }
+
         private void AuditEntity()
         {
             foreach (var auditableEntity in ChangeTracker.Entries<IAuditableEntity>())
