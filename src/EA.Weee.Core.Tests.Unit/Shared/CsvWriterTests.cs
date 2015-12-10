@@ -139,5 +139,27 @@ lines.";
 
             Assert.Equal(expectedValue, csv);
         }
+
+        [Fact]
+        public void CsvWriter_WithFormatAsTExt_PrependsApostropeToValueStartingWithZero()
+        {
+            // Arrange
+            CsvWriter<string> writer = new CsvWriter<string>();
+
+            writer.DefineColumn("Column 1", x => x, true);
+
+            List<string> data = new List<string>() { "01234 555 555", "The man said \"Hello World\" to the dog." };
+
+            // Act
+            string csv = writer.Write(data);
+
+            // Assert
+            string expectedValue =
+                "Column 1" + Environment.NewLine +
+                "=\"01234 555 555\"" + Environment.NewLine +
+                "=\"The man said \"\"Hello World\"\" to the dog.\"" + Environment.NewLine;
+
+            Assert.Equal(expectedValue, csv);
+        }
     }
 }
