@@ -12,12 +12,11 @@
             <h1 class="heading-large">Your file has passed our validation checks</h1>
         </div>
     </header>
-    @using (Html.BeginForm("SubmitXml", "MemberRegistration", FormMethod.Post, new { area = "Scheme", enctype = "multipart/form-data" }))
+    @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        @Html.HiddenFor(m => m.MemberUploadId)
         @Html.HiddenFor(m => m.TotalCharges)
         
         <p>Your XML file has passed our technical validation checks but we are unable to verify that all of the information in your file is correct.</p>
