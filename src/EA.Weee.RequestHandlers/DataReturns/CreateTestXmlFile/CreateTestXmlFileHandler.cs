@@ -14,22 +14,22 @@
 
     public class CreateTestXmlFileHandler : IRequestHandler<CreateTestXmlFile, FileInfo>
     {
-        private readonly IDataReturnContentsGenerator dataReturnContentsGenerator;
+        private readonly IDataReturnVersionGenerator dataReturnVersionGenerator;
         private readonly IXmlGenerator xmlGenerator;
 
         public CreateTestXmlFileHandler(
-            IDataReturnContentsGenerator dataReturnContentsGenerator,
+            IDataReturnVersionGenerator dataReturnVersionGenerator,
             IXmlGenerator xmlGenerator)
         {
-            this.dataReturnContentsGenerator = dataReturnContentsGenerator;
+            this.dataReturnVersionGenerator = dataReturnVersionGenerator;
             this.xmlGenerator = xmlGenerator;
         }
 
         public async Task<FileInfo> HandleAsync(Requests.DataReturns.CreateTestXmlFile message)
         {
-            DataReturnContents dataReturnContents = await dataReturnContentsGenerator.GenerateAsync(message.Settings);
+            DataReturnVersion dataReturnVersion = await dataReturnVersionGenerator.GenerateAsync(message.Settings);
 
-            XDocument xml = xmlGenerator.GenerateXml(dataReturnContents);
+            XDocument xml = xmlGenerator.GenerateXml(dataReturnVersion);
 
             byte[] data;
             using (System.IO.MemoryStream stream = new System.IO.MemoryStream())

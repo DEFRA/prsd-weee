@@ -101,9 +101,9 @@
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
     <Compile Include="Admin\UpdateUserHandlerTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandlerTests.cs" />
-    <Compile Include="DataReturns\GenerateDomainObjects\GenerateFromDataReturnsXmlTests.cs" />
-    <Compile Include="DataReturns\ProcessDataReturnsXMLFileHandlerTests.cs" />
-    <Compile Include="DataReturns\XmlValidation\DataReturnsXmlValidatorTests.cs" />
+    <Compile Include="DataReturns\GenerateDomainObjects\GenerateFromDataReturnXmlTests.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFileHandlerTests.cs" />
+    <Compile Include="DataReturns\XmlValidation\DataReturnXmlValidatorTests.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandlerTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandlerTests.cs" />
@@ -131,7 +131,7 @@
     <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerChargeCalculatorTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\XmlValidatorTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\XMLValidatorTests.cs" />
     <Compile Include="Scheme\PrnGeneration\PrnHelperTests.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandlerTests.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandlerTests.cs" />

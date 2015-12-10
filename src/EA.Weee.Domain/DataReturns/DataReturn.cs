@@ -10,7 +10,7 @@
 
     /// <summary>
     /// This entity represents a scheme's data return for a single quarter.
-    /// The Contents property provides a link to the current contents of the return.
+    /// The CurrentVersion property provides a link to the current version of the return.
     /// </summary>
     public class DataReturn : Entity
     {
@@ -19,10 +19,10 @@
         public Quarter Quarter { get; private set; }
 
         /// <summary>
-        /// Provides the current contents of the data return.
-        /// To replace the contents, use teh SetContents method.
+        /// Provides the current version of the data return.
+        /// To replace the version, use the SetCurrentVersion method.
         /// </summary>
-        public DataReturnContents Contents { get; private set; }
+        public DataReturnVersion CurrentVersion { get; private set; }
 
         public DataReturn(Scheme.Scheme scheme, Quarter quarter)
         {
@@ -33,17 +33,24 @@
             Quarter = quarter;
         }
 
-        public void SetContents(DataReturnContents contents)
+        /// <summary>
+        /// This constructor is used by Entity Framework.
+        /// </summary>
+        protected DataReturn()
         {
-            Guard.ArgumentNotNull(() => contents, contents);
+        }
 
-            if (contents.DataReturn != this)
+        public void SetCurrentVersion(DataReturnVersion version)
+        {
+            Guard.ArgumentNotNull(() => version, version);
+
+            if (version.DataReturn != this)
             {
-                string errorMessage = "The specified data return contents does not relate to this data return.";
+                string errorMessage = "The specified data return version does not relate to this data return.";
                 throw new InvalidOperationException(errorMessage);
             }
 
-            Contents = contents;
+            CurrentVersion = version;
         }
     }
 }

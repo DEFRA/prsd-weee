@@ -219,7 +219,7 @@
         public async void PostUpload_WithDataReturnWithNoErrors_RedirectsToSubmit()
         {
             // Arrange   
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnsXMLFile>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXmlFile>._))
                 .Returns(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
 
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
@@ -230,7 +230,7 @@
                 A.Dummy<IReadOnlyCollection<DataReturnError>>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
-                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
                 .Returns(dataReturnForSubmission);
 
             DataReturnsController controller = GetDummyDataReturnsController(weeeClient);
@@ -257,7 +257,7 @@
         public async void PostUpload_WithDataReturnWithErrors_RedirectsToReview()
         {
             // Arrange   
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnsXMLFile>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXmlFile>._))
                 .Returns(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
 
             DataReturnError error = new DataReturnError("Test Error");
@@ -270,7 +270,7 @@
                 new List<DataReturnError>() { error });
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
-                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
                 .Returns(dataReturnForSubmission);
 
             DataReturnsController controller = GetDummyDataReturnsController(weeeClient);
@@ -305,7 +305,7 @@
                 A.Dummy<IReadOnlyCollection<DataReturnError>>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
-                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
                 .Returns(dataReturnForSubmission);
 
             DataReturnsController controller = GetDummyDataReturnsController(weeeClient);
@@ -336,7 +336,7 @@
                 A.Dummy<IReadOnlyCollection<DataReturnError>>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
-                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
                 .Returns(dataReturnForSubmission);
 
             DataReturnsController controller = GetDummyDataReturnsController(weeeClient);
@@ -373,7 +373,7 @@
                 new List<DataReturnError>() { error });
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
-                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
                 .Returns(dataReturnForSubmission);
 
             DataReturnsController controller = GetDummyDataReturnsController(weeeClient);
@@ -412,7 +412,7 @@
                 A.Dummy<IReadOnlyCollection<DataReturnError>>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
-                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
                 .Returns(dataReturnForSubmission);
 
             DataReturnsController controller = GetDummyDataReturnsController(weeeClient);
@@ -444,7 +444,7 @@
                 new List<DataReturnError>() { error });
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
-                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
                 .Returns(dataReturnForSubmission);
 
             DataReturnsController controller = GetDummyDataReturnsController(weeeClient);
@@ -479,7 +479,7 @@
                 A.Dummy<IReadOnlyCollection<DataReturnError>>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
-                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
                 .Returns(dataReturnForSubmission);
 
             DataReturnsController controller = GetDummyDataReturnsController(weeeClient);
@@ -518,7 +518,7 @@
                 A.Dummy<IReadOnlyCollection<DataReturnError>>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
-                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
+                .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
                 .Returns(dataReturnForSubmission);
 
             DataReturnsController controller = GetDummyDataReturnsController(weeeClient);

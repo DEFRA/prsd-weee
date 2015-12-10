@@ -31,11 +31,11 @@
         private readonly DbSet<Scheme> schemesDbSet;
         private readonly DbSet<ProducerSubmission> producersDbSet;
         private readonly DbSet<MemberUpload> memberUploadsDbSet;
-        private readonly IXmlValidator xmlValidator;
+        private readonly IXMLValidator xmlValidator;
         private readonly IXmlConverter xmlConverter;
-        private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
+        private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
         private static readonly Guid organisationId = Guid.NewGuid();
-        private static readonly ProcessXMLFile Message = new ProcessXMLFile(organisationId, new byte[1], "File name");
+        private static readonly ProcessXmlFile Message = new ProcessXmlFile(organisationId, new byte[1], "File name");
 
         public ProcessXMLFileHandlerTests()
         {
@@ -55,8 +55,8 @@
             A.CallTo(() => context.MemberUploads).Returns(memberUploadsDbSet);
 
             generator = A.Fake<IGenerateFromXml>();
-            xmlValidator = A.Fake<IXmlValidator>();
-            xmlChargeBandCalculator = A.Fake<IXmlChargeBandCalculator>();
+            xmlValidator = A.Fake<IXMLValidator>();
+            xmlChargeBandCalculator = A.Fake<IXMLChargeBandCalculator>();
             handler = new ProcessXMLFileHandler(context, permissiveAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator);
         }
 

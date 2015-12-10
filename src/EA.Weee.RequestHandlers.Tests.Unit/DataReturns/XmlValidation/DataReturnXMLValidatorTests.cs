@@ -15,14 +15,14 @@
     using Xml.Deserialization;
     using Xunit;
 
-    public class DataReturnsXmlValidatorTests
+    public class DataReturnXmlValidatorTests
     {
         private readonly ISchemaValidator schemaValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
         private readonly IDeserializer deserializer;
 
-        public DataReturnsXmlValidatorTests()
+        public DataReturnXmlValidatorTests()
         {
             schemaValidator = A.Fake<ISchemaValidator>();
             xmlConverter = A.Fake<IXmlConverter>();
@@ -39,7 +39,7 @@
             A.CallTo(() => deserializer.Deserialize<SchemeReturn>(A<XDocument>._))
                 .Throws(new XmlDeserializationFailureException(new Exception("Test exception")));
 
-            var result = XmlValidator().Validate(new ProcessDataReturnsXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var result = XmlValidator().Validate(new ProcessDataReturnXmlFile(A<Guid>._, A<byte[]>._, A<string>._));
 
             Assert.NotEmpty(result);
             Assert.Equal(1, result.Count());
@@ -54,14 +54,14 @@
                     new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "An error occurred")
                 });
 
-            var result = XmlValidator().Validate(new ProcessDataReturnsXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var result = XmlValidator().Validate(new ProcessDataReturnXmlFile(A<Guid>._, A<byte[]>._, A<string>._));
 
             Assert.NotEmpty(result);
         }
 
-        private DataReturnsXmlValidator XmlValidator()
+        private DataReturnXMLValidator XmlValidator()
         {
-            return new DataReturnsXmlValidator(schemaValidator, xmlConverter, errorTranslator, deserializer);
+            return new DataReturnXMLValidator(schemaValidator, xmlConverter, errorTranslator, deserializer);
         }
     }
 }

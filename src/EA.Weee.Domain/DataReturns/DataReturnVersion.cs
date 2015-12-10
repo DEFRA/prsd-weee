@@ -12,9 +12,15 @@
     /// This entity provides the content for a data return. Each data return may have
     /// any number of versions of the contents, but only one will be the "current" version.
     /// </summary>
-    public class DataReturnContents : Entity
+    public class DataReturnVersion : Entity
     {
         public DataReturn DataReturn { get; private set; }
+
+        public virtual DateTime? SubmittedDate { get; private set; }
+
+        public string SubmittingUserId { get; private set; }
+
+        public virtual bool IsSubmitted { get; private set; }
 
         public ICollection<ReturnItem> ReturnItemsCollectedFromDcf { get; private set; }
 
@@ -28,7 +34,7 @@
 
         public ICollection<Producer> Producers { get; private set; }
 
-        public DataReturnContents(DataReturn dataReturn)
+        public DataReturnVersion(DataReturn dataReturn)
         {
             Guard.ArgumentNotNull(() => dataReturn, dataReturn);
 
@@ -39,6 +45,13 @@
             B2cWeeeFromDistributors = new List<ReturnItem>();
             B2cWeeeFromFinalHolders = new List<ReturnItem>();
             Producers = new List<Producer>();
+        }
+
+        /// <summary>
+        /// This constructor is used by Entity Framework.
+        /// </summary>
+        protected DataReturnVersion()
+        {
         }
 
         public void AddReturnItemCollectedFromDcf(ReturnItem returnItem)
@@ -118,6 +131,20 @@
             }
 
             Producers.Add(producer);
+        }
+
+        public void Submit(string userId)
+        {
+            if (IsSubmitted)
+            {
+                string errorMessage = "This data return version has already been submitted.";
+                throw new InvalidOperationException(errorMessage);
+            }
+
+            IsSubmitted = true;
+            SubmittedDate = SystemTime.UtcNow;
+            SubmittingUserId = userId;
+            DataReturn.SetCurrentVersion(this);
         }
     }
 }

@@ -25,6 +25,13 @@
             Q = q;
         }
 
+        /// <summary>
+        /// This constructor is used by Entity Framework.
+        /// </summary>
+        protected Quarter()
+        {
+        }
+
         public bool Equals(Quarter other)
         {
             if (other == null)
