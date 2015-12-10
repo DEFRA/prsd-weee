@@ -52,20 +52,21 @@
     </Compile>
     <Compile Include="DataReturns\Category.cs" />
     <Compile Include="DataReturns\DataReturn.cs" />
-    <Compile Include="DataReturns\DataReturnContents.cs" />
-    <Compile Include="DataReturns\DataReturnsUpload.cs" />
-    <Compile Include="DataReturns\DataReturnsUploadError.cs" />
-    <Compile Include="DataReturns\DataReturnsUploadRawData.cs" />
+    <Compile Include="DataReturns\DataReturnUpload.cs" />
+    <Compile Include="DataReturns\DataReturnUploadError.cs" />
+    <Compile Include="DataReturns\DataReturnUploadRawData.cs" />
+    <Compile Include="DataReturns\DataReturnVersion.cs" />
     <Compile Include="DataReturns\DeliveredToAe.cs" />
     <Compile Include="DataReturns\DeliveredToAtf.cs" />
     <Compile Include="DataReturns\Producer.cs" />
     <Compile Include="DataReturns\Quarter.cs" />
     <Compile Include="DataReturns\QuarterType.cs" />
     <Compile Include="DataReturns\ReturnItem.cs" />
-    <Compile Include="Lookup\ChargeBand.cs" />
     <Compile Include="Events\OrganisationUserRequestEvent.cs" />
     <Compile Include="Events\OrganisationUserRequestCompletedEvent.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Lookup\ChargeBand.cs" />
+    <Compile Include="Lookup\ChargeBandAmount.cs" />
     <Compile Include="ObligationType.cs" />
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
@@ -82,7 +83,6 @@
     <Compile Include="Country.cs" />
     <Compile Include="Producer\Business.cs" />
     <Compile Include="Producer\Company.cs" />
-    <Compile Include="Lookup\ChargeBandAmount.cs" />
     <Compile Include="Producer\ProducerContact.cs" />
     <Compile Include="EEEPlacedOnMarketBandType.cs" />
     <Compile Include="ErrorLevel.cs" />

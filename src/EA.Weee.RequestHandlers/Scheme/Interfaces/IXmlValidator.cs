@@ -4,8 +4,8 @@
     using Domain.Scheme;
     using Requests.Scheme.MemberRegistration;
 
-    public interface IXmlValidator
+    public interface IXMLValidator
     {
-        IEnumerable<MemberUploadError> Validate(ProcessXMLFile message);
+        IEnumerable<MemberUploadError> Validate(ProcessXmlFile message);
     }
 }

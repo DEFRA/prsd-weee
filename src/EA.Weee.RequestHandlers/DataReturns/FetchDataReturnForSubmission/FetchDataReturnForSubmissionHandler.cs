@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Core.DataReturns;
     using Domain;
@@ -16,8 +15,8 @@
 
     public class FetchDataReturnForSubmissionHandler : IRequestHandler<Request, DataReturnForSubmission>
     {
-        private IWeeeAuthorization authorization;
-        private IFetchDataReturnForSubmissionDataAccess dataAccess;
+        private readonly IWeeeAuthorization authorization;
+        private readonly IFetchDataReturnForSubmissionDataAccess dataAccess;
 
         public FetchDataReturnForSubmissionHandler(
             IWeeeAuthorization authorization,
@@ -29,15 +28,15 @@
 
         public async Task<DataReturnForSubmission> HandleAsync(Request message)
         {
-            DataReturnsUpload dataReturn = await dataAccess.FetchDataReturnAsync(message.DataReturnId);
+            DataReturnUpload dataReturnsUpload = await dataAccess.FetchDataReturnUploadAsync(message.DataReturnUploadId);
 
-            authorization.EnsureSchemeAccess(dataReturn.Scheme.Id);
+            authorization.EnsureSchemeAccess(dataReturnsUpload.Scheme.Id);
 
-            if (dataReturn.IsSubmitted)
+            if (dataReturnsUpload.DataReturnVersion != null && dataReturnsUpload.DataReturnVersion.IsSubmitted)
             {
                 string errorMessage = string.Format(
                     "The data return with ID \"{0}\" has already been submitted.",
-                    dataReturn.Id);
+                    dataReturnsUpload.Id);
                 throw new InvalidOperationException(errorMessage);
             }
 
@@ -55,12 +54,12 @@
                 ErrorLevel.Fatal,
             };
 
-            List<DataReturnWarning> warnings = dataReturn.Errors
+            List<DataReturnWarning> warnings = dataReturnsUpload.Errors
                 .Where(e => errorLevelsWhichAreWarnings.Contains(e.ErrorLevel))
                 .Select(e => new DataReturnWarning(e.Description))
                 .ToList();
 
-            List<DataReturnError> errors = dataReturn.Errors
+            List<DataReturnError> errors = dataReturnsUpload.Errors
                 .Where(e => errorLevelsWhichAreErrors.Contains(e.ErrorLevel))
                 .OrderBy(e => e.LineNumber)
                 .Select(e => new DataReturnError(e.Description))
@@ -70,8 +69,8 @@
             Quarter quarter = new Quarter(2016, QuarterType.Q2);
 
             return new DataReturnForSubmission(
-                dataReturn.Id,
-                dataReturn.Scheme.OrganisationId,
+                dataReturnsUpload.Id,
+                dataReturnsUpload.Scheme.OrganisationId,
                 quarter,
                 warnings,
                 errors);

@@ -12,14 +12,14 @@
     using Xml.DataReturns;
     using Xml.Deserialization;
 
-    public class DataReturnsXmlValidator : IDataReturnsXmlValidator
+    public class DataReturnXMLValidator : IDataReturnXmlValidator
     {
         private readonly ISchemaValidator schemaValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
         private readonly IDeserializer deserializer;
 
-        public DataReturnsXmlValidator(ISchemaValidator schemaValidator, IXmlConverter xmlConverter, IXmlErrorTranslator errorTranslator, IDeserializer deserializer)
+        public DataReturnXMLValidator(ISchemaValidator schemaValidator, IXmlConverter xmlConverter, IXmlErrorTranslator errorTranslator, IDeserializer deserializer)
         {
             this.schemaValidator = schemaValidator;
             this.errorTranslator = errorTranslator;
@@ -27,7 +27,7 @@
             this.deserializer = deserializer;
         }
 
-        public IEnumerable<DataReturnsUploadError> Validate(ProcessDataReturnsXMLFile message)
+        public IEnumerable<DataReturnUploadError> Validate(ProcessDataReturnXmlFile message)
         {
             string schemaVersion = "3.2";
             // Validate against the schema
@@ -50,7 +50,7 @@
                 // Couldn't deserialise - can't go any further, add an error and bail out here
                 var exceptionMessage = e.InnerException != null ? e.InnerException.Message : e.Message;
                 var friendlyMessage = errorTranslator.MakeFriendlyErrorMessage(exceptionMessage, schemaVersion);
-                errors.Add(new DataReturnsUploadError(ErrorLevel.Error, UploadErrorType.Schema, friendlyMessage));
+                errors.Add(new DataReturnUploadError(ErrorLevel.Error, UploadErrorType.Schema, friendlyMessage));
 
                 return errors;
             }

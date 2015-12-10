@@ -46,9 +46,9 @@
             { Category.PhotovoltaicPanels, "Photovoltaic Panels" },
         };
 
-        public XDocument GenerateXml(DataReturnContents dataReturnContents)
+        public XDocument GenerateXml(DataReturnVersion dataReturnVersion)
         {
-            Guard.ArgumentNotNull(() => dataReturnContents, dataReturnContents);
+            Guard.ArgumentNotNull(() => dataReturnVersion, dataReturnVersion);
 
             XDocument xmlDoc = new XDocument();
 
@@ -57,12 +57,12 @@
             XElement xmlSchemeReturn = new XElement(ns + "SchemeReturn");
             xmlDoc.Add(xmlSchemeReturn);
 
-            PopulateSchemeReturn(dataReturnContents, xmlSchemeReturn);
+            PopulateSchemeReturn(dataReturnVersion, xmlSchemeReturn);
 
             return xmlDoc;
         }
 
-        private void PopulateSchemeReturn(DataReturnContents dataReturnContents, XElement xmlSchemeReturn)
+        private void PopulateSchemeReturn(DataReturnVersion dataReturnVersion, XElement xmlSchemeReturn)
         {
             XElement xmlXsdVersion = new XElement(ns + "XSDVersion");
             xmlSchemeReturn.Add(xmlXsdVersion);
@@ -70,20 +70,20 @@
 
             XElement xmlApprovalNo = new XElement(ns + "ApprovalNo");
             xmlSchemeReturn.Add(xmlApprovalNo);
-            xmlApprovalNo.Value = dataReturnContents.DataReturn.Scheme.ApprovalNumber;
+            xmlApprovalNo.Value = dataReturnVersion.DataReturn.Scheme.ApprovalNumber;
 
             XElement xmlComplianceYear = new XElement(ns + "ComplianceYear");
             xmlSchemeReturn.Add(xmlComplianceYear);
-            xmlComplianceYear.Value = dataReturnContents.DataReturn.Quarter.Year.ToString();
+            xmlComplianceYear.Value = dataReturnVersion.DataReturn.Quarter.Year.ToString();
 
             XElement xmlReturnPeriod = new XElement(ns + "ReturnPeriod");
             xmlSchemeReturn.Add(xmlReturnPeriod);
-            xmlReturnPeriod.Value = quarterTypeMapping[dataReturnContents.DataReturn.Quarter.Q];
+            xmlReturnPeriod.Value = quarterTypeMapping[dataReturnVersion.DataReturn.Quarter.Q];
 
             XElement xmlCollectedFromDcf = new XElement(ns + "CollectedFromDCF");
             xmlSchemeReturn.Add(xmlCollectedFromDcf);
 
-            foreach (ReturnItem returnItem in dataReturnContents.ReturnItemsCollectedFromDcf)
+            foreach (ReturnItem returnItem in dataReturnVersion.ReturnItemsCollectedFromDcf)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
                 xmlCollectedFromDcf.Add(xmlReturn);
@@ -91,7 +91,7 @@
                 PopulateReturn(returnItem, xmlReturn);
             }
 
-            foreach (DeliveredToAtf deliveredToAatf in dataReturnContents.DeliveredToAatf)
+            foreach (DeliveredToAtf deliveredToAatf in dataReturnVersion.DeliveredToAatf)
             {
                 XElement xmlDeliveredToATF = new XElement(ns + "DeliveredToATF");
                 xmlSchemeReturn.Add(xmlDeliveredToATF);
@@ -99,7 +99,7 @@
                 PopulateDeliveredToAatf(deliveredToAatf, xmlDeliveredToATF);
             }
 
-            foreach (DeliveredToAe deliveredToAE in dataReturnContents.DeliveredToAe)
+            foreach (DeliveredToAe deliveredToAE in dataReturnVersion.DeliveredToAe)
             {
                 XElement xmlDeliveredToAE = new XElement(ns + "DeliveredToAE");
                 xmlSchemeReturn.Add(xmlDeliveredToAE);
@@ -110,7 +110,7 @@
             XElement xmlB2cWeeeFromDistributors = new XElement(ns + "B2CWEEEFromDistributors");
             xmlSchemeReturn.Add(xmlB2cWeeeFromDistributors);
 
-            foreach (ReturnItem returnItem in dataReturnContents.B2cWeeeFromDistributors)
+            foreach (ReturnItem returnItem in dataReturnVersion.B2cWeeeFromDistributors)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
                 xmlB2cWeeeFromDistributors.Add(xmlReturn);
@@ -121,7 +121,7 @@
             XElement xmlB2cWeeeFromFinalHolders = new XElement(ns + "B2CWEEEFromFinalHolders");
             xmlSchemeReturn.Add(xmlB2cWeeeFromFinalHolders);
 
-            foreach (ReturnItem returnItem in dataReturnContents.B2cWeeeFromFinalHolders)
+            foreach (ReturnItem returnItem in dataReturnVersion.B2cWeeeFromFinalHolders)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
                 xmlB2cWeeeFromFinalHolders.Add(xmlReturn);
@@ -132,7 +132,7 @@
             XElement xmlProducerList = new XElement(ns + "ProducerList");
             xmlSchemeReturn.Add(xmlProducerList);
 
-            foreach (Producer producer in dataReturnContents.Producers)
+            foreach (Producer producer in dataReturnVersion.Producers)
             {
                 XElement xmlProducer = new XElement(ns + "Producer");
                 xmlProducerList.Add(xmlProducer);

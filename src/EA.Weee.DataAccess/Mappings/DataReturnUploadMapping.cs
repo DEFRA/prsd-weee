@@ -3,13 +3,13 @@
     using System.Data.Entity.ModelConfiguration;
     using Domain.DataReturns;
 
-    internal class DataReturnsUploadMapping : EntityTypeConfiguration<DataReturnsUpload>
+    internal class DataReturnUploadMapping : EntityTypeConfiguration<DataReturnUpload>
     {
-        public DataReturnsUploadMapping()
+        public DataReturnUploadMapping()
         {
             HasRequired(e => e.RawData).WithRequiredPrincipal();
 
-            ToTable("DataReturnsUpload", "PCS");
+            ToTable("DataReturnUpload", "PCS");
         }
     }
 }

@@ -10,11 +10,11 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Scheme;
 
-    public class DataReturnContentsGeneratorDataAccess : IDataReturnContentsGeneratorDataAccess
+    public class DataReturnVersionGeneratorDataAccess : IDataReturnVersionGeneratorDataAccess
     {
         private readonly WeeeContext context;
 
-        public DataReturnContentsGeneratorDataAccess(WeeeContext context)
+        public DataReturnVersionGeneratorDataAccess(WeeeContext context)
         {
             this.context = context;
         }

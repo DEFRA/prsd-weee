@@ -19,14 +19,14 @@
         [Fact]
         public void GenerateDataReturnsUpload_SchemaErrors_NullComplianceYear()
         {
-            var message = new ProcessDataReturnsXMLFile(Guid.NewGuid(), new byte[1], "File name");
+            var message = new ProcessDataReturnXmlFile(Guid.NewGuid(), new byte[1], "File name");
 
             var generateFromXml = new GenerateFromXmlBuilder().Build();
 
             var result = generateFromXml.GenerateDataReturnsUpload(message,
-                new List<DataReturnsUploadError>
+                new List<DataReturnUploadError>
                 {
-                    new DataReturnsUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Some schema error")
+                    new DataReturnUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Some schema error")
                 }, A.Dummy<Scheme>());
 
             Assert.Null(result.ComplianceYear);
@@ -39,10 +39,10 @@
             A.CallTo(() => builder.XmlDeserializer.Deserialize<SchemeReturn>(A<XDocument>._))
                 .Returns(new SchemeReturn { ComplianceYear = "2015" });
 
-            var message = new ProcessDataReturnsXMLFile(Guid.NewGuid(), new byte[1], "File name");
+            var message = new ProcessDataReturnXmlFile(Guid.NewGuid(), new byte[1], "File name");
             var generateFromXml = builder.Build();
 
-            var result = generateFromXml.GenerateDataReturnsUpload(message, new List<DataReturnsUploadError>(), A.Dummy<Scheme>());
+            var result = generateFromXml.GenerateDataReturnsUpload(message, new List<DataReturnUploadError>(), A.Dummy<Scheme>());
 
             Assert.NotNull(result.ComplianceYear);
             Assert.Equal(2015, result.ComplianceYear.Value);
@@ -59,9 +59,9 @@
                 XmlDeserializer = A.Fake<IDeserializer>();
             }
 
-            public GenerateFromDataReturnsXml Build()
+            public GenerateFromDataReturnXml Build()
             {
-                return new GenerateFromDataReturnsXml(XmlConverter, XmlDeserializer);
+                return new GenerateFromDataReturnXml(XmlConverter, XmlDeserializer);
             }
         }
     }

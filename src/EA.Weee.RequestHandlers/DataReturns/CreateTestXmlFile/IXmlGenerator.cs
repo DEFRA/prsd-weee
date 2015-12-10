@@ -10,6 +10,6 @@
 
     public interface IXmlGenerator
     {
-        XDocument GenerateXml(DataReturnContents dataReturnContents);
+        XDocument GenerateXml(DataReturnVersion dataReturnVersion);
     }
 }

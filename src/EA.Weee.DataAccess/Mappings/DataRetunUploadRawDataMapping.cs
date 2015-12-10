@@ -3,11 +3,11 @@
     using System.Data.Entity.ModelConfiguration;
     using Domain.DataReturns;
 
-    internal class DataReturnsUploadRawDataMapping : EntityTypeConfiguration<DataReturnsUploadRawData>
+    internal class DataReturnsUploadRawDataMapping : EntityTypeConfiguration<DataReturnUploadRawData>
     {
         public DataReturnsUploadRawDataMapping()
         {
-            ToTable("DataReturnsUpload", "PCS");
+            ToTable("DataReturnUpload", "PCS");
         }
     }
 }
