@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Domain;
@@ -11,36 +12,38 @@
     using Xml.DataReturns;
     using Xml.Deserialization;
 
-    public class GenerateFromDataReturnsXml : IGenerateFromDataReturnsXml
+    public class GenerateFromDataReturnXML : IGenerateFromDataReturnXML
     {
         private readonly IXmlConverter xmlConverter;
-        private readonly IDeserializer deserializer;
+        private readonly IDeserializer deserializer;       
 
-        public GenerateFromDataReturnsXml(IXmlConverter xmlConverter, IDeserializer deserializer)
+        public GenerateFromDataReturnXML(IXmlConverter xmlConverter, IDeserializer deserializer)
         {
             this.xmlConverter = xmlConverter;
             this.deserializer = deserializer;
         }
 
-        public DataReturnsUpload GenerateDataReturnsUpload(
-            ProcessDataReturnsXMLFile messageXmlFile,
-            List<DataReturnsUploadError> errors,
-            Scheme scheme)
+        public DataReturnUpload GenerateDataReturnsUpload(ProcessDataReturnXMLFile messageXmlFile, List<DataReturnUploadError> errors, Scheme scheme)
         {
             Guard.ArgumentNotNull(() => messageXmlFile, messageXmlFile);
             Guard.ArgumentNotNull(() => errors, errors);
             Guard.ArgumentNotNull(() => scheme, scheme);
 
+            var xml = xmlConverter.XmlToUtf8String(messageXmlFile.Data);
+           
+            DataReturn returns = null;
+
             if (errors != null && errors.Any(e => e.ErrorType == UploadErrorType.Schema))
-            {
-                return new DataReturnsUpload(xmlConverter.XmlToUtf8String(messageXmlFile.Data), errors, null, scheme, messageXmlFile.FileName);
+            {                
+                return new DataReturnUpload(scheme, xml, errors, messageXmlFile.FileName, null, null, null); 
             }
             else
             {
-                var xml = xmlConverter.XmlToUtf8String(messageXmlFile.Data);
                 SchemeReturn deserializedXml = deserializer.Deserialize<SchemeReturn>(xmlConverter.Convert(messageXmlFile.Data));
-                return new DataReturnsUpload(xml, errors, int.Parse(deserializedXml.ComplianceYear), scheme, messageXmlFile.FileName);
+                int complianceYear = int.Parse(deserializedXml.ComplianceYear);
+                int quarter = Convert.ToInt32(deserializedXml.ReturnPeriod);               
+                return new DataReturnUpload(scheme, xml, errors, messageXmlFile.FileName, null, complianceYear, quarter);
             }
-        }
+        }       
     }
 }

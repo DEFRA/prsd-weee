@@ -107,11 +107,11 @@
             Assert.Equal(producerCharge5, producerCharges["The Empire 3"]);
         }
 
-        private XmlChargeBandCalculator XmlChargeBandCalculator()
+        private XMLChargeBandCalculator XmlChargeBandCalculator()
         {
             var xmlConverter = new XmlConverter(A.Fake<IWhiteSpaceCollapser>(), new Deserializer());
 
-            return new XmlChargeBandCalculator(xmlConverter, producerChargerCalculator);
+            return new XMLChargeBandCalculator(xmlConverter, producerChargerCalculator);
         }
     }
 }

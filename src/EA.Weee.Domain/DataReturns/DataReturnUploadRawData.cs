@@ -3,7 +3,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
 
-    public class DataReturnsUploadRawData
+    public class DataReturnUploadRawData
     {
         [Key]
         public Guid DataReturnsUploadId { get; set; }
