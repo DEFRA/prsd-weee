@@ -16,9 +16,9 @@
                 error.LineNumber.HasValue ? error.LineNumber.Value : 0);
         }
 
-        public static DataReturnsUploadError ToDataReturnsUploadError(this XmlValidationError error)
+        public static DataReturnUploadError ToDataReturnsUploadError(this XmlValidationError error)
         {
-            return new DataReturnsUploadError(error.ErrorLevel.ToDomainEnumeration<ErrorLevel>(),
+            return new DataReturnUploadError(error.ErrorLevel.ToDomainEnumeration<ErrorLevel>(),
                 error.ErrorType.ToUploadErrorType(), error.Message,
                 error.LineNumber.HasValue ? error.LineNumber.Value : 0);
         }
