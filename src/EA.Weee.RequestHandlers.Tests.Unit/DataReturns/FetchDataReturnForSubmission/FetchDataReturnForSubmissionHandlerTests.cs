@@ -206,10 +206,50 @@
                 null,
                 null,
                 null);
-            
+
             IFetchDataReturnForSubmissionDataAccess dataAccess = A.Fake<IFetchDataReturnForSubmissionDataAccess>();
             A.CallTo(() => dataAccess.FetchDataReturnUploadAsync(A<Guid>._)).Returns(dataReturnsUpload);
             return dataAccess;
+        }
+
+        [Fact]
+        public async Task HandleAsync_ForDataReturnWithMultipleErrors_ReturnsErrorsByLineNumberOrder()
+        {
+            // Arrange
+            DataReturnUpload dataReturnsUpload = new DataReturnUpload(
+                A.Dummy<Scheme>(),
+                A.Dummy<string>(),
+                new List<DataReturnUploadError>()
+                {
+                  new DataReturnUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Error on 55 line no", 55),
+                  new DataReturnUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Error on 5 line no", 5),
+                  new DataReturnUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Error on 75 line no", 75),
+                  new DataReturnUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Error without line no")
+                },                
+                A.Dummy<string>(),
+                null,
+                A.Dummy<int>(),
+                A.Dummy<int>());
+
+            IFetchDataReturnForSubmissionDataAccess dataAccess = A.Fake<IFetchDataReturnForSubmissionDataAccess>();
+            A.CallTo(() => dataAccess.FetchDataReturnUploadAsync(A<Guid>._)).Returns(dataReturnsUpload);
+
+            FetchDataReturnForSubmissionHandler handler = new FetchDataReturnForSubmissionHandler(
+                A.Dummy<IWeeeAuthorization>(),
+                dataAccess);
+
+            Requests.DataReturns.FetchDataReturnForSubmission request = new Requests.DataReturns.FetchDataReturnForSubmission(
+                A.Dummy<Guid>());
+
+            // Act
+            DataReturnForSubmission result = await handler.HandleAsync(request);
+
+            // Assert
+            Assert.Equal(4, result.Errors.Count);
+            Assert.True(result.Errors.ElementAt(0).Description == "Error without line no"
+                && result.Errors.ElementAt(1).Description == "Error on 5 line no"
+                && result.Errors.ElementAt(2).Description == "Error on 55 line no"
+                && result.Errors.ElementAt(3).Description == "Error on 75 line no");
         }
     }
 }

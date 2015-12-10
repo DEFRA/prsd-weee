@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.SearchResultsViewModel
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.SearchResultsViewModel
 @{
     ViewBag.Title = "Search results";
 }
@@ -44,9 +45,7 @@
             </table>
             <br/>
 
-            <div class="form-group">
-                <input type="submit" class="button" value="Continue" />
-            </div>
+            @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
         }
     }
     else

@@ -195,31 +195,33 @@
                 ModelHelper helper = new ModelHelper(db.Model);
 
                 Scheme scheme1 = helper.CreateScheme();
-                scheme1.SchemeName = "Z scheme";
-                
+
+                scheme1.SchemeName = "SONY";
+
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
-                memberUpload1.ComplianceYear = 2016;
+                memberUpload1.ComplianceYear = 2017;
                 memberUpload1.IsSubmitted = true;
 
+                var dateTimeOfRegisteredFor2017 = DateTime.UtcNow.AddDays(-3);
+                var datetimeOfFirstUpdatedFor2017 = dateTimeOfRegisteredFor2017.AddDays(1);
+                var datetimeOfSecondUpdatedFor2017 = datetimeOfFirstUpdatedFor2017.AddDays(1);
+
                 ProducerSubmission producerSubmission1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
-                producerSubmission1.Business.Company.Name = "A company name";
-
+                producerSubmission1.UpdatedDate = dateTimeOfRegisteredFor2017;
                 ProducerSubmission producerSubmission2 = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
-                producerSubmission2.Business.Company.Name = "B company name";
-
-                Scheme scheme2 = helper.CreateScheme();
-                scheme2.SchemeName = "A scheme";
+                producerSubmission2.UpdatedDate = datetimeOfFirstUpdatedFor2017;
+                ProducerSubmission producerSubmission3 = helper.CreateProducerAsCompany(memberUpload1, "WEE/99ZZZZ99");
+                producerSubmission3.UpdatedDate = datetimeOfSecondUpdatedFor2017;
                 
-                MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme2);
+                MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme1);
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;
 
-                ProducerSubmission producerSubmission3 = helper.CreateProducerAsCompany(memberUpload2, "WEE/99ZZZZ99");
-                producerSubmission3.Business.Company.Name = "C company name";
+                var dateTimeOfRegisteredFor2016 = DateTime.UtcNow.AddDays(-5);
 
                 ProducerSubmission producerSubmission4 = helper.CreateProducerAsCompany(memberUpload2, "WEE/99ZZZZ99");
-                producerSubmission4.Business.Company.Name = "D company name";
-
+                producerSubmission4.UpdatedDate = dateTimeOfRegisteredFor2016;
+                
                 db.Model.SaveChanges();
 
                 // Act
@@ -230,10 +232,10 @@
                 Assert.NotNull(results);
                 Assert.Equal(results.Count, 4);
 
-                Assert.True(results[0].PCSName == scheme2.SchemeName && results[0].ProducerName == producerSubmission3.Business.Company.Name);
-                Assert.True(results[1].PCSName == scheme2.SchemeName && results[1].ProducerName == producerSubmission4.Business.Company.Name);
-                Assert.True(results[2].PCSName == scheme1.SchemeName && results[2].ProducerName == producerSubmission1.Business.Company.Name);
-                Assert.True(results[3].PCSName == scheme1.SchemeName && results[3].ProducerName == producerSubmission2.Business.Company.Name);
+                Assert.True(results[0].DateAmended.Date == datetimeOfSecondUpdatedFor2017.Date && results[0].ComplianceYear == 2017);
+                Assert.True(results[1].DateAmended.Date == datetimeOfFirstUpdatedFor2017.Date && results[1].ComplianceYear == 2017);
+                Assert.True(results[2].DateRegistered.Date == dateTimeOfRegisteredFor2017.Date && results[2].ComplianceYear == 2017);
+                Assert.True(results[3].DateRegistered.Date == dateTimeOfRegisteredFor2016.Date && results[3].ComplianceYear == 2016);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿@using EA.Weee.Core.Shared
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Account.InternalUserAuthorizationRequiredViewModel
 @{
     ViewBag.Title = "Internal User Authorisation Required";
@@ -45,8 +46,6 @@
     @using (Html.BeginForm("SignOut", "Account", new { @area = "Admin" }, FormMethod.Post, new { id = "signoutForm" }))
     {
         @Html.AntiForgeryToken()
-        <div>
-            <input type="submit" class="button" value="Sign out" />
-        </div>
+        @(this.WeeeGds().Submit("Sign out", new { @class = "button" }))
     }
 }

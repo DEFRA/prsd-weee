@@ -25,9 +25,8 @@
             @Html.Gds().ValidationMessageFor(m => m.Password)
             @Html.Gds().PasswordFor(m => m.Password)
         </div>
-        <p>
-            <input type="submit" value="Continue" class="button" />
-        </p>
+
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
     }
 
     <p>

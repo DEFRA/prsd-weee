@@ -95,6 +95,7 @@
                     @using (Html.BeginForm("SignOut", "Account", routeValues: new { area = (Model.UserIsInternal ? "admin" : string.Empty) }, method: FormMethod.Post, htmlAttributes: new { id = "logoutForm" }))
                     {
                         @Html.AntiForgeryToken()
+
                         <input class="link-submit" id="link-sign-out" type="submit" value="Sign out"/>
                     }
                 </li>
