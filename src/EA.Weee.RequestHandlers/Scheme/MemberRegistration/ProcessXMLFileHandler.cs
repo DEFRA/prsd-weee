@@ -16,18 +16,18 @@
     using Requests.Scheme.MemberRegistration;
     using Xml.Converter;
 
-    internal class ProcessXMLFileHandler : IRequestHandler<ProcessXMLFile, Guid>
+    internal class ProcessXMLFileHandler : IRequestHandler<ProcessXmlFile, Guid>
     {
         private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
-        private readonly IXmlValidator xmlValidator;
+        private readonly IXMLValidator xmlValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IGenerateFromXml generateFromXml;
-        private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
+        private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
 
         public ProcessXMLFileHandler(WeeeContext context, IWeeeAuthorization authorization, 
-            IXmlValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, 
-            IXmlChargeBandCalculator xmlChargeBandCalculator)
+            IXMLValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, 
+            IXMLChargeBandCalculator xmlChargeBandCalculator)
         {
             this.context = context;
             this.authorization = authorization;
@@ -37,7 +37,7 @@
             this.generateFromXml = generateFromXml;
         }
 
-        public async Task<Guid> HandleAsync(ProcessXMLFile message)
+        public async Task<Guid> HandleAsync(ProcessXmlFile message)
         {
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
@@ -88,7 +88,7 @@
             return upload.Id;
         }
 
-        private Dictionary<string, ProducerCharge> ProducerCharges(ProcessXMLFile message, ref decimal totalCharges)
+        private Dictionary<string, ProducerCharge> ProducerCharges(ProcessXmlFile message, ref decimal totalCharges)
         {
             var producerCharges = xmlChargeBandCalculator.Calculate(message);
 

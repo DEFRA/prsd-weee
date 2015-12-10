@@ -18,7 +18,7 @@
         [Fact]
         public void GenerateMemberUpload_SchemaErrors_NullComplianceYear()
         {
-            var message = new ProcessXMLFile(Guid.NewGuid(), new byte[1], "File name");
+            var message = new ProcessXmlFile(Guid.NewGuid(), new byte[1], "File name");
 
             var generateFromXml = new GenerateFromXmlBuilder().Build();
 
@@ -39,7 +39,7 @@
             A.CallTo(() => builder.XmlConverter.Deserialize(A<XDocument>._))
                 .Returns(new schemeType { complianceYear = "2015" });
 
-            var message = new ProcessXMLFile(Guid.NewGuid(), new byte[1], "File name");
+            var message = new ProcessXmlFile(Guid.NewGuid(), new byte[1], "File name");
             var generateFromXml = builder.Build();
 
             var result = generateFromXml.GenerateMemberUpload(message, new List<MemberUploadError>(), 2015, A.Fake<Scheme>());
@@ -55,7 +55,7 @@
             A.CallTo(() => builder.XmlConverter.Deserialize(A<XDocument>._))
                 .Returns(new schemeType { complianceYear = "2015" });
 
-            var message = new ProcessXMLFile(Guid.NewGuid(), new byte[1], "File name");
+            var message = new ProcessXmlFile(Guid.NewGuid(), new byte[1], "File name");
             var generateFromXml = builder.Build();
 
             var result = generateFromXml.GenerateMemberUpload(message, null, 2015, A.Fake<Scheme>());
@@ -67,7 +67,7 @@
         [Fact]
         public void GenerateMemberUpload_ReturnsNewMemberUpload_WithCorrectValues()
         {
-            var message = new ProcessXMLFile(
+            var message = new ProcessXmlFile(
                 new Guid("4CAD6CA3-E4E7-4D1A-BAAB-8C454EECF109"),
                 new byte[1],
                 "File name");

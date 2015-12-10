@@ -14,17 +14,17 @@
     using QuarterType = EA.Weee.Domain.DataReturns.QuarterType;
     using RandomHelper = Core.Scheme.MemberUploadTesting.RandomHelper;
 
-    public class DataReturnContentsGenerator : IDataReturnContentsGenerator
+    public class DataReturnVersionGenerator : IDataReturnVersionGenerator
     {
-        private readonly IDataReturnContentsGeneratorDataAccess dataAccess;
+        private readonly IDataReturnVersionGeneratorDataAccess dataAccess;
         private static readonly Random r = new Random();
 
-        public DataReturnContentsGenerator(IDataReturnContentsGeneratorDataAccess dataAccess)
+        public DataReturnVersionGenerator(IDataReturnVersionGeneratorDataAccess dataAccess)
         {
             this.dataAccess = dataAccess;
         }
 
-        public async Task<DataReturnContents> GenerateAsync(TestFileSettings settings)
+        public async Task<DataReturnVersion> GenerateAsync(TestFileSettings settings)
         {
             Domain.Scheme.Scheme scheme = await dataAccess.FetchSchemeAsync(settings.OrganisationID);
 
@@ -34,38 +34,38 @@
 
             DataReturn dataReturn = new DataReturn(scheme, quarter);
 
-            DataReturnContents dataReturnContents = new DataReturnContents(dataReturn);
+            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
 
             IEnumerable<ReturnItem> returnItemsCollectedFromDcf = CreateReturnItems(null);
             foreach (ReturnItem returnItem in returnItemsCollectedFromDcf)
             {
-                dataReturnContents.AddReturnItemCollectedFromDcf(returnItem);
+                dataReturnVersion.AddReturnItemCollectedFromDcf(returnItem);
             }
 
             int numberOfDeliveredToAatfs = settings.NumberOfAatfs;
             for (int index = 0; index < numberOfDeliveredToAatfs; ++index)
             {
                 DeliveredToAtf deliveredToAatf = CreateDeliveredToAtf();
-                dataReturnContents.DeliveredToAatf.Add(deliveredToAatf);
+                dataReturnVersion.DeliveredToAatf.Add(deliveredToAatf);
             }
 
             int numberOfDeliveredToAes = settings.NumberOfAes;
             for (int index = 0; index < numberOfDeliveredToAes; ++index)
             {
                 DeliveredToAe deliveredToAe = CreateDeliveredToAe();
-                dataReturnContents.DeliveredToAe.Add(deliveredToAe);
+                dataReturnVersion.DeliveredToAe.Add(deliveredToAe);
             }
 
             IEnumerable<ReturnItem> b2cWeeeFromDistributors = CreateReturnItems(ObligationType.B2C);
             foreach (ReturnItem returnItem in b2cWeeeFromDistributors)
             {
-                dataReturnContents.AddB2cWeeeFromDistributor(returnItem);
+                dataReturnVersion.AddB2cWeeeFromDistributor(returnItem);
             }
 
             IEnumerable<ReturnItem> b2cWeeeFromFinalHolders = CreateReturnItems(ObligationType.B2C);
             foreach (ReturnItem returnItem in b2cWeeeFromFinalHolders)
             {
-                dataReturnContents.B2cWeeeFromFinalHolders.Add(returnItem);
+                dataReturnVersion.B2cWeeeFromFinalHolders.Add(returnItem);
             }
 
             IList<RegisteredProducer> registeredProducers = await dataAccess.FetchRegisteredProducersAsync(scheme, quarter.Year);
@@ -87,12 +87,10 @@
             foreach (RegisteredProducer producerToInclude in producersToInclude)
             {
                 Producer producer = CreateProducer(producerToInclude);
-                dataReturnContents.AddProducer(producer);
+                dataReturnVersion.AddProducer(producer);
             }
 
-            dataReturn.SetContents(dataReturnContents);
-
-            return dataReturnContents;
+            return dataReturnVersion;
         }
 
         private static DeliveredToAtf CreateDeliveredToAtf()
@@ -189,7 +187,7 @@
         {
             decimal amount = (decimal)(r.NextDouble() * 1000000);
 
-            return Math.Round(amount, 2);
+            return Math.Round(amount, 3);
         }
 
         private static string GetRandomAtfApprovalNumber()

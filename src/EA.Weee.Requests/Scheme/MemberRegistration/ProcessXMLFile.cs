@@ -3,7 +3,7 @@
     using System;
     using Prsd.Core.Mediator;
 
-    public class ProcessXMLFile : IRequest<Guid>
+    public class ProcessXmlFile : IRequest<Guid>
     {
         public Guid OrganisationId { get; private set; }
 
@@ -11,7 +11,7 @@
 
         public string FileName { get; private set; }
 
-        public ProcessXMLFile(Guid organisationId, byte[] data, string fileName)
+        public ProcessXmlFile(Guid organisationId, byte[] data, string fileName)
         {
             OrganisationId = organisationId;
             Data = data;

@@ -8,7 +8,7 @@
     using Domain.Producer;
     using EA.Weee.Domain.Scheme;
 
-    public interface IDataReturnContentsGeneratorDataAccess
+    public interface IDataReturnVersionGeneratorDataAccess
     {
         Task<Domain.Scheme.Scheme> FetchSchemeAsync(Guid organisationID);
 

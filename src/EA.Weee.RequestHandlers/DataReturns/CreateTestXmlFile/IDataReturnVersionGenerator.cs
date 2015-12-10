@@ -8,8 +8,8 @@
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Domain.DataReturns;
 
-    public interface IDataReturnContentsGenerator
+    public interface IDataReturnVersionGenerator
     {
-        Task<DataReturnContents> GenerateAsync(TestFileSettings settings);
+        Task<DataReturnVersion> GenerateAsync(TestFileSettings settings);
     }
 }
