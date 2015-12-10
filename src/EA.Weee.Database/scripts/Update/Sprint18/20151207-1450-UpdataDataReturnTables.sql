@@ -75,7 +75,8 @@ CREATE TABLE [PCS].[DataReturnVersion](
 	[Id] [uniqueidentifier] NOT NULL,
 	[RowVersion] [timestamp] NOT NULL,
 	[SubmittedDate] [datetime] NULL,
-	[DataReturnId] [uniqueidentifier] NOT NULL,
+	[SubmittingUserId] [nvarchar](128) NULL,
+	[DataReturnId] [uniqueidentifier] NOT NULL,	
  CONSTRAINT [PK_DataReturnVersion] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

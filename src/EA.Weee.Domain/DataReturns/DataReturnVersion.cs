@@ -10,6 +10,8 @@
 
         public virtual DateTime? SubmittedDate { get; private set; }
 
+        public string SubmittingUserId { get; private set; }
+
         public virtual bool IsSubmitted { get; private set; }
         public DataReturnVersion(DataReturn dataReturn)
         {
