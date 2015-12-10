@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml.SpecifyOptionsViewModel
 
 @{
@@ -30,9 +31,7 @@
 
         <p>If your file does not download automatically, use the button below.</p>
 
-        <div class="form-group">
-            <input type="submit" class="button" value="Download file" />
-        </div>
+        @(this.WeeeGds().Submit("Download file", new { @class = "button" }))
         
         @Html.ActionLink("Create another file", "SpecifyOptions", "GeneratePcsXml", new { OrganisationID = Model.OrganisationID }, new { @class = "button" })
 

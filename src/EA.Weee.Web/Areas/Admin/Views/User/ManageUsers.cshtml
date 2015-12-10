@@ -2,6 +2,7 @@
 @using EA.Weee.Core.Admin
 @using EA.Weee.Requests.Admin
 @using EA.Weee.Web.Infrastructure.Paging
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.User.ManageUsersViewModel
 @{
     ViewBag.Title = "Choose Users";
@@ -127,9 +128,8 @@
         <p>Showing @Model.Users.ItemStart - @Model.Users.ItemEnd of @Model.Users.TotalItemCount</p>
     }
 
-    <div class="form-group">
-        <input type="submit" class="button" value="Continue"/>
-    </div>
+    @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+
     <p>
         <a href="javascript:history.back();">Back</a>
     </p>

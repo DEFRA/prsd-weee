@@ -25,9 +25,7 @@
                 RadioButtonLayout.Stacked)
         </div>
 
-        <p>
-            <input type="submit" class="button" value="Continue" />
-        </p>
+        @(this.WeeeGds().Submit("Continue", new { @class = "Continue" }))
     }
     <div>
          @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
