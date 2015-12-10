@@ -1,37 +1,35 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.FetchDataReturnForSubmission
 {
     using System;
-    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.DataReturns;
+    using Domain.Scheme;
 
     public class FetchDataReturnForSubmissionDataAccess : IFetchDataReturnForSubmissionDataAccess
     {
-        private WeeeContext context;
+        private readonly WeeeContext context;
 
-        public FetchDataReturnForSubmissionDataAccess(WeeeContext context)
+        public FetchDataReturnForSubmissionDataAccess(WeeeContext dbContext)
         {
-            this.context = context;
+            this.context = dbContext;
         }
-
-        public async Task<DataReturnsUpload> FetchDataReturnAsync(Guid dataReturnId)
+        public async Task<DataReturnUpload> FetchDataReturnUploadAsync(Guid dataReturnUploadId)
         {
             var result = await context
                 .DataReturnsUploads
+                //.Include(dru => dru.DataReturnsVersion)                
                 .Include(dru => dru.Errors)
-                .Include(dru => dru.Scheme)
-                .Where(dru => dru.Id == dataReturnId)
+                .Where(dru => dru.Id == dataReturnUploadId)
                 .SingleOrDefaultAsync();
 
             if (result == null)
             {
                 string errorMessage = string.Format(
                     "A data return was not found with ID \"{0}\".",
-                    dataReturnId);
+                    dataReturnUploadId);
                 throw new Exception(errorMessage);
             }
 

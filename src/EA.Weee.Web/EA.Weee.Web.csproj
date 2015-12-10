@@ -231,8 +231,8 @@
     <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
     <Compile Include="Areas\Scheme\Controllers\DataReturnsController.cs" />
-    <Compile Include="Areas\Scheme\Requests\ProcessDataReturnsXmlFileRequest.cs" />
-    <Compile Include="Areas\Scheme\Requests\ProcessXmlFileRequest.cs" />
+    <Compile Include="Areas\Scheme\Requests\ProcessDataReturnXMLFileRequest.cs" />
+    <Compile Include="Areas\Scheme\Requests\ProcessXMLFileRequest.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
     <Content Include="Areas\Admin\Views\Scheme\ViewOrganisationDetails.cshtml">
