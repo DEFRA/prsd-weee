@@ -24,7 +24,7 @@
             IsSubmitted = false;
             SubmittedDate = null;
         }
-        public void Submit()
+        public void Submit(string userId)
         {
             if (IsSubmitted)
             {
@@ -33,6 +33,7 @@
 
             IsSubmitted = true;
             SubmittedDate = SystemTime.UtcNow;
+            SubmittingUserId = userId;
             DataReturn.SetCurrentDataReturnVersion(this);     
         }       
     }
