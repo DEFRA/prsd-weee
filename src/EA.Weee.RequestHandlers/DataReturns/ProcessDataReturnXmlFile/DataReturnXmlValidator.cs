@@ -27,7 +27,7 @@
             this.deserializer = deserializer;
         }
 
-        public IEnumerable<DataReturnUploadError> Validate(ProcessDataReturnsXMLFile message)
+        public IEnumerable<DataReturnUploadError> Validate(ProcessDataReturnXMLFile message)
         {
             string schemaVersion = "3.2";
             // Validate against the schema

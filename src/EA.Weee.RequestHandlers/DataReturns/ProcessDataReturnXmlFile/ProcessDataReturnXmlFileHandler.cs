@@ -7,13 +7,12 @@
     using System.Threading.Tasks;
     using Domain.DataReturns;
     using Domain.Scheme;
-    using FetchDataReturnForSubmission;
     using Prsd.Core.Mediator;
     using Requests.DataReturns;
     using Security;
     using Xml.Converter;
 
-    internal class ProcessDataReturnXMLFileHandler : IRequestHandler<ProcessDataReturnsXMLFile, Guid>
+    internal class ProcessDataReturnXMLFileHandler : IRequestHandler<ProcessDataReturnXMLFile, Guid>
     {
         private readonly IProcessDataReturnXMLFileDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
@@ -35,7 +34,7 @@
             this.xmlGenerator = xmlGenerator;
         }
 
-        public async Task<Guid> HandleAsync(ProcessDataReturnsXMLFile message)
+        public async Task<Guid> HandleAsync(ProcessDataReturnXMLFile message)
         {
             Scheme scheme = await dataAccess.FetchSchemeByOrganisationIdAsync(message.OrganisationId);
             authorization.EnsureSchemeAccess(scheme.Id);

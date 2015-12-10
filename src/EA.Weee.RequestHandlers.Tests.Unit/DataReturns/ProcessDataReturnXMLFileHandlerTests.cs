@@ -32,7 +32,7 @@
                                              A.Dummy<IXmlConverter>(),
                                              A.Dummy<IGenerateFromDataReturnXML>());
 
-            ProcessDataReturnsXMLFile message = A.Dummy<ProcessDataReturnsXMLFile>();
+            ProcessDataReturnXMLFile message = A.Dummy<ProcessDataReturnXMLFile>();
             // Act
             Func<Task<Guid>> testCode = async () => await handler.HandleAsync(message);
 

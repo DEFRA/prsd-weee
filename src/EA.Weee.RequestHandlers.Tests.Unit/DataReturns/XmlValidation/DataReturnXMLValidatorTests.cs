@@ -39,7 +39,7 @@
             A.CallTo(() => deserializer.Deserialize<SchemeReturn>(A<XDocument>._))
                 .Throws(new XmlDeserializationFailureException(new Exception("Test exception")));
 
-            var result = XmlValidator().Validate(new ProcessDataReturnsXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var result = XmlValidator().Validate(new ProcessDataReturnXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
 
             Assert.NotEmpty(result);
             Assert.Equal(1, result.Count());
@@ -54,7 +54,7 @@
                     new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "An error occurred")
                 });
 
-            var result = XmlValidator().Validate(new ProcessDataReturnsXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var result = XmlValidator().Validate(new ProcessDataReturnXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
 
             Assert.NotEmpty(result);
         }

@@ -6,6 +6,6 @@
 
     public interface IDataReturnXMLValidator
     {
-        IEnumerable<DataReturnUploadError> Validate(ProcessDataReturnsXMLFile message);
+        IEnumerable<DataReturnUploadError> Validate(ProcessDataReturnXMLFile message);
     }
 }
