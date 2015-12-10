@@ -5,11 +5,11 @@
     using ViewModels;
     using Weee.Requests.Scheme.MemberRegistration;
 
-    public class ProcessXmlFileRequest : IMap<PCSFileUploadViewModel, ProcessXMLFile>
+    public class ProcessXMLFileRequest : IMap<PCSFileUploadViewModel, ProcessXMLFile>
     {
         private readonly IFileConverterService fileConverter;
 
-        public ProcessXmlFileRequest(IFileConverterService fileConverter)
+        public ProcessXMLFileRequest(IFileConverterService fileConverter)
         {
             this.fileConverter = fileConverter;
         }
