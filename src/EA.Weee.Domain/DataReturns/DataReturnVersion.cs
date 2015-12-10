@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
     using System;
+    using System.Collections.Generic;
     using Prsd.Core;
     using Prsd.Core.Domain;
 
@@ -13,17 +14,28 @@
         public string SubmittingUserId { get; private set; }
 
         public virtual bool IsSubmitted { get; private set; }
+
+        public virtual ICollection<EeeOutputAmount> EeeOutputAmounts { get; private set; }
+
         public DataReturnVersion(DataReturn dataReturn)
         {
             Guard.ArgumentNotNull(() => dataReturn, dataReturn);
-            this.DataReturn = dataReturn;            
+            this.DataReturn = dataReturn;
+
+            EeeOutputAmounts = new List<EeeOutputAmount>();
         }
 
         protected DataReturnVersion()
         {
-            IsSubmitted = false;
-            SubmittedDate = null;
         }
+
+        public void AddEeeOutputAmount(EeeOutputAmount eeeOutputAmount)
+        {
+            Guard.ArgumentNotNull(() => eeeOutputAmount, eeeOutputAmount);
+
+            EeeOutputAmounts.Add(eeeOutputAmount);
+        }
+
         public void Submit(string userId)
         {
             if (IsSubmitted)
