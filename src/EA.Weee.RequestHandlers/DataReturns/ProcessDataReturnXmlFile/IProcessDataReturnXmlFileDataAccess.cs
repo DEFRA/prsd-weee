@@ -9,7 +9,7 @@
     {
         Task<Scheme> FetchSchemeByOrganisationIdAsync(Guid organisationId);
         Task<DataReturn> FetchDataReturnAsync(Guid schemeId, int complianceYear, int quarter);
-        Task SaveAsync(DataReturnUpload dataReturnUpload);
-        Task SaveAsync(DataReturn dataReturn);
+        Task SaveDataReturnsUploadAsync(DataReturnUpload dataReturnUpload);
+        Task SaveSuccessfulReturnsDataAsync(DataReturnUpload dataUpload, DataReturn dataReturn, DataReturnVersion version);
     }
 }
