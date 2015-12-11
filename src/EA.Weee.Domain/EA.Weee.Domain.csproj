@@ -51,10 +51,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataReturns\DataReturn.cs" />
-    <Compile Include="DataReturns\DataReturnVersion.cs" />
     <Compile Include="DataReturns\DataReturnUpload.cs" />
     <Compile Include="DataReturns\DataReturnUploadError.cs" />
     <Compile Include="DataReturns\DataReturnUploadRawData.cs" />
+    <Compile Include="DataReturns\DataReturnVersion.cs" />
+    <Compile Include="DataReturns\DeliveredToAe.cs" />
+    <Compile Include="DataReturns\DeliveredToAtf.cs" />
+    <Compile Include="DataReturns\Producer.cs" />
+    <Compile Include="DataReturns\Quarter.cs" />
+    <Compile Include="DataReturns\QuarterType.cs" />
+    <Compile Include="DataReturns\ReturnItem.cs" />
     <Compile Include="DataReturns\EeeOutputAmount.cs" />
     <Compile Include="Events\OrganisationUserRequestEvent.cs" />
     <Compile Include="Events\OrganisationUserRequestCompletedEvent.cs" />

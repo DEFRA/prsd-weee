@@ -9,17 +9,17 @@
     using Core.Scheme.MemberUploadTesting;
     using Core.Shared.Paging;
     using Infrastructure;
-    using ViewModels.GeneratePcsXml;
+    using ViewModels.CreatePcsMemberXmlFile;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme.MemberUploadTesting;
 
     [Authorize]
-    public class GeneratePcsXmlController : Controller
+    public class CreatePcsMemberXmlFileController : Controller
     {
         private const int pageSize = 10;
         private readonly Func<IWeeeClient> apiClient;
 
-        public GeneratePcsXmlController(Func<IWeeeClient> apiClient)
+        public CreatePcsMemberXmlFileController(Func<IWeeeClient> apiClient)
         {
             this.apiClient = apiClient;
         }

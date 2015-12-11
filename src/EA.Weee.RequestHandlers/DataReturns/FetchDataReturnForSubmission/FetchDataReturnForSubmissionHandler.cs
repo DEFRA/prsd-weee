@@ -9,6 +9,8 @@
     using Domain.DataReturns;
     using EA.Prsd.Core.Mediator;
     using Security;
+    using Quarter = EA.Weee.Core.DataReturns.Quarter;
+    using QuarterType = EA.Weee.Core.DataReturns.QuarterType;
     using Request = EA.Weee.Requests.DataReturns.FetchDataReturnForSubmission;
 
     public class FetchDataReturnForSubmissionHandler : IRequestHandler<Request, DataReturnForSubmission>

@@ -107,28 +107,42 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Upload(Guid pcsId, PCSFileUploadViewModel model)
         {
-            await SetBreadcrumb(pcsId);
             if (!ModelState.IsValid)
-            {                
-                return View(model);
+            {
+                if (Request.IsAjaxRequest())
+                {
+                    return new HttpStatusCodeResult(500);
+                }
+                else
+                {
+                    await SetBreadcrumb(pcsId);
+                    return View(model);
+                }
             }
 
             Guid dataReturnId;
             using (var client = apiClient())
             {
                 model.PcsId = pcsId;
-                var request = mapper.Map<PCSFileUploadViewModel, ProcessDataReturnXMLFile>(model);
+                var request = mapper.Map<PCSFileUploadViewModel, ProcessDataReturnXmlFile>(model);
                 dataReturnId = await client.SendAsync(User.GetAccessToken(), request);
             }
 
-            DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
-            if (dataReturn.Errors.Count == 0)
+            if (Request.IsAjaxRequest())
             {
-                return RedirectToAction("Submit", new { pcsId = pcsId, dataReturnId = dataReturnId });
+                return Json(dataReturnId);
             }
             else
             {
-                return RedirectToAction("Review", new { pcsId = pcsId, dataReturnId = dataReturnId });
+                DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+                if (dataReturn.Errors.Count == 0)
+                {
+                    return RedirectToAction("Submit", new { pcsId = pcsId, dataReturnId = dataReturnId });
+                }
+                else
+                {
+                    return RedirectToAction("Review", new { pcsId = pcsId, dataReturnId = dataReturnId });
+                }
             }
         }
 
@@ -159,13 +173,13 @@
 
             if (dataReturn.Errors.Count != 0)
             {
-                return RedirectToAction("Review", new { pcsId,  dataReturnId });
+                return RedirectToAction("Review", new { pcsId, dataReturnId });
             }
 
             SubmitViewModel viewModel = new SubmitViewModel()
             {
                 DataReturn = dataReturn
-            };          
+            };
 
             return View(viewModel);
         }

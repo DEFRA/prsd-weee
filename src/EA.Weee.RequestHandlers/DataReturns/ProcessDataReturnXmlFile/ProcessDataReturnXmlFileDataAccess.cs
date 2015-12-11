@@ -8,11 +8,11 @@
     using Domain.DataReturns;
     using Domain.Scheme;
 
-    public class ProcessDataReturnXMLFileDataAccess : IProcessDataReturnXMLFileDataAccess
+    public class ProcessDataReturnXmlFileDataAccess : IProcessDataReturnXmlFileDataAccess
     {
         private readonly WeeeContext context;
 
-        public ProcessDataReturnXMLFileDataAccess(WeeeContext context)
+        public ProcessDataReturnXmlFileDataAccess(WeeeContext context)
         {
             this.context = context;
         }
@@ -22,26 +22,18 @@
             return await context.Schemes.SingleAsync(c => c.OrganisationId == organisationId);
         }
 
-        public async Task<DataReturn> FetchDataReturnAsync(Guid schemeId, int complianceYear, int quarter)
+        public async Task<DataReturn> FetchDataReturnOrDefaultAsync(Scheme scheme, Quarter quarter)
         {
-            var result = await context
-                    .DataReturns
-                    .Where(dr => dr.Scheme.Id == schemeId && dr.ComplianceYear == complianceYear && dr.Quarter == quarter)
-                  .SingleOrDefaultAsync();
-            return result;
+            return await context.DataReturns
+                .Where(dr => dr.Scheme.Id == scheme.Id)
+                .Where(dr => dr.Quarter.Year == quarter.Year)
+                .Where(dr => dr.Quarter.Q == quarter.Q)
+                .SingleOrDefaultAsync();
         }
 
-        public async Task SaveDataReturnsUploadAsync(DataReturnUpload dataUpload)
+        public async Task AddAndSaveAsync(DataReturnUpload dataUpload)
         {
             context.DataReturnsUploads.Add(dataUpload);
-            await context.SaveChangesAsync();
-        }
-
-        public async Task SaveSuccessfulReturnsDataAsync(DataReturnUpload dataUpload, DataReturn dataReturn, DataReturnVersion version)
-        {
-            context.DataReturnsUploads.Add(dataUpload);
-            context.DataReturns.Add(dataReturn);
-            context.DataReturnVersions.Add(version);
             await context.SaveChangesAsync();
         }
     }
