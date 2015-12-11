@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="scripts\Update\Sprint19\20151211-1745-AddIsAlignedColumnToRegisteredProducer.sql" />
     <Content Include="scripts\Everytime\0007-InsertCategoryData.sql" />
     <Content Include="scripts\Everytime\0006-MigratedProducers.sql" />
     <Content Include="scripts\Update\Sprint18\20151207-1450-UpdataDataReturnTables.sql" />
