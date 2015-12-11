@@ -27,14 +27,14 @@
             this.dataAccess = dataAccess;
         }
 
-        public async Task<IEnumerable<ProducerSubmission>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
+        public async Task<IEnumerable<ProducerSubmission>> GenerateProducers(ProcessXmlFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges)
         {
             var deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(messageXmlFile.Data));
             var producers = await GenerateProducerData(deserializedXml, memberUpload, producerCharges);
             return producers;
         }
 
-        public MemberUpload GenerateMemberUpload(ProcessXMLFile messageXmlFile, List<MemberUploadError> errors, decimal totalCharges, Scheme scheme)
+        public MemberUpload GenerateMemberUpload(ProcessXmlFile messageXmlFile, List<MemberUploadError> errors, decimal totalCharges, Scheme scheme)
         {
             if (errors != null && errors.Any(e => e.ErrorType == UploadErrorType.Schema))
             {

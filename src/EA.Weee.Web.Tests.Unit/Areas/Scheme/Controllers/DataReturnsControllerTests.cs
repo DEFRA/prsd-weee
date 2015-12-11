@@ -219,7 +219,7 @@
         public async void PostUpload_WithDataReturnWithNoErrors_RedirectsToSubmit()
         {
             // Arrange   
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXMLFile>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXmlFile>._))
                 .Returns(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
 
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
@@ -257,7 +257,7 @@
         public async void PostUpload_WithDataReturnWithErrors_RedirectsToReview()
         {
             // Arrange   
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXMLFile>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXmlFile>._))
                 .Returns(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
 
             DataReturnError error = new DataReturnError("Test Error");

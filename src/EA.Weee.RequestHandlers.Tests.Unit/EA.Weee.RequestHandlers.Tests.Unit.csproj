@@ -101,9 +101,9 @@
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
     <Compile Include="Admin\UpdateUserHandlerTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandlerTests.cs" />
-    <Compile Include="DataReturns\GenerateDomainObjects\GenerateFromDataReturnXMLTests.cs" />
-    <Compile Include="DataReturns\ProcessDataReturnXMLFileHandlerTests.cs" />
-    <Compile Include="DataReturns\XmlValidation\DataReturnXMLValidatorTests.cs" />
+    <Compile Include="DataReturns\GenerateDomainObjects\GenerateFromDataReturnXmlTests.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFileHandlerTests.cs" />
+    <Compile Include="DataReturns\XmlValidation\DataReturnXmlValidatorTests.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandlerTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandlerTests.cs" />

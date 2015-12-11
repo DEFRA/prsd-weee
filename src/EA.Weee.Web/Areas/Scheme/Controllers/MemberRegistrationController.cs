@@ -117,7 +117,7 @@
             using (var client = apiClient())
             {
                 model.PcsId = pcsId;
-                var request = mapper.Map<PCSFileUploadViewModel, ProcessXMLFile>(model);
+                var request = mapper.Map<PCSFileUploadViewModel, ProcessXmlFile>(model);
                 validationId = await client.SendAsync(User.GetAccessToken(), request);
             }
 

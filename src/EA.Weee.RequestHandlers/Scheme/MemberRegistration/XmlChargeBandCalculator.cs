@@ -22,7 +22,7 @@
             ErrorsAndWarnings = new List<MemberUploadError>();
         }
 
-        public Dictionary<string, ProducerCharge> Calculate(ProcessXMLFile message)
+        public Dictionary<string, ProducerCharge> Calculate(ProcessXmlFile message)
         {
             var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
 

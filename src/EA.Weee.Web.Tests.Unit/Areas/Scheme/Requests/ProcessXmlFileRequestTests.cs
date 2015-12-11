@@ -27,9 +27,9 @@
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
-        private ProcessXMLFileRequest Request()
+        private ProcessXmlFileRequest Request()
         {
-            return new ProcessXMLFileRequest(fileConverter);
+            return new ProcessXmlFileRequest(fileConverter);
         }
     }
 }
