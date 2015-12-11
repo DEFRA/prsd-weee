@@ -9,6 +9,6 @@
     {
         List<MemberUploadError> ErrorsAndWarnings { get; set; }
 
-        Dictionary<string, ProducerCharge> Calculate(ProcessXMLFile message);
+        Dictionary<string, ProducerCharge> Calculate(ProcessXmlFile message);
     }
 }

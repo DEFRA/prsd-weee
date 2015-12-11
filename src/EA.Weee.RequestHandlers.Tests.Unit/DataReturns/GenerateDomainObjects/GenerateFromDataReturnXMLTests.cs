@@ -19,7 +19,7 @@
         [Fact]
         public void GenerateDataReturnsUpload_SchemaErrors_NullComplianceYear()
         {
-            var message = new ProcessDataReturnXMLFile(Guid.NewGuid(), new byte[1], "File name");
+            var message = new ProcessDataReturnXmlFile(Guid.NewGuid(), new byte[1], "File name");
 
             var generateFromXml = new GenerateFromXmlBuilder().Build();
 
@@ -39,7 +39,7 @@
             A.CallTo(() => builder.XmlDeserializer.Deserialize<SchemeReturn>(A<XDocument>._))
                 .Returns(new SchemeReturn { ComplianceYear = "2015" });
 
-            var message = new ProcessDataReturnXMLFile(Guid.NewGuid(), new byte[1], "File name");
+            var message = new ProcessDataReturnXmlFile(Guid.NewGuid(), new byte[1], "File name");
             var generateFromXml = builder.Build();
 
             var result = generateFromXml.GenerateDataReturnsUpload(message, new List<DataReturnUploadError>(), A.Dummy<Scheme>());
@@ -59,9 +59,9 @@
                 XmlDeserializer = A.Fake<IDeserializer>();
             }
 
-            public GenerateFromDataReturnXML Build()
+            public GenerateFromDataReturnXml Build()
             {
-                return new GenerateFromDataReturnXML(XmlConverter, XmlDeserializer);
+                return new GenerateFromDataReturnXml(XmlConverter, XmlDeserializer);
             }
         }
     }
