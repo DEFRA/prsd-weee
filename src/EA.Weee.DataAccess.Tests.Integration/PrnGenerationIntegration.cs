@@ -52,7 +52,7 @@
             var org = orgAndMemberUpload.Item1;
             var memberUpload = orgAndMemberUpload.Item2;
 
-            ProcessXMLFile message = new ProcessXMLFile(org.Id, validXmlBytes, "File name");
+            ProcessXmlFile message = new ProcessXmlFile(org.Id, validXmlBytes, "File name");
 
             long initialSeed = GetCurrentSeed();
             long expectedSeed = ExpectedSeedAfterThisXml(validXmlString, initialSeed);

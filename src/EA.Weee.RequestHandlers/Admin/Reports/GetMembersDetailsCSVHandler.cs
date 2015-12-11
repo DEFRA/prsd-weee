@@ -62,9 +62,9 @@
             csvWriter.DefineColumn(@"Correspondent for notices forename", i => i.CNForename);
             csvWriter.DefineColumn(@"Correspondent for notices surname", i => i.CNSurname);
             
-            csvWriter.DefineColumn(@"Correspondent for notices telephone", i => i.CNTelephone);
-            csvWriter.DefineColumn(@"Correspondent for notices mobile", i => i.CNMobile);
-            csvWriter.DefineColumn(@"Correspondent for notices fax", i => i.CNFax);
+            csvWriter.DefineColumn(@"Correspondent for notices telephone", i => i.CNTelephone, true);
+            csvWriter.DefineColumn(@"Correspondent for notices mobile", i => i.CNMobile, true);
+            csvWriter.DefineColumn(@"Correspondent for notices fax", i => i.CNFax, true);
             csvWriter.DefineColumn(@"Correspondent for notices email", i => i.CNEmail);
 
             //address
@@ -82,9 +82,9 @@
             csvWriter.DefineColumn(@"Reg. Off. OR PPoB forename", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactForename : i.PPOBContactForename);
             csvWriter.DefineColumn(@"Reg. Off. OR PPoB surname", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactSurname : i.PPOBContactSurname);
 
-            csvWriter.DefineColumn(@"Reg. Off. OR PPoB telephone", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactTelephone : i.PPOBContactTelephone);
-            csvWriter.DefineColumn(@"Reg. Off. OR PPoB mobile", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactMobile : i.PPOBContactMobile);
-            csvWriter.DefineColumn(@"Reg. Off. OR PPoB fax", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactFax : i.PPOBContactFax);
+            csvWriter.DefineColumn(@"Reg. Off. OR PPoB telephone", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactTelephone : i.PPOBContactTelephone, true);
+            csvWriter.DefineColumn(@"Reg. Off. OR PPoB mobile", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactMobile : i.PPOBContactMobile, true);
+            csvWriter.DefineColumn(@"Reg. Off. OR PPoB fax", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactFax : i.PPOBContactFax, true);
             csvWriter.DefineColumn(@"Reg. Off. OR PPoB email", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactEmail : i.PPOBContactEmail);
 
             //address
@@ -104,9 +104,9 @@
             csvWriter.DefineColumn(@"Overseas producer forename", i => i.OverseasContactForename);
             csvWriter.DefineColumn(@"Overseas producer surname", i => i.OverseasContactSurname);
 
-            csvWriter.DefineColumn(@"Overseas producer telephone", i => i.OverseasContactTelephone);
-            csvWriter.DefineColumn(@"Overseas producer mobile", i => i.OverseasContactMobile);
-            csvWriter.DefineColumn(@"Overseas producer fax", i => i.OverseasContactFax);
+            csvWriter.DefineColumn(@"Overseas producer telephone", i => i.OverseasContactTelephone, true);
+            csvWriter.DefineColumn(@"Overseas producer mobile", i => i.OverseasContactMobile, true);
+            csvWriter.DefineColumn(@"Overseas producer fax", i => i.OverseasContactFax, true);
             csvWriter.DefineColumn(@"Overseas producer email", i => i.OverseasContactEmail);
 
             //address

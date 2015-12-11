@@ -124,7 +124,7 @@
             using (var client = apiClient())
             {
                 model.PcsId = pcsId;
-                var request = mapper.Map<PCSFileUploadViewModel, ProcessDataReturnsXMLFile>(model);
+                var request = mapper.Map<PCSFileUploadViewModel, ProcessDataReturnXmlFile>(model);
                 dataReturnId = await client.SendAsync(User.GetAccessToken(), request);
             }
 
