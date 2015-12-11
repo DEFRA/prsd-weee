@@ -11,7 +11,7 @@
     using Xml.Converter;
     using Xunit;
 
-    public class ProcessDataReturnXMLFileHandlerTests
+    public class ProcessDataReturnXmlFileHandlerTests
     {
         /// <summary>
         /// This test ensures that a user with no access to a scheme cannot create
@@ -25,14 +25,14 @@
                 .DenySchemeAccess()
                 .Build();
 
-            ProcessDataReturnXMLFileHandler handler = new ProcessDataReturnXMLFileHandler(
-                                             A.Dummy<IProcessDataReturnXMLFileDataAccess>(),
+            ProcessDataReturnXmlFileHandler handler = new ProcessDataReturnXmlFileHandler(
+                                             A.Dummy<IProcessDataReturnXmlFileDataAccess>(),
                                              authorization,
-                                             A.Dummy<IDataReturnXMLValidator>(),
+                                             A.Dummy<IDataReturnXmlValidator>(),
                                              A.Dummy<IXmlConverter>(),
-                                             A.Dummy<IGenerateFromDataReturnXML>());
+                                             A.Dummy<IGenerateFromDataReturnXml>());
 
-            ProcessDataReturnXMLFile message = A.Dummy<ProcessDataReturnXMLFile>();
+            ProcessDataReturnXmlFile message = A.Dummy<ProcessDataReturnXmlFile>();
             // Act
             Func<Task<Guid>> testCode = async () => await handler.HandleAsync(message);
 

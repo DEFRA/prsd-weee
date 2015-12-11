@@ -1,0 +1,96 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.DataReturns
+@model EA.Weee.Web.Areas.Test.ViewModels.CreatePcsDataReturnXmlFile.SpecifyOptionsViewModel
+
+@{
+    ViewBag.Title = "Specify Options";
+
+    IEnumerable<SelectListItem> quarterSelectListItems = Enum.GetValues(typeof(QuarterType))
+        .OfType<QuarterType>()
+        .Select(q => new SelectListItem()
+        {
+            Text = q.ToString(),
+            Value = q.ToString()
+        });
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Specify options for the XML file
+        </h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        @Html.HiddenFor(model => model.OrganisationID);
+
+        <div class="form-group" @Html.Gds().FormGroupClass(m => m.ComplianceYear)>
+            @Html.Gds().LabelFor(model => model.ComplianceYear)
+            @Html.Gds().ValidationMessageFor(mode => Model.ComplianceYear)
+            @Html.Gds().TextBoxFor(model => model.ComplianceYear)
+        </div>
+
+        <div class="form-group" @Html.Gds().FormGroupClass(m => m.Quarter)>
+            @Html.Gds().LabelFor(model => model.Quarter)
+            @Html.Gds().ValidationMessageFor(mode => Model.Quarter)
+            @Html.Gds().DropDownListFor(model => model.Quarter, quarterSelectListItems)
+        </div>
+
+        <div class="form-group" @Html.Gds().FormGroupClass(m => m.NumberOfAatfs)>
+            @Html.Gds().LabelFor(model => model.NumberOfAatfs)
+            @Html.Gds().ValidationMessageFor(mode => Model.NumberOfAatfs)
+            @Html.Gds().TextBoxFor(model => model.NumberOfAatfs)
+        </div>
+
+        <div class="form-group" @Html.Gds().FormGroupClass(m => m.NumberOfAes)>
+            @Html.Gds().LabelFor(model => model.NumberOfAes)
+            @Html.Gds().ValidationMessageFor(mode => Model.NumberOfAes)
+            @Html.Gds().TextBoxFor(model => model.NumberOfAes)
+        </div>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.AllProducers)">
+            @Html.Gds().ValidationMessageFor(m => m.AllProducers)
+            @Html.Gds().LabelFor(model => model.AllProducers)
+            <label class="block-label" for="PrivacyPolicy">
+                @Html.CheckBoxFor(m => m.AllProducers, new { @id = "allProducersCheckbox" })
+                Include all registered producers
+            </label>
+        </div>
+
+        <div id="numberOfProducersDiv" class="form-group" @Html.Gds().FormGroupClass(m => m.NumberOfProducers)>
+            @Html.Gds().LabelFor(model => model.NumberOfProducers)
+            @Html.Gds().ValidationMessageFor(mode => Model.NumberOfProducers)
+            @Html.Gds().TextBoxFor(model => model.NumberOfProducers)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+
+        @Html.ActionLink("Select a different PCS", "SelectOrganisation", "CreatePcsDataReturnXmlFile", null, null)
+    }
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        function showHideNumberOfProducersDiv() {
+            if ($("#allProducersCheckbox").is(":checked")) {
+                $("#numberOfProducersDiv").hide();
+                $("#numberOfProducersDiv input").val(0);
+            } else {
+                $("#numberOfProducersDiv").show();
+            }
+        }
+
+        $(function () {
+            showHideNumberOfProducersDiv();
+            $("#allProducersCheckbox").on("click", showHideNumberOfProducersDiv);
+        });
+    </script>
+}

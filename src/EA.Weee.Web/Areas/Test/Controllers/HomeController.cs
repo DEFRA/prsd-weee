@@ -21,8 +21,11 @@
             {
                 switch (viewModel.SelectedValue)
                 {
-                    case HomeViewModel.OptionGeneratePcsXmlFile:
-                        return RedirectToAction("SelectOrganisation", "GeneratePcsXml");
+                    case HomeViewModel.CreatePcsMemberXmlFile:
+                        return RedirectToAction("SelectOrganisation", "CreatePcsMemberXmlFile");
+
+                    case HomeViewModel.CreatePcsDataReturnXmlFile:
+                        return RedirectToAction("SelectOrganisation", "CreatePcsDataReturnXmlFile");
 
                     case HomeViewModel.ManageCache:
                         return RedirectToAction("Index", "ManageCache");

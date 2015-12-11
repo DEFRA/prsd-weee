@@ -9,12 +9,6 @@
         {
             ToTable("DataReturnVersion", "PCS");
 
-            HasRequired(drv => drv.DataReturn)
-                .WithOptional(drv => drv.CurrentDataReturnVersion)
-                .Map(mc =>
-                {
-                    mc.MapKey("DataReturnId");
-                });
             Ignore(dr => dr.IsSubmitted);
         }
     }

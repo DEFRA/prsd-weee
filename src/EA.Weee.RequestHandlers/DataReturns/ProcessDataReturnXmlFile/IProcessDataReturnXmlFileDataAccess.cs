@@ -5,11 +5,12 @@
     using Domain.DataReturns;
     using EA.Weee.Domain.Scheme;
 
-    public interface IProcessDataReturnXMLFileDataAccess
+    public interface IProcessDataReturnXmlFileDataAccess
     {
         Task<Scheme> FetchSchemeByOrganisationIdAsync(Guid organisationId);
-        Task<DataReturn> FetchDataReturnAsync(Guid schemeId, int complianceYear, int quarter);
-        Task SaveDataReturnsUploadAsync(DataReturnUpload dataReturnUpload);
-        Task SaveSuccessfulReturnsDataAsync(DataReturnUpload dataUpload, DataReturn dataReturn, DataReturnVersion version);
+
+        Task<DataReturn> FetchDataReturnOrDefaultAsync(Scheme scheme, Quarter quarter);
+
+        Task AddAndSaveAsync(DataReturnUpload dataReturnUpload);
     }
 }

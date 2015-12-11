@@ -12,20 +12,20 @@
     using Security;
     using Xml.Converter;
 
-    internal class ProcessDataReturnXMLFileHandler : IRequestHandler<ProcessDataReturnXMLFile, Guid>
+    internal class ProcessDataReturnXmlFileHandler : IRequestHandler<ProcessDataReturnXmlFile, Guid>
     {
-        private readonly IProcessDataReturnXMLFileDataAccess dataAccess;
+        private readonly IProcessDataReturnXmlFileDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
-        private readonly IDataReturnXMLValidator xmlValidator;
+        private readonly IDataReturnXmlValidator xmlValidator;
         private readonly IXmlConverter xmlConverter;
-        private readonly IGenerateFromDataReturnXML xmlGenerator;
+        private readonly IGenerateFromDataReturnXml xmlGenerator;
      
-        public ProcessDataReturnXMLFileHandler(
-            IProcessDataReturnXMLFileDataAccess xmlfileDataAccess,
+        public ProcessDataReturnXmlFileHandler(
+            IProcessDataReturnXmlFileDataAccess xmlfileDataAccess,
             IWeeeAuthorization authorization,
-            IDataReturnXMLValidator xmlValidator, 
+            IDataReturnXmlValidator xmlValidator, 
             IXmlConverter xmlConverter,
-            IGenerateFromDataReturnXML xmlGenerator)
+            IGenerateFromDataReturnXml xmlGenerator)
         {
             this.dataAccess = xmlfileDataAccess;
             this.authorization = authorization;
@@ -34,7 +34,7 @@
             this.xmlGenerator = xmlGenerator;
         }
 
-        public async Task<Guid> HandleAsync(ProcessDataReturnXMLFile message)
+        public async Task<Guid> HandleAsync(ProcessDataReturnXmlFile message)
         {
             Scheme scheme = await dataAccess.FetchSchemeByOrganisationIdAsync(message.OrganisationId);
             authorization.EnsureSchemeAccess(scheme.Id);
@@ -53,25 +53,25 @@
            
             if (!errors.Any())
             {
-                DataReturn dataReturn = null;
-                //check if data return exists for scheme, compliance year and quarter
-                //get that return 
-                //otherwise create a new return
-                dataReturn = await dataAccess.FetchDataReturnAsync(scheme.Id, dataReturnUpload.ComplianceYear.Value, dataReturnUpload.Quarter.Value);
+                Quarter quarter = new Quarter(
+                    dataReturnUpload.ComplianceYear.Value,
+                    (QuarterType)dataReturnUpload.Quarter.Value);
+
+                // Try to fetch the existing data return for the scheme and quarter, otherwise create a new data return.
+                DataReturn dataReturn = await dataAccess.FetchDataReturnOrDefaultAsync(scheme, quarter);
+
                 if (dataReturn == null)
                 {
-                    dataReturn = new DataReturn(scheme, dataReturnUpload.ComplianceYear.Value, dataReturnUpload.Quarter.Value);
+                    dataReturn = new DataReturn(scheme, quarter);
                 }
+
                 DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
+
                 dataReturnUpload.SetDataReturnsVersion(dataReturnVersion);
-                await dataAccess.SaveSuccessfulReturnsDataAsync(dataReturnUpload, dataReturn, dataReturnVersion);
             }
-            else 
-            {
-                // errors
-                await dataAccess.SaveDataReturnsUploadAsync(dataReturnUpload);
-            }
-           
+
+            await dataAccess.AddAndSaveAsync(dataReturnUpload);
+
             return dataReturnUpload.Id;
         }
     }

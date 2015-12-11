@@ -2,7 +2,7 @@
 @using EA.Weee.Core.Organisations
 @using EA.Weee.Web.Infrastructure.Paging
 @using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml.SelectOrganisationViewModel
+@model EA.Weee.Web.Areas.Test.ViewModels.CreatePcsMemberXmlFile.SelectOrganisationViewModel
 
 @{
     ViewBag.Title = "Select Organisation";
@@ -16,7 +16,7 @@
         </h1>
     </header>
 
-    @using (Html.BeginForm("SelectOrganisation", "GeneratePcsXml", FormMethod.Get))
+    @using (Html.BeginForm("SelectOrganisation", "CreatePcsMemberXmlFile", FormMethod.Get))
     {
         <p>Search for and select the PCS that will be used for the test file.</p>
 
