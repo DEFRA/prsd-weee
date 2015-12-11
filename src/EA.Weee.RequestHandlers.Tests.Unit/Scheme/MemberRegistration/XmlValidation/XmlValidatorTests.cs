@@ -17,14 +17,14 @@
     using Xml.MemberRegistration;
     using Xunit;
 
-    public class XmlValidatorTests
+    public class XMLValidatorTests
     {
         private readonly ISchemaValidator schemaValidator;
         private readonly IMemberRegistrationBusinessValidator businessValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
 
-        public XmlValidatorTests()
+        public XMLValidatorTests()
         {
             schemaValidator = A.Fake<ISchemaValidator>();
             businessValidator = A.Fake<IMemberRegistrationBusinessValidator>();
@@ -41,7 +41,7 @@
                     new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "An error occurred")
                 });
 
-            XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            XmlValidator().Validate(new ProcessXmlFile(A<Guid>._, A<byte[]>._, A<string>._));
 
             A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._))
                 .MustNotHaveHappened();
@@ -59,7 +59,7 @@
                                 RuleResult.Fail("An error occurred")
                             });
 
-            var result = XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var result = XmlValidator().Validate(new ProcessXmlFile(A<Guid>._, A<byte[]>._, A<string>._));
 
             Assert.NotEmpty(result);
         }
@@ -73,7 +73,7 @@
             A.CallTo(() => xmlConverter.Deserialize(A<XDocument>._))
                 .Throws(new XmlDeserializationFailureException(new Exception("Test exception")));
 
-            var result = XmlValidator().Validate(new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._));
+            var result = XmlValidator().Validate(new ProcessXmlFile(A<Guid>._, A<byte[]>._, A<string>._));
 
             Assert.NotEmpty(result);
             Assert.Equal(1, result.Count());
@@ -81,9 +81,9 @@
             A.CallTo(() => businessValidator.Validate(A<schemeType>._, A<Guid>._)).MustNotHaveHappened();
         }
 
-        private XmlValidator XmlValidator()
+        private XMLValidator XmlValidator()
         {
-            return new XmlValidator(schemaValidator, xmlConverter, businessValidator, errorTranslator);
+            return new XMLValidator(schemaValidator, xmlConverter, businessValidator, errorTranslator);
         }
     }
 }

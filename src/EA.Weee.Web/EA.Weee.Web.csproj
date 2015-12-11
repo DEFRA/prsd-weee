@@ -231,7 +231,7 @@
     <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
     <Compile Include="Areas\Scheme\Controllers\DataReturnsController.cs" />
-    <Compile Include="Areas\Scheme\Requests\ProcessDataReturnsXmlFileRequest.cs" />
+    <Compile Include="Areas\Scheme\Requests\ProcessDataReturnXmlFileRequest.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessXmlFileRequest.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
@@ -455,9 +455,9 @@
     <Content Include="Areas\Test\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Test\Views\Home\Index.cshtml" />
     <Content Include="Areas\Test\Views\web.config" />
-    <Content Include="Areas\Test\Views\GeneratePcsXml\SelectOrganisation.cshtml" />
-    <Content Include="Areas\Test\Views\GeneratePcsXml\SpecifyOptions.cshtml" />
-    <Content Include="Areas\Test\Views\GeneratePcsXml\DownloadFile.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsMemberXmlFile\SelectOrganisation.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsMemberXmlFile\SpecifyOptions.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsMemberXmlFile\DownloadFile.cshtml" />
     <Content Include="Areas\Admin\Views\Account\AccountActivationRequired.cshtml" />
     <Content Include="Areas\Admin\Views\Account\AccountActivated.cshtml" />
     <Content Include="Areas\Admin\Views\Account\SignIn.cshtml" />
@@ -497,6 +497,9 @@
     <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SubmitViewModel.cs" />
+    <Compile Include="Areas\Test\Controllers\CreatePcsDataReturnXmlFileController.cs" />
+    <Compile Include="Areas\Test\ViewModels\CreatePcsDataReturnXmlFile\SelectOrganisationViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\CreatePcsDataReturnXmlFile\SpecifyOptionsViewModel.cs" />
     <Compile Include="Infrastructure\CsvFilenameFormat.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\govuk_elements\_tables.scss" />
@@ -540,6 +543,9 @@
     <Content Include="Areas\Scheme\Views\DataReturns\Submit.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\SuccessfulSubmission.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\AuthorisationRequired.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\DownloadFile.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\SelectOrganisation.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\SpecifyOptions.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
@@ -677,12 +683,12 @@
     <Compile Include="Areas\Admin\ViewModels\Scheme\SchemeViewModel.cs" />
     <Compile Include="ViewModels\Shared\Scheme\ViewOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\ManageCacheController.cs" />
-    <Compile Include="Areas\Test\Controllers\GeneratePcsXmlController.cs" />
+    <Compile Include="Areas\Test\Controllers\CreatePcsMemberXmlFileController.cs" />
     <Compile Include="Areas\Test\Controllers\HomeController.cs" />
     <Compile Include="Areas\Test\TestAreaRegistration.cs" />
-    <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SpecifyOptionsViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\CreatePcsMemberXmlFile\SpecifyOptionsViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\HomeViewModel.cs" />
-    <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SelectOrganisationViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\CreatePcsMemberXmlFile\SelectOrganisationViewModel.cs" />
     <Compile Include="Authorization\LoginResult.cs" />
     <Compile Include="Authorization\AuthorizationState.cs" />
     <Compile Include="Controllers\Base\ExternalSiteController.cs" />
