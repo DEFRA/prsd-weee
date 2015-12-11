@@ -1,5 +1,5 @@
 ﻿GO
-PRINT N'Altering [Lookup].[Category]...';
+PRINT N'Altering [Lookup].[WeeeCategory]...';
 
 DECLARE @tblTempCategoryTable TABLE (
 [Id]            UNIQUEIDENTIFIER NOT NULL,
@@ -24,10 +24,10 @@ VALUES
 ('1552F07A-2F0A-4276-9D49-C42A24FAA2BF', 13, 'Gas Discharge Lamps and LED light sources'),
 ('0F0A5653-24A7-4DE0-BE0A-5EF0FC81D11E', 14, 'Photovoltaic Panels');
 
-INSERT INTO [Lookup].[Category]([Id], [Number], [Name])
+INSERT INTO [Lookup].[WeeeCategory]([Id], [Number], [Name])
 SELECT tmp.[Id], tmp.[Number], tmp.[Name]
 FROM @tblTempCategoryTable tmp
-LEFT JOIN [Lookup].[Category] tbl ON tbl.[Id] = tmp.[Id]
+LEFT JOIN [Lookup].[WeeeCategory] tbl ON tbl.[Id] = tmp.[Id]
 WHERE tbl.[Id] IS NULL
 
 GO
