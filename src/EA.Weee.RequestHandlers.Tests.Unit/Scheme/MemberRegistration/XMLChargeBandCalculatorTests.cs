@@ -31,7 +31,7 @@
                 @"ExampleXML\v3-valid.xml");
 
             byte[] xml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(absoluteFilePath).LocalPath));
-            ProcessXMLFile request = new ProcessXMLFile(A<Guid>._, xml, "File name");
+            ProcessXmlFile request = new ProcessXmlFile(A<Guid>._, xml, "File name");
 
             var xmlChargeBandCalculator = XmlChargeBandCalculator();
 
@@ -53,7 +53,7 @@
                 @"ExampleXML\v3-same-producer-name.xml");
 
             byte[] xml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(absoluteFilePath).LocalPath));
-            ProcessXMLFile request = new ProcessXMLFile(A<Guid>._, xml, "File name");
+            ProcessXmlFile request = new ProcessXmlFile(A<Guid>._, xml, "File name");
 
             var xmlChargeBandCalculator = XmlChargeBandCalculator();
 
@@ -75,7 +75,7 @@
                 @"ExampleXML\v3-valid-ChargeBand.xml");
 
             byte[] xml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(absoluteFilePath).LocalPath));
-            ProcessXMLFile request = new ProcessXMLFile(A<Guid>._, xml, "File name");
+            ProcessXmlFile request = new ProcessXmlFile(A<Guid>._, xml, "File name");
 
             ProducerCharge producerCharge1 = A.Dummy<ProducerCharge>();
             ProducerCharge producerCharge2 = A.Dummy<ProducerCharge>();

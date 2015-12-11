@@ -33,7 +33,7 @@
             this.xmlConverter = xmlConverter;
         }
 
-        public IEnumerable<MemberUploadError> Validate(ProcessXMLFile message)
+        public IEnumerable<MemberUploadError> Validate(ProcessXmlFile message)
         {
             string schemaVersion = MemberRegistrationSchemaVersion.Version_3_07.GetAttribute<DisplayAttribute>().Name;
             // Validate against the schema

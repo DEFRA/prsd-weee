@@ -12,18 +12,21 @@
     using Xml.DataReturns;
     using Xml.Deserialization;
 
-    public class GenerateFromDataReturnXML : IGenerateFromDataReturnXML
+    public class GenerateFromDataReturnXml : IGenerateFromDataReturnXml
     {
         private readonly IXmlConverter xmlConverter;
         private readonly IDeserializer deserializer;       
 
-        public GenerateFromDataReturnXML(IXmlConverter xmlConverter, IDeserializer deserializer)
+        public GenerateFromDataReturnXml(IXmlConverter xmlConverter, IDeserializer deserializer)
         {
             this.xmlConverter = xmlConverter;
             this.deserializer = deserializer;
         }
 
-        public DataReturnUpload GenerateDataReturnsUpload(ProcessDataReturnXMLFile messageXmlFile, List<DataReturnUploadError> errors, Scheme scheme)
+        public DataReturnUpload GenerateDataReturnsUpload(
+            ProcessDataReturnXmlFile messageXmlFile,
+            List<DataReturnUploadError> errors,
+            Scheme scheme)
         {
             Guard.ArgumentNotNull(() => messageXmlFile, messageXmlFile);
             Guard.ArgumentNotNull(() => errors, errors);
@@ -31,8 +34,6 @@
 
             var xml = xmlConverter.XmlToUtf8String(messageXmlFile.Data);
            
-            DataReturn returns = null;
-
             if (errors != null && errors.Any(e => e.ErrorType == UploadErrorType.Schema))
             {                
                 return new DataReturnUpload(scheme, xml, errors, messageXmlFile.FileName, null, null, null); 

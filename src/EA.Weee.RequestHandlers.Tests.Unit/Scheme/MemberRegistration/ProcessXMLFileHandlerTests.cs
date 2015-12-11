@@ -35,7 +35,7 @@
         private readonly IXmlConverter xmlConverter;
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
         private static readonly Guid organisationId = Guid.NewGuid();
-        private static readonly ProcessXMLFile Message = new ProcessXMLFile(organisationId, new byte[1], "File name");
+        private static readonly ProcessXmlFile Message = new ProcessXmlFile(organisationId, new byte[1], "File name");
 
         public ProcessXMLFileHandlerTests()
         {

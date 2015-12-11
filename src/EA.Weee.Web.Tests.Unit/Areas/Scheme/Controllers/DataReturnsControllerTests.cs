@@ -219,7 +219,7 @@
         public async void PostUpload_WithDataReturnWithNoErrors_RedirectsToSubmit()
         {
             // Arrange   
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXMLFile>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXmlFile>._))
                 .Returns(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
 
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
@@ -237,6 +237,11 @@
 
             PCSFileUploadViewModel viewModel = new PCSFileUploadViewModel();
 
+            var controllerContext = A.Fake<HttpContextBase>();
+            controller.ControllerContext = new ControllerContext(controllerContext, new RouteData(), controller);
+            var request = A.Fake<HttpRequestBase>();
+            A.CallTo(() => controllerContext.Request).Returns(request);
+
             // Act
             ActionResult result = await controller.Upload(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), viewModel);
 
@@ -249,6 +254,18 @@
             Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnId"]);
         }
 
+        [Fact]
+        public async void PostUpload_AjaxRequest_ModelIsInvalid_ReturnsError()
+        {
+            var controller = GetRealDataReturnsControllerWithAjaxRequest();
+
+            controller.ModelState.AddModelError("ErrorKey", "Some kind of error goes here");
+
+            var result = await controller.Upload(A<Guid>._, new PCSFileUploadViewModel());
+
+            Assert.IsType<HttpStatusCodeResult>(result);
+        }
+
         /// <summary>
         /// This test ensures that the user is redireted to the GET Review action
         /// following the upload of a data return that generates errors during processing.
@@ -257,7 +274,7 @@
         public async void PostUpload_WithDataReturnWithErrors_RedirectsToReview()
         {
             // Arrange   
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXMLFile>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXmlFile>._))
                 .Returns(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"));
 
             DataReturnError error = new DataReturnError("Test Error");
@@ -277,6 +294,11 @@
 
             PCSFileUploadViewModel viewModel = new PCSFileUploadViewModel();
 
+            var controllerContext = A.Fake<HttpContextBase>();
+            controller.ControllerContext = new ControllerContext(controllerContext, new RouteData(), controller);
+            var request = A.Fake<HttpRequestBase>();
+            A.CallTo(() => controllerContext.Request).Returns(request);
+
             // Act
             ActionResult result = await controller.Upload(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), viewModel);
 
@@ -287,6 +309,20 @@
             Assert.Equal("Review", redirectToRouteResult.RouteValues["action"]);
             Assert.Equal(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), redirectToRouteResult.RouteValues["pcsId"]);
             Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnId"]);
+        }
+
+        [Fact]
+        public async void PostUpload_AjaxRequest_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
+        {
+            var dataReturnId = Guid.NewGuid();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXmlFile>._))
+                .Returns(dataReturnId);
+
+            var controller = GetRealDataReturnsControllerWithAjaxRequest();
+
+            var result = await controller.Upload(A<Guid>._, new PCSFileUploadViewModel());
+
+            Assert.IsType<JsonResult>(result);
         }
 
         /// <summary>
