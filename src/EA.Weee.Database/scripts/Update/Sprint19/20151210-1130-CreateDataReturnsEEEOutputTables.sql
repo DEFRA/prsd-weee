@@ -15,7 +15,7 @@ GO
 
 -- This check constraint ensures that the obligation type can only have values of 'B2B' or 'B2C'.
 ALTER TABLE [PCS].[EeeOutputAmount]  WITH CHECK ADD
-	CONSTRAINT [CK_EeeOutputAmount_ObligationType] CHECK ([ObligationType] IN ('B2B', 'B2C'))
+	CONSTRAINT [CK_EeeOutputAmount_ObligationType] CHECK (([ObligationType]='B2B' OR [ObligationType]='B2C'))
 GO
 
 ALTER TABLE [PCS].[EeeOutputAmount]
