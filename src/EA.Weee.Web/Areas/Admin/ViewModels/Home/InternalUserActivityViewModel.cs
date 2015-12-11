@@ -9,7 +9,7 @@
         {
             InternalUserActivity.ManageScheme,
             InternalUserActivity.SubmissionsHistory,
-            InternalUserActivity.ViewProducerInformation,
+            InternalUserActivity.ProducerDetails,
             InternalUserActivity.ManageUsers,
             InternalUserActivity.ViewReports
         })

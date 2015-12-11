@@ -315,7 +315,7 @@
         public async void PostUpload_AjaxRequest_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
         {
             var dataReturnId = Guid.NewGuid();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnsXMLFile>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXmlFile>._))
                 .Returns(dataReturnId);
 
             var controller = GetRealDataReturnsControllerWithAjaxRequest();

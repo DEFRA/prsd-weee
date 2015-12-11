@@ -168,9 +168,56 @@
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> ConfirmRemoveProducer(string registrationNumber)
+        {
+            await SetBreadcrumb();
+
+            return View(new ConfirmRemoveProducerViewModel
+            {
+                RegistrationNumber = registrationNumber
+            });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ConfirmRemoveProducer(ConfirmRemoveProducerViewModel model)
+        {
+            await SetBreadcrumb();
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.SelectedValue == "No")
+            {
+                return RedirectToAction("Details", new { model.RegistrationNumber });
+            }
+            if (model.SelectedValue == "Yes")
+            {
+                //using (var client = apiClient())
+                //{
+                //    await
+                //        client.SendAsync(User.GetAccessToken(),
+                //            new CopyOrganisationAddressIntoRegisteredOffice(viewModel.OrganisationId));
+                //}
+
+                return RedirectToAction("RemovedProducer");
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RemovedProducer()
+        {
+            await SetBreadcrumb();
+
+            return View();
+        }
+
         private async Task SetBreadcrumb()
         {
-            breadcrumb.InternalActivity = "View producer information";
+            breadcrumb.InternalActivity = "Producer details";
 
             await Task.Yield();
         }
