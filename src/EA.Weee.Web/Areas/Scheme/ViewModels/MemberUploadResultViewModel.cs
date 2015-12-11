@@ -9,8 +9,6 @@
     {
         public List<UploadErrorData> ErrorData { get; set; }
 
-        public Guid MemberUploadId { get; set; }
-
         public decimal TotalCharges { get; set; }
 
         [MustBeTrue(ErrorMessage = "Please confirm that you have read the privacy policy")]

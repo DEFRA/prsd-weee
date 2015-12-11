@@ -11,16 +11,12 @@
     </header>
 
     <p>
-        @Model.Details.RegistrationNumber is registered with the
-        following @schemePlural in @Model.Details.ComplianceYear:
+        <span class="font-bold">Compliance year:</span><span class="text-margin">@Model.Details.ComplianceYear</span><br>
+        <span class="font-bold">Producer registration number (PRN):</span><span class="text-margin">@Model.Details.RegistrationNumber</span>
     </p>
 
     @foreach (var scheme in Model.Details.Schemes)
     {
-        <h2 class="heading-small">
-            @scheme.SchemeName
-        </h2>
-
         <table>
             <thead>
                 <tr class="visuallyhidden">
@@ -29,47 +25,51 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Producer name</td>
+                    <th>Registered PCS</th>
+                    <td>@scheme.SchemeName</td>
+                </tr>
+                <tr>
+                    <th>Producer name</th>
                     <td>@scheme.ProducerName</td>
                 </tr>
                 <tr>
-                    <td>Trading name</td>
+                    <th>Trading name</th>
                     <td>@scheme.TradingName</td>
                 </tr>
                 <tr>
-                    <td>Registration date</td>
+                    <th>Registration date</th>
                     <td>@scheme.RegistrationDate.ToString("dd MMMM yyyy")</td>
                 </tr>
                 @if (@scheme.CompanyNumber != null)
                 {
                     <tr>
-                        <td>Company registration number</td>
+                        <th>Company registration number</th>
                         <td>@scheme.CompanyNumber</td>
                     </tr>
                 }
                 <tr>
-                    <td>Obligation type</td>
+                    <th>Obligation type</th>
                     <td>@scheme.ObligationType</td>
                 </tr>
                 <tr>
-                    <td>Charge band type</td>
+                    <th>Charge band type</th>
                     <td>@scheme.ChargeBandType</td>
                 </tr>
                 <tr>
-                    <td>Authorised representative</td>
+                    <th>Authorised representative</th>
                     <td>@scheme.IsAuthorisedRepresentative</td>
                 </tr>
                 @if (@scheme.CeasedToExist != null)
                 {
                     <tr>
-                        <td>Ceased to exist</td>
+                        <th>Ceased to exist</th>
                         <td>@scheme.CeasedToExist.Value.ToString("dd MMMM yyyy")</td>
                     </tr>
                 }
             </tbody>
         </table>
 
-        <br />
+            <br />
     }
     <p>
         @Html.ActionLink("Download amendment history (CSV)", "DownloadProducerAmendmentsCsv", "Producers", new { registrationNumber = @Model.Details.RegistrationNumber }, null)
