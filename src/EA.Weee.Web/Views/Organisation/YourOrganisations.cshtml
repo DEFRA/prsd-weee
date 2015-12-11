@@ -1,6 +1,7 @@
 ﻿@using System.Collections.Generic
 @using System.Web.Mvc
 @using EA.Weee.Core.Organisations
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.ViewModels.Organisation.YourOrganisationsViewModel
 @{
     ViewBag.Title = "Your organisations";
@@ -19,8 +20,14 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.Selected)">
-            @Html.EditorFor(m => m.AccessibleOrganisations)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationId)">
+            @this.WeeeGds().RadioButtonsFor(
+                 m => m.SelectedOrganisationId,
+                 Model.Organisations,
+                 o => o.OrganisationId,
+                 o => o.Organisation.OrganisationName,
+                 RadioButtonLegend.VisuallyHidden,
+                 RadioButtonLayout.Stacked)
         </div>
 
         <p>
