@@ -1,0 +1,49 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.ConfirmRemoveProducerViewModel
+@{
+    ViewBag.Title = "Confirm Remove Producer";
+}
+
+@section main_content {
+
+    <header class="hgroup">
+        <h1 class="heading-large">Are you sure you want to remove this producer?</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <p>The following producer will no longer be a member of A WEEE Scheme for 2016.</p>
+
+        <table>
+            <thead>
+                <tr class="visuallyhidden">
+                    <th colspan="2">Confirm Producer Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Producer name</th>
+                    <td>10 Squared Ltd</td>
+                </tr>
+                <tr>
+                    <th>Producer registration number</th>
+                    <td>WEE/MM1329AA</td>
+                </tr>
+            </tbody>
+        </table>
+        <br/>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmRemoveProducer">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Are you sure you want to remove this producer?",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Inline)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+    }
+}

@@ -65,7 +65,7 @@
                 case InternalUserActivity.ManageScheme:
                     return RedirectToAction("ManageSchemes", "Scheme");
 
-                case InternalUserActivity.ViewProducerInformation:
+                case InternalUserActivity.ProducerDetails:
                     return RedirectToAction("Search", "Producers");
 
                 case InternalUserActivity.SubmissionsHistory:
