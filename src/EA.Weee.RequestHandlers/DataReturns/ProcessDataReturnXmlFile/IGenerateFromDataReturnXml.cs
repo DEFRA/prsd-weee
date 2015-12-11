@@ -5,8 +5,8 @@
     using Domain.Scheme;
     using Requests.DataReturns;
 
-    public interface IGenerateFromDataReturnXML
+    public interface IGenerateFromDataReturnXml
     {
-        DataReturnUpload GenerateDataReturnsUpload(ProcessDataReturnXMLFile messageXmlFile, List<DataReturnUploadError> errors, Scheme scheme);
+        DataReturnUpload GenerateDataReturnsUpload(ProcessDataReturnXmlFile messageXmlFile, List<DataReturnUploadError> errors, Scheme scheme);
     }
 }

@@ -12,7 +12,7 @@
     using Xml.DataReturns;
     using Xml.Deserialization;
 
-    public class DataReturnXMLValidator : IDataReturnXMLValidator
+    public class DataReturnXMLValidator : IDataReturnXmlValidator
     {
         private readonly ISchemaValidator schemaValidator;
         private readonly IXmlConverter xmlConverter;
@@ -27,7 +27,7 @@
             this.deserializer = deserializer;
         }
 
-        public IEnumerable<DataReturnUploadError> Validate(ProcessDataReturnXMLFile message)
+        public IEnumerable<DataReturnUploadError> Validate(ProcessDataReturnXmlFile message)
         {
             string schemaVersion = "3.2";
             // Validate against the schema

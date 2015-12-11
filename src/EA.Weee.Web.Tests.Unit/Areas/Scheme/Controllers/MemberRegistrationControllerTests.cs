@@ -203,9 +203,9 @@
         [Fact]
         public async void PostAddOrAmendMembers_FileIsMappedSuccessfully_ValidateRequestSentWithConvertedFileDataAndOrganisationId()
         {
-            var request = new ProcessXMLFile(A<Guid>._, A<byte[]>._, A<string>._);
+            var request = new ProcessXmlFile(A<Guid>._, A<byte[]>._, A<string>._);
 
-            A.CallTo(() => mapper.Map<PCSFileUploadViewModel, ProcessXMLFile>(A<PCSFileUploadViewModel>._))
+            A.CallTo(() => mapper.Map<PCSFileUploadViewModel, ProcessXmlFile>(A<PCSFileUploadViewModel>._))
                 .Returns(request);
 
             try
@@ -224,7 +224,7 @@
         public async void PostAddOrAmendMembers_NotAjaxRequest_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
         {
             var validationId = Guid.NewGuid();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessXMLFile>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessXmlFile>._))
                 .Returns(validationId);
 
             var controller = GetRealMemberRegistrationControllerWithFakeContext();
@@ -242,7 +242,7 @@
         public async void PostAddOrAmendMembers_AjaxRequest_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
         {
             var validationId = Guid.NewGuid();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessXMLFile>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessXmlFile>._))
                 .Returns(validationId);
 
             var controller = GetRealMemberRegistrationControllerWithAjaxRequest();
@@ -378,7 +378,10 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<MemberUploadSubmission>._))
                 .Returns(memberUploadId);
 
-            var result = await MemberRegistrationController().SubmitXml(A<Guid>._, new MemberUploadResultViewModel { ErrorData = new List<UploadErrorData>(), MemberUploadId = memberUploadId});
+            var result = await MemberRegistrationController().XmlHasNoErrors(
+                A<Guid>._,
+                memberUploadId,
+                new MemberUploadResultViewModel { ErrorData = new List<UploadErrorData>() });
 
             var redirect = (RedirectToRouteResult)result;
 
@@ -394,14 +397,16 @@
             var memberUploadResult = new MemberUploadResultViewModel
             {
                 ErrorData = new List<UploadErrorData>(),
-                MemberUploadId = memberUploadId,
                 PrivacyPolicy = false
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
                .Returns(new List<UploadErrorData>());
 
-            var result = await MemberRegistrationController(memberUploadResult).SubmitXml(A<Guid>._, memberUploadResult) as ViewResult;
+            var result = await MemberRegistrationController(memberUploadResult).XmlHasNoErrors(
+                A<Guid>._,
+                memberUploadId,
+                memberUploadResult) as ViewResult;
 
             Assert.False(result.ViewData.ModelState.IsValid);
         }

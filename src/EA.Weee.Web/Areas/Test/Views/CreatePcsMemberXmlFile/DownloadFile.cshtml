@@ -1,6 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Test.ViewModels.GeneratePcsXml.SpecifyOptionsViewModel
+@model EA.Weee.Web.Areas.Test.ViewModels.CreatePcsMemberXmlFile.SpecifyOptionsViewModel
 
 @{
     ViewBag.Title = "Download File";
@@ -14,7 +14,7 @@
         </h1>
     </header>
 
-    @using (Html.BeginForm("DownloadFile", "GeneratePcsXml", FormMethod.Post, new { id = "downloadFileForm" }))
+    @using (Html.BeginForm("DownloadFile", "CreatePcsMemberXmlFile", FormMethod.Post, new { id = "downloadFileForm" }))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
@@ -33,7 +33,7 @@
 
         @(this.WeeeGds().Submit("Download file", new { @class = "button" }))
         
-        @Html.ActionLink("Create another file", "SpecifyOptions", "GeneratePcsXml", new { OrganisationID = Model.OrganisationID }, new { @class = "button" })
+        @Html.ActionLink("Create another file", "SpecifyOptions", "CreatePcsMemberXmlFile", new { OrganisationID = Model.OrganisationID }, null)
 
         <script type="text/javascript">
             document.getElementById("downloadFileForm").submit();

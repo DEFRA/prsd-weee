@@ -5,18 +5,18 @@
     using ViewModels;
     using Weee.Requests.Scheme.MemberRegistration;
 
-    public class ProcessXMLFileRequest : IMap<PCSFileUploadViewModel, ProcessXMLFile>
+    public class ProcessXmlFileRequest : IMap<PCSFileUploadViewModel, ProcessXmlFile>
     {
         private readonly IFileConverterService fileConverter;
 
-        public ProcessXMLFileRequest(IFileConverterService fileConverter)
+        public ProcessXmlFileRequest(IFileConverterService fileConverter)
         {
             this.fileConverter = fileConverter;
         }
 
-        public ProcessXMLFile Map(PCSFileUploadViewModel source)
+        public ProcessXmlFile Map(PCSFileUploadViewModel source)
         {
-            return new ProcessXMLFile(source.PcsId, fileConverter.Convert(source.File), source.File.FileName);
+            return new ProcessXmlFile(source.PcsId, fileConverter.Convert(source.File), source.File.FileName);
         }
     }
 }
