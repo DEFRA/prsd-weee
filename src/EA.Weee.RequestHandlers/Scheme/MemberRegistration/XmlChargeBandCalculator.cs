@@ -9,20 +9,20 @@
     using Xml.Converter;
     using Xml.MemberRegistration;
 
-    public class XmlChargeBandCalculator : IXmlChargeBandCalculator
+    public class XMLChargeBandCalculator : IXMLChargeBandCalculator
     {
         private readonly IXmlConverter xmlConverter;
         private readonly IProducerChargeCalculator producerChargeCalculator;
         public List<MemberUploadError> ErrorsAndWarnings { get; set; }
 
-        public XmlChargeBandCalculator(IXmlConverter xmlConverter, IProducerChargeCalculator producerChargeCalculator)
+        public XMLChargeBandCalculator(IXmlConverter xmlConverter, IProducerChargeCalculator producerChargeCalculator)
         {
             this.xmlConverter = xmlConverter;
             this.producerChargeCalculator = producerChargeCalculator;
             ErrorsAndWarnings = new List<MemberUploadError>();
         }
 
-        public Dictionary<string, ProducerCharge> Calculate(ProcessXMLFile message)
+        public Dictionary<string, ProducerCharge> Calculate(ProcessXmlFile message)
         {
             var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
 
