@@ -76,7 +76,7 @@ GO
 
 -- Add [EeeOutputReturnVersionId] column to [PCS].[DataReturnVersion]
 ALTER TABLE [PCS].[DataReturnVersion]
-ADD EeeOutputReturnVersionId [uniqueidentifier] NOT NULL
+ADD EeeOutputReturnVersionId [uniqueidentifier]
 GO
 
 ALTER TABLE [PCS].[DataReturnVersion]  WITH CHECK ADD CONSTRAINT [FK_DataReturnVersion_EeeOutputReturnVersion] FOREIGN KEY([EeeOutputReturnVersionId])
