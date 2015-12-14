@@ -53,9 +53,21 @@
            
             if (!errors.Any())
             {
+                await SetDataReturnAndCurrentVersion(scheme, dataReturnUpload);
+            }
+
+            await dataAccess.AddAndSaveAsync(dataReturnUpload);
+
+            return dataReturnUpload.Id;
+        }
+
+        private async Task SetDataReturnAndCurrentVersion(Scheme scheme, DataReturnUpload dataReturnUpload)
+        {
+            if (dataReturnUpload.ComplianceYear.HasValue && dataReturnUpload.Quarter.HasValue)
+            {
                 Quarter quarter = new Quarter(
-                    dataReturnUpload.ComplianceYear.Value,
-                    (QuarterType)dataReturnUpload.Quarter.Value);
+                dataReturnUpload.ComplianceYear.Value,
+                (QuarterType)dataReturnUpload.Quarter.Value);
 
                 // Try to fetch the existing data return for the scheme and quarter, otherwise create a new data return.
                 DataReturn dataReturn = await dataAccess.FetchDataReturnOrDefaultAsync(scheme, quarter);
@@ -67,12 +79,8 @@
 
                 DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
 
-                dataReturnUpload.SetDataReturnsVersion(dataReturnVersion);
+                dataReturnUpload.SetDataReturnVersion(dataReturnVersion);
             }
-
-            await dataAccess.AddAndSaveAsync(dataReturnUpload);
-
-            return dataReturnUpload.Id;
         }
     }
 }
