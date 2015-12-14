@@ -1,10 +1,6 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.DataReturns
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Domain.DataReturns;
     using Domain.Producer;
     using FakeItEasy;
@@ -24,7 +20,7 @@
         {
             // Arrange
             var returnVersion = new DataReturnVersion(A.Fake<DataReturn>());
-            var eeeOutputAmount = new EeeOutputAmount(A<ObligationType>._, A<WeeeCategory>._, A<decimal>._, A.Fake<RegisteredProducer>(), A.Fake<DataReturnVersion>());
+            var eeeOutputAmount = new EeeOutputAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, A.Fake<RegisteredProducer>(), A.Fake<DataReturnVersion>());
 
             // Act
             returnVersion.AddEeeOutputAmount(eeeOutputAmount);
@@ -38,7 +34,7 @@
         {
             // Arrange
             var returnVersion = new DataReturnVersion(A.Fake<DataReturn>());
-            var weeeCollectedAmount = new WeeeCollectedAmount(A<WeeeCollectedAmountSourceType>._, A<ObligationType>._, A<WeeeCategory>._, A<decimal>._, A.Fake<DataReturnVersion>());
+            var weeeCollectedAmount = new WeeeCollectedAmount(A<WeeeCollectedAmountSourceType>._, ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, A.Fake<DataReturnVersion>());
 
             // Act
             returnVersion.AddWeeeCollectedAmount(weeeCollectedAmount);
@@ -52,13 +48,13 @@
         {
             // Arrange
             var returnVersion = new DataReturnVersion(A.Fake<DataReturn>());
-            var aatfDeliveryLocation = new AatfDeliveryLocation("Test", "Test", A<ObligationType>._, A<WeeeCategory>._, A<decimal>._, A.Fake<DataReturnVersion>());
+            var deliveredAmount = new AatfDeliveredAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, A.Fake<AatfDeliveryLocation>(), A.Fake<DataReturnVersion>());
 
             // Act
-            returnVersion.AddAatfDeliveryLocation(aatfDeliveryLocation);
+            returnVersion.AddAatfDeliveredAmount(deliveredAmount);
 
             // Assert
-            Assert.Contains(aatfDeliveryLocation, returnVersion.AatfDeliveryLocations);
+            Assert.Contains(deliveredAmount, returnVersion.AatfDeliveredAmounts);
         }
 
         [Fact]
@@ -66,13 +62,13 @@
         {
             // Arrange
             var returnVersion = new DataReturnVersion(A.Fake<DataReturn>());
-            var deliveryLocation = new AeDeliveryLocation("Test", "Test", A<ObligationType>._, A<WeeeCategory>._, A<decimal>._, A.Fake<DataReturnVersion>());
+            var deliveredAmount = new AeDeliveredAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, A.Fake<AeDeliveryLocation>(), A.Fake<DataReturnVersion>());
 
             // Act
-            returnVersion.AddAeDeliveryLocation(deliveryLocation);
+            returnVersion.AddAeDeliveredAmount(deliveredAmount);
 
             // Assert
-            Assert.Contains(deliveryLocation, returnVersion.AeDeliveryLocations);
+            Assert.Contains(deliveredAmount, returnVersion.AeDeliveredAmounts);
         }
     }
 }

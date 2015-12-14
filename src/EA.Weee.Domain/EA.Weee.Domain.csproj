@@ -50,6 +50,8 @@
     <Compile Include="Audit\IAuditableEntity.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataReturns\AatfDeliveredAmount.cs" />
+    <Compile Include="DataReturns\AeDeliveredAmount.cs" />
     <Compile Include="DataReturns\DataReturn.cs" />
     <Compile Include="DataReturns\DataReturnUpload.cs" />
     <Compile Include="DataReturns\DataReturnUploadError.cs" />
@@ -61,6 +63,7 @@
     <Compile Include="DataReturns\Quarter.cs" />
     <Compile Include="DataReturns\QuarterType.cs" />
     <Compile Include="DataReturns\EeeOutputAmount.cs" />
+    <Compile Include="DataReturns\ReturnItem.cs" />
     <Compile Include="DataReturns\WeeeCollectedAmount.cs" />
     <Compile Include="DataReturns\WeeeCollectedAmountSourceType.cs" />
     <Compile Include="Events\OrganisationUserRequestEvent.cs" />
@@ -106,6 +109,7 @@
     <Compile Include="SystemData.cs" />
     <Compile Include="UKCompetentAuthority.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="DataReturns\WeeeDeliveredAmount.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
