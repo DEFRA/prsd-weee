@@ -96,22 +96,22 @@
                 PopulateReturn(returnItem, xmlReturn);
             }
 
-            var aatfDeliveryLocations = dataReturnVersion.AatfDeliveryLocations.GroupBy(x => x.AatfApprovalNumber);
-            foreach (var aatfDelivertyLocation in aatfDeliveryLocations)
+            var aatfDeliveredAmounts = dataReturnVersion.AatfDeliveredAmounts.GroupBy(x => x.AatfDeliveryLocation);
+            foreach (var aatfDeliveredAmount in aatfDeliveredAmounts)
             {
                 XElement xmlDeliveredToATF = new XElement(ns + "DeliveredToATF");
                 xmlSchemeReturn.Add(xmlDeliveredToATF);
 
-                PopulateDeliveredToAatf(aatfDelivertyLocation, xmlDeliveredToATF);
+                PopulateDeliveredToAatf(aatfDeliveredAmount, xmlDeliveredToATF);
             }
 
-            var aeDeliveryLocations = dataReturnVersion.AeDeliveryLocations.GroupBy(x => x.ApprovalNumber);
-            foreach (var deliveredToAE in aeDeliveryLocations)
+            var aeDeliveredAmounts = dataReturnVersion.AeDeliveredAmounts.GroupBy(x => x.AeDeliveryLocation);
+            foreach (var aeDeliveredAmount in aeDeliveredAmounts)
             {
                 XElement xmlDeliveredToAE = new XElement(ns + "DeliveredToAE");
                 xmlSchemeReturn.Add(xmlDeliveredToAE);
 
-                PopulateDeliveredToAE(deliveredToAE, xmlDeliveredToAE);
+                PopulateDeliveredToAE(aeDeliveredAmount, xmlDeliveredToAE);
             }
 
             XElement xmlB2cWeeeFromDistributors = new XElement(ns + "B2CWEEEFromDistributors");
@@ -151,18 +151,18 @@
             }
         }
 
-        private void PopulateDeliveredToAatf(IEnumerable<AatfDeliveryLocation> deliveredToAatfs, XElement xmlDeliveredToAtf)
+        private void PopulateDeliveredToAatf(IGrouping<AatfDeliveryLocation, AatfDeliveredAmount> deliveredToAatfs, XElement xmlDeliveredToAtf)
         {
             XElement xmlDeliveredToFacility = new XElement(ns + "DeliveredToFacility");
             xmlDeliveredToAtf.Add(xmlDeliveredToFacility);
 
             XElement xmlAatfApprovalNo = new XElement(ns + "AATFApprovalNo");
             xmlDeliveredToFacility.Add(xmlAatfApprovalNo);
-            xmlAatfApprovalNo.Value = deliveredToAatfs.First().AatfApprovalNumber;
+            xmlAatfApprovalNo.Value = deliveredToAatfs.Key.AatfApprovalNumber;
 
             XElement xmlFacilityName = new XElement(ns + "FacilityName");
             xmlDeliveredToFacility.Add(xmlFacilityName);
-            xmlFacilityName.Value = deliveredToAatfs.First().FacilityName;
+            xmlFacilityName.Value = deliveredToAatfs.Key.FacilityName;
 
             foreach (IReturnItem returnItem in deliveredToAatfs)
             {
@@ -173,18 +173,18 @@
             }
         }
 
-        private void PopulateDeliveredToAE(IEnumerable<AeDeliveryLocation> deliveredToAes, XElement xmlDeliveredToAE)
+        private void PopulateDeliveredToAE(IGrouping<AeDeliveryLocation, AeDeliveredAmount> deliveredToAes, XElement xmlDeliveredToAE)
         {
             XElement xmlDeliveredToOperator = new XElement(ns + "DeliveredToOperator");
             xmlDeliveredToAE.Add(xmlDeliveredToOperator);
 
             XElement xmlAEApprovalNo = new XElement(ns + "AEApprovalNo");
             xmlDeliveredToOperator.Add(xmlAEApprovalNo);
-            xmlAEApprovalNo.Value = deliveredToAes.First().ApprovalNumber;
+            xmlAEApprovalNo.Value = deliveredToAes.Key.ApprovalNumber;
 
             XElement xmlOperatorName = new XElement(ns + "OperatorName");
             xmlDeliveredToOperator.Add(xmlOperatorName);
-            xmlOperatorName.Value = deliveredToAes.First().OperatorName;
+            xmlOperatorName.Value = deliveredToAes.Key.OperatorName;
 
             foreach (IReturnItem returnItem in deliveredToAes)
             {

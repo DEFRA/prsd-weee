@@ -25,9 +25,9 @@
 
         public virtual ICollection<WeeeCollectedAmount> WeeeCollectedAmounts { get; private set; }
 
-        public virtual ICollection<AatfDeliveryLocation> AatfDeliveryLocations { get; private set; }
+        public virtual ICollection<AatfDeliveredAmount> AatfDeliveredAmounts { get; private set; }
 
-        public virtual ICollection<AeDeliveryLocation> AeDeliveryLocations { get; private set; }
+        public virtual ICollection<AeDeliveredAmount> AeDeliveredAmounts { get; private set; }
 
         public virtual ICollection<EeeOutputAmount> EeeOutputAmounts { get; private set; }
 
@@ -38,8 +38,8 @@
             DataReturn = dataReturn;
 
             WeeeCollectedAmounts = new List<WeeeCollectedAmount>();
-            AatfDeliveryLocations = new List<AatfDeliveryLocation>();
-            AeDeliveryLocations = new List<AeDeliveryLocation>();
+            AatfDeliveredAmounts = new List<AatfDeliveredAmount>();
+            AeDeliveredAmounts = new List<AeDeliveredAmount>();
             EeeOutputAmounts = new List<EeeOutputAmount>();
         }
 
@@ -142,39 +142,39 @@
             EeeOutputAmounts.Add(eeeOutputAmount);
         }
 
-        public void AddAatfDeliveryLocation(AatfDeliveryLocation aatfDeliveryLocation)
+        public void AddAatfDeliveredAmount(AatfDeliveredAmount aatfDeliveredAmount)
         {
-            Guard.ArgumentNotNull(() => aatfDeliveryLocation, aatfDeliveryLocation);
+            Guard.ArgumentNotNull(() => aatfDeliveredAmount, aatfDeliveredAmount);
 
-            if (AatfDeliveryLocations
-                .Where(r => r.AatfApprovalNumber == aatfDeliveryLocation.AatfApprovalNumber)                
-                .Where(r => r.WeeeCategory == aatfDeliveryLocation.WeeeCategory)
-                .Where(r => (r.ObligationType & aatfDeliveryLocation.ObligationType) != ObligationType.None)
+            if (AatfDeliveredAmounts
+                .Where(r => r.AatfDeliveryLocation.AatfApprovalNumber == aatfDeliveredAmount.AatfDeliveryLocation.AatfApprovalNumber)
+                .Where(r => r.WeeeCategory == aatfDeliveredAmount.WeeeCategory)
+                .Where(r => (r.ObligationType & aatfDeliveredAmount.ObligationType) != ObligationType.None)
                 .Any())
             {
                 string errorMessage = "A return item with this obligation type and category has already been added.";
                 throw new InvalidOperationException(errorMessage);
             }
 
-            AatfDeliveryLocations.Add(aatfDeliveryLocation);
+            AatfDeliveredAmounts.Add(aatfDeliveredAmount);
         }
 
         [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Parameter name is valid.")]
-        public void AddAeDeliveryLocation(AeDeliveryLocation aeDeliveryLocation)
+        public void AddAeDeliveredAmount(AeDeliveredAmount aeDeliveredAmount)
         {
-            Guard.ArgumentNotNull(() => aeDeliveryLocation, aeDeliveryLocation);
+            Guard.ArgumentNotNull(() => aeDeliveredAmount, aeDeliveredAmount);
 
-            if (AeDeliveryLocations
-                .Where(r => r.ApprovalNumber == aeDeliveryLocation.ApprovalNumber)
-                .Where(r => r.WeeeCategory == aeDeliveryLocation.WeeeCategory)
-                .Where(r => (r.ObligationType & aeDeliveryLocation.ObligationType) != ObligationType.None)
+            if (AeDeliveredAmounts
+                .Where(r => r.AeDeliveryLocation.ApprovalNumber == aeDeliveredAmount.AeDeliveryLocation.ApprovalNumber)
+                .Where(r => r.WeeeCategory == aeDeliveredAmount.WeeeCategory)
+                .Where(r => (r.ObligationType & aeDeliveredAmount.ObligationType) != ObligationType.None)
                 .Any())
             {
                 string errorMessage = "A return item with this obligation type and category has already been added.";
                 throw new InvalidOperationException(errorMessage);
             }
 
-            AeDeliveryLocations.Add(aeDeliveryLocation);
+            AeDeliveredAmounts.Add(aeDeliveredAmount);
         }
 
         public void Submit(string userId)

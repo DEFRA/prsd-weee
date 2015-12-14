@@ -54,7 +54,7 @@
                 var deliveredToAatfs = CreateDeliveredToAatfs(dataReturnVersion);
                 foreach (var deliveredToAatf in deliveredToAatfs)
                 {
-                    dataReturnVersion.AddAatfDeliveryLocation(deliveredToAatf);
+                    dataReturnVersion.AddAatfDeliveredAmount(deliveredToAatf);
                 }
             }
 
@@ -64,7 +64,7 @@
                 var deliveredToAes = CreateDeliveredToAes(dataReturnVersion);
                 foreach (var deliveredToAe in deliveredToAes)
                 {
-                    dataReturnVersion.AeDeliveryLocations.Add(deliveredToAe);
+                    dataReturnVersion.AddAeDeliveredAmount(deliveredToAe);
                 }
             }
 
@@ -119,9 +119,9 @@
             return dataReturnVersion;
         }
 
-        private static IEnumerable<AatfDeliveryLocation> CreateDeliveredToAatfs(DataReturnVersion dataReturnVersion)
+        private static IEnumerable<AatfDeliveredAmount> CreateDeliveredToAatfs(DataReturnVersion dataReturnVersion)
         {
-            var deliveredToAatfs = new List<AatfDeliveryLocation>();
+            var deliveredToAatfs = new List<AatfDeliveredAmount>();
 
             string aatfApprovalNumber = GetRandomAtfApprovalNumber();
 
@@ -131,19 +131,20 @@
                 facilityName = RandomHelper.CreateRandomString("Facility", 0, 250);
             }
 
+            var deliveryLocation = new AatfDeliveryLocation(aatfApprovalNumber, facilityName);
+
             IEnumerable<IReturnItem> returnItems = CreateReturnItems(null);
             foreach (IReturnItem returnItem in returnItems)
             {
-                deliveredToAatfs.Add(new AatfDeliveryLocation(aatfApprovalNumber,
-                    facilityName, returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, dataReturnVersion));
+                deliveredToAatfs.Add(new AatfDeliveredAmount(returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, deliveryLocation, dataReturnVersion));
             }
 
             return deliveredToAatfs;
         }
 
-        private static IEnumerable<AeDeliveryLocation> CreateDeliveredToAes(DataReturnVersion dataReturnVersion)
+        private static IEnumerable<AeDeliveredAmount> CreateDeliveredToAes(DataReturnVersion dataReturnVersion)
         {
-            var deliveredToAes = new List<AeDeliveryLocation>();
+            var deliveredToAes = new List<AeDeliveredAmount>();
 
             string approvalNumber = GetRandomAeApprovalNumber();
 
@@ -153,11 +154,12 @@
                 operatorName = RandomHelper.CreateRandomString("Operator", 0, 250);
             }
 
+            var deliveryLocation = new AeDeliveryLocation(approvalNumber, operatorName);
+
             IEnumerable<IReturnItem> returnItems = CreateReturnItems(null);
             foreach (IReturnItem returnItem in returnItems)
             {
-                deliveredToAes.Add(new AeDeliveryLocation(approvalNumber,
-                    operatorName, returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, dataReturnVersion));
+                deliveredToAes.Add(new AeDeliveredAmount(returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, deliveryLocation, dataReturnVersion));
             }
 
             return deliveredToAes;
@@ -180,16 +182,16 @@
                 {
                     case null:
                     case ObligationType.Both:
-                        returnItems.Add(new ReturnItem(category, ObligationType.B2B, GetRandomReturnAmount()));
-                        returnItems.Add(new ReturnItem(category, ObligationType.B2C, GetRandomReturnAmount()));
+                        returnItems.Add(new ReturnItem(ObligationType.B2B, category, GetRandomReturnAmount()));
+                        returnItems.Add(new ReturnItem(ObligationType.B2C, category, GetRandomReturnAmount()));
                         break;
 
                     case ObligationType.B2B:
-                        returnItems.Add(new ReturnItem(category, ObligationType.B2B, GetRandomReturnAmount()));
+                        returnItems.Add(new ReturnItem(ObligationType.B2B, category, GetRandomReturnAmount()));
                         break;
 
                     case ObligationType.B2C:
-                        returnItems.Add(new ReturnItem(category, ObligationType.B2C, GetRandomReturnAmount()));
+                        returnItems.Add(new ReturnItem(ObligationType.B2C, category, GetRandomReturnAmount()));
                         break;
 
                     default:
