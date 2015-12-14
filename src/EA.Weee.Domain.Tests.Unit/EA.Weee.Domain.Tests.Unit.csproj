@@ -77,6 +77,9 @@
     </Compile>
     <Compile Include="Admin\CompetentAuthorityUserTests.cs" />
     <Compile Include="CountryTests.cs" />
+    <Compile Include="DataReturns\DataReturnTests.cs" />
+    <Compile Include="DataReturns\DataReturnUploadTests.cs" />
+    <Compile Include="DataReturns\DataReturnVersionTests.cs" />
     <Compile Include="ExtensionMethodsTests.cs" />
     <Compile Include="Helpers\UKCompetentAuthorityFactory.cs" />
     <Compile Include="Helpers\CountryFactory.cs" />

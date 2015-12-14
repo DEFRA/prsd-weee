@@ -139,12 +139,19 @@
             {
                 string errorMessage = "This data return version has already been submitted.";
                 throw new InvalidOperationException(errorMessage);
+            }            
+            if (DataReturn != null)
+            {
+                IsSubmitted = true;
+                SubmittedDate = SystemTime.UtcNow;
+                SubmittingUserId = userId;
+                DataReturn.SetCurrentVersion(this);
             }
-
-            IsSubmitted = true;
-            SubmittedDate = SystemTime.UtcNow;
-            SubmittingUserId = userId;
-            DataReturn.SetCurrentVersion(this);
+            else
+            {
+                string errorMessage = "This data return version has no corresponding data return.";
+                throw new InvalidOperationException(errorMessage);
+            }
         }
     }
 }

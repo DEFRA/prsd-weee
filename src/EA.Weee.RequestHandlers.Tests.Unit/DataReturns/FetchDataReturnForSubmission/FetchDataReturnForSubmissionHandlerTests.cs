@@ -202,8 +202,7 @@
                 A.Dummy<Scheme>(),
                 A.Dummy<string>(),
                 new List<DataReturnUploadError>() { dataReturnsUploadError },
-                A.Dummy<string>(),
-                null,
+                A.Dummy<string>(),                
                 null,
                 null);
 
@@ -226,8 +225,7 @@
                   new DataReturnUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Error on 75 line no", 75),
                   new DataReturnUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Error without line no")
                 },                
-                A.Dummy<string>(),
-                null,
+                A.Dummy<string>(),                
                 A.Dummy<int>(),
                 A.Dummy<int>());
 
