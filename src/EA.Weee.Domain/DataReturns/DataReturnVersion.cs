@@ -14,7 +14,7 @@
     /// </summary>
     public class DataReturnVersion : Entity
     {
-        public DataReturn DataReturn { get; private set; }
+        public virtual DataReturn DataReturn { get; private set; }
 
         public virtual DateTime? SubmittedDate { get; private set; }
 
