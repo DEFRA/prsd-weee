@@ -10,9 +10,9 @@
   <!--
 ================================================================================
 =
-=   APPLICATION: Waste Electronic and Electrical Equipment Regulations 2006  
+=   APPLICATION: Waste Electronic and Electrical Equipment Regulations 2013
 =   MODULE: Scheme Returns
-=   FILE: XSD Scheme Returns version 1.0.xsd                                 
+=   FILE: XSD Scheme Returns version 3.21.xsd
 =   DESCRIPTION: Schema to validate WEEE Scheme Quarterly Returns Data
 =
 ================================================================================
@@ -29,12 +29,17 @@
 =   15/02/2008   Colin McDonald     1.3           Minor amendments.
 =   29/01/2010   Jacqui Spencer			2.0           Amended due to 2010 regulation changes.
 =   01/11/2015   Dave A             3.1           Updated categories.
+
 =   24/11/2015   Muhammad I         3.2           - Updates to the unique constraints XPath expressions.
                                                   - Additional unique constraints for AATF, AE and Producer identifiers.
                                                   - Rename WEEEReturnedReg43 to B2CWEEEFromDistributors and enforce B2C obligation type for returns.
                                                   - Rename WEEETakenBackReg50 to B2CWEEEFromFinalHolders and enforce B2C obligation type for returns.
                                                   - Make DeliveredToAE optional.
                                                   - XSD version restriction changed.
+                                                  
+=   10/12/2015   Muhammad I         3.21          - Update compliance year restriction to have a minimum of 2016.
+                                                  - Remove unused SiteAddressDetailsType and operatorTypeType elements.
+                                                  - Update regulation year to 2013 and correct file name.
 ================================================================================
 -->
   <xs:element name="SchemeReturn">
@@ -43,7 +48,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="XSDVersion" default="3.2">
+        <xs:element name="XSDVersion" default="3.21">
           <xs:simpleType>
             <xs:restriction base="XSDVersionType"/>
           </xs:simpleType>
@@ -198,8 +203,8 @@
   </xs:element>
   <xs:simpleType name="XSDVersionType">
     <xs:restriction base="xs:decimal">
-      <xs:minInclusive value="3.2"/>
-      <xs:maxInclusive value="3.2"/>
+      <xs:minInclusive value="3.21"/>
+      <xs:maxInclusive value="3.21"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="approvalNoType">
@@ -209,7 +214,7 @@
   </xs:simpleType>
   <xs:simpleType name="complianceYearType">
     <xs:restriction base="xs:positiveInteger">
-      <xs:minInclusive value="2010"/>
+      <xs:minInclusive value="2016"/>
       <xs:maxInclusive value="3000"/>
     </xs:restriction>
   </xs:simpleType>
@@ -272,65 +277,6 @@
     <xs:restriction base="xs:token">
       <xs:minLength value="1"/>
       <xs:maxLength value="255"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:complexType name="SiteAddressDetailsType">
-    <xs:sequence>
-      <xs:element name="HouseNumberOrName" minOccurs="0">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:maxLength value="100"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="Street" minOccurs="0">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:maxLength value="100"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="Locality" minOccurs="0">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:maxLength value="100"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="Town" minOccurs="0">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:maxLength value="100"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="County" minOccurs="0">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:maxLength value="100"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="Postcode" minOccurs="0">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:maxLength value="50"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="Country" minOccurs="0">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:maxLength value="100"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:simpleType name="operatorTypeType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="ATF"/>
-      <xs:enumeration value="AE"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="aeApprovalNoType">
