@@ -36,14 +36,14 @@
            
             if (errors != null && errors.Any(e => e.ErrorType == UploadErrorType.Schema))
             {                
-                return new DataReturnUpload(scheme, xml, errors, messageXmlFile.FileName, null, null, null); 
+                return new DataReturnUpload(scheme, xml, errors, messageXmlFile.FileName, null, null); 
             }
             else
             {
                 SchemeReturn deserializedXml = deserializer.Deserialize<SchemeReturn>(xmlConverter.Convert(messageXmlFile.Data));
                 int complianceYear = int.Parse(deserializedXml.ComplianceYear);
                 int quarter = Convert.ToInt32(deserializedXml.ReturnPeriod);               
-                return new DataReturnUpload(scheme, xml, errors, messageXmlFile.FileName, null, complianceYear, quarter);
+                return new DataReturnUpload(scheme, xml, errors, messageXmlFile.FileName, complianceYear, quarter);
             }
         }       
     }
