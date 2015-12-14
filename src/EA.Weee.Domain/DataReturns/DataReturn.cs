@@ -14,15 +14,15 @@
     /// </summary>
     public class DataReturn : Entity
     {
-        public Scheme.Scheme Scheme { get; private set; }
+        public virtual Scheme.Scheme Scheme { get; private set; }
 
-        public Quarter Quarter { get; private set; }
+        public virtual Quarter Quarter { get; private set; }
 
         /// <summary>
         /// Provides the current version of the data return.
         /// To replace the version, use the SetCurrentVersion method.
         /// </summary>
-        public DataReturnVersion CurrentVersion { get; private set; }
+        public virtual DataReturnVersion CurrentVersion { get; private set; }
 
         public DataReturn(Scheme.Scheme scheme, Quarter quarter)
         {

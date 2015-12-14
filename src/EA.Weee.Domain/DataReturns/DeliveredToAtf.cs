@@ -6,37 +6,35 @@
     using System.Text;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Domain;
+    using Lookup;
     using Prsd.Core;
 
-    public class DeliveredToAtf : Entity
+    public class AatfDeliveryLocation : Entity, IReturnItem
     {
         public string AatfApprovalNumber { get; private set; }
 
         public string FacilityName { get; private set; }
 
-        public ICollection<ReturnItem> ReturnItems { get; private set; }
+        public virtual ObligationType ObligationType { get; private set; }
 
-        public DeliveredToAtf(string aatfApprovalNumber, string facilityName)
+        public virtual WeeeCategory WeeeCategory { get; private set; }
+
+        public decimal Tonnage { get; private set; }
+
+        public virtual DataReturnVersion DataReturnVersion { get; private set; }
+
+        protected AatfDeliveryLocation()
+        {
+        }
+
+        public AatfDeliveryLocation(string aatfApprovalNumber, string facilityName, ObligationType obligationType, WeeeCategory weeeCategory, decimal tonnage, DataReturnVersion dataReturnVersion)
         {
             AatfApprovalNumber = aatfApprovalNumber;
             FacilityName = facilityName;
-            ReturnItems = new List<ReturnItem>();
-        }
-
-        public void AddReturnItem(ReturnItem returnItem)
-        {
-            Guard.ArgumentNotNull(() => returnItem, returnItem);
-
-            if (ReturnItems
-                .Where(r => r.Category == returnItem.Category)
-                .Where(r => (r.ObligationType & returnItem.ObligationType) != ObligationType.None)
-                .Any())
-            {
-                string errorMessage = "A return item with this obligation type and category has already been added.";
-                throw new InvalidOperationException(errorMessage);
-            }
-
-            ReturnItems.Add(returnItem);
+            ObligationType = obligationType;
+            WeeeCategory = weeeCategory;
+            Tonnage = tonnage;
+            DataReturnVersion = dataReturnVersion;
         }
     }
 }
