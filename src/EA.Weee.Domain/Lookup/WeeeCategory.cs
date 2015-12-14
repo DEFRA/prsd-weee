@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    public enum Category
+    public enum WeeeCategory
     {
         [Display(Name = "Large Household Appliances")]
         LargeHouseholdAppliances = 1,

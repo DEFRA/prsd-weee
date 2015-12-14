@@ -12,13 +12,13 @@
         [Fact]
         public void ConstructsEeeOutputAmount_WithNullRegisteredProducer_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new EeeOutputAmount(A<ObligationType>._, A<Category>._, A<decimal>._, null, A.Fake<DataReturnVersion>()));
+            Assert.Throws<ArgumentNullException>(() => new EeeOutputAmount(A<ObligationType>._, A<WeeeCategory>._, A<decimal>._, null, A.Fake<DataReturnVersion>()));
         }
 
         [Fact]
         public void ConstructsEeeOutputAmount_WithNullDataReturnVersion_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new EeeOutputAmount(A<ObligationType>._, A<Category>._, A<decimal>._, A.Fake<RegisteredProducer>(), null));
+            Assert.Throws<ArgumentNullException>(() => new EeeOutputAmount(A<ObligationType>._, A<WeeeCategory>._, A<decimal>._, A.Fake<RegisteredProducer>(), null));
         }
     }
 }

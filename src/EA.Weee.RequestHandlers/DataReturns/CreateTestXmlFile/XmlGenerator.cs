@@ -2,12 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Xml.Linq;
     using Domain;
     using Domain.Lookup;
+    using Domain.Producer;
     using EA.Weee.Domain.DataReturns;
     using Prsd.Core;
 
@@ -29,22 +31,22 @@
             { ObligationType.B2C, "B2C" },
         };
 
-        private static readonly Dictionary<Category, string> categoryMapping = new Dictionary<Category, string>()
+        private static readonly Dictionary<WeeeCategory, string> categoryMapping = new Dictionary<WeeeCategory, string>()
         {
-            { Category.LargeHouseholdAppliances, "Large Household Appliances" },
-            { Category.SmallHouseholdAppliances, "Small Household Appliances" },
-            { Category.ITAndTelecommsEquipment, "IT and Telecomms Equipment" },
-            { Category.ConsumerEquipment, "Consumer Equipment" },
-            { Category.LightingEquipment, "Lighting Equipment" },
-            { Category.ElectricalAndElectronicTools, "Electrical and Electronic Tools" },
-            { Category.ToysLeisureAndSports, "Toys Leisure and Sports" },
-            { Category.MedicalDevices, "Medical Devices" },
-            { Category.MonitoringAndControlInstruments, "Monitoring and Control Instruments" },
-            { Category.AutomaticDispensers, "Automatic Dispensers" },
-            { Category.DisplayEquipment, "Display Equipment" },
-            { Category.CoolingApplicancesContainingRefrigerants, "Cooling Appliances Containing Refrigerants" },
-            { Category.GasDischargeLampsAndLedLightSources, "Gas Discharge Lamps and LED light sources" },
-            { Category.PhotovoltaicPanels, "Photovoltaic Panels" },
+            { WeeeCategory.LargeHouseholdAppliances, "Large Household Appliances" },
+            { WeeeCategory.SmallHouseholdAppliances, "Small Household Appliances" },
+            { WeeeCategory.ITAndTelecommsEquipment, "IT and Telecomms Equipment" },
+            { WeeeCategory.ConsumerEquipment, "Consumer Equipment" },
+            { WeeeCategory.LightingEquipment, "Lighting Equipment" },
+            { WeeeCategory.ElectricalAndElectronicTools, "Electrical and Electronic Tools" },
+            { WeeeCategory.ToysLeisureAndSports, "Toys Leisure and Sports" },
+            { WeeeCategory.MedicalDevices, "Medical Devices" },
+            { WeeeCategory.MonitoringAndControlInstruments, "Monitoring and Control Instruments" },
+            { WeeeCategory.AutomaticDispensers, "Automatic Dispensers" },
+            { WeeeCategory.DisplayEquipment, "Display Equipment" },
+            { WeeeCategory.CoolingApplicancesContainingRefrigerants, "Cooling Appliances Containing Refrigerants" },
+            { WeeeCategory.GasDischargeLampsAndLedLightSources, "Gas Discharge Lamps and LED light sources" },
+            { WeeeCategory.PhotovoltaicPanels, "Photovoltaic Panels" },
         };
 
         public XDocument GenerateXml(DataReturnVersion dataReturnVersion)
@@ -63,6 +65,7 @@
             return xmlDoc;
         }
 
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Field name deliveredToAE is valid.")]
         private void PopulateSchemeReturn(DataReturnVersion dataReturnVersion, XElement xmlSchemeReturn)
         {
             XElement xmlXsdVersion = new XElement(ns + "XSDVersion");
@@ -84,7 +87,8 @@
             XElement xmlCollectedFromDcf = new XElement(ns + "CollectedFromDCF");
             xmlSchemeReturn.Add(xmlCollectedFromDcf);
 
-            foreach (ReturnItem returnItem in dataReturnVersion.ReturnItemsCollectedFromDcf)
+            var fromDcf = dataReturnVersion.WeeeCollectedAmounts.Where(x => x.SourceType == WeeeCollectedAmountSourceType.Dcf);
+            foreach (IReturnItem returnItem in fromDcf)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
                 xmlCollectedFromDcf.Add(xmlReturn);
@@ -92,15 +96,17 @@
                 PopulateReturn(returnItem, xmlReturn);
             }
 
-            foreach (DeliveredToAtf deliveredToAatf in dataReturnVersion.DeliveredToAatf)
+            var aatfDeliveryLocations = dataReturnVersion.AatfDeliveryLocations.GroupBy(x => x.AatfApprovalNumber);
+            foreach (var aatfDelivertyLocation in aatfDeliveryLocations)
             {
                 XElement xmlDeliveredToATF = new XElement(ns + "DeliveredToATF");
                 xmlSchemeReturn.Add(xmlDeliveredToATF);
 
-                PopulateDeliveredToAatf(deliveredToAatf, xmlDeliveredToATF);
+                PopulateDeliveredToAatf(aatfDelivertyLocation, xmlDeliveredToATF);
             }
 
-            foreach (DeliveredToAe deliveredToAE in dataReturnVersion.DeliveredToAe)
+            var aeDeliveryLocations = dataReturnVersion.AeDeliveryLocations.GroupBy(x => x.ApprovalNumber);
+            foreach (var deliveredToAE in aeDeliveryLocations)
             {
                 XElement xmlDeliveredToAE = new XElement(ns + "DeliveredToAE");
                 xmlSchemeReturn.Add(xmlDeliveredToAE);
@@ -111,7 +117,8 @@
             XElement xmlB2cWeeeFromDistributors = new XElement(ns + "B2CWEEEFromDistributors");
             xmlSchemeReturn.Add(xmlB2cWeeeFromDistributors);
 
-            foreach (ReturnItem returnItem in dataReturnVersion.B2cWeeeFromDistributors)
+            var fromDistributors = dataReturnVersion.WeeeCollectedAmounts.Where(x => x.SourceType == WeeeCollectedAmountSourceType.Distributor);
+            foreach (IReturnItem returnItem in fromDistributors)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
                 xmlB2cWeeeFromDistributors.Add(xmlReturn);
@@ -122,7 +129,8 @@
             XElement xmlB2cWeeeFromFinalHolders = new XElement(ns + "B2CWEEEFromFinalHolders");
             xmlSchemeReturn.Add(xmlB2cWeeeFromFinalHolders);
 
-            foreach (ReturnItem returnItem in dataReturnVersion.B2cWeeeFromFinalHolders)
+            var fromFinalHolders = dataReturnVersion.WeeeCollectedAmounts.Where(x => x.SourceType == WeeeCollectedAmountSourceType.FinalHolder);
+            foreach (IReturnItem returnItem in fromFinalHolders)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
                 xmlB2cWeeeFromFinalHolders.Add(xmlReturn);
@@ -133,29 +141,30 @@
             XElement xmlProducerList = new XElement(ns + "ProducerList");
             xmlSchemeReturn.Add(xmlProducerList);
 
-            foreach (Producer producer in dataReturnVersion.Producers)
+            var eeeOutputAmountsByProducers = dataReturnVersion.EeeOutputAmounts.GroupBy(x => x.RegisteredProducer);
+            foreach (var eeeOutputAmountsByProducer in eeeOutputAmountsByProducers)
             {
                 XElement xmlProducer = new XElement(ns + "Producer");
                 xmlProducerList.Add(xmlProducer);
 
-                PopulateProducer(producer, xmlProducer);
+                PopulateProducer(eeeOutputAmountsByProducer.Key, eeeOutputAmountsByProducer, xmlProducer);
             }
         }
 
-        private void PopulateDeliveredToAatf(DeliveredToAtf deliveredToAatf, XElement xmlDeliveredToAtf)
+        private void PopulateDeliveredToAatf(IEnumerable<AatfDeliveryLocation> deliveredToAatfs, XElement xmlDeliveredToAtf)
         {
             XElement xmlDeliveredToFacility = new XElement(ns + "DeliveredToFacility");
             xmlDeliveredToAtf.Add(xmlDeliveredToFacility);
 
             XElement xmlAatfApprovalNo = new XElement(ns + "AATFApprovalNo");
             xmlDeliveredToFacility.Add(xmlAatfApprovalNo);
-            xmlAatfApprovalNo.Value = deliveredToAatf.AatfApprovalNumber;
+            xmlAatfApprovalNo.Value = deliveredToAatfs.First().AatfApprovalNumber;
 
             XElement xmlFacilityName = new XElement(ns + "FacilityName");
             xmlDeliveredToFacility.Add(xmlFacilityName);
-            xmlFacilityName.Value = deliveredToAatf.FacilityName;
+            xmlFacilityName.Value = deliveredToAatfs.First().FacilityName;
 
-            foreach (ReturnItem returnItem in deliveredToAatf.ReturnItems)
+            foreach (IReturnItem returnItem in deliveredToAatfs)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
                 xmlDeliveredToAtf.Add(xmlReturn);
@@ -164,20 +173,20 @@
             }
         }
 
-        private void PopulateDeliveredToAE(DeliveredToAe deliveredToAe, XElement xmlDeliveredToAE)
+        private void PopulateDeliveredToAE(IEnumerable<AeDeliveryLocation> deliveredToAes, XElement xmlDeliveredToAE)
         {
             XElement xmlDeliveredToOperator = new XElement(ns + "DeliveredToOperator");
             xmlDeliveredToAE.Add(xmlDeliveredToOperator);
 
             XElement xmlAEApprovalNo = new XElement(ns + "AEApprovalNo");
             xmlDeliveredToOperator.Add(xmlAEApprovalNo);
-            xmlAEApprovalNo.Value = deliveredToAe.ApprovalNumber;
+            xmlAEApprovalNo.Value = deliveredToAes.First().ApprovalNumber;
 
             XElement xmlOperatorName = new XElement(ns + "OperatorName");
             xmlDeliveredToOperator.Add(xmlOperatorName);
-            xmlOperatorName.Value = deliveredToAe.OperatorName;
+            xmlOperatorName.Value = deliveredToAes.First().OperatorName;
 
-            foreach (ReturnItem returnItem in deliveredToAe.ReturnItems)
+            foreach (IReturnItem returnItem in deliveredToAes)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
                 xmlDeliveredToAE.Add(xmlReturn);
@@ -186,30 +195,30 @@
             }
         }
 
-        private void PopulateProducer(Producer producer, XElement xmlProducer)
+        private void PopulateProducer(RegisteredProducer registeredProducer, IEnumerable<EeeOutputAmount> eeeOutputAmounts, XElement xmlProducer)
         {
             XElement xmlRegistrationNo = new XElement(ns + "RegistrationNo");
             xmlProducer.Add(xmlRegistrationNo);
-            xmlRegistrationNo.Value = producer.RegisteredProducer.ProducerRegistrationNumber;
+            xmlRegistrationNo.Value = registeredProducer.ProducerRegistrationNumber;
 
             XElement xmlProducerCompanyName = new XElement(ns + "ProducerCompanyName");
             xmlProducer.Add(xmlProducerCompanyName);
-            xmlProducerCompanyName.Value = producer.RegisteredProducer.CurrentSubmission.OrganisationName;
+            xmlProducerCompanyName.Value = registeredProducer.CurrentSubmission.OrganisationName;
 
-            foreach (ReturnItem returnItem in producer.ReturnItems)
+            foreach (var eeeOutputAmount in eeeOutputAmounts)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
                 xmlProducer.Add(xmlReturn);
 
-                PopulateReturn(returnItem, xmlReturn);
+                PopulateReturn(eeeOutputAmount, xmlReturn);
             }
         }
 
-        private void PopulateReturn(ReturnItem returnItem, XElement xmlReturn)
+        private void PopulateReturn(IReturnItem returnItem, XElement xmlReturn)
         {
             XElement xmlCategoryName = new XElement(ns + "CategoryName");
             xmlReturn.Add(xmlCategoryName);
-            xmlCategoryName.Value = categoryMapping[returnItem.Category];
+            xmlCategoryName.Value = categoryMapping[returnItem.WeeeCategory];
 
             XElement xmlObligationType = new XElement(ns + "ObligationType");
             xmlReturn.Add(xmlObligationType);
@@ -217,7 +226,7 @@
 
             XElement xmlTonnesReturnValue = new XElement(ns + "TonnesReturnValue");
             xmlReturn.Add(xmlTonnesReturnValue);
-            xmlTonnesReturnValue.Value = returnItem.AmountInTonnes.ToString();
+            xmlTonnesReturnValue.Value = returnItem.Tonnage.ToString();
         }
     }
 }

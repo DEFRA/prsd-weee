@@ -89,6 +89,7 @@
     <Compile Include="DataReturns\CreateTestXmlFile\DataReturnVersionGeneratorDataAccess.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\IDataReturnVersionGenerator.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\IDataReturnVersionGeneratorDataAccess.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\ReturnItem.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\XmlGenerator.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\IXmlGenerator.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionDataAccess.cs" />
