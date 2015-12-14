@@ -1,43 +1,22 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.DataReturns
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Domain.DataReturns;
     using Domain.Producer;
-    using EA.Weee.Domain.DataReturns;
     using FakeItEasy;
     using Lookup;
     using Xunit;
-    using Scheme = Domain.Scheme.Scheme;
 
     public class DataReturnVersionTests
     {
         [Fact]
-        public void AddEeeOutputAmount_AddNull_ThrowsArgumentNullException()
+        public void ConstructsDataReturnVersion_WithNullDataReturn_ThrowsArgumentNullException()
         {
-            var returnVersion = new DataReturnVersion(A.Fake<DataReturn>());
-
-            Assert.Throws<ArgumentNullException>(() => returnVersion.AddEeeOutputAmount(null));
-        }
-
-        [Fact]
-        public void AddEeeOutputAmount_WithEeeOutputAmountProducerNotInCurrentScheme_ThrowsInvalidOperationException()
-        {
-            var scheme1 = A.Fake<Scheme>();
-            A.CallTo(() => scheme1.Id).Returns(Guid.NewGuid());
-
-            var scheme2 = A.Fake<Scheme>();
-            A.CallTo(() => scheme2.Id).Returns(Guid.NewGuid());
-
-            var registeredProducer = A.Fake<RegisteredProducer>();
-            var outputAmount = A.Fake<EeeOutputAmount>();
-            A.CallTo(() => outputAmount.RegisteredProducer).Returns(registeredProducer);
-            A.CallTo(() => registeredProducer.Scheme).Returns(scheme1);
-
-            var dataReturn = A.Fake<DataReturn>();
-            A.CallTo(() => dataReturn.Scheme).Returns(scheme2);
-
-            var returnVersion = new DataReturnVersion(dataReturn);
-
-            Assert.Throws<InvalidOperationException>(() => returnVersion.AddEeeOutputAmount(outputAmount));
+            Assert.Throws<ArgumentNullException>(() => new DataReturnVersion(null));
         }
 
         [Fact]
@@ -52,6 +31,48 @@
 
             // Assert
             Assert.Contains(eeeOutputAmount, returnVersion.EeeOutputAmounts);
+        }
+
+        [Fact]
+        public void AddWeeeCollectedAmount_AddsToWeeeCollectedAmounts()
+        {
+            // Arrange
+            var returnVersion = new DataReturnVersion(A.Fake<DataReturn>());
+            var weeeCollectedAmount = new WeeeCollectedAmount(A<WeeeCollectedAmountSourceType>._, A<ObligationType>._, A<WeeeCategory>._, A<decimal>._, A.Fake<DataReturnVersion>());
+
+            // Act
+            returnVersion.AddWeeeCollectedAmount(weeeCollectedAmount);
+
+            // Assert
+            Assert.Contains(weeeCollectedAmount, returnVersion.WeeeCollectedAmounts);
+        }
+
+        [Fact]
+        public void AddAatfDeliveryLocation_AddsToAatfDeliveryLocations()
+        {
+            // Arrange
+            var returnVersion = new DataReturnVersion(A.Fake<DataReturn>());
+            var aatfDeliveryLocation = new AatfDeliveryLocation("Test", "Test", A<ObligationType>._, A<WeeeCategory>._, A<decimal>._, A.Fake<DataReturnVersion>());
+
+            // Act
+            returnVersion.AddAatfDeliveryLocation(aatfDeliveryLocation);
+
+            // Assert
+            Assert.Contains(aatfDeliveryLocation, returnVersion.AatfDeliveryLocations);
+        }
+
+        [Fact]
+        public void AddAeDeliveryLocation_AddsToAeDeliveryLocations()
+        {
+            // Arrange
+            var returnVersion = new DataReturnVersion(A.Fake<DataReturn>());
+            var deliveryLocation = new AeDeliveryLocation("Test", "Test", A<ObligationType>._, A<WeeeCategory>._, A<decimal>._, A.Fake<DataReturnVersion>());
+
+            // Act
+            returnVersion.AddAeDeliveryLocation(deliveryLocation);
+
+            // Assert
+            Assert.Contains(deliveryLocation, returnVersion.AeDeliveryLocations);
         }
     }
 }

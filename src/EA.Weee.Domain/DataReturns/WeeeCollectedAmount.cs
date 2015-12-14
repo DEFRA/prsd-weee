@@ -6,7 +6,9 @@
     using System.Text;
     using System.Threading.Tasks;
     using Lookup;
+    using Prsd.Core;
     using Prsd.Core.Domain;
+
     public class WeeeCollectedAmount : Entity, IReturnItem
     {
         public virtual WeeeCollectedAmountSourceType SourceType { get; private set; }
@@ -21,6 +23,8 @@
 
         public WeeeCollectedAmount(WeeeCollectedAmountSourceType sourceType, ObligationType obligationType, WeeeCategory weeeCategory, decimal tonnage, DataReturnVersion dataReturnVersion)
         {
+            Guard.ArgumentNotNull(() => dataReturnVersion, dataReturnVersion);
+
             SourceType = sourceType;
             ObligationType = obligationType;
             WeeeCategory = weeeCategory;

@@ -29,6 +29,10 @@
 
         public AeDeliveryLocation(string approvalNumber, string operatorName, ObligationType obligationType, WeeeCategory weeeCategory, decimal tonnage, DataReturnVersion dataReturnVersion)
         {
+            Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
+            Guard.ArgumentNotNullOrEmpty(() => operatorName, operatorName);
+            Guard.ArgumentNotNull(() => dataReturnVersion, dataReturnVersion);
+
             ApprovalNumber = approvalNumber;
             OperatorName = operatorName;
             ObligationType = obligationType;
