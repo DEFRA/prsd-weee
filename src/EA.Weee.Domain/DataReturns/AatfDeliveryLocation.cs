@@ -29,6 +29,10 @@
 
         public AatfDeliveryLocation(string aatfApprovalNumber, string facilityName, ObligationType obligationType, WeeeCategory weeeCategory, decimal tonnage, DataReturnVersion dataReturnVersion)
         {
+            Guard.ArgumentNotNullOrEmpty(() => aatfApprovalNumber, aatfApprovalNumber);
+            Guard.ArgumentNotNullOrEmpty(() => facilityName, facilityName);
+            Guard.ArgumentNotNull(() => dataReturnVersion, dataReturnVersion);
+
             AatfApprovalNumber = aatfApprovalNumber;
             FacilityName = facilityName;
             ObligationType = obligationType;
