@@ -26,6 +26,23 @@
         [HttpGet]
         public async Task<ActionResult> Index()
         {
+            return await ShowOrganisations();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Index(YourOrganisationsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return await ShowOrganisations();
+            }
+
+            return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = model.SelectedOrganisationId.Value });
+        }
+
+        private async Task<ActionResult> ShowOrganisations()
+        {
             IEnumerable<OrganisationUserData> organisations = await GetOrganisations();
 
             List<OrganisationUserData> accessibleOrganisations = organisations
@@ -41,24 +58,16 @@
                 Guid organisationId = accessibleOrganisations[0].OrganisationId;
                 return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = organisationId });
             }
-            
+
             if (accessibleOrganisations.Count > 0)
             {
                 YourOrganisationsViewModel model = new YourOrganisationsViewModel();
-                
-                foreach (OrganisationUserData organisation in accessibleOrganisations)
-                {
-                    RadioButtonPair<string, Guid> item = new RadioButtonPair<string, Guid>(
-                        organisation.Organisation.OrganisationName,
-                        organisation.OrganisationId);
-
-                    model.AccessibleOrganisations.PossibleValues.Add(item);
-                }
+                model.Organisations = accessibleOrganisations;
 
                 ViewBag.InaccessibleOrganisations = inaccessibleOrganisations.Where(o => o.UserStatus == UserStatus.Pending);
                 return View("YourOrganisations", model);
             }
-            
+
             if (inaccessibleOrganisations.Count > 0)
             {
                 PendingOrganisationsViewModel model = new PendingOrganisationsViewModel();
@@ -69,20 +78,6 @@
             }
 
             return RedirectToAction("Search", "OrganisationRegistration");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Index(YourOrganisationsViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("YourOrganisations", model);
-            }
-
-            Guid organisationId = model.AccessibleOrganisations.SelectedValue;
-
-            return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = organisationId });
         }
 
         [ChildActionOnly]
