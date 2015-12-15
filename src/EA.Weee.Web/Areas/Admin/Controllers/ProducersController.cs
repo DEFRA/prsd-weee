@@ -169,7 +169,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ConfirmRemoveProducer(Guid registeredProducerId)
+        public async Task<ActionResult> ConfirmRemoval(Guid registeredProducerId)
         {
             await SetBreadcrumb();
             using (IWeeeClient client = apiClient())
@@ -177,7 +177,7 @@
                 ProducerDetailsScheme producer = await client.SendAsync(User.GetAccessToken(),
                     new GetProducerDetailsByRegisteredProducerId(registeredProducerId));
 
-                return View(new ConfirmRemoveProducerViewModel
+                return View(new ConfirmRemovalViewModel
                 {
                     RegisteredProducerId = registeredProducerId,
                     RegistrationNumber = producer.Prn,
@@ -190,7 +190,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ConfirmRemoveProducer(ConfirmRemoveProducerViewModel model)
+        public async Task<ActionResult> ConfirmRemoval(ConfirmRemovalViewModel model)
         {
             await SetBreadcrumb();
 
@@ -207,25 +207,20 @@
             {
                 using (var client = apiClient())
                 {
-                    var result = await
-                         client.SendAsync(User.GetAccessToken(),
-                             new RemoveProducer(model.RegisteredProducerId));
+                    await client.SendAsync(User.GetAccessToken(), new RemoveProducer(model.RegisteredProducerId));
 
-                    if (result)
-                    {
-                        return RedirectToAction("RemovedProducer",
+                    return RedirectToAction("Removed",
                             new { model.RegistrationNumber, model.ComplianceYear, model.SchemeName });
-                    }
                 }
             }
             return View(model);
         }
 
         [HttpGet]
-        public async Task<ActionResult> RemovedProducer(string registrationNumber, int complianceYear, string schemeName)
+        public async Task<ActionResult> Removed(string registrationNumber, int complianceYear, string schemeName)
         {
             await SetBreadcrumb();
-            return View(new RemovedProducerViewModel
+            return View(new RemovedViewModel
             {
                 RegistrationNumber = registrationNumber,
                 ComplianceYear = complianceYear,
@@ -235,12 +230,12 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RemovedProducer(RemovedProducerViewModel model)
+        public async Task<ActionResult> Removed(RemovedViewModel model)
         {
             using (IWeeeClient client = apiClient())
             {
                 var isAssociate = await client.SendAsync(User.GetAccessToken(),
-                    new IsProducerAssociateWithAnotherScheme(model.RegistrationNumber, model.ComplianceYear));
+                    new IsProducerAssociatedWithAnotherScheme(model.RegistrationNumber, model.ComplianceYear));
 
                 if (isAssociate)
                 {

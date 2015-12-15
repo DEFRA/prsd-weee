@@ -1,5 +1,5 @@
 ﻿@using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.ConfirmRemoveProducerViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.ConfirmRemovalViewModel
 @{
     ViewBag.Title = "Confirm Remove Producer";
 }
@@ -41,7 +41,7 @@
             </tbody>
         </table>
         <br/>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmRemoveProducer">
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmRemoval">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,

@@ -4,21 +4,21 @@
     using Prsd.Core.Mediator;
     using Security;
 
-    public class IsProducerAssociateWithAnotherSchemeHandler : IRequestHandler<Requests.Admin.IsProducerAssociateWithAnotherScheme, bool>
+    public class IsProducerAssociatedWithAnotherSchemeHandler : IRequestHandler<Requests.Admin.IsProducerAssociatedWithAnotherScheme, bool>
     {
         private readonly IWeeeAuthorization authorization;
 
-        public IsProducerAssociateWithAnotherSchemeHandler(IWeeeAuthorization authorization)
+        public IsProducerAssociatedWithAnotherSchemeHandler(IWeeeAuthorization authorization)
         {
             this.authorization = authorization;
         }
 
-        public async Task<bool> HandleAsync(Requests.Admin.IsProducerAssociateWithAnotherScheme request)
+        public async Task<bool> HandleAsync(Requests.Admin.IsProducerAssociatedWithAnotherScheme request)
         {
             authorization.EnsureCanAccessInternalArea();
             // TODO: The actual implementation
 
-            return await Task.Run(() => true);
+            return await Task.Run(() => false);
         }
     }
 }
