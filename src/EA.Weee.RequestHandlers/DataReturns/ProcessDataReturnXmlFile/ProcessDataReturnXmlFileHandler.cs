@@ -45,7 +45,7 @@
             var errors = xmlValidator.Validate(message);
             List<DataReturnUploadError> datareturnsUploadErrors = errors as List<DataReturnUploadError> ?? errors.ToList();
            
-            DataReturnUpload dataReturnUpload = xmlGenerator.GenerateDataReturnsUpload(message, datareturnsUploadErrors, scheme);
+            var dataReturnUpload = xmlGenerator.GenerateDataReturnUpload(message, datareturnsUploadErrors, scheme);
            
             // record XML processing end time
             stopwatch.Stop();
@@ -63,7 +63,7 @@
 
         private async Task SetDataReturnAndCurrentVersion(Scheme scheme, DataReturnUpload dataReturnUpload)
         {
-            if (dataReturnUpload.ComplianceYear.HasValue && dataReturnUpload.Quarter.HasValue)
+            if (dataReturnUpload.ComplianceYear != null && dataReturnUpload.Quarter != null)
             {
                 Quarter quarter = new Quarter(
                 dataReturnUpload.ComplianceYear.Value,

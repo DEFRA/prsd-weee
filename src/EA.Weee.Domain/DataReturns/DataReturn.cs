@@ -19,7 +19,7 @@
         /// Provides the current version of the data return.
         /// To replace the version, use the SetCurrentVersion method.
         /// </summary>
-        public DataReturnVersion CurrentVersion { get; private set; }
+        public virtual DataReturnVersion CurrentVersion { get; private set; }
 
         public DataReturn(Scheme scheme, Quarter quarter)
         {
