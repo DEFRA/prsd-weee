@@ -3,7 +3,7 @@
     using System;
     using Prsd.Core.Mediator;
 
-    public class RemoveProducer : IRequest<bool>
+    public class RemoveProducer : IRequest<int>
     {
         public Guid RegisteredProducerId { get; set; }
 
