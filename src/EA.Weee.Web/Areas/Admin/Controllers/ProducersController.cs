@@ -169,17 +169,27 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ConfirmRemoveProducer(string registrationNumber)
+        public async Task<ActionResult> ConfirmRemoveProducer(Guid registeredProducerId)
         {
             await SetBreadcrumb();
-
-            return View(new ConfirmRemoveProducerViewModel
+            using (IWeeeClient client = apiClient())
             {
-                RegistrationNumber = registrationNumber
-            });
+                ProducerDetailsScheme producer = await client.SendAsync(User.GetAccessToken(),
+                    new GetProducerDetailsByRegisteredProducerId(registeredProducerId));
+
+                return View(new ConfirmRemoveProducerViewModel
+                {
+                    RegisteredProducerId = registeredProducerId,
+                    RegistrationNumber = producer.Prn,
+                    ComplianceYear = producer.ComplianceYear,
+                    ProducerName = producer.ProducerName,
+                    SchemeName = producer.SchemeName
+                });
+            }
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ConfirmRemoveProducer(ConfirmRemoveProducerViewModel model)
         {
             await SetBreadcrumb();
@@ -195,24 +205,53 @@
             }
             if (model.SelectedValue == "Yes")
             {
+                //TODO : Needs to change as per actual implementation
                 //using (var client = apiClient())
                 //{
                 //    await
                 //        client.SendAsync(User.GetAccessToken(),
-                //            new CopyOrganisationAddressIntoRegisteredOffice(viewModel.OrganisationId));
+                //            new RemoveProducer(model.RegisteredProducerId));
                 //}
 
-                return RedirectToAction("RemovedProducer");
+                return RedirectToAction("RemovedProducer", new { model.RegisteredProducerId });
             }
             return View(model);
         }
 
         [HttpGet]
-        public async Task<ActionResult> RemovedProducer()
+        public async Task<ActionResult> RemovedProducer(Guid registeredProducerId)
         {
             await SetBreadcrumb();
+            using (IWeeeClient client = apiClient())
+            {
+                ProducerDetailsScheme producer = await client.SendAsync(User.GetAccessToken(),
+                    new GetProducerDetailsByRegisteredProducerId(registeredProducerId));
 
-            return View();
+                return View(new RemovedProducerViewModel
+                {
+                    RegisteredProducerId = registeredProducerId,
+                    RegistrationNumber = producer.Prn,
+                    ComplianceYear = producer.ComplianceYear,
+                    SchemeName = producer.SchemeName
+                });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RemovedProducer(RemovedProducerViewModel model)
+        {
+            using (IWeeeClient client = apiClient())
+            {
+                var isAssociate = await client.SendAsync(User.GetAccessToken(),
+                    new IsProducerAssociateWithScheme(model.RegistrationNumber));
+
+                if (isAssociate)
+                {
+                    return RedirectToAction("Details", new { model.RegistrationNumber });
+                }
+                return RedirectToAction("Search");
+            }
         }
 
         private async Task SetBreadcrumb()
