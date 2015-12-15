@@ -1,29 +1,23 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using EA.Prsd.Core.Domain;
+    using Lookup;
+    using Prsd.Core.Domain;
 
-    public class ReturnItem : Entity
+    public class ReturnItem : Entity, IReturnItem
     {
-        public Category Category { get; private set; }
+        public virtual ObligationType ObligationType { get; private set; }
 
-        public ObligationType ObligationType { get; private set; }
+        public virtual decimal Tonnage { get; private set; }
 
-        public decimal AmountInTonnes { get; private set; }
+        public virtual WeeeCategory WeeeCategory { get; private set; }
 
-        public ReturnItem(
-            Category category,
-            ObligationType obligationType,
-            decimal amountInTonnes)
+        public ReturnItem(ObligationType obligationType, WeeeCategory weeeCategory, decimal tonnage)
         {
-            Category = category;
+            WeeeCategory = weeeCategory;
             ObligationType = obligationType;
 
-            if (amountInTonnes < 0)
+            if (tonnage < 0)
             {
                 throw new ArgumentOutOfRangeException("amountInTonnes");
             }
@@ -34,7 +28,11 @@
                 throw new InvalidOperationException(errorMessage);
             }
 
-            AmountInTonnes = amountInTonnes;
+            Tonnage = tonnage;
+        }
+
+        protected ReturnItem()
+        {
         }
     }
 }
