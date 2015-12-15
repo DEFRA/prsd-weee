@@ -2,6 +2,8 @@
 {
     using System.Data.Common;
     using System.Data.Entity;
+    using System.Data.SqlClient;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Domain;
@@ -12,13 +14,15 @@
     using Domain.Organisation;
     using Domain.Producer;
     using Domain.Scheme;
+    using Domain.Unalignment;
+    using Extensions;
     using Prsd.Core;
     using Prsd.Core.DataAccess.Extensions;
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
     using StoredProcedure;
 
-    public class WeeeContext : DbContext
+    public partial class WeeeContext : DbContext
     {
         private readonly IUserContext userContext;
         private readonly IEventDispatcher dispatcher;
@@ -112,6 +116,8 @@
             this.SetEntityId();
             this.AuditChanges(userContext.UserId);
             AuditEntity();
+            UnalignEntities();
+
             int result;
             if (alreadyHasTransaction)
             {
@@ -141,6 +147,8 @@
             this.SetEntityId();
             this.AuditChanges(userContext.UserId);
             AuditEntity();
+            UnalignEntities();
+
             int result;
             if (alreadyHasTransaction)
             {
@@ -185,6 +193,28 @@
                 {
                     auditableEntity.Entity.Date = SystemTime.UtcNow;
                     auditableEntity.Entity.UserId = userContext.UserId.ToString();
+                }
+            }
+        }
+
+        private void UnalignEntities()
+        {
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                var unalignableEntity = entry.Entity as UnalignableEntity;
+                if (unalignableEntity != null 
+                    && !unalignableEntity.IsAligned)
+                {
+                    var entity = unalignableEntity;
+
+                    var tableName = GetTableName(entity.GetType());
+                    var primaryKeyName = GetPrimaryKeyName(entity.GetType());
+
+                    var sql = string.Format("UPDATE {0} SET IsAligned = 0 WHERE {1} = @id", tableName, primaryKeyName);
+
+                    Database.ExecuteSqlCommand(sql, new SqlParameter("@id", entry.OriginalValues[primaryKeyName]));
+
+                    entry.State = EntityState.Detached;
                 }
             }
         }
