@@ -81,6 +81,12 @@
 
                 dataReturnUpload.SetDataReturnVersion(dataReturnVersion);
             }
+            else
+            {
+                throw new ApplicationException(String.Format(
+                        "Data return upload for scheme {0} does not have a compliance year or quarter",
+                        scheme.Id));
+            }
         }
     }
 }
