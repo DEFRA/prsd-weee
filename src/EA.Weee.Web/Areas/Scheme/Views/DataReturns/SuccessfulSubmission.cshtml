@@ -13,9 +13,7 @@
     @using (Html.BeginForm("SignOut", "Account", new { Area = "" }, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        <p>If you have finished performing tasks you can
-        <span id="log-off-link"><noscript><input type="submit" value="sign out" /></noscript></span>
-        or proceed to perform more activities.</p>
+        <p>If you have finished performing tasks you can <input type="submit" value="sign out" class="link-submit" /> or proceed to perform more activities.</p>
     }
 
     @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
@@ -30,10 +28,4 @@
             "What did you think of this service?", new RouteValueDictionary { { "area", string.Empty } }, newTab: true)
         (takes 30 seconds)
     </p>
-}
-
-@section scripts {
-    <script type="text/javascript">
-        $("#log-off-link").html("<a href=\"#\" onclick=\"$(this).closest('form').submit();\">sign out</a>");
-    </script>
 }
