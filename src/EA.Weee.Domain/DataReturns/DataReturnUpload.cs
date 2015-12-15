@@ -26,14 +26,15 @@
 
         public virtual DataReturnVersion DataReturnVersion { get; private set; }
 
-        public DataReturnUpload(Scheme scheme, string data, List<DataReturnUploadError> errors, string fileName, DataReturnVersion returnVersion, int? year, int? quarter)
+        public DataReturnUpload(Scheme scheme, string data, List<DataReturnUploadError> errors, string fileName, int? year, int? quarter)
         {
+            Guard.ArgumentNotNull(() => scheme, scheme);           
+
             Scheme = scheme;
             Errors = errors;
             RawData = new DataReturnUploadRawData() { Data = data };
             this.Date = SystemTime.UtcNow;
-            FileName = fileName;
-            DataReturnVersion = returnVersion;
+            FileName = fileName;            
             ComplianceYear = year;
             Quarter = quarter;
         }
@@ -55,19 +56,21 @@
             }
         }
 
-        public virtual void SetDataReturnsVersion(DataReturnVersion version)
+        public virtual void SetDataReturnVersion(DataReturnVersion returnVersion)
         {
-            if (version != null)
-            {
-                DataReturnVersion = version;
-            }
+            Guard.ArgumentNotNull(() => returnVersion, returnVersion);
+            DataReturnVersion = returnVersion;
         }
-
         public void Submit(string userId)
         {
             if (DataReturnVersion != null)
             {
                 DataReturnVersion.Submit(userId);
+            }
+            else
+            {
+                string errorMessage = "This data return version not defined.";
+                throw new InvalidOperationException(errorMessage);
             }          
         }
     }
