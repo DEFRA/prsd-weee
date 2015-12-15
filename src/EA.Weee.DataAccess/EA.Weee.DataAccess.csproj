@@ -78,6 +78,8 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
     <Compile Include="Identity\WeeeIdentityContext.cs" />
+    <Compile Include="Mappings\AatfDeliveryLocationMapping.cs" />
+    <Compile Include="Mappings\AeDeliveryLocationMapping.cs" />
     <Compile Include="Mappings\CompetentAuthorityUserMapping.cs" />
     <Compile Include="Mappings\DataReturnUploadErrorMapping.cs" />
     <Compile Include="Mappings\DataReturnMapping.cs" />
@@ -112,6 +114,8 @@
     <Compile Include="Mappings\ProducerSISCodeMapping.cs" />
     <Compile Include="Mappings\SchemeMapping.cs" />
     <Compile Include="Mappings\SystemDataMapping.cs" />
+    <Compile Include="Mappings\WeeeCollectedAmountMapping.cs" />
+    <Compile Include="Mappings\WeeeDeliveredAmountMapping.cs" />
     <Compile Include="RelationshipExtensions.cs" />
     <Compile Include="StoredProcedure\IStoredProcedures.cs" />
     <Compile Include="StoredProcedure\MembersDetailsCSVData.cs" />
