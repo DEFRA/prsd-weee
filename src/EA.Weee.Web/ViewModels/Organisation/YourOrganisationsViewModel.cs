@@ -1,31 +1,18 @@
 ﻿namespace EA.Weee.Web.ViewModels.Organisation
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using Core.Organisations;
     using EA.Weee.Web.ViewModels.Shared;
 
     public class YourOrganisationsViewModel
     {
-        [Required]
-        //[DisplayName("Which organisation would you like to perform activities for?")] --TODO: Update content to allow legend
-        public StringGuidRadioButtons AccessibleOrganisations { get; private set; }
+        public IReadOnlyList<OrganisationUserData> Organisations { get; set; }
 
+        [DisplayName("Which organisation would you like to perform activities for?")]
         [Required(ErrorMessage = "Select an organisation to perform activities")]
-        public RadioButtonPair<string, Guid> Selected
-        {
-            get
-            {
-                return AccessibleOrganisations.Selected;
-            }
-            set
-            {
-                AccessibleOrganisations.Selected = value;
-            }
-        }
-
-        public YourOrganisationsViewModel()
-        {
-            AccessibleOrganisations = new StringGuidRadioButtons();
-        }
+        public Guid? SelectedOrganisationId { get; set; }
     }
 }

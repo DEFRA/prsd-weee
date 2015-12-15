@@ -102,10 +102,10 @@
 
             YourOrganisationsViewModel model = viewResult.Model as YourOrganisationsViewModel;
 
-            Assert.Equal(1, model.AccessibleOrganisations.PossibleValues.Count);
+            Assert.Equal(1, model.Organisations.Count);
 
-            Assert.Equal(organisationId1, model.AccessibleOrganisations.PossibleValues[0].Value);
-            Assert.Equal("Organisation Name 1", model.AccessibleOrganisations.PossibleValues[0].Key);
+            Assert.Equal(organisationId1, model.Organisations[0].OrganisationId);
+            Assert.Equal("Organisation Name 1", model.Organisations[0].Organisation.OrganisationName);
 
             Assert.IsAssignableFrom<IEnumerable<OrganisationUserData>>(viewResult.ViewBag.InaccessibleOrganisations);
 
