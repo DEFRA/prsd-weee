@@ -4,8 +4,6 @@
 
     public class RemovedProducerViewModel
     {
-        public Guid RegisteredProducerId { get; set; }
-
         public string RegistrationNumber { get; set; }
 
         public int ComplianceYear { get; set; }

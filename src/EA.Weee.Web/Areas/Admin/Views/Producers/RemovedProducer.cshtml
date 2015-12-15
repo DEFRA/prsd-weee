@@ -13,7 +13,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.RegistrationNumber)
-        @Html.HiddenFor(m => m.RegisteredProducerId)
+        @Html.HiddenFor(m => m.ComplianceYear)
 
         <p>You have successfully removed the producer from '@Model.SchemeName' for @Model.ComplianceYear.</p>
 
