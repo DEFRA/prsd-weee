@@ -15,7 +15,13 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <p>The following producer will no longer be a member of A WEEE Scheme for 2016.</p>
+        @Html.HiddenFor(m => m.ComplianceYear)
+        @Html.HiddenFor(m => m.SchemeName)
+        @Html.HiddenFor(m => m.ProducerName)
+        @Html.HiddenFor(m => m.RegistrationNumber)
+        @Html.HiddenFor(m => m.RegisteredProducerId)
+
+        <p>The following producer will no longer be a member of @Model.SchemeName for @Model.ComplianceYear.</p>
 
         <table>
             <thead>
@@ -26,11 +32,11 @@
             <tbody>
                 <tr>
                     <th>Producer name</th>
-                    <td>10 Squared Ltd</td>
+                    <td>@Model.ProducerName</td>
                 </tr>
                 <tr>
                     <th>Producer registration number</th>
-                    <td>WEE/MM1329AA</td>
+                    <td>@Model.RegistrationNumber</td>
                 </tr>
             </tbody>
         </table>

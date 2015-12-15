@@ -1,5 +1,5 @@
 ﻿@using EA.Weee.Web.RazorHelpers
-
+@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.RemovedProducerViewModel
 @{
     ViewBag.Title = "Removed Producer";
 }
@@ -12,8 +12,10 @@
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
-        <p>You have successfully removed the producer from 'A WEEE Scheme' for 2016.</p>
+        @Html.HiddenFor(m => m.RegistrationNumber)
+        @Html.HiddenFor(m => m.RegisteredProducerId)
+
+        <p>You have successfully removed the producer from '@Model.SchemeName' for @Model.ComplianceYear.</p>
 
         @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
     }
