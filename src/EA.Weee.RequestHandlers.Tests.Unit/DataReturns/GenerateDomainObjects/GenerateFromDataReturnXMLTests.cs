@@ -23,7 +23,7 @@
 
             var generateFromXml = new GenerateFromXmlBuilder().Build();
 
-            var result = generateFromXml.GenerateDataReturnsUpload(message,
+            var result = generateFromXml.GenerateDataReturnUpload(message,
                 new List<DataReturnUploadError>
                 {
                     new DataReturnUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Some schema error")
@@ -42,7 +42,7 @@
             var message = new ProcessDataReturnXmlFile(Guid.NewGuid(), new byte[1], "File name");
             var generateFromXml = builder.Build();
 
-            var result = generateFromXml.GenerateDataReturnsUpload(message, new List<DataReturnUploadError>(), A.Dummy<Scheme>());
+            var result = generateFromXml.GenerateDataReturnUpload(message, new List<DataReturnUploadError>(), A.Dummy<Scheme>());
 
             Assert.NotNull(result.ComplianceYear);
             Assert.Equal(2015, result.ComplianceYear.Value);

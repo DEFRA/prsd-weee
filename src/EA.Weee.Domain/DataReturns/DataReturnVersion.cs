@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -22,29 +23,24 @@
 
         public virtual bool IsSubmitted { get; private set; }
 
-        public ICollection<ReturnItem> ReturnItemsCollectedFromDcf { get; private set; }
+        public virtual ICollection<WeeeCollectedAmount> WeeeCollectedAmounts { get; private set; }
 
-        public ICollection<DeliveredToAtf> DeliveredToAatf { get; private set; }
+        public virtual ICollection<AatfDeliveredAmount> AatfDeliveredAmounts { get; private set; }
 
-        public ICollection<DeliveredToAe> DeliveredToAe { get; private set; }
+        public virtual ICollection<AeDeliveredAmount> AeDeliveredAmounts { get; private set; }
 
-        public ICollection<ReturnItem> B2cWeeeFromDistributors { get; private set; }
-
-        public ICollection<ReturnItem> B2cWeeeFromFinalHolders { get; private set; }
-
-        public ICollection<Producer> Producers { get; private set; }
+        public virtual ICollection<EeeOutputAmount> EeeOutputAmounts { get; private set; }
 
         public DataReturnVersion(DataReturn dataReturn)
         {
             Guard.ArgumentNotNull(() => dataReturn, dataReturn);
 
             DataReturn = dataReturn;
-            ReturnItemsCollectedFromDcf = new List<ReturnItem>();
-            DeliveredToAatf = new List<DeliveredToAtf>();
-            DeliveredToAe = new List<DeliveredToAe>();
-            B2cWeeeFromDistributors = new List<ReturnItem>();
-            B2cWeeeFromFinalHolders = new List<ReturnItem>();
-            Producers = new List<Producer>();
+
+            WeeeCollectedAmounts = new List<WeeeCollectedAmount>();
+            AatfDeliveredAmounts = new List<AatfDeliveredAmount>();
+            AeDeliveredAmounts = new List<AeDeliveredAmount>();
+            EeeOutputAmounts = new List<EeeOutputAmount>();
         }
 
         /// <summary>
@@ -54,83 +50,131 @@
         {
         }
 
-        public void AddReturnItemCollectedFromDcf(ReturnItem returnItem)
+        public void AddWeeeCollectedAmount(WeeeCollectedAmount weeeCollectedAmount)
         {
-            Guard.ArgumentNotNull(() => returnItem, returnItem);
+            switch (weeeCollectedAmount.SourceType)
+            {
+                case WeeeCollectedAmountSourceType.Dcf:
+                    AddReturnItemCollectedFromDcf(weeeCollectedAmount);
+                    break;
+                case WeeeCollectedAmountSourceType.Distributor:
+                    AddB2cWeeeFromDistributor(weeeCollectedAmount);
+                    break;
+                case WeeeCollectedAmountSourceType.FinalHolder:
+                    AddB2cWeeeFromFinalHolder(weeeCollectedAmount);
+                    break;
+            }
+        }
 
-            if (ReturnItemsCollectedFromDcf
-                .Where(r => r.Category == returnItem.Category)
-                .Where(r => (r.ObligationType & returnItem.ObligationType) != ObligationType.None)
+        private void AddReturnItemCollectedFromDcf(WeeeCollectedAmount weeeCollectedAmount)
+        {
+            Guard.ArgumentNotNull(() => weeeCollectedAmount, weeeCollectedAmount);
+
+            if (WeeeCollectedAmounts
+                .Where(r => r.SourceType == WeeeCollectedAmountSourceType.Dcf)
+                .Where(r => r.WeeeCategory == weeeCollectedAmount.WeeeCategory)
+                .Where(r => (r.ObligationType & weeeCollectedAmount.ObligationType) != ObligationType.None)
                 .Any())
             {
                 string errorMessage = "A return item with this obligation type and category has already been added.";
                 throw new InvalidOperationException(errorMessage);
             }
 
-            ReturnItemsCollectedFromDcf.Add(returnItem);
+            WeeeCollectedAmounts.Add(weeeCollectedAmount);
         }
 
-        public void AddB2cWeeeFromDistributor(ReturnItem returnItem)
+        private void AddB2cWeeeFromDistributor(WeeeCollectedAmount weeeCollectedAmount)
         {
-            Guard.ArgumentNotNull(() => returnItem, returnItem);
+            Guard.ArgumentNotNull(() => weeeCollectedAmount, weeeCollectedAmount);
 
-            if (returnItem.ObligationType != ObligationType.B2C)
+            if (weeeCollectedAmount.ObligationType != ObligationType.B2C)
             {
                 string errorMessage = "Only return items with an obligation type of B2C can be added under \"B2C WEEE from distributors\".";
                 throw new InvalidOperationException(errorMessage);
             }
 
-            if (B2cWeeeFromDistributors
-                .Where(r => r.Category == returnItem.Category)
-                .Where(r => (r.ObligationType & returnItem.ObligationType) != ObligationType.None)
+            if (WeeeCollectedAmounts
+                .Where(r => r.SourceType == WeeeCollectedAmountSourceType.Distributor)
+                .Where(r => r.WeeeCategory == weeeCollectedAmount.WeeeCategory)
+                .Where(r => (r.ObligationType & weeeCollectedAmount.ObligationType) != ObligationType.None)
                 .Any())
             {
                 string errorMessage = "A return item with this obligation type and category has already been added.";
                 throw new InvalidOperationException(errorMessage);
             }
 
-            B2cWeeeFromDistributors.Add(returnItem);
+            WeeeCollectedAmounts.Add(weeeCollectedAmount);
         }
 
-        public void AddB2cWeeeFromFinalHolder(ReturnItem returnItem)
+        private void AddB2cWeeeFromFinalHolder(WeeeCollectedAmount weeeCollectedAmount)
         {
-            Guard.ArgumentNotNull(() => returnItem, returnItem);
+            Guard.ArgumentNotNull(() => weeeCollectedAmount, weeeCollectedAmount);
 
-            if (returnItem.ObligationType != ObligationType.B2C)
+            if (weeeCollectedAmount.ObligationType != ObligationType.B2C)
             {
                 string errorMessage = "Only return items with an obligation type of B2C can be added under \"B2C WEEE from final holders\".";
                 throw new InvalidOperationException(errorMessage);
             }
 
-            if (B2cWeeeFromFinalHolders
-                .Where(r => r.Category == returnItem.Category)
-                .Where(r => (r.ObligationType & returnItem.ObligationType) != ObligationType.None)
+            if (WeeeCollectedAmounts
+                .Where(r => r.SourceType == WeeeCollectedAmountSourceType.FinalHolder)
+                .Where(r => r.WeeeCategory == weeeCollectedAmount.WeeeCategory)
+                .Where(r => (r.ObligationType & weeeCollectedAmount.ObligationType) != ObligationType.None)
                 .Any())
             {
                 string errorMessage = "A return item with this obligation type and category has already been added.";
                 throw new InvalidOperationException(errorMessage);
             }
 
-            B2cWeeeFromFinalHolders.Add(returnItem);
+            WeeeCollectedAmounts.Add(weeeCollectedAmount);
         }
 
-        public void AddProducer(Producer producer)
+        public void AddEeeOutputAmount(EeeOutputAmount eeeOutputAmount)
         {
-            Guard.ArgumentNotNull(() => producer, producer);
+            Guard.ArgumentNotNull(() => eeeOutputAmount, eeeOutputAmount);
 
-            if (producer.RegisteredProducer.Scheme != DataReturn.Scheme)
+            if (eeeOutputAmount.RegisteredProducer.Scheme.Id != DataReturn.Scheme.Id)
             {
                 string errorMesage = "The specified producer was registered in a different scheme to this data return.";
                 throw new InvalidOperationException(errorMesage);
             }
 
-            if (producer.RegisteredProducer.ComplianceYear != DataReturn.Quarter.Year)
+            EeeOutputAmounts.Add(eeeOutputAmount);
+        }
+
+        public void AddAatfDeliveredAmount(AatfDeliveredAmount aatfDeliveredAmount)
+        {
+            Guard.ArgumentNotNull(() => aatfDeliveredAmount, aatfDeliveredAmount);
+
+            if (AatfDeliveredAmounts
+                .Where(r => r.AatfDeliveryLocation.AatfApprovalNumber == aatfDeliveredAmount.AatfDeliveryLocation.AatfApprovalNumber)
+                .Where(r => r.WeeeCategory == aatfDeliveredAmount.WeeeCategory)
+                .Where(r => (r.ObligationType & aatfDeliveredAmount.ObligationType) != ObligationType.None)
+                .Any())
             {
-                string errorMesage = "The specified producer was registered in a different year to this data return.";
-                throw new InvalidOperationException(errorMesage);
+                string errorMessage = "A return item with this obligation type and category has already been added.";
+                throw new InvalidOperationException(errorMessage);
             }
 
-            Producers.Add(producer);
+            AatfDeliveredAmounts.Add(aatfDeliveredAmount);
+        }
+
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Parameter name is valid.")]
+        public void AddAeDeliveredAmount(AeDeliveredAmount aeDeliveredAmount)
+        {
+            Guard.ArgumentNotNull(() => aeDeliveredAmount, aeDeliveredAmount);
+
+            if (AeDeliveredAmounts
+                .Where(r => r.AeDeliveryLocation.ApprovalNumber == aeDeliveredAmount.AeDeliveryLocation.ApprovalNumber)
+                .Where(r => r.WeeeCategory == aeDeliveredAmount.WeeeCategory)
+                .Where(r => (r.ObligationType & aeDeliveredAmount.ObligationType) != ObligationType.None)
+                .Any())
+            {
+                string errorMessage = "A return item with this obligation type and category has already been added.";
+                throw new InvalidOperationException(errorMessage);
+            }
+
+            AeDeliveredAmounts.Add(aeDeliveredAmount);
         }
 
         public void Submit(string userId)
@@ -139,7 +183,7 @@
             {
                 string errorMessage = "This data return version has already been submitted.";
                 throw new InvalidOperationException(errorMessage);
-            }            
+            }
             if (DataReturn != null)
             {
                 IsSubmitted = true;
