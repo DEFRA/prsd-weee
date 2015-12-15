@@ -29,7 +29,7 @@
 
         public IEnumerable<DataReturnUploadError> Validate(ProcessDataReturnXmlFile message)
         {
-            string schemaVersion = "3.2";
+            string schemaVersion = "3.21";
             // Validate against the schema
             var errors = schemaValidator.Validate(message.Data, @"EA.Weee.Xml.DataReturns.v3schema.xsd", @"http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns", schemaVersion)
                 .Select(e => e.ToDataReturnsUploadError())

@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="scripts\Everytime\0007-InsertCategoryData.sql" />
+    <Content Include="scripts\Everytime\0007-InsertWeeeCategoryData.sql" />
     <Content Include="scripts\Everytime\0006-MigratedProducers.sql" />
     <Content Include="scripts\Update\Sprint18\20151207-1450-UpdataDataReturnTables.sql" />
     <Content Include="scripts\Update\Sprint18\20151208-1505-Update-spgProducerAmendmentsCSVDataByPRN.sql" />
@@ -139,6 +139,7 @@
     <Content Include="scripts\Update\Sprint18\20151202-1015-AddProcessTimeToDataReturnsUpload.sql" />
     <Content Include="scripts\Update\Sprint18\20151126-1142-AddDataReturnsUploadAndErrorsTables.sql" />
     <Content Include="scripts\Update\Sprint18\20151210-1716-AddUniqueConstraintToDataReturnTable.sql" />
+    <Content Include="scripts\Update\Sprint19\20151211-1500-RenameCategoryTableAndReferences.sql" />
     <Content Include="scripts\Update\Sprint19\20151211-0930-CreateDataReturnsWeeeCollectedTables.sql" />
     <Content Include="scripts\Update\Sprint19\20151210-1130-CreateDataReturnsCategoryTable.sql" />
     <Content Include="scripts\Update\Sprint19\20151210-1500-CreateDataReturnsWeeeDeliveredTables.sql" />
