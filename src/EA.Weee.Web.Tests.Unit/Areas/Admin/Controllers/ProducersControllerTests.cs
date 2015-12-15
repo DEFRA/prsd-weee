@@ -352,9 +352,16 @@
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
             ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
-            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
 
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveProducer>._))
+                .Returns(true);
+
+            Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
+            A.CallTo(() => weeeClientFunc())
+                .Returns(weeeClient);
+
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc);
 
             ConfirmRemoveProducerViewModel viewModel = new ConfirmRemoveProducerViewModel();
             viewModel.SelectedValue = "Yes";
@@ -396,30 +403,14 @@
             // Arrange
             BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
             ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
-
-            ProducerDetailsScheme producerDetailsScheme = A.Dummy<ProducerDetailsScheme>();
-
-            var registeredProducerId = Guid.NewGuid();
-
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
-                .WhenArgumentsMatch(a => ((GetProducerDetailsByRegisteredProducerId)a[1]).RegisteredProducerId == registeredProducerId)
-                .Returns(producerDetailsScheme);
-
             Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
-            A.CallTo(() => weeeClientFunc())
-                .Returns(weeeClient);
-
+            
             ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc);
 
             // Act
-            ActionResult result = await controller.RemovedProducer(registeredProducerId);
+            ActionResult result = await controller.RemovedProducer("WEE/MM0001AA", 2016, "SchemeName");
 
             // Assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
-                .WhenArgumentsMatch(a => ((GetProducerDetailsByRegisteredProducerId)a[1]).RegisteredProducerId == registeredProducerId)
-                .MustHaveHappened();
-
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
 
@@ -436,8 +427,8 @@
             var registeredNumber = "WEE/MM0001AA";
 
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociateWithScheme>._))
-                .WhenArgumentsMatch(a => ((IsProducerAssociateWithScheme)a[1]).RegistrationNumber == registeredNumber)
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociateWithAnotherScheme>._))
+                .WhenArgumentsMatch(a => ((IsProducerAssociateWithAnotherScheme)a[1]).RegistrationNumber == registeredNumber)
                 .Returns(true);
 
             Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
@@ -453,8 +444,8 @@
             ActionResult result = await controller.RemovedProducer(model);
 
             // Assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociateWithScheme>._))
-                .WhenArgumentsMatch(a => ((IsProducerAssociateWithScheme)a[1]).RegistrationNumber == registeredNumber)
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociateWithAnotherScheme>._))
+                .WhenArgumentsMatch(a => ((IsProducerAssociateWithAnotherScheme)a[1]).RegistrationNumber == registeredNumber)
                 .MustHaveHappened();
             
             var redirectToRouteResult = ((RedirectToRouteResult)result);
@@ -472,8 +463,8 @@
             var registeredNumber = "WEE/MM0001AA";
 
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociateWithScheme>._))
-                .WhenArgumentsMatch(a => ((IsProducerAssociateWithScheme)a[1]).RegistrationNumber == registeredNumber)
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociateWithAnotherScheme>._))
+                .WhenArgumentsMatch(a => ((IsProducerAssociateWithAnotherScheme)a[1]).RegistrationNumber == registeredNumber)
                 .Returns(false);
 
             Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
@@ -489,8 +480,8 @@
             ActionResult result = await controller.RemovedProducer(model);
 
             // Assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociateWithScheme>._))
-                .WhenArgumentsMatch(a => ((IsProducerAssociateWithScheme)a[1]).RegistrationNumber == registeredNumber)
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociateWithAnotherScheme>._))
+                .WhenArgumentsMatch(a => ((IsProducerAssociateWithAnotherScheme)a[1]).RegistrationNumber == registeredNumber)
                 .MustHaveHappened();
 
             var redirectToRouteResult = ((RedirectToRouteResult)result);

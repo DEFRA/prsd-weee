@@ -205,36 +205,32 @@
             }
             if (model.SelectedValue == "Yes")
             {
-                //TODO : Needs to change as per actual implementation
-                //using (var client = apiClient())
-                //{
-                //    await
-                //        client.SendAsync(User.GetAccessToken(),
-                //            new RemoveProducer(model.RegisteredProducerId));
-                //}
+                using (var client = apiClient())
+                {
+                    var result = await
+                         client.SendAsync(User.GetAccessToken(),
+                             new RemoveProducer(model.RegisteredProducerId));
 
-                return RedirectToAction("RemovedProducer", new { model.RegisteredProducerId });
+                    if (result)
+                    {
+                        return RedirectToAction("RemovedProducer",
+                            new { model.RegistrationNumber, model.ComplianceYear, model.SchemeName });
+                    }
+                }
             }
             return View(model);
         }
 
         [HttpGet]
-        public async Task<ActionResult> RemovedProducer(Guid registeredProducerId)
+        public async Task<ActionResult> RemovedProducer(string registrationNumber, int complianceYear, string schemeName)
         {
             await SetBreadcrumb();
-            using (IWeeeClient client = apiClient())
+            return View(new RemovedProducerViewModel
             {
-                ProducerDetailsScheme producer = await client.SendAsync(User.GetAccessToken(),
-                    new GetProducerDetailsByRegisteredProducerId(registeredProducerId));
-
-                return View(new RemovedProducerViewModel
-                {
-                    RegisteredProducerId = registeredProducerId,
-                    RegistrationNumber = producer.Prn,
-                    ComplianceYear = producer.ComplianceYear,
-                    SchemeName = producer.SchemeName
-                });
-            }
+                RegistrationNumber = registrationNumber,
+                ComplianceYear = complianceYear,
+                SchemeName = schemeName
+            });
         }
 
         [HttpPost]
@@ -244,7 +240,7 @@
             using (IWeeeClient client = apiClient())
             {
                 var isAssociate = await client.SendAsync(User.GetAccessToken(),
-                    new IsProducerAssociateWithScheme(model.RegistrationNumber));
+                    new IsProducerAssociateWithAnotherScheme(model.RegistrationNumber, model.ComplianceYear));
 
                 if (isAssociate)
                 {
