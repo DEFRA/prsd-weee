@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class RemovedProducerViewModel
+    public class RemovedViewModel
     {
         public string RegistrationNumber { get; set; }
 

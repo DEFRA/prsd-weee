@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using Web.ViewModels.Shared;
 
-    public class ConfirmRemoveProducerViewModel : YesNoChoiceViewModel
+    public class ConfirmRemovalViewModel : YesNoChoiceViewModel
     {
         [Required(ErrorMessage = "Please confirm")]
         public override string SelectedValue { get; set; }

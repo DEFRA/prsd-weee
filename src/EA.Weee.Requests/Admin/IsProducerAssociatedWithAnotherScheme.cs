@@ -2,13 +2,13 @@
 {
     using Prsd.Core.Mediator;
 
-    public class IsProducerAssociateWithAnotherScheme : IRequest<bool>
+    public class IsProducerAssociatedWithAnotherScheme : IRequest<bool>
     {
         public string RegistrationNumber { get; set; }
 
         public int ComplianceYear { get; set; }
 
-        public IsProducerAssociateWithAnotherScheme(string registrationNumber, int complianceYear)
+        public IsProducerAssociatedWithAnotherScheme(string registrationNumber, int complianceYear)
         {
             RegistrationNumber = registrationNumber;
             ComplianceYear = complianceYear;
