@@ -17,6 +17,9 @@
         {
             Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
             Guard.ArgumentNotNullOrEmpty(() => operatorName, operatorName);
+
+            ApprovalNumber = approvalNumber;
+            OperatorName = operatorName;
         }
     }
 }
