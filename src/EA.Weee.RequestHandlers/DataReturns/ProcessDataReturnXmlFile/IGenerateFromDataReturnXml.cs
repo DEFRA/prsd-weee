@@ -7,6 +7,6 @@
 
     public interface IGenerateFromDataReturnXml
     {
-        DataReturnUpload GenerateDataReturnsUpload(ProcessDataReturnXmlFile messageXmlFile, List<DataReturnUploadError> errors, Scheme scheme);
+        DataReturnUpload GenerateDataReturnUpload(ProcessDataReturnXmlFile messageXmlFile, List<DataReturnUploadError> errors, Scheme scheme);
     }
 }
