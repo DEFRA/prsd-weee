@@ -7,7 +7,13 @@
     {
         public RegisteredProducerMapping()
         {
-            ToTable("RegisteredProducer", "Producer");
+            Ignore(m => m.IsAligned);
+
+            Map(m =>
+            {
+                m.ToTable("RegisteredProducer", "Producer");
+                m.Requires("IsAligned").HasValue(true);
+            });
         }
     }
 }
