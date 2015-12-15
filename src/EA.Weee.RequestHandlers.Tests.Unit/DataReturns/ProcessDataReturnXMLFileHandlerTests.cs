@@ -3,9 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
+    using Domain;
     using Domain.DataReturns;
     using Domain.Scheme;
     using FakeItEasy;
@@ -82,37 +84,50 @@
         }
 
         [Fact]
-        public async Task ProcessDataReturnXmlFile_SavesDataReturnUpload()
+        public async Task ProcessDataReturnXmlFile_ComplianceYearNotSet_ThrowsApplicationException()
         {
+            await Assert.ThrowsAsync<ApplicationException>(async () => await handler.HandleAsync(Message));
+        }
+
+        [Fact]
+        public async void ProcessDataReturnXmlFile_HasErrors_SavesDataReturnUpload()
+        {
+            IEnumerable<DataReturnUploadError> errors = new[]
+           {
+                new DataReturnUploadError(Domain.ErrorLevel.Error, UploadErrorType.Schema, "any description")
+            };
+            
+            List<DataReturnUploadError> datareturnsUploadErrors = errors as List<DataReturnUploadError> ?? errors.ToList();
+            A.CallTo(() => xmlValidator.Validate(Message))
+                .Returns(errors);
             var id = await handler.HandleAsync(Message);
             Assert.NotNull(id);
         }
 
         [Fact]
-        public async Task ProcessDataReturnXmlFile_StoresProcessTime()
+        public async Task ProcessDataReturnXmlFile_HasErrors_ShouldNotStoreDataReturnVersion()
         {
-            IEnumerable<DataReturnUploadError> errors = new List<DataReturnUploadError>();
+           IEnumerable<DataReturnUploadError> errors = new[]
+           {
+                new DataReturnUploadError(Domain.ErrorLevel.Error, UploadErrorType.Schema, "any description")
+            };
             Scheme scheme = FakeSchemeData();
-
+            List<DataReturnUploadError> datareturnsUploadErrors = errors as List<DataReturnUploadError> ?? errors.ToList();
             A.CallTo(() => xmlValidator.Validate(Message))
                 .Returns(errors);
 
             DataReturnUpload upload = A.Fake<DataReturnUpload>();
-
-            A.CallTo(() => generator.GenerateDataReturnsUpload(
+            A.CallTo(() => generator.GenerateDataReturnUpload(
                  Message,
-                new List<DataReturnUploadError>(),
+                datareturnsUploadErrors,
                 scheme))
-                 .WithAnyArguments()
-                .Returns(upload);
+                .Returns<DataReturnUpload>(upload);
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => upload.SetProcessTime(new TimeSpan()))
-                .WithAnyArguments()
-                .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => upload.SetDataReturnVersion(A.Dummy<DataReturnVersion>()))               
+                .MustNotHaveHappened();
         }
-
         private static Scheme FakeSchemeData()
         {
             return new Scheme(organisationId);

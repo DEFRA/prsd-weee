@@ -23,7 +23,7 @@
             this.deserializer = deserializer;
         }
 
-        public DataReturnUpload GenerateDataReturnsUpload(
+        public DataReturnUpload GenerateDataReturnUpload(
             ProcessDataReturnXmlFile messageXmlFile,
             List<DataReturnUploadError> errors,
             Scheme scheme)
