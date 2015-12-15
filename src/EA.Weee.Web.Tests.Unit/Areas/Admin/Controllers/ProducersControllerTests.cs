@@ -16,6 +16,17 @@
 
     public class ProducersControllerTests
     {
+        private readonly BreadcrumbService breadcumbService;
+        private readonly ISearcher<ProducerSearchResult> producerSearcher;
+        private readonly IWeeeClient weeeClient;
+
+        public ProducersControllerTests()
+        {
+            breadcumbService = A.Fake<BreadcrumbService>();
+            producerSearcher = A.Fake<ISearcher<ProducerSearchResult>>();
+            weeeClient = A.Fake<IWeeeClient>();
+        }
+
         [Fact]
         public async Task GetSearch_ReturnsSearchView()
         {
@@ -285,208 +296,150 @@
         }
 
         [Fact]
-        public async void HttpGet_ConfirmRemoveProducer_ShouldReturnConfirmRemoveProducerView()
+        public async void HttpGet_ConfirmRemoval_ShouldSendRequest_AndShouldReturnConfirmRemovalModel()
         {
             // Arrange
-            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
+            var producerDetailsScheme = A.Dummy<ProducerDetailsScheme>();
 
-            ProducerDetailsScheme producerDetailsScheme = A.Dummy<ProducerDetailsScheme>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
+                .Returns(producerDetailsScheme);
 
             var registeredProducerId = Guid.NewGuid();
 
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
-                .WhenArgumentsMatch(a => ((GetProducerDetailsByRegisteredProducerId)a[1]).RegisteredProducerId == registeredProducerId)
-                .Returns(producerDetailsScheme);
-
-            Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
-            A.CallTo(() => weeeClientFunc())
-                .Returns(weeeClient);
-
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc);
-
             // Act
-            ActionResult result = await controller.ConfirmRemoveProducer(registeredProducerId);
+            ActionResult result = await ProducersController().ConfirmRemoval(registeredProducerId);
 
             // Assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
-                .WhenArgumentsMatch(a => ((GetProducerDetailsByRegisteredProducerId)a[1]).RegisteredProducerId == registeredProducerId)
-                .MustHaveHappened();
+                .MustHaveHappened(Repeated.Exactly.Once);
 
-            ViewResult viewResult = result as ViewResult;
-            Assert.NotNull(viewResult);
-
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "confirmremoveproducer");
-
-            ConfirmRemoveProducerViewModel resultsViewModel = viewResult.Model as ConfirmRemoveProducerViewModel;
-            Assert.NotNull(resultsViewModel);
+            Assert.IsType<ViewResult>(result);
+            Assert.IsType<ConfirmRemovalViewModel>(((ViewResult)result).Model);
         }
 
         [Fact]
-        public async Task HttpPost_WithInvalidModel_ReturnsConfirmRemoveProducerView()
+        public async Task HttpPost_ConfirmRemoval_WithInvalidModel_ReturnsConfirmRemovalModel()
         {
             // Arrange
-            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
-            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
-
-            ConfirmRemoveProducerViewModel viewModel = new ConfirmRemoveProducerViewModel();
+            var controller = ProducersController();
+            var viewModel = new ConfirmRemovalViewModel();
             controller.ModelState.AddModelError("SomeProperty", "Exception");
 
             // Act
-            ActionResult result = await controller.ConfirmRemoveProducer(viewModel);
+            var result = await controller.ConfirmRemoval(viewModel);
 
             // Assert
-            ViewResult viewResult = result as ViewResult;
-            Assert.NotNull(viewResult);
-
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "confirmremoveproducer");
+            Assert.IsType<ViewResult>(result);
+            Assert.IsType<ConfirmRemovalViewModel>(((ViewResult)result).Model);
         }
 
         [Fact]
-        public async Task HttpPost_WithYesOptionSelected_RedirectToRemovedProducerAction()
+        public async Task HttpPost_ConfirmRemoval_WithYesOptionSelected_SendsRequest_ThenRedirectsToRemovedAction()
         {
             // Arrange
-            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveProducer>._))
-                .Returns(true);
-
-            Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
-            A.CallTo(() => weeeClientFunc())
-                .Returns(weeeClient);
-
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc);
-
-            ConfirmRemoveProducerViewModel viewModel = new ConfirmRemoveProducerViewModel();
+            var viewModel = new ConfirmRemovalViewModel();
             viewModel.SelectedValue = "Yes";
 
             // Act
-            ActionResult result = await controller.ConfirmRemoveProducer(viewModel);
+            var result = await ProducersController().ConfirmRemoval(viewModel);
 
             // Assert
-            var redirectToRouteResult = ((RedirectToRouteResult)result);
 
-            Assert.Equal("RemovedProducer", redirectToRouteResult.RouteValues["action"]);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveProducer>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = (((RedirectToRouteResult)result).RouteValues);
+
+            Assert.Equal("Removed", routeValues["action"]);
         }
 
         [Fact]
-        public async Task HttpPost_WithNoOptionSelected_RedirectToDetailsAction()
+        public async Task HttpPost_ConfirmRemoval_WithNoOptionSelected_DoesNotSendRequest_ThenRedirectsToDetailsAction()
         {
             // Arrange
-            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
-            Func<IWeeeClient> weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClient);
-
-            ConfirmRemoveProducerViewModel viewModel = new ConfirmRemoveProducerViewModel();
+            var viewModel = new ConfirmRemovalViewModel();
             viewModel.SelectedValue = "No";
 
             // Act
-            ActionResult result = await controller.ConfirmRemoveProducer(viewModel);
+            var result = await ProducersController().ConfirmRemoval(viewModel);
 
             // Assert
-            var redirectToRouteResult = ((RedirectToRouteResult)result);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveProducer>._))
+                .MustNotHaveHappened();
 
-            Assert.Equal("Details", redirectToRouteResult.RouteValues["action"]);
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Details", routeValues["action"]);
         }
 
         [Fact]
-        public async void HttpGet_RemovedProducer_ShouldReturnRemovedProducerView()
+        public async void HttpGet_RemovedProducer_ShouldReturnRemovedProducerModel()
         {
-            // Arrange
-            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
-            Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
-            
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc);
-
             // Act
-            ActionResult result = await controller.RemovedProducer("WEE/MM0001AA", 2016, "SchemeName");
+            var result = await ProducersController().Removed("WEE/MM0001AA", 2016, "SchemeName");
 
             // Assert
-            ViewResult viewResult = result as ViewResult;
-            Assert.NotNull(viewResult);
-
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "removedproducer");
+            Assert.IsType<ViewResult>(result);
+            Assert.IsType<RemovedViewModel>(((ViewResult)result).Model);
         }
 
         [Fact]
-        public async void HttpPost_RemovedProducer_ProducerAssociateWithOtherScheme_ShouldRedirectToDetailsAction()
+        public async void HttpPost_RemovedProducer_ProducerIsAssociatedWithOtherScheme_ShouldRedirectToDetailsAction()
         {
             // Arrange
-            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
-            
-            var registeredNumber = "WEE/MM0001AA";
-
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociateWithAnotherScheme>._))
-                .WhenArgumentsMatch(a => ((IsProducerAssociateWithAnotherScheme)a[1]).RegistrationNumber == registeredNumber)
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociatedWithAnotherScheme>._))
                 .Returns(true);
 
-            Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
-            A.CallTo(() => weeeClientFunc()).Returns(weeeClient);
-
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc);
-
             // Act
-            RemovedProducerViewModel model = new RemovedProducerViewModel
+            var model = new RemovedViewModel
             {
-                RegistrationNumber = registeredNumber
+                RegistrationNumber = "ABC12345"
             };
-            ActionResult result = await controller.RemovedProducer(model);
+
+            var result = await ProducersController().Removed(model);
 
             // Assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociateWithAnotherScheme>._))
-                .WhenArgumentsMatch(a => ((IsProducerAssociateWithAnotherScheme)a[1]).RegistrationNumber == registeredNumber)
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociatedWithAnotherScheme>._))
                 .MustHaveHappened();
-            
-            var redirectToRouteResult = ((RedirectToRouteResult)result);
 
-            Assert.Equal("Details", redirectToRouteResult.RouteValues["action"]);
+            Assert.IsType<RedirectToRouteResult>(result);
+            
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Details", routeValues["action"]);
         }
 
         [Fact]
-        public async void HttpPost_RemovedProducer_ProducerNotAssociateWithOtherScheme_ShouldRedirectToSearchAction()
+        public async void HttpPost_RemovedProducer_ProducerNotAssociatedWithOtherScheme_ShouldRedirectToSearchAction()
         {
             // Arrange
-            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
-
-            var registeredNumber = "WEE/MM0001AA";
-
-            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociateWithAnotherScheme>._))
-                .WhenArgumentsMatch(a => ((IsProducerAssociateWithAnotherScheme)a[1]).RegistrationNumber == registeredNumber)
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociatedWithAnotherScheme>._))
                 .Returns(false);
 
-            Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
-            A.CallTo(() => weeeClientFunc()).Returns(weeeClient);
-
-            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc);
-
             // Act
-            RemovedProducerViewModel model = new RemovedProducerViewModel
+            var model = new RemovedViewModel
             {
-                RegistrationNumber = registeredNumber
+                RegistrationNumber = "ABC12345"
             };
-            ActionResult result = await controller.RemovedProducer(model);
+
+            var result = await ProducersController().Removed(model);
 
             // Assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociateWithAnotherScheme>._))
-                .WhenArgumentsMatch(a => ((IsProducerAssociateWithAnotherScheme)a[1]).RegistrationNumber == registeredNumber)
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociatedWithAnotherScheme>._))
                 .MustHaveHappened();
 
-            var redirectToRouteResult = ((RedirectToRouteResult)result);
+            Assert.IsType<RedirectToRouteResult>(result);
 
-            Assert.Equal("Search", redirectToRouteResult.RouteValues["action"]);
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Search", routeValues["action"]);
+        }
+
+        private ProducersController ProducersController()
+        {
+            return new ProducersController(breadcumbService, producerSearcher, () => weeeClient);
         }
     }
 }
