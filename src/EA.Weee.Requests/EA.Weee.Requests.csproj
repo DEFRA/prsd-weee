@@ -46,7 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />
-    <Compile Include="Admin\IsProducerAssociateWithScheme.cs" />
+    <Compile Include="Admin\IsProducerAssociateWithAnotherScheme.cs" />
+    <Compile Include="Admin\RemoveProducer.cs" />
     <Compile Include="Admin\Reports\GetMemberDetailsCSV.cs" />
     <Compile Include="Admin\Reports\GetPCSChargesCSV.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSV.cs" />
