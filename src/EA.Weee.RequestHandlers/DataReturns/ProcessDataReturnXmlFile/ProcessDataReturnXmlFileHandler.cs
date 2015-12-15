@@ -45,7 +45,7 @@
             var errors = xmlValidator.Validate(message);
             List<DataReturnUploadError> datareturnsUploadErrors = errors as List<DataReturnUploadError> ?? errors.ToList();
            
-            DataReturnUpload dataReturnUpload = xmlGenerator.GenerateDataReturnsUpload(message, datareturnsUploadErrors, scheme);
+            var dataReturnUpload = xmlGenerator.GenerateDataReturnUpload(message, datareturnsUploadErrors, scheme);
            
             // record XML processing end time
             stopwatch.Stop();
@@ -53,9 +53,21 @@
            
             if (!errors.Any())
             {
+                await SetDataReturnAndCurrentVersion(scheme, dataReturnUpload);
+            }
+
+            await dataAccess.AddAndSaveAsync(dataReturnUpload);
+
+            return dataReturnUpload.Id;
+        }
+
+        private async Task SetDataReturnAndCurrentVersion(Scheme scheme, DataReturnUpload dataReturnUpload)
+        {
+            if (dataReturnUpload.ComplianceYear != null && dataReturnUpload.Quarter != null)
+            {
                 Quarter quarter = new Quarter(
-                    dataReturnUpload.ComplianceYear.Value,
-                    (QuarterType)dataReturnUpload.Quarter.Value);
+                dataReturnUpload.ComplianceYear.Value,
+                (QuarterType)dataReturnUpload.Quarter.Value);
 
                 // Try to fetch the existing data return for the scheme and quarter, otherwise create a new data return.
                 DataReturn dataReturn = await dataAccess.FetchDataReturnOrDefaultAsync(scheme, quarter);
@@ -67,12 +79,14 @@
 
                 DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
 
-                dataReturnUpload.SetDataReturnsVersion(dataReturnVersion);
+                dataReturnUpload.SetDataReturnVersion(dataReturnVersion);
             }
-
-            await dataAccess.AddAndSaveAsync(dataReturnUpload);
-
-            return dataReturnUpload.Id;
+            else
+            {
+                throw new ApplicationException(String.Format(
+                        "Data return upload for scheme {0} does not have a compliance year or quarter",
+                        scheme.Id));
+            }
         }
     }
 }
