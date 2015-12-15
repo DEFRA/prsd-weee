@@ -26,7 +26,7 @@
             <tbody>
                 <tr>
                     <th>Registered PCS</th>
-                    <td>@scheme.SchemeName<br />@Html.ActionLink("Remove producer", "ConfirmRemoveProducer", "Producers", new { registrationNumber = @Model.Details.RegistrationNumber }, null)</td>
+                    <td>@scheme.SchemeName<br />@Html.ActionLink("Remove producer", "ConfirmRemoveProducer", "Producers", new { registeredProducerId = @scheme.RegisteredProducerId }, null)</td>
                 </tr>
                 <tr>
                     <th>Producer name</th>
