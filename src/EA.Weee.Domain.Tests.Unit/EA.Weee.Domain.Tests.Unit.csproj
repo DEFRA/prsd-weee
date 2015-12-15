@@ -77,10 +77,12 @@
     </Compile>
     <Compile Include="Admin\CompetentAuthorityUserTests.cs" />
     <Compile Include="CountryTests.cs" />
+    <Compile Include="DataReturns\DataReturnTests.cs" />
+    <Compile Include="DataReturns\DataReturnUploadTests.cs" />
+    <Compile Include="DataReturns\DataReturnVersionTests.cs" />
     <Compile Include="DataReturns\AatfDeliveredAmountTests.cs" />
     <Compile Include="DataReturns\AatfDeliveryLocationTests.cs" />
     <Compile Include="DataReturns\AeDeliveredAmountTests.cs" />
-    <Compile Include="DataReturns\DataReturnVersionTests.cs" />
     <Compile Include="DataReturns\AeDeliveryLocationTests.cs" />
     <Compile Include="DataReturns\EeeOutputAmountTests.cs" />
     <Compile Include="DataReturns\ReturnItemTests.cs" />
