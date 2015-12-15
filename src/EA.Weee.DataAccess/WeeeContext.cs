@@ -3,7 +3,6 @@
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.SqlClient;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Domain;
@@ -15,7 +14,6 @@
     using Domain.Producer;
     using Domain.Scheme;
     using Domain.Unalignment;
-    using Extensions;
     using Prsd.Core;
     using Prsd.Core.DataAccess.Extensions;
     using Prsd.Core.Domain;
@@ -205,8 +203,6 @@
                     var sql = string.Format("UPDATE {0} SET IsAligned = 0 WHERE {1} = @id", tableName, primaryKeyName);
 
                     Database.ExecuteSqlCommand(sql, new SqlParameter("@id", entry.OriginalValues[primaryKeyName]));
-
-                    entry.State = EntityState.Detached;
                 }
             }
         }
