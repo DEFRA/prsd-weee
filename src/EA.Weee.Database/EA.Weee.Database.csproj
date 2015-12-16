@@ -150,6 +150,7 @@
     <Content Include="scripts\Update\Sprint19\20151215-1005-UpdateSpgPcsChargesCsvDataByComplianceYearAndAuthorisedAuthority.sql" />
     <Content Include="scripts\Update\Sprint19\20151215-1007-UpdateSpgProducerAmendmentsCsvDataByPrn.sql" />
     <Content Include="scripts\Update\Sprint19\20151215-1011-UpdateSpgProducerPublicRegisterCsvDataByComplianceYear.sql" />
+    <Content Include="scripts\Update\Sprint19\20151216-1400-UpdateMigratedProducers.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
