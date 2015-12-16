@@ -16,6 +16,17 @@
 
     public class ProducersControllerTests
     {
+        private readonly BreadcrumbService breadcumbService;
+        private readonly ISearcher<ProducerSearchResult> producerSearcher;
+        private readonly IWeeeClient weeeClient;
+
+        public ProducersControllerTests()
+        {
+            breadcumbService = A.Fake<BreadcrumbService>();
+            producerSearcher = A.Fake<ISearcher<ProducerSearchResult>>();
+            weeeClient = A.Fake<IWeeeClient>();
+        }
+
         [Fact]
         public async Task GetSearch_ReturnsSearchView()
         {
@@ -282,6 +293,153 @@
 
             //Assert
             Assert.IsType<FileContentResult>(result);
+        }
+
+        [Fact]
+        public async void HttpGet_ConfirmRemoval_ShouldSendRequest_AndShouldReturnConfirmRemovalModel()
+        {
+            // Arrange
+            var producerDetailsScheme = A.Dummy<ProducerDetailsScheme>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
+                .Returns(producerDetailsScheme);
+
+            var registeredProducerId = Guid.NewGuid();
+
+            // Act
+            ActionResult result = await ProducersController().ConfirmRemoval(registeredProducerId);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.IsType<ConfirmRemovalViewModel>(((ViewResult)result).Model);
+        }
+
+        [Fact]
+        public async Task HttpPost_ConfirmRemoval_WithInvalidModel_ReturnsConfirmRemovalModel()
+        {
+            // Arrange
+            var controller = ProducersController();
+            var viewModel = new ConfirmRemovalViewModel();
+            controller.ModelState.AddModelError("SomeProperty", "Exception");
+
+            // Act
+            var result = await controller.ConfirmRemoval(viewModel);
+
+            // Assert
+            Assert.IsType<ViewResult>(result);
+            Assert.IsType<ConfirmRemovalViewModel>(((ViewResult)result).Model);
+        }
+
+        [Fact]
+        public async Task HttpPost_ConfirmRemoval_WithYesOptionSelected_SendsRequest_ThenRedirectsToRemovedAction()
+        {
+            // Arrange
+            var viewModel = new ConfirmRemovalViewModel();
+            viewModel.SelectedValue = "Yes";
+
+            // Act
+            var result = await ProducersController().ConfirmRemoval(viewModel);
+
+            // Assert
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveProducer>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = (((RedirectToRouteResult)result).RouteValues);
+
+            Assert.Equal("Removed", routeValues["action"]);
+        }
+
+        [Fact]
+        public async Task HttpPost_ConfirmRemoval_WithNoOptionSelected_DoesNotSendRequest_ThenRedirectsToDetailsAction()
+        {
+            // Arrange
+            var viewModel = new ConfirmRemovalViewModel();
+            viewModel.SelectedValue = "No";
+
+            // Act
+            var result = await ProducersController().ConfirmRemoval(viewModel);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveProducer>._))
+                .MustNotHaveHappened();
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Details", routeValues["action"]);
+        }
+
+        [Fact]
+        public async void HttpGet_RemovedProducer_ShouldReturnRemovedProducerModel()
+        {
+            // Act
+            var result = await ProducersController().Removed("WEE/MM0001AA", 2016, "SchemeName");
+
+            // Assert
+            Assert.IsType<ViewResult>(result);
+            Assert.IsType<RemovedViewModel>(((ViewResult)result).Model);
+        }
+
+        [Fact]
+        public async void HttpPost_RemovedProducer_ProducerIsAssociatedWithOtherScheme_ShouldRedirectToDetailsAction()
+        {
+            // Arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociatedWithAnotherScheme>._))
+                .Returns(true);
+
+            // Act
+            var model = new RemovedViewModel
+            {
+                RegistrationNumber = "ABC12345"
+            };
+
+            var result = await ProducersController().Removed(model);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociatedWithAnotherScheme>._))
+                .MustHaveHappened();
+
+            Assert.IsType<RedirectToRouteResult>(result);
+            
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Details", routeValues["action"]);
+        }
+
+        [Fact]
+        public async void HttpPost_RemovedProducer_ProducerNotAssociatedWithOtherScheme_ShouldRedirectToSearchAction()
+        {
+            // Arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociatedWithAnotherScheme>._))
+                .Returns(false);
+
+            // Act
+            var model = new RemovedViewModel
+            {
+                RegistrationNumber = "ABC12345"
+            };
+
+            var result = await ProducersController().Removed(model);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsProducerAssociatedWithAnotherScheme>._))
+                .MustHaveHappened();
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Search", routeValues["action"]);
+        }
+
+        private ProducersController ProducersController()
+        {
+            return new ProducersController(breadcumbService, producerSearcher, () => weeeClient);
         }
     }
 }
