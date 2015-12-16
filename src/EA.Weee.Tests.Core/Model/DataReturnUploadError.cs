@@ -12,20 +12,16 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Company
+    public partial class DataReturnUploadError
     {
-        public Company()
-        {
-            this.Businesses = new HashSet<Business>();
-        }
-    
         public System.Guid Id { get; set; }
         public byte[] RowVersion { get; set; }
-        public string Name { get; set; }
-        public string CompanyNumber { get; set; }
-        public System.Guid RegisteredOfficeContactId { get; set; }
+        public int ErrorLevel { get; set; }
+        public int ErrorType { get; set; }
+        public string Description { get; set; }
+        public System.Guid DataReturnUploadId { get; set; }
+        public int LineNumber { get; set; }
     
-        public virtual ICollection<Business> Businesses { get; set; }
-        public virtual Contact1 Contact1 { get; set; }
+        public virtual DataReturnUpload DataReturnUpload { get; set; }
     }
 }
