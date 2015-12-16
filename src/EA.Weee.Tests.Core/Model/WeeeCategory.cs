@@ -12,20 +12,21 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Company
+    public partial class WeeeCategory
     {
-        public Company()
+        public WeeeCategory()
         {
-            this.Businesses = new HashSet<Business>();
+            this.EeeOutputAmounts = new HashSet<EeeOutputAmount>();
+            this.WeeeCollectedAmounts = new HashSet<WeeeCollectedAmount>();
+            this.WeeeDeliveredAmounts = new HashSet<WeeeDeliveredAmount>();
         }
     
         public System.Guid Id { get; set; }
-        public byte[] RowVersion { get; set; }
+        public int Number { get; set; }
         public string Name { get; set; }
-        public string CompanyNumber { get; set; }
-        public System.Guid RegisteredOfficeContactId { get; set; }
     
-        public virtual ICollection<Business> Businesses { get; set; }
-        public virtual Contact1 Contact1 { get; set; }
+        public virtual ICollection<EeeOutputAmount> EeeOutputAmounts { get; set; }
+        public virtual ICollection<WeeeCollectedAmount> WeeeCollectedAmounts { get; set; }
+        public virtual ICollection<WeeeDeliveredAmount> WeeeDeliveredAmounts { get; set; }
     }
 }

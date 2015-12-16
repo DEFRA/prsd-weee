@@ -12,30 +12,28 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Scheme
+    public partial class DataReturnVersion
     {
-        public Scheme()
+        public DataReturnVersion()
         {
-            this.MemberUploads = new HashSet<MemberUpload>();
-            this.RegisteredProducers = new HashSet<RegisteredProducer>();
             this.DataReturns = new HashSet<DataReturn>();
             this.DataReturnUploads = new HashSet<DataReturnUpload>();
         }
     
         public System.Guid Id { get; set; }
         public byte[] RowVersion { get; set; }
-        public int SchemeStatus { get; set; }
-        public string ApprovalNumber { get; set; }
-        public System.Guid OrganisationId { get; set; }
-        public string SchemeName { get; set; }
-        public string IbisCustomerReference { get; set; }
-        public Nullable<int> ObligationType { get; set; }
-        public Nullable<System.Guid> CompetentAuthorityId { get; set; }
+        public Nullable<System.DateTime> SubmittedDate { get; set; }
+        public string SubmittingUserId { get; set; }
+        public System.Guid DataReturnId { get; set; }
+        public Nullable<System.Guid> EeeOutputReturnVersionId { get; set; }
+        public Nullable<System.Guid> WeeeDeliveredReturnVersionId { get; set; }
+        public Nullable<System.Guid> WeeeCollectedReturnVersionId { get; set; }
     
-        public virtual Organisation Organisation { get; set; }
-        public virtual ICollection<MemberUpload> MemberUploads { get; set; }
-        public virtual ICollection<RegisteredProducer> RegisteredProducers { get; set; }
         public virtual ICollection<DataReturn> DataReturns { get; set; }
+        public virtual DataReturn DataReturn { get; set; }
         public virtual ICollection<DataReturnUpload> DataReturnUploads { get; set; }
+        public virtual EeeOutputReturnVersion EeeOutputReturnVersion { get; set; }
+        public virtual WeeeCollectedReturnVersion WeeeCollectedReturnVersion { get; set; }
+        public virtual WeeeDeliveredReturnVersion WeeeDeliveredReturnVersion { get; set; }
     }
 }
