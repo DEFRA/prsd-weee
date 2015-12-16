@@ -51,7 +51,7 @@
 
             if (Regex.IsMatch(message, DataAtTheRoolLevelIsInvalid))
             {
-                resultErrorMessage = "The file you're trying to upload is not a correctly formatted XML file. Please make sure you're uploading a valid XML file.";
+                resultErrorMessage = "The file you're trying to upload is not a correctly formatted XML file. Upload a valid XML file.";
             }
             else if (Regex.IsMatch(message, GeneralConstraintFailurePattern))
             {
@@ -115,7 +115,7 @@
         private string MakeFriendlyErrorUniqueKeyMessage(XElement sender, string message)
         { 
             var element = sender.Descendants().First();
-            return string.Format("There is duplicate value '{0}' for field '{1}' of parent field '{2}'.", element.Value, element.Name.LocalName, sender.Name.LocalName);
+            return string.Format("There is duplicate value '{0}' for field '{1}' of parent field '{2}'. Remove one of the duplicate entries", element.Value, element.Name.LocalName, sender.Name.LocalName);
         }
 
         private static bool TestRegex(string message, Regex regex, out Match match)
@@ -135,7 +135,7 @@
                 case "MinInclusive":
                 case "MaxInclusive":
                     friendlyMessageTemplate =
-                        "The {1} you've provided is incorrect. Please make sure you enter the right value.";
+                        "The value '{0}' supplied for field '{1}' is lower than the minimum, or greater than the maximum, allowed value.";
                     break;
                 case "Pattern":
                     friendlyMessageTemplate = string.IsNullOrEmpty(sender.Value) ? "You must provide a value for {1}." : "The value '{0}' supplied for field '{1}' doesn't match the required format.";
@@ -216,7 +216,7 @@
 
         private string MakeFriendlyInvalidChildElementMessage(XElement sender, string message, string schemaVersion)
         {
-            return string.Format("The field {0} isn't expected here. Please check that you are using v{1} of the XSD schema (XML template).", sender.Name.LocalName, schemaVersion);
+            return string.Format("The field {0} isn't expected here. Check that you are using v{1} of the XSD schema (XML template).", sender.Name.LocalName, schemaVersion);
         }
 
         private string MakeFriendlyIncompleteContentMessage(XElement sender, string message)
