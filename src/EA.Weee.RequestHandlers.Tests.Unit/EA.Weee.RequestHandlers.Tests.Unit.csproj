@@ -89,6 +89,7 @@
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Admin\GetAdminUserStatusHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdHandlerTests.cs" />
+    <Compile Include="Admin\GetProducerDetails\IsProducerRegisteredForComplianceYearTests.cs" />
     <Compile Include="Admin\GetProducerDetails\RemoveProducerHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetPCSChargesCSVHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandlerTests.cs" />

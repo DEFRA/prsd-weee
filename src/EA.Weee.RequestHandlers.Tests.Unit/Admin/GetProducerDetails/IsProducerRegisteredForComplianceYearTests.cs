@@ -9,26 +9,26 @@
     using Requests.Admin;
     using Xunit;
 
-    public class RemoveProducerHandlerTests
+    public class IsProducerRegisteredForComplianceYearTests
     {
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IRegisteredProducerRepository registeredProducerRepository;
 
-        public RemoveProducerHandlerTests()
+        public IsProducerRegisteredForComplianceYearTests()
         {
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             registeredProducerRepository = A.Fake<IRegisteredProducerRepository>();
         }
 
         [Fact]
-        public async void WhenUserIsUnauthorised_ShouldNotGetProducer_OrSaveChanges()
+        public async void WhenUserIsUnauthorised_ShouldNotGetProducerRegistrations_OrSaveChanges()
         {
             A.CallTo(() => weeeAuthorization.EnsureCanAccessInternalArea())
                 .Throws<SecurityException>();
 
-            var request = new RemoveProducer(Guid.NewGuid());
+            var request = new IsProducerRegisteredForComplianceYear("ABC12345", 2016);
 
-            await Assert.ThrowsAsync<SecurityException>(() => RemoveProducerHandler().HandleAsync(request));
+            await Assert.ThrowsAsync<SecurityException>(() => IsProducerRegisteredForComplianceYearHandler().HandleAsync(request));
 
             A.CallTo(() => registeredProducerRepository.GetProducerRegistration(A<Guid>._))
                 .MustNotHaveHappened();
@@ -38,22 +38,19 @@
         }
 
         [Fact]
-        public async void WhenUserIsAuthorised_ShouldGetProducer_AndSaveChanges()
+        public async void WhenUserIsAuthorised_ShouldGetProducerRegistrations()
         {
-            var request = new RemoveProducer(Guid.NewGuid());
+            var request = new IsProducerRegisteredForComplianceYear("ABC12345", 2016);
 
-            await RemoveProducerHandler().HandleAsync(request);
+            await IsProducerRegisteredForComplianceYearHandler().HandleAsync(request);
 
-            A.CallTo(() => registeredProducerRepository.GetProducerRegistration(request.RegisteredProducerId))
-                .MustHaveHappened(Repeated.Exactly.Once);
-            
-            A.CallTo(() => registeredProducerRepository.SaveChangesAsync())
+            A.CallTo(() => registeredProducerRepository.GetProducerRegistrations(request.RegistrationNumber, request.ComplianceYear))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
-        private RemoveProducerHandler RemoveProducerHandler()
+        private IsProducerRegisteredForComplianceYearHandler IsProducerRegisteredForComplianceYearHandler()
         {
-            return new RemoveProducerHandler(weeeAuthorization, registeredProducerRepository);
+            return new IsProducerRegisteredForComplianceYearHandler(weeeAuthorization, registeredProducerRepository);
         }
     }
 }

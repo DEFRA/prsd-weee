@@ -16,7 +16,7 @@
             this.context = context;
         }
 
-        public async Task<RegisteredProducer> Get(Guid id)
+        public async Task<RegisteredProducer> GetProducerRegistration(Guid id)
         {
             var producer = await context.RegisteredProducers.SingleOrDefaultAsync(p => p.Id == id);
 
@@ -28,7 +28,7 @@
             return producer;
         }
 
-        public async Task<IEnumerable<RegisteredProducer>> Get(string producerRegistrationNumber, int complianceYear)
+        public async Task<IEnumerable<RegisteredProducer>> GetProducerRegistrations(string producerRegistrationNumber, int complianceYear)
         {
             return await context.RegisteredProducers
                 .Where(p => p.ProducerRegistrationNumber == producerRegistrationNumber
