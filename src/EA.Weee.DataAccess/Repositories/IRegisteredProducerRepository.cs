@@ -7,8 +7,8 @@
 
     public interface IRegisteredProducerRepository : IRepository
     {
-        Task<RegisteredProducer> Get(Guid id);
+        Task<RegisteredProducer> GetProducerRegistration(Guid id);
 
-        Task<IEnumerable<RegisteredProducer>> Get(string producerRegistrationNumber, int complianceYear);
+        Task<IEnumerable<RegisteredProducer>> GetProducerRegistrations(string producerRegistrationNumber, int complianceYear);
     }
 }

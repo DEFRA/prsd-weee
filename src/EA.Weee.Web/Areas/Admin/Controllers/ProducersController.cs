@@ -13,19 +13,22 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
+    using Services.Caching;
 
     public class ProducersController : AdminController
     {
         private readonly BreadcrumbService breadcrumb;
         private readonly ISearcher<ProducerSearchResult> producerSearcher;
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IWeeeCache cache;
         private const int maximumSearchResults = 10;
 
-        public ProducersController(BreadcrumbService breadcrumb, ISearcher<ProducerSearchResult> producerSearcher, Func<IWeeeClient> apiClient)
+        public ProducersController(BreadcrumbService breadcrumb, ISearcher<ProducerSearchResult> producerSearcher, Func<IWeeeClient> apiClient, IWeeeCache cache)
         {
             this.breadcrumb = breadcrumb;
             this.producerSearcher = producerSearcher;
             this.apiClient = apiClient;
+            this.cache = cache;
         }
 
         /// <summary>
@@ -207,7 +210,12 @@
             {
                 using (var client = apiClient())
                 {
-                    await client.SendAsync(User.GetAccessToken(), new RemoveProducer(model.RegisteredProducerId));
+                    var result = await client.SendAsync(User.GetAccessToken(), new RemoveProducer(model.RegisteredProducerId));
+
+                    if (result.InvalidateProducerSearchCache)
+                    {
+                        await cache.InvalidateProducerSearch();
+                    }
 
                     return RedirectToAction("Removed",
                             new { model.RegistrationNumber, model.ComplianceYear, model.SchemeName });
@@ -234,13 +242,14 @@
         {
             using (IWeeeClient client = apiClient())
             {
-                var isAssociate = await client.SendAsync(User.GetAccessToken(),
-                    new IsProducerAssociatedWithAnotherScheme(model.RegistrationNumber, model.ComplianceYear));
+                var isAssociatedWithAnotherScheme = await client.SendAsync(User.GetAccessToken(),
+                    new IsProducerRegisteredForComplianceYear(model.RegistrationNumber, model.ComplianceYear));
 
-                if (isAssociate)
+                if (isAssociatedWithAnotherScheme)
                 {
                     return RedirectToAction("Details", new { model.RegistrationNumber });
                 }
+
                 return RedirectToAction("Search");
             }
         }
