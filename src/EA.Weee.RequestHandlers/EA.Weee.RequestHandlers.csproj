@@ -80,6 +80,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdHandler.cs" />
+    <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\IsProducerAssociatedWithAnotherSchemeHandler.cs" />
+    <Compile Include="Admin\GetProducerDetails\RemoveProducerHandler.cs" />
     <Compile Include="Admin\Reports\GetPCSChargesCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandler.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />

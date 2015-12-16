@@ -168,9 +168,86 @@
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> ConfirmRemoval(Guid registeredProducerId)
+        {
+            await SetBreadcrumb();
+            using (IWeeeClient client = apiClient())
+            {
+                ProducerDetailsScheme producer = await client.SendAsync(User.GetAccessToken(),
+                    new GetProducerDetailsByRegisteredProducerId(registeredProducerId));
+
+                return View(new ConfirmRemovalViewModel
+                {
+                    RegisteredProducerId = registeredProducerId,
+                    RegistrationNumber = producer.Prn,
+                    ComplianceYear = producer.ComplianceYear,
+                    ProducerName = producer.ProducerName,
+                    SchemeName = producer.SchemeName
+                });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ConfirmRemoval(ConfirmRemovalViewModel model)
+        {
+            await SetBreadcrumb();
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.SelectedValue == "No")
+            {
+                return RedirectToAction("Details", new { model.RegistrationNumber });
+            }
+            if (model.SelectedValue == "Yes")
+            {
+                using (var client = apiClient())
+                {
+                    await client.SendAsync(User.GetAccessToken(), new RemoveProducer(model.RegisteredProducerId));
+
+                    return RedirectToAction("Removed",
+                            new { model.RegistrationNumber, model.ComplianceYear, model.SchemeName });
+                }
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Removed(string registrationNumber, int complianceYear, string schemeName)
+        {
+            await SetBreadcrumb();
+            return View(new RemovedViewModel
+            {
+                RegistrationNumber = registrationNumber,
+                ComplianceYear = complianceYear,
+                SchemeName = schemeName
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Removed(RemovedViewModel model)
+        {
+            using (IWeeeClient client = apiClient())
+            {
+                var isAssociate = await client.SendAsync(User.GetAccessToken(),
+                    new IsProducerAssociatedWithAnotherScheme(model.RegistrationNumber, model.ComplianceYear));
+
+                if (isAssociate)
+                {
+                    return RedirectToAction("Details", new { model.RegistrationNumber });
+                }
+                return RedirectToAction("Search");
+            }
+        }
+
         private async Task SetBreadcrumb()
         {
-            breadcrumb.InternalActivity = "View producer information";
+            breadcrumb.InternalActivity = "Producer details";
 
             await Task.Yield();
         }
