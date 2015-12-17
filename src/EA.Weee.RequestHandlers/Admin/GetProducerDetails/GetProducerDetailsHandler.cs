@@ -77,6 +77,7 @@
 
                 ProducerDetailsScheme producerSchemeDetails = new ProducerDetailsScheme()
                 {
+                    RegisteredProducerId = latestDetails.RegisteredProducer.Id,
                     SchemeName = schemeGroup.Key.SchemeName,
                     ProducerName = latestDetails.OrganisationName,
                     TradingName = latestDetails.TradingName,
