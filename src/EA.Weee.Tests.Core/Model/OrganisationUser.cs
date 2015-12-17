@@ -9,7 +9,9 @@
 
 namespace EA.Weee.Tests.Core.Model
 {
-
+    using System;
+    using System.Collections.Generic;
+    
     public partial class OrganisationUser
     {
         public System.Guid Id { get; set; }

@@ -12,20 +12,22 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Company
+    public partial class DataReturn
     {
-        public Company()
+        public DataReturn()
         {
-            this.Businesses = new HashSet<Business>();
+            this.DataReturnVersions = new HashSet<DataReturnVersion>();
         }
     
         public System.Guid Id { get; set; }
         public byte[] RowVersion { get; set; }
-        public string Name { get; set; }
-        public string CompanyNumber { get; set; }
-        public System.Guid RegisteredOfficeContactId { get; set; }
+        public int ComplianceYear { get; set; }
+        public System.Guid SchemeId { get; set; }
+        public Nullable<System.Guid> CurrentDataReturnVersionId { get; set; }
+        public int Quarter { get; set; }
     
-        public virtual ICollection<Business> Businesses { get; set; }
-        public virtual Contact1 Contact1 { get; set; }
+        public virtual DataReturnVersion DataReturnVersion { get; set; }
+        public virtual Scheme Scheme { get; set; }
+        public virtual ICollection<DataReturnVersion> DataReturnVersions { get; set; }
     }
 }
