@@ -47,11 +47,12 @@
                     }
                 }
 
-                string sourceNamespace = source.Root.GetDefaultNamespace().NamespaceName;
-                if (sourceNamespace != schemaNamespace)
+                if (source.Root.Name.Namespace != schemaNamespace)
                 {
                     errors.Add(new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema,
-                        string.Format("The namespace of the provided XML file ({0}) doesn't match the namespace of the WEEE schema ({1}).", sourceNamespace, schemaNamespace)));
+                    string.Format("The namespace of the provided XML file ({0}) doesn't match the namespace of the WEEE schema ({1}).",
+                        source.Root.Name.Namespace,
+                        schemaNamespace)));
                     return errors;
                 }
 
