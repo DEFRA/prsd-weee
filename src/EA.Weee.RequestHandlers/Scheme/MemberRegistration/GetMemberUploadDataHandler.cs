@@ -13,20 +13,20 @@
     using Requests.Scheme.MemberRegistration;
     using Security;
 
-    internal class GetMemberUploadDataHandler : IRequestHandler<GetMemberUploadData, List<UploadErrorData>>
+    internal class GetMemberUploadDataHandler : IRequestHandler<GetMemberUploadData, List<ErrorData>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
-        private readonly IMap<MemberUploadError, UploadErrorData> memberUploadErrorMap;
+        private readonly IMap<MemberUploadError, ErrorData> memberUploadErrorMap;
 
-        public GetMemberUploadDataHandler(IWeeeAuthorization authorization, WeeeContext context, IMap<MemberUploadError, UploadErrorData> memberUploadErrorMap)
+        public GetMemberUploadDataHandler(IWeeeAuthorization authorization, WeeeContext context, IMap<MemberUploadError, ErrorData> memberUploadErrorMap)
         {
             this.authorization = authorization;
             this.context = context;
             this.memberUploadErrorMap = memberUploadErrorMap;
         }
 
-        public async Task<List<UploadErrorData>> HandleAsync(GetMemberUploadData message)
+        public async Task<List<ErrorData>> HandleAsync(GetMemberUploadData message)
         {
             authorization.EnsureInternalOrOrganisationAccess(message.PcsId);
 

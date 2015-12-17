@@ -196,7 +196,7 @@
     <Compile Include="Shared\CompetentAuthority.cs" />
     <Compile Include="Shared\CountryData.cs" />
     <Compile Include="Shared\ErrorLevel.cs" />
-    <Compile Include="Shared\UploadErrorData.cs" />
+    <Compile Include="Shared\ErrorData.cs" />
     <Compile Include="Shared\OrganisationStatus.cs" />
     <Compile Include="Shared\Paging\IPagedList.cs" />
     <Compile Include="Shared\Paging\PagedList.cs" />
