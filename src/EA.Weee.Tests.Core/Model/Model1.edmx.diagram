@@ -61,6 +61,43 @@
         <AssociationConnector Association="EA.Weee.TestModel.FK_ProducerSubmission_RegisteredProducer" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_RegisteredProducer_ProducerSubmission" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_SICCode_ProducerSubmission" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.WeeeCategory" Width="1.5" PointX="17.25" PointY="18.5" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.AatfDeliveryLocation" Width="1.5" PointX="20.25" PointY="13.375" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.AeDeliveryLocation" Width="1.5" PointX="20.25" PointY="29" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.DataReturn" Width="1.5" PointX="9.75" PointY="31.375" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.DataReturnUpload" Width="1.5" PointX="14.25" PointY="31" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.DataReturnUploadError" Width="1.5" PointX="16.5" PointY="32.5" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.DataReturnVersion" Width="1.5" PointX="12" PointY="30.875" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.EeeOutputAmount" Width="1.5" PointX="19.5" PointY="22.25" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.EeeOutputReturnVersion" Width="1.5" PointX="19.5" PointY="19.75" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.EeeOutputReturnVersionAmount" Width="1.5" PointX="21.75" PointY="22.625" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.WeeeCollectedAmount" Width="1.5" PointX="19.5" PointY="16.375" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.WeeeCollectedReturnVersion" Width="1.5" PointX="9.75" PointY="35.75" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.WeeeCollectedReturnVersionAmount" Width="1.5" PointX="21.75" PointY="25.875" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.WeeeDeliveredAmount" Width="1.5" PointX="22.5" PointY="18.125" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.WeeeDeliveredReturnVersion" Width="1.5" PointX="9.75" PointY="38.125" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.WeeeDeliveredReturnVersionAmount" Width="1.5" PointX="24.75" PointY="27.875" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_EeeOutputAmount_WeeeCategory" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeCollectedAmount_WeeeCategory" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeDeliveredAmount_WeeeCategory" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AatfDeliveryLocation" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AeDeliveryLocation" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturn_DataReturnVersion" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturn_Scheme" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturnVersion_DataReturn" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturnUpload_DataReturnVersion" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturnUpload_Scheme" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturnUploadError_DataReturnUpload" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturnVersion_EeeOutputReturnVersion" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturnVersion_WeeeCollectedReturnVersion" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturnVersion_WeeeDeliveredReturnVersion" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_EeeOutputAmount_RegisteredProducer" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_EeeOutputReturnVersionAmount_EeeOutputAmount" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_EeeOutputReturnVersionAmount_EeeOutputReturnVersion" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeCollectedReturnVersionAmount_WeeeCollectedAmount" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeCollectedReturnVersionAmount_WeeeCollectedReturnVersion" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredAmount" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredReturnVersion" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

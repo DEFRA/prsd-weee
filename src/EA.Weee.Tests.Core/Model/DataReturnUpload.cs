@@ -12,25 +12,26 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class RegisteredProducer
+    public partial class DataReturnUpload
     {
-        public RegisteredProducer()
+        public DataReturnUpload()
         {
-            this.ProducerSubmissions = new HashSet<ProducerSubmission>();
-            this.EeeOutputAmounts = new HashSet<EeeOutputAmount>();
+            this.DataReturnUploadErrors = new HashSet<DataReturnUploadError>();
         }
     
         public System.Guid Id { get; set; }
         public byte[] RowVersion { get; set; }
-        public string ProducerRegistrationNumber { get; set; }
+        public string Data { get; set; }
+        public System.DateTime Date { get; set; }
+        public string FileName { get; set; }
         public System.Guid SchemeId { get; set; }
-        public int ComplianceYear { get; set; }
-        public Nullable<System.Guid> CurrentSubmissionId { get; set; }
-        public bool IsAligned { get; set; }
+        public Nullable<int> ComplianceYear { get; set; }
+        public Nullable<int> Quarter { get; set; }
+        public Nullable<System.Guid> DataReturnVersionId { get; set; }
+        public System.TimeSpan ProcessTime { get; set; }
     
+        public virtual DataReturnVersion DataReturnVersion { get; set; }
         public virtual Scheme Scheme { get; set; }
-        public virtual ICollection<ProducerSubmission> ProducerSubmissions { get; set; }
-        public virtual ProducerSubmission CurrentSubmission { get; set; }
-        public virtual ICollection<EeeOutputAmount> EeeOutputAmounts { get; set; }
+        public virtual ICollection<DataReturnUploadError> DataReturnUploadErrors { get; set; }
     }
 }
