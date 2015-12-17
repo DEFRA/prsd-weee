@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntityFrameworkModule.cs" />
+    <Compile Include="Mappings\WeeeCollectedReturnVersionMapping.cs" />
     <Compile Include="Repositories\IRegisteredProducerRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\RegisteredProducerRepository.cs" />
