@@ -26,7 +26,7 @@
             <tbody>
                 <tr>
                     <th>Registered PCS</th>
-                    <td>@scheme.SchemeName</td>
+                    <td>@scheme.SchemeName<br />@Html.ActionLink("Remove producer", "ConfirmRemoval", "Producers", new { registeredProducerId = @scheme.RegisteredProducerId }, null)</td>
                 </tr>
                 <tr>
                     <th>Producer name</th>
@@ -69,7 +69,7 @@
             </tbody>
         </table>
 
-            <br />
+        <br />
     }
     <p>
         @Html.ActionLink("Download amendment history (CSV)", "DownloadProducerAmendmentsCsv", "Producers", new { registrationNumber = @Model.Details.RegistrationNumber }, null)
