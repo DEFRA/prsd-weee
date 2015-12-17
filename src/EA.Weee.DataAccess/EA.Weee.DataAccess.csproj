@@ -76,6 +76,7 @@
     <Compile Include="EntityFrameworkModule.cs" />
     <Compile Include="DataAccess\IRegisteredProducerDataAccess.cs" />
     <Compile Include="DataAccess\RegisteredProducerDataAccess.cs" />
+    <Compile Include="Mappings\WeeeCollectedReturnVersionMapping.cs" />
     <Compile Include="WeeeContext.Metadata.cs" />
     <Compile Include="Extensions\ProducerExtensions.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />

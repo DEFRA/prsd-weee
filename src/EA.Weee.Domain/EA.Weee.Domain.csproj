@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
+    <Compile Include="DataReturns\WeeeCollectedReturnVersion.cs" />
     <Compile Include="Unalignment\UnalignableEntity.cs" />
     <Compile Include="Audit\AuditableEntity.cs" />
     <Compile Include="Audit\IAuditableEntity.cs">

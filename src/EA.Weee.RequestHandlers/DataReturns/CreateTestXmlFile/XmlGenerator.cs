@@ -84,8 +84,8 @@
 
             XElement xmlCollectedFromDcf = new XElement(ns + "CollectedFromDCF");
             xmlSchemeReturn.Add(xmlCollectedFromDcf);
-
-            var fromDcf = dataReturnVersion.WeeeCollectedAmounts.Where(x => x.SourceType == WeeeCollectedAmountSourceType.Dcf);
+                        
+            var fromDcf = dataReturnVersion.WeeeCollectedReturnVersions.SelectMany(x => x.WeeeCollectedAmounts.Where(w => w.SourceType == WeeeCollectedAmountSourceType.Dcf));
             foreach (IReturnItem returnItem in fromDcf)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
@@ -115,7 +115,8 @@
             XElement xmlB2cWeeeFromDistributors = new XElement(ns + "B2CWEEEFromDistributors");
             xmlSchemeReturn.Add(xmlB2cWeeeFromDistributors);
 
-            var fromDistributors = dataReturnVersion.WeeeCollectedAmounts.Where(x => x.SourceType == WeeeCollectedAmountSourceType.Distributor);
+            var fromDistributors = dataReturnVersion.WeeeCollectedReturnVersions.SelectMany(x => x.WeeeCollectedAmounts.Where(w => w.SourceType == WeeeCollectedAmountSourceType.Distributor));
+             
             foreach (IReturnItem returnItem in fromDistributors)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
@@ -127,7 +128,7 @@
             XElement xmlB2cWeeeFromFinalHolders = new XElement(ns + "B2CWEEEFromFinalHolders");
             xmlSchemeReturn.Add(xmlB2cWeeeFromFinalHolders);
 
-            var fromFinalHolders = dataReturnVersion.WeeeCollectedAmounts.Where(x => x.SourceType == WeeeCollectedAmountSourceType.FinalHolder);
+            var fromFinalHolders = dataReturnVersion.WeeeCollectedReturnVersions.SelectMany(x => x.WeeeCollectedAmounts.Where(w => w.SourceType == WeeeCollectedAmountSourceType.FinalHolder));
             foreach (IReturnItem returnItem in fromFinalHolders)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
