@@ -33,5 +33,10 @@
         /// Information about the scheme currently in scope.
         /// </summary>
         public SchemePublicInfo SchemeInfo { get; set; }
+
+        /// <summary>
+        /// The activity currently in scope when accessing the test area.
+        /// </summary>
+        public string TestAreaActivity { get; set; }
     }
 }

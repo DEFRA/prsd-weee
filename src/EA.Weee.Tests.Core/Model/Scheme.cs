@@ -18,6 +18,8 @@ namespace EA.Weee.Tests.Core.Model
         {
             this.MemberUploads = new HashSet<MemberUpload>();
             this.RegisteredProducers = new HashSet<RegisteredProducer>();
+            this.DataReturns = new HashSet<DataReturn>();
+            this.DataReturnUploads = new HashSet<DataReturnUpload>();
         }
     
         public System.Guid Id { get; set; }
@@ -33,5 +35,7 @@ namespace EA.Weee.Tests.Core.Model
         public virtual Organisation Organisation { get; set; }
         public virtual ICollection<MemberUpload> MemberUploads { get; set; }
         public virtual ICollection<RegisteredProducer> RegisteredProducers { get; set; }
+        public virtual ICollection<DataReturn> DataReturns { get; set; }
+        public virtual ICollection<DataReturnUpload> DataReturnUploads { get; set; }
     }
 }

@@ -9,6 +9,7 @@
     using Core.Scheme.MemberUploadTesting;
     using Core.Shared.Paging;
     using Infrastructure;
+    using Services;
     using ViewModels.CreatePcsMemberXmlFile;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme.MemberUploadTesting;
@@ -18,10 +19,20 @@
     {
         private const int pageSize = 10;
         private readonly Func<IWeeeClient> apiClient;
+        private readonly BreadcrumbService breadcrumb;
 
-        public CreatePcsMemberXmlFileController(Func<IWeeeClient> apiClient)
+        public CreatePcsMemberXmlFileController(
+            Func<IWeeeClient> apiClient,
+            BreadcrumbService breadcrumb)
         {
             this.apiClient = apiClient;
+            this.breadcrumb = breadcrumb;
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+            breadcrumb.TestAreaActivity = "Create PCS member XML file";
         }
 
         [HttpGet]
@@ -50,7 +61,7 @@
                     MatchingOrganisations = matchingOrganistionList
                 };
             }
-            
+
             return View(viewModel);
         }
 
@@ -103,23 +114,23 @@
 
             ProducerListSettings settings = new ProducerListSettings()
             {
-                OrganisationID = viewModel.OrganisationID, 
-                SchemaVersion = viewModel.SchemaVersion, 
-                ComplianceYear = viewModel.ComplianceYear, 
-                NumberOfNewProducers = viewModel.NumberOfNewProducers, 
-                NumberOfExistingProducers = viewModel.NumberOfExistingProducers, 
+                OrganisationID = viewModel.OrganisationID,
+                SchemaVersion = viewModel.SchemaVersion,
+                ComplianceYear = viewModel.ComplianceYear,
+                NumberOfNewProducers = viewModel.NumberOfNewProducers,
+                NumberOfExistingProducers = viewModel.NumberOfExistingProducers,
                 NoCompaniesForNewProducers = viewModel.NoCompaniesForNewProducers,
-                IncludeMalformedSchema = viewModel.IncludeMalformedSchema, 
-                IncludeUnexpectedFooElement = viewModel.IncludeUnexpectedFooElement, 
-                IgnoreStringLengthConditions = viewModel.IgnoreStringLengthConditions, 
+                IncludeMalformedSchema = viewModel.IncludeMalformedSchema,
+                IncludeUnexpectedFooElement = viewModel.IncludeUnexpectedFooElement,
+                IgnoreStringLengthConditions = viewModel.IgnoreStringLengthConditions,
             };
 
             PcsXmlFile xmlFile = await GenerateXml(settings);
 
             ContentDisposition cd = new ContentDisposition
             {
-                FileName = xmlFile.FileName, 
-                Inline = false, 
+                FileName = xmlFile.FileName,
+                Inline = false,
             };
 
             Response.AppendHeader("Content-Disposition", cd.ToString());
@@ -148,7 +159,7 @@
             using (IWeeeClient client = apiClient())
             {
                 return await client.SendAsync(
-                    User.GetAccessToken(), 
+                    User.GetAccessToken(),
                     new GeneratePcsXmlFile(settings));
             }
         }

@@ -133,7 +133,7 @@
 
         private async Task SetBreadcrumb()
         {
-            breadcrumb.InternalActivity = "View submissions history";
+            breadcrumb.InternalActivity = "Submissions history";
 
             await Task.Yield();
         }

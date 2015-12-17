@@ -70,20 +70,20 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15334.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.15334-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15345-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15310-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15310-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15345-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15310-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15345-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
@@ -222,6 +222,8 @@
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ProducerPublicRegisterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
@@ -542,6 +544,8 @@
     <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\DownloadFile.cshtml" />
     <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\SelectOrganisation.cshtml" />
     <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\SpecifyOptions.cshtml" />
+    <Content Include="Areas\Admin\Views\Producers\ConfirmRemoval.cshtml" />
+    <Content Include="Areas\Admin\Views\Producers\Removed.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
