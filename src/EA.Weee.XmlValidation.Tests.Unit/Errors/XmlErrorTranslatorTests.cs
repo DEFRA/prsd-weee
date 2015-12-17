@@ -218,7 +218,7 @@
         public void XmlErrorTranslator_MinInclusiveFailed_CorrectMessage()
         {
             string providedException = string.Format("The '{0}' element is invalid - The value '{1}' is invalid according to its datatype '{2}' - The MinInclusive constraint failed.", TestField, TestValue, TestType);
-            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The {1} you've provided is incorrect. Please make sure you enter the right value.", TestValue, TestField));
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' is lower than the minimum, or greater than the maximum, allowed value", TestValue, TestField));
 
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }
@@ -227,7 +227,7 @@
         public void XmlErrorTranslator_MaxInclusiveFailed_CorrectMessage()
         {
             string providedException = string.Format("The '{0}' element is invalid - The value '{1}' is invalid according to its datatype '{2}' - The MaxInclusive constraint failed.", TestField, TestValue, TestType);
-            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The {1} you've provided is incorrect. Please make sure you enter the right value.", TestValue, TestField));
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' is lower than the minimum, or greater than the maximum, allowed value", TestValue, TestField));
 
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }
@@ -272,7 +272,7 @@
         public void XmlErrorTranslator_InvalidChildElement_CorrectMessage()
         {
             string providedException = string.Format("The element 'TestParentElement' in namespace '{0}' has invalid child element '{1}' in namespace '{0}'. List of possible elements expected: '{2}' in namespace '{0}'.", TestNamespace, TestField, TestType);
-            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The field {0} isn't expected here. Please check that you are using v3.0.7 of the XSD schema (XML template).", TestField));
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The field {0} isn't expected here. Check that you are using v3.0.7 of the XSD schema (XML template).", TestField));
 
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }
@@ -323,7 +323,7 @@
             string result = translator.MakeFriendlyErrorMessage(schemaValidationErrorMessage, A<string>._);
 
             // Assert
-            Assert.Equal("The file you're trying to upload is not a correctly formatted XML file. Please make sure you're uploading a valid XML file.", result);
+            Assert.Equal("The file you're trying to upload is not a correctly formatted XML file. Upload a valid XML file.", result);
         }
 
         private string AddUniversalMessageParts(string specificMessage)
