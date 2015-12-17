@@ -65,7 +65,7 @@
 
             string fileContent = csvWriter.Write(items);
 
-            var fileName = string.Format("{0} - producerpublicregister_{1:ddMMyyyy_HHmm}.csv",
+            var fileName = string.Format("{0}_producerpublicregister_{1:ddMMyyyy_HHmm}.csv",
                 request.ComplianceYear,
                 DateTime.UtcNow);
 
