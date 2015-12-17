@@ -2,7 +2,7 @@
 {
     using System;
     using System.Security;
-    using DataAccess.Repositories;
+    using DataAccess.DataAccess;
     using FakeItEasy;
     using RequestHandlers.Admin.GetProducerDetails;
     using RequestHandlers.Security;
@@ -12,12 +12,12 @@
     public class RemoveProducerHandlerTests
     {
         private readonly IWeeeAuthorization weeeAuthorization;
-        private readonly IRegisteredProducerRepository registeredProducerRepository;
+        private readonly IRemoveProducerDataAccess removeProducerDataAccess;
 
         public RemoveProducerHandlerTests()
         {
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
-            registeredProducerRepository = A.Fake<IRegisteredProducerRepository>();
+            removeProducerDataAccess = A.Fake<IRemoveProducerDataAccess>();
         }
 
         [Fact]
@@ -30,30 +30,33 @@
 
             await Assert.ThrowsAsync<SecurityException>(() => RemoveProducerHandler().HandleAsync(request));
 
-            A.CallTo(() => registeredProducerRepository.GetProducerRegistration(A<Guid>._))
+            A.CallTo(() => removeProducerDataAccess.GetProducerRegistration(A<Guid>._))
                 .MustNotHaveHappened();
 
-            A.CallTo(() => registeredProducerRepository.SaveChangesAsync())
+            A.CallTo(() => removeProducerDataAccess.SaveChangesAsync())
                 .MustNotHaveHappened();
         }
 
         [Fact]
-        public async void WhenUserIsAuthorised_ShouldGetProducer_AndSaveChanges()
+        public async void WhenUserIsAuthorised_ShouldGetProducer_AndProducerSubmissions_AndSaveChanges()
         {
             var request = new RemoveProducer(Guid.NewGuid());
 
             await RemoveProducerHandler().HandleAsync(request);
 
-            A.CallTo(() => registeredProducerRepository.GetProducerRegistration(request.RegisteredProducerId))
+            A.CallTo(() => removeProducerDataAccess.GetProducerRegistration(request.RegisteredProducerId))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => removeProducerDataAccess.GetProducerSubmissionsForRegisteredProducer(request.RegisteredProducerId))
                 .MustHaveHappened(Repeated.Exactly.Once);
             
-            A.CallTo(() => registeredProducerRepository.SaveChangesAsync())
+            A.CallTo(() => removeProducerDataAccess.SaveChangesAsync())
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         private RemoveProducerHandler RemoveProducerHandler()
         {
-            return new RemoveProducerHandler(weeeAuthorization, registeredProducerRepository);
+            return new RemoveProducerHandler(weeeAuthorization, removeProducerDataAccess);
         }
     }
 }

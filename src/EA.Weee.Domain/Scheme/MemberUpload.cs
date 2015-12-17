@@ -87,6 +87,11 @@
             }
         }
 
+        public void DeductFromTotalCharges(decimal amount)
+        {
+            TotalCharges -= amount;
+        }
+
         protected MemberUpload()
         {
         }

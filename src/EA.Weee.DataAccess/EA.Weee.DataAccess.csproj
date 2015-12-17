@@ -74,9 +74,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntityFrameworkModule.cs" />
-    <Compile Include="Repositories\IRegisteredProducerRepository.cs" />
-    <Compile Include="Repositories\IRepository.cs" />
-    <Compile Include="Repositories\RegisteredProducerRepository.cs" />
+    <Compile Include="DataAccess\IRegisteredProducerDataAccess.cs" />
+    <Compile Include="DataAccess\RegisteredProducerDataAccess.cs" />
     <Compile Include="WeeeContext.Metadata.cs" />
     <Compile Include="Extensions\ProducerExtensions.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />
