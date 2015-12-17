@@ -20,20 +20,20 @@
         private readonly IProcessDataReturnXmlFileDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
         private readonly IGenerateFromDataReturnXml xmlGenerator;
-        private readonly Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder> xmlBusinessValidatorDelegate;
+        private readonly Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder> dataReturnVersionFromXmlBuilderDelegate;
         private readonly Func<Scheme, Quarter, IDataReturnVersionBuilder> dataReturnVersionBuilderDelegate;
      
         public ProcessDataReturnXmlFileHandler(
             IProcessDataReturnXmlFileDataAccess xmlfileDataAccess,
             IWeeeAuthorization authorization,
             IGenerateFromDataReturnXml xmlGenerator,
-            Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder> xmlBusinessValidatorDelegate,
+            Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder> dataReturnVersionFromXmlBuilderDelegate,
             Func<Scheme, Quarter, IDataReturnVersionBuilder> dataReturnVersionBuilderDelegate)
         {
             this.dataAccess = xmlfileDataAccess;
             this.authorization = authorization;
             this.xmlGenerator = xmlGenerator;
-            this.xmlBusinessValidatorDelegate = xmlBusinessValidatorDelegate;
+            this.dataReturnVersionFromXmlBuilderDelegate = dataReturnVersionFromXmlBuilderDelegate;
             this.dataReturnVersionBuilderDelegate = dataReturnVersionBuilderDelegate;
         }
 
@@ -58,23 +58,23 @@
             {
                 int complianceYear = int.Parse(xmlGeneratorResult.DeserialisedType.ComplianceYear);
                 int quarter = Convert.ToInt32(xmlGeneratorResult.DeserialisedType.ReturnPeriod);
-           
+
                 var pcsReturnVersionBuilder = dataReturnVersionBuilderDelegate(scheme, new Quarter(complianceYear, (QuarterType)quarter));
-                var xmlBusinessValidator = xmlBusinessValidatorDelegate(pcsReturnVersionBuilder);
-           
-                var xmlBusinessValidatorResult = await xmlBusinessValidator.Build(xmlGeneratorResult.DeserialisedType);
-           
+                var dataReturnVersionFromXmlBuilder = dataReturnVersionFromXmlBuilderDelegate(pcsReturnVersionBuilder);
+
+                var dataReturnVersionBuilderresult = await dataReturnVersionFromXmlBuilder.Build(xmlGeneratorResult.DeserialisedType);
+
                 var allErrors = xmlGeneratorResult.SchemaErrors.Select(e => e.ToDataReturnsUploadError())
-                    .Union(xmlBusinessValidatorResult.ErrorData.Select(e => new DataReturnUploadError(e.ErrorLevel.ToDomainErrorLevel(), Domain.UploadErrorType.Business, e.Description)))
+                    .Union(dataReturnVersionBuilderresult.ErrorData.Select(e => new DataReturnUploadError(e.ErrorLevel.ToDomainErrorLevel(), Domain.UploadErrorType.Business, e.Description)))
                     .ToList();
 
                 dataReturnUpload = new DataReturnUpload(scheme, xmlGeneratorResult.XmlString, allErrors, message.FileName, complianceYear, quarter);
 
-                if (!xmlBusinessValidatorResult.ErrorData.Any(e => e.ErrorLevel == ErrorLevel.Error))
+                if (!dataReturnVersionBuilderresult.ErrorData.Any(e => e.ErrorLevel == ErrorLevel.Error))
                 {
-                    dataReturnUpload.SetDataReturnVersion(xmlBusinessValidatorResult.DataReturnVersion);
+                    dataReturnUpload.SetDataReturnVersion(dataReturnVersionBuilderresult.DataReturnVersion);
                 }
-                }
+            }
 
             // Record XML processing end time
             stopwatch.Stop();
