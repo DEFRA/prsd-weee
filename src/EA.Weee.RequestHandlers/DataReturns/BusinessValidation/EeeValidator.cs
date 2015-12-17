@@ -12,7 +12,7 @@
 
     public class EeeValidator : IEeeValidator
     {
-        public List<ErrorData> Validate(string producerRegistrationNumber, string producerName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
+        public async Task<List<ErrorData>> Validate(string producerRegistrationNumber, string producerName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
         {
             //TODO: Implement business validation rules.
             return new List<ErrorData>();

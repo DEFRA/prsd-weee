@@ -69,7 +69,7 @@
         {
             await CreateDataReturnVersion();
 
-            var validationResult = eeeValidator.Validate(producerRegistrationNumber, producerName, category, obligationType, tonnage);
+            var validationResult = await eeeValidator.Validate(producerRegistrationNumber, producerName, category, obligationType, tonnage);
 
             if (ConsideredValid(validationResult))
             {
