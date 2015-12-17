@@ -105,6 +105,19 @@
             }
         }
 
+        public static ObligationType ToDomainObligationType(this Xml.DataReturns.obligationTypeType obligationType)
+        {
+            switch (obligationType)
+            {
+                case Xml.DataReturns.obligationTypeType.B2B:
+                    return ObligationType.B2B;
+                case Xml.DataReturns.obligationTypeType.B2C:
+                    return ObligationType.B2C;
+                default:
+                    throw new ArgumentException("Unable to map between obligation types");
+            }
+        }
+
         public static Domain.Lookup.WeeeCategory ToDomainWeeeCategory(this Xml.DataReturns.categoryNameType category)
         {
             switch (category)

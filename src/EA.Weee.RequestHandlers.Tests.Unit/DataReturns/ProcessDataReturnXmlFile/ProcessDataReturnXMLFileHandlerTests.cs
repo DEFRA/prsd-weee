@@ -4,8 +4,6 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
-    using Core.DataReturns;
-    using Core.Shared;
     using Domain.DataReturns;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
@@ -68,9 +66,9 @@
             public IProcessDataReturnXmlFileDataAccess DataAccess;
             public IWeeeAuthorization Authorization;
             public IGenerateFromDataReturnXml XmlGenerator;
-            public IDataReturnFromXmlBuilder XmlBusinessValidator;
-            public Func<IDataReturnVersionBuilder, IDataReturnFromXmlBuilder> XmlBusinessValidatorDelegate;
-            public Func<string, int, Core.DataReturns.QuarterType, IDataReturnVersionBuilder> DataReturnVersionBuilderDelegate;
+            public IDataReturnVersionFromXmlBuilder XmlBusinessValidator;
+            public Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder> XmlBusinessValidatorDelegate;
+            public Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilder> DataReturnVersionBuilderDelegate;
 
             public ProcessDataReturnXmlFileHandlerBuilder()
             {
@@ -81,10 +79,10 @@
 
                 XmlGenerator = A.Fake<IGenerateFromDataReturnXml>();
 
-                XmlBusinessValidator = A.Fake<IDataReturnFromXmlBuilder>();
-                XmlBusinessValidatorDelegate = new Func<IDataReturnVersionBuilder, IDataReturnFromXmlBuilder>(x => XmlBusinessValidator);
+                XmlBusinessValidator = A.Fake<IDataReturnVersionFromXmlBuilder>();
+                XmlBusinessValidatorDelegate = new Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder>(x => XmlBusinessValidator);
 
-                DataReturnVersionBuilderDelegate = A.Fake<Func<string, int, Core.DataReturns.QuarterType, IDataReturnVersionBuilder>>();
+                DataReturnVersionBuilderDelegate = A.Fake<Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilder>>();
             }
 
             public ProcessDataReturnXmlFileHandler Build()

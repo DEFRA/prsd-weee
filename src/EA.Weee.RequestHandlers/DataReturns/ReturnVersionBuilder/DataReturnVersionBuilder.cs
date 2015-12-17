@@ -6,69 +6,101 @@
     using System.Text;
     using System.Threading.Tasks;
     using BusinessValidation;
-    using Core.DataReturns;
     using Core.Shared;
     using Domain.DataReturns;
     using Domain.Lookup;
+    using ObligationType = Domain.ObligationType;
 
     public class DataReturnVersionBuilder : IDataReturnVersionBuilder
     {
-        private readonly string schemeApprovalNumber;
+        private readonly Domain.Scheme.Scheme scheme;
 
-        private readonly int complianceYear;
-
-        private readonly Core.DataReturns.QuarterType quarter;
+        private readonly Quarter quarter;
 
         private readonly IEeeValidator eeeValidator;
 
         private readonly IDataReturnVersionBuilderDataAccess dataAccess;
 
-        public DataReturnVersionBuilder(string schemeApprovalNumber, int complianceYear, Core.DataReturns.QuarterType quarter,
-            IEeeValidator eeeValidator, IDataReturnVersionBuilderDataAccess dataAccess)
+        protected List<ErrorData> ErrorData { get; set; }
+
+        private DataReturnVersion dataReturnVersion;
+
+        public DataReturnVersionBuilder(Domain.Scheme.Scheme scheme, Quarter quarter,
+            IEeeValidator eeeValidator,
+            Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate)
         {
-            this.schemeApprovalNumber = schemeApprovalNumber;
-            this.complianceYear = complianceYear;
+            this.scheme = scheme;
             this.quarter = quarter;
             this.eeeValidator = eeeValidator;
-            this.dataAccess = dataAccess;
+            dataAccess = dataAccessDelegate(scheme, quarter);
+
+            ErrorData = new List<ErrorData>();
         }
 
-        public void AddAatfDeliveredAmount(string aatfApprovalNumber, string facilityName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
+        private async Task CreateDataReturnVersion()
         {
-            throw new NotImplementedException();
+            if (dataReturnVersion == null)
+            {
+                var dataReturn = await dataAccess.FetchDataReturnOrDefault();
+                if (dataReturn == null)
+                {
+                    dataReturn = new DataReturn(scheme, quarter);
+                }
+
+                dataReturnVersion = new DataReturnVersion(dataReturn);
+            }
         }
 
-        public void AddAeDeliveredAmount(string approvalNumber, string operatorName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
+        public async Task AddAatfDeliveredAmount(string aatfApprovalNumber, string facilityName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
         {
-            throw new NotImplementedException();
+            await CreateDataReturnVersion();
+
+            dataReturnVersion.AddAatfDeliveredAmount(new AatfDeliveredAmount(obligationType, category, tonnage, new AatfDeliveryLocation(aatfApprovalNumber, facilityName), dataReturnVersion));
         }
 
-        public void AddEeeOutputAmount(string producerRegistrationNumber, string producerName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
+        public async Task AddAeDeliveredAmount(string approvalNumber, string operatorName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
         {
-            throw new NotImplementedException();
+            await CreateDataReturnVersion();
+
+            dataReturnVersion.AddAeDeliveredAmount(new AeDeliveredAmount(obligationType, category, tonnage, new AeDeliveryLocation(approvalNumber, operatorName), dataReturnVersion));
         }
 
-        public void AddWeeeCollectedAmount(WeeeCollectedAmountSourceType sourceType, WeeeCategory category, ObligationType obligationType, decimal tonnage)
+        public async Task AddEeeOutputAmount(string producerRegistrationNumber, string producerName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
         {
-            throw new NotImplementedException();
+            await CreateDataReturnVersion();
+
+            var validationResult = eeeValidator.Validate(producerRegistrationNumber, producerName, category, obligationType, tonnage);
+
+            if (ConsideredValid(validationResult))
+            {
+                var registeredProducer = await dataAccess.GetRegisteredProducer(producerRegistrationNumber);
+
+                dataReturnVersion.AddEeeOutputAmount(new EeeOutputAmount(obligationType, category, tonnage, registeredProducer, dataReturnVersion));
+            }
+
+            ErrorData.AddRange(validationResult);
+        }
+
+        public async Task AddWeeeCollectedAmount(WeeeCollectedAmountSourceType sourceType, WeeeCategory category, ObligationType obligationType, decimal tonnage)
+        {
+            await CreateDataReturnVersion();
+
+            dataReturnVersion.AddWeeeCollectedAmount(new WeeeCollectedAmount(sourceType, obligationType, category, tonnage, dataReturnVersion));
         }
 
         public DataReturnVersionBuilderResult Build()
         {
-            //if (!xmlBusinessValidatorResult.ErrorData.Any(e => e.ErrorLevel == ErrorLevel.Error))
-            //{
-            //    // Try to fetch the existing data return for the scheme and quarter, otherwise create a new data return.
-            //    Quarter quarterDb = new Quarter(complianceYear, (QuarterType)quarter);
-            //    DataReturn dataReturn = await dataAccess.FetchDataReturnOrDefaultAsync(scheme, quarterDb);
-            //    if (dataReturn == null)
-            //    {
-            //        dataReturn = new DataReturn(scheme, quarterDb);
-            //    }
+            if (dataReturnVersion == null)
+            {
+                throw new InvalidOperationException("Return data has not been provided.");
+            }
 
-            //    DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
-            //}
+            return new DataReturnVersionBuilderResult(ConsideredValid(ErrorData) ? dataReturnVersion : null, ErrorData);
+        }
 
-            throw new NotImplementedException();
+        private static bool ConsideredValid(ICollection<ErrorData> errorData)
+        {
+            return !errorData.Any(e => e.ErrorLevel == ErrorLevel.Error);
         }
     }
 }

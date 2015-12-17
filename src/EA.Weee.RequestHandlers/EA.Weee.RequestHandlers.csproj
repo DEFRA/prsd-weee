@@ -84,7 +84,8 @@
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandler.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
-    <Compile Include="DataReturns\BusinessValidation\EeeeValidator.cs" />
+    <Compile Include="DataReturns\BusinessValidation\EeeValidator.cs" />
+    <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderResult.cs" />
     <Compile Include="DataReturns\BusinessValidation\IEeeValidator.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\CreateTestXmlFileHandler.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\DataReturnVersionGenerator.cs" />
@@ -96,10 +97,10 @@
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionDataAccess.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\IFetchDataReturnForSubmissionDataAccess.cs" />
-    <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnFromXmlBuilder.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnVersionFromXmlBuilder.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\GenerateFromDataReturnXml.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\GenerateFromDataReturnXmlResult.cs" />
-    <Compile Include="DataReturns\ProcessDataReturnXmlFile\IDataReturnXmlBusinessValidator.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\IDataReturnVersionFromXmlBuilder.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\IGenerateFromDataReturnXml.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\IProcessDataReturnXmlFileDataAccess.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileDataAccess.cs" />
@@ -107,7 +108,6 @@
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderDataAccess.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\IDataReturnVersionBuilder.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilder.cs" />
-    <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderResult.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\IDataReturnVersionBuilderDataAccess.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />

@@ -20,15 +20,15 @@
         private readonly IProcessDataReturnXmlFileDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
         private readonly IGenerateFromDataReturnXml xmlGenerator;
-        private readonly Func<IDataReturnVersionBuilder, IDataReturnFromXmlBuilder> xmlBusinessValidatorDelegate;
-        private readonly Func<string, int, Core.DataReturns.QuarterType, IDataReturnVersionBuilder> dataReturnVersionBuilderDelegate;
+        private readonly Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder> xmlBusinessValidatorDelegate;
+        private readonly Func<Scheme, Quarter, IDataReturnVersionBuilder> dataReturnVersionBuilderDelegate;
 
         public ProcessDataReturnXmlFileHandler(
             IProcessDataReturnXmlFileDataAccess xmlfileDataAccess,
             IWeeeAuthorization authorization,
             IGenerateFromDataReturnXml xmlGenerator,
-            Func<IDataReturnVersionBuilder, IDataReturnFromXmlBuilder> xmlBusinessValidatorDelegate,
-            Func<string, int, Core.DataReturns.QuarterType, IDataReturnVersionBuilder> dataReturnVersionBuilderDelegate)
+            Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder> xmlBusinessValidatorDelegate,
+            Func<Scheme, Quarter, IDataReturnVersionBuilder> dataReturnVersionBuilderDelegate)
         {
             this.dataAccess = xmlfileDataAccess;
             this.authorization = authorization;
@@ -59,10 +59,10 @@
                 int complianceYear = int.Parse(xmlGeneratorResult.DeserialisedType.ComplianceYear);
                 int quarter = Convert.ToInt32(xmlGeneratorResult.DeserialisedType.ReturnPeriod);
 
-                var pcsReturnVersionBuilder = dataReturnVersionBuilderDelegate(scheme.ApprovalNumber, complianceYear, (Core.DataReturns.QuarterType)quarter);
+                var pcsReturnVersionBuilder = dataReturnVersionBuilderDelegate(scheme, new Quarter(complianceYear, (QuarterType)quarter));
                 var xmlBusinessValidator = xmlBusinessValidatorDelegate(pcsReturnVersionBuilder);
 
-                var xmlBusinessValidatorResult = xmlBusinessValidator.Build(xmlGeneratorResult.DeserialisedType);
+                var xmlBusinessValidatorResult = await xmlBusinessValidator.Build(xmlGeneratorResult.DeserialisedType);
 
                 var allErrors = xmlGeneratorResult.SchemaErrors.Select(e => e.ToDataReturnsUploadError())
                     .Union(xmlBusinessValidatorResult.ErrorData.Select(e => new DataReturnUploadError(e.ErrorLevel.ToDomainErrorLevel(), Domain.UploadErrorType.Business, e.Description)))
