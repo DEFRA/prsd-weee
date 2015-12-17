@@ -22,7 +22,7 @@
         private readonly IGenerateFromDataReturnXml xmlGenerator;
         private readonly Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder> xmlBusinessValidatorDelegate;
         private readonly Func<Scheme, Quarter, IDataReturnVersionBuilder> dataReturnVersionBuilderDelegate;
-
+     
         public ProcessDataReturnXmlFileHandler(
             IProcessDataReturnXmlFileDataAccess xmlfileDataAccess,
             IWeeeAuthorization authorization,
@@ -52,30 +52,30 @@
             {
                 dataReturnUpload = new DataReturnUpload(scheme, xmlGeneratorResult.XmlString,
                     xmlGeneratorResult.SchemaErrors.Select(e => e.ToDataReturnsUploadError()).ToList(),
-                    message.FileName, null, null, null);
+                    message.FileName, null, null);
             }
             else
             {
                 int complianceYear = int.Parse(xmlGeneratorResult.DeserialisedType.ComplianceYear);
                 int quarter = Convert.ToInt32(xmlGeneratorResult.DeserialisedType.ReturnPeriod);
-
+           
                 var pcsReturnVersionBuilder = dataReturnVersionBuilderDelegate(scheme, new Quarter(complianceYear, (QuarterType)quarter));
                 var xmlBusinessValidator = xmlBusinessValidatorDelegate(pcsReturnVersionBuilder);
-
+           
                 var xmlBusinessValidatorResult = await xmlBusinessValidator.Build(xmlGeneratorResult.DeserialisedType);
-
+           
                 var allErrors = xmlGeneratorResult.SchemaErrors.Select(e => e.ToDataReturnsUploadError())
                     .Union(xmlBusinessValidatorResult.ErrorData.Select(e => new DataReturnUploadError(e.ErrorLevel.ToDomainErrorLevel(), Domain.UploadErrorType.Business, e.Description)))
                     .ToList();
 
-                dataReturnUpload = new DataReturnUpload(scheme, xmlGeneratorResult.XmlString, allErrors, message.FileName, null, complianceYear, quarter);
+                dataReturnUpload = new DataReturnUpload(scheme, xmlGeneratorResult.XmlString, allErrors, message.FileName, complianceYear, quarter);
 
                 if (!xmlBusinessValidatorResult.ErrorData.Any(e => e.ErrorLevel == ErrorLevel.Error))
                 {
-                    dataReturnUpload.SetDataReturnsVersion(xmlBusinessValidatorResult.DataReturnVersion);
+                    dataReturnUpload.SetDataReturnVersion(xmlBusinessValidatorResult.DataReturnVersion);
                 }
-            }
-           
+                }
+
             // Record XML processing end time
             stopwatch.Stop();
             dataReturnUpload.SetProcessTime(stopwatch.Elapsed);

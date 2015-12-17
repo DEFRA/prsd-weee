@@ -1,0 +1,23 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.RemovedViewModel
+@{
+    ViewBag.Title = "Removed Producer";
+}
+
+@section main_content {
+
+    <header class="hgroup">
+        <h1 class="heading-large">Producer removed from PCS</h1>
+    </header>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.RegistrationNumber)
+        @Html.HiddenFor(m => m.ComplianceYear)
+
+        <p>You have successfully removed the producer from '@Model.SchemeName' for @Model.ComplianceYear.</p>
+
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+    }
+}
+
