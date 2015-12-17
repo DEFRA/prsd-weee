@@ -6,9 +6,11 @@
     using System.Text;
     using System.Threading.Tasks;
     using Domain.DataReturns;
-
+    using Domain.Producer;
     public interface IDataReturnVersionBuilderDataAccess
     {
-        Task<DataReturn> FetchDataReturnOrDefaultAsync(Domain.Scheme.Scheme scheme, Quarter quarter);
+        Task<DataReturn> FetchDataReturnOrDefault();
+
+        Task<RegisteredProducer> GetRegisteredProducer(string producerRegistrationNumber);
     }
 }
