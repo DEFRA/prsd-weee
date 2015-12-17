@@ -9,6 +9,8 @@
     /// </summary>
     public class ProducerDetailsScheme
     {
+        public Guid RegisteredProducerId { get; set; }
+
         public string SchemeName { get; set; }
         
         public string ProducerName { get; set; }
@@ -26,5 +28,9 @@
         public DateTime? CeasedToExist { get; set; }
 
         public string IsAuthorisedRepresentative { get; set; }
+
+        public int ComplianceYear { get; set; }
+
+        public string Prn { get; set; }
     }
 }

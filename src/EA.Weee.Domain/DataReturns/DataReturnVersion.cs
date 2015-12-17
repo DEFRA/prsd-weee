@@ -16,7 +16,7 @@
     /// </summary>
     public class DataReturnVersion : Entity
     {
-        public DataReturn DataReturn { get; private set; }
+        public virtual DataReturn DataReturn { get; private set; }
 
         public virtual DateTime? SubmittedDate { get; private set; }
 
@@ -185,11 +185,18 @@
                 string errorMessage = "This data return version has already been submitted.";
                 throw new InvalidOperationException(errorMessage);
             }
-
-            IsSubmitted = true;
-            SubmittedDate = SystemTime.UtcNow;
-            SubmittingUserId = userId;
-            DataReturn.SetCurrentVersion(this);
-        }       
+            if (DataReturn != null)
+            {
+                IsSubmitted = true;
+                SubmittedDate = SystemTime.UtcNow;
+                SubmittingUserId = userId;
+                DataReturn.SetCurrentVersion(this);
+            }
+            else
+            {
+                string errorMessage = "This data return version has no corresponding data return.";
+                throw new InvalidOperationException(errorMessage);
+            }
+        }
     }
 }

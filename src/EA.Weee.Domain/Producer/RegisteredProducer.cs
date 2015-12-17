@@ -1,15 +1,12 @@
 ﻿namespace EA.Weee.Domain.Producer
 {
-    using EA.Prsd.Core.Domain;
     using Prsd.Core;
     using Scheme;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using Unalignment;
 
-    public class RegisteredProducer : Entity
+    public class RegisteredProducer : UnalignableEntity
     {
         public RegisteredProducer(
             string producerRegistrationNumber,

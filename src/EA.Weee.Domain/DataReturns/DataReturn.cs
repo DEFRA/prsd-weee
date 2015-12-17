@@ -1,12 +1,9 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using EA.Prsd.Core;
-    using EA.Prsd.Core.Domain;
+    using Prsd.Core;
+    using Prsd.Core.Domain;
+    using Scheme;
 
     /// <summary>
     /// This entity represents a scheme's data return for a single quarter.
@@ -14,7 +11,7 @@
     /// </summary>
     public class DataReturn : Entity
     {
-        public virtual Scheme.Scheme Scheme { get; private set; }
+        public virtual Scheme Scheme { get; private set; }
 
         public virtual Quarter Quarter { get; private set; }
 
@@ -24,7 +21,7 @@
         /// </summary>
         public virtual DataReturnVersion CurrentVersion { get; private set; }
 
-        public DataReturn(Scheme.Scheme scheme, Quarter quarter)
+        public DataReturn(Scheme scheme, Quarter quarter)
         {
             Guard.ArgumentNotNull(() => scheme, scheme);
             Guard.ArgumentNotNull(() => quarter, quarter);
