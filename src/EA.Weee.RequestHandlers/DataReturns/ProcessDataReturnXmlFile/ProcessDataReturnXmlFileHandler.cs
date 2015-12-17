@@ -5,33 +5,36 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Shared;
     using Domain.DataReturns;
     using Domain.Scheme;
     using Prsd.Core.Mediator;
     using Requests.DataReturns;
+    using ReturnVersionBuilder;
     using Security;
-    using Xml.Converter;
+    using Shared;
+    using Xml.DataReturns;
 
     internal class ProcessDataReturnXmlFileHandler : IRequestHandler<ProcessDataReturnXmlFile, Guid>
     {
         private readonly IProcessDataReturnXmlFileDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
-        private readonly IDataReturnXmlValidator xmlValidator;
-        private readonly IXmlConverter xmlConverter;
         private readonly IGenerateFromDataReturnXml xmlGenerator;
-     
+        private readonly Func<IDataReturnVersionBuilder, IDataReturnFromXmlBuilder> xmlBusinessValidatorDelegate;
+        private readonly Func<string, int, Core.DataReturns.QuarterType, IDataReturnVersionBuilder> dataReturnVersionBuilderDelegate;
+
         public ProcessDataReturnXmlFileHandler(
             IProcessDataReturnXmlFileDataAccess xmlfileDataAccess,
             IWeeeAuthorization authorization,
-            IDataReturnXmlValidator xmlValidator, 
-            IXmlConverter xmlConverter,
-            IGenerateFromDataReturnXml xmlGenerator)
+            IGenerateFromDataReturnXml xmlGenerator,
+            Func<IDataReturnVersionBuilder, IDataReturnFromXmlBuilder> xmlBusinessValidatorDelegate,
+            Func<string, int, Core.DataReturns.QuarterType, IDataReturnVersionBuilder> dataReturnVersionBuilderDelegate)
         {
             this.dataAccess = xmlfileDataAccess;
             this.authorization = authorization;
-            this.xmlValidator = xmlValidator;
-            this.xmlConverter = xmlConverter;
             this.xmlGenerator = xmlGenerator;
+            this.xmlBusinessValidatorDelegate = xmlBusinessValidatorDelegate;
+            this.dataReturnVersionBuilderDelegate = dataReturnVersionBuilderDelegate;
         }
 
         public async Task<Guid> HandleAsync(ProcessDataReturnXmlFile message)
@@ -42,34 +45,41 @@
             // record XML processing start time
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            var errors = xmlValidator.Validate(message);
-            List<DataReturnUploadError> datareturnsUploadErrors = errors as List<DataReturnUploadError> ?? errors.ToList();
+            var xmlGeneratorResult = xmlGenerator.GenerateDataReturns<SchemeReturn>(message);
+            DataReturnUpload dataReturnUpload;
+
+            if (xmlGeneratorResult.SchemaErrors.Any())
+            {
+                dataReturnUpload = new DataReturnUpload(scheme, xmlGeneratorResult.XmlString,
+                    xmlGeneratorResult.SchemaErrors.Select(e => e.ToDataReturnsUploadError()).ToList(),
+                    message.FileName, null, null, null);
+            }
+            else
+            {
+                int complianceYear = int.Parse(xmlGeneratorResult.DeserialisedType.ComplianceYear);
+                int quarter = Convert.ToInt32(xmlGeneratorResult.DeserialisedType.ReturnPeriod);
+
+                var pcsReturnVersionBuilder = dataReturnVersionBuilderDelegate(scheme.ApprovalNumber, complianceYear, (Core.DataReturns.QuarterType)quarter);
+                var xmlBusinessValidator = xmlBusinessValidatorDelegate(pcsReturnVersionBuilder);
+
+                var xmlBusinessValidatorResult = xmlBusinessValidator.Build(xmlGeneratorResult.DeserialisedType);
+
+                var allErrors = xmlGeneratorResult.SchemaErrors.Select(e => e.ToDataReturnsUploadError())
+                    .Union(xmlBusinessValidatorResult.ErrorData.Select(e => new DataReturnUploadError(e.ErrorLevel.ToDomainErrorLevel(), Domain.UploadErrorType.Business, e.Description)))
+                    .ToList();
+
+                dataReturnUpload = new DataReturnUpload(scheme, xmlGeneratorResult.XmlString, allErrors, message.FileName, null, complianceYear, quarter);
+
+                if (!xmlBusinessValidatorResult.ErrorData.Any(e => e.ErrorLevel == ErrorLevel.Error))
+                {
+                    dataReturnUpload.SetDataReturnsVersion(xmlBusinessValidatorResult.DataReturnVersion);
+                }
+            }
            
-            DataReturnUpload dataReturnUpload = xmlGenerator.GenerateDataReturnsUpload(message, datareturnsUploadErrors, scheme);
-           
-            // record XML processing end time
+            // Record XML processing end time
             stopwatch.Stop();
             dataReturnUpload.SetProcessTime(stopwatch.Elapsed);
            
-            if (!errors.Any())
-            {
-                Quarter quarter = new Quarter(
-                    dataReturnUpload.ComplianceYear.Value,
-                    (QuarterType)dataReturnUpload.Quarter.Value);
-
-                // Try to fetch the existing data return for the scheme and quarter, otherwise create a new data return.
-                DataReturn dataReturn = await dataAccess.FetchDataReturnOrDefaultAsync(scheme, quarter);
-
-                if (dataReturn == null)
-                {
-                    dataReturn = new DataReturn(scheme, quarter);
-                }
-
-                DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
-
-                dataReturnUpload.SetDataReturnsVersion(dataReturnVersion);
-            }
-
             await dataAccess.AddAndSaveAsync(dataReturnUpload);
 
             return dataReturnUpload.Id;

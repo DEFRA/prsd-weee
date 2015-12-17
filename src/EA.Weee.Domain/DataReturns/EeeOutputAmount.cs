@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
     using EA.Prsd.Core;
-    using EA.Weee.Domain.Lookup;
     using EA.Weee.Domain.Producer;
+    using Lookup;
 
     public class EeeOutputAmount : ReturnItem
     {

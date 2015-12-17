@@ -403,11 +403,11 @@
         {
             using (var client = apiClient())
             {
-                IEnumerable<UploadErrorData> errors =
+                IEnumerable<ErrorData> errors =
                     (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(schemeId, memberUploadId)))
                     .OrderByDescending(e => e.ErrorLevel);
 
-                CsvWriter<UploadErrorData> csvWriter = csvWriterFactory.Create<UploadErrorData>();
+                CsvWriter<ErrorData> csvWriter = csvWriterFactory.Create<ErrorData>();
                 csvWriter.DefineColumn("Description", e => e.Description);
     
                 var schemePublicInfo = await cache.FetchSchemePublicInfo(schemeId);
