@@ -46,6 +46,7 @@
                                             returnItem.WeeeCategory,
                                             returnItem.Tonnage));
                 dataReturnVersion.AddWeeeCollectedReturnVersion(returnVersion);
+                returnVersion.AddDataReturnVersion(dataReturnVersion);
             }
 
             int numberOfDeliveredToAatfs = settings.NumberOfAatfs;
@@ -77,6 +78,7 @@
                                             returnItem.WeeeCategory,
                                             returnItem.Tonnage));
                 dataReturnVersion.AddWeeeCollectedReturnVersion(returnVersion);
+                returnVersion.AddDataReturnVersion(dataReturnVersion);
             }
 
             IEnumerable<ReturnItem> b2cWeeeFromFinalHolders = CreateReturnItems(ObligationType.B2C);
@@ -88,6 +90,7 @@
                                             returnItem.WeeeCategory,
                                             returnItem.Tonnage));
                 dataReturnVersion.AddWeeeCollectedReturnVersion(returnVersion);
+                returnVersion.AddDataReturnVersion(dataReturnVersion);
             }
 
             IList<RegisteredProducer> registeredProducers = await dataAccess.FetchRegisteredProducersAsync(scheme, quarter.Year);
