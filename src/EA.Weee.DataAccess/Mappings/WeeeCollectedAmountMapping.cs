@@ -7,7 +7,15 @@
         public WeeeCollectedAmountMapping()
         {
             ToTable("WeeeCollectedAmount", "PCS");
-            Ignore(w => w.DataReturnVersion);            
+            HasMany(w => w.WeeeCollectedReturnVersions)                
+                .WithMany(a => a.WeeeCollectedAmounts)
+                .Map(
+               m =>
+               {
+                   m.MapLeftKey("WeeeCollectedReturnVersionId");
+                   m.MapRightKey("WeeCollectedAmountId");
+                   m.ToTable("WeeeCollectedReturnVersionAmount");
+               });
         }
     }
 }

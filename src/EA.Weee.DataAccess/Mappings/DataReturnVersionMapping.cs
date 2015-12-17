@@ -8,6 +8,7 @@
         public DataReturnVersionMapping()
         {
             ToTable("DataReturnVersion", "PCS");
+            HasMany(d => d.WeeeCollectedReturnVersions);
 
             Ignore(dr => dr.IsSubmitted);
         }
