@@ -37,12 +37,12 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15334.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.15334-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.15345-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core.DataAccess, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.15310-develop1\lib\net452\EA.Prsd.Core.DataAccess.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.DataAccess, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.15345-develop1\lib\net452\EA.Prsd.Core.DataAccess.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -74,10 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntityFrameworkModule.cs" />
+    <Compile Include="DataAccess\IRegisteredProducerDataAccess.cs" />
+    <Compile Include="DataAccess\RegisteredProducerDataAccess.cs" />
     <Compile Include="Mappings\WeeeCollectedReturnVersionMapping.cs" />
-    <Compile Include="Repositories\IRegisteredProducerRepository.cs" />
-    <Compile Include="Repositories\IRepository.cs" />
-    <Compile Include="Repositories\RegisteredProducerRepository.cs" />
     <Compile Include="WeeeContext.Metadata.cs" />
     <Compile Include="Extensions\ProducerExtensions.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />

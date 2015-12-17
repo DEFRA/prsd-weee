@@ -2,7 +2,7 @@
 {
     using System;
     using System.Security;
-    using DataAccess.Repositories;
+    using DataAccess.DataAccess;
     using FakeItEasy;
     using RequestHandlers.Admin.GetProducerDetails;
     using RequestHandlers.Security;
@@ -12,16 +12,16 @@
     public class IsProducerRegisteredForComplianceYearTests
     {
         private readonly IWeeeAuthorization weeeAuthorization;
-        private readonly IRegisteredProducerRepository registeredProducerRepository;
+        private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
 
         public IsProducerRegisteredForComplianceYearTests()
         {
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
-            registeredProducerRepository = A.Fake<IRegisteredProducerRepository>();
+            registeredProducerDataAccess = A.Fake<IRegisteredProducerDataAccess>();
         }
 
         [Fact]
-        public async void WhenUserIsUnauthorised_ShouldNotGetProducerRegistrations_OrSaveChanges()
+        public async void WhenUserIsUnauthorised_ShouldNotGetProducerRegistrations()
         {
             A.CallTo(() => weeeAuthorization.EnsureCanAccessInternalArea())
                 .Throws<SecurityException>();
@@ -30,10 +30,7 @@
 
             await Assert.ThrowsAsync<SecurityException>(() => IsProducerRegisteredForComplianceYearHandler().HandleAsync(request));
 
-            A.CallTo(() => registeredProducerRepository.GetProducerRegistration(A<Guid>._))
-                .MustNotHaveHappened();
-
-            A.CallTo(() => registeredProducerRepository.SaveChangesAsync())
+            A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(A<Guid>._))
                 .MustNotHaveHappened();
         }
 
@@ -44,13 +41,13 @@
 
             await IsProducerRegisteredForComplianceYearHandler().HandleAsync(request);
 
-            A.CallTo(() => registeredProducerRepository.GetProducerRegistrations(request.RegistrationNumber, request.ComplianceYear))
+            A.CallTo(() => registeredProducerDataAccess.GetProducerRegistrations(request.RegistrationNumber, request.ComplianceYear))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         private IsProducerRegisteredForComplianceYearHandler IsProducerRegisteredForComplianceYearHandler()
         {
-            return new IsProducerRegisteredForComplianceYearHandler(weeeAuthorization, registeredProducerRepository);
+            return new IsProducerRegisteredForComplianceYearHandler(weeeAuthorization, registeredProducerDataAccess);
         }
     }
 }

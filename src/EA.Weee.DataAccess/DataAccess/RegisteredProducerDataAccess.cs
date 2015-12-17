@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.DataAccess.Repositories
+﻿namespace EA.Weee.DataAccess.DataAccess
 {
     using System;
     using System.Collections.Generic;
@@ -7,11 +7,11 @@
     using System.Threading.Tasks;
     using Domain.Producer;
 
-    public class RegisteredProducerRepository : IRegisteredProducerRepository
+    public class RegisteredProducerDataAccess : IRegisteredProducerDataAccess
     {
         private readonly WeeeContext context;
 
-        public RegisteredProducerRepository(WeeeContext context)
+        public RegisteredProducerDataAccess(WeeeContext context)
         {
             this.context = context;
         }
@@ -34,11 +34,6 @@
                 .Where(p => p.ProducerRegistrationNumber == producerRegistrationNumber
                     && p.ComplianceYear == complianceYear)
                 .ToListAsync();
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            return await context.SaveChangesAsync();
         }
     }
 }

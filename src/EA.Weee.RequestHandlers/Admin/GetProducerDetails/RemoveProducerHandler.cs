@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin;
-    using DataAccess.Repositories;
+    using DataAccess.DataAccess;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
@@ -11,23 +13,31 @@
     public class RemoveProducerHandler : IRequestHandler<RemoveProducer, RemoveProducerResult>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IRegisteredProducerRepository registeredProducerRepository;
+        private readonly IRemoveProducerDataAccess removeProducerDataAccess;
 
-        public RemoveProducerHandler(IWeeeAuthorization authorization, IRegisteredProducerRepository registeredProducerRepository)
+        public RemoveProducerHandler(IWeeeAuthorization authorization, IRemoveProducerDataAccess removeProducerDataAccess)
         {
             this.authorization = authorization;
-            this.registeredProducerRepository = registeredProducerRepository;
+            this.removeProducerDataAccess = removeProducerDataAccess;
         }
 
         public async Task<RemoveProducerResult> HandleAsync(RemoveProducer request)
         {
             authorization.EnsureCanAccessInternalArea();
 
-            var producer = await registeredProducerRepository.GetProducerRegistration(request.RegisteredProducerId);
+            var producerSubmissions =
+                await removeProducerDataAccess.GetProducerSubmissionsForRegisteredProducer(request.RegisteredProducerId);
+
+            foreach (var producerSubmission in producerSubmissions)
+            {
+                producerSubmission.MemberUpload.DeductFromTotalCharges(producerSubmission.ChargeThisUpdate);
+            }
+
+            var producer = await removeProducerDataAccess.GetProducerRegistration(request.RegisteredProducerId);
 
             producer.Unalign();
 
-            await registeredProducerRepository.SaveChangesAsync();
+            await removeProducerDataAccess.SaveChangesAsync();
 
             return new RemoveProducerResult(true);
         }
