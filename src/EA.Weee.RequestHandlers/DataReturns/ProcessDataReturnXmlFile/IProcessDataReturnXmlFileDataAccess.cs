@@ -9,8 +9,6 @@
     {
         Task<Scheme> FetchSchemeByOrganisationIdAsync(Guid organisationId);
 
-        Task<DataReturn> FetchDataReturnOrDefaultAsync(Scheme scheme, Quarter quarter);
-
         Task AddAndSaveAsync(DataReturnUpload dataReturnUpload);
     }
 }
