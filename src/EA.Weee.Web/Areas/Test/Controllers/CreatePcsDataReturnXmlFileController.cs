@@ -11,6 +11,7 @@
     using Core.Shared;
     using Core.Shared.Paging;
     using Infrastructure;
+    using Services;
     using ViewModels.CreatePcsDataReturnXmlFile;
     using Weee.Requests.DataReturns;
     using Weee.Requests.Organisations;
@@ -20,10 +21,20 @@
     {
         private const int pageSize = 10;
         private readonly Func<IWeeeClient> apiClient;
+        private readonly BreadcrumbService breadcrumb;
 
-        public CreatePcsDataReturnXmlFileController(Func<IWeeeClient> apiClient)
+        public CreatePcsDataReturnXmlFileController(
+            Func<IWeeeClient> apiClient,
+            BreadcrumbService breadcrumb)
         {
             this.apiClient = apiClient;
+            this.breadcrumb = breadcrumb;
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+            breadcrumb.TestAreaActivity = "Create PCS data return XML file";
         }
 
         [HttpGet]
