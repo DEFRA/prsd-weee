@@ -22,7 +22,7 @@
         /// a data return.
         /// </summary>
         [Fact]
-        public async void HandleAsync_UserNotAssociatedWithScheme_ThrowsSecurityException()
+        public async Task HandleAsync_UserNotAssociatedWithScheme_ThrowsSecurityException()
         {
             // Arrange
             var builder = new ProcessDataReturnXmlFileHandlerBuilder();
@@ -42,7 +42,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_SchemaErrors_DoesNotPerformBusinessValidation()
+        public async Task HandleAsync_SchemaErrors_DoesNotPerformBusinessValidation()
         {
             // Arrange
             var builder = new ProcessDataReturnXmlFileHandlerBuilder();
@@ -58,7 +58,7 @@
             await builder.InvokeHandleAsync();
 
             // Assert
-            A.CallTo(() => builder.XmlBusinessValidator.Build(A<SchemeReturn>._)).MustNotHaveHappened();
+            A.CallTo(() => builder.DataReturnVersionFromXmlBuilder.Build(A<SchemeReturn>._)).MustNotHaveHappened();
         }
 
         private class ProcessDataReturnXmlFileHandlerBuilder
@@ -66,8 +66,8 @@
             public IProcessDataReturnXmlFileDataAccess DataAccess;
             public IWeeeAuthorization Authorization;
             public IGenerateFromDataReturnXml XmlGenerator;
-            public IDataReturnVersionFromXmlBuilder XmlBusinessValidator;
-            public Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder> XmlBusinessValidatorDelegate;
+            public IDataReturnVersionFromXmlBuilder DataReturnVersionFromXmlBuilder;
+            public Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder> DataReturnVersionFromXmlBuilderDelegate;
             public Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilder> DataReturnVersionBuilderDelegate;
 
             public ProcessDataReturnXmlFileHandlerBuilder()
@@ -79,8 +79,8 @@
 
                 XmlGenerator = A.Fake<IGenerateFromDataReturnXml>();
 
-                XmlBusinessValidator = A.Fake<IDataReturnVersionFromXmlBuilder>();
-                XmlBusinessValidatorDelegate = new Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder>(x => XmlBusinessValidator);
+                DataReturnVersionFromXmlBuilder = A.Fake<IDataReturnVersionFromXmlBuilder>();
+                DataReturnVersionFromXmlBuilderDelegate = new Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder>(x => DataReturnVersionFromXmlBuilder);
 
                 DataReturnVersionBuilderDelegate = A.Fake<Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilder>>();
             }
@@ -91,7 +91,7 @@
                                               DataAccess,
                                               Authorization,
                                               XmlGenerator,
-                                              XmlBusinessValidatorDelegate,
+                                              DataReturnVersionFromXmlBuilderDelegate,
                                               DataReturnVersionBuilderDelegate);
             }
 
