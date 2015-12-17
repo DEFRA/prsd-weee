@@ -64,17 +64,20 @@
         }
 
         [Fact]
-        public void AddWeeeCollectedAmount_AddsToWeeeCollectedAmounts()
+        public void AddWeeeCollectedReturnVersion_AddsToWeeeCollectedReturnVersion()
         {
             // Arrange
-            var returnVersion = new DataReturnVersion(A.Fake<DataReturn>());
-            var weeeCollectedAmount = new WeeeCollectedAmount(A<WeeeCollectedAmountSourceType>._, ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, A.Fake<DataReturnVersion>());
+            var returnVersion = new DataReturnVersion(A.Fake<DataReturn>());            
+            WeeeCollectedReturnVersion collectedReturnVersion = new WeeeCollectedReturnVersion();
+            
+            WeeeCollectedAmount amount = new WeeeCollectedAmount(A<WeeeCollectedAmountSourceType>._, ObligationType.B2B, A<WeeeCategory>._, A<decimal>._);
+            collectedReturnVersion.AddWeeeCollectedAmount(amount);
 
             // Act
-            returnVersion.AddWeeeCollectedAmount(weeeCollectedAmount);
+            returnVersion.AddWeeeCollectedReturnVersion(collectedReturnVersion);           
 
             // Assert
-            Assert.Contains(weeeCollectedAmount, returnVersion.WeeeCollectedAmounts);
+            Assert.Contains(amount, collectedReturnVersion.WeeeCollectedAmounts);
         }
 
         [Fact]

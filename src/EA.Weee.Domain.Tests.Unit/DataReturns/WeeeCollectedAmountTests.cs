@@ -9,9 +9,10 @@
     public class WeeeCollectedAmountTests
     {
         [Fact]
-        public void ConstructsWeeeCollectedAmount_WithNullDataReturnVersion_ThrowsArgumentNullException()
+        public void AddWeeeCollectedAmount_WithNullWeeeColletctedReturnVersion_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new WeeeCollectedAmount(A<WeeeCollectedAmountSourceType>._, ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, null));
+            var weeeCollectedAmount = new WeeeCollectedAmount(A<WeeeCollectedAmountSourceType>._, ObligationType.B2B, A<WeeeCategory>._, A<decimal>._);
+            Assert.Throws<ArgumentNullException>(() => weeeCollectedAmount.AddWeeeCollectedReturnVersion(null));
         }
     }
 }

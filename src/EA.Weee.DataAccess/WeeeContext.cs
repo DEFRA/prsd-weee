@@ -68,6 +68,7 @@
 
         public virtual DbSet<AeDeliveryLocation> AeDeliveryLocations { get; set; }
 
+        public virtual DbSet<WeeeCollectedReturnVersion> WeeeCollectedReturnVersions { get; set; }
         public virtual DbSet<WeeeCollectedAmount> WeeeCollectedAmounts { get; set; }
 
         public virtual IStoredProcedures StoredProcedures { get; private set; }
