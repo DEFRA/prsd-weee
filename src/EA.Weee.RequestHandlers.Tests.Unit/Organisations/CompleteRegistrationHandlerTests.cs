@@ -82,7 +82,8 @@
         private Organisation GetOrganisationWithId(Guid id)
         {
             var organisation = A.Fake<Organisation>();
-            dbHelper.SetId(organisation, id);
+            A.CallTo(() => organisation.Id).Returns(id);
+            A.CallTo(() => organisation.OrganisationAddress).Returns(A.Fake<Address>());
             return organisation;
         }
     }
