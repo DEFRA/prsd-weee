@@ -9876,3 +9876,9 @@ INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerN
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/KD5680RW', 'Warner Bros. Entertainment UK Limited', '259661', '3d70623e-0e16-453b-b1b4-b8e8551b8dfc')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/AF5688SU', 'BBC', 'RC000057', 'a762e97f-475c-4521-99a3-a57e538d29ab')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/BD5695TR', 'Siemens Healthcare Medical Solutions Ltd', NULL, '9131f594-e5d8-4d6a-8e3f-b78fca1d6038')
+
+-- Latest updates 16/12/2015
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/CH5704UQ', 'Prime Light Electrical Ltd', '02754353', 'BE3F794C-B13A-4449-8B8F-5632772ED9E5')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/DF5711UX', 'Principal Lighting Ltd.', '4947891', 'A3F3A455-CC5D-4C58-9D50-82EF4A4DF468')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/CK5698TU', 'Henrob Ltd', '01873269', '959B43AD-9DCB-46B8-A256-F3AD3AF3C02C')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/CD5701TX', 'Robert Scott & Sons Ltd', '1099088', 'FDB4B90D-F9D5-4CD0-95D6-302DFE678FB1')
