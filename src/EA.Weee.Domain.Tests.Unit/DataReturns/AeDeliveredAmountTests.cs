@@ -11,7 +11,7 @@
         [Fact]
         public void ConstructsAeDeliveredAmount_WithNullAeDeliveryLocation_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new AeDeliveredAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, null, A.Fake<DataReturnVersion>()));
+            Assert.Throws<ArgumentNullException>(() => new AeDeliveredAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, null));
         }
     }
 }

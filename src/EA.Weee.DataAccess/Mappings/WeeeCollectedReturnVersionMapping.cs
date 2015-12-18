@@ -2,13 +2,14 @@
 {
     using System.Data.Entity.ModelConfiguration;
     using EA.Weee.Domain.DataReturns;
+
     internal class WeeeCollectedReturnVersionMapping : EntityTypeConfiguration<WeeeCollectedReturnVersion>
     {
         public WeeeCollectedReturnVersionMapping()
         {
             ToTable("WeeeCollectedReturnVersion", "PCS");
             HasMany(r => r.DataReturnVersions);
-            HasMany(w => w.WeeeCollectedAmounts);      
+            HasMany(w => w.WeeeCollectedAmounts);
         }
     }
 }

@@ -103,8 +103,8 @@
 
             var result = builder.Build();
 
-            Assert.Equal(1, result.DataReturnVersion.AatfDeliveredAmounts.Count);
-            Assert.Collection(result.DataReturnVersion.AatfDeliveredAmounts,
+            Assert.Equal(1, result.DataReturnVersion.WeeeDeliveredReturnVersion.AatfDeliveredAmounts.Count);
+            Assert.Collection(result.DataReturnVersion.WeeeDeliveredReturnVersion.AatfDeliveredAmounts,
                 r => Assert.Equal("Approval Number", r.AatfDeliveryLocation.AatfApprovalNumber));
         }
 
@@ -116,8 +116,8 @@
 
             var result = builder.Build();
 
-            Assert.Equal(1, result.DataReturnVersion.AeDeliveredAmounts.Count);
-            Assert.Collection(result.DataReturnVersion.AeDeliveredAmounts,
+            Assert.Equal(1, result.DataReturnVersion.WeeeDeliveredReturnVersion.AeDeliveredAmounts.Count);
+            Assert.Collection(result.DataReturnVersion.WeeeDeliveredReturnVersion.AeDeliveredAmounts,
                 r => Assert.Equal("Approval Number", r.AeDeliveryLocation.ApprovalNumber));
         }
 
@@ -153,8 +153,8 @@
 
             var result = builder.Build();
 
-            Assert.Equal(1, result.DataReturnVersion.EeeOutputAmounts.Count);
-            Assert.Collection(result.DataReturnVersion.EeeOutputAmounts,
+            Assert.Equal(1, result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts.Count);
+            Assert.Collection(result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts,
                 r => Assert.Equal("Registration Number", r.RegisteredProducer.ProducerRegistrationNumber));
         }
 
@@ -174,8 +174,8 @@
 
             var result = builder.Build();
 
-            Assert.Equal(1, result.DataReturnVersion.EeeOutputAmounts.Count);
-            Assert.Collection(result.DataReturnVersion.EeeOutputAmounts,
+            Assert.Equal(1, result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts.Count);
+            Assert.Collection(result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts,
                 r => Assert.Equal("Registration Number", r.RegisteredProducer.ProducerRegistrationNumber));
         }
 

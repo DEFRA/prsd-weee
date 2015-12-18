@@ -31,6 +31,9 @@
             Tonnage = tonnage;
         }
 
+        /// <summary>
+        /// This constructor is used by Entity Framework.
+        /// </summary>
         protected ReturnItem()
         {
         }

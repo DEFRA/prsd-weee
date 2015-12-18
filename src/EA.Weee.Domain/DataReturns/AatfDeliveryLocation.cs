@@ -9,6 +9,9 @@
 
         public string FacilityName { get; private set; }
 
+        /// <summary>
+        /// This constructor is used by Entity Framework.
+        /// </summary>
         protected AatfDeliveryLocation()
         {
         }
