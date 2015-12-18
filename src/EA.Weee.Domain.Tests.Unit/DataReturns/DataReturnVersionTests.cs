@@ -64,23 +64,6 @@
         }
 
         [Fact]
-        public void AddWeeeCollectedReturnVersion_AddsToWeeeCollectedReturnVersion()
-        {
-            // Arrange
-            var returnVersion = new DataReturnVersion(A.Fake<DataReturn>());            
-            WeeeCollectedReturnVersion collectedReturnVersion = new WeeeCollectedReturnVersion();
-            
-            WeeeCollectedAmount amount = new WeeeCollectedAmount(A<WeeeCollectedAmountSourceType>._, ObligationType.B2B, A<WeeeCategory>._, A<decimal>._);
-            collectedReturnVersion.AddWeeeCollectedAmount(amount);
-
-            // Act
-            returnVersion.AddWeeeCollectedReturnVersion(collectedReturnVersion);           
-
-            // Assert
-            Assert.Contains(amount, collectedReturnVersion.WeeeCollectedAmounts);
-        }
-
-        [Fact]
         public void AddAatfDeliveryLocation_AddsToAatfDeliveryLocations()
         {
             // Arrange

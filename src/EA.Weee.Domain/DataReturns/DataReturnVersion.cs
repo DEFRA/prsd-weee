@@ -24,7 +24,7 @@
 
         public virtual bool IsSubmitted { get; private set; }
                
-        public virtual ICollection<WeeeCollectedReturnVersion> WeeeCollectedReturnVersions { get; private set; }
+        public virtual WeeeCollectedReturnVersion WeeeCollectedReturnVersion { get; private set; }
 
         public virtual ICollection<AatfDeliveredAmount> AatfDeliveredAmounts { get; private set; }
 
@@ -38,7 +38,7 @@
 
             DataReturn = dataReturn;
 
-            WeeeCollectedReturnVersions = new List<WeeeCollectedReturnVersion>();
+            WeeeCollectedReturnVersion = new WeeeCollectedReturnVersion(this);
             AatfDeliveredAmounts = new List<AatfDeliveredAmount>();
             AeDeliveredAmounts = new List<AeDeliveredAmount>();
             EeeOutputAmounts = new List<EeeOutputAmount>();
@@ -49,11 +49,6 @@
         /// </summary>
         protected DataReturnVersion()
         {
-        }
-        
-        public void AddWeeeCollectedReturnVersion(WeeeCollectedReturnVersion weeeCollectedReturnVersion)
-        {
-            WeeeCollectedReturnVersions.Add(weeeCollectedReturnVersion);
         }
      
         public void AddEeeOutputAmount(EeeOutputAmount eeeOutputAmount)

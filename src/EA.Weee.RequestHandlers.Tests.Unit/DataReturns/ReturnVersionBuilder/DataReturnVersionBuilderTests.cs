@@ -131,8 +131,9 @@
 
             var result = builder.Build();
 
-            Assert.Equal(1, result.DataReturnVersion.WeeeCollectedAmounts.Count);
-            Assert.Collection(result.DataReturnVersion.WeeeCollectedAmounts,
+            Assert.Equal(1, result.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts.Count);
+
+            Assert.Collection(result.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts,
                 r => Assert.Equal(type, r.SourceType));
         }
 
