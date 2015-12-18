@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
-    using EA.Weee.Domain.Lookup;
+    using Lookup;
 
     public interface IReturnItem
     {

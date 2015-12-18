@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Core.DataReturns;
     using EA.Prsd.Core.Domain;
     using Prsd.Core;
 
@@ -22,8 +23,8 @@
         public string SubmittingUserId { get; private set; }
 
         public virtual bool IsSubmitted { get; private set; }
-
-        public virtual ICollection<WeeeCollectedAmount> WeeeCollectedAmounts { get; private set; }
+               
+        public virtual WeeeCollectedReturnVersion WeeeCollectedReturnVersion { get; private set; }
 
         public virtual ICollection<AatfDeliveredAmount> AatfDeliveredAmounts { get; private set; }
 
@@ -37,7 +38,7 @@
 
             DataReturn = dataReturn;
 
-            WeeeCollectedAmounts = new List<WeeeCollectedAmount>();
+            WeeeCollectedReturnVersion = new WeeeCollectedReturnVersion(this);
             AatfDeliveredAmounts = new List<AatfDeliveredAmount>();
             AeDeliveredAmounts = new List<AeDeliveredAmount>();
             EeeOutputAmounts = new List<EeeOutputAmount>();
@@ -49,86 +50,7 @@
         protected DataReturnVersion()
         {
         }
-
-        public void AddWeeeCollectedAmount(WeeeCollectedAmount weeeCollectedAmount)
-        {
-            switch (weeeCollectedAmount.SourceType)
-            {
-                case WeeeCollectedAmountSourceType.Dcf:
-                    AddReturnItemCollectedFromDcf(weeeCollectedAmount);
-                    break;
-                case WeeeCollectedAmountSourceType.Distributor:
-                    AddB2cWeeeFromDistributor(weeeCollectedAmount);
-                    break;
-                case WeeeCollectedAmountSourceType.FinalHolder:
-                    AddB2cWeeeFromFinalHolder(weeeCollectedAmount);
-                    break;
-            }
-        }
-
-        private void AddReturnItemCollectedFromDcf(WeeeCollectedAmount weeeCollectedAmount)
-        {
-            Guard.ArgumentNotNull(() => weeeCollectedAmount, weeeCollectedAmount);
-
-            if (WeeeCollectedAmounts
-                .Where(r => r.SourceType == WeeeCollectedAmountSourceType.Dcf)
-                .Where(r => r.WeeeCategory == weeeCollectedAmount.WeeeCategory)
-                .Where(r => (r.ObligationType & weeeCollectedAmount.ObligationType) != ObligationType.None)
-                .Any())
-            {
-                string errorMessage = "A return item with this obligation type and category has already been added.";
-                throw new InvalidOperationException(errorMessage);
-            }
-
-            WeeeCollectedAmounts.Add(weeeCollectedAmount);
-        }
-
-        private void AddB2cWeeeFromDistributor(WeeeCollectedAmount weeeCollectedAmount)
-        {
-            Guard.ArgumentNotNull(() => weeeCollectedAmount, weeeCollectedAmount);
-
-            if (weeeCollectedAmount.ObligationType != ObligationType.B2C)
-            {
-                string errorMessage = "Only return items with an obligation type of B2C can be added under \"B2C WEEE from distributors\".";
-                throw new InvalidOperationException(errorMessage);
-            }
-
-            if (WeeeCollectedAmounts
-                .Where(r => r.SourceType == WeeeCollectedAmountSourceType.Distributor)
-                .Where(r => r.WeeeCategory == weeeCollectedAmount.WeeeCategory)
-                .Where(r => (r.ObligationType & weeeCollectedAmount.ObligationType) != ObligationType.None)
-                .Any())
-            {
-                string errorMessage = "A return item with this obligation type and category has already been added.";
-                throw new InvalidOperationException(errorMessage);
-            }
-
-            WeeeCollectedAmounts.Add(weeeCollectedAmount);
-        }
-
-        private void AddB2cWeeeFromFinalHolder(WeeeCollectedAmount weeeCollectedAmount)
-        {
-            Guard.ArgumentNotNull(() => weeeCollectedAmount, weeeCollectedAmount);
-
-            if (weeeCollectedAmount.ObligationType != ObligationType.B2C)
-            {
-                string errorMessage = "Only return items with an obligation type of B2C can be added under \"B2C WEEE from final holders\".";
-                throw new InvalidOperationException(errorMessage);
-            }
-
-            if (WeeeCollectedAmounts
-                .Where(r => r.SourceType == WeeeCollectedAmountSourceType.FinalHolder)
-                .Where(r => r.WeeeCategory == weeeCollectedAmount.WeeeCategory)
-                .Where(r => (r.ObligationType & weeeCollectedAmount.ObligationType) != ObligationType.None)
-                .Any())
-            {
-                string errorMessage = "A return item with this obligation type and category has already been added.";
-                throw new InvalidOperationException(errorMessage);
-            }
-
-            WeeeCollectedAmounts.Add(weeeCollectedAmount);
-        }
-
+     
         public void AddEeeOutputAmount(EeeOutputAmount eeeOutputAmount)
         {
             Guard.ArgumentNotNull(() => eeeOutputAmount, eeeOutputAmount);

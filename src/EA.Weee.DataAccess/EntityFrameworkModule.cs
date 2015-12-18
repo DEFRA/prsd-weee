@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.DataAccess
 {
     using Autofac;
+    using DataAccess;
     using EA.Prsd.Core.Domain;
-    using Repositories;
 
     public class EntityFrameworkModule : Module
     {
@@ -12,7 +12,7 @@
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
 
-            builder.RegisterType<RegisteredProducerRepository>().As<IRegisteredProducerRepository>()
+            builder.RegisterType<RegisteredProducerDataAccess>().As<IRegisteredProducerDataAccess>()
                 .InstancePerRequest();
         }
     }

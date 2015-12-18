@@ -3,8 +3,8 @@
     using System;
     using Domain.Producer;
     using EA.Weee.Domain.DataReturns;
-    using EA.Weee.Domain.Lookup;
     using FakeItEasy;
+    using Lookup;
     using Xunit;
 
     public class EeeOutputAmountTests

@@ -2,7 +2,7 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
-    using DataAccess.Repositories;
+    using DataAccess.DataAccess;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
@@ -10,19 +10,19 @@
     public class IsProducerRegisteredForComplianceYearHandler : IRequestHandler<IsProducerRegisteredForComplianceYear, bool>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IRegisteredProducerRepository registeredProducerRepository;
+        private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
 
-        public IsProducerRegisteredForComplianceYearHandler(IWeeeAuthorization authorization, IRegisteredProducerRepository registeredProducerRepository)
+        public IsProducerRegisteredForComplianceYearHandler(IWeeeAuthorization authorization, IRegisteredProducerDataAccess registeredProducerDataAccess)
         {
             this.authorization = authorization;
-            this.registeredProducerRepository = registeredProducerRepository;
+            this.registeredProducerDataAccess = registeredProducerDataAccess;
         }
 
         public async Task<bool> HandleAsync(IsProducerRegisteredForComplianceYear request)
         {
             authorization.EnsureCanAccessInternalArea();
 
-            var producerRegistrations = await registeredProducerRepository.GetProducerRegistrations(request.RegistrationNumber, request.ComplianceYear);
+            var producerRegistrations = await registeredProducerDataAccess.GetProducerRegistrations(request.RegistrationNumber, request.ComplianceYear);
 
             return producerRegistrations.Any();
         }
