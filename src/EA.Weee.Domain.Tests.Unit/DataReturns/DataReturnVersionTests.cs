@@ -64,20 +64,6 @@
         }
 
         [Fact]
-        public void AddWeeeCollectedAmount_AddsToWeeeCollectedAmounts()
-        {
-            // Arrange
-            var returnVersion = new DataReturnVersion(A.Fake<DataReturn>());
-            var weeeCollectedAmount = new WeeeCollectedAmount(A<WeeeCollectedAmountSourceType>._, ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, A.Fake<DataReturnVersion>());
-
-            // Act
-            returnVersion.AddWeeeCollectedAmount(weeeCollectedAmount);
-
-            // Assert
-            Assert.Contains(weeeCollectedAmount, returnVersion.WeeeCollectedAmounts);
-        }
-
-        [Fact]
         public void AddAatfDeliveryLocation_AddsToAatfDeliveryLocations()
         {
             // Arrange
