@@ -50,20 +50,20 @@
             int numberOfDeliveredToAatfs = settings.NumberOfAatfs;
             for (int index = 0; index < numberOfDeliveredToAatfs; ++index)
             {
-                var deliveredToAatfs = CreateDeliveredToAatfs(dataReturnVersion);
+                var deliveredToAatfs = CreateDeliveredToAatfs();
                 foreach (var deliveredToAatf in deliveredToAatfs)
                 {
-                    dataReturnVersion.AddAatfDeliveredAmount(deliveredToAatf);
+                    dataReturnVersion.WeeeDeliveredReturnVersion.AddAatfDeliveredAmount(deliveredToAatf);
                 }
             }
 
             int numberOfDeliveredToAes = settings.NumberOfAes;
             for (int index = 0; index < numberOfDeliveredToAes; ++index)
             {
-                var deliveredToAes = CreateDeliveredToAes(dataReturnVersion);
+                var deliveredToAes = CreateDeliveredToAes();
                 foreach (var deliveredToAe in deliveredToAes)
                 {
-                    dataReturnVersion.AddAeDeliveredAmount(deliveredToAe);
+                    dataReturnVersion.WeeeDeliveredReturnVersion.AddAeDeliveredAmount(deliveredToAe);
                 }
             }
 
@@ -105,18 +105,18 @@
 
             foreach (RegisteredProducer producerToInclude in producersToInclude)
             {
-                var eeeOutputAmounts = CreateEeeOutputAmounts(producerToInclude, dataReturnVersion);
+                var eeeOutputAmounts = CreateEeeOutputAmounts(producerToInclude);
 
                 foreach (var eeeOutputAmount in eeeOutputAmounts)
                 {
-                    dataReturnVersion.AddEeeOutputAmount(eeeOutputAmount);
+                    dataReturnVersion.EeeOutputReturnVersion.AddEeeOutputAmount(eeeOutputAmount);
                 }
             }
 
             return dataReturnVersion;
         }
 
-        private static IEnumerable<AatfDeliveredAmount> CreateDeliveredToAatfs(DataReturnVersion dataReturnVersion)
+        private static IEnumerable<AatfDeliveredAmount> CreateDeliveredToAatfs()
         {
             var deliveredToAatfs = new List<AatfDeliveredAmount>();
 
@@ -128,13 +128,13 @@
             IEnumerable<IReturnItem> returnItems = CreateReturnItems(null);
             foreach (IReturnItem returnItem in returnItems)
             {
-                deliveredToAatfs.Add(new AatfDeliveredAmount(returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, deliveryLocation, dataReturnVersion));
+                deliveredToAatfs.Add(new AatfDeliveredAmount(returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, deliveryLocation));
             }
 
             return deliveredToAatfs;
         }
 
-        private static IEnumerable<AeDeliveredAmount> CreateDeliveredToAes(DataReturnVersion dataReturnVersion)
+        private static IEnumerable<AeDeliveredAmount> CreateDeliveredToAes()
         {
             var deliveredToAes = new List<AeDeliveredAmount>();
 
@@ -146,18 +146,18 @@
             IEnumerable<IReturnItem> returnItems = CreateReturnItems(null);
             foreach (IReturnItem returnItem in returnItems)
             {
-                deliveredToAes.Add(new AeDeliveredAmount(returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, deliveryLocation, dataReturnVersion));
+                deliveredToAes.Add(new AeDeliveredAmount(returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, deliveryLocation));
             }
 
             return deliveredToAes;
         }
 
-        private static IEnumerable<EeeOutputAmount> CreateEeeOutputAmounts(RegisteredProducer registeredProducer, DataReturnVersion dataReturnVersion)
+        private static IEnumerable<EeeOutputAmount> CreateEeeOutputAmounts(RegisteredProducer registeredProducer)
         {
             ObligationType obligationType = registeredProducer.CurrentSubmission.ObligationType;
             IEnumerable<IReturnItem> returnItems = CreateReturnItems(obligationType);
 
-            return returnItems.Select(x => new EeeOutputAmount(x.ObligationType, x.WeeeCategory, x.Tonnage, registeredProducer, dataReturnVersion));
+            return returnItems.Select(x => new EeeOutputAmount(x.ObligationType, x.WeeeCategory, x.Tonnage, registeredProducer));
         }
 
         private static IEnumerable<ReturnItem> CreateReturnItems(ObligationType? filter)

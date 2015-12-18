@@ -9,14 +9,17 @@
         public virtual AeDeliveryLocation AeDeliveryLocation { get; private set; }
 
         [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "aeDeliveryLocation name is valid.")]
-        public AeDeliveredAmount(ObligationType obligationType, WeeeCategory weeeCategory, decimal tonnage, AeDeliveryLocation aeDeliveryLocation, DataReturnVersion dataReturnVersion) :
-            base(obligationType, weeeCategory, tonnage, dataReturnVersion)
+        public AeDeliveredAmount(ObligationType obligationType, WeeeCategory weeeCategory, decimal tonnage, AeDeliveryLocation aeDeliveryLocation) :
+            base(obligationType, weeeCategory, tonnage)
         {
             Guard.ArgumentNotNull(() => aeDeliveryLocation, aeDeliveryLocation);
 
             AeDeliveryLocation = aeDeliveryLocation;
         }
 
+        /// <summary>
+        /// This constructor is used by Entity Framework.
+        /// </summary>
         protected AeDeliveredAmount()
         {
         }
