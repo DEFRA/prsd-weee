@@ -17,6 +17,7 @@ namespace EA.Weee.Tests.Core.Model
         public RegisteredProducer()
         {
             this.ProducerSubmissions = new HashSet<ProducerSubmission>();
+            this.EeeOutputAmounts = new HashSet<EeeOutputAmount>();
         }
     
         public System.Guid Id { get; set; }
@@ -25,9 +26,11 @@ namespace EA.Weee.Tests.Core.Model
         public System.Guid SchemeId { get; set; }
         public int ComplianceYear { get; set; }
         public Nullable<System.Guid> CurrentSubmissionId { get; set; }
+        public bool IsAligned { get; set; }
     
         public virtual Scheme Scheme { get; set; }
         public virtual ICollection<ProducerSubmission> ProducerSubmissions { get; set; }
         public virtual ProducerSubmission CurrentSubmission { get; set; }
+        public virtual ICollection<EeeOutputAmount> EeeOutputAmounts { get; set; }
     }
 }

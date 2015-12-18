@@ -1,11 +1,11 @@
-﻿namespace EA.Weee.DataAccess.Repositories
+﻿namespace EA.Weee.DataAccess.DataAccess
 {
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.Producer;
 
-    public interface IRegisteredProducerRepository : IRepository
+    public interface IRegisteredProducerDataAccess
     {
         Task<RegisteredProducer> GetProducerRegistration(Guid id);
 

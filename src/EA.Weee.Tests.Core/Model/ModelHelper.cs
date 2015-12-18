@@ -235,7 +235,8 @@
                     SchemeId = scheme.Id,
                     ComplianceYear = complianceYear,
                     ProducerRegistrationNumber = registrationNumber,
-                    CurrentSubmissionId = null
+                    CurrentSubmissionId = null,
+                    IsAligned = true
                 };
                 model.RegisteredProducers.Add(registeredProducer);
             }
