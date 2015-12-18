@@ -61,6 +61,27 @@
             A.CallTo(() => builder.DataReturnVersionFromXmlBuilder.Build(A<SchemeReturn>._)).MustNotHaveHappened();
         }
 
+        [Fact]
+        public async Task HandleAsync_SavesDataUpload()
+        {
+            // Arrange
+            var builder = new ProcessDataReturnXmlFileHandlerBuilder();
+
+            var schemeReturn = new SchemeReturn() { ComplianceYear = "2016", ReturnPeriod = SchemeReturnReturnPeriod.Quarter1JanuaryMarch };
+            var xmlGeneratorResult = new GenerateFromDataReturnXmlResult<SchemeReturn>(A.Dummy<string>(),
+                schemeReturn, new List<XmlValidationError>());
+
+            A.CallTo(() => builder.XmlGenerator.GenerateDataReturns<SchemeReturn>(A<ProcessDataReturnXmlFile>._))
+                .Returns(xmlGeneratorResult);
+
+            // Act
+            await builder.InvokeHandleAsync();
+
+            // Assert
+            A.CallTo(() => builder.DataAccess.AddAndSaveAsync(A<DataReturnUpload>._))
+                .MustHaveHappened(Repeated.Exactly.Once);            
+        }
+
         private class ProcessDataReturnXmlFileHandlerBuilder
         {
             public IProcessDataReturnXmlFileDataAccess DataAccess;
