@@ -2,6 +2,7 @@
 {
     using Lookup;
     using Prsd.Core;
+
     public abstract class WeeeDeliveredAmount : ReturnItem
     { 
         public virtual DataReturnVersion DataReturnVersion { get; private set; }
