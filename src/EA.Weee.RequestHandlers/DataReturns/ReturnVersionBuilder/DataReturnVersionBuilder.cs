@@ -85,7 +85,7 @@
         {
             await CreateDataReturnVersion();
 
-            dataReturnVersion.AddWeeeCollectedAmount(new WeeeCollectedAmount(sourceType, obligationType, category, tonnage, dataReturnVersion));
+            dataReturnVersion.WeeeCollectedReturnVersion.AddWeeeCollectedAmount(new WeeeCollectedAmount(sourceType, obligationType, category, tonnage));
         }
 
         public DataReturnVersionBuilderResult Build()
