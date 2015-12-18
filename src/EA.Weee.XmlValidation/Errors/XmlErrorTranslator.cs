@@ -22,6 +22,9 @@
 
         private const string IncompleteContentPattern =
            @"^The element '([^']*)' in namespace '[^']*' has incomplete content. List of possible elements expected: '[^']*' in namespace '[^']*'.$";
+        
+        private const string FixedValueConstraintFailurePattern =
+           @"^The value of the '([^']*)' element does not equal its fixed value.$";
 
         private static readonly Regex EntityNameParsingErrorPattern = new Regex(
             @"^An error occurred while parsing EntityName\. Line (?<LineNumber>\d+), position \d+\.$",
@@ -96,6 +99,10 @@
             {
                 resultErrorMessage = MakeFriendlyErrorUniqueKeyMessage(sender, message);
             }
+            else if (Regex.IsMatch(message, FixedValueConstraintFailurePattern))
+            {
+                resultErrorMessage = MakeFriendlyFixedValueConstraintMessage(sender);
+            }
 
             var registrationNo = GetRegistrationNumber(sender);
             var registrationNoText = !string.IsNullOrEmpty(registrationNo) ? string.Format("Producer {0}: ", registrationNo) : string.Empty;
@@ -113,7 +120,7 @@
         }
 
         private string MakeFriendlyErrorUniqueKeyMessage(XElement sender, string message)
-        { 
+        {
             var element = sender.Descendants().First();
             return string.Format("There is duplicate value '{0}' for field '{1}' of parent field '{2}'. Remove one of the duplicate entries", element.Value, element.Name.LocalName, sender.Name.LocalName);
         }
@@ -234,6 +241,11 @@
             var lineNumber = Regex.Match(message, ErrorInXmlDocumentPattern).Groups[1].ToString();
 
             return string.Format("{0} This can be caused by an error on this line, or before it (XML line {1}).", message, lineNumber);
+        }
+
+        private string MakeFriendlyFixedValueConstraintMessage(XElement sender)
+        {
+            return string.Format("The value '{0}' supplied for field '{1}'  is not permitted. Only the value specified in the schema is allowed.", sender.Value, sender.Name.LocalName);
         }
 
         private string GetRegistrationNumber(XElement sender)
