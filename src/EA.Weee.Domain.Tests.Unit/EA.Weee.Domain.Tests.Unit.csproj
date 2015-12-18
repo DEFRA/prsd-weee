@@ -87,6 +87,7 @@
     <Compile Include="DataReturns\EeeOutputAmountTests.cs" />
     <Compile Include="DataReturns\ReturnItemTests.cs" />
     <Compile Include="DataReturns\WeeeCollectedAmountTests.cs" />
+    <Compile Include="DataReturns\WeeeCollectedReturnVersionTests.cs" />
     <Compile Include="DataReturns\WeeeDeliveredAmountTests.cs" />
     <Compile Include="ExtensionMethodsTests.cs" />
     <Compile Include="Helpers\UKCompetentAuthorityFactory.cs" />

@@ -64,8 +64,8 @@
 
                 var dataReturnVersionBuilderresult = await dataReturnVersionFromXmlBuilder.Build(xmlGeneratorResult.DeserialisedType);
 
-                var allErrors = xmlGeneratorResult.SchemaErrors.Select(e => e.ToDataReturnsUploadError())
-                    .Union(dataReturnVersionBuilderresult.ErrorData.Select(e => new DataReturnUploadError(e.ErrorLevel.ToDomainErrorLevel(), Domain.UploadErrorType.Business, e.Description)))
+                var allErrors = (dataReturnVersionBuilderresult.ErrorData
+                    .Select(e => new DataReturnUploadError(e.ErrorLevel.ToDomainErrorLevel(), Domain.UploadErrorType.Business, e.Description)))
                     .ToList();
 
                 dataReturnUpload = new DataReturnUpload(scheme, xmlGeneratorResult.XmlString, allErrors, message.FileName, complianceYear, quarter);

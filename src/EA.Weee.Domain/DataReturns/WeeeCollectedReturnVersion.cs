@@ -5,21 +5,21 @@
     using System.Linq;
     using EA.Prsd.Core.Domain;
     using Prsd.Core;
+
     public class WeeeCollectedReturnVersion : Entity
     {
-        public virtual Guid Id { get; private set; }
         public virtual ICollection<DataReturnVersion> DataReturnVersions { get; private set; }
+
         public virtual ICollection<WeeeCollectedAmount> WeeeCollectedAmounts { get; private set; }
         
-        public WeeeCollectedReturnVersion()
-        {
-            DataReturnVersions = new List<DataReturnVersion>();
-            WeeeCollectedAmounts = new List<WeeeCollectedAmount>();
-        }
-
-        public void AddDataReturnVersion(DataReturnVersion dataReturnVersion)
+        public WeeeCollectedReturnVersion(DataReturnVersion dataReturnVersion)
         {
             Guard.ArgumentNotNull(() => dataReturnVersion, dataReturnVersion);
+
+            DataReturnVersions = new List<DataReturnVersion>();
+            WeeeCollectedAmounts = new List<WeeeCollectedAmount>();
+
+            DataReturnVersions.Add(dataReturnVersion);
         }
 
         public void AddWeeeCollectedAmount(WeeeCollectedAmount weeeCollectedAmount)

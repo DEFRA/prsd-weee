@@ -40,13 +40,11 @@
             IEnumerable<ReturnItem> returnItemsCollectedFromDcf = CreateReturnItems(null);
             foreach (var returnItem in returnItemsCollectedFromDcf)
             {
-                WeeeCollectedReturnVersion returnVersion = new WeeeCollectedReturnVersion();
-                returnVersion.AddWeeeCollectedAmount(new WeeeCollectedAmount(WeeeCollectedAmountSourceType.Dcf,
+                dataReturnVersion.WeeeCollectedReturnVersion.AddWeeeCollectedAmount(
+                    new WeeeCollectedAmount(WeeeCollectedAmountSourceType.Dcf,
                                             returnItem.ObligationType,
                                             returnItem.WeeeCategory,
                                             returnItem.Tonnage));
-                dataReturnVersion.AddWeeeCollectedReturnVersion(returnVersion);
-                returnVersion.AddDataReturnVersion(dataReturnVersion);
             }
 
             int numberOfDeliveredToAatfs = settings.NumberOfAatfs;
@@ -72,25 +70,21 @@
             IEnumerable<ReturnItem> b2cWeeeFromDistributors = CreateReturnItems(ObligationType.B2C);
             foreach (var returnItem in b2cWeeeFromDistributors)
             {
-                WeeeCollectedReturnVersion returnVersion = new WeeeCollectedReturnVersion();
-                returnVersion.AddWeeeCollectedAmount(new WeeeCollectedAmount(WeeeCollectedAmountSourceType.Distributor,
+                dataReturnVersion.WeeeCollectedReturnVersion.AddWeeeCollectedAmount(
+                    new WeeeCollectedAmount(WeeeCollectedAmountSourceType.Distributor,
                                             returnItem.ObligationType,
                                             returnItem.WeeeCategory,
                                             returnItem.Tonnage));
-                dataReturnVersion.AddWeeeCollectedReturnVersion(returnVersion);
-                returnVersion.AddDataReturnVersion(dataReturnVersion);
             }
 
             IEnumerable<ReturnItem> b2cWeeeFromFinalHolders = CreateReturnItems(ObligationType.B2C);
             foreach (var returnItem in b2cWeeeFromFinalHolders)
             {
-                WeeeCollectedReturnVersion returnVersion = new WeeeCollectedReturnVersion();
-                returnVersion.AddWeeeCollectedAmount(new WeeeCollectedAmount(WeeeCollectedAmountSourceType.FinalHolder,
+                dataReturnVersion.WeeeCollectedReturnVersion.AddWeeeCollectedAmount(
+                    new WeeeCollectedAmount(WeeeCollectedAmountSourceType.FinalHolder,
                                             returnItem.ObligationType,
                                             returnItem.WeeeCategory,
                                             returnItem.Tonnage));
-                dataReturnVersion.AddWeeeCollectedReturnVersion(returnVersion);
-                returnVersion.AddDataReturnVersion(dataReturnVersion);
             }
 
             IList<RegisteredProducer> registeredProducers = await dataAccess.FetchRegisteredProducersAsync(scheme, quarter.Year);
