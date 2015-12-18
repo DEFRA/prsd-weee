@@ -62,7 +62,7 @@
         private Organisation GetOrganisationWithId(Guid id)
         {
             var organisation = A.Fake<Organisation>();
-            dbHelper.SetId(organisation, id);
+            A.CallTo(() => organisation.Id).Returns(id);
             return organisation;
         }
     }

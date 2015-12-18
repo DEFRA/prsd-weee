@@ -29,7 +29,12 @@
         [Fact]
         public async Task AddAddressToOrganisationHandler_NotOrganisationUser_ThrowsSecurityException()
         {
-            var context = GetPreparedContext();
+            var organisations = new List<Organisation>();
+            var countries = new List<Country>();
+
+            var context = A.Fake<WeeeContext>();
+            A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Countries).Returns(dbHelper.GetAsyncEnabledDbSet(countries));
 
             var handler = new AddAddressToOrganisationHandler(context, denyingAuthorization);
             var message = GetMessage(Guid.NewGuid(), AddressType.OrganisationAddress);
@@ -42,7 +47,12 @@
         [Fact]
         public async Task AddAddressToOrganisationHandler_NoSuchOrganisation_ThrowsArgumentException()
         {
-            var context = GetPreparedContext();
+            var organisations = new List<Organisation>();
+            var countries = new List<Country>();
+
+            var context = A.Fake<WeeeContext>();
+            A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Countries).Returns(dbHelper.GetAsyncEnabledDbSet(countries));
 
             var handler = new AddAddressToOrganisationHandler(context, permissiveAuthorization);
             var message = GetMessage(Guid.NewGuid(), AddressType.OrganisationAddress);
@@ -59,8 +69,13 @@
         public async Task AddAddressToOrganisationHandler_NoSuchCountry_ThrowsArgumentException()
         {
             var organisationId = Guid.NewGuid();
+            var organisation = GetOrganisationWithId(organisationId);
+            var organisations = new List<Organisation>() { organisation };
+            var countries = new List<Country>();
 
-            var context = GetPreparedContext(new List<Organisation> { GetOrganisationWithId(organisationId) });
+            var context = A.Fake<WeeeContext>();
+            A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Countries).Returns(dbHelper.GetAsyncEnabledDbSet(countries));
 
             var handler = new AddAddressToOrganisationHandler(context, permissiveAuthorization);
             var message = GetMessage(organisationId, AddressType.OrganisationAddress);
@@ -78,13 +93,14 @@
         {
             var organisationId = Guid.NewGuid();
             var organisation = GetOrganisationWithId(organisationId);
-
+            var organisations = new List<Organisation>() { organisation };
             var countryId = Guid.NewGuid();
             var countryName = "Some country";
+            var countries = new List<Country>() { new Country(countryId, countryName) };
 
-            var context = GetPreparedContext(
-                new List<Organisation> { organisation }, 
-                new List<Country> { new Country(countryId, countryName) });
+            var context = A.Fake<WeeeContext>();
+            A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Countries).Returns(dbHelper.GetAsyncEnabledDbSet(countries));
 
             var handler = new AddAddressToOrganisationHandler(context, permissiveAuthorization);
 
@@ -121,18 +137,6 @@
                 data);
 
             return message;
-        }
-
-        private WeeeContext GetPreparedContext(List<Organisation> organisations = null, List<Country> countries = null)
-        {
-            organisations = organisations ?? new List<Organisation>();
-            countries = countries ?? new List<Country>();
-
-            var context = A.Fake<WeeeContext>();
-            A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(organisations));
-            A.CallTo(() => context.Countries).Returns(dbHelper.GetAsyncEnabledDbSet(countries));
-
-            return context;
         }
     }
 }
