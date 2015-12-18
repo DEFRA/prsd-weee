@@ -222,11 +222,14 @@
 
             public readonly Quarter Quarter;
 
-            public readonly IEeeValidator EeeValidator;
-
             public readonly IDataReturnVersionBuilderDataAccess DataAccess;
 
             private readonly Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate;
+
+            public readonly IEeeValidator EeeValidator;
+
+            private readonly Func<Domain.Scheme.Scheme, Quarter,
+                Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess>, IEeeValidator> eeeValidatorDelegate;
 
             public DataReturnVersionBuilderHelper()
             {
@@ -236,24 +239,26 @@
                 DataAccess = A.Fake<IDataReturnVersionBuilderDataAccess>();
 
                 dataAccessDelegate = (x, y) => DataAccess;
+                eeeValidatorDelegate = (s, q, DataAccess) => EeeValidator;
             }
 
             public DataReturnVersionBuilder Create()
             {
-                return new DataReturnVersionBuilder(Scheme, Quarter, EeeValidator, dataAccessDelegate);
+                return new DataReturnVersionBuilder(Scheme, Quarter, eeeValidatorDelegate, dataAccessDelegate);
             }
 
             public DataReturnVersionBuilder CreateWithErrorData(List<ErrorData> errorData)
             {
-                return new DataReturnVersionBuilderExtension(Scheme, Quarter, EeeValidator, dataAccessDelegate, errorData);
+                return new DataReturnVersionBuilderExtension(Scheme, Quarter, eeeValidatorDelegate, dataAccessDelegate, errorData);
             }
         }
 
         private class DataReturnVersionBuilderExtension : DataReturnVersionBuilder
         {
             public DataReturnVersionBuilderExtension(Domain.Scheme.Scheme scheme, Quarter quarter,
-            IEeeValidator eeeValidator, Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate, List<ErrorData> errorData)
-                : base(scheme, quarter, eeeValidator, dataAccessDelegate)
+            Func<Domain.Scheme.Scheme, Quarter, Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess>, IEeeValidator> eeeValidatorDelegate,
+            Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate, List<ErrorData> errorData)
+                : base(scheme, quarter, eeeValidatorDelegate, dataAccessDelegate)
             {
                 ErrorData = errorData;
             }

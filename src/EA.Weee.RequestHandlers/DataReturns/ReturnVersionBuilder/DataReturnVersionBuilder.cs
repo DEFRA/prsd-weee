@@ -26,12 +26,13 @@
         private DataReturnVersion dataReturnVersion;
 
         public DataReturnVersionBuilder(Domain.Scheme.Scheme scheme, Quarter quarter,
-            IEeeValidator eeeValidator,
+            Func<Domain.Scheme.Scheme, Quarter, 
+                Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess>, IEeeValidator> eeeValidatorDelegate,
             Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate)
         {
             this.scheme = scheme;
             this.quarter = quarter;
-            this.eeeValidator = eeeValidator;
+            eeeValidator = eeeValidatorDelegate(scheme, quarter, dataAccessDelegate);
             dataAccess = dataAccessDelegate(scheme, quarter);
 
             ErrorData = new List<ErrorData>();
