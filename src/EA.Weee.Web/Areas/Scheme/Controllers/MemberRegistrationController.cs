@@ -248,13 +248,13 @@
         {
             using (var client = apiClient())
             {
-                IEnumerable<UploadErrorData> errors =
+                IEnumerable<ErrorData> errors =
                     (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId)))
                     .OrderByDescending(e => e.ErrorLevel);
 
                 var schemePublicInfo = await cache.FetchSchemePublicInfo(pcsId);
 
-                CsvWriter<UploadErrorData> csvWriter = csvWriterFactory.Create<UploadErrorData>();
+                CsvWriter<ErrorData> csvWriter = csvWriterFactory.Create<ErrorData>();
                 csvWriter.DefineColumn("Type", e => (int)e.ErrorLevel >= 5 ? "Error" : "Warning");
                 csvWriter.DefineColumn("Description", e => e.Description);
 

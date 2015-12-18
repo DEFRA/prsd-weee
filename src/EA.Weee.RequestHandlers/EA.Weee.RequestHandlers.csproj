@@ -42,12 +42,12 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15334.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.15334-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15345-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15310-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15345-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -83,12 +83,17 @@
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\IRemoveProducerDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\IsProducerRegisteredForComplianceYearHandler.cs" />
+    <Compile Include="Admin\GetProducerDetails\RemoveProducerDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\RemoveProducerHandler.cs" />
     <Compile Include="Admin\Reports\GetPCSChargesCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandler.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
+    <Compile Include="DataReturns\BusinessValidation\EeeValidator.cs" />
+    <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderResult.cs" />
+    <Compile Include="DataReturns\BusinessValidation\IEeeValidator.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\CreateTestXmlFileHandler.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\DataReturnVersionGenerator.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\DataReturnVersionGeneratorDataAccess.cs" />
@@ -99,13 +104,18 @@
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionDataAccess.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\IFetchDataReturnForSubmissionDataAccess.cs" />
-    <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnXmlValidator.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnVersionFromXmlBuilder.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\GenerateFromDataReturnXml.cs" />
-    <Compile Include="DataReturns\ProcessDataReturnXmlFile\IDataReturnXmlValidator.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\GenerateFromDataReturnXmlResult.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\IDataReturnVersionFromXmlBuilder.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\IGenerateFromDataReturnXml.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\IProcessDataReturnXmlFileDataAccess.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileDataAccess.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileHandler.cs" />
+    <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderDataAccess.cs" />
+    <Compile Include="DataReturns\ReturnVersionBuilder\IDataReturnVersionBuilder.cs" />
+    <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilder.cs" />
+    <Compile Include="DataReturns\ReturnVersionBuilder\IDataReturnVersionBuilderDataAccess.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />

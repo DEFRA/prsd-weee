@@ -1,17 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.CreateTestXmlFile
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Xml.Linq;
     using Domain;
     using Domain.Lookup;
     using Domain.Producer;
     using EA.Weee.Domain.DataReturns;
     using Prsd.Core;
+    using QuarterType = EA.Weee.Domain.DataReturns.QuarterType;
 
     public class XmlGenerator : IXmlGenerator
     {
@@ -87,7 +85,7 @@
             XElement xmlCollectedFromDcf = new XElement(ns + "CollectedFromDCF");
             xmlSchemeReturn.Add(xmlCollectedFromDcf);
 
-            var fromDcf = dataReturnVersion.WeeeCollectedAmounts.Where(x => x.SourceType == WeeeCollectedAmountSourceType.Dcf);
+            var fromDcf = dataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts.Where(w => w.SourceType == WeeeCollectedAmountSourceType.Dcf);
             foreach (IReturnItem returnItem in fromDcf)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
@@ -117,7 +115,8 @@
             XElement xmlB2cWeeeFromDistributors = new XElement(ns + "B2CWEEEFromDistributors");
             xmlSchemeReturn.Add(xmlB2cWeeeFromDistributors);
 
-            var fromDistributors = dataReturnVersion.WeeeCollectedAmounts.Where(x => x.SourceType == WeeeCollectedAmountSourceType.Distributor);
+            var fromDistributors = dataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts.Where(w => w.SourceType == WeeeCollectedAmountSourceType.Distributor);
+             
             foreach (IReturnItem returnItem in fromDistributors)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
@@ -129,7 +128,7 @@
             XElement xmlB2cWeeeFromFinalHolders = new XElement(ns + "B2CWEEEFromFinalHolders");
             xmlSchemeReturn.Add(xmlB2cWeeeFromFinalHolders);
 
-            var fromFinalHolders = dataReturnVersion.WeeeCollectedAmounts.Where(x => x.SourceType == WeeeCollectedAmountSourceType.FinalHolder);
+            var fromFinalHolders = dataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts.Where(w => w.SourceType == WeeeCollectedAmountSourceType.FinalHolder);
             foreach (IReturnItem returnItem in fromFinalHolders)
             {
                 XElement xmlReturn = new XElement(ns + "Return");

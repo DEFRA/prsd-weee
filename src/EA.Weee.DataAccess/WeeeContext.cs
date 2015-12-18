@@ -62,6 +62,15 @@
 
         public virtual DbSet<DataReturn> DataReturns { get; set; }
 
+        public virtual DbSet<WeeeDeliveredAmount> WeeeDeliveredAmounts { get; set; }
+
+        public virtual DbSet<AatfDeliveryLocation> AatfDeliveryLocations { get; set; }
+
+        public virtual DbSet<AeDeliveryLocation> AeDeliveryLocations { get; set; }
+
+        public virtual DbSet<WeeeCollectedReturnVersion> WeeeCollectedReturnVersions { get; set; }
+        public virtual DbSet<WeeeCollectedAmount> WeeeCollectedAmounts { get; set; }
+
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
         public WeeeContext(IUserContext userContext, IEventDispatcher dispatcher)
