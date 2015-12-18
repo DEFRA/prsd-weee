@@ -6,6 +6,7 @@
     using Domain.DataReturns;
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
     using Weee.DataAccess;
+    using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
 
@@ -20,6 +21,7 @@
             {
                 // Arrange
                 ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
 
                 var scheme1 = helper.CreateScheme();
                 helper.GerOrCreateRegisteredProducer(scheme1, 2016, "AAAA");
@@ -29,7 +31,7 @@
 
                 database.Model.SaveChanges();
 
-                var dataAccess = new DataReturnVersionBuilderDataAccess(GetScheme(database.WeeeContext, scheme1.Id), new Quarter(2016, QuarterType.Q1), database.WeeeContext);
+                var dataAccess = new DataReturnVersionBuilderDataAccess(domainHelper.GetScheme(scheme1.Id), new Quarter(2016, QuarterType.Q1), database.WeeeContext);
 
                 // Act
                 var result = await dataAccess.GetRegisteredProducer("AAAA");
@@ -47,6 +49,7 @@
             {
                 // Arrange
                 ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
 
                 var scheme = helper.CreateScheme();
                 helper.GerOrCreateRegisteredProducer(scheme, 2016, "AAAA");
@@ -54,7 +57,7 @@
 
                 database.Model.SaveChanges();
 
-                var dataAccess = new DataReturnVersionBuilderDataAccess(GetScheme(database.WeeeContext, scheme.Id), new Quarter(2017, QuarterType.Q1), database.WeeeContext);
+                var dataAccess = new DataReturnVersionBuilderDataAccess(domainHelper.GetScheme(scheme.Id), new Quarter(2017, QuarterType.Q1), database.WeeeContext);
 
                 // Act
                 var result = await dataAccess.GetRegisteredProducer("AAAA");
@@ -72,6 +75,7 @@
             {
                 // Arrange
                 ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
 
                 var scheme = helper.CreateScheme();
                 helper.GerOrCreateRegisteredProducer(scheme, 2016, "AAAA");
@@ -79,7 +83,7 @@
 
                 database.Model.SaveChanges();
 
-                var dataAccess = new DataReturnVersionBuilderDataAccess(GetScheme(database.WeeeContext, scheme.Id), new Quarter(2016, QuarterType.Q1), database.WeeeContext);
+                var dataAccess = new DataReturnVersionBuilderDataAccess(domainHelper.GetScheme(scheme.Id), new Quarter(2016, QuarterType.Q1), database.WeeeContext);
 
                 // Act
                 var result = await dataAccess.GetRegisteredProducer("BBBB");
@@ -88,11 +92,6 @@
                 Assert.Equal("BBBB", result.ProducerRegistrationNumber);
                 Assert.Equal(producer.Id, result.Id);
             }
-        }
-
-        private static Domain.Scheme.Scheme GetScheme(WeeeContext context, Guid schemeId)
-        {
-            return context.Schemes.Single(s => s.Id == schemeId);
         }
     }
 }
