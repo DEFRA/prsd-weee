@@ -37,7 +37,7 @@
         [Fact]
         public async Task Build_ReturnsDataReturnVersionAndWarnings_WhenNoErrorsButWithWarnings()
         {
-            var warnings = new List<ErrorData> { new ErrorData { ErrorLevel = ErrorLevel.Warning } };
+            var warnings = new List<ErrorData> { new ErrorData("A warning", ErrorLevel.Warning) };
 
             var builder = new DataReturnVersionBuilderHelper().CreateWithErrorData(warnings);
             await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
@@ -51,7 +51,7 @@
         [Fact]
         public async Task Build_ReturnsNullDataReturnVersionWhenContainsErrors_AndReturnsErrors()
         {
-            var errors = new List<ErrorData> { new ErrorData { ErrorLevel = ErrorLevel.Error } };
+            var errors = new List<ErrorData> { new ErrorData("An Error", ErrorLevel.Error) };
             var builder = new DataReturnVersionBuilderHelper().CreateWithErrorData(errors);
             await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
 
@@ -164,7 +164,7 @@
             var helper = new DataReturnVersionBuilderHelper();
 
             A.CallTo(() => helper.EeeValidator.Validate(A<string>._, A<string>._, A<WeeeCategory>._, A<ObligationType>._, A<decimal>._))
-                .Returns(new List<ErrorData> { new ErrorData { ErrorLevel = ErrorLevel.Warning } });
+                .Returns(new List<ErrorData> { new ErrorData("A warning", ErrorLevel.Warning) });
 
             A.CallTo(() => helper.DataAccess.GetRegisteredProducer(A<string>._))
                 .Returns(new RegisteredProducer("Registration Number", 2016, A.Dummy<Domain.Scheme.Scheme>()));
@@ -185,7 +185,7 @@
             var helper = new DataReturnVersionBuilderHelper();
 
             A.CallTo(() => helper.EeeValidator.Validate(A<string>._, A<string>._, A<WeeeCategory>._, A<ObligationType>._, A<decimal>._))
-                .Returns(new List<ErrorData> { new ErrorData { ErrorLevel = ErrorLevel.Error } });
+                .Returns(new List<ErrorData> { new ErrorData("An Error", ErrorLevel.Error) });
 
             var builder = helper.Create();
             await builder.AddEeeOutputAmount("Registration Number", A<string>._, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
@@ -199,7 +199,7 @@
         [Fact]
         public async Task AddEeeOutputAmount_WithIfValidationErrorsandWarnings_CapturesErrorsAndWarnings()
         {
-            var errorsAndWarnings = new List<ErrorData> { new ErrorData { ErrorLevel = ErrorLevel.Error }, new ErrorData { ErrorLevel = ErrorLevel.Warning } };
+            var errorsAndWarnings = new List<ErrorData> { new ErrorData("An Error", ErrorLevel.Error), new ErrorData("A warning", ErrorLevel.Warning) };
 
             var helper = new DataReturnVersionBuilderHelper();
 
