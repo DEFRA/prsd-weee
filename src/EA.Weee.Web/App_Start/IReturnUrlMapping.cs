@@ -1,11 +1,5 @@
 ﻿namespace EA.Weee.Web.App_Start
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    
     /// <summary>
     /// Provides a mapping for the ReturnUrl parameter used following a successful sign-in.
     /// Some actions do not support HTTP GET. If a user attempts one of these actions when

@@ -1,12 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Scheme
 {
+    using System;
+    using System.Threading.Tasks;
     using EA.Weee.RequestHandlers.Scheme.GetSchemePublicInfo;
     using EA.Weee.Tests.Core.Model;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class GetSchemePublicInfoDataAccessTests

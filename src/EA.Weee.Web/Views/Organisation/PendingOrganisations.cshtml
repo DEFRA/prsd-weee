@@ -1,4 +1,5 @@
 ﻿@using EA.Weee.Core.Organisations
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.ViewModels.Organisation.PendingOrganisationsViewModel
 @{
     ViewBag.Title = "Organisations pending";
@@ -37,12 +38,11 @@
     @using (Html.BeginForm("SignOut", "Account", FormMethod.Post, new { id = "logoutForm" }))
     {
         @Html.AntiForgeryToken()
-        <div>
-            <input type="submit" class="button" value="Sign out" />
-        </div>
+
+        @(this.WeeeGds().Submit("Sign out", new { @class = "button" }))
     }
+
     <p>
         <a href="@Url.Action("Search", "OrganisationRegistration")">Create or access another organisation</a>
     </p>
-   
 }

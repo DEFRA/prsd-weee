@@ -33,9 +33,14 @@
                 .Where(t => t.Namespace.Contains("Mappings"))
                 .AsImplementedInterfaces();
 
-            // Xml Upload
+            // Member registration Upload
             builder.RegisterAssemblyTypes(GetType().Assembly)
                 .Where(t => t.Namespace.Contains("MemberRegistration"))
+                .AsImplementedInterfaces();
+
+            // data returns Upload
+            builder.RegisterAssemblyTypes(GetType().Assembly)
+                .Where(t => t.Namespace.Contains("DataReturns"))
                 .AsImplementedInterfaces();
 
             // Register singleton types relating to PCS member upload testing.

@@ -1,12 +1,9 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Shared
 {
-    using EA.Weee.Core.Shared;
-    using FakeItEasy;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using EA.Weee.Core.Shared;
+    using FakeItEasy;
     using Xunit;
 
     public class CsvWriterTests
@@ -139,6 +136,28 @@ lines.";
                 "Column 1" + Environment.NewLine +
                 "Good String" + Environment.NewLine +
                 "Sanitized Bad String" + Environment.NewLine;
+
+            Assert.Equal(expectedValue, csv);
+        }
+
+        [Fact]
+        public void CsvWriter_WithFormatAsText_EscapesValuesAndWritesAsFormula()
+        {
+            // Arrange
+            CsvWriter<string> writer = new CsvWriter<string>();
+
+            writer.DefineColumn("Column 1", x => x, true);
+
+            List<string> data = new List<string>() { "01234 555 555", "The man said \"Hello World\" to the dog." };
+
+            // Act
+            string csv = writer.Write(data);
+
+            // Assert
+            string expectedValue =
+                "Column 1" + Environment.NewLine +
+                "=\"01234 555 555\"" + Environment.NewLine +
+                "=\"The man said \"\"Hello World\"\" to the dog.\"" + Environment.NewLine;
 
             Assert.Equal(expectedValue, csv);
         }

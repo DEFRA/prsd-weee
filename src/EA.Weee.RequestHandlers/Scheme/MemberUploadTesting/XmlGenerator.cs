@@ -2,6 +2,7 @@
 {
     using System;
     using System.Xml.Linq;
+    using Core.Scheme;
     using Core.Scheme.MemberUploadTesting;
     using Prsd.Core;
 
@@ -49,15 +50,15 @@
             xmlScheme.Add(xmlXSDVersion);
             switch (producerList.SchemaVersion)
             {
-                case SchemaVersion.Version_3_04:
+                case MemberRegistrationSchemaVersion.Version_3_04:
                     xmlXSDVersion.Value = "3.04";
                     break;
 
-                case SchemaVersion.Version_3_06:
+                case MemberRegistrationSchemaVersion.Version_3_06:
                     xmlXSDVersion.Value = "3.06";
                     break;
 
-                case SchemaVersion.Version_3_07:
+                case MemberRegistrationSchemaVersion.Version_3_07:
                     xmlXSDVersion.Value = "3.07";
                     break;
 

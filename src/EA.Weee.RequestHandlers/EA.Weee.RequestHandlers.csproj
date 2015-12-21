@@ -80,15 +80,50 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdHandler.cs" />
+    <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\IRemoveProducerDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\IsProducerRegisteredForComplianceYearHandler.cs" />
+    <Compile Include="Admin\GetProducerDetails\RemoveProducerDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\RemoveProducerHandler.cs" />
     <Compile Include="Admin\Reports\GetPCSChargesCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandler.cs" />
+    <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
+    <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\CreateTestXmlFileHandler.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\DataReturnVersionGenerator.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\DataReturnVersionGeneratorDataAccess.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\IDataReturnVersionGenerator.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\IDataReturnVersionGeneratorDataAccess.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\XmlGenerator.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\IXmlGenerator.cs" />
+    <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionDataAccess.cs" />
+    <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandler.cs" />
+    <Compile Include="DataReturns\FetchDataReturnForSubmission\IFetchDataReturnForSubmissionDataAccess.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnXmlValidator.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\GenerateFromDataReturnXml.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\IDataReturnXmlValidator.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\IGenerateFromDataReturnXml.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\IProcessDataReturnXmlFileDataAccess.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileDataAccess.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileHandler.cs" />
+    <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IProducerListFactory.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IProducerListFactoryDataAccess.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\IXmlGenerator.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerListFactory.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryDataAccess.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\SchemeInfo.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
+    <Compile Include="Shared\Extensions.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\GenerateFromXmlDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\IGenerateFromXmlDataAccess.cs" />
-    <Compile Include="Scheme\MemberRegistration\IDeserializer.cs" />
-    <Compile Include="Scheme\MemberRegistration\Deserializer.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheDataAccess.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\FetchOrganisationSearchResultsForCacheHandler.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache\IFetchOrganisationSearchResultsForCacheDataAccess.cs" />
@@ -121,7 +156,6 @@
     <Compile Include="Mappings\ContactMap.cs" />
     <Compile Include="Mappings\CountryMap.cs" />
     <Compile Include="Mappings\LatestMemberUploadListMap.cs" />
-    <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\MemberUploadMap.cs" />
     <Compile Include="Mappings\PublicOrganisationMap.cs" />
     <Compile Include="Mappings\OrganisationMap.cs" />
@@ -164,11 +198,9 @@
     <Compile Include="Scheme\MemberRegistration\GetComplianceYearsHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadByIdHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadDataHandler.cs" />
-    <Compile Include="Scheme\Interfaces\IXmlChargeBandCalculator.cs" />
-    <Compile Include="Scheme\Interfaces\IXmlConverter.cs" />
+    <Compile Include="Scheme\Interfaces\IXMLChargeBandCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\IProducerChargeCalculator.cs" />
-    <Compile Include="Scheme\MemberRegistration\IWhiteSpaceCollapser.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandler.cs" />
     <Compile Include="Scheme\GetSchemesHandler.cs" />
@@ -186,20 +218,10 @@
     <Compile Include="Organisations\VerifyOrganisationExistsHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerChargeCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerChargeCalculatorDataAccess.cs" />
-    <Compile Include="Scheme\MemberRegistration\WhiteSpaceCollapser.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlChargeBandCalculator.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlConverter.cs" />
-    <Compile Include="Scheme\Interfaces\IXmlValidator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XMLChargeBandCalculator.cs" />
+    <Compile Include="Scheme\Interfaces\IXMLValidator.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerCharge.cs" />
-    <Compile Include="Scheme\Interfaces\ISchemaValidator.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidator.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\XmlValidator.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\IProducerListFactory.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\IXmlGenerator.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\ProducerListFactory.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\XMLValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestHandlerModule.cs" />
     <Compile Include="Scheme\UpdateSchemeInformationHandler.cs" />
@@ -248,7 +270,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="GenerateSchemaCs.ps1" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

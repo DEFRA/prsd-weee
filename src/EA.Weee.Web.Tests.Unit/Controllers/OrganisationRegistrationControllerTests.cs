@@ -1,14 +1,14 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
     using Core.Shared;
     using EA.Weee.Core.Search;
     using FakeItEasy;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using ViewModels.OrganisationRegistration;
     using ViewModels.OrganisationRegistration.Details;
     using ViewModels.OrganisationRegistration.Type;

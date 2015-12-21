@@ -1,16 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations
 {
+    using System;
+    using System.Threading.Tasks;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Organisations;
     using EA.Weee.Requests.Organisations;
     using FakeItEasy;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class UpdateOrganisationContactDetailsHandlerTests

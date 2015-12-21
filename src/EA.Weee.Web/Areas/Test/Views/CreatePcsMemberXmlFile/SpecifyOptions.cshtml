@@ -1,0 +1,66 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Test.ViewModels.CreatePcsMemberXmlFile.SpecifyOptionsViewModel
+
+@{
+    ViewBag.Title = "Specify Options";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Specify options for the XML file
+        </h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        @Html.HiddenFor(model => model.OrganisationID);
+        
+        <div class="form-group" @Html.Gds().FormGroupClass(m => m.SchemaVersion)>
+            @Html.Gds().LabelFor(model => model.SchemaVersion)
+            @Html.Gds().ValidationMessageFor(mode => Model.SchemaVersion)
+            @Html.EnumDropDownListFor(model => model.SchemaVersion)
+        </div>
+
+        <div class="form-group" @Html.Gds().FormGroupClass(m => m.ComplianceYear)>
+            @Html.Gds().LabelFor(model => model.ComplianceYear)
+            @Html.Gds().ValidationMessageFor(mode => Model.ComplianceYear)
+            @Html.Gds().TextBoxFor(model => model.ComplianceYear)
+        </div>
+
+        <div class="form-group" @Html.Gds().FormGroupClass(m => m.NumberOfNewProducers)>
+            @Html.Gds().LabelFor(model => model.NumberOfNewProducers)
+            @Html.Gds().ValidationMessageFor(mode => Model.NumberOfNewProducers)
+            @Html.Gds().TextBoxFor(model => model.NumberOfNewProducers)
+        </div>
+
+        <div class="form-group" @Html.Gds().FormGroupClass(m => m.NumberOfExistingProducers)>
+            @Html.Gds().LabelFor(model => model.NumberOfExistingProducers)
+            @Html.Gds().ValidationMessageFor(mode => Model.NumberOfExistingProducers)
+            @Html.Gds().TextBoxFor(model => model.NumberOfExistingProducers)
+        </div>
+
+        <h3 class="heading-small">Advanced Options</h3>
+
+        <div class="form-group">
+            @Html.Gds().CheckBoxFor(model => model.NoCompaniesForNewProducers)
+        </div>
+        
+        <h3 class="heading-small">Optional Errors</h3>
+
+        <div class="form-group">
+            @Html.Gds().CheckBoxFor(model => model.IncludeMalformedSchema)
+            @Html.Gds().CheckBoxFor(model => model.IncludeUnexpectedFooElement)
+            @Html.Gds().CheckBoxFor(model => model.IgnoreStringLengthConditions)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+
+        @Html.ActionLink("Select a different PCS", "SelectOrganisation", "CreatePcsMemberXmlFile", null, null)
+    }
+}

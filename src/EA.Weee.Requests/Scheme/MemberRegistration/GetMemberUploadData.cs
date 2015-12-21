@@ -5,7 +5,7 @@
     using Core.Shared;
     using Prsd.Core.Mediator;
 
-    public class GetMemberUploadData : IRequest<List<MemberUploadErrorData>>
+    public class GetMemberUploadData : IRequest<List<UploadErrorData>>
     {
         public Guid PcsId { get; private set; }
 

@@ -1,5 +1,10 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
     using Core.Scheme;
@@ -10,11 +15,6 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using TestHelpers;
     using Web.Areas.Scheme.Controllers;
     using Web.Areas.Scheme.ViewModels;
@@ -436,7 +436,7 @@
 
         private HomeController HomeController()
         {
-            var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>(), A.Fake<CsvWriterFactory>());
+            var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>(), A.Fake<CsvWriterFactory>(), A.Fake<ConfigurationService>());
             new HttpContextMocker().AttachToController(controller);
 
             return controller;
@@ -474,7 +474,8 @@
 
             CsvWriterFactory csvWriterFactory = A.Dummy<CsvWriterFactory>();
 
-            HomeController controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory);
+            ConfigurationService configService = A.Dummy<ConfigurationService>();
+            HomeController controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory, configService);
             new HttpContextMocker().AttachToController(controller);
 
             // Act
@@ -518,7 +519,6 @@
 
             A.CallTo(() => client.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(countries);
-
             Func<IWeeeClient> apiClient = () => client;
 
             IWeeeCache cache = A.Dummy<IWeeeCache>();
@@ -527,7 +527,9 @@
 
             CsvWriterFactory csvWriterFactory = A.Dummy<CsvWriterFactory>();
 
-            HomeController controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory);
+            ConfigurationService configService = A.Dummy<ConfigurationService>();
+
+            HomeController controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory, configService);
             new HttpContextMocker().AttachToController(controller);
 
             controller.ModelState.AddModelError("SomeProperty", "IsInvalid");
@@ -577,7 +579,8 @@
 
             CsvWriterFactory csvWriterFactory = A.Dummy<CsvWriterFactory>();
 
-            HomeController controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory);
+            ConfigurationService configService = A.Dummy<ConfigurationService>();
+            HomeController controller = new HomeController(apiClient, cache, breadcrumb, csvWriterFactory, configService);
             new HttpContextMocker().AttachToController(controller);
 
             // Act
@@ -631,7 +634,7 @@
         {
             var controller = HomeController();
 
-            var result = await controller.DownloadCsv(A<Guid>._, A<int>._, A<Guid>._);
+            var result = await controller.DownloadCsv(A<Guid>._, A<int>._, A<Guid>._, A<DateTime>._);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
                 .MustHaveHappened(Repeated.Exactly.Once);

@@ -1,6 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Scheme.ViewModels.AddOrAmendMembersViewModel
+@model EA.Weee.Web.Areas.Scheme.ViewModels.PCSFileUploadViewModel
 @{
     ViewBag.Title = "Manage PCS Members";
     HtmlHelper.ClientValidationEnabled = true;
@@ -96,20 +96,17 @@
 
             <p>To register or update your members' details, upload and submit an XML file.</p>
             <p class="bold-small">
-                <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image" />Your XML file must use the version 3.07 schema.
+                <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image"/>Your XML file must use the version 3.07 schema.
             </p>
             <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
                 @(this.WeeeGds().ScreenReaderLabelFor(m => m.File))
                 @Html.Gds().ValidationMessageFor(m => m.File)
                 @Html.Gds().TextBoxFor(m => m.File, new { type = "file", accept = ".xml" })
-           </div>
+            </div>
 
         </div>
 
-        <p>
-            <input style="margin-top: 20px;" id="submitButton" type="submit" value="Check file for errors" class="button" aria-live="off"/>
-            <img id="spinner" style="display: none; margin-top: 20px" src="~/Content/weee/images/spinner.gif" alt="Spinning graphic" class="important-image"/>
-        </p>
+        @(this.WeeeGds().Submit("Check file for errors", new { style = "margin-top: 20px;", id = "submitButton", @class="button", aria_live="off" }, true))
 
         <p>
             @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { id = "anotherActivitylink" })

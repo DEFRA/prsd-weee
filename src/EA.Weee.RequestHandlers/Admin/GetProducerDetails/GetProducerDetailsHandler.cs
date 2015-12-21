@@ -1,15 +1,14 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.Producer;
     using EA.Weee.RequestHandlers.Security;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class GetProducerDetailsHandler : IRequestHandler<Requests.Admin.GetProducerDetails, ProducerDetails>
     {
@@ -26,7 +25,7 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            List<Producer> producers = await dataAccess.Fetch(request.RegistrationNumber);
+            List<ProducerSubmission> producers = await dataAccess.Fetch(request.RegistrationNumber);
 
             if (producers.Count == 0)
             {
@@ -56,7 +55,7 @@
                     .First()
                     .UpdatedDate;
 
-                Producer latestDetails = schemeGroup
+                ProducerSubmission latestDetails = schemeGroup
                     .OrderBy(p => p.UpdatedDate)
                     .Last();
 
@@ -78,6 +77,7 @@
 
                 ProducerDetailsScheme producerSchemeDetails = new ProducerDetailsScheme()
                 {
+                    RegisteredProducerId = latestDetails.RegisteredProducer.Id,
                     SchemeName = schemeGroup.Key.SchemeName,
                     ProducerName = latestDetails.OrganisationName,
                     TradingName = latestDetails.TradingName,

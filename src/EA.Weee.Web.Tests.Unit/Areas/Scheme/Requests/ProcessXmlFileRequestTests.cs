@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Scheme.Requests
 {
-    using System;
     using System.Web;
     using FakeItEasy;
     using Services;
@@ -22,7 +21,7 @@
         {
             var file = A.Fake<HttpPostedFileBase>();
 
-            Request().Map(new AddOrAmendMembersViewModel { File = file });
+            Request().Map(new PCSFileUploadViewModel { File = file });
 
             A.CallTo(() => fileConverter.Convert(file))
                 .MustHaveHappened(Repeated.Exactly.Once);

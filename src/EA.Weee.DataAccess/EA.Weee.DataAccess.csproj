@@ -74,15 +74,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntityFrameworkModule.cs" />
-    <Compile Include="EventHandlers\MemberUploadSubmittedEventHandler.cs" />
+    <Compile Include="DataAccess\IRegisteredProducerDataAccess.cs" />
+    <Compile Include="DataAccess\RegisteredProducerDataAccess.cs" />
+    <Compile Include="WeeeContext.Metadata.cs" />
     <Compile Include="Extensions\ProducerExtensions.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
     <Compile Include="Identity\WeeeIdentityContext.cs" />
+    <Compile Include="Mappings\AatfDeliveryLocationMapping.cs" />
+    <Compile Include="Mappings\AeDeliveryLocationMapping.cs" />
     <Compile Include="Mappings\CompetentAuthorityUserMapping.cs" />
-    <Compile Include="Mappings\MemberUploadErrorTypeMapping.cs" />
+    <Compile Include="Mappings\DataReturnUploadErrorMapping.cs" />
+    <Compile Include="Mappings\DataReturnMapping.cs" />
+    <Compile Include="Mappings\DataReturnVersionMapping.cs" />
+    <Compile Include="Mappings\DataReturnUploadMapping.cs" />
+    <Compile Include="Mappings\DataRetunUploadRawDataMapping.cs" />
+    <Compile Include="Mappings\UploadErrorTypeMapping.cs" />
     <Compile Include="Mappings\MemberUploadRawDataMapping.cs" />
     <Compile Include="Mappings\MigratedProducerMapping.cs" />
+    <Compile Include="Mappings\RegisteredProducerMapping.cs" />
     <Compile Include="Mappings\SchemeStatusMapping.cs" />
     <Compile Include="Mappings\ProducerAddressMapping.cs" />
     <Compile Include="Mappings\ProducerAuthorisedRepresentativeMapping.cs" />
@@ -100,18 +110,22 @@
     <Compile Include="Mappings\OrganisationTypeMapping.cs" />
     <Compile Include="Mappings\OrganisationUserMapping.cs" />
     <Compile Include="Mappings\UserStatusMapping.cs" />
-    <Compile Include="Mappings\ProducerMapping.cs" />
+    <Compile Include="Mappings\ProducerSubmissionMapping.cs" />
     <Compile Include="Mappings\ProducerCompany.cs" />
     <Compile Include="Mappings\ProducerPartnerMapping.cs" />
     <Compile Include="Mappings\ProducerPartnershipMapping.cs" />
     <Compile Include="Mappings\ProducerSISCodeMapping.cs" />
     <Compile Include="Mappings\SchemeMapping.cs" />
     <Compile Include="Mappings\SystemDataMapping.cs" />
+    <Compile Include="Mappings\WeeeCollectedAmountMapping.cs" />
+    <Compile Include="Mappings\WeeeDeliveredAmountMapping.cs" />
     <Compile Include="RelationshipExtensions.cs" />
     <Compile Include="StoredProcedure\IStoredProcedures.cs" />
     <Compile Include="StoredProcedure\MembersDetailsCSVData.cs" />
     <Compile Include="StoredProcedure\PCSChargesCSVData.cs" />
+    <Compile Include="StoredProcedure\ProducerAmendmentsHistoryCSVData.cs" />
     <Compile Include="StoredProcedure\ProducerCSVData.cs" />
+    <Compile Include="StoredProcedure\ProducerPublicRegisterCSVData.cs" />
     <Compile Include="StoredProcedure\StoredProcedures.cs" />
     <Compile Include="WeeeContext.cs" />
     <Compile Include="Mappings\AddressMapping.cs" />
@@ -121,7 +135,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
@@ -129,7 +145,9 @@
       <Name>EA.Weee.Domain</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="EventHandlers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

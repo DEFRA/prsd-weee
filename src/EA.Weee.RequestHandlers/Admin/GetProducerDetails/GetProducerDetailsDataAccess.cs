@@ -1,13 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain.Producer;
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
+    using EA.Weee.DataAccess;
+    using EA.Weee.Domain.Producer;
 
     public class GetProducerDetailsDataAccess : IGetProducerDetailsDataAccess
     {
@@ -30,11 +28,11 @@
         /// </summary>
         /// <param name="registrationNumber"></param>
         /// <returns></returns>
-        public async Task<List<Producer>> Fetch(string registrationNumber)
+        public async Task<List<ProducerSubmission>> Fetch(string registrationNumber)
         {
-            return await context.Producers
+            return await context.ProducerSubmissions
                 .Where(p => p.MemberUpload.IsSubmitted)
-                .Where(p => p.RegistrationNumber == registrationNumber)
+                .Where(p => p.RegisteredProducer.ProducerRegistrationNumber == registrationNumber)
                 .Include(p => p.MemberUpload)
                 .Include(p => p.ProducerBusiness)
                 .Include(p => p.ProducerBusiness.CompanyDetails)

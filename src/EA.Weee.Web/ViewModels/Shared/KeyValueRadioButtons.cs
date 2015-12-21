@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared
 {
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
     /// <summary>

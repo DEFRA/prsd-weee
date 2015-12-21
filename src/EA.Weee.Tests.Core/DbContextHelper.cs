@@ -46,7 +46,18 @@
 
         public T SetId<T>(T entity, Guid id) where T : Entity
         {
-            typeof(Entity).GetProperty("Id").SetValue(entity, id);
+            // If the name ends with Proxy, this is likely to be a fake object.
+            // Set it's Id value using the CallTo method as setting the value directly
+            // using reflection fails.
+            if (entity.GetType().Name.EndsWith("Proxy"))
+            {
+                A.CallTo(() => entity.Id).Returns(id);
+            }
+            else
+            {
+                typeof(Entity).GetProperty("Id").SetValue(entity, id);
+            }
+
             return entity;
         }
     }

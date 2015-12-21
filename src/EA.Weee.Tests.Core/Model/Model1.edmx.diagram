@@ -24,7 +24,6 @@
         <EntityTypeShape EntityType="EA.Weee.TestModel.MigratedProducer_" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EA.Weee.TestModel.Partner_" Width="1.5" PointX="9.75" PointY="27.375" IsExpanded="true" />
         <EntityTypeShape EntityType="EA.Weee.TestModel.Partnership" Width="1.5" PointX="7.5" PointY="27.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="EA.Weee.TestModel.Producer" Width="1.5" PointX="15" PointY="26" IsExpanded="true" />
         <EntityTypeShape EntityType="EA.Weee.TestModel.SICCode_" Width="1.5" PointX="17.25" PointY="29.375" IsExpanded="true" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_CompetentAuthorityUser_CompetentAuthority" ManuallyRouted="false" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_CompetentAuthority_Country" ManuallyRouted="false" />
@@ -39,25 +38,66 @@
         <AssociationConnector Association="EA.Weee.TestModel.FK_Scheme_Organisation" ManuallyRouted="false" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_MemberUpload_Scheme" ManuallyRouted="false" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_MemberUploadError_MemberUpload" ManuallyRouted="false" />
-        <AssociationConnector Association="EA.Weee.TestModel.FK_Producer_MemberUpload" ManuallyRouted="false" />
-        <AssociationConnector Association="EA.Weee.TestModel.FK_Producer_Scheme" ManuallyRouted="false" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_Contact_Address" ManuallyRouted="false" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_AuthorisedRepresentative_OverseasContact" ManuallyRouted="false" />
-        <AssociationConnector Association="EA.Weee.TestModel.FK_Producer_AuthorisedRepresentative" ManuallyRouted="false" />
-        <AssociationConnector Association="EA.Weee.TestModel.FK_BrandNameList_Producer" ManuallyRouted="false" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_Business_Company" ManuallyRouted="false" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_Business_Contact" ManuallyRouted="false" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_Business_Partnership" ManuallyRouted="false" />
-        <AssociationConnector Association="EA.Weee.TestModel.FK_Producer_Business" ManuallyRouted="false" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_Company_Contact" ManuallyRouted="false" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_Partnership_Contact" ManuallyRouted="false" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_Partner_Partnership" ManuallyRouted="false" />
-        <AssociationConnector Association="EA.Weee.TestModel.FK_SICCodeList_Producer" ManuallyRouted="false" />
         <EntityTypeShape EntityType="EA.Weee.TestModel.AspNetUser" Width="1.5" PointX="5.375" PointY="1" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_CompetentAuthorityUser_AspNetUsers" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_OrganisationUser_AspNetUsers" />
         <EntityTypeShape EntityType="EA.Weee.TestModel.ChargeBandAmount" Width="1.5" PointX="0.75" PointY="3.875" />
-        <AssociationConnector Association="EA.Weee.TestModel.FK_Producer_ChargeBandAmount" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.ProducerSubmission" Width="1.5" PointX="15" PointY="12.375" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.RegisteredProducer" Width="1.5" PointX="17.25" PointY="22" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_ProducerSubmission_ChargeBandAmount" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_ProducerSubmission_MemberUpload" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_RegisteredProducer_Scheme" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_ProducerSubmission_AuthorisedRepresentative" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_BrandName_ProducerSubmission" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_ProducerSubmission_Business" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_ProducerSubmission_RegisteredProducer" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_RegisteredProducer_ProducerSubmission" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_SICCode_ProducerSubmission" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.WeeeCategory" Width="1.5" PointX="17.25" PointY="18.5" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.AatfDeliveryLocation" Width="1.5" PointX="20.25" PointY="13.375" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.AeDeliveryLocation" Width="1.5" PointX="20.25" PointY="29" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.DataReturn" Width="1.5" PointX="9.75" PointY="31.375" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.DataReturnUpload" Width="1.5" PointX="14.25" PointY="31" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.DataReturnUploadError" Width="1.5" PointX="16.5" PointY="32.5" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.DataReturnVersion" Width="1.5" PointX="12" PointY="30.875" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.EeeOutputAmount" Width="1.5" PointX="19.5" PointY="22.25" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.EeeOutputReturnVersion" Width="1.5" PointX="19.5" PointY="19.75" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.EeeOutputReturnVersionAmount" Width="1.5" PointX="21.75" PointY="22.625" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.WeeeCollectedAmount" Width="1.5" PointX="19.5" PointY="16.375" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.WeeeCollectedReturnVersion" Width="1.5" PointX="9.75" PointY="35.75" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.WeeeCollectedReturnVersionAmount" Width="1.5" PointX="21.75" PointY="25.875" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.WeeeDeliveredAmount" Width="1.5" PointX="22.5" PointY="18.125" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.WeeeDeliveredReturnVersion" Width="1.5" PointX="9.75" PointY="38.125" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.WeeeDeliveredReturnVersionAmount" Width="1.5" PointX="24.75" PointY="27.875" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_EeeOutputAmount_WeeeCategory" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeCollectedAmount_WeeeCategory" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeDeliveredAmount_WeeeCategory" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AatfDeliveryLocation" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AeDeliveryLocation" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturn_DataReturnVersion" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturn_Scheme" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturnVersion_DataReturn" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturnUpload_DataReturnVersion" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturnUpload_Scheme" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturnUploadError_DataReturnUpload" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturnVersion_EeeOutputReturnVersion" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturnVersion_WeeeCollectedReturnVersion" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_DataReturnVersion_WeeeDeliveredReturnVersion" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_EeeOutputAmount_RegisteredProducer" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_EeeOutputReturnVersionAmount_EeeOutputAmount" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_EeeOutputReturnVersionAmount_EeeOutputReturnVersion" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeCollectedReturnVersionAmount_WeeeCollectedAmount" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeCollectedReturnVersionAmount_WeeeCollectedReturnVersion" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredAmount" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredReturnVersion" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

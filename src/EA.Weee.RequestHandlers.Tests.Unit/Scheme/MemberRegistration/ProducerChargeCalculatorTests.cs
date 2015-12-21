@@ -1,18 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
-    using DataAccess;
-    using Domain;
+    using System;
     using Domain.Lookup;
-    using Domain.Producer;
-    using Domain.Scheme;
-    using EA.Weee.RequestHandlers.Scheme.Interfaces;
-    using EA.Weee.Xml;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
-    using System;
-    using System.Collections.Generic;
-    using Weee.Tests.Core;
-    using Xml.Schemas;
+    using Xml.MemberRegistration;
     using Xunit;
 
     public class ProducerChargeCalculatorTests

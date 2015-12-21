@@ -1,6 +1,7 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Core.Shared
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModel
 @{
     ViewBag.Title = "Edit PCS";
@@ -89,9 +90,7 @@
     </p>
     if (Model.Status != SchemeStatus.Rejected)
     {
-    <p>
-        <input type="submit" value="Save and continue" class="button" />
-    </p>
+        @(this.WeeeGds().Submit("Save and Continue", new { @class = "button" }))
     }
     <p>
         <a href="javascript:history.back();">Back</a>

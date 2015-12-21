@@ -6,7 +6,7 @@
     {
         public Guid OrganisationID { get; set; }
 
-        public SchemaVersion SchemaVersion { get; set; }
+        public MemberRegistrationSchemaVersion SchemaVersion { get; set; }
 
         public int ComplianceYear { get; set; }
 

@@ -2,14 +2,7 @@
 {
     using EA.Weee.Web.App_Start;
     using FakeItEasy;
-    using Microsoft.Owin;
     using Microsoft.Owin.Security.Cookies;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web;
     using Xunit;
 
     public class WeeeCookieAuthenticationProviderTests

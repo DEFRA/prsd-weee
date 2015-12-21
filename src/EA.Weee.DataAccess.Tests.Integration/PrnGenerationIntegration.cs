@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
@@ -11,7 +10,6 @@
     using System.Xml.Linq;
     using System.Xml.Serialization;
     using Core.Helpers.PrnGeneration;
-    using Domain;
     using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Producer;
@@ -22,8 +20,9 @@
     using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
     using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using Requests.Scheme.MemberRegistration;
-    using Xml;
-    using Xml.Schemas;
+    using Xml.Converter;
+    using Xml.Deserialization;
+    using Xml.MemberRegistration;
     using Xunit;
 
     public class PrnGenerationIntegration
@@ -53,7 +52,7 @@
             var org = orgAndMemberUpload.Item1;
             var memberUpload = orgAndMemberUpload.Item2;
 
-            ProcessXMLFile message = new ProcessXMLFile(org.Id, validXmlBytes, "File name");
+            ProcessXmlFile message = new ProcessXmlFile(org.Id, validXmlBytes, "File name");
 
             long initialSeed = GetCurrentSeed();
             long expectedSeed = ExpectedSeedAfterThisXml(validXmlString, initialSeed);
@@ -61,7 +60,7 @@
             IWhiteSpaceCollapser whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
 
             XmlConverter xmlConverter = new XmlConverter(whiteSpaceCollapser, new Deserializer());
-            var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message));
+            var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
 
             var producerCharges = new Dictionary<string, ProducerCharge>();
             var anyAmount = 30;
@@ -78,13 +77,15 @@
             }
 
             // act
-            IEnumerable<Producer> producers = await new GenerateFromXml(xmlConverter, new GenerateFromXmlDataAccess(context)).GenerateProducers(message, memberUpload, producerCharges);
+            IEnumerable<ProducerSubmission> producers = await new GenerateFromXml(
+                xmlConverter,
+                new GenerateFromXmlDataAccess(context)).GenerateProducers(message, memberUpload, producerCharges);
 
             // assert
             long newSeed = GetCurrentSeed();
             Assert.Equal(expectedSeed, newSeed);
 
-            var prns = producers.Select(p => p.RegistrationNumber);
+            var prns = producers.Select(p => p.RegisteredProducer.ProducerRegistrationNumber);
             Assert.Equal(prns.Distinct(), prns); // all prns should be unique
         }
 
@@ -137,7 +138,16 @@
             context.Schemes.Add(scheme);
             context.SaveChanges();
 
-            MemberUpload memberUpload = new MemberUpload(org.Id, scheme.Id, string.Empty, "File name");
+            MemberUpload memberUpload = new MemberUpload(
+                org.Id,
+                "<xml />",
+                new List<MemberUploadError>(),
+                0,
+                2017,
+                scheme,
+                "File name",
+                "user 1");
+
             context.MemberUploads.Add(memberUpload);
             context.SaveChanges();
 

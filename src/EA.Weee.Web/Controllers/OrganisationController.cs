@@ -13,7 +13,6 @@
     using ViewModels.Organisation;
     using ViewModels.Shared;
     using Weee.Requests.Organisations;
-    using Weee.Requests.Users;
 
     public class OrganisationController : ExternalSiteController
     {
@@ -26,6 +25,23 @@
 
         [HttpGet]
         public async Task<ActionResult> Index()
+        {
+            return await ShowOrganisations();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Index(YourOrganisationsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return await ShowOrganisations();
+            }
+
+            return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = model.SelectedOrganisationId.Value });
+        }
+
+        private async Task<ActionResult> ShowOrganisations()
         {
             IEnumerable<OrganisationUserData> organisations = await GetOrganisations();
 
@@ -42,48 +58,26 @@
                 Guid organisationId = accessibleOrganisations[0].OrganisationId;
                 return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = organisationId });
             }
-            
+
             if (accessibleOrganisations.Count > 0)
             {
                 YourOrganisationsViewModel model = new YourOrganisationsViewModel();
-                
-                foreach (OrganisationUserData organisation in accessibleOrganisations)
-                {
-                    RadioButtonPair<string, Guid> item = new RadioButtonPair<string, Guid>(
-                        organisation.Organisation.OrganisationName,
-                        organisation.OrganisationId);
-
-                    model.AccessibleOrganisations.PossibleValues.Add(item);
-                }
+                model.Organisations = accessibleOrganisations;
 
                 ViewBag.InaccessibleOrganisations = inaccessibleOrganisations.Where(o => o.UserStatus == UserStatus.Pending);
                 return View("YourOrganisations", model);
             }
-            
+
             if (inaccessibleOrganisations.Count > 0)
             {
                 PendingOrganisationsViewModel model = new PendingOrganisationsViewModel();
 
-                model.InaccessibleOrganisations = inaccessibleOrganisations;
+                model.InaccessibleOrganisations = FilterOutDuplicateOrganisations(inaccessibleOrganisations);
 
                 return View("PendingOrganisations", model);
             }
 
             return RedirectToAction("Search", "OrganisationRegistration");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Index(YourOrganisationsViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("YourOrganisations", model);
-            }
-
-            Guid organisationId = model.AccessibleOrganisations.SelectedValue;
-
-            return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = organisationId });
         }
 
         [ChildActionOnly]
@@ -125,6 +119,52 @@
             return organisations
                 .Where(o => o.Organisation.OrganisationStatus == OrganisationStatus.Complete)
                 .OrderBy(o => o.Organisation.OrganisationName);
+        }
+
+        /// <summary>
+        /// Where a user has multiple associations with an organisation, only the current association
+        /// should be displayed. The order of perference is "Active", "Inactive", "Pending", "Rejected".
+        /// </summary>
+        /// <param name="organisations"></param>
+        /// <returns></returns>
+        private IEnumerable<OrganisationUserData> FilterOutDuplicateOrganisations(IEnumerable<OrganisationUserData> organisations)
+        {
+            List<UserStatus> userStatuesInOrderOfPreference = new List<UserStatus>()
+            {
+                UserStatus.Active,
+                UserStatus.Inactive,
+                UserStatus.Pending,
+                UserStatus.Rejected
+            };
+
+            List<OrganisationUserData> results = new List<OrganisationUserData>();
+
+            foreach (UserStatus userStatus in userStatuesInOrderOfPreference)
+            {
+                var organisationsWithMatchingUserStatus = organisations.Where(o => o.UserStatus == userStatus);
+
+                foreach (OrganisationUserData organistion in organisationsWithMatchingUserStatus)
+                {
+                    bool alreadyAdded = results
+                        .Where(r => r.OrganisationId == organistion.OrganisationId)
+                        .Where(r => r.UserId == organistion.UserId)
+                        .Any();
+
+                    if (!alreadyAdded)
+                    {
+                        results.Add(organistion);
+                    }
+                }
+            }
+
+            // Now return the results in the same order that they were supplied to this method.
+            foreach (OrganisationUserData organisation in organisations)
+            {
+                if (results.Contains(organisation))
+                {
+                    yield return organisation;
+                }
+            }
         }
     }
 }

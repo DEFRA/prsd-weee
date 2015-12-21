@@ -69,8 +69,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
     <Reference Include="xunit.assert, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
@@ -90,15 +88,24 @@
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
     <Compile Include="Admin\GetAdminUserStatusHandlerTests.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdHandlerTests.cs" />
+    <Compile Include="Admin\GetProducerDetails\IsProducerRegisteredForComplianceYearTests.cs" />
+    <Compile Include="Admin\GetProducerDetails\RemoveProducerHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetPCSChargesCSVHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandlerTests.cs" />
     <Compile Include="Admin\GetAllApprovedSchemesHandlerTests.cs" />
     <Compile Include="Admin\GetAllComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandlerTests.cs" />
     <Compile Include="Admin\GetUserDataHandlerTests.cs" />
+    <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandlerTest.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccessTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
     <Compile Include="Admin\UpdateUserHandlerTests.cs" />
+    <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandlerTests.cs" />
+    <Compile Include="DataReturns\GenerateDomainObjects\GenerateFromDataReturnXmlTests.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFileHandlerTests.cs" />
+    <Compile Include="DataReturns\XmlValidation\DataReturnXmlValidatorTests.cs" />
+    <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandlerTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandlerTests.cs" />
@@ -115,8 +122,9 @@
     <Compile Include="Scheme\GetSchemeByIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemesHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandlerTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\DeserializerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXmlGenerateProducerDataTests.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryTests.cs" />
+    <Compile Include="Scheme\MemberUploadTesting\XmlGeneratorTests.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXmlTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GetComplianceYearsHandlerTests.cs" />
@@ -124,16 +132,9 @@
     <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\ProducerChargeCalculatorTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\WhiteSpaceCollapserTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\SchemaValidation\SchemaValidatorTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\ValidationContext.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlValidation\XmlValidatorTests.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryTests.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\XmlGeneratorTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\XmlValidation\XMLValidatorTests.cs" />
     <Compile Include="Scheme\PrnGeneration\PrnHelperTests.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandlerTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlConverterTests.cs" />
-    <Compile Include="Scheme\MemberRegistration\XmlErrorTranslatorTests.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandlerTests.cs" />
     <Compile Include="Organisations\GetUserOrganisationsByStatusHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadDataHandlerTests.cs" />
@@ -158,7 +159,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
@@ -201,20 +204,20 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ExampleXML\not-xml.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ExampleXML\v2-valid.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ExampleXML\v3-badly-damaged.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ExampleXML\not-xml.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="ExampleXML\v3-noproducers.xml" />
-    <Content Include="ExampleXML\v3-slightly-invalid.xml">
+    <Content Include="ExampleXML\v3-same-producer-name.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ExampleXML\v3-same-producer-name.xml">
+    <Content Include="ExampleXML\v3-slightly-invalid.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ExampleXML\v3-valid-AmendmentBandC.xml">
