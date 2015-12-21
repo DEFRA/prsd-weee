@@ -17,6 +17,9 @@
             WeeeCollectedReturnVersions = new List<WeeeCollectedReturnVersion>();
         }
 
+        /// <summary>
+        /// This constructor is used by Entity Framework.
+        /// </summary>
         protected WeeeCollectedAmount()
         {
         }

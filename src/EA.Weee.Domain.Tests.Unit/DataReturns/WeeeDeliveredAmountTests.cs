@@ -9,17 +9,15 @@
     public class WeeeDeliveredAmountTests
     {
         [Fact]
-        public void ConstructsWeeeDeliveredAmount_WithNullDataReturnVersion_ThrowsArgumentNullException()
+        public void ConstructsWeeeDeliveredAmount_WithNullAatfDeliveryLocation_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new WeeeDeliveredAmountTester(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, null));
+            Assert.Throws<ArgumentNullException>(() => new WeeeDeliveredAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, (AatfDeliveryLocation)null));
         }
 
-        private class WeeeDeliveredAmountTester : WeeeDeliveredAmount
+        [Fact]
+        public void ConstructsWeeeDeliveredAmount_WithNullAeDeliveryLocation_ThrowsArgumentNullException()
         {
-            public WeeeDeliveredAmountTester(ObligationType obligationType, WeeeCategory weeeCategory, decimal tonnage, DataReturnVersion dataReturnVersion) :
-                base(obligationType, weeeCategory, tonnage, dataReturnVersion)
-            {
-            }
+            Assert.Throws<ArgumentNullException>(() => new WeeeDeliveredAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, (AeDeliveryLocation)null));
         }
     }
 }
