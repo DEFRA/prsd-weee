@@ -46,14 +46,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
+    <Compile Include="DataReturns\EeeOutputReturnVersion.cs" />
     <Compile Include="DataReturns\WeeeCollectedReturnVersion.cs" />
+    <Compile Include="DataReturns\WeeeDeliveredReturnVersion.cs" />
     <Compile Include="Unalignment\UnalignableEntity.cs" />
     <Compile Include="Audit\AuditableEntity.cs" />
     <Compile Include="Audit\IAuditableEntity.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataReturns\AatfDeliveredAmount.cs" />
-    <Compile Include="DataReturns\AeDeliveredAmount.cs" />
     <Compile Include="DataReturns\DataReturn.cs" />
     <Compile Include="DataReturns\DataReturnUpload.cs" />
     <Compile Include="DataReturns\DataReturnUploadError.cs" />
