@@ -326,6 +326,35 @@
             Assert.Equal("The file you're trying to upload is not a correctly formatted XML file. Upload a valid XML file.", result);
         }
 
+        /// <summary>
+        /// This test ensures that error messages resulting from the incorrect use of fixed values are translated
+        /// from their formal text into friendly text that includes the local name and value of the element causing
+        /// the error and the line number of that XML element.
+        /// </summary>
+        [Fact]
+        public void MakeFriendlyErrorMessage_ForFixedValueError_ReturnsFriendlyMessage()
+        {
+            // Arrange
+            XElement element = XElement.Parse("<foo>bar</foo>");
+            string errorMessage = "The value of the 'http://some.domain.com/schema/foo' element does not equal its fixed value.";
+            int lineNmber = 123;
+
+            XmlErrorTranslator xmlErrorTranslator = new XmlErrorTranslator();
+
+            // Act
+            string result = xmlErrorTranslator.MakeFriendlyErrorMessage(
+                element,
+                errorMessage,
+                lineNmber,
+                A.Dummy<string>());
+
+            // Assert
+            Assert.Equal(
+                "The value 'bar' supplied for field 'foo' is not permitted. " +
+                "Only the value specified in the schema is allowed (XML line 123).",
+                result);
+        }
+
         private string AddUniversalMessageParts(string specificMessage)
         {
             var registrationNoText = string.Format("Producer {0}: ", TestRegistrationNo);
