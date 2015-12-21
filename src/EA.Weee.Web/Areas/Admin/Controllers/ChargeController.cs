@@ -11,10 +11,14 @@
     public class ChargeController : AdminController
     {
         private readonly IAppConfiguration configuration;
+        private readonly BreadcrumbService breadcrumb;
 
-        public ChargeController(IAppConfiguration configuration)
+        public ChargeController(
+            IAppConfiguration configuration,
+            BreadcrumbService breadcrumb)
         {
             this.configuration = configuration;
+            this.breadcrumb = breadcrumb;
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -23,6 +27,8 @@
             {
                 throw new InvalidOperationException("Invoicing is not enabled.");
             }
+
+            breadcrumb.InternalActivity = "Manage charges";
 
             base.OnActionExecuting(filterContext);
         }
