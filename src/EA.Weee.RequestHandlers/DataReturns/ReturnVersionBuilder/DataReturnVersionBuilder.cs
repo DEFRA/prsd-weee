@@ -19,20 +19,21 @@
 
         private readonly IEeeValidator eeeValidator;
 
-        private readonly IDataReturnVersionBuilderDataAccess dataAccess;
+        private readonly IDataReturnVersionBuilderDataAccess schemeQuarterDataAccess;
 
         protected List<ErrorData> ErrorData { get; set; }
 
         private DataReturnVersion dataReturnVersion;
 
         public DataReturnVersionBuilder(Domain.Scheme.Scheme scheme, Quarter quarter,
-            IEeeValidator eeeValidator,
+            Func<Domain.Scheme.Scheme, Quarter, 
+                Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess>, IEeeValidator> eeeValidatorDelegate,
             Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate)
         {
             this.scheme = scheme;
             this.quarter = quarter;
-            this.eeeValidator = eeeValidator;
-            dataAccess = dataAccessDelegate(scheme, quarter);
+            eeeValidator = eeeValidatorDelegate(scheme, quarter, dataAccessDelegate);
+            schemeQuarterDataAccess = dataAccessDelegate(scheme, quarter);
 
             ErrorData = new List<ErrorData>();
         }
@@ -41,7 +42,7 @@
         {
             if (dataReturnVersion == null)
             {
-                var dataReturn = await dataAccess.FetchDataReturnOrDefault();
+                var dataReturn = await schemeQuarterDataAccess.FetchDataReturnOrDefault();
                 if (dataReturn == null)
                 {
                     dataReturn = new DataReturn(scheme, quarter);
@@ -55,14 +56,14 @@
         {
             await CreateDataReturnVersion();
 
-            dataReturnVersion.AddAatfDeliveredAmount(new AatfDeliveredAmount(obligationType, category, tonnage, new AatfDeliveryLocation(aatfApprovalNumber, facilityName), dataReturnVersion));
+            dataReturnVersion.WeeeDeliveredReturnVersion.AddWeeeDeliveredAmount(new WeeeDeliveredAmount(obligationType, category, tonnage, new AatfDeliveryLocation(aatfApprovalNumber, facilityName)));
         }
 
         public async Task AddAeDeliveredAmount(string approvalNumber, string operatorName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
         {
             await CreateDataReturnVersion();
 
-            dataReturnVersion.AddAeDeliveredAmount(new AeDeliveredAmount(obligationType, category, tonnage, new AeDeliveryLocation(approvalNumber, operatorName), dataReturnVersion));
+            dataReturnVersion.WeeeDeliveredReturnVersion.AddWeeeDeliveredAmount(new WeeeDeliveredAmount(obligationType, category, tonnage, new AeDeliveryLocation(approvalNumber, operatorName)));
         }
 
         public async Task AddEeeOutputAmount(string producerRegistrationNumber, string producerName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
@@ -73,9 +74,9 @@
 
             if (ConsideredValid(validationResult))
             {
-                var registeredProducer = await dataAccess.GetRegisteredProducer(producerRegistrationNumber);
+                var registeredProducer = await schemeQuarterDataAccess.GetRegisteredProducer(producerRegistrationNumber);
 
-                dataReturnVersion.AddEeeOutputAmount(new EeeOutputAmount(obligationType, category, tonnage, registeredProducer, dataReturnVersion));
+                dataReturnVersion.EeeOutputReturnVersion.AddEeeOutputAmount(new EeeOutputAmount(obligationType, category, tonnage, registeredProducer));
             }
 
             ErrorData.AddRange(validationResult);

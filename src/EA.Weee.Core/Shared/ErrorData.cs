@@ -2,8 +2,14 @@
 {
     public class ErrorData
     {
-        public ErrorLevel ErrorLevel { get; set; }
+        public ErrorData(string description, ErrorLevel errorLevel)
+        {
+            ErrorLevel = errorLevel;
+            Description = description;
+        }
 
-        public string Description { get; set; }
+        public ErrorLevel ErrorLevel { get; private set; }
+
+        public string Description { get; private set; }
     }
 }
