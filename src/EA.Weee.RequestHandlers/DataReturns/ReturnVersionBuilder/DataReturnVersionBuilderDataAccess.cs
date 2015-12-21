@@ -15,6 +15,7 @@
         private readonly WeeeContext context;
         private readonly Domain.Scheme.Scheme scheme;
         private readonly Quarter quarter;
+        private ICollection<RegisteredProducer> schemeYearProducers;
 
         public DataReturnVersionBuilderDataAccess(Domain.Scheme.Scheme scheme, Quarter quarter, WeeeContext context)
         {
@@ -34,11 +35,20 @@
 
         public async Task<RegisteredProducer> GetRegisteredProducer(string producerRegistrationNumber)
         {
-            return await context.RegisteredProducers
+            ICollection<RegisteredProducer> producers = await GetSchemeYearProducers();
+            return producers.Single(p => p.ProducerRegistrationNumber == producerRegistrationNumber);
+        }
+
+        private async Task<ICollection<RegisteredProducer>> GetSchemeYearProducers()
+        {
+            if (schemeYearProducers == null)
+            {
+                schemeYearProducers = await context.RegisteredProducers
                 .Where(p => p.Scheme.Id == scheme.Id)
                 .Where(p => p.ComplianceYear == quarter.Year)
-                .Where(p => p.ProducerRegistrationNumber == producerRegistrationNumber)
-                .SingleAsync();
+                .ToListAsync();
+            }
+            return schemeYearProducers;
         }
     }
 }
