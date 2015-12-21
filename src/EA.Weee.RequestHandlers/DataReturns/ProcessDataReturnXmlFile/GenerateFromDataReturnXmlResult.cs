@@ -5,11 +5,11 @@
 
     public class GenerateFromDataReturnXmlResult<T> where T : class
     {
-        public string XmlString { get; }
+        public string XmlString { get; private set; }
 
-        public T DeserialisedType { get; }
+        public T DeserialisedType { get; private set; }
 
-        public List<XmlValidationError> SchemaErrors { get; }
+        public List<XmlValidationError> SchemaErrors { get; private set; }
 
         public GenerateFromDataReturnXmlResult(string xmlString, T deserialisedType, List<XmlValidationError> schemaErrors)
         {
