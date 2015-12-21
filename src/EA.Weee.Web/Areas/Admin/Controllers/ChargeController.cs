@@ -5,8 +5,10 @@
     using System.Linq;
     using System.Web;
     using System.Web.Mvc;
+    using Core.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using Services;
+    using ViewModels.Charge;
 
     public class ChargeController : AdminController
     {
@@ -34,7 +36,25 @@
         }
 
         [HttpGet]
-        public ActionResult SelectAA()
+        public ActionResult SelectAuthority()
+        {
+            return View(new SelectAuthorityViewModel());
+        }
+
+        [HttpPost]
+        public ActionResult SelectAuthority(SelectAuthorityViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            CompetentAuthority authority = viewModel.SelectedAuthority.Value;
+            return RedirectToAction("ChooseActivity", new { authority });
+        }
+
+        [HttpGet]
+        public ActionResult ChooseActivity(CompetentAuthority authority)
         {
             return View();
         }

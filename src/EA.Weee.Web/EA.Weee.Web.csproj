@@ -223,6 +223,7 @@
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
@@ -547,7 +548,8 @@
     <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\SpecifyOptions.cshtml" />
     <Content Include="Areas\Admin\Views\Producers\ConfirmRemoval.cshtml" />
     <Content Include="Areas\Admin\Views\Producers\Removed.cshtml" />
-    <Content Include="Areas\Admin\Views\Charge\SelectAA.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\SelectAuthority.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\ChooseActivity.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
