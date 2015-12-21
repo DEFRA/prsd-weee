@@ -23,6 +23,12 @@
                 namespaces: new[] { typeof(ProducersController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: "admin_charges",
+                url: "admin/charge/{authority}/{action}",
+                defaults: new { controller = "Charge", authority = UrlParameter.Optional },
+                namespaces: new[] { typeof(HomeController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: "admin_default",
                 url: "admin/{controller}/{action}/{id}",
                 defaults: new { action = "Index", controller = "Home", id = UrlParameter.Optional },
