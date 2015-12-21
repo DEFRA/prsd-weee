@@ -305,7 +305,7 @@
         public async Task GetViewErrorsOrWarnings_ErrorsPresent_ShowsErrorPage()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
-            .Returns(new List<ErrorData> { new ErrorData { ErrorLevel = ErrorLevel.Error } });
+            .Returns(new List<ErrorData> { new ErrorData("An Error", ErrorLevel.Error) });
 
             var result = await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
             
@@ -320,7 +320,7 @@
         public async Task GetViewErrorsOrWarnings_WarningPresent_ShowsAcceptedPage()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
-           .Returns(new List<ErrorData> { new ErrorData { ErrorLevel = ErrorLevel.Warning } });
+           .Returns(new List<ErrorData> { new ErrorData("An warning", ErrorLevel.Warning) });
 
             var result = await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
 
@@ -347,10 +347,7 @@
         {
             var errors = new List<ErrorData>
             {
-                new ErrorData
-                {
-                    ErrorLevel = ErrorLevel.Error
-                }
+                new ErrorData("An Error", ErrorLevel.Error)
             };
 
             var providedErrors = await ErrorsAfterClientReturns(errors);

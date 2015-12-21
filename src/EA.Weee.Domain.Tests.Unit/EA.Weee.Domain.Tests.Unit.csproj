@@ -80,15 +80,15 @@
     <Compile Include="DataReturns\DataReturnTests.cs" />
     <Compile Include="DataReturns\DataReturnUploadTests.cs" />
     <Compile Include="DataReturns\DataReturnVersionTests.cs" />
-    <Compile Include="DataReturns\AatfDeliveredAmountTests.cs" />
     <Compile Include="DataReturns\AatfDeliveryLocationTests.cs" />
-    <Compile Include="DataReturns\AeDeliveredAmountTests.cs" />
     <Compile Include="DataReturns\AeDeliveryLocationTests.cs" />
     <Compile Include="DataReturns\EeeOutputAmountTests.cs" />
+    <Compile Include="DataReturns\EeeOutputReturnVersionTests.cs" />
     <Compile Include="DataReturns\ReturnItemTests.cs" />
     <Compile Include="DataReturns\WeeeCollectedAmountTests.cs" />
     <Compile Include="DataReturns\WeeeCollectedReturnVersionTests.cs" />
     <Compile Include="DataReturns\WeeeDeliveredAmountTests.cs" />
+    <Compile Include="DataReturns\WeeeDeliveredReturnVersionTests.cs" />
     <Compile Include="ExtensionMethodsTests.cs" />
     <Compile Include="Helpers\UKCompetentAuthorityFactory.cs" />
     <Compile Include="Helpers\CountryFactory.cs" />
