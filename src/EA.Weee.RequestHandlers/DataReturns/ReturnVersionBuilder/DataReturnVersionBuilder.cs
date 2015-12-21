@@ -19,7 +19,7 @@
 
         private readonly IEeeValidator eeeValidator;
 
-        private readonly IDataReturnVersionBuilderDataAccess dataAccess;
+        private readonly IDataReturnVersionBuilderDataAccess schemeQuarterDataAccess;
 
         protected List<ErrorData> ErrorData { get; set; }
 
@@ -33,7 +33,7 @@
             this.scheme = scheme;
             this.quarter = quarter;
             eeeValidator = eeeValidatorDelegate(scheme, quarter, dataAccessDelegate);
-            dataAccess = dataAccessDelegate(scheme, quarter);
+            schemeQuarterDataAccess = dataAccessDelegate(scheme, quarter);
 
             ErrorData = new List<ErrorData>();
         }
@@ -42,7 +42,7 @@
         {
             if (dataReturnVersion == null)
             {
-                var dataReturn = await dataAccess.FetchDataReturnOrDefault();
+                var dataReturn = await schemeQuarterDataAccess.FetchDataReturnOrDefault();
                 if (dataReturn == null)
                 {
                     dataReturn = new DataReturn(scheme, quarter);
@@ -74,7 +74,7 @@
 
             if (ConsideredValid(validationResult))
             {
-                var registeredProducer = await dataAccess.GetRegisteredProducer(producerRegistrationNumber);
+                var registeredProducer = await schemeQuarterDataAccess.GetRegisteredProducer(producerRegistrationNumber);
 
                 dataReturnVersion.AddEeeOutputAmount(new EeeOutputAmount(obligationType, category, tonnage, registeredProducer, dataReturnVersion));
             }
