@@ -36,7 +36,7 @@
         public async Task<RegisteredProducer> GetRegisteredProducer(string producerRegistrationNumber)
         {
             ICollection<RegisteredProducer> producers = await GetSchemeYearProducers();
-            return producers.Single(p => p.ProducerRegistrationNumber == producerRegistrationNumber);
+            return producers.SingleOrDefault(p => p.ProducerRegistrationNumber == producerRegistrationNumber);
         }
 
         private async Task<ICollection<RegisteredProducer>> GetSchemeYearProducers()
