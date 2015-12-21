@@ -91,7 +91,7 @@
                         }
                         else
                         {
-                            return RedirectToAction("SelectAA", "Charge");
+                            return RedirectToAction("SelectAuthority", "Charge");
                         }
                     }
 
