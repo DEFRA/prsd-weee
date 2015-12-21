@@ -1,12 +1,14 @@
 ﻿namespace EA.Weee.XmlValidation
 {
     using Autofac;
-    using BusinessValidation;
-    using BusinessValidation.Helpers;
-    using BusinessValidation.QuerySets;
-    using BusinessValidation.QuerySets.Queries.Producer;
-    using BusinessValidation.Rules.Producer;
-    using BusinessValidation.Rules.Scheme;
+    using BusinessValidation.MemberRegistration;
+    using BusinessValidation.MemberRegistration.Helpers;
+    using BusinessValidation.MemberRegistration.QuerySets;
+    using BusinessValidation.MemberRegistration.QuerySets.Queries.Producer;
+    using BusinessValidation.MemberRegistration.Rules.Producer;
+    using BusinessValidation.MemberRegistration.Rules.Scheme;
+    using Errors;
+    using SchemaValidation;
 
     public class XmlValidationModule : Module
     {
@@ -14,8 +16,8 @@
         {
             // TODO: Autoscan
 
-            builder.RegisterType<XmlBusinessValidator>()
-                .As<IXmlBusinessValidator>()
+            builder.RegisterType<MemberRegistrationBusinessValidator>()
+                .As<IMemberRegistrationBusinessValidator>()
                 .InstancePerRequest();
 
             builder.RegisterType<MigratedProducerQuerySet>()
@@ -95,14 +97,8 @@
             builder.RegisterType<ExistingProducerRegistrationNumbers>().As<IExistingProducerRegistrationNumbers>().InstancePerRequest();
             builder.RegisterType<CurrentProducersByRegistrationNumber>().As<ICurrentProducersByRegistrationNumber>().InstancePerRequest();
 
-            //builder.RegisterAssemblyTypes(GetType().Assembly)
-            //    .Where(t => t.Name.StartsWith("BusinessValidation"))
-            //    .AsImplementedInterfaces();
-            //    .InstancePerRequest();
-
-            //builder.RegisterType<XmlBusinessValidator>()
-            //    .As<IXmlBusinessValidator>()
-            //    .InstancePerRequest();
+            builder.RegisterType<XmlErrorTranslator>().As<IXmlErrorTranslator>().InstancePerRequest();
+            builder.RegisterType<SchemaValidator>().As<ISchemaValidator>().InstancePerRequest();
         }
     }
 }

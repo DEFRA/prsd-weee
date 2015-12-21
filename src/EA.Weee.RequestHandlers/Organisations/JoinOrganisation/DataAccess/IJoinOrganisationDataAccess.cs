@@ -2,7 +2,6 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Domain;
     using Domain.Organisation;
 
     public interface IJoinOrganisationDataAccess

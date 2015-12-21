@@ -1,19 +1,17 @@
 ﻿namespace EA.Weee.Web.App_Start
 {
-    using EA.Prsd.Core;
-    using EA.Prsd.Core.Web;
-    using EA.Prsd.Core.Web.OAuth;
-    using EA.Prsd.Core.Web.OpenId;
-    using Microsoft.Owin.Security.Cookies;
-    using Prsd.Core.Web.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Security.Claims;
-    using System.Threading.Tasks;
-    using System.Web;
+    using System.Threading.Tasks;    
     using System.Web.Mvc;
+    using EA.Prsd.Core;   
+    using EA.Prsd.Core.Web.OAuth;
+    using EA.Prsd.Core.Web.OpenId;
+    using Microsoft.Owin.Security.Cookies;
+    using Prsd.Core.Web.Extensions;
     using Thinktecture.IdentityModel.Client;
     using ClaimTypes = Prsd.Core.Web.ClaimTypes;
 

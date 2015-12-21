@@ -1,14 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
-    using Domain.Lookup;
-    using EA.Weee.DataAccess;
-    using EA.Weee.Domain;
-    using EA.Weee.RequestHandlers.Scheme.Interfaces;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using Domain.Lookup;
+    using EA.Weee.DataAccess;
 
     public class ProducerChargeCalculatorDataAccess : IProducerChargeCalculatorDataAccess
     {
@@ -46,13 +41,13 @@
             if (!sumOfExistingChargesLookup.TryGetValue(schemeApprovalNumber, out schemeProducerYear))
             {
                 schemeProducerYear = context
-                    .Producers
+                    .ProducerSubmissions
                     .Where(p => p.MemberUpload.IsSubmitted)
-                    .Where(p => p.Scheme.ApprovalNumber == schemeApprovalNumber)
+                    .Where(p => p.RegisteredProducer.Scheme.ApprovalNumber == schemeApprovalNumber)
                     .GroupBy(p => new
                     {
-                        RegistrationNumber = p.RegistrationNumber,
-                        ComplianceYear = p.MemberUpload.ComplianceYear.Value
+                        RegistrationNumber = p.RegisteredProducer.ProducerRegistrationNumber,
+                        ComplianceYear = p.RegisteredProducer.ComplianceYear
                     })
                     .Select(g => new
                     {

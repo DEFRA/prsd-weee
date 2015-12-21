@@ -4,7 +4,7 @@
 
     public class ProducerList
     {
-        public SchemaVersion SchemaVersion { get; set; }
+        public MemberRegistrationSchemaVersion SchemaVersion { get; set; }
         public string ApprovalNumber { get; set; }
         public int ComplianceYear { get; set; }
         public string TradingName { get; set; }

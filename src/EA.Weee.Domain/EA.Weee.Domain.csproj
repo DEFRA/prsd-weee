@@ -46,20 +46,39 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
+    <Compile Include="Unalignment\UnalignableEntity.cs" />
     <Compile Include="Audit\AuditableEntity.cs" />
     <Compile Include="Audit\IAuditableEntity.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lookup\ChargeBand.cs" />
-    <Compile Include="Events\MemberUploadSubmittedEvent.cs" />
+    <Compile Include="DataReturns\AatfDeliveredAmount.cs" />
+    <Compile Include="DataReturns\AeDeliveredAmount.cs" />
+    <Compile Include="DataReturns\DataReturn.cs" />
+    <Compile Include="DataReturns\DataReturnUpload.cs" />
+    <Compile Include="DataReturns\DataReturnUploadError.cs" />
+    <Compile Include="DataReturns\DataReturnUploadRawData.cs" />
+    <Compile Include="DataReturns\DataReturnVersion.cs" />
+    <Compile Include="DataReturns\AeDeliveryLocation.cs" />
+    <Compile Include="DataReturns\AatfDeliveryLocation.cs" />
+    <Compile Include="DataReturns\IReturnItem.cs" />
+    <Compile Include="DataReturns\Quarter.cs" />
+    <Compile Include="DataReturns\QuarterType.cs" />
+    <Compile Include="DataReturns\EeeOutputAmount.cs" />
+    <Compile Include="DataReturns\ReturnItem.cs" />
+    <Compile Include="DataReturns\WeeeCollectedAmount.cs" />
+    <Compile Include="DataReturns\WeeeCollectedAmountSourceType.cs" />
     <Compile Include="Events\OrganisationUserRequestEvent.cs" />
     <Compile Include="Events\OrganisationUserRequestCompletedEvent.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Lookup\WeeeCategory.cs" />
+    <Compile Include="Lookup\ChargeBand.cs" />
+    <Compile Include="Lookup\ChargeBandAmount.cs" />
     <Compile Include="ObligationType.cs" />
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
+    <Compile Include="Producer\RegisteredProducer.cs" />
     <Compile Include="Scheme\MemberUploadRawData.cs" />
-    <Compile Include="Scheme\MemberUploadErrorType.cs" />
+    <Compile Include="UploadErrorType.cs" />
     <Compile Include="Scheme\SchemeStatus.cs" />
     <Compile Include="Producer\MigratedProducer.cs" />
     <Compile Include="Producer\ProducerAddress.cs" />
@@ -70,7 +89,6 @@
     <Compile Include="Country.cs" />
     <Compile Include="Producer\Business.cs" />
     <Compile Include="Producer\Company.cs" />
-    <Compile Include="Lookup\ChargeBandAmount.cs" />
     <Compile Include="Producer\ProducerContact.cs" />
     <Compile Include="EEEPlacedOnMarketBandType.cs" />
     <Compile Include="ErrorLevel.cs" />
@@ -92,10 +110,13 @@
     <Compile Include="SystemData.cs" />
     <Compile Include="UKCompetentAuthority.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="DataReturns\WeeeDeliveredAmount.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-    <Compile Include="Producer\Producer.cs" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <Compile Include="Producer\ProducerSubmission.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

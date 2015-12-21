@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Diagnostics;
@@ -12,22 +11,23 @@
     using Domain.Producer;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
-    using GenerateProducerObjects;
     using Interfaces;
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
-    using XmlValidation;
+    using Xml.Converter;
 
-    internal class ProcessXMLFileHandler : IRequestHandler<ProcessXMLFile, Guid>
+    internal class ProcessXMLFileHandler : IRequestHandler<ProcessXmlFile, Guid>
     {
         private readonly WeeeContext context;
         private readonly IWeeeAuthorization authorization;
-        private readonly IXmlValidator xmlValidator;
+        private readonly IXMLValidator xmlValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IGenerateFromXml generateFromXml;
-        private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
+        private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
 
-        public ProcessXMLFileHandler(WeeeContext context, IWeeeAuthorization authorization, IXmlValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, IXmlChargeBandCalculator xmlChargeBandCalculator)
+        public ProcessXMLFileHandler(WeeeContext context, IWeeeAuthorization authorization, 
+            IXMLValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, 
+            IXMLChargeBandCalculator xmlChargeBandCalculator)
         {
             this.context = context;
             this.authorization = authorization;
@@ -37,7 +37,7 @@
             this.generateFromXml = generateFromXml;
         }
 
-        public async Task<Guid> HandleAsync(ProcessXMLFile message)
+        public async Task<Guid> HandleAsync(ProcessXmlFile message)
         {
             authorization.EnsureOrganisationAccess(message.OrganisationId);
 
@@ -48,7 +48,7 @@
             var errors = xmlValidator.Validate(message);
 
             List<MemberUploadError> memberUploadErrors = errors as List<MemberUploadError> ?? errors.ToList();
-            bool containsSchemaErrors = memberUploadErrors.Any(e => e.ErrorType == MemberUploadErrorType.Schema);
+            bool containsSchemaErrors = memberUploadErrors.Any(e => e.ErrorType == UploadErrorType.Schema);
             bool containsErrorOrFatal = memberUploadErrors.Any(e => (e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal));
 
             //calculate charge band for producers if no schema errors
@@ -68,8 +68,8 @@
             }
 
             var scheme = await context.Schemes.SingleAsync(c => c.OrganisationId == message.OrganisationId);
-            var upload = generateFromXml.GenerateMemberUpload(message, memberUploadErrors, totalCharges, scheme.Id);
-            IEnumerable<Producer> producers = Enumerable.Empty<Producer>();
+            var upload = generateFromXml.GenerateMemberUpload(message, memberUploadErrors, totalCharges, scheme);
+            IEnumerable<ProducerSubmission> producers = Enumerable.Empty<ProducerSubmission>();
 
             //Build producers domain object if there are no errors (schema or business) during validation of xml file.
             if (!containsErrorOrFatal)
@@ -82,13 +82,13 @@
             upload.SetProcessTime(stopwatch.Elapsed);
 
             context.MemberUploads.Add(upload);
-            context.Producers.AddRange(producers);
+            context.ProducerSubmissions.AddRange(producers);
 
             await context.SaveChangesAsync();
             return upload.Id;
         }
 
-        private Dictionary<string, ProducerCharge> ProducerCharges(ProcessXMLFile message, ref decimal totalCharges)
+        private Dictionary<string, ProducerCharge> ProducerCharges(ProcessXmlFile message, ref decimal totalCharges)
         {
             var producerCharges = xmlChargeBandCalculator.Calculate(message);
 

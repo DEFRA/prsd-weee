@@ -22,11 +22,11 @@
             var results = await(from mu in context.MemberUploads
                                 join user in context.Users on mu.UserId equals user.Id
                                 where mu.IsSubmitted &&
-                                      mu.SchemeId == schemeId &&
+                                      mu.Scheme.Id == schemeId &&
                                       (!complianceYear.HasValue || mu.ComplianceYear == complianceYear)
                                  select new SubmissionsHistorySearchResult
                                  {
-                                     SchemeId = mu.SchemeId,
+                                     SchemeId = mu.Scheme.Id,
                                      OrganisationId = mu.OrganisationId,
                                      MemberUploadId = mu.Id,
                                      SubmittedBy = user.FirstName + " " + user.Surname,

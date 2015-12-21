@@ -1,11 +1,6 @@
 ﻿namespace EA.Weee.Api.Client.Entities
 {
     using EA.Weee.Core.Routing;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class PasswordResetRequest
     {

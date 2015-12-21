@@ -1,34 +1,34 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Admin;
-    using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web;
-    using System.Web.Mvc;
+    using Services.Caching;
 
     public class ProducersController : AdminController
     {
         private readonly BreadcrumbService breadcrumb;
         private readonly ISearcher<ProducerSearchResult> producerSearcher;
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IWeeeCache cache;
         private const int maximumSearchResults = 10;
 
-        public ProducersController(BreadcrumbService breadcrumb, ISearcher<ProducerSearchResult> producerSearcher, Func<IWeeeClient> apiClient)
+        public ProducersController(BreadcrumbService breadcrumb, ISearcher<ProducerSearchResult> producerSearcher, Func<IWeeeClient> apiClient, IWeeeCache cache)
         {
             this.breadcrumb = breadcrumb;
             this.producerSearcher = producerSearcher;
             this.apiClient = apiClient;
+            this.cache = cache;
         }
 
         /// <summary>
@@ -158,9 +158,105 @@
             return View(viewModel);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> DownloadProducerAmendmentsCsv(string registrationNumber)
+        {
+            using (IWeeeClient client = apiClient())
+            {
+                var producerAmendmentsCsvData = await client.SendAsync(User.GetAccessToken(),
+                    new GetProducerAmendmentsHistoryCSV(registrationNumber));
+
+                byte[] data = new UTF8Encoding().GetBytes(producerAmendmentsCsvData.FileContent);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerAmendmentsCsvData.FileName));
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ConfirmRemoval(Guid registeredProducerId)
+        {
+            await SetBreadcrumb();
+            using (IWeeeClient client = apiClient())
+            {
+                ProducerDetailsScheme producer = await client.SendAsync(User.GetAccessToken(),
+                    new GetProducerDetailsByRegisteredProducerId(registeredProducerId));
+
+                return View(new ConfirmRemovalViewModel
+                {
+                    RegisteredProducerId = registeredProducerId,
+                    RegistrationNumber = producer.Prn,
+                    ComplianceYear = producer.ComplianceYear,
+                    ProducerName = producer.ProducerName,
+                    SchemeName = producer.SchemeName
+                });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ConfirmRemoval(ConfirmRemovalViewModel model)
+        {
+            await SetBreadcrumb();
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.SelectedValue == "No")
+            {
+                return RedirectToAction("Details", new { model.RegistrationNumber });
+            }
+            if (model.SelectedValue == "Yes")
+            {
+                using (var client = apiClient())
+                {
+                    var result = await client.SendAsync(User.GetAccessToken(), new RemoveProducer(model.RegisteredProducerId));
+
+                    if (result.InvalidateProducerSearchCache)
+                    {
+                        await cache.InvalidateProducerSearch();
+                    }
+
+                    return RedirectToAction("Removed",
+                            new { model.RegistrationNumber, model.ComplianceYear, model.SchemeName });
+                }
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Removed(string registrationNumber, int complianceYear, string schemeName)
+        {
+            await SetBreadcrumb();
+            return View(new RemovedViewModel
+            {
+                RegistrationNumber = registrationNumber,
+                ComplianceYear = complianceYear,
+                SchemeName = schemeName
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Removed(RemovedViewModel model)
+        {
+            using (IWeeeClient client = apiClient())
+            {
+                var isAssociatedWithAnotherScheme = await client.SendAsync(User.GetAccessToken(),
+                    new IsProducerRegisteredForComplianceYear(model.RegistrationNumber, model.ComplianceYear));
+
+                if (isAssociatedWithAnotherScheme)
+                {
+                    return RedirectToAction("Details", new { model.RegistrationNumber });
+                }
+
+                return RedirectToAction("Search");
+            }
+        }
+
         private async Task SetBreadcrumb()
         {
-            breadcrumb.InternalActivity = "View producer information";
+            breadcrumb.InternalActivity = "Producer details";
 
             await Task.Yield();
         }

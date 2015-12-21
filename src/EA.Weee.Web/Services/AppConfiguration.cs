@@ -36,5 +36,11 @@
         public bool EnableTestArea { get; set; }
 
         public string DonePageUrl { get; set; }
+
+        [DefaultValue("false")]
+        public bool EnableDataReturns { get; set; }
+
+        [DefaultValue(15.0)]
+        public double OrganisationCacheDurationMins { get; set; }
     }
 }

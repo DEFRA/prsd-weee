@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Requests.Users
 {
-    using System;
     using Core.Users;
     using Prsd.Core.Mediator;
 

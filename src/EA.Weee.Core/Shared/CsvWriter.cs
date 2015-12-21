@@ -5,7 +5,6 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Writes a set of data to a string of comma separated variables.
@@ -36,10 +35,12 @@
         /// Defines a column that will appear in the output.
         /// </summary>
         /// <param name="title">The title that will appear on the first row of the output.</param>
-        /// <param name="func">A Functhat defines how the data value will be extracted from each item.</param>
-        public void DefineColumn(string title, Func<T, object> func)
+        /// <param name="func">A Func that defines how the data value will be extracted from each item.</param>
+        /// <param name="formatAsText">Forces the value to be output as a string value. This should be used for
+        /// text columns which are likely to be misinterpreted by Excel as numberic, e.g. phone numbers.</param>
+        public void DefineColumn(string title, Func<T, object> func, bool formatAsText = false)
         {
-            columns.Add(new CsvColumn(title, func, excelSanitizer));
+            columns.Add(new CsvColumn(title, func, formatAsText, excelSanitizer));
         }
 
         public string Write(IEnumerable<T> items)
@@ -81,12 +82,14 @@
         {
             public string Title { get; private set; }
             private readonly Func<T, object> func;
+            private readonly bool formatAsText;
             private readonly IExcelSanitizer excelSanitizer;
 
-            public CsvColumn(string title, Func<T, object> func, IExcelSanitizer excelSanitizer)
+            public CsvColumn(string title, Func<T, object> func, bool formatAsText, IExcelSanitizer excelSanitizer)
             {
                 Title = title;
                 this.func = func;
+                this.formatAsText = formatAsText;
                 this.excelSanitizer = excelSanitizer;
             }
 
@@ -111,6 +114,13 @@
                         result);
                     Trace.TraceWarning(message);
                     result = excelSanitizer.Sanitize(result);
+                }
+
+                if (formatAsText)
+                {
+                    // Assuming the CSV file will be opened in Excel, write the value as a formula. E.g. ="The value".
+                    // Any double quotes already present in the string are escaped with double double-quotes.
+                    result = string.Format("=\"{0}\"", result.Replace("\"", "\"\""));
                 }
 
                 return result;

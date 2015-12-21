@@ -2,9 +2,6 @@
 {
     using System;
     using System.Web;
-    using System.Web.Mvc;
-    using System.Web.Optimization;
-    using System.Web.Routing;
 
     public class Global : HttpApplication
     {

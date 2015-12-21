@@ -1,12 +1,8 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.DataAccess.BusinessValidation.Rules.QuerySets
 {
-    using DataAccess;
-    using EA.Weee.Tests.Core.Model;
-    using FakeItEasy;
     using System;
-    using System.Collections.Generic;
-    using Weee.Tests.Core;
-    using XmlValidation.BusinessValidation.QuerySets;
+    using EA.Weee.Tests.Core.Model;
+    using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
     using Xunit;
 
     public class MigratedProducerQuerySetTests

@@ -5,10 +5,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.Scheme;
     using DataAccess;
-    using Domain.Scheme;
-    using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
     using Security;

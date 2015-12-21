@@ -137,13 +137,11 @@
       <HintPath>..\packages\RazorEngine.3.7.3\lib\net45\RazorEngine.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Collections" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20622.1351, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.206221351\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
-    <Reference Include="System.Linq" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
@@ -158,9 +156,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Runtime" />
     <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -226,9 +222,14 @@
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\ProducerPublicRegisterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
+    <Compile Include="Areas\Scheme\Controllers\DataReturnsController.cs" />
+    <Compile Include="Areas\Scheme\Requests\ProcessDataReturnXmlFileRequest.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessXmlFileRequest.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
@@ -452,9 +453,9 @@
     <Content Include="Areas\Test\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Test\Views\Home\Index.cshtml" />
     <Content Include="Areas\Test\Views\web.config" />
-    <Content Include="Areas\Test\Views\GeneratePcsXml\SelectOrganisation.cshtml" />
-    <Content Include="Areas\Test\Views\GeneratePcsXml\SpecifyOptions.cshtml" />
-    <Content Include="Areas\Test\Views\GeneratePcsXml\DownloadFile.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsMemberXmlFile\SelectOrganisation.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsMemberXmlFile\SpecifyOptions.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsMemberXmlFile\DownloadFile.cshtml" />
     <Content Include="Areas\Admin\Views\Account\AccountActivationRequired.cshtml" />
     <Content Include="Areas\Admin\Views\Account\AccountActivated.cshtml" />
     <Content Include="Areas\Admin\Views\Account\SignIn.cshtml" />
@@ -493,6 +494,10 @@
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
+    <Compile Include="Areas\Scheme\ViewModels\DataReturns\SubmitViewModel.cs" />
+    <Compile Include="Areas\Test\Controllers\CreatePcsDataReturnXmlFileController.cs" />
+    <Compile Include="Areas\Test\ViewModels\CreatePcsDataReturnXmlFile\SelectOrganisationViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\CreatePcsDataReturnXmlFile\SpecifyOptionsViewModel.cs" />
     <Compile Include="Infrastructure\CsvFilenameFormat.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\govuk_elements\_tables.scss" />
@@ -531,6 +536,16 @@
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_media-player.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
+    <Content Include="Areas\Scheme\Views\DataReturns\Upload.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ProducerPublicRegister.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\Submit.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\SuccessfulSubmission.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\AuthorisationRequired.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\DownloadFile.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\SelectOrganisation.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\SpecifyOptions.cshtml" />
+    <Content Include="Areas\Admin\Views\Producers\ConfirmRemoval.cshtml" />
+    <Content Include="Areas\Admin\Views\Producers\Removed.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
@@ -660,7 +675,7 @@
     <Compile Include="Areas\Admin\ViewModels\User\ManageUsersViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\User\EditUserViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\MemberRegistrationController.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\AddOrAmendMembersViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\PCSFileUploadViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\LatestMemberUploadViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\AuthorizationRequiredViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\OrganisationUserViewModel.cs" />
@@ -668,12 +683,12 @@
     <Compile Include="Areas\Admin\ViewModels\Scheme\SchemeViewModel.cs" />
     <Compile Include="ViewModels\Shared\Scheme\ViewOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\ManageCacheController.cs" />
-    <Compile Include="Areas\Test\Controllers\GeneratePcsXmlController.cs" />
+    <Compile Include="Areas\Test\Controllers\CreatePcsMemberXmlFileController.cs" />
     <Compile Include="Areas\Test\Controllers\HomeController.cs" />
     <Compile Include="Areas\Test\TestAreaRegistration.cs" />
-    <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SpecifyOptionsViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\CreatePcsMemberXmlFile\SpecifyOptionsViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\HomeViewModel.cs" />
-    <Compile Include="Areas\Test\ViewModels\GeneratePcsXml\SelectOrganisationViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\CreatePcsMemberXmlFile\SelectOrganisationViewModel.cs" />
     <Compile Include="Authorization\LoginResult.cs" />
     <Compile Include="Authorization\AuthorizationState.cs" />
     <Compile Include="Controllers\Base\ExternalSiteController.cs" />

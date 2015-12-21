@@ -43,16 +43,17 @@
                     "FAKE DATA",
                     new List<MemberUploadError>
                         {
-                            new MemberUploadError(ErrorLevel.Warning, MemberUploadErrorType.Schema, "FAKE WARNING"),
-                            new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "FAKE ERROR"),
-                            new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "FAKE ERROR"),
-                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL"),
-                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Schema, "FAKE FATAL"),
-                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL")
+                            new MemberUploadError(ErrorLevel.Warning, UploadErrorType.Schema, "FAKE WARNING"),
+                            new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "FAKE ERROR"),
+                            new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "FAKE ERROR"),
+                            new MemberUploadError(ErrorLevel.Fatal, UploadErrorType.Business, "FAKE FATAL"),
+                            new MemberUploadError(ErrorLevel.Fatal, UploadErrorType.Schema, "FAKE FATAL"),
+                            new MemberUploadError(ErrorLevel.Fatal, UploadErrorType.Business, "FAKE FATAL")
                         },
                     0,
                     2016,
-                    Guid.NewGuid(), "File name")
+                    A.Dummy<Scheme>(),
+                    "File name")
             };
 
             var handler = GetPreparedHandler(memberUploadsWithSeveralErrors);
@@ -75,16 +76,17 @@
                     "FAKE DATA",
                     new List<MemberUploadError>
                         {
-                            new MemberUploadError(ErrorLevel.Warning, MemberUploadErrorType.Schema, "FAKE WARNING 250", 250),
-                            new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "FAKE ERROR 50", 50),
-                            new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "FAKE ERROR 5", 5),
-                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL 28", 28),
-                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Schema, "FAKE FATAL 178", 178),
-                            new MemberUploadError(ErrorLevel.Fatal, MemberUploadErrorType.Business, "FAKE FATAL")
+                            new MemberUploadError(ErrorLevel.Warning, UploadErrorType.Schema, "FAKE WARNING 250", 250),
+                            new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "FAKE ERROR 50", 50),
+                            new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "FAKE ERROR 5", 5),
+                            new MemberUploadError(ErrorLevel.Fatal, UploadErrorType.Business, "FAKE FATAL 28", 28),
+                            new MemberUploadError(ErrorLevel.Fatal, UploadErrorType.Schema, "FAKE FATAL 178", 178),
+                            new MemberUploadError(ErrorLevel.Fatal, UploadErrorType.Business, "FAKE FATAL")
                         },
                     0,
                     2016,
-                    Guid.NewGuid(), "File name")
+                    A.Dummy<Scheme>(),
+                    "File name")
             };
 
             var handler = GetPreparedHandler(memberUploadsWithSeveralErrors);
@@ -105,7 +107,7 @@
         {
             var memberUploadsWithNoErrors = new[]
             {
-                new MemberUpload(pcsId, schemeId, "FAKE DATA", "File name")
+                new MemberUpload(pcsId, A.Dummy<Scheme>(), "FAKE DATA", "File name")
             };
 
             var handler = GetPreparedHandler(memberUploadsWithNoErrors);
@@ -119,7 +121,7 @@
         [Fact]
         public async Task GetMemberUploadHandler_NonExistentMemberUpload_ArgumentNullException()
         {
-            var memberUploadsThatWontBeReturnedForRandomGuid = new[] { new MemberUpload(pcsId, schemeId, "FAKE DATA", "File name") };
+            var memberUploadsThatWontBeReturnedForRandomGuid = new[] { new MemberUpload(pcsId, A.Dummy<Scheme>(), "FAKE DATA", "File name") };
 
             var handler = GetPreparedHandler(memberUploadsThatWontBeReturnedForRandomGuid);
 
@@ -133,7 +135,7 @@
         {
             var someOtherPcsId = Guid.NewGuid();
 
-            var memberUploadsForSomeOtherPcs = new[] { new MemberUpload(someOtherPcsId, schemeId, "FAKE DATA", "File name") };
+            var memberUploadsForSomeOtherPcs = new[] { new MemberUpload(someOtherPcsId, A.Dummy<Scheme>(), "FAKE DATA", "File name") };
 
             var handler = GetPreparedHandler(memberUploadsForSomeOtherPcs);
 

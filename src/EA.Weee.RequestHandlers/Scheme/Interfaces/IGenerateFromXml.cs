@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.Interfaces
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.Producer;
@@ -11,9 +10,9 @@
 
     public interface IGenerateFromXml
     {
-        Task<IEnumerable<Producer>> GenerateProducers(ProcessXMLFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges);
+        Task<IEnumerable<ProducerSubmission>> GenerateProducers(ProcessXmlFile messageXmlFile, MemberUpload memberUpload, Dictionary<string, ProducerCharge> producerCharges);
 
-        MemberUpload GenerateMemberUpload(ProcessXMLFile messageXmlFile, List<MemberUploadError> errors,
-            decimal totalCharges, Guid schemeId);
+        MemberUpload GenerateMemberUpload(ProcessXmlFile messageXmlFile, List<MemberUploadError> errors,
+            decimal totalCharges, Scheme scheme);
     }
 }

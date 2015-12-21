@@ -1,11 +1,10 @@
 ﻿namespace EA.Weee.Tests.Core.Model
 {
-    using Domain;
-    using Domain.Lookup;
-    using Domain.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Domain;
+    using Domain.Lookup;
 
     /// <summary>
     /// This class provides helper methods for deterministically seeding a database.
@@ -16,25 +15,22 @@
     public class ModelHelper
     {
         private readonly Entities model;
-        private Dictionary<Type, int> objectCount = new Dictionary<Type, int>();
+        private int currentId;
+        private object currentIdLock = new object();
 
         public ModelHelper(Entities model)
         {
             this.model = model;
         }
 
-        private int GetNextId(Type type)
+        private int GetNextId()
         {
-            if (!objectCount.ContainsKey(type))
+            lock (currentIdLock)
             {
-                objectCount.Add(type, 1);
-                return 1;
+                currentId++;
             }
-            else
-            {
-                objectCount[type]++;
-                return objectCount[type];
-            }
+
+            return currentId;
         }
 
         private Guid IntegerToGuid(int id)
@@ -58,7 +54,7 @@
                     break;
                 case IdType.Integer:
                 default:
-                    userId = GetNextId(typeof(AspNetUser)).ToString();
+                    userId = GetNextId().ToString();
                     break;
             }
 
@@ -99,7 +95,7 @@
         {
             var organisation = CreateOrganisation();
 
-            int schemeId = GetNextId(typeof(Scheme));
+            int schemeId = GetNextId();
             Scheme scheme = new Scheme
             {
                 Id = IntegerToGuid(schemeId),
@@ -119,7 +115,7 @@
         /// <returns></returns>
         public Organisation CreateOrganisation()
         {
-            int organisationId = GetNextId(typeof(Organisation));
+            int organisationId = GetNextId();
             Organisation organisation = new Organisation
             {
                 Id = IntegerToGuid(organisationId),
@@ -151,6 +147,25 @@
             return organisationUser;
         }
 
+        public Address CreateOrganisationAddress()
+        {
+            Country england = model.Countries.Single(c => c.Name == "UK - England");
+            int addressId = GetNextId();
+            return new Address
+            {
+                Id = IntegerToGuid(addressId),
+                Address1 = string.Format("Address {0} Address1", addressId),
+                Address2 = string.Format("Address {0} Address2", addressId),
+                Postcode = "458 5256",
+                TownOrCity = string.Format("Address {0} TownOrCity", addressId),
+                CountyOrRegion = string.Format("Address {0} CountyOrRegion", addressId),
+                Email = "test@test.com",
+                Telephone = "123 456 7890",
+                Country = england,
+                CountryId = england.Id
+            };
+        }
+
         /// <summary>
         /// Cretates a member upload associated with the specified scheme.
         /// After creation, the ComplianceYear and IsSubmitted properties
@@ -160,11 +175,12 @@
         /// <returns></returns>
         public MemberUpload CreateMemberUpload(Scheme scheme)
         {
-            int memberUploadId = GetNextId(typeof(MemberUpload));
+            int memberUploadId = GetNextId();
             MemberUpload memberUpload = new MemberUpload
             {
                 Id = IntegerToGuid(memberUploadId),
                 OrganisationId = scheme.OrganisationId,
+                Organisation = scheme.Organisation,
                 Scheme = scheme,
                 SchemeId = scheme.Id,
                 Data = string.Format("<memberUpload{0} />", memberUploadId),
@@ -184,19 +200,48 @@
         /// <returns></returns>
         public MemberUploadError CreateMemberUploadError(MemberUpload memberUpload)
         {
-            int memberUploadErrorId = GetNextId(typeof(MemberUploadError));
+            int memberUploadErrorId = GetNextId();
             MemberUploadError memberUploadError = new MemberUploadError
             {
                 Id = IntegerToGuid(memberUploadErrorId),
                 MemberUploadId = memberUpload.Id,
                 ErrorLevel = ErrorLevel.Warning.Value,
-                ErrorType = MemberUploadErrorType.Business.Value,
+                ErrorType = UploadErrorType.Business.Value,
                 Description = "Test Warning"
             };
-         
+
             model.MemberUploadErrors.Add(memberUploadError);
 
             return memberUploadError;
+        }
+
+        public RegisteredProducer GerOrCreateRegisteredProducer(Scheme scheme, int complianceYear, string registrationNumber)
+        {
+            // Try to find a RegisteredProducer that has already been created, otherwise create a new one.
+            RegisteredProducer registeredProducer =
+                model.RegisteredProducers.Local
+                .SingleOrDefault(rp => rp.ProducerRegistrationNumber == registrationNumber &&
+                                       rp.ComplianceYear == complianceYear &&
+                                       rp.SchemeId == scheme.Id);
+
+            if (registeredProducer == null)
+            {
+                int registeredProducerId = GetNextId();
+
+                registeredProducer = new RegisteredProducer
+                {
+                    Id = IntegerToGuid(registeredProducerId),
+                    Scheme = scheme,
+                    SchemeId = scheme.Id,
+                    ComplianceYear = complianceYear,
+                    ProducerRegistrationNumber = registrationNumber,
+                    CurrentSubmissionId = null,
+                    IsAligned = true
+                };
+                model.RegisteredProducers.Add(registeredProducer);
+            }
+
+            return registeredProducer;
         }
 
         /// <summary>
@@ -205,15 +250,15 @@
         /// </summary>
         /// <param name="memberUpload"></param>
         /// <returns></returns>
-        public Producer CreateProducerAsCompany(MemberUpload memberUpload, string registrationNumber)
+        public ProducerSubmission CreateProducerAsCompany(MemberUpload memberUpload, string registrationNumber)
         {
-            Producer producer = CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
+            ProducerSubmission producerSubsmission = CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
             Company company = CreateCompany();
 
-            producer.Business.Company = company;
-            producer.Business.CompanyId = company.Id;
+            producerSubsmission.Business.Company = company;
+            producerSubsmission.Business.CompanyId = company.Id;
 
-            return producer;
+            return producerSubsmission;
         }
 
         /// <summary>
@@ -222,15 +267,15 @@
         /// </summary>
         /// <param name="memberUpload"></param>
         /// <returns></returns>
-        public Producer CreateProducerAsPartnership(MemberUpload memberUpload, string registrationNumber)
+        public ProducerSubmission CreateProducerAsPartnership(MemberUpload memberUpload, string registrationNumber)
         {
-            Producer producer = CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
+            ProducerSubmission producerSubmission = CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
             Partnership partnership = CreatePartnership();
 
-            producer.Business.Partnership = partnership;
-            producer.Business.PartnershipId = partnership.Id;
+            producerSubmission.Business.Partnership = partnership;
+            producerSubmission.Business.PartnershipId = partnership.Id;
 
-            return producer;
+            return producerSubmission;
         }
 
         /// <summary>
@@ -239,48 +284,57 @@
         /// </summary>
         /// <param name="memberUpload"></param>
         /// <returns></returns>
-        public Producer CreateProducerAsSoleTrader(MemberUpload memberUpload, string registrationNumber)
+        public ProducerSubmission CreateProducerAsSoleTrader(MemberUpload memberUpload, string registrationNumber)
         {
             return CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
         }
 
-        private Producer CreateProducerWithEmptyBusiness(MemberUpload memberUpload, string registrationNumber)
+        private ProducerSubmission CreateProducerWithEmptyBusiness(MemberUpload memberUpload, string registrationNumber)
         {
-            int businessId = GetNextId(typeof(Business));
+            int businessId = GetNextId();
             Business business = new Business
             {
                 Id = IntegerToGuid(businessId),
             };
             model.Businesses.Add(business);
 
-            int producerId = GetNextId(typeof(Producer));
+            int producerSubmissionId = GetNextId();
+
+            RegisteredProducer registeredProducer = GerOrCreateRegisteredProducer(memberUpload.Scheme, memberUpload.ComplianceYear.Value, registrationNumber);
+
             var chargeBandAmount = FetchChargeBandAmount(ChargeBand.A);
-            Producer producer = new Producer
+            ProducerSubmission producerSubmission = new ProducerSubmission
             {
-                Id = IntegerToGuid(producerId),
+                Id = IntegerToGuid(producerSubmissionId),
+                RegisteredProducer = registeredProducer,
+                RegisteredProducerId = registeredProducer.Id,
                 MemberUpload = memberUpload,
                 MemberUploadId = memberUpload.Id,
-                RegistrationNumber = registrationNumber,
-                TradingName = string.Format("Producer {0} Trading Name", producerId),
+                TradingName = string.Format("Producer {0} Trading Name", producerSubmissionId),
                 UpdatedDate = new DateTime(2015, 1, 1, 0, 0, 0),
                 Business = business,
                 ProducerBusinessId = business.Id,
-                Scheme = memberUpload.Scheme,
-                SchemeId = memberUpload.Scheme.Id,
                 AuthorisedRepresentativeId = null,
                 ChargeBandAmountId = chargeBandAmount.Id,
-                ChargeThisUpdate = 445
+                ChargeThisUpdate = 0,
+                ObligationType = "B2B"
             };
-            model.Producers.Add(producer);
+            model.ProducerSubmissions.Add(producerSubmission);
 
-            return producer;
+            if (memberUpload.IsSubmitted)
+            {
+                registeredProducer.CurrentSubmissionId = IntegerToGuid(producerSubmissionId);
+                registeredProducer.CurrentSubmission = producerSubmission;
+            }
+
+            return producerSubmission;
         }
 
         private Company CreateCompany()
         {
             Contact1 contact = CreateContact();
 
-            int companyId = GetNextId(typeof(Company));
+            int companyId = GetNextId();
             Company company = new Company
             {
                 Id = IntegerToGuid(companyId),
@@ -298,7 +352,7 @@
         {
             Contact1 contact = CreateContact();
 
-            int partnershipId = GetNextId(typeof(Partnership));
+            int partnershipId = GetNextId();
             Partnership partnership = new Partnership
             {
                 Id = IntegerToGuid(partnershipId),
@@ -315,7 +369,7 @@
         {
             Country england = model.Countries.Single(c => c.Name == "UK - England");
 
-            int addressId = GetNextId(typeof(Address));
+            int addressId = GetNextId();
             Address1 address = new Address1
             {
                 Id = IntegerToGuid(addressId),
@@ -331,7 +385,7 @@
             };
             model.Address1.Add(address);
 
-            int contactId = GetNextId(typeof(Contact));
+            int contactId = GetNextId();
             Contact1 contact = new Contact1
             {
                 Id = IntegerToGuid(contactId),

@@ -1,11 +1,7 @@
 ﻿namespace EA.Weee.Core.Admin
 {
-    using EA.Weee.Core.Shared;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using EA.Weee.Core.Shared;
 
     /// <summary>
     /// Provides scheme-specific details about a producer (identified by their
@@ -13,6 +9,8 @@
     /// </summary>
     public class ProducerDetailsScheme
     {
+        public Guid RegisteredProducerId { get; set; }
+
         public string SchemeName { get; set; }
         
         public string ProducerName { get; set; }
@@ -30,5 +28,9 @@
         public DateTime? CeasedToExist { get; set; }
 
         public string IsAuthorisedRepresentative { get; set; }
+
+        public int ComplianceYear { get; set; }
+
+        public string Prn { get; set; }
     }
 }

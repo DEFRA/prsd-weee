@@ -9,7 +9,6 @@
     using Prsd.Core.Mediator;
     using Services;
     using Web.Areas.Admin.Controllers;
-    using Web.Areas.Admin.ViewModels.Home;
     using Web.Areas.Admin.ViewModels.Reports;
     using Weee.Requests.Admin;
     using Weee.Requests.Shared;
@@ -85,6 +84,7 @@
         [Theory]
         [InlineData(Reports.ProducerDetails, "ProducerDetails")]
         [InlineData(Reports.PCSCharges, "PCSCharges")]
+        [InlineData(Reports.Producerpublicregister, "ProducerPublicRegister")]
         public void HttpPost_ChooseActivity_RedirectsToCorrectControllerAction(string selection, string action)
         {
             // Arrange
@@ -158,6 +158,32 @@
             controller.ModelState.AddModelError("Key", "Any error");
 
             var result = await controller.PCSCharges(new ReportsFilterViewModel());
+
+            Assert.IsType<ViewResult>(result);
+            Assert.False(controller.ModelState.IsValid);
+        }
+
+        [Fact]
+        public async void HttpGet_ProducerPublicRegister_ShouldReturnsProducerPublilcRegisterView()
+        {
+            var controller = ReportsController();
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAllComplianceYears>._))
+                .Returns(new List<int> { 2015, 2016 });
+            
+            var result = await controller.ProducerPublicRegister();
+
+            var viewResult = ((ViewResult)result);
+            Assert.Equal("ProducerPublicRegister", viewResult.ViewName);
+        }
+
+        [Fact]
+        public async void HttpPost_ProducerPublicRegister_ModelIsInvalid_ShouldRedirectViewWithError()
+        {
+            var controller = ReportsController();
+            controller.ModelState.AddModelError("Key", "Any error");
+
+            var result = await controller.ProducerPublicRegister(new ProducerPublicRegisterViewModel());
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);

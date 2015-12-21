@@ -1,26 +1,31 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration.XmlValidation
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using Core.Exceptions;
     using Core.Helpers;
-    using Core.Helpers.Xml;
+    using Core.Scheme;
     using Domain;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;
-    using Weee.XmlValidation.BusinessValidation;
-    using Xml.Schemas;
+    using Shared;
+    using Weee.XmlValidation.BusinessValidation.MemberRegistration;
+    using Weee.XmlValidation.Errors;
+    using Weee.XmlValidation.SchemaValidation;
+    using Xml.Converter;
+    using Xml.Deserialization;
+    using Xml.MemberRegistration;
 
-    public class XmlValidator : IXmlValidator
+    public class XMLValidator : IXMLValidator
     {
         private readonly ISchemaValidator schemaValidator;
-        private readonly IXmlBusinessValidator businessValidator;
+        private readonly IMemberRegistrationBusinessValidator businessValidator;
 
         private readonly IXmlConverter xmlConverter;
         private readonly IXmlErrorTranslator errorTranslator;
 
-        public XmlValidator(ISchemaValidator schemaValidator, IXmlConverter xmlConverter, IXmlBusinessValidator businessValidator, IXmlErrorTranslator errorTranslator)
+        public XMLValidator(ISchemaValidator schemaValidator, IXmlConverter xmlConverter, IMemberRegistrationBusinessValidator businessValidator, IXmlErrorTranslator errorTranslator)
         {
             this.schemaValidator = schemaValidator;
             this.businessValidator = businessValidator;
@@ -28,10 +33,14 @@
             this.xmlConverter = xmlConverter;
         }
 
-        public IEnumerable<MemberUploadError> Validate(ProcessXMLFile message)
+        public IEnumerable<MemberUploadError> Validate(ProcessXmlFile message)
         {
+            string schemaVersion = MemberRegistrationSchemaVersion.Version_3_07.GetAttribute<DisplayAttribute>().Name;
             // Validate against the schema
-            var errors = schemaValidator.Validate(message).ToList();
+            var errors = schemaValidator.Validate(message.Data, @"EA.Weee.Xml.MemberRegistration.v3schema.xsd", @"http://www.environment-agency.gov.uk/WEEE/XMLSchema", schemaVersion)
+                .Select(e => e.ToMemberUploadError())
+                .ToList();
+
             if (errors.Any())
             {
                 return errors;
@@ -42,20 +51,20 @@
             try
             {
                 // Validate deserialized XML against business rules
-                deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(message));
+                deserializedXml = xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
             }
             catch (XmlDeserializationFailureException e)
             {
                 // Couldn't deserialise - can't go any further, add an error and bail out here
                 var exceptionMessage = e.InnerException != null ? e.InnerException.Message : e.Message;
-                var friendlyMessage = errorTranslator.MakeFriendlyErrorMessage(exceptionMessage);
-                errors.Add(new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, friendlyMessage));
+                var friendlyMessage = errorTranslator.MakeFriendlyErrorMessage(exceptionMessage, schemaVersion);
+                errors.Add(new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, friendlyMessage));
 
                 return errors;
             }
 
             errors = businessValidator.Validate(deserializedXml, message.OrganisationId)
-                .Select(err => new MemberUploadError(err.ErrorLevel.ToDomainEnumeration<ErrorLevel>(), MemberUploadErrorType.Business, err.Message))
+                .Select(err => new MemberUploadError(err.ErrorLevel.ToDomainEnumeration<ErrorLevel>(), UploadErrorType.Business, err.Message))
                 .ToList();
 
             return errors;

@@ -1,17 +1,17 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
-    using Api.Client;
-    using Core.Scheme;
-    using Core.Shared;
-    using Infrastructure;
-    using Services;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Api.Client;
+    using Core.Scheme;
+    using Core.Shared;
+    using Infrastructure;
     using Prsd.Core.Mapper;
+    using Services;
     using Services.Caching;
     using ViewModels;
     using Web.Controllers.Base;
@@ -80,6 +80,23 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> Summary(Guid pcsId)
+        {
+            using (var client = apiClient())
+            {
+                List<int> years = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(pcsId));
+
+                if (years.Count > 0)
+                {
+                    await SetBreadcrumb(pcsId, ManageMembersActivity);
+                    return View(years);
+                }
+            }
+
+            return RedirectToAction("AddOrAmendMembers", "MemberRegistration");
+        }
+
+        [HttpGet]
         public async Task<ViewResult> AddOrAmendMembers(Guid pcsId)
         {
             using (var client = apiClient())
@@ -97,7 +114,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddOrAmendMembers(Guid pcsId, AddOrAmendMembersViewModel model)
+        public async Task<ActionResult> AddOrAmendMembers(Guid pcsId, PCSFileUploadViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -117,7 +134,7 @@
             using (var client = apiClient())
             {
                 model.PcsId = pcsId;
-                var request = mapper.Map<AddOrAmendMembersViewModel, ProcessXMLFile>(model);
+                var request = mapper.Map<PCSFileUploadViewModel, ProcessXmlFile>(model);
                 validationId = await client.SendAsync(User.GetAccessToken(), request);
             }
 
@@ -130,23 +147,6 @@
                 return RedirectToAction("ViewErrorsAndWarnings", "MemberRegistration",
                     new { area = "Scheme", memberUploadId = validationId });
             }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> Summary(Guid pcsId)
-        {
-            using (var client = apiClient())
-            {
-                List<int> years = await client.SendAsync(User.GetAccessToken(), new GetComplianceYears(pcsId));
-
-                if (years.Count > 0)
-                {
-                    await SetBreadcrumb(pcsId, ManageMembersActivity);
-                    return View(years);
-                }
-            }
-
-            return RedirectToAction("AddOrAmendMembers", "MemberRegistration");
         }
 
         [HttpGet]
@@ -164,7 +164,7 @@
                     await SetBreadcrumb(pcsId, ManageMembersActivity);
 
                     return View("ViewErrorsAndWarnings",
-                        new MemberUploadResultViewModel { MemberUploadId = memberUploadId, ErrorData = errors, TotalCharges = memberUpload.TotalCharges });
+                        new MemberUploadResultViewModel { ErrorData = errors, TotalCharges = memberUpload.TotalCharges });
                 }
 
                 return RedirectToAction("XmlHasNoErrors", new { pcsId, memberUploadId });
@@ -187,40 +187,15 @@
                 return View("XmlHasNoErrors",
                      new MemberUploadResultViewModel
                      {
-                         MemberUploadId = memberUploadId,
                          ErrorData = errors,
                          TotalCharges = memberUpload.TotalCharges
                      });
             }
         }
 
-        [HttpGet]
-        public async Task<ActionResult> DownloadErrorsAndWarnings(Guid pcsId, Guid memberUploadId)
-        {
-            using (var client = apiClient())
-            {
-                IEnumerable<MemberUploadErrorData> errors =
-                    (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId)))
-                    .OrderByDescending(e => e.ErrorLevel);
-
-                var schemePublicInfo = await cache.FetchSchemePublicInfo(pcsId);
-
-                CsvWriter<MemberUploadErrorData> csvWriter = csvWriterFactory.Create<MemberUploadErrorData>();
-                csvWriter.DefineColumn("Type", e => (int)e.ErrorLevel >= 5 ? "Error" : "Warning");
-                csvWriter.DefineColumn("Description", e => e.Description);
-
-                string csv = csvWriter.Write(errors);
-
-                var csvFilename = string.Format("{0}_memberregistration_errors_warnings_{1}.csv", schemePublicInfo.ApprovalNo, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-
-                byte[] fileContent = new UTF8Encoding().GetBytes(csv);
-                return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(csvFilename));
-            }
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SubmitXml(Guid pcsId, MemberUploadResultViewModel viewModel)
+        public async Task<ActionResult> XmlHasNoErrors(Guid pcsId, Guid memberUploadId, MemberUploadResultViewModel viewModel)
         {
             using (var client = apiClient())
             {
@@ -229,14 +204,14 @@
                 if (!ModelState.IsValid)
                 {
                     var errors =
-                    await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, viewModel.MemberUploadId));
+                    await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId));
                     viewModel.ErrorData = errors;
-                    return View("XmlHasNoErrors", viewModel);
+                    return View(viewModel);
                 }
 
-                await client.SendAsync(User.GetAccessToken(), new MemberUploadSubmission(pcsId, viewModel.MemberUploadId));
+                await client.SendAsync(User.GetAccessToken(), new MemberUploadSubmission(pcsId, memberUploadId));
 
-                return RedirectToAction("SuccessfulSubmission", new { pcsId = pcsId, memberUploadId = viewModel.MemberUploadId });
+                return RedirectToAction("SuccessfulSubmission", new { pcsId, memberUploadId });
             }
         }
 
@@ -266,6 +241,30 @@
 
             await SetBreadcrumb(pcsId, ManageMembersActivity);
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadErrorsAndWarnings(Guid pcsId, Guid memberUploadId)
+        {
+            using (var client = apiClient())
+            {
+                IEnumerable<UploadErrorData> errors =
+                    (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(pcsId, memberUploadId)))
+                    .OrderByDescending(e => e.ErrorLevel);
+
+                var schemePublicInfo = await cache.FetchSchemePublicInfo(pcsId);
+
+                CsvWriter<UploadErrorData> csvWriter = csvWriterFactory.Create<UploadErrorData>();
+                csvWriter.DefineColumn("Type", e => (int)e.ErrorLevel >= 5 ? "Error" : "Warning");
+                csvWriter.DefineColumn("Description", e => e.Description);
+
+                string csv = csvWriter.Write(errors);
+
+                var csvFilename = string.Format("{0}_memberregistration_errors_warnings_{1}.csv", schemePublicInfo.ApprovalNo, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+
+                byte[] fileContent = new UTF8Encoding().GetBytes(csv);
+                return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(csvFilename));
+            }
         }
 
         [HttpGet]

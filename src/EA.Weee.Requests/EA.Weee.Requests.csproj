@@ -45,9 +45,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />
+    <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
+    <Compile Include="Admin\RemoveProducer.cs" />
     <Compile Include="Admin\Reports\GetMemberDetailsCSV.cs" />
     <Compile Include="Admin\Reports\GetPCSChargesCSV.cs" />
+    <Compile Include="Admin\GetProducerAmendmentsHistoryCSV.cs" />
+    <Compile Include="Admin\Reports\GetProducerPublicRegisterCSV.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile.cs" />
+    <Compile Include="DataReturns\FetchDataReturnForSubmission.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile.cs" />
     <Compile Include="Organisations\GetOrganisationOverview.cs" />
+    <Compile Include="Scheme\MemberRegistration\ProcessXMLFile.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache.cs" />
     <Compile Include="Admin\FindMatchingUsers.cs" />
@@ -88,7 +97,6 @@
     <Compile Include="Scheme\MemberRegistration\GetProducerCSV.cs" />
     <Compile Include="Scheme\GetSchemeStatus.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmission.cs" />
-    <Compile Include="Scheme\MemberRegistration\ProcessXMLFile.cs" />
     <Compile Include="Scheme\MemberUploadTesting\PcsXmlFile.cs" />
     <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFile.cs" />
     <Compile Include="Scheme\UpdateSchemeInformation.cs" />
@@ -107,7 +115,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">

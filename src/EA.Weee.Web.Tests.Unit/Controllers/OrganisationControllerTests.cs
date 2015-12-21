@@ -1,22 +1,16 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
-    using EA.Prsd.Core.Web.OAuth;
-    using EA.Prsd.Core.Web.OpenId;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Web.Controllers;
-    using EA.Weee.Web.Services;
     using EA.Weee.Web.ViewModels.Organisation;
     using FakeItEasy;
-    using Microsoft.Owin.Security;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Xunit;
 
     public class OrganisationControllerTests
@@ -108,10 +102,10 @@
 
             YourOrganisationsViewModel model = viewResult.Model as YourOrganisationsViewModel;
 
-            Assert.Equal(1, model.AccessibleOrganisations.PossibleValues.Count);
+            Assert.Equal(1, model.Organisations.Count);
 
-            Assert.Equal(organisationId1, model.AccessibleOrganisations.PossibleValues[0].Value);
-            Assert.Equal("Organisation Name 1", model.AccessibleOrganisations.PossibleValues[0].Key);
+            Assert.Equal(organisationId1, model.Organisations[0].OrganisationId);
+            Assert.Equal("Organisation Name 1", model.Organisations[0].Organisation.OrganisationName);
 
             Assert.IsAssignableFrom<IEnumerable<OrganisationUserData>>(viewResult.ViewBag.InaccessibleOrganisations);
 
@@ -189,6 +183,112 @@
             Assert.Equal(null, redirectResult.RouteValues["area"] as string, ignoreCase: true);
             Assert.Equal("organisationregistration", redirectResult.RouteValues["controller"] as string, ignoreCase: true);
             Assert.Equal("Search", redirectResult.RouteValues["action"] as string, ignoreCase: true);
+        }
+
+        /// <summary>
+        /// This test ensures that the list of pending organisation associations will filter
+        /// out duplicates. For a user who has two associations with the same organisation
+        /// with statues of "Pending" and "Rejected", only the pending association should be shown.
+        /// </summary>
+        [Fact]
+        public async void GetIndex_WithPendingAndRejectedAssociation_ShowsOnlyPendingAssociation()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
+                .Returns(new List<OrganisationUserData>
+                {
+                    new OrganisationUserData
+                    {
+                        OrganisationId = new Guid("EF4B78BA-3D73-4B99-A996-714677590A78"),
+                        UserStatus = UserStatus.Pending,
+                        Organisation = new OrganisationData
+                        {
+                            OrganisationName = "Organisation Name 1",
+                            OrganisationStatus = OrganisationStatus.Complete,
+                        }
+                    },
+                    new OrganisationUserData
+                    {
+                        OrganisationId = new Guid("EF4B78BA-3D73-4B99-A996-714677590A78"),
+                        UserStatus = UserStatus.Rejected,
+                        Organisation = new OrganisationData
+                        {
+                            OrganisationName = "Organisation Name 1",
+                            OrganisationStatus = OrganisationStatus.Complete,
+                        }
+                    }
+                });
+
+            OrganisationController controller = new OrganisationController(() => weeeClient);
+
+            // Act
+            ActionResult result = await controller.Index();
+
+            // Assert
+            Assert.IsAssignableFrom<ViewResultBase>(result);
+            ViewResultBase viewResult = result as ViewResultBase;
+
+            Assert.IsAssignableFrom<PendingOrganisationsViewModel>(viewResult.Model);
+            PendingOrganisationsViewModel model = viewResult.Model as PendingOrganisationsViewModel;
+
+            Assert.Equal(1, model.InaccessibleOrganisations.Count());
+            OrganisationUserData result1 = model.InaccessibleOrganisations.First();
+
+            Assert.Equal(UserStatus.Pending, result1.UserStatus);
+        }
+
+        /// <summary>
+        /// This test ensures that the list of pending organisation associations will filter
+        /// out duplicates. For a user who has two associations with the same organisation
+        /// with statues of "Inactive" and "Rejected", only the inactive association should be shown.
+        /// </summary>
+        [Fact]
+        public async void GetIndex_WithInactiveAndRejectedAssociation_ShowsOnlyInactiveAssociation()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
+                .Returns(new List<OrganisationUserData>
+                {
+                    new OrganisationUserData
+                    {
+                        OrganisationId = new Guid("EF4B78BA-3D73-4B99-A996-714677590A78"),
+                        UserStatus = UserStatus.Inactive,
+                        Organisation = new OrganisationData
+                        {
+                            OrganisationName = "Organisation Name 1",
+                            OrganisationStatus = OrganisationStatus.Complete,
+                        }
+                    },
+                    new OrganisationUserData
+                    {
+                        OrganisationId = new Guid("EF4B78BA-3D73-4B99-A996-714677590A78"),
+                        UserStatus = UserStatus.Rejected,
+                        Organisation = new OrganisationData
+                        {
+                            OrganisationName = "Organisation Name 1",
+                            OrganisationStatus = OrganisationStatus.Complete,
+                        }
+                    }
+                });
+
+            OrganisationController controller = new OrganisationController(() => weeeClient);
+
+            // Act
+            ActionResult result = await controller.Index();
+
+            // Assert
+            Assert.IsAssignableFrom<ViewResultBase>(result);
+            ViewResultBase viewResult = result as ViewResultBase;
+
+            Assert.IsAssignableFrom<PendingOrganisationsViewModel>(viewResult.Model);
+            PendingOrganisationsViewModel model = viewResult.Model as PendingOrganisationsViewModel;
+
+            Assert.Equal(1, model.InaccessibleOrganisations.Count());
+            OrganisationUserData result1 = model.InaccessibleOrganisations.First();
+
+            Assert.Equal(UserStatus.Inactive, result1.UserStatus);
         }
     }
 }

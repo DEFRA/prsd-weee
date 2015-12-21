@@ -1,11 +1,6 @@
 ﻿namespace EA.Weee.Core.Search
 {
-    using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     ///  A base class for search results.

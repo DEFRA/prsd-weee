@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web
 {
+    using System.Reflection;
     using Authorization;
     using Autofac;
     using Autofac.Integration.Mvc;
@@ -9,12 +10,9 @@
     using EA.Weee.Core.Search.Simple;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using Modules;
-    using Requests.Base;
-    using System.Linq;
-    using System.Reflection;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mapper;
+    using Requests.Base;
 
     public class AutofacBootstrapper
     {

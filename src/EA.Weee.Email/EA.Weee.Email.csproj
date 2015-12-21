@@ -100,7 +100,9 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <EmbeddedResource Include="Templates\OrganisationUserRequestCompleted.cshtml" />
     <EmbeddedResource Include="Templates\OrganisationUserRequest.cshtml" />
     <EmbeddedResource Include="Templates\PasswordResetRequest.cshtml" />

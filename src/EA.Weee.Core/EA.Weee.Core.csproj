@@ -87,10 +87,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
+    <Compile Include="Admin\RemoveProducerResult.cs" />
     <Compile Include="Admin\Reports\CSVFileData.cs" />
+    <Compile Include="DataReturns\DataReturnError.cs" />
+    <Compile Include="DataReturns\DataReturnForSubmission.cs" />
+    <Compile Include="DataReturns\DataReturnWarning.cs" />
+    <Compile Include="DataReturns\IErrorOrWarning.cs" />
+    <Compile Include="DataReturns\Quarter.cs" />
+    <Compile Include="DataReturns\QuarterType.cs" />
+    <Compile Include="DataReturns\TestFileSettings.cs" />
     <Compile Include="DataStandards\CommonMaxFieldLengths.cs" />
     <Compile Include="DataStandards\EnvironmentAgencyMaxFieldLengths.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
+    <Compile Include="Scheme\MemberRegistrationSchemaVersion.cs" />
     <Compile Include="Search\Fuzzy\CommonTerm.cs" />
     <Compile Include="Search\Fuzzy\FuzzyOrganisationSearcher.cs">
       <SubType>Code</SubType>
@@ -126,15 +135,12 @@
     <Compile Include="Configuration\TestUserEmailDomainElementCollection.cs" />
     <Compile Include="Configuration\TestUserEmailDomainsSection.cs" />
     <Compile Include="CoreModule.cs" />
-    <Compile Include="Exceptions\XmlDeserializationFailureException.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\PrnGeneration\IPrnHelper.cs" />
     <Compile Include="Helpers\PrnGeneration\IQuadraticResidueHelper.cs" />
     <Compile Include="Helpers\PrnGeneration\PrnAsComponents.cs" />
     <Compile Include="Helpers\PrnGeneration\PrnHelper.cs" />
     <Compile Include="Helpers\PrnGeneration\QuadraticResidueHelper.cs" />
-    <Compile Include="Helpers\Xml\IXmlErrorTranslator.cs" />
-    <Compile Include="Helpers\Xml\XmlErrorTranslator.cs" />
     <Compile Include="Routing\ExternalRoute.cs" />
     <Compile Include="Routing\ResetPasswordRoute.cs" />
     <Compile Include="Scheme\SchemePublicInfo.cs" />
@@ -144,6 +150,7 @@
     <Compile Include="Shared\ChargeBandType.cs" />
     <Compile Include="Shared\CsvWriter.cs" />
     <Compile Include="Shared\CsvWriterFactory.cs" />
+    <Compile Include="Shared\FileInfo.cs" />
     <Compile Include="Shared\InternalDomains.cs" />
     <Compile Include="Shared\NoFormulaeExcelSanitizer.cs" />
     <Compile Include="Shared\IExcelSanitizer.cs" />
@@ -177,7 +184,6 @@
     <Compile Include="Scheme\MemberUploadTesting\ProducerSettings.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerStatus.cs" />
     <Compile Include="Scheme\MemberUploadTesting\RandomHelper.cs" />
-    <Compile Include="Scheme\MemberUploadTesting\SchemaVersion.cs" />
     <Compile Include="Scheme\MemberUploadTesting\SchemeBusiness.cs" />
     <Compile Include="Scheme\MemberUploadTesting\SchemeCompany.cs" />
     <Compile Include="Scheme\MemberUploadTesting\SchemePartnership.cs" />
@@ -191,7 +197,7 @@
     <Compile Include="Shared\CompetentAuthority.cs" />
     <Compile Include="Shared\CountryData.cs" />
     <Compile Include="Shared\ErrorLevel.cs" />
-    <Compile Include="Shared\MemberUploadErrorData.cs" />
+    <Compile Include="Shared\UploadErrorData.cs" />
     <Compile Include="Shared\OrganisationStatus.cs" />
     <Compile Include="Shared\Paging\IPagedList.cs" />
     <Compile Include="Shared\Paging\PagedList.cs" />

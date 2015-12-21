@@ -1,15 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Scheme.MemberRegistration
 {
-    using DataAccess;
-    using Domain;
-    using Domain.Lookup;
-    using Domain.Producer;
-    using EA.Weee.Xml;
-    using RequestHandlers;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Xml.Schemas;
+    using Domain.Lookup;
+    using Xml.MemberRegistration;
 
     public class ProducerChargeCalculator : IProducerChargeCalculator
     {

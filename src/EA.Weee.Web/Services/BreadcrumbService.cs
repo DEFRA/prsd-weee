@@ -1,11 +1,6 @@
 ﻿namespace EA.Weee.Web.Services
 {
     using EA.Weee.Core.Scheme;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 
     public class BreadcrumbService
     {
@@ -38,5 +33,10 @@ using System.Web.Mvc;
         /// Information about the scheme currently in scope.
         /// </summary>
         public SchemePublicInfo SchemeInfo { get; set; }
+
+        /// <summary>
+        /// The activity currently in scope when accessing the test area.
+        /// </summary>
+        public string TestAreaActivity { get; set; }
     }
 }

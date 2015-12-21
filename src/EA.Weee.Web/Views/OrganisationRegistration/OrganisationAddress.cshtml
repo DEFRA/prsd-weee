@@ -1,4 +1,5 @@
-﻿@model EA.Weee.Web.ViewModels.Shared.AddressViewModel
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.Shared.AddressViewModel
 @{
     ViewBag.Title = "Organisation contact details";
 }
@@ -22,8 +23,6 @@
 
         @Html.EditorFor(m => m.Address)
 
-        <div class="form-group">
-            <input id="continue" type="submit" class="button" value="Continue" />
-        </div>
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
     }
 }
