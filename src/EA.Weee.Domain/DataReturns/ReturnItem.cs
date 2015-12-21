@@ -31,8 +31,21 @@
             Tonnage = tonnage;
         }
 
+        /// <summary>
+        /// This constructor is used by Entity Framework.
+        /// </summary>
         protected ReturnItem()
         {
+        }
+
+        /// <summary>
+        /// This column should only be used by Entity Framework. it provides a mapping between the
+        /// <see cref="ObligationType"/> enum and the NVARCHAR(4) stored in the database.
+        /// </summary>
+        public string DatabaseObligationType
+        {
+            get { return ObligationType.ToString(); }
+            set { ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), value); }
         }
     }
 }
