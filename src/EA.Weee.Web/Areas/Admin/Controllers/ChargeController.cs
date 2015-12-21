@@ -42,6 +42,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult SelectAuthority(SelectAuthorityViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -56,7 +57,32 @@
         [HttpGet]
         public ActionResult ChooseActivity(CompetentAuthority authority)
         {
-            return View();
+            return View(new ChooseActivityViewModel());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChooseActivity(CompetentAuthority authority, ChooseActivityViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            switch (viewModel.SelectedActivity.Value)
+            {
+                case Activity.ManagePendingCharges:
+                    throw new NotImplementedException();
+
+                case Activity.ManageIssuedCharges:
+                    throw new NotImplementedException();
+
+                case Activity.ViewInvoiceRunHistory:
+                    throw new NotImplementedException();
+
+                default:
+                    throw new NotSupportedException();
+            }
         }
     }
 }
