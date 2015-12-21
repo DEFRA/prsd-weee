@@ -1,10 +1,6 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.DataReturns
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Domain.DataReturns;
     using FakeItEasy;
     using Lookup;
@@ -32,31 +28,39 @@
         }
 
         [Fact]
-        public void AddAatfDeliveryLocation_AddsToAatfDeliveryLocations()
+        public void AddWeeeDeliveredAmount_WithNullWeeeDeliveredAmount_ThrowsArgumentNullException()
         {
-            // Arrange
             var weeeDeliveredReturnVersion = new WeeeDeliveredReturnVersion(A.Fake<DataReturnVersion>());
-            var deliveredAmount = new AatfDeliveredAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, A.Fake<AatfDeliveryLocation>());
 
-            // Act
-            weeeDeliveredReturnVersion.AddAatfDeliveredAmount(deliveredAmount);
-
-            // Assert
-            Assert.Contains(deliveredAmount, weeeDeliveredReturnVersion.AatfDeliveredAmounts);
+            Assert.Throws<ArgumentNullException>(() => weeeDeliveredReturnVersion.AddWeeeDeliveredAmount(null));
         }
 
         [Fact]
-        public void AddAeDeliveryLocation_AddsToAeDeliveryLocations()
+        public void AddWeeeDeliveredAmount_WithAatfDeliveryLocation_AddsToWeeeDeliveredAmounts()
         {
             // Arrange
             var weeeDeliveredReturnVersion = new WeeeDeliveredReturnVersion(A.Fake<DataReturnVersion>());
-            var deliveredAmount = new AeDeliveredAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, A.Fake<AeDeliveryLocation>());
+            var deliveredAmount = new WeeeDeliveredAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, A.Fake<AatfDeliveryLocation>());
 
             // Act
-            weeeDeliveredReturnVersion.AddAeDeliveredAmount(deliveredAmount);
+            weeeDeliveredReturnVersion.AddWeeeDeliveredAmount(deliveredAmount);
 
             // Assert
-            Assert.Contains(deliveredAmount, weeeDeliveredReturnVersion.AeDeliveredAmounts);
+            Assert.Contains(deliveredAmount, weeeDeliveredReturnVersion.WeeeDeliveredAmounts);
+        }
+
+        [Fact]
+        public void AddWeeeDeliveredAmount_WithAeDeliveryLocation_AddsToWeeeDeliveredAmounts()
+        {
+            // Arrange
+            var weeeDeliveredReturnVersion = new WeeeDeliveredReturnVersion(A.Fake<DataReturnVersion>());
+            var deliveredAmount = new WeeeDeliveredAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, A.Fake<AeDeliveryLocation>());
+
+            // Act
+            weeeDeliveredReturnVersion.AddWeeeDeliveredAmount(deliveredAmount);
+
+            // Assert
+            Assert.Contains(deliveredAmount, weeeDeliveredReturnVersion.WeeeDeliveredAmounts);
         }
     }
 }

@@ -103,9 +103,9 @@
 
             var result = builder.Build();
 
-            Assert.Equal(1, result.DataReturnVersion.WeeeDeliveredReturnVersion.AatfDeliveredAmounts.Count);
-            Assert.Collection(result.DataReturnVersion.WeeeDeliveredReturnVersion.AatfDeliveredAmounts,
-                r => Assert.Equal("Approval Number", r.AatfDeliveryLocation.AatfApprovalNumber));
+            Assert.Equal(1, result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Count);
+            Assert.Collection(result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts,
+                r => Assert.Equal("Approval Number", r.AatfDeliveryLocation.ApprovalNumber));
         }
 
         [Fact]
@@ -116,8 +116,8 @@
 
             var result = builder.Build();
 
-            Assert.Equal(1, result.DataReturnVersion.WeeeDeliveredReturnVersion.AeDeliveredAmounts.Count);
-            Assert.Collection(result.DataReturnVersion.WeeeDeliveredReturnVersion.AeDeliveredAmounts,
+            Assert.Equal(1, result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Count);
+            Assert.Collection(result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts,
                 r => Assert.Equal("Approval Number", r.AeDeliveryLocation.ApprovalNumber));
         }
 

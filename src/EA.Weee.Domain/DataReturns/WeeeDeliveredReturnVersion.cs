@@ -13,9 +13,7 @@
     {
         public virtual ICollection<DataReturnVersion> DataReturnVersions { get; private set; }
 
-        public virtual ICollection<AatfDeliveredAmount> AatfDeliveredAmounts { get; private set; }
-
-        public virtual ICollection<AeDeliveredAmount> AeDeliveredAmounts { get; private set; }
+        public virtual ICollection<WeeeDeliveredAmount> WeeeDeliveredAmounts { get; private set; }
 
         /// <summary>
         /// This constructor is used by Entity Framework.
@@ -29,18 +27,30 @@
             Guard.ArgumentNotNull(() => dataReturnVersion, dataReturnVersion);
 
             DataReturnVersions = new List<DataReturnVersion>();
-            AatfDeliveredAmounts = new List<AatfDeliveredAmount>();
-            AeDeliveredAmounts = new List<AeDeliveredAmount>();
+            WeeeDeliveredAmounts = new List<WeeeDeliveredAmount>();
 
             DataReturnVersions.Add(dataReturnVersion);
         }
 
-        public void AddAatfDeliveredAmount(AatfDeliveredAmount aatfDeliveredAmount)
+        public void AddWeeeDeliveredAmount(WeeeDeliveredAmount weeeDeliveredAmount)
         {
-            Guard.ArgumentNotNull(() => aatfDeliveredAmount, aatfDeliveredAmount);
+            Guard.ArgumentNotNull(() => weeeDeliveredAmount, weeeDeliveredAmount);
 
-            if (AatfDeliveredAmounts
-                .Where(r => r.AatfDeliveryLocation.AatfApprovalNumber == aatfDeliveredAmount.AatfDeliveryLocation.AatfApprovalNumber)
+            if (weeeDeliveredAmount.IsAatfDeliveredAmount)
+            {
+                AddAatfDeliveredAmount(weeeDeliveredAmount);
+            }
+            else if (weeeDeliveredAmount.IsAeDeliveredAmount)
+            {
+                AddAeDeliveredAmount(weeeDeliveredAmount);
+            }
+        }
+
+        private void AddAatfDeliveredAmount(WeeeDeliveredAmount aatfDeliveredAmount)
+        {
+            if (WeeeDeliveredAmounts
+                .Where(r => r.IsAatfDeliveredAmount)
+                .Where(r => r.AatfDeliveryLocation.ApprovalNumber == aatfDeliveredAmount.AatfDeliveryLocation.ApprovalNumber)
                 .Where(r => r.WeeeCategory == aatfDeliveredAmount.WeeeCategory)
                 .Where(r => (r.ObligationType & aatfDeliveredAmount.ObligationType) != ObligationType.None)
                 .Any())
@@ -49,15 +59,14 @@
                 throw new InvalidOperationException(errorMessage);
             }
 
-            AatfDeliveredAmounts.Add(aatfDeliveredAmount);
+            WeeeDeliveredAmounts.Add(aatfDeliveredAmount);
         }
 
-        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Parameter name is valid.")]
-        public void AddAeDeliveredAmount(AeDeliveredAmount aeDeliveredAmount)
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Parameter name aeDeliveredAmount is valid.")]
+        private void AddAeDeliveredAmount(WeeeDeliveredAmount aeDeliveredAmount)
         {
-            Guard.ArgumentNotNull(() => aeDeliveredAmount, aeDeliveredAmount);
-
-            if (AeDeliveredAmounts
+            if (WeeeDeliveredAmounts
+                .Where(r => r.IsAeDeliveredAmount)
                 .Where(r => r.AeDeliveryLocation.ApprovalNumber == aeDeliveredAmount.AeDeliveryLocation.ApprovalNumber)
                 .Where(r => r.WeeeCategory == aeDeliveredAmount.WeeeCategory)
                 .Where(r => (r.ObligationType & aeDeliveredAmount.ObligationType) != ObligationType.None)
@@ -67,7 +76,7 @@
                 throw new InvalidOperationException(errorMessage);
             }
 
-            AeDeliveredAmounts.Add(aeDeliveredAmount);
+            WeeeDeliveredAmounts.Add(aeDeliveredAmount);
         }
     }
 }

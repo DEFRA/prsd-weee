@@ -9,28 +9,11 @@
         {
             ToTable("WeeeDeliveredAmount", "PCS");
 
-            HasMany(m => m.WeeeDeliveredReturnVersions)
-                .WithMany()
-                .Map(m =>
-                {
-                    m.MapLeftKey("WeeeDeliveredAmountReturnVersionId");
-                    m.MapRightKey("WeeeDeliveredAmountAmountId");
-                    m.ToTable("WeeeDeliveredAmountReturnVersionAmount");
-                });
+            Ignore(ps => ps.IsAatfDeliveredAmount);
+            Ignore(ps => ps.IsAeDeliveredAmount);
 
-            Map<AatfDeliveredAmount>(m =>
-            {
-                m.MapInheritedProperties();
-                m.Requires(p => p.AatfDeliveryLocation);
-                m.ToTable("WeeeDeliveredAmount", "PCS");
-            });
-
-            Map<AeDeliveredAmount>(m =>
-            {
-                m.MapInheritedProperties();
-                m.Requires(p => p.AeDeliveryLocation);
-                m.ToTable("WeeeDeliveredAmount", "PCS");
-            });
+            Ignore(ps => ps.ObligationType);
+            Property(ps => ps.DatabaseObligationType).HasColumnName("ObligationType");
         }
     }
 }

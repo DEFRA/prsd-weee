@@ -8,15 +8,9 @@
         public WeeeCollectedAmountMapping()
         {
             ToTable("WeeeCollectedAmount", "PCS");
-            HasMany(w => w.WeeeCollectedReturnVersions)                
-                .WithMany(a => a.WeeeCollectedAmounts)
-                .Map(
-               m =>
-               {
-                   m.MapLeftKey("WeeeCollectedReturnVersionId");
-                   m.MapRightKey("WeeCollectedAmountId");
-                   m.ToTable("WeeeCollectedReturnVersionAmount");
-               });
+
+            Ignore(ps => ps.ObligationType);
+            Property(ps => ps.DatabaseObligationType).HasColumnName("ObligationType");
         }
     }
 }
