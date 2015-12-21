@@ -1,5 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Security;
+    using System.Threading.Tasks;
     using DataAccess;
     using Domain;
     using Domain.Lookup;
@@ -11,13 +16,8 @@
     using RequestHandlers.Scheme.Interfaces;
     using RequestHandlers.Scheme.MemberRegistration;
     using Requests.Scheme.MemberRegistration;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Security;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
+    using Xml.Converter;
     using Xunit;
 
     public class ProcessXMLFileHandlerTests
@@ -29,18 +29,18 @@
         private readonly IGenerateFromXml generator;
         private readonly WeeeContext context;
         private readonly DbSet<Scheme> schemesDbSet;
-        private readonly DbSet<Producer> producersDbSet;
+        private readonly DbSet<ProducerSubmission> producersDbSet;
         private readonly DbSet<MemberUpload> memberUploadsDbSet;
-        private readonly IXmlValidator xmlValidator;
+        private readonly IXMLValidator xmlValidator;
         private readonly IXmlConverter xmlConverter;
-        private readonly IXmlChargeBandCalculator xmlChargeBandCalculator;
+        private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
         private static readonly Guid organisationId = Guid.NewGuid();
-        private static readonly ProcessXMLFile Message = new ProcessXMLFile(organisationId, new byte[1], "File name");
+        private static readonly ProcessXmlFile Message = new ProcessXmlFile(organisationId, new byte[1], "File name");
 
         public ProcessXMLFileHandlerTests()
         {
             memberUploadsDbSet = A.Fake<DbSet<MemberUpload>>();
-            producersDbSet = A.Fake<DbSet<Producer>>();
+            producersDbSet = A.Fake<DbSet<ProducerSubmission>>();
             xmlConverter = A.Fake<IXmlConverter>();
             var schemes = new[]
             {
@@ -51,12 +51,12 @@
 
             context = A.Fake<WeeeContext>();
             A.CallTo(() => context.Schemes).Returns(schemesDbSet);
-            A.CallTo(() => context.Producers).Returns(producersDbSet);
+            A.CallTo(() => context.ProducerSubmissions).Returns(producersDbSet);
             A.CallTo(() => context.MemberUploads).Returns(memberUploadsDbSet);
 
             generator = A.Fake<IGenerateFromXml>();
-            xmlValidator = A.Fake<IXmlValidator>();
-            xmlChargeBandCalculator = A.Fake<IXmlChargeBandCalculator>();
+            xmlValidator = A.Fake<IXMLValidator>();
+            xmlChargeBandCalculator = A.Fake<IXMLChargeBandCalculator>();
             handler = new ProcessXMLFileHandler(context, permissiveAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator);
         }
 
@@ -73,7 +73,7 @@
         [Fact]
         public async void ProcessXmlfile_ParsesXMLFile_SavesValidProducers()
         {
-            IEnumerable<Producer> generatedProducers = new[] { TestProducer("ForestMoonOfEndor") };
+            IEnumerable<ProducerSubmission> generatedProducers = new[] { TestProducer("ForestMoonOfEndor") };
 
             A.CallTo(() => generator.GenerateProducers(Message, A<MemberUpload>.Ignored, A<Dictionary<string, ProducerCharge>>.Ignored))
                 .Returns(Task.FromResult(generatedProducers));
@@ -97,13 +97,13 @@
         {
             IEnumerable<MemberUploadError> errors = new[]
             {
-                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "any description")
+                new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "any description")
             };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
 
             A.CallTo(() => xmlChargeBandCalculator.Calculate(Message)).MustNotHaveHappened();
-            A.CallTo(() => xmlConverter.Convert(Message)).MustNotHaveHappened();
+            A.CallTo(() => xmlConverter.Convert(Message.Data)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -111,7 +111,7 @@
         {
             IEnumerable<MemberUploadError> errors = new[]
             {
-                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
+                new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description")
             };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
@@ -134,7 +134,7 @@
         {
             IEnumerable<MemberUploadError> errors = new[]
             {
-                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Schema, "any description")
+                new MemberUploadError(ErrorLevel.Error, UploadErrorType.Schema, "any description")
             };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
             await handler.HandleAsync(Message);
@@ -147,7 +147,7 @@
         {
             var errors = new List<MemberUploadError>
             {
-                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
+                new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description")
             };
             A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
 
@@ -161,7 +161,7 @@
         {
             var errors = new List<MemberUploadError>
             {
-                new MemberUploadError(ErrorLevel.Error, MemberUploadErrorType.Business, "any description")
+                new MemberUploadError(ErrorLevel.Error, UploadErrorType.Business, "any description")
             };
             A.CallTo(() => xmlChargeBandCalculator.ErrorsAndWarnings).Returns(errors);
 
@@ -172,13 +172,24 @@
         public async void ProcessXmlfile_StoresProcessTime()
         {
             IEnumerable<MemberUploadError> errors = new List<MemberUploadError>();
-            A.CallTo(() => xmlValidator.Validate(Message)).Returns(errors);
+            A.CallTo(() => xmlValidator.Validate(Message))
+                .Returns(errors);
+
             MemberUpload upload = A.Fake<MemberUpload>();
-            A.CallTo(() => generator.GenerateMemberUpload(Message, errors as List<MemberUploadError>, 0, organisationId)).WithAnyArguments().Returns(upload);
+
+            A.CallTo(() => generator.GenerateMemberUpload(
+                Message,
+                errors as List<MemberUploadError>,
+                0,
+                A.Dummy<Scheme>()))
+                .WithAnyArguments()
+                .Returns(upload);
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => upload.SetProcessTime(new TimeSpan())).WithAnyArguments().MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => upload.SetProcessTime(new TimeSpan()))
+                .WithAnyArguments()
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -188,19 +199,28 @@
             Assert.NotNull(id);
         }
 
-        public static Producer TestProducer(string tradingName)
+        public static ProducerSubmission TestProducer(string tradingName)
         {
-            var schemeId = Guid.NewGuid();
+            var scheme = A.Fake<EA.Weee.Domain.Scheme.Scheme>();
+            A.CallTo(() => scheme.SchemeName).Returns("Scheme Name");
 
-            return new Producer(
-                schemeId,
-                new MemberUpload(organisationId, schemeId, "FAKE Member Upload DATA", "File name"),
-                null,
+            var memberUpload = A.Fake<EA.Weee.Domain.Scheme.MemberUpload>();
+            A.CallTo(() => memberUpload.ComplianceYear).Returns(2017);
+            A.CallTo(() => memberUpload.Scheme).Returns(scheme);
+
+            var registeredProducer = A.Fake<EA.Weee.Domain.Producer.RegisteredProducer>();
+            A.CallTo(() => registeredProducer.ComplianceYear).Returns(2017);
+            A.CallTo(() => registeredProducer.Scheme).Returns(scheme);
+            A.CallTo(() => registeredProducer.ProducerRegistrationNumber).Returns("WEE/AA1111AA");
+
+            return new ProducerSubmission(
+                registeredProducer,
+                memberUpload,
+                A.Fake<ProducerBusiness>(),
                 null,
                 SystemTime.UtcNow,
                 0,
                 true,
-                string.Empty,
                 null,
                 tradingName,
                 EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
@@ -209,7 +229,6 @@
                 AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<BrandName>(),
                 new List<SICCode>(),
-                true,
                 A.Dummy<ChargeBandAmount>(),
                 (decimal)30.0);
         }

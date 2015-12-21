@@ -1,23 +1,26 @@
 ﻿namespace EA.Weee.DataAccess
 {
+    using System.Data.Common;
+    using System.Data.Entity;
+    using System.Data.SqlClient;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Domain;
     using Domain.Admin;
     using Domain.Audit;
+    using Domain.DataReturns;
     using Domain.Lookup;
     using Domain.Organisation;
     using Domain.Producer;
     using Domain.Scheme;
+    using Domain.Unalignment;
     using Prsd.Core;
     using Prsd.Core.DataAccess.Extensions;
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
     using StoredProcedure;
-    using System.Data.Common;
-    using System.Data.Entity;
-    using System.Threading;
-    using System.Threading.Tasks;
 
-    public class WeeeContext : DbContext
+    public partial class WeeeContext : DbContext
     {
         private readonly IUserContext userContext;
         private readonly IEventDispatcher dispatcher;
@@ -40,7 +43,9 @@
 
         public virtual DbSet<Scheme> Schemes { get; set; }
 
-        public virtual DbSet<Producer> Producers { get; set; }
+        public virtual DbSet<RegisteredProducer> RegisteredProducers { get; set; }
+
+        public virtual DbSet<ProducerSubmission> ProducerSubmissions { get; set; }
 
         public virtual DbSet<SystemData> SystemData { get; set; }
 
@@ -49,6 +54,21 @@
         public virtual DbSet<ChargeBandAmount> ChargeBandAmounts { get; set; }
 
         public virtual DbSet<CompetentAuthorityUser> CompetentAuthorityUsers { get; set; }
+
+        public virtual DbSet<DataReturnUpload> DataReturnsUploads { get; set; }
+
+        public virtual DbSet<DataReturnUploadError> DataReturnsUploadErrors { get; set; }
+        public virtual DbSet<DataReturnVersion> DataReturnVersions { get; set; }
+
+        public virtual DbSet<DataReturn> DataReturns { get; set; }
+
+        public virtual DbSet<WeeeDeliveredAmount> WeeeDeliveredAmounts { get; set; }
+
+        public virtual DbSet<AatfDeliveryLocation> AatfDeliveryLocations { get; set; }
+
+        public virtual DbSet<AeDeliveryLocation> AeDeliveryLocations { get; set; }
+
+        public virtual DbSet<WeeeCollectedAmount> WeeeCollectedAmounts { get; set; }
 
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
@@ -94,6 +114,8 @@
             this.SetEntityId();
             this.AuditChanges(userContext.UserId);
             AuditEntity();
+            UnalignEntities();
+
             int result;
             if (alreadyHasTransaction)
             {
@@ -123,6 +145,8 @@
             this.SetEntityId();
             this.AuditChanges(userContext.UserId);
             AuditEntity();
+            UnalignEntities();
+
             int result;
             if (alreadyHasTransaction)
             {
@@ -150,6 +174,15 @@
             Entry(entity).State = EntityState.Deleted;
         }
 
+        public string GetCurrentUser()
+        {
+            if (userContext != null)
+            {
+                return userContext.UserId.ToString();
+            }
+            return null;
+        }
+
         private void AuditEntity()
         {
             foreach (var auditableEntity in ChangeTracker.Entries<IAuditableEntity>())
@@ -158,6 +191,26 @@
                 {
                     auditableEntity.Entity.Date = SystemTime.UtcNow;
                     auditableEntity.Entity.UserId = userContext.UserId.ToString();
+                }
+            }
+        }
+
+        private void UnalignEntities()
+        {
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                var unalignableEntity = entry.Entity as UnalignableEntity;
+                if (unalignableEntity != null 
+                    && !unalignableEntity.IsAligned)
+                {
+                    var entity = unalignableEntity;
+
+                    var tableName = GetTableName(entity.GetType());
+                    var primaryKeyName = GetPrimaryKeyName(entity.GetType());
+
+                    var sql = string.Format("UPDATE {0} SET IsAligned = 0 WHERE {1} = @id", tableName, primaryKeyName);
+
+                    Database.ExecuteSqlCommand(sql, new SqlParameter("@id", entry.OriginalValues[primaryKeyName]));
                 }
             }
         }

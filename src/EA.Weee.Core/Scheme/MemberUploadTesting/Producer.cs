@@ -96,7 +96,7 @@
 
             producer.ProducerBusiness = ProducerBusiness.Create(settings, noCompany);
 
-            if (settings.SchemaVersion < SchemaVersion.Version_3_07 || RandomHelper.OneIn(2))
+            if (settings.SchemaVersion < MemberRegistrationSchemaVersion.Version_3_07 || RandomHelper.OneIn(2))
             {
                 producer.AuthorizedRepresentative = AuthorizedRepresentative.Create(settings);
             }

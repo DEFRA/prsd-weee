@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme
 {
+    using System;
+    using System.Data.Entity;
+    using System.Security;
+    using System.Threading.Tasks;
     using DataAccess;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
     using RequestHandlers.Scheme;
     using Requests.Scheme;
-    using System;
-    using System.Data.Entity;
-    using System.Security;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     using ObligationType = Domain.ObligationType;

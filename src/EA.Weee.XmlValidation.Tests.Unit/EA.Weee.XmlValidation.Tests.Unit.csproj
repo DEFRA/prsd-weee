@@ -57,6 +57,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
       <Private>True</Private>
@@ -83,29 +84,34 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="BusinessValidation\Domain\FakeProducer.cs" />
-    <Compile Include="BusinessValidation\Helpers\SearchMatcherTests.cs" />
-    <Compile Include="BusinessValidation\QuerySets\ProducerQuerySetTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\AmendmentHasNoProducerRegistrationNumberTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\CompanyAlreadyRegisteredTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\EnsureAnOverseasProducerIsNotBasedInTheUKTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\InsertHasProducerRegistrationNumberTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\ProducerChargeBandChangeTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\ProducerNameAlreadyRegisteredTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\ProducerRegistrationNumberValidityTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\UkBasedAuthorisedRepresentativeTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Scheme\CorrectSchemeApprovalNumberTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Scheme\DuplicateProducerNamesTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Scheme\DuplicateProducerRegistrationNumbersTests.cs" />
-    <Compile Include="BusinessValidation\XmlBusinessValidatorTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Domain\FakeProducer.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Helpers\SearchMatcherTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\QuerySets\ProducerQuerySetTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\AmendmentHasNoProducerRegistrationNumberTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\CompanyAlreadyRegisteredTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\EnsureAnOverseasProducerIsNotBasedInTheUKTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\InsertHasProducerRegistrationNumberTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerChargeBandChangeTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerNameAlreadyRegisteredTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerRegistrationNumberValidityTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\UkBasedAuthorisedRepresentativeTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Scheme\CorrectSchemeApprovalNumberTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Scheme\DuplicateProducerNamesTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Scheme\DuplicateProducerRegistrationNumbersTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\MemberRegistrationBusinessValidatorTests.cs" />
+    <Compile Include="DataReturns\XmlSchemaValidationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\AnnualTurnoverMismatchTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\ProducerAlreadyRegisteredTests.cs" />
-    <Compile Include="BusinessValidation\Rules\Producer\ProducerNameChangeTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\AnnualTurnoverMismatchTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerAlreadyRegisteredTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerNameChangeTests.cs" />
+    <Compile Include="Errors\XmlErrorTranslatorTests.cs" />
+    <Compile Include="SchemaValidation\SchemaValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
@@ -133,7 +139,69 @@
       <Name>EA.Weee.Xml</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="DataReturns\XmlFiles\v3-B2CWEEEFromDistributors-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturns\XmlFiles\v3-B2CWEEEFromFinalHolders-ReturnWithB2BObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturns\XmlFiles\v3-B2CWEEEFromFinalHolders-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturns\XmlFiles\v3-CollectedFromDCF-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturns\XmlFiles\v3-DeliveredToAE-DuplicateAEApprovalNo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturns\XmlFiles\v3-DeliveredToAE-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturns\XmlFiles\v3-DeliveredToATF-DuplicateAATFApprovalNo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturns\XmlFiles\v3-DeliveredToATF-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturns\XmlFiles\v3-B2CWEEEFromDistributors-ReturnWithB2BObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturns\XmlFiles\v3-ProducerList-DuplicateCategoryObligationType.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataReturns\XmlFiles\v3-ProducerList-DuplicateRegistrationNo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\not-xml.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v2-valid.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-badly-damaged.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-noproducers.xml" />
+    <Content Include="ExampleXML\v3-same-producer-name.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-slightly-invalid.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-valid-AmendmentBandC.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-valid-ChargeBand.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-valid.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExampleXML\v3-wrong-namespace.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

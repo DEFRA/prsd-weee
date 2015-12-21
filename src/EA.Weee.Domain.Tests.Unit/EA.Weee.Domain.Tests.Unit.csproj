@@ -77,6 +77,16 @@
     </Compile>
     <Compile Include="Admin\CompetentAuthorityUserTests.cs" />
     <Compile Include="CountryTests.cs" />
+    <Compile Include="DataReturns\DataReturnTests.cs" />
+    <Compile Include="DataReturns\DataReturnUploadTests.cs" />
+    <Compile Include="DataReturns\DataReturnVersionTests.cs" />
+    <Compile Include="DataReturns\AatfDeliveredAmountTests.cs" />
+    <Compile Include="DataReturns\AatfDeliveryLocationTests.cs" />
+    <Compile Include="DataReturns\AeDeliveredAmountTests.cs" />
+    <Compile Include="DataReturns\AeDeliveryLocationTests.cs" />
+    <Compile Include="DataReturns\EeeOutputAmountTests.cs" />
+    <Compile Include="DataReturns\ReturnItemTests.cs" />
+    <Compile Include="DataReturns\WeeeDeliveredAmountTests.cs" />
     <Compile Include="ExtensionMethodsTests.cs" />
     <Compile Include="Helpers\UKCompetentAuthorityFactory.cs" />
     <Compile Include="Helpers\CountryFactory.cs" />
@@ -101,7 +111,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">

@@ -1,10 +1,6 @@
 ﻿namespace EA.Weee.Core.Search.Fuzzy
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// A term within a search result.

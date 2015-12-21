@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2009 sp1 (http://www.altova.com) by Environment Agency (Capgemini UK plc) -->
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Mark Buttle (Environment Agency) -->
+<xs:schema xmlns="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns"
+           xmlns:tns="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+  <!--
+================================================================================
+=
+=   APPLICATION: Waste Electronic and Electrical Equipment Regulations 2013
+=   MODULE: Scheme Returns
+=   FILE: XSD Scheme Returns version 3.21.xsd
+=   DESCRIPTION: Schema to validate WEEE Scheme Quarterly Returns Data
+=
+================================================================================
+=
+=   CHANGE HISTORY
+=
+=   Date           Author    				Version  	Purpose of Change                           
+=_____________________________________________________________________________
+=
+=   7/09/2007    Jacqui Spencer  		1.0     	    Initial Draft.
+=   09/10/2007   Colin McDonald     1.1           Changed Return Period Values.
+=   23/10/2007   Colin McDonald     1.2           Amended return elements to enforce unique entry 
+=                                                                     of a combination of category name and obligation type.
+=   15/02/2008   Colin McDonald     1.3           Minor amendments.
+=   29/01/2010   Jacqui Spencer			2.0           Amended due to 2010 regulation changes.
+=   01/11/2015   Dave A             3.1           Updated categories.
+
+=   24/11/2015   Muhammad I         3.2           - Updates to the unique constraints XPath expressions.
+                                                  - Additional unique constraints for AATF, AE and Producer identifiers.
+                                                  - Rename WEEEReturnedReg43 to B2CWEEEFromDistributors and enforce B2C obligation type for returns.
+                                                  - Rename WEEETakenBackReg50 to B2CWEEEFromFinalHolders and enforce B2C obligation type for returns.
+                                                  - Make DeliveredToAE optional.
+                                                  - XSD version restriction changed.
+                                                  
+=   10/12/2015   Muhammad I         3.21          - Update compliance year restriction to have a minimum of 2016.
+                                                  - Remove unused SiteAddressDetailsType and operatorTypeType elements.
+                                                  - Update regulation year to 2013 and correct file name.
+================================================================================
+-->
+  <xs:element name="SchemeReturn">
+    <xs:annotation>
+      <xs:documentation>Root element for scheme return data</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="XSDVersion" default="3.21">
+          <xs:simpleType>
+            <xs:restriction base="XSDVersionType"/>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="ApprovalNo" type="approvalNoType"/>
+        <xs:element name="ComplianceYear" type="complianceYearType"/>
+        <xs:element name="ReturnPeriod">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="Quarter 1: January - March"/>
+              <xs:enumeration value="Quarter 2: April - June"/>
+              <xs:enumeration value="Quarter 3: July - September"/>
+              <xs:enumeration value="Quarter 4: October - December"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="CollectedFromDCF">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Return" type="TonnageReturnType" maxOccurs="28"/>
+            </xs:sequence>
+          </xs:complexType>
+          <xs:unique name="uniqueCategoryCollectedFromDCF">
+            <xs:selector xpath="tns:Return"/>
+            <xs:field xpath="tns:CategoryName"/>
+            <xs:field xpath="tns:ObligationType"/>
+          </xs:unique>
+        </xs:element>
+        <xs:element name="DeliveredToATF" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="DeliveredToFacility">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="AATFApprovalNo" type="atfApprovalNoType"/>
+                    <xs:element name="FacilityName">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:maxLength value="250"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Return" type="TonnageReturnType" maxOccurs="28"/>
+            </xs:sequence>
+          </xs:complexType>
+          <xs:unique name="uniqueCategoryDeliveredToATF">
+            <xs:selector xpath="tns:Return"/>
+            <xs:field xpath="tns:CategoryName"/>
+            <xs:field xpath="tns:ObligationType"/>
+          </xs:unique>
+        </xs:element>
+        <xs:element name="DeliveredToAE" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="DeliveredToOperator">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="AEApprovalNo" type="aeApprovalNoType"/>
+                    <xs:element name="OperatorName">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:maxLength value="250"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Return" type="TonnageReturnType" maxOccurs="28"/>
+            </xs:sequence>
+          </xs:complexType>
+          <xs:unique name="uniqueCategoryObligationDeliveredToAE">
+            <xs:selector xpath="tns:Return"/>
+            <xs:field xpath="tns:CategoryName"/>
+            <xs:field xpath="tns:ObligationType"/>
+          </xs:unique>
+        </xs:element>
+        <xs:element name="B2CWEEEFromDistributors">
+          <xs:annotation>
+            <xs:documentation>WEEE Returned under regulation 43.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Return" type="B2CTonnageReturnType" maxOccurs="28"/>
+            </xs:sequence>
+          </xs:complexType>
+          <xs:unique name="uniqueCategoryObligationB2CWEEEFromDistributors">
+            <xs:selector xpath="tns:Return"/>
+            <xs:field xpath="tns:CategoryName"/>
+            <xs:field xpath="tns:ObligationType"/>
+          </xs:unique>
+        </xs:element>
+        <xs:element name="B2CWEEEFromFinalHolders">
+          <xs:annotation>
+            <xs:documentation>WEEE Taken back under regulation 50.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Return" type="B2CTonnageReturnType" maxOccurs="28"/>
+            </xs:sequence>
+          </xs:complexType>
+          <xs:unique name="uniqueCategoryObligationB2CWEEEFromFinalHolders">
+            <xs:selector xpath="tns:Return"/>
+            <xs:field xpath="tns:CategoryName"/>
+            <xs:field xpath="tns:ObligationType"/>
+          </xs:unique>
+        </xs:element>
+        <xs:element name="ProducerList">
+          <xs:annotation>
+            <xs:documentation>EEE Produced</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Producer" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="RegistrationNo" type="registrationNoType"/>
+                    <xs:element name="ProducerCompanyName" type="mandatoryNameType"/>
+                    <xs:element name="Return" type="TonnageReturnType" maxOccurs="28">
+                      <xs:annotation>
+                        <xs:documentation>Note that Non-Household EEE should only be reported annually in the Quarter 4 return. </xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+                <xs:unique name="uniqueCategoryObligationProducerReturn">
+                  <xs:selector xpath="tns:Return"/>
+                  <xs:field xpath="tns:CategoryName"/>
+                  <xs:field xpath="tns:ObligationType"/>
+                </xs:unique>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+          <xs:unique name="uniqueProducerRegistrationNo">
+            <xs:selector xpath="tns:Producer"/>
+            <xs:field xpath="tns:RegistrationNo"/>
+          </xs:unique>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="uniqueAATFApprovalNo">
+      <xs:selector xpath="tns:DeliveredToATF/tns:DeliveredToFacility"/>
+      <xs:field xpath="tns:AATFApprovalNo"/>
+    </xs:unique>
+    <xs:unique name="uniqueAEApprovalNo">
+      <xs:selector xpath="tns:DeliveredToAE/tns:DeliveredToOperator"/>
+      <xs:field xpath="tns:AEApprovalNo"/>
+    </xs:unique>
+  </xs:element>
+  <xs:simpleType name="XSDVersionType">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="3.21"/>
+      <xs:maxInclusive value="3.21"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="approvalNoType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(WEE/)[A-Z]{2}[0-9]{4}[A-Z]{2}(/SCH)"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="complianceYearType">
+    <xs:restriction base="xs:positiveInteger">
+      <xs:minInclusive value="2016"/>
+      <xs:maxInclusive value="3000"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="categoryNameType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="Large Household Appliances"/>
+      <xs:enumeration value="Small Household Appliances"/>
+      <xs:enumeration value="IT and Telecomms Equipment"/>
+      <xs:enumeration value="Consumer Equipment"/>
+      <xs:enumeration value="Lighting Equipment"/>
+      <xs:enumeration value="Electrical and Electronic Tools"/>
+      <xs:enumeration value="Toys Leisure and Sports"/>
+      <xs:enumeration value="Medical Devices"/>
+      <xs:enumeration value="Monitoring and Control Instruments"/>
+      <xs:enumeration value="Automatic Dispensers"/>
+      <xs:enumeration value="Display Equipment"/>
+      <xs:enumeration value="Cooling Appliances Containing Refrigerants"/>
+      <xs:enumeration value="Gas Discharge Lamps and LED light sources"/>
+      <xs:enumeration value="Photovoltaic Panels"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="obligationTypeType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="B2B"/>
+      <xs:enumeration value="B2C"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="returnValueTonnageType">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="0"/>
+      <xs:fractionDigits value="3"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="TonnageReturnType">
+    <xs:sequence>
+      <xs:element name="CategoryName" type="categoryNameType"/>
+      <xs:element name="ObligationType" type="obligationTypeType"/>
+      <xs:element name="TonnesReturnValue" type="returnValueTonnageType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="B2CTonnageReturnType">
+    <xs:complexContent>
+      <xs:restriction base="TonnageReturnType">
+        <xs:sequence>
+          <xs:element name="CategoryName" type="categoryNameType"/>
+          <xs:element name="ObligationType" type="obligationTypeType" fixed="B2C"/>
+          <xs:element name="TonnesReturnValue" type="returnValueTonnageType"/>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="registrationNoType">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="12"/>
+      <xs:maxLength value="12"/>
+      <xs:pattern value="((WEE/)[A-Z]{2}[0-9]{4}[A-Z]{2})?"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="mandatoryNameType">
+    <xs:restriction base="xs:token">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="255"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="aeApprovalNoType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(WEE/)[A-Z]{2}[0-9]{4}[A-Z]{2}(/AE|/EXP)"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="atfApprovalNoType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(WEE/)[A-Z]{2}[0-9]{4}[A-Z]{2}(/ATF)"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

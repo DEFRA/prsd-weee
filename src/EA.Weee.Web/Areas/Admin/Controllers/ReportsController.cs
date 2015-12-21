@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
+    using System;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Core.Scheme;
@@ -8,12 +12,9 @@
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Services;
-    using System;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
+    using Weee.Requests.Admin.Reports;
     using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
 
@@ -65,12 +66,12 @@
         [ValidateAntiForgeryToken]
         public ActionResult ChooseReport(ChooseReportViewModel model)
         {
+            SetBreadcrumb();
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
-            SetBreadcrumb();
 
             switch (model.SelectedValue)
             {
@@ -79,6 +80,9 @@
 
                 case Reports.PCSCharges:
                     return RedirectToAction("PCSCharges", "Reports");
+
+                case Reports.Producerpublicregister:
+                    return RedirectToAction("ProducerPublicRegister", "Reports");
                 default:
                     throw new NotSupportedException();
             }
@@ -113,9 +117,10 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ProducerDetails(ReportsFilterViewModel model)
         {
+            SetBreadcrumb();
+
             using (var client = apiClient())
             {
-                SetBreadcrumb();
                 await SetReportsFilterLists(model, client);
                 if (!ModelState.IsValid)
                 {
@@ -151,14 +156,15 @@
                 }
             }
         }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> PCSCharges(ReportsFilterViewModel model)
-        {            
+        {
+            SetBreadcrumb();
+
             using (var client = apiClient())
             {
-                SetBreadcrumb();
                 await SetReportsFilterLists(model, client);
                 if (!ModelState.IsValid)
                 {
@@ -167,6 +173,49 @@
 
                 //Download the csv based on the filters.
                 return await DownloadPCSChargesCSV(model, client);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ProducerPublicRegister()
+        {
+            SetBreadcrumb();
+
+            using (var client = apiClient())
+            {
+                try
+                {
+                    ProducerPublicRegisterViewModel model = new ProducerPublicRegisterViewModel();
+                    await SetReportsFilterLists(model, client);
+                    return View("ProducerPublicRegister", model);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                    return View();
+                }
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ProducerPublicRegister(ProducerPublicRegisterViewModel model)
+        {
+            SetBreadcrumb();
+
+            using (var client = apiClient())
+            {
+                await SetReportsFilterLists(model, client);
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+                
+                return await DownloadProducerPublicRegisterCSV(model, client);
             }
         }
 
@@ -182,6 +231,13 @@
                 model.SchemeNames = new SelectList(allSchemes, "Id", "SchemeName");
             }           
         }
+
+        private async Task SetReportsFilterLists(ProducerPublicRegisterViewModel model, IWeeeClient client)
+        {
+            var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
+            model.ComplianceYears = new SelectList(allYears);
+        }
+
         private void SetBreadcrumb()
         {
             breadcrumb.InternalActivity = "View reports";
@@ -237,6 +293,15 @@
 
             byte[] data = new UTF8Encoding().GetBytes(pcsChargesCsvData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
+        }
+
+        private async Task<ActionResult> DownloadProducerPublicRegisterCSV(ProducerPublicRegisterViewModel model, IWeeeClient client)
+        {
+            var membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(),
+               new GetProducerPublicRegisterCSV(model.SelectedYear));
+
+            byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(membersDetailsCsvData.FileName));
         }
     }
 }

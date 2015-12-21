@@ -4,11 +4,11 @@
     using Domain.Scheme;
     using Prsd.Core.Mapper;
 
-    public class MemberUploadErrorMap : IMap<MemberUploadError, MemberUploadErrorData>
+    public class MemberUploadErrorMap : IMap<MemberUploadError, UploadErrorData>
     {
-        public MemberUploadErrorData Map(MemberUploadError source)
+        public UploadErrorData Map(MemberUploadError source)
         {
-            return new MemberUploadErrorData
+            return new UploadErrorData
             {
                 ErrorLevel = (ErrorLevel)source.ErrorLevel.Value,
                 Description = source.Description

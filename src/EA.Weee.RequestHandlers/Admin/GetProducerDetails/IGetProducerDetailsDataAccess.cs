@@ -1,11 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
-    using EA.Weee.Domain.Producer;
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
+    using EA.Weee.Domain.Producer;
 
     public interface IGetProducerDetailsDataAccess
     {
@@ -21,6 +18,6 @@
         /// </summary>
         /// <param name="registrationNumber"></param>
         /// <returns></returns>
-        Task<List<Producer>> Fetch(string registrationNumber);
+        Task<List<ProducerSubmission>> Fetch(string registrationNumber);
     }
 }

@@ -4,39 +4,36 @@
 
 @if (Model.Any())
 {
-    <div class="related-section">
-        <div class="form-group">
-            <div class="table-hr"></div>
-                <table id="submissions" class="prsd-table">
-                    <thead>
-                        <tr>
-                            <th>Date and time (GMT)</th>
-                            <th>Warnings</th>
-                            <th>Submitted by</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                   @foreach (SubmissionsHistorySearchResult item in Model)
-                   {
-                       string datetime = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
-                        <tr>
-                            <td>@datetime</td>
-                            <td>
-                                @if (item.NoOfWarnings > 0)
-                                {
-                                    string warningText = (item.NoOfWarnings > 1 ? "warnings (CSV)" : "warning (CSV)");
-                                    <a href="@Url.Action("DownloadCSV", "Submissions", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId })">@item.NoOfWarnings @warningText</a>
-                                }
-                            </td>
-                            <td style="text-align:left">@item.SubmittedBy</td>
-                         </tr>
-                   }
-                    </tbody>
-                </table>
-        </div>
-    </div>
+    <div class="table-hr"></div>
+    <table id="submissions" class="prsd-table">
+        <caption class="hidden-for-screen-reader">This table shows the submissions for the selected year and scheme.</caption>
+        <thead>
+            <tr>
+                <th>Date and time (GMT)</th>
+                <th>Warnings</th>
+                <th>Submitted by</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (SubmissionsHistorySearchResult item in Model)
+        {
+            string datetime = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
+            <tr>
+                <td>@datetime</td>
+                <td>
+                    @if (item.NoOfWarnings > 0)
+                    {
+                        string warningText = (item.NoOfWarnings > 1 ? "warnings (CSV)" : "warning (CSV)");
+                        <a href="@Url.Action("DownloadCSV", "Submissions", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
+                    }
+                </td>
+                <td style="text-align:left">@item.SubmittedBy</td>
+                </tr>
+        }
+        </tbody>
+    </table>
 }
 else
 {
-    <p>We didn't find any submission that matched your criteria.</p>
+    <span>We didn't find any submission that matched your criteria.</span>
 }

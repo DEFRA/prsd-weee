@@ -1,16 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Scheme.MemberRegistration
 {
-    using EA.Weee.RequestHandlers.Scheme.Interfaces;
-    using EA.Weee.Xml.Schemas;
-    using FakeItEasy;
-    using RequestHandlers.Scheme.MemberRegistration;
-    using Requests.Scheme.MemberRegistration;
     using System;
-    using System.Collections;
     using System.IO;
     using System.Reflection;
     using System.Text;
-    using System.Xml.Linq;
+    using FakeItEasy;
+    using RequestHandlers.Scheme.MemberRegistration;
+    using Requests.Scheme.MemberRegistration;
+    using Xml.Converter;
+    using Xml.Deserialization;
+    using Xml.MemberRegistration;
     using Xunit;
 
     public class XmlChargeBandCalculatorTests
@@ -32,7 +31,7 @@
                 @"ExampleXML\v3-valid.xml");
 
             byte[] xml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(absoluteFilePath).LocalPath));
-            ProcessXMLFile request = new ProcessXMLFile(A<Guid>._, xml, "File name");
+            ProcessXmlFile request = new ProcessXmlFile(A<Guid>._, xml, "File name");
 
             var xmlChargeBandCalculator = XmlChargeBandCalculator();
 
@@ -54,7 +53,7 @@
                 @"ExampleXML\v3-same-producer-name.xml");
 
             byte[] xml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(absoluteFilePath).LocalPath));
-            ProcessXMLFile request = new ProcessXMLFile(A<Guid>._, xml, "File name");
+            ProcessXmlFile request = new ProcessXmlFile(A<Guid>._, xml, "File name");
 
             var xmlChargeBandCalculator = XmlChargeBandCalculator();
 
@@ -76,7 +75,7 @@
                 @"ExampleXML\v3-valid-ChargeBand.xml");
 
             byte[] xml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(absoluteFilePath).LocalPath));
-            ProcessXMLFile request = new ProcessXMLFile(A<Guid>._, xml, "File name");
+            ProcessXmlFile request = new ProcessXmlFile(A<Guid>._, xml, "File name");
 
             ProducerCharge producerCharge1 = A.Dummy<ProducerCharge>();
             ProducerCharge producerCharge2 = A.Dummy<ProducerCharge>();
@@ -108,11 +107,11 @@
             Assert.Equal(producerCharge5, producerCharges["The Empire 3"]);
         }
 
-        private XmlChargeBandCalculator XmlChargeBandCalculator()
+        private XMLChargeBandCalculator XmlChargeBandCalculator()
         {
             var xmlConverter = new XmlConverter(A.Fake<IWhiteSpaceCollapser>(), new Deserializer());
 
-            return new XmlChargeBandCalculator(xmlConverter, producerChargerCalculator);
+            return new XMLChargeBandCalculator(xmlConverter, producerChargerCalculator);
         }
     }
 }

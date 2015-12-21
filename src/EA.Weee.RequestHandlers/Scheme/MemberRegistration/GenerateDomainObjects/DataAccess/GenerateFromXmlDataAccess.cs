@@ -6,7 +6,6 @@
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Runtime.ExceptionServices;
-    using System.Text;
     using System.Threading.Tasks;
     using Core.Helpers.PrnGeneration;
     using Domain;
@@ -119,6 +118,16 @@
             }
         }
 
+        public async Task<RegisteredProducer> FetchRegisteredProducerOrDefault(string producerRegistrationNumber, int complianceYear, Guid schemeId)
+        {
+            return await context
+                .RegisteredProducers
+                .Where(rp => rp.ProducerRegistrationNumber == producerRegistrationNumber)
+                .Where(rp => rp.ComplianceYear == complianceYear)
+                .Where(rp => rp.Scheme.Id == schemeId)
+                .SingleOrDefaultAsync();
+        }
+
         public async Task<Country> GetCountry(string countryName)
         {
             Country country = null;
@@ -131,31 +140,19 @@
             return country;
         }
 
-        public Task<Producer> GetLatestProducerRecord(Guid schemeId, string producerRegistrationNumber)
+        public async Task<bool> MigratedProducerExists(string producerRegistrationNumber)
         {
-            return GetLatestProducerRecord(schemeId, producerRegistrationNumber, false);
+            return await context
+                .MigratedProducers
+                .AnyAsync(mp => mp.ProducerRegistrationNumber == producerRegistrationNumber);
         }
 
-        public Task<Producer> GetLatestProducerRecordExcludeScheme(Guid schemeId, string producerRegistrationNumber)
+        public async Task<bool> ProducerRegistrationExists(string producerRegistrationNumber)
         {
-            return GetLatestProducerRecord(schemeId, producerRegistrationNumber, true);
-        }
-
-        private Task<Producer> GetLatestProducerRecord(Guid schemeId, string producerRegistrationNumber, bool excludeSpecifiedSchemeId)
-        {
-            // Get the producers for scheme based on producer->prn and producer->lastsubmitted
-            // is latest date and memberupload ->IsSubmitted is true.
-            return context.MemberUploads
-                  .Where(member => member.IsSubmitted && ((member.SchemeId == schemeId) != excludeSpecifiedSchemeId))
-                  .SelectMany(p => p.Producers)
-                  .Where(p => p.RegistrationNumber == producerRegistrationNumber)
-                  .OrderByDescending(p => p.UpdatedDate)
-                  .FirstOrDefaultAsync();
-        }
-
-        public Task<MigratedProducer> GetMigratedProducer(string producerRegistrationNumber)
-        {
-            return context.MigratedProducers.FirstOrDefaultAsync(m => m.ProducerRegistrationNumber == producerRegistrationNumber);
+            return await context
+                .RegisteredProducers
+                .Where(rp => rp.CurrentSubmission != null)
+                .AnyAsync(rp => rp.ProducerRegistrationNumber == producerRegistrationNumber);
         }
     }
 }

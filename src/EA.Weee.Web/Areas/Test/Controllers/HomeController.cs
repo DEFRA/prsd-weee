@@ -1,12 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Test.Controllers
 {
-    using EA.Weee.Web.Areas.Test.ViewModels;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
     using System.Web.Mvc;
-    
+    using EA.Weee.Web.Areas.Test.ViewModels;
+
     public class HomeController : Controller
     {
         [HttpGet]
@@ -24,8 +21,11 @@
             {
                 switch (viewModel.SelectedValue)
                 {
-                    case HomeViewModel.OptionGeneratePcsXmlFile:
-                        return RedirectToAction("SelectOrganisation", "GeneratePcsXml");
+                    case HomeViewModel.CreatePcsMemberXmlFile:
+                        return RedirectToAction("SelectOrganisation", "CreatePcsMemberXmlFile");
+
+                    case HomeViewModel.CreatePcsDataReturnXmlFile:
+                        return RedirectToAction("SelectOrganisation", "CreatePcsDataReturnXmlFile");
 
                     case HomeViewModel.ManageCache:
                         return RedirectToAction("Index", "ManageCache");

@@ -17,14 +17,13 @@
         @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
         @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { autocomplete = "false" })
     </div>
-    <div class="form-group  @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
+    <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
         @Html.Gds().LabelFor(m => m.SelectedScheme)
         @Html.Gds().ValidationMessageFor(m => m.SelectedScheme)
         @Html.Gds().DropDownListFor(m => m.SelectedScheme, Model.SchemeNames, new { autocomplete = "false" })
     </div>
-    <p class="form-group" id="submissionResults">
-
-    </p>
+    
+    <div class="form-group" id="submissionResults"></div>
 
     <p>
         <a href="javascript:history.back();">Back</a>

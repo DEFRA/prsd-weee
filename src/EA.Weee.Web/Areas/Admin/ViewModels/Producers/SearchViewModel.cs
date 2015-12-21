@@ -8,7 +8,7 @@
     {
         [Required]
         [DisplayName("Search term")]
-        [StringLength(CommonMaxFieldLengths.DefaultString)]
+        [StringLength(EnvironmentAgencyMaxFieldLengths.ProducerSearchTerm)]
         public string SearchTerm { get; set; }
 
         public string SelectedRegistrationNumber { get; set; }

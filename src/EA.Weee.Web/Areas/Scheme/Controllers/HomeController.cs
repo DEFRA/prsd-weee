@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using Api.Client;
     using Core.Organisations;
     using EA.Weee.Core.Shared;
@@ -9,12 +15,6 @@
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
     using Prsd.Core.Extensions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using ViewModels;
     using Web.Controllers.Base;
     using Web.ViewModels.Shared;
@@ -32,13 +32,15 @@
         private readonly BreadcrumbService breadcrumb;
         private readonly CsvWriterFactory csvWriterFactory;
         private const string DoNotChange = "Do not change at this time";
+        private readonly ConfigurationService configurationService;
 
-        public HomeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb, CsvWriterFactory csvWriterFactory)
+        public HomeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb, CsvWriterFactory csvWriterFactory, ConfigurationService configService)
         {
             this.apiClient = apiClient;
             this.cache = cache;
             this.breadcrumb = breadcrumb;
             this.csvWriterFactory = csvWriterFactory;
+            this.configurationService = configService;
         }
 
         [HttpGet]
@@ -78,6 +80,10 @@
 
                 List<string> activities = new List<string>();
                 activities.Add(PcsAction.ManagePcsMembers);
+                if (configurationService.CurrentConfiguration.EnableDataReturns)
+                {
+                    activities.Add(PcsAction.SubmitPcsDataReturns);
+                }
                 if (organisationOverview.HasMemberSubmissions)
                 {
                     activities.Add(PcsAction.ViewSubmissionHistory);
@@ -130,6 +136,22 @@
                 if (viewModel.SelectedValue == PcsAction.ViewSubmissionHistory)
                 {
                     return RedirectToAction("ViewSubmissionHistory", new { pcsId = viewModel.OrganisationId });
+                }
+                if (viewModel.SelectedValue == PcsAction.SubmitPcsDataReturns)
+                {
+                    using (var client = apiClient())
+                    {
+                        var status = await client.SendAsync(User.GetAccessToken(), new GetSchemeStatus(viewModel.OrganisationId));
+
+                        if (status == SchemeStatus.Approved)
+                        {
+                            return RedirectToAction("Upload", "DataReturns", new { pcsId = viewModel.OrganisationId });
+                        }
+                        else
+                        {
+                            return RedirectToAction("AuthorisationRequired", "DataReturns", new { pcsId = viewModel.OrganisationId });
+                        }
+                    }
                 }
             }
 
@@ -359,7 +381,7 @@
         [HttpGet]
         public async Task<ActionResult> ViewSubmissionHistory(Guid pcsId)
         {
-            await SetBreadcrumb(pcsId, "View submission history");
+            await SetBreadcrumbAndPcsBanner(pcsId, "View submission history");
 
             var model = new SubmissionHistoryViewModel();
             
@@ -377,19 +399,19 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadCsv(Guid schemeId, int year, Guid memberUploadId)
+        public async Task<ActionResult> DownloadCsv(Guid schemeId, int year, Guid memberUploadId, DateTime submissionDateTime)
         {
             using (var client = apiClient())
             {
-                IEnumerable<MemberUploadErrorData> errors =
+                IEnumerable<UploadErrorData> errors =
                     (await client.SendAsync(User.GetAccessToken(), new GetMemberUploadData(schemeId, memberUploadId)))
                     .OrderByDescending(e => e.ErrorLevel);
 
-                CsvWriter<MemberUploadErrorData> csvWriter = csvWriterFactory.Create<MemberUploadErrorData>();
+                CsvWriter<UploadErrorData> csvWriter = csvWriterFactory.Create<UploadErrorData>();
                 csvWriter.DefineColumn("Description", e => e.Description);
-                
+    
                 var schemePublicInfo = await cache.FetchSchemePublicInfo(schemeId);
-                var csvFileName = string.Format("{0}_memberregistration_{1}_warnings_{2}.csv", schemePublicInfo.ApprovalNo, year, DateTime.Now.ToString("ddMMyyyy_HHmm"));
+                var csvFileName = string.Format("{0}_memberregistration_{1}_warnings_{2}.csv", schemePublicInfo.ApprovalNo, year, submissionDateTime.ToString("ddMMyyyy_HHmm"));
 
                 string csv = csvWriter.Write(errors);
                 byte[] fileContent = new UTF8Encoding().GetBytes(csv);
@@ -440,6 +462,12 @@
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = activity;
+        }
+
+        private async Task SetBreadcrumbAndPcsBanner(Guid organisationId, string activity)
+        {
+            await SetBreadcrumb(organisationId, activity);
+            breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
     }
 }

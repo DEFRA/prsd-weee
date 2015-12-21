@@ -1,4 +1,5 @@
-﻿@{
+﻿@using EA.Weee.Web.RazorHelpers
+@{
     ViewBag.Title = "Manage Cache";
 }
 
@@ -16,12 +17,6 @@
     {
         @Html.AntiForgeryToken()
 
-        <p>
-            <input type="submit" class="button" value="Continue" />
-        </p>
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
     }
-
-    <p>
-        @Html.ActionLink("Back", "Index", "Home", null, null)
-    </p>
 }

@@ -1,28 +1,24 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.DataAccess.BusinessValidation.Rules.QuerySets
 {
-    using DataAccess;
-    using EA.Weee.Tests.Core.Model;
-    using FakeItEasy;
     using System;
-    using System.Collections.Generic;
-    using Weee.Tests.Core;
-    using XmlValidation.BusinessValidation.QuerySets;
+    using EA.Weee.Tests.Core.Model;
+    using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
     using Xunit;
 
     public class SchemeQuerySetTests
     {
         [Fact]
-        public void GetSchemeApprovalNumber_SchemeIdDoesNotExist_ReturnsNull()
+        public void GetSchemeApprovalNumberByOrganisationId_OrganisationIdDoesNotExist_ReturnsNull()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 // Arrange
-                var schemeId = new Guid("15BE2DE7-8D51-470E-B27D-779AF14172AD");
+                var organisationId = Guid.NewGuid();
 
                 SchemeQuerySet schemeQuerySet = new SchemeQuerySet(database.WeeeContext);
 
                 // Act
-                string result = schemeQuerySet.GetSchemeApprovalNumber(schemeId);
+                string result = schemeQuerySet.GetSchemeApprovalNumberByOrganisationId(organisationId);
 
                 // Assert
                 Assert.Null(result);
@@ -30,22 +26,22 @@
         }
 
         [Fact]
-        public void GetSchemeApprovalNumber_SchemeIdDoesExist_ReturnsApprovalNumber()
+        public void GetSchemeApprovalNumberByOrganisationId_OrganisationIdDoesExist_ReturnsApprovalNumber()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
                 ModelHelper helper = new ModelHelper(database.Model);
 
                 // Arrange
-                Scheme scheme1 = helper.CreateScheme();
-                scheme1.ApprovalNumber = "ABC";
+                Scheme scheme = helper.CreateScheme();
+                scheme.ApprovalNumber = "ABC";
                 
                 database.Model.SaveChanges();
 
                 SchemeQuerySet schemeQuerySet = new SchemeQuerySet(database.WeeeContext);
 
                 // Act
-                string result = schemeQuerySet.GetSchemeApprovalNumber(scheme1.Id);
+                string result = schemeQuerySet.GetSchemeApprovalNumberByOrganisationId(scheme.OrganisationId);
 
                 // Assert
                 Assert.Equal("ABC", result);

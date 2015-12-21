@@ -5,7 +5,8 @@
         || (Model.Breadcrumb.ExternalActivity != null)
         || (Model.Breadcrumb.InternalActivity != null)
         || (Model.Breadcrumb.InternalOrganisation != null)
-        || (Model.Breadcrumb.InternalUser != null);
+        || (Model.Breadcrumb.InternalUser != null)
+        || (Model.Breadcrumb.TestAreaActivity != null);
         
     bool showIdentity = Model.User.Identity.IsAuthenticated;
     
@@ -78,6 +79,13 @@
                         <a href="@Url.Action("ManageUsers", "User", new { Area = "admin" })">User</a>: @Model.Breadcrumb.InternalUser
                     </li>
                 }
+
+                @if (Model.Breadcrumb.TestAreaActivity != null)
+                {
+                    <li>
+                        <a href="@Url.Action("Index", "Home", new { Area = "test" })">Activity</a>: @Model.Breadcrumb.TestAreaActivity
+                    </li>
+                }
             </ul>
         </div>
     </div>
@@ -95,6 +103,7 @@
                     @using (Html.BeginForm("SignOut", "Account", routeValues: new { area = (Model.UserIsInternal ? "admin" : string.Empty) }, method: FormMethod.Post, htmlAttributes: new { id = "logoutForm" }))
                     {
                         @Html.AntiForgeryToken()
+
                         <input class="link-submit" id="link-sign-out" type="submit" value="Sign out"/>
                     }
                 </li>
