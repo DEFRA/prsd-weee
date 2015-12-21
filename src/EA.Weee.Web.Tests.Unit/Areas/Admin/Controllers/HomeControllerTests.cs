@@ -1,10 +1,13 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
+    using System;
     using System.Web.Mvc;
     using Api.Client;
     using Core.Shared;
     using FakeItEasy;
     using Prsd.Core.Mediator;
+    using Services;
+    using ViewModels.Shared;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Home;
     using Xunit;
@@ -70,7 +73,7 @@
             var controller = HomeController();
             controller.ModelState.AddModelError("Key", "Any error");
 
-            var result = controller.ChooseActivity(new InternalUserActivityViewModel());
+            var result = controller.ChooseActivity(A.Dummy<RadioButtonStringCollectionViewModel>());
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
@@ -82,13 +85,15 @@
         [InlineData(InternalUserActivity.ProducerDetails, "Search")]
         [InlineData(InternalUserActivity.SubmissionsHistory, "SubmissionsHistory")]
         [InlineData(InternalUserActivity.ViewReports, "ChooseReport")]
+        [InlineData(InternalUserActivity.ManagePcsCharges, "SelectAA")]
         public void HttpPost_ChooseActivity_RedirectsToCorrectControllerAction(string selection, string action)
         {
             // Arrange
-            InternalUserActivityViewModel model = new InternalUserActivityViewModel { SelectedValue = selection };
+            RadioButtonStringCollectionViewModel viewModel = new RadioButtonStringCollectionViewModel();
+            viewModel.SelectedValue = selection;
 
             // Act
-            ActionResult result = HomeController().ChooseActivity(model);
+            ActionResult result = HomeController().ChooseActivity(viewModel);
 
             // Assert
             var redirectToRouteResult = ((RedirectToRouteResult)result);
@@ -96,9 +101,35 @@
             Assert.Equal(action, redirectToRouteResult.RouteValues["action"]);
         }
 
+        /// <summary>
+        /// This test ensures that the "ManagePcsCharges" option is considered invalid for the POST ChoooseActivity
+        /// action when the configuration has "EnabledInvoicing" set to false.
+        /// </summary>
+        [Fact]
+        public void PostChooseActivity_SelectedManagePcsChargesWhenConfigSetToFalse_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnableInvoicing).Returns(false);
+
+            HomeController controller = new HomeController(() => apiClient, configuration);
+
+            RadioButtonStringCollectionViewModel viewModel = new RadioButtonStringCollectionViewModel();
+            viewModel.SelectedValue = InternalUserActivity.ManagePcsCharges.ToString();
+
+            // Act
+            Func<ActionResult> testCode = () => controller.ChooseActivity(viewModel);
+
+            // Assert
+            Assert.Throws<InvalidOperationException>(testCode);
+        }
+
         private HomeController HomeController()
         {
-            return new HomeController(() => apiClient);
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnableInvoicing).Returns(true);
+
+            return new HomeController(() => apiClient, configuration);
         }
     }
 }
