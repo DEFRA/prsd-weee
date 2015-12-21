@@ -8,15 +8,9 @@
         public EeeOutputAmountMapping()
         {
             ToTable("EeeOutputAmount", "PCS");
-            HasMany(w => w.EeeOutputReturnVersions)
-                .WithMany(a => a.EeeOutputAmounts)
-                .Map(
-               m =>
-               {
-                   m.MapLeftKey("EeeOutputAmountReturnVersionId");
-                   m.MapRightKey("EeeOutputAmountAmountId");
-                   m.ToTable("EeeOutputAmountReturnVersionAmount");
-               });
+
+            Ignore(ps => ps.ObligationType);
+            Property(ps => ps.DatabaseObligationType).HasColumnName("ObligationType");
         }
     }
 }

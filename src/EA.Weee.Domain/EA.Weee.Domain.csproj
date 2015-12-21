@@ -54,8 +54,6 @@
     <Compile Include="Audit\IAuditableEntity.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataReturns\AatfDeliveredAmount.cs" />
-    <Compile Include="DataReturns\AeDeliveredAmount.cs" />
     <Compile Include="DataReturns\DataReturn.cs" />
     <Compile Include="DataReturns\DataReturnUpload.cs" />
     <Compile Include="DataReturns\DataReturnUploadError.cs" />

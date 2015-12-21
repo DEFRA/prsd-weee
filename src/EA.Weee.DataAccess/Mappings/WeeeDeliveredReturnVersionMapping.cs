@@ -9,9 +9,17 @@
         {
             ToTable("WeeeDeliveredReturnVersion", "PCS");
 
-            HasMany(r => r.DataReturnVersions);
-            HasMany(at => at.AatfDeliveredAmounts);
-            HasMany(ae => ae.AatfDeliveredAmounts);
+            HasMany(r => r.DataReturnVersions)
+                .WithRequired(e => e.WeeeDeliveredReturnVersion);
+
+            HasMany(w => w.WeeeDeliveredAmounts)
+                .WithMany(r => r.WeeeDeliveredReturnVersions)
+                .Map(m =>
+                {
+                    m.MapLeftKey("WeeeDeliveredReturnVersionId");
+                    m.MapRightKey("WeeeDeliveredAmountId");
+                    m.ToTable("WeeeDeliveredReturnVersionAmount", "PCS");
+                });
         }
     }
 }

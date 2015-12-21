@@ -53,7 +53,7 @@
                 var deliveredToAatfs = CreateDeliveredToAatfs();
                 foreach (var deliveredToAatf in deliveredToAatfs)
                 {
-                    dataReturnVersion.WeeeDeliveredReturnVersion.AddAatfDeliveredAmount(deliveredToAatf);
+                    dataReturnVersion.WeeeDeliveredReturnVersion.AddWeeeDeliveredAmount(deliveredToAatf);
                 }
             }
 
@@ -63,7 +63,7 @@
                 var deliveredToAes = CreateDeliveredToAes();
                 foreach (var deliveredToAe in deliveredToAes)
                 {
-                    dataReturnVersion.WeeeDeliveredReturnVersion.AddAeDeliveredAmount(deliveredToAe);
+                    dataReturnVersion.WeeeDeliveredReturnVersion.AddWeeeDeliveredAmount(deliveredToAe);
                 }
             }
 
@@ -116,9 +116,9 @@
             return dataReturnVersion;
         }
 
-        private static IEnumerable<AatfDeliveredAmount> CreateDeliveredToAatfs()
+        private static IEnumerable<WeeeDeliveredAmount> CreateDeliveredToAatfs()
         {
-            var deliveredToAatfs = new List<AatfDeliveredAmount>();
+            var deliveredToAatfs = new List<WeeeDeliveredAmount>();
 
             string aatfApprovalNumber = GetRandomAtfApprovalNumber();
             string facilityName = RandomHelper.CreateRandomString("Facility", 0, 250);
@@ -128,15 +128,15 @@
             IEnumerable<IReturnItem> returnItems = CreateReturnItems(null);
             foreach (IReturnItem returnItem in returnItems)
             {
-                deliveredToAatfs.Add(new AatfDeliveredAmount(returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, deliveryLocation));
+                deliveredToAatfs.Add(new WeeeDeliveredAmount(returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, deliveryLocation));
             }
 
             return deliveredToAatfs;
         }
 
-        private static IEnumerable<AeDeliveredAmount> CreateDeliveredToAes()
+        private static IEnumerable<WeeeDeliveredAmount> CreateDeliveredToAes()
         {
-            var deliveredToAes = new List<AeDeliveredAmount>();
+            var deliveredToAes = new List<WeeeDeliveredAmount>();
 
             string approvalNumber = GetRandomAeApprovalNumber();
             string operatorName = RandomHelper.CreateRandomString("Operator", 0, 250);
@@ -146,7 +146,7 @@
             IEnumerable<IReturnItem> returnItems = CreateReturnItems(null);
             foreach (IReturnItem returnItem in returnItems)
             {
-                deliveredToAes.Add(new AeDeliveredAmount(returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, deliveryLocation));
+                deliveredToAes.Add(new WeeeDeliveredAmount(returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, deliveryLocation));
             }
 
             return deliveredToAes;

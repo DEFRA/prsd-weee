@@ -8,8 +8,18 @@
         public EeeOutputReturnVersionMapping()
         {
             ToTable("EeeOutputReturnVersion", "PCS");
-            HasMany(r => r.DataReturnVersions);
-            HasMany(e => e.EeeOutputAmounts);
+
+            HasMany(r => r.DataReturnVersions)
+                .WithRequired(e => e.EeeOutputReturnVersion);
+
+            HasMany(e => e.EeeOutputAmounts)
+                .WithMany(r => r.EeeOutputReturnVersions)
+                .Map(m =>
+                {
+                    m.MapLeftKey("EeeOutputReturnVersionId");
+                    m.MapRightKey("EeeOuputAmountId");
+                    m.ToTable("EeeOutputReturnVersionAmount", "PCS");
+                });
         }
     }
 }
