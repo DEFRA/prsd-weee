@@ -1,7 +1,44 @@
-﻿
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.ViewModels.Charge
+@model ChooseActivityViewModel
+
 @{
-    ViewBag.Title = "ChooseActivity";
+    ViewBag.Title = "Choose Activity";
+
+    Dictionary<Activity, string> displayNames = new Dictionary<Activity, string>()
+    {
+        { Activity.ManagePendingCharges, "Manage pending charges" },
+        { Activity.ManageIssuedCharges, "Manage issued charges" },
+        { Activity.ViewInvoiceRunHistory, "View invoice run history" },
+    };
 }
 
-<h2>ChooseActivity</h2>
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            What would you like to do?
+        </h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedActivity)">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedActivity,
+                Model.PossibleValues,
+                a => a,
+                a => displayNames[a],
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+    }
+}
 
