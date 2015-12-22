@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.ProcessDataReturnXmlFile
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Core.Shared;
@@ -11,16 +12,18 @@
     using Xml.DataReturns;
     using Xunit;
     using ObligationType = Domain.ObligationType;
+    using Scheme = Domain.Scheme.Scheme;
 
     public class DataReturnVersionFromXmlBuilderTests
     {
         [Fact]
         public async Task Build_NoProducers_DoesNotProcessProducerList()
         {
-            var builder = new DataReturnVersionFromXmlBuilderHelper();
+            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
 
             var schemeReturn = new SchemeReturn()
             {
+                ApprovalNo = "WEE/AA1111AA/SCH",
                 ProducerList = null
             };
 
@@ -33,10 +36,11 @@
         [Fact]
         public async Task Build_ProcessesAllReturnsInProducerList()
         {
-            var builder = new DataReturnVersionFromXmlBuilderHelper();
+            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
 
             var schemeReturn = new SchemeReturn()
             {
+                ApprovalNo = "WEE/AA1111AA/SCH",
                 ProducerList = new SchemeReturnProducer[]
                 {
                     new SchemeReturnProducer
@@ -59,10 +63,11 @@
         [Fact]
         public async Task Build_NoCollectedFromDcf_DoesNotProcessCollectedFromDcf()
         {
-            var builder = new DataReturnVersionFromXmlBuilderHelper();
+            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
 
             var schemeReturn = new SchemeReturn()
             {
+                ApprovalNo = "WEE/AA1111AA/SCH",
                 CollectedFromDCF = null
             };
 
@@ -75,10 +80,11 @@
         [Fact]
         public async Task Build_ProcessesAllReturnsInCollectedFromDcf()
         {
-            var builder = new DataReturnVersionFromXmlBuilderHelper();
+            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
 
             var schemeReturn = new SchemeReturn()
             {
+                ApprovalNo = "WEE/AA1111AA/SCH",
                 CollectedFromDCF = new[] { A.Dummy<TonnageReturnType>(), A.Dummy<TonnageReturnType>() }
             };
 
@@ -91,10 +97,11 @@
         [Fact]
         public async Task Build_NoB2CWEEEFromDistributors_DoesNotProcessB2CWEEEFromDistributors()
         {
-            var builder = new DataReturnVersionFromXmlBuilderHelper();
+            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
 
             var schemeReturn = new SchemeReturn()
             {
+                ApprovalNo = "WEE/AA1111AA/SCH",
                 B2CWEEEFromDistributors = null
             };
 
@@ -107,10 +114,11 @@
         [Fact]
         public async Task Build_ProcessesAllReturnsInB2CWEEEFromDistributors()
         {
-            var builder = new DataReturnVersionFromXmlBuilderHelper();
+            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
 
             var schemeReturn = new SchemeReturn()
             {
+                ApprovalNo = "WEE/AA1111AA/SCH",
                 B2CWEEEFromDistributors = new[] { A.Dummy<TonnageReturnType>(), A.Dummy<TonnageReturnType>() }
             };
 
@@ -123,10 +131,11 @@
         [Fact]
         public async Task Build_NoB2CWEEEFromFinalHolders_DoesNotProcessB2CWEEEFromFinalHolders()
         {
-            var builder = new DataReturnVersionFromXmlBuilderHelper();
+            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
 
             var schemeReturn = new SchemeReturn()
             {
+                ApprovalNo = "WEE/AA1111AA/SCH",
                 B2CWEEEFromFinalHolders = null
             };
 
@@ -139,10 +148,11 @@
         [Fact]
         public async Task Build_ProcessesAllReturnsInB2CWEEEFromFinalHolders()
         {
-            var builder = new DataReturnVersionFromXmlBuilderHelper();
+            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
 
             var schemeReturn = new SchemeReturn()
             {
+                ApprovalNo = "WEE/AA1111AA/SCH",
                 B2CWEEEFromFinalHolders = new[] { A.Dummy<TonnageReturnType>(), A.Dummy<TonnageReturnType>() }
             };
 
@@ -155,10 +165,11 @@
         [Fact]
         public async Task Build_NoDeliveredToAaTF_DoesNotProcessDeliveredToAaTF()
         {
-            var builder = new DataReturnVersionFromXmlBuilderHelper();
+            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
 
             var schemeReturn = new SchemeReturn()
             {
+                ApprovalNo = "WEE/AA1111AA/SCH",
                 DeliveredToATF = null
             };
 
@@ -171,10 +182,11 @@
         [Fact]
         public async Task Build_ProcessesAllReturnsInDeliveredToAaTF()
         {
-            var builder = new DataReturnVersionFromXmlBuilderHelper();
+            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
 
             var schemeReturn = new SchemeReturn()
             {
+                ApprovalNo = "WEE/AA1111AA/SCH",
                 DeliveredToATF = new[]
                 {
                     new SchemeReturnDeliveredToATF
@@ -199,10 +211,11 @@
         [Fact]
         public async Task Build_NoDeliveredToAe_DoesNotProcessDeliveredToAe()
         {
-            var builder = new DataReturnVersionFromXmlBuilderHelper();
+            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
 
             var schemeReturn = new SchemeReturn()
             {
+                ApprovalNo = "WEE/AA1111AA/SCH",
                 DeliveredToAE = null
             };
 
@@ -215,10 +228,11 @@
         [Fact]
         public async Task Build_ProcessesAllReturnsInDeliveredToAe()
         {
-            var builder = new DataReturnVersionFromXmlBuilderHelper();
+            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
 
             var schemeReturn = new SchemeReturn()
             {
+                ApprovalNo = "WEE/AA1111AA/SCH",
                 DeliveredToAE = new[]
                 {
                     new SchemeReturnDeliveredToAE
@@ -243,25 +257,71 @@
         [Fact]
         public async Task Build_ReturnsResult()
         {
-            var builder = new DataReturnVersionFromXmlBuilderHelper();
+            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
 
             var expectedResult = new DataReturnVersionBuilderResult(A.Dummy<DataReturnVersion>(), A.Dummy<List<ErrorData>>());
 
             A.CallTo(() => builder.DataReturnVersionBuilder.Build())
                  .Returns(expectedResult);
 
-            var actualResult = await builder.Create().Build(A.Dummy<SchemeReturn>());
+            SchemeReturn schemeReturn = new SchemeReturn()
+            {
+                ApprovalNo = "WEE/AA1111AA/SCH"
+            };
+
+            var actualResult = await builder.Create().Build(schemeReturn);
 
             Assert.Equal(expectedResult, actualResult);
+        }
+
+        /// <summary>
+        /// This test ensures that the scheme approval number provided in the XML file matches
+        /// the approval number of the scheme for which the data return version is being built.
+        /// If not, an "Error" level error should be returned with a description that contains
+        /// the scheme approval number that was provided.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task Build_DifferentSchemeApprovalNumber_ReturnsError()
+        {
+            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
+
+            var schemeReturn = new SchemeReturn()
+            {
+                ApprovalNo = "WEE/ZZ9999ZZ/SCH",
+            };
+
+            DataReturnVersionBuilderResult result = await builder.Create().Build(schemeReturn);
+
+            Assert.NotNull(result);
+            Assert.Null(result.DataReturnVersion);
+            Assert.NotEmpty(result.ErrorData);
+
+            ErrorData firstError = result.ErrorData[0];
+
+            Assert.NotNull(firstError);
+            Assert.Equal(ErrorLevel.Error, firstError.ErrorLevel);
+            Assert.Contains("WEE/ZZ9999ZZ/SCH", firstError.Description);
         }
 
         private class DataReturnVersionFromXmlBuilderHelper
         {
             public IDataReturnVersionBuilder DataReturnVersionBuilder;
 
-            public DataReturnVersionFromXmlBuilderHelper()
+            public DataReturnVersionFromXmlBuilderHelper(string schemeApprovalNumber)
             {
                 DataReturnVersionBuilder = A.Fake<IDataReturnVersionBuilder>();
+
+                Scheme scheme = new Scheme(new Guid("FE4056B3-F892-476E-A4AB-7C111AE1EF14"));
+
+                scheme.UpdateScheme(
+                    "Test scheme",
+                    schemeApprovalNumber,
+                    "1B1S",
+                    ObligationType.Both,
+                    new Guid("C5D400BE-0CE7-43D7-BD7B-B7936967E500"));
+
+                A.CallTo(() => DataReturnVersionBuilder.Scheme).Returns(scheme);
             }
 
             public DataReturnVersionFromXmlBuilder Create()
