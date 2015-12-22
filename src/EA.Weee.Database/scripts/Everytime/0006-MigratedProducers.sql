@@ -9882,3 +9882,18 @@ INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerN
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/DF5711UX', 'Principal Lighting Ltd.', '4947891', 'A3F3A455-CC5D-4C58-9D50-82EF4A4DF468')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/CK5698TU', 'Henrob Ltd', '01873269', '959B43AD-9DCB-46B8-A256-F3AD3AF3C02C')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/CD5701TX', 'Robert Scott & Sons Ltd', '1099088', 'FDB4B90D-F9D5-4CD0-95D6-302DFE678FB1')
+
+-- Latest updates 22/12/2015
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/FB5699TV', 'Senetic Ltd', '07125121', 'E365E190-C494-447D-BD2A-DC15876BD32F')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/FK5718VU', 'Merlin Equipment Ltd', '03995246', 'BFBB265C-967C-468E-A14B-385E379A6264')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/FA5715VR', 'Medstrom Ltd', '05709304', '1B95C551-F70D-407B-AB0B-8BC8D1C03BBC')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/DJ5713VZ', 'Edge-Core Networks Corporation', NULL, '0064F32A-D363-4C03-855A-3A03B96C54B0')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/EK5713VZ', 'Kornit Digital Ltd', NULL, '0BB596AB-46F9-45CC-9E8F-D2CCCC6A9F4E')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/EB5714VQ', 'Phagenesis Ltd', '06308699', '7732648B-FA01-4101-9ACA-849E713DF154')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/EC5714VQ', 'CTS Europe Ltd', '07306969', 'D3B2298B-AA43-4499-999A-89E751DF6EAA')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/ED5714VQ', 'Panda Bikes Ltd', '08788641', 'E7453DDC-C35E-44F6-8D7E-60E95EBD3384')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/EF5715VR', 'Bally Gaming and Systems UK Ltd', '03538502', 'EB8D0879-1396-4E84-8ADE-F2BC26FF4CBA')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/FH5720VW', 'Conergy West Sussex Ltd', '07306359', '33A4BDC9-2D77-4D9C-BC15-772F97AFADB2')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/FD5719VV', 'Andrew James Ltd', '05604979', '594973E2-4F9C-414B-8082-C7176F5A4785')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/FF5720VW', 'Cathexis Europe Ltd', '06421746', '5869CA94-1FE6-4490-9F4C-88F14F1A379E')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/GK5722VY', 'Theraclion', NULL, '016B3D81-F1EE-472C-9376-69C1E8B06F38')
