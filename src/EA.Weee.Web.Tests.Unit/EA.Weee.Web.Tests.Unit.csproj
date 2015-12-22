@@ -172,6 +172,7 @@
     <Compile Include="App_Start\ReturnUrlMappingTests.cs" />
     <Compile Include="App_Start\WeeeCookieAuthenticationProviderTests.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountControllerTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\ChargeControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ProducersControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsControllerTests.cs" />
