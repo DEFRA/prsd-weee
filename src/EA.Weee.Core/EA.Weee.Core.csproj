@@ -89,6 +89,7 @@
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
     <Compile Include="Admin\RemoveProducerResult.cs" />
     <Compile Include="Admin\Reports\CSVFileData.cs" />
+    <Compile Include="Charges\PendingCharge.cs" />
     <Compile Include="DataReturns\DataReturnError.cs" />
     <Compile Include="DataReturns\DataReturnForSubmission.cs" />
     <Compile Include="DataReturns\DataReturnWarning.cs" />
