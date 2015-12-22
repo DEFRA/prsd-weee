@@ -60,7 +60,7 @@
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        var placeHolderLocation = "@Url.Action("Review", "DataReturns", new { dataReturnId = Guid.Empty })";
+                        var placeHolderLocation = "@Url.Action("Review", "DataReturns", new { dataReturnUploadId = Guid.Empty })";
                         window.location = placeHolderLocation.replace("@Guid.Empty", response);
                     },
                     statusCode: {
