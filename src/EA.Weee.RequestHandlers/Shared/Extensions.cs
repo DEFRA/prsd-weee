@@ -155,6 +155,14 @@
             }
         }
 
+        public static void AddIfNotDefault<T>(this ICollection<T> collection, T value)
+        {
+            if (!object.Equals(value, default(T)))
+            {
+                collection.Add(value);
+            }
+        }
+
         public static QuarterType ToDomainQuarterType(this Xml.DataReturns.SchemeReturnReturnPeriod returnPeriod)
         {
             switch (returnPeriod)

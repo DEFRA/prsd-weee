@@ -8,11 +8,7 @@
     {
         public ErrorData Map(MemberUploadError source)
         {
-            return new ErrorData
-            {
-                ErrorLevel = (ErrorLevel)source.ErrorLevel.Value,
-                Description = source.Description
-            };
+            return new ErrorData(source.Description, (ErrorLevel)source.ErrorLevel.Value);
         }
     }
 }

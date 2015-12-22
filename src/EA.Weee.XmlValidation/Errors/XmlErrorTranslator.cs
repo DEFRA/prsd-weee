@@ -23,6 +23,10 @@
         private const string IncompleteContentPattern =
            @"^The element '([^']*)' in namespace '[^']*' has incomplete content. List of possible elements expected: '[^']*' in namespace '[^']*'.$";
 
+        private static readonly Regex FixedValueConstraintFailurePattern = new Regex(
+           @"^The value of the '(?<ElementName>[^']*)' element does not equal its fixed value.$",
+           RegexOptions.Compiled);
+
         private static readonly Regex EntityNameParsingErrorPattern = new Regex(
             @"^An error occurred while parsing EntityName\. Line (?<LineNumber>\d+), position \d+\.$",
             RegexOptions.Compiled);
@@ -96,6 +100,14 @@
             {
                 resultErrorMessage = MakeFriendlyErrorUniqueKeyMessage(sender, message);
             }
+            else if (TestRegex(message, FixedValueConstraintFailurePattern, out match))
+            {
+                resultErrorMessage = string.Format(
+                    "The value '{0}' supplied for field '{1}' is not permitted. " +
+                    "Only the value specified in the schema is allowed.",
+                    sender.Value,
+                    sender.Name.LocalName);
+            }
 
             var registrationNo = GetRegistrationNumber(sender);
             var registrationNoText = !string.IsNullOrEmpty(registrationNo) ? string.Format("Producer {0}: ", registrationNo) : string.Empty;
@@ -113,7 +125,7 @@
         }
 
         private string MakeFriendlyErrorUniqueKeyMessage(XElement sender, string message)
-        { 
+        {
             var element = sender.Descendants().First();
             return string.Format("There is duplicate value '{0}' for field '{1}' of parent field '{2}'. Remove one of the duplicate entries", element.Value, element.Name.LocalName, sender.Name.LocalName);
         }

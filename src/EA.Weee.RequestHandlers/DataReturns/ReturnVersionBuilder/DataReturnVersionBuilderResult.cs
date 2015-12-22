@@ -10,6 +10,11 @@
 
         public List<ErrorData> ErrorData { get; private set; }
 
+        public DataReturnVersionBuilderResult()
+        {
+            ErrorData = new List<ErrorData>();
+        }
+
         public DataReturnVersionBuilderResult(DataReturnVersion dataReturnVersion, List<ErrorData> errorData)
         {
             DataReturnVersion = dataReturnVersion;
