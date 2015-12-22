@@ -43,6 +43,9 @@
 
         private const string UniqueKeyConstraintPattern = @"There is a duplicate key sequence '[^']*' for the '[^']*' key or unique identity constraint.$";
 
+        public const string IncorrectlyFormattedXmlMessage =
+            "The file you're trying to upload is not a correctly formatted XML file. Upload a valid XML file.";
+
         public string MakeFriendlyErrorMessage(string message, string schemaVersion)
         {
             return MakeFriendlyErrorMessage(null, message, -1, schemaVersion);
@@ -55,7 +58,7 @@
 
             if (Regex.IsMatch(message, DataAtTheRoolLevelIsInvalid))
             {
-                resultErrorMessage = "The file you're trying to upload is not a correctly formatted XML file. Upload a valid XML file.";
+                resultErrorMessage = IncorrectlyFormattedXmlMessage;
             }
             else if (Regex.IsMatch(message, GeneralConstraintFailurePattern))
             {
@@ -155,6 +158,10 @@
                 case "Enumeration":
                     friendlyMessageTemplate =
                         "The value '{0}' supplied for field '{1}' isn't one of the accepted values.";
+                    break;
+                case "FractionDigits":
+                    friendlyMessageTemplate =
+                        "The value '{0}' supplied for field '{1}' exceeds the maximum number of allowed decimal places";
                     break;
             }
 
