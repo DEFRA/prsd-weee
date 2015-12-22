@@ -6,6 +6,6 @@
 
     public interface INamespaceValidator
     {
-        IEnumerable<XmlValidationError> Validate(string expectedNamespace, string actualNamespace);
+        IEnumerable<XmlValidationError> Validate(XNamespace expectedNamespace, XNamespace actualNamespace);
     }
 }

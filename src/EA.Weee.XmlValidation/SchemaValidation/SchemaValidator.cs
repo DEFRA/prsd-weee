@@ -24,7 +24,7 @@
             this.namespaceValidator = namespaceValidator;
         }
 
-        public IEnumerable<XmlValidationError> Validate(byte[] data, string schemaName, string schemaNamespace, string schemaVersion)
+        public IEnumerable<XmlValidationError> Validate(byte[] data, string schemaName, XNamespace schemaNamespace, string schemaVersion)
         {
             var errors = new List<XmlValidationError>();
 
