@@ -415,5 +415,81 @@
         {
             return model.ChargeBandAmounts.First(pcb => pcb.ChargeBand == (int)chargeBand);
         }
+
+        public DataReturnUpload CreateDataReturnUpload(Scheme scheme, DataReturnVersion dataReturnVersion = null)
+        {
+            int dataReturnUploadId = GetNextId();
+            DataReturnUpload dataReturnUpload = new DataReturnUpload
+            {
+                Id = IntegerToGuid(dataReturnUploadId),
+                SchemeId = scheme.Id,
+                Scheme = scheme,
+                Data = string.Format("<SchemeReturn{0} />", dataReturnUploadId),
+                Date = DateTime.UtcNow,
+                ProcessTime = TimeSpan.Zero
+            };
+
+            if (dataReturnVersion != null)
+            {
+                dataReturnUpload.DataReturnVersionId = dataReturnVersion.Id;
+                dataReturnUpload.DataReturnVersion = dataReturnVersion;
+            }
+
+            model.DataReturnUploads.Add(dataReturnUpload);
+
+            return dataReturnUpload;
+        }
+
+        public DataReturn GetOrCreateDataReturn(Scheme scheme, int complianceYear, int quarter)
+        {
+            // Try to find a DataReturn that has already been created, otherwise create a new one.
+            var dataReturn =
+                model.DataReturns.Local
+                .SingleOrDefault(du => du.Scheme.Id == scheme.Id &&
+                                       du.ComplianceYear == complianceYear &&
+                                       du.Quarter == quarter);
+
+            if (dataReturn == null)
+            {
+                int dataReturnId = GetNextId();
+
+                dataReturn = new DataReturn
+                {
+                    Id = IntegerToGuid(dataReturnId),
+                    Scheme = scheme,
+                    SchemeId = scheme.Id,
+                    Quarter = quarter,
+                    ComplianceYear = complianceYear
+                };
+                model.DataReturns.Add(dataReturn);
+            }
+
+            return dataReturn;
+        }
+
+        public DataReturnVersion CreateDataReturnVersion(Scheme scheme, int complianceYear, int quarter, bool isSubmitted = true)
+        {
+            var dataReturn = GetOrCreateDataReturn(scheme, complianceYear, quarter);
+
+            Guid dataReturnVersionId = IntegerToGuid(GetNextId());
+
+            var dataReturnVersion = new DataReturnVersion
+            {
+                Id = dataReturnVersionId,
+                DataReturn = dataReturn,
+                DataReturnId = dataReturn.Id
+            };
+
+            if (isSubmitted)
+            {
+                dataReturnVersion.SubmittedDate = DateTime.UtcNow;
+                dataReturnVersion.SubmittingUserId = GetOrCreateUser("Testuser").Id;
+                dataReturn.CurrentDataReturnVersionId = dataReturnVersionId;
+            }
+
+            model.DataReturnVersions.Add(dataReturnVersion);
+
+            return dataReturnVersion;
+        }
     }
 }
