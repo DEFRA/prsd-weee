@@ -40,6 +40,17 @@
         }
 
         [Fact]
+        public void SchemaValidation_EmptyFile_AddsError_WithIncorrectlyFormattedXmlMessage()
+        {
+            var errors = SchemaValidator()
+                .Validate(new byte[0], @"EA.Weee.Xml.MemberRegistration.v3schema.xsd",
+                    @"http://www.environment-agency.gov.uk/WEEE/XMLSchema", A<string>._);
+
+            Assert.Single(errors);
+            Assert.Contains(XmlErrorTranslator.IncorrectlyFormattedXmlMessage, errors.Single().Message);
+        }
+
+        [Fact]
         public void SchemaValidation_IncorrectNamespace_AddsError()
         {
             var wrongNamespaceXmlLocation = Path.Combine(

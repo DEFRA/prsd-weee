@@ -30,8 +30,7 @@
                 //check if the xml is not blank before doing any validations
                 if (data != null && data.Length == 0)
                 {
-                    string errorMsg = "The file you're trying to upload is not a correctly formatted XML file. Please make sure you're uploading a valid XML file.";
-                    errors.Add(new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, errorMsg));
+                    errors.Add(new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, XmlErrorTranslator.IncorrectlyFormattedXmlMessage));
                     return errors;
                 }
 
