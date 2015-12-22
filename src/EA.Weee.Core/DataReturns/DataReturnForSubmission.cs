@@ -8,7 +8,7 @@
 
     public class DataReturnForSubmission
     {
-        public Guid DataReturnId { get; private set; }
+        public Guid DataReturnUploadId { get; private set; }
 
         public Guid OrganisationId { get; private set; }
 
@@ -21,14 +21,14 @@
         public IReadOnlyCollection<DataReturnError> Errors { get; private set; }
 
         public DataReturnForSubmission(
-            Guid dataReturnId,
+            Guid dataReturnUploadId,
             Guid organisationId,
             int? year,
             QuarterType? quarter,
             IReadOnlyCollection<DataReturnWarning> warnings,
             IReadOnlyCollection<DataReturnError> errors)
         {
-            DataReturnId = dataReturnId;
+            DataReturnUploadId = dataReturnUploadId;
             OrganisationId = organisationId;
             Quarter = quarter;
             Year = year;

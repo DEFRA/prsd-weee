@@ -22,7 +22,7 @@
         private readonly IGenerateFromDataReturnXml xmlGenerator;
         private readonly Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder> dataReturnVersionFromXmlBuilderDelegate;
         private readonly Func<Scheme, Quarter, IDataReturnVersionBuilder> dataReturnVersionBuilderDelegate;
-     
+
         public ProcessDataReturnXmlFileHandler(
             IProcessDataReturnXmlFileDataAccess xmlfileDataAccess,
             IWeeeAuthorization authorization,
@@ -57,9 +57,9 @@
             else
             {
                 int complianceYear = int.Parse(xmlGeneratorResult.DeserialisedType.ComplianceYear);
-                int quarter = Convert.ToInt32(xmlGeneratorResult.DeserialisedType.ReturnPeriod);
+                QuarterType quarter = xmlGeneratorResult.DeserialisedType.ReturnPeriod.ToDomainQuarterType();
 
-                var pcsReturnVersionBuilder = dataReturnVersionBuilderDelegate(scheme, new Quarter(complianceYear, (QuarterType)quarter));
+                var pcsReturnVersionBuilder = dataReturnVersionBuilderDelegate(scheme, new Quarter(complianceYear, quarter));
                 var dataReturnVersionFromXmlBuilder = dataReturnVersionFromXmlBuilderDelegate(pcsReturnVersionBuilder);
 
                 var dataReturnVersionBuilderresult = await dataReturnVersionFromXmlBuilder.Build(xmlGeneratorResult.DeserialisedType);
@@ -68,7 +68,7 @@
                     .Select(e => new DataReturnUploadError(e.ErrorLevel.ToDomainErrorLevel(), Domain.UploadErrorType.Business, e.Description)))
                     .ToList();
 
-                dataReturnUpload = new DataReturnUpload(scheme, xmlGeneratorResult.XmlString, allErrors, message.FileName, complianceYear, quarter);
+                dataReturnUpload = new DataReturnUpload(scheme, xmlGeneratorResult.XmlString, allErrors, message.FileName, complianceYear, Convert.ToInt32(quarter));
 
                 if (!dataReturnVersionBuilderresult.ErrorData.Any(e => e.ErrorLevel == ErrorLevel.Error))
                 {
@@ -79,7 +79,7 @@
             // Record XML processing end time
             stopwatch.Stop();
             dataReturnUpload.SetProcessTime(stopwatch.Elapsed);
-           
+
             await dataAccess.AddAndSaveAsync(dataReturnUpload);
 
             return dataReturnUpload.Id;
