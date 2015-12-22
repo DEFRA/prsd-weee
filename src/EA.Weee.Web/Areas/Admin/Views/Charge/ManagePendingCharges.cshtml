@@ -2,7 +2,7 @@
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.Shared
 @using EA.Weee.Core.Charges
-@model System.Collections.Generic.IEnumerable<PendingCharge>
+@model System.Collections.Generic.IList<PendingCharge>
 
 @{
     ViewBag.Title = "Manage Pending Charges";
@@ -31,33 +31,42 @@
         @authorityDisplayNames[authority]
     </p>
 
-    <table width="100%" class="">
-        <thead>
-            <tr>
-                <th>PCS name</th>
-                <th>Approval number</th>
-                <th>Compliance year</th>
-                <th class="numeric">Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (PendingCharge pendingCharge in Model)
-            {
-                <tr>
-                    <td>@pendingCharge.SchemeName</td>
-                    <td>@pendingCharge.SchemeApprovalNumber</td>
-                    <td>@pendingCharge.ComplianceYear</td>
-                    <td class="numeric">@pendingCharge.TotalGBP.ToString("C")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <br />
-
-    @using (Html.BeginForm())
+    @if (Model.Count > 0)
     {
-        @Html.AntiForgeryToken()
-        @(this.WeeeGds().Submit("Issue Charges", new { @class = "button" }))
+        <table width="100%" class="">
+            <thead>
+                <tr>
+                    <th>PCS name</th>
+                    <th>Approval number</th>
+                    <th>Compliance year</th>
+                    <th class="numeric">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (PendingCharge pendingCharge in Model)
+                {
+                    <tr>
+                        <td>@pendingCharge.SchemeName</td>
+                        <td>@pendingCharge.SchemeApprovalNumber</td>
+                        <td>@pendingCharge.ComplianceYear</td>
+                        <td class="numeric">@pendingCharge.TotalGBP.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+
+        using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @(this.WeeeGds().Submit("Issue Charges", new { @class = "button" }))
+        }
+    }
+    else
+    {
+        <p>
+            There are no pending charges.
+        </p>
     }
 
     @Html.ActionLink("Manage more PCS charges", "SelectAuthority")

@@ -3,14 +3,17 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
     using Api.Client;
     using Core.Charges;
     using Core.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
+    using Infrastructure;
     using Services;
     using ViewModels.Charge;
+    using Weee.Requests.Charges;
 
     public class ChargeController : AdminController
     {
@@ -91,13 +94,13 @@
         }
 
         [HttpGet]
-        public ActionResult ManagePendingCharges(CompetentAuthority authority)
+        public async Task<ActionResult> ManagePendingCharges(CompetentAuthority authority)
         {
-            IReadOnlyCollection<PendingCharge> pendingCharges;
+            IList<PendingCharge> pendingCharges;
             using (IWeeeClient client = weeeClient())
             {
-                // TODO: data access
-                pendingCharges = new List<PendingCharge>(TemporaryFakeDataAccess());
+                FetchPendingCharges request = new FetchPendingCharges(authority);
+                pendingCharges = await client.SendAsync(User.GetAccessToken(), request);
             }
 
             ViewBag.Authority = authority;
@@ -105,39 +108,26 @@
             return View(pendingCharges);
         }
 
-        private IEnumerable<PendingCharge> TemporaryFakeDataAccess()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ManagePendingCharges(CompetentAuthority authority, FormCollection formCollection)
         {
-            yield return new PendingCharge()
+            Guid invoiceRunId;
+            using (IWeeeClient client = weeeClient())
             {
-                SchemeName = "Another Cool Scheme",
-                SchemeApprovalNumber = "WEEE/12345/01",
-                ComplianceYear = 2017,
-                TotalGBP = 32089.40m
-            };
+                IssuePendingCharges request = new IssuePendingCharges(authority);
+                invoiceRunId = await client.SendAsync(User.GetAccessToken(), request);
+            }
 
-            yield return new PendingCharge()
-            {
-                SchemeName = "Another Cool Scheme",
-                SchemeApprovalNumber = "WEEE/12345/01",
-                ComplianceYear = 2016,
-                TotalGBP = 32089.40m
-            };
+            return RedirectToAction("InvoiceRun", new { authority, id = invoiceRunId });
+        }
 
-            yield return new PendingCharge()
-            {
-                SchemeName = "Biffa",
-                SchemeApprovalNumber = "WEEE/54321/02",
-                ComplianceYear = 2017,
-                TotalGBP = 2500.10m
-            };
+        [HttpGet]
+        public ActionResult InvoiceRun(CompetentAuthority authority, Guid id)
+        {
+            // TODO: Ensure the invoice run ID exists and that it is related to the apecified authority.
 
-            yield return new PendingCharge()
-            {
-                SchemeName = "Biffa",
-                SchemeApprovalNumber = "WEEE/54321/02",
-                ComplianceYear = 2016,
-                TotalGBP = 2800.50m
-            };
+            return View();
         }
     }
 }
