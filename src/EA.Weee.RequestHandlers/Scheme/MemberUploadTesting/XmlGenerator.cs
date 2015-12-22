@@ -11,8 +11,8 @@
     /// Creates an XML Document that can be used for testing the PCS member upload functionality
     /// based on the content of a ProducerList.
     /// 
-    /// For now there is only one XmlGenerator which can generate XML for all versioXmlNamespace.MemberRegistration of the schema.
-    /// If the structure or content of future versioXmlNamespace.MemberRegistration of the schema diverge substantially, then
+    /// For now there is only one XmlGenerator which can generate XML for all versions of the schema.
+    /// If the structure or content of future versions of the schema diverge substantially, then
     /// the stratergy pattern should be used to split the methods in this class into individual classes
     /// representing the different behaviours.
     /// </summary>

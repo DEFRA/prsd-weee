@@ -16,35 +16,29 @@
                 () => new NamespaceValidator().Validate("Some invalid namespace", "Any namespace"));
         }
 
-        [Theory]
-        [InlineData(XmlNamespace.MemberRegistration)]
-        [InlineData(XmlNamespace.DataReturns)]
-        public void ActualNamespaceIsNotOneOfTheSystemsXmlNamespaces_ShouldReturnSchemaError_IncludingExpectedNamespaceInMessage(string expectedNamespace)
+        [Fact]
+        public void ActualNamespaceIsNotOneOfTheSystemsXmlNamespaces_ShouldReturnSchemaError_IncludingExpectedNamespaceInMessage()
         {
-            var result = new NamespaceValidator().Validate(expectedNamespace, "Any old rubbish");
+            var result = new NamespaceValidator().Validate(XmlNamespace.MemberRegistration, "Any old rubbish");
 
             var error = result.Single();
 
             Assert.Equal(ErrorLevel.Error, error.ErrorLevel);
-            Assert.Contains(expectedNamespace, error.Message);
+            Assert.Contains(XmlNamespace.MemberRegistration.NamespaceName, error.Message);
         }
 
-        [Theory]
-        [InlineData(XmlNamespace.MemberRegistration, XmlNamespace.DataReturns)]
-        [InlineData(XmlNamespace.DataReturns, XmlNamespace.MemberRegistration)]
-        public void ActualNamespaceIsOneOfTheSystemsXmlNamespaces_ButNotTheExpectedNamespace_ShouldReturnSchemaError(string expectedNamespace, string actualNamespace)
+        [Fact]
+        public void ActualNamespaceIsOneOfTheSystemsXmlNamespaces_ButNotTheExpectedNamespace_ShouldReturnSchemaError()
         {
-            var result = new NamespaceValidator().Validate(expectedNamespace, actualNamespace);
+            var result = new NamespaceValidator().Validate(XmlNamespace.MemberRegistration, XmlNamespace.DataReturns);
 
             Assert.Single(result);
         }
 
-        [Theory]
-        [InlineData(XmlNamespace.MemberRegistration, XmlNamespace.MemberRegistration)]
-        [InlineData(XmlNamespace.DataReturns, XmlNamespace.DataReturns)]
-        public void ActualNamespaceAndExpectedNamespaceMatch_NoErrorsReturned(string expectedNamespace, string actualNamespace)
+        [Fact]
+        public void ActualNamespaceAndExpectedNamespaceMatch_NoErrorsReturned()
         {
-            var result = new NamespaceValidator().Validate(expectedNamespace, actualNamespace);
+            var result = new NamespaceValidator().Validate(XmlNamespace.MemberRegistration, XmlNamespace.MemberRegistration);
 
             Assert.Empty(result);
         }
