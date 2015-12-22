@@ -17,6 +17,7 @@
     using Xml.DataReturns;
     using XmlValidation.Errors;
     using Xunit;
+    using DataReturnVersion = Domain.DataReturns.DataReturnVersion;
     using ProcessDataReturnXmlFile = Requests.DataReturns.ProcessDataReturnXmlFile;
     using Scheme = Domain.Scheme.Scheme;
 
@@ -36,12 +37,12 @@
 
                 database.Model.SaveChanges();
 
+                var builder = new ProcessDataReturnXmlFileHandlerBuilder(database.WeeeContext);
+
                 var xmlGeneratorResult = new GenerateFromDataReturnXmlResult<SchemeReturn>(
                     "Test XML string",
                     A.Dummy<SchemeReturn>(),
                     new List<XmlValidationError> { new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "Error text") });
-
-                var builder = new ProcessDataReturnXmlFileHandlerBuilder(database.WeeeContext);
 
                 A.CallTo(() => builder.XmlGenerator.GenerateDataReturns<SchemeReturn>(A<ProcessDataReturnXmlFile>._))
                      .Returns(xmlGeneratorResult);
@@ -56,6 +57,94 @@
                 Assert.Null(dataReturnUpload.Quarter);
             }
         }
+
+        [Fact]
+        public async Task HandleAsync_XmlContainsSchemaError_StoresAvailableDataReturnData()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+
+                var organisation = helper.CreateOrganisation();
+                var scheme = helper.CreateScheme(organisation);
+
+                database.Model.SaveChanges();
+
+                var builder = new ProcessDataReturnXmlFileHandlerBuilder(database.WeeeContext);
+
+                var xmlGeneratorResult = new GenerateFromDataReturnXmlResult<SchemeReturn>(
+                    "Test XML string",
+                    A.Dummy<SchemeReturn>(),
+                    new List<XmlValidationError> { new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "Error text") });
+
+                A.CallTo(() => builder.XmlGenerator.GenerateDataReturns<SchemeReturn>(A<ProcessDataReturnXmlFile>._))
+                     .Returns(xmlGeneratorResult);
+
+                // Act
+                var dataReturnUploadId = await builder.InvokeHandleAsync(organisation.Id, fileName: "XML file name");
+
+                //Assert
+                var dataReturnUpload = domainHelper.GetDataReturnUpload(dataReturnUploadId);
+
+                Assert.Equal(scheme.Id, dataReturnUpload.Scheme.Id);
+                Assert.Equal("Test XML string", dataReturnUpload.RawData.Data);
+                Assert.Equal("XML file name", dataReturnUpload.FileName);
+                Assert.NotEqual(TimeSpan.Zero, dataReturnUpload.ProcessTime);
+            }
+        }
+
+        //[Fact]
+        //public async Task HandleAsync_XmlDoesNotContainSchemaError_StoresAvailableDataReturnData()
+        //{
+        //    using (DatabaseWrapper database = new DatabaseWrapper())
+        //    {
+        //        // Arrange
+        //        ModelHelper helper = new ModelHelper(database.Model);
+        //        DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+
+        //        var organisation = helper.CreateOrganisation();
+        //        var scheme = helper.CreateScheme(organisation);
+
+
+        //        database.Model.SaveChanges();
+
+        //        var builder = new ProcessDataReturnXmlFileHandlerBuilder(database.WeeeContext);
+
+        //        var schemeReturn = new SchemeReturn()
+        //        {
+        //            ComplianceYear = "2016",
+        //            ReturnPeriod = SchemeReturnReturnPeriod.Quarter3JulySeptember
+        //        };
+
+        //        var xmlGeneratorResult = new GenerateFromDataReturnXmlResult<SchemeReturn>(
+        //            "Test XML string",
+        //            schemeReturn,
+        //            new List<XmlValidationError>());
+
+        //        A.CallTo(() => builder.XmlGenerator.GenerateDataReturns<SchemeReturn>(A<ProcessDataReturnXmlFile>._))
+        //             .Returns(xmlGeneratorResult);
+
+        //        var dataReturnVersionBuilderResult = new DataReturnVersionBuilderResult(A.Dummy<DataReturnVersion>(), A.Dummy<List<ErrorData>>());
+
+        //        A.CallTo(() => builder.DataReturnVersionFromXmlBuilder.Build(A<SchemeReturn>._))
+        //            .Returns(dataReturnVersionBuilderResult);
+
+        //        // Act
+        //        var dataReturnUploadId = await builder.InvokeHandleAsync(organisation.Id, fileName: "XML file name");
+
+        //        //Assert
+        //        var dataReturnUpload = domainHelper.GetDataReturnUpload(dataReturnUploadId);
+
+        //        Assert.Equal(scheme.Id, dataReturnUpload.Scheme.Id);
+        //        Assert.Equal("Test XML string", dataReturnUpload.RawData.Data);
+        //        Assert.Equal("XML file name", dataReturnUpload.FileName);
+        //        Assert.Equal(2016, dataReturnUpload.ComplianceYear);
+        //        Assert.Equal(Convert.ToInt32(QuarterType.Q3), dataReturnUpload.Quarter);
+        //        Assert.NotEqual(TimeSpan.Zero, dataReturnUpload.ProcessTime);
+        //    }
+        //}
 
         private class ProcessDataReturnXmlFileHandlerBuilder
         {
