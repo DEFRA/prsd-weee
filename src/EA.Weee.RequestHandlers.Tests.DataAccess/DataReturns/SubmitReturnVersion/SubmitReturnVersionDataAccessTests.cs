@@ -1,10 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.DataReturns.SubmitReturnVersion
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using RequestHandlers.DataReturns.SubmitReturnVersion;
-    using Weee.DataAccess;
     using Weee.Tests.Core.Model;
     using Xunit;
 
@@ -23,21 +21,21 @@
 
                 database.Model.SaveChanges();
 
-                var dbDataReturnVersion = GetDomainDataReturnVersion(database.WeeeContext, dataReturnVersion.Id);
-
+                var dbDataReturnVersion = database.WeeeContext
+                    .DataReturnVersions
+                    .Single(r => r.Id == dataReturnVersion.Id);
                 var dataAccess = new SubmitReturnVersionDataAccess(database.WeeeContext);
+
+                // Act
                 await dataAccess.Submit(dbDataReturnVersion);
 
+                // Assert
                 Assert.Equal(dataReturnVersion.Id, dbDataReturnVersion.Id);
                 Assert.True(dbDataReturnVersion.IsSubmitted);
                 Assert.NotNull(dbDataReturnVersion.SubmittedDate);
+                Assert.Equal(database.WeeeContext.GetCurrentUser(), dbDataReturnVersion.SubmittingUserId);
                 Assert.Equal(dataReturnVersion.Id, dbDataReturnVersion.DataReturn.CurrentVersion.Id);
             }
-        }
-
-        private Domain.DataReturns.DataReturnVersion GetDomainDataReturnVersion(WeeeContext context, Guid id)
-        {
-            return context.DataReturnVersions.Single(r => r.Id == id);
         }
     }
 }
