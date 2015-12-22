@@ -286,7 +286,7 @@
                 DataAccess = A.Fake<IDataReturnVersionBuilderDataAccess>();
 
                 dataAccessDelegate = (x, y) => DataAccess;
-                eeeValidatorDelegate = (s, q, DataAccess) => EeeValidator;
+                eeeValidatorDelegate = (s, q, z) => EeeValidator;
             }
 
             public DataReturnVersionBuilder Create()

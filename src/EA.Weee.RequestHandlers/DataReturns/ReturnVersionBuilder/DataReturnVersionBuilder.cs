@@ -9,13 +9,15 @@
     using Core.Shared;
     using Domain.DataReturns;
     using Domain.Lookup;
+    using Prsd.Core;
     using ObligationType = Domain.ObligationType;
+    using Scheme = Domain.Scheme.Scheme;
 
     public class DataReturnVersionBuilder : IDataReturnVersionBuilder
     {
-        private readonly Domain.Scheme.Scheme scheme;
+        public Scheme Scheme { get; private set; }
 
-        private readonly Quarter quarter;
+        public Quarter Quarter { get; private set; }
 
         private readonly IEeeValidator eeeValidator;
 
@@ -25,13 +27,17 @@
 
         private DataReturnVersion dataReturnVersion;
 
-        public DataReturnVersionBuilder(Domain.Scheme.Scheme scheme, Quarter quarter,
-            Func<Domain.Scheme.Scheme, Quarter, 
-                Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess>, IEeeValidator> eeeValidatorDelegate,
-            Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate)
+        public DataReturnVersionBuilder(
+            Scheme scheme,
+            Quarter quarter,
+            Func<Scheme, Quarter, Func<Scheme, Quarter, IDataReturnVersionBuilderDataAccess>, IEeeValidator> eeeValidatorDelegate,
+            Func<Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate)
         {
-            this.scheme = scheme;
-            this.quarter = quarter;
+            Guard.ArgumentNotNull(() => scheme, scheme);
+            Guard.ArgumentNotNull(() => quarter, quarter);
+
+            Scheme = scheme;
+            Quarter = quarter;
             eeeValidator = eeeValidatorDelegate(scheme, quarter, dataAccessDelegate);
             schemeQuarterDataAccess = dataAccessDelegate(scheme, quarter);
 
@@ -45,7 +51,7 @@
                 var dataReturn = await schemeQuarterDataAccess.FetchDataReturnOrDefault();
                 if (dataReturn == null)
                 {
-                    dataReturn = new DataReturn(scheme, quarter);
+                    dataReturn = new DataReturn(Scheme, Quarter);
                 }
 
                 dataReturnVersion = new DataReturnVersion(dataReturn);
