@@ -1,0 +1,64 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Shared
+@using EA.Weee.Core.Charges
+@model System.Collections.Generic.IEnumerable<PendingCharge>
+
+@{
+    ViewBag.Title = "Manage Pending Charges";
+
+    CompetentAuthority authority = (CompetentAuthority)ViewBag.Authority;
+
+    Dictionary<CompetentAuthority, string> authorityDisplayNames = new Dictionary<CompetentAuthority, string>()
+    {
+        { CompetentAuthority.England, "Environment Agency" },
+        { CompetentAuthority.Scotland, "Scottish Environment Protection Agency" },
+        { CompetentAuthority.NorthernIreland, "Northern Ireland Environment Agency" },
+        { CompetentAuthority.Wales, "Natural Resources Wales" },
+    };
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Pending Charges
+        </h1>
+    </header>
+
+    <p>
+        <span class="bold-small">Appropriate Authority:</span>
+        @authorityDisplayNames[authority]
+    </p>
+
+    <table width="100%" class="">
+        <thead>
+            <tr>
+                <th>PCS name</th>
+                <th>Approval number</th>
+                <th>Compliance year</th>
+                <th class="numeric">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (PendingCharge pendingCharge in Model)
+            {
+                <tr>
+                    <td>@pendingCharge.SchemeName</td>
+                    <td>@pendingCharge.SchemeApprovalNumber</td>
+                    <td>@pendingCharge.ComplianceYear</td>
+                    <td class="numeric">@pendingCharge.TotalGBP.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @(this.WeeeGds().Submit("Issue Charges", new { @class = "button" }))
+    }
+
+    @Html.ActionLink("Manage more PCS charges", "SelectAuthority")
+}

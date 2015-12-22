@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Web;
     using System.Web.Mvc;
+    using Api.Client;
+    using Core.Charges;
     using Core.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using Services;
@@ -14,13 +16,16 @@
     {
         private readonly IAppConfiguration configuration;
         private readonly BreadcrumbService breadcrumb;
+        private readonly Func<IWeeeClient> weeeClient;
 
         public ChargeController(
             IAppConfiguration configuration,
-            BreadcrumbService breadcrumb)
+            BreadcrumbService breadcrumb,
+            Func<IWeeeClient> weeeClient)
         {
             this.configuration = configuration;
             this.breadcrumb = breadcrumb;
+            this.weeeClient = weeeClient;
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -72,7 +77,7 @@
             switch (viewModel.SelectedActivity.Value)
             {
                 case Activity.ManagePendingCharges:
-                    throw new NotImplementedException();
+                    return RedirectToAction("ManagePendingCharges", new { authority });
 
                 case Activity.ManageIssuedCharges:
                     throw new NotImplementedException();
@@ -83,6 +88,56 @@
                 default:
                     throw new NotSupportedException();
             }
+        }
+
+        [HttpGet]
+        public ActionResult ManagePendingCharges(CompetentAuthority authority)
+        {
+            IReadOnlyCollection<PendingCharge> pendingCharges;
+            using (IWeeeClient client = weeeClient())
+            {
+                // TODO: data access
+                pendingCharges = new List<PendingCharge>(TemporaryFakeDataAccess());
+            }
+
+            ViewBag.Authority = authority;
+
+            return View(pendingCharges);
+        }
+
+        private IEnumerable<PendingCharge> TemporaryFakeDataAccess()
+        {
+            yield return new PendingCharge()
+            {
+                SchemeName = "Another Cool Scheme",
+                SchemeApprovalNumber = "WEEE/12345/01",
+                ComplianceYear = 2017,
+                TotalGBP = 32089.40m
+            };
+
+            yield return new PendingCharge()
+            {
+                SchemeName = "Another Cool Scheme",
+                SchemeApprovalNumber = "WEEE/12345/01",
+                ComplianceYear = 2016,
+                TotalGBP = 32089.40m
+            };
+
+            yield return new PendingCharge()
+            {
+                SchemeName = "Biffa",
+                SchemeApprovalNumber = "WEEE/54321/02",
+                ComplianceYear = 2017,
+                TotalGBP = 2500.10m
+            };
+
+            yield return new PendingCharge()
+            {
+                SchemeName = "Biffa",
+                SchemeApprovalNumber = "WEEE/54321/02",
+                ComplianceYear = 2016,
+                TotalGBP = 2800.50m
+            };
         }
     }
 }
