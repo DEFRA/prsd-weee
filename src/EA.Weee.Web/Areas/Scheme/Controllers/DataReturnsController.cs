@@ -230,8 +230,8 @@
             string filename = string.Format(
                 "{0}_{1}{2}_data_return_errors_and_warnings_{3}.csv",
                 scheme.ApprovalNo,
-                dataReturn.Quarter.Year,
-                dataReturn.Quarter.Q,
+                dataReturn.Year,
+                dataReturn.Quarter,
                 DateTime.Now.ToString("ddMMyyyy_HHmm"));
 
             byte[] fileContent = Encoding.UTF8.GetBytes(csv);

@@ -12,7 +12,9 @@
 
         public Guid OrganisationId { get; private set; }
 
-        public Quarter Quarter { get; private set; }
+        public QuarterType? Quarter { get; private set; }
+
+        public int? Year { get; private set; }
 
         public IReadOnlyCollection<DataReturnWarning> Warnings { get; private set; }
 
@@ -21,13 +23,15 @@
         public DataReturnForSubmission(
             Guid dataReturnId,
             Guid organisationId,
-            Quarter quarter,
+            int? year,
+            QuarterType? quarter,
             IReadOnlyCollection<DataReturnWarning> warnings,
             IReadOnlyCollection<DataReturnError> errors)
         {
             DataReturnId = dataReturnId;
             OrganisationId = organisationId;
             Quarter = quarter;
+            Year = year;
             Warnings = warnings;
             Errors = errors;
         }
