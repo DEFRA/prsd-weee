@@ -216,6 +216,53 @@
             Assert.Contains(result.ErrorData, r => r.ErrorLevel == ErrorLevel.Error);
         }
 
+        /// <summary>
+        /// This test ensures that the error message list resulting from a DataReturnVersionBuilder Build() call does not contain
+        /// duplicate errors in the case where the same validation error has occurred multiple times. This check was inserted because
+        /// CheckProducerIsRegisteredWithSchemeForYear(prn) validation adds the same error for every EEE amount added for the invalid
+        /// producer.
+        /// </summary>
+        [Fact]
+        public async Task AddMultipleEeeOutputAmounts_WithDuplicateValidationErrorsAndWarnings_DoesNotOutputDuplicateErrorsOrWarnings()
+        {
+            String reg1Prn = "Registration Number 1";
+            String reg2Prn = "Registration Number 2";
+
+            var reg1ErrorsAndWarnings = new List<ErrorData>
+            {
+                new ErrorData("Error being compared", ErrorLevel.Error),
+                new ErrorData("Warning being compared", ErrorLevel.Warning)
+            };
+
+            var reg2ErrorsAndWarnings = new List<ErrorData>
+            {
+                new ErrorData("Error being compared", ErrorLevel.Error),
+                new ErrorData("Warning being compared", ErrorLevel.Warning)
+            };
+
+            var helper = new DataReturnVersionBuilderHelper();
+
+            A.CallTo(() => helper.EeeValidator.Validate(reg1Prn, A<string>._, A<WeeeCategory>._, A<ObligationType>._, A<decimal>._))
+                .Returns(reg1ErrorsAndWarnings);
+            A.CallTo(() => helper.EeeValidator.Validate(reg2Prn, A<string>._, A<WeeeCategory>._, A<ObligationType>._, A<decimal>._))
+                .Returns(reg2ErrorsAndWarnings);
+
+            // Add five records, all contain the same error and warning
+            var builder = helper.Create();
+            await builder.AddEeeOutputAmount(reg1Prn, A<string>._, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+            await builder.AddEeeOutputAmount(reg1Prn, A<string>._, A<WeeeCategory>._, ObligationType.B2B, A<decimal>._);
+            await builder.AddEeeOutputAmount(reg1Prn, A<string>._, A<WeeeCategory>._, ObligationType.B2B, A<decimal>._);
+            await builder.AddEeeOutputAmount(reg1Prn, A<string>._, A<WeeeCategory>._, ObligationType.B2B, A<decimal>._);
+            await builder.AddEeeOutputAmount(reg2Prn, A<string>._, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
+
+            // Act
+            var result = builder.Build();
+
+            // Assert
+            // Only outputs one of each duplicate error/warning
+            Assert.Equal(2, result.ErrorData.Count);
+        }
+
         private class DataReturnVersionBuilderHelper
         {
             public readonly Domain.Scheme.Scheme Scheme;
@@ -260,7 +307,7 @@
             Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate, List<ErrorData> errorData)
                 : base(scheme, quarter, eeeValidatorDelegate, dataAccessDelegate)
             {
-                ErrorData = errorData;
+                Errors = errorData;
             }
         }
     }
