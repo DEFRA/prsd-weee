@@ -145,10 +145,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
-      <Project>{75EFEE66-9358-4DE4-9A84-E7191EEC7DB8}</Project>
-      <Name>EA.Weee.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
       <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>
       <Name>EA.Weee.Domain</Name>
