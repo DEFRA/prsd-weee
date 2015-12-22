@@ -120,41 +120,41 @@
                 }
             }
 
-            Guid dataReturnId;
+            Guid dataReturnUploadId;
             using (var client = apiClient())
             {
                 model.PcsId = pcsId;
                 var request = mapper.Map<PCSFileUploadViewModel, ProcessDataReturnXmlFile>(model);
-                dataReturnId = await client.SendAsync(User.GetAccessToken(), request);
+                dataReturnUploadId = await client.SendAsync(User.GetAccessToken(), request);
             }
 
             if (Request.IsAjaxRequest())
             {
-                return Json(dataReturnId);
+                return Json(dataReturnUploadId);
             }
             else
             {
-                DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+                DataReturnForSubmission dataReturn = await FetchDataReturnUpload(pcsId, dataReturnUploadId);
                 if (dataReturn.Errors.Count == 0)
                 {
-                    return RedirectToAction("Submit", new { pcsId = pcsId, dataReturnId = dataReturnId });
+                    return RedirectToAction("Submit", new { pcsId = pcsId, dataReturnUploadId = dataReturnUploadId });
                 }
                 else
                 {
-                    return RedirectToAction("Review", new { pcsId = pcsId, dataReturnId = dataReturnId });
+                    return RedirectToAction("Review", new { pcsId = pcsId, dataReturnUploadId = dataReturnUploadId });
                 }
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult> Review(Guid pcsId, Guid dataReturnId)
+        public async Task<ActionResult> Review(Guid pcsId, Guid dataReturnUploadId)
         {
             await SetBreadcrumb(pcsId);
-            DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+            DataReturnForSubmission dataReturn = await FetchDataReturnUpload(pcsId, dataReturnUploadId);
 
             if (dataReturn.Errors.Count == 0)
             {
-                return RedirectToAction("Submit", new { pcsId, dataReturnId });
+                return RedirectToAction("Submit", new { pcsId, dataReturnUploadId });
             }
 
             SubmitViewModel viewModel = new SubmitViewModel()
@@ -166,14 +166,14 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Submit(Guid pcsId, Guid dataReturnId)
+        public async Task<ActionResult> Submit(Guid pcsId, Guid dataReturnUploadId)
         {
             await SetBreadcrumb(pcsId);
-            DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+            DataReturnForSubmission dataReturn = await FetchDataReturnUpload(pcsId, dataReturnUploadId);
 
             if (dataReturn.Errors.Count != 0)
             {
-                return RedirectToAction("Review", new { pcsId, dataReturnId });
+                return RedirectToAction("Review", new { pcsId, dataReturnUploadId });
             }
 
             SubmitViewModel viewModel = new SubmitViewModel()
@@ -186,19 +186,22 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Submit(Guid pcsId, Guid dataReturnId, SubmitViewModel viewModel)
+        public async Task<ActionResult> Submit(Guid pcsId, Guid dataReturnUploadId, SubmitViewModel viewModel)
         {
             await SetBreadcrumb(pcsId);
+
             if (!ModelState.IsValid)
             {
-                DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
-
+                DataReturnForSubmission dataReturn = await FetchDataReturnUpload(pcsId, dataReturnUploadId);
                 viewModel.DataReturn = dataReturn;
 
                 return View(viewModel);
             }
 
-            // TODO: Submit the data return.
+            using (var client = apiClient())
+            {
+                await client.SendAsync(User.GetAccessToken(), new SubmitDataReturnUpload(dataReturnUploadId));
+            }
 
             return RedirectToAction("SuccessfulSubmission", new { pcsId });
         }
@@ -211,11 +214,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadErrorsAndWarnings(Guid pcsId, Guid dataReturnId)
+        public async Task<ActionResult> DownloadErrorsAndWarnings(Guid pcsId, Guid dataReturnUploadId)
         {
             SchemePublicInfo scheme = await cache.FetchSchemePublicInfo(pcsId);
 
-            DataReturnForSubmission dataReturn = await FetchDataReturn(pcsId, dataReturnId);
+            DataReturnForSubmission dataReturn = await FetchDataReturnUpload(pcsId, dataReturnUploadId);
 
             CsvWriter<IErrorOrWarning> csvWriter = csvWriterFactory.Create<IErrorOrWarning>();
             csvWriter.DefineColumn("Type", e => e.TypeName);
@@ -284,13 +287,13 @@
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
 
-        private async Task<DataReturnForSubmission> FetchDataReturn(Guid pcsId, Guid dataReturnId)
+        private async Task<DataReturnForSubmission> FetchDataReturnUpload(Guid pcsId, Guid dataReturnUploadId)
         {
             DataReturnForSubmission dataReturn;
 
             using (var client = apiClient())
             {
-                FetchDataReturnForSubmission request = new FetchDataReturnForSubmission(dataReturnId);
+                FetchDataReturnForSubmission request = new FetchDataReturnForSubmission(dataReturnUploadId);
                 dataReturn = await client.SendAsync(User.GetAccessToken(), request);
             }
 

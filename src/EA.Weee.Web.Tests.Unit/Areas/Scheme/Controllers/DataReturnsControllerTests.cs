@@ -107,7 +107,7 @@
 
         [Fact]
         public async void GetAuthorizationRequired_SchemeIsApproved_RedirectsToPcsMemberSummary()
-                    {
+        {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Approved);
 
@@ -127,7 +127,7 @@
         {
             await Assert.ThrowsAnyAsync<InvalidOperationException>(() => DataReturnsController().Upload(A<Guid>._));
         }
-        
+
         [Fact]
         public async void GetUpload_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
         {
@@ -252,7 +252,7 @@
 
             Assert.Equal("Submit", redirectToRouteResult.RouteValues["action"]);
             Assert.Equal(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), redirectToRouteResult.RouteValues["pcsId"]);
-            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnId"]);
+            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnUploadId"]);
         }
 
         [Fact]
@@ -310,7 +310,7 @@
 
             Assert.Equal("Review", redirectToRouteResult.RouteValues["action"]);
             Assert.Equal(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), redirectToRouteResult.RouteValues["pcsId"]);
-            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnId"]);
+            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnUploadId"]);
         }
 
         [Fact]
@@ -392,7 +392,7 @@
 
             Assert.Equal("Submit", redirectToRouteResult.RouteValues["action"]);
             Assert.Equal(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), redirectToRouteResult.RouteValues["pcsId"]);
-            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnId"]);
+            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnUploadId"]);
         }
 
         /// <summary>
@@ -503,7 +503,7 @@
 
             Assert.Equal("Review", redirectToRouteResult.RouteValues["action"]);
             Assert.Equal(new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"), redirectToRouteResult.RouteValues["pcsId"]);
-            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnId"]);
+            Assert.Equal(new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"), redirectToRouteResult.RouteValues["dataReturnUploadId"]);
         }
 
         /// <summary>
@@ -589,6 +589,22 @@
             Assert.Equal(dataReturnForSubmission, viewModel.DataReturn);
         }
 
+        [Fact]
+        public async Task PostSubmit_HappyPath_SubmitsDataReturnUpload()
+        {
+            // Arrange
+            Guid dataReturnUploadId = Guid.NewGuid();
+            var controller = BuildFakeDataReturnsController();
+
+            // Act
+            await controller.Submit(A.Dummy<Guid>(), dataReturnUploadId, A.Dummy<SubmitViewModel>());
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<SubmitDataReturnUpload>._))
+                .WhenArgumentsMatch(args => args.Get<SubmitDataReturnUpload>("request").DataReturnUploadId == dataReturnUploadId)
+                .MustHaveHappened();
+        }
+
         /// <summary>
         /// This test ensures that the POST Submit action redirects the user to the GET SuccessfulSubmission
         /// action after a successful submission.
@@ -631,11 +647,11 @@
             A.CallTo(() => controllerContext.Request).Returns(request);
             return controller;
         }
-                
+
         private DataReturnsController DataReturnsController(object viewModel)
         {
             DataReturnsController controller = DataReturnsController();
-            
+
             // Mimic the behaviour of the model binder which is responsible for Validating the Model
             var validationContext = new ValidationContext(viewModel, null, null);
             var validationResults = new List<ValidationResult>();
@@ -719,6 +735,6 @@
             new HttpContextMocker().AttachToController(controller);
 
             return controller;
-        }  
+        }
     }
 }
