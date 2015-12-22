@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.DataReturns.SubmitReturnVersion
 {
-    using System.Linq;
     using System.Threading.Tasks;
     using RequestHandlers.DataReturns.SubmitReturnVersion;
+    using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
     using Xunit;
 
@@ -15,15 +15,14 @@
             {
                 // Arrange
                 ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
 
                 var scheme = helper.CreateScheme();
                 var dataReturnVersion = helper.CreateDataReturnVersion(scheme, 2016, 1, false);
 
                 database.Model.SaveChanges();
 
-                var dbDataReturnVersion = database.WeeeContext
-                    .DataReturnVersions
-                    .Single(r => r.Id == dataReturnVersion.Id);
+                var dbDataReturnVersion = domainHelper.GetDataReturnVersion(dataReturnVersion.Id);
                 var dataAccess = new SubmitReturnVersionDataAccess(database.WeeeContext);
 
                 // Act
