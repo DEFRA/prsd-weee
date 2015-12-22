@@ -55,6 +55,7 @@
     <Compile Include="DataReturns\CreateTestXmlFile.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile.cs" />
+    <Compile Include="DataReturns\SubmitDataReturnUpload.cs" />
     <Compile Include="Organisations\GetOrganisationOverview.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFile.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache.cs" />
