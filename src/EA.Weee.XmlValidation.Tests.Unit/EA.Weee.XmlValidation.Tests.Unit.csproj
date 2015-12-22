@@ -105,6 +105,7 @@
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerAlreadyRegisteredTests.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerNameChangeTests.cs" />
     <Compile Include="Errors\XmlErrorTranslatorTests.cs" />
+    <Compile Include="SchemaValidation\NamespaceValidatorTests.cs" />
     <Compile Include="SchemaValidation\SchemaValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
