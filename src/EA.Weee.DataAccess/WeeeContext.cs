@@ -8,6 +8,7 @@
     using Domain;
     using Domain.Admin;
     using Domain.Audit;
+    using Domain.Charges;
     using Domain.DataReturns;
     using Domain.Lookup;
     using Domain.Organisation;
@@ -58,6 +59,7 @@
         public virtual DbSet<DataReturnUpload> DataReturnsUploads { get; set; }
 
         public virtual DbSet<DataReturnUploadError> DataReturnsUploadErrors { get; set; }
+
         public virtual DbSet<DataReturnVersion> DataReturnVersions { get; set; }
 
         public virtual DbSet<DataReturn> DataReturns { get; set; }
@@ -69,7 +71,10 @@
         public virtual DbSet<AeDeliveryLocation> AeDeliveryLocations { get; set; }
 
         public virtual DbSet<WeeeCollectedReturnVersion> WeeeCollectedReturnVersions { get; set; }
+
         public virtual DbSet<WeeeCollectedAmount> WeeeCollectedAmounts { get; set; }
+
+        public virtual DbSet<InvoiceRun> InvoiceRuns { get; set; }
 
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
