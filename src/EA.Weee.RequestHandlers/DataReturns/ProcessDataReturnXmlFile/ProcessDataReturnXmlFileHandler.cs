@@ -62,17 +62,17 @@
                 var pcsReturnVersionBuilder = dataReturnVersionBuilderDelegate(scheme, new Quarter(complianceYear, (QuarterType)quarter));
                 var dataReturnVersionFromXmlBuilder = dataReturnVersionFromXmlBuilderDelegate(pcsReturnVersionBuilder);
 
-                var dataReturnVersionBuilderresult = await dataReturnVersionFromXmlBuilder.Build(xmlGeneratorResult.DeserialisedType);
+                var dataReturnVersionBuilderResult = await dataReturnVersionFromXmlBuilder.Build(xmlGeneratorResult.DeserialisedType);
 
-                var allErrors = (dataReturnVersionBuilderresult.ErrorData
+                var allErrors = (dataReturnVersionBuilderResult.ErrorData
                     .Select(e => new DataReturnUploadError(e.ErrorLevel.ToDomainErrorLevel(), Domain.UploadErrorType.Business, e.Description)))
                     .ToList();
 
                 dataReturnUpload = new DataReturnUpload(scheme, xmlGeneratorResult.XmlString, allErrors, message.FileName, complianceYear, quarter);
 
-                if (!dataReturnVersionBuilderresult.ErrorData.Any(e => e.ErrorLevel == ErrorLevel.Error))
+                if (!dataReturnVersionBuilderResult.ErrorData.Any(e => e.ErrorLevel == ErrorLevel.Error))
                 {
-                    dataReturnUpload.SetDataReturnVersion(dataReturnVersionBuilderresult.DataReturnVersion);
+                    dataReturnUpload.SetDataReturnVersion(dataReturnVersionBuilderResult.DataReturnVersion);
                 }
             }
 
