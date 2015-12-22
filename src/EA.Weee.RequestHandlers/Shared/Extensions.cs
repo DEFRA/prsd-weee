@@ -162,5 +162,22 @@
                 collection.Add(value);
             }
         }
+
+        public static QuarterType ToDomainQuarterType(this Xml.DataReturns.SchemeReturnReturnPeriod returnPeriod)
+        {
+            switch (returnPeriod)
+            {
+                case Xml.DataReturns.SchemeReturnReturnPeriod.Quarter1JanuaryMarch:
+                    return QuarterType.Q1;
+                case Xml.DataReturns.SchemeReturnReturnPeriod.Quarter2AprilJune:
+                    return QuarterType.Q2;
+                case Xml.DataReturns.SchemeReturnReturnPeriod.Quarter3JulySeptember:
+                    return QuarterType.Q3;
+                case Xml.DataReturns.SchemeReturnReturnPeriod.Quarter4OctoberDecember:
+                    return QuarterType.Q4;
+                default:
+                    throw new ArgumentException("Unable to map to domain quarter type");
+            }
+        }
     }
 }
