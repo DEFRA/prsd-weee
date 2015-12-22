@@ -116,6 +116,9 @@
     <Compile Include="DataReturns\ReturnVersionBuilder\IDataReturnVersionBuilder.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilder.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\IDataReturnVersionBuilderDataAccess.cs" />
+    <Compile Include="DataReturns\SubmitReturnVersion\ISubmitReturnVersionDataAccess.cs" />
+    <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandler.cs" />
+    <Compile Include="DataReturns\SubmitReturnVersion\SubmitReturnVersionDataAccess.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />

@@ -107,6 +107,7 @@
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXMLFileHandlerTests.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandlerTests.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderTests.cs" />
+    <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandlerTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandlerTests.cs" />

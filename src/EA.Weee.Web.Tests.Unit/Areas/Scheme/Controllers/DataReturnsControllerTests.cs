@@ -225,7 +225,8 @@
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
                 new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
                 new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
-                new Quarter(2015, QuarterType.Q4),
+                2015,
+                QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
                 A.Dummy<IReadOnlyCollection<DataReturnError>>());
 
@@ -282,7 +283,8 @@
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
                 new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
                 new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
-                new Quarter(2015, QuarterType.Q4),
+                2015,
+                QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
                 new List<DataReturnError>() { error });
 
@@ -336,7 +338,8 @@
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
                 new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
                 new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
-                new Quarter(2015, QuarterType.Q4),
+                2015,
+                QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
                 A.Dummy<IReadOnlyCollection<DataReturnError>>());
 
@@ -367,7 +370,8 @@
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
                 new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
                 new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
-                new Quarter(2015, QuarterType.Q4),
+                2015,
+                QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
                 A.Dummy<IReadOnlyCollection<DataReturnError>>());
 
@@ -404,7 +408,8 @@
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
                 new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
                 new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
-                new Quarter(2015, QuarterType.Q4),
+                2015,
+                QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
                 new List<DataReturnError>() { error });
 
@@ -443,7 +448,8 @@
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
                 new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
                 new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
-                new Quarter(2015, QuarterType.Q4),
+                2015,
+                QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
                 A.Dummy<IReadOnlyCollection<DataReturnError>>());
 
@@ -475,7 +481,8 @@
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
                 new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
                 new Guid("DDE08793-D655-4CDD-A87A-083307C1AA66"),
-                new Quarter(2015, QuarterType.Q4),
+                2015,
+                QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
                 new List<DataReturnError>() { error });
 
@@ -510,7 +517,8 @@
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
                 new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
                 new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
-                new Quarter(2015, QuarterType.Q4),
+                2015,
+                QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
                 A.Dummy<IReadOnlyCollection<DataReturnError>>());
 
@@ -549,7 +557,8 @@
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
                 new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"),
                 new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"),
-                new Quarter(2015, QuarterType.Q4),
+                2015,
+                QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
                 A.Dummy<IReadOnlyCollection<DataReturnError>>());
 
