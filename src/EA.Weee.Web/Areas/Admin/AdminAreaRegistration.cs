@@ -24,8 +24,8 @@
 
             context.MapLowercaseDashedRoute(
                 name: "admin_charges",
-                url: "admin/charge/{authority}/{action}",
-                defaults: new { controller = "Charge", authority = UrlParameter.Optional },
+                url: "admin/charge/{authority}/{action}/{id}",
+                defaults: new { controller = "Charge", authority = UrlParameter.Optional, id = UrlParameter.Optional },
                 namespaces: new[] { typeof(HomeController).Namespace });
 
             context.MapLowercaseDashedRoute(
