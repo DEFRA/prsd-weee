@@ -161,7 +161,7 @@
                     break;
                 case "FractionDigits":
                     friendlyMessageTemplate =
-                        "The value '{0}' supplied for field '{1}' has exceeded the maximum number of allowed decimal places";
+                        "The value '{0}' supplied for field '{1}' exceeds the maximum number of allowed decimal places";
                     break;
             }
 
