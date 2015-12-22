@@ -12,17 +12,17 @@
         private const string InvalidNamespaceMessageTemplate = "The namespace of the XML file you have uploaded is not for a {0} file. Upload a file that uses the namespace '{1}'.";
         private const string IncorrectNamespaceMessageTemplate = "The XML file you have provided is for {0}. You must provide a {1} XML file.";
 
-        private readonly Dictionary<string, string> validNamespaceDictionary;
+        private readonly Dictionary<XNamespace, string> validNamespaceDictionary;
          
         public NamespaceValidator()
         {
-            validNamespaceDictionary = new Dictionary<string, string>();
+            validNamespaceDictionary = new Dictionary<XNamespace, string>();
 
             validNamespaceDictionary.Add(XmlNamespace.MemberRegistration, "member registration");
             validNamespaceDictionary.Add(XmlNamespace.DataReturns, "data returns");
         }
 
-        public IEnumerable<XmlValidationError> Validate(string expectedNamespace, string actualNamespace)
+        public IEnumerable<XmlValidationError> Validate(XNamespace expectedNamespace, XNamespace actualNamespace)
         {
             var errors = new List<XmlValidationError>();
 
