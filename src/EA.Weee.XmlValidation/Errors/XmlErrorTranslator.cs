@@ -159,6 +159,10 @@
                     friendlyMessageTemplate =
                         "The value '{0}' supplied for field '{1}' isn't one of the accepted values.";
                     break;
+                case "FractionDigits":
+                    friendlyMessageTemplate =
+                        "The value '{0}' supplied for field '{1}' can only be to three decimal places.";
+                    break;
             }
 
             if (friendlyMessageTemplate != string.Empty)
