@@ -21,7 +21,7 @@
 
         private readonly IDataReturnVersionBuilderDataAccess schemeQuarterDataAccess;
 
-        protected List<ErrorData> ErrorData { get; set; }
+        protected List<ErrorData> Errors { get; set; }
 
         private DataReturnVersion dataReturnVersion;
 
@@ -35,7 +35,7 @@
             eeeValidator = eeeValidatorDelegate(scheme, quarter, dataAccessDelegate);
             schemeQuarterDataAccess = dataAccessDelegate(scheme, quarter);
 
-            ErrorData = new List<ErrorData>();
+            Errors = new List<ErrorData>();
         }
 
         private async Task CreateDataReturnVersion()
@@ -79,7 +79,7 @@
                 dataReturnVersion.EeeOutputReturnVersion.AddEeeOutputAmount(new EeeOutputAmount(obligationType, category, tonnage, registeredProducer));
             }
 
-            ErrorData.AddRange(validationResult);
+            Errors.AddRange(validationResult);
         }
 
         public async Task AddWeeeCollectedAmount(WeeeCollectedAmountSourceType sourceType, WeeeCategory category, ObligationType obligationType, decimal tonnage)
@@ -96,7 +96,9 @@
                 throw new InvalidOperationException("Return data has not been provided.");
             }
 
-            return new DataReturnVersionBuilderResult(ConsideredValid(ErrorData) ? dataReturnVersion : null, ErrorData);
+            List<ErrorData> uniqueErrors = Errors.Distinct().ToList();
+
+            return new DataReturnVersionBuilderResult(ConsideredValid(Errors) ? dataReturnVersion : null, uniqueErrors);
         }
 
         private static bool ConsideredValid(ICollection<ErrorData> errorData)
