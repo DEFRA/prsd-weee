@@ -9,9 +9,9 @@
 
     Dictionary<Activity, string> displayNames = new Dictionary<Activity, string>()
     {
-        { Activity.ManagePendingCharges, "Manage pending charges" },
-        { Activity.ManageIssuedCharges, "Manage issued charges" },
-        { Activity.ViewInvoiceRunHistory, "View invoice run history" },
+        { Activity.ManagePendingCharges, "Pending charges" },
+        { Activity.ManageIssuedCharges, "Issued charges" },
+        { Activity.ViewInvoiceRunHistory, "Invoice runs" },
     };
 }
 
@@ -19,7 +19,7 @@
 {
     <header class="hgroup">
         <h1 class="heading-large">
-            What would you like to do?
+            What would you like to manage?
         </h1>
     </header>
 
@@ -40,5 +40,7 @@
 
         @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
     }
+
+    @Html.ActionLink("Back", "SelectAuthority")
 }
 
