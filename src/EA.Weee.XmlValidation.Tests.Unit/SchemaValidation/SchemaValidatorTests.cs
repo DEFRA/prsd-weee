@@ -10,6 +10,7 @@
     using FakeItEasy;
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;
+    using Xml;
     using Xml.Converter;
     using Xunit;
 
@@ -34,7 +35,7 @@
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Returns(XDocument.Parse(validXml));
 
-            var errors = SchemaValidator().Validate(new byte[1], @"EA.Weee.Xml.MemberRegistration.v3schema.xsd", @"http://www.environment-agency.gov.uk/WEEE/XMLSchema", A<string>._);
+            var errors = SchemaValidator().Validate(new byte[1], @"EA.Weee.Xml.MemberRegistration.v3schema.xsd", XmlNamespace.MemberRegistration, A<string>._);
 
             Assert.Empty(errors);
         }
@@ -43,8 +44,7 @@
         public void SchemaValidation_EmptyFile_AddsError_WithIncorrectlyFormattedXmlMessage()
         {
             var errors = SchemaValidator()
-                .Validate(new byte[0], @"EA.Weee.Xml.MemberRegistration.v3schema.xsd",
-                    @"http://www.environment-agency.gov.uk/WEEE/XMLSchema", A<string>._);
+                .Validate(new byte[0], @"EA.Weee.Xml.MemberRegistration.v3schema.xsd", XmlNamespace.MemberRegistration, A<string>._);
 
             Assert.Single(errors);
             Assert.Contains(XmlErrorTranslator.IncorrectlyFormattedXmlMessage, errors.Single().Message);

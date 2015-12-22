@@ -8,6 +8,7 @@
     using Domain.Scheme;
     using Prsd.Core;
     using Requests.DataReturns;
+    using Xml;
     using Xml.Converter;
     using Xml.DataReturns;
     using Xml.Deserialization;
@@ -39,7 +40,7 @@
 
             // Validate against the schema
             var validationErrors = schemaValidator
-                .Validate(message.Data, @"EA.Weee.Xml.DataReturns.v3schema.xsd", @"http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns", schemaVersion)
+                .Validate(message.Data, @"EA.Weee.Xml.DataReturns.v3schema.xsd", XmlNamespace.DataReturns, schemaVersion)
                 .ToList();
            
             if (!validationErrors.Any())
