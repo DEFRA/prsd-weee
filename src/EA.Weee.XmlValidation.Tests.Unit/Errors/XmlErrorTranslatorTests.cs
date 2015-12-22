@@ -287,6 +287,15 @@
         }
 
         [Fact]
+        public void XmlErrorTranslator_MissingChildElement_CorrectMessage()
+        {
+            string providedException = string.Format("The element '{0}' in namespace '{1}' has incomplete content. List of possible elements expected: '{2}' in namespace '{1}'.", TestField, TestNamespace, TestType);
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The '{0}' element is missing a child element '{1}'.", TestField, TestType));
+
+            CheckExceptionMessage(expectedFriendlyMessage, providedException);
+        }
+
+        [Fact]
         public void XmlErrorTranslator_ErrorInXmlDocument_CorrectMessage()
         {
             const string lineNumber = "57";
