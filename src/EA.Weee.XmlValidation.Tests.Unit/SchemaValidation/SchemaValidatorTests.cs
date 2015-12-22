@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.Tests.Unit.SchemaValidation
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -18,11 +19,13 @@
     {
         private readonly IXmlErrorTranslator xmlErrorTranslator;
         private readonly IXmlConverter xmlConverter;
+        private readonly INamespaceValidator namespaceValidator;
 
         public SchemaValidatorTests()
         {
             xmlErrorTranslator = A.Fake<IXmlErrorTranslator>();
             xmlConverter = A.Fake<IXmlConverter>();
+            namespaceValidator = A.Fake<INamespaceValidator>();
         }
 
         [Fact]
@@ -51,7 +54,7 @@
         }
 
         [Fact]
-        public void SchemaValidation_IncorrectNamespace_AddsError()
+        public void SchemaValidation_DataIsNotEmpty_ChecksForInvalidNamespace_AndReturnsAnyErrorsFromInvalidNamepsaceValidator()
         {
             var wrongNamespaceXmlLocation = Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), @"ExampleXML\v3-wrong-namespace.xml");
@@ -60,9 +63,17 @@
             A.CallTo(() => xmlConverter.Convert(A<byte[]>._))
                 .Returns(XDocument.Parse(wrongNamespaceXml));
 
-            var errors = SchemaValidator().Validate(new byte[0], string.Empty, string.Empty, A<string>._);
+            var error = new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "Some message", 1);
 
-            Assert.NotEmpty(errors.Where(me => me.ErrorLevel == ErrorLevel.Error));
+            A.CallTo(() => namespaceValidator.Validate(A<string>._, A<string>._))
+                .Returns(new List<XmlValidationError> { error });
+
+            var result = SchemaValidator().Validate(new byte[1], string.Empty, string.Empty, A<string>._);
+
+            A.CallTo(() => namespaceValidator.Validate(A<string>._, A<string>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.Contains(error, result);
         }
 
         [Fact]
@@ -103,7 +114,7 @@
 
         private SchemaValidator SchemaValidator()
         {
-            return new SchemaValidator(xmlErrorTranslator, xmlConverter);
+            return new SchemaValidator(xmlErrorTranslator, xmlConverter, namespaceValidator);
         }
     }
 }
