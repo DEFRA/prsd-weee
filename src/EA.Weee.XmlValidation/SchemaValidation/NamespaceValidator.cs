@@ -28,8 +28,8 @@
 
             if (!validNamespaceDictionary.ContainsKey(expectedNamespace))
             {
-                throw new ArgumentException("The expected namespace is not a namespace recognised by the system");
-            }
+                throw new ArgumentException(string.Format("The expected namespace '{0}' is not a namespace recognised by the system", expectedNamespace));
+            } 
 
             if (actualNamespace != expectedNamespace)
             {
