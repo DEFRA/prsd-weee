@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Shared;
     using Domain.DataReturns;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;
@@ -74,12 +75,15 @@
             A.CallTo(() => builder.XmlGenerator.GenerateDataReturns<SchemeReturn>(A<ProcessDataReturnXmlFile>._))
                 .Returns(xmlGeneratorResult);
 
+            A.CallTo(() => builder.DataReturnVersionFromXmlBuilder.Build(A<SchemeReturn>._))
+                 .Returns(new DataReturnVersionBuilderResult(A.Dummy<DataReturnVersion>(), A.Dummy<List<ErrorData>>()));
+
             // Act
             await builder.InvokeHandleAsync();
 
             // Assert
             A.CallTo(() => builder.DataAccess.AddAndSaveAsync(A<DataReturnUpload>._))
-                .MustHaveHappened(Repeated.Exactly.Once);            
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         private class ProcessDataReturnXmlFileHandlerBuilder
@@ -88,8 +92,8 @@
             public IWeeeAuthorization Authorization;
             public IGenerateFromDataReturnXml XmlGenerator;
             public IDataReturnVersionFromXmlBuilder DataReturnVersionFromXmlBuilder;
-            public Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder> DataReturnVersionFromXmlBuilderDelegate;
-            public Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilder> DataReturnVersionBuilderDelegate;
+            private readonly Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder> dataReturnVersionFromXmlBuilderDelegate;
+            private readonly Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilder> dataReturnVersionBuilderDelegate;
 
             public ProcessDataReturnXmlFileHandlerBuilder()
             {
@@ -101,9 +105,9 @@
                 XmlGenerator = A.Fake<IGenerateFromDataReturnXml>();
 
                 DataReturnVersionFromXmlBuilder = A.Fake<IDataReturnVersionFromXmlBuilder>();
-                DataReturnVersionFromXmlBuilderDelegate = new Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder>(x => DataReturnVersionFromXmlBuilder);
+                dataReturnVersionFromXmlBuilderDelegate = x => DataReturnVersionFromXmlBuilder;
 
-                DataReturnVersionBuilderDelegate = A.Fake<Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilder>>();
+                dataReturnVersionBuilderDelegate = A.Fake<Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilder>>();
             }
 
             public ProcessDataReturnXmlFileHandler Build()
@@ -112,8 +116,8 @@
                                               DataAccess,
                                               Authorization,
                                               XmlGenerator,
-                                              DataReturnVersionFromXmlBuilderDelegate,
-                                              DataReturnVersionBuilderDelegate);
+                                              dataReturnVersionFromXmlBuilderDelegate,
+                                              dataReturnVersionBuilderDelegate);
             }
 
             public Task InvokeHandleAsync(ProcessDataReturnXmlFile processDataReturnXmlFile = null)

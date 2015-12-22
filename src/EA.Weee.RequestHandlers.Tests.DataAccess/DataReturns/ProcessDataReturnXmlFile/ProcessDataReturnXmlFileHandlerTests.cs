@@ -5,43 +5,96 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Core.Shared;
+    using Domain.DataReturns;
     using FakeItEasy;
+    using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
+    using RequestHandlers.DataReturns.ReturnVersionBuilder;
+    using Security;
+    using Weee.DataAccess;
+    using Weee.Tests.Core;
+    using Weee.Tests.Core.Model;
+    using Xml.DataReturns;
+    using XmlValidation.Errors;
     using Xunit;
+    using ProcessDataReturnXmlFile = Requests.DataReturns.ProcessDataReturnXmlFile;
+    using Scheme = Domain.Scheme.Scheme;
 
     public class ProcessDataReturnXmlFileHandlerTests
     {
-        // TODO: Write tests
+        [Fact]
+        public async Task HandleAsync_XmlContainsSchemaError_CreatesDataReturnUpload_WithNullComplianceYearAndQuarter()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
 
-        //[Fact]
-        //public void HandleAsync_SchemaErrors_NullComplianceYear()
-        //{
-        //    var message = new ProcessDataReturnXmlFile(Guid.NewGuid(), new byte[1], "File name");
+                var organisation = helper.CreateOrganisation();
+                helper.CreateScheme(organisation);
 
-        //    var generateFromXml = new GenerateFromXmlBuilder().Build();
+                database.Model.SaveChanges();
 
-        //    var result = generateFromXml.GenerateDataReturnsUpload(message,
-        //        new List<DataReturnUploadError>
-        //        {
-        //            new DataReturnUploadError(ErrorLevel.Error, UploadErrorType.Schema, "Some schema error")
-        //        }, A.Dummy<Scheme>());
+                var xmlGeneratorResult = new GenerateFromDataReturnXmlResult<SchemeReturn>(
+                    "Test XML string",
+                    A.Dummy<SchemeReturn>(),
+                    new List<XmlValidationError> { new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "Error text") });
 
-        //    Assert.Null(result.ComplianceYear);
-        //}
+                var builder = new ProcessDataReturnXmlFileHandlerBuilder(database.WeeeContext);
 
-        //[Fact]
-        //public void HandleAsync_NoSchemaErrors_ComplianceYearObtained()
-        //{
-        //    var builder = new GenerateFromXmlBuilder();
-        //    A.CallTo(() => builder.XmlDeserializer.Deserialize<SchemeReturn>(A<XDocument>._))
-        //        .Returns(new SchemeReturn { ComplianceYear = "2015" });
+                A.CallTo(() => builder.XmlGenerator.GenerateDataReturns<SchemeReturn>(A<ProcessDataReturnXmlFile>._))
+                     .Returns(xmlGeneratorResult);
 
-        //    var message = new ProcessDataReturnXmlFile(Guid.NewGuid(), new byte[1], "File name");
-        //    var generateFromXml = builder.Build();
+                // Act
+                var dataReturnUploadId = await builder.InvokeHandleAsync(organisation.Id);
 
-        //    var result = generateFromXml.GenerateDataReturnsUpload(message, new List<DataReturnUploadError>(), A.Dummy<Scheme>());
+                //Assert
+                var dataReturnUpload = domainHelper.GetDataReturnUpload(dataReturnUploadId);
 
-        //    Assert.NotNull(result.ComplianceYear);
-        //    Assert.Equal(2015, result.ComplianceYear.Value);
-        //}
+                Assert.Null(dataReturnUpload.ComplianceYear);
+                Assert.Null(dataReturnUpload.Quarter);
+            }
+        }
+
+        private class ProcessDataReturnXmlFileHandlerBuilder
+        {
+            private readonly IProcessDataReturnXmlFileDataAccess dataAccess;
+            private readonly IWeeeAuthorization authorization;
+            public IGenerateFromDataReturnXml XmlGenerator;
+            public IDataReturnVersionFromXmlBuilder DataReturnVersionFromXmlBuilder;
+            private readonly Func<IDataReturnVersionBuilder, IDataReturnVersionFromXmlBuilder> dataReturnVersionFromXmlBuilderDelegate;
+            private readonly Func<Scheme, Quarter, IDataReturnVersionBuilder> dataReturnVersionBuilderDelegate;
+
+            public ProcessDataReturnXmlFileHandlerBuilder(WeeeContext context)
+            {
+                dataAccess = new ProcessDataReturnXmlFileDataAccess(context);
+                authorization = A.Fake<IWeeeAuthorization>();
+                XmlGenerator = A.Fake<IGenerateFromDataReturnXml>();
+
+                DataReturnVersionFromXmlBuilder = A.Fake<IDataReturnVersionFromXmlBuilder>();
+                dataReturnVersionFromXmlBuilderDelegate = x => DataReturnVersionFromXmlBuilder;
+
+                dataReturnVersionBuilderDelegate = A.Fake<Func<Scheme, Quarter, IDataReturnVersionBuilder>>();
+            }
+
+            public ProcessDataReturnXmlFileHandler Build()
+            {
+                return new ProcessDataReturnXmlFileHandler(
+                                              dataAccess,
+                                              authorization,
+                                              XmlGenerator,
+                                              dataReturnVersionFromXmlBuilderDelegate,
+                                              dataReturnVersionBuilderDelegate);
+            }
+
+            public Task<Guid> InvokeHandleAsync(Guid organisationId, byte[] data = null, string fileName = null)
+            {
+                var messageData = data ?? A.Dummy<byte[]>();
+                var messageFileName = fileName ?? A.Dummy<string>();
+
+                return Build().HandleAsync(new ProcessDataReturnXmlFile(organisationId, messageData, messageFileName));
+            }
+        }
     }
 }

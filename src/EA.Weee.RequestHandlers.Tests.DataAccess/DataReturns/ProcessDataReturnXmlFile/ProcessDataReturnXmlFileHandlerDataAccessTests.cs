@@ -21,7 +21,7 @@
                 ModelHelper helper = new ModelHelper(database.Model);
 
                 var organisation1 = helper.CreateOrganisation();
-                var scheme1 = helper.CreateScheme(organisation1);
+                helper.CreateScheme(organisation1);
 
                 var organisation2 = helper.CreateOrganisation();
                 var scheme2 = helper.CreateScheme(organisation2);
@@ -39,7 +39,18 @@
         }
 
         [Fact]
-        public async Task AddAndSaveAsync_AddsDataReturnUpload_ToContextDataReturnsUploads()
+        public async Task FetchSchemeByOrganisationIdAsync_ThrowsInvalidOperationException_WhenNoMatchingOrganisationId()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                var dataAccess = new ProcessDataReturnXmlFileDataAccess(database.WeeeContext);
+
+                await Assert.ThrowsAsync<InvalidOperationException>(() => dataAccess.FetchSchemeByOrganisationIdAsync(Guid.NewGuid()));
+            }
+        }
+
+        [Fact]
+        public async Task AddAndSaveAsync_AddsDataReturnUpload_ToWeeeContextDataReturnsUploads()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
