@@ -11,7 +11,11 @@
         public virtual ICollection<DataReturnVersion> DataReturnVersions { get; private set; }
 
         public virtual ICollection<WeeeCollectedAmount> WeeeCollectedAmounts { get; private set; }
-        
+
+        protected WeeeCollectedReturnVersion()
+        {
+        }
+
         public WeeeCollectedReturnVersion(DataReturnVersion dataReturnVersion)
         {
             Guard.ArgumentNotNull(() => dataReturnVersion, dataReturnVersion);
