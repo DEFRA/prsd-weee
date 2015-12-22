@@ -65,6 +65,7 @@
         [HttpGet]
         public ActionResult ChooseActivity(CompetentAuthority authority)
         {
+            ViewBag.Authority = authority;
             return View(new ChooseActivityViewModel());
         }
 
@@ -74,6 +75,7 @@
         {
             if (!ModelState.IsValid)
             {
+                ViewBag.Authority = authority;
                 return View(viewModel);
             }
 
