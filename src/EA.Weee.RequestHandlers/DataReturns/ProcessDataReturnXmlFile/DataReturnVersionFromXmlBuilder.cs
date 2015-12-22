@@ -1,22 +1,42 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
 {
+    using System;
     using System.Threading.Tasks;
+    using Core.Shared;
     using Domain.DataReturns;
+    using Prsd.Core;
     using ReturnVersionBuilder;
     using Shared;
     using Xml.DataReturns;
 
+    /// <summary>
+    /// Builds data return version domain objects for a specified scheme and quarter by processing
+    /// a SchemeReturn object representing the contents of a schematically valid XML file.
+    /// The scheme and quarter are determined by the IDataReturnVersionBuilder provided.
+    /// </summary>
     public class DataReturnVersionFromXmlBuilder : IDataReturnVersionFromXmlBuilder
     {
         private readonly IDataReturnVersionBuilder dataReturnVersionBuilder;
 
-        public DataReturnVersionFromXmlBuilder(IDataReturnVersionBuilder dataReturnVersionBuilder)
+        public DataReturnVersionFromXmlBuilder(
+            IDataReturnVersionBuilder dataReturnVersionBuilder)
         {
+            Guard.ArgumentNotNull(() => dataReturnVersionBuilder, dataReturnVersionBuilder);
             this.dataReturnVersionBuilder = dataReturnVersionBuilder;
         }
 
         public async Task<DataReturnVersionBuilderResult> Build(SchemeReturn schemeReturn)
         {
+            string errorMessage;
+            if (!CheckXmlBusinessValidation(schemeReturn, out errorMessage))
+            {
+                ErrorData error = new ErrorData(errorMessage, ErrorLevel.Error);
+
+                DataReturnVersionBuilderResult result = new DataReturnVersionBuilderResult();
+                result.ErrorData.Add(error);
+                return result;
+            }
+
             if (schemeReturn.ProducerList != null)
             {
                 foreach (var producer in schemeReturn.ProducerList)
@@ -86,6 +106,27 @@
             }
 
             return dataReturnVersionBuilder.Build();
+        }
+
+        /// <summary>
+        /// Checks business validation rules that only apply to data provided in XML.
+        /// </summary>
+        /// <param name="schemeReturn">The contents of the XML file to be validated.</param>
+        /// <param name="errorMessage">A description of the first error encountered, or null if all checks pass.</param>
+        /// <returns>Returns true if all checks pass.</returns>
+        public bool CheckXmlBusinessValidation(SchemeReturn schemeReturn, out string errorMessage)
+        {
+            if (schemeReturn.ApprovalNo != dataReturnVersionBuilder.Scheme.ApprovalNumber)
+            {
+                errorMessage = string.Format(
+                    "The PCS approval number \"{0}\" you have provided does not match with the PCS. Review the PCS approval number.",
+                    schemeReturn.ApprovalNo);
+
+                return false;
+            }
+
+            errorMessage = null;
+            return true;
         }
     }
 }

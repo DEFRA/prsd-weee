@@ -1,13 +1,13 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
     using System.Data.Entity.ModelConfiguration;
-    using EA.Weee.Domain.DataReturns;
+    using Domain.DataReturns;
 
-    internal class WeeeCollectedAmountMapping : EntityTypeConfiguration<WeeeCollectedAmount>
+    public class EeeOutputAmountMapping : EntityTypeConfiguration<EeeOutputAmount>
     {
-        public WeeeCollectedAmountMapping()
+        public EeeOutputAmountMapping()
         {
-            ToTable("WeeeCollectedAmount", "PCS");
+            ToTable("EeeOutputAmount", "PCS");
 
             Ignore(ps => ps.ObligationType);
             Property(ps => ps.DatabaseObligationType).HasColumnName("ObligationType");

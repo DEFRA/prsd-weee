@@ -94,7 +94,10 @@
                 PopulateReturn(returnItem, xmlReturn);
             }
 
-            var aatfDeliveredAmounts = dataReturnVersion.AatfDeliveredAmounts.GroupBy(x => x.AatfDeliveryLocation);
+            var aatfDeliveredAmounts = dataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts
+                .Where(x => x.IsAatfDeliveredAmount)
+                .GroupBy(x => x.AatfDeliveryLocation);
+
             foreach (var aatfDeliveredAmount in aatfDeliveredAmounts)
             {
                 XElement xmlDeliveredToATF = new XElement(ns + "DeliveredToATF");
@@ -103,7 +106,10 @@
                 PopulateDeliveredToAatf(aatfDeliveredAmount, xmlDeliveredToATF);
             }
 
-            var aeDeliveredAmounts = dataReturnVersion.AeDeliveredAmounts.GroupBy(x => x.AeDeliveryLocation);
+            var aeDeliveredAmounts = dataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts
+                .Where(x => x.IsAeDeliveredAmount)
+                .GroupBy(x => x.AeDeliveryLocation);
+
             foreach (var aeDeliveredAmount in aeDeliveredAmounts)
             {
                 XElement xmlDeliveredToAE = new XElement(ns + "DeliveredToAE");
@@ -116,7 +122,7 @@
             xmlSchemeReturn.Add(xmlB2cWeeeFromDistributors);
 
             var fromDistributors = dataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts.Where(w => w.SourceType == WeeeCollectedAmountSourceType.Distributor);
-             
+
             foreach (IReturnItem returnItem in fromDistributors)
             {
                 XElement xmlReturn = new XElement(ns + "Return");
@@ -140,7 +146,7 @@
             XElement xmlProducerList = new XElement(ns + "ProducerList");
             xmlSchemeReturn.Add(xmlProducerList);
 
-            var eeeOutputAmountsByProducers = dataReturnVersion.EeeOutputAmounts.GroupBy(x => x.RegisteredProducer);
+            var eeeOutputAmountsByProducers = dataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts.GroupBy(x => x.RegisteredProducer);
             foreach (var eeeOutputAmountsByProducer in eeeOutputAmountsByProducers)
             {
                 XElement xmlProducer = new XElement(ns + "Producer");
@@ -150,14 +156,14 @@
             }
         }
 
-        private void PopulateDeliveredToAatf(IGrouping<AatfDeliveryLocation, AatfDeliveredAmount> deliveredToAatfs, XElement xmlDeliveredToAtf)
+        private void PopulateDeliveredToAatf(IGrouping<AatfDeliveryLocation, WeeeDeliveredAmount> deliveredToAatfs, XElement xmlDeliveredToAtf)
         {
             XElement xmlDeliveredToFacility = new XElement(ns + "DeliveredToFacility");
             xmlDeliveredToAtf.Add(xmlDeliveredToFacility);
 
             XElement xmlAatfApprovalNo = new XElement(ns + "AATFApprovalNo");
             xmlDeliveredToFacility.Add(xmlAatfApprovalNo);
-            xmlAatfApprovalNo.Value = deliveredToAatfs.Key.AatfApprovalNumber;
+            xmlAatfApprovalNo.Value = deliveredToAatfs.Key.ApprovalNumber;
 
             XElement xmlFacilityName = new XElement(ns + "FacilityName");
             xmlDeliveredToFacility.Add(xmlFacilityName);
@@ -172,7 +178,7 @@
             }
         }
 
-        private void PopulateDeliveredToAE(IGrouping<AeDeliveryLocation, AeDeliveredAmount> deliveredToAes, XElement xmlDeliveredToAE)
+        private void PopulateDeliveredToAE(IGrouping<AeDeliveryLocation, WeeeDeliveredAmount> deliveredToAes, XElement xmlDeliveredToAE)
         {
             XElement xmlDeliveredToOperator = new XElement(ns + "DeliveredToOperator");
             xmlDeliveredToAE.Add(xmlDeliveredToOperator);

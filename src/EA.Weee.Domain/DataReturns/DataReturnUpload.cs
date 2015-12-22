@@ -38,7 +38,10 @@
             ComplianceYear = year;
             Quarter = quarter;
         }
-        
+
+        /// <summary>
+        /// This constructor is used by Entity Framework.
+        /// </summary>
         protected DataReturnUpload()
         {
             this.Date = SystemTime.UtcNow;           
