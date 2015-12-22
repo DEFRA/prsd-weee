@@ -128,6 +128,14 @@
       <Project>{0162d3e9-cd9b-478d-a6b4-0638c96bcf14}</Project>
       <Name>EA.Weee.Tests.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.XmlValidation\EA.Weee.XmlValidation.csproj">
+      <Project>{de6ea3d2-5f5f-4da6-b3a2-da97b757096c}</Project>
+      <Name>EA.Weee.XmlValidation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Xml\EA.Weee.Xml.csproj">
+      <Project>{a0c346a3-f2cc-4acd-80a3-0e99c3dc1c03}</Project>
+      <Name>EA.Weee.Xml</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
