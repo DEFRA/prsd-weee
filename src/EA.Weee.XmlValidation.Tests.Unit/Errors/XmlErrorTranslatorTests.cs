@@ -272,7 +272,7 @@
         public void XmlErrorTranslator_InvalidFractionDigits_CorrectMessage()
         {
             var providedException = string.Format("The '{0}' element is invalid - The value '{1}' is invalid according to its datatype '{2}' - The FractionDigits constraint failed.", TestField, TestValue, TestType);
-            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' can only be to three decimal places.", TestValue, TestField));
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' exceeds the maximum number of allowed decimal places.", TestValue, TestField));
 
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }
