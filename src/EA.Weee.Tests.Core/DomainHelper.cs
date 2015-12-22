@@ -27,5 +27,10 @@
         {
             return context.DataReturnsUploads.Single(d => d.Id == dataReturnUploadId);
         }
+
+        public DataReturnVersion GetDataReturnVersion(Guid dataReturnVersionId)
+        {
+            return context.DataReturnVersions.Single(d => d.Id == dataReturnVersionId);
+        }
     }
 }
