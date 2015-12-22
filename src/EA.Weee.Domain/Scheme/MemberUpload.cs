@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Audit;
+    using Charges;
     using Events;
     using Organisation;
     using Producer;
@@ -31,6 +32,8 @@
         public virtual TimeSpan ProcessTime { get; private set; }
 
         public virtual MemberUploadRawData RawData { get; set; }
+
+        public virtual InvoiceRun InvoiceRun { get; private set; }
 
         public MemberUpload(
             Guid organisationId,
@@ -103,9 +106,26 @@
                 ProcessTime = processTime;
             }
             else
-        {
+            {
                 throw new InvalidOperationException("ProcessTime cannot be set for a MemberUpload that has already been given a ProcessTime value.");
             }
+        }
+
+        /// <summary>
+        /// Assigns the member upload to the specified invoice run.
+        /// </summary>
+        /// <param name="invoiceRun"></param>
+        internal void AssignToInvoiceRun(InvoiceRun invoiceRun)
+        {
+            Guard.ArgumentNotNull(() => invoiceRun, invoiceRun);
+
+            if (InvoiceRun != null)
+            {
+                string errorMessage = "Once a member upload has been assigned to an invoice run, it cannot be reassigned.";
+                throw new InvalidOperationException(errorMessage);
+            }
+
+            InvoiceRun = invoiceRun;
         }
     }
 }
