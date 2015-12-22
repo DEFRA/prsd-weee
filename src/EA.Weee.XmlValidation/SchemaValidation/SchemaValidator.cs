@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.XmlValidation.SchemaValidation
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Xml;
     using System.Xml.Linq;
     using System.Xml.Schema;
@@ -14,14 +15,16 @@
     {
         private readonly IXmlErrorTranslator xmlErrorTranslator;
         private readonly IXmlConverter xmlConverter;
+        private readonly INamespaceValidator namespaceValidator;
 
-        public SchemaValidator(IXmlErrorTranslator xmlErrorTranslator, IXmlConverter xmlConverter)
+        public SchemaValidator(IXmlErrorTranslator xmlErrorTranslator, IXmlConverter xmlConverter, INamespaceValidator namespaceValidator)
         {
             this.xmlErrorTranslator = xmlErrorTranslator;
             this.xmlConverter = xmlConverter;
+            this.namespaceValidator = namespaceValidator;
         }
 
-        public IEnumerable<XmlValidationError> Validate(byte[] data, string schemaName, string schemaNamespace, string schemaVersion)
+        public IEnumerable<XmlValidationError> Validate(byte[] data, string schemaName, XNamespace schemaNamespace, string schemaVersion)
         {
             var errors = new List<XmlValidationError>();
 
@@ -30,30 +33,26 @@
                 //check if the xml is not blank before doing any validations
                 if (data != null && data.Length == 0)
                 {
-                    string errorMsg = "The file you're trying to upload is not a correctly formatted XML file. Please make sure you're uploading a valid XML file.";
-                    errors.Add(new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, errorMsg));
+                    errors.Add(new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, XmlErrorTranslator.IncorrectlyFormattedXmlMessage));
                     return errors;
                 }
 
                 // Validate against the schema
                 var source = xmlConverter.Convert(data);
-                var schemas = new XmlSchemaSet();
 
+                var namespaceErrors = namespaceValidator.Validate(schemaNamespace, source.Root.Name.Namespace.ToString());
+                if (namespaceErrors.Any())
+                {
+                    return namespaceErrors;
+                }
+
+                var schemas = new XmlSchemaSet();
                 using (var stream = typeof(schemeType).Assembly.GetManifestResourceStream(schemaName))
                 {
                     using (var schemaReader = XmlReader.Create(stream))
                     {
                         schemas.Add(null, schemaReader);
                     }
-                }
-
-                if (source.Root.Name.Namespace != schemaNamespace)
-                {
-                    errors.Add(new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema,
-                    string.Format("The namespace of the provided XML file ({0}) doesn't match the namespace of the WEEE schema ({1}).",
-                        source.Root.Name.Namespace,
-                        schemaNamespace)));
-                    return errors;
                 }
 
                 source.Validate(
