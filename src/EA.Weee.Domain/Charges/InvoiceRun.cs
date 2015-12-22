@@ -16,9 +16,9 @@
     /// </summary>
     public class InvoiceRun : Entity
     {
-        public UKCompetentAuthority CompetentAuthority { get; set; }
+        public UKCompetentAuthority CompetentAuthority { get; private set; }
 
-        public IReadOnlyCollection<MemberUpload> MemberUploads { get; set; }
+        public IReadOnlyCollection<MemberUpload> MemberUploads { get; private set; }
 
         public InvoiceRun(UKCompetentAuthority competentAuthority, IList<MemberUpload> memberUploads)
         {
