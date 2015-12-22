@@ -154,5 +154,13 @@
                     throw new ArgumentException("Unable to map between category types");
             }
         }
+
+        public static void AddIfNotDefault<T>(this ICollection<T> collection, T value)
+        {
+            if (!object.Equals(value, default(T)))
+            {
+                collection.Add(value);
+            }
+        }
     }
 }

@@ -23,6 +23,10 @@
         private const string IncompleteContentPattern =
            @"^The element '([^']*)' in namespace '[^']*' has incomplete content. List of possible elements expected: '[^']*' in namespace '[^']*'.$";
 
+        private static readonly Regex FixedValueConstraintFailurePattern = new Regex(
+           @"^The value of the '(?<ElementName>[^']*)' element does not equal its fixed value.$",
+           RegexOptions.Compiled);
+
         private static readonly Regex EntityNameParsingErrorPattern = new Regex(
             @"^An error occurred while parsing EntityName\. Line (?<LineNumber>\d+), position \d+\.$",
             RegexOptions.Compiled);
@@ -96,6 +100,14 @@
             {
                 resultErrorMessage = MakeFriendlyErrorUniqueKeyMessage(sender, message);
             }
+            else if (TestRegex(message, FixedValueConstraintFailurePattern, out match))
+            {
+                resultErrorMessage = string.Format(
+                    "The value '{0}' supplied for field '{1}' is not permitted. " +
+                    "Only the value specified in the schema is allowed.",
+                    sender.Value,
+                    sender.Name.LocalName);
+            }
 
             var registrationNo = GetRegistrationNumber(sender);
             var registrationNoText = !string.IsNullOrEmpty(registrationNo) ? string.Format("Producer {0}: ", registrationNo) : string.Empty;
@@ -113,7 +125,7 @@
         }
 
         private string MakeFriendlyErrorUniqueKeyMessage(XElement sender, string message)
-        { 
+        {
             var element = sender.Descendants().First();
             return string.Format("There is duplicate value '{0}' for field '{1}' of parent field '{2}'. Remove one of the duplicate entries", element.Value, element.Name.LocalName, sender.Name.LocalName);
         }
@@ -138,7 +150,7 @@
                         "The value '{0}' supplied for field '{1}' is lower than the minimum, or greater than the maximum, allowed value.";
                     break;
                 case "Pattern":
-                    friendlyMessageTemplate = string.IsNullOrEmpty(sender.Value) ? "You must provide a value for {1}." : "The value '{0}' supplied for field '{1}' doesn't match the required format.";
+                    friendlyMessageTemplate = string.IsNullOrEmpty(sender.Value) ? "You must provide a value for '{1}'." : "The value '{0}' supplied for field '{1}' doesn't match the required format.";
                     break;
                 case "Enumeration":
                     friendlyMessageTemplate =
@@ -216,7 +228,7 @@
 
         private string MakeFriendlyInvalidChildElementMessage(XElement sender, string message, string schemaVersion)
         {
-            return string.Format("The field {0} isn't expected here. Check that you are using v{1} of the XSD schema (XML template).", sender.Name.LocalName, schemaVersion);
+            return string.Format("The field '{0}' isn't expected here. Check that you are using v{1} of the XSD schema (XML template).", sender.Name.LocalName, schemaVersion);
         }
 
         private string MakeFriendlyIncompleteContentMessage(XElement sender, string message)
@@ -226,14 +238,14 @@
             {
                 listName = listName.Substring(0, listName.Length - 4);
             }
-            return string.Format("There are no {0} details in XML file. Please provide details for at least one {0}.", listName);
+            return string.Format("There are no '{0}' details in XML file. Please provide details for at least one '{0}'.", listName);
         }
 
         private string MakeFriendlyErrorInXmlDocumentMessage(string message)
         {
             var lineNumber = Regex.Match(message, ErrorInXmlDocumentPattern).Groups[1].ToString();
 
-            return string.Format("{0} This can be caused by an error on this line, or before it (XML line {1}).", message, lineNumber);
+            return string.Format("'{0}' This can be caused by an error on this line, or before it (XML line {1}).", message, lineNumber);
         }
 
         private string GetRegistrationNumber(XElement sender)
