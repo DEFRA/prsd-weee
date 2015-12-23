@@ -11,9 +11,9 @@
 
         public virtual User CreatedBy { get; set; }
 
-        public string CreatedById { get; set; }
-
         public virtual User UpdatedBy { get; set; }
+
+        public string CreatedById { get; set; }
 
         public string UpdatedById { get; set; }
     }
