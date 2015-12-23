@@ -51,7 +51,7 @@
             TotalCharges = totalCharges;
             ComplianceYear = complianceYear;
             RawData = new MemberUploadRawData() { Data = data };
-            UserId = userId;
+            CreatedById = userId;
             FileName = fileName;
             ProducerSubmissions = new List<ProducerSubmission>();
         }
