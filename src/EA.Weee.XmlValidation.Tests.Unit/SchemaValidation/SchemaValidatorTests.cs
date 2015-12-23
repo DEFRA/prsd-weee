@@ -65,12 +65,12 @@
 
             var error = new XmlValidationError(ErrorLevel.Error, XmlErrorType.Schema, "Some message", 1);
 
-            A.CallTo(() => namespaceValidator.Validate(A<string>._, A<string>._))
+            A.CallTo(() => namespaceValidator.Validate(A<XNamespace>._, A<XNamespace>._))
                 .Returns(new List<XmlValidationError> { error });
 
             var result = SchemaValidator().Validate(new byte[1], string.Empty, string.Empty, A<string>._);
 
-            A.CallTo(() => namespaceValidator.Validate(A<string>._, A<string>._))
+            A.CallTo(() => namespaceValidator.Validate(A<XNamespace>._, A<XNamespace>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.Contains(error, result);

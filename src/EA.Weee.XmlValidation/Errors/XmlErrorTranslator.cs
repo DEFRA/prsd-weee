@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.XmlValidation.Errors
 {
+    using System;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Xml.Linq;
@@ -119,7 +120,7 @@
 
             if (!string.IsNullOrEmpty(lineNumberText))
             {
-                resultErrorMessage = resultErrorMessage.EndsWith(".", System.StringComparison.CurrentCulture)
+                resultErrorMessage = resultErrorMessage.EndsWith(".", StringComparison.CurrentCulture)
                     ? resultErrorMessage.Remove(resultErrorMessage.Length - 1)
                     : resultErrorMessage;
             }
@@ -245,7 +246,13 @@
             {
                 listName = listName.Substring(0, listName.Length - 4);
             }
-            return string.Format("There are no '{0}' details in XML file. Please provide details for at least one '{0}'.", listName);
+
+            var missingElement = message
+                .Split(new[] { "List of possible elements expected:" }, StringSplitOptions.None)[1]
+                .Split(new[] { "in namespace" }, StringSplitOptions.None)[0]
+                .Trim();
+
+            return string.Format("The '{0}' element is missing a child element {1}.", listName, missingElement);
         }
 
         private string MakeFriendlyErrorInXmlDocumentMessage(string message)
