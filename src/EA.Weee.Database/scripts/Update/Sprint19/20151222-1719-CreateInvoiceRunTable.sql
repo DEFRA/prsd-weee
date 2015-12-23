@@ -8,12 +8,6 @@ GO
 CREATE SCHEMA [Charging]
 GO
 
-GRANT DELETE ON SCHEMA::[Charging] TO [weee_application]
-GRANT INSERT ON SCHEMA::[Charging] TO [weee_application]
-GRANT SELECT ON SCHEMA::[Charging] TO [weee_application]
-GRANT UPDATE ON SCHEMA::[Charging] TO [weee_application]
-GO
-
 CREATE TABLE [Charging].[InvoiceRun]
 (
 	[Id]							UNIQUEIDENTIFIER	NOT NULL,

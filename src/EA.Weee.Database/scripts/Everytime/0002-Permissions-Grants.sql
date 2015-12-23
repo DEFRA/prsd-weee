@@ -15,6 +15,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[Identity] TO [weee_application]
 GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[Admin] TO [weee_application]
 GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[Organisation] TO [weee_application]
 GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[PCS] TO [weee_application]
+GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[Charging] TO [weee_application]
 GRANT EXECUTE, SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[Producer] TO [weee_application]
 
 GO
