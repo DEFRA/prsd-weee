@@ -35,6 +35,13 @@
 
             foreach (MemberUpload memberUpload in memberUploads)
             {
+                if (memberUpload.Scheme.CompetentAuthority != competentAuthority)
+                {
+                    string errorMessage = "All member uploads assigned to an invoice run must be related " +
+                        "to schemes with the same authority as the invoice run.";
+                    throw new InvalidOperationException(errorMessage);
+                }
+
                 memberUpload.AssignToInvoiceRun(this);
             }
 
