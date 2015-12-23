@@ -190,12 +190,12 @@
             {
                 if (auditableEntity.State == EntityState.Added)
                 {
-                    auditableEntity.Entity.CreatedById = userContext.UserId;
+                    auditableEntity.Entity.CreatedById = userContext.UserId.ToString();
                     auditableEntity.Entity.CreatedDate = SystemTime.UtcNow;
                 }
                 else if (auditableEntity.State == EntityState.Modified)
                 {
-                    auditableEntity.Entity.UpdatedById = userContext.UserId;
+                    auditableEntity.Entity.UpdatedById = userContext.UserId.ToString();
                     auditableEntity.Entity.UpdatedDate = SystemTime.UtcNow;
                 }
             }
