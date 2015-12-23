@@ -22,7 +22,7 @@
         /// Returns all member uploads for the specified authority which are submitted and not yet
         /// assigned to an invoice run.
         /// Results will be ordered by scheme name ascending and then compliance year descending.
-        /// The scheme domain object will be pre-loaded with each member upload returned.
+        /// The scheme and UK competent authority domain objects will be pre-loaded with each member upload returned.
         /// </summary>
         /// <param name="authority"></param>
         /// <returns></returns>
