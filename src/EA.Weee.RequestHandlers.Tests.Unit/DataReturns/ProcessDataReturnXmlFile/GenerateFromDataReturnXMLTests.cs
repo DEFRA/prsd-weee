@@ -20,7 +20,7 @@
         {
             var builder = new GenerateFromXmlBuilder();
 
-            A.CallTo(() => builder.SchemaValidator.Validate(A<byte[]>._, string.Empty, string.Empty, A<string>._))
+            A.CallTo(() => builder.SchemaValidator.Validate(A<byte[]>._, string.Empty, A<XNamespace>._, A<string>._))
                 .Returns(new List<XmlValidationError>());
 
             A.CallTo(() => builder.XmlDeserializer.Deserialize<SchemeReturn>(A<XDocument>._))
@@ -37,7 +37,7 @@
         {
             var builder = new GenerateFromXmlBuilder();
 
-            A.CallTo(() => builder.SchemaValidator.Validate(A<byte[]>._, A<string>._, A<string>._, A<string>._))
+            A.CallTo(() => builder.SchemaValidator.Validate(A<byte[]>._, A<string>._, A<XNamespace>._, A<string>._))
                 .Returns(new List<XmlValidationError>
                 {
                     new XmlValidationError(Core.Shared.ErrorLevel.Error, XmlErrorType.Schema, "An error occurred")
@@ -53,7 +53,7 @@
         {
             var builder = new GenerateFromXmlBuilder();
 
-            A.CallTo(() => builder.SchemaValidator.Validate(A<byte[]>._, string.Empty, string.Empty, A<string>._))
+            A.CallTo(() => builder.SchemaValidator.Validate(A<byte[]>._, string.Empty, A<XNamespace>._, A<string>._))
                 .Returns(new List<XmlValidationError>());
 
             A.CallTo(() => builder.XmlDeserializer.Deserialize<SchemeReturn>(A<XDocument>._))
@@ -74,7 +74,7 @@
 
             var builder = new GenerateFromXmlBuilder();
 
-            A.CallTo(() => builder.SchemaValidator.Validate(A<byte[]>._, string.Empty, string.Empty, A<string>._))
+            A.CallTo(() => builder.SchemaValidator.Validate(A<byte[]>._, string.Empty, A<XNamespace>._, A<string>._))
                 .Returns(new List<XmlValidationError>());
 
             A.CallTo(() => builder.XmlDeserializer.Deserialize<SchemeReturn>(A<XDocument>._))
