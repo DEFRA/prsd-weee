@@ -93,8 +93,15 @@
         /// <returns></returns>
         public Scheme CreateScheme()
         {
-            var organisation = CreateOrganisation();
+            return CreateScheme(CreateOrganisation());
+        }
 
+        /// <summary>
+        /// Creates a scheme and associates it to the specified organisation.
+        /// </summary>
+        /// <returns></returns>
+        public Scheme CreateScheme(Organisation organisation)
+        {
             int schemeId = GetNextId();
             Scheme scheme = new Scheme
             {
