@@ -9897,3 +9897,7 @@ INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerN
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/FD5719VV', 'Andrew James Ltd', '05604979', '594973E2-4F9C-414B-8082-C7176F5A4785')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/FF5720VW', 'Cathexis Europe Ltd', '06421746', '5869CA94-1FE6-4490-9F4C-88F14F1A379E')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/GK5722VY', 'Theraclion', NULL, '016B3D81-F1EE-472C-9376-69C1E8B06F38')
+
+-- Latest updates 23/12/2015
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/GF5727WT', 'Cyber Electronics Co Ltd', '1453249', '36705286-0044-4F93-BB9E-7ADEA616FF65')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/GJ5729WV', 'AE Greentech Distribution PLC', '07168990', 'D6D7A8E4-4AA1-4A60-8183-C9DEBF2858B2')
