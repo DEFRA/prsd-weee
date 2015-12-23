@@ -114,7 +114,7 @@
 
             this.SetEntityId();
             this.AuditChanges(userContext.UserId);
-            AuditEntity();
+            AuditEntities();
             UnalignEntities();
 
             int result;
@@ -145,7 +145,7 @@
 
             this.SetEntityId();
             this.AuditChanges(userContext.UserId);
-            AuditEntity();
+            AuditEntities();
             UnalignEntities();
 
             int result;
@@ -184,14 +184,19 @@
             return null;
         }
 
-        private void AuditEntity()
+        private void AuditEntities()
         {
-            foreach (var auditableEntity in ChangeTracker.Entries<IAuditableEntity>())
+            foreach (var auditableEntity in ChangeTracker.Entries<AuditableEntity>())
             {
-                if (auditableEntity.State == EntityState.Added || auditableEntity.State == EntityState.Modified)
+                if (auditableEntity.State == EntityState.Added)
                 {
-                    auditableEntity.Entity.Date = SystemTime.UtcNow;
-                    auditableEntity.Entity.UserId = userContext.UserId.ToString();
+                    auditableEntity.Entity.CreatedById = userContext.UserId;
+                    auditableEntity.Entity.CreatedDate = SystemTime.UtcNow;
+                }
+                else if (auditableEntity.State == EntityState.Modified)
+                {
+                    auditableEntity.Entity.UpdatedById = userContext.UserId;
+                    auditableEntity.Entity.UpdatedDate = SystemTime.UtcNow;
                 }
             }
         }
