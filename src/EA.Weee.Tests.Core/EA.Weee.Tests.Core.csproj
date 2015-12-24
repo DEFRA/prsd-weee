@@ -209,9 +209,6 @@
     <Compile Include="Model\SICCode_.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\WeeeCategory.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\WeeeCollectedAmount.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

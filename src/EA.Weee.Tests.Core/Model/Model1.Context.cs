@@ -49,21 +49,20 @@ namespace EA.Weee.Tests.Core.Model
         public virtual DbSet<ChargeBandAmount> ChargeBandAmounts { get; set; }
         public virtual DbSet<ProducerSubmission> ProducerSubmissions { get; set; }
         public virtual DbSet<RegisteredProducer> RegisteredProducers { get; set; }
-        public virtual DbSet<WeeeCategory> WeeeCategories { get; set; }
-        public virtual DbSet<AatfDeliveryLocation> AatfDeliveryLocations { get; set; }
-        public virtual DbSet<AeDeliveryLocation> AeDeliveryLocations { get; set; }
         public virtual DbSet<DataReturn> DataReturns { get; set; }
         public virtual DbSet<DataReturnUpload> DataReturnUploads { get; set; }
         public virtual DbSet<DataReturnUploadError> DataReturnUploadErrors { get; set; }
         public virtual DbSet<DataReturnVersion> DataReturnVersions { get; set; }
         public virtual DbSet<EeeOutputAmount> EeeOutputAmounts { get; set; }
         public virtual DbSet<EeeOutputReturnVersion> EeeOutputReturnVersions { get; set; }
-        public virtual DbSet<EeeOutputReturnVersionAmount> EeeOutputReturnVersionAmounts { get; set; }
         public virtual DbSet<WeeeCollectedAmount> WeeeCollectedAmounts { get; set; }
         public virtual DbSet<WeeeCollectedReturnVersion> WeeeCollectedReturnVersions { get; set; }
-        public virtual DbSet<WeeeCollectedReturnVersionAmount> WeeeCollectedReturnVersionAmounts { get; set; }
         public virtual DbSet<WeeeDeliveredAmount> WeeeDeliveredAmounts { get; set; }
         public virtual DbSet<WeeeDeliveredReturnVersion> WeeeDeliveredReturnVersions { get; set; }
+        public virtual DbSet<EeeOutputReturnVersionAmount> EeeOutputReturnVersionAmounts { get; set; }
+        public virtual DbSet<WeeeCollectedReturnVersionAmount> WeeeCollectedReturnVersionAmounts { get; set; }
         public virtual DbSet<WeeeDeliveredReturnVersionAmount> WeeeDeliveredReturnVersionAmounts { get; set; }
+        public virtual DbSet<AatfDeliveryLocation> AatfDeliveryLocations { get; set; }
+        public virtual DbSet<AeDeliveryLocation> AeDeliveryLocations { get; set; }
     }
 }

@@ -22,13 +22,13 @@ namespace EA.Weee.Tests.Core.Model
         public System.Guid Id { get; set; }
         public Nullable<System.Guid> AatfDeliveryLocationId { get; set; }
         public Nullable<System.Guid> AeDeliveryLocationId { get; set; }
-        public System.Guid WeeeCategoryId { get; set; }
         public string ObligationType { get; set; }
         public decimal Tonnage { get; set; }
+        public byte[] RowVersion { get; set; }
+        public int WeeeCategory { get; set; }
     
-        public virtual WeeeCategory WeeeCategory { get; set; }
+        public virtual ICollection<WeeeDeliveredReturnVersionAmount> WeeeDeliveredReturnVersionAmounts { get; set; }
         public virtual AatfDeliveryLocation AatfDeliveryLocation { get; set; }
         public virtual AeDeliveryLocation AeDeliveryLocation { get; set; }
-        public virtual ICollection<WeeeDeliveredReturnVersionAmount> WeeeDeliveredReturnVersionAmounts { get; set; }
     }
 }

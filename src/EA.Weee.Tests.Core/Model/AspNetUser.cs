@@ -18,6 +18,8 @@ namespace EA.Weee.Tests.Core.Model
         {
             this.CompetentAuthorityUsers = new HashSet<CompetentAuthorityUser>();
             this.OrganisationUsers = new HashSet<OrganisationUser>();
+            this.MemberUploads = new HashSet<MemberUpload>();
+            this.MemberUploads1 = new HashSet<MemberUpload>();
         }
     
         public string Id { get; set; }
@@ -37,5 +39,7 @@ namespace EA.Weee.Tests.Core.Model
     
         public virtual ICollection<CompetentAuthorityUser> CompetentAuthorityUsers { get; set; }
         public virtual ICollection<OrganisationUser> OrganisationUsers { get; set; }
+        public virtual ICollection<MemberUpload> MemberUploads { get; set; }
+        public virtual ICollection<MemberUpload> MemberUploads1 { get; set; }
     }
 }
