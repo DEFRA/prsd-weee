@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
     <Compile Include="Charges\InvoiceRun.cs" />
+    <Compile Include="Charges\InvoiceRunIbisFileData.cs" />
     <Compile Include="DataReturns\EeeOutputReturnVersion.cs" />
     <Compile Include="DataReturns\WeeeCollectedReturnVersion.cs" />
     <Compile Include="DataReturns\WeeeDeliveredReturnVersion.cs" />
