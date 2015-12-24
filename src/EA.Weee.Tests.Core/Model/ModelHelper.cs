@@ -80,7 +80,7 @@
 
             if (user == null)
             {
-                user = CreateUser(userName);
+                user = CreateUser(userName, IdType.Guid);
                 model.SaveChanges();
             }
 
@@ -191,11 +191,12 @@
                 Scheme = scheme,
                 SchemeId = scheme.Id,
                 Data = string.Format("<memberUpload{0} />", memberUploadId),
-                UserId = GetOrCreateUser("Testuser").Id,
-                Date = DateTime.UtcNow,
+                CreatedById = GetOrCreateUser("Testuser").Id,
+                CreatedDate = DateTime.UtcNow,
                 ProcessTime = new TimeSpan(0)
             };
             model.MemberUploads.Add(memberUpload);
+            model.SaveChanges();
 
             return memberUpload;
         }

@@ -21,11 +21,11 @@ namespace EA.Weee.Tests.Core.Model
     
         public System.Guid Id { get; set; }
         public System.Guid RegisteredProducerId { get; set; }
-        public System.Guid WeeeCategoryId { get; set; }
         public string ObligationType { get; set; }
         public decimal Tonnage { get; set; }
+        public byte[] RowVersion { get; set; }
+        public int WeeeCategory { get; set; }
     
-        public virtual WeeeCategory WeeeCategory { get; set; }
         public virtual RegisteredProducer RegisteredProducer { get; set; }
         public virtual ICollection<EeeOutputReturnVersionAmount> EeeOutputReturnVersionAmounts { get; set; }
     }
