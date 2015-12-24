@@ -18,9 +18,13 @@
     {
         public UKCompetentAuthority CompetentAuthority { get; private set; }
 
-        public IReadOnlyCollection<MemberUpload> MemberUploads { get; private set; }
+        public IReadOnlyList<MemberUpload> MemberUploads { get; private set; }
 
-        public InvoiceRun(UKCompetentAuthority competentAuthority, IList<MemberUpload> memberUploads)
+        public virtual InvoiceRunIbisFileData IbisFileData { get; private set; }
+
+        public InvoiceRun(
+            UKCompetentAuthority competentAuthority,
+            IReadOnlyList<MemberUpload> memberUploads)
         {
             Guard.ArgumentNotNull(() => competentAuthority, competentAuthority);
             Guard.ArgumentNotNull(() => memberUploads, memberUploads);
@@ -53,6 +57,19 @@
         /// </summary>
         protected InvoiceRun()
         {
+        }
+
+        public void SetIbisFileData(InvoiceRunIbisFileData ibisFileData)
+        {
+            Guard.ArgumentNotNull(() => ibisFileData, ibisFileData);
+
+            if (IbisFileData != null)
+            {
+                string errorMessage = "Once 1B1S files have been provided for an invoice run, they cannot be replaced.";
+                throw new InvalidOperationException(errorMessage);
+            }
+
+            IbisFileData = ibisFileData;
         }
     }
 }
