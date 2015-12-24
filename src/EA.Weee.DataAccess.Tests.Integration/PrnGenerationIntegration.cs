@@ -33,7 +33,6 @@
     {
         private readonly IUserContext userContext;
         private readonly IEventDispatcher eventDispatcher;
-        private readonly WeeeContext context;
 
         public PrnGenerationIntegration()
         {
@@ -42,11 +41,9 @@
             A.CallTo(() => userContext.UserId).Returns(Guid.NewGuid());
 
             eventDispatcher = A.Fake<IEventDispatcher>();
-
-            context = new WeeeContext(userContext, eventDispatcher);
         }
 
-        [Fact(Skip = "TODO: Needs fixing")]
+        [Fact]
         public async Task HappyPath_ManyUniquePrnsGeneratedAndSeedUpdatedToExpectedValue()
         {
             // arrange
@@ -86,16 +83,16 @@
                     }
                 }
 
-                var contextMemberUpload = context.MemberUploads
+                var contextMemberUpload = database.WeeeContext.MemberUploads
                     .Single(mu => mu.Id == memberUpload.Id);
 
                 // act
                 var producers = await new GenerateFromXml(
                     xmlConverter,
-                    new GenerateFromXmlDataAccess(context)).GenerateProducers(message, contextMemberUpload, producerCharges);
+                    new GenerateFromXmlDataAccess(database.WeeeContext)).GenerateProducers(message, contextMemberUpload, producerCharges);
 
                 // assert
-                long newSeed = GetCurrentSeed();
+                long newSeed = database.WeeeContext.SystemData.Select(sd => sd.LatestPrnSeed).First();
                 Assert.Equal(expectedSeed, newSeed);
 
                 var prns = producers.Select(p => p.RegisteredProducer.ProducerRegistrationNumber);
@@ -109,7 +106,9 @@
             var helper = new PrnHelper(new QuadraticResidueHelper());
             var generatedPrns = new HashSet<string>();
 
-            uint seed = (uint)GetCurrentSeed();
+            var context = new WeeeContext(userContext, eventDispatcher);
+
+            uint seed = (uint)GetCurrentSeed(context);
             var components = new PrnAsComponents(seed);
 
             // be careful how high you go with this limit or generatedPrns will fill up
@@ -137,7 +136,7 @@
             }
         }
 
-        private long GetCurrentSeed()
+        private long GetCurrentSeed(WeeeContext context)
         {
             return context.SystemData.Select(sd => sd.LatestPrnSeed).First();
         }
