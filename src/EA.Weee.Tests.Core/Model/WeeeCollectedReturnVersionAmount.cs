@@ -14,9 +14,9 @@ namespace EA.Weee.Tests.Core.Model
     
     public partial class WeeeCollectedReturnVersionAmount
     {
-        public System.Guid Id { get; set; }
         public System.Guid WeeeCollectedReturnVersionId { get; set; }
         public System.Guid WeeeCollectedAmountId { get; set; }
+        public byte[] RowVersion { get; set; }
     
         public virtual WeeeCollectedAmount WeeeCollectedAmount { get; set; }
         public virtual WeeeCollectedReturnVersion WeeeCollectedReturnVersion { get; set; }
