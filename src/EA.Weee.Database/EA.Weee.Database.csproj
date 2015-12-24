@@ -156,6 +156,7 @@
     <Content Include="scripts\Update\Sprint19\20151222-1719-CreateInvoiceRunTable.sql" />
     <Content Include="scripts\Update\Sprint19\20151223-1015-UpdateMemberUploadAuditColumns.sql" />
     <Content Include="scripts\Update\Sprint20\20151224-1147-UpdateSpgPcsChargesCsvDataByComplianceYearAndAuthorisedAuthority.sql" />
+    <Content Include="scripts\Update\Sprint20\20152412-1743-AddIbisDataColumnsToInvoiceRunTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
