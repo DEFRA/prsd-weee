@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Core.Shared;
     using Domain.DataReturns;
@@ -30,10 +31,10 @@
             A.CallTo(() => builder.DataAccess.GetRegisteredProducer(prn))
                 .Returns(producer);
 
-            //Act
+            // Act
             var errors = await builder.InvokeValidate(prn);
 
-            //Assert
+            // Assert
             Assert.Empty(errors);
         }
 
@@ -49,10 +50,10 @@
             A.CallTo(() => builder.DataAccess.GetRegisteredProducer(A<string>._))
                 .Returns((RegisteredProducer)null);
 
-            //Act
+            // Act
             var errors = await builder.InvokeValidate(prn);
 
-            //Assert
+            // Assert
             Assert.Equal(1, errors.Count);
             ErrorData error = errors[0];
             Assert.Equal(ErrorLevel.Error, error.ErrorLevel);
@@ -67,15 +68,28 @@
             var builder = new EeeValidatorBuilder();
             builder.Year = 2016;
 
-            var prn = "Non-existent PRN";
+            var producerSubmission = A.Fake<ProducerSubmission>();
+            A.CallTo(() => producerSubmission.OrganisationName)
+                .Returns("ProducerName123");
+
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => registeredProducer.CurrentSubmission)
+                .Returns(producerSubmission);
 
             A.CallTo(() => builder.DataAccess.GetRegisteredProducer(A<string>._))
-                .Returns((RegisteredProducer)null);
-        }
+                .Returns(registeredProducer);
 
-        [Fact]
-        public async Task Validate_WithProducerNotRegisteredWithScheme_DoesNotPerformProducerNameValidation()
-        {
+            // Act
+            var errors = await builder.InvokeValidate("PRN1234", "IncorrectProducerName");
+
+            // Assert
+            Assert.Equal(1, errors.Count);
+            Assert.Equal(ErrorLevel.Error, errors.Single().ErrorLevel);
+            Assert.Contains("does not match the registered producer name of", errors.Single().Description);
+            Assert.Contains("ProducerName123", errors.Single().Description);
+            Assert.Contains("IncorrectProducerName", errors.Single().Description);
+            Assert.Contains("PRN1234", errors.Single().Description);
+            Assert.Contains("2016", errors.Single().Description);
         }
 
         private class EeeValidatorBuilder

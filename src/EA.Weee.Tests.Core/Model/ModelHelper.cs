@@ -451,18 +451,25 @@
 
             if (dataReturn == null)
             {
-                int dataReturnId = GetNextId();
-
-                dataReturn = new DataReturn
-                {
-                    Id = IntegerToGuid(dataReturnId),
-                    Scheme = scheme,
-                    SchemeId = scheme.Id,
-                    Quarter = quarter,
-                    ComplianceYear = complianceYear
-                };
-                model.DataReturns.Add(dataReturn);
+                dataReturn = CreateDataReturn(scheme, complianceYear, quarter);
             }
+
+            return dataReturn;
+        }
+
+        public DataReturn CreateDataReturn(Scheme scheme, int complianceYear, int quarter)
+        {
+            int dataReturnId = GetNextId();
+
+            var dataReturn = new DataReturn
+            {
+                Id = IntegerToGuid(dataReturnId),
+                Scheme = scheme,
+                SchemeId = scheme.Id,
+                Quarter = quarter,
+                ComplianceYear = complianceYear
+            };
+            model.DataReturns.Add(dataReturn);
 
             return dataReturn;
         }
