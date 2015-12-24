@@ -2,6 +2,7 @@
 {
     using System;
     using System.Data.Common;
+    using System.Linq;
     using System.Transactions;
     using EA.Prsd.Core.Domain;
     using EA.Weee.DataAccess;
@@ -50,13 +51,41 @@
 
         public DatabaseWrapper()
         {
+            // Create test user(context auditing requires a valid user id)
+            var userId = string.Empty;
+            using (var model = new Entities())
+            {
+                var testUserName = "WeeeIntegrationTestUser";
+                var testUser = model.AspNetUsers.FirstOrDefault(u => u.UserName == testUserName);
+
+                if (testUser == null)
+                {
+                    testUser = new AspNetUser
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        FirstName = "Test",
+                        Surname = "LastName",
+                        Email = "a@b.c",
+                        EmailConfirmed = true,
+                        UserName = testUserName
+                    };
+
+                    model.AspNetUsers.Add(testUser);
+                    model.SaveChanges();
+                }
+
+                userId = testUser.Id;
+            }
+
             transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
             Model = new Entities();
+
             DbConnection connection = Model.Database.Connection;
 
             IUserContext userContext = A.Fake<IUserContext>();
-            A.CallTo(() => userContext.UserId).Returns(Guid.NewGuid());
+            A.CallTo(() => userContext.UserId)
+                .ReturnsLazily(() => Guid.Parse(userId));
 
             IEventDispatcher eventDispatcher = A.Fake<IEventDispatcher>();
 
