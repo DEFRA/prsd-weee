@@ -93,5 +93,30 @@
                 Assert.Equal(producer.Id, result.Id);
             }
         }
+
+        [Fact]
+        public async Task GetRegisteredProducer_ReturnsSubmittedProducerOnly()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+
+                var scheme = helper.CreateScheme();
+                helper.GerOrCreateRegisteredProducer(scheme, 2016, "AAAA");
+                var producer = helper.GerOrCreateRegisteredProducer(scheme, 2016, "BBBB");
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new DataReturnVersionBuilderDataAccess(domainHelper.GetScheme(scheme.Id), new Quarter(2016, QuarterType.Q1), database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.GetRegisteredProducer("BBBB");
+
+                // Assert
+                Assert.Null(result);
+            }
+        }
     }
 }
