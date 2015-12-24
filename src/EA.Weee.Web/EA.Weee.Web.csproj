@@ -219,9 +219,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\Admin\Controllers\ChargeController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SubmissionsController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Charge\Activity.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Charge\ChooseActivityViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
@@ -546,6 +550,10 @@
     <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\SpecifyOptions.cshtml" />
     <Content Include="Areas\Admin\Views\Producers\ConfirmRemoval.cshtml" />
     <Content Include="Areas\Admin\Views\Producers\Removed.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\SelectAuthority.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\ChooseActivity.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\ManagePendingCharges.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\InvoiceRun.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
@@ -662,7 +670,6 @@
     <Compile Include="Areas\Admin\ViewModels\Account\InternalLoginViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\InternalUserCreationViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Home\InternalUserActivity.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Home\InternalUserActivityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\ResetPasswordModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\ResetPasswordRequestViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\DetailsViewModel.cs" />
