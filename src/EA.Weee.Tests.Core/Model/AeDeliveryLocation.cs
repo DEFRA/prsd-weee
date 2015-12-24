@@ -21,7 +21,8 @@ namespace EA.Weee.Tests.Core.Model
     
         public System.Guid Id { get; set; }
         public string ApprovalNumber { get; set; }
-        public string Name { get; set; }
+        public string OperatorName { get; set; }
+        public byte[] RowVersion { get; set; }
     
         public virtual ICollection<WeeeDeliveredAmount> WeeeDeliveredAmounts { get; set; }
     }

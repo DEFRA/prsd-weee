@@ -29,22 +29,22 @@
                 mu1.ComplianceYear = 2015;
                 mu1.IsSubmitted = true;
                 mu1.OrganisationId = organisationId;
-                mu1.Date = DateTime.Now;
-                mu1.UserId = user1.Id;
+                mu1.CreatedDate = DateTime.Now;
+                mu1.CreatedById = user1.Id;
 
                 var mu2 = modelHelper.CreateMemberUpload(scheme1);
                 mu2.ComplianceYear = 2015;
                 mu2.IsSubmitted = true;
                 mu2.OrganisationId = organisationId;
-                mu2.Date = DateTime.Now;
-                mu2.UserId = user1.Id;
+                mu2.CreatedDate = DateTime.Now;
+                mu2.CreatedById = user1.Id;
 
                 var mu3 = modelHelper.CreateMemberUpload(scheme1);
                 mu3.ComplianceYear = 2016;
                 mu3.IsSubmitted = true;
                 mu3.OrganisationId = organisationId;
-                mu3.Date = DateTime.Now;
-                mu3.UserId = user1.Id;
+                mu3.CreatedDate = DateTime.Now;
+                mu3.CreatedById = user1.Id;
 
                 database.Model.SaveChanges();
 
@@ -79,22 +79,22 @@
                 mu1.ComplianceYear = 2015;
                 mu1.IsSubmitted = true;
                 mu1.OrganisationId = organisationId;
-                mu1.Date = DateTime.Now;
-                mu1.UserId = user1.Id;
+                mu1.CreatedDate = DateTime.Now;
+                mu1.CreatedById = user1.Id;
 
                 var mu2 = modelHelper.CreateMemberUpload(scheme1);
                 mu2.ComplianceYear = 2015;
                 mu2.IsSubmitted = true;
                 mu2.OrganisationId = organisationId;
-                mu2.Date = DateTime.Now;
-                mu2.UserId = user1.Id;
+                mu2.CreatedDate = DateTime.Now;
+                mu2.CreatedById = user1.Id;
 
                 var mu3 = modelHelper.CreateMemberUpload(scheme1);
                 mu3.ComplianceYear = 2016;
                 mu3.IsSubmitted = true;
                 mu3.OrganisationId = organisationId;
-                mu3.Date = DateTime.Now;
-                mu3.UserId = user1.Id;
+                mu3.CreatedDate = DateTime.Now;
+                mu3.CreatedById = user1.Id;
 
                 database.Model.SaveChanges();
 
