@@ -101,6 +101,8 @@
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccessTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
     <Compile Include="Admin\UpdateUserHandlerTests.cs" />
+    <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandlerTests.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesHandlerTests.cs" />
     <Compile Include="DataReturns\BusinessValidation\EeeeValidatorTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandlerTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnVersionFromXmlBuilderTests.cs" />
