@@ -80,7 +80,7 @@
 
             if (user == null)
             {
-                user = CreateUser(userName);
+                user = CreateUser(userName, IdType.Guid);
                 model.SaveChanges();
             }
 
@@ -191,11 +191,13 @@
                 Scheme = scheme,
                 SchemeId = scheme.Id,
                 Data = string.Format("<memberUpload{0} />", memberUploadId),
-                UserId = GetOrCreateUser("Testuser").Id,
-                Date = DateTime.UtcNow,
-                ProcessTime = new TimeSpan(0)
+                CreatedById = GetOrCreateUser("Testuser").Id,
+                CreatedDate = DateTime.UtcNow,
+                ProcessTime = new TimeSpan(0),
+                ComplianceYear = 2016
             };
             model.MemberUploads.Add(memberUpload);
+            model.SaveChanges();
 
             return memberUpload;
         }
@@ -359,17 +361,35 @@
         {
             Contact1 contact = CreateContact();
 
-            int partnershipId = GetNextId();
+            var partnershipId = GetNextId();
+
             Partnership partnership = new Partnership
             {
                 Id = IntegerToGuid(partnershipId),
-                Name = string.Format("Partnership {0} Name", partnershipId),
+                Name = string.Format("Partnership {0} Name",  CreatePartnershipNameFromId(partnershipId)),
                 Contact1 = contact,
                 PrincipalPlaceOfBusinessId = contact.Id,
             };
             model.Partnerships.Add(partnership);
 
             return partnership;
+        }
+
+        private string CreatePartnershipNameFromId(int id)
+        {
+            var preceedingZeros = "0000000";
+
+            if (id.ToString().Length > preceedingZeros.Length)
+            {
+                throw new ArgumentOutOfRangeException(string.Format("modulus of id must be less than {0} digits", id));
+            }
+
+            for (var i = 0; i < id.ToString().Length; i++)
+            {
+                preceedingZeros = preceedingZeros.Remove(0, 1);
+            }
+
+            return preceedingZeros + id;
         }
 
         private Contact1 CreateContact()
