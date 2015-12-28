@@ -41,8 +41,8 @@
         }
 
         /// <summary>
-        /// Returns all member uploads for the specified authority which are submitted and not yet
-        /// assigned to an invoice run.
+        /// Returns all member uploads for the specified authority which are submitted, have a positive total charge
+        /// and are not yet assigned to an invoice run.
         /// Results will be ordered by scheme name ascending and then compliance year descending.
         /// The scheme and UK competent authority domain objects will be pre-loaded with each member upload returned.
         /// </summary>
@@ -56,6 +56,7 @@
                 .Where(mu => mu.IsSubmitted)
                 .Where(mu => mu.InvoiceRun == null)
                 .Where(mu => mu.Scheme.CompetentAuthority.Id == authority.Id)
+                .Where(mu => mu.TotalCharges > 0)
                 .OrderBy(mu => mu.Scheme.SchemeName)
                 .ThenByDescending(mu => mu.ComplianceYear)
                 .ToListAsync();
