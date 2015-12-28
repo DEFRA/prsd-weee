@@ -10,15 +10,20 @@
     using Ibis;
 
     /// <summary>
-    /// Converts domain objects representing schemes, member uploads and producer submissions into
-    /// IBIS object representing customers, invoices and invoice line items.
+    /// A generator of 1B1S file data for an invoice run.
     /// </summary>
     public interface IIbisFileDataGenerator
     {
+        /// <summary>
+        /// Creates the data representing 1B1S customer and transaction files for the specified list
+        /// of member uploads.
+        /// </summary>
+        /// <param name="fileID">The ID that the 1B1S files will use. This must be unique for every pair of 1B1S files
+        /// and must be in the range of 0 to 99999. To avoid clashes with IDs used by the incumbent system, a seed
+        /// value may need to be used.</param>
+        /// <param name="memberUploads">The list of member uploads to be included.</param>
+        /// <returns>Returns an <see cref="InvoiceRunIbisFileData"/> which provides the data and file names of the
+        /// generated 1B1S customer and transaction files.</returns>
         InvoiceRunIbisFileData CreateFileData(ulong fileID, IReadOnlyList<MemberUpload> memberUploads);
-
-        CustomerFile CreateCustomerFile(ulong fileID, IReadOnlyList<MemberUpload> memberUploads);
-
-        TransactionFile CreateTransactionFile(ulong fileID, IReadOnlyList<MemberUpload> memberUploads);
     }
 }
