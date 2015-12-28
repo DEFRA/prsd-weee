@@ -51,6 +51,7 @@
             string transactionFileData = transactionFile.Write();
 
             return new InvoiceRunIbisFileData(
+                fileID,
                 customerFileName,
                 customerFileData,
                 transactionFileName,
