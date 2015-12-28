@@ -26,6 +26,6 @@
         /// </summary>
         /// <param name="authority"></param>
         /// <returns></returns>
-        Task<IList<MemberUpload>> FetchSubmittedNonInvoicedMemberUploadsAsync(UKCompetentAuthority authority);
+        Task<IReadOnlyList<MemberUpload>> FetchSubmittedNonInvoicedMemberUploadsAsync(UKCompetentAuthority authority);
     }
 }
