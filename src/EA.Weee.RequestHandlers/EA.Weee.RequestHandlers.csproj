@@ -94,6 +94,7 @@
     <Compile Include="Charges\CommonDataAccess.cs" />
     <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandler.cs" />
     <Compile Include="Charges\ICommonDataAccess.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IIbisFileDataGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\IIssuePendingChargesDataAccess.cs" />
     <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesDataAccess.cs" />
     <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesHandler.cs" />
@@ -270,6 +271,10 @@
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
       <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>
       <Name>EA.Weee.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Ibis\EA.Weee.Ibis.csproj">
+      <Project>{c3c69bf6-3716-4123-83ee-4c64b19c5377}</Project>
+      <Name>EA.Weee.Ibis</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
       <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
