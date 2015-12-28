@@ -38,16 +38,29 @@
 
             InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
 
-            // TODO: Get the next available fileID from the database.
-            ulong fileID = 0;
+            ulong fileId = await GetNextIbisFileId();
 
-            InvoiceRunIbisFileData ibisFileData = ibisFileDataGenerator.CreateFileData(fileID, memberUploads);
+            InvoiceRunIbisFileData ibisFileData = ibisFileDataGenerator.CreateFileData(fileId, memberUploads);
             
             invoiceRun.SetIbisFileData(ibisFileData);
 
             await dataAccess.SaveAsync(invoiceRun);
 
             return invoiceRun.Id;
+        }
+
+        public async Task<ulong> GetNextIbisFileId()
+        {
+            ulong? currentMaximumFileID = await dataAccess.GetMaximumIbisFileIdOrDefaultAsync();
+
+            if (currentMaximumFileID != null)
+            {
+                return currentMaximumFileID.Value + 1;
+            }
+            else
+            {
+                return await dataAccess.GetInitialIbisFileIdAsync();
+            }
         }
     }
 }
