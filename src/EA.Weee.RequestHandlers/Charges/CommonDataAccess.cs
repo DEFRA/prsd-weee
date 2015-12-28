@@ -48,7 +48,7 @@
         /// </summary>
         /// <param name="authority"></param>
         /// <returns></returns>
-        public async Task<IList<MemberUpload>> FetchSubmittedNonInvoicedMemberUploadsAsync(UKCompetentAuthority authority)
+        public async Task<IReadOnlyList<MemberUpload>> FetchSubmittedNonInvoicedMemberUploadsAsync(UKCompetentAuthority authority)
         {
             return await Context.MemberUploads
                 .Include(mu => mu.Scheme)

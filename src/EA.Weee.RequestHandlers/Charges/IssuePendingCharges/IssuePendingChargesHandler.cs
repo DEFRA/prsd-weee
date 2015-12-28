@@ -16,13 +16,16 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IIssuePendingChargesDataAccess dataAccess;
+        private readonly IIbisFileDataGenerator ibisFileDataGenerator;
 
         public IssuePendingChargesHandler(
             IWeeeAuthorization authorization,
-            IIssuePendingChargesDataAccess dataAccess)
+            IIssuePendingChargesDataAccess dataAccess,
+            IIbisFileDataGenerator ibisFileGenerator)
         {
             this.authorization = authorization;
             this.dataAccess = dataAccess;
+            this.ibisFileDataGenerator = ibisFileGenerator;
         }
 
         public async Task<Guid> HandleAsync(Requests.Charges.IssuePendingCharges message)
@@ -31,9 +34,16 @@
 
             UKCompetentAuthority authority = await dataAccess.FetchCompetentAuthority(message.Authority);
 
-            IList<MemberUpload> memberUploads = await dataAccess.FetchSubmittedNonInvoicedMemberUploadsAsync(authority);
+            IReadOnlyList<MemberUpload> memberUploads = await dataAccess.FetchSubmittedNonInvoicedMemberUploadsAsync(authority);
 
             InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+
+            // TODO: Get the next available fileID from the database.
+            ulong fileID = 0;
+
+            InvoiceRunIbisFileData ibisFileData = ibisFileDataGenerator.CreateFileData(fileID, memberUploads);
+            
+            invoiceRun.SetIbisFileData(ibisFileData);
 
             await dataAccess.SaveAsync(invoiceRun);
 
