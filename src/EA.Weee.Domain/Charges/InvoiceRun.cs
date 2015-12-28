@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Core.Shared;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Domain.Scheme;
