@@ -14,6 +14,7 @@
         {
             ToTable("InvoiceRun", "Charging");
 
+            Property(e => e.FileIdDatabaseValue).HasColumnName("IbisFileId");
             Property(e => e.CustomerFileName).HasColumnName("IbisCustomerFileName");
             Property(e => e.CustomerFileData).HasColumnName("IbisCustomerFileData");
             Property(e => e.TransactionFileName).HasColumnName("IbisTransactionFileName");

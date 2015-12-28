@@ -18,6 +18,8 @@
         [Key]
         public Guid InvoiceRunId { get; private set; }
 
+        public ulong FileId { get; private set; }
+
         public string CustomerFileName { get; private set; }
 
         public string CustomerFileData { get; private set; }
@@ -27,6 +29,7 @@
         public string TransactionFileData { get; private set; }
 
         public InvoiceRunIbisFileData(
+            ulong fileId,
             string customerFileName,
             string customerFileData,
             string transactionFileName,
@@ -37,6 +40,7 @@
             Guard.ArgumentNotNullOrEmpty(() => transactionFileName, transactionFileName);
             Guard.ArgumentNotNullOrEmpty(() => transactionFileData, transactionFileData);
 
+            FileId = fileId;
             CustomerFileName = customerFileName;
             CustomerFileData = customerFileData;
             TransactionFileName = transactionFileName;
@@ -48,6 +52,16 @@
         /// </summary>
         protected InvoiceRunIbisFileData()
         {
+        }
+
+        /// <summary>
+        /// This property is used by Entity Framework to map the ulong FileID property
+        /// to the BIGINT column of the database.
+        /// </summary>
+        public long FileIdDatabaseValue
+        {
+            get { return (long)FileId; }
+            set { FileId = (ulong)value; }
         }
     }
 }
