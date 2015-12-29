@@ -108,7 +108,7 @@
             yield return FileSource;
             yield return ConvertRegionToString(RegionIdentifier);
             yield return GetFileTypeIdentifier();
-            yield return FileID.ToString();
+            yield return FileID.ToString("D5");
 
             foreach (string additionalDataItem in GetAdditionalHeaderDataItems())
             {
@@ -123,7 +123,7 @@
         /// </summary>
         private IEnumerable<string> GetFooterDataItems()
         {
-            yield return GetTotalLineCount().ToString();
+            yield return GetTotalLineCount().ToString("D7");
 
             foreach (string additionalDataItem in GetAdditionalFooterDataItems())
             {
