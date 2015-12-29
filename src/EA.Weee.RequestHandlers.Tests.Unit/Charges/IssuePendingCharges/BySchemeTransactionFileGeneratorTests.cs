@@ -20,14 +20,14 @@
         /// This test ensures that the transaction file will be generated with the specified file ID.
         /// </summary>
         [Fact]
-        public void CreateTransactionFile_WithFileID_CreatesFileWithCorrectFileID()
+        public async Task CreateTransactionFile_WithFileID_CreatesFileWithCorrectFileID()
         {
             // Arrange
             BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator();
             ulong id = 12345;
 
             // Act
-            TransactionFile transactionFile = generator.CreateTransactionFile(id, A.Dummy<IReadOnlyList<MemberUpload>>());
+            TransactionFile transactionFile = await generator.CreateAsync(id, A.Dummy<IReadOnlyList<MemberUpload>>());
 
             // Assert
             Assert.Equal((ulong)12345, transactionFile.FileID);
@@ -38,7 +38,7 @@
         /// correct details from the member upload and scheme.
         /// </summary>
         [Fact]
-        public void CreateTransactionFile_WithOneMemberUpload_CreatesFileWithOneInvoiceWithOneLineItemWithCorrectDetails()
+        public async Task CreateTransactionFile_WithOneMemberUpload_CreatesFileWithOneInvoiceWithOneLineItemWithCorrectDetails()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -70,7 +70,7 @@
             BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator();
 
             // Act
-            TransactionFile transactionFile = generator.CreateTransactionFile(0, memberUploads);
+            TransactionFile transactionFile = await generator.CreateAsync(0, memberUploads);
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -118,7 +118,7 @@
         /// into a single invoice, with each member upload being represented by a line item.
         /// </summary>
         [Fact]
-        public void CreateTransactionFile_WithTwoMemberUploadsForTheSameScheme_CreatesFileWithOneInvoiceWithTwoLineItems()
+        public async Task CreateTransactionFile_WithTwoMemberUploadsForTheSameScheme_CreatesFileWithOneInvoiceWithTwoLineItems()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -160,7 +160,7 @@
             BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator();
 
             // Act
-            TransactionFile transactionFile = generator.CreateTransactionFile(0, memberUploads);
+            TransactionFile transactionFile = await generator.CreateAsync(0, memberUploads);
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -187,7 +187,7 @@
         /// This test ensures that member uploads for different schemes will not be grouped.
         /// </summary>
         [Fact]
-        public void CreateTransactionFile_WithTwoMemberUploadsForDifferentSchemes_CreatesFileWithTwoInvoices()
+        public async Task CreateTransactionFile_WithTwoMemberUploadsForDifferentSchemes_CreatesFileWithTwoInvoices()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -238,7 +238,7 @@
             BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator();
 
             // Act
-            TransactionFile transactionFile = generator.CreateTransactionFile(0, memberUploads);
+            TransactionFile transactionFile = await generator.CreateAsync(0, memberUploads);
 
             // Assert
             Assert.NotNull(transactionFile);
