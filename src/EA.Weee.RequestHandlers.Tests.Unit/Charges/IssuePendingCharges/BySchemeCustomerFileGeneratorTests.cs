@@ -6,6 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using Domain;
+    using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
     using Ibis;
@@ -54,8 +55,11 @@
                 "01234 567890",
                 "someone@domain.com");
 
+            Contact contact = new Contact("John", "Smith", "Manager");
+
             Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
             organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
+            organisation.AddOrUpdateMainContactPerson(contact);
 
             Scheme scheme = new Scheme(organisation);
             scheme.UpdateScheme(
@@ -92,11 +96,11 @@
 
             Assert.NotNull(customer);
             Assert.Equal("WEE00000001", customer.CustomerReference);
-            Assert.Equal("Test scheme", customer.Name);
+            Assert.Equal("Test organisation", customer.Name);
 
             Assert.NotNull(customer.Address);
-            Assert.Equal("1 High Street", customer.Address.AddressLine1);
-            Assert.Equal(null, customer.Address.AddressLine2);
+            Assert.Equal("John Smith", customer.Address.AddressLine1);
+            Assert.Equal("1 High Street", customer.Address.AddressLine2);
             Assert.Equal(null, customer.Address.AddressLine3);
             Assert.Equal(null, customer.Address.AddressLine4);
             Assert.Equal("Some town", customer.Address.AddressLine5);
@@ -126,6 +130,7 @@
 
             Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
             organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
+            organisation.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
 
             Scheme scheme = new Scheme(organisation);
             scheme.UpdateScheme(
@@ -194,6 +199,7 @@
 
             Organisation organisation1 = Organisation.CreateSoleTrader("Test organisation 1");
             organisation1.AddOrUpdateAddress(AddressType.OrganisationAddress, address1);
+            organisation1.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
 
             Scheme scheme1 = new Scheme(organisation1);
             scheme1.UpdateScheme(
@@ -226,6 +232,7 @@
 
             Organisation organisation2 = Organisation.CreateSoleTrader("Test organisation 2");
             organisation2.AddOrUpdateAddress(AddressType.OrganisationAddress, address2);
+            organisation2.AddOrUpdateMainContactPerson(A.Dummy<Contact>());
 
             Scheme scheme2 = new Scheme(organisation2);
             scheme2.UpdateScheme(
