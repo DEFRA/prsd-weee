@@ -79,7 +79,7 @@
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal("WEECI00123.dat", result.CustomerFileName);
+            Assert.Equal("WEEHC00123.dat", result.CustomerFileName);
             Assert.Equal("WEEHI00123.dat", result.TransactionFileName);
         }
     }

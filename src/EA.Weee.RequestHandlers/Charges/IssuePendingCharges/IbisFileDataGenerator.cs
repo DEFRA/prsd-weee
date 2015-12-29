@@ -44,7 +44,7 @@
             CustomerFile customerFile = ibisCustomerFileGenerator.CreateCustomerFile(fileID, memberUploads);
             TransactionFile transactionFile = ibisTransactionFileGenerator.CreateTransactionFile(fileID, memberUploads);
 
-            string customerFileName = string.Format("WEECI{0:D5}.dat", fileID);
+            string customerFileName = string.Format("WEEHC{0:D5}.dat", fileID);
             string transactionFileName = string.Format("WEEHI{0:D5}.dat", fileID);
 
             string customerFileData = customerFile.Write();
