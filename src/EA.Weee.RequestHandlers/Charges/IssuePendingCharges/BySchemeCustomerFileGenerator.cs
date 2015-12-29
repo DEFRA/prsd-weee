@@ -29,9 +29,9 @@
                 try
                 {
                     address = new Address(
+                        scheme.Organisation.Contact.FullName,
                         scheme.Organisation.OrganisationAddress.Address1,
                         scheme.Organisation.OrganisationAddress.Address2,
-                        null,
                         null,
                         scheme.Organisation.OrganisationAddress.TownOrCity,
                         scheme.Organisation.OrganisationAddress.CountyOrRegion,
@@ -52,7 +52,7 @@
                 {
                     customer = new Customer(
                         scheme.IbisCustomerReference,
-                        scheme.SchemeName,
+                        scheme.Organisation.OrganisationName,
                         address);
                 }
                 catch (Exception ex)
