@@ -51,7 +51,7 @@
             // Register the type that will generate 1B1S files from member uploads.
             builder.RegisterType<IbisFileDataGenerator>().As<IIbisFileDataGenerator>();
             builder.RegisterType<BySchemeCustomerFileGenerator>().As<IIbisCustomerFileGenerator>();
-            builder.RegisterType<BySubmissionTransactionFileGenerator>().As<IIbisTransactionFileGenerator>();
+            builder.RegisterType<BySchemeTransactionFileGenerator>().As<IIbisTransactionFileGenerator>();
         }
     }
 }
