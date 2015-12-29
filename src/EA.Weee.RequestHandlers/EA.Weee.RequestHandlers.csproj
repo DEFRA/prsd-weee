@@ -96,6 +96,7 @@
     <Compile Include="Charges\ICommonDataAccess.cs" />
     <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\BySchemeTransactionFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\IbisFileDataGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySubmissionTransactionFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\IIbisCustomerFileGenerator.cs" />
