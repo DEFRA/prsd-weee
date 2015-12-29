@@ -22,8 +22,8 @@
         /// and must be in the range of 0 to 99999. To avoid clashes with IDs used by the incumbent system, a seed
         /// value may need to be used.</param>
         /// <param name="memberUploads">The list of member uploads to be included.</param>
-        /// <returns>Returns an <see cref="InvoiceRunIbisFileData"/> which provides the data and file names of the
+        /// <returns>Returns an <see cref="IbisFileData"/> which provides the data and file names of the
         /// generated 1B1S customer and transaction files.</returns>
-        InvoiceRunIbisFileData CreateFileData(ulong fileID, IReadOnlyList<MemberUpload> memberUploads);
+        IbisFileData CreateFileData(ulong fileID, IReadOnlyList<MemberUpload> memberUploads);
     }
 }

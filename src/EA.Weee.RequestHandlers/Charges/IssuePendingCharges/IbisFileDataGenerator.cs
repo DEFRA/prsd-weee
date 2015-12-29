@@ -11,7 +11,7 @@
 
     /// <summary>
     /// This is the default implementation of <see cref="IIbisFileDataGenerator"/>.
-    /// It creates an <see cref="InvoiceRunIbisFileData"/> using an
+    /// It creates an <see cref="IbisFileData"/> using an
     /// <see cref="IIbisCustomerFileGenerator"/> and an <see cref="IIbisTransactionFileGenerator"/>
     /// to generate 1B1S files, which are then written to strings and returned with appropriate
     /// files names based on the specified file ID.
@@ -37,9 +37,9 @@
         /// and must be in the range of 0 to 99999. To avoid clashes with IDs used by the incumbent system, a seed
         /// value may need to be used.</param>
         /// <param name="memberUploads">The list of member uploads to be included.</param>
-        /// <returns>Returns an <see cref="InvoiceRunIbisFileData"/> which provides the data and file names of the
+        /// <returns>Returns an <see cref="IbisFileData"/> which provides the data and file names of the
         /// generated 1B1S customer and transaction files.</returns>
-        public InvoiceRunIbisFileData CreateFileData(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
+        public IbisFileData CreateFileData(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
         {
             CustomerFile customerFile = ibisCustomerFileGenerator.CreateCustomerFile(fileID, memberUploads);
             TransactionFile transactionFile = ibisTransactionFileGenerator.CreateTransactionFile(fileID, memberUploads);
@@ -50,7 +50,7 @@
             string customerFileData = customerFile.Write();
             string transactionFileData = transactionFile.Write();
 
-            return new InvoiceRunIbisFileData(
+            return new IbisFileData(
                 fileID,
                 customerFileName,
                 customerFileData,

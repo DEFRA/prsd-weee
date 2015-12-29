@@ -8,8 +8,6 @@
         public InvoiceRunMapping()
         {
             ToTable("InvoiceRun", "Charging");
-
-            HasRequired(e => e.IbisFileData).WithRequiredPrincipal();
         }
     }
 }
