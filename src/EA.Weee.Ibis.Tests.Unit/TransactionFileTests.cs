@@ -34,12 +34,12 @@
             // Assert
             string expectedDate = DateTime.UtcNow.Date.ToString("dd-MMM-yyyy").ToUpperInvariant();
             string expectedOutput =
-                "\"H\",\"0000000\",\"WEE\",\"H\",\"I\",\"0\",\"\",\"" + expectedDate + "\"" + Environment.NewLine +
+                "\"H\",\"0000000\",\"WEE\",\"H\",\"I\",\"00000\",\"\",\"" + expectedDate + "\"" + Environment.NewLine +
                 "\"D\",\"0000001\",\"WEE0001\",\"01-JAN-2015\",\"I\",\"WEE741804H\",\"\",\"GBP\",\"\",\"01-JAN-2015\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\","
                     + "\"10000\",\"\",\"H\",\"Test item 1\",\"W\",\"H\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"1\",\"Each\",\"10000\"" + Environment.NewLine +
                 "\"D\",\"0000002\",\"WEE0001\",\"01-JAN-2015\",\"I\",\"WEE741804H\",\"\",\"GBP\",\"\",\"01-JAN-2015\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\","
                     + "\"12345\",\"\",\"H\",\"Test item 2\",\"W\",\"H\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"1\",\"Each\",\"12345\"" + Environment.NewLine +
-                "\"T\",\"0000003\",\"4\",\"22345\",\"0\"" + Environment.NewLine;
+                "\"T\",\"0000003\",\"0000004\",\"22345\",\"0\"" + Environment.NewLine;
 
             Assert.Equal(expectedOutput, result);
         }
