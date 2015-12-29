@@ -142,5 +142,12 @@
                     "[Producer].[spgProducerAmendmentsCSVDataByPRN] @PRN",
                     prnParameter).ToListAsync();
         }
+
+        public async Task<int> SpgNext1B1STransactionNumber()
+        {
+            return await context.Database
+                .SqlQuery<int>("[Charging].[SpgNext1B1STransactionNumber]")
+                .SingleAsync();
+        }
     }
 }

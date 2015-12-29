@@ -15,7 +15,14 @@
     /// </summary>
     public class BySchemeTransactionFileGenerator : IIbisTransactionFileGenerator
     {
-        public Task<TransactionFile> CreateAsync(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
+        private readonly ITransactionReferenceGenerator transactionReferenceGenerator;
+
+        public BySchemeTransactionFileGenerator(ITransactionReferenceGenerator transactionReferenceGenerator)
+        {
+            this.transactionReferenceGenerator = transactionReferenceGenerator;
+        }
+
+        public async Task<TransactionFile> CreateAsync(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
         {
             TransactionFile transactionFile = new TransactionFile("WEE", fileID);
 
@@ -52,8 +59,7 @@
                     lineItems.Add(lineItem);
                 }
 
-                // TODO: What format is the transaction reference?
-                string transactionReference = "WEE1000001H";
+                string transactionReference = await transactionReferenceGenerator.GetNextTransactionReferenceAsync();
 
                 Invoice invoice;
                 try
@@ -77,7 +83,7 @@
                 transactionFile.AddInvoice(invoice);
             }
 
-            return Task.FromResult(transactionFile);
+            return transactionFile;
         }
     }
 }
