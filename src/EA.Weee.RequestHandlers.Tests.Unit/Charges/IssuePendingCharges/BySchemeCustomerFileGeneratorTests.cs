@@ -21,14 +21,14 @@
         /// This test ensures that the customer file will be generated with the specified file ID.
         /// </summary>
         [Fact]
-        public void CreateCustomerFile_WithFileID_CreatesFileWithCorrectFileID()
+        public async Task CreateCustomerFile_WithFileID_CreatesFileWithCorrectFileID()
         {
             // Arrange
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
             ulong id = 12345;
 
             // Act
-            CustomerFile customerFile = generator.CreateCustomerFile(id, A.Dummy<IReadOnlyList<MemberUpload>>());
+            CustomerFile customerFile = await generator.CreateAsync(id, A.Dummy<IReadOnlyList<MemberUpload>>());
 
             // Assert
             Assert.Equal((ulong)12345, customerFile.FileID);
@@ -40,7 +40,7 @@
         /// the scheme and their organisation's address.
         /// </summary>
         [Fact]
-        public void CreateCustomerFile_WithOneMemberUpload_CreatesOneCustomer()
+        public async Task CreateCustomerFile_WithOneMemberUpload_CreatesOneCustomer()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -86,7 +86,7 @@
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 
             // Act
-            CustomerFile customerFile = generator.CreateCustomerFile(0, memberUploads);
+            CustomerFile customerFile = await generator.CreateAsync(0, memberUploads);
 
             // Assert
             Assert.NotNull(customerFile);
@@ -113,7 +113,7 @@
         /// for the same scheme will result in one customer being added to the file.
         /// </summary>
         [Fact]
-        public void CreateCustomerFile_WithTwoMemberUploadsForTheSameScheme_CreatesOneCustomer()
+        public async Task CreateCustomerFile_WithTwoMemberUploadsForTheSameScheme_CreatesOneCustomer()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -167,7 +167,7 @@
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 
             // Act
-            CustomerFile customerFile = generator.CreateCustomerFile(0, memberUploads);
+            CustomerFile customerFile = await generator.CreateAsync(0, memberUploads);
 
             // Assert
             Assert.NotNull(customerFile);
@@ -182,7 +182,7 @@
         /// for different schemes will result in two customers being added to the file.
         /// </summary>
         [Fact]
-        public void CreateCustomerFile_WithTwoMemberUploadsForDifferentSchemes_CreatesTwoCustomers()
+        public async Task CreateCustomerFile_WithTwoMemberUploadsForDifferentSchemes_CreatesTwoCustomers()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -260,7 +260,7 @@
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 
             // Act
-            CustomerFile customerFile = generator.CreateCustomerFile(0, memberUploads);
+            CustomerFile customerFile = await generator.CreateAsync(0, memberUploads);
 
             // Assert
             Assert.NotNull(customerFile);

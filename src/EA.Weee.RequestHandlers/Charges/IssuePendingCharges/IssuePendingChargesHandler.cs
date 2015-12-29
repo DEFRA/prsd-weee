@@ -42,7 +42,7 @@
             {
                 ulong fileId = await GetNextIbisFileId();
 
-                IbisFileData ibisFileData = ibisFileDataGenerator.CreateFileData(fileId, memberUploads);
+                IbisFileData ibisFileData = await ibisFileDataGenerator.CreateFileDataAsync(fileId, memberUploads);
 
                 invoiceRun.SetIbisFileData(ibisFileData);
             }

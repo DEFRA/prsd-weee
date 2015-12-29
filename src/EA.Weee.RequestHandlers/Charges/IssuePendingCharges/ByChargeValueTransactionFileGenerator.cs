@@ -16,7 +16,7 @@
     /// </summary>
     public class ByChargeValueTransactionFileGenerator : IIbisTransactionFileGenerator
     {
-        public TransactionFile CreateTransactionFile(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
+        public Task<TransactionFile> CreateAsync(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
         {
             TransactionFile transactionFile = new TransactionFile("WEE", fileID);
 
@@ -91,7 +91,7 @@
                 }
             }
 
-            return transactionFile;
+            return Task.FromResult(transactionFile);
         }
     }
 }

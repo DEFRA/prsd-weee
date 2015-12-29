@@ -24,6 +24,6 @@
         /// <param name="memberUploads">The list of member uploads to be included.</param>
         /// <returns>Returns an <see cref="IbisFileData"/> which provides the data and file names of the
         /// generated 1B1S customer and transaction files.</returns>
-        IbisFileData CreateFileData(ulong fileID, IReadOnlyList<MemberUpload> memberUploads);
+        Task<IbisFileData> CreateFileDataAsync(ulong fileID, IReadOnlyList<MemberUpload> memberUploads);
     }
 }

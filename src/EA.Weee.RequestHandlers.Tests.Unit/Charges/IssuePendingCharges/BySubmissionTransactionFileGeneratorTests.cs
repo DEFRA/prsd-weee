@@ -20,14 +20,14 @@
         /// This test ensures that the transaction file will be generated with the specified file ID.
         /// </summary>
         [Fact]
-        public void CreateTransactionFile_WithFileID_CreatesFileWithCorrectFileID()
+        public async Task CreateTransactionFile_WithFileID_CreatesFileWithCorrectFileID()
         {
             // Arrange
             BySubmissionTransactionFileGenerator generator = new BySubmissionTransactionFileGenerator();
             ulong id = 12345;
 
             // Act
-            TransactionFile transactionFile = generator.CreateTransactionFile(id, A.Dummy<IReadOnlyList<MemberUpload>>());
+            TransactionFile transactionFile = await generator.CreateAsync(id, A.Dummy<IReadOnlyList<MemberUpload>>());
 
             // Assert
             Assert.Equal((ulong)12345, transactionFile.FileID);
@@ -40,7 +40,7 @@
         /// details are not taken from any producer submissions within the member upload.
         /// </summary>
         [Fact]
-        public void CreateTransactionFile_WithOneMemberUpload_CreatesOneInvoiceWithOneLineItem()
+        public async Task CreateTransactionFile_WithOneMemberUpload_CreatesOneInvoiceWithOneLineItem()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -72,7 +72,7 @@
             BySubmissionTransactionFileGenerator generator = new BySubmissionTransactionFileGenerator();
 
             // Act
-            TransactionFile transactionFile = generator.CreateTransactionFile(0, memberUploads);
+            TransactionFile transactionFile = await generator.CreateAsync(0, memberUploads);
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -120,7 +120,7 @@
         /// will result in two invoices being added to the file.
         /// </summary>
         [Fact]
-        public void CreateTransactionFile_WithTwoMemberUploads_CreatesTwoInvoices()
+        public async Task CreateTransactionFile_WithTwoMemberUploads_CreatesTwoInvoices()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -162,7 +162,7 @@
             BySubmissionTransactionFileGenerator generator = new BySubmissionTransactionFileGenerator();
 
             // Act
-            TransactionFile transactionFile = generator.CreateTransactionFile(0, memberUploads);
+            TransactionFile transactionFile = await generator.CreateAsync(0, memberUploads);
 
             // Assert
             Assert.NotNull(transactionFile);

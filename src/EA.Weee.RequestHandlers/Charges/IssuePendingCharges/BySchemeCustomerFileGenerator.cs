@@ -15,7 +15,7 @@
     /// </summary>
     public class BySchemeCustomerFileGenerator : IIbisCustomerFileGenerator
     {
-        public CustomerFile CreateCustomerFile(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
+        public Task<CustomerFile> CreateAsync(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
         {
             CustomerFile customerFile = new CustomerFile("WEE", fileID);
 
@@ -67,7 +67,7 @@
                 customerFile.AddCustomer(customer);
             }
 
-            return customerFile;
+            return Task.FromResult(customerFile);
         }
     }
 }

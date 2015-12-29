@@ -39,10 +39,10 @@
         /// <param name="memberUploads">The list of member uploads to be included.</param>
         /// <returns>Returns an <see cref="IbisFileData"/> which provides the data and file names of the
         /// generated 1B1S customer and transaction files.</returns>
-        public IbisFileData CreateFileData(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
+        public async Task<IbisFileData> CreateFileDataAsync(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
         {
-            CustomerFile customerFile = ibisCustomerFileGenerator.CreateCustomerFile(fileID, memberUploads);
-            TransactionFile transactionFile = ibisTransactionFileGenerator.CreateTransactionFile(fileID, memberUploads);
+            CustomerFile customerFile = await ibisCustomerFileGenerator.CreateAsync(fileID, memberUploads);
+            TransactionFile transactionFile = await ibisTransactionFileGenerator.CreateAsync(fileID, memberUploads);
 
             string customerFileName = string.Format("WEEHC{0:D5}.dat", fileID);
             string transactionFileName = string.Format("WEEHI{0:D5}.dat", fileID);
