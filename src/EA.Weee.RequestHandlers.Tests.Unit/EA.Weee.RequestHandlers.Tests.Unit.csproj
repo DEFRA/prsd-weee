@@ -104,6 +104,7 @@
     <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandlerTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGeneratorTests.cs" />
+    <Compile Include="Charges\IssuePendingCharges\BySchemeTransactionFileGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\IbisFileDataGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySubmissionTransactionFileGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesHandlerTests.cs" />
