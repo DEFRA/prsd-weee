@@ -38,11 +38,14 @@
 
             InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
 
-            ulong fileId = await GetNextIbisFileId();
+            if (authority.Name == "Environment Agency")
+            {
+                ulong fileId = await GetNextIbisFileId();
 
-            InvoiceRunIbisFileData ibisFileData = ibisFileDataGenerator.CreateFileData(fileId, memberUploads);
-            
-            invoiceRun.SetIbisFileData(ibisFileData);
+                IbisFileData ibisFileData = ibisFileDataGenerator.CreateFileData(fileId, memberUploads);
+
+                invoiceRun.SetIbisFileData(ibisFileData);
+            }
 
             await dataAccess.SaveAsync(invoiceRun);
 

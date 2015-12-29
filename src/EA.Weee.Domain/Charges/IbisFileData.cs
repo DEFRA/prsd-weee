@@ -7,17 +7,15 @@
     using System.Text;
     using System.Threading.Tasks;
     using EA.Prsd.Core;
+    using Prsd.Core.Domain;
 
     /// <summary>
     /// Provides the 1B1S file data for an invoice run.
     /// This object should be accessed through the lazy-loaded IbisFileData property
     /// of an <see cref="InvoiceRun"/> domain obejct.
     /// </summary>
-    public class InvoiceRunIbisFileData
+    public class IbisFileData : Entity
     {
-        [Key]
-        public Guid InvoiceRunId { get; private set; }
-
         public ulong FileId { get; private set; }
 
         public string CustomerFileName { get; private set; }
@@ -28,7 +26,7 @@
 
         public string TransactionFileData { get; private set; }
 
-        public InvoiceRunIbisFileData(
+        public IbisFileData(
             ulong fileId,
             string customerFileName,
             string customerFileData,
@@ -50,7 +48,7 @@
         /// <summary>
         /// This constructor is used by Entity Framework.
         /// </summary>
-        protected InvoiceRunIbisFileData()
+        protected IbisFileData()
         {
         }
 
