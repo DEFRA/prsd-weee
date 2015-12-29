@@ -23,7 +23,9 @@
         public async Task CreateTransactionFile_WithFileID_CreatesFileWithCorrectFileID()
         {
             // Arrange
-            BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator();
+            BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator(
+                A.Dummy<ITransactionReferenceGenerator>());
+
             ulong id = 12345;
 
             // Act
@@ -67,7 +69,10 @@
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator();
+            ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
+            A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
+
+            BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator(transactionReferenceGenerator);
 
             // Act
             TransactionFile transactionFile = await generator.CreateAsync(0, memberUploads);
@@ -80,10 +85,7 @@
             Assert.NotNull(invoice);
 
             Assert.Equal(TransactionType.Invoice, invoice.TransactionType);
-
-            // TODO: Determine the format requirement for transaction references.
-            //Assert.Equal("FOO", invoice.TransactionReference);
-
+            Assert.Equal("WEE800001H", invoice.TransactionReference);
             Assert.Equal(123.45m, invoice.TransactionTotal);
             Assert.Equal(null, invoice.TransactionHeaderNarrative);
 
@@ -157,7 +159,10 @@
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);
 
-            BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator();
+            ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
+            A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
+
+            BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator(transactionReferenceGenerator);
 
             // Act
             TransactionFile transactionFile = await generator.CreateAsync(0, memberUploads);
@@ -235,7 +240,10 @@
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);
 
-            BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator();
+            ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
+            A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
+
+            BySchemeTransactionFileGenerator generator = new BySchemeTransactionFileGenerator(transactionReferenceGenerator);
 
             // Act
             TransactionFile transactionFile = await generator.CreateAsync(0, memberUploads);

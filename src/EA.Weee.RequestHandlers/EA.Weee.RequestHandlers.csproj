@@ -105,6 +105,8 @@
     <Compile Include="Charges\IssuePendingCharges\IIssuePendingChargesDataAccess.cs" />
     <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesDataAccess.cs" />
     <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesHandler.cs" />
+    <Compile Include="Charges\IssuePendingCharges\ITransactionReferenceGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\TransactionReferenceGenerator.cs" />
     <Compile Include="DataReturns\BusinessValidation\EeeValidator.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderResult.cs" />
     <Compile Include="DataReturns\BusinessValidation\IEeeValidator.cs" />
