@@ -48,10 +48,11 @@
             builder.RegisterType<ProducerListFactory>().As<IProducerListFactory>();
             builder.RegisterType<XmlGenerator>().As<IXmlGenerator>();
 
-            // Register the type that will generate 1B1S files from member uploads.
+            // Register the types that will generate 1B1S files from member uploads.
             builder.RegisterType<IbisFileDataGenerator>().As<IIbisFileDataGenerator>();
             builder.RegisterType<BySchemeCustomerFileGenerator>().As<IIbisCustomerFileGenerator>();
             builder.RegisterType<BySchemeTransactionFileGenerator>().As<IIbisTransactionFileGenerator>();
+            builder.RegisterType<TransactionReferenceGenerator>().As<ITransactionReferenceGenerator>();
         }
     }
 }

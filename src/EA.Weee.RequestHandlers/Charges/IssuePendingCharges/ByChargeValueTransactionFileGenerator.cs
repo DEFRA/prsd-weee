@@ -16,7 +16,14 @@
     /// </summary>
     public class ByChargeValueTransactionFileGenerator : IIbisTransactionFileGenerator
     {
-        public Task<TransactionFile> CreateAsync(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
+        private readonly ITransactionReferenceGenerator transactionReferenceGenerator;
+
+        public ByChargeValueTransactionFileGenerator(ITransactionReferenceGenerator transactionReferenceGenerator)
+        {
+            this.transactionReferenceGenerator = transactionReferenceGenerator;
+        }
+
+        public async Task<TransactionFile> CreateAsync(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
         {
             TransactionFile transactionFile = new TransactionFile("WEE", fileID);
 
@@ -62,8 +69,7 @@
                         lineItems.Add(lineItem);
                     }
 
-                    // TODO: What format is the transaction reference?
-                    string transactionReference = "WEE1000001H";
+                    string transactionReference = await transactionReferenceGenerator.GetNextTransactionReferenceAsync();
 
                     // TODO: Add "SubmittedDate" to the domain model for a member upload.
                     DateTime submittedDate = memberUpload.UpdatedDate ?? memberUpload.CreatedDate;
@@ -91,7 +97,7 @@
                 }
             }
 
-            return Task.FromResult(transactionFile);
+            return transactionFile;
         }
     }
 }
