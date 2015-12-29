@@ -38,7 +38,7 @@
                 transactionFileGenerator);
 
             // Act
-            InvoiceRunIbisFileData result = generator.CreateFileData(A.Dummy<ulong>(), A.Dummy<List<MemberUpload>>());
+            IbisFileData result = generator.CreateFileData(A.Dummy<ulong>(), A.Dummy<List<MemberUpload>>());
 
             // Assert
             Assert.NotNull(result);
@@ -75,7 +75,7 @@
                 transactionFileGenerator);
 
             // Act
-            InvoiceRunIbisFileData result = generator.CreateFileData(fileID, A.Dummy<List<MemberUpload>>());
+            IbisFileData result = generator.CreateFileData(fileID, A.Dummy<List<MemberUpload>>());
 
             // Assert
             Assert.NotNull(result);

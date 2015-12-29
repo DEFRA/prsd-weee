@@ -19,7 +19,7 @@
 
         public IReadOnlyList<MemberUpload> MemberUploads { get; private set; }
 
-        public virtual InvoiceRunIbisFileData IbisFileData { get; private set; }
+        public virtual IbisFileData IbisFileData { get; private set; }
 
         public InvoiceRun(
             UKCompetentAuthority competentAuthority,
@@ -58,9 +58,15 @@
         {
         }
 
-        public void SetIbisFileData(InvoiceRunIbisFileData ibisFileData)
+        public void SetIbisFileData(IbisFileData ibisFileData)
         {
             Guard.ArgumentNotNull(() => ibisFileData, ibisFileData);
+
+            if (CompetentAuthority.Name != "Environment Agency")
+            {
+                string errorMessage = "1B1S files can only be provided for the Environment Agency. Devolved agencies do not use 1B1S.";
+                throw new InvalidOperationException(errorMessage);
+            }
 
             if (IbisFileData != null)
             {
