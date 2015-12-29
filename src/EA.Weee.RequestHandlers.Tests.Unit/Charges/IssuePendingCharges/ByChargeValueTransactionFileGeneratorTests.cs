@@ -23,14 +23,14 @@
         /// This test ensures that the transaction file will be generated with the specified file ID.
         /// </summary>
         [Fact]
-        public void CreateTransactionFile_WithFileID_CreatesFileWithCorrectFileID()
+        public async Task CreateTransactionFile_WithFileID_CreatesFileWithCorrectFileID()
         {
             // Arrange
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator();
             ulong id = 12345;
 
             // Act
-            TransactionFile transactionFile = generator.CreateTransactionFile(id, A.Dummy<IReadOnlyList<MemberUpload>>());
+            TransactionFile transactionFile = await generator.CreateAsync(id, A.Dummy<IReadOnlyList<MemberUpload>>());
 
             // Assert
             Assert.Equal((ulong)12345, transactionFile.FileID);
@@ -42,7 +42,7 @@
         /// in no invoices being added to the file.
         /// </summary>
         [Fact]
-        public void CreateTransactionFile_ProducerSubmissionWithNoCharge_NotIncludedInTransactionFile()
+        public async Task CreateTransactionFile_ProducerSubmissionWithNoCharge_NotIncludedInTransactionFile()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -99,7 +99,7 @@
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator();
 
             // Act
-            TransactionFile transactionFile = generator.CreateTransactionFile(0, memberUploads);
+            TransactionFile transactionFile = await generator.CreateAsync(0, memberUploads);
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -112,7 +112,7 @@
         /// will result in no invoices being added to the file.
         /// </summary>
         [Fact]
-        public void CreateTransactionFile_ProducerSubmissionWithUnalignedRegistration_NotIncludedInTransactionFile()
+        public async Task CreateTransactionFile_ProducerSubmissionWithUnalignedRegistration_NotIncludedInTransactionFile()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -171,7 +171,7 @@
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator();
 
             // Act
-            TransactionFile transactionFile = generator.CreateTransactionFile(0, memberUploads);
+            TransactionFile transactionFile = await generator.CreateAsync(0, memberUploads);
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -184,7 +184,7 @@
         /// added to the file; with the correct details of the producer submission.
         /// </summary>
         [Fact]
-        public void CreateTransactionFile_WithOneProducerSubmission_CreatesOneInvoiceWithOneLineItem()
+        public async Task CreateTransactionFile_WithOneProducerSubmission_CreatesOneInvoiceWithOneLineItem()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -241,7 +241,7 @@
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator();
 
             // Act
-            TransactionFile transactionFile = generator.CreateTransactionFile(0, memberUploads);
+            TransactionFile transactionFile = await generator.CreateAsync(0, memberUploads);
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -287,7 +287,7 @@
         /// two line items being added to the file.
         /// </summary>
         [Fact]
-        public void CreateTransactionFile_WithTwoProducerSubmissionsWithDifferentCharges_CreatesOneInvoiceWithTwoLineItems()
+        public async Task CreateTransactionFile_WithTwoProducerSubmissionsWithDifferentCharges_CreatesOneInvoiceWithTwoLineItems()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -365,7 +365,7 @@
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator();
 
             // Act
-            TransactionFile transactionFile = generator.CreateTransactionFile(0, memberUploads);
+            TransactionFile transactionFile = await generator.CreateAsync(0, memberUploads);
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -395,7 +395,7 @@
         /// one line item being added to the file.
         /// </summary>
         [Fact]
-        public void CreateTransactionFile_WithTwoProducerSubmissionsWithSameCharge_CreatesOneInvoiceWithOneLineItem()
+        public async Task CreateTransactionFile_WithTwoProducerSubmissionsWithSameCharge_CreatesOneInvoiceWithOneLineItem()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -473,7 +473,7 @@
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator();
 
             // Act
-            TransactionFile transactionFile = generator.CreateTransactionFile(0, memberUploads);
+            TransactionFile transactionFile = await generator.CreateAsync(0, memberUploads);
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -497,7 +497,7 @@
         /// with one producer submission each will result in two invoices being added to the file.
         /// </summary>
         [Fact]
-        public void CreateTransactionFile_WithTwoMemberUploads_CreatesTwoInvoices()
+        public async Task CreateTransactionFile_WithTwoMemberUploads_CreatesTwoInvoices()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -587,7 +587,7 @@
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator();
 
             // Act
-            TransactionFile transactionFile = generator.CreateTransactionFile(0, memberUploads);
+            TransactionFile transactionFile = await generator.CreateAsync(0, memberUploads);
 
             // Assert
             Assert.NotNull(transactionFile);

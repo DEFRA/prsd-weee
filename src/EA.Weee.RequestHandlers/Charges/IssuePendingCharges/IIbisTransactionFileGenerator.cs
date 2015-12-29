@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using EA.Weee.Domain.Scheme;
     using EA.Weee.Ibis;
 
@@ -9,6 +10,6 @@
     /// </summary>
     public interface IIbisTransactionFileGenerator
     {
-        TransactionFile CreateTransactionFile(ulong fileID, IReadOnlyList<MemberUpload> memberUploads);
+        Task<TransactionFile> CreateAsync(ulong fileID, IReadOnlyList<MemberUpload> memberUploads);
     }
 }

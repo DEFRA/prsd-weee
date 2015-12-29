@@ -20,17 +20,17 @@
         /// properties.
         /// </summary>
         [Fact]
-        public void CreateFileData_Always_CreatesFileData()
+        public async Task CreateFileData_Always_CreatesFileData()
         {
             // Arrange
             CustomerFile customerFile = new CustomerFile("WEE", (ulong)12345);
             IIbisCustomerFileGenerator customerFileGenerator = A.Fake<IIbisCustomerFileGenerator>();
-            A.CallTo(() => customerFileGenerator.CreateCustomerFile(A<ulong>._, A<IReadOnlyList<MemberUpload>>._))
+            A.CallTo(() => customerFileGenerator.CreateAsync(A<ulong>._, A<IReadOnlyList<MemberUpload>>._))
                 .Returns(customerFile);
 
             TransactionFile transactionFile = new TransactionFile("WEE", (ulong)12345);
             IIbisTransactionFileGenerator transactionFileGenerator = A.Fake<IIbisTransactionFileGenerator>();
-            A.CallTo(() => transactionFileGenerator.CreateTransactionFile(A<ulong>._, A<IReadOnlyList<MemberUpload>>._))
+            A.CallTo(() => transactionFileGenerator.CreateAsync(A<ulong>._, A<IReadOnlyList<MemberUpload>>._))
                 .Returns(transactionFile);
 
             IbisFileDataGenerator generator = new IbisFileDataGenerator(
@@ -38,7 +38,7 @@
                 transactionFileGenerator);
 
             // Act
-            IbisFileData result = generator.CreateFileData(A.Dummy<ulong>(), A.Dummy<List<MemberUpload>>());
+            IbisFileData result = await generator.CreateFileDataAsync(A.Dummy<ulong>(), A.Dummy<List<MemberUpload>>());
 
             // Assert
             Assert.NotNull(result);
@@ -55,19 +55,19 @@
         /// padded to 5 characters. The extension should be ".dat";
         /// </summary>
         [Fact]
-        public void CreateFileData_WithFileID_CreatesFilesWithCorrectFileNames()
+        public async Task CreateFileData_WithFileID_CreatesFilesWithCorrectFileNames()
         {
             // Arrange
             ulong fileID = 123;
 
             CustomerFile customerFile = new CustomerFile("WEE", (ulong)12345);
             IIbisCustomerFileGenerator customerFileGenerator = A.Fake<IIbisCustomerFileGenerator>();
-            A.CallTo(() => customerFileGenerator.CreateCustomerFile(A<ulong>._, A<IReadOnlyList<MemberUpload>>._))
+            A.CallTo(() => customerFileGenerator.CreateAsync(A<ulong>._, A<IReadOnlyList<MemberUpload>>._))
                 .Returns(customerFile);
 
             TransactionFile transactionFile = new TransactionFile("WEE", (ulong)12345);
             IIbisTransactionFileGenerator transactionFileGenerator = A.Fake<IIbisTransactionFileGenerator>();
-            A.CallTo(() => transactionFileGenerator.CreateTransactionFile(A<ulong>._, A<IReadOnlyList<MemberUpload>>._))
+            A.CallTo(() => transactionFileGenerator.CreateAsync(A<ulong>._, A<IReadOnlyList<MemberUpload>>._))
                 .Returns(transactionFile);
 
             IbisFileDataGenerator generator = new IbisFileDataGenerator(
@@ -75,7 +75,7 @@
                 transactionFileGenerator);
 
             // Act
-            IbisFileData result = generator.CreateFileData(fileID, A.Dummy<List<MemberUpload>>());
+            IbisFileData result = await generator.CreateFileDataAsync(fileID, A.Dummy<List<MemberUpload>>());
 
             // Assert
             Assert.NotNull(result);
