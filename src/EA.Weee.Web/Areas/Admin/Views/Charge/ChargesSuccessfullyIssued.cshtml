@@ -1,7 +1,10 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
+@model System.Guid
+
 @{
-    ViewBag.Title = "Invoice Run";
+    // Note: The model is the ID of the InvoiceRun.
+    ViewBag.Title = "Charges Successfully Issued";
 }
 
 @section main_content
@@ -11,6 +14,10 @@
             Your charges were succesfully issued.
         </h1>
     </header>
+
+    <p>
+        @Html.ActionLink("Download invoice files (zip)", "DownloadInvoiceFiles", new { id = Model })
+    </p>
 
     @Html.ActionLink("Continue", "ChooseActivity", null, new { @class = "button" })
 }

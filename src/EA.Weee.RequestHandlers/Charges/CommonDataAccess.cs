@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
     using Core.Shared;
     using Domain;
+    using Domain.Charges;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Scheme;
 
@@ -60,6 +61,30 @@
                 .OrderBy(mu => mu.Scheme.SchemeName)
                 .ThenByDescending(mu => mu.ComplianceYear)
                 .ToListAsync();
+        }
+
+        /// <summary>
+        /// Returns th invoice run with the specified ID.
+        /// The 1B1S file data domain object will be pre-loaded where it is available.
+        /// </summary>
+        /// <param name="invoiceRunId"></param>
+        /// <returns></returns>
+        public async Task<InvoiceRun> FetchInvoiceRunAsync(Guid invoiceRunId)
+        {
+            InvoiceRun invoiceRun = await Context.InvoiceRuns
+                .Include(ir => ir.IbisFileData)
+                .SingleOrDefaultAsync(ir => ir.Id == invoiceRunId);
+
+            if (invoiceRun == null)
+            {
+                string errorMessage = string.Format(
+                    "No invoice run with ID \"{0}\" was found in the database",
+                    invoiceRunId);
+
+                throw new Exception(errorMessage);
+            }
+
+            return invoiceRun;
         }
     }
 }
