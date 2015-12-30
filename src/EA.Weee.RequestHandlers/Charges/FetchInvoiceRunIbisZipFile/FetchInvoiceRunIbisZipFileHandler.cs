@@ -43,10 +43,10 @@
                 throw new InvalidOperationException(errorMessage);
             }
 
-            // TODO: Add invoice run created date to the filename. E.g. "WEEE invoice files 00500 2015-12-31.zip"
             string fileName = string.Format(
-                "WEEE invoice files {0:D5}.zip",
-                invoiceRun.IbisFileData.FileId);
+                "WEEE invoice files {0:D5} {1:yyyy-MM-dd}.zip",
+                invoiceRun.IbisFileData.FileId,
+                invoiceRun.CreatedDate);
 
             byte[] data = null;
             using (var stream = new System.IO.MemoryStream())

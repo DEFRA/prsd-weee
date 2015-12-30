@@ -11,6 +11,7 @@
     using Domain.Charges;
     using Domain.Scheme;
     using FakeItEasy;
+    using Prsd.Core;
     using RequestHandlers.Charges;
     using RequestHandlers.Charges.FetchPendingCharges;
     using RequestHandlers.Security;
@@ -86,8 +87,8 @@
 
         /// <summary>
         /// This test ensures that the file info returned by the handler has a file name with
-        /// the format "WEEE invoice files [1B1S File ID].zip", where the file ID is padded
-        /// to 5 digits.
+        /// the format "WEEE invoice files [1B1S File ID] [Invoice run created date].zip",
+        /// where the file ID is padded to 5 digits and the date is formatted as yyyy-MM-dd.
         /// </summary>
         /// <returns></returns>
         [Fact]
@@ -116,7 +117,9 @@
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
+            SystemTime.Freeze(new DateTime(2015, 12, 31));
             InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            SystemTime.Unfreeze();
 
             ulong fileID = 123;
 
@@ -135,7 +138,7 @@
 
             // Assert
             Assert.NotNull(fileInfo);
-            Assert.Equal("WEEE invoice files 00123.zip", fileInfo.FileName);
+            Assert.Equal("WEEE invoice files 00123 2015-12-31.zip", fileInfo.FileName);
         }
     }
 }

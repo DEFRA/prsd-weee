@@ -6,6 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using Domain;
+    using Domain.Charges;
     using Domain.Organisation;
     using Domain.Scheme;
     using FakeItEasy;
@@ -24,11 +25,53 @@
         public async Task CreateCustomerFile_WithFileID_CreatesFileWithCorrectFileID()
         {
             // Arrange
+            UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
+
+            Address address = new Address(
+                "1 High Street",
+                null,
+                "Some town",
+                "Some county",
+                "Post code",
+                A.Dummy<Country>(),
+                "01234 567890",
+                "someone@domain.com");
+
+            Contact contact = new Contact("John", "Smith", "Manager");
+
+            Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
+            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
+            organisation.AddOrUpdateMainContactPerson(contact);
+
+            Scheme scheme = new Scheme(organisation);
+            scheme.UpdateScheme(
+                "Test scheme",
+                "WEE/AA1111AA/SCH",
+                "WEE00000001",
+                A.Dummy<ObligationType>(),
+                authority);
+
+            int complianceYear = A.Dummy<int>();
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                complianceYear,
+                scheme,
+                A.Dummy<string>());
+
+            List<MemberUpload> memberUploads = new List<MemberUpload>();
+            memberUploads.Add(memberUpload);
+
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
             ulong id = 12345;
 
             // Act
-            CustomerFile customerFile = await generator.CreateAsync(id, A.Dummy<IReadOnlyList<MemberUpload>>());
+            CustomerFile customerFile = await generator.CreateAsync(id, invoiceRun);
 
             // Assert
             Assert.Equal((ulong)12345, customerFile.FileID);
@@ -83,10 +126,12 @@
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 
             // Act
-            CustomerFile customerFile = await generator.CreateAsync(0, memberUploads);
+            CustomerFile customerFile = await generator.CreateAsync(0, invoiceRun);
 
             // Assert
             Assert.NotNull(customerFile);
@@ -164,10 +209,12 @@
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);
 
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 
             // Act
-            CustomerFile customerFile = await generator.CreateAsync(0, memberUploads);
+            CustomerFile customerFile = await generator.CreateAsync(0, invoiceRun);
 
             // Assert
             Assert.NotNull(customerFile);
@@ -257,10 +304,12 @@
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);
 
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 
             // Act
-            CustomerFile customerFile = await generator.CreateAsync(0, memberUploads);
+            CustomerFile customerFile = await generator.CreateAsync(0, invoiceRun);
 
             // Assert
             Assert.NotNull(customerFile);
