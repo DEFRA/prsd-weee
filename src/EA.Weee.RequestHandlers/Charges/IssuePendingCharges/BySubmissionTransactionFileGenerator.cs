@@ -22,11 +22,11 @@
             this.transactionReferenceGenerator = transactionReferenceGenerator;
         }
 
-        public async Task<TransactionFile> CreateAsync(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
+        public async Task<TransactionFile> CreateAsync(ulong fileID, InvoiceRun invoiceRun)
         {
             TransactionFile transactionFile = new TransactionFile("WEE", fileID);
 
-            foreach (MemberUpload memberUpload in memberUploads)
+            foreach (MemberUpload memberUpload in invoiceRun.MemberUploads)
             {
                 // TODO: Add "SubmittedDate" to the domain model for a member upload.
                 DateTime submittedDate = memberUpload.UpdatedDate ?? memberUpload.CreatedDate;
@@ -59,7 +59,7 @@
                 {
                     invoice = new Invoice(
                         memberUpload.Scheme.IbisCustomerReference,
-                        submittedDate,
+                        invoiceRun.CreatedDate,
                         TransactionType.Invoice,
                         transactionReference,
                         new List<InvoiceLineItem>() { lineItem });

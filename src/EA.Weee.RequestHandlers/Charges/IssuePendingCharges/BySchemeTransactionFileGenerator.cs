@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Domain.Charges;
     using EA.Weee.Domain.Scheme;
     using EA.Weee.Ibis;
 
@@ -22,11 +23,11 @@
             this.transactionReferenceGenerator = transactionReferenceGenerator;
         }
 
-        public async Task<TransactionFile> CreateAsync(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
+        public async Task<TransactionFile> CreateAsync(ulong fileID, InvoiceRun invoiceRun)
         {
             TransactionFile transactionFile = new TransactionFile("WEE", fileID);
 
-            var groups = memberUploads.GroupBy(mu => mu.Scheme);
+            var groups = invoiceRun.MemberUploads.GroupBy(mu => mu.Scheme);
 
             foreach (var group in groups)
             {
@@ -66,7 +67,7 @@
                 {
                     invoice = new Invoice(
                         group.Key.IbisCustomerReference,
-                        DateTime.UtcNow,
+                        invoiceRun.CreatedDate,
                         TransactionType.Invoice,
                         transactionReference,
                         lineItems);
