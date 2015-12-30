@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using EA.Weee.Domain.Scheme;
+    using Domain.Charges;
     using EA.Weee.Ibis;
 
     /// <summary>
@@ -10,6 +10,6 @@
     /// </summary>
     public interface IIbisCustomerFileGenerator
     {
-        Task<CustomerFile> CreateAsync(ulong fileID, IReadOnlyList<MemberUpload> memberUploads);
+        Task<CustomerFile> CreateAsync(ulong fileID, InvoiceRun invoiceRun);
     }
 }

@@ -17,6 +17,8 @@
     {
         public UKCompetentAuthority CompetentAuthority { get; private set; }
 
+        public DateTime CreatedDate { get; private set; }
+
         public IReadOnlyList<MemberUpload> MemberUploads { get; private set; }
 
         public virtual IbisFileData IbisFileData { get; private set; }
@@ -29,6 +31,7 @@
             Guard.ArgumentNotNull(() => memberUploads, memberUploads);
 
             CompetentAuthority = competentAuthority;
+            CreatedDate = SystemTime.UtcNow;
 
             if (memberUploads.Count == 0)
             {

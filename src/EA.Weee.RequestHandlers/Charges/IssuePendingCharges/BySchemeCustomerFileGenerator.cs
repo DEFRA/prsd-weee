@@ -5,8 +5,8 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Domain.Charges;
     using Ibis;
-    using MemberUpload = EA.Weee.Domain.Scheme.MemberUpload;
     using Scheme = EA.Weee.Domain.Scheme.Scheme;
 
     /// <summary>
@@ -15,11 +15,11 @@
     /// </summary>
     public class BySchemeCustomerFileGenerator : IIbisCustomerFileGenerator
     {
-        public Task<CustomerFile> CreateAsync(ulong fileID, IReadOnlyList<MemberUpload> memberUploads)
+        public Task<CustomerFile> CreateAsync(ulong fileID, InvoiceRun invoiceRun)
         {
             CustomerFile customerFile = new CustomerFile("WEE", fileID);
 
-            IEnumerable<Scheme> schemes = memberUploads
+            IEnumerable<Scheme> schemes = invoiceRun.MemberUploads
                 .Select(mu => mu.Scheme)
                 .Distinct();
 

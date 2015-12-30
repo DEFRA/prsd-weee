@@ -161,6 +161,7 @@
     <Content Include="scripts\Update\Sprint20\20151228-1818-AddInitialIbisFileIdToSysemDataTable.sql" />
     <Content Include="scripts\Update\Sprint20\20151229-2019-MoveIbisFileDataIntoSeparateTable.sql" />
     <Content Include="scripts\Update\Sprint20\20151229-2151-Added1B1STransactionSequence.sql" />
+    <Content Include="scripts\Update\Sprint20\20151230-1638-AddCreatedDateToInvoiceRun.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
