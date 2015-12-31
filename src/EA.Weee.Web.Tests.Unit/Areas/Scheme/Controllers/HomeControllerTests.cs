@@ -452,7 +452,22 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_SelectViewSubmissionHistory_RedirectsToViewSubmissionHistory()
+        public async void PostChooseActivity_SelectViewSubmissionHistoryWithEnabledDataReturn_RedirectsToViewSubmissionHistory()
+        {
+            var result = await HomeController(true).ChooseActivity(new ChooseActivityViewModel
+            {
+                SelectedValue = PcsAction.ViewSubmissionHistory
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ChooseSubmissionType", routeValues["action"]);
+        }
+
+        [Fact]
+        public async void PostChooseActivity_SelectViewSubmissionHistoryWithoutEnabledDataReturn_RedirectsToViewSubmissionHistory()
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
@@ -463,7 +478,7 @@
 
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("ChooseSubmissionType", routeValues["action"]);
+            Assert.Equal("ViewSubmissionHistory", routeValues["action"]);
         }
 
         [Fact]
@@ -501,9 +516,11 @@
             Assert.Equal("ChooseActivity", routeValues["action"]);
         }
 
-        private HomeController HomeController()
+        private HomeController HomeController(bool enableDataReturns = false)
         {
-            var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>(), A.Fake<CsvWriterFactory>(), A.Fake<ConfigurationService>());
+            ConfigurationService configService = A.Fake<ConfigurationService>();
+            configService.CurrentConfiguration.EnableDataReturns = enableDataReturns;
+            var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>(), A.Fake<CsvWriterFactory>(), configService);
             new HttpContextMocker().AttachToController(controller);
 
             return controller;
