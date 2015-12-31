@@ -17,6 +17,15 @@
             ApprovalNumber = string.Empty;
         }
 
+        public Scheme(Organisation organisation)
+        {
+            Guard.ArgumentNotNull(() => organisation, organisation);
+
+            Organisation = organisation;
+            SchemeStatus = SchemeStatus.Pending;
+            ApprovalNumber = string.Empty;
+        }
+
         protected Scheme()
         {
         }
@@ -54,6 +63,24 @@
             IbisCustomerReference = ibisCustomerReference;
             ObligationType = obligationType;
             CompetentAuthorityId = competentAuthorityId;
+        }
+
+        public void UpdateScheme(
+            string schemeName,
+            string approvalNumber,
+            string ibisCustomerReference,
+            ObligationType? obligationType,
+            UKCompetentAuthority competentAuthority)
+        {
+            Guard.ArgumentNotNullOrEmpty(() => schemeName, schemeName);
+            Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
+            Guard.ArgumentNotNull(() => competentAuthority, competentAuthority);
+
+            SchemeName = schemeName;
+            ApprovalNumber = approvalNumber;
+            IbisCustomerReference = ibisCustomerReference;
+            ObligationType = obligationType;
+            CompetentAuthority = competentAuthority;
         }
 
         public void SetStatus(SchemeStatus status)

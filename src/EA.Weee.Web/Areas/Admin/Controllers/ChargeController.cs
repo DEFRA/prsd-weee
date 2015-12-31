@@ -121,15 +121,26 @@
                 invoiceRunId = await client.SendAsync(User.GetAccessToken(), request);
             }
 
-            return RedirectToAction("InvoiceRun", new { authority, id = invoiceRunId });
+            return RedirectToAction("ChargesSuccessfullyIssued", new { authority, id = invoiceRunId });
         }
 
         [HttpGet]
-        public ActionResult InvoiceRun(CompetentAuthority authority, Guid id)
+        public ActionResult ChargesSuccessfullyIssued(CompetentAuthority authority, Guid id)
         {
-            // TODO: Ensure the invoice run ID exists and that it is related to the apecified authority.
+            return View(id);
+        }
 
-            return View();
+        [HttpGet]
+        public async Task<ActionResult> DownloadInvoiceFiles(CompetentAuthority authority, Guid id)
+        {
+            FileInfo fileInfo;
+            using (IWeeeClient client = weeeClient())
+            {
+                FetchInvoiceRunIbisZipFile request = new FetchInvoiceRunIbisZipFile(id);
+                fileInfo = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            return File(fileInfo.Data, "text/plain", fileInfo.FileName);
         }
     }
 }

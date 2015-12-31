@@ -8,6 +8,8 @@
         public SystemDataMapping()
         {
             this.ToTable("SystemData", "dbo");
+
+            Property(e => e.InitialIbisFileIdDatabaseValue).HasColumnName("InitialIbisFileId");
         }
     }
 }

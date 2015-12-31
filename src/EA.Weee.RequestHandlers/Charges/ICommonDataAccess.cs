@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using Core.Shared;
     using Domain;
+    using Domain.Charges;
     using Domain.Scheme;
 
     public interface ICommonDataAccess
@@ -26,6 +27,14 @@
         /// </summary>
         /// <param name="authority"></param>
         /// <returns></returns>
-        Task<IList<MemberUpload>> FetchSubmittedNonInvoicedMemberUploadsAsync(UKCompetentAuthority authority);
+        Task<IReadOnlyList<MemberUpload>> FetchSubmittedNonInvoicedMemberUploadsAsync(UKCompetentAuthority authority);
+
+        /// <summary>
+        /// Returns th invoice run with the specified ID.
+        /// The 1B1S file data domain object will be pre-loaded where it is available.
+        /// </summary>
+        /// <param name="invoiceRunId"></param>
+        /// <returns></returns>
+        Task<InvoiceRun> FetchInvoiceRunAsync(Guid invoiceRunId);
     }
 }
