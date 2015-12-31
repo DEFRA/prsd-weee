@@ -101,7 +101,13 @@
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccessTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
     <Compile Include="Admin\UpdateUserHandlerTests.cs" />
+    <Compile Include="Charges\FetchInvoiceRunIbisZipFile\FetchInvoiceRunIbisZipFileHandlerTests.cs" />
     <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandlerTests.cs" />
+    <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGeneratorTests.cs" />
+    <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGeneratorTests.cs" />
+    <Compile Include="Charges\IssuePendingCharges\BySchemeTransactionFileGeneratorTests.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IbisFileDataGeneratorTests.cs" />
+    <Compile Include="Charges\IssuePendingCharges\BySubmissionTransactionFileGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesHandlerTests.cs" />
     <Compile Include="DataReturns\BusinessValidation\EeeeValidatorTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandlerTests.cs" />
@@ -180,6 +186,10 @@
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
       <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>
       <Name>EA.Weee.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Ibis\EA.Weee.Ibis.csproj">
+      <Project>{c3c69bf6-3716-4123-83ee-4c64b19c5377}</Project>
+      <Name>EA.Weee.Ibis</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.RequestHandlers\EA.Weee.RequestHandlers.csproj">
       <Project>{575a5355-b008-422a-b9b6-535ca2b5cc26}</Project>
