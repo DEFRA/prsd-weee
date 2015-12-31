@@ -55,7 +55,7 @@
                 {
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
-                               
+
                 List<string> activities = await GetActivities(pcsId);
 
                 var model = new ChooseActivityViewModel(activities);
@@ -135,7 +135,7 @@
                 }
                 if (viewModel.SelectedValue == PcsAction.ViewSubmissionHistory)
                 {
-                    return RedirectToAction("ViewSubmissionHistory", new { pcsId = viewModel.OrganisationId });
+                    return RedirectToAction("ChooseSubmissionType", new { pcsId = viewModel.OrganisationId });
                 }
                 if (viewModel.SelectedValue == PcsAction.SubmitPcsDataReturns)
                 {
@@ -158,6 +158,61 @@
             await SetBreadcrumb(viewModel.OrganisationId, null);
             viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId);
             await SetShowLinkToCreateOrJoinOrganisation(viewModel);
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ChooseSubmissionType(Guid pcsId)
+        {
+            using (var client = apiClient())
+            {
+                var organisationExists =
+                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
+
+                if (!organisationExists)
+                {
+                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
+                }
+
+                var model = new ChooseSubmissionTypeViewModel
+                {
+                    PossibleValues = new List<string>
+                    {
+                        SubmissionType.EeeOrWeeeDataReturns,
+                        SubmissionType.MemberRegistrations
+                    },
+                    OrganisationId = pcsId
+                };
+
+                await SetBreadcrumbAndPcsBanner(pcsId, "View submission history");
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChooseSubmissionType(ChooseSubmissionTypeViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (viewModel.SelectedValue == SubmissionType.EeeOrWeeeDataReturns)
+                {
+                    return RedirectToAction("ViewDataReturnSubmissionHistory", new { pcsId = viewModel.OrganisationId });
+                }
+                else if (viewModel.SelectedValue == SubmissionType.MemberRegistrations)
+                {
+                    return RedirectToAction("ViewSubmissionHistory", new { pcsId = viewModel.OrganisationId });
+                }
+            }
+
+            await SetBreadcrumbAndPcsBanner(viewModel.OrganisationId, "View submission history");
+            viewModel.PossibleValues = new List<string>
+            {
+                SubmissionType.EeeOrWeeeDataReturns,
+                SubmissionType.MemberRegistrations
+            };
+
             return View(viewModel);
         }
 
@@ -223,7 +278,7 @@
                 };
 
                 return View("ManageOrganisationUsers", model);
-            }           
+            }
         }
 
         [HttpPost]
@@ -384,7 +439,7 @@
             await SetBreadcrumbAndPcsBanner(pcsId, "View submission history");
 
             var model = new SubmissionHistoryViewModel();
-            
+
             using (var client = apiClient())
             {
                 var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemePublicInfo(pcsId));
@@ -409,7 +464,7 @@
 
                 CsvWriter<ErrorData> csvWriter = csvWriterFactory.Create<ErrorData>();
                 csvWriter.DefineColumn("Description", e => e.Description);
-    
+
                 var schemePublicInfo = await cache.FetchSchemePublicInfo(schemeId);
                 var csvFileName = string.Format("{0}_memberregistration_{1}_warnings_{2}.csv", schemePublicInfo.ApprovalNo, year, submissionDateTime.ToString("ddMMyyyy_HHmm"));
 
@@ -419,6 +474,25 @@
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> ViewDataReturnSubmissionHistory(Guid pcsId)
+        {
+            await SetBreadcrumbAndPcsBanner(pcsId, "View submission history");
+
+            var model = new DataReturnSubmissionHistoryViewModel();
+
+            using (var client = apiClient())
+            {
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemePublicInfo(pcsId));
+
+                if (scheme != null)
+                {
+                    model.Results = await client.SendAsync(User.GetAccessToken(), new GetDataReturnSubmissionsHistoryResults(scheme.SchemeId, scheme.OrganisationId));
+                }
+            }
+
+            return View(model);
+        }
         private IList<string> GetUserPossibleStatusToBeChanged(UserStatus userStatus)
         {
             var userStatuses = new RadioButtonGenericStringCollectionViewModel<UserStatus>();
