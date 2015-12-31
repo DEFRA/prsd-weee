@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -20,26 +21,41 @@
              */
 
             var newRegisteredProducers = ChangeTracker.Entries<RegisteredProducer>()
-                .Where(e => e.State == System.Data.Entity.EntityState.Added)
+                .Where(e => e.State == EntityState.Added)
                 .Select(e => e.Entity)
                 .ToList();
 
-            if (newRegisteredProducers.Count > 0)
+            Dictionary<Guid, Guid?> currentSubmissionIds =
+                newRegisteredProducers.ToDictionary(rp => rp.Id, rp => rp.CurrentSubmissionId);
+
+            var newDataReturns = ChangeTracker.Entries<DataReturn>()
+                .Where(e => e.State == EntityState.Added)
+                .Select(e => e.Entity)
+                .ToList();
+
+            Dictionary<Guid, Guid?> currentDataReturnVersionIds
+                = newDataReturns.ToDictionary(dr => dr.Id, dr => dr.CurrentDataReturnVersionId);
+
+            foreach (RegisteredProducer newRegisteredProducer in newRegisteredProducers)
             {
-                Dictionary<Guid, Guid?> currentSubmissionIds =
-                    newRegisteredProducers.ToDictionary(rp => rp.Id, rp => rp.CurrentSubmissionId);
+                newRegisteredProducer.CurrentSubmissionId = null;
+            }
 
-                foreach (RegisteredProducer newRegisteredProducer in newRegisteredProducers)
-                {
-                    newRegisteredProducer.CurrentSubmissionId = null;
-                }
+            foreach (var newDataReturn in newDataReturns)
+            {
+                newDataReturn.CurrentDataReturnVersionId = null;
+            }
 
-                base.SaveChanges();
+            base.SaveChanges();
 
-                foreach (RegisteredProducer newRegisteredProducer in newRegisteredProducers)
-                {
-                    newRegisteredProducer.CurrentSubmissionId = currentSubmissionIds[newRegisteredProducer.Id];
-                }
+            foreach (RegisteredProducer newRegisteredProducer in newRegisteredProducers)
+            {
+                newRegisteredProducer.CurrentSubmissionId = currentSubmissionIds[newRegisteredProducer.Id];
+            }
+
+            foreach (var newDataReturn in newDataReturns)
+            {
+                newDataReturn.CurrentDataReturnVersionId = currentDataReturnVersionIds[newDataReturn.Id];
             }
 
             return base.SaveChanges();
