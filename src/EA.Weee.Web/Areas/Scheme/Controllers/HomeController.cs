@@ -135,7 +135,14 @@
                 }
                 if (viewModel.SelectedValue == PcsAction.ViewSubmissionHistory)
                 {
-                    return RedirectToAction("ChooseSubmissionType", new { pcsId = viewModel.OrganisationId });
+                    if (configurationService.CurrentConfiguration.EnableDataReturns)
+                    {
+                        return RedirectToAction("ChooseSubmissionType", new { pcsId = viewModel.OrganisationId });
+                    }
+                    else
+                    {
+                        return RedirectToAction("ViewSubmissionHistory", new { pcsId = viewModel.OrganisationId });
+                    }
                 }
                 if (viewModel.SelectedValue == PcsAction.SubmitPcsDataReturns)
                 {
