@@ -31,7 +31,8 @@
 
             IssuePendingChargesHandler handler = new IssuePendingChargesHandler(
                 authorization,
-                A.Dummy<IIssuePendingChargesDataAccess>());
+                A.Dummy<IIssuePendingChargesDataAccess>(),
+                A.Dummy<IIbisFileDataGenerator>());
 
             // Act
             Func<Task<Guid>> testCode = async () => await handler.HandleAsync(A.Dummy<Requests.Charges.IssuePendingCharges>());
@@ -92,7 +93,8 @@
 
             IssuePendingChargesHandler handler = new IssuePendingChargesHandler(
                 authorization,
-                dataAccess);
+                dataAccess,
+                A.Dummy<IIbisFileDataGenerator>());
 
             Requests.Charges.IssuePendingCharges request = new Requests.Charges.IssuePendingCharges(CompetentAuthority.NorthernIreland);
 
