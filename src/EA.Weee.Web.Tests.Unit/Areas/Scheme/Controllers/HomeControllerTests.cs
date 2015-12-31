@@ -463,7 +463,7 @@
 
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("ViewSubmissionHistory", routeValues["action"]);
+            Assert.Equal("ChooseSubmissionType", routeValues["action"]);
         }
 
         [Fact]
