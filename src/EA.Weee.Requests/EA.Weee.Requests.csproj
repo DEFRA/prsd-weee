@@ -78,6 +78,7 @@
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
     <Compile Include="Scheme\GetSchemeById.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo.cs" />
+    <Compile Include="Shared\GetDataReturnSubmissionsHistoryResults.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResults.cs" />
     <Compile Include="Scheme\MemberRegistration\GetComplianceYears.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadById.cs" />
