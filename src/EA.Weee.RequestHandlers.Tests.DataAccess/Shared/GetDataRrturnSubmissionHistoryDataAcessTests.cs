@@ -9,7 +9,7 @@
     public class GetDataReturnSubmissionHistoryDataAcessTests
     {
         [Fact]
-        public async void GetDataReturnSubmissionHistory_WitValidSchemeId_ReturnsAllYearsSubmissionHistoryData()
+        public async void GetDataReturnSubmissionHistory_WitValidSchemeId_ReturnsAllSubmittedSubmissionHistoryData()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -18,7 +18,7 @@
 
                 // Arrange
                 ModelHelper modelHelper = new ModelHelper(database.Model);
-                
+
                 var scheme1 = modelHelper.CreateScheme();
                 scheme1.Organisation.Id = organisationId;
                 database.Model.SaveChanges();
@@ -39,6 +39,14 @@
                 dru2.Quarter = (int?)QuarterType.Q2;
                 dru2.FileName = "DataReturnUpload2.xml";
 
+                var drv3 = modelHelper.CreateDataReturnVersion(scheme1, 2015, 2, true);
+                database.Model.SaveChanges();
+
+                var dru3 = modelHelper.CreateDataReturnUpload(scheme1, drv3);
+                dru3.ComplianceYear = 2015;
+                dru3.Quarter = (int?)QuarterType.Q2;
+                dru3.FileName = "DataReturnUpload3.xml";
+
                 database.Model.SaveChanges();
 
                 // Act
@@ -46,7 +54,7 @@
 
                 // Assert
                 Assert.NotNull(result);
-                Assert.Equal(result.Count, 1);
+                Assert.Equal(result.Count, 2);
             }
         }
     }
