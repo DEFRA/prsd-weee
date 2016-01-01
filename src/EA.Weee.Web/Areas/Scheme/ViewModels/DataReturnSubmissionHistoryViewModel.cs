@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
 {
     using System.Collections.Generic;
-    using Core.Admin;
+    using Core.DataReturns;
 
     public class DataReturnSubmissionHistoryViewModel
     {

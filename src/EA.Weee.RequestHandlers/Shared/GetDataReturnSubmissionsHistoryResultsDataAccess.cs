@@ -5,7 +5,6 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Core.Admin;
     using Core.DataReturns;
     using DataAccess;
 
@@ -22,7 +21,7 @@
         {
             var results = await(from dru in context.DataReturnsUploads
                                  join user in context.Users on dru.DataReturnVersion.SubmittingUserId equals user.Id
-                                 where dru.Scheme.Id == schemeId && dru.ComplianceYear.HasValue && dru.DataReturnVersion != null
+                                 where dru.Scheme.Id == schemeId && dru.DataReturnVersion != null
                                  select new DataReturnSubmissionsHistoryResult
                                  {
                                      SchemeId = dru.Scheme.Id,
