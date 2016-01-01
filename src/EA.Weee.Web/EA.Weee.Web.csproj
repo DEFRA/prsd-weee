@@ -557,7 +557,6 @@
     <Content Include="Areas\Admin\Views\Charge\ChooseActivity.cshtml" />
     <Content Include="Areas\Admin\Views\Charge\ManagePendingCharges.cshtml" />
     <Content Include="Areas\Admin\Views\Charge\ChargesSuccessfullyIssued.cshtml" />
-    <Content Include="Areas\Admin\Views\Charge\InvoiceRun.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ChooseSubmissionType.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ViewDataReturnSubmissionHistory.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
