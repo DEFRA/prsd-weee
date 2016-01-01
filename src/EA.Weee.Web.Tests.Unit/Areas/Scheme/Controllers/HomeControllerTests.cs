@@ -231,7 +231,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<Exception>(() => HomeController().ChooseSubmissionType(A<Guid>._));
+            await Assert.ThrowsAnyAsync<ArgumentException>(() => HomeController().ChooseSubmissionType(A<Guid>._));
         }
 
         [Fact]
@@ -452,7 +452,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_SelectViewSubmissionHistoryWithEnabledDataReturn_RedirectsToViewSubmissionHistory()
+        public async void PostChooseActivity_SelectViewSubmissionHistoryWithEnabledDataReturn_RedirectsToViewChooseSubmissionType()
         {
             var result = await HomeController(true).ChooseActivity(new ChooseActivityViewModel
             {
