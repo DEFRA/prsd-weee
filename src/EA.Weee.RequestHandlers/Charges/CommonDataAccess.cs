@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
     using Core.Shared;
     using Domain;
+    using Domain.Charges;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Scheme;
 
@@ -41,14 +42,14 @@
         }
 
         /// <summary>
-        /// Returns all member uploads for the specified authority which are submitted and not yet
-        /// assigned to an invoice run.
+        /// Returns all member uploads for the specified authority which are submitted, have a positive total charge
+        /// and are not yet assigned to an invoice run.
         /// Results will be ordered by scheme name ascending and then compliance year descending.
         /// The scheme and UK competent authority domain objects will be pre-loaded with each member upload returned.
         /// </summary>
         /// <param name="authority"></param>
         /// <returns></returns>
-        public async Task<IList<MemberUpload>> FetchSubmittedNonInvoicedMemberUploadsAsync(UKCompetentAuthority authority)
+        public async Task<IReadOnlyList<MemberUpload>> FetchSubmittedNonInvoicedMemberUploadsAsync(UKCompetentAuthority authority)
         {
             return await Context.MemberUploads
                 .Include(mu => mu.Scheme)
@@ -56,9 +57,34 @@
                 .Where(mu => mu.IsSubmitted)
                 .Where(mu => mu.InvoiceRun == null)
                 .Where(mu => mu.Scheme.CompetentAuthority.Id == authority.Id)
+                .Where(mu => mu.TotalCharges > 0)
                 .OrderBy(mu => mu.Scheme.SchemeName)
                 .ThenByDescending(mu => mu.ComplianceYear)
                 .ToListAsync();
+        }
+
+        /// <summary>
+        /// Returns th invoice run with the specified ID.
+        /// The 1B1S file data domain object will be pre-loaded where it is available.
+        /// </summary>
+        /// <param name="invoiceRunId"></param>
+        /// <returns></returns>
+        public async Task<InvoiceRun> FetchInvoiceRunAsync(Guid invoiceRunId)
+        {
+            InvoiceRun invoiceRun = await Context.InvoiceRuns
+                .Include(ir => ir.IbisFileData)
+                .SingleOrDefaultAsync(ir => ir.Id == invoiceRunId);
+
+            if (invoiceRun == null)
+            {
+                string errorMessage = string.Format(
+                    "No invoice run with ID \"{0}\" was found in the database",
+                    invoiceRunId);
+
+                throw new Exception(errorMessage);
+            }
+
+            return invoiceRun;
         }
     }
 }
