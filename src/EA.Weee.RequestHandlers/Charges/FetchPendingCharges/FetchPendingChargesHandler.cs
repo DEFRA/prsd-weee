@@ -30,7 +30,7 @@
 
             UKCompetentAuthority authority = await dataAccess.FetchCompetentAuthority(message.Authority);
 
-            IList<MemberUpload> memberUploads = await dataAccess.FetchSubmittedNonInvoicedMemberUploadsAsync(authority);
+            IReadOnlyList<MemberUpload> memberUploads = await dataAccess.FetchSubmittedNonInvoicedMemberUploadsAsync(authority);
 
             var groups = memberUploads.GroupBy(mu => new { mu.Scheme, mu.ComplianceYear });
 

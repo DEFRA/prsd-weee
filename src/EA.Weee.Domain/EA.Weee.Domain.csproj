@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
     <Compile Include="Charges\InvoiceRun.cs" />
+    <Compile Include="Charges\IbisFileData.cs" />
     <Compile Include="DataReturns\EeeOutputReturnVersion.cs" />
     <Compile Include="DataReturns\WeeeCollectedReturnVersion.cs" />
     <Compile Include="DataReturns\WeeeDeliveredReturnVersion.cs" />
@@ -116,12 +117,6 @@
       <SubType>Designer</SubType>
     </None>
     <Compile Include="Producer\ProducerSubmission.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
-      <Project>{75efee66-9358-4de4-9a84-e7191eec7db8}</Project>
-      <Name>EA.Weee.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" />
