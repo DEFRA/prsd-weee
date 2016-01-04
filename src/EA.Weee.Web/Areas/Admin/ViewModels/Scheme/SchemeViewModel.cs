@@ -14,8 +14,8 @@
         public SchemeViewModel()
         {
             var obligationTypeNone = EA.Weee.Core.Shared.ObligationType.None.ToString();
-            ObligationTypeSelectList = new SelectList(EnumHelper.GetValues(typeof(ObligationType)), "Key", "Value");
-            ObligationTypeSelectList = new SelectList(ObligationTypeSelectList.Where(x => x.Text != obligationTypeNone).ToList(), "Value", "Text");
+            var allObligationTypes = new SelectList(EnumHelper.GetValues(typeof(ObligationType)), "Key", "Value");
+            ObligationTypeSelectList = new SelectList(allObligationTypes.Where(x => x.Text != obligationTypeNone).ToList(), "Value", "Text");
             StatusSelectList = new SelectList(EnumHelper.GetValues(typeof(SchemeStatus)), "Key", "Value");
             Status = SchemeStatus.Pending;
             IsUnchangeableStatus = false;
