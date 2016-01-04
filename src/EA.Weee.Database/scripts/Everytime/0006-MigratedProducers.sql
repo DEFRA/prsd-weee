@@ -9901,3 +9901,10 @@ INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerN
 -- Latest updates 23/12/2015
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/GF5727WT', 'Cyber Electronics Co Ltd', '1453249', '36705286-0044-4F93-BB9E-7ADEA616FF65')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/GJ5729WV', 'AE Greentech Distribution PLC', '07168990', 'D6D7A8E4-4AA1-4A60-8183-C9DEBF2858B2')
+
+-- Latest updates 24/12/2015
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/HC5731WX', 'Rehau Ltd', '00722004', 'aea768e6-2bd0-4567-be3c-544ff3f7fa57')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/HA5730WW', 'Billi UK LLP', 'OC381177', '98c1177e-9715-491f-a684-9f738819b817')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/HE5732WY', 'XYZPrinting Inc', NULL, 'ec3e18bc-b3c8-4d00-a10b-e853edba59c5')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/HG5732WY', 'JEDirect Corp', NULL, '9f3a3460-e1bb-434c-88ee-51fd7f361be9')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/HH5732WY', 'Rocket Production POP LLP', 'OC359998', '1bcd81d1-0bfa-438b-832a-899d57a08340')
