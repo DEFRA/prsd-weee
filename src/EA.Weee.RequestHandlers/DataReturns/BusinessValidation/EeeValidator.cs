@@ -8,8 +8,6 @@
     using Domain.Lookup;
     using Domain.Producer;
     using ReturnVersionBuilder;
-    using Shared;
-    using XmlValidation.BusinessValidation;
     using ObligationType = Domain.ObligationType;
     using Scheme = Domain.Scheme.Scheme;
 
@@ -29,33 +27,48 @@
             schemeQuarterDataAccess = dataAccessDelegate(scheme, quarter);
         }
 
-        public async Task<List<ErrorData>> Validate(string producerRegistrationNumber, string producerName, 
+        public async Task<List<ErrorData>> Validate(string producerRegistrationNumber, string producerName,
             WeeeCategory category, ObligationType obligationType, decimal tonnage)
         {
             List<ErrorData> errorsAndWarnings = new List<ErrorData>();
 
-            errorsAndWarnings.AddIfNotDefault<ErrorData>(await CheckProducerIsRegisteredWithSchemeForYear(producerRegistrationNumber));
+            errorsAndWarnings.AddRange(await CheckProducerDetails(producerRegistrationNumber, producerName));
 
             //TODO: Implement further business validation rules.
 
             return errorsAndWarnings;
         }
 
-        private async Task<ErrorData> CheckProducerIsRegisteredWithSchemeForYear(string producerRegistrationNumber)
+        private async Task<List<ErrorData>> CheckProducerDetails(string producerRegistrationNumber, string producerName)
         {
+            var errors = new List<ErrorData>();
+
             RegisteredProducer producer = await schemeQuarterDataAccess.GetRegisteredProducer(producerRegistrationNumber);
 
+            // If producer is null, add an error as it is not registered with the current scheme for the compliance year.
             if (producer == null)
             {
-                String errorMessage = string.Format(
+                var errorMessage = string.Format(
                     "The producer with producer registration number {0} is not a registered member of your producer compliance scheme for {1}. "
                     + "Remove this producer from your return, or ensure they are a registered member of your scheme.",
                     producerRegistrationNumber,
                     quarter.Year);
-                return new ErrorData(errorMessage, ErrorLevel.Error);
+
+                errors.Add(new ErrorData(errorMessage, ErrorLevel.Error));
+            }
+            else if (!string.Equals(producer.CurrentSubmission.OrganisationName, producerName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var errorMessage = string.Format(
+                "The producer name {0} registered for producer registration number {1} for {2} does not match the registered producer name of {3}. Ensure the registration number and producer name match the registered details.",
+                producerName,
+                producerRegistrationNumber,
+                quarter.Year,
+                producer.CurrentSubmission.OrganisationName);
+
+                errors.Add(new ErrorData(errorMessage, ErrorLevel.Error));
             }
 
-            return null;
+            return errors;
         }
     }
 }
