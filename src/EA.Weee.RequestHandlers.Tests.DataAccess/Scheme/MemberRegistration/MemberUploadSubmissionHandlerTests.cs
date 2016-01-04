@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
+    using RequestHandlers.Shared.DomainUser;
     using Requests.Scheme.MemberRegistration;
     using Security;
     using Weee.Tests.Core.Model;
@@ -35,7 +37,11 @@
 
                 database.Model.SaveChanges();
 
-                var handler = new MemberUploadSubmissionHandler(A.Dummy<IWeeeAuthorization>(), database.WeeeContext);
+                Domain.User user = await database.WeeeContext.Users.FirstAsync();
+                IDomainUserContext domainUserContext = A.Fake<IDomainUserContext>();
+                A.CallTo(() => domainUserContext.GetCurrentUserAsync()).Returns(user);
+
+                var handler = new MemberUploadSubmissionHandler(A.Dummy<IWeeeAuthorization>(), database.WeeeContext, domainUserContext);
                 await handler.HandleAsync(new MemberUploadSubmission(scheme.OrganisationId, memberUpload.Id));
 
                 var registeredProducerDb = FindRegisteredProducer(database, registeredProducer.Id);
@@ -71,7 +77,11 @@
 
                 database.Model.SaveChanges();
 
-                var handler = new MemberUploadSubmissionHandler(A.Dummy<IWeeeAuthorization>(), database.WeeeContext);
+                Domain.User user = await database.WeeeContext.Users.FirstAsync();
+                IDomainUserContext domainUserContext = A.Fake<IDomainUserContext>();
+                A.CallTo(() => domainUserContext.GetCurrentUserAsync()).Returns(user);
+
+                var handler = new MemberUploadSubmissionHandler(A.Dummy<IWeeeAuthorization>(), database.WeeeContext, domainUserContext);
                 await handler.HandleAsync(new MemberUploadSubmission(scheme.OrganisationId, memberUpload2.Id));
 
                 var registeredProducerDb = FindRegisteredProducer(database, registeredProducer.Id);
@@ -106,7 +116,11 @@
 
                 database.Model.SaveChanges();
 
-                var handler = new MemberUploadSubmissionHandler(A.Dummy<IWeeeAuthorization>(), database.WeeeContext);
+                Domain.User user = await database.WeeeContext.Users.FirstAsync();
+                IDomainUserContext domainUserContext = A.Fake<IDomainUserContext>();
+                A.CallTo(() => domainUserContext.GetCurrentUserAsync()).Returns(user);
+
+                var handler = new MemberUploadSubmissionHandler(A.Dummy<IWeeeAuthorization>(), database.WeeeContext, domainUserContext);
                 await handler.HandleAsync(new MemberUploadSubmission(scheme.OrganisationId, memberUpload2.Id));
 
                 var registeredProducerDb1 = FindRegisteredProducer(database, registeredProducer1.Id);
@@ -147,7 +161,11 @@
 
                 database.Model.SaveChanges();
 
-                var handler = new MemberUploadSubmissionHandler(A.Dummy<IWeeeAuthorization>(), database.WeeeContext);
+                Domain.User user = await database.WeeeContext.Users.FirstAsync();
+                IDomainUserContext domainUserContext = A.Fake<IDomainUserContext>();
+                A.CallTo(() => domainUserContext.GetCurrentUserAsync()).Returns(user);
+
+                var handler = new MemberUploadSubmissionHandler(A.Dummy<IWeeeAuthorization>(), database.WeeeContext, domainUserContext);
                 await handler.HandleAsync(new MemberUploadSubmission(scheme2.OrganisationId, memberUpload2.Id));
 
                 var registeredProducerDb1 = FindRegisteredProducer(database, registeredProducer1.Id);
