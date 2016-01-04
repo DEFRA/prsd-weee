@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using Domain.Charges;
     using EA.Weee.Ibis;
@@ -25,6 +27,8 @@
 
         public async Task<TransactionFile> CreateAsync(ulong fileID, InvoiceRun invoiceRun)
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-GB");
+
             TransactionFile transactionFile = new TransactionFile("WEE", fileID);
 
             foreach (MemberUpload memberUpload in invoiceRun.MemberUploads)
