@@ -27,7 +27,16 @@
 
             // Setup producer that exists in scheme for compliance year
             var prn = "Test PRN";
-            RegisteredProducer producer = new RegisteredProducer(prn, 2016, builder.Scheme);
+            var producerName = "Test Producer Name";
+
+            var producerSubmission = A.Fake<ProducerSubmission>();
+            A.CallTo(() => producerSubmission.OrganisationName)
+                .Returns(producerName);
+
+            var producer = A.Fake<RegisteredProducer>(x => x.WithArgumentsForConstructor(() => new RegisteredProducer(prn, 2016, builder.Scheme)));
+            A.CallTo(() => producer.CurrentSubmission)
+                .Returns(producerSubmission);
+
             A.CallTo(() => builder.DataAccess.GetRegisteredProducer(prn))
                 .Returns(producer);
 
@@ -93,7 +102,7 @@
         }
 
         [Fact]
-        public async Task Validate_WithIncorrectProducerName_DifferentStringCase_ReturnsError()
+        public async Task Validate_WithProducerNamesDifferentCase_DoesNotReturnError()
         {
             // Arrange
             var builder = new EeeValidatorBuilder();
@@ -101,7 +110,7 @@
 
             var producerSubmission = A.Fake<ProducerSubmission>();
             A.CallTo(() => producerSubmission.OrganisationName)
-                .Returns("ProducerName123");
+                .Returns("producer name aaa");
 
             var registeredProducer = A.Fake<RegisteredProducer>();
             A.CallTo(() => registeredProducer.CurrentSubmission)
@@ -111,16 +120,10 @@
                 .Returns(registeredProducer);
 
             // Act
-            var errors = await builder.InvokeValidate("PRN1234", "IncorrectProducerName");
+            var errors = await builder.InvokeValidate("PRN1234", "Producer NamE AAA");
 
             // Assert
-            Assert.Equal(1, errors.Count);
-            Assert.Equal(ErrorLevel.Error, errors.Single().ErrorLevel);
-            Assert.Contains("does not match the registered producer name of", errors.Single().Description);
-            Assert.Contains("ProducerName123", errors.Single().Description);
-            Assert.Contains("IncorrectProducerName", errors.Single().Description);
-            Assert.Contains("PRN1234", errors.Single().Description);
-            Assert.Contains("2016", errors.Single().Description);
+            Assert.Equal(0, errors.Count);
         }
 
         private class EeeValidatorBuilder
@@ -146,7 +149,7 @@
                 return new EeeValidator(Scheme, new Quarter(Year, Quarter), dataAccessDelegate);
             }
 
-            public Task<List<ErrorData>> InvokeValidate(string producerRegistrationNumber = null, string producerName = null)
+            public Task<List<ErrorData>> InvokeValidate(string producerRegistrationNumber = "Test PRN", string producerName = "Test Producer Name")
             {
                 string prn = producerRegistrationNumber ?? A.Dummy<string>();
                 string name = producerName ?? A.Dummy<string>();
