@@ -35,6 +35,9 @@
 
                 var producerSubmission = helper.CreateProducerAsCompany(memberUpload, registrationNumber);
 
+                // At least one user is required in the database.
+                helper.GetOrCreateUser("A user");
+
                 database.Model.SaveChanges();
 
                 Domain.User user = await database.WeeeContext.Users.FirstAsync();
@@ -75,6 +78,9 @@
 
                 var producerSubmission2 = helper.CreateProducerAsCompany(memberUpload2, registrationNumber);
 
+                // At least one user is required in the database.
+                helper.GetOrCreateUser("A user");
+
                 database.Model.SaveChanges();
 
                 Domain.User user = await database.WeeeContext.Users.FirstAsync();
@@ -113,6 +119,9 @@
 
                 var registeredProducer2 = helper.GerOrCreateRegisteredProducer(scheme, 2017, registrationNumber);
                 var producerSubmission2 = helper.CreateProducerAsCompany(memberUpload2, registrationNumber);
+
+                // At least one user is required in the database.
+                helper.GetOrCreateUser("A user");
 
                 database.Model.SaveChanges();
 
@@ -158,6 +167,9 @@
 
                 var registeredProducer2 = helper.GerOrCreateRegisteredProducer(scheme2, complianceYear, registrationNumber);
                 var producerSubmission2 = helper.CreateProducerAsCompany(memberUpload2, registrationNumber);
+
+                // At least one user is required in the database.
+                helper.GetOrCreateUser("A user");
 
                 database.Model.SaveChanges();
 
