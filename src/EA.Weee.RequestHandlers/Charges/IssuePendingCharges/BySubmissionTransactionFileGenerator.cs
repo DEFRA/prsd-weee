@@ -28,8 +28,7 @@
 
             foreach (MemberUpload memberUpload in invoiceRun.MemberUploads)
             {
-                // TODO: Add "SubmittedDate" to the domain model for a member upload.
-                DateTime submittedDate = memberUpload.UpdatedDate ?? memberUpload.CreatedDate;
+                DateTime submittedDate = memberUpload.SubmittedDate.Value;
 
                 List<InvoiceLineItem> lineItems = new List<InvoiceLineItem>();
 

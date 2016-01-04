@@ -48,6 +48,8 @@
                 scheme,
                 A.Dummy<string>());
 
+            memberUpload.Submit(A.Dummy<User>());
+
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
@@ -593,6 +595,8 @@
                 100m);
 
             memberUpload1.ProducerSubmissions.Add(producerSubmission1);
+
+            memberUpload1.Submit(A.Dummy<User>());
 
             MemberUpload memberUpload2 = new MemberUpload(
                 A.Dummy<Guid>(),
