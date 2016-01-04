@@ -62,6 +62,8 @@
                 scheme,
                 A.Dummy<string>());
 
+            memberUpload.Submit(A.Dummy<User>());
+
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
@@ -122,6 +124,8 @@
                 complianceYear,
                 scheme,
                 A.Dummy<string>());
+
+            memberUpload.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
@@ -196,6 +200,8 @@
                 scheme,
                 A.Dummy<string>());
 
+            memberUpload1.Submit(A.Dummy<User>());
+
             MemberUpload memberUpload2 = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
@@ -204,6 +210,8 @@
                 complianceYear,
                 scheme,
                 A.Dummy<string>());
+
+            memberUpload2.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload1);
@@ -267,6 +275,8 @@
                 scheme1,
                 A.Dummy<string>());
 
+            memberUpload1.Submit(A.Dummy<User>());
+
             Address address2 = new Address(
                 "2 High Street",
                 null,
@@ -299,6 +309,8 @@
                 complianceYear2,
                 scheme2,
                 A.Dummy<string>());
+
+            memberUpload2.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload1);
