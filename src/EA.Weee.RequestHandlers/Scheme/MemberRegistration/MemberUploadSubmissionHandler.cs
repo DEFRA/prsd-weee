@@ -4,19 +4,26 @@
     using System.Data.Entity;
     using System.Threading.Tasks;
     using DataAccess;
+    using Domain;
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
     using Security;
+    using Shared.DomainUser;
 
     internal class MemberUploadSubmissionHandler : IRequestHandler<MemberUploadSubmission, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
+        private readonly IDomainUserContext domainUserContext;
 
-        public MemberUploadSubmissionHandler(IWeeeAuthorization authorization, WeeeContext context)
+        public MemberUploadSubmissionHandler(
+            IWeeeAuthorization authorization,
+            WeeeContext context,
+            IDomainUserContext domainUserContext)
         {
             this.authorization = authorization;
             this.context = context;
+            this.domainUserContext = domainUserContext;
         }
 
         public async Task<Guid> HandleAsync(MemberUploadSubmission message)
@@ -37,7 +44,9 @@
 
             if (!memberUpload.IsSubmitted)
             {
-                memberUpload.Submit();
+                User submittingUser = await domainUserContext.GetCurrentUserAsync();
+
+                memberUpload.Submit(submittingUser);
                 await context.SaveChangesAsync();
             }
 
