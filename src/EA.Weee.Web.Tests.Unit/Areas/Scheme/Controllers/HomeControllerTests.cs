@@ -55,7 +55,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<Exception>(() => HomeController().ChooseActivity(A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ChooseActivity(A<Guid>._));
         }
 
         [Fact]
@@ -231,7 +231,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<ArgumentException>(() => HomeController().ChooseSubmissionType(A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ChooseSubmissionType(A<Guid>._));
         }
 
         [Fact]
@@ -298,7 +298,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<Exception>(() => HomeController().ManageOrganisationUsers(A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUsers(A<Guid>._));
         }
 
         [Fact]
@@ -351,7 +351,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<Exception>(() => HomeController().ManageOrganisationUser(A<Guid>._, A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUser(A<Guid>._, A<Guid>._));
         }
 
         [Fact]
@@ -487,7 +487,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<Exception>(() => HomeController().ManageOrganisationUsers(A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUsers(A<Guid>._));
         }
 
         [Fact]
