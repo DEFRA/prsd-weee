@@ -47,7 +47,6 @@
                 .Where(p => p.Scheme.Id == scheme.Id)
                 .Where(p => p.ComplianceYear == quarter.Year)
                 .Where(p => p.CurrentSubmission != null)
-                .AsNoTracking()
                 .ToListAsync();
             }
             return schemeYearProducers;

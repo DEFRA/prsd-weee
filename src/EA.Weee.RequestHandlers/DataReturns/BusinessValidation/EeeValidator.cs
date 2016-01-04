@@ -4,10 +4,13 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Core.Shared;
+    using Domain;
     using Domain.DataReturns;
     using Domain.Lookup;
     using Domain.Producer;
     using ReturnVersionBuilder;
+    using Shared;
+    using ErrorLevel = Core.Shared.ErrorLevel;
     using ObligationType = Domain.ObligationType;
     using Scheme = Domain.Scheme.Scheme;
 
@@ -32,17 +35,6 @@
         {
             List<ErrorData> errorsAndWarnings = new List<ErrorData>();
 
-            errorsAndWarnings.AddRange(await CheckProducerDetails(producerRegistrationNumber, producerName));
-
-            //TODO: Implement further business validation rules.
-
-            return errorsAndWarnings;
-        }
-
-        private async Task<List<ErrorData>> CheckProducerDetails(string producerRegistrationNumber, string producerName)
-        {
-            var errors = new List<ErrorData>();
-
             RegisteredProducer producer = await schemeQuarterDataAccess.GetRegisteredProducer(producerRegistrationNumber);
 
             // If producer is null, add an error as it is not registered with the current scheme for the compliance year.
@@ -54,9 +46,22 @@
                     producerRegistrationNumber,
                     quarter.Year);
 
-                errors.Add(new ErrorData(errorMessage, ErrorLevel.Error));
+                errorsAndWarnings.Add(new ErrorData(errorMessage, ErrorLevel.Error));
             }
-            else if (!string.Equals(producer.CurrentSubmission.OrganisationName, producerName, StringComparison.InvariantCultureIgnoreCase))
+            else
+            {
+                errorsAndWarnings.AddIfNotDefault(ValidateProducerName(producer, producerRegistrationNumber, producerName));
+                errorsAndWarnings.AddIfNotDefault(ValidateProducerObligationType(producer, producerRegistrationNumber, producerName, obligationType));
+            }
+
+            return errorsAndWarnings;
+        }
+
+        public ErrorData ValidateProducerName(RegisteredProducer producer, string producerRegistrationNumber, string producerName)
+        {
+            ErrorData error = null;
+
+            if (!string.Equals(producer.CurrentSubmission.OrganisationName, producerName, StringComparison.InvariantCultureIgnoreCase))
             {
                 var errorMessage = string.Format(
                 "The producer name {0} registered for producer registration number {1} for {2} does not match the registered producer name of {3}. Ensure the registration number and producer name match the registered details.",
@@ -65,10 +70,29 @@
                 quarter.Year,
                 producer.CurrentSubmission.OrganisationName);
 
-                errors.Add(new ErrorData(errorMessage, ErrorLevel.Error));
+                error = new ErrorData(errorMessage, ErrorLevel.Error);
             }
 
-            return errors;
+            return error;
+        }
+
+        public ErrorData ValidateProducerObligationType(RegisteredProducer producer, string producerRegistrationNumber, string producerName, ObligationType obligationType)
+        {
+            ErrorData error = null;
+
+            if (!producer.CurrentSubmission.ObligationType.HasFlag(obligationType))
+            {
+                var errorMessage = string.Format(
+                "Producer registration number {0} {1} has submitted a {2} return for one or more categories but is only registered for {3}. Amend the return or submit an update for the producer's details.",
+                producerRegistrationNumber,
+                producerName,
+                obligationType,
+                producer.CurrentSubmission.ObligationType);
+
+                error = new ErrorData(errorMessage, ErrorLevel.Error);
+            }
+
+            return error;
         }
     }
 }

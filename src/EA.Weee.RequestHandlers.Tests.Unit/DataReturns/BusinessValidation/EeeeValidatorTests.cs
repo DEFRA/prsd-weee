@@ -26,12 +26,15 @@
             builder.Year = 2016;
 
             // Setup producer that exists in scheme for compliance year
-            var prn = "Test PRN";
-            var producerName = "Test Producer Name";
+            var prn = "TestPRN";
+            var producerName = "TestProducerName";
+            var obligationType = ObligationType.B2C;
 
             var producerSubmission = A.Fake<ProducerSubmission>();
             A.CallTo(() => producerSubmission.OrganisationName)
                 .Returns(producerName);
+            A.CallTo(() => producerSubmission.ObligationType)
+                .Returns(obligationType);
 
             var producer = A.Fake<RegisteredProducer>(x => x.WithArgumentsForConstructor(() => new RegisteredProducer(prn, 2016, builder.Scheme)));
             A.CallTo(() => producer.CurrentSubmission)
@@ -41,10 +44,42 @@
                 .Returns(producer);
 
             // Act
-            var errors = await builder.InvokeValidate(prn);
+            var errors = await builder.InvokeValidate(prn, producerName, obligationType);
 
             // Assert
             Assert.Empty(errors);
+        }
+
+        [Fact]
+        public async Task Validate_WithValidPRN_ButIncorrectProducerDetails_ReturnsExpectedErrors()
+        {
+            // Arrange
+            var builder = new EeeValidatorBuilder();
+            builder.Year = 2016;
+
+            // Setup producer that exists in scheme for compliance year
+            var prn = "Test PRN";
+            var producerName = "Test Producer Name";
+            var obligationType = ObligationType.B2C;
+
+            var producerSubmission = A.Fake<ProducerSubmission>();
+            A.CallTo(() => producerSubmission.OrganisationName)
+                .Returns(producerName);
+
+            var producer = A.Fake<RegisteredProducer>(x => x.WithArgumentsForConstructor(() => new RegisteredProducer(prn, 2016, builder.Scheme)));
+            A.CallTo(() => producer.CurrentSubmission)
+                .Returns(producerSubmission);
+            A.CallTo(() => producerSubmission.ObligationType)
+                .Returns(obligationType);
+
+            A.CallTo(() => builder.DataAccess.GetRegisteredProducer(prn))
+                .Returns(producer);
+
+            // Act
+            var errors = await builder.InvokeValidate(prn, "Incorrect Name", ObligationType.B2B);
+
+            // Assert
+            Assert.Equal(2, errors.Count);
         }
 
         [Fact]
@@ -71,7 +106,7 @@
         }
 
         [Fact]
-        public async Task Validate_WithIncorrectProducerName_ReturnsError()
+        public void ValidateProducerName_WithIncorrectProducerName_ReturnsError()
         {
             // Arrange
             var builder = new EeeValidatorBuilder();
@@ -85,24 +120,21 @@
             A.CallTo(() => registeredProducer.CurrentSubmission)
                 .Returns(producerSubmission);
 
-            A.CallTo(() => builder.DataAccess.GetRegisteredProducer(A<string>._))
-                .Returns(registeredProducer);
-
             // Act
-            var errors = await builder.InvokeValidate("PRN1234", "IncorrectProducerName");
+            var error = builder.Build().ValidateProducerName(registeredProducer, "PRN1234", "IncorrectProducerName");
 
             // Assert
-            Assert.Equal(1, errors.Count);
-            Assert.Equal(ErrorLevel.Error, errors.Single().ErrorLevel);
-            Assert.Contains("does not match the registered producer name of", errors.Single().Description);
-            Assert.Contains("ProducerName123", errors.Single().Description);
-            Assert.Contains("IncorrectProducerName", errors.Single().Description);
-            Assert.Contains("PRN1234", errors.Single().Description);
-            Assert.Contains("2016", errors.Single().Description);
+            Assert.NotNull(error);
+            Assert.Equal(ErrorLevel.Error, error.ErrorLevel);
+            Assert.Contains("does not match the registered producer name of", error.Description);
+            Assert.Contains("ProducerName123", error.Description);
+            Assert.Contains("IncorrectProducerName", error.Description);
+            Assert.Contains("PRN1234", error.Description);
+            Assert.Contains("2016", error.Description);
         }
 
         [Fact]
-        public async Task Validate_WithProducerNamesDifferentCase_DoesNotReturnError()
+        public void ValidateProducerName_WithProducerNamesDifferentCase_DoesNotReturnError()
         {
             // Arrange
             var builder = new EeeValidatorBuilder();
@@ -116,14 +148,65 @@
             A.CallTo(() => registeredProducer.CurrentSubmission)
                 .Returns(producerSubmission);
 
-            A.CallTo(() => builder.DataAccess.GetRegisteredProducer(A<string>._))
-                .Returns(registeredProducer);
-
             // Act
-            var errors = await builder.InvokeValidate("PRN1234", "Producer NamE AAA");
+            var error = builder.Build().ValidateProducerName(registeredProducer, A.Dummy<string>(), "Producer NamE AAA");
 
             // Assert
-            Assert.Equal(0, errors.Count);
+            Assert.Null(error);
+        }
+
+        [Theory]
+        [InlineData(ObligationType.B2B, ObligationType.B2C)]
+        [InlineData(ObligationType.B2C, ObligationType.B2B)]
+        public void ValidateProducerObligationType_WithIncorrectObligationType_ReturnsError(ObligationType registeredObligationType, ObligationType eeeObligationType)
+        {
+            // Arrange
+            var builder = new EeeValidatorBuilder();
+
+            var producerSubmission = A.Fake<ProducerSubmission>();
+            A.CallTo(() => producerSubmission.ObligationType)
+                .Returns(registeredObligationType);
+
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => registeredProducer.CurrentSubmission)
+                .Returns(producerSubmission);
+
+            // Act
+            var error = builder.Build().ValidateProducerObligationType(registeredProducer, "PRN1234", "TestProducerName", eeeObligationType);
+
+            // Assert
+            Assert.NotNull(error);
+            Assert.Equal(ErrorLevel.Error, error.ErrorLevel);
+            Assert.Contains("for one or more categories but is only registered for", error.Description);
+            Assert.Contains("PRN1234", error.Description);
+            Assert.Contains("TestProducerName", error.Description);
+            Assert.Contains(eeeObligationType.ToString(), error.Description);
+            Assert.Contains(registeredObligationType.ToString(), error.Description);
+        }
+
+        [Theory]
+        [InlineData(ObligationType.B2B, ObligationType.B2B)]
+        [InlineData(ObligationType.Both, ObligationType.B2B)]
+        [InlineData(ObligationType.B2C, ObligationType.B2C)]
+        [InlineData(ObligationType.Both, ObligationType.B2C)]
+        public void ValidateProducerObligationType_WithCorrectObligationType_DoesNotReturnError(ObligationType registeredObligationType, ObligationType eeeObligationType)
+        {
+            // Arrange
+            var builder = new EeeValidatorBuilder();
+
+            var producerSubmission = A.Fake<ProducerSubmission>();
+            A.CallTo(() => producerSubmission.ObligationType)
+                .Returns(registeredObligationType);
+
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => registeredProducer.CurrentSubmission)
+                .Returns(producerSubmission);
+
+            // Act
+            var error = builder.Build().ValidateProducerObligationType(registeredProducer, A.Dummy<string>(), A.Dummy<string>(), eeeObligationType);
+
+            // Assert
+            Assert.Null(error);
         }
 
         private class EeeValidatorBuilder
@@ -149,12 +232,10 @@
                 return new EeeValidator(Scheme, new Quarter(Year, Quarter), dataAccessDelegate);
             }
 
-            public Task<List<ErrorData>> InvokeValidate(string producerRegistrationNumber = "Test PRN", string producerName = "Test Producer Name")
+            public Task<List<ErrorData>> InvokeValidate(string producerRegistrationNumber = "Test PRN", string producerName = "Test Producer Name",
+                ObligationType obligationType = ObligationType.B2B)
             {
-                string prn = producerRegistrationNumber ?? A.Dummy<string>();
-                string name = producerName ?? A.Dummy<string>();
-
-                return Build().Validate(prn, name, A.Dummy<WeeeCategory>(), A.Dummy<ObligationType>(), A.Dummy<decimal>());
+                return Build().Validate(producerRegistrationNumber, producerName, A.Dummy<WeeeCategory>(), obligationType, A.Dummy<decimal>());
             }
         }
     }
