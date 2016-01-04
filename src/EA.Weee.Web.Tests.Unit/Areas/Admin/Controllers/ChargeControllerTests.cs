@@ -337,11 +337,11 @@
 
         /// <summary>
         /// This test ensures that the POST "ManagePendingCharges" action will call the API to issue charges
-        /// amd then return a redirect to the "InvoiceRun" action with the selected authority and the ID of
+        /// amd then return a redirect to the "ChargesSuccessfullyIssued" action with the selected authority and the ID of
         /// the invoice run returned by the API.
         /// </summary>
         [Fact]
-        public async Task PostManagePendingCharges_Always_CallsApiAndRedirectsToInvoiceRunActionWithAuthorityAndInvoiceRunId()
+        public async Task PostManagePendingCharges_Always_CallsApiAndRedirectsToChargesSuccessfullyIssuedActionWithAuthorityAndInvoiceRunId()
         {
             Guid invoiceRunId = new Guid("FB95F6E7-8809-488A-B23B-5B3F5A9B3D5F");
 
@@ -362,9 +362,75 @@
             RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
             Assert.NotNull(redirectResult);
 
-            Assert.Equal("InvoiceRun", redirectResult.RouteValues["action"]);
+            Assert.Equal("ChargesSuccessfullyIssued", redirectResult.RouteValues["action"]);
             Assert.Equal(CompetentAuthority.NorthernIreland, redirectResult.RouteValues["authority"]);
             Assert.Equal(invoiceRunId, redirectResult.RouteValues["id"]);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "ChargesSucessfullyIssued" action will return the "ChargesSuccessfullyIssued" view
+        /// providing the invoice run ID as the model.
+        /// </summary>
+        [Fact]
+        public void GetChargesSuccessfullyIssued_Always_ReturnsChargesSuccessfullyIssuedViewWithModel()
+        {
+            // Arrange
+            Guid invoiceRunId = new Guid("23610E5E-5B79-4DB0-BD8C-0213A9B44C45");
+
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => A.Dummy<IWeeeClient>());
+
+            // Act
+            ActionResult result = controller.ChargesSuccessfullyIssued(A.Dummy<CompetentAuthority>(), invoiceRunId);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "ChargesSuccessfullyIssued");
+
+            Guid? viewModel = viewResult.Model as Guid?;
+            Assert.NotNull(viewModel);
+            Assert.Equal(invoiceRunId, viewModel);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "DownloadInvoiceFiles" action will call the API to retrieve
+        /// data for a ZIP file representing the specified invoice run's 1B1S files; and that this data will
+        /// be returned as a FileResult with the correct file name and a content type of "text/plain".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetDownloadInvoiceFiles_Always_CallsApiAndReturnsFileResult()
+        {
+            // Arrange
+            Guid invoiceRunId = new Guid("ADED8BDE-CF03-4696-B972-DDAB9306A6DD");
+
+            FileInfo fileInfo = new FileInfo("Test file.zip", A.Dummy<byte[]>());
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchInvoiceRunIbisZipFile>._))
+                .WhenArgumentsMatch(a => a.Get<FetchInvoiceRunIbisZipFile>("request").InvoiceRunId == invoiceRunId)
+                .Returns(fileInfo);
+
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => weeeClient);
+
+            // Act
+            ActionResult result = await controller.DownloadInvoiceFiles(
+                A.Dummy<CompetentAuthority>(),
+                invoiceRunId);
+
+            // Assert
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+
+            Assert.Equal("Test file.zip", fileResult.FileDownloadName);
+            Assert.Equal("text/plain", fileResult.ContentType);
         }
     }
 }

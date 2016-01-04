@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers
 {
     using Autofac;
+    using Charges.IssuePendingCharges;
     using Prsd.Core.Autofac;
     using Prsd.Core.Decorators;
     using Prsd.Core.Mediator;
@@ -46,6 +47,12 @@
             // Register singleton types relating to PCS member upload testing.
             builder.RegisterType<ProducerListFactory>().As<IProducerListFactory>();
             builder.RegisterType<XmlGenerator>().As<IXmlGenerator>();
+
+            // Register the types that will generate 1B1S files from member uploads.
+            builder.RegisterType<IbisFileDataGenerator>().As<IIbisFileDataGenerator>();
+            builder.RegisterType<BySchemeCustomerFileGenerator>().As<IIbisCustomerFileGenerator>();
+            builder.RegisterType<BySchemeTransactionFileGenerator>().As<IIbisTransactionFileGenerator>();
+            builder.RegisterType<TransactionReferenceGenerator>().As<ITransactionReferenceGenerator>();
         }
     }
 }
