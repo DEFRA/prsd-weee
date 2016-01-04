@@ -151,7 +151,7 @@
                 case "MinInclusive":
                 case "MaxInclusive":
                     friendlyMessageTemplate =
-                        "The value '{0}' supplied for field '{1}' is lower than the minimum or greater than the maximum, allowed value.";
+                        "The value '{0}' supplied for field '{1}' is lower than the minimum or greater than the maximum allowed value.";
                     break;
                 case "Pattern":
                     friendlyMessageTemplate = string.IsNullOrEmpty(sender.Value) ? "You must provide a value for '{1}'." : "The value '{0}' supplied for field '{1}' doesn't match the required format.";
