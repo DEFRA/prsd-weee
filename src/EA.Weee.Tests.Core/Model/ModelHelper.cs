@@ -196,8 +196,8 @@
                 ProcessTime = new TimeSpan(0),
                 ComplianceYear = 2016
             };
+
             model.MemberUploads.Add(memberUpload);
-            model.SaveChanges();
 
             return memberUpload;
         }
