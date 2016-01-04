@@ -119,7 +119,7 @@
             if (schemeReturn.ApprovalNo != dataReturnVersionBuilder.Scheme.ApprovalNumber)
             {
                 errorMessage = string.Format(
-                    "The PCS approval number \"{0}\" you have provided does not match with the PCS. Review the PCS approval number.",
+                    "The PCS approval number {0} you have provided does not match with the PCS. Review the PCS approval number.",
                     schemeReturn.ApprovalNo);
 
                 return false;

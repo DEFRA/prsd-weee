@@ -218,7 +218,7 @@
         public void XmlErrorTranslator_MinInclusiveFailed_CorrectMessage()
         {
             string providedException = string.Format("The '{0}' element is invalid - The value '{1}' is invalid according to its datatype '{2}' - The MinInclusive constraint failed.", TestField, TestValue, TestType);
-            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' is lower than the minimum, or greater than the maximum, allowed value", TestValue, TestField));
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' is lower than the minimum or greater than the maximum allowed value", TestValue, TestField));
 
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }
@@ -227,7 +227,7 @@
         public void XmlErrorTranslator_MaxInclusiveFailed_CorrectMessage()
         {
             string providedException = string.Format("The '{0}' element is invalid - The value '{1}' is invalid according to its datatype '{2}' - The MaxInclusive constraint failed.", TestField, TestValue, TestType);
-            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' is lower than the minimum, or greater than the maximum, allowed value", TestValue, TestField));
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' is lower than the minimum or greater than the maximum allowed value", TestValue, TestField));
 
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }
