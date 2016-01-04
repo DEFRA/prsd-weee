@@ -48,6 +48,12 @@
                     throw new InvalidOperationException(errorMessage);
                 }
 
+                if (!memberUpload.IsSubmitted)
+                {
+                    string errorMessage = "An unsubmitted member upload cannot be assigned to an invoice run.";
+                    throw new InvalidOperationException(errorMessage);
+                }
+
                 memberUpload.AssignToInvoiceRun(this);
             }
 
