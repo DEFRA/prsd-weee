@@ -83,6 +83,8 @@
                     }
                 }
 
+                database.Model.SaveChanges();
+
                 var contextMemberUpload = database.WeeeContext.MemberUploads
                     .Single(mu => mu.Id == memberUpload.Id);
 
