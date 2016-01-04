@@ -96,6 +96,7 @@
         <EntityTypeShape EntityType="EA.Weee.TestModel.AeDeliveryLocation" Width="1.5" PointX="20.25" PointY="29" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AatfDeliveryLocation" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AeDeliveryLocation" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_MemberUpload_User_SubmittedBy" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

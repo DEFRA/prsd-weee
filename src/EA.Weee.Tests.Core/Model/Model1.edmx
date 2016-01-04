@@ -93,7 +93,7 @@
           <Property Name="OrganisationType" Type="int" Nullable="false" />
           <Property Name="OrganisationStatus" Type="int" Nullable="false" />
           <Property Name="TradingName" Type="nvarchar" MaxLength="256" />
-          <Property Name="CompanyRegistrationNumber" Type="nvarchar" MaxLength="10" />
+          <Property Name="CompanyRegistrationNumber" Type="nvarchar" MaxLength="64" />
           <Property Name="ContactId" Type="uniqueidentifier" />
           <Property Name="OrganisationAddressId" Type="uniqueidentifier" />
           <Property Name="BusinessAddressId" Type="uniqueidentifier" />
@@ -219,10 +219,14 @@
           <Property Name="TotalCharges" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="FileName" Type="nvarchar(max)" />
           <Property Name="ProcessTime" Type="time" Precision="7" Nullable="false" />
+          <Property Name="MemberUploadId" Type="uniqueidentifier" />
+          <Property Name="InvoiceRunId" Type="uniqueidentifier" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedById" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="UpdatedById" Type="nvarchar" MaxLength="128" />
+          <Property Name="SubmittedDate" Type="datetime" />
+          <Property Name="SubmittedByUserId" Type="nvarchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="MemberUploadError">
           <Key>
@@ -444,7 +448,7 @@
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="ProducerSubmissionId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
-        <Association Name="FK__MemberUpl__Creat__45544755">
+        <Association Name="FK__MemberUpl__Creat__5F492382">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
           <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
           <ReferentialConstraint>
@@ -456,7 +460,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__MemberUpl__Updat__46486B8E">
+        <Association Name="FK__MemberUpl__Updat__603D47BB">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
           <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
           <ReferentialConstraint>
@@ -777,6 +781,18 @@
             </Principal>
             <Dependent Role="MemberUpload">
               <PropertyRef Name="SchemeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberUpload_User_SubmittedBy">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="SubmittedByUserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1108,11 +1124,11 @@
           <EntitySet Name="ProducerSubmission" EntityType="Self.ProducerSubmission" Schema="Producer" store:Type="Tables" />
           <EntitySet Name="RegisteredProducer" EntityType="Self.RegisteredProducer" Schema="Producer" store:Type="Tables" />
           <EntitySet Name="SICCode" EntityType="Self.SICCode" Schema="Producer" store:Type="Tables" />
-          <AssociationSet Name="FK__MemberUpl__Creat__45544755" Association="Self.FK__MemberUpl__Creat__45544755">
+          <AssociationSet Name="FK__MemberUpl__Creat__5F492382" Association="Self.FK__MemberUpl__Creat__5F492382">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="MemberUpload" EntitySet="MemberUpload" />
           </AssociationSet>
-          <AssociationSet Name="FK__MemberUpl__Updat__46486B8E" Association="Self.FK__MemberUpl__Updat__46486B8E">
+          <AssociationSet Name="FK__MemberUpl__Updat__603D47BB" Association="Self.FK__MemberUpl__Updat__603D47BB">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="MemberUpload" EntitySet="MemberUpload" />
           </AssociationSet>
@@ -1218,6 +1234,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_MemberUpload_Scheme" Association="Self.FK_MemberUpload_Scheme">
             <End Role="Scheme" EntitySet="Scheme" />
+            <End Role="MemberUpload" EntitySet="MemberUpload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberUpload_User_SubmittedBy" Association="Self.FK_MemberUpload_User_SubmittedBy">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="MemberUpload" EntitySet="MemberUpload" />
           </AssociationSet>
           <AssociationSet Name="FK_MemberUploadError_MemberUpload" Association="Self.FK_MemberUploadError_MemberUpload">
@@ -1394,7 +1414,7 @@
           <Property Name="OrganisationType" Type="Int32" Nullable="false" />
           <Property Name="OrganisationStatus" Type="Int32" Nullable="false" />
           <Property Name="TradingName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="CompanyRegistrationNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyRegistrationNumber" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Name="ContactId" Type="Guid" />
           <Property Name="OrganisationAddressId" Type="Guid" />
           <Property Name="BusinessAddressId" Type="Guid" />
@@ -1443,6 +1463,11 @@
           <Property Name="UpdatedById" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetUser" Relationship="EA.Weee.TestModel.FK__MemberUpl__Creat__45544755" FromRole="MemberUpload" ToRole="AspNetUser" />
           <NavigationProperty Name="AspNetUser1" Relationship="EA.Weee.TestModel.FK__MemberUpl__Updat__46486B8E" FromRole="MemberUpload" ToRole="AspNetUser" />
+          <Property Name="MemberUploadId" Type="Guid" />
+          <Property Name="InvoiceRunId" Type="Guid" />
+          <Property Name="SubmittedDate" Type="DateTime" Precision="3" />
+          <Property Name="SubmittedByUserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser2" Relationship="EA.Weee.TestModel.FK_MemberUpload_User_SubmittedBy" FromRole="MemberUpload" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="MemberUploadError">
           <Key>
@@ -2102,6 +2127,10 @@
             <End Role="AeDeliveryLocation" EntitySet="AeDeliveryLocations" />
             <End Role="WeeeDeliveredAmount" EntitySet="WeeeDeliveredAmounts" />
           </AssociationSet>
+          <AssociationSet Name="FK_MemberUpload_User_SubmittedBy" Association="EA.Weee.TestModel.FK_MemberUpload_User_SubmittedBy">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="MemberUpload" EntitySet="MemberUploads" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="AspNetUser">
           <Key>
@@ -2125,6 +2154,7 @@
           <NavigationProperty Name="OrganisationUsers" Relationship="EA.Weee.TestModel.FK_OrganisationUser_AspNetUsers" FromRole="AspNetUser" ToRole="OrganisationUser" />
           <NavigationProperty Name="MemberUploads" Relationship="EA.Weee.TestModel.FK__MemberUpl__Creat__45544755" FromRole="AspNetUser" ToRole="MemberUpload" />
           <NavigationProperty Name="MemberUploads1" Relationship="EA.Weee.TestModel.FK__MemberUpl__Updat__46486B8E" FromRole="AspNetUser" ToRole="MemberUpload" />
+          <NavigationProperty Name="MemberUploads2" Relationship="EA.Weee.TestModel.FK_MemberUpload_User_SubmittedBy" FromRole="AspNetUser" ToRole="MemberUpload" />
         </EntityType>
         <Association Name="FK_CompetentAuthorityUser_AspNetUsers">
           <End Type="EA.Weee.TestModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
@@ -2737,6 +2767,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MemberUpload_User_SubmittedBy">
+          <End Type="EA.Weee.TestModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
+          <End Type="EA.Weee.TestModel.MemberUpload" Role="MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="SubmittedByUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2830,6 +2872,10 @@
           <EntitySetMapping Name="MemberUploads">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.MemberUpload">
               <MappingFragment StoreEntitySet="MemberUpload">
+                <ScalarProperty Name="SubmittedByUserId" ColumnName="SubmittedByUserId" />
+                <ScalarProperty Name="SubmittedDate" ColumnName="SubmittedDate" />
+                <ScalarProperty Name="InvoiceRunId" ColumnName="InvoiceRunId" />
+                <ScalarProperty Name="MemberUploadId" ColumnName="MemberUploadId" />
                 <ScalarProperty Name="UpdatedById" ColumnName="UpdatedById" />
                 <ScalarProperty Name="CreatedById" ColumnName="CreatedById" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
