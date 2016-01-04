@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
+    <Compile Include="DataReturns\DataReturnSubmissionsHistoryResult.cs" />
     <Compile Include="Admin\RemoveProducerResult.cs" />
     <Compile Include="Admin\Reports\CSVFileData.cs" />
     <Compile Include="Charges\PendingCharge.cs" />
