@@ -6,9 +6,11 @@
     using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
+    using Domain;
     using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
+    using RequestHandlers.Shared.DomainUser;
     using Requests.Scheme.MemberRegistration;
     using Weee.Tests.Core;
     using Xunit;
@@ -27,7 +29,7 @@
 
             A.CallTo(() => context.MemberUploads).Returns(memberUploadsDbSet);
 
-            return new MemberUploadSubmissionHandler(AuthorizationBuilder.CreateUserAllowedToAccessOrganisation(), context);
+            return new MemberUploadSubmissionHandler(AuthorizationBuilder.CreateUserAllowedToAccessOrganisation(), context, A.Dummy<IDomainUserContext>());
         }
 
         [Fact]
@@ -35,7 +37,7 @@
         {
             var denyingAuthorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
-            var handler = new MemberUploadSubmissionHandler(denyingAuthorization, A<WeeeContext>._);
+            var handler = new MemberUploadSubmissionHandler(denyingAuthorization, A<WeeeContext>._, A.Dummy<IDomainUserContext>());
             var message = new MemberUploadSubmission(Guid.NewGuid(), Guid.NewGuid());
 
             await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
@@ -97,7 +99,7 @@
         {
             var memberUpload = new MemberUpload(pcsId, "Test data", new List<MemberUploadError>(), 0, 2016, A.Dummy<Scheme>(), "File name");
 
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             var handler = GetPreparedHandler(new[]
             {
