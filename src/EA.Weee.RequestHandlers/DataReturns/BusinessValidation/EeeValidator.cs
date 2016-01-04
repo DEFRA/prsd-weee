@@ -34,14 +34,14 @@
         {
             List<ErrorData> errorsAndWarnings = new List<ErrorData>();
 
-            errorsAndWarnings.AddRange(await CheckProducerDetails(producerRegistrationNumber));
+            errorsAndWarnings.AddRange(await CheckProducerDetails(producerRegistrationNumber, producerName));
 
             //TODO: Implement further business validation rules.
 
             return errorsAndWarnings;
         }
 
-        private async Task<List<ErrorData>> CheckProducerDetails(string producerRegistrationNumber)
+        private async Task<List<ErrorData>> CheckProducerDetails(string producerRegistrationNumber, string producerName)
         {
             var errors = new List<ErrorData>();
 
@@ -55,10 +55,20 @@
                     + "Remove this producer from your return, or ensure they are a registered member of your scheme.",
                     producerRegistrationNumber,
                     quarter.Year);
+
                 errors.Add(new ErrorData(errorMessage, ErrorLevel.Error));
             }
+            else if (producer.CurrentSubmission.OrganisationName != producerName)
+            {
+                var errorMessage = string.Format(
+                "The producer name {0} registered for producer registration number {1} for {2} does not match the registered producer name of {3}. Ensure the registration number and producer name match the registered details.",
+                producerName,
+                producerRegistrationNumber,
+                quarter.Year,
+                producer.CurrentSubmission.OrganisationName);
 
-            //The producer name[producer name from XML] registered for producer registration number[PRN from XML] for [compliance year from XML] does not match the registered producer name of[producer name from database].Ensure the registration number and producer name match the registered details.
+                errors.Add(new ErrorData(errorMessage, ErrorLevel.Error));
+            }
 
             return errors;
         }

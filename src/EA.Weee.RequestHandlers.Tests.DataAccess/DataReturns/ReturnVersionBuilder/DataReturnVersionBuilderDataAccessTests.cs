@@ -109,7 +109,7 @@
 
                 database.Model.SaveChanges();
 
-                var dataAccess = new DataReturnVersionBuilderDataAccess(domainHelper.GetScheme(scheme.Id), new Quarter(2017, QuarterType.Q2), database.WeeeContext);
+                var dataAccess = new DataReturnVersionBuilderDataAccess(domainHelper.GetScheme(scheme.Id), new Quarter(2016, QuarterType.Q2), database.WeeeContext);
 
                 // Act
                 var result = await dataAccess.FetchDataReturnOrDefault();
