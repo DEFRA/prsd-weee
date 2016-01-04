@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Web.Mvc;
     using Core.DataStandards;
     using Core.Shared;
@@ -12,7 +13,9 @@
     {
         public SchemeViewModel()
         {
-            ObligationTypeSelectList = new SelectList(EnumHelper.GetValues(typeof(ObligationType)), "Key", "Value");
+            var obligationTypeNone = EA.Weee.Core.Shared.ObligationType.None.ToString();
+            var allObligationTypes = new SelectList(EnumHelper.GetValues(typeof(ObligationType)), "Key", "Value");
+            ObligationTypeSelectList = new SelectList(allObligationTypes.Where(x => x.Text != obligationTypeNone).ToList(), "Value", "Text");
             StatusSelectList = new SelectList(EnumHelper.GetValues(typeof(SchemeStatus)), "Key", "Value");
             Status = SchemeStatus.Pending;
             IsUnchangeableStatus = false;
