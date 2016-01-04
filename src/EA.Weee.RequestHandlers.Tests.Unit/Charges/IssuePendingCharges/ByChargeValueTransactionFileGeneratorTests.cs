@@ -122,7 +122,7 @@
 
             memberUpload.ProducerSubmissions.Add(producerSubmission);
 
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
@@ -195,7 +195,7 @@
 
             memberUpload.ProducerSubmissions.Add(producerSubmission);
 
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             registeredProducer.Unalign();
 
@@ -270,7 +270,7 @@
 
             memberUpload.ProducerSubmissions.Add(producerSubmission);
 
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
@@ -395,7 +395,7 @@
 
             memberUpload.ProducerSubmissions.Add(producerSubmission2);
 
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
@@ -508,7 +508,7 @@
 
             memberUpload.ProducerSubmissions.Add(producerSubmission2);
 
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
@@ -626,7 +626,7 @@
 
             memberUpload2.ProducerSubmissions.Add(producerSubmission2);
 
-            memberUpload2.Submit();
+            memberUpload2.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload1);
