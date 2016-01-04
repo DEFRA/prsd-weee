@@ -47,7 +47,7 @@
                 mu3.CreatedById = user1.Id;
 
                 database.Model.SaveChanges();
-                
+
                 // Act
                 var result = await dataAccess.GetSubmissionsHistory(scheme1.Id);
 

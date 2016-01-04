@@ -1,42 +1,49 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.BusinessValidation
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Core.Shared;
     using Domain.DataReturns;
+    using Domain.Lookup;
     using Domain.Producer;
     using FakeItEasy;
-    using RequestHandlers.DataReturns;
     using RequestHandlers.DataReturns.BusinessValidation;
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
     using Xunit;
+    using ObligationType = Domain.ObligationType;
     using Quarter = Domain.DataReturns.Quarter;
     using Scheme = Domain.Scheme.Scheme;
+
     public class EeeeValidatorTests
     {
         [Fact]
         public async Task Validate_WithValidData_ReturnsEmptyErrorDataList()
         {
             // Arrange
-            int complianceYear = 2016;
-            Quarter quarter = new Quarter(complianceYear, Domain.DataReturns.QuarterType.Q1);
-            Scheme scheme = A.Fake<Scheme>();
-            IDataReturnVersionBuilderDataAccess dataAccess = A.Fake<IDataReturnVersionBuilderDataAccess>();
-            Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate;
-            dataAccessDelegate = (s, q) => dataAccess;
+            var builder = new EeeValidatorBuilder();
+            builder.Year = 2016;
 
-            //Setup producer that exists in scheme for compliance year
-            String prn = "Test PRN";
-            RegisteredProducer producer = new RegisteredProducer(prn, complianceYear, scheme);
-            A.CallTo(() => dataAccess.GetRegisteredProducer(prn)).Returns(producer);
+            // Setup producer that exists in scheme for compliance year
+            var prn = "Test PRN";
+            var producerName = "Test Producer Name";
 
-            EeeValidator eeeValidator = new EeeValidator(scheme, quarter, dataAccessDelegate);
+            var producerSubmission = A.Fake<ProducerSubmission>();
+            A.CallTo(() => producerSubmission.OrganisationName)
+                .Returns(producerName);
 
-            //Act
-            var errors = await eeeValidator.Validate(prn, "Fake producer", 
-                Domain.Lookup.WeeeCategory.LargeHouseholdAppliances, Domain.ObligationType.B2B, new Decimal(5));
+            var producer = A.Fake<RegisteredProducer>(x => x.WithArgumentsForConstructor(() => new RegisteredProducer(prn, 2016, builder.Scheme)));
+            A.CallTo(() => producer.CurrentSubmission)
+                .Returns(producerSubmission);
 
-            //Assert
+            A.CallTo(() => builder.DataAccess.GetRegisteredProducer(prn))
+                .Returns(producer);
+
+            // Act
+            var errors = await builder.InvokeValidate(prn);
+
+            // Assert
             Assert.Empty(errors);
         }
 
@@ -44,29 +51,111 @@
         public async Task Validate_WithProducerNotRegisteredWithScheme_ReturnsError()
         {
             // Arrange
-            int complianceYear = 2016;
-            Quarter quarter = new Quarter(complianceYear, Domain.DataReturns.QuarterType.Q1);
-            Scheme scheme = A.Fake<Scheme>();
-            IDataReturnVersionBuilderDataAccess dataAccess = A.Fake<IDataReturnVersionBuilderDataAccess>();
-            Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate;
-            dataAccessDelegate = (s, q) => dataAccess;
+            var builder = new EeeValidatorBuilder();
+            builder.Year = 2016;
 
-            String prn = "Non-extistant PRN";
+            var prn = "Non-existent PRN";
 
-            A.CallTo(() => dataAccess.GetRegisteredProducer(A<string>._)).Returns((RegisteredProducer)null);
+            A.CallTo(() => builder.DataAccess.GetRegisteredProducer(A<string>._))
+                .Returns((RegisteredProducer)null);
 
-            EeeValidator eeeValidator = new EeeValidator(scheme, quarter, dataAccessDelegate);
+            // Act
+            var errors = await builder.InvokeValidate(prn);
 
-            //Act
-            var errors = await eeeValidator.Validate(prn, "Fake producer", 
-                Domain.Lookup.WeeeCategory.LargeHouseholdAppliances, Domain.ObligationType.B2B, new Decimal(5));
-
-            //Assert
+            // Assert
             Assert.Equal(1, errors.Count);
             ErrorData error = errors[0];
             Assert.Equal(ErrorLevel.Error, error.ErrorLevel);
             Assert.Contains(prn, error.Description);
-            Assert.Contains(complianceYear.ToString(), error.Description);
+            Assert.Contains("2016", error.Description);
+        }
+
+        [Fact]
+        public async Task Validate_WithIncorrectProducerName_ReturnsError()
+        {
+            // Arrange
+            var builder = new EeeValidatorBuilder();
+            builder.Year = 2016;
+
+            var producerSubmission = A.Fake<ProducerSubmission>();
+            A.CallTo(() => producerSubmission.OrganisationName)
+                .Returns("ProducerName123");
+
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => registeredProducer.CurrentSubmission)
+                .Returns(producerSubmission);
+
+            A.CallTo(() => builder.DataAccess.GetRegisteredProducer(A<string>._))
+                .Returns(registeredProducer);
+
+            // Act
+            var errors = await builder.InvokeValidate("PRN1234", "IncorrectProducerName");
+
+            // Assert
+            Assert.Equal(1, errors.Count);
+            Assert.Equal(ErrorLevel.Error, errors.Single().ErrorLevel);
+            Assert.Contains("does not match the registered producer name of", errors.Single().Description);
+            Assert.Contains("ProducerName123", errors.Single().Description);
+            Assert.Contains("IncorrectProducerName", errors.Single().Description);
+            Assert.Contains("PRN1234", errors.Single().Description);
+            Assert.Contains("2016", errors.Single().Description);
+        }
+
+        [Fact]
+        public async Task Validate_WithProducerNamesDifferentCase_DoesNotReturnError()
+        {
+            // Arrange
+            var builder = new EeeValidatorBuilder();
+            builder.Year = 2016;
+
+            var producerSubmission = A.Fake<ProducerSubmission>();
+            A.CallTo(() => producerSubmission.OrganisationName)
+                .Returns("producer name aaa");
+
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => registeredProducer.CurrentSubmission)
+                .Returns(producerSubmission);
+
+            A.CallTo(() => builder.DataAccess.GetRegisteredProducer(A<string>._))
+                .Returns(registeredProducer);
+
+            // Act
+            var errors = await builder.InvokeValidate("PRN1234", "Producer NamE AAA");
+
+            // Assert
+            Assert.Equal(0, errors.Count);
+        }
+
+        private class EeeValidatorBuilder
+        {
+            public int Year;
+            public QuarterType Quarter;
+            public Scheme Scheme;
+            public IDataReturnVersionBuilderDataAccess DataAccess;
+
+            public EeeValidatorBuilder()
+            {
+                Year = 2016;
+                Quarter = QuarterType.Q1;
+                Scheme = A.Fake<Scheme>();
+
+                DataAccess = A.Fake<IDataReturnVersionBuilderDataAccess>();
+            }
+
+            public EeeValidator Build()
+            {
+                Func<Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate = (x, y) => DataAccess;
+
+                return new EeeValidator(Scheme, new Quarter(Year, Quarter), dataAccessDelegate);
+            }
+
+            public Task<List<ErrorData>> InvokeValidate(string producerRegistrationNumber = "Test PRN", string producerName = "Test Producer Name")
+            {
+                string prn = producerRegistrationNumber ?? A.Dummy<string>();
+                string name = producerName ?? A.Dummy<string>();
+
+                return Build().Validate(prn, name, A.Dummy<WeeeCategory>(), A.Dummy<ObligationType>(), A.Dummy<decimal>());
+            }
         }
     }
 }
