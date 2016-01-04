@@ -55,7 +55,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<Exception>(() => HomeController().ChooseActivity(A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ChooseActivity(A<Guid>._));
         }
 
         [Fact]
@@ -226,12 +226,79 @@
         }
 
         [Fact]
+        public async void GetChooseSubmissionType_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(false);
+
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ChooseSubmissionType(A<Guid>._));
+        }
+
+        [Fact]
+        public async void GetChooseSubmissionType_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+
+            var result = await HomeController().ChooseSubmissionType(A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public async void PostChooseSubmissionType_ModelIsInvalid_ShouldRedirectViewWithModel()
+        {
+            var controller = HomeController();
+            controller.ModelState.AddModelError("Key", "Any error");
+
+            var model = new ChooseSubmissionTypeViewModel
+            {
+                SelectedValue = SubmissionType.EeeOrWeeeDataReturns
+            };
+            var result = await controller.ChooseSubmissionType(model);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(model, ((ViewResult)(result)).Model);
+            Assert.False(controller.ModelState.IsValid);
+        }
+
+        [Fact]
+        public async void PostChooseSubmissionType_MemberRegistrationsSelected_RedirectsToMemberRegistrationSubmissionHistory()
+        {   
+            var result = await HomeController().ChooseSubmissionType(new ChooseSubmissionTypeViewModel
+            {
+                SelectedValue = SubmissionType.MemberRegistrations
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ViewSubmissionHistory", routeValues["action"]);
+        }
+
+        [Fact]
+        public async void PostChooseSubmissionType_DataReturnsSelected_RedirectsToDataReturnsSubmissionHistory()
+        {
+            var result = await HomeController().ChooseSubmissionType(new ChooseSubmissionTypeViewModel
+            {
+                SelectedValue = SubmissionType.EeeOrWeeeDataReturns 
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ViewDataReturnSubmissionHistory", routeValues["action"]);
+        }
+
+        [Fact]
         public async void GetManageOrganisationUsers_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<Exception>(() => HomeController().ManageOrganisationUsers(A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUsers(A<Guid>._));
         }
 
         [Fact]
@@ -284,7 +351,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<Exception>(() => HomeController().ManageOrganisationUser(A<Guid>._, A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUser(A<Guid>._, A<Guid>._));
         }
 
         [Fact]
@@ -385,7 +452,22 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_SelectViewSubmissionHistory_RedirectsToViewSubmissionHistory()
+        public async void PostChooseActivity_SelectViewSubmissionHistoryWithEnabledDataReturn_RedirectsToViewChooseSubmissionType()
+        {
+            var result = await HomeController(true).ChooseActivity(new ChooseActivityViewModel
+            {
+                SelectedValue = PcsAction.ViewSubmissionHistory
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ChooseSubmissionType", routeValues["action"]);
+        }
+
+        [Fact]
+        public async void PostChooseActivity_SelectViewSubmissionHistoryWithoutEnabledDataReturn_RedirectsToViewSubmissionHistory()
         {
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
@@ -405,7 +487,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<Exception>(() => HomeController().ManageOrganisationUsers(A<Guid>._));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUsers(A<Guid>._));
         }
 
         [Fact]
@@ -434,9 +516,11 @@
             Assert.Equal("ChooseActivity", routeValues["action"]);
         }
 
-        private HomeController HomeController()
+        private HomeController HomeController(bool enableDataReturns = false)
         {
-            var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>(), A.Fake<CsvWriterFactory>(), A.Fake<ConfigurationService>());
+            ConfigurationService configService = A.Fake<ConfigurationService>();
+            configService.CurrentConfiguration.EnableDataReturns = enableDataReturns;
+            var controller = new HomeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>(), A.Fake<CsvWriterFactory>(), configService);
             new HttpContextMocker().AttachToController(controller);
 
             return controller;
@@ -640,6 +724,37 @@
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.IsType<FileContentResult>(result);
+        }
+
+        [Fact]
+        public async void GetViewDataReturnSubmissionHistory_ShouldExecuteGetDataReturnSubmissionsHistoryResultsAndReturnsView()
+        {
+            var controller = HomeController();
+
+            var result = await controller.ViewDataReturnSubmissionHistory(A<Guid>._);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public async void GetViewDataReturnSubmissionHistory_SchemeInfoIsNull_ShouldNotExecuteGetDataReturnSubmissionsHistoryResultsAndReturnsView()
+        {
+            var controller = HomeController();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemePublicInfo>._)).Returns((SchemePublicInfo)null);
+
+            var result = await controller.ViewSubmissionHistory(A<Guid>._);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnSubmissionsHistoryResults>._))
+                .MustNotHaveHappened();
+
+            Assert.IsType<ViewResult>(result);
         }
     }
 }

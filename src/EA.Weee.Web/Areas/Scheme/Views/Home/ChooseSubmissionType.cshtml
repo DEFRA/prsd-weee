@@ -1,0 +1,38 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.ChooseSubmissionTypeViewModel
+@{
+    ViewBag.Title = "Choose Submission Type";
+}
+
+@section main_content
+{   
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Which submissions would you like to view?
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "ChooseSubmissionType", controllerName: "Home", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.OrganisationId)
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ActivityOptions">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Which submissions would you like to view?",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+    }
+
+    <div>
+        <a href="@Url.Action("ChooseActivity", "Home", new { area = "Scheme" })">Perform another activity</a>
+    </div>
+}
+
