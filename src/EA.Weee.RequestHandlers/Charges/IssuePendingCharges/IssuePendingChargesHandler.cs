@@ -16,13 +16,16 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IIssuePendingChargesDataAccess dataAccess;
+        private readonly IIbisFileDataGenerator ibisFileDataGenerator;
 
         public IssuePendingChargesHandler(
             IWeeeAuthorization authorization,
-            IIssuePendingChargesDataAccess dataAccess)
+            IIssuePendingChargesDataAccess dataAccess,
+            IIbisFileDataGenerator ibisFileGenerator)
         {
             this.authorization = authorization;
             this.dataAccess = dataAccess;
+            this.ibisFileDataGenerator = ibisFileGenerator;
         }
 
         public async Task<Guid> HandleAsync(Requests.Charges.IssuePendingCharges message)
@@ -31,13 +34,36 @@
 
             UKCompetentAuthority authority = await dataAccess.FetchCompetentAuthority(message.Authority);
 
-            IList<MemberUpload> memberUploads = await dataAccess.FetchSubmittedNonInvoicedMemberUploadsAsync(authority);
+            IReadOnlyList<MemberUpload> memberUploads = await dataAccess.FetchSubmittedNonInvoicedMemberUploadsAsync(authority);
 
             InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+
+            if (authority.Name == "Environment Agency")
+            {
+                ulong fileId = await GetNextIbisFileId();
+
+                IbisFileData ibisFileData = await ibisFileDataGenerator.CreateFileDataAsync(fileId, invoiceRun);
+
+                invoiceRun.SetIbisFileData(ibisFileData);
+            }
 
             await dataAccess.SaveAsync(invoiceRun);
 
             return invoiceRun.Id;
+        }
+
+        public async Task<ulong> GetNextIbisFileId()
+        {
+            ulong? currentMaximumFileID = await dataAccess.GetMaximumIbisFileIdOrDefaultAsync();
+
+            if (currentMaximumFileID != null)
+            {
+                return currentMaximumFileID.Value + 1;
+            }
+            else
+            {
+                return await dataAccess.GetInitialIbisFileIdAsync();
+            }
         }
     }
 }
