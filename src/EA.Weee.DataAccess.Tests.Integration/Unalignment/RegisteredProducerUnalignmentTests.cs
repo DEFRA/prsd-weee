@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
     using Domain.Organisation;
     using Domain.Producer;
     using Domain.Scheme;
@@ -21,7 +22,7 @@
         }
 
         [Fact]
-        public async void CreateRegisteredProducer_ProducerIsAligned()
+        public async Task CreateRegisteredProducer_ProducerIsAligned()
         {
             var context = WeeeContext();
 
@@ -45,7 +46,7 @@
         }
 
         [Fact]
-        public async void CreateRegisteredProducer_ProducerIsAligned_ThenUnlign_ProducerEntityNotInDbSet()
+        public async Task CreateRegisteredProducer_ProducerIsAligned_ThenUnlign_ProducerEntityNotInDbSet()
         {
             var context = WeeeContext();
 
@@ -69,6 +70,37 @@
                 .SingleOrDefault(p => p.Id == producer.Id);
 
             Assert.Null(producer);
+        }
+
+        [Fact]
+        public async Task CreateRegisteredProducer_ProducerIsAligned_ThenUnlign_ThenReRegister_ReturnsAlignedProducer()
+        {
+            var context = WeeeContext();
+
+            var organisation = Organisation.CreateSoleTrader("My trading name");
+            context.Organisations.Add(organisation);
+            await context.SaveChangesAsync();
+
+            var scheme = new Scheme(organisation.Id);
+            context.Schemes.Add(scheme);
+            await context.SaveChangesAsync();
+
+            var producer = new RegisteredProducer("ABC12345", 2017, scheme);
+            context.RegisteredProducers.Add(producer);
+            await context.SaveChangesAsync();
+
+            producer.Unalign();
+            await context.SaveChangesAsync();
+
+            var alignroducer = new RegisteredProducer("ABC12345", 2017, scheme);
+            context.RegisteredProducers.Add(alignroducer);
+            await context.SaveChangesAsync();
+
+            producer = context.RegisteredProducers
+                .SingleOrDefault(p => p.Id == alignroducer.Id);
+
+            Assert.NotNull(producer);
+            Assert.True(producer.IsAligned);
         }
 
         private WeeeContext WeeeContext()
