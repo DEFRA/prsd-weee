@@ -25,7 +25,7 @@
 
         public virtual List<ProducerSubmission> ProducerSubmissions { get; private set; }
 
-        public decimal TotalCharges { get; private set; }
+        public virtual decimal TotalCharges { get; private set; }
 
         public virtual string FileName { get; private set; }
 
@@ -115,7 +115,7 @@
         /// Assigns the member upload to the specified invoice run.
         /// </summary>
         /// <param name="invoiceRun"></param>
-        internal void AssignToInvoiceRun(InvoiceRun invoiceRun)
+        public void AssignToInvoiceRun(InvoiceRun invoiceRun)
         {
             Guard.ArgumentNotNull(() => invoiceRun, invoiceRun);
 
