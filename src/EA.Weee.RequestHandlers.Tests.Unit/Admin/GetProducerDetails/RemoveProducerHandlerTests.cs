@@ -2,7 +2,9 @@
 {
     using System;
     using System.Security;
-    using DataAccess.DataAccess;
+    using Domain.Charges;
+    using Domain.Producer;
+    using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.Admin.GetProducerDetails;
     using RequestHandlers.Security;
@@ -11,52 +13,119 @@
 
     public class RemoveProducerHandlerTests
     {
-        private readonly IWeeeAuthorization weeeAuthorization;
-        private readonly IRemoveProducerDataAccess removeProducerDataAccess;
-
-        public RemoveProducerHandlerTests()
-        {
-            weeeAuthorization = A.Fake<IWeeeAuthorization>();
-            removeProducerDataAccess = A.Fake<IRemoveProducerDataAccess>();
-        }
-
         [Fact]
         public async void WhenUserIsUnauthorised_ShouldNotGetProducer_OrSaveChanges()
         {
-            A.CallTo(() => weeeAuthorization.EnsureCanAccessInternalArea())
+            // Arrange
+            var builder = new RemoveProducerHandlerBuilder();
+
+            A.CallTo(() => builder.WeeeAuthorization.EnsureCanAccessInternalArea())
                 .Throws<SecurityException>();
 
             var request = new RemoveProducer(Guid.NewGuid());
 
-            await Assert.ThrowsAsync<SecurityException>(() => RemoveProducerHandler().HandleAsync(request));
+            // Act
+            await Assert.ThrowsAsync<SecurityException>(() => builder.Build().HandleAsync(request));
 
-            A.CallTo(() => removeProducerDataAccess.GetProducerRegistration(A<Guid>._))
+            // Assert
+            A.CallTo(() => builder.RemoveProducerDataAccess.GetProducerRegistration(A<Guid>._))
                 .MustNotHaveHappened();
 
-            A.CallTo(() => removeProducerDataAccess.SaveChangesAsync())
+            A.CallTo(() => builder.RemoveProducerDataAccess.SaveChangesAsync())
                 .MustNotHaveHappened();
         }
 
         [Fact]
         public async void WhenUserIsAuthorised_ShouldGetProducer_AndProducerSubmissions_AndSaveChanges()
         {
+            // Arrange
+            var builder = new RemoveProducerHandlerBuilder();
             var request = new RemoveProducer(Guid.NewGuid());
 
-            await RemoveProducerHandler().HandleAsync(request);
+            // Act
+            await builder.Build().HandleAsync(request);
 
-            A.CallTo(() => removeProducerDataAccess.GetProducerRegistration(request.RegisteredProducerId))
+            // Assert
+            A.CallTo(() => builder.RemoveProducerDataAccess.GetProducerRegistration(request.RegisteredProducerId))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            A.CallTo(() => removeProducerDataAccess.GetProducerSubmissionsForRegisteredProducer(request.RegisteredProducerId))
+            A.CallTo(() => builder.RemoveProducerDataAccess.GetProducerSubmissionsForRegisteredProducer(request.RegisteredProducerId))
                 .MustHaveHappened(Repeated.Exactly.Once);
-            
-            A.CallTo(() => removeProducerDataAccess.SaveChangesAsync())
+
+            A.CallTo(() => builder.RemoveProducerDataAccess.SaveChangesAsync())
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
-        private RemoveProducerHandler RemoveProducerHandler()
+        [Fact]
+        public async void DoesNotDeductChargeFromMemberUpload_WhenAlreadyInvoiced()
         {
-            return new RemoveProducerHandler(weeeAuthorization, removeProducerDataAccess);
+            // Arrange
+            var builder = new RemoveProducerHandlerBuilder();
+
+            var memberUpload = new MemberUpload(A.Dummy<Guid>(), A.Dummy<string>(), null, 100, A.Dummy<int>(), A.Dummy<Scheme>(), A.Dummy<string>());
+            memberUpload.AssignToInvoiceRun(A.Dummy<InvoiceRun>());
+
+            var producerSubmission = A.Fake<ProducerSubmission>();
+            A.CallTo(() => producerSubmission.ChargeThisUpdate)
+                .Returns(20);
+            A.CallTo(() => producerSubmission.MemberUpload)
+                .Returns(memberUpload);
+
+            A.CallTo(() => builder.RemoveProducerDataAccess.GetProducerSubmissionsForRegisteredProducer(A<Guid>._))
+                .Returns(new[] { producerSubmission });
+
+            // Act
+            await builder.Build().HandleAsync(A.Dummy<RemoveProducer>());
+
+            // Assert
+            A.CallTo(() => builder.RemoveProducerDataAccess.GetProducerSubmissionsForRegisteredProducer(A<Guid>._))
+                .MustHaveHappened();
+
+            Assert.Equal(100, memberUpload.TotalCharges);
+        }
+
+        [Fact]
+        public async void DeductsChargeFromMemberUpload_WhenNotInvoiced()
+        {
+            // Arrange
+            var builder = new RemoveProducerHandlerBuilder();
+
+            var memberUpload = new MemberUpload(A.Dummy<Guid>(), A.Dummy<string>(), null, 100, A.Dummy<int>(), A.Dummy<Scheme>(), A.Dummy<string>());
+
+            var producerSubmission = A.Fake<ProducerSubmission>();
+            A.CallTo(() => producerSubmission.ChargeThisUpdate)
+                .Returns(20);
+            A.CallTo(() => producerSubmission.MemberUpload)
+                .Returns(memberUpload);
+
+            A.CallTo(() => builder.RemoveProducerDataAccess.GetProducerSubmissionsForRegisteredProducer(A<Guid>._))
+                .Returns(new[] { producerSubmission });
+
+            // Act
+            await builder.Build().HandleAsync(A.Dummy<RemoveProducer>());
+
+            // Assert
+            A.CallTo(() => builder.RemoveProducerDataAccess.GetProducerSubmissionsForRegisteredProducer(A<Guid>._))
+                .MustHaveHappened();
+
+            Assert.Equal(80, memberUpload.TotalCharges);
+        }
+
+        private class RemoveProducerHandlerBuilder
+        {
+            public readonly IWeeeAuthorization WeeeAuthorization;
+            public readonly IRemoveProducerDataAccess RemoveProducerDataAccess;
+
+            public RemoveProducerHandlerBuilder()
+            {
+                WeeeAuthorization = A.Fake<IWeeeAuthorization>();
+                RemoveProducerDataAccess = A.Fake<IRemoveProducerDataAccess>();
+            }
+
+            public RemoveProducerHandler Build()
+            {
+                return new RemoveProducerHandler(WeeeAuthorization, RemoveProducerDataAccess);
+            }
         }
     }
 }
