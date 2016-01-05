@@ -99,6 +99,7 @@
             img.Attributes.Add("id", "spinner");
             img.Attributes.Add("style", "display:none; margin-top: 20px");
             img.Attributes.Add("src", VirtualPathUtility.ToAbsolute(@"~/Content/weee/images/spinner.gif"));
+            img.Attributes.Add("alt", "spinning wheel");
             img.Attributes.Add("class", "important-image");
 
             return img.ToString(TagRenderMode.SelfClosing);
