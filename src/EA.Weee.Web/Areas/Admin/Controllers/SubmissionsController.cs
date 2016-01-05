@@ -178,11 +178,39 @@
                 return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
             }
         }
-
+        
         [HttpGet]
-        public ActionResult DataReturnSubmissionHistory()
+        public async Task<ActionResult> DataReturnSubmissionHistory()
         {
-            return View();
+            using (var client = apiClient())
+            {
+                await SetBreadcrumb();
+
+                try
+                {
+                    //Get all the compliance years currently in database and set it to latest one.
+                    //Get all the approved PCSs
+                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
+                    var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
+                    DataReturnSubmissionsHistoryViewModel model = new DataReturnSubmissionsHistoryViewModel
+                    {
+                        ComplianceYears = new SelectList(allYears),
+                        SchemeNames = new SelectList(allSchemes, "Id", "SchemeName"),
+                        SelectedYear = allYears.FirstOrDefault(),
+                        SelectedScheme = allSchemes.Count > 0 ? allSchemes.First().Id : Guid.Empty
+                    };
+                    return View(model);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                    return View();
+                }
+            }
         }
         private async Task SetBreadcrumb()
         {
