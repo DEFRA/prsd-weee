@@ -369,10 +369,11 @@
 
         /// <summary>
         /// This test ensures that the GET "ChargesSucessfullyIssued" action will return the "ChargesSuccessfullyIssued" view
-        /// providing the invoice run ID as the model.
+        /// providing the invoice run ID as the model. Where the authority is the Environment Agency, the ViewBag
+        /// will have AllowDownloadOfInvoiceFiles set to true.
         /// </summary>
         [Fact]
-        public void GetChargesSuccessfullyIssued_Always_ReturnsChargesSuccessfullyIssuedViewWithModel()
+        public void GetChargesSuccessfullyIssued_ForEngland_ReturnsChargesSuccessfullyIssuedViewWithModelAllowingInvoiceDownload()
         {
             // Arrange
             Guid invoiceRunId = new Guid("23610E5E-5B79-4DB0-BD8C-0213A9B44C45");
@@ -383,7 +384,7 @@
                 () => A.Dummy<IWeeeClient>());
 
             // Act
-            ActionResult result = controller.ChargesSuccessfullyIssued(A.Dummy<CompetentAuthority>(), invoiceRunId);
+            ActionResult result = controller.ChargesSuccessfullyIssued(CompetentAuthority.England, invoiceRunId);
 
             // Assert
             ViewResult viewResult = result as ViewResult;
@@ -394,16 +395,48 @@
             Guid? viewModel = viewResult.Model as Guid?;
             Assert.NotNull(viewModel);
             Assert.Equal(invoiceRunId, viewModel);
+            Assert.Equal(true, viewResult.ViewBag.AllowDownloadOfInvoiceFiles);
         }
 
         /// <summary>
-        /// This test ensures that the GET "DownloadInvoiceFiles" action will call the API to retrieve
+        /// This test ensures that the GET "ChargesSucessfullyIssued" action will return the "ChargesSuccessfullyIssued" view
+        /// providing the invoice run ID as the model. Where the authority is devloved, the ViewBag
+        /// will have AllowDownloadOfInvoiceFiles set to false.
+        /// </summary>
+        [Fact]
+        public void GetChargesSuccessfullyIssued_ForDevolvedAuthority_ReturnsChargesSuccessfullyIssuedViewWithModelNotAllowingInvoiceDownload()
+        {
+            // Arrange
+            Guid invoiceRunId = new Guid("23610E5E-5B79-4DB0-BD8C-0213A9B44C45");
+
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => A.Dummy<IWeeeClient>());
+
+            // Act
+            ActionResult result = controller.ChargesSuccessfullyIssued(CompetentAuthority.Scotland, invoiceRunId);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "ChargesSuccessfullyIssued");
+
+            Guid? viewModel = viewResult.Model as Guid?;
+            Assert.NotNull(viewModel);
+            Assert.Equal(invoiceRunId, viewModel);
+            Assert.Equal(false, viewResult.ViewBag.AllowDownloadOfInvoiceFiles);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "DownloadInvoiceFiles" action for England will call the API to retrieve
         /// data for a ZIP file representing the specified invoice run's 1B1S files; and that this data will
         /// be returned as a FileResult with the correct file name and a content type of "text/plain".
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetDownloadInvoiceFiles_Always_CallsApiAndReturnsFileResult()
+        public async Task GetDownloadInvoiceFiles_ForEngland_CallsApiAndReturnsFileResult()
         {
             // Arrange
             Guid invoiceRunId = new Guid("ADED8BDE-CF03-4696-B972-DDAB9306A6DD");
@@ -422,7 +455,7 @@
 
             // Act
             ActionResult result = await controller.DownloadInvoiceFiles(
-                A.Dummy<CompetentAuthority>(),
+                CompetentAuthority.England,
                 invoiceRunId);
 
             // Assert
@@ -431,6 +464,38 @@
 
             Assert.Equal("Test file.zip", fileResult.FileDownloadName);
             Assert.Equal("text/plain", fileResult.ContentType);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "DownloadInvoiceFiles" action for a devloved authority will throw
+        /// an InvalidOperationException.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetDownloadInvoiceFiles_ForDevolvedAuthority_ThowsInvalidOperationException()
+        {
+            // Arrange
+            Guid invoiceRunId = new Guid("ADED8BDE-CF03-4696-B972-DDAB9306A6DD");
+
+            FileInfo fileInfo = new FileInfo("Test file.zip", A.Dummy<byte[]>());
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchInvoiceRunIbisZipFile>._))
+                .WhenArgumentsMatch(a => a.Get<FetchInvoiceRunIbisZipFile>("request").InvoiceRunId == invoiceRunId)
+                .Returns(fileInfo);
+
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => weeeClient);
+
+            // Act
+            Func<Task<ActionResult>> testCode = async () => await controller.DownloadInvoiceFiles(
+                CompetentAuthority.Scotland,
+                invoiceRunId);
+
+            // Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(testCode);
         }
     }
 }
