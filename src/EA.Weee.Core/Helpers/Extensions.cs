@@ -7,7 +7,7 @@
     using System.Reflection;
     using Prsd.Core.Domain;
 
-    public static class Extensions
+    public static partial class Extensions
     {
         public static string ToStringWithXSignificantFigures(this double doub, int significantFigures)
         {
