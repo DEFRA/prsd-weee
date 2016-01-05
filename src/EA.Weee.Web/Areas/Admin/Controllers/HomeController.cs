@@ -78,7 +78,7 @@
                     return RedirectToAction("Search", "Producers");
 
                 case InternalUserActivity.SubmissionsHistory:
-                    return RedirectToAction("SubmissionsHistory", "Submissions");
+                    return RedirectToAction("ChooseSubmissionType", "Submissions");
 
                 case InternalUserActivity.ViewReports:
                     return RedirectToAction("ChooseReport", "Reports");

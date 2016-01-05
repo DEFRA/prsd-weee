@@ -235,7 +235,6 @@
     <Compile Include="Areas\Scheme\Controllers\DataReturnsController.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessDataReturnXmlFileRequest.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessXmlFileRequest.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\ChooseSubmissionTypeViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturnSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
@@ -559,6 +558,8 @@
     <Content Include="Areas\Admin\Views\Charge\ChargesSuccessfullyIssued.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ChooseSubmissionType.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ViewDataReturnSubmissionHistory.cshtml" />
+    <Content Include="Areas\Admin\Views\Submissions\ChooseSubmissionType.cshtml" />
+    <Content Include="Areas\Admin\Views\Submissions\DataReturnSubmissionHistory.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
@@ -804,6 +805,7 @@
     <Compile Include="ViewModels\Shared\AddressViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionOptionalViewModel.cs" />
     <Compile Include="ViewModels\Shared\StringGuidRadioButtons.cs" />
+    <Compile Include="ViewModels\Shared\Submission\ChooseSubmissionTypeViewModel.cs" />
     <Compile Include="ViewModels\Shared\TitleViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\MemberUploadResultViewModel.cs" />
