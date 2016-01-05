@@ -115,7 +115,7 @@
         /// Assigns the member upload to the specified invoice run.
         /// </summary>
         /// <param name="invoiceRun"></param>
-        public void AssignToInvoiceRun(InvoiceRun invoiceRun)
+        internal void AssignToInvoiceRun(InvoiceRun invoiceRun)
         {
             Guard.ArgumentNotNull(() => invoiceRun, invoiceRun);
 
