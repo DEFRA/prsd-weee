@@ -38,7 +38,7 @@
 
         public MvcHtmlString Submit(string value, IDictionary<string, object> htmlAttributes = null, bool withSpinner = false)
         {
-            var html = string.Format(@"<div class=""form-submit""><input type=""submit"" value=""{0}"" {1}/>{2}</div>",
+            var html = string.Format(@"<div class=""left-cleared""><input type=""submit"" value=""{0}"" {1}/>{2}</div>",
                 value, AttributesHtml(htmlAttributes), SpinnerHtml(withSpinner));
 
             return new MvcHtmlString(html);
@@ -46,7 +46,7 @@
 
         public MvcHtmlString Submit(string value, object htmlAttributes = null, bool withSpinner = false)
         {
-            var html = string.Format(@"<div class=""form-submit""><input type=""submit"" value=""{0}"" {1}/>{2}</div>",
+            var html = string.Format(@"<div class=""left-cleared""><input type=""submit"" value=""{0}"" {1}/>{2}</div>",
                 value, AttributesHtml(htmlAttributes), SpinnerHtml(withSpinner));
 
             return new MvcHtmlString(html);
