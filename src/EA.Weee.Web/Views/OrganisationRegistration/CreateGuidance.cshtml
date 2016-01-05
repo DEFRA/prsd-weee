@@ -10,21 +10,17 @@
             Create a new organisation
         </h1>
     </header>
-    @using (Html.BeginForm(actionName: "CreateGuidance", controllerName: "OrganisationRegistration", method: FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
 
-        <p>When you create a new organisation, you are making a request for your organisation to perform WEEE activities using our online service.</p>
+    <p>When you create a new organisation, you are making a request for your organisation to perform WEEE activities using our online service.</p>
 
-        <div class="form-group">
-            <div class="panel-indent panel-indent-info">
-                <p>Your organisation can only exist once in our service. If you are unsure whether your organisation already exists, @Html.ActionLink("search our service again", "Search", "OrganisationRegistration").</p>
-                <p>We will check your identity against the details we hold for your organisation and notify you once access is granted.</p>
-            </div>
+    <div class="form-group">
+        <div class="panel-indent panel-indent-info">
+            <p>Your organisation can only exist once in our service. If you are unsure whether your organisation already exists, @Html.ActionLink("search our service again", "Search", "OrganisationRegistration").</p>
+            <p>We will check your identity against the details we hold for your organisation and notify you once access is granted.</p>
         </div>
-        <div class="form-group">
-            @Html.ActionLink("Continue", "Type", "OrganisationRegistration", new { searchedText = Model }, new { @class = "button" })
-        </div>
-    }
+    </div>
+    <div class="form-group">
+        @Html.ActionLink("Continue", "Type", "OrganisationRegistration", new { searchedText = Model }, new { @class = "button" })
+    </div>
 }
 
