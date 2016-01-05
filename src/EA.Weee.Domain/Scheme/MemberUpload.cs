@@ -25,7 +25,7 @@
 
         public virtual List<ProducerSubmission> ProducerSubmissions { get; private set; }
 
-        public decimal TotalCharges { get; private set; }
+        public virtual decimal TotalCharges { get; private set; }
 
         public virtual string FileName { get; private set; }
 
