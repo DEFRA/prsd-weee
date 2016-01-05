@@ -13,9 +13,11 @@
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
+    using Scheme.ViewModels;
     using Services;
     using Services.Caching;
     using ViewModels.Submissions;
+    using Web.ViewModels.Shared.Submission;
     using Weee.Requests.Admin;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
@@ -34,6 +36,52 @@
             this.apiClient = client;
             this.cache = cache;
             this.csvWriterFactory = csvWriterFactory;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ChooseSubmissionType()
+        {
+            using (var client = apiClient())
+            {   
+                var model = new ChooseSubmissionTypeViewModel
+                {
+                    PossibleValues = new List<string>
+                    {
+                        SubmissionType.EeeOrWeeeDataReturns,
+                        SubmissionType.MemberRegistrations
+                    }
+                };
+
+                await SetBreadcrumb();
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChooseSubmissionType(ChooseSubmissionTypeViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (viewModel.SelectedValue == SubmissionType.EeeOrWeeeDataReturns)
+                {
+                    return RedirectToAction("DataReturnSubmissionHistory");
+                }
+                else if (viewModel.SelectedValue == SubmissionType.MemberRegistrations)
+                {
+                    return RedirectToAction("SubmissionsHistory");
+                }
+            }
+
+            await SetBreadcrumb();
+            viewModel.PossibleValues = new List<string>
+            {
+                SubmissionType.EeeOrWeeeDataReturns,
+                SubmissionType.MemberRegistrations
+            };
+
+            return View(viewModel);
         }
 
         /// <summary>
@@ -131,6 +179,11 @@
             }
         }
 
+        [HttpGet]
+        public ActionResult DataReturnSubmissionHistory()
+        {
+            return View();
+        }
         private async Task SetBreadcrumb()
         {
             breadcrumb.InternalActivity = "Submissions history";
