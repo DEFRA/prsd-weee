@@ -107,7 +107,7 @@
 
         public virtual ChargeBandAmount ChargeBandAmount { get; private set; }
 
-        public decimal ChargeThisUpdate { get; private set; }
+        public virtual decimal ChargeThisUpdate { get; private set; }
 
         private string organisationName;
         public virtual string OrganisationName
