@@ -83,7 +83,7 @@
         [InlineData(InternalUserActivity.ManageUsers, "ManageUsers")]
         [InlineData(InternalUserActivity.ManageScheme, "ManageSchemes")]
         [InlineData(InternalUserActivity.ProducerDetails, "Search")]
-        [InlineData(InternalUserActivity.SubmissionsHistory, "SubmissionsHistory")]
+        [InlineData(InternalUserActivity.SubmissionsHistory, "ChooseSubmissionType")]
         [InlineData(InternalUserActivity.ViewReports, "ChooseReport")]
         [InlineData(InternalUserActivity.ManagePcsCharges, "SelectAuthority")]
         public void HttpPost_ChooseActivity_RedirectsToCorrectControllerAction(string selection, string action)
