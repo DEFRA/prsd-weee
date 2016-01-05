@@ -15,6 +15,36 @@
           <Property Name="UserStatus" Type="int" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="1B1STransactionNumberSequence">
+          <Key>
+            <PropertyRef Name="NextNumber" />
+          </Key>
+          <Property Name="NextNumber" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IbisFileData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="FileId" Type="bigint" Nullable="false" />
+          <Property Name="CustomerFileName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="CustomerFileData" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="TransactionFileName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="TransactionFileData" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InvoiceRun">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="CompetentAuthorityId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IbisFileDataId" Type="uniqueidentifier" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="AspNetUsers">
           <Key>
             <PropertyRef Name="Id" />
@@ -219,7 +249,6 @@
           <Property Name="TotalCharges" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="FileName" Type="nvarchar(max)" />
           <Property Name="ProcessTime" Type="time" Precision="7" Nullable="false" />
-          <Property Name="MemberUploadId" Type="uniqueidentifier" />
           <Property Name="InvoiceRunId" Type="uniqueidentifier" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
@@ -760,6 +789,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_InvoiceRun_CompetentAuthority">
+          <End Role="CompetentAuthority" Type="Self.CompetentAuthority" Multiplicity="1" />
+          <End Role="InvoiceRun" Type="Self.InvoiceRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompetentAuthority">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InvoiceRun">
+              <PropertyRef Name="CompetentAuthorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceRun_IbisFileData">
+          <End Role="IbisFileData" Type="Self.IbisFileData" Multiplicity="0..1" />
+          <End Role="InvoiceRun" Type="Self.InvoiceRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IbisFileData">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InvoiceRun">
+              <PropertyRef Name="IbisFileDataId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberUpload_InvoiceRun">
+          <End Role="InvoiceRun" Type="Self.InvoiceRun" Multiplicity="0..1" />
+          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InvoiceRun">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="InvoiceRunId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MemberUpload_Organisation">
           <End Role="Organisation" Type="Self.Organisation" Multiplicity="1" />
           <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
@@ -1086,6 +1151,8 @@
         </Association>
         <EntityContainer Name="EAWeeeTestModelStoreContainer">
           <EntitySet Name="CompetentAuthorityUser" EntityType="Self.CompetentAuthorityUser" Schema="Admin" store:Type="Tables" />
+          <EntitySet Name="IbisFileData" EntityType="Self.IbisFileData" Schema="Charging" store:Type="Tables" />
+          <EntitySet Name="InvoiceRun" EntityType="Self.InvoiceRun" Schema="Charging" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="Identity" store:Type="Tables" />
           <EntitySet Name="ChargeBandAmount" EntityType="Self.ChargeBandAmount" Schema="Lookup" store:Type="Tables" />
           <EntitySet Name="CompetentAuthority" EntityType="Self.CompetentAuthority" Schema="Lookup" store:Type="Tables" />
@@ -1124,6 +1191,11 @@
           <EntitySet Name="ProducerSubmission" EntityType="Self.ProducerSubmission" Schema="Producer" store:Type="Tables" />
           <EntitySet Name="RegisteredProducer" EntityType="Self.RegisteredProducer" Schema="Producer" store:Type="Tables" />
           <EntitySet Name="SICCode" EntityType="Self.SICCode" Schema="Producer" store:Type="Tables" />
+          <EntitySet Name="1B1STransactionNumberSequence" EntityType="Self.1B1STransactionNumberSequence" store:Type="Tables" store:Schema="Charging">
+            <DefiningQuery>SELECT 
+    [1B1STransactionNumberSequence].[NextNumber] AS [NextNumber]
+    FROM [Charging].[1B1STransactionNumberSequence] AS [1B1STransactionNumberSequence]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK__MemberUpl__Creat__5F492382" Association="Self.FK__MemberUpl__Creat__5F492382">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="MemberUpload" EntitySet="MemberUpload" />
@@ -1227,6 +1299,18 @@
           <AssociationSet Name="FK_EeeOutputReturnVersionAmount_EeeOutputReturnVersion" Association="Self.FK_EeeOutputReturnVersionAmount_EeeOutputReturnVersion">
             <End Role="EeeOutputReturnVersion" EntitySet="EeeOutputReturnVersion" />
             <End Role="EeeOutputReturnVersionAmount" EntitySet="EeeOutputReturnVersionAmount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceRun_CompetentAuthority" Association="Self.FK_InvoiceRun_CompetentAuthority">
+            <End Role="CompetentAuthority" EntitySet="CompetentAuthority" />
+            <End Role="InvoiceRun" EntitySet="InvoiceRun" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceRun_IbisFileData" Association="Self.FK_InvoiceRun_IbisFileData">
+            <End Role="IbisFileData" EntitySet="IbisFileData" />
+            <End Role="InvoiceRun" EntitySet="InvoiceRun" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberUpload_InvoiceRun" Association="Self.FK_MemberUpload_InvoiceRun">
+            <End Role="InvoiceRun" EntitySet="InvoiceRun" />
+            <End Role="MemberUpload" EntitySet="MemberUpload" />
           </AssociationSet>
           <AssociationSet Name="FK_MemberUpload_Organisation" Association="Self.FK_MemberUpload_Organisation">
             <End Role="Organisation" EntitySet="Organisation" />
@@ -1363,6 +1447,7 @@
           <Property Name="CountryId" Type="Guid" Nullable="false" />
           <NavigationProperty Name="CompetentAuthorityUsers" Relationship="Self.FK_CompetentAuthorityUser_CompetentAuthority" FromRole="CompetentAuthority" ToRole="CompetentAuthorityUser" />
           <NavigationProperty Name="Country" Relationship="Self.FK_CompetentAuthority_Country" FromRole="CompetentAuthority" ToRole="Country" />
+          <NavigationProperty Name="InvoiceRuns" Relationship="EA.Weee.TestModel.FK_InvoiceRun_CompetentAuthority" FromRole="CompetentAuthority" ToRole="InvoiceRun" />
         </EntityType>
         <EntityType Name="Country">
           <Key>
@@ -1463,11 +1548,11 @@
           <Property Name="UpdatedById" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetUser" Relationship="EA.Weee.TestModel.FK__MemberUpl__Creat__45544755" FromRole="MemberUpload" ToRole="AspNetUser" />
           <NavigationProperty Name="AspNetUser1" Relationship="EA.Weee.TestModel.FK__MemberUpl__Updat__46486B8E" FromRole="MemberUpload" ToRole="AspNetUser" />
-          <Property Name="MemberUploadId" Type="Guid" />
           <Property Name="InvoiceRunId" Type="Guid" />
           <Property Name="SubmittedDate" Type="DateTime" Precision="3" />
           <Property Name="SubmittedByUserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetUser2" Relationship="EA.Weee.TestModel.FK_MemberUpload_User_SubmittedBy" FromRole="MemberUpload" ToRole="AspNetUser" />
+          <NavigationProperty Name="InvoiceRun" Relationship="EA.Weee.TestModel.FK_MemberUpload_InvoiceRun" FromRole="MemberUpload" ToRole="InvoiceRun" />
         </EntityType>
         <EntityType Name="MemberUploadError">
           <Key>
@@ -2131,6 +2216,21 @@
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
             <End Role="MemberUpload" EntitySet="MemberUploads" />
           </AssociationSet>
+          <EntitySet Name="IbisFileDatas" EntityType="EA.Weee.TestModel.IbisFileData" />
+          <EntitySet Name="InvoiceRuns" EntityType="EA.Weee.TestModel.InvoiceRun" />
+          <EntitySet Name="C1B1STransactionNumberSequence" EntityType="EA.Weee.TestModel.C1B1STransactionNumberSequence" />
+          <AssociationSet Name="FK_InvoiceRun_IbisFileData" Association="EA.Weee.TestModel.FK_InvoiceRun_IbisFileData">
+            <End Role="IbisFileData" EntitySet="IbisFileDatas" />
+            <End Role="InvoiceRun" EntitySet="InvoiceRuns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceRun_CompetentAuthority" Association="EA.Weee.TestModel.FK_InvoiceRun_CompetentAuthority">
+            <End Role="CompetentAuthority" EntitySet="CompetentAuthorities" />
+            <End Role="InvoiceRun" EntitySet="InvoiceRuns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberUpload_InvoiceRun" Association="EA.Weee.TestModel.FK_MemberUpload_InvoiceRun">
+            <End Role="InvoiceRun" EntitySet="InvoiceRuns" />
+            <End Role="MemberUpload" EntitySet="MemberUploads" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="AspNetUser">
           <Key>
@@ -2779,6 +2879,74 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="IbisFileData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="FileId" Type="Int64" Nullable="false" />
+          <Property Name="CustomerFileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerFileData" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionFileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionFileData" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="InvoiceRuns" Relationship="EA.Weee.TestModel.FK_InvoiceRun_IbisFileData" FromRole="IbisFileData" ToRole="InvoiceRun" />
+        </EntityType>
+        <EntityType Name="InvoiceRun">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="CompetentAuthorityId" Type="Guid" Nullable="false" />
+          <Property Name="IbisFileDataId" Type="Guid" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="IbisFileData" Relationship="EA.Weee.TestModel.FK_InvoiceRun_IbisFileData" FromRole="InvoiceRun" ToRole="IbisFileData" />
+          <NavigationProperty Name="CompetentAuthority" Relationship="EA.Weee.TestModel.FK_InvoiceRun_CompetentAuthority" FromRole="InvoiceRun" ToRole="CompetentAuthority" />
+          <NavigationProperty Name="MemberUploads" Relationship="EA.Weee.TestModel.FK_MemberUpload_InvoiceRun" FromRole="InvoiceRun" ToRole="MemberUpload" />
+        </EntityType>
+        <EntityType Name="C1B1STransactionNumberSequence">
+          <Key>
+            <PropertyRef Name="NextNumber" />
+          </Key>
+          <Property Name="NextNumber" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_InvoiceRun_IbisFileData">
+          <End Type="EA.Weee.TestModel.IbisFileData" Role="IbisFileData" Multiplicity="0..1" />
+          <End Type="EA.Weee.TestModel.InvoiceRun" Role="InvoiceRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IbisFileData">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InvoiceRun">
+              <PropertyRef Name="IbisFileDataId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceRun_CompetentAuthority">
+          <End Type="EA.Weee.TestModel.CompetentAuthority" Role="CompetentAuthority" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.InvoiceRun" Role="InvoiceRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompetentAuthority">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InvoiceRun">
+              <PropertyRef Name="CompetentAuthorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberUpload_InvoiceRun">
+          <End Type="EA.Weee.TestModel.InvoiceRun" Role="InvoiceRun" Multiplicity="0..1" />
+          <End Type="EA.Weee.TestModel.MemberUpload" Role="MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InvoiceRun">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="InvoiceRunId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2875,7 +3043,6 @@
                 <ScalarProperty Name="SubmittedByUserId" ColumnName="SubmittedByUserId" />
                 <ScalarProperty Name="SubmittedDate" ColumnName="SubmittedDate" />
                 <ScalarProperty Name="InvoiceRunId" ColumnName="InvoiceRunId" />
-                <ScalarProperty Name="MemberUploadId" ColumnName="MemberUploadId" />
                 <ScalarProperty Name="UpdatedById" ColumnName="UpdatedById" />
                 <ScalarProperty Name="CreatedById" ColumnName="CreatedById" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
@@ -3261,6 +3428,37 @@
                 <ScalarProperty Name="OperatorName" ColumnName="OperatorName" />
                 <ScalarProperty Name="ApprovalNumber" ColumnName="ApprovalNumber" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IbisFileDatas">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.IbisFileData">
+              <MappingFragment StoreEntitySet="IbisFileData">
+                <ScalarProperty Name="TransactionFileData" ColumnName="TransactionFileData" />
+                <ScalarProperty Name="TransactionFileName" ColumnName="TransactionFileName" />
+                <ScalarProperty Name="CustomerFileData" ColumnName="CustomerFileData" />
+                <ScalarProperty Name="CustomerFileName" ColumnName="CustomerFileName" />
+                <ScalarProperty Name="FileId" ColumnName="FileId" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvoiceRuns">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.InvoiceRun">
+              <MappingFragment StoreEntitySet="InvoiceRun">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IbisFileDataId" ColumnName="IbisFileDataId" />
+                <ScalarProperty Name="CompetentAuthorityId" ColumnName="CompetentAuthorityId" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C1B1STransactionNumberSequence">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.C1B1STransactionNumberSequence">
+              <MappingFragment StoreEntitySet="1B1STransactionNumberSequence">
+                <ScalarProperty Name="NextNumber" ColumnName="NextNumber" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
