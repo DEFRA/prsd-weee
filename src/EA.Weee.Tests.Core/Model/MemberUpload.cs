@@ -34,6 +34,9 @@ namespace EA.Weee.Tests.Core.Model
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public string CreatedById { get; set; }
         public string UpdatedById { get; set; }
+        public Nullable<System.Guid> InvoiceRunId { get; set; }
+        public Nullable<System.DateTime> SubmittedDate { get; set; }
+        public string SubmittedByUserId { get; set; }
     
         public virtual Organisation Organisation { get; set; }
         public virtual Scheme Scheme { get; set; }
@@ -41,5 +44,7 @@ namespace EA.Weee.Tests.Core.Model
         public virtual ICollection<ProducerSubmission> ProducerSubmissions { get; set; }
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual AspNetUser AspNetUser1 { get; set; }
+        public virtual AspNetUser AspNetUser2 { get; set; }
+        public virtual InvoiceRun InvoiceRun { get; set; }
     }
 }

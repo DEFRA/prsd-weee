@@ -35,8 +35,7 @@
 
                 foreach (MemberUpload memberUpload in group)
                 {
-                    // TODO: Add "SubmittedDate" to the domain model for a member upload.
-                    DateTime submittedDate = memberUpload.UpdatedDate ?? memberUpload.CreatedDate;
+                    DateTime submittedDate = memberUpload.SubmittedDate.Value;
 
                     string description = string.Format("Charge for producer registration submission made on {0:dd MMM yyyy}.",
                         submittedDate);

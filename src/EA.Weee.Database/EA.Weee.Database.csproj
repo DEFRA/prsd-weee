@@ -162,6 +162,12 @@
     <Content Include="scripts\Update\Sprint20\20151229-2019-MoveIbisFileDataIntoSeparateTable.sql" />
     <Content Include="scripts\Update\Sprint20\20151229-2151-Added1B1STransactionSequence.sql" />
     <Content Include="scripts\Update\Sprint20\20151230-1638-AddCreatedDateToInvoiceRun.sql" />
+    <Content Include="scripts\Update\Sprint20\20160104-1605-AddSubmittedColumnsToMemberUpload.sql" />
+    <Content Include="scripts\Update\Sprint20\20160104-1731-UpdateGetProducerCSVStoredProcedureWithSubmittedDate.sql" />
+    <Content Include="scripts\Update\Sprint20\20160104-1737-UpdateGetProducerCSVStoredProcedureWithSubmittedDate.sql" />
+    <Content Include="scripts\Update\Sprint20\20160104-1739-UpdatePCSChargesCSVStoredProducerWithSubmittedDate.sql" />
+    <Content Include="scripts\Update\Sprint20\20160104-1740-UpdateProducerAmendmentsCSVStoredProducerWithSubmittedDate.sql" />
+    <Content Include="scripts\Update\Sprint20\20160105-1334-ModifyUniqueKeyConstraintforRegisteredProducers.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

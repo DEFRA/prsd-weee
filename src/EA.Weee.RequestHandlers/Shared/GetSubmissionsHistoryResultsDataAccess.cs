@@ -20,7 +20,6 @@
         public async Task<List<SubmissionsHistorySearchResult>> GetSubmissionsHistory(Guid schemeId, int? complianceYear = null)
         {
             var results = await(from mu in context.MemberUploads
-                                join user in context.Users on mu.CreatedById equals user.Id
                                 where mu.IsSubmitted &&
                                       mu.Scheme.Id == schemeId &&
                                       (!complianceYear.HasValue || mu.ComplianceYear == complianceYear)
@@ -29,9 +28,9 @@
                                      SchemeId = mu.Scheme.Id,
                                      OrganisationId = mu.OrganisationId,
                                      MemberUploadId = mu.Id,
-                                     SubmittedBy = user.FirstName + " " + user.Surname,
+                                     SubmittedBy = mu.SubmittedByUser.FirstName + " " + mu.SubmittedByUser.Surname,
                                      Year = mu.ComplianceYear.Value,
-                                     DateTime = mu.CreatedDate,
+                                     DateTime = mu.SubmittedDate.Value,
                                      TotalCharges = mu.TotalCharges,
                                      NoOfWarnings = (from me in context.MemberUploadErrors
                                                      where me.MemberUploadId == mu.Id && (me.ErrorLevel.Value == Domain.ErrorLevel.Warning.Value)

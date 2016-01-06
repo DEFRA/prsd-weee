@@ -6,6 +6,7 @@
     using Prsd.Core.Decorators;
     using Prsd.Core.Mediator;
     using Scheme.MemberUploadTesting;
+    using Shared.DomainUser;
 
     public class RequestHandlerModule : Module
     {
@@ -53,6 +54,9 @@
             builder.RegisterType<BySchemeCustomerFileGenerator>().As<IIbisCustomerFileGenerator>();
             builder.RegisterType<BySchemeTransactionFileGenerator>().As<IIbisTransactionFileGenerator>();
             builder.RegisterType<TransactionReferenceGenerator>().As<ITransactionReferenceGenerator>();
+
+            // Register the DomainUserContext which may be used by all request handlers to get the current domain user.
+            builder.RegisterType<DomainUserContext>().As<IDomainUserContext>();
         }
     }
 }
