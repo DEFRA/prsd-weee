@@ -9,6 +9,7 @@
     using Api.Client;
     using Base;
     using Core.Admin;
+    using Core.DataReturns;
     using Core.Shared;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
@@ -21,6 +22,7 @@
     using Weee.Requests.Admin;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
+    using Weee.Requests.Shared;
     using GetSubmissionsHistoryResults = Weee.Requests.Shared.GetSubmissionsHistoryResults;
 
     public class SubmissionsController : AdminController
@@ -190,7 +192,7 @@
                 {
                     //Get all the compliance years currently in database and set it to latest one.
                     //Get all the approved PCSs
-                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
+                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears(ComplianceYearFor.DataReturns));
                     var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
                     DataReturnSubmissionsHistoryViewModel model = new DataReturnSubmissionsHistoryViewModel
                     {
@@ -212,6 +214,43 @@
                 }
             }
         }
+
+        /// <summary>
+        /// This method is called using AJAX by JS-users.
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="schemeId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> FetchDataReturnSubmissionResults(int year, Guid schemeId)
+        {
+            if (!Request.IsAjaxRequest())
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+            using (var client = apiClient())
+            {
+                try
+                {
+                    var schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+
+                    IList<DataReturnSubmissionsHistoryResult> searchResults = await client.SendAsync(User.GetAccessToken(), new GetDataReturnSubmissionsHistoryResults(schemeId, schemeData.OrganisationId, year));
+                    return PartialView("_dataReturnSubmissionsResults", searchResults);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+                    throw;
+                }
+            }
+        }
+
         private async Task SetBreadcrumb()
         {
             breadcrumb.InternalActivity = "Submissions history";
