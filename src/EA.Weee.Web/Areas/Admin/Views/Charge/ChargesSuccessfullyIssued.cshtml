@@ -15,9 +15,12 @@
         </h1>
     </header>
 
-    <p>
-        @Html.ActionLink("Download invoice files (zip)", "DownloadInvoiceFiles", new { id = Model })
-    </p>
+    @if (ViewBag.AllowDownloadOfInvoiceFiles)
+    {
+        <p>
+            @Html.ActionLink("Download invoice files (zip)", "DownloadInvoiceFiles", new { id = Model })
+        </p>
+    }
 
     @Html.ActionLink("Continue", "ChooseActivity", null, new { @class = "button" })
 }

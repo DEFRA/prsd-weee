@@ -127,12 +127,19 @@
         [HttpGet]
         public ActionResult ChargesSuccessfullyIssued(CompetentAuthority authority, Guid id)
         {
+            ViewBag.AllowDownloadOfInvoiceFiles = (authority == CompetentAuthority.England);
             return View(id);
         }
 
         [HttpGet]
         public async Task<ActionResult> DownloadInvoiceFiles(CompetentAuthority authority, Guid id)
         {
+            if (authority != CompetentAuthority.England)
+            {
+                string errorMessage = "Invoice files can only be downloaded for invoice runs related to the Environnent Agency.";
+                throw new InvalidOperationException(errorMessage);
+            }
+
             FileInfo fileInfo;
             using (IWeeeClient client = weeeClient())
             {

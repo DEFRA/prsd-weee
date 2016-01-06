@@ -64,7 +64,7 @@
                 A.Dummy<string>(),
                 A.Dummy<string>());
 
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
@@ -112,7 +112,7 @@
                 A.Dummy<string>(),
                 A.Dummy<string>());
 
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);

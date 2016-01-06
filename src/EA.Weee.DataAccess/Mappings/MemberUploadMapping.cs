@@ -8,6 +8,7 @@
         public MemberUploadMapping()
         {
             HasRequired(e => e.RawData).WithRequiredPrincipal();
+            HasOptional(e => e.SubmittedByUser);
 
             ToTable("MemberUpload", "PCS");
         }

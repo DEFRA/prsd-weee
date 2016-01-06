@@ -69,6 +69,8 @@
                 scheme,
                 A.Dummy<string>());
 
+            memberUpload1.Submit(A.Dummy<User>());
+
             MemberUpload memberUpload2 = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
@@ -77,6 +79,8 @@
                 2017,
                 scheme,
                 A.Dummy<string>());
+
+            memberUpload2.Submit(A.Dummy<User>());
 
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);

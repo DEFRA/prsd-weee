@@ -115,6 +115,9 @@
     <Compile Include="Model\Business.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\C1B1STransactionNumberSequence.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\ChargeBandAmount.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -158,7 +161,13 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Entities.cs" />
+    <Compile Include="Model\IbisFileData.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\IdType.cs" />
+    <Compile Include="Model\InvoiceRun.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\MemberUpload.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

@@ -20,6 +20,7 @@ namespace EA.Weee.Tests.Core.Model
             this.OrganisationUsers = new HashSet<OrganisationUser>();
             this.MemberUploads = new HashSet<MemberUpload>();
             this.MemberUploads1 = new HashSet<MemberUpload>();
+            this.MemberUploads2 = new HashSet<MemberUpload>();
         }
     
         public string Id { get; set; }
@@ -41,5 +42,6 @@ namespace EA.Weee.Tests.Core.Model
         public virtual ICollection<OrganisationUser> OrganisationUsers { get; set; }
         public virtual ICollection<MemberUpload> MemberUploads { get; set; }
         public virtual ICollection<MemberUpload> MemberUploads1 { get; set; }
+        public virtual ICollection<MemberUpload> MemberUploads2 { get; set; }
     }
 }

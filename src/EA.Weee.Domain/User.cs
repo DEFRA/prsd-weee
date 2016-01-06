@@ -4,7 +4,7 @@
 
     public class User
     {
-        private User()
+        protected User()
         {
         }
 

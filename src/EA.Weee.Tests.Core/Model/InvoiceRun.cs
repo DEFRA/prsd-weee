@@ -12,21 +12,21 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class CompetentAuthority
+    public partial class InvoiceRun
     {
-        public CompetentAuthority()
+        public InvoiceRun()
         {
-            this.CompetentAuthorityUsers = new HashSet<CompetentAuthorityUser>();
-            this.InvoiceRuns = new HashSet<InvoiceRun>();
+            this.MemberUploads = new HashSet<MemberUpload>();
         }
     
         public System.Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Abbreviation { get; set; }
-        public System.Guid CountryId { get; set; }
+        public byte[] RowVersion { get; set; }
+        public System.Guid CompetentAuthorityId { get; set; }
+        public Nullable<System.Guid> IbisFileDataId { get; set; }
+        public System.DateTime CreatedDate { get; set; }
     
-        public virtual ICollection<CompetentAuthorityUser> CompetentAuthorityUsers { get; set; }
-        public virtual Country Country { get; set; }
-        public virtual ICollection<InvoiceRun> InvoiceRuns { get; set; }
+        public virtual IbisFileData IbisFileData { get; set; }
+        public virtual CompetentAuthority CompetentAuthority { get; set; }
+        public virtual ICollection<MemberUpload> MemberUploads { get; set; }
     }
 }
