@@ -5,42 +5,46 @@
 
 
 
-@section main_content {
+@*@section main_content {*@
 
-    <header class="hgroup">
-        <h1 class="heading-large">Submissions history</h1>
-    </header>
+<header class="hgroup">
+    <h1 class="heading-large">Submissions history</h1>
+</header>
 
-    <p>View submissions for:</p>
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
-        @Html.Gds().LabelFor(m => m.SelectedYear)
-        @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
-        @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { autocomplete = "false" })
-    </div>
-    <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
-        @Html.Gds().LabelFor(m => m.SelectedScheme)
-        @Html.Gds().ValidationMessageFor(m => m.SelectedScheme)
-        @Html.Gds().DropDownListFor(m => m.SelectedScheme, Model.SchemeNames, new { autocomplete = "false" })
-    </div>
+<p>View submissions for:</p>
+<div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+    @Html.Gds().LabelFor(m => m.SelectedYear)
+    @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+    @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { autocomplete = "false" })
+</div>
+<div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
+    @Html.Gds().LabelFor(m => m.SelectedScheme)
+    @Html.Gds().ValidationMessageFor(m => m.SelectedScheme)
+    @Html.Gds().DropDownListFor(m => m.SelectedScheme, Model.SchemeNames, new { autocomplete = "false" })
+</div>
 
-    <div class="form-group" id="submissionResults"></div>
+<p>
+    <span class="font-bold">Submission type:</span> Data returns
+</p>
 
-    <p>
-        <a href="javascript:history.back();">Back</a>
-    </p>
-}
+<div class="form-group" id="submissionResults"></div>
+
+<p>
+    <a href="javascript:history.back();">Back</a>
+</p>
+@*}*@
 
 @section scripts {
     <script type="text/javascript">
         $(document).ready(function () {
             var selectedYear = $("#SelectedYear").val();
             var selectedScheme = $("#SelectedScheme").val();
-            FetchSubmissionResults(selectedYear, selectedScheme);
+            FetchDataReturnSubmissionResults(selectedYear, selectedScheme);
         });
 
-        function FetchSubmissionResults(selectedYear, selectedScheme) {
+        function FetchDataReturnSubmissionResults(selectedYear, selectedScheme) {
             $.ajax({
-                url: '@Url.Action("FetchSubmissionResults")',
+                url: '@Url.Action("FetchDataReturnSubmissionResults")',
                 type: 'POST',
                 cache: false,
                 data: { year: selectedYear, schemeId: selectedScheme, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
@@ -55,14 +59,14 @@
 
                 var selectedYear = $(this).val();
                 var selectedScheme = $("#SelectedScheme").val();
-                FetchSubmissionResults(selectedYear, selectedScheme);
+                FetchDataReturnSubmissionResults(selectedYear, selectedScheme);
             });
 
         $("#SelectedScheme")
             .change(function () {
                 var selectedScheme = $(this).val();
                 var selectedYear = $("#SelectedYear").val();
-                FetchSubmissionResults(selectedYear, selectedScheme);
+                FetchDataReturnSubmissionResults(selectedYear, selectedScheme);
             });
     </script>
 }
