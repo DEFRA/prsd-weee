@@ -15,7 +15,7 @@
             Ignore(ps => ps.ObligationType);
             Property(ps => ps.DatabaseObligationType).HasColumnName("ObligationType");
 
-            Property(ps => ps.Tonnage).HasPrecision(38, 3);
+            Property(ps => ps.Tonnage).HasPrecision(28, 3);
         }
     }
 }

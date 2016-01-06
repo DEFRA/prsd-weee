@@ -246,6 +246,7 @@
     <xs:restriction base="xs:decimal">
       <xs:minInclusive value="0"/>
       <xs:fractionDigits value="3"/>
+      <xs:totalDigits value="28"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:complexType name="TonnageReturnType">
