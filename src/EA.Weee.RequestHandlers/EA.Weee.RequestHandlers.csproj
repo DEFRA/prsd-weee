@@ -96,6 +96,9 @@
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
     <Compile Include="Charges\CommonDataAccess.cs" />
+    <Compile Include="Charges\FetchInvoiceRunCSV\FetchInvoiceRunCSVDataAccess.cs" />
+    <Compile Include="Charges\FetchInvoiceRunCSV\FetchInvoiceRunCSVHandler.cs" />
+    <Compile Include="Charges\FetchInvoiceRunCSV\IFetchInvoiceRunCSVDataAccess.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile\FetchInvoiceRunIbisZipFileHandler.cs" />
     <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandler.cs" />
     <Compile Include="Charges\ICommonDataAccess.cs" />
