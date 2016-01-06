@@ -25,7 +25,7 @@
 
         public virtual List<ProducerSubmission> ProducerSubmissions { get; private set; }
 
-        public decimal TotalCharges { get; private set; }
+        public virtual decimal TotalCharges { get; private set; }
 
         public virtual string FileName { get; private set; }
 
@@ -34,6 +34,10 @@
         public virtual MemberUploadRawData RawData { get; set; }
 
         public virtual InvoiceRun InvoiceRun { get; private set; }
+
+        public virtual User SubmittedByUser { get; private set; }
+
+        public DateTime? SubmittedDate { get; private set; }
 
         public MemberUpload(
             Guid organisationId,
@@ -75,14 +79,18 @@
             ProducerSubmissions = new List<ProducerSubmission>();
         }
 
-        public void Submit()
+        public void Submit(User submittingUser)
         {
+            Guard.ArgumentNotNull(() => submittingUser, submittingUser);
+
             if (IsSubmitted)
             {
                 throw new InvalidOperationException("IsSubmitted status must be false to transition to true");
             }
 
             IsSubmitted = true;
+            SubmittedByUser = submittingUser;
+            SubmittedDate = SystemTime.UtcNow;
 
             foreach (ProducerSubmission producerSubmission in ProducerSubmissions)
             {

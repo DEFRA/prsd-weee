@@ -106,7 +106,7 @@
 
         </div>
 
-        @(this.WeeeGds().Submit("Check file for errors", new { style = "margin-top: 20px;", id = "submitButton", @class="button", aria_live="off" }, true))
+        @(this.WeeeGds().Submit("Check file for errors", new { style = "margin-top: 20px;", id = "submitButton", @class="button" }, true))
 
         <p>
             @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { id = "anotherActivitylink" })
