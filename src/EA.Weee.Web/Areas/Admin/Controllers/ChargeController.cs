@@ -88,7 +88,7 @@
                     throw new NotImplementedException();
 
                 case Activity.ViewInvoiceRunHistory:
-                    throw new NotImplementedException();
+                    return RedirectToAction("InvoiceRuns", new { authority });
 
                 default:
                     throw new NotSupportedException();
@@ -148,6 +148,11 @@
             }
 
             return File(fileInfo.Data, "text/plain", fileInfo.FileName);
+        }
+
+        public Task<ActionResult> InvoiceRuns(CompetentAuthority authority)
+        {
+            throw new NotImplementedException();
         }
     }
 }
