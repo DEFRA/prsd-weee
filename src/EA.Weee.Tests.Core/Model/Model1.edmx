@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EA.Weee.TestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="EA.Weee.TestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="CompetentAuthorityUser">
           <Key>
             <PropertyRef Name="Id" />
@@ -88,6 +88,19 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="2048" Nullable="false" />
         </EntityType>
+        <EntityType Name="QuarterWindowTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Quarter" Type="int" Nullable="false" />
+          <Property Name="AddStartYears" Type="int" Nullable="false" />
+          <Property Name="StartMonth" Type="int" Nullable="false" />
+          <Property Name="StartDay" Type="int" Nullable="false" />
+          <Property Name="AddEndYears" Type="int" Nullable="false" />
+          <Property Name="EndMonth" Type="int" Nullable="false" />
+          <Property Name="EndDay" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Address">
           <Key>
             <PropertyRef Name="Id" />
@@ -123,7 +136,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="OrganisationType" Type="int" Nullable="false" />
           <Property Name="OrganisationStatus" Type="int" Nullable="false" />
           <Property Name="TradingName" Type="nvarchar" MaxLength="256" />
-          <Property Name="CompanyRegistrationNumber" Type="nvarchar" MaxLength="64" />
+          <Property Name="CompanyRegistrationNumber" Type="nvarchar" MaxLength="10" />
           <Property Name="ContactId" Type="uniqueidentifier" />
           <Property Name="OrganisationAddressId" Type="uniqueidentifier" />
           <Property Name="BusinessAddressId" Type="uniqueidentifier" />
@@ -249,11 +262,11 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="TotalCharges" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="FileName" Type="nvarchar(max)" />
           <Property Name="ProcessTime" Type="time" Precision="7" Nullable="false" />
-          <Property Name="InvoiceRunId" Type="uniqueidentifier" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedById" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="UpdatedById" Type="nvarchar" MaxLength="128" />
+          <Property Name="InvoiceRunId" Type="uniqueidentifier" />
           <Property Name="SubmittedDate" Type="datetime" />
           <Property Name="SubmittedByUserId" Type="nvarchar" MaxLength="128" />
         </EntityType>
@@ -477,7 +490,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="ProducerSubmissionId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
-        <Association Name="FK__MemberUpl__Creat__5F492382">
+        <Association Name="FK__MemberUpl__Creat__45544755">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
           <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
           <ReferentialConstraint>
@@ -489,7 +502,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__MemberUpl__Updat__603D47BB">
+        <Association Name="FK__MemberUpl__Updat__46486B8E">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
           <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1157,6 +1170,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <EntitySet Name="ChargeBandAmount" EntityType="Self.ChargeBandAmount" Schema="Lookup" store:Type="Tables" />
           <EntitySet Name="CompetentAuthority" EntityType="Self.CompetentAuthority" Schema="Lookup" store:Type="Tables" />
           <EntitySet Name="Country" EntityType="Self.Country" Schema="Lookup" store:Type="Tables" />
+          <EntitySet Name="QuarterWindowTemplate" EntityType="Self.QuarterWindowTemplate" Schema="Lookup" store:Type="Tables" />
           <EntitySet Name="Address" EntityType="Self.Address" Schema="Organisation" store:Type="Tables" />
           <EntitySet Name="Contact" EntityType="Self.Contact" Schema="Organisation" store:Type="Tables" />
           <EntitySet Name="Organisation" EntityType="Self.Organisation" Schema="Organisation" store:Type="Tables" />
@@ -1196,11 +1210,11 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
     [1B1STransactionNumberSequence].[NextNumber] AS [NextNumber]
     FROM [Charging].[1B1STransactionNumberSequence] AS [1B1STransactionNumberSequence]</DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK__MemberUpl__Creat__5F492382" Association="Self.FK__MemberUpl__Creat__5F492382">
+          <AssociationSet Name="FK__MemberUpl__Creat__45544755" Association="Self.FK__MemberUpl__Creat__45544755">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="MemberUpload" EntitySet="MemberUpload" />
           </AssociationSet>
-          <AssociationSet Name="FK__MemberUpl__Updat__603D47BB" Association="Self.FK__MemberUpl__Updat__603D47BB">
+          <AssociationSet Name="FK__MemberUpl__Updat__46486B8E" Association="Self.FK__MemberUpl__Updat__46486B8E">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="MemberUpload" EntitySet="MemberUpload" />
           </AssociationSet>
@@ -1499,7 +1513,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="OrganisationType" Type="Int32" Nullable="false" />
           <Property Name="OrganisationStatus" Type="Int32" Nullable="false" />
           <Property Name="TradingName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="CompanyRegistrationNumber" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyRegistrationNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="ContactId" Type="Guid" />
           <Property Name="OrganisationAddressId" Type="Guid" />
           <Property Name="BusinessAddressId" Type="Guid" />
@@ -2231,6 +2245,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
             <End Role="InvoiceRun" EntitySet="InvoiceRuns" />
             <End Role="MemberUpload" EntitySet="MemberUploads" />
           </AssociationSet>
+          <EntitySet Name="QuarterWindowTemplates" EntityType="EA.Weee.TestModel.QuarterWindowTemplate" />
         </EntityContainer>
         <EntityType Name="AspNetUser">
           <Key>
@@ -2947,6 +2962,19 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="QuarterWindowTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Quarter" Type="Int32" Nullable="false" />
+          <Property Name="AddStartYears" Type="Int32" Nullable="false" />
+          <Property Name="StartMonth" Type="Int32" Nullable="false" />
+          <Property Name="StartDay" Type="Int32" Nullable="false" />
+          <Property Name="AddEndYears" Type="Int32" Nullable="false" />
+          <Property Name="EndMonth" Type="Int32" Nullable="false" />
+          <Property Name="EndDay" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3459,6 +3487,20 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
             <EntityTypeMapping TypeName="EA.Weee.TestModel.C1B1STransactionNumberSequence">
               <MappingFragment StoreEntitySet="1B1STransactionNumberSequence">
                 <ScalarProperty Name="NextNumber" ColumnName="NextNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="QuarterWindowTemplates">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.QuarterWindowTemplate">
+              <MappingFragment StoreEntitySet="QuarterWindowTemplate">
+                <ScalarProperty Name="EndDay" ColumnName="EndDay" />
+                <ScalarProperty Name="EndMonth" ColumnName="EndMonth" />
+                <ScalarProperty Name="AddEndYears" ColumnName="AddEndYears" />
+                <ScalarProperty Name="StartDay" ColumnName="StartDay" />
+                <ScalarProperty Name="StartMonth" ColumnName="StartMonth" />
+                <ScalarProperty Name="AddStartYears" ColumnName="AddStartYears" />
+                <ScalarProperty Name="Quarter" ColumnName="Quarter" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

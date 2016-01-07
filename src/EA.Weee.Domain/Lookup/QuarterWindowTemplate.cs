@@ -1,7 +1,11 @@
 ﻿namespace EA.Weee.Domain.Lookup
 {
+    using System;
+
     public class QuarterWindowTemplate
     {
+        public Guid Id { get; private set; }
+
         public int Quarter { get; private set; }
 
         public int AddStartYears { get; private set; }
