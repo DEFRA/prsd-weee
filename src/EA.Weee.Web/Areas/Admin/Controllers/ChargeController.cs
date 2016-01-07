@@ -38,7 +38,7 @@
                 throw new InvalidOperationException("Invoicing is not enabled.");
             }
 
-            breadcrumb.InternalActivity = "Manage charges";
+            breadcrumb.InternalActivity = "Manage PCS charges";
 
             base.OnActionExecuting(filterContext);
         }
@@ -150,7 +150,22 @@
             return File(fileInfo.Data, "text/plain", fileInfo.FileName);
         }
 
-        public Task<ActionResult> InvoiceRuns(CompetentAuthority authority)
+        [HttpGet]
+        public async Task<ActionResult> InvoiceRuns(CompetentAuthority authority)
+        {
+            IReadOnlyList<InvoiceRunInfo> invoiceRuns;
+            using (IWeeeClient client = weeeClient())
+            {
+                FetchInvoiceRuns request = new FetchInvoiceRuns(authority);
+                invoiceRuns = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            ViewBag.AllowDownloadOfInvoiceFiles = (authority == CompetentAuthority.England);
+            return View(invoiceRuns);
+        }
+
+        [HttpGet]
+        public Task<ActionResult> DownloadSummaryFile(CompetentAuthority authority, Guid id)
         {
             throw new NotImplementedException();
         }

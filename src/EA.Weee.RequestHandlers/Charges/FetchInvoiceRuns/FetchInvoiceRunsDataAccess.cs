@@ -29,6 +29,7 @@
         public async Task<IReadOnlyList<InvoiceRun>> FetchInvoiceRunsAsync(UKCompetentAuthority authority)
         {
             return await context.InvoiceRuns
+                .Include(ir => ir.IssuedByUser)
                 .Where(ir => ir.CompetentAuthority.Id == authority.Id)
                 .OrderBy(ir => ir.IssuedDate)
                 .ToListAsync();

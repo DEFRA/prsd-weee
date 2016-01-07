@@ -9,8 +9,8 @@
     using Domain.Charges;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Charges;
-    using Security;
     using Requests.Charges;
+    using Security;
 
     public class FetchInvoiceRunsHandler : IRequestHandler<FetchInvoiceRuns, IReadOnlyList<InvoiceRunInfo>>
     {
