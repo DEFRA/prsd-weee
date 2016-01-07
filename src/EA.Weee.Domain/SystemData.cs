@@ -9,11 +9,11 @@
 
         public ulong InitialIbisFileId { get; private set; }
 
-        public bool UseSetComplianceYearAndQuarter { get; private set; }
+        public bool UseFixedComplianceYearAndQuarter { get; private set; }
 
-        public int SetComplianceYear { get; private set; }
+        public int FixedComplianceYear { get; private set; }
 
-        public QuarterType SetQuarter { get; private set; }
+        public QuarterType FixedQuarter { get; private set; }
 
         protected SystemData()
         {
@@ -21,8 +21,8 @@
 
         public void UpdateQuarterAndComplianceYear(Quarter quarter)
         {
-            SetComplianceYear = quarter.Year;
-            SetQuarter = quarter.Q;
+            FixedComplianceYear = quarter.Year;
+            FixedQuarter = quarter.Q;
         }
 
         /// <summary>

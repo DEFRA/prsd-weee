@@ -21,9 +21,9 @@
         {
             var systemData = await systemDataDataAccess.Get();
 
-            if (systemData.UseSetComplianceYearAndQuarter)
+            if (systemData.UseFixedComplianceYearAndQuarter)
             {
-                return new Quarter(systemData.SetComplianceYear, (QuarterType)(int)systemData.SetQuarter);
+                return new Quarter(systemData.FixedComplianceYear, (QuarterType)(int)systemData.FixedQuarter);
             }
 
             switch (DateTime.Now.Month)
