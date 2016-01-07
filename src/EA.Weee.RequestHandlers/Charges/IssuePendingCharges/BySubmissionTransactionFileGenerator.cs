@@ -58,7 +58,7 @@
                 {
                     invoice = new Invoice(
                         memberUpload.Scheme.IbisCustomerReference,
-                        invoiceRun.CreatedDate,
+                        invoiceRun.IssuedDate,
                         TransactionType.Invoice,
                         transactionReference,
                         new List<InvoiceLineItem>() { lineItem });
