@@ -301,6 +301,34 @@
         }
 
         /// <summary>
+        /// This test ensures that the POST "ChooseActivity" action will return a redirect
+        /// to the "InvoiceRuns" action, with the selected authority when option
+        /// to view invoice run history is selected.
+        /// </summary>
+        [Fact]
+        public void PostChooseActivity_WithViewInvoiceRunHistorySelected_RedirectsToInvoiceRunsActionWithSelectedAuthority()
+        {
+            // Arrange
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => A.Dummy<IWeeeClient>());
+
+            ChooseActivityViewModel viewModel = new ChooseActivityViewModel();
+            viewModel.SelectedActivity = Activity.ViewInvoiceRunHistory;
+
+            // Act
+            ActionResult result = controller.ChooseActivity(CompetentAuthority.NorthernIreland, viewModel);
+
+            // Assert
+            RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
+            Assert.NotNull(redirectResult);
+
+            Assert.Equal("InvoiceRuns", redirectResult.RouteValues["action"]);
+            Assert.Equal(CompetentAuthority.NorthernIreland, redirectResult.RouteValues["authority"]);
+        }
+
+        /// <summary>
         /// This test ensures that the GET "ManagePendingCharges" action will return the
         /// "ManagePendingCharges" view with a view model containing data retrieved from the API
         /// and adds the specified authority to the ViewBag.
