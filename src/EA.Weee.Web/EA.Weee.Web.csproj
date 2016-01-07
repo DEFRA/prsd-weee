@@ -229,6 +229,7 @@
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\ProducerEEEDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ProducerPublicRegisterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
@@ -239,9 +240,14 @@
     <Compile Include="Areas\Scheme\ViewModels\DataReturnSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
+    <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\PCSCharges.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\ViewOrganisationDetails.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
     <Content Include="Areas\Scheme\Views\MemberRegistration\AddOrAmendMembers.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -496,10 +502,6 @@
     <Content Include="Areas\Test\Views\ManageCache\Index.cshtml" />
     <Content Include="Areas\Test\Views\ManageCache\CacheCleared.cshtml" />
     <Content Include="Content\weee\_footer.scss" />
-    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SubmitViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionType.cs" />
     <Compile Include="Areas\Test\Controllers\CreatePcsDataReturnXmlFileController.cs" />
@@ -521,11 +523,6 @@
     <Content Include="Content\govuk_elements\_buttons.scss" />
     <Content Include="Content\govuk_elements\_breadcrumb.scss" />
     <Content Include="Content\weee\_footer.scss" />
-    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\PCSCharges.cshtml" />
     <Content Include="Content\govuk_elements\forms\_form-validation.scss" />
     <Content Include="Content\govuk_elements\forms\_form-date.scss" />
     <Content Include="Content\govuk_elements\forms\_form-block-labels.scss" />
@@ -559,6 +556,7 @@
     <Content Include="Areas\Admin\Views\Charge\ChargesSuccessfullyIssued.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ChooseSubmissionType.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ViewDataReturnSubmissionHistory.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ProducerEEEData.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />

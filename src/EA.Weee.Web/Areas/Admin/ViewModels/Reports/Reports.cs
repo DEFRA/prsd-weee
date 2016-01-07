@@ -5,5 +5,6 @@
         public const string ProducerDetails = "Producer details";
         public const string PCSCharges = "PCS charges";
         public const string Producerpublicregister = "Producer public register";
+        public const string ProducerEEEDdata = "Producer EEE data";
     }
 }
