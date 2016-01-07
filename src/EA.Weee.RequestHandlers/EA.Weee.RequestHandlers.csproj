@@ -153,8 +153,8 @@
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryDataAccess.cs" />
     <Compile Include="Scheme\MemberUploadTesting\SchemeInfo.cs" />
     <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
-    <Compile Include="Services\IQuarterWindowService.cs" />
-    <Compile Include="Services\QuarterWindowService.cs" />
+    <Compile Include="Factories\IQuarterWindowFactory.cs" />
+    <Compile Include="Factories\QuarterWindowFactory.cs" />
     <Compile Include="Shared\DomainUser\DomainUserContext.cs" />
     <Compile Include="Shared\DomainUser\IDomainUserContext.cs" />
     <Compile Include="Shared\Extensions.cs" />

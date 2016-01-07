@@ -49,6 +49,7 @@
     <Compile Include="Charges\InvoiceRun.cs" />
     <Compile Include="Charges\IbisFileData.cs" />
     <Compile Include="DataReturns\EeeOutputReturnVersion.cs" />
+    <Compile Include="DataReturns\QuarterWindow.cs" />
     <Compile Include="DataReturns\WeeeCollectedReturnVersion.cs" />
     <Compile Include="DataReturns\WeeeDeliveredReturnVersion.cs" />
     <Compile Include="Lookup\QuarterWindowTemplate.cs" />

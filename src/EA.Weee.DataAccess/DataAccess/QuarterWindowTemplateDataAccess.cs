@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
-    using System.Linq;
+    using System.Data.Entity;
+    using System.Threading.Tasks;
     using Domain.Lookup;
 
     public class QuarterWindowTemplateDataAccess : IQuarterWindowTemplateDataAccess
@@ -12,9 +13,9 @@
             this.context = context;
         }
 
-        public QuarterWindowTemplate GetByQuarter(int quarter)
+        public async Task<QuarterWindowTemplate> GetByQuarter(int quarter)
         {
-            return context.QuarterWindowTemplates.Single(qw => qw.Quarter == quarter);
+            return await context.QuarterWindowTemplates.SingleAsync(qw => qw.Quarter == quarter);
         }
     }
 }
