@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Core.DataReturns
+﻿namespace EA.Weee.Domain.DataReturns
 {
     using System;
 
