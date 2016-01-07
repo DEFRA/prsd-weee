@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Domain.Lookup
 {
-    public class QuarterWindow
+    public class QuarterWindowTemplate
     {
         public int Quarter { get; private set; }
 
@@ -16,7 +16,7 @@
 
         public int EndDay { get; private set; }
 
-        protected QuarterWindow()
+        protected QuarterWindowTemplate()
         {
         }
     }
