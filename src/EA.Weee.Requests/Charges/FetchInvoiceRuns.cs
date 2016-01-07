@@ -5,9 +5,9 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Core.Shared;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Charges;
-    using Core.Shared;
 
     /// <summary>
     /// A request to fetch all invoice runs for the specified appropriate authority.
