@@ -97,6 +97,7 @@
     <Compile Include="DataReturns\IErrorOrWarning.cs" />
     <Compile Include="DataReturns\Quarter.cs" />
     <Compile Include="DataReturns\QuarterType.cs" />
+    <Compile Include="DataReturns\QuarterWindow.cs" />
     <Compile Include="DataReturns\TestFileSettings.cs" />
     <Compile Include="DataStandards\CommonMaxFieldLengths.cs" />
     <Compile Include="DataStandards\EnvironmentAgencyMaxFieldLengths.cs" />
