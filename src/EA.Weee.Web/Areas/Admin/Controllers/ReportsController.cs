@@ -84,7 +84,7 @@
                 case Reports.Producerpublicregister:
                     return RedirectToAction("ProducerPublicRegister", "Reports");
 
-                case Reports.ProducerEEEDdata:
+                case Reports.ProducerEEEData:
                     return RedirectToAction("ProducerEEEData", "Reports");
                 default:
                     throw new NotSupportedException();
@@ -225,7 +225,7 @@
         [HttpGet]
         public async Task<ActionResult> ProducerEEEData()
         {
-            SetBreadcrumb(Reports.ProducerEEEDdata);
+            SetBreadcrumb(Reports.ProducerEEEData);
 
             using (var client = apiClient())
             {
@@ -252,7 +252,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ProducerEEEData(ProducerEEEDataViewModel model)
         {
-            SetBreadcrumb(Reports.ProducerEEEDdata);
+            SetBreadcrumb(Reports.ProducerEEEData);
 
             using (var client = apiClient())
             {
