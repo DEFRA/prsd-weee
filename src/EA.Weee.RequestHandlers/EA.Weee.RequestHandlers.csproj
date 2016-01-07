@@ -155,6 +155,8 @@
     <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
     <Compile Include="Factories\IQuarterWindowFactory.cs" />
     <Compile Include="Factories\QuarterWindowFactory.cs" />
+    <Compile Include="Factories\QuarterFactory.cs" />
+    <Compile Include="Factories\IQuarterFactory.cs" />
     <Compile Include="Shared\DomainUser\DomainUserContext.cs" />
     <Compile Include="Shared\DomainUser\IDomainUserContext.cs" />
     <Compile Include="Shared\Extensions.cs" />
