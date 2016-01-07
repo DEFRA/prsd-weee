@@ -1,4 +1,4 @@
-﻿CREATE TABLE [Lookup].[QuarterWindow] 
+﻿CREATE TABLE [Lookup].[QuarterWindowTemplate] 
 (
 	Id UNIQUEIDENTIFIER NOT NULL, 
 	Quarter int NOT NULL,
@@ -8,7 +8,7 @@
 	AddEndYears int NOT NULL,
 	EndMonth int NOT NULL,
 	EndDay int NOT NULL
-	CONSTRAINT [PK_QuarterWindow] PRIMARY KEY CLUSTERED 
+	CONSTRAINT [PK_QuarterWindowTemplate] PRIMARY KEY CLUSTERED 
 	(
 		[Id] ASC
 	)	
