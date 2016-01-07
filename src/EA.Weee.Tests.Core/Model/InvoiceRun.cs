@@ -23,10 +23,12 @@ namespace EA.Weee.Tests.Core.Model
         public byte[] RowVersion { get; set; }
         public System.Guid CompetentAuthorityId { get; set; }
         public Nullable<System.Guid> IbisFileDataId { get; set; }
-        public System.DateTime CreatedDate { get; set; }
+        public Nullable<System.DateTime> IssuedDate { get; set; }
+        public string IssuedByUserId { get; set; }
     
         public virtual IbisFileData IbisFileData { get; set; }
         public virtual CompetentAuthority CompetentAuthority { get; set; }
         public virtual ICollection<MemberUpload> MemberUploads { get; set; }
+        public virtual AspNetUser AspNetUser { get; set; }
     }
 }

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EA.Weee.TestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="EA.Weee.TestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="CompetentAuthorityUser">
           <Key>
             <PropertyRef Name="Id" />
@@ -43,7 +43,8 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="CompetentAuthorityId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="IbisFileDataId" Type="uniqueidentifier" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="IssuedDate" Type="datetime" />
+          <Property Name="IssuedByUserId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="AspNetUsers">
           <Key>
@@ -136,7 +137,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="OrganisationType" Type="int" Nullable="false" />
           <Property Name="OrganisationStatus" Type="int" Nullable="false" />
           <Property Name="TradingName" Type="nvarchar" MaxLength="256" />
-          <Property Name="CompanyRegistrationNumber" Type="nvarchar" MaxLength="10" />
+          <Property Name="CompanyRegistrationNumber" Type="nvarchar" MaxLength="64" />
           <Property Name="ContactId" Type="uniqueidentifier" />
           <Property Name="OrganisationAddressId" Type="uniqueidentifier" />
           <Property Name="BusinessAddressId" Type="uniqueidentifier" />
@@ -262,11 +263,11 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="TotalCharges" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="FileName" Type="nvarchar(max)" />
           <Property Name="ProcessTime" Type="time" Precision="7" Nullable="false" />
+          <Property Name="InvoiceRunId" Type="uniqueidentifier" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedById" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="UpdatedById" Type="nvarchar" MaxLength="128" />
-          <Property Name="InvoiceRunId" Type="uniqueidentifier" />
           <Property Name="SubmittedDate" Type="datetime" />
           <Property Name="SubmittedByUserId" Type="nvarchar" MaxLength="128" />
         </EntityType>
@@ -490,7 +491,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="ProducerSubmissionId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
-        <Association Name="FK__MemberUpl__Creat__45544755">
+        <Association Name="FK__MemberUpl__Creat__5F492382">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
           <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
           <ReferentialConstraint>
@@ -502,7 +503,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__MemberUpl__Updat__46486B8E">
+        <Association Name="FK__MemberUpl__Updat__603D47BB">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
           <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
           <ReferentialConstraint>
@@ -799,6 +800,18 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
             </Principal>
             <Dependent Role="EeeOutputReturnVersionAmount">
               <PropertyRef Name="EeeOutputReturnVersionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceRun_AspNetUsers_IssuedBy">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="InvoiceRun" Type="Self.InvoiceRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InvoiceRun">
+              <PropertyRef Name="IssuedByUserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1210,11 +1223,11 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
     [1B1STransactionNumberSequence].[NextNumber] AS [NextNumber]
     FROM [Charging].[1B1STransactionNumberSequence] AS [1B1STransactionNumberSequence]</DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK__MemberUpl__Creat__45544755" Association="Self.FK__MemberUpl__Creat__45544755">
+          <AssociationSet Name="FK__MemberUpl__Creat__5F492382" Association="Self.FK__MemberUpl__Creat__5F492382">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="MemberUpload" EntitySet="MemberUpload" />
           </AssociationSet>
-          <AssociationSet Name="FK__MemberUpl__Updat__46486B8E" Association="Self.FK__MemberUpl__Updat__46486B8E">
+          <AssociationSet Name="FK__MemberUpl__Updat__603D47BB" Association="Self.FK__MemberUpl__Updat__603D47BB">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="MemberUpload" EntitySet="MemberUpload" />
           </AssociationSet>
@@ -1313,6 +1326,10 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <AssociationSet Name="FK_EeeOutputReturnVersionAmount_EeeOutputReturnVersion" Association="Self.FK_EeeOutputReturnVersionAmount_EeeOutputReturnVersion">
             <End Role="EeeOutputReturnVersion" EntitySet="EeeOutputReturnVersion" />
             <End Role="EeeOutputReturnVersionAmount" EntitySet="EeeOutputReturnVersionAmount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceRun_AspNetUsers_IssuedBy" Association="Self.FK_InvoiceRun_AspNetUsers_IssuedBy">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="InvoiceRun" EntitySet="InvoiceRun" />
           </AssociationSet>
           <AssociationSet Name="FK_InvoiceRun_CompetentAuthority" Association="Self.FK_InvoiceRun_CompetentAuthority">
             <End Role="CompetentAuthority" EntitySet="CompetentAuthority" />
@@ -1513,7 +1530,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="OrganisationType" Type="Int32" Nullable="false" />
           <Property Name="OrganisationStatus" Type="Int32" Nullable="false" />
           <Property Name="TradingName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="CompanyRegistrationNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyRegistrationNumber" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Name="ContactId" Type="Guid" />
           <Property Name="OrganisationAddressId" Type="Guid" />
           <Property Name="BusinessAddressId" Type="Guid" />
@@ -2246,6 +2263,10 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
             <End Role="MemberUpload" EntitySet="MemberUploads" />
           </AssociationSet>
           <EntitySet Name="QuarterWindowTemplates" EntityType="EA.Weee.TestModel.QuarterWindowTemplate" />
+          <AssociationSet Name="FK_InvoiceRun_AspNetUsers_IssuedBy" Association="EA.Weee.TestModel.FK_InvoiceRun_AspNetUsers_IssuedBy">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="InvoiceRun" EntitySet="InvoiceRuns" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="AspNetUser">
           <Key>
@@ -2270,6 +2291,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <NavigationProperty Name="MemberUploads" Relationship="EA.Weee.TestModel.FK__MemberUpl__Creat__45544755" FromRole="AspNetUser" ToRole="MemberUpload" />
           <NavigationProperty Name="MemberUploads1" Relationship="EA.Weee.TestModel.FK__MemberUpl__Updat__46486B8E" FromRole="AspNetUser" ToRole="MemberUpload" />
           <NavigationProperty Name="MemberUploads2" Relationship="EA.Weee.TestModel.FK_MemberUpload_User_SubmittedBy" FromRole="AspNetUser" ToRole="MemberUpload" />
+          <NavigationProperty Name="InvoiceRuns" Relationship="EA.Weee.TestModel.FK_InvoiceRun_AspNetUsers_IssuedBy" FromRole="AspNetUser" ToRole="InvoiceRun" />
         </EntityType>
         <Association Name="FK_CompetentAuthorityUser_AspNetUsers">
           <End Type="EA.Weee.TestModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
@@ -2915,10 +2937,12 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="CompetentAuthorityId" Type="Guid" Nullable="false" />
           <Property Name="IbisFileDataId" Type="Guid" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="IbisFileData" Relationship="EA.Weee.TestModel.FK_InvoiceRun_IbisFileData" FromRole="InvoiceRun" ToRole="IbisFileData" />
           <NavigationProperty Name="CompetentAuthority" Relationship="EA.Weee.TestModel.FK_InvoiceRun_CompetentAuthority" FromRole="InvoiceRun" ToRole="CompetentAuthority" />
           <NavigationProperty Name="MemberUploads" Relationship="EA.Weee.TestModel.FK_MemberUpload_InvoiceRun" FromRole="InvoiceRun" ToRole="MemberUpload" />
+          <Property Name="IssuedDate" Type="DateTime" Precision="3" />
+          <Property Name="IssuedByUserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="EA.Weee.TestModel.FK_InvoiceRun_AspNetUsers_IssuedBy" FromRole="InvoiceRun" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="C1B1STransactionNumberSequence">
           <Key>
@@ -2975,6 +2999,18 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="EndMonth" Type="Int32" Nullable="false" />
           <Property Name="EndDay" Type="Int32" Nullable="false" />
         </EntityType>
+        <Association Name="FK_InvoiceRun_AspNetUsers_IssuedBy">
+          <End Type="EA.Weee.TestModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.InvoiceRun" Role="InvoiceRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InvoiceRun">
+              <PropertyRef Name="IssuedByUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3475,7 +3511,8 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <EntitySetMapping Name="InvoiceRuns">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.InvoiceRun">
               <MappingFragment StoreEntitySet="InvoiceRun">
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IssuedByUserId" ColumnName="IssuedByUserId" />
+                <ScalarProperty Name="IssuedDate" ColumnName="IssuedDate" />
                 <ScalarProperty Name="IbisFileDataId" ColumnName="IbisFileDataId" />
                 <ScalarProperty Name="CompetentAuthorityId" ColumnName="CompetentAuthorityId" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
