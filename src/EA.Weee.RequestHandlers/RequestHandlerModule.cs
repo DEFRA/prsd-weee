@@ -46,7 +46,7 @@
                 .AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(GetType().Assembly)
-                .Where(t => t.Namespace.Contains("Services"))
+                .Where(t => t.Namespace.Contains("Factories"))
                 .AsImplementedInterfaces();
 
             // Register singleton types relating to PCS member upload testing.
