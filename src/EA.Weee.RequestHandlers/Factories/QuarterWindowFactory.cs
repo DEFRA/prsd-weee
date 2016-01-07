@@ -1,21 +1,22 @@
-﻿namespace EA.Weee.RequestHandlers.Services
+﻿namespace EA.Weee.RequestHandlers.Factories
 {
     using System;
-    using Core.DataReturns;
+    using System.Threading.Tasks;
     using DataAccess.DataAccess;
+    using Domain.DataReturns;
 
-    public class QuarterWindowService : IQuarterWindowService
+    public class QuarterWindowFactory : IQuarterWindowFactory
     {
         private readonly IQuarterWindowTemplateDataAccess dataAccess;
 
-        public QuarterWindowService(IQuarterWindowTemplateDataAccess dataAccess)
+        public QuarterWindowFactory(IQuarterWindowTemplateDataAccess dataAccess)
         {
             this.dataAccess = dataAccess;
         }
 
-        public QuarterWindow GetQuarterWindow(Quarter quarter)
+        public async Task<QuarterWindow> GetQuarterWindow(Quarter quarter)
         {
-            var quarterWindowTemplate = dataAccess.GetByQuarter((int)quarter.Q);
+            var quarterWindowTemplate = await dataAccess.GetByQuarter((int)quarter.Q);
 
             var startDate = new DateTime(quarter.Year + quarterWindowTemplate.AddStartYears, quarterWindowTemplate.StartMonth, quarterWindowTemplate.StartDay);
             var endDate = new DateTime(quarter.Year + quarterWindowTemplate.AddEndYears, quarterWindowTemplate.EndMonth, quarterWindowTemplate.EndDay);

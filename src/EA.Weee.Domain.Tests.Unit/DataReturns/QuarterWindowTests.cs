@@ -1,8 +1,8 @@
-﻿namespace EA.Weee.Core.Tests.Unit.DataReturns
+﻿namespace EA.Weee.Domain.Tests.Unit.DataReturns
 {
-    using Core.DataReturns;
-    using FakeItEasy;
     using System;
+    using Domain.DataReturns;
+    using FakeItEasy;
     using Xunit;
 
     public class QuarterWindowTests
