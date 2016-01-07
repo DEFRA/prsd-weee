@@ -85,6 +85,7 @@
         [InlineData(Reports.ProducerDetails, "ProducerDetails")]
         [InlineData(Reports.PCSCharges, "PCSCharges")]
         [InlineData(Reports.Producerpublicregister, "ProducerPublicRegister")]
+        [InlineData(Reports.ProducerEEEData, "ProducerEEEData")]
         public void HttpPost_ChooseActivity_RedirectsToCorrectControllerAction(string selection, string action)
         {
             // Arrange
@@ -184,6 +185,32 @@
             controller.ModelState.AddModelError("Key", "Any error");
 
             var result = await controller.ProducerPublicRegister(new ProducerPublicRegisterViewModel());
+
+            Assert.IsType<ViewResult>(result);
+            Assert.False(controller.ModelState.IsValid);
+        }
+
+        [Fact]
+        public async void HttpGet_ProducerEEEData_ShouldReturnsProducerEEEDataView()
+        {
+            var controller = ReportsController();
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAllComplianceYears>._))
+                .Returns(new List<int> { 2015, 2016 });
+
+            var result = await controller.ProducerEEEData();
+
+            var viewResult = ((ViewResult)result);
+            Assert.Equal("ProducerEEEData", viewResult.ViewName);
+        }
+
+        [Fact]
+        public async void HttpPost_ProducerEEEData_ModelIsInvalid_ShouldRedirectViewWithError()
+        {
+            var controller = ReportsController();
+            controller.ModelState.AddModelError("Key", "Any error");
+
+            var result = await controller.ProducerEEEData(new ProducerEEEDataViewModel());
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
