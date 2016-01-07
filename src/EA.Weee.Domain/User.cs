@@ -29,6 +29,11 @@
 
         public string Email { get; private set; }
 
+        public string FullName
+        {
+            get { return string.Format("{0} {1}", FirstName, Surname); }
+        }
+
         public void UpdateUserInfo(string firstName, string lastName)
         {
             Guard.ArgumentNotNullOrEmpty(() => firstName, firstName);
