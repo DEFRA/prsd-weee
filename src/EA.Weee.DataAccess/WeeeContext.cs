@@ -76,7 +76,7 @@
 
         public virtual DbSet<InvoiceRun> InvoiceRuns { get; set; }
 
-        public virtual DbSet<QuarterWindowTemplate> QuarterWindows { get; set; }
+        public virtual DbSet<QuarterWindowTemplate> QuarterWindowTemplates { get; set; }
 
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 

@@ -14,7 +14,7 @@
 
         public QuarterWindowTemplate GetByQuarter(int quarter)
         {
-            return context.QuarterWindows.Single(qw => qw.Quarter == quarter);
+            return context.QuarterWindowTemplates.Single(qw => qw.Quarter == quarter);
         }
     }
 }
