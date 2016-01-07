@@ -104,6 +104,7 @@
         <AssociationConnector Association="EA.Weee.TestModel.FK_InvoiceRun_CompetentAuthority" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_MemberUpload_InvoiceRun" />
         <EntityTypeShape EntityType="EA.Weee.TestModel.QuarterWindowTemplate" Width="1.5" PointX="7.375" PointY="0.75" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_InvoiceRun_AspNetUsers_IssuedBy" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
