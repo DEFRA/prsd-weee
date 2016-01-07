@@ -74,9 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAccess\IQuarterWindowTemplateDataAccess.cs" />
-    <Compile Include="DataAccess\ISystemDataDataAccess.cs" />
     <Compile Include="DataAccess\QuarterWindowTemplateDataAccess.cs" />
-    <Compile Include="DataAccess\SystemDataDataAccess.cs" />
     <Compile Include="EntityFrameworkModule.cs" />
     <Compile Include="DataAccess\IRegisteredProducerDataAccess.cs" />
     <Compile Include="DataAccess\RegisteredProducerDataAccess.cs" />
