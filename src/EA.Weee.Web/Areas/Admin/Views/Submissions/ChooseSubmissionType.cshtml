@@ -6,14 +6,14 @@
 }
 
 @section main_content
-{   
+{
     <header class="hgroup">
         <h1 class="heading-large">
             Which submissions would you like to view?
         </h1>
     </header>
 
-    @using (Html.BeginForm(actionName: "ChooseSubmissionType", controllerName: "Home", method: FormMethod.Post))
+    @using (Html.BeginForm(actionName: "ChooseSubmissionType", controllerName: "Submissions", method: FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
@@ -31,8 +31,6 @@
         @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
     }
 
-    <div>
-        <a href="@Url.Action("ChooseActivity", "Home", new { area = "Scheme" })">Perform another activity</a>
-    </div>
+    <a href="@Url.Action("ChooseActivity", "Home", new { area = "Admin" })">Perform another activity</a>
 }
 
