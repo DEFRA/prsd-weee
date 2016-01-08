@@ -10,6 +10,8 @@
 
         bool HasKey(string key);
 
+        bool IsLiveEnvironment { get; }
+
         ITestUserEmailDomains TestInternalUserEmailDomains { get; }
     }
 }

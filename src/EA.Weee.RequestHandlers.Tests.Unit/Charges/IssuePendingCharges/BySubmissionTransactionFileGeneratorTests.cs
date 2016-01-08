@@ -47,10 +47,12 @@
                 scheme,
                 A.Dummy<string>());
 
+            memberUpload.Submit(A.Dummy<User>());
+
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
@@ -99,6 +101,10 @@
                 scheme,
                 A.Dummy<string>());
 
+            SystemTime.Freeze(new DateTime(2015, 1, 1));
+            memberUpload.Submit(A.Dummy<User>());
+            SystemTime.Unfreeze();
+
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
@@ -108,7 +114,7 @@
             BySubmissionTransactionFileGenerator generator = new BySubmissionTransactionFileGenerator(transactionReferenceGenerator);
 
             SystemTime.Freeze(new DateTime(2015, 12, 31));
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
             SystemTime.Unfreeze();
 
             // Act
@@ -137,10 +143,7 @@
             Assert.NotNull(lineItem);
 
             Assert.Equal(123.45m, lineItem.AmountExcludingVAT);
-
-            // TODO: Add "SubmittedDate" to the MemberUpload domain object.
-            // Assert.Equal("Charge for producer registration submission made on 01 Jan 2015.", lineItem.Description);
-
+            Assert.Equal("Charge for producer registration submission made on 01 Jan 2015.", lineItem.Description);
             Assert.Equal("H", lineItem.AreaCode);
             Assert.Equal("H", lineItem.ContextCode);
             Assert.Equal("W", lineItem.IncomeStreamCode);
@@ -180,6 +183,8 @@
                 scheme,
                 A.Dummy<string>());
 
+            memberUpload1.Submit(A.Dummy<User>());
+
             MemberUpload memberUpload2 = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
@@ -189,11 +194,13 @@
                 scheme,
                 A.Dummy<string>());
 
+            memberUpload2.Submit(A.Dummy<User>());
+
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");

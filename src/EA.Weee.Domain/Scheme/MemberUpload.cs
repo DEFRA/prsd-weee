@@ -35,6 +35,10 @@
 
         public virtual InvoiceRun InvoiceRun { get; private set; }
 
+        public virtual User SubmittedByUser { get; private set; }
+
+        public DateTime? SubmittedDate { get; private set; }
+
         public MemberUpload(
             Guid organisationId,
             string data,
@@ -75,14 +79,18 @@
             ProducerSubmissions = new List<ProducerSubmission>();
         }
 
-        public void Submit()
+        public void Submit(User submittingUser)
         {
+            Guard.ArgumentNotNull(() => submittingUser, submittingUser);
+
             if (IsSubmitted)
             {
                 throw new InvalidOperationException("IsSubmitted status must be false to transition to true");
             }
 
             IsSubmitted = true;
+            SubmittedByUser = submittingUser;
+            SubmittedDate = SystemTime.UtcNow;
 
             foreach (ProducerSubmission producerSubmission in ProducerSubmissions)
             {
