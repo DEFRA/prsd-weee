@@ -25,6 +25,11 @@
             FixedQuarter = quarter.Q;
         }
 
+        public void ToggleFixedQuarterAndComplianceYearUsage(bool enabled)
+        {
+            UseFixedComplianceYearAndQuarter = enabled;
+        }
+
         /// <summary>
         /// This property is used by Entity Framework to map the ulong InitialIbisFileId property
         /// to the BIGINT column of the database.

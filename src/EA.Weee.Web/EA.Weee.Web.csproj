@@ -504,8 +504,10 @@
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SubmitViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionType.cs" />
     <Compile Include="Areas\Test\Controllers\CreatePcsDataReturnXmlFileController.cs" />
+    <Compile Include="Areas\Test\Controllers\ManagePcsReturnsSubmissionWindowController.cs" />
     <Compile Include="Areas\Test\ViewModels\CreatePcsDataReturnXmlFile\SelectOrganisationViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\CreatePcsDataReturnXmlFile\SpecifyOptionsViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\ManagePcsReturnsSubmissionWindow\SettingsModel.cs" />
     <Compile Include="Infrastructure\CsvFilenameFormat.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\govuk_elements\_tables.scss" />
@@ -559,6 +561,8 @@
     <Content Include="Areas\Scheme\Views\Home\ViewDataReturnSubmissionHistory.cshtml" />
     <Content Include="Areas\Admin\Views\Submissions\ChooseSubmissionType.cshtml" />
     <Content Include="Areas\Admin\Views\Submissions\DataReturnSubmissionHistory.cshtml" />
+    <Content Include="Areas\Test\Views\ManagePcsReturnsSubmissionWindow\Settings.cshtml" />
+    <Content Include="Areas\Test\Views\ManagePcsReturnsSubmissionWindow\SettingsUpdated.cshtml" />
     <Content Include="Areas\Admin\Views\Submissions\_dataReturnSubmissionsResults.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerEEEData.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\_ProducersDataReportFilters.cshtml" />
