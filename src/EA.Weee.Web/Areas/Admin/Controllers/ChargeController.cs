@@ -158,7 +158,7 @@
             CSVFileData csvFileData;
             using (IWeeeClient client = weeeClient())
             {
-                var request = new FetchInvoiceRunCSV(id);
+                var request = new FetchInvoiceRunCsv(id);
                 csvFileData = await client.SendAsync(User.GetAccessToken(), request);
             }
 

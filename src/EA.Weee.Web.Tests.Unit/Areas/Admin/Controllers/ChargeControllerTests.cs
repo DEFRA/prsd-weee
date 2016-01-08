@@ -508,8 +508,8 @@
             var csvFileData = new CSVFileData { FileName = "Test file.csv", FileContent = "CSV content" };
 
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchInvoiceRunCSV>._))
-                .WhenArgumentsMatch(a => a.Get<FetchInvoiceRunCSV>("request").InvoiceRunId == invoiceRunId)
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchInvoiceRunCsv>._))
+                .WhenArgumentsMatch(a => a.Get<FetchInvoiceRunCsv>("request").InvoiceRunId == invoiceRunId)
                 .Returns(csvFileData);
 
             ChargeController controller = new ChargeController(
