@@ -20,7 +20,7 @@
         public async Task<List<int>> HandleAsync(GetAllComplianceYears request)
         {
             authorization.EnsureCanAccessInternalArea();
-            return await dataAccess.GetAllComplianceYears();
+            return await dataAccess.GetAllComplianceYears(request.ComplianceYearFor);
         }
     }
 }
