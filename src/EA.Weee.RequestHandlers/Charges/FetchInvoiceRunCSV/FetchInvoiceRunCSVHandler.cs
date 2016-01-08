@@ -45,7 +45,7 @@
             string fileContent = csvWriter.Write(items);
 
             var invoiceRun = await commonDataAccess.FetchInvoiceRunAsync(message.InvoiceRunId);
-            string fileName = string.Format("invoicerun_{0}_{1}.csv", invoiceRun.CompetentAuthority.Abbreviation, invoiceRun.CreatedDate.ToString("ddMMyyyy"));
+            string fileName = string.Format("invoicerun_{0}_{1}.csv", invoiceRun.CompetentAuthority.Abbreviation, invoiceRun.IssuedDate.ToString("ddMMyyyy"));
 
             return new CSVFileData
             {

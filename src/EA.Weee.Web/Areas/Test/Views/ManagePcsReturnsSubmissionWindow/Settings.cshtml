@@ -1,0 +1,40 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Test.ViewModels.ManagePcsReturnsSubmissionWindow.SettingsModel
+@{
+    ViewBag.Title = "PCS submission window settings";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            PCS submission window settings
+        </h1>
+    </header>
+
+    <p>Use this page to manage the PCS submission window</p>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.FixCurrentQuarterAndComplianceYear)">
+            @Html.Gds().ValidationMessageFor(m => m.FixCurrentQuarterAndComplianceYear)
+            @Html.Gds().CheckBoxFor(m => m.FixCurrentQuarterAndComplianceYear)
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.CurrentComplianceYear)">
+            @Html.Gds().LabelFor(m => m.CurrentComplianceYear)
+            @Html.Gds().ValidationMessageFor(m => m.CurrentComplianceYear)
+            @Html.Gds().TextBoxFor(m => m.CurrentComplianceYear, new { @maxlength = CommonMaxFieldLengths.Year })
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedQuarter)">
+            @Html.Gds().LabelFor(m => m.SelectedQuarter)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedQuarter)
+            @Html.Gds().DropDownListFor(m => m.SelectedQuarter, Model.Quarters)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+    }
+}

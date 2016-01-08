@@ -8,6 +8,8 @@
         public InvoiceRunMapping()
         {
             ToTable("InvoiceRun", "Charging");
+
+            HasRequired(e => e.IssuedByUser);
         }
     }
 }

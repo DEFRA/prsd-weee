@@ -46,7 +46,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_ReturnsFileNameWithInvoiceRunDateAndAA()
+        public async Task HandleAsync_ReturnsFileNameWithInvoiceIssuedDateAndAA()
         {
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             var context = A.Dummy<WeeeContext>();
@@ -58,7 +58,7 @@
             var invoiceRun = A.Fake<InvoiceRun>();
             A.CallTo(() => invoiceRun.CompetentAuthority)
                 .Returns(new UKCompetentAuthority(Guid.NewGuid(), "Wales", "NRW", A.Dummy<Country>()));
-            A.CallTo(() => invoiceRun.CreatedDate)
+            A.CallTo(() => invoiceRun.IssuedDate)
                 .Returns(new DateTime(2016, 02, 25));
 
             A.CallTo(() => dataAccess.FetchInvoiceRunAsync(A<Guid>._))

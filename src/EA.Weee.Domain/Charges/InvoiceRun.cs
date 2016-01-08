@@ -17,7 +17,9 @@
     {
         public virtual UKCompetentAuthority CompetentAuthority { get; private set; }
 
-        public virtual DateTime CreatedDate { get; private set; }
+        public virtual DateTime IssuedDate { get; private set; }
+
+        public User IssuedByUser { get; private set; }
 
         public IReadOnlyList<MemberUpload> MemberUploads { get; private set; }
 
@@ -25,13 +27,16 @@
 
         public InvoiceRun(
             UKCompetentAuthority competentAuthority,
-            IReadOnlyList<MemberUpload> memberUploads)
+            IReadOnlyList<MemberUpload> memberUploads,
+            User issuingUser)
         {
             Guard.ArgumentNotNull(() => competentAuthority, competentAuthority);
             Guard.ArgumentNotNull(() => memberUploads, memberUploads);
+            Guard.ArgumentNotNull(() => issuingUser, issuingUser);
 
             CompetentAuthority = competentAuthority;
-            CreatedDate = SystemTime.UtcNow;
+            IssuedDate = SystemTime.UtcNow;
+            IssuedByUser = issuingUser;
 
             if (memberUploads.Count == 0)
             {

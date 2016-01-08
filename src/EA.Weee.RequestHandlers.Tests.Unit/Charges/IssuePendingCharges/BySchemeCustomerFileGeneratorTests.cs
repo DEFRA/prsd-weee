@@ -67,7 +67,7 @@
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
             ulong id = 12345;
@@ -130,7 +130,7 @@
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 
@@ -217,7 +217,7 @@
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 
@@ -316,7 +316,7 @@
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 

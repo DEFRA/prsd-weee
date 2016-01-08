@@ -11,21 +11,25 @@
     using EA.Weee.Domain.Charges;
     using EA.Weee.Domain.Scheme;
     using Security;
+    using Shared.DomainUser;
 
     public class IssuePendingChargesHandler : IRequestHandler<Requests.Charges.IssuePendingCharges, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IIssuePendingChargesDataAccess dataAccess;
         private readonly IIbisFileDataGenerator ibisFileDataGenerator;
+        private readonly IDomainUserContext domainUserContext;
 
         public IssuePendingChargesHandler(
             IWeeeAuthorization authorization,
             IIssuePendingChargesDataAccess dataAccess,
-            IIbisFileDataGenerator ibisFileGenerator)
+            IIbisFileDataGenerator ibisFileDataGenerator,
+            IDomainUserContext domainUserContext)
         {
             this.authorization = authorization;
             this.dataAccess = dataAccess;
-            this.ibisFileDataGenerator = ibisFileGenerator;
+            this.ibisFileDataGenerator = ibisFileDataGenerator;
+            this.domainUserContext = domainUserContext;
         }
 
         public async Task<Guid> HandleAsync(Requests.Charges.IssuePendingCharges message)
@@ -36,7 +40,9 @@
 
             IReadOnlyList<MemberUpload> memberUploads = await dataAccess.FetchSubmittedNonInvoicedMemberUploadsAsync(authority);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            User issuingUser = await domainUserContext.GetCurrentUserAsync();
+
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, issuingUser);
 
             if (authority.Name == "Environment Agency")
             {
