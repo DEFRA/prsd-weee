@@ -21,6 +21,11 @@
             return ConfigurationManager.AppSettings.AllKeys.Select((string x) => x.ToUpperInvariant()).Contains(key.ToUpperInvariant());
         }
 
+        public bool IsLiveEnvironment
+        {
+            get { return AppSettings["Weee.Environment"] == "Live"; }
+        }
+
         public ITestUserEmailDomains TestInternalUserEmailDomains
         {
             get

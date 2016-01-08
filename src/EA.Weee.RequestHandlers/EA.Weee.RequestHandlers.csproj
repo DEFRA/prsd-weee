@@ -158,6 +158,8 @@
     <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
     <Compile Include="Factories\IQuarterWindowFactory.cs" />
     <Compile Include="Factories\QuarterWindowFactory.cs" />
+    <Compile Include="Factories\QuarterFactory.cs" />
+    <Compile Include="Factories\IQuarterFactory.cs" />
     <Compile Include="Shared\DomainUser\DomainUserContext.cs" />
     <Compile Include="Shared\DomainUser\IDomainUserContext.cs" />
     <Compile Include="Shared\Extensions.cs" />
@@ -273,6 +275,7 @@
     <Compile Include="Security\WeeeAuthorization.cs" />
     <Compile Include="Shared\GetCountriesHandler.cs" />
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
+    <Compile Include="Test\UpdatePcsSubmissionWindowSettingsHandler.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsersDataAccess.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\IGetManageableOrganisationUsersDataAccess.cs" />
     <Compile Include="Users\GetOrganisationUserHandler.cs" />
