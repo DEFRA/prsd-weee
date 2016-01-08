@@ -17,6 +17,7 @@ namespace EA.Weee.Tests.Core.Model
         public CompetentAuthority()
         {
             this.CompetentAuthorityUsers = new HashSet<CompetentAuthorityUser>();
+            this.InvoiceRuns = new HashSet<InvoiceRun>();
         }
     
         public System.Guid Id { get; set; }
@@ -26,5 +27,6 @@ namespace EA.Weee.Tests.Core.Model
     
         public virtual ICollection<CompetentAuthorityUser> CompetentAuthorityUsers { get; set; }
         public virtual Country Country { get; set; }
+        public virtual ICollection<InvoiceRun> InvoiceRuns { get; set; }
     }
 }

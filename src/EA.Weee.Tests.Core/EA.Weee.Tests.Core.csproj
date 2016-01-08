@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="AuthorizationBuilder.cs" />
     <Compile Include="DbContextHelper.cs" />
+    <Compile Include="DomainHelper.cs" />
     <Compile Include="Model\AatfDeliveryLocation.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -112,6 +113,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Business.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\C1B1STransactionNumberSequence.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\ChargeBandAmount.cs">
@@ -157,7 +161,13 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Entities.cs" />
+    <Compile Include="Model\IbisFileData.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\IdType.cs" />
+    <Compile Include="Model\InvoiceRun.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\MemberUpload.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -206,9 +216,6 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\SICCode_.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model\WeeeCategory.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\WeeeCollectedAmount.cs">

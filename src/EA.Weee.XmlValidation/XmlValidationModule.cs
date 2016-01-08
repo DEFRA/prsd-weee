@@ -99,6 +99,7 @@
 
             builder.RegisterType<XmlErrorTranslator>().As<IXmlErrorTranslator>().InstancePerRequest();
             builder.RegisterType<SchemaValidator>().As<ISchemaValidator>().InstancePerRequest();
+            builder.RegisterType<NamespaceValidator>().As<INamespaceValidator>().InstancePerRequest();
         }
     }
 }

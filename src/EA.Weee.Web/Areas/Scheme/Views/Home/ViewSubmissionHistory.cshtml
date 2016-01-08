@@ -11,12 +11,15 @@
         View submission history
     </h1>
 </header>
-
+<p>
+    <span class="font-bold">Submission type:</span> Member registrations
+</p>
 @if (Model.Results.Any())
-{   
-            <div class="form-group">
-                <table id="submissions">
-                    <thead>
+{
+    <div class="form-group">
+        <table id="submissions">
+            <caption><span class="visuallyhidden">Submissions</span></caption>
+                <thead>
                     <tr>
                         <th>Date and time (GMT)</th>
                         <th>Compliance year</th>
@@ -25,30 +28,30 @@
                         <th>Submitted by</th>
                         <th>File name</th>
                     </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (SubmissionsHistorySearchResult item in Model.Results)
-                        {
-                            string datetimeValue = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
+                </thead>
+                <tbody>
+                    @foreach (SubmissionsHistorySearchResult item in Model.Results)
+                    {
+                        string datetimeValue = @item.DateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
 
-                            <tr>
-                                <td>@datetimeValue</td>
-                                <td>@item.Year</td>
-                                <td>
-                                    @if (item.NoOfWarnings > 0)
-                                    {
-                                        string warningText = (item.NoOfWarnings > 1 ? "warnings (CSV)" : "warning (CSV)");
-                                        <a href="@Url.Action("DownloadCsv", "Home", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
-                                    }
-                                </td>
-                                <td>£@item.TotalCharges</td>
-                                <td>@item.SubmittedBy</td>
-                                <td>@item.FileName</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                        <tr>
+                            <td>@datetimeValue</td>
+                            <td>@item.Year</td>
+                            <td>
+                                @if (item.NoOfWarnings > 0)
+                                {
+                                    string warningText = (item.NoOfWarnings > 1 ? "warnings (CSV)" : "warning (CSV)");
+                                    <a href="@Url.Action("DownloadCsv", "Home", new { schemeId = item.OrganisationId, year = item.Year, memberUploadId = item.MemberUploadId, submissionDateTime = item.DateTime })">@item.NoOfWarnings @warningText</a>
+                                }
+                            </td>
+                            <td>£@item.TotalCharges</td>
+                            <td>@item.SubmittedBy</td>
+                            <td>@item.FileName</td>
+                        </tr>
+                    }
+                </tbody>
+</table>
+    </div>
 }
 else
 {

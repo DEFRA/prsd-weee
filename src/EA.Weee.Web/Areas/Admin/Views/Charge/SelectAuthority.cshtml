@@ -1,0 +1,46 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Shared
+@model EA.Weee.Web.Areas.Admin.ViewModels.Charge.SelectAuthorityViewModel
+
+@{
+    ViewBag.Title = "Choose Appropriate Authority";
+
+    Dictionary<CompetentAuthority, string> displayNames = new Dictionary<CompetentAuthority, string>()
+    {
+        { CompetentAuthority.England, "Environment Agency" },
+        { CompetentAuthority.Scotland, "Scottish Environment Protection Agency" },
+        { CompetentAuthority.NorthernIreland, "Northern Ireland Environment Agency" },
+        { CompetentAuthority.Wales, "Natural Resources Wales" },
+    };
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            For which appropriate authority would you like to manage charges?
+        </h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedAuthority)">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedAuthority,
+                Model.PossibleValues,
+                a => a,
+                a => displayNames[a],
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+    }
+
+    @Html.ActionLink("Back", "Index", "Home")
+}
+

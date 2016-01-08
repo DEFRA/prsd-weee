@@ -61,6 +61,10 @@
     <Reference Include="FluentValidation">
       <HintPath>..\packages\FluentValidation.5.6.2.0\lib\Net45\FluentValidation.dll</HintPath>
     </Reference>
+    <Reference Include="Ionic.Zip, Version=1.9.7.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.9.7\lib\net20\Ionic.Zip.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -91,6 +95,26 @@
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandler.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
+    <Compile Include="Charges\CommonDataAccess.cs" />
+    <Compile Include="Charges\FetchInvoiceRunIbisZipFile\FetchInvoiceRunIbisZipFileHandler.cs" />
+    <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandler.cs" />
+    <Compile Include="Charges\ICommonDataAccess.cs" />
+    <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\BySchemeTransactionFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IbisFileDataGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\BySubmissionTransactionFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IIbisCustomerFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IIbisFileDataGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IIbisTransactionFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IIssuePendingChargesDataAccess.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesDataAccess.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesHandler.cs" />
+    <Compile Include="Charges\IssuePendingCharges\ITransactionReferenceGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\TransactionReferenceGenerator.cs" />
+    <Compile Include="DataReturns\BusinessValidation\EeeValidator.cs" />
+    <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderResult.cs" />
+    <Compile Include="DataReturns\BusinessValidation\IEeeValidator.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\CreateTestXmlFileHandler.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\DataReturnVersionGenerator.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\DataReturnVersionGeneratorDataAccess.cs" />
@@ -101,13 +125,21 @@
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionDataAccess.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\IFetchDataReturnForSubmissionDataAccess.cs" />
-    <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnXmlValidator.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnVersionFromXmlBuilder.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\GenerateFromDataReturnXml.cs" />
-    <Compile Include="DataReturns\ProcessDataReturnXmlFile\IDataReturnXmlValidator.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\GenerateFromDataReturnXmlResult.cs" />
+    <Compile Include="DataReturns\ProcessDataReturnXmlFile\IDataReturnVersionFromXmlBuilder.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\IGenerateFromDataReturnXml.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\IProcessDataReturnXmlFileDataAccess.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileDataAccess.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileHandler.cs" />
+    <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderDataAccess.cs" />
+    <Compile Include="DataReturns\ReturnVersionBuilder\IDataReturnVersionBuilder.cs" />
+    <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilder.cs" />
+    <Compile Include="DataReturns\ReturnVersionBuilder\IDataReturnVersionBuilderDataAccess.cs" />
+    <Compile Include="DataReturns\SubmitReturnVersion\ISubmitReturnVersionDataAccess.cs" />
+    <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandler.cs" />
+    <Compile Include="DataReturns\SubmitReturnVersion\SubmitReturnVersionDataAccess.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
@@ -121,6 +153,8 @@
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryDataAccess.cs" />
     <Compile Include="Scheme\MemberUploadTesting\SchemeInfo.cs" />
     <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
+    <Compile Include="Shared\DomainUser\DomainUserContext.cs" />
+    <Compile Include="Shared\DomainUser\IDomainUserContext.cs" />
     <Compile Include="Shared\Extensions.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\GenerateFromXmlDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\IGenerateFromXmlDataAccess.cs" />
@@ -186,11 +220,14 @@
     <Compile Include="Scheme\GetSchemePublicInfo\IGetSchemePublicInfoDataAccess.cs" />
     <Compile Include="Scheme\GetSchemesDataAccess.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandler.cs" />
+    <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsDataAccess.cs" />
+    <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Scheme\IGetSchemeByIdDataAccess.cs" />
     <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorityByIdHandler.cs" />
+    <Compile Include="Shared\IGetDataReturnSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\IGetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\IProducerChargeCalculatorDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXml.cs" />
@@ -254,6 +291,10 @@
       <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>
       <Name>EA.Weee.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.Ibis\EA.Weee.Ibis.csproj">
+      <Project>{c3c69bf6-3716-4123-83ee-4c64b19c5377}</Project>
+      <Name>EA.Weee.Ibis</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Requests\EA.Weee.Requests.csproj">
       <Project>{87fbb5cc-a732-4363-a158-39dbf3707407}</Project>
       <Name>EA.Weee.Requests</Name>
@@ -274,7 +315,6 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.1\build\StyleCop.MSBuild.Targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

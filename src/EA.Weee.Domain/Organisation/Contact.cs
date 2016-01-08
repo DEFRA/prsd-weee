@@ -64,6 +64,11 @@
             }
         }
 
+        public string FullName
+        {
+            get { return string.Format("{0} {1}", FirstName, LastName); }
+        }
+
         public Contact OverwriteWhereNull(Contact otherContact)
         {
             if (otherContact == null)

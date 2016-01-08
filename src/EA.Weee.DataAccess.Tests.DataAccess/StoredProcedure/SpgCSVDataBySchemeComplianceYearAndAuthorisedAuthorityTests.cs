@@ -25,6 +25,7 @@
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
+                memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
                 ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
 
@@ -95,6 +96,7 @@
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
+                memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
                 ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
 
@@ -131,6 +133,7 @@
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
+                memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
                 ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
 
@@ -167,6 +170,7 @@
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
+                memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
                 ProducerSubmission producer1 = helper.CreateProducerAsSoleTrader(memberUpload1, "WEE/11AAAA11");
 
@@ -203,12 +207,14 @@
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
+                memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
                 ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
 
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme1);
                 memberUpload2.ComplianceYear = 2017;
                 memberUpload2.IsSubmitted = true;
+                memberUpload2.SubmittedDate = new DateTime(2015, 1, 1);
 
                 ProducerSubmission producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/11AAAA11");
 
@@ -243,6 +249,7 @@
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
+                memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
                 ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
 
@@ -251,6 +258,7 @@
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme2);
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;
+                memberUpload2.SubmittedDate = new DateTime(2015, 1, 1);
 
                 ProducerSubmission producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/22BBBB22");
 
@@ -283,6 +291,7 @@
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
+                memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
                 ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11BBBB11");
                 producer1.Business.Partnership.Name = "ABCH";

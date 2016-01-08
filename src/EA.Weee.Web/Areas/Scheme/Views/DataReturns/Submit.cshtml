@@ -117,7 +117,7 @@
                     "DataReturns",
                     "Downloads",
                     "Errors and warnings",
-                    routeValues: new RouteValueDictionary(new { dataReturnId = Model.DataReturn.DataReturnId })).
+                    routeValues: new RouteValueDictionary(new { dataReturnUploadId = Model.DataReturn.DataReturnUploadId })).
             </p>
 
             <p>
@@ -138,18 +138,8 @@
         }
         else
         {
-            <p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete.</p>
-
-            @Html.Partial("_PrivacyPolicy");
-
-            <div class="form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
-                @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
-                <label class="block-label" for="PrivacyPolicy">
-                    @Html.CheckBoxFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy" })
-                    Confirm you have read our privacy policy
-                </label>
-            </div>
-
+            <p>By submitting your XML file, you are confirming that the information you’ve provided is accurate and complete. The data you provide will be used to calculate your obligation and will contribute to public data reports.</p>
+            
             <p>
                 @this.WeeeGds().SubmitWithEventTracking(
                     "Submit",

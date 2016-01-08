@@ -21,6 +21,7 @@ namespace EA.Weee.Tests.Core.Model
         }
     
         public System.Guid Id { get; set; }
+        public byte[] RowVersion { get; set; }
     
         public virtual ICollection<DataReturnVersion> DataReturnVersions { get; set; }
         public virtual ICollection<WeeeDeliveredReturnVersionAmount> WeeeDeliveredReturnVersionAmounts { get; set; }

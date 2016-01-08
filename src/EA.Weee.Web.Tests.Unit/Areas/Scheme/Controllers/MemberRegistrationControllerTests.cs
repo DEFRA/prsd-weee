@@ -293,7 +293,7 @@
         public async Task GetViewErrorsOrWarnings_NoErrors_RedirectsToAcceptedPage()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
-            .Returns(new List<UploadErrorData> { });
+            .Returns(new List<ErrorData> { });
 
             var result = await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
             var redirect = (RedirectToRouteResult)result;
@@ -305,7 +305,7 @@
         public async Task GetViewErrorsOrWarnings_ErrorsPresent_ShowsErrorPage()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
-            .Returns(new List<UploadErrorData> { new UploadErrorData { ErrorLevel = ErrorLevel.Error } });
+            .Returns(new List<ErrorData> { new ErrorData("An Error", ErrorLevel.Error) });
 
             var result = await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
             
@@ -320,7 +320,7 @@
         public async Task GetViewErrorsOrWarnings_WarningPresent_ShowsAcceptedPage()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
-           .Returns(new List<UploadErrorData> { new UploadErrorData { ErrorLevel = ErrorLevel.Warning } });
+           .Returns(new List<ErrorData> { new ErrorData("An warning", ErrorLevel.Warning) });
 
             var result = await MemberRegistrationController().ViewErrorsAndWarnings(A<Guid>._, A<Guid>._);
 
@@ -332,7 +332,7 @@
         [Fact]
         public async Task GetXmlHasNoErrors_NoErrors_HasProvidedErrorData()
         {
-            var errors = new List<UploadErrorData>();
+            var errors = new List<ErrorData>();
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
              .Returns(errors);
@@ -345,12 +345,9 @@
         [Fact]
         public async Task GetViewErrorsOrWarnings_ErrorsPresent_HasProvidedErrorData()
         {
-            var errors = new List<UploadErrorData>
+            var errors = new List<ErrorData>
             {
-                new UploadErrorData
-                {
-                    ErrorLevel = ErrorLevel.Error
-                }
+                new ErrorData("An Error", ErrorLevel.Error)
             };
 
             var providedErrors = await ErrorsAfterClientReturns(errors);
@@ -381,7 +378,7 @@
             var result = await MemberRegistrationController().XmlHasNoErrors(
                 A<Guid>._,
                 memberUploadId,
-                new MemberUploadResultViewModel { ErrorData = new List<UploadErrorData>() });
+                new MemberUploadResultViewModel { ErrorData = new List<ErrorData>() });
 
             var redirect = (RedirectToRouteResult)result;
 
@@ -396,12 +393,12 @@
 
             var memberUploadResult = new MemberUploadResultViewModel
             {
-                ErrorData = new List<UploadErrorData>(),
+                ErrorData = new List<ErrorData>(),
                 PrivacyPolicy = false
             };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
-               .Returns(new List<UploadErrorData>());
+               .Returns(new List<ErrorData>());
 
             var result = await MemberRegistrationController(memberUploadResult).XmlHasNoErrors(
                 A<Guid>._,
@@ -486,7 +483,7 @@
             Assert.Null(context.Result);
         }
 
-        private async Task<List<UploadErrorData>> ErrorsAfterClientReturns(List<UploadErrorData> memberUploadErrorDatas)
+        private async Task<List<ErrorData>> ErrorsAfterClientReturns(List<ErrorData> memberUploadErrorDatas)
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetMemberUploadData>._))
               .Returns(memberUploadErrorDatas);

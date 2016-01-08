@@ -76,6 +76,12 @@
     <Compile Include="EntityFrameworkModule.cs" />
     <Compile Include="DataAccess\IRegisteredProducerDataAccess.cs" />
     <Compile Include="DataAccess\RegisteredProducerDataAccess.cs" />
+    <Compile Include="Mappings\EeeOutputAmountMapping.cs" />
+    <Compile Include="Mappings\EeeOutputReturnVersionMapping.cs" />
+    <Compile Include="Mappings\IbisFileDataMapping.cs" />
+    <Compile Include="Mappings\InvoiceRunMapping.cs" />
+    <Compile Include="Mappings\WeeeCollectedReturnVersionMapping.cs" />
+    <Compile Include="Mappings\WeeeDeliveredReturnVersionMapping.cs" />
     <Compile Include="WeeeContext.Metadata.cs" />
     <Compile Include="Extensions\ProducerExtensions.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />

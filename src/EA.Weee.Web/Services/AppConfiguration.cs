@@ -40,6 +40,12 @@
         [DefaultValue("false")]
         public bool EnableDataReturns { get; set; }
 
+        /// <summary>
+        /// This setting determines whether the admin area allows managing of charges and invoicing.
+        /// </summary>
+        [DefaultValue(false)]
+        public bool EnableInvoicing { get; set; }
+
         [DefaultValue(15.0)]
         public double OrganisationCacheDurationMins { get; set; }
     }

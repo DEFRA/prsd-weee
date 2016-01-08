@@ -15,6 +15,36 @@
           <Property Name="UserStatus" Type="int" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="1B1STransactionNumberSequence">
+          <Key>
+            <PropertyRef Name="NextNumber" />
+          </Key>
+          <Property Name="NextNumber" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IbisFileData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="FileId" Type="bigint" Nullable="false" />
+          <Property Name="CustomerFileName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="CustomerFileData" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="TransactionFileName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="TransactionFileData" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InvoiceRun">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="CompetentAuthorityId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IbisFileDataId" Type="uniqueidentifier" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="AspNetUsers">
           <Key>
             <PropertyRef Name="Id" />
@@ -57,14 +87,6 @@
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="2048" Nullable="false" />
-        </EntityType>
-        <EntityType Name="WeeeCategory">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="Number" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
         </EntityType>
         <EntityType Name="Address">
           <Key>
@@ -123,7 +145,8 @@
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ApprovalNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="FacilityName" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
         <EntityType Name="AeDeliveryLocation">
           <Key>
@@ -131,7 +154,8 @@
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ApprovalNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="OperatorName" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
         <EntityType Name="DataReturn">
           <Key>
@@ -190,23 +214,26 @@
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="RegisteredProducerId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="WeeeCategoryId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ObligationType" Type="nvarchar" MaxLength="4" Nullable="false" />
           <Property Name="Tonnage" Type="decimal" Precision="38" Scale="3" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="WeeeCategory" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="EeeOutputReturnVersion">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
         <EntityType Name="EeeOutputReturnVersionAmount">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="EeeOutputReturnVersionId" />
+            <PropertyRef Name="EeeOuputAmountId" />
           </Key>
-          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="EeeOutputReturnVersionId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="EeeOuputAmountId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
         <EntityType Name="MemberUpload">
           <Key>
@@ -220,10 +247,15 @@
           <Property Name="SchemeId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="IsSubmitted" Type="bit" Nullable="false" />
           <Property Name="TotalCharges" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="FileName" Type="nvarchar(max)" />
           <Property Name="ProcessTime" Type="time" Precision="7" Nullable="false" />
+          <Property Name="InvoiceRunId" Type="uniqueidentifier" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="CreatedById" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UpdatedById" Type="nvarchar" MaxLength="128" />
+          <Property Name="SubmittedDate" Type="datetime" />
+          <Property Name="SubmittedByUserId" Type="nvarchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="MemberUploadError">
           <Key>
@@ -257,23 +289,26 @@
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="SourceType" Type="int" Nullable="false" />
-          <Property Name="WeeeCategoryId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ObligationType" Type="nvarchar" MaxLength="4" Nullable="false" />
           <Property Name="Tonnage" Type="decimal" Precision="38" Scale="3" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="WeeeCategory" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="WeeeCollectedReturnVersion">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
         <EntityType Name="WeeeCollectedReturnVersionAmount">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="WeeeCollectedReturnVersionId" />
+            <PropertyRef Name="WeeeCollectedAmountId" />
           </Key>
-          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="WeeeCollectedReturnVersionId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="WeeeCollectedAmountId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
         <EntityType Name="WeeeDeliveredAmount">
           <Key>
@@ -282,23 +317,26 @@
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="AatfDeliveryLocationId" Type="uniqueidentifier" />
           <Property Name="AeDeliveryLocationId" Type="uniqueidentifier" />
-          <Property Name="WeeeCategoryId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ObligationType" Type="nvarchar" MaxLength="4" Nullable="false" />
           <Property Name="Tonnage" Type="decimal" Precision="38" Scale="3" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="WeeeCategory" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="WeeeDeliveredReturnVersion">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
         <EntityType Name="WeeeDeliveredReturnVersionAmount">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="WeeeDeliveredReturnVersionId" />
+            <PropertyRef Name="WeeeDeliveredAmountId" />
           </Key>
-          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="WeeeDeliveredReturnVersionId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="WeeeDeliveredAmountId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
         <EntityType Name="Address1">
           <Key>
@@ -439,6 +477,30 @@
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="ProducerSubmissionId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
+        <Association Name="FK__MemberUpl__Creat__5F492382">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="CreatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__MemberUpl__Updat__603D47BB">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="UpdatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Address_Country">
           <End Role="Country" Type="Self.Country" Multiplicity="1" />
           <End Role="Address" Type="Self.Address" Multiplicity="*" />
@@ -703,18 +765,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_EeeOutputAmount_WeeeCategory">
-          <End Role="WeeeCategory" Type="Self.WeeeCategory" Multiplicity="1" />
-          <End Role="EeeOutputAmount" Type="Self.EeeOutputAmount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="WeeeCategory">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="EeeOutputAmount">
-              <PropertyRef Name="WeeeCategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_EeeOutputReturnVersionAmount_EeeOutputAmount">
           <End Role="EeeOutputAmount" Type="Self.EeeOutputAmount" Multiplicity="1" />
           <End Role="EeeOutputReturnVersionAmount" Type="Self.EeeOutputReturnVersionAmount" Multiplicity="*" />
@@ -739,6 +789,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_InvoiceRun_CompetentAuthority">
+          <End Role="CompetentAuthority" Type="Self.CompetentAuthority" Multiplicity="1" />
+          <End Role="InvoiceRun" Type="Self.InvoiceRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompetentAuthority">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InvoiceRun">
+              <PropertyRef Name="CompetentAuthorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceRun_IbisFileData">
+          <End Role="IbisFileData" Type="Self.IbisFileData" Multiplicity="0..1" />
+          <End Role="InvoiceRun" Type="Self.InvoiceRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IbisFileData">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InvoiceRun">
+              <PropertyRef Name="IbisFileDataId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberUpload_InvoiceRun">
+          <End Role="InvoiceRun" Type="Self.InvoiceRun" Multiplicity="0..1" />
+          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InvoiceRun">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="InvoiceRunId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MemberUpload_Organisation">
           <End Role="Organisation" Type="Self.Organisation" Multiplicity="1" />
           <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
@@ -760,6 +846,18 @@
             </Principal>
             <Dependent Role="MemberUpload">
               <PropertyRef Name="SchemeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberUpload_User_SubmittedBy">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="SubmittedByUserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -979,18 +1077,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_WeeeCollectedAmount_WeeeCategory">
-          <End Role="WeeeCategory" Type="Self.WeeeCategory" Multiplicity="1" />
-          <End Role="WeeeCollectedAmount" Type="Self.WeeeCollectedAmount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="WeeeCategory">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WeeeCollectedAmount">
-              <PropertyRef Name="WeeeCategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_WeeeCollectedReturnVersionAmount_WeeeCollectedAmount">
           <End Role="WeeeCollectedAmount" Type="Self.WeeeCollectedAmount" Multiplicity="1" />
           <End Role="WeeeCollectedReturnVersionAmount" Type="Self.WeeeCollectedReturnVersionAmount" Multiplicity="*" />
@@ -1039,18 +1125,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_WeeeDeliveredAmount_WeeeCategory">
-          <End Role="WeeeCategory" Type="Self.WeeeCategory" Multiplicity="1" />
-          <End Role="WeeeDeliveredAmount" Type="Self.WeeeDeliveredAmount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="WeeeCategory">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WeeeDeliveredAmount">
-              <PropertyRef Name="WeeeCategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredAmount">
           <End Role="WeeeDeliveredAmount" Type="Self.WeeeDeliveredAmount" Multiplicity="1" />
           <End Role="WeeeDeliveredReturnVersionAmount" Type="Self.WeeeDeliveredReturnVersionAmount" Multiplicity="*" />
@@ -1077,11 +1151,12 @@
         </Association>
         <EntityContainer Name="EAWeeeTestModelStoreContainer">
           <EntitySet Name="CompetentAuthorityUser" EntityType="Self.CompetentAuthorityUser" Schema="Admin" store:Type="Tables" />
+          <EntitySet Name="IbisFileData" EntityType="Self.IbisFileData" Schema="Charging" store:Type="Tables" />
+          <EntitySet Name="InvoiceRun" EntityType="Self.InvoiceRun" Schema="Charging" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="Identity" store:Type="Tables" />
           <EntitySet Name="ChargeBandAmount" EntityType="Self.ChargeBandAmount" Schema="Lookup" store:Type="Tables" />
           <EntitySet Name="CompetentAuthority" EntityType="Self.CompetentAuthority" Schema="Lookup" store:Type="Tables" />
           <EntitySet Name="Country" EntityType="Self.Country" Schema="Lookup" store:Type="Tables" />
-          <EntitySet Name="WeeeCategory" EntityType="Self.WeeeCategory" Schema="Lookup" store:Type="Tables" />
           <EntitySet Name="Address" EntityType="Self.Address" Schema="Organisation" store:Type="Tables" />
           <EntitySet Name="Contact" EntityType="Self.Contact" Schema="Organisation" store:Type="Tables" />
           <EntitySet Name="Organisation" EntityType="Self.Organisation" Schema="Organisation" store:Type="Tables" />
@@ -1116,6 +1191,19 @@
           <EntitySet Name="ProducerSubmission" EntityType="Self.ProducerSubmission" Schema="Producer" store:Type="Tables" />
           <EntitySet Name="RegisteredProducer" EntityType="Self.RegisteredProducer" Schema="Producer" store:Type="Tables" />
           <EntitySet Name="SICCode" EntityType="Self.SICCode" Schema="Producer" store:Type="Tables" />
+          <EntitySet Name="1B1STransactionNumberSequence" EntityType="Self.1B1STransactionNumberSequence" store:Type="Tables" store:Schema="Charging">
+            <DefiningQuery>SELECT 
+    [1B1STransactionNumberSequence].[NextNumber] AS [NextNumber]
+    FROM [Charging].[1B1STransactionNumberSequence] AS [1B1STransactionNumberSequence]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__MemberUpl__Creat__5F492382" Association="Self.FK__MemberUpl__Creat__5F492382">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="MemberUpload" EntitySet="MemberUpload" />
+          </AssociationSet>
+          <AssociationSet Name="FK__MemberUpl__Updat__603D47BB" Association="Self.FK__MemberUpl__Updat__603D47BB">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="MemberUpload" EntitySet="MemberUpload" />
+          </AssociationSet>
           <AssociationSet Name="FK_Address_Country" Association="Self.FK_Address_Country">
             <End Role="Country" EntitySet="Country" />
             <End Role="Address" EntitySet="Address" />
@@ -1204,10 +1292,6 @@
             <End Role="RegisteredProducer" EntitySet="RegisteredProducer" />
             <End Role="EeeOutputAmount" EntitySet="EeeOutputAmount" />
           </AssociationSet>
-          <AssociationSet Name="FK_EeeOutputAmount_WeeeCategory" Association="Self.FK_EeeOutputAmount_WeeeCategory">
-            <End Role="WeeeCategory" EntitySet="WeeeCategory" />
-            <End Role="EeeOutputAmount" EntitySet="EeeOutputAmount" />
-          </AssociationSet>
           <AssociationSet Name="FK_EeeOutputReturnVersionAmount_EeeOutputAmount" Association="Self.FK_EeeOutputReturnVersionAmount_EeeOutputAmount">
             <End Role="EeeOutputAmount" EntitySet="EeeOutputAmount" />
             <End Role="EeeOutputReturnVersionAmount" EntitySet="EeeOutputReturnVersionAmount" />
@@ -1216,12 +1300,28 @@
             <End Role="EeeOutputReturnVersion" EntitySet="EeeOutputReturnVersion" />
             <End Role="EeeOutputReturnVersionAmount" EntitySet="EeeOutputReturnVersionAmount" />
           </AssociationSet>
+          <AssociationSet Name="FK_InvoiceRun_CompetentAuthority" Association="Self.FK_InvoiceRun_CompetentAuthority">
+            <End Role="CompetentAuthority" EntitySet="CompetentAuthority" />
+            <End Role="InvoiceRun" EntitySet="InvoiceRun" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceRun_IbisFileData" Association="Self.FK_InvoiceRun_IbisFileData">
+            <End Role="IbisFileData" EntitySet="IbisFileData" />
+            <End Role="InvoiceRun" EntitySet="InvoiceRun" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberUpload_InvoiceRun" Association="Self.FK_MemberUpload_InvoiceRun">
+            <End Role="InvoiceRun" EntitySet="InvoiceRun" />
+            <End Role="MemberUpload" EntitySet="MemberUpload" />
+          </AssociationSet>
           <AssociationSet Name="FK_MemberUpload_Organisation" Association="Self.FK_MemberUpload_Organisation">
             <End Role="Organisation" EntitySet="Organisation" />
             <End Role="MemberUpload" EntitySet="MemberUpload" />
           </AssociationSet>
           <AssociationSet Name="FK_MemberUpload_Scheme" Association="Self.FK_MemberUpload_Scheme">
             <End Role="Scheme" EntitySet="Scheme" />
+            <End Role="MemberUpload" EntitySet="MemberUpload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberUpload_User_SubmittedBy" Association="Self.FK_MemberUpload_User_SubmittedBy">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="MemberUpload" EntitySet="MemberUpload" />
           </AssociationSet>
           <AssociationSet Name="FK_MemberUploadError_MemberUpload" Association="Self.FK_MemberUploadError_MemberUpload">
@@ -1296,10 +1396,6 @@
             <End Role="ProducerSubmission" EntitySet="ProducerSubmission" />
             <End Role="SICCode" EntitySet="SICCode" />
           </AssociationSet>
-          <AssociationSet Name="FK_WeeeCollectedAmount_WeeeCategory" Association="Self.FK_WeeeCollectedAmount_WeeeCategory">
-            <End Role="WeeeCategory" EntitySet="WeeeCategory" />
-            <End Role="WeeeCollectedAmount" EntitySet="WeeeCollectedAmount" />
-          </AssociationSet>
           <AssociationSet Name="FK_WeeeCollectedReturnVersionAmount_WeeeCollectedAmount" Association="Self.FK_WeeeCollectedReturnVersionAmount_WeeeCollectedAmount">
             <End Role="WeeeCollectedAmount" EntitySet="WeeeCollectedAmount" />
             <End Role="WeeeCollectedReturnVersionAmount" EntitySet="WeeeCollectedReturnVersionAmount" />
@@ -1314,10 +1410,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_WeeeDeliveredAmount_AeDeliveryLocation" Association="Self.FK_WeeeDeliveredAmount_AeDeliveryLocation">
             <End Role="AeDeliveryLocation" EntitySet="AeDeliveryLocation" />
-            <End Role="WeeeDeliveredAmount" EntitySet="WeeeDeliveredAmount" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeeDeliveredAmount_WeeeCategory" Association="Self.FK_WeeeDeliveredAmount_WeeeCategory">
-            <End Role="WeeeCategory" EntitySet="WeeeCategory" />
             <End Role="WeeeDeliveredAmount" EntitySet="WeeeDeliveredAmount" />
           </AssociationSet>
           <AssociationSet Name="FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredAmount" Association="Self.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredAmount">
@@ -1355,6 +1447,7 @@
           <Property Name="CountryId" Type="Guid" Nullable="false" />
           <NavigationProperty Name="CompetentAuthorityUsers" Relationship="Self.FK_CompetentAuthorityUser_CompetentAuthority" FromRole="CompetentAuthority" ToRole="CompetentAuthorityUser" />
           <NavigationProperty Name="Country" Relationship="Self.FK_CompetentAuthority_Country" FromRole="CompetentAuthority" ToRole="Country" />
+          <NavigationProperty Name="InvoiceRuns" Relationship="EA.Weee.TestModel.FK_InvoiceRun_CompetentAuthority" FromRole="CompetentAuthority" ToRole="InvoiceRun" />
         </EntityType>
         <EntityType Name="Country">
           <Key>
@@ -1446,11 +1539,20 @@
           <NavigationProperty Name="Organisation" Relationship="Self.FK_MemberUpload_Organisation" FromRole="MemberUpload" ToRole="Organisation" />
           <NavigationProperty Name="Scheme" Relationship="Self.FK_MemberUpload_Scheme" FromRole="MemberUpload" ToRole="Scheme" />
           <NavigationProperty Name="MemberUploadErrors" Relationship="Self.FK_MemberUploadError_MemberUpload" FromRole="MemberUpload" ToRole="MemberUploadError" />
-          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Date" Type="DateTime" Precision="3" Nullable="false" />
           <Property Name="ProcessTime" Type="Time" Nullable="false" Precision="7" />
           <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ProducerSubmissions" Relationship="EA.Weee.TestModel.FK_ProducerSubmission_MemberUpload" FromRole="MemberUpload" ToRole="ProducerSubmission" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedById" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="UpdatedById" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="EA.Weee.TestModel.FK__MemberUpl__Creat__45544755" FromRole="MemberUpload" ToRole="AspNetUser" />
+          <NavigationProperty Name="AspNetUser1" Relationship="EA.Weee.TestModel.FK__MemberUpl__Updat__46486B8E" FromRole="MemberUpload" ToRole="AspNetUser" />
+          <Property Name="InvoiceRunId" Type="Guid" />
+          <Property Name="SubmittedDate" Type="DateTime" Precision="3" />
+          <Property Name="SubmittedByUserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser2" Relationship="EA.Weee.TestModel.FK_MemberUpload_User_SubmittedBy" FromRole="MemberUpload" ToRole="AspNetUser" />
+          <NavigationProperty Name="InvoiceRun" Relationship="EA.Weee.TestModel.FK_MemberUpload_InvoiceRun" FromRole="MemberUpload" ToRole="InvoiceRun" />
         </EntityType>
         <EntityType Name="MemberUploadError">
           <Key>
@@ -2015,42 +2117,16 @@
             <End Role="ProducerSubmission" EntitySet="ProducerSubmissions" />
             <End Role="SICCode_" EntitySet="SICCode_Set" />
           </AssociationSet>
-          <EntitySet Name="WeeeCategories" EntityType="EA.Weee.TestModel.WeeeCategory" />
-          <EntitySet Name="AatfDeliveryLocations" EntityType="EA.Weee.TestModel.AatfDeliveryLocation" />
-          <EntitySet Name="AeDeliveryLocations" EntityType="EA.Weee.TestModel.AeDeliveryLocation" />
           <EntitySet Name="DataReturns" EntityType="EA.Weee.TestModel.DataReturn" />
           <EntitySet Name="DataReturnUploads" EntityType="EA.Weee.TestModel.DataReturnUpload" />
           <EntitySet Name="DataReturnUploadErrors" EntityType="EA.Weee.TestModel.DataReturnUploadError" />
           <EntitySet Name="DataReturnVersions" EntityType="EA.Weee.TestModel.DataReturnVersion" />
           <EntitySet Name="EeeOutputAmounts" EntityType="EA.Weee.TestModel.EeeOutputAmount" />
           <EntitySet Name="EeeOutputReturnVersions" EntityType="EA.Weee.TestModel.EeeOutputReturnVersion" />
-          <EntitySet Name="EeeOutputReturnVersionAmounts" EntityType="EA.Weee.TestModel.EeeOutputReturnVersionAmount" />
           <EntitySet Name="WeeeCollectedAmounts" EntityType="EA.Weee.TestModel.WeeeCollectedAmount" />
           <EntitySet Name="WeeeCollectedReturnVersions" EntityType="EA.Weee.TestModel.WeeeCollectedReturnVersion" />
-          <EntitySet Name="WeeeCollectedReturnVersionAmounts" EntityType="EA.Weee.TestModel.WeeeCollectedReturnVersionAmount" />
           <EntitySet Name="WeeeDeliveredAmounts" EntityType="EA.Weee.TestModel.WeeeDeliveredAmount" />
           <EntitySet Name="WeeeDeliveredReturnVersions" EntityType="EA.Weee.TestModel.WeeeDeliveredReturnVersion" />
-          <EntitySet Name="WeeeDeliveredReturnVersionAmounts" EntityType="EA.Weee.TestModel.WeeeDeliveredReturnVersionAmount" />
-          <AssociationSet Name="FK_EeeOutputAmount_WeeeCategory" Association="EA.Weee.TestModel.FK_EeeOutputAmount_WeeeCategory">
-            <End Role="WeeeCategory" EntitySet="WeeeCategories" />
-            <End Role="EeeOutputAmount" EntitySet="EeeOutputAmounts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeeCollectedAmount_WeeeCategory" Association="EA.Weee.TestModel.FK_WeeeCollectedAmount_WeeeCategory">
-            <End Role="WeeeCategory" EntitySet="WeeeCategories" />
-            <End Role="WeeeCollectedAmount" EntitySet="WeeeCollectedAmounts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeeDeliveredAmount_WeeeCategory" Association="EA.Weee.TestModel.FK_WeeeDeliveredAmount_WeeeCategory">
-            <End Role="WeeeCategory" EntitySet="WeeeCategories" />
-            <End Role="WeeeDeliveredAmount" EntitySet="WeeeDeliveredAmounts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeeDeliveredAmount_AatfDeliveryLocation" Association="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AatfDeliveryLocation">
-            <End Role="AatfDeliveryLocation" EntitySet="AatfDeliveryLocations" />
-            <End Role="WeeeDeliveredAmount" EntitySet="WeeeDeliveredAmounts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeeDeliveredAmount_AeDeliveryLocation" Association="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AeDeliveryLocation">
-            <End Role="AeDeliveryLocation" EntitySet="AeDeliveryLocations" />
-            <End Role="WeeeDeliveredAmount" EntitySet="WeeeDeliveredAmounts" />
-          </AssociationSet>
           <AssociationSet Name="FK_DataReturn_DataReturnVersion" Association="EA.Weee.TestModel.FK_DataReturn_DataReturnVersion">
             <End Role="DataReturnVersion" EntitySet="DataReturnVersions" />
             <End Role="DataReturn" EntitySet="DataReturns" />
@@ -2091,6 +2167,17 @@
             <End Role="RegisteredProducer" EntitySet="RegisteredProducers" />
             <End Role="EeeOutputAmount" EntitySet="EeeOutputAmounts" />
           </AssociationSet>
+          <AssociationSet Name="FK__MemberUpl__Creat__45544755" Association="EA.Weee.TestModel.FK__MemberUpl__Creat__45544755">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="MemberUpload" EntitySet="MemberUploads" />
+          </AssociationSet>
+          <AssociationSet Name="FK__MemberUpl__Updat__46486B8E" Association="EA.Weee.TestModel.FK__MemberUpl__Updat__46486B8E">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="MemberUpload" EntitySet="MemberUploads" />
+          </AssociationSet>
+          <EntitySet Name="EeeOutputReturnVersionAmounts" EntityType="EA.Weee.TestModel.EeeOutputReturnVersionAmount" />
+          <EntitySet Name="WeeeCollectedReturnVersionAmounts" EntityType="EA.Weee.TestModel.WeeeCollectedReturnVersionAmount" />
+          <EntitySet Name="WeeeDeliveredReturnVersionAmounts" EntityType="EA.Weee.TestModel.WeeeDeliveredReturnVersionAmount" />
           <AssociationSet Name="FK_EeeOutputReturnVersionAmount_EeeOutputAmount" Association="EA.Weee.TestModel.FK_EeeOutputReturnVersionAmount_EeeOutputAmount">
             <End Role="EeeOutputAmount" EntitySet="EeeOutputAmounts" />
             <End Role="EeeOutputReturnVersionAmount" EntitySet="EeeOutputReturnVersionAmounts" />
@@ -2115,6 +2202,35 @@
             <End Role="WeeeDeliveredReturnVersion" EntitySet="WeeeDeliveredReturnVersions" />
             <End Role="WeeeDeliveredReturnVersionAmount" EntitySet="WeeeDeliveredReturnVersionAmounts" />
           </AssociationSet>
+          <EntitySet Name="AatfDeliveryLocations" EntityType="EA.Weee.TestModel.AatfDeliveryLocation" />
+          <EntitySet Name="AeDeliveryLocations" EntityType="EA.Weee.TestModel.AeDeliveryLocation" />
+          <AssociationSet Name="FK_WeeeDeliveredAmount_AatfDeliveryLocation" Association="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AatfDeliveryLocation">
+            <End Role="AatfDeliveryLocation" EntitySet="AatfDeliveryLocations" />
+            <End Role="WeeeDeliveredAmount" EntitySet="WeeeDeliveredAmounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WeeeDeliveredAmount_AeDeliveryLocation" Association="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AeDeliveryLocation">
+            <End Role="AeDeliveryLocation" EntitySet="AeDeliveryLocations" />
+            <End Role="WeeeDeliveredAmount" EntitySet="WeeeDeliveredAmounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberUpload_User_SubmittedBy" Association="EA.Weee.TestModel.FK_MemberUpload_User_SubmittedBy">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="MemberUpload" EntitySet="MemberUploads" />
+          </AssociationSet>
+          <EntitySet Name="IbisFileDatas" EntityType="EA.Weee.TestModel.IbisFileData" />
+          <EntitySet Name="InvoiceRuns" EntityType="EA.Weee.TestModel.InvoiceRun" />
+          <EntitySet Name="C1B1STransactionNumberSequence" EntityType="EA.Weee.TestModel.C1B1STransactionNumberSequence" />
+          <AssociationSet Name="FK_InvoiceRun_IbisFileData" Association="EA.Weee.TestModel.FK_InvoiceRun_IbisFileData">
+            <End Role="IbisFileData" EntitySet="IbisFileDatas" />
+            <End Role="InvoiceRun" EntitySet="InvoiceRuns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceRun_CompetentAuthority" Association="EA.Weee.TestModel.FK_InvoiceRun_CompetentAuthority">
+            <End Role="CompetentAuthority" EntitySet="CompetentAuthorities" />
+            <End Role="InvoiceRun" EntitySet="InvoiceRuns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberUpload_InvoiceRun" Association="EA.Weee.TestModel.FK_MemberUpload_InvoiceRun">
+            <End Role="InvoiceRun" EntitySet="InvoiceRuns" />
+            <End Role="MemberUpload" EntitySet="MemberUploads" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="AspNetUser">
           <Key>
@@ -2136,6 +2252,9 @@
           <Property Name="Surname" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="CompetentAuthorityUsers" Relationship="EA.Weee.TestModel.FK_CompetentAuthorityUser_AspNetUsers" FromRole="AspNetUser" ToRole="CompetentAuthorityUser" />
           <NavigationProperty Name="OrganisationUsers" Relationship="EA.Weee.TestModel.FK_OrganisationUser_AspNetUsers" FromRole="AspNetUser" ToRole="OrganisationUser" />
+          <NavigationProperty Name="MemberUploads" Relationship="EA.Weee.TestModel.FK__MemberUpl__Creat__45544755" FromRole="AspNetUser" ToRole="MemberUpload" />
+          <NavigationProperty Name="MemberUploads1" Relationship="EA.Weee.TestModel.FK__MemberUpl__Updat__46486B8E" FromRole="AspNetUser" ToRole="MemberUpload" />
+          <NavigationProperty Name="MemberUploads2" Relationship="EA.Weee.TestModel.FK_MemberUpload_User_SubmittedBy" FromRole="AspNetUser" ToRole="MemberUpload" />
         </EntityType>
         <Association Name="FK_CompetentAuthorityUser_AspNetUsers">
           <End Type="EA.Weee.TestModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
@@ -2324,35 +2443,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="WeeeCategory">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Number" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="EeeOutputAmounts" Relationship="EA.Weee.TestModel.FK_EeeOutputAmount_WeeeCategory" FromRole="WeeeCategory" ToRole="EeeOutputAmount" />
-          <NavigationProperty Name="WeeeCollectedAmounts" Relationship="EA.Weee.TestModel.FK_WeeeCollectedAmount_WeeeCategory" FromRole="WeeeCategory" ToRole="WeeeCollectedAmount" />
-          <NavigationProperty Name="WeeeDeliveredAmounts" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredAmount_WeeeCategory" FromRole="WeeeCategory" ToRole="WeeeDeliveredAmount" />
-        </EntityType>
-        <EntityType Name="AatfDeliveryLocation">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="ApprovalNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="WeeeDeliveredAmounts" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AatfDeliveryLocation" FromRole="AatfDeliveryLocation" ToRole="WeeeDeliveredAmount" />
-        </EntityType>
-        <EntityType Name="AeDeliveryLocation">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="ApprovalNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="WeeeDeliveredAmounts" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AeDeliveryLocation" FromRole="AeDeliveryLocation" ToRole="WeeeDeliveredAmount" />
-        </EntityType>
         <EntityType Name="DataReturn">
           <Key>
             <PropertyRef Name="Id" />
@@ -2423,11 +2513,11 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="RegisteredProducerId" Type="Guid" Nullable="false" />
-          <Property Name="WeeeCategoryId" Type="Guid" Nullable="false" />
           <Property Name="ObligationType" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="true" />
           <Property Name="Tonnage" Type="Decimal" Nullable="false" Precision="38" Scale="3" />
-          <NavigationProperty Name="WeeeCategory" Relationship="EA.Weee.TestModel.FK_EeeOutputAmount_WeeeCategory" FromRole="EeeOutputAmount" ToRole="WeeeCategory" />
           <NavigationProperty Name="RegisteredProducer" Relationship="EA.Weee.TestModel.FK_EeeOutputAmount_RegisteredProducer" FromRole="EeeOutputAmount" ToRole="RegisteredProducer" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="WeeeCategory" Type="Int32" Nullable="false" />
           <NavigationProperty Name="EeeOutputReturnVersionAmounts" Relationship="EA.Weee.TestModel.FK_EeeOutputReturnVersionAmount_EeeOutputAmount" FromRole="EeeOutputAmount" ToRole="EeeOutputReturnVersionAmount" />
         </EntityType>
         <EntityType Name="EeeOutputReturnVersion">
@@ -2436,17 +2526,8 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
           <NavigationProperty Name="DataReturnVersions" Relationship="EA.Weee.TestModel.FK_DataReturnVersion_EeeOutputReturnVersion" FromRole="EeeOutputReturnVersion" ToRole="DataReturnVersion" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="EeeOutputReturnVersionAmounts" Relationship="EA.Weee.TestModel.FK_EeeOutputReturnVersionAmount_EeeOutputReturnVersion" FromRole="EeeOutputReturnVersion" ToRole="EeeOutputReturnVersionAmount" />
-        </EntityType>
-        <EntityType Name="EeeOutputReturnVersionAmount">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="EeeOutputReturnVersionId" Type="Guid" Nullable="false" />
-          <Property Name="EeeOuputAmountId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="EeeOutputAmount" Relationship="EA.Weee.TestModel.FK_EeeOutputReturnVersionAmount_EeeOutputAmount" FromRole="EeeOutputReturnVersionAmount" ToRole="EeeOutputAmount" />
-          <NavigationProperty Name="EeeOutputReturnVersion" Relationship="EA.Weee.TestModel.FK_EeeOutputReturnVersionAmount_EeeOutputReturnVersion" FromRole="EeeOutputReturnVersionAmount" ToRole="EeeOutputReturnVersion" />
         </EntityType>
         <EntityType Name="WeeeCollectedAmount">
           <Key>
@@ -2454,10 +2535,10 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="SourceType" Type="Int32" Nullable="false" />
-          <Property Name="WeeeCategoryId" Type="Guid" Nullable="false" />
           <Property Name="ObligationType" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="true" />
           <Property Name="Tonnage" Type="Decimal" Nullable="false" Precision="38" Scale="3" />
-          <NavigationProperty Name="WeeeCategory" Relationship="EA.Weee.TestModel.FK_WeeeCollectedAmount_WeeeCategory" FromRole="WeeeCollectedAmount" ToRole="WeeeCategory" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="WeeeCategory" Type="Int32" Nullable="false" />
           <NavigationProperty Name="WeeeCollectedReturnVersionAmounts" Relationship="EA.Weee.TestModel.FK_WeeeCollectedReturnVersionAmount_WeeeCollectedAmount" FromRole="WeeeCollectedAmount" ToRole="WeeeCollectedReturnVersionAmount" />
         </EntityType>
         <EntityType Name="WeeeCollectedReturnVersion">
@@ -2466,17 +2547,8 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
           <NavigationProperty Name="DataReturnVersions" Relationship="EA.Weee.TestModel.FK_DataReturnVersion_WeeeCollectedReturnVersion" FromRole="WeeeCollectedReturnVersion" ToRole="DataReturnVersion" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="WeeeCollectedReturnVersionAmounts" Relationship="EA.Weee.TestModel.FK_WeeeCollectedReturnVersionAmount_WeeeCollectedReturnVersion" FromRole="WeeeCollectedReturnVersion" ToRole="WeeeCollectedReturnVersionAmount" />
-        </EntityType>
-        <EntityType Name="WeeeCollectedReturnVersionAmount">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="WeeeCollectedReturnVersionId" Type="Guid" Nullable="false" />
-          <Property Name="WeeeCollectedAmountId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="WeeeCollectedAmount" Relationship="EA.Weee.TestModel.FK_WeeeCollectedReturnVersionAmount_WeeeCollectedAmount" FromRole="WeeeCollectedReturnVersionAmount" ToRole="WeeeCollectedAmount" />
-          <NavigationProperty Name="WeeeCollectedReturnVersion" Relationship="EA.Weee.TestModel.FK_WeeeCollectedReturnVersionAmount_WeeeCollectedReturnVersion" FromRole="WeeeCollectedReturnVersionAmount" ToRole="WeeeCollectedReturnVersion" />
         </EntityType>
         <EntityType Name="WeeeDeliveredAmount">
           <Key>
@@ -2485,13 +2557,13 @@
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="AatfDeliveryLocationId" Type="Guid" />
           <Property Name="AeDeliveryLocationId" Type="Guid" />
-          <Property Name="WeeeCategoryId" Type="Guid" Nullable="false" />
           <Property Name="ObligationType" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="true" />
           <Property Name="Tonnage" Type="Decimal" Nullable="false" Precision="38" Scale="3" />
-          <NavigationProperty Name="WeeeCategory" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredAmount_WeeeCategory" FromRole="WeeeDeliveredAmount" ToRole="WeeeCategory" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="WeeeCategory" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="WeeeDeliveredReturnVersionAmounts" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredAmount" FromRole="WeeeDeliveredAmount" ToRole="WeeeDeliveredReturnVersionAmount" />
           <NavigationProperty Name="AatfDeliveryLocation" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AatfDeliveryLocation" FromRole="WeeeDeliveredAmount" ToRole="AatfDeliveryLocation" />
           <NavigationProperty Name="AeDeliveryLocation" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AeDeliveryLocation" FromRole="WeeeDeliveredAmount" ToRole="AeDeliveryLocation" />
-          <NavigationProperty Name="WeeeDeliveredReturnVersionAmounts" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredAmount" FromRole="WeeeDeliveredAmount" ToRole="WeeeDeliveredReturnVersionAmount" />
         </EntityType>
         <EntityType Name="WeeeDeliveredReturnVersion">
           <Key>
@@ -2499,78 +2571,9 @@
           </Key>
           <Property Name="Id" Type="Guid" Nullable="false" />
           <NavigationProperty Name="DataReturnVersions" Relationship="EA.Weee.TestModel.FK_DataReturnVersion_WeeeDeliveredReturnVersion" FromRole="WeeeDeliveredReturnVersion" ToRole="DataReturnVersion" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="WeeeDeliveredReturnVersionAmounts" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredReturnVersion" FromRole="WeeeDeliveredReturnVersion" ToRole="WeeeDeliveredReturnVersionAmount" />
         </EntityType>
-        <EntityType Name="WeeeDeliveredReturnVersionAmount">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="WeeeDeliveredReturnVersionId" Type="Guid" Nullable="false" />
-          <Property Name="WeeeDeliveredAmountId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="WeeeDeliveredAmount" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredAmount" FromRole="WeeeDeliveredReturnVersionAmount" ToRole="WeeeDeliveredAmount" />
-          <NavigationProperty Name="WeeeDeliveredReturnVersion" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredReturnVersion" FromRole="WeeeDeliveredReturnVersionAmount" ToRole="WeeeDeliveredReturnVersion" />
-        </EntityType>
-        <Association Name="FK_EeeOutputAmount_WeeeCategory">
-          <End Type="EA.Weee.TestModel.WeeeCategory" Role="WeeeCategory" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.EeeOutputAmount" Role="EeeOutputAmount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="WeeeCategory">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="EeeOutputAmount">
-              <PropertyRef Name="WeeeCategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeeCollectedAmount_WeeeCategory">
-          <End Type="EA.Weee.TestModel.WeeeCategory" Role="WeeeCategory" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.WeeeCollectedAmount" Role="WeeeCollectedAmount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="WeeeCategory">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WeeeCollectedAmount">
-              <PropertyRef Name="WeeeCategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeeDeliveredAmount_WeeeCategory">
-          <End Type="EA.Weee.TestModel.WeeeCategory" Role="WeeeCategory" Multiplicity="1" />
-          <End Type="EA.Weee.TestModel.WeeeDeliveredAmount" Role="WeeeDeliveredAmount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="WeeeCategory">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WeeeDeliveredAmount">
-              <PropertyRef Name="WeeeCategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeeDeliveredAmount_AatfDeliveryLocation">
-          <End Type="EA.Weee.TestModel.AatfDeliveryLocation" Role="AatfDeliveryLocation" Multiplicity="0..1" />
-          <End Type="EA.Weee.TestModel.WeeeDeliveredAmount" Role="WeeeDeliveredAmount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AatfDeliveryLocation">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WeeeDeliveredAmount">
-              <PropertyRef Name="AatfDeliveryLocationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeeDeliveredAmount_AeDeliveryLocation">
-          <End Type="EA.Weee.TestModel.AeDeliveryLocation" Role="AeDeliveryLocation" Multiplicity="0..1" />
-          <End Type="EA.Weee.TestModel.WeeeDeliveredAmount" Role="WeeeDeliveredAmount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AeDeliveryLocation">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WeeeDeliveredAmount">
-              <PropertyRef Name="AeDeliveryLocationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DataReturn_DataReturnVersion">
           <End Type="EA.Weee.TestModel.DataReturnVersion" Role="DataReturnVersion" Multiplicity="0..1" />
           <End Type="EA.Weee.TestModel.DataReturn" Role="DataReturn" Multiplicity="*" />
@@ -2691,6 +2694,63 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__MemberUpl__Creat__45544755">
+          <End Type="EA.Weee.TestModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.MemberUpload" Role="MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="CreatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__MemberUpl__Updat__46486B8E">
+          <End Type="EA.Weee.TestModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
+          <End Type="EA.Weee.TestModel.MemberUpload" Role="MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="UpdatedById" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EeeOutputReturnVersionAmount">
+          <Key>
+            <PropertyRef Name="EeeOutputReturnVersionId" />
+            <PropertyRef Name="EeeOuputAmountId" />
+          </Key>
+          <Property Name="EeeOutputReturnVersionId" Type="Guid" Nullable="false" />
+          <Property Name="EeeOuputAmountId" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="EeeOutputAmount" Relationship="EA.Weee.TestModel.FK_EeeOutputReturnVersionAmount_EeeOutputAmount" FromRole="EeeOutputReturnVersionAmount" ToRole="EeeOutputAmount" />
+          <NavigationProperty Name="EeeOutputReturnVersion" Relationship="EA.Weee.TestModel.FK_EeeOutputReturnVersionAmount_EeeOutputReturnVersion" FromRole="EeeOutputReturnVersionAmount" ToRole="EeeOutputReturnVersion" />
+        </EntityType>
+        <EntityType Name="WeeeCollectedReturnVersionAmount">
+          <Key>
+            <PropertyRef Name="WeeeCollectedReturnVersionId" />
+            <PropertyRef Name="WeeeCollectedAmountId" />
+          </Key>
+          <Property Name="WeeeCollectedReturnVersionId" Type="Guid" Nullable="false" />
+          <Property Name="WeeeCollectedAmountId" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="WeeeCollectedAmount" Relationship="EA.Weee.TestModel.FK_WeeeCollectedReturnVersionAmount_WeeeCollectedAmount" FromRole="WeeeCollectedReturnVersionAmount" ToRole="WeeeCollectedAmount" />
+          <NavigationProperty Name="WeeeCollectedReturnVersion" Relationship="EA.Weee.TestModel.FK_WeeeCollectedReturnVersionAmount_WeeeCollectedReturnVersion" FromRole="WeeeCollectedReturnVersionAmount" ToRole="WeeeCollectedReturnVersion" />
+        </EntityType>
+        <EntityType Name="WeeeDeliveredReturnVersionAmount">
+          <Key>
+            <PropertyRef Name="WeeeDeliveredReturnVersionId" />
+            <PropertyRef Name="WeeeDeliveredAmountId" />
+          </Key>
+          <Property Name="WeeeDeliveredReturnVersionId" Type="Guid" Nullable="false" />
+          <Property Name="WeeeDeliveredAmountId" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="WeeeDeliveredAmount" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredAmount" FromRole="WeeeDeliveredReturnVersionAmount" ToRole="WeeeDeliveredAmount" />
+          <NavigationProperty Name="WeeeDeliveredReturnVersion" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredReturnVersion" FromRole="WeeeDeliveredReturnVersionAmount" ToRole="WeeeDeliveredReturnVersion" />
+        </EntityType>
         <Association Name="FK_EeeOutputReturnVersionAmount_EeeOutputAmount">
           <End Type="EA.Weee.TestModel.EeeOutputAmount" Role="EeeOutputAmount" Multiplicity="1" />
           <End Type="EA.Weee.TestModel.EeeOutputReturnVersionAmount" Role="EeeOutputReturnVersionAmount" Multiplicity="*" />
@@ -2760,6 +2820,130 @@
             </Principal>
             <Dependent Role="WeeeDeliveredReturnVersionAmount">
               <PropertyRef Name="WeeeDeliveredReturnVersionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AatfDeliveryLocation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="ApprovalNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FacilityName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="WeeeDeliveredAmounts" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AatfDeliveryLocation" FromRole="AatfDeliveryLocation" ToRole="WeeeDeliveredAmount" />
+        </EntityType>
+        <EntityType Name="AeDeliveryLocation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="ApprovalNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OperatorName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="WeeeDeliveredAmounts" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredAmount_AeDeliveryLocation" FromRole="AeDeliveryLocation" ToRole="WeeeDeliveredAmount" />
+        </EntityType>
+        <Association Name="FK_WeeeDeliveredAmount_AatfDeliveryLocation">
+          <End Type="EA.Weee.TestModel.AatfDeliveryLocation" Role="AatfDeliveryLocation" Multiplicity="0..1" />
+          <End Type="EA.Weee.TestModel.WeeeDeliveredAmount" Role="WeeeDeliveredAmount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AatfDeliveryLocation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WeeeDeliveredAmount">
+              <PropertyRef Name="AatfDeliveryLocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WeeeDeliveredAmount_AeDeliveryLocation">
+          <End Type="EA.Weee.TestModel.AeDeliveryLocation" Role="AeDeliveryLocation" Multiplicity="0..1" />
+          <End Type="EA.Weee.TestModel.WeeeDeliveredAmount" Role="WeeeDeliveredAmount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AeDeliveryLocation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WeeeDeliveredAmount">
+              <PropertyRef Name="AeDeliveryLocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberUpload_User_SubmittedBy">
+          <End Type="EA.Weee.TestModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
+          <End Type="EA.Weee.TestModel.MemberUpload" Role="MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="SubmittedByUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="IbisFileData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="FileId" Type="Int64" Nullable="false" />
+          <Property Name="CustomerFileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerFileData" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionFileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionFileData" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="InvoiceRuns" Relationship="EA.Weee.TestModel.FK_InvoiceRun_IbisFileData" FromRole="IbisFileData" ToRole="InvoiceRun" />
+        </EntityType>
+        <EntityType Name="InvoiceRun">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="CompetentAuthorityId" Type="Guid" Nullable="false" />
+          <Property Name="IbisFileDataId" Type="Guid" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="IbisFileData" Relationship="EA.Weee.TestModel.FK_InvoiceRun_IbisFileData" FromRole="InvoiceRun" ToRole="IbisFileData" />
+          <NavigationProperty Name="CompetentAuthority" Relationship="EA.Weee.TestModel.FK_InvoiceRun_CompetentAuthority" FromRole="InvoiceRun" ToRole="CompetentAuthority" />
+          <NavigationProperty Name="MemberUploads" Relationship="EA.Weee.TestModel.FK_MemberUpload_InvoiceRun" FromRole="InvoiceRun" ToRole="MemberUpload" />
+        </EntityType>
+        <EntityType Name="C1B1STransactionNumberSequence">
+          <Key>
+            <PropertyRef Name="NextNumber" />
+          </Key>
+          <Property Name="NextNumber" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_InvoiceRun_IbisFileData">
+          <End Type="EA.Weee.TestModel.IbisFileData" Role="IbisFileData" Multiplicity="0..1" />
+          <End Type="EA.Weee.TestModel.InvoiceRun" Role="InvoiceRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IbisFileData">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InvoiceRun">
+              <PropertyRef Name="IbisFileDataId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceRun_CompetentAuthority">
+          <End Type="EA.Weee.TestModel.CompetentAuthority" Role="CompetentAuthority" Multiplicity="1" />
+          <End Type="EA.Weee.TestModel.InvoiceRun" Role="InvoiceRun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompetentAuthority">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InvoiceRun">
+              <PropertyRef Name="CompetentAuthorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberUpload_InvoiceRun">
+          <End Type="EA.Weee.TestModel.InvoiceRun" Role="InvoiceRun" Multiplicity="0..1" />
+          <End Type="EA.Weee.TestModel.MemberUpload" Role="MemberUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InvoiceRun">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MemberUpload">
+              <PropertyRef Name="InvoiceRunId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2856,10 +3040,15 @@
           <EntitySetMapping Name="MemberUploads">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.MemberUpload">
               <MappingFragment StoreEntitySet="MemberUpload">
+                <ScalarProperty Name="SubmittedByUserId" ColumnName="SubmittedByUserId" />
+                <ScalarProperty Name="SubmittedDate" ColumnName="SubmittedDate" />
+                <ScalarProperty Name="InvoiceRunId" ColumnName="InvoiceRunId" />
+                <ScalarProperty Name="UpdatedById" ColumnName="UpdatedById" />
+                <ScalarProperty Name="CreatedById" ColumnName="CreatedById" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="ProcessTime" ColumnName="ProcessTime" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="OrganisationId" ColumnName="OrganisationId" />
@@ -3079,33 +3268,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="WeeeCategories">
-            <EntityTypeMapping TypeName="EA.Weee.TestModel.WeeeCategory">
-              <MappingFragment StoreEntitySet="WeeeCategory">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Number" ColumnName="Number" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AatfDeliveryLocations">
-            <EntityTypeMapping TypeName="EA.Weee.TestModel.AatfDeliveryLocation">
-              <MappingFragment StoreEntitySet="AatfDeliveryLocation">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ApprovalNumber" ColumnName="ApprovalNumber" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AeDeliveryLocations">
-            <EntityTypeMapping TypeName="EA.Weee.TestModel.AeDeliveryLocation">
-              <MappingFragment StoreEntitySet="AeDeliveryLocation">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ApprovalNumber" ColumnName="ApprovalNumber" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="DataReturns">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.DataReturn">
               <MappingFragment StoreEntitySet="DataReturn">
@@ -3164,9 +3326,10 @@
           <EntitySetMapping Name="EeeOutputAmounts">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.EeeOutputAmount">
               <MappingFragment StoreEntitySet="EeeOutputAmount">
+                <ScalarProperty Name="WeeeCategory" ColumnName="WeeeCategory" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="Tonnage" ColumnName="Tonnage" />
                 <ScalarProperty Name="ObligationType" ColumnName="ObligationType" />
-                <ScalarProperty Name="WeeeCategoryId" ColumnName="WeeeCategoryId" />
                 <ScalarProperty Name="RegisteredProducerId" ColumnName="RegisteredProducerId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -3175,15 +3338,7 @@
           <EntitySetMapping Name="EeeOutputReturnVersions">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.EeeOutputReturnVersion">
               <MappingFragment StoreEntitySet="EeeOutputReturnVersion">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="EeeOutputReturnVersionAmounts">
-            <EntityTypeMapping TypeName="EA.Weee.TestModel.EeeOutputReturnVersionAmount">
-              <MappingFragment StoreEntitySet="EeeOutputReturnVersionAmount">
-                <ScalarProperty Name="EeeOuputAmountId" ColumnName="EeeOuputAmountId" />
-                <ScalarProperty Name="EeeOutputReturnVersionId" ColumnName="EeeOutputReturnVersionId" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -3191,9 +3346,10 @@
           <EntitySetMapping Name="WeeeCollectedAmounts">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.WeeeCollectedAmount">
               <MappingFragment StoreEntitySet="WeeeCollectedAmount">
+                <ScalarProperty Name="WeeeCategory" ColumnName="WeeeCategory" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="Tonnage" ColumnName="Tonnage" />
                 <ScalarProperty Name="ObligationType" ColumnName="ObligationType" />
-                <ScalarProperty Name="WeeeCategoryId" ColumnName="WeeeCategoryId" />
                 <ScalarProperty Name="SourceType" ColumnName="SourceType" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -3202,15 +3358,7 @@
           <EntitySetMapping Name="WeeeCollectedReturnVersions">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.WeeeCollectedReturnVersion">
               <MappingFragment StoreEntitySet="WeeeCollectedReturnVersion">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="WeeeCollectedReturnVersionAmounts">
-            <EntityTypeMapping TypeName="EA.Weee.TestModel.WeeeCollectedReturnVersionAmount">
-              <MappingFragment StoreEntitySet="WeeeCollectedReturnVersionAmount">
-                <ScalarProperty Name="WeeeCollectedAmountId" ColumnName="WeeeCollectedAmountId" />
-                <ScalarProperty Name="WeeeCollectedReturnVersionId" ColumnName="WeeeCollectedReturnVersionId" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -3218,9 +3366,10 @@
           <EntitySetMapping Name="WeeeDeliveredAmounts">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.WeeeDeliveredAmount">
               <MappingFragment StoreEntitySet="WeeeDeliveredAmount">
+                <ScalarProperty Name="WeeeCategory" ColumnName="WeeeCategory" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="Tonnage" ColumnName="Tonnage" />
                 <ScalarProperty Name="ObligationType" ColumnName="ObligationType" />
-                <ScalarProperty Name="WeeeCategoryId" ColumnName="WeeeCategoryId" />
                 <ScalarProperty Name="AeDeliveryLocationId" ColumnName="AeDeliveryLocationId" />
                 <ScalarProperty Name="AatfDeliveryLocationId" ColumnName="AatfDeliveryLocationId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -3230,16 +3379,86 @@
           <EntitySetMapping Name="WeeeDeliveredReturnVersions">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.WeeeDeliveredReturnVersion">
               <MappingFragment StoreEntitySet="WeeeDeliveredReturnVersion">
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EeeOutputReturnVersionAmounts">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.EeeOutputReturnVersionAmount">
+              <MappingFragment StoreEntitySet="EeeOutputReturnVersionAmount">
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="EeeOuputAmountId" ColumnName="EeeOuputAmountId" />
+                <ScalarProperty Name="EeeOutputReturnVersionId" ColumnName="EeeOutputReturnVersionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WeeeCollectedReturnVersionAmounts">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.WeeeCollectedReturnVersionAmount">
+              <MappingFragment StoreEntitySet="WeeeCollectedReturnVersionAmount">
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="WeeeCollectedAmountId" ColumnName="WeeeCollectedAmountId" />
+                <ScalarProperty Name="WeeeCollectedReturnVersionId" ColumnName="WeeeCollectedReturnVersionId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="WeeeDeliveredReturnVersionAmounts">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.WeeeDeliveredReturnVersionAmount">
               <MappingFragment StoreEntitySet="WeeeDeliveredReturnVersionAmount">
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="WeeeDeliveredAmountId" ColumnName="WeeeDeliveredAmountId" />
                 <ScalarProperty Name="WeeeDeliveredReturnVersionId" ColumnName="WeeeDeliveredReturnVersionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AatfDeliveryLocations">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.AatfDeliveryLocation">
+              <MappingFragment StoreEntitySet="AatfDeliveryLocation">
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="FacilityName" ColumnName="FacilityName" />
+                <ScalarProperty Name="ApprovalNumber" ColumnName="ApprovalNumber" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AeDeliveryLocations">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.AeDeliveryLocation">
+              <MappingFragment StoreEntitySet="AeDeliveryLocation">
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="OperatorName" ColumnName="OperatorName" />
+                <ScalarProperty Name="ApprovalNumber" ColumnName="ApprovalNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IbisFileDatas">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.IbisFileData">
+              <MappingFragment StoreEntitySet="IbisFileData">
+                <ScalarProperty Name="TransactionFileData" ColumnName="TransactionFileData" />
+                <ScalarProperty Name="TransactionFileName" ColumnName="TransactionFileName" />
+                <ScalarProperty Name="CustomerFileData" ColumnName="CustomerFileData" />
+                <ScalarProperty Name="CustomerFileName" ColumnName="CustomerFileName" />
+                <ScalarProperty Name="FileId" ColumnName="FileId" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvoiceRuns">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.InvoiceRun">
+              <MappingFragment StoreEntitySet="InvoiceRun">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="IbisFileDataId" ColumnName="IbisFileDataId" />
+                <ScalarProperty Name="CompetentAuthorityId" ColumnName="CompetentAuthorityId" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C1B1STransactionNumberSequence">
+            <EntityTypeMapping TypeName="EA.Weee.TestModel.C1B1STransactionNumberSequence">
+              <MappingFragment StoreEntitySet="1B1STransactionNumberSequence">
+                <ScalarProperty Name="NextNumber" ColumnName="NextNumber" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -38,7 +38,10 @@
             ComplianceYear = year;
             Quarter = quarter;
         }
-        
+
+        /// <summary>
+        /// This constructor is used by Entity Framework.
+        /// </summary>
         protected DataReturnUpload()
         {
             this.Date = SystemTime.UtcNow;           
@@ -61,6 +64,7 @@
             Guard.ArgumentNotNull(() => returnVersion, returnVersion);
             DataReturnVersion = returnVersion;
         }
+
         public void Submit(string userId)
         {
             if (DataReturnVersion != null)
@@ -69,7 +73,7 @@
             }
             else
             {
-                string errorMessage = "This data return version not defined.";
+                string errorMessage = "This data upload cannot be submitted as it does not have an associated data return version.";
                 throw new InvalidOperationException(errorMessage);
             }          
         }

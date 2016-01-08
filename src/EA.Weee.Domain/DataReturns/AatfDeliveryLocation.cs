@@ -5,20 +5,23 @@
 
     public class AatfDeliveryLocation : Entity
     {
-        public string AatfApprovalNumber { get; private set; }
+        public string ApprovalNumber { get; private set; }
 
         public string FacilityName { get; private set; }
 
+        /// <summary>
+        /// This constructor is used by Entity Framework.
+        /// </summary>
         protected AatfDeliveryLocation()
         {
         }
 
-        public AatfDeliveryLocation(string aatfApprovalNumber, string facilityName)
+        public AatfDeliveryLocation(string approvalNumber, string facilityName)
         {
-            Guard.ArgumentNotNullOrEmpty(() => aatfApprovalNumber, aatfApprovalNumber);
+            Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
             Guard.ArgumentNotNullOrEmpty(() => facilityName, facilityName);
 
-            AatfApprovalNumber = aatfApprovalNumber;
+            ApprovalNumber = approvalNumber;
             FacilityName = facilityName;
         }
     }
