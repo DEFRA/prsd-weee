@@ -231,7 +231,7 @@
             {
                 try
                 {
-                    ProducerEEEDataViewModel model = new ProducerEEEDataViewModel();
+                    ProducersDataViewModel model = new ProducersDataViewModel();
                     var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
                     model.ComplianceYears = new SelectList(allYears);
                     return View("ProducerEEEData", model);
@@ -250,7 +250,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ProducerEEEData(ProducerEEEDataViewModel model)
+        public async Task<ActionResult> ProducerEEEData(ProducersDataViewModel model)
         {
             SetBreadcrumb(Reports.ProducerEEEData);
 
@@ -352,7 +352,7 @@
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(membersDetailsCsvData.FileName));
         }
 
-        private async Task<ActionResult> DownloadProducerEEEDataCSV(ProducerEEEDataViewModel model, IWeeeClient client)
+        private async Task<ActionResult> DownloadProducerEEEDataCSV(ProducersDataViewModel model, IWeeeClient client)
         {
             throw new NotSupportedException("Report not implemented yet.");
         }
