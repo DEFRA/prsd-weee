@@ -22,7 +22,11 @@
         @Html.Gds().ValidationMessageFor(m => m.SelectedScheme)
         @Html.Gds().DropDownListFor(m => m.SelectedScheme, Model.SchemeNames, new { autocomplete = "false" })
     </div>
-    
+
+    <p>
+        <span class="font-bold">Submission type:</span> Member registrations
+    </p>
+
     <div class="form-group" id="submissionResults"></div>
 
     <p class="left-cleared">
