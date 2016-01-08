@@ -229,7 +229,7 @@
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\ProducerEEEDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\ProducersDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ProducerPublicRegisterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
@@ -557,6 +557,7 @@
     <Content Include="Areas\Scheme\Views\Home\ChooseSubmissionType.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ViewDataReturnSubmissionHistory.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerEEEData.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\_ProducersDataReportFilters.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
