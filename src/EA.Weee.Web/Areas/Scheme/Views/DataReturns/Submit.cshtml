@@ -139,7 +139,14 @@
         else
         {
             <p>By submitting your XML file, you are confirming that the information you’ve provided is accurate and complete. The data you provide will be used to calculate your obligation and will contribute to public data reports.</p>
-            
+
+            if (Model.DataReturn.IsResubmission)
+            {
+                <p class="important">
+                    Submitting this file will overwrite your existing data return for this period.
+                </p>
+            }
+
             <p>
                 @this.WeeeGds().SubmitWithEventTracking(
                     "Submit",

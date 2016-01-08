@@ -335,6 +335,12 @@ th.sorted-descending:after {
 	background-repeat: no-repeat;
 }
 
+p.important {
+    @extend .bold-small;
+    padding-left: 50px;
+    background: url(/Content/govuk_toolkit/images/icon-important.png) no-repeat 0% 50%;
+    min-height:35px;
+}
 
 // 5. Data
 // ==========================================================================
