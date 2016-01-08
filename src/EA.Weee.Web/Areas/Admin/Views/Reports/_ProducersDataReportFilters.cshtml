@@ -1,0 +1,17 @@
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.ProducersDataViewModel
+
+<div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+    @Html.Gds().LabelFor(m => m.SelectedYear)
+    @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+    @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+</div>
+<div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedQuarter)">
+    @Html.Gds().LabelFor(m => m.SelectedQuarter)
+    @Html.Gds().ValidationMessageFor(m => m.SelectedQuarter)
+    @Html.Gds().DropDownListFor(m => m.SelectedQuarter, Model.Quarters, string.Empty, new { autocomplete = "false" })
+</div>
+<div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedObligationtype)">
+    @Html.Gds().LabelFor(m => m.SelectedObligationtype)
+    @Html.Gds().ValidationMessageFor(m => m.SelectedObligationtype)
+    @Html.Gds().DropDownListFor(m => m.SelectedObligationtype, Model.Obligationtypes, string.Empty, new { autocomplete = "false" })
+</div>
