@@ -16,7 +16,6 @@ namespace EA.Weee.Tests.Core.Model
     {
         public System.Guid WeeeDeliveredReturnVersionId { get; set; }
         public System.Guid WeeeDeliveredAmountId { get; set; }
-        public byte[] RowVersion { get; set; }
     
         public virtual WeeeDeliveredAmount WeeeDeliveredAmount { get; set; }
         public virtual WeeeDeliveredReturnVersion WeeeDeliveredReturnVersion { get; set; }

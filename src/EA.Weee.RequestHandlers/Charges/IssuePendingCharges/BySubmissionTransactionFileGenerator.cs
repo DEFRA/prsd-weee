@@ -30,8 +30,6 @@
             {
                 DateTime submittedDate = memberUpload.SubmittedDate.Value;
 
-                List<InvoiceLineItem> lineItems = new List<InvoiceLineItem>();
-
                 string description = string.Format("Charge for producer registration submission made on {0:dd MMM yyyy}.",
                     submittedDate);
 
@@ -45,7 +43,7 @@
                 catch (Exception ex)
                 {
                     string errorMessage = string.Format(
-                        "An error occured creating an 1B1S invoice line item to represent the member upload with ID \"{0}\". " +
+                        "An error occurred creating an 1B1S invoice line item to represent the member upload with ID \"{0}\". " +
                         "See the inner exception for more details.",
                         memberUpload.Id);
                     throw new Exception(errorMessage, ex);
@@ -66,7 +64,7 @@
                 catch (Exception ex)
                 {
                     string errorMessage = string.Format(
-                        "An error occured creating an 1B1S invoice to represent the member upload with ID \"{0}\". " +
+                        "An error occurred creating an 1B1S invoice to represent the member upload with ID \"{0}\". " +
                         "See the inner exception for more details.",
                         memberUpload.Id);
                     throw new Exception(errorMessage, ex);

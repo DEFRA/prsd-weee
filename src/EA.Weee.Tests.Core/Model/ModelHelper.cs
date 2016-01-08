@@ -326,7 +326,8 @@
                 AuthorisedRepresentativeId = null,
                 ChargeBandAmountId = chargeBandAmount.Id,
                 ChargeThisUpdate = 0,
-                ObligationType = "B2B"
+                ObligationType = "B2B",
+                Invoiced = false
             };
             model.ProducerSubmissions.Add(producerSubmission);
 
@@ -366,7 +367,7 @@
             Partnership partnership = new Partnership
             {
                 Id = IntegerToGuid(partnershipId),
-                Name = string.Format("Partnership {0} Name",  CreatePartnershipNameFromId(partnershipId)),
+                Name = string.Format("Partnership {0} Name", CreatePartnershipNameFromId(partnershipId)),
                 Contact1 = contact,
                 PrincipalPlaceOfBusinessId = contact.Id,
             };

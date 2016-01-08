@@ -89,29 +89,6 @@
         }
 
         /// <summary>
-        /// This test ensures that a member upload which has not been submitted cannot be assigned to an invoice run. 
-        /// </summary>
-        [Fact]
-        public void Constructor_WithUnsubmittedMemberUpload_ThrowsInvalidOperationException()
-        {
-            // Arrange
-            UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
-
-            Scheme scheme = A.Fake<Scheme>();
-            A.CallTo(() => scheme.CompetentAuthority).Returns(authority);
-
-            List<MemberUpload> memberUploads = new List<MemberUpload>();
-            MemberUpload memberUpload1 = new MemberUpload(new Guid("A2A01A99-A97D-4219-9060-D7CDF7435114"), scheme, "data", "filename");
-            memberUploads.Add(memberUpload1);
-
-            // Act
-            Func<InvoiceRun> testCode = () => new InvoiceRun(authority, memberUploads);
-
-            // Assert
-            Assert.Throws<InvalidOperationException>(testCode);
-        }
-
-        /// <summary>
         /// This test ensures that the member uploads are assigned to the invoice run being
         /// constructed. 
         /// </summary>
