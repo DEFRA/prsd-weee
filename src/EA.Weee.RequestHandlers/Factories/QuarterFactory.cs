@@ -23,7 +23,7 @@
 
             if (systemData.UseFixedComplianceYearAndQuarter)
             {
-                return new Quarter(systemData.FixedComplianceYear, (QuarterType)(int)systemData.FixedQuarter);
+                return new Quarter(systemData.FixedComplianceYear, systemData.FixedQuarter);
             }
 
             switch (DateTime.Now.Month)
@@ -49,11 +49,20 @@
             }
         }
 
-        public async Task SetCurrent(Quarter quarter)
+        public async Task SetFixedQuarter(Quarter quarter)
         {
             var systemData = await systemDataDataAccess.Get();
 
             systemData.UpdateQuarterAndComplianceYear(quarter);
+
+            await context.SaveChangesAsync();
+        }
+
+        public async Task ToggleFixedQuarterUseage(bool enabled)
+        {
+            var systemData = await systemDataDataAccess.Get();
+
+            systemData.ToggleFixedQuarterAndComplianceYearUsage(enabled);
 
             await context.SaveChangesAsync();
         }
