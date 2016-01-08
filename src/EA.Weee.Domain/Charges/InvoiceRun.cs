@@ -15,9 +15,9 @@
     /// </summary>
     public class InvoiceRun : Entity
     {
-        public UKCompetentAuthority CompetentAuthority { get; private set; }
+        public virtual UKCompetentAuthority CompetentAuthority { get; private set; }
 
-        public DateTime CreatedDate { get; private set; }
+        public virtual DateTime CreatedDate { get; private set; }
 
         public IReadOnlyList<MemberUpload> MemberUploads { get; private set; }
 

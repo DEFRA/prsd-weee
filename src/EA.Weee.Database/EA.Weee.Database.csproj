@@ -169,6 +169,7 @@
     <Content Include="scripts\Update\Sprint20\20160104-1740-UpdateProducerAmendmentsCSVStoredProducerWithSubmittedDate.sql" />
     <Content Include="scripts\Update\Sprint20\20160105-1334-ModifyUniqueKeyConstraintforRegisteredProducers.sql" />
     <Content Include="scripts\Update\Sprint20\20160107-1600-AddInvoicedColumnToProducerSubmission.sql" />
+    <Content Include="scripts\Update\Sprint20\20160108-1300-AddSpgInvoiceRunChargeBreakdown.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

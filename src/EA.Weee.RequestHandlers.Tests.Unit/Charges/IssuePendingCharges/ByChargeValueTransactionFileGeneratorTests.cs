@@ -174,8 +174,6 @@
                 scheme,
                 A.Dummy<string>());
 
-            RegisteredProducer registeredProducer = new RegisteredProducer("WEE/11AAAA11", complianceYear, scheme);
-
             var producerSubmission = A.Fake<ProducerSubmission>();
             A.CallTo(() => producerSubmission.ChargeThisUpdate)
                 .Returns(123.45m);
