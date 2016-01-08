@@ -558,10 +558,13 @@
                 TransactionFileName = "Transaction file name"
             };
 
+            var user = GetOrCreateUser("Invoice Run User");
+
             var invoiceRun = new InvoiceRun
             {
                 Id = IntegerToGuid(GetNextId()),
-                CreatedDate = DateTime.UtcNow,
+                IssuedDate = DateTime.UtcNow,
+                IssuedByUserId = user.Id,
                 CompetentAuthority = compenentAuthority,
                 CompetentAuthorityId = compenentAuthority.Id,
                 IbisFileData = ibisFileData,

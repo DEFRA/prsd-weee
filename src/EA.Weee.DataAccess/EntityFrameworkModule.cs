@@ -14,6 +14,12 @@
 
             builder.RegisterType<RegisteredProducerDataAccess>().As<IRegisteredProducerDataAccess>()
                 .InstancePerRequest();
+
+            builder.RegisterType<QuarterWindowTemplateDataAccess>().As<IQuarterWindowTemplateDataAccess>()
+                .InstancePerRequest();
+
+            builder.RegisterType<SystemDataDataAccess>().As<ISystemDataDataAccess>()
+                .InstancePerRequest();
         }
     }
 }

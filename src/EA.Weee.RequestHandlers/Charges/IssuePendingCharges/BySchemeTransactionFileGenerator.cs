@@ -66,7 +66,7 @@
                 {
                     invoice = new Invoice(
                         group.Key.IbisCustomerReference,
-                        invoiceRun.CreatedDate,
+                        invoiceRun.IssuedDate,
                         TransactionType.Invoice,
                         transactionReference,
                         lineItems);

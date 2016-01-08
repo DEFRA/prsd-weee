@@ -9,16 +9,20 @@
     using Api.Client;
     using Base;
     using Core.Admin;
+    using Core.DataReturns;
     using Core.Shared;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
+    using Scheme.ViewModels;
     using Services;
     using Services.Caching;
     using ViewModels.Submissions;
+    using Web.ViewModels.Shared.Submission;
     using Weee.Requests.Admin;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
+    using Weee.Requests.Shared;
     using GetSubmissionsHistoryResults = Weee.Requests.Shared.GetSubmissionsHistoryResults;
 
     public class SubmissionsController : AdminController
@@ -34,6 +38,52 @@
             this.apiClient = client;
             this.cache = cache;
             this.csvWriterFactory = csvWriterFactory;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ChooseSubmissionType()
+        {
+            using (var client = apiClient())
+            {   
+                var model = new ChooseSubmissionTypeViewModel
+                {
+                    PossibleValues = new List<string>
+                    {
+                        SubmissionType.EeeOrWeeeDataReturns,
+                        SubmissionType.MemberRegistrations
+                    }
+                };
+
+                await SetBreadcrumb();
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChooseSubmissionType(ChooseSubmissionTypeViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (viewModel.SelectedValue == SubmissionType.EeeOrWeeeDataReturns)
+                {
+                    return RedirectToAction("DataReturnSubmissionHistory");
+                }
+                else if (viewModel.SelectedValue == SubmissionType.MemberRegistrations)
+                {
+                    return RedirectToAction("SubmissionsHistory");
+                }
+            }
+
+            await SetBreadcrumb();
+            viewModel.PossibleValues = new List<string>
+            {
+                SubmissionType.EeeOrWeeeDataReturns,
+                SubmissionType.MemberRegistrations
+            };
+
+            return View(viewModel);
         }
 
         /// <summary>
@@ -128,6 +178,76 @@
                 string csv = csvWriter.Write(errors);
                 byte[] fileContent = new UTF8Encoding().GetBytes(csv);
                 return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
+            }
+        }
+        
+        [HttpGet]
+        public async Task<ActionResult> DataReturnSubmissionHistory()
+        {
+            using (var client = apiClient())
+            {
+                await SetBreadcrumb();
+
+                try
+                {
+                    //Get all the compliance years currently in database and set it to latest one.
+                    //Get all the approved PCSs
+                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears(ComplianceYearFor.DataReturns));
+                    var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
+                    DataReturnSubmissionsHistoryViewModel model = new DataReturnSubmissionsHistoryViewModel
+                    {
+                        ComplianceYears = new SelectList(allYears),
+                        SchemeNames = new SelectList(allSchemes, "Id", "SchemeName"),
+                        SelectedYear = allYears.FirstOrDefault(),
+                        SelectedScheme = allSchemes.Count > 0 ? allSchemes.First().Id : Guid.Empty
+                    };
+                    return View(model);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                    return View();
+                }
+            }
+        }
+
+        /// <summary>
+        /// This method is called using AJAX by JS-users.
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="schemeId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> FetchDataReturnSubmissionResults(int year, Guid schemeId)
+        {
+            if (!Request.IsAjaxRequest())
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+            using (var client = apiClient())
+            {
+                try
+                {
+                    var schemeData = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+
+                    IList<DataReturnSubmissionsHistoryResult> searchResults = await client.SendAsync(User.GetAccessToken(), new GetDataReturnSubmissionsHistoryResults(schemeId, schemeData.OrganisationId, year));
+                    return PartialView("_dataReturnSubmissionsResults", searchResults);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+                    throw;
+                }
             }
         }
 

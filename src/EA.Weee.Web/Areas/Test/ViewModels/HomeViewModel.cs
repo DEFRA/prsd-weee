@@ -8,12 +8,14 @@
         public const string CreatePcsMemberXmlFile = "Create PCS Member XML File";
         public const string CreatePcsDataReturnXmlFile = "Create PCS Data Return XML File";
         public const string ManageCache = "Manage Cache";
+        public const string ManagePcsReturnsSubmissionWindow = "Manage PCS Returns Submission Window";
 
         public HomeViewModel() : base(new List<string>
             {
                 CreatePcsMemberXmlFile,
                 CreatePcsDataReturnXmlFile,
-                ManageCache
+                ManageCache,
+                ManagePcsReturnsSubmissionWindow
             })
         {
         }
