@@ -48,6 +48,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="scripts\Update\Sprint21\20160107-1430-AddFixedComplianceYearAndSetQuarterToSystemDataTable.sql" />
     <Content Include="scripts\Everytime\0007-InsertQuarterWindowTemplates.sql" />
+    <Content Include="scripts\Update\Sprint21\20150107-2227-CreateSpgSchemeWeeeCsv.sql" />
     <Content Include="scripts\Update\Sprint21\20160106-1618-CreateQuarterWindowTemplateTable.sql" />
     <Content Include="scripts\Update\Sprint19\20151221-1230-RefactorDataReturnsJunctionTables.sql" />
     <Content Include="scripts\Update\Sprint19\20151218-1700-ChangeWeeeCategory.sql" />
