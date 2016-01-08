@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Core.Configuration;
     using Domain.DataReturns;
     using Factories;
     using Prsd.Core.Mediator;
@@ -10,14 +11,21 @@
     public class UpdatePcsSubmissionWindowSettingsHandler : IRequestHandler<UpdatePcsSubmissionWindowSettings, bool>
     {
         private readonly IQuarterFactory quarterFactory;
+        private readonly IConfigurationManagerWrapper configurationManagerWrapper;
 
-        public UpdatePcsSubmissionWindowSettingsHandler(IQuarterFactory quarterFactory)
+        public UpdatePcsSubmissionWindowSettingsHandler(IQuarterFactory quarterFactory, IConfigurationManagerWrapper configurationManagerWrapper)
         {
             this.quarterFactory = quarterFactory;
+            this.configurationManagerWrapper = configurationManagerWrapper;
         }
 
         public async Task<bool> HandleAsync(UpdatePcsSubmissionWindowSettings message)
         {
+            if (configurationManagerWrapper.IsLiveEnvironment)
+            {
+                throw new InvalidOperationException("The PCS submission window cannot be fixed");
+            }
+
             if (message.FixCurrentQuarterAndComplianceYear &&
                      (!message.CurrentComplianceYear.HasValue || !message.SelectedQuarter.HasValue))
             {
