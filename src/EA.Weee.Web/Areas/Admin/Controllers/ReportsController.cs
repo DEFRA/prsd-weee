@@ -83,6 +83,9 @@
 
                 case Reports.Producerpublicregister:
                     return RedirectToAction("ProducerPublicRegister", "Reports");
+
+                case Reports.ProducerEEEData:
+                    return RedirectToAction("ProducerEEEData", "Reports");
                 default:
                     throw new NotSupportedException();
             }
@@ -219,6 +222,51 @@
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> ProducerEEEData()
+        {
+            SetBreadcrumb(Reports.ProducerEEEData);
+
+            using (var client = apiClient())
+            {
+                try
+                {
+                    ProducersDataViewModel model = new ProducersDataViewModel();
+                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears(ComplianceYearFor.DataReturns));
+                    model.ComplianceYears = new SelectList(allYears);
+                    return View("ProducerEEEData", model);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+                    if (ModelState.IsValid)
+                    {
+                        throw;
+                    }
+                    return View();
+                }
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ProducerEEEData(ProducersDataViewModel model)
+        {
+            SetBreadcrumb(Reports.ProducerEEEData);
+
+            using (var client = apiClient())
+            {
+                var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears(ComplianceYearFor.DataReturns));
+                model.ComplianceYears = new SelectList(allYears);
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
+                return await DownloadProducerEEEDataCSV(model, client);
+            }
+        }
+
         private async Task SetReportsFilterLists(ReportsFilterViewModel model, IWeeeClient client)
         {
             var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
@@ -238,9 +286,9 @@
             model.ComplianceYears = new SelectList(allYears);
         }
 
-        private void SetBreadcrumb()
+        private void SetBreadcrumb(string reportName = null)
         {
-            breadcrumb.InternalActivity = "View reports";
+            breadcrumb.InternalActivity = string.IsNullOrEmpty(reportName) ? "view reports" : reportName;
         }
 
         private async Task<ActionResult> DownloadMembersDetailsCSV(ReportsFilterViewModel model, IWeeeClient client)
@@ -302,6 +350,11 @@
 
             byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(membersDetailsCsvData.FileName));
+        }
+
+        private async Task<ActionResult> DownloadProducerEEEDataCSV(ProducersDataViewModel model, IWeeeClient client)
+        {
+            throw new NotSupportedException("Report not implemented yet.");
         }
     }
 }
