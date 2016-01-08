@@ -13,6 +13,7 @@
     using FakeItEasy;
     using RequestHandlers.Charges.IssuePendingCharges;
     using RequestHandlers.Security;
+    using RequestHandlers.Shared.DomainUser;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -32,7 +33,8 @@
             IssuePendingChargesHandler handler = new IssuePendingChargesHandler(
                 authorization,
                 A.Dummy<IIssuePendingChargesDataAccess>(),
-                A.Dummy<IIbisFileDataGenerator>());
+                A.Dummy<IIbisFileDataGenerator>(),
+                A.Dummy<IDomainUserContext>());
 
             // Act
             Func<Task<Guid>> testCode = async () => await handler.HandleAsync(A.Dummy<Requests.Charges.IssuePendingCharges>());
@@ -69,6 +71,8 @@
                 scheme,
                 A.Dummy<string>());
 
+            memberUpload1.Submit(A.Dummy<User>());
+
             MemberUpload memberUpload2 = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
@@ -77,6 +81,8 @@
                 2017,
                 scheme,
                 A.Dummy<string>());
+
+            memberUpload2.Submit(A.Dummy<User>());
 
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);
@@ -94,7 +100,8 @@
             IssuePendingChargesHandler handler = new IssuePendingChargesHandler(
                 authorization,
                 dataAccess,
-                A.Dummy<IIbisFileDataGenerator>());
+                A.Dummy<IIbisFileDataGenerator>(),
+                A.Dummy<IDomainUserContext>());
 
             Requests.Charges.IssuePendingCharges request = new Requests.Charges.IssuePendingCharges(CompetentAuthority.NorthernIreland);
 

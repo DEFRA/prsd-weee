@@ -22,7 +22,7 @@
                 A.Dummy<string>());
 
             // Act
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             // Assert
             Assert.True(memberUpload.IsSubmitted);
@@ -41,10 +41,10 @@
                 A.Dummy<Scheme>(),
                 A.Dummy<string>());
 
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             // Act
-            Action action = () => memberUpload.Submit();
+            Action action = () => memberUpload.Submit(A.Dummy<User>());
 
             // Assert
             Assert.Throws<InvalidOperationException>(action);

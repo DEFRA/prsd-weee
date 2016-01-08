@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Helpers
 @using EA.Weee.Core.Shared
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.ManageSchemesViewModel
@@ -37,7 +38,7 @@
             @foreach (var scheme in Model.Schemes)
             {
                 <tr>
-                    <td width="100%">@scheme.Name</td>
+                    <td width="100%">@scheme.Name.HardTrim(80)</td>
                     <td>
                         @if (scheme.SchemeStatus == SchemeStatus.Approved)
                         {

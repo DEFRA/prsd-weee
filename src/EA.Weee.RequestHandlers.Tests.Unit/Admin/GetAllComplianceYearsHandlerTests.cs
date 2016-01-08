@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Shared;
+    using Domain.DataReturns;
     using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.Admin;
@@ -51,7 +53,7 @@
             A.CallTo(() => memberUpload3.ComplianceYear).Returns(2016);
 
             IGetAllComplianceYearsDataAccess dataAccess = A.Fake<IGetAllComplianceYearsDataAccess>();
-            A.CallTo(() => dataAccess.GetAllComplianceYears())
+            A.CallTo(() => dataAccess.GetAllComplianceYears(ComplianceYearFor.MemberRegistrations))
                 .Returns(new List<int>()
                 {
                     memberUpload2.ComplianceYear.Value, 

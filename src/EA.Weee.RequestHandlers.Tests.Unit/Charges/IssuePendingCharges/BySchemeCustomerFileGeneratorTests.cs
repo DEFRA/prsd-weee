@@ -62,10 +62,12 @@
                 scheme,
                 A.Dummy<string>());
 
+            memberUpload.Submit(A.Dummy<User>());
+
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
             ulong id = 12345;
@@ -123,10 +125,12 @@
                 scheme,
                 A.Dummy<string>());
 
+            memberUpload.Submit(A.Dummy<User>());
+
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 
@@ -196,6 +200,8 @@
                 scheme,
                 A.Dummy<string>());
 
+            memberUpload1.Submit(A.Dummy<User>());
+
             MemberUpload memberUpload2 = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
@@ -205,11 +211,13 @@
                 scheme,
                 A.Dummy<string>());
 
+            memberUpload2.Submit(A.Dummy<User>());
+
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 
@@ -267,6 +275,8 @@
                 scheme1,
                 A.Dummy<string>());
 
+            memberUpload1.Submit(A.Dummy<User>());
+
             Address address2 = new Address(
                 "2 High Street",
                 null,
@@ -300,11 +310,13 @@
                 scheme2,
                 A.Dummy<string>());
 
+            memberUpload2.Submit(A.Dummy<User>());
+
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 

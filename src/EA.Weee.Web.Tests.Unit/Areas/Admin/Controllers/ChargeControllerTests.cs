@@ -96,7 +96,7 @@
 
         /// <summary>
         /// This test ensures that the OnActionExecuting method will set the InternalActivity
-        /// property of the breadcrumb to "Manage charges".
+        /// property of the breadcrumb to "Manage PCS charges".
         /// </summary>
         [Fact]
         public void OnActionExecuting_Always_SetsBreadcrumbInternalActivityToManageCharges()
@@ -128,7 +128,7 @@
             }
 
             // Assert
-            Assert.Equal("Manage charges", breadcrumb.InternalActivity);
+            Assert.Equal("Manage PCS charges", breadcrumb.InternalActivity);
         }
 
         /// <summary>
@@ -297,6 +297,34 @@
             Assert.NotNull(redirectResult);
 
             Assert.Equal("ManagePendingCharges", redirectResult.RouteValues["action"]);
+            Assert.Equal(CompetentAuthority.NorthernIreland, redirectResult.RouteValues["authority"]);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "ChooseActivity" action will return a redirect
+        /// to the "InvoiceRuns" action, with the selected authority when option
+        /// to view invoice run history is selected.
+        /// </summary>
+        [Fact]
+        public void PostChooseActivity_WithViewInvoiceRunHistorySelected_RedirectsToInvoiceRunsActionWithSelectedAuthority()
+        {
+            // Arrange
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => A.Dummy<IWeeeClient>());
+
+            ChooseActivityViewModel viewModel = new ChooseActivityViewModel();
+            viewModel.SelectedActivity = Activity.ViewInvoiceRunHistory;
+
+            // Act
+            ActionResult result = controller.ChooseActivity(CompetentAuthority.NorthernIreland, viewModel);
+
+            // Assert
+            RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
+            Assert.NotNull(redirectResult);
+
+            Assert.Equal("InvoiceRuns", redirectResult.RouteValues["action"]);
             Assert.Equal(CompetentAuthority.NorthernIreland, redirectResult.RouteValues["authority"]);
         }
 
@@ -496,6 +524,74 @@
 
             // Assert
             await Assert.ThrowsAsync<InvalidOperationException>(testCode);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "InvoiceRuns" action will return the "InvoiceRuns" view
+        /// providing the list of invoice runs. Where the authority is the Environment Agency, the ViewBag
+        /// will have AllowDownloadOfInvoiceFiles set to true.
+        /// </summary>
+        [Fact]
+        public async Task GetInvoiceRuns_ForEngland_ReturnsInvoiceRunsViewWithModelAllowingInvoiceDownload()
+        {
+            // Arrange
+            IReadOnlyList<InvoiceRunInfo> results = A.Dummy<IReadOnlyList<InvoiceRunInfo>>();
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<FetchInvoiceRuns>._)).Returns(results);
+
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => weeeClient);
+
+            // Act
+            ActionResult result = await controller.InvoiceRuns(CompetentAuthority.England);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "InvoiceRuns");
+
+            IReadOnlyList<InvoiceRunInfo> viewModel = viewResult.Model as IReadOnlyList<InvoiceRunInfo>;
+            Assert.NotNull(viewModel);
+            Assert.Equal(results, viewModel);
+            Assert.Equal(true, viewResult.ViewBag.AllowDownloadOfInvoiceFiles);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "InvoiceRuns" action will return the "InvoiceRuns" view
+        /// providing the list of invoice runs. Where the authority is devolved, the ViewBag
+        /// will have AllowDownloadOfInvoiceFiles set to false.
+        /// </summary>
+        [Fact]
+        public async Task GetInvoiceRuns_ForDevolvedAuthority_ReturnsInvoiceRunsViewWithModelNotAllowingInvoiceDownload()
+        {
+            // Arrange
+            IReadOnlyList<InvoiceRunInfo> results = A.Dummy<IReadOnlyList<InvoiceRunInfo>>();
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<FetchInvoiceRuns>._)).Returns(results);
+
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => weeeClient);
+
+            // Act
+            ActionResult result = await controller.InvoiceRuns(CompetentAuthority.Scotland);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "InvoiceRuns");
+
+            IReadOnlyList<InvoiceRunInfo> viewModel = viewResult.Model as IReadOnlyList<InvoiceRunInfo>;
+            Assert.NotNull(viewModel);
+            Assert.Equal(results, viewModel);
+            Assert.Equal(false, viewResult.ViewBag.AllowDownloadOfInvoiceFiles);
         }
     }
 }
