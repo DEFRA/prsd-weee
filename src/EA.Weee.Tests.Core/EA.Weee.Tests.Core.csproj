@@ -209,6 +209,9 @@
     <Compile Include="Model\ProducerSubmission.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\QuarterWindowTemplate.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\RegisteredProducer.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
