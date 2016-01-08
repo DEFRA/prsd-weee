@@ -8,11 +8,11 @@
     using Core.Admin;
     using Prsd.Core.Mediator;
 
-    public class FetchInvoiceRunCSV : IRequest<CSVFileData>
+    public class FetchInvoiceRunCsv : IRequest<CSVFileData>
     {
         public Guid InvoiceRunId { get; private set; }
 
-        public FetchInvoiceRunCSV(Guid invoiceRunId)
+        public FetchInvoiceRunCsv(Guid invoiceRunId)
         {
             InvoiceRunId = invoiceRunId;
         }
