@@ -176,30 +176,14 @@
 
             RegisteredProducer registeredProducer = new RegisteredProducer("WEE/11AAAA11", complianceYear, scheme);
 
-            ProducerSubmission producerSubmission = new ProducerSubmission(
-                registeredProducer,
-                memberUpload,
-                A.Dummy<ProducerBusiness>(),
-                A.Dummy<AuthorisedRepresentative>(),
-                A.Dummy<DateTime>(),
-                A.Dummy<decimal>(),
-                A.Dummy<bool>(),
-                A.Dummy<DateTime?>(),
-                A.Dummy<string>(),
-                A.Dummy<EEEPlacedOnMarketBandType>(),
-                A.Dummy<SellingTechniqueType>(),
-                A.Dummy<ObligationType>(),
-                A.Dummy<AnnualTurnOverBandType>(),
-                A.Dummy<List<BrandName>>(),
-                A.Dummy<List<SICCode>>(),
-                A.Dummy<Domain.Lookup.ChargeBandAmount>(),
-                123.45m);
+            var producerSubmission = A.Fake<ProducerSubmission>();
+            A.CallTo(() => producerSubmission.ChargeThisUpdate)
+                .Returns(123.45m);
+            A.CallTo(() => producerSubmission.Invoiced)
+                .Returns(false);
 
             memberUpload.ProducerSubmissions.Add(producerSubmission);
-
             memberUpload.Submit(A.Dummy<User>());
-
-            registeredProducer.Unalign();
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);

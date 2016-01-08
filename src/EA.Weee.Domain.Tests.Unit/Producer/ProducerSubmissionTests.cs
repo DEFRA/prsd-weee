@@ -8,7 +8,7 @@
     using Lookup;
     using Xunit;
 
-    public class ProducerTests
+    public class ProducerSubmissionTests
     {
         [Fact]
         public void Producer_EqualsNullParameter_ReturnsFalse()
@@ -146,6 +146,24 @@
             var producer2 = ProducerBuilder.WithSICCodes(sicCodes2);
 
             Assert.NotEqual(producer, producer2);
+        }
+
+        [Fact]
+        public void Producer_SetAsInvoiced_UpdatesInvoicedProperty()
+        {
+            var producer = ProducerBuilder.NewProducer;
+            producer.SetAsInvoiced();
+
+            Assert.True(producer.Invoiced);
+        }
+
+        [Fact]
+        public void Producer_SetAsInvoiced_ThrowsInvalidOperationException_IfAlreadyInvoiced()
+        {
+            var producer = ProducerBuilder.NewProducer;
+            producer.SetAsInvoiced();
+
+            Assert.Throws<InvalidOperationException>(() => producer.SetAsInvoiced());
         }
 
         private class AlwaysEqualAuthorisedRepresentative : AuthorisedRepresentative

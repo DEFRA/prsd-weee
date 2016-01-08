@@ -10,5 +10,11 @@
 
     public class FetchInvoiceRunCSV : IRequest<CSVFileData>
     {
+        public Guid InvoiceRunId { get; private set; }
+
+        public FetchInvoiceRunCSV(Guid invoiceRunId)
+        {
+            InvoiceRunId = invoiceRunId;
+        }
     }
 }

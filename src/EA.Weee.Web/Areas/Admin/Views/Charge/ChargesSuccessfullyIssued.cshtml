@@ -15,6 +15,10 @@
         </h1>
     </header>
 
+    <p>
+        @Html.ActionLink("Download charge breakdown (CSV)", "DownloadChargeBreakdown", new { id = Model })
+    </p>
+
     @if (ViewBag.AllowDownloadOfInvoiceFiles)
     {
         <p>
