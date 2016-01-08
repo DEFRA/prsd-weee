@@ -17,12 +17,13 @@
             this.context = context;
         }
 
-        public async Task<List<DataReturnSubmissionsHistoryResult>> GetDataReturnSubmissionsHistory(Guid schemeId)
+        public async Task<List<DataReturnSubmissionsHistoryResult>> GetDataReturnSubmissionsHistory(Guid schemeId, int? complianceYear = null)
         {
             var results = await(from dru in context.DataReturnsUploads
                                  join user in context.Users on dru.DataReturnVersion.SubmittingUserId equals user.Id
-                                 where dru.Scheme.Id == schemeId && dru.DataReturnVersion != null
-                                 select new DataReturnSubmissionsHistoryResult
+                                 where dru.Scheme.Id == schemeId && dru.DataReturnVersion != null &&
+                                      (!complianceYear.HasValue || dru.ComplianceYear == complianceYear)
+                                select new DataReturnSubmissionsHistoryResult
                                  {
                                      SchemeId = dru.Scheme.Id,
                                      OrganisationId = dru.Scheme.OrganisationId,
