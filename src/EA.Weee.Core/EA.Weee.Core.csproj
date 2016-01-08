@@ -152,6 +152,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Shared\ChargeBandType.cs" />
+    <Compile Include="Shared\ComplianceYearFor.cs" />
     <Compile Include="Shared\CsvWriter.cs" />
     <Compile Include="Shared\CsvWriterFactory.cs" />
     <Compile Include="Shared\FileInfo.cs" />

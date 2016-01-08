@@ -6,6 +6,6 @@
     using Core.DataReturns;
     public interface IGetDataReturnSubmissionsHistoryResultsDataAccess
     {
-        Task<List<DataReturnSubmissionsHistoryResult>> GetDataReturnSubmissionsHistory(Guid schemeId);
+        Task<List<DataReturnSubmissionsHistoryResult>> GetDataReturnSubmissionsHistory(Guid schemeId, int? complianceYear);
     }
 }
