@@ -30,7 +30,10 @@
 
             foreach (var producerSubmission in producerSubmissions)
             {
-                producerSubmission.MemberUpload.DeductFromTotalCharges(producerSubmission.ChargeThisUpdate);
+                if (producerSubmission.MemberUpload.InvoiceRun == null)
+                {
+                    producerSubmission.MemberUpload.DeductFromTotalCharges(producerSubmission.ChargeThisUpdate);
+                }
             }
 
             var producer = await removeProducerDataAccess.GetProducerRegistration(request.RegisteredProducerId);

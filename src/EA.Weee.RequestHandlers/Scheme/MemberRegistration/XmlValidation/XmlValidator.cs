@@ -13,6 +13,7 @@
     using Weee.XmlValidation.BusinessValidation.MemberRegistration;
     using Weee.XmlValidation.Errors;
     using Weee.XmlValidation.SchemaValidation;
+    using Xml;
     using Xml.Converter;
     using Xml.Deserialization;
     using Xml.MemberRegistration;
@@ -37,7 +38,7 @@
         {
             string schemaVersion = MemberRegistrationSchemaVersion.Version_3_07.GetAttribute<DisplayAttribute>().Name;
             // Validate against the schema
-            var errors = schemaValidator.Validate(message.Data, @"EA.Weee.Xml.MemberRegistration.v3schema.xsd", @"http://www.environment-agency.gov.uk/WEEE/XMLSchema", schemaVersion)
+            var errors = schemaValidator.Validate(message.Data, @"EA.Weee.Xml.MemberRegistration.v3schema.xsd", XmlNamespace.MemberRegistration, schemaVersion)
                 .Select(e => e.ToMemberUploadError())
                 .ToList();
 

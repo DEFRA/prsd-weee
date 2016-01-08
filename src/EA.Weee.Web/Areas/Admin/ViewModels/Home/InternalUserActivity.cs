@@ -7,5 +7,6 @@
         public const string ProducerDetails = "Producer details";
         public const string ManageUsers = "Manage users";
         public const string ViewReports = "View reports";
+        public const string ManagePcsCharges = "Manage PCS charges";
     }
 }

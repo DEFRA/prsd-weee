@@ -47,6 +47,9 @@
   <ItemGroup>
     <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
+    <Compile Include="Charges\FetchInvoiceRunIbisZipFile.cs" />
+    <Compile Include="Charges\FetchPendingCharges.cs" />
+    <Compile Include="Charges\IssuePendingCharges.cs" />
     <Compile Include="Admin\RemoveProducer.cs" />
     <Compile Include="Admin\Reports\GetMemberDetailsCSV.cs" />
     <Compile Include="Admin\Reports\GetPCSChargesCSV.cs" />
@@ -55,6 +58,7 @@
     <Compile Include="DataReturns\CreateTestXmlFile.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile.cs" />
+    <Compile Include="DataReturns\SubmitDataReturnUpload.cs" />
     <Compile Include="Organisations\GetOrganisationOverview.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFile.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache.cs" />
@@ -75,6 +79,7 @@
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
     <Compile Include="Scheme\GetSchemeById.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo.cs" />
+    <Compile Include="Shared\GetDataReturnSubmissionsHistoryResults.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResults.cs" />
     <Compile Include="Scheme\MemberRegistration\GetComplianceYears.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadById.cs" />

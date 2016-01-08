@@ -88,7 +88,7 @@
         public string TradingName { get; private set; }
 
         public bool VATRegistered { get; private set; }
-    
+
         public decimal? AnnualTurnover { get; private set; }
 
         public DateTime? CeaseToExist { get; private set; }
@@ -101,13 +101,13 @@
 
         public int EEEPlacedOnMarketBandType { get; private set; }
 
-        public ObligationType ObligationType { get; private set; }
+        public virtual ObligationType ObligationType { get; private set; }
 
         public int SellingTechniqueType { get; private set; }
 
         public virtual ChargeBandAmount ChargeBandAmount { get; private set; }
 
-        public decimal ChargeThisUpdate { get; private set; }
+        public virtual decimal ChargeThisUpdate { get; private set; }
 
         private string organisationName;
         public virtual string OrganisationName
@@ -158,7 +158,7 @@
                    BrandNames.ElementsEqual(other.BrandNames) &&
                    SICCodes.ElementsEqual(other.SICCodes);
         }
-        
+
         public override bool Equals(object obj)
         {
             return Equals(obj as ProducerSubmission);

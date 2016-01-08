@@ -87,8 +87,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
+    <Compile Include="DataReturns\DataReturnSubmissionsHistoryResult.cs" />
     <Compile Include="Admin\RemoveProducerResult.cs" />
     <Compile Include="Admin\Reports\CSVFileData.cs" />
+    <Compile Include="Charges\PendingCharge.cs" />
     <Compile Include="DataReturns\DataReturnError.cs" />
     <Compile Include="DataReturns\DataReturnForSubmission.cs" />
     <Compile Include="DataReturns\DataReturnWarning.cs" />
@@ -98,6 +100,7 @@
     <Compile Include="DataReturns\TestFileSettings.cs" />
     <Compile Include="DataStandards\CommonMaxFieldLengths.cs" />
     <Compile Include="DataStandards\EnvironmentAgencyMaxFieldLengths.cs" />
+    <Compile Include="Helpers\Extensions.Strings.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
     <Compile Include="Scheme\MemberRegistrationSchemaVersion.cs" />
     <Compile Include="Search\Fuzzy\CommonTerm.cs" />
@@ -197,7 +200,7 @@
     <Compile Include="Shared\CompetentAuthority.cs" />
     <Compile Include="Shared\CountryData.cs" />
     <Compile Include="Shared\ErrorLevel.cs" />
-    <Compile Include="Shared\UploadErrorData.cs" />
+    <Compile Include="Shared\ErrorData.cs" />
     <Compile Include="Shared\OrganisationStatus.cs" />
     <Compile Include="Shared\Paging\IPagedList.cs" />
     <Compile Include="Shared\Paging\PagedList.cs" />

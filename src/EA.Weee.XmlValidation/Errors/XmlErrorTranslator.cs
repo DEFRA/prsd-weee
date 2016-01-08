@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.XmlValidation.Errors
 {
+    using System;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Xml.Linq;
@@ -23,6 +24,10 @@
         private const string IncompleteContentPattern =
            @"^The element '([^']*)' in namespace '[^']*' has incomplete content. List of possible elements expected: '[^']*' in namespace '[^']*'.$";
 
+        private static readonly Regex FixedValueConstraintFailurePattern = new Regex(
+           @"^The value of the '(?<ElementName>[^']*)' element does not equal its fixed value.$",
+           RegexOptions.Compiled);
+
         private static readonly Regex EntityNameParsingErrorPattern = new Regex(
             @"^An error occurred while parsing EntityName\. Line (?<LineNumber>\d+), position \d+\.$",
             RegexOptions.Compiled);
@@ -39,6 +44,9 @@
 
         private const string UniqueKeyConstraintPattern = @"There is a duplicate key sequence '[^']*' for the '[^']*' key or unique identity constraint.$";
 
+        public const string IncorrectlyFormattedXmlMessage =
+            "The file you're trying to upload is not a correctly formatted XML file. Upload a valid XML file.";
+
         public string MakeFriendlyErrorMessage(string message, string schemaVersion)
         {
             return MakeFriendlyErrorMessage(null, message, -1, schemaVersion);
@@ -51,7 +59,7 @@
 
             if (Regex.IsMatch(message, DataAtTheRoolLevelIsInvalid))
             {
-                resultErrorMessage = "The file you're trying to upload is not a correctly formatted XML file. Upload a valid XML file.";
+                resultErrorMessage = IncorrectlyFormattedXmlMessage;
             }
             else if (Regex.IsMatch(message, GeneralConstraintFailurePattern))
             {
@@ -96,6 +104,14 @@
             {
                 resultErrorMessage = MakeFriendlyErrorUniqueKeyMessage(sender, message);
             }
+            else if (TestRegex(message, FixedValueConstraintFailurePattern, out match))
+            {
+                resultErrorMessage = string.Format(
+                    "The value '{0}' supplied for field '{1}' is not permitted. " +
+                    "Only the value specified in the schema is allowed.",
+                    sender.Value,
+                    sender.Name.LocalName);
+            }
 
             var registrationNo = GetRegistrationNumber(sender);
             var registrationNoText = !string.IsNullOrEmpty(registrationNo) ? string.Format("Producer {0}: ", registrationNo) : string.Empty;
@@ -104,7 +120,7 @@
 
             if (!string.IsNullOrEmpty(lineNumberText))
             {
-                resultErrorMessage = resultErrorMessage.EndsWith(".", System.StringComparison.CurrentCulture)
+                resultErrorMessage = resultErrorMessage.EndsWith(".", StringComparison.CurrentCulture)
                     ? resultErrorMessage.Remove(resultErrorMessage.Length - 1)
                     : resultErrorMessage;
             }
@@ -113,7 +129,7 @@
         }
 
         private string MakeFriendlyErrorUniqueKeyMessage(XElement sender, string message)
-        { 
+        {
             var element = sender.Descendants().First();
             return string.Format("There is duplicate value '{0}' for field '{1}' of parent field '{2}'. Remove one of the duplicate entries", element.Value, element.Name.LocalName, sender.Name.LocalName);
         }
@@ -135,14 +151,18 @@
                 case "MinInclusive":
                 case "MaxInclusive":
                     friendlyMessageTemplate =
-                        "The value '{0}' supplied for field '{1}' is lower than the minimum, or greater than the maximum, allowed value.";
+                        "The value '{0}' supplied for field '{1}' is lower than the minimum or greater than the maximum allowed value.";
                     break;
                 case "Pattern":
-                    friendlyMessageTemplate = string.IsNullOrEmpty(sender.Value) ? "You must provide a value for {1}." : "The value '{0}' supplied for field '{1}' doesn't match the required format.";
+                    friendlyMessageTemplate = string.IsNullOrEmpty(sender.Value) ? "You must provide a value for '{1}'." : "The value '{0}' supplied for field '{1}' doesn't match the required format.";
                     break;
                 case "Enumeration":
                     friendlyMessageTemplate =
                         "The value '{0}' supplied for field '{1}' isn't one of the accepted values.";
+                    break;
+                case "FractionDigits":
+                    friendlyMessageTemplate =
+                        "The value '{0}' supplied for field '{1}' exceeds the maximum number of allowed decimal places";
                     break;
             }
 
@@ -216,7 +236,7 @@
 
         private string MakeFriendlyInvalidChildElementMessage(XElement sender, string message, string schemaVersion)
         {
-            return string.Format("The field {0} isn't expected here. Check that you are using v{1} of the XSD schema (XML template).", sender.Name.LocalName, schemaVersion);
+            return string.Format("The field '{0}' isn't expected here. Check that you are using v{1} of the XSD schema (XML template).", sender.Name.LocalName, schemaVersion);
         }
 
         private string MakeFriendlyIncompleteContentMessage(XElement sender, string message)
@@ -226,14 +246,20 @@
             {
                 listName = listName.Substring(0, listName.Length - 4);
             }
-            return string.Format("There are no {0} details in XML file. Please provide details for at least one {0}.", listName);
+
+            var missingElement = message
+                .Split(new[] { "List of possible elements expected:" }, StringSplitOptions.None)[1]
+                .Split(new[] { "in namespace" }, StringSplitOptions.None)[0]
+                .Trim();
+
+            return string.Format("The '{0}' element is missing a child element {1}.", listName, missingElement);
         }
 
         private string MakeFriendlyErrorInXmlDocumentMessage(string message)
         {
             var lineNumber = Regex.Match(message, ErrorInXmlDocumentPattern).Groups[1].ToString();
 
-            return string.Format("{0} This can be caused by an error on this line, or before it (XML line {1}).", message, lineNumber);
+            return string.Format("'{0}' This can be caused by an error on this line, or before it (XML line {1}).", message, lineNumber);
         }
 
         private string GetRegistrationNumber(XElement sender)

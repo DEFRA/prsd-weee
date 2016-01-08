@@ -76,17 +76,20 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Admin\CompetentAuthorityUserTests.cs" />
+    <Compile Include="Charges\InvoiceRunTests.cs" />
     <Compile Include="CountryTests.cs" />
     <Compile Include="DataReturns\DataReturnTests.cs" />
     <Compile Include="DataReturns\DataReturnUploadTests.cs" />
     <Compile Include="DataReturns\DataReturnVersionTests.cs" />
-    <Compile Include="DataReturns\AatfDeliveredAmountTests.cs" />
     <Compile Include="DataReturns\AatfDeliveryLocationTests.cs" />
-    <Compile Include="DataReturns\AeDeliveredAmountTests.cs" />
     <Compile Include="DataReturns\AeDeliveryLocationTests.cs" />
     <Compile Include="DataReturns\EeeOutputAmountTests.cs" />
+    <Compile Include="DataReturns\EeeOutputReturnVersionTests.cs" />
     <Compile Include="DataReturns\ReturnItemTests.cs" />
+    <Compile Include="DataReturns\WeeeCollectedAmountTests.cs" />
+    <Compile Include="DataReturns\WeeeCollectedReturnVersionTests.cs" />
     <Compile Include="DataReturns\WeeeDeliveredAmountTests.cs" />
+    <Compile Include="DataReturns\WeeeDeliveredReturnVersionTests.cs" />
     <Compile Include="ExtensionMethodsTests.cs" />
     <Compile Include="Helpers\UKCompetentAuthorityFactory.cs" />
     <Compile Include="Helpers\CountryFactory.cs" />
@@ -116,6 +119,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
+      <Project>{75efee66-9358-4de4-9a84-e7191eec7db8}</Project>
+      <Name>EA.Weee.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
       <Project>{a987fff6-5386-419e-af0a-e6c74e3323cf}</Project>
       <Name>EA.Weee.Domain</Name>

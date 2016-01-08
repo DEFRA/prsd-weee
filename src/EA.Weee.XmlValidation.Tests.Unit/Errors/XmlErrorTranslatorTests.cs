@@ -218,7 +218,7 @@
         public void XmlErrorTranslator_MinInclusiveFailed_CorrectMessage()
         {
             string providedException = string.Format("The '{0}' element is invalid - The value '{1}' is invalid according to its datatype '{2}' - The MinInclusive constraint failed.", TestField, TestValue, TestType);
-            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' is lower than the minimum, or greater than the maximum, allowed value", TestValue, TestField));
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' is lower than the minimum or greater than the maximum allowed value", TestValue, TestField));
 
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }
@@ -227,7 +227,7 @@
         public void XmlErrorTranslator_MaxInclusiveFailed_CorrectMessage()
         {
             string providedException = string.Format("The '{0}' element is invalid - The value '{1}' is invalid according to its datatype '{2}' - The MaxInclusive constraint failed.", TestField, TestValue, TestType);
-            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' is lower than the minimum, or greater than the maximum, allowed value", TestValue, TestField));
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' is lower than the minimum or greater than the maximum allowed value", TestValue, TestField));
 
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }
@@ -269,10 +269,28 @@
         }
 
         [Fact]
+        public void XmlErrorTranslator_InvalidFractionDigits_CorrectMessage()
+        {
+            var providedException = string.Format("The '{0}' element is invalid - The value '{1}' is invalid according to its datatype '{2}' - The FractionDigits constraint failed.", TestField, TestValue, TestType);
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' exceeds the maximum number of allowed decimal places.", TestValue, TestField));
+
+            CheckExceptionMessage(expectedFriendlyMessage, providedException);
+        }
+
+        [Fact]
         public void XmlErrorTranslator_InvalidChildElement_CorrectMessage()
         {
             string providedException = string.Format("The element 'TestParentElement' in namespace '{0}' has invalid child element '{1}' in namespace '{0}'. List of possible elements expected: '{2}' in namespace '{0}'.", TestNamespace, TestField, TestType);
-            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The field {0} isn't expected here. Check that you are using v3.0.7 of the XSD schema (XML template).", TestField));
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The field '{0}' isn't expected here. Check that you are using v3.0.7 of the XSD schema (XML template).", TestField));
+
+            CheckExceptionMessage(expectedFriendlyMessage, providedException);
+        }
+
+        [Fact]
+        public void XmlErrorTranslator_MissingChildElement_CorrectMessage()
+        {
+            string providedException = string.Format("The element '{0}' in namespace '{1}' has incomplete content. List of possible elements expected: '{2}' in namespace '{1}'.", TestField, TestNamespace, TestType);
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The '{0}' element is missing a child element '{1}'.", TestField, TestType));
 
             CheckExceptionMessage(expectedFriendlyMessage, providedException);
         }
@@ -283,7 +301,7 @@
             const string lineNumber = "57";
 
             string providedException = string.Format("There is an error in XML document ({0}, 109).", lineNumber);
-            string expectedFriendlyMessage = string.Format("{0} This can be caused by an error on this line, or before it (XML line {1}).", providedException, lineNumber);
+            string expectedFriendlyMessage = string.Format("'{0}' This can be caused by an error on this line, or before it (XML line {1}).", providedException, lineNumber);
 
             var translator = new XmlErrorTranslator();
 
@@ -324,6 +342,35 @@
 
             // Assert
             Assert.Equal("The file you're trying to upload is not a correctly formatted XML file. Upload a valid XML file.", result);
+        }
+
+        /// <summary>
+        /// This test ensures that error messages resulting from the incorrect use of fixed values are translated
+        /// from their formal text into friendly text that includes the local name and value of the element causing
+        /// the error and the line number of that XML element.
+        /// </summary>
+        [Fact]
+        public void MakeFriendlyErrorMessage_ForFixedValueError_ReturnsFriendlyMessage()
+        {
+            // Arrange
+            XElement element = XElement.Parse("<foo>bar</foo>");
+            string errorMessage = "The value of the 'http://some.domain.com/schema/foo' element does not equal its fixed value.";
+            int lineNmber = 123;
+
+            XmlErrorTranslator xmlErrorTranslator = new XmlErrorTranslator();
+
+            // Act
+            string result = xmlErrorTranslator.MakeFriendlyErrorMessage(
+                element,
+                errorMessage,
+                lineNmber,
+                A.Dummy<string>());
+
+            // Assert
+            Assert.Equal(
+                "The value 'bar' supplied for field 'foo' is not permitted. " +
+                "Only the value specified in the schema is allowed (XML line 123).",
+                result);
         }
 
         private string AddUniversalMessageParts(string specificMessage)
