@@ -14,7 +14,7 @@ SET NOCOUNT ON
 SELECT
   S.[SchemeName],
   M.[ComplianceYear],
-  M.[SubmittedDate],
+  M.[SubmittedDate] as 'SubmissionDate',
   CASE 
     WHEN PBC.Name IS NULL THEN PBP.Name
     ELSE PBC.NAME
