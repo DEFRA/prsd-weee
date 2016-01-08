@@ -67,5 +67,6 @@ namespace EA.Weee.Tests.Core.Model
         public virtual DbSet<IbisFileData> IbisFileDatas { get; set; }
         public virtual DbSet<InvoiceRun> InvoiceRuns { get; set; }
         public virtual DbSet<C1B1STransactionNumberSequence> C1B1STransactionNumberSequence { get; set; }
+        public virtual DbSet<QuarterWindowTemplate> QuarterWindowTemplates { get; set; }
     }
 }
