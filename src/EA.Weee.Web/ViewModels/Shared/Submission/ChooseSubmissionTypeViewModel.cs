@@ -1,9 +1,9 @@
-﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels
+﻿namespace EA.Weee.Web.ViewModels.Shared.Submission
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Web.ViewModels.Shared;
+    using Shared;
 
     public class ChooseSubmissionTypeViewModel : RadioButtonStringCollectionViewModel
     {

@@ -232,7 +232,7 @@
                 try
                 {
                     ProducersDataViewModel model = new ProducersDataViewModel();
-                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
+                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears(ComplianceYearFor.DataReturns));
                     model.ComplianceYears = new SelectList(allYears);
                     return View("ProducerEEEData", model);
                 }
@@ -256,7 +256,7 @@
 
             using (var client = apiClient())
             {
-                var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
+                var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears(ComplianceYearFor.DataReturns));
                 model.ComplianceYears = new SelectList(allYears);
                 if (!ModelState.IsValid)
                 {
