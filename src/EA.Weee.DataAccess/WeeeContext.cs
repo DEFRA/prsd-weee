@@ -8,6 +8,7 @@
     using Domain;
     using Domain.Admin;
     using Domain.Audit;
+    using Domain.Charges;
     using Domain.DataReturns;
     using Domain.Lookup;
     using Domain.Organisation;
@@ -58,6 +59,7 @@
         public virtual DbSet<DataReturnUpload> DataReturnsUploads { get; set; }
 
         public virtual DbSet<DataReturnUploadError> DataReturnsUploadErrors { get; set; }
+
         public virtual DbSet<DataReturnVersion> DataReturnVersions { get; set; }
 
         public virtual DbSet<DataReturn> DataReturns { get; set; }
@@ -68,7 +70,11 @@
 
         public virtual DbSet<AeDeliveryLocation> AeDeliveryLocations { get; set; }
 
+        public virtual DbSet<WeeeCollectedReturnVersion> WeeeCollectedReturnVersions { get; set; }
+
         public virtual DbSet<WeeeCollectedAmount> WeeeCollectedAmounts { get; set; }
+
+        public virtual DbSet<InvoiceRun> InvoiceRuns { get; set; }
 
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
@@ -113,7 +119,7 @@
 
             this.SetEntityId();
             this.AuditChanges(userContext.UserId);
-            AuditEntity();
+            AuditEntities();
             UnalignEntities();
 
             int result;
@@ -144,7 +150,7 @@
 
             this.SetEntityId();
             this.AuditChanges(userContext.UserId);
-            AuditEntity();
+            AuditEntities();
             UnalignEntities();
 
             int result;
@@ -183,14 +189,19 @@
             return null;
         }
 
-        private void AuditEntity()
+        private void AuditEntities()
         {
-            foreach (var auditableEntity in ChangeTracker.Entries<IAuditableEntity>())
+            foreach (var auditableEntity in ChangeTracker.Entries<AuditableEntity>())
             {
-                if (auditableEntity.State == EntityState.Added || auditableEntity.State == EntityState.Modified)
+                if (auditableEntity.State == EntityState.Added)
                 {
-                    auditableEntity.Entity.Date = SystemTime.UtcNow;
-                    auditableEntity.Entity.UserId = userContext.UserId.ToString();
+                    auditableEntity.Entity.CreatedById = userContext.UserId.ToString();
+                    auditableEntity.Entity.CreatedDate = SystemTime.UtcNow;
+                }
+                else if (auditableEntity.State == EntityState.Modified)
+                {
+                    auditableEntity.Entity.UpdatedById = userContext.UserId.ToString();
+                    auditableEntity.Entity.UpdatedDate = SystemTime.UtcNow;
                 }
             }
         }

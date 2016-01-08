@@ -10,34 +10,37 @@
     using System.Xml.Linq;
     using System.Xml.Serialization;
     using Core.Helpers.PrnGeneration;
-    using Domain.Lookup;
-    using Domain.Organisation;
-    using Domain.Producer;
-    using Domain.Scheme;
+    using Domain;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Scheme.MemberRegistration;
     using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
     using RequestHandlers.Scheme.MemberRegistration.GenerateProducerObjects;
     using Requests.Scheme.MemberRegistration;
+    using Weee.Tests.Core.Model;
     using Xml.Converter;
     using Xml.Deserialization;
     using Xml.MemberRegistration;
     using Xunit;
+    using ChargeBandAmount = Domain.Lookup.ChargeBandAmount;
+    using MemberUpload = Domain.Scheme.MemberUpload;
+    using MemberUploadError = Domain.Scheme.MemberUploadError;
+    using Organisation = Domain.Organisation.Organisation;
+    using ProducerSubmission = Domain.Producer.ProducerSubmission;
+    using Scheme = Domain.Scheme.Scheme;
 
     public class PrnGenerationIntegration
     {
-        private readonly WeeeContext context;
+        private readonly IUserContext userContext;
+        private readonly IEventDispatcher eventDispatcher;
 
         public PrnGenerationIntegration()
         {
-            var userContext = A.Fake<IUserContext>();
+            userContext = A.Fake<IUserContext>();
 
             A.CallTo(() => userContext.UserId).Returns(Guid.NewGuid());
 
-            IEventDispatcher eventDispatcher = A.Fake<IEventDispatcher>();
-
-            context = new WeeeContext(userContext, eventDispatcher);
+            eventDispatcher = A.Fake<IEventDispatcher>();
         }
 
         [Fact]
@@ -48,45 +51,55 @@
             var validXmlString = File.ReadAllText(new Uri(validXmlLocation).LocalPath);
             var validXmlBytes = File.ReadAllBytes(new Uri(validXmlLocation).LocalPath);
 
-            var orgAndMemberUpload = SetUpContext();
-            var org = orgAndMemberUpload.Item1;
-            var memberUpload = orgAndMemberUpload.Item2;
-
-            ProcessXmlFile message = new ProcessXmlFile(org.Id, validXmlBytes, "File name");
-
-            long initialSeed = GetCurrentSeed();
-            long expectedSeed = ExpectedSeedAfterThisXml(validXmlString, initialSeed);
-
-            IWhiteSpaceCollapser whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
-
-            XmlConverter xmlConverter = new XmlConverter(whiteSpaceCollapser, new Deserializer());
-            var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
-
-            var producerCharges = new Dictionary<string, ProducerCharge>();
-            var anyAmount = 30;
-            var anyChargeBandAmount = A.Dummy<ChargeBandAmount>();
-
-            foreach (var producerData in schemeType.producerList)
+            using (var database = new DatabaseWrapper())
             {
-                var producerName = producerData.GetProducerName();
-                if (!producerCharges.ContainsKey(producerName))
+                var modelHelper = new ModelHelper(database.Model);
+
+                var org = modelHelper.CreateOrganisation();
+                var scheme = modelHelper.CreateScheme(org);
+                var memberUpload = modelHelper.CreateMemberUpload(scheme);
+
+                var message = new ProcessXmlFile(org.Id, validXmlBytes, "File name");
+
+                var initialSeed = database.WeeeContext.SystemData.Select(sd => sd.LatestPrnSeed).First();
+                var expectedSeed = ExpectedSeedAfterThisXml(validXmlString, initialSeed);
+
+                var whiteSpaceCollapser = A.Fake<IWhiteSpaceCollapser>();
+
+                var xmlConverter = new XmlConverter(whiteSpaceCollapser, new Deserializer());
+                var schemeType = xmlConverter.Deserialize(xmlConverter.Convert(message.Data));
+
+                var producerCharges = new Dictionary<string, ProducerCharge>();
+                var anyAmount = 30;
+                var anyChargeBandAmount = A.Dummy<ChargeBandAmount>();
+
+                foreach (var producerData in schemeType.producerList)
                 {
-                    producerCharges.Add(producerName,
-                        new ProducerCharge { Amount = anyAmount, ChargeBandAmount = anyChargeBandAmount });
+                    var producerName = producerData.GetProducerName();
+                    if (!producerCharges.ContainsKey(producerName))
+                    {
+                        producerCharges.Add(producerName,
+                            new ProducerCharge { Amount = anyAmount, ChargeBandAmount = anyChargeBandAmount });
+                    }
                 }
+
+                database.Model.SaveChanges();
+
+                var contextMemberUpload = database.WeeeContext.MemberUploads
+                    .Single(mu => mu.Id == memberUpload.Id);
+
+                // act
+                var producers = await new GenerateFromXml(
+                    xmlConverter,
+                    new GenerateFromXmlDataAccess(database.WeeeContext)).GenerateProducers(message, contextMemberUpload, producerCharges);
+
+                // assert
+                long newSeed = database.WeeeContext.SystemData.Select(sd => sd.LatestPrnSeed).First();
+                Assert.Equal(expectedSeed, newSeed);
+
+                var prns = producers.Select(p => p.RegisteredProducer.ProducerRegistrationNumber);
+                Assert.Equal(prns.Distinct(), prns); // all prns should be unique
             }
-
-            // act
-            IEnumerable<ProducerSubmission> producers = await new GenerateFromXml(
-                xmlConverter,
-                new GenerateFromXmlDataAccess(context)).GenerateProducers(message, memberUpload, producerCharges);
-
-            // assert
-            long newSeed = GetCurrentSeed();
-            Assert.Equal(expectedSeed, newSeed);
-
-            var prns = producers.Select(p => p.RegisteredProducer.ProducerRegistrationNumber);
-            Assert.Equal(prns.Distinct(), prns); // all prns should be unique
         }
 
         [Fact(Skip = "This is a time-consuming test and shouldn't be run automatically")]
@@ -95,7 +108,9 @@
             var helper = new PrnHelper(new QuadraticResidueHelper());
             var generatedPrns = new HashSet<string>();
 
-            uint seed = (uint)GetCurrentSeed();
+            var context = new WeeeContext(userContext, eventDispatcher);
+
+            uint seed = (uint)GetCurrentSeed(context);
             var components = new PrnAsComponents(seed);
 
             // be careful how high you go with this limit or generatedPrns will fill up
@@ -123,35 +138,9 @@
             }
         }
 
-        private long GetCurrentSeed()
+        private long GetCurrentSeed(WeeeContext context)
         {
             return context.SystemData.Select(sd => sd.LatestPrnSeed).First();
-        }
-
-        private Tuple<Organisation, MemberUpload> SetUpContext()
-        {
-            Organisation org = Organisation.CreateSoleTrader("PrnGeneration HappyPath Test");
-            context.Organisations.Add(org);
-            context.SaveChanges();
-
-            Scheme scheme = new Scheme(org.Id);
-            context.Schemes.Add(scheme);
-            context.SaveChanges();
-
-            MemberUpload memberUpload = new MemberUpload(
-                org.Id,
-                "<xml />",
-                new List<MemberUploadError>(),
-                0,
-                2017,
-                scheme,
-                "File name",
-                "user 1");
-
-            context.MemberUploads.Add(memberUpload);
-            context.SaveChanges();
-
-            return new Tuple<Organisation, MemberUpload>(org, memberUpload);
         }
 
         private long ExpectedSeedAfterThisXml(string xml, long initialSeed)

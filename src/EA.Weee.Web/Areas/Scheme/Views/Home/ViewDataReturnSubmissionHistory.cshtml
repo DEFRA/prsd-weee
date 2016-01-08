@@ -1,0 +1,62 @@
+﻿@using System.Globalization
+@using EA.Weee.Core.Admin
+@using EA.Weee.Core.DataReturns
+@model EA.Weee.Web.Areas.Scheme.ViewModels.DataReturnSubmissionHistoryViewModel
+@{
+    ViewBag.Title = "View Data Return Submission History";
+}
+
+<header class="hgroup">
+    <h1 class="heading-large">
+        Submission history
+    </h1>
+</header>
+
+<p>
+    <span class="font-bold">Submission type:</span> Data returns
+</p>
+@if (Model.Results.Any())
+{
+    <div class="form-group">
+        <table id="submissions">
+            <thead>
+                <tr>
+                    <th>Date and time (GMT)</th>
+                    <th>Compliance year</th>
+                    <th>Quarter reported</th>
+                    <th>Submitted by</th>
+                    <th>File name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataReturnSubmissionsHistoryResult item in Model.Results)
+                {
+                    string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
+
+                    <tr>
+                        <td>@datetimeValue</td>
+                        <td>@item.ComplianceYear</td>
+                        <td>@item.Quarter</td>
+                        <td>@item.SubmittedBy</td>
+                        <td>@item.FileName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="form-group">
+        <p>There are no submissions to view.</p>
+    </div>
+}
+<p>
+    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @area = "Scheme" }, new { @class = "button" })
+</p>
+<p>
+    @Html.ActionLink("Back", "ChooseSubmissionType", "Home")
+</p>
+
+
+

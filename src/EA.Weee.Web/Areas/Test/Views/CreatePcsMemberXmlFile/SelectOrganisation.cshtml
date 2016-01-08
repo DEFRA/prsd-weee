@@ -19,6 +19,11 @@
     @using (Html.BeginForm("SelectOrganisation", "CreatePcsMemberXmlFile", FormMethod.Get))
     {
         <p>Search for and select the PCS that will be used for the test file.</p>
+        <p>
+            If you are signed in as an external user, only organisations with which you are
+            associated will be returned. If you want to search all organisations, sign in
+            as an internal user.
+        </p>
 
         @Html.ValidationSummary()
 

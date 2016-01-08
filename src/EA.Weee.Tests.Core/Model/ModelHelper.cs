@@ -80,7 +80,7 @@
 
             if (user == null)
             {
-                user = CreateUser(userName);
+                user = CreateUser(userName, IdType.Guid);
                 model.SaveChanges();
             }
 
@@ -93,8 +93,15 @@
         /// <returns></returns>
         public Scheme CreateScheme()
         {
-            var organisation = CreateOrganisation();
+            return CreateScheme(CreateOrganisation());
+        }
 
+        /// <summary>
+        /// Creates a scheme and associates it to the specified organisation.
+        /// </summary>
+        /// <returns></returns>
+        public Scheme CreateScheme(Organisation organisation)
+        {
             int schemeId = GetNextId();
             Scheme scheme = new Scheme
             {
@@ -184,10 +191,12 @@
                 Scheme = scheme,
                 SchemeId = scheme.Id,
                 Data = string.Format("<memberUpload{0} />", memberUploadId),
-                UserId = GetOrCreateUser("Testuser").Id,
-                Date = DateTime.UtcNow,
-                ProcessTime = new TimeSpan(0)
+                CreatedById = GetOrCreateUser("Testuser").Id,
+                CreatedDate = DateTime.UtcNow,
+                ProcessTime = new TimeSpan(0),
+                ComplianceYear = 2016
             };
+
             model.MemberUploads.Add(memberUpload);
 
             return memberUpload;
@@ -352,17 +361,35 @@
         {
             Contact1 contact = CreateContact();
 
-            int partnershipId = GetNextId();
+            var partnershipId = GetNextId();
+
             Partnership partnership = new Partnership
             {
                 Id = IntegerToGuid(partnershipId),
-                Name = string.Format("Partnership {0} Name", partnershipId),
+                Name = string.Format("Partnership {0} Name",  CreatePartnershipNameFromId(partnershipId)),
                 Contact1 = contact,
                 PrincipalPlaceOfBusinessId = contact.Id,
             };
             model.Partnerships.Add(partnership);
 
             return partnership;
+        }
+
+        private string CreatePartnershipNameFromId(int id)
+        {
+            var preceedingZeros = "0000000";
+
+            if (id.ToString().Length > preceedingZeros.Length)
+            {
+                throw new ArgumentOutOfRangeException(string.Format("modulus of id must be less than {0} digits", id));
+            }
+
+            for (var i = 0; i < id.ToString().Length; i++)
+            {
+                preceedingZeros = preceedingZeros.Remove(0, 1);
+            }
+
+            return preceedingZeros + id;
         }
 
         private Contact1 CreateContact()
@@ -407,6 +434,89 @@
         public ChargeBandAmount FetchChargeBandAmount(ChargeBand chargeBand)
         {
             return model.ChargeBandAmounts.First(pcb => pcb.ChargeBand == (int)chargeBand);
+        }
+
+        public DataReturnUpload CreateDataReturnUpload(Scheme scheme, DataReturnVersion dataReturnVersion = null)
+        {
+            int dataReturnUploadId = GetNextId();
+            DataReturnUpload dataReturnUpload = new DataReturnUpload
+            {
+                Id = IntegerToGuid(dataReturnUploadId),
+                SchemeId = scheme.Id,
+                Scheme = scheme,
+                Data = string.Format("<SchemeReturn{0} />", dataReturnUploadId),
+                Date = DateTime.UtcNow,
+                ProcessTime = TimeSpan.Zero
+            };
+
+            if (dataReturnVersion != null)
+            {
+                dataReturnUpload.DataReturnVersionId = dataReturnVersion.Id;
+                dataReturnUpload.DataReturnVersion = dataReturnVersion;
+            }
+
+            model.DataReturnUploads.Add(dataReturnUpload);
+
+            return dataReturnUpload;
+        }
+
+        public DataReturn GetOrCreateDataReturn(Scheme scheme, int complianceYear, int quarter)
+        {
+            // Try to find a DataReturn that has already been created, otherwise create a new one.
+            var dataReturn =
+                model.DataReturns.Local
+                .SingleOrDefault(du => du.Scheme.Id == scheme.Id &&
+                                       du.ComplianceYear == complianceYear &&
+                                       du.Quarter == quarter);
+
+            if (dataReturn == null)
+            {
+                dataReturn = CreateDataReturn(scheme, complianceYear, quarter);
+            }
+
+            return dataReturn;
+        }
+
+        public DataReturn CreateDataReturn(Scheme scheme, int complianceYear, int quarter)
+        {
+            int dataReturnId = GetNextId();
+
+            var dataReturn = new DataReturn
+            {
+                Id = IntegerToGuid(dataReturnId),
+                Scheme = scheme,
+                SchemeId = scheme.Id,
+                Quarter = quarter,
+                ComplianceYear = complianceYear
+            };
+            model.DataReturns.Add(dataReturn);
+
+            return dataReturn;
+        }
+
+        public DataReturnVersion CreateDataReturnVersion(Scheme scheme, int complianceYear, int quarter, bool isSubmitted = true)
+        {
+            var dataReturn = GetOrCreateDataReturn(scheme, complianceYear, quarter);
+
+            Guid dataReturnVersionId = IntegerToGuid(GetNextId());
+
+            var dataReturnVersion = new DataReturnVersion
+            {
+                Id = dataReturnVersionId,
+                DataReturn = dataReturn,
+                DataReturnId = dataReturn.Id
+            };
+
+            if (isSubmitted)
+            {
+                dataReturnVersion.SubmittedDate = DateTime.UtcNow;
+                dataReturnVersion.SubmittingUserId = GetOrCreateUser("Testuser").Id;
+                dataReturn.CurrentDataReturnVersionId = dataReturnVersionId;
+            }
+
+            model.DataReturnVersions.Add(dataReturnVersion);
+
+            return dataReturnVersion;
         }
     }
 }

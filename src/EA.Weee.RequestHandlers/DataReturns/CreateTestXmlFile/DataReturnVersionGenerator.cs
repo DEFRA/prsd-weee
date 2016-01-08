@@ -40,54 +40,51 @@
             IEnumerable<ReturnItem> returnItemsCollectedFromDcf = CreateReturnItems(null);
             foreach (var returnItem in returnItemsCollectedFromDcf)
             {
-                dataReturnVersion.AddWeeeCollectedAmount(
+                dataReturnVersion.WeeeCollectedReturnVersion.AddWeeeCollectedAmount(
                     new WeeeCollectedAmount(WeeeCollectedAmountSourceType.Dcf,
                                             returnItem.ObligationType,
                                             returnItem.WeeeCategory,
-                                            returnItem.Tonnage,
-                                            dataReturnVersion));
+                                            returnItem.Tonnage));
             }
 
             int numberOfDeliveredToAatfs = settings.NumberOfAatfs;
             for (int index = 0; index < numberOfDeliveredToAatfs; ++index)
             {
-                var deliveredToAatfs = CreateDeliveredToAatfs(dataReturnVersion);
+                var deliveredToAatfs = CreateDeliveredToAatfs();
                 foreach (var deliveredToAatf in deliveredToAatfs)
                 {
-                    dataReturnVersion.AddAatfDeliveredAmount(deliveredToAatf);
+                    dataReturnVersion.WeeeDeliveredReturnVersion.AddWeeeDeliveredAmount(deliveredToAatf);
                 }
             }
 
             int numberOfDeliveredToAes = settings.NumberOfAes;
             for (int index = 0; index < numberOfDeliveredToAes; ++index)
             {
-                var deliveredToAes = CreateDeliveredToAes(dataReturnVersion);
+                var deliveredToAes = CreateDeliveredToAes();
                 foreach (var deliveredToAe in deliveredToAes)
                 {
-                    dataReturnVersion.AddAeDeliveredAmount(deliveredToAe);
+                    dataReturnVersion.WeeeDeliveredReturnVersion.AddWeeeDeliveredAmount(deliveredToAe);
                 }
             }
 
             IEnumerable<ReturnItem> b2cWeeeFromDistributors = CreateReturnItems(ObligationType.B2C);
             foreach (var returnItem in b2cWeeeFromDistributors)
             {
-                dataReturnVersion.AddWeeeCollectedAmount(
+                dataReturnVersion.WeeeCollectedReturnVersion.AddWeeeCollectedAmount(
                     new WeeeCollectedAmount(WeeeCollectedAmountSourceType.Distributor,
                                             returnItem.ObligationType,
                                             returnItem.WeeeCategory,
-                                            returnItem.Tonnage,
-                                            dataReturnVersion));
+                                            returnItem.Tonnage));
             }
 
             IEnumerable<ReturnItem> b2cWeeeFromFinalHolders = CreateReturnItems(ObligationType.B2C);
             foreach (var returnItem in b2cWeeeFromFinalHolders)
             {
-                dataReturnVersion.AddWeeeCollectedAmount(
+                dataReturnVersion.WeeeCollectedReturnVersion.AddWeeeCollectedAmount(
                     new WeeeCollectedAmount(WeeeCollectedAmountSourceType.FinalHolder,
                                             returnItem.ObligationType,
                                             returnItem.WeeeCategory,
-                                            returnItem.Tonnage,
-                                            dataReturnVersion));
+                                            returnItem.Tonnage));
             }
 
             IList<RegisteredProducer> registeredProducers = await dataAccess.FetchRegisteredProducersAsync(scheme, quarter.Year);
@@ -108,20 +105,20 @@
 
             foreach (RegisteredProducer producerToInclude in producersToInclude)
             {
-                var eeeOutputAmounts = CreateEeeOutputAmounts(producerToInclude, dataReturnVersion);
+                var eeeOutputAmounts = CreateEeeOutputAmounts(producerToInclude);
 
                 foreach (var eeeOutputAmount in eeeOutputAmounts)
                 {
-                    dataReturnVersion.AddEeeOutputAmount(eeeOutputAmount);
+                    dataReturnVersion.EeeOutputReturnVersion.AddEeeOutputAmount(eeeOutputAmount);
                 }
             }
 
             return dataReturnVersion;
         }
 
-        private static IEnumerable<AatfDeliveredAmount> CreateDeliveredToAatfs(DataReturnVersion dataReturnVersion)
+        private static IEnumerable<WeeeDeliveredAmount> CreateDeliveredToAatfs()
         {
-            var deliveredToAatfs = new List<AatfDeliveredAmount>();
+            var deliveredToAatfs = new List<WeeeDeliveredAmount>();
 
             string aatfApprovalNumber = GetRandomAtfApprovalNumber();
             string facilityName = RandomHelper.CreateRandomString("Facility", 0, 250);
@@ -131,15 +128,15 @@
             IEnumerable<IReturnItem> returnItems = CreateReturnItems(null);
             foreach (IReturnItem returnItem in returnItems)
             {
-                deliveredToAatfs.Add(new AatfDeliveredAmount(returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, deliveryLocation, dataReturnVersion));
+                deliveredToAatfs.Add(new WeeeDeliveredAmount(returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, deliveryLocation));
             }
 
             return deliveredToAatfs;
         }
 
-        private static IEnumerable<AeDeliveredAmount> CreateDeliveredToAes(DataReturnVersion dataReturnVersion)
+        private static IEnumerable<WeeeDeliveredAmount> CreateDeliveredToAes()
         {
-            var deliveredToAes = new List<AeDeliveredAmount>();
+            var deliveredToAes = new List<WeeeDeliveredAmount>();
 
             string approvalNumber = GetRandomAeApprovalNumber();
             string operatorName = RandomHelper.CreateRandomString("Operator", 0, 250);
@@ -149,18 +146,18 @@
             IEnumerable<IReturnItem> returnItems = CreateReturnItems(null);
             foreach (IReturnItem returnItem in returnItems)
             {
-                deliveredToAes.Add(new AeDeliveredAmount(returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, deliveryLocation, dataReturnVersion));
+                deliveredToAes.Add(new WeeeDeliveredAmount(returnItem.ObligationType, returnItem.WeeeCategory, returnItem.Tonnage, deliveryLocation));
             }
 
             return deliveredToAes;
         }
 
-        private static IEnumerable<EeeOutputAmount> CreateEeeOutputAmounts(RegisteredProducer registeredProducer, DataReturnVersion dataReturnVersion)
+        private static IEnumerable<EeeOutputAmount> CreateEeeOutputAmounts(RegisteredProducer registeredProducer)
         {
             ObligationType obligationType = registeredProducer.CurrentSubmission.ObligationType;
             IEnumerable<IReturnItem> returnItems = CreateReturnItems(obligationType);
 
-            return returnItems.Select(x => new EeeOutputAmount(x.ObligationType, x.WeeeCategory, x.Tonnage, registeredProducer, dataReturnVersion));
+            return returnItems.Select(x => new EeeOutputAmount(x.ObligationType, x.WeeeCategory, x.Tonnage, registeredProducer));
         }
 
         private static IEnumerable<ReturnItem> CreateReturnItems(ObligationType? filter)

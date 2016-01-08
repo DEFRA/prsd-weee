@@ -110,7 +110,9 @@
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Scheme\IDuplicateProducerRegistrationNumbers.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Scheme\DuplicateProducerRegistrationNumbers.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\MemberRegistrationBusinessValidator.cs" />
+    <Compile Include="SchemaValidation\INamespaceValidator.cs" />
     <Compile Include="SchemaValidation\ISchemaValidator.cs" />
+    <Compile Include="SchemaValidation\NamespaceValidator.cs" />
     <Compile Include="SchemaValidation\SchemaValidator.cs" />
     <Compile Include="XmlValidationModule.cs" />
     <Compile Include="Errors\IXmlErrorTranslator.cs" />

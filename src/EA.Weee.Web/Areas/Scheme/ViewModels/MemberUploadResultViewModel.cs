@@ -7,7 +7,7 @@
 
     public class MemberUploadResultViewModel
     {
-        public List<UploadErrorData> ErrorData { get; set; }
+        public List<ErrorData> ErrorData { get; set; }
 
         public decimal TotalCharges { get; set; }
 

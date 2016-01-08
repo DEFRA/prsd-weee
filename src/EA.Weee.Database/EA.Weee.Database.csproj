@@ -46,8 +46,11 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="scripts\Update\Sprint19\20151221-1230-RefactorDataReturnsJunctionTables.sql" />
+    <Content Include="scripts\Update\Sprint19\20151218-1700-ChangeWeeeCategory.sql" />
+    <Content Include="scripts\Update\Sprint19\20151218-1630-AddRowVersionToReturnsTables.sql" />
+    <Content Include="scripts\Update\Sprint19\20151218-1600-RenameDeliveryLocationTablesColumn.sql" />
     <Content Include="scripts\Update\Sprint19\20151211-1745-AddIsAlignedColumnToRegisteredProducer.sql" />
-    <Content Include="scripts\Everytime\0007-InsertWeeeCategoryData.sql" />
     <Content Include="scripts\Everytime\0006-MigratedProducers.sql" />
     <Content Include="scripts\Update\Sprint18\20151207-1450-UpdataDataReturnTables.sql" />
     <Content Include="scripts\Update\Sprint18\20151208-1505-Update-spgProducerAmendmentsCSVDataByPRN.sql" />
@@ -150,6 +153,21 @@
     <Content Include="scripts\Update\Sprint19\20151215-1005-UpdateSpgPcsChargesCsvDataByComplianceYearAndAuthorisedAuthority.sql" />
     <Content Include="scripts\Update\Sprint19\20151215-1007-UpdateSpgProducerAmendmentsCsvDataByPrn.sql" />
     <Content Include="scripts\Update\Sprint19\20151215-1011-UpdateSpgProducerPublicRegisterCsvDataByComplianceYear.sql" />
+    <Content Include="scripts\Update\Sprint19\20151222-1719-CreateInvoiceRunTable.sql" />
+    <Content Include="scripts\Update\Sprint19\20151223-1015-UpdateMemberUploadAuditColumns.sql" />
+    <Content Include="scripts\Update\Sprint20\20151224-1147-UpdateSpgPcsChargesCsvDataByComplianceYearAndAuthorisedAuthority.sql" />
+    <Content Include="scripts\Update\Sprint20\20151228-1712-AddFileIDToInvoiceRunTable.sql" />
+    <Content Include="scripts\Update\Sprint20\20151224-1743-AddIbisDataColumnsToInvoiceRunTable.sql" />
+    <Content Include="scripts\Update\Sprint20\20151228-1818-AddInitialIbisFileIdToSysemDataTable.sql" />
+    <Content Include="scripts\Update\Sprint20\20151229-2019-MoveIbisFileDataIntoSeparateTable.sql" />
+    <Content Include="scripts\Update\Sprint20\20151229-2151-Added1B1STransactionSequence.sql" />
+    <Content Include="scripts\Update\Sprint20\20151230-1638-AddCreatedDateToInvoiceRun.sql" />
+    <Content Include="scripts\Update\Sprint20\20160104-1605-AddSubmittedColumnsToMemberUpload.sql" />
+    <Content Include="scripts\Update\Sprint20\20160104-1731-UpdateGetProducerCSVStoredProcedureWithSubmittedDate.sql" />
+    <Content Include="scripts\Update\Sprint20\20160104-1737-UpdateGetProducerCSVStoredProcedureWithSubmittedDate.sql" />
+    <Content Include="scripts\Update\Sprint20\20160104-1739-UpdatePCSChargesCSVStoredProducerWithSubmittedDate.sql" />
+    <Content Include="scripts\Update\Sprint20\20160104-1740-UpdateProducerAmendmentsCSVStoredProducerWithSubmittedDate.sql" />
+    <Content Include="scripts\Update\Sprint20\20160105-1334-ModifyUniqueKeyConstraintforRegisteredProducers.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
