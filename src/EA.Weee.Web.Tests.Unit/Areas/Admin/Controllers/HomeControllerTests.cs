@@ -124,10 +124,32 @@
             Assert.Throws<InvalidOperationException>(testCode);
         }
 
+        [Fact]
+        public void PostChooseActivity_EnableDataReturnsIsFalse_RedirectToSubmissionsHistory()
+        {
+            // Arrange
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnableDataReturns).Returns(false);
+
+            HomeController controller = new HomeController(() => apiClient, configuration);
+
+            RadioButtonStringCollectionViewModel viewModel = new RadioButtonStringCollectionViewModel();
+            viewModel.SelectedValue = InternalUserActivity.SubmissionsHistory;
+
+            // Act
+            ActionResult result = controller.ChooseActivity(viewModel);
+
+            // Assert
+            var redirectToRouteResult = ((RedirectToRouteResult)result);
+
+            Assert.Equal("SubmissionsHistory", redirectToRouteResult.RouteValues["action"]);
+        }
+
         private HomeController HomeController()
         {
             IAppConfiguration configuration = A.Fake<IAppConfiguration>();
             A.CallTo(() => configuration.EnableInvoicing).Returns(true);
+            A.CallTo(() => configuration.EnableDataReturns).Returns(true);
 
             return new HomeController(() => apiClient, configuration);
         }
