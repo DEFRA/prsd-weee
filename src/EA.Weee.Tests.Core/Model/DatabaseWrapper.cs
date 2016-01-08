@@ -21,7 +21,7 @@
     /// It should be used to act on the database.
     /// 
     /// Any changes made to the database will happen within a transaction which
-    /// will never be automatically rolled back when the DatabaseWrapper is disposed.
+    /// will be automatically rolled back when the DatabaseWrapper is disposed.
     /// </summary>
     /// <example>
     /// using (DatabaseWrapper db = new DatabseWrapper())
@@ -81,15 +81,13 @@
 
             Model = new Entities();
 
-            DbConnection connection = Model.Database.Connection;
-
             IUserContext userContext = A.Fake<IUserContext>();
             A.CallTo(() => userContext.UserId)
                 .ReturnsLazily(() => Guid.Parse(userId));
 
             IEventDispatcher eventDispatcher = A.Fake<IEventDispatcher>();
 
-            WeeeContext = new WeeeContext(userContext, eventDispatcher, connection);
+            WeeeContext = new WeeeContext(userContext, eventDispatcher);
 
             StoredProcedures = new StoredProcedures(WeeeContext);
         }
