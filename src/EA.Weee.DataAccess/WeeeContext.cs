@@ -91,18 +91,6 @@
             StoredProcedures = new StoredProcedures(this);
         }
 
-        /// <summary>
-        /// This constructor should only be used for integration testing.
-        /// </summary>
-        /// <param name="userContext"></param>
-        /// <param name="connection"></param>
-        public WeeeContext(IUserContext userContext, IEventDispatcher dispatcher, DbConnection connection)
-            : base(connection, false)
-        {
-            this.userContext = userContext;
-            this.dispatcher = dispatcher;
-        }
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             var assembly = typeof(WeeeContext).Assembly;
