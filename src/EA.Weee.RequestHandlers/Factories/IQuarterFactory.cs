@@ -7,6 +7,8 @@
     {
         Task<Quarter> GetCurrent();
 
-        Task SetCurrent(Quarter quarter);
+        Task SetFixedQuarter(Quarter quarter);
+
+        Task ToggleFixedQuarterUseage(bool enabled);
     }
 }
