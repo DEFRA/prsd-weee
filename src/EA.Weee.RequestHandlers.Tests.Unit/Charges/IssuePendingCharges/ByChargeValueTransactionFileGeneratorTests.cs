@@ -144,11 +144,11 @@
 
         /// <summary>
         /// This test ensures that creating a transaction file from one member upload with
-        /// a single producer submission, where the producer's registration has been unaligned,
+        /// a single producer submission, where the producer is marked as not being invoiced,
         /// will result in no invoices being added to the file.
         /// </summary>
         [Fact]
-        public async Task CreateTransactionFile_ProducerSubmissionWithUnalignedRegistration_NotIncludedInTransactionFile()
+        public async Task CreateTransactionFile_ProducerSubmissionMarkedAsNotInvoiced_NotIncludedInTransactionFile()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
