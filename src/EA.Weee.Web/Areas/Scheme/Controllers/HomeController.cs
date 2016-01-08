@@ -19,6 +19,7 @@
     using Web.Controllers.Base;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Scheme;
+    using Web.ViewModels.Shared.Submission;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Users;

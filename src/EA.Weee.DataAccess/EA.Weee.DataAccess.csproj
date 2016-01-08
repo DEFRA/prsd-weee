@@ -73,6 +73,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAccess\IQuarterWindowTemplateDataAccess.cs" />
+    <Compile Include="DataAccess\ISystemDataDataAccess.cs" />
+    <Compile Include="DataAccess\QuarterWindowTemplateDataAccess.cs" />
+    <Compile Include="DataAccess\SystemDataDataAccess.cs" />
     <Compile Include="EntityFrameworkModule.cs" />
     <Compile Include="DataAccess\IRegisteredProducerDataAccess.cs" />
     <Compile Include="DataAccess\RegisteredProducerDataAccess.cs" />
@@ -80,6 +84,7 @@
     <Compile Include="Mappings\EeeOutputReturnVersionMapping.cs" />
     <Compile Include="Mappings\IbisFileDataMapping.cs" />
     <Compile Include="Mappings\InvoiceRunMapping.cs" />
+    <Compile Include="Mappings\QuarterWindowTemplateMapping.cs" />
     <Compile Include="Mappings\WeeeCollectedReturnVersionMapping.cs" />
     <Compile Include="Mappings\WeeeDeliveredReturnVersionMapping.cs" />
     <Compile Include="WeeeContext.Metadata.cs" />

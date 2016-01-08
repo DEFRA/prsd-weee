@@ -97,6 +97,9 @@
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
     <Compile Include="Charges\CommonDataAccess.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile\FetchInvoiceRunIbisZipFileHandler.cs" />
+    <Compile Include="Charges\FetchInvoiceRuns\FetchInvoiceRunsDataAccess.cs" />
+    <Compile Include="Charges\FetchInvoiceRuns\FetchInvoiceRunsHandler.cs" />
+    <Compile Include="Charges\FetchInvoiceRuns\IFetchInvoiceRunsDataAccess.cs" />
     <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandler.cs" />
     <Compile Include="Charges\ICommonDataAccess.cs" />
     <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGenerator.cs" />
@@ -153,6 +156,12 @@
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryDataAccess.cs" />
     <Compile Include="Scheme\MemberUploadTesting\SchemeInfo.cs" />
     <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
+    <Compile Include="Factories\IQuarterWindowFactory.cs" />
+    <Compile Include="Factories\QuarterWindowFactory.cs" />
+    <Compile Include="Factories\QuarterFactory.cs" />
+    <Compile Include="Factories\IQuarterFactory.cs" />
+    <Compile Include="Shared\DomainUser\DomainUserContext.cs" />
+    <Compile Include="Shared\DomainUser\IDomainUserContext.cs" />
     <Compile Include="Shared\Extensions.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\GenerateFromXmlDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\DataAccess\IGenerateFromXmlDataAccess.cs" />
@@ -266,6 +275,7 @@
     <Compile Include="Security\WeeeAuthorization.cs" />
     <Compile Include="Shared\GetCountriesHandler.cs" />
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
+    <Compile Include="Test\UpdatePcsSubmissionWindowSettingsHandler.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsersDataAccess.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\IGetManageableOrganisationUsersDataAccess.cs" />
     <Compile Include="Users\GetOrganisationUserHandler.cs" />

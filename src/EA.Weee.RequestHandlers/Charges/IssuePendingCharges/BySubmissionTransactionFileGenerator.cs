@@ -28,8 +28,7 @@
 
             foreach (MemberUpload memberUpload in invoiceRun.MemberUploads)
             {
-                // TODO: Add "SubmittedDate" to the domain model for a member upload.
-                DateTime submittedDate = memberUpload.UpdatedDate ?? memberUpload.CreatedDate;
+                DateTime submittedDate = memberUpload.SubmittedDate.Value;
 
                 List<InvoiceLineItem> lineItems = new List<InvoiceLineItem>();
 
@@ -59,7 +58,7 @@
                 {
                     invoice = new Invoice(
                         memberUpload.Scheme.IbisCustomerReference,
-                        invoiceRun.CreatedDate,
+                        invoiceRun.IssuedDate,
                         TransactionType.Invoice,
                         transactionReference,
                         new List<InvoiceLineItem>() { lineItem });

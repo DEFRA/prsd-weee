@@ -48,10 +48,12 @@
                 scheme,
                 A.Dummy<string>());
 
+            memberUpload.Submit(A.Dummy<User>());
+
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
@@ -122,12 +124,12 @@
 
             memberUpload.ProducerSubmissions.Add(producerSubmission);
 
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator(
                 A.Dummy<ITransactionReferenceGenerator>());
@@ -195,14 +197,14 @@
 
             memberUpload.ProducerSubmissions.Add(producerSubmission);
 
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             registeredProducer.Unalign();
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator(
                 A.Dummy<ITransactionReferenceGenerator>());
@@ -270,13 +272,13 @@
 
             memberUpload.ProducerSubmissions.Add(producerSubmission);
 
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
             SystemTime.Freeze(new DateTime(2015, 12, 31));
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
             SystemTime.Unfreeze();
 
             ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
@@ -395,12 +397,12 @@
 
             memberUpload.ProducerSubmissions.Add(producerSubmission2);
 
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
@@ -508,12 +510,12 @@
 
             memberUpload.ProducerSubmissions.Add(producerSubmission2);
 
-            memberUpload.Submit();
+            memberUpload.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
@@ -594,6 +596,8 @@
 
             memberUpload1.ProducerSubmissions.Add(producerSubmission1);
 
+            memberUpload1.Submit(A.Dummy<User>());
+
             MemberUpload memberUpload2 = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
@@ -626,13 +630,13 @@
 
             memberUpload2.ProducerSubmissions.Add(producerSubmission2);
 
-            memberUpload2.Submit();
+            memberUpload2.Submit(A.Dummy<User>());
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
