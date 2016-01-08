@@ -176,6 +176,7 @@
     <Content Include="scripts\Update\Sprint21\20160107-1545-AddIssuedByToInvoiceRun.sql" />
     <Content Include="scripts\Update\Sprint21\20160107-1600-AddInvoicedColumnToProducerSubmission.sql" />
     <Content Include="scripts\Update\Sprint21\20160108-1300-AddSpgInvoiceRunChargeBreakdown.sql" />
+    <Content Include="scripts\Update\Sprint21\20160108-2045-FixMissingForeignKeyNames.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
