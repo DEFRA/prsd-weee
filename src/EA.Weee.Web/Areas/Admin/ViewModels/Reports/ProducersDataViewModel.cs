@@ -9,9 +9,9 @@
     using Core.DataReturns;
     using Core.Shared;
     using Prsd.Core.Helpers;
-    public class ProducerEEEDataViewModel
+    public class ProducersDataViewModel
     {
-        public ProducerEEEDataViewModel()
+        public ProducersDataViewModel()
         {
             var obligationTypeNone = ObligationType.None.ToString();
             var obligationTypeBoth = ObligationType.Both.ToString();

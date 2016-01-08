@@ -210,7 +210,7 @@
             var controller = ReportsController();
             controller.ModelState.AddModelError("Key", "Any error");
 
-            var result = await controller.ProducerEEEData(new ProducerEEEDataViewModel());
+            var result = await controller.ProducerEEEData(new ProducersDataViewModel());
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
