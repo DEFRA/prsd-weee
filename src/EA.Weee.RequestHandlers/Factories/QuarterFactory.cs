@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Factories
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using DataAccess;
     using DataAccess.DataAccess;
@@ -15,38 +16,6 @@
         {
             this.systemDataDataAccess = systemDataDataAccess;
             this.context = context;
-        }
-
-        public async Task<Quarter> GetCurrent()
-        {
-            var systemData = await systemDataDataAccess.Get();
-
-            if (systemData.UseFixedComplianceYearAndQuarter)
-            {
-                return new Quarter(systemData.FixedComplianceYear, systemData.FixedQuarter);
-            }
-
-            switch (DateTime.Now.Month)
-            {
-                case 1:
-                case 2:
-                case 3:
-                    return new Quarter(DateTime.Now.Year, QuarterType.Q1);
-                case 4:
-                case 5:
-                case 6:
-                    return new Quarter(DateTime.Now.Year, QuarterType.Q2);
-                case 7:
-                case 8:
-                case 9:
-                    return new Quarter(DateTime.Now.Year, QuarterType.Q3);
-                case 10:
-                case 11:
-                case 12:
-                    return new Quarter(DateTime.Now.Year, QuarterType.Q4);
-                default:
-                    throw new IndexOutOfRangeException("The current quarter month is not in the range 1-12");
-            }
         }
 
         public async Task SetFixedQuarter(Quarter quarter)
