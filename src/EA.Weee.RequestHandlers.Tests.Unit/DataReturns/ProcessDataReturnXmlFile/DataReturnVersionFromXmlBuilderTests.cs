@@ -8,6 +8,7 @@
     using Domain.Lookup;
     using FakeItEasy;
     using RequestHandlers.DataReturns.BusinessValidation;
+    using RequestHandlers.DataReturns.BusinessValidation.Rules;
     using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
     using Xml.DataReturns;
@@ -278,11 +279,12 @@
         private class DataReturnVersionFromXmlBuilderHelper
         {
             public IDataReturnVersionBuilder DataReturnVersionBuilder;
-            public readonly IXmlBusinessValidator XmlBusinessValidator;
+            public ISchemeApprovalNumberMismatch SchemeApprovalNumberMismatch;
 
             public DataReturnVersionFromXmlBuilderHelper(string schemeApprovalNumber)
             {
                 DataReturnVersionBuilder = A.Fake<IDataReturnVersionBuilder>();
+                SchemeApprovalNumberMismatch = A.Fake<ISchemeApprovalNumberMismatch>();
 
                 Scheme scheme = new Scheme(new Guid("FE4056B3-F892-476E-A4AB-7C111AE1EF14"));
 
@@ -294,13 +296,11 @@
                     new Guid("C5D400BE-0CE7-43D7-BD7B-B7936967E500"));
 
                 A.CallTo(() => DataReturnVersionBuilder.Scheme).Returns(scheme);
-
-                XmlBusinessValidator = A.Fake<IXmlBusinessValidator>();
             }
 
             public DataReturnVersionFromXmlBuilder Create()
             {
-                return new DataReturnVersionFromXmlBuilder(DataReturnVersionBuilder, XmlBusinessValidator);
+                return new DataReturnVersionFromXmlBuilder(DataReturnVersionBuilder, SchemeApprovalNumberMismatch);
             }
         }
     }

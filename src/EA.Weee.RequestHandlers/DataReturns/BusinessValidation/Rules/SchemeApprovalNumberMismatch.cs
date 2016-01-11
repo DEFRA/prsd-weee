@@ -1,22 +1,20 @@
-﻿namespace EA.Weee.RequestHandlers.DataReturns.BusinessValidation.XmlBusinessRules
+﻿namespace EA.Weee.RequestHandlers.DataReturns.BusinessValidation.Rules
 {
-    using System;
     using Core.Shared;
     using Domain.Scheme;
     using ReturnVersionBuilder;
-    using Xml.DataReturns;
 
     public class SchemeApprovalNumberMismatch : ISchemeApprovalNumberMismatch
     {
-        public DataReturnVersionBuilderResult Validate(SchemeReturn xmlSchemeReturn, Scheme scheme)
+        public DataReturnVersionBuilderResult Validate(string xmlSchemeApprovalNumber, Scheme scheme)
         {
             var result = new DataReturnVersionBuilderResult();
 
-            if (xmlSchemeReturn.ApprovalNo != scheme.ApprovalNumber)
+            if (xmlSchemeApprovalNumber != scheme.ApprovalNumber)
             {
                 var errorMessage = string.Format(
                     "The PCS approval number {0} you have provided does not match with the PCS. Review the PCS approval number.",
-                    xmlSchemeReturn.ApprovalNo);
+                    xmlSchemeApprovalNumber);
 
                 result.ErrorData.Add(new ErrorData(errorMessage, ErrorLevel.Error));
             }
