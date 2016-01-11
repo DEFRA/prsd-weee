@@ -16,6 +16,7 @@ namespace EA.Weee.Tests.Core.Model
     {
         public System.Guid EeeOutputReturnVersionId { get; set; }
         public System.Guid EeeOuputAmountId { get; set; }
+        public byte[] RowVersion { get; set; }
     
         public virtual EeeOutputAmount EeeOutputAmount { get; set; }
         public virtual EeeOutputReturnVersion EeeOutputReturnVersion { get; set; }
