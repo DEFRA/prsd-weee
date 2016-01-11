@@ -3,7 +3,7 @@
     using System;
     using Core.Shared;
     using Domain.Scheme;
-    using RequestHandlers.DataReturns.BusinessValidation.XmlBusinessRules;
+    using RequestHandlers.DataReturns.BusinessValidation.Rules;
     using Xml.DataReturns;
     using Xunit;
 
@@ -19,14 +19,9 @@
         [Fact]
         public void Validate_DifferentSchemeApprovalNumber_ReturnsError()
         {
-            var schemeReturn = new SchemeReturn()
-            {
-                ApprovalNo = "WEE/ZZ9999ZZ/SCH",
-            };
-
             var scheme = BuildScheme("WEE/AA1111AA/SCH");
 
-            var result = new SchemeApprovalNumberMismatch().Validate(schemeReturn, scheme);
+            var result = new SchemeApprovalNumberMismatch().Validate("WEE/ZZ9999ZZ/SCH", scheme);
 
             Assert.NotNull(result);
             Assert.Null(result.DataReturnVersion);
