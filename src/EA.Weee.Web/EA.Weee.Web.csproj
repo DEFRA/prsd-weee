@@ -559,6 +559,7 @@
     <Content Include="Areas\Admin\Views\Charge\ChargesSuccessfullyIssued.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ChooseSubmissionType.cshtml" />
     <Content Include="Areas\Scheme\Views\Home\ViewDataReturnSubmissionHistory.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\InvoiceRuns.cshtml" />
     <Content Include="Areas\Admin\Views\Submissions\ChooseSubmissionType.cshtml" />
     <Content Include="Areas\Admin\Views\Submissions\DataReturnSubmissionHistory.cshtml" />
     <Content Include="Areas\Test\Views\ManagePcsReturnsSubmissionWindow\Settings.cshtml" />
@@ -566,6 +567,7 @@
     <Content Include="Areas\Admin\Views\Submissions\_dataReturnSubmissionsResults.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerEEEData.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\_ProducersDataReportFilters.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\SchemeWeeeData.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />

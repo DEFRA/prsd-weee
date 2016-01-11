@@ -21,7 +21,7 @@
             {
                 Activity.ManagePendingCharges,
                 //Activity.ManageIssuedCharges,
-                //Activity.ViewInvoiceRunHistory
+                Activity.ViewInvoiceRunHistory
             };
         }
     }

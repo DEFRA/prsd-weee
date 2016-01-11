@@ -1,0 +1,67 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Shared
+@using EA.Weee.Core.Charges
+@model System.Collections.Generic.IReadOnlyList<InvoiceRunInfo>
+
+@{
+    ViewBag.Title = "Charges history";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            Charges history
+        </h1>
+    </header>
+
+    @if (Model.Count > 0)
+    {
+        <table width="100%" class="">
+            <thead>
+                <tr>
+                    <th>Date issued</th>
+                    <th>Issued by</th>
+                    <th>Summary file (csv)</th>
+                    @if (ViewBag.AllowDownloadOfInvoiceFiles)
+                    {
+                        <th>Invoice files (zip)</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (InvoiceRunInfo invoiceRun in Model)
+                {
+                    <tr>
+                        <td>@invoiceRun.IssuedDate.ToString("dd MMM yyyy")</td>
+                        <td>@invoiceRun.IssuedByUserFullName</td>
+                        <td>
+                            @Html.ActionLink("Download", "DownloadChargeBreakdown", new { id = invoiceRun.InvoiceRunId })
+                        </td>
+                        @if (ViewBag.AllowDownloadOfInvoiceFiles)
+                        {
+                            <td>
+                                @Html.ActionLink("Download", "DownloadInvoiceFiles", new { id = invoiceRun.InvoiceRunId })
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+    }
+    else
+    {
+        <p>
+            No invoice runs have been issued yet.
+        </p>
+    }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "button" })
+    </p>
+    <p>
+        <a href="javascript:history.back();">Back</a>
+    </p>
+}
