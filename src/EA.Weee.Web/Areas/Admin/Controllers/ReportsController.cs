@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -226,26 +227,25 @@
         public async Task<ActionResult> ProducerEEEData()
         {
             SetBreadcrumb(Reports.ProducerEEEData);
-
-            using (var client = apiClient())
+            ViewBag.TriggerDownload = false;
+            List<int> years;
+            try
             {
-                try
-                {
-                    ProducersDataViewModel model = new ProducersDataViewModel();
-                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears(ComplianceYearFor.DataReturns));
-                    model.ComplianceYears = new SelectList(allYears);
-                    return View("ProducerEEEData", model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                    return View();
-                }
+                years = await FetchComplianceYearsForDataReturns();
             }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+                return View();
+            }
+
+            ProducersDataViewModel model = new ProducersDataViewModel();
+            model.ComplianceYears = new SelectList(years);
+            return View(model);            
         }
 
         [HttpPost]
@@ -253,20 +253,37 @@
         public async Task<ActionResult> ProducerEEEData(ProducersDataViewModel model)
         {
             SetBreadcrumb(Reports.ProducerEEEData);
-
-            using (var client = apiClient())
+            List<int> years;
+            try
             {
-                var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears(ComplianceYearFor.DataReturns));
-                model.ComplianceYears = new SelectList(allYears);
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
-
-                return await DownloadProducerEEEDataCSV(model, client);
+                years = await FetchComplianceYearsForDataReturns();
             }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+                ViewBag.TriggerDownload = false;
+                return View();
+            }
+
+            model.ComplianceYears = new SelectList(years);
+
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            return View(model);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> DownloadProducerEEEDataCsv(int complianceYear, ObligationType obligationType)
+        {
+                GetProducersEEEDataCSV request = new GetProducersEEEDataCSV(complianceYear, obligationType);
+                var producerEEEData = await apiClient().SendAsync(User.GetAccessToken(), request);
+                byte[] data = new UTF8Encoding().GetBytes(producerEEEData.FileContent);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerEEEData.FileName));   
+        }
         private async Task SetReportsFilterLists(ReportsFilterViewModel model, IWeeeClient client)
         {
             var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
@@ -284,6 +301,15 @@
         {
             var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
             model.ComplianceYears = new SelectList(allYears);
+        }
+
+        private async Task<List<int>> FetchComplianceYearsForDataReturns()
+        {
+            GetAllComplianceYears request = new GetAllComplianceYears(ComplianceYearFor.DataReturns);
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), request);
+            }
         }
 
         private void SetBreadcrumb(string reportName = null)
@@ -350,11 +376,6 @@
 
             byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(membersDetailsCsvData.FileName));
-        }
-
-        private async Task<ActionResult> DownloadProducerEEEDataCSV(ProducersDataViewModel model, IWeeeClient client)
-        {
-            throw new NotSupportedException("Report not implemented yet.");
-        }
+        }       
     }
 }

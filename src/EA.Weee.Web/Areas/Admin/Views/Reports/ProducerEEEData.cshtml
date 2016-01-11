@@ -27,3 +27,13 @@
     </p>
 }
 
+@section scripts
+{
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadProducerEEEDataCsv", new { complianceYear = Model.SelectedYear, obligationType = Model.SelectedObligationtype }))";
+        </script>
+    }
+}
+
