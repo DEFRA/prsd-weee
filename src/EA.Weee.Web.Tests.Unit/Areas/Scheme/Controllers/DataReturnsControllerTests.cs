@@ -228,7 +228,8 @@
                 2015,
                 QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
-                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+                A.Dummy<IReadOnlyCollection<DataReturnError>>(),
+                false);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
                 .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
@@ -286,7 +287,8 @@
                 2015,
                 QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
-                new List<DataReturnError>() { error });
+                new List<DataReturnError>() { error },
+                false);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
                 .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
@@ -341,7 +343,8 @@
                 2015,
                 QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
-                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+                A.Dummy<IReadOnlyCollection<DataReturnError>>(),
+                false);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
                 .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
@@ -373,7 +376,8 @@
                 2015,
                 QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
-                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+                A.Dummy<IReadOnlyCollection<DataReturnError>>(),
+                false);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
                 .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
@@ -411,7 +415,8 @@
                 2015,
                 QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
-                new List<DataReturnError>() { error });
+                new List<DataReturnError>() { error },
+                false);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
                 .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
@@ -451,7 +456,8 @@
                 2015,
                 QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
-                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+                A.Dummy<IReadOnlyCollection<DataReturnError>>(),
+                false);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
                 .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
@@ -484,7 +490,8 @@
                 2015,
                 QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
-                new List<DataReturnError>() { error });
+                new List<DataReturnError>() { error },
+                false);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
                 .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
@@ -520,7 +527,8 @@
                 2015,
                 QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
-                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+                A.Dummy<IReadOnlyCollection<DataReturnError>>(),
+                false);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
                 .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
@@ -560,7 +568,8 @@
                 2015,
                 QuarterType.Q4,
                 A.Dummy<IReadOnlyCollection<DataReturnWarning>>(),
-                A.Dummy<IReadOnlyCollection<DataReturnError>>());
+                A.Dummy<IReadOnlyCollection<DataReturnError>>(),
+                false);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnForSubmission>._))
                 .WhenArgumentsMatch(args => args.Get<FetchDataReturnForSubmission>("request").DataReturnUploadId == new Guid("06FFB265-46D3-4CE3-805A-A81F1B11622A"))
