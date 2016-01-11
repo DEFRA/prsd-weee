@@ -2,6 +2,7 @@
 {
     using System;
     using System.Security;
+    using Domain;
     using Domain.Charges;
     using Domain.Producer;
     using Domain.Scheme;
@@ -63,6 +64,7 @@
             var builder = new RemoveProducerHandlerBuilder();
 
             var memberUpload = new MemberUpload(A.Dummy<Guid>(), A.Dummy<string>(), null, 100, A.Dummy<int>(), A.Dummy<Scheme>(), A.Dummy<string>());
+            memberUpload.Submit(A.Dummy<User>());
             memberUpload.AssignToInvoiceRun(A.Dummy<InvoiceRun>());
 
             var producerSubmission = A.Fake<ProducerSubmission>();

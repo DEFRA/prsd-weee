@@ -98,9 +98,11 @@
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandlerTests.cs" />
     <Compile Include="Admin\GetUserDataHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandlerTest.cs" />
+    <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandlerTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccessTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
     <Compile Include="Admin\UpdateUserHandlerTests.cs" />
+    <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandlerTests.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile\FetchInvoiceRunIbisZipFileHandlerTests.cs" />
     <Compile Include="Charges\FetchInvoiceRuns\FetchInvoiceRunsHandlerTests.cs" />
     <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandlerTests.cs" />

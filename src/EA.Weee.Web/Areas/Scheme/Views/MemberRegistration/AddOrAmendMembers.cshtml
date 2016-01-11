@@ -95,8 +95,8 @@
             @Html.Gds().ValidationSummary()
 
             <p>To register or update your members' details, upload and submit an XML file.</p>
-            <p class="bold-small">
-                <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" class="important-image"/>Your XML file must use the version 3.07 schema.
+            <p class="important">
+                Your XML file must use the version 3.07 schema.
             </p>
             <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
                 @(this.WeeeGds().ScreenReaderLabelFor(m => m.File))
