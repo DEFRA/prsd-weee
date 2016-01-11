@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Domain
 {
-    using DataReturns;
+    using System;
     using Prsd.Core.Domain;
 
     public class SystemData : Entity
@@ -9,25 +9,22 @@
 
         public ulong InitialIbisFileId { get; private set; }
 
-        public bool UseFixedComplianceYearAndQuarter { get; private set; }
+        public bool UseFixedCurrentDate { get; private set; }
 
-        public int FixedComplianceYear { get; private set; }
-
-        public QuarterType FixedQuarter { get; private set; }
+        public DateTime FixedCurrentDate { get; private set; }
 
         protected SystemData()
         {
         }
 
-        public void UpdateQuarterAndComplianceYear(Quarter quarter)
+        public void UpdateFixedCurrentDate(DateTime date)
         {
-            FixedComplianceYear = quarter.Year;
-            FixedQuarter = quarter.Q;
+            FixedCurrentDate = date;
         }
 
-        public void ToggleFixedQuarterAndComplianceYearUsage(bool enabled)
+        public void ToggleFixedCurrentDateUsage(bool enabled)
         {
-            UseFixedComplianceYearAndQuarter = enabled;
+            UseFixedCurrentDate = enabled;
         }
 
         /// <summary>
