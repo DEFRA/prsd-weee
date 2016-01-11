@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Data.SqlClient;
     using System.Threading.Tasks;
+    using Domain;
 
     public class StoredProcedures : IStoredProcedures
     {
@@ -149,5 +150,16 @@
                 .SqlQuery<int>("[Charging].[SpgNext1B1STransactionNumber]")
                 .SingleAsync();
         }
+
+        public async Task<List<ProducerEEECSVData>> SpgProducerEEECSVDataByComplianceYearAndObligationType(int complianceYear, string obligationtype)
+        {
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter obligationTypeParameter = new SqlParameter("@ObligationType", obligationtype);
+            return await context.Database
+                .SqlQuery<ProducerEEECSVData>(
+                    "[Producer].[spgProducerEEECSVDataByComplianceYearAndObligationType] @ComplianceYear, @ObligationType",
+                    complianceYearParameter,
+                    obligationTypeParameter).ToListAsync();
+        }   
     }
 }
