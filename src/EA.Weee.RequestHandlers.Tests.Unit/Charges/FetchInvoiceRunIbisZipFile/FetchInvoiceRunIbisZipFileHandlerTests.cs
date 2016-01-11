@@ -69,7 +69,7 @@
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ICommonDataAccess dataAccess = A.Fake<ICommonDataAccess>();
             A.CallTo(() => dataAccess.FetchInvoiceRunAsync(A<Guid>._)).Returns(invoiceRun);
@@ -118,7 +118,7 @@
             memberUploads.Add(memberUpload);
 
             SystemTime.Freeze(new DateTime(2015, 12, 31));
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
             SystemTime.Unfreeze();
 
             ulong fileID = 123;

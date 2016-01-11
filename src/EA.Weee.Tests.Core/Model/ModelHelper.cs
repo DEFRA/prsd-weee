@@ -174,7 +174,7 @@
         }
 
         /// <summary>
-        /// Cretates a member upload associated with the specified scheme.
+        /// Creates a member upload associated with the specified scheme.
         /// After creation, the ComplianceYear and IsSubmitted properties
         /// should be explicitly set by the test.
         /// </summary>
@@ -198,6 +198,30 @@
             };
 
             model.MemberUploads.Add(memberUpload);
+
+            return memberUpload;
+        }
+
+        /// <summary>
+        /// Creates a member upload associated with the specified scheme and sets the member
+        /// upload as being submitted. An invoice run can optionally be assigned to the submitted
+        /// member upload.
+        /// </summary>
+        /// <param name="scheme"></param>
+        /// <param name="invoiceRun"></param>
+        /// <returns></returns>
+        public MemberUpload CreateSubmittedMemberUpload(Scheme scheme, InvoiceRun invoiceRun = null)
+        {
+            var memberUpload = CreateMemberUpload(scheme);
+
+            memberUpload.IsSubmitted = true;
+            memberUpload.SubmittedDate = DateTime.UtcNow;
+
+            if (invoiceRun != null)
+            {
+                memberUpload.InvoiceRun = invoiceRun;
+                memberUpload.InvoiceRunId = invoiceRun.Id;
+            }
 
             return memberUpload;
         }
@@ -326,7 +350,8 @@
                 AuthorisedRepresentativeId = null,
                 ChargeBandAmountId = chargeBandAmount.Id,
                 ChargeThisUpdate = 0,
-                ObligationType = "B2B"
+                ObligationType = "B2B",
+                Invoiced = false
             };
             model.ProducerSubmissions.Add(producerSubmission);
 
@@ -366,7 +391,7 @@
             Partnership partnership = new Partnership
             {
                 Id = IntegerToGuid(partnershipId),
-                Name = string.Format("Partnership {0} Name",  CreatePartnershipNameFromId(partnershipId)),
+                Name = string.Format("Partnership {0} Name", CreatePartnershipNameFromId(partnershipId)),
                 Contact1 = contact,
                 PrincipalPlaceOfBusinessId = contact.Id,
             };
@@ -517,6 +542,38 @@
             model.DataReturnVersions.Add(dataReturnVersion);
 
             return dataReturnVersion;
+        }
+
+        public InvoiceRun CreateInvoiceRun()
+        {
+            var compenentAuthority = model.CompetentAuthorities.First();
+
+            var ibisFileData = new IbisFileData
+            {
+                Id = IntegerToGuid(GetNextId()),
+                FileId = GetNextId(),
+                CustomerFileData = "Customer file data",
+                CustomerFileName = "Customer file name",
+                TransactionFileData = "Transaction file data",
+                TransactionFileName = "Transaction file name"
+            };
+
+            var user = GetOrCreateUser("Invoice Run User");
+
+            var invoiceRun = new InvoiceRun
+            {
+                Id = IntegerToGuid(GetNextId()),
+                IssuedDate = DateTime.UtcNow,
+                IssuedByUserId = user.Id,
+                CompetentAuthority = compenentAuthority,
+                CompetentAuthorityId = compenentAuthority.Id,
+                IbisFileData = ibisFileData,
+                IbisFileDataId = ibisFileData.Id
+            };
+
+            model.InvoiceRuns.Add(invoiceRun);
+
+            return invoiceRun;
         }
     }
 }

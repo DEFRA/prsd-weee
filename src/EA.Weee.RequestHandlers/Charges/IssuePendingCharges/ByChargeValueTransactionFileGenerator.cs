@@ -12,7 +12,7 @@
     using MemberUpload = EA.Weee.Domain.Scheme.MemberUpload;
 
     /// <summary>
-    /// This 1B1S transcation file generator creates a transaction file with one invoice for each member upload.
+    /// This 1B1S transaction file generator creates a transaction file with one invoice for each member upload.
     /// Invoice line items are formed by grouping by amount the non-zero, non-deleted producer submission
     /// charges within each member upload.
     /// </summary>
@@ -37,7 +37,7 @@
 
                 var lineItemGroups = memberUpload.ProducerSubmissions
                     .Where(ps => ps.ChargeThisUpdate != 0)
-                    .Where(ps => ps.RegisteredProducer.IsAligned)
+                    .Where(ps => ps.Invoiced)
                     .GroupBy(ps => ps.ChargeThisUpdate)
                     .OrderBy(g => g.Key)
                     .Select(g => new { Charge = g.Key, Quantity = g.Count() })
@@ -64,7 +64,7 @@
                         catch (Exception ex)
                         {
                             string errorMessage = string.Format(
-                                "An error occured creating an 1B1S invoice line item to represent the member upload with ID \"{0}\". " +
+                                "An error occurred creating an 1B1S invoice line item to represent the member upload with ID \"{0}\". " +
                                 "See the inner exception for more details.",
                                 memberUpload.Id);
                             throw new Exception(errorMessage, ex);
@@ -80,7 +80,7 @@
                     {
                         invoice = new Invoice(
                             memberUpload.Scheme.IbisCustomerReference,
-                            invoiceRun.CreatedDate,
+                            invoiceRun.IssuedDate,
                             TransactionType.Invoice,
                             transactionReference,
                             lineItems);
@@ -88,7 +88,7 @@
                     catch (Exception ex)
                     {
                         string errorMessage = string.Format(
-                            "An error occured creating an 1B1S invoice to represent the member upload with ID \"{0}\"." +
+                            "An error occurred creating an 1B1S invoice to represent the member upload with ID \"{0}\"." +
                             "See the inner exception for more details.",
                             memberUpload.Id);
                         throw new Exception(errorMessage, ex);
