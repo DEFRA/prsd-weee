@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using BusinessValidation;
+    using BusinessValidation.Rules;
     using Core.Shared;
     using Domain.DataReturns;
     using Prsd.Core;
@@ -19,27 +20,37 @@
     public class DataReturnVersionFromXmlBuilder : IDataReturnVersionFromXmlBuilder
     {
         private readonly IDataReturnVersionBuilder dataReturnVersionBuilder;
-        private readonly IXmlBusinessValidator xmlBusinessValidator;
+        private readonly ISchemeApprovalNumberMismatch schemeApprovalNumberMismatch;
 
         public DataReturnVersionFromXmlBuilder(
             IDataReturnVersionBuilder dataReturnVersionBuilder,
-            IXmlBusinessValidator xmlBusinessValidator)
+            ISchemeApprovalNumberMismatch schemeApprovalNumberMismatch)
         {
             Guard.ArgumentNotNull(() => dataReturnVersionBuilder, dataReturnVersionBuilder);
             this.dataReturnVersionBuilder = dataReturnVersionBuilder;
-            this.xmlBusinessValidator = xmlBusinessValidator;
+            this.schemeApprovalNumberMismatch = schemeApprovalNumberMismatch;
         }
 
         public async Task<DataReturnVersionBuilderResult> Build(SchemeReturn schemeReturn)
         {
-            // Process XML-specific validation first
-            var businessValidationResult = await xmlBusinessValidator.Validate(schemeReturn);
+            // PreValidate (any validation before business validation)
+            var preValidationResult = await dataReturnVersionBuilder.PreValidate();
 
-            if (businessValidationResult.ErrorData.Any())
+            if (preValidationResult.ErrorData.Any())
             {
-                return businessValidationResult;
+                return preValidationResult;
             }
 
+            // Then process XML-specific validation
+            var schemeApprovalNumberMismatchResult = schemeApprovalNumberMismatch.Validate(schemeReturn.ApprovalNo,
+                dataReturnVersionBuilder.Scheme);
+
+            if (schemeApprovalNumberMismatchResult.ErrorData.Any())
+            {
+                return schemeApprovalNumberMismatchResult;
+            }
+
+            // Then build the Data Return Version
             if (schemeReturn.ProducerList != null)
             {
                 foreach (var producer in schemeReturn.ProducerList)

@@ -8,7 +8,7 @@
     using Factories;
     using FakeItEasy;
     using Prsd.Core;
-    using RequestHandlers.DataReturns.BusinessValidation.XmlBusinessRules;
+    using RequestHandlers.DataReturns.BusinessValidation.Rules;
     using Xml.DataReturns;
     using Xunit;
 
@@ -35,39 +35,9 @@
 
             var result = await
                 SubmissionWindowClosed()
-                    .Validate(new SchemeReturn
-                    {
-                        ComplianceYear = "2016",
-                        ReturnPeriod = SchemeReturnReturnPeriod.Quarter1JanuaryMarch
-                    });
+                    .Validate(new Quarter(2016, QuarterType.Q1));
 
             Assert.Empty(result.ErrorData);
-        }
-
-        [Fact]
-        public async void UseFixedComplianceYearAndQuarter_AndComplianceYearAndQuarterDoNotMatch_ValidationError_StatingFixedForTesting()
-        {
-            var systemData = new TestSystemData();
-            systemData.UpdateQuarterAndComplianceYear(new Quarter(2016, QuarterType.Q1));
-            systemData.ToggleFixedQuarterAndComplianceYearUsage(true);
-
-            A.CallTo(() => systemDataDataAccess.Get())
-                .Returns(systemData);
-
-            var result = await
-                SubmissionWindowClosed()
-                    .Validate(new SchemeReturn
-                    {
-                        ComplianceYear = "2016",
-                        ReturnPeriod = SchemeReturnReturnPeriod.Quarter2AprilJune
-                    });
-
-            Assert.Single(result.ErrorData);
-
-            var error = result.ErrorData.Single();
-
-            Assert.Equal(Core.Shared.ErrorLevel.Error, error.ErrorLevel);
-            Assert.Contains("fixed for testing", error.Description);
         }
 
         [Fact]
@@ -91,11 +61,7 @@
 
             var result = await
                 SubmissionWindowClosed()
-                    .Validate(new SchemeReturn
-                    {
-                        ComplianceYear = "2016",
-                        ReturnPeriod = SchemeReturnReturnPeriod.Quarter1JanuaryMarch
-                    });
+                    .Validate(new Quarter(2016, QuarterType.Q1));
 
             SystemTime.Unfreeze();
 
@@ -123,11 +89,7 @@
 
             var result = await
                 SubmissionWindowClosed()
-                    .Validate(new SchemeReturn
-                    {
-                        ComplianceYear = "2016",
-                        ReturnPeriod = SchemeReturnReturnPeriod.Quarter1JanuaryMarch
-                    });
+                    .Validate(new Quarter(2016, QuarterType.Q1));
 
             SystemTime.Unfreeze();
 
@@ -137,6 +99,7 @@
 
             Assert.Equal(Core.Shared.ErrorLevel.Error, error.ErrorLevel);
             Assert.Contains("not yet opened", error.Description);
+            Assert.Contains("2016", error.Description);
         }
 
         [Fact]
@@ -148,10 +111,10 @@
             A.CallTo(() => systemDataDataAccess.Get())
                 .Returns(systemData);
 
-            var timeNow = new DateTime(2016, 1, 3, 0, 0, 0);
+            var timeNow = new DateTime(2016, 1, 1, 0, 0, 0);
 
-            var windowStart = new DateTime(2016, 1, 1, 0, 0, 0);
-            var windowEnd = new DateTime(2016, 1, 2, 0, 0, 0);
+            var windowStart = new DateTime(2015, 1, 1, 0, 0, 0);
+            var windowEnd = new DateTime(2015, 12, 31, 23, 59, 59);
 
             A.CallTo(() => quarterWindowFactory.GetQuarterWindow(A<Quarter>._))
                 .Returns(new QuarterWindow(windowStart, windowEnd));
@@ -160,11 +123,7 @@
 
             var result = await
                 SubmissionWindowClosed()
-                    .Validate(new SchemeReturn
-                    {
-                        ComplianceYear = "2016",
-                        ReturnPeriod = SchemeReturnReturnPeriod.Quarter1JanuaryMarch
-                    });
+                    .Validate(new Quarter(2015, QuarterType.Q4));
 
             SystemTime.Unfreeze();
 
@@ -174,6 +133,7 @@
 
             Assert.Equal(Core.Shared.ErrorLevel.Error, error.ErrorLevel);
             Assert.Contains("has closed", error.Description);
+            Assert.Contains("2015", error.Description);
         }
 
         private SubmissionWindowClosed SubmissionWindowClosed()

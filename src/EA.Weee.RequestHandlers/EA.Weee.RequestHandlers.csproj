@@ -114,12 +114,10 @@
     <Compile Include="Charges\IssuePendingCharges\ITransactionReferenceGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\TransactionReferenceGenerator.cs" />
     <Compile Include="DataReturns\BusinessValidation\EeeValidator.cs" />
-    <Compile Include="DataReturns\BusinessValidation\IXmlBusinessValidator.cs" />
-    <Compile Include="DataReturns\BusinessValidation\XmlBusinessRules\ISchemeApprovalNumberMismatch.cs" />
-    <Compile Include="DataReturns\BusinessValidation\XmlBusinessRules\ISubmissionWindowClosed.cs" />
-    <Compile Include="DataReturns\BusinessValidation\XmlBusinessRules\SchemeApprovalNumberMismatch.cs" />
-    <Compile Include="DataReturns\BusinessValidation\XmlBusinessRules\SubmissionWindowClosed.cs" />
-    <Compile Include="DataReturns\BusinessValidation\XmlBusinessValidator.cs" />
+    <Compile Include="DataReturns\BusinessValidation\Rules\ISchemeApprovalNumberMismatch.cs" />
+    <Compile Include="DataReturns\BusinessValidation\Rules\ISubmissionWindowClosed.cs" />
+    <Compile Include="DataReturns\BusinessValidation\Rules\SchemeApprovalNumberMismatch.cs" />
+    <Compile Include="DataReturns\BusinessValidation\Rules\SubmissionWindowClosed.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderResult.cs" />
     <Compile Include="DataReturns\BusinessValidation\IEeeValidator.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\CreateTestXmlFileHandler.cs" />
