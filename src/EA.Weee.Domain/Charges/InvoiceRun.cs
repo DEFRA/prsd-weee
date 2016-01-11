@@ -15,9 +15,9 @@
     /// </summary>
     public class InvoiceRun : Entity
     {
-        public UKCompetentAuthority CompetentAuthority { get; private set; }
+        public virtual UKCompetentAuthority CompetentAuthority { get; private set; }
 
-        public DateTime IssuedDate { get; private set; }
+        public virtual DateTime IssuedDate { get; private set; }
 
         public User IssuedByUser { get; private set; }
 
@@ -50,12 +50,6 @@
                 {
                     string errorMessage = "All member uploads assigned to an invoice run must be related " +
                         "to schemes with the same authority as the invoice run.";
-                    throw new InvalidOperationException(errorMessage);
-                }
-
-                if (!memberUpload.IsSubmitted)
-                {
-                    string errorMessage = "An unsubmitted member upload cannot be assigned to an invoice run.";
                     throw new InvalidOperationException(errorMessage);
                 }
 

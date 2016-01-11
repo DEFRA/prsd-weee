@@ -3,10 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.Admin;
     using Core.Charges;
     using Core.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -136,7 +138,7 @@
         {
             if (authority != CompetentAuthority.England)
             {
-                string errorMessage = "Invoice files can only be downloaded for invoice runs related to the Environnent Agency.";
+                string errorMessage = "Invoice files can only be downloaded for invoice runs related to the Environment Agency.";
                 throw new InvalidOperationException(errorMessage);
             }
 
@@ -168,6 +170,20 @@
         public Task<ActionResult> DownloadSummaryFile(CompetentAuthority authority, Guid id)
         {
             throw new NotImplementedException();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadChargeBreakdown(Guid id)
+        {
+            CSVFileData csvFileData;
+            using (IWeeeClient client = weeeClient())
+            {
+                var request = new FetchInvoiceRunCsv(id);
+                csvFileData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            byte[] data = new UTF8Encoding().GetBytes(csvFileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileData.FileName));
         }
     }
 }

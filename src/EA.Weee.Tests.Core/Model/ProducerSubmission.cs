@@ -38,6 +38,7 @@ namespace EA.Weee.Tests.Core.Model
         public System.Guid ChargeBandAmountId { get; set; }
         public decimal ChargeThisUpdate { get; set; }
         public Nullable<System.DateTime> CeaseToExist { get; set; }
+        public bool Invoiced { get; set; }
     
         public virtual ChargeBandAmount ChargeBandAmount { get; set; }
         public virtual MemberUpload MemberUpload { get; set; }
