@@ -3,10 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.Admin;
     using Core.Charges;
     using Core.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -38,7 +40,7 @@
                 throw new InvalidOperationException("Invoicing is not enabled.");
             }
 
-            breadcrumb.InternalActivity = "Manage charges";
+            breadcrumb.InternalActivity = "Manage PCS charges";
 
             base.OnActionExecuting(filterContext);
         }
@@ -88,7 +90,7 @@
                     throw new NotImplementedException();
 
                 case Activity.ViewInvoiceRunHistory:
-                    throw new NotImplementedException();
+                    return RedirectToAction("InvoiceRuns", new { authority });
 
                 default:
                     throw new NotSupportedException();
@@ -136,7 +138,7 @@
         {
             if (authority != CompetentAuthority.England)
             {
-                string errorMessage = "Invoice files can only be downloaded for invoice runs related to the Environnent Agency.";
+                string errorMessage = "Invoice files can only be downloaded for invoice runs related to the Environment Agency.";
                 throw new InvalidOperationException(errorMessage);
             }
 
@@ -148,6 +150,34 @@
             }
 
             return File(fileInfo.Data, "text/plain", fileInfo.FileName);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> InvoiceRuns(CompetentAuthority authority)
+        {
+            IReadOnlyList<InvoiceRunInfo> invoiceRuns;
+            using (IWeeeClient client = weeeClient())
+            {
+                FetchInvoiceRuns request = new FetchInvoiceRuns(authority);
+                invoiceRuns = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            ViewBag.AllowDownloadOfInvoiceFiles = (authority == CompetentAuthority.England);
+            return View(invoiceRuns);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadChargeBreakdown(Guid id)
+        {
+            CSVFileData csvFileData;
+            using (IWeeeClient client = weeeClient())
+            {
+                var request = new FetchInvoiceRunCsv(id);
+                csvFileData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            byte[] data = new UTF8Encoding().GetBytes(csvFileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileData.FileName));
         }
     }
 }

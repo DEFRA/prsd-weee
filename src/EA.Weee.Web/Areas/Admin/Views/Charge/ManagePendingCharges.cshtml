@@ -69,5 +69,10 @@
         </p>
     }
 
-    @Html.ActionLink("Manage more PCS charges", "SelectAuthority")
+    <p>
+        @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "button" })
+    </p>
+    <p>
+        <a href="javascript:history.back();">Back</a>
+    </p>
 }

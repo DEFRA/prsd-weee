@@ -11,7 +11,7 @@
 
     /// <summary>
     /// This 1B1S transaction file generator creates a transaction file with one
-    /// transaciton for each scheme referenced by the specified list of member uploads.
+    /// transaction for each scheme referenced by the specified list of member uploads.
     /// Each member upload appears as a line item.
     /// </summary>
     public class BySchemeTransactionFileGenerator : IIbisTransactionFileGenerator
@@ -50,7 +50,7 @@
                     catch (Exception ex)
                     {
                         string errorMessage = string.Format(
-                            "An error occured creating an 1B1S invoice line item to represent the member upload with ID \"{0}\". " +
+                            "An error occurred creating an 1B1S invoice line item to represent the member upload with ID \"{0}\". " +
                             "See the inner exception for more details.",
                             memberUpload.Id);
                         throw new Exception(errorMessage, ex);
@@ -66,7 +66,7 @@
                 {
                     invoice = new Invoice(
                         group.Key.IbisCustomerReference,
-                        invoiceRun.CreatedDate,
+                        invoiceRun.IssuedDate,
                         TransactionType.Invoice,
                         transactionReference,
                         lineItems);
@@ -74,7 +74,7 @@
                 catch (Exception ex)
                 {
                     string errorMessage = string.Format(
-                        "An error occured creating an 1B1S invoice to represent the member uploads for scheme with ID \"{0}\". " +
+                        "An error occurred creating an 1B1S invoice to represent the member uploads for scheme with ID \"{0}\". " +
                         "See the inner exception for more details.",
                         group.Key.Id);
                     throw new Exception(errorMessage, ex);

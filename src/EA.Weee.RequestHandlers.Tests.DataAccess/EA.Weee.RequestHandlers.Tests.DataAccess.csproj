@@ -87,6 +87,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Admin\FindMatchingUsersDataAccessTests.cs" />
+    <Compile Include="Charging\FetchInvoiceRuns\FetchInvoiceRunsDataAccessTests.cs" />
     <Compile Include="Admin\GetAllComplianceYearsDataAccessTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileHandlerDataAccessTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileHandlerTests.cs" />

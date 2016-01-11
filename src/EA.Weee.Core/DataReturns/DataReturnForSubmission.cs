@@ -20,13 +20,16 @@
 
         public IReadOnlyCollection<DataReturnError> Errors { get; private set; }
 
+        public bool IsResubmission { get; private set; }
+
         public DataReturnForSubmission(
             Guid dataReturnUploadId,
             Guid organisationId,
             int? year,
             QuarterType? quarter,
             IReadOnlyCollection<DataReturnWarning> warnings,
-            IReadOnlyCollection<DataReturnError> errors)
+            IReadOnlyCollection<DataReturnError> errors,
+            bool isResubmission)
         {
             DataReturnUploadId = dataReturnUploadId;
             OrganisationId = organisationId;
@@ -34,6 +37,7 @@
             Year = year;
             Warnings = warnings;
             Errors = errors;
+            IsResubmission = isResubmission;
         }
     }
 }

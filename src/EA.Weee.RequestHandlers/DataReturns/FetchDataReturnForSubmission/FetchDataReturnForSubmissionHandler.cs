@@ -27,36 +27,50 @@
 
         public async Task<DataReturnForSubmission> HandleAsync(Request message)
         {
-            DataReturnUpload dataReturnsUpload = await dataAccess.FetchDataReturnUploadAsync(message.DataReturnUploadId);
+            DataReturnUpload dataReturnUpload = await dataAccess.FetchDataReturnUploadAsync(message.DataReturnUploadId);
 
-            authorization.EnsureSchemeAccess(dataReturnsUpload.Scheme.Id);
+            authorization.EnsureSchemeAccess(dataReturnUpload.Scheme.Id);
 
-            if (dataReturnsUpload.DataReturnVersion != null && dataReturnsUpload.DataReturnVersion.IsSubmitted)
+            if (dataReturnUpload.DataReturnVersion != null && dataReturnUpload.DataReturnVersion.IsSubmitted)
             {
                 string errorMessage = string.Format(
                     "The data return with ID \"{0}\" has already been submitted.",
-                    dataReturnsUpload.Id);
+                    dataReturnUpload.Id);
                 throw new InvalidOperationException(errorMessage);
             }
 
-            List<DataReturnWarning> warnings = dataReturnsUpload.Errors
+            List<DataReturnWarning> warnings = dataReturnUpload.Errors
                 .Where(e => e.ErrorLevel == ErrorLevel.Warning)
                 .Select(e => new DataReturnWarning(e.Description))
                 .ToList();
 
-            List<DataReturnError> errors = dataReturnsUpload.Errors
+            List<DataReturnError> errors = dataReturnUpload.Errors
                 .Where(e => e.ErrorLevel == ErrorLevel.Error)
                 .OrderBy(e => e.LineNumber)
                 .Select(e => new DataReturnError(e.Description))
                 .ToList();
 
+            bool isResubmission;
+            if (errors.Count == 0)
+            {
+                isResubmission = await dataAccess.CheckForExistingSubmissionAsync(
+                    dataReturnUpload.Scheme.Id,
+                    dataReturnUpload.ComplianceYear.Value,
+                    dataReturnUpload.Quarter.Value);
+            }
+            else
+            {
+                isResubmission = false;
+            }
+
             return new DataReturnForSubmission(
-                dataReturnsUpload.Id,
-                dataReturnsUpload.Scheme.OrganisationId,
-                dataReturnsUpload.ComplianceYear,
-                (QuarterType?)dataReturnsUpload.Quarter,
+                dataReturnUpload.Id,
+                dataReturnUpload.Scheme.OrganisationId,
+                dataReturnUpload.ComplianceYear,
+                (QuarterType?)dataReturnUpload.Quarter,
                 warnings,
-                errors);
+                errors,
+                isResubmission);
         }
     }
 }
