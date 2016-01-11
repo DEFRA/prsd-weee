@@ -17,14 +17,6 @@
             var obligationTypeBoth = ObligationType.Both.ToString();
             var allObligationTypes = new SelectList(EnumHelper.GetValues(typeof(ObligationType)), "Key", "Value");
             Obligationtypes = new SelectList(allObligationTypes.Where(x => (x.Text != obligationTypeNone && x.Text != obligationTypeBoth)).ToList(), "Value", "Text");
-            
-            Quarters = Enum.GetValues(typeof(QuarterType))
-                           .OfType<QuarterType>()
-                           .Select(q => new SelectListItem()
-                           {
-                               Text = q.ToString(),
-                               Value = q.ToString()
-                           });
         }
 
         [Required]
@@ -32,11 +24,6 @@
         public int SelectedYear { get; set; }
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
-
-        [DisplayName("Quarter")]
-        public QuarterType? SelectedQuarter { get; set; }
-
-        public IEnumerable<SelectListItem> Quarters { get; set; }
 
         [Required]
         [Display(Name = "Obligation type")]
