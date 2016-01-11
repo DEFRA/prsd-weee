@@ -229,7 +229,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="RegisteredProducerId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ObligationType" Type="nvarchar" MaxLength="4" Nullable="false" />
-          <Property Name="Tonnage" Type="decimal" Precision="38" Scale="3" Nullable="false" />
+          <Property Name="Tonnage" Type="decimal" Precision="28" Scale="3" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="WeeeCategory" Type="int" Nullable="false" />
         </EntityType>
@@ -247,7 +247,6 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           </Key>
           <Property Name="EeeOutputReturnVersionId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="EeeOuputAmountId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
         <EntityType Name="MemberUpload">
           <Key>
@@ -263,11 +262,11 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="TotalCharges" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="FileName" Type="nvarchar(max)" />
           <Property Name="ProcessTime" Type="time" Precision="7" Nullable="false" />
-          <Property Name="InvoiceRunId" Type="uniqueidentifier" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="CreatedById" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="UpdatedById" Type="nvarchar" MaxLength="128" />
+          <Property Name="InvoiceRunId" Type="uniqueidentifier" />
           <Property Name="SubmittedDate" Type="datetime" />
           <Property Name="SubmittedByUserId" Type="nvarchar" MaxLength="128" />
         </EntityType>
@@ -304,7 +303,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="SourceType" Type="int" Nullable="false" />
           <Property Name="ObligationType" Type="nvarchar" MaxLength="4" Nullable="false" />
-          <Property Name="Tonnage" Type="decimal" Precision="38" Scale="3" Nullable="false" />
+          <Property Name="Tonnage" Type="decimal" Precision="28" Scale="3" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="WeeeCategory" Type="int" Nullable="false" />
         </EntityType>
@@ -322,7 +321,6 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           </Key>
           <Property Name="WeeeCollectedReturnVersionId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="WeeeCollectedAmountId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
         <EntityType Name="WeeeDeliveredAmount">
           <Key>
@@ -332,7 +330,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="AatfDeliveryLocationId" Type="uniqueidentifier" />
           <Property Name="AeDeliveryLocationId" Type="uniqueidentifier" />
           <Property Name="ObligationType" Type="nvarchar" MaxLength="4" Nullable="false" />
-          <Property Name="Tonnage" Type="decimal" Precision="38" Scale="3" Nullable="false" />
+          <Property Name="Tonnage" Type="decimal" Precision="28" Scale="3" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="WeeeCategory" Type="int" Nullable="false" />
         </EntityType>
@@ -350,7 +348,6 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           </Key>
           <Property Name="WeeeDeliveredReturnVersionId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="WeeeDeliveredAmountId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
         <EntityType Name="Address1">
           <Key>
@@ -469,6 +466,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="ChargeBandAmountId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ChargeThisUpdate" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="CeaseToExist" Type="datetime" />
+          <Property Name="Invoiced" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="RegisteredProducer">
           <Key>
@@ -491,7 +489,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
           <Property Name="ProducerSubmissionId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
-        <Association Name="FK__MemberUpl__Creat__5F492382">
+        <Association Name="FK__MemberUpl__Creat__595B4002">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
           <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
           <ReferentialConstraint>
@@ -503,7 +501,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__MemberUpl__Updat__603D47BB">
+        <Association Name="FK__MemberUpl__Updat__5A4F643B">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
           <End Role="MemberUpload" Type="Self.MemberUpload" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1223,11 +1221,11 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
     [1B1STransactionNumberSequence].[NextNumber] AS [NextNumber]
     FROM [Charging].[1B1STransactionNumberSequence] AS [1B1STransactionNumberSequence]</DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK__MemberUpl__Creat__5F492382" Association="Self.FK__MemberUpl__Creat__5F492382">
+          <AssociationSet Name="FK__MemberUpl__Creat__595B4002" Association="Self.FK__MemberUpl__Creat__595B4002">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="MemberUpload" EntitySet="MemberUpload" />
           </AssociationSet>
-          <AssociationSet Name="FK__MemberUpl__Updat__603D47BB" Association="Self.FK__MemberUpl__Updat__603D47BB">
+          <AssociationSet Name="FK__MemberUpl__Updat__5A4F643B" Association="Self.FK__MemberUpl__Updat__5A4F643B">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="MemberUpload" EntitySet="MemberUpload" />
           </AssociationSet>
@@ -2355,6 +2353,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <NavigationProperty Name="RegisteredProducer" Relationship="EA.Weee.TestModel.FK_ProducerSubmission_RegisteredProducer" FromRole="ProducerSubmission" ToRole="RegisteredProducer" />
           <NavigationProperty Name="RegisteredProducers" Relationship="EA.Weee.TestModel.FK_RegisteredProducer_ProducerSubmission" FromRole="ProducerSubmission" ToRole="RegisteredProducer" />
           <NavigationProperty Name="SICCodes" Relationship="EA.Weee.TestModel.FK_SICCode_ProducerSubmission" FromRole="ProducerSubmission" ToRole="SICCode_" />
+          <Property Name="Invoiced" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="RegisteredProducer">
           <Key>
@@ -2551,7 +2550,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="RegisteredProducerId" Type="Guid" Nullable="false" />
           <Property Name="ObligationType" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="true" />
-          <Property Name="Tonnage" Type="Decimal" Nullable="false" Precision="38" Scale="3" />
+          <Property Name="Tonnage" Type="Decimal" Nullable="false" Precision="28" Scale="3" />
           <NavigationProperty Name="RegisteredProducer" Relationship="EA.Weee.TestModel.FK_EeeOutputAmount_RegisteredProducer" FromRole="EeeOutputAmount" ToRole="RegisteredProducer" />
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="WeeeCategory" Type="Int32" Nullable="false" />
@@ -2573,7 +2572,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="Id" Type="Guid" Nullable="false" />
           <Property Name="SourceType" Type="Int32" Nullable="false" />
           <Property Name="ObligationType" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="true" />
-          <Property Name="Tonnage" Type="Decimal" Nullable="false" Precision="38" Scale="3" />
+          <Property Name="Tonnage" Type="Decimal" Nullable="false" Precision="28" Scale="3" />
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="WeeeCategory" Type="Int32" Nullable="false" />
           <NavigationProperty Name="WeeeCollectedReturnVersionAmounts" Relationship="EA.Weee.TestModel.FK_WeeeCollectedReturnVersionAmount_WeeeCollectedAmount" FromRole="WeeeCollectedAmount" ToRole="WeeeCollectedReturnVersionAmount" />
@@ -2595,7 +2594,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="AatfDeliveryLocationId" Type="Guid" />
           <Property Name="AeDeliveryLocationId" Type="Guid" />
           <Property Name="ObligationType" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="true" />
-          <Property Name="Tonnage" Type="Decimal" Nullable="false" Precision="38" Scale="3" />
+          <Property Name="Tonnage" Type="Decimal" Nullable="false" Precision="28" Scale="3" />
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="WeeeCategory" Type="Int32" Nullable="false" />
           <NavigationProperty Name="WeeeDeliveredReturnVersionAmounts" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredAmount" FromRole="WeeeDeliveredAmount" ToRole="WeeeDeliveredReturnVersionAmount" />
@@ -2762,7 +2761,6 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           </Key>
           <Property Name="EeeOutputReturnVersionId" Type="Guid" Nullable="false" />
           <Property Name="EeeOuputAmountId" Type="Guid" Nullable="false" />
-          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="EeeOutputAmount" Relationship="EA.Weee.TestModel.FK_EeeOutputReturnVersionAmount_EeeOutputAmount" FromRole="EeeOutputReturnVersionAmount" ToRole="EeeOutputAmount" />
           <NavigationProperty Name="EeeOutputReturnVersion" Relationship="EA.Weee.TestModel.FK_EeeOutputReturnVersionAmount_EeeOutputReturnVersion" FromRole="EeeOutputReturnVersionAmount" ToRole="EeeOutputReturnVersion" />
         </EntityType>
@@ -2773,7 +2771,6 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           </Key>
           <Property Name="WeeeCollectedReturnVersionId" Type="Guid" Nullable="false" />
           <Property Name="WeeeCollectedAmountId" Type="Guid" Nullable="false" />
-          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="WeeeCollectedAmount" Relationship="EA.Weee.TestModel.FK_WeeeCollectedReturnVersionAmount_WeeeCollectedAmount" FromRole="WeeeCollectedReturnVersionAmount" ToRole="WeeeCollectedAmount" />
           <NavigationProperty Name="WeeeCollectedReturnVersion" Relationship="EA.Weee.TestModel.FK_WeeeCollectedReturnVersionAmount_WeeeCollectedReturnVersion" FromRole="WeeeCollectedReturnVersionAmount" ToRole="WeeeCollectedReturnVersion" />
         </EntityType>
@@ -2784,7 +2781,6 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           </Key>
           <Property Name="WeeeDeliveredReturnVersionId" Type="Guid" Nullable="false" />
           <Property Name="WeeeDeliveredAmountId" Type="Guid" Nullable="false" />
-          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="WeeeDeliveredAmount" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredAmount" FromRole="WeeeDeliveredReturnVersionAmount" ToRole="WeeeDeliveredAmount" />
           <NavigationProperty Name="WeeeDeliveredReturnVersion" Relationship="EA.Weee.TestModel.FK_WeeeDeliveredReturnVersionAmount_WeeeDeliveredReturnVersion" FromRole="WeeeDeliveredReturnVersionAmount" ToRole="WeeeDeliveredReturnVersion" />
         </EntityType>
@@ -3299,6 +3295,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <EntitySetMapping Name="ProducerSubmissions">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.ProducerSubmission">
               <MappingFragment StoreEntitySet="ProducerSubmission">
+                <ScalarProperty Name="Invoiced" ColumnName="Invoiced" />
                 <ScalarProperty Name="CeaseToExist" ColumnName="CeaseToExist" />
                 <ScalarProperty Name="ChargeThisUpdate" ColumnName="ChargeThisUpdate" />
                 <ScalarProperty Name="ChargeBandAmountId" ColumnName="ChargeBandAmountId" />
@@ -3451,7 +3448,6 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <EntitySetMapping Name="EeeOutputReturnVersionAmounts">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.EeeOutputReturnVersionAmount">
               <MappingFragment StoreEntitySet="EeeOutputReturnVersionAmount">
-                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="EeeOuputAmountId" ColumnName="EeeOuputAmountId" />
                 <ScalarProperty Name="EeeOutputReturnVersionId" ColumnName="EeeOutputReturnVersionId" />
               </MappingFragment>
@@ -3460,7 +3456,6 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <EntitySetMapping Name="WeeeCollectedReturnVersionAmounts">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.WeeeCollectedReturnVersionAmount">
               <MappingFragment StoreEntitySet="WeeeCollectedReturnVersionAmount">
-                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="WeeeCollectedAmountId" ColumnName="WeeeCollectedAmountId" />
                 <ScalarProperty Name="WeeeCollectedReturnVersionId" ColumnName="WeeeCollectedReturnVersionId" />
               </MappingFragment>
@@ -3469,7 +3464,6 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <EntitySetMapping Name="WeeeDeliveredReturnVersionAmounts">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.WeeeDeliveredReturnVersionAmount">
               <MappingFragment StoreEntitySet="WeeeDeliveredReturnVersionAmount">
-                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="WeeeDeliveredAmountId" ColumnName="WeeeDeliveredAmountId" />
                 <ScalarProperty Name="WeeeDeliveredReturnVersionId" ColumnName="WeeeDeliveredReturnVersionId" />
               </MappingFragment>

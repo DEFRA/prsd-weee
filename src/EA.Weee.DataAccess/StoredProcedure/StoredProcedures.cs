@@ -39,11 +39,11 @@
 
             SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", DBNull.Value);
             SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", DBNull.Value);
-            
+
             return await context.Database
                 .SqlQuery<MembersDetailsCSVData>(
                     "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @SchemeId, @CompetentAuthorityId",
-                    complianceYearParameter,                                     
+                    complianceYearParameter,
                     schemeIdParameter,
                      competentAuthorityIdParameter)
                 .ToListAsync();
@@ -64,11 +64,11 @@
 
             SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
             SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", (object)competentAuthorityId ?? DBNull.Value);
-            
+
             return await context.Database
                 .SqlQuery<MembersDetailsCSVData>(
                     "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @SchemeId, @CompetentAuthorityId",
-                    complianceYearParameter,                                     
+                    complianceYearParameter,
                     schemeIdParameter,
                      competentAuthorityIdParameter)
                 .ToListAsync();
@@ -83,7 +83,7 @@
         public async Task<List<PCSChargesCSVData>> SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(int complianceYear, Guid? competentAuthorityId)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-            
+
             SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", (object)competentAuthorityId ?? DBNull.Value);
 
             return await context.Database
@@ -102,7 +102,7 @@
         public async Task<List<PCSChargesCSVData>> SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(int complianceYear)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-            
+
             SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", DBNull.Value);
 
             return await context.Database
@@ -148,6 +148,22 @@
             return await context.Database
                 .SqlQuery<int>("[Charging].[SpgNext1B1STransactionNumber]")
                 .SingleAsync();
+        }
+
+        /// <summary>
+        /// Gets the details of the producers for an invoice run.
+        /// </summary>
+        /// <param name="invoiceRunId"></param>
+        /// <returns></returns>
+        public async Task<List<PCSChargesCSVData>> SpgInvoiceRunChargeBreakdown(Guid invoiceRunId)
+        {
+            var invoiceRunIdParameter = new SqlParameter("@InvoiceRunId", invoiceRunId);
+
+            return await context.Database
+                .SqlQuery<PCSChargesCSVData>(
+                    "[Charging].[SpgInvoiceRunChargeBreakdown] @InvoiceRunId",
+                    invoiceRunIdParameter)
+                .ToListAsync();
         }
     }
 }
