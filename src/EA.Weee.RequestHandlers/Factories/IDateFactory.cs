@@ -5,10 +5,10 @@
     using System.Threading.Tasks;
     using Domain.DataReturns;
 
-    public interface IQuarterFactory
+    public interface IDateFactory
     { 
-        Task SetFixedQuarter(Quarter quarter);
+        Task SetFixedDate(DateTime quarter);
 
-        Task ToggleFixedQuarterUseage(bool enabled);
+        Task ToggleFixedDateUsage(bool enabled);
     }
 }

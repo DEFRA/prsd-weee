@@ -1,37 +1,35 @@
 ﻿namespace EA.Weee.RequestHandlers.Factories
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using DataAccess;
     using DataAccess.DataAccess;
-    using Domain.DataReturns;
 
-    public class QuarterFactory : IQuarterFactory
+    public class DateFactory : IDateFactory
     {
         private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly WeeeContext context;
 
-        public QuarterFactory(ISystemDataDataAccess systemDataDataAccess, WeeeContext context)
+        public DateFactory(ISystemDataDataAccess systemDataDataAccess, WeeeContext context)
         {
             this.systemDataDataAccess = systemDataDataAccess;
             this.context = context;
         }
 
-        public async Task SetFixedQuarter(Quarter quarter)
+        public async Task SetFixedDate(DateTime date)
         {
             var systemData = await systemDataDataAccess.Get();
 
-            systemData.UpdateQuarterAndComplianceYear(quarter);
+            systemData.UpdateFixedCurrentDate(date);
 
             await context.SaveChangesAsync();
         }
 
-        public async Task ToggleFixedQuarterUseage(bool enabled)
+        public async Task ToggleFixedDateUsage(bool enabled)
         {
             var systemData = await systemDataDataAccess.Get();
 
-            systemData.ToggleFixedQuarterAndComplianceYearUsage(enabled);
+            systemData.ToggleFixedCurrentDateUsage(enabled);
 
             await context.SaveChangesAsync();
         }
