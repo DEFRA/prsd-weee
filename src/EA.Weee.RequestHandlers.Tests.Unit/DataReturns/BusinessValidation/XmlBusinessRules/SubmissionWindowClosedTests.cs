@@ -24,14 +24,20 @@
         }
 
         [Fact]
-        public async void UseFixedComplianceYearAndQuarter_AndComplianceYearAndQuarterMatch_NoValidationError()
+        public async void UsingFixedDate_AndDateIsWithinWindow_NoValidationError()
         {
             var systemData = new TestSystemData();
-            systemData.UpdateQuarterAndComplianceYear(new Quarter(2016, QuarterType.Q1));
-            systemData.ToggleFixedQuarterAndComplianceYearUsage(true);
+            systemData.UpdateFixedCurrentDate(new DateTime(2016, 01, 01, 0, 0, 0));
+            systemData.ToggleFixedCurrentDateUsage(true);
 
             A.CallTo(() => systemDataDataAccess.Get())
                 .Returns(systemData);
+
+            var windowStart = new DateTime(2016, 1, 1, 0, 0, 0);
+            var windowEnd = new DateTime(2016, 1, 2, 0, 0, 0);
+
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindow(A<Quarter>._))
+                .Returns(new QuarterWindow(windowStart, windowEnd));
 
             var result = await
                 SubmissionWindowClosed()
@@ -41,10 +47,10 @@
         }
 
         [Fact]
-        public async void NotUsingFixedComplianceYearAndQuarter_TimeNowIsWithinQuarterWindow_NoValidationError()
+        public async void NotUsingFixedDate_TimeNowIsWithinQuarterWindow_NoValidationError()
         {
             var systemData = new TestSystemData();
-            systemData.ToggleFixedQuarterAndComplianceYearUsage(false);
+            systemData.ToggleFixedCurrentDateUsage(false);
 
             A.CallTo(() => systemDataDataAccess.Get())
                 .Returns(systemData);
@@ -69,10 +75,10 @@
         }
 
         [Fact]
-        public async void NotUsingFixedComplianceYearAndQuarter_TimeNowBeforeQuarterWindow_ValidationError_StatingWindowNotYetOpened()
+        public async void NotUsingFixedDate_TimeNowBeforeQuarterWindow_ValidationError_StatingWindowNotYetOpened()
         {
             var systemData = new TestSystemData();
-            systemData.ToggleFixedQuarterAndComplianceYearUsage(false);
+            systemData.ToggleFixedCurrentDateUsage(false);
 
             A.CallTo(() => systemDataDataAccess.Get())
                 .Returns(systemData);
@@ -106,7 +112,7 @@
         public async void NotUsingFixedComplianceYearAndQuarter_TimeAfterQuarterWindow_ValidationError_StatingWindowHasClosed()
         {
             var systemData = new TestSystemData();
-            systemData.ToggleFixedQuarterAndComplianceYearUsage(false);
+            systemData.ToggleFixedCurrentDateUsage(false);
 
             A.CallTo(() => systemDataDataAccess.Get())
                 .Returns(systemData);

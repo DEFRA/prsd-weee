@@ -24,36 +24,17 @@
         {
             var result = new DataReturnVersionBuilderResult();
 
-            var quarterWindow = await quarterWindowFactory.GetQuarterWindow(quarter);
-
+            var currentDate = SystemTime.Now;
             var systemSettings = await systemDataDataAccess.Get();
 
-            if (systemSettings.UseFixedComplianceYearAndQuarter)
+            if (systemSettings.UseFixedCurrentDate)
             {
-                if (systemSettings.FixedComplianceYear != quarter.Year
-                    || systemSettings.FixedQuarter != quarter.Q)
-                {
-                    var systemSetQuarter = new Quarter(systemSettings.FixedComplianceYear, systemSettings.FixedQuarter);
-
-                    var systemSetQuarterWindow =
-                        await quarterWindowFactory.GetQuarterWindow(systemSetQuarter);
-
-                    return Validate(systemSetQuarterWindow.StartDate, quarterWindow, quarter);
-                }
-            }
-            else
-            {
-                return Validate(SystemTime.Now, quarterWindow, quarter);
+                currentDate = systemSettings.FixedCurrentDate;
             }
 
-            return result;
-        }
+            var quarterWindow = await quarterWindowFactory.GetQuarterWindow(quarter);
 
-        private DataReturnVersionBuilderResult Validate(DateTime currentTime, QuarterWindow quarterWindow, Quarter quarter)
-        {
-            var result = new DataReturnVersionBuilderResult();
-
-            if (quarterWindow.IsBeforeWindow(currentTime))
+            if (quarterWindow.IsBeforeWindow(currentDate))
             {
                 var errorMessage = string.Format(
                     "The submission window for {0} {1} has not yet opened.The submission window will open on the {2}, resubmit your file on or after this date.",
@@ -63,7 +44,7 @@
                 return result;
             }
 
-            if (quarterWindow.IsAfterWindow(currentTime))
+            if (quarterWindow.IsAfterWindow(currentDate))
             {
                 var errorMessage = string.Format(
                     "The window for resubmitting data returns for the {0} compliance period has closed. Contact your relevant agency.",
