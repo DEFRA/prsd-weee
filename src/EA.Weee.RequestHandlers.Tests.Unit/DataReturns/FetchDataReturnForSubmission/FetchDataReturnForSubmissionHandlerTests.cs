@@ -42,7 +42,7 @@
                 UploadErrorType.Business,
                 A<string>._);
 
-            IFetchDataReturnForSubmissionDataAccess dataAccess = FetchDummyDataReturn(dataReturnsUploadError);
+            IFetchDataReturnForSubmissionDataAccess dataAccess = FetchDummyDataReturnWithError(dataReturnsUploadError);
 
             FetchDataReturnForSubmissionHandler handler = new FetchDataReturnForSubmissionHandler(
                 A.Dummy<IWeeeAuthorization>(),
@@ -67,12 +67,12 @@
         public async Task HandleAsync_ForDataReturnWithOneErrorWithErrorLevelWarning_ReturnsDtoWithOneWarning()
         {
             // Arrange
-            DataReturnUploadError dataReturnsUploadError = new DataReturnUploadError(
+            DataReturnUploadError dataReturnsUploadWarning = new DataReturnUploadError(
                 ErrorLevel.Warning,
                 UploadErrorType.Business,
                 A<string>._);
 
-            IFetchDataReturnForSubmissionDataAccess dataAccess = FetchDummyDataReturn(dataReturnsUploadError);
+            IFetchDataReturnForSubmissionDataAccess dataAccess = FetchDummyDataReturnWithWarning(dataReturnsUploadWarning);
 
             FetchDataReturnForSubmissionHandler handler = new FetchDataReturnForSubmissionHandler(
                 A.Dummy<IWeeeAuthorization>(),
@@ -88,7 +88,7 @@
             Assert.Equal(1, result.Warnings.Count);
         }
 
-        private static IFetchDataReturnForSubmissionDataAccess FetchDummyDataReturn(DataReturnUploadError dataReturnsUploadError)
+        private static IFetchDataReturnForSubmissionDataAccess FetchDummyDataReturnWithError(DataReturnUploadError dataReturnsUploadError)
         {
             DataReturnUpload dataReturnsUpload = new DataReturnUpload(
                 A.Dummy<Scheme>(),
@@ -100,6 +100,23 @@
 
             IFetchDataReturnForSubmissionDataAccess dataAccess = A.Fake<IFetchDataReturnForSubmissionDataAccess>();
             A.CallTo(() => dataAccess.FetchDataReturnUploadAsync(A<Guid>._)).Returns(dataReturnsUpload);
+            A.CallTo(() => dataAccess.CheckForExistingSubmissionAsync(A<Guid>._, A<int>._, A<int>._)).Returns(false);
+            return dataAccess;
+        }
+
+        private static IFetchDataReturnForSubmissionDataAccess FetchDummyDataReturnWithWarning(DataReturnUploadError dataReturnsUploadError)
+        {
+            DataReturnUpload dataReturnsUpload = new DataReturnUpload(
+                A.Dummy<Scheme>(),
+                A.Dummy<string>(),
+                new List<DataReturnUploadError>() { dataReturnsUploadError },
+                A.Dummy<string>(),
+                2016,
+                1);
+
+            IFetchDataReturnForSubmissionDataAccess dataAccess = A.Fake<IFetchDataReturnForSubmissionDataAccess>();
+            A.CallTo(() => dataAccess.FetchDataReturnUploadAsync(A<Guid>._)).Returns(dataReturnsUpload);
+            A.CallTo(() => dataAccess.CheckForExistingSubmissionAsync(A<Guid>._, A<int>._, A<int>._)).Returns(false);
             return dataAccess;
         }
 

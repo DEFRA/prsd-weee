@@ -7,6 +7,8 @@
 
     public interface IFetchDataReturnForSubmissionDataAccess
     {
-        Task<DataReturnUpload> FetchDataReturnUploadAsync(Guid dataReturnsUploadId);        
+        Task<DataReturnUpload> FetchDataReturnUploadAsync(Guid dataReturnsUploadId);
+
+        Task<bool> CheckForExistingSubmissionAsync(Guid schemeId, int complianceYear, int quarterType);
     }
 }

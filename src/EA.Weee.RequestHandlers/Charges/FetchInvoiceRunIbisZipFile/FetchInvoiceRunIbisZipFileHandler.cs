@@ -46,7 +46,7 @@
             string fileName = string.Format(
                 "WEEE invoice files {0:D5} {1:yyyy-MM-dd}.zip",
                 invoiceRun.IbisFileData.FileId,
-                invoiceRun.CreatedDate);
+                invoiceRun.IssuedDate);
 
             byte[] data = null;
             using (var stream = new System.IO.MemoryStream())
