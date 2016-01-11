@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
+    <Compile Include="Admin\Reports\GetProducersEEEDataCSV.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile.cs" />
     <Compile Include="Charges\FetchInvoiceRuns.cs" />
     <Compile Include="Charges\FetchPendingCharges.cs" />

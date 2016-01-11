@@ -87,6 +87,7 @@
     <Compile Include="Mappings\QuarterWindowTemplateMapping.cs" />
     <Compile Include="Mappings\WeeeCollectedReturnVersionMapping.cs" />
     <Compile Include="Mappings\WeeeDeliveredReturnVersionMapping.cs" />
+    <Compile Include="StoredProcedure\ProducerEEECSVData.cs" />
     <Compile Include="WeeeContext.Metadata.cs" />
     <Compile Include="Extensions\ProducerExtensions.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />
