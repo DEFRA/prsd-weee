@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -76,16 +77,20 @@
             switch (model.SelectedValue)
             {
                 case Reports.ProducerDetails:
-                    return RedirectToAction("ProducerDetails", "Reports");
+                    return RedirectToAction("ProducerDetails");
 
                 case Reports.PCSCharges:
-                    return RedirectToAction("PCSCharges", "Reports");
+                    return RedirectToAction("PCSCharges");
 
                 case Reports.Producerpublicregister:
-                    return RedirectToAction("ProducerPublicRegister", "Reports");
+                    return RedirectToAction("ProducerPublicRegister");
 
                 case Reports.ProducerEEEData:
-                    return RedirectToAction("ProducerEEEData", "Reports");
+                    return RedirectToAction("ProducerEEEData");
+
+                case Reports.SchemeWeeeData:
+                    return RedirectToAction("SchemeWeeeData");
+
                 default:
                     throw new NotSupportedException();
             }
@@ -264,6 +269,84 @@
                 }
 
                 return await DownloadProducerEEEDataCSV(model, client);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SchemeWeeeData()
+        {
+            SetBreadcrumb(Reports.SchemeWeeeData);
+            ViewBag.TriggerDownload = false;
+
+            List<int> years;
+            try
+            {
+                years = await FetchComplianceYearsForDataReturns();
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+                return View();
+            }
+
+            ProducersDataViewModel model = new ProducersDataViewModel();
+            model.ComplianceYears = new SelectList(years);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SchemeWeeeData(ProducersDataViewModel model)
+        {
+            SetBreadcrumb(Reports.SchemeWeeeData);
+
+            List<int> years;
+            try
+            {
+                years = await FetchComplianceYearsForDataReturns();
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+                ViewBag.TriggerDownload = false;
+                return View();
+            }
+
+            model.ComplianceYears = new SelectList(years);
+
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadSchemeWeeeDataCsv(int complianceYear, ObligationType obligationType)
+        {
+            FileInfo file;
+
+            GetSchemeWeeeCsv request = new GetSchemeWeeeCsv(complianceYear, obligationType);
+            using (var client = apiClient())
+            {
+                file = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            return File(file.Data, "text/plain", file.FileName);
+        }
+
+        private async Task<List<int>> FetchComplianceYearsForDataReturns()
+        {
+            GetAllComplianceYears request = new GetAllComplianceYears(ComplianceYearFor.DataReturns);
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), request);
             }
         }
 
