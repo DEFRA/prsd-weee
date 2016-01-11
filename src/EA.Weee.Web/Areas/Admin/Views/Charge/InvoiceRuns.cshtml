@@ -37,7 +37,7 @@
                         <td>@invoiceRun.IssuedDate.ToString("dd MMM yyyy")</td>
                         <td>@invoiceRun.IssuedByUserFullName</td>
                         <td>
-                            @Html.ActionLink("Download", "DownloadSummaryFile", new { id = invoiceRun.InvoiceRunId })
+                            @Html.ActionLink("Download", "DownloadChargeBreakdown", new { id = invoiceRun.InvoiceRunId })
                         </td>
                         @if (ViewBag.AllowDownloadOfInvoiceFiles)
                         {
