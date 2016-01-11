@@ -7,6 +7,7 @@
     using Domain.DataReturns;
     using Domain.Lookup;
     using FakeItEasy;
+    using RequestHandlers.DataReturns.BusinessValidation;
     using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
     using Xml.DataReturns;
@@ -274,39 +275,10 @@
             Assert.Equal(expectedResult, actualResult);
         }
 
-        /// <summary>
-        /// This test ensures that the scheme approval number provided in the XML file matches
-        /// the approval number of the scheme for which the data return version is being built.
-        /// If not, an "Error" level error should be returned with a description that contains
-        /// the scheme approval number that was provided.
-        /// </summary>
-        /// <returns></returns>
-        [Fact]
-        public async Task Build_DifferentSchemeApprovalNumber_ReturnsError()
-        {
-            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
-
-            var schemeReturn = new SchemeReturn()
-            {
-                ApprovalNo = "WEE/ZZ9999ZZ/SCH",
-            };
-
-            DataReturnVersionBuilderResult result = await builder.Create().Build(schemeReturn);
-
-            Assert.NotNull(result);
-            Assert.Null(result.DataReturnVersion);
-            Assert.NotEmpty(result.ErrorData);
-
-            ErrorData firstError = result.ErrorData[0];
-
-            Assert.NotNull(firstError);
-            Assert.Equal(ErrorLevel.Error, firstError.ErrorLevel);
-            Assert.Contains("WEE/ZZ9999ZZ/SCH", firstError.Description);
-        }
-
         private class DataReturnVersionFromXmlBuilderHelper
         {
             public IDataReturnVersionBuilder DataReturnVersionBuilder;
+            public readonly IXmlBusinessValidator XmlBusinessValidator;
 
             public DataReturnVersionFromXmlBuilderHelper(string schemeApprovalNumber)
             {
@@ -322,11 +294,13 @@
                     new Guid("C5D400BE-0CE7-43D7-BD7B-B7936967E500"));
 
                 A.CallTo(() => DataReturnVersionBuilder.Scheme).Returns(scheme);
+
+                XmlBusinessValidator = A.Fake<IXmlBusinessValidator>();
             }
 
             public DataReturnVersionFromXmlBuilder Create()
             {
-                return new DataReturnVersionFromXmlBuilder(DataReturnVersionBuilder);
+                return new DataReturnVersionFromXmlBuilder(DataReturnVersionBuilder, XmlBusinessValidator);
             }
         }
     }
