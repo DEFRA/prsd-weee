@@ -10,6 +10,8 @@
             ToTable("AspNetUsers", "Identity")
                 .Property(p => p.Id)
                 .HasColumnName("Id");
+
+            Ignore(u => u.FullName);
         }
     }
 }

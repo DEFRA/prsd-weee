@@ -12,5 +12,6 @@
         public const int Postcode = 10;
         public const int Telephone = 20;
         public const int Password = 100;
+        public const int Year = 4;
     }
 }

@@ -29,6 +29,9 @@
 
                     case HomeViewModel.ManageCache:
                         return RedirectToAction("Index", "ManageCache");
+                    
+                    case HomeViewModel.ManagePcsReturnsSubmissionWindow:
+                        return RedirectToAction("Settings", "ManagePcsReturnsSubmissionWindow");
 
                     default:
                         throw new NotSupportedException();
