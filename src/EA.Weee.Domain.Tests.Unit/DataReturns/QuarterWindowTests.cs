@@ -13,7 +13,7 @@
             var startDate = new DateTime(2016, 04, 01, 0, 0, 0);
             var currentDate = new DateTime(2016, 03, 31, 23, 59, 59);
 
-            var quarterWindow = new QuarterWindow(A<Quarter>._, startDate, A<DateTime>._);
+            var quarterWindow = new QuarterWindow(startDate, A<DateTime>._);
 
             var result = quarterWindow.IsBeforeWindow(currentDate);
 
@@ -26,7 +26,7 @@
             var startDate = new DateTime(2016, 04, 01, 0, 0, 0);
             var currentDate = new DateTime(2016, 04, 01, 0, 0, 0);
 
-            var quarterWindow = new QuarterWindow(A<Quarter>._, startDate, A<DateTime>._);
+            var quarterWindow = new QuarterWindow(startDate, A<DateTime>._);
 
             var result = quarterWindow.IsBeforeWindow(currentDate);
 
@@ -39,7 +39,7 @@
             var endDate = new DateTime(2016, 07, 01, 0, 0, 0);
             var currentDate = new DateTime(2016, 07, 01, 23, 59, 59);
 
-            var quarterWindow = new QuarterWindow(A<Quarter>._, A<DateTime>._, endDate);
+            var quarterWindow = new QuarterWindow(A<DateTime>._, endDate);
 
             var result = quarterWindow.IsAfterWindow(currentDate);
 
@@ -52,7 +52,7 @@
             var endDate = new DateTime(2016, 07, 01, 0, 0, 0);
             var currentDate = new DateTime(2016, 07, 02, 0, 0, 0);
 
-            var quarterWindow = new QuarterWindow(A<Quarter>._, A<DateTime>._, endDate);
+            var quarterWindow = new QuarterWindow(A<DateTime>._, endDate);
 
             var result = quarterWindow.IsAfterWindow(currentDate);
 
