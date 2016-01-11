@@ -78,6 +78,14 @@
             return value;
         }
 
+        public IEnumerable<string> ColumnTitles
+        {
+            get
+            {
+                return columns.Select(c => c.Title);
+            }
+        }
+
         private class CsvColumn
         {
             public string Title { get; private set; }

@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
+    using Core.Admin;
     using Core.Charges;
     using Core.Shared;
     using FakeItEasy;
@@ -592,6 +593,35 @@
             Assert.NotNull(viewModel);
             Assert.Equal(results, viewModel);
             Assert.Equal(false, viewResult.ViewBag.AllowDownloadOfInvoiceFiles);
+        }
+
+        [Fact]
+        public async Task GetDownloadChargeBreakdown_CallsApiAndReturnsFileResult()
+        {
+            // Arrange
+            Guid invoiceRunId = Guid.NewGuid();
+
+            var csvFileData = new CSVFileData { FileName = "Test file.csv", FileContent = "CSV content" };
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchInvoiceRunCsv>._))
+                .WhenArgumentsMatch(a => a.Get<FetchInvoiceRunCsv>("request").InvoiceRunId == invoiceRunId)
+                .Returns(csvFileData);
+
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => weeeClient);
+
+            // Act
+            ActionResult result = await controller.DownloadChargeBreakdown(invoiceRunId);
+
+            // Assert
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+
+            Assert.Equal("Test file.csv", fileResult.FileDownloadName);
+            Assert.Equal("text/csv", fileResult.ContentType);
         }
     }
 }
