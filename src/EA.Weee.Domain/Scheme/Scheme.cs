@@ -22,6 +22,7 @@
             Guard.ArgumentNotNull(() => organisation, organisation);
 
             Organisation = organisation;
+            OrganisationId = organisation.Id;
             SchemeStatus = SchemeStatus.Pending;
             ApprovalNumber = string.Empty;
         }
@@ -81,6 +82,7 @@
             IbisCustomerReference = ibisCustomerReference;
             ObligationType = obligationType;
             CompetentAuthority = competentAuthority;
+            CompetentAuthorityId = competentAuthority.Id;
         }
 
         public void SetStatus(SchemeStatus status)
