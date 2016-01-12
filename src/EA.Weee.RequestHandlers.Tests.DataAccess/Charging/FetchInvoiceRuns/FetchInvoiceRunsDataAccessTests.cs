@@ -77,11 +77,11 @@
 
         /// <summary>
         /// This test ensures that the FetchInvoiceRuns data access method returns invoice runs
-        /// in order of their issued date ascending.
+        /// in order of their issued date descending.
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task FetchInvoiceRunsAsync_Always_ReturnsResultsOrderedByIssuedDateAscending()
+        public async Task FetchInvoiceRunsAsync_Always_ReturnsResultsOrderedByIssuedDateDescending()
         {
             using (DatabaseWrapper wrapper = new DatabaseWrapper())
             {
@@ -134,9 +134,9 @@
                 Assert.NotNull(results);
                 Assert.Equal(3, results.Count);
                 Assert.Collection(results,
-                    r1 => Assert.Equal(new DateTime(2015, 1, 1), r1.IssuedDate),
+                    r1 => Assert.Equal(new DateTime(2015, 1, 3), r1.IssuedDate),
                     r2 => Assert.Equal(new DateTime(2015, 1, 2), r2.IssuedDate),
-                    r3 => Assert.Equal(new DateTime(2015, 1, 3), r3.IssuedDate));
+                    r3 => Assert.Equal(new DateTime(2015, 1, 1), r3.IssuedDate));
             }
         }
 
