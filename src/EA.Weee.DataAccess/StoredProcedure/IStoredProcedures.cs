@@ -11,7 +11,7 @@
         Task<List<MembersDetailsCSVData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear);
         Task<List<MembersDetailsCSVData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, Guid? schemeId, Guid? competentAuthorityId);
 
-        Task<int> SpgNext1B1STransactionNumber();
+        Task<int> SpgNextIbisTransactionNumber();
 
         //PCS charges
         Task<List<PCSChargesCSVData>> SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(int complianceYear);
