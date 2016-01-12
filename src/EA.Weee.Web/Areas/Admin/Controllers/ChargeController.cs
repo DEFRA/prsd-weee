@@ -208,9 +208,17 @@
         }
 
         [HttpGet]
-        public Task<ActionResult> DownloadIssuedChargesCsv(CompetentAuthority authority, int complianceYear, string schemeName)
+        public async Task<ActionResult> DownloadIssuedChargesCsv(CompetentAuthority authority, int complianceYear, string schemeName)
         {
-            throw new NotImplementedException();
+            FileInfo file;
+
+            using (IWeeeClient client = weeeClient())
+            {
+                FetchIssuedChargesCsv request = new FetchIssuedChargesCsv(authority, complianceYear, schemeName);
+                file = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            return File(file.Data, "text/plain", file.FileName);
         }
 
         private async Task<IEnumerable<int>> GetComplianceYearsWithInvoices(CompetentAuthority authority)
