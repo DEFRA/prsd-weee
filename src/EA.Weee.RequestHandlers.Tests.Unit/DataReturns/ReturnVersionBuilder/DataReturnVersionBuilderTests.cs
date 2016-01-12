@@ -9,6 +9,7 @@
     using Domain.Producer;
     using FakeItEasy;
     using RequestHandlers.DataReturns.BusinessValidation;
+    using RequestHandlers.DataReturns.BusinessValidation.Rules;
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
     using Xunit;
     using ObligationType = Domain.ObligationType;
@@ -271,6 +272,8 @@
 
             public readonly IDataReturnVersionBuilderDataAccess DataAccess;
 
+            public readonly ISubmissionWindowClosed SubmissionWindowClosed;
+
             private readonly Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate;
 
             public readonly IEeeValidator EeeValidator;
@@ -284,6 +287,7 @@
                 Quarter = A.Dummy<Quarter>();
                 EeeValidator = A.Fake<IEeeValidator>();
                 DataAccess = A.Fake<IDataReturnVersionBuilderDataAccess>();
+                SubmissionWindowClosed = A.Fake<ISubmissionWindowClosed>();
 
                 dataAccessDelegate = (x, y) => DataAccess;
                 eeeValidatorDelegate = (s, q, z) => EeeValidator;
@@ -291,12 +295,12 @@
 
             public DataReturnVersionBuilder Create()
             {
-                return new DataReturnVersionBuilder(Scheme, Quarter, eeeValidatorDelegate, dataAccessDelegate);
+                return new DataReturnVersionBuilder(Scheme, Quarter, eeeValidatorDelegate, dataAccessDelegate, SubmissionWindowClosed);
             }
 
             public DataReturnVersionBuilder CreateWithErrorData(List<ErrorData> errorData)
             {
-                return new DataReturnVersionBuilderExtension(Scheme, Quarter, eeeValidatorDelegate, dataAccessDelegate, errorData);
+                return new DataReturnVersionBuilderExtension(Scheme, Quarter, eeeValidatorDelegate, dataAccessDelegate, SubmissionWindowClosed, errorData);
             }
         }
 
@@ -304,8 +308,8 @@
         {
             public DataReturnVersionBuilderExtension(Domain.Scheme.Scheme scheme, Quarter quarter,
             Func<Domain.Scheme.Scheme, Quarter, Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess>, IEeeValidator> eeeValidatorDelegate,
-            Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate, List<ErrorData> errorData)
-                : base(scheme, quarter, eeeValidatorDelegate, dataAccessDelegate)
+            Func<Domain.Scheme.Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate, ISubmissionWindowClosed submissionWindowClosed, List<ErrorData> errorData)
+                : base(scheme, quarter, eeeValidatorDelegate, dataAccessDelegate, submissionWindowClosed)
             {
                 Errors = errorData;
             }
