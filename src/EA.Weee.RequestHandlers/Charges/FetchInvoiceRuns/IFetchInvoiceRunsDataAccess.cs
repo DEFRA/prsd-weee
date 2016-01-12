@@ -12,7 +12,7 @@
     {
         /// <summary>
         /// Fetches all invoice runs for the specified authority.
-        /// Results are ordered by issued date ascending.
+        /// Results are ordered by issued date descending.
         /// </summary>
         /// <param name="authority"></param>
         /// <returns></returns>
