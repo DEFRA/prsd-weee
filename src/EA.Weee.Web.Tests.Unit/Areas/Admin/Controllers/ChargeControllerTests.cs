@@ -651,5 +651,332 @@
             Assert.Equal("Test file.csv", fileResult.FileDownloadName);
             Assert.Equal("text/csv", fileResult.ContentType);
         }
+
+        /// <summary>
+        /// This test ensures that the GET "IssuedCharges" action will return the "IssuedCharges" view.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetIssuedCharges_Always_ReturnsIssuedChargesView()
+        {
+            // Arrange
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => A.Dummy<IWeeeClient>());
+
+            // Act
+            ActionResult result = await controller.IssuedCharges(A.Dummy<CompetentAuthority>());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "IssuedCharges");
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "IssuedCharges" action will call the API
+        /// to fetch a list of compliance years and scheme names which will be populated
+        /// into the view model.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetIssuedCharges_Always_CallsApiAndPopulatesViewModel()
+        {
+            // Arrange
+            CompetentAuthority authority = A.Dummy<CompetentAuthority>();
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            List<int> complianceYears = A.Dummy<List<int>>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchComplianceYearsWithInvoices>._))
+                .WhenArgumentsMatch(a => a.Get<FetchComplianceYearsWithInvoices>("request").Authority == authority)
+                .Returns(complianceYears);
+
+            List<string> schemeNames = A.Dummy<List<string>>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchSchemesWithInvoices>._))
+                .WhenArgumentsMatch(a => a.Get<FetchSchemesWithInvoices>("request").Authority == authority)
+                .Returns(schemeNames);
+
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => weeeClient);
+
+            // Act
+            ActionResult result = await controller.IssuedCharges(authority);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            IssuedChargesViewModel viewModel = viewResult.Model as IssuedChargesViewModel;
+            Assert.NotNull(viewModel);
+
+            Assert.Equal(complianceYears, viewModel.ComplianceYears);
+            Assert.Equal(schemeNames, viewModel.SchemeNames);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "IssuedCharges" action will populate
+        /// the "Authority" property of the ViewBag with the specified authority.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetIssuedCharges_Always_PopulatesViewBagWithAuthority()
+        {
+            // Arrange
+            CompetentAuthority authority = A.Dummy<CompetentAuthority>();
+
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => A.Dummy<IWeeeClient>());
+
+            // Act
+            ActionResult result = await controller.IssuedCharges(authority);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.Equal(authority, viewResult.ViewBag.Authority);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "IssuedCharges" action will populate
+        /// the "TriggerDownload" property of the ViewBag with false.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetIssuedCharges_Always_PopulatesViewBagTriggerDownloadWithFalse()
+        {
+            // Arrange
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => A.Dummy<IWeeeClient>());
+
+            // Act
+            ActionResult result = await controller.IssuedCharges(A.Dummy<CompetentAuthority>());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "IssuedCharges" action will return the "IssuedCharges" view.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostIssuedCharges_Always_ReturnsIssuedChargesView()
+        {
+            // Arrange
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => A.Dummy<IWeeeClient>());
+
+            // Act
+            ActionResult result = await controller.IssuedCharges(
+                A.Dummy<CompetentAuthority>(),
+                A.Dummy<IssuedChargesViewModel>());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "IssuedCharges");
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "IssuedCharges" action will call the API
+        /// to fetch a list of compliance years and scheme names which will be populated
+        /// into the view model.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostIssuedCharges_Always_CallsApiAndPopulatesViewModel()
+        {
+            // Arrange
+            CompetentAuthority authority = A.Dummy<CompetentAuthority>();
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            List<int> complianceYears = A.Dummy<List<int>>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchComplianceYearsWithInvoices>._))
+                .WhenArgumentsMatch(a => a.Get<FetchComplianceYearsWithInvoices>("request").Authority == authority)
+                .Returns(complianceYears);
+
+            List<string> schemeNames = A.Dummy<List<string>>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchSchemesWithInvoices>._))
+                .WhenArgumentsMatch(a => a.Get<FetchSchemesWithInvoices>("request").Authority == authority)
+                .Returns(schemeNames);
+
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => weeeClient);
+
+            // Act
+            ActionResult result = await controller.IssuedCharges(authority, A.Dummy<IssuedChargesViewModel>());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            IssuedChargesViewModel viewModel = viewResult.Model as IssuedChargesViewModel;
+            Assert.NotNull(viewModel);
+
+            Assert.Equal(complianceYears, viewModel.ComplianceYears);
+            Assert.Equal(schemeNames, viewModel.SchemeNames);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "IssuedCharges" action will populate
+        /// the "Authority" property of the ViewBag with the specified authority.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostIssuedCharges_Always_PopulatesViewBagWithAuthority()
+        {
+            // Arrange
+            CompetentAuthority authority = A.Dummy<CompetentAuthority>();
+
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => A.Dummy<IWeeeClient>());
+
+            // Act
+            ActionResult result = await controller.IssuedCharges(authority, A.Dummy<IssuedChargesViewModel>());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.Equal(authority, viewResult.ViewBag.Authority);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "IssuedCharges" action will populate
+        /// the "TriggerDownload" property of the ViewBag with false if there are
+        /// validation errors.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostIssuedCharges_WithValidationErrors_PopulatesViewBagTriggerDownloadWithFalse()
+        {
+            // Arrange
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => A.Dummy<IWeeeClient>());
+
+            controller.ModelState.AddModelError("key", "error");
+
+            // Act
+            ActionResult result = await controller.IssuedCharges(A.Dummy<CompetentAuthority>(), A.Dummy<IssuedChargesViewModel>());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "IssuedCharges" action will populate
+        /// the "TriggerDownload" property of the ViewBag with true if there are
+        /// no validation errors.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostIssuedCharges_WithNoValidationErrors_PopulatesViewBagTriggerDownloadWithTrue()
+        {
+            // Arrange
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => A.Dummy<IWeeeClient>());
+
+            // Act
+            ActionResult result = await controller.IssuedCharges(A.Dummy<CompetentAuthority>(), A.Dummy<IssuedChargesViewModel>());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "DownloadIssuedChargesCsv" action will always return
+        /// a file result with a file name provided by calling the API.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetDownloadIssuedChargesCsv_Always_CallsApiAndReturnsFileResultWithCorrectFileName()
+        {
+            // Arrange
+            CompetentAuthority authority = A.Dummy<CompetentAuthority>();
+            int complianceYear = A.Dummy<int>();
+            string schemeName = A.Dummy<string>();
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            FileInfo fileInfo = new FileInfo("filename", new byte[] { 1, 2, 3 });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchIssuedChargesCsv>._))
+                .WhenArgumentsMatch(a => a.Get<FetchIssuedChargesCsv>("request").Authority == authority
+                    && a.Get<FetchIssuedChargesCsv>("request").ComplianceYear == complianceYear
+                    && a.Get<FetchIssuedChargesCsv>("request").SchemeName == schemeName)
+                .Returns(fileInfo);
+
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => weeeClient);
+
+            // Act
+            ActionResult result = await controller.DownloadIssuedChargesCsv(authority, complianceYear, schemeName);
+
+            // Assert
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+
+            Assert.Equal("filename", fileResult.FileDownloadName);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "DownloadIssuedChargesCsv" action will always
+        /// return a file with a content type of "text/plain".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetDownloadIssuedChargesCsv_Always_ReturnsFileResultWithContentTypeOfTextPlain()
+        {
+            // Arrange
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => A.Dummy<IWeeeClient>());
+
+            // Act
+            ActionResult result = await controller.DownloadIssuedChargesCsv(
+                A.Dummy<CompetentAuthority>(),
+                A.Dummy<int>(),
+                A.Dummy<string>());
+
+            // Assert
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+
+            Assert.Equal("text/plain", fileResult.ContentType);
+        }
     }
 }
