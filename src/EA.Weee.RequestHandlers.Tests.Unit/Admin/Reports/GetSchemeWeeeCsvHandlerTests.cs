@@ -74,7 +74,7 @@
         /// <summary>
         /// This test ensures that the CSV writer created for a B2C report contains
         /// the columns "Scheme Name", "Scheme approval No", "Quarter", "Category",
-        /// "DCF", "R43", "R52" and "Total AATF/AE", followed by a column for each
+        /// "DCF", "Distributors", "Final holders" and "Total AATF/AE", followed by a column for each
         /// AATF and a column for each AE.
         /// </summary>
         [Fact]
@@ -106,13 +106,13 @@
 
             // Assert
             Assert.Collection(result.ColumnTitles,
-                title => Assert.Equal("Scheme Name", title),
+                title => Assert.Equal("Scheme name", title),
                 title => Assert.Equal("Scheme approval No", title),
                 title => Assert.Equal("Quarter", title),
                 title => Assert.Equal("Category", title),
                 title => Assert.Equal("DCF", title),
-                title => Assert.Equal("R43", title),
-                title => Assert.Equal("R52", title),
+                title => Assert.Equal("Distributors", title),
+                title => Assert.Equal("Final holders", title),
                 title => Assert.Equal("Total AATF/AE", title),
                 title => Assert.Equal("AATF1", title),
                 title => Assert.Equal("AATF2", title),
@@ -155,7 +155,7 @@
 
             // Assert
             Assert.Collection(result.ColumnTitles,
-                title => Assert.Equal("Scheme Name", title),
+                title => Assert.Equal("Scheme name", title),
                 title => Assert.Equal("Scheme approval No", title),
                 title => Assert.Equal("Quarter", title),
                 title => Assert.Equal("Category", title),
@@ -279,11 +279,11 @@
         }
 
         /// <summary>
-        /// This test ensures that the CSV result for the R43 will be blank rather than 0
+        /// This test ensures that the CSV result for the distributors will be blank rather than 0
         /// if no collected amounts are returned in the data.
         /// </summary>
         [Fact]
-        public void CreateResults_WithNoCollectedAmounts_PopulatesR43AsNull()
+        public void CreateResults_WithNoCollectedAmounts_PopulatesDistributorsAsNull()
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
@@ -302,15 +302,15 @@
 
             // Assert
             GetSchemeWeeeCsvHandler.CsvResult result1 = results.First();
-            Assert.Equal(null, result1.R43);
+            Assert.Equal(null, result1.Distributors);
         }
 
         /// <summary>
-        /// This test ensures that the CSV result for the R43 will be populated
+        /// This test ensures that the CSV result for the distributors will be populated
         /// if a collected amount with source type 1 is returned in the data.
         /// </summary>
         [Fact]
-        public void CreateResults_WithCollectedAmountWithSourceType1_PopulatesR43WithValue()
+        public void CreateResults_WithCollectedAmountWithSourceType1_PopulatesDistributorsWithValue()
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
@@ -342,15 +342,15 @@
 
             // Assert
             GetSchemeWeeeCsvHandler.CsvResult result1 = results.First();
-            Assert.Equal(123.456m, result1.R43);
+            Assert.Equal(123.456m, result1.Distributors);
         }
 
         /// <summary>
-        /// This test ensures that the CSV result for the R52 will be blank rather than 0
+        /// This test ensures that the CSV result for the final holders will be blank rather than 0
         /// if no collected amounts are returned in the data.
         /// </summary>
         [Fact]
-        public void CreateResults_WithNoCollectedAmounts_PopulatesR52AsNull()
+        public void CreateResults_WithNoCollectedAmounts_PopulatesFinalHoldersAsNull()
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
@@ -369,15 +369,15 @@
 
             // Assert
             GetSchemeWeeeCsvHandler.CsvResult result1 = results.First();
-            Assert.Equal(null, result1.R52);
+            Assert.Equal(null, result1.FinalHolders);
         }
 
         /// <summary>
-        /// This test ensures that the CSV result for the R52 will be populated
+        /// This test ensures that the CSV result for the final holders will be populated
         /// if a collected amount with source type 2 is returned in the data.
         /// </summary>
         [Fact]
-        public void CreateResults_WithCollectedAmountWithSourceType2_PopulatesR52WithValue()
+        public void CreateResults_WithCollectedAmountWithSourceType2_PopulatesFinalHoldersWithValue()
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
@@ -409,7 +409,7 @@
 
             // Assert
             GetSchemeWeeeCsvHandler.CsvResult result1 = results.First();
-            Assert.Equal(123.456m, result1.R52);
+            Assert.Equal(123.456m, result1.FinalHolders);
         }
 
         /// <summary>
