@@ -180,6 +180,7 @@
     <Content Include="scripts\Update\Sprint21\20160108-2045-FixMissingForeignKeyNames.sql" />
     <Content Include="scripts\Update\Sprint21\20160111-1800-AlterSystemDataFixedDateColumns.sql" />
     <Content Include="scripts\Update\Sprint21\20160112-1207-SetInitialIbisFileId.sql" />
+    <Content Include="scripts\Update\Sprint21\20160112-1608-Rename1B1STransactionNumberSequenceTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
