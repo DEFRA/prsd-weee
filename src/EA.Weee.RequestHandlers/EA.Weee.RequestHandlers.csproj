@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>15bc679f</NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -95,7 +96,9 @@
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandler.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
+    <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandler.cs" />
     <Compile Include="Charges\CommonDataAccess.cs" />
+    <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile\FetchInvoiceRunIbisZipFileHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRuns\FetchInvoiceRunsDataAccess.cs" />
     <Compile Include="Charges\FetchInvoiceRuns\FetchInvoiceRunsHandler.cs" />
@@ -116,6 +119,10 @@
     <Compile Include="Charges\IssuePendingCharges\ITransactionReferenceGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\TransactionReferenceGenerator.cs" />
     <Compile Include="DataReturns\BusinessValidation\EeeValidator.cs" />
+    <Compile Include="DataReturns\BusinessValidation\Rules\ISchemeApprovalNumberMismatch.cs" />
+    <Compile Include="DataReturns\BusinessValidation\Rules\ISubmissionWindowClosed.cs" />
+    <Compile Include="DataReturns\BusinessValidation\Rules\SchemeApprovalNumberMismatch.cs" />
+    <Compile Include="DataReturns\BusinessValidation\Rules\SubmissionWindowClosed.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderResult.cs" />
     <Compile Include="DataReturns\BusinessValidation\IEeeValidator.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\CreateTestXmlFileHandler.cs" />
@@ -158,8 +165,8 @@
     <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
     <Compile Include="Factories\IQuarterWindowFactory.cs" />
     <Compile Include="Factories\QuarterWindowFactory.cs" />
-    <Compile Include="Factories\QuarterFactory.cs" />
-    <Compile Include="Factories\IQuarterFactory.cs" />
+    <Compile Include="Factories\DateFactory.cs" />
+    <Compile Include="Factories\IDateFactory.cs" />
     <Compile Include="Shared\DomainUser\DomainUserContext.cs" />
     <Compile Include="Shared\DomainUser\IDomainUserContext.cs" />
     <Compile Include="Shared\Extensions.cs" />
@@ -275,6 +282,7 @@
     <Compile Include="Security\WeeeAuthorization.cs" />
     <Compile Include="Shared\GetCountriesHandler.cs" />
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
+    <Compile Include="Test\GetPcsSubmissionWindowSettingsHandler.cs" />
     <Compile Include="Test\UpdatePcsSubmissionWindowSettingsHandler.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsersDataAccess.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\IGetManageableOrganisationUsersDataAccess.cs" />

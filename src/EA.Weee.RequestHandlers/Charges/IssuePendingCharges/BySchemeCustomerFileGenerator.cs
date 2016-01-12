@@ -40,7 +40,7 @@
                 catch (Exception ex)
                 {
                     string errorMessage = string.Format(
-                        "An error occured creating an 1B1S address to represent the scheme with ID \"{0}\". " +
+                        "An error occurred creating an 1B1S address to represent the scheme with ID \"{0}\". " +
                         "See the inner exception for more details.",
                         scheme.Id);
                     throw new Exception(errorMessage, ex);
@@ -58,7 +58,7 @@
                 catch (Exception ex)
                 {
                     string errorMessage = string.Format(
-                        "An error occured creating an 1B1S customer to represent the scheme with ID \"{0}\". " +
+                        "An error occurred creating an 1B1S customer to represent the scheme with ID \"{0}\". " +
                         "See the inner exception for more details.",
                         scheme.Id);
                     throw new Exception(errorMessage, ex);

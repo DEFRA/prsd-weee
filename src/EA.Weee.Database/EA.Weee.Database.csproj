@@ -48,6 +48,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="scripts\Update\Sprint21\20160107-1430-AddFixedComplianceYearAndSetQuarterToSystemDataTable.sql" />
     <Content Include="scripts\Everytime\0007-InsertQuarterWindowTemplates.sql" />
+    <Content Include="scripts\Update\Sprint21\20150107-2227-CreateSpgSchemeWeeeCsv.sql" />
     <Content Include="scripts\Update\Sprint21\20160106-1618-CreateQuarterWindowTemplateTable.sql" />
     <Content Include="scripts\Update\Sprint19\20151221-1230-RefactorDataReturnsJunctionTables.sql" />
     <Content Include="scripts\Update\Sprint19\20151218-1700-ChangeWeeeCategory.sql" />
@@ -164,6 +165,7 @@
     <Content Include="scripts\Update\Sprint20\20151228-1818-AddInitialIbisFileIdToSysemDataTable.sql" />
     <Content Include="scripts\Update\Sprint20\20151229-2019-MoveIbisFileDataIntoSeparateTable.sql" />
     <Content Include="scripts\Update\Sprint20\20151229-2151-Added1B1STransactionSequence.sql" />
+    <Content Include="scripts\Update\Sprint21\20160106-0930-UpdateTonnagePrecision.sql" />
     <Content Include="scripts\Update\Sprint20\20151230-1638-AddCreatedDateToInvoiceRun.sql" />
     <Content Include="scripts\Update\Sprint20\20160104-1605-AddSubmittedColumnsToMemberUpload.sql" />
     <Content Include="scripts\Update\Sprint20\20160104-1731-UpdateGetProducerCSVStoredProcedureWithSubmittedDate.sql" />
@@ -172,6 +174,11 @@
     <Content Include="scripts\Update\Sprint20\20160104-1740-UpdateProducerAmendmentsCSVStoredProducerWithSubmittedDate.sql" />
     <Content Include="scripts\Update\Sprint20\20160105-1334-ModifyUniqueKeyConstraintforRegisteredProducers.sql" />
     <Content Include="scripts\Update\Sprint21\20160107-1545-AddIssuedByToInvoiceRun.sql" />
+    <Content Include="scripts\Update\Sprint21\20160107-1600-AddInvoicedColumnToProducerSubmission.sql" />
+    <Content Include="scripts\Update\Sprint21\20160108-1300-AddSpgInvoiceRunChargeBreakdown.sql" />
+    <Content Include="scripts\Update\Sprint21\20160108-2045-FixMissingForeignKeyNames.sql" />
+    <Content Include="scripts\Update\Sprint21\20160111-1800-AlterSystemDataFixedDateColumns.sql" />
+    <Content Include="scripts\Update\Sprint21\20160112-1207-SetInitialIbisFileId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

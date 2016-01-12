@@ -10,12 +10,12 @@
 
     public class UpdatePcsSubmissionWindowSettingsHandler : IRequestHandler<UpdatePcsSubmissionWindowSettings, bool>
     {
-        private readonly IQuarterFactory quarterFactory;
+        private readonly IDateFactory dateFactory;
         private readonly IConfigurationManagerWrapper configurationManagerWrapper;
 
-        public UpdatePcsSubmissionWindowSettingsHandler(IQuarterFactory quarterFactory, IConfigurationManagerWrapper configurationManagerWrapper)
+        public UpdatePcsSubmissionWindowSettingsHandler(IDateFactory dateFactory, IConfigurationManagerWrapper configurationManagerWrapper)
         {
-            this.quarterFactory = quarterFactory;
+            this.dateFactory = dateFactory;
             this.configurationManagerWrapper = configurationManagerWrapper;
         }
 
@@ -23,22 +23,20 @@
         {
             if (configurationManagerWrapper.IsLiveEnvironment)
             {
-                throw new InvalidOperationException("The PCS submission window cannot be fixed");
+                throw new InvalidOperationException("The current date cannot be fixed in a live environment");
             }
 
-            if (message.FixCurrentQuarterAndComplianceYear &&
-                     (!message.CurrentComplianceYear.HasValue || !message.SelectedQuarter.HasValue))
+            if (message.FixCurrentDate)
             {
-                throw new InvalidOperationException("A quarter or compliance year cannot be fixed with null values");
+                if (!message.CurrentDate.HasValue)
+                {
+                    throw new InvalidOperationException("A date cannot be fixed with a null value");
+                }
+
+                await dateFactory.SetFixedDate(message.CurrentDate.Value);
             }
 
-            if (message.FixCurrentQuarterAndComplianceYear)
-            {
-                await quarterFactory.SetFixedQuarter(new Quarter(message.CurrentComplianceYear.Value,
-                    (QuarterType)message.SelectedQuarter.Value));
-            }
-
-            await quarterFactory.ToggleFixedQuarterUseage(message.FixCurrentQuarterAndComplianceYear);
+            await dateFactory.ToggleFixedDateUsage(message.FixCurrentDate);
 
             return true;
         }
