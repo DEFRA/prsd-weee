@@ -64,6 +64,25 @@
         }
 
         /// <summary>
+        /// Returns all member uploads for the specified authority which have been  assigned to an invoice run.
+        /// Results will be ordered by scheme name ascending and then compliance year descending.
+        /// The scheme and UK competent authority domain objects will be pre-loaded with each member upload returned.
+        /// </summary>
+        /// <param name="authority"></param>
+        /// <returns></returns>
+        public async Task<IReadOnlyList<MemberUpload>> FetchInvoicedMemberUploadsAsync(UKCompetentAuthority authority)
+        {
+            return await Context.MemberUploads
+                .Include(mu => mu.Scheme)
+                .Include(mu => mu.Scheme.CompetentAuthority)
+                .Where(mu => mu.InvoiceRun != null)
+                .Where(mu => mu.Scheme.CompetentAuthority.Id == authority.Id)
+                .OrderBy(mu => mu.Scheme.SchemeName)
+                .ThenByDescending(mu => mu.ComplianceYear)
+                .ToListAsync();
+        }
+
+        /// <summary>
         /// Returns th invoice run with the specified ID.
         /// The 1B1S file data domain object will be pre-loaded where it is available.
         /// </summary>

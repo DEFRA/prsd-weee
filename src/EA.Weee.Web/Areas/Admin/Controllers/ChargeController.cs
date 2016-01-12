@@ -213,14 +213,22 @@
             throw new NotImplementedException();
         }
 
-        private Task<IEnumerable<int>> GetComplianceYearsWithInvoices(CompetentAuthority authority)
+        private async Task<IEnumerable<int>> GetComplianceYearsWithInvoices(CompetentAuthority authority)
         {
-            throw new NotImplementedException();
+            FetchComplianceYearsWithInvoices request = new FetchComplianceYearsWithInvoices(authority);
+            using (IWeeeClient client = weeeClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), request);
+            }
         }
 
-        private Task<IEnumerable<string>> GetSchemesWithInvoices(CompetentAuthority authority)
+        private async Task<IEnumerable<string>> GetSchemesWithInvoices(CompetentAuthority authority)
         {
-            throw new NotImplementedException()
+            FetchSchemesWithInvoices request = new FetchSchemesWithInvoices(authority);
+            using (IWeeeClient client = weeeClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(), request);
+            }
         }
     }
 }
