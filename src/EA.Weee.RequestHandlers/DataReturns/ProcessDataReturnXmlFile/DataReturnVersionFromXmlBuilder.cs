@@ -1,7 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
+    using BusinessValidation;
+    using BusinessValidation.Rules;
     using Core.Shared;
     using Domain.DataReturns;
     using Prsd.Core;
@@ -17,26 +20,37 @@
     public class DataReturnVersionFromXmlBuilder : IDataReturnVersionFromXmlBuilder
     {
         private readonly IDataReturnVersionBuilder dataReturnVersionBuilder;
+        private readonly ISchemeApprovalNumberMismatch schemeApprovalNumberMismatch;
 
         public DataReturnVersionFromXmlBuilder(
-            IDataReturnVersionBuilder dataReturnVersionBuilder)
+            IDataReturnVersionBuilder dataReturnVersionBuilder,
+            ISchemeApprovalNumberMismatch schemeApprovalNumberMismatch)
         {
             Guard.ArgumentNotNull(() => dataReturnVersionBuilder, dataReturnVersionBuilder);
             this.dataReturnVersionBuilder = dataReturnVersionBuilder;
+            this.schemeApprovalNumberMismatch = schemeApprovalNumberMismatch;
         }
 
         public async Task<DataReturnVersionBuilderResult> Build(SchemeReturn schemeReturn)
         {
-            string errorMessage;
-            if (!CheckXmlBusinessValidation(schemeReturn, out errorMessage))
-            {
-                ErrorData error = new ErrorData(errorMessage, ErrorLevel.Error);
+            // PreValidate (any validation before business validation)
+            var preValidationResult = await dataReturnVersionBuilder.PreValidate();
 
-                DataReturnVersionBuilderResult result = new DataReturnVersionBuilderResult();
-                result.ErrorData.Add(error);
-                return result;
+            if (preValidationResult.ErrorData.Any())
+            {
+                return preValidationResult;
             }
 
+            // Then process XML-specific validation
+            var schemeApprovalNumberMismatchResult = schemeApprovalNumberMismatch.Validate(schemeReturn.ApprovalNo,
+                dataReturnVersionBuilder.Scheme);
+
+            if (schemeApprovalNumberMismatchResult.ErrorData.Any())
+            {
+                return schemeApprovalNumberMismatchResult;
+            }
+
+            // Then build the Data Return Version
             if (schemeReturn.ProducerList != null)
             {
                 foreach (var producer in schemeReturn.ProducerList)
@@ -106,27 +120,6 @@
             }
 
             return dataReturnVersionBuilder.Build();
-        }
-
-        /// <summary>
-        /// Checks business validation rules that only apply to data provided in XML.
-        /// </summary>
-        /// <param name="schemeReturn">The contents of the XML file to be validated.</param>
-        /// <param name="errorMessage">A description of the first error encountered, or null if all checks pass.</param>
-        /// <returns>Returns true if all checks pass.</returns>
-        public bool CheckXmlBusinessValidation(SchemeReturn schemeReturn, out string errorMessage)
-        {
-            if (schemeReturn.ApprovalNo != dataReturnVersionBuilder.Scheme.ApprovalNumber)
-            {
-                errorMessage = string.Format(
-                    "The PCS approval number {0} you have provided does not match with the PCS. Review the PCS approval number.",
-                    schemeReturn.ApprovalNo);
-
-                return false;
-            }
-
-            errorMessage = null;
-            return true;
         }
     }
 }
