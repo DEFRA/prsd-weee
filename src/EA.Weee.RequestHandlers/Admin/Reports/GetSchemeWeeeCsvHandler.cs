@@ -33,7 +33,7 @@
             { 10, "10. Automatic Dispensers" },
             { 11, "11. Display Equipment" },
             { 12, "12. Cooling Appliances Containing Refrigerants" },
-            { 13, "13. Gas Discharge Lamps and LED light sources" },
+            { 13, "13. Gas Discharge Lamps and LED Light Sources" },
             { 14, "14. Photovoltaic Panels" },
         };
 
@@ -104,15 +104,15 @@
                             .Select(ca => (decimal?)ca.Tonnage)
                             .SingleOrDefault();
 
-                        // A source type of "Final holder" has ID 2 and is defined by regulation 43.
+                        // A source type of "Distributor" has ID 1 and is defined by regulation 43.
                         decimal? r43 = collectedAmounts
-                            .Where(ca => ca.SourceType == 2)
+                            .Where(ca => ca.SourceType == 1)
                             .Select(ca => (decimal?)ca.Tonnage)
                             .SingleOrDefault();
 
-                        // A source type of "Distributor" has ID 1 and is defined by regulation 50.
-                        decimal? r50 = collectedAmounts
-                            .Where(ca => ca.SourceType == 1)
+                        // A source type of "Final Holder" has ID 2 and is defined by regulation 52.
+                        decimal? r52 = collectedAmounts
+                            .Where(ca => ca.SourceType == 2)
                             .Select(ca => (decimal?)ca.Tonnage)
                             .SingleOrDefault();
 
@@ -124,7 +124,7 @@
                         csvResult.Category = category;
                         csvResult.Dcf = dcf;
                         csvResult.R43 = r43;
-                        csvResult.R50 = r50;
+                        csvResult.R52 = r52;
 
                         var deliveredAmounts = results.DeliveredAmounts
                             .Where(da => da.QuarterType == quarterType)
@@ -183,7 +183,7 @@
             if (obligationType == ObligationType.B2C)
             {
                 writer.DefineColumn("R43", x => x.R43);
-                writer.DefineColumn("R50", x => x.R50);
+                writer.DefineColumn("R52", x => x.R52);
             }
 
             writer.DefineColumn("Total AATF/AE", x => x.TotalDelivered);
@@ -226,7 +226,7 @@
             public int Category { get; set; }
             public decimal? Dcf { get; set; }
             public decimal? R43 { get; set; }
-            public decimal? R50 { get; set; }
+            public decimal? R52 { get; set; }
             public decimal? TotalDelivered { get; set; }
             public Dictionary<string, decimal?> AatfTonnage { get; set; }
             public Dictionary<string, decimal?> AeTonnage { get; set; }
