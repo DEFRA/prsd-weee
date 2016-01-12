@@ -22,7 +22,7 @@
 
         /// <summary>
         /// Fetches all invoice runs for the specified authority.
-        /// Results are ordered by issued date ascending.
+        /// Results are ordered by issued date descending.
         /// </summary>
         /// <param name="authority"></param>
         /// <returns></returns>
@@ -31,7 +31,7 @@
             return await context.InvoiceRuns
                 .Include(ir => ir.IssuedByUser)
                 .Where(ir => ir.CompetentAuthority.Id == authority.Id)
-                .OrderBy(ir => ir.IssuedDate)
+                .OrderByDescending(ir => ir.IssuedDate)
                 .ToListAsync();
         }
     }
