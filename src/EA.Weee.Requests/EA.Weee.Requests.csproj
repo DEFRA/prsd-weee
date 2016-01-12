@@ -47,6 +47,8 @@
   <ItemGroup>
     <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
+    <Compile Include="Admin\Reports\GetSchemeWeeeCsv.cs" />
+    <Compile Include="Charges\FetchInvoiceRunCsv.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile.cs" />
     <Compile Include="Charges\FetchInvoiceRuns.cs" />
     <Compile Include="Charges\FetchPendingCharges.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="Organisations\FindMatchingOrganisations.cs" />
     <Compile Include="Organisations\GetPublicOrganisationInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Test\GetPcsSubmissionWindowSettings.cs" />
     <Compile Include="Test\UpdatePcsSubmissionWindowSettings.cs" />
     <Compile Include="Users\GetOrganisationUser.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsers.cs" />

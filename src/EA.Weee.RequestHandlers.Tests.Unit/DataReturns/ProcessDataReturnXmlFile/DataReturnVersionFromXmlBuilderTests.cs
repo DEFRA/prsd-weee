@@ -7,6 +7,8 @@
     using Domain.DataReturns;
     using Domain.Lookup;
     using FakeItEasy;
+    using RequestHandlers.DataReturns.BusinessValidation;
+    using RequestHandlers.DataReturns.BusinessValidation.Rules;
     using RequestHandlers.DataReturns.ProcessDataReturnXmlFile;
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
     using Xml.DataReturns;
@@ -274,43 +276,15 @@
             Assert.Equal(expectedResult, actualResult);
         }
 
-        /// <summary>
-        /// This test ensures that the scheme approval number provided in the XML file matches
-        /// the approval number of the scheme for which the data return version is being built.
-        /// If not, an "Error" level error should be returned with a description that contains
-        /// the scheme approval number that was provided.
-        /// </summary>
-        /// <returns></returns>
-        [Fact]
-        public async Task Build_DifferentSchemeApprovalNumber_ReturnsError()
-        {
-            var builder = new DataReturnVersionFromXmlBuilderHelper("WEE/AA1111AA/SCH");
-
-            var schemeReturn = new SchemeReturn()
-            {
-                ApprovalNo = "WEE/ZZ9999ZZ/SCH",
-            };
-
-            DataReturnVersionBuilderResult result = await builder.Create().Build(schemeReturn);
-
-            Assert.NotNull(result);
-            Assert.Null(result.DataReturnVersion);
-            Assert.NotEmpty(result.ErrorData);
-
-            ErrorData firstError = result.ErrorData[0];
-
-            Assert.NotNull(firstError);
-            Assert.Equal(ErrorLevel.Error, firstError.ErrorLevel);
-            Assert.Contains("WEE/ZZ9999ZZ/SCH", firstError.Description);
-        }
-
         private class DataReturnVersionFromXmlBuilderHelper
         {
             public IDataReturnVersionBuilder DataReturnVersionBuilder;
+            public ISchemeApprovalNumberMismatch SchemeApprovalNumberMismatch;
 
             public DataReturnVersionFromXmlBuilderHelper(string schemeApprovalNumber)
             {
                 DataReturnVersionBuilder = A.Fake<IDataReturnVersionBuilder>();
+                SchemeApprovalNumberMismatch = A.Fake<ISchemeApprovalNumberMismatch>();
 
                 Scheme scheme = new Scheme(new Guid("FE4056B3-F892-476E-A4AB-7C111AE1EF14"));
 
@@ -326,7 +300,7 @@
 
             public DataReturnVersionFromXmlBuilder Create()
             {
-                return new DataReturnVersionFromXmlBuilder(DataReturnVersionBuilder);
+                return new DataReturnVersionFromXmlBuilder(DataReturnVersionBuilder, SchemeApprovalNumberMismatch);
             }
         }
     }

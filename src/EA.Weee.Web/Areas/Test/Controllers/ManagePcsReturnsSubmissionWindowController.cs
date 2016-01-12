@@ -19,9 +19,17 @@
         }
 
         [HttpGet]
-        public ActionResult Settings()
+        public async Task<ActionResult> Settings()
         {
-            return View(new SettingsModel());
+            using (var client = apiClient())
+            {
+                var settings = await client.SendAsync(User.GetAccessToken(), new GetPcsSubmissionWindowSettings());
+                return View(new SettingsModel
+                {
+                    CurrentDate = settings.CurrentDate,
+                    FixCurrentDate = settings.FixCurrentDate
+                });
+            }           
         }
 
         [ValidateAntiForgeryToken]
@@ -37,9 +45,8 @@
             {
                 await client.SendAsync(User.GetAccessToken(), new UpdatePcsSubmissionWindowSettings
                 {
-                    CurrentComplianceYear = settings.CurrentComplianceYear,
-                    FixCurrentQuarterAndComplianceYear = settings.FixCurrentQuarterAndComplianceYear,
-                    SelectedQuarter = settings.SelectedQuarter
+                    FixCurrentDate = settings.FixCurrentDate,
+                    CurrentDate = settings.CurrentDate
                 });
             }
 

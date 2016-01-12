@@ -19,7 +19,7 @@
             {
                 if (string.IsNullOrEmpty(xSDVersionString))
                 {
-                    return 3.2m;
+                    return 3.22m;
                 }
                 return decimal.Parse(xSDVersionString);
             }
