@@ -231,26 +231,23 @@
         public async Task<ActionResult> ProducerEEEData()
         {
             SetBreadcrumb(Reports.ProducerEEEData);
-
-            using (var client = apiClient())
+            List<int> years;
+            try
             {
-                try
-                {
-                    ProducersDataViewModel model = new ProducersDataViewModel();
-                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears(ComplianceYearFor.DataReturns));
-                    model.ComplianceYears = new SelectList(allYears);
-                    return View("ProducerEEEData", model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                    return View();
-                }
+                years = await FetchComplianceYearsForDataReturns();
             }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+                return View();
+            }
+            ProducersDataViewModel model = new ProducersDataViewModel();
+            model.ComplianceYears = new SelectList(years);
+            return View(model);
         }
 
         [HttpPost]
@@ -258,18 +255,30 @@
         public async Task<ActionResult> ProducerEEEData(ProducersDataViewModel model)
         {
             SetBreadcrumb(Reports.ProducerEEEData);
+            List<int> years;
+            try
+            {
+                years = await FetchComplianceYearsForDataReturns();
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+                return View();
+            }
 
+            model.ComplianceYears = new SelectList(years);
             using (var client = apiClient())
             {
-                var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears(ComplianceYearFor.DataReturns));
-                model.ComplianceYears = new SelectList(allYears);
                 if (!ModelState.IsValid)
                 {
                     return View(model);
                 }
-
                 return await DownloadProducerEEEDataCSV(model, client);
-            }
+            }            
         }
 
         [HttpGet]
