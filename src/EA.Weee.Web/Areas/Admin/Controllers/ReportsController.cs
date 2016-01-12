@@ -447,7 +447,7 @@
         private async Task<ActionResult> DownloadProducerEEEDataCSV(ProducersDataViewModel model, IWeeeClient client)
         {
             var producerEEECsvData = await client.SendAsync(User.GetAccessToken(),
-               new GetProducersEEEDataCSV(model.SelectedYear, model.SelectedObligationtype));
+               new GetProducerEEEDataCSV(model.SelectedYear, model.SelectedObligationtype));
 
             byte[] data = new UTF8Encoding().GetBytes(producerEEECsvData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerEEECsvData.FileName));

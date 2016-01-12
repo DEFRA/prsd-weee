@@ -11,7 +11,7 @@
     using Requests.Admin.Reports;
     using Security;
 
-    internal class GetProducerEEEDataCSVHandler : IRequestHandler<GetProducersEEEDataCSV, CSVFileData>
+    internal class GetProducerEEEDataCSVHandler : IRequestHandler<GetProducerEEEDataCSV, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
@@ -25,7 +25,7 @@
             this.csvWriterFactory = csvWriterFactory;
         }
 
-        public async Task<CSVFileData> HandleAsync(GetProducersEEEDataCSV request)
+        public async Task<CSVFileData> HandleAsync(GetProducerEEEDataCSV request)
         {
             authorization.EnsureCanAccessInternalArea();
 
