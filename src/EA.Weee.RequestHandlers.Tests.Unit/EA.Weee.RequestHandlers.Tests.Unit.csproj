@@ -113,6 +113,8 @@
     <Compile Include="Charges\IssuePendingCharges\BySubmissionTransactionFileGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesHandlerTests.cs" />
     <Compile Include="DataReturns\BusinessValidation\EeeeValidatorTests.cs" />
+    <Compile Include="DataReturns\BusinessValidation\XmlBusinessRules\SchemeApprovalNumberMismatchTests.cs" />
+    <Compile Include="DataReturns\BusinessValidation\XmlBusinessRules\SubmissionWindowClosedTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandlerTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnVersionFromXmlBuilderTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\GenerateFromDataReturnXMLTests.cs" />
