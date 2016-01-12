@@ -1,0 +1,76 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.Shared
+@model EA.Weee.Web.Areas.Admin.ViewModels.Charge.IssuedChargesViewModel
+@{
+    ViewBag.Title = "Issued Charges";
+
+    CompetentAuthority authority = (CompetentAuthority)ViewBag.Authority;
+
+    Dictionary<CompetentAuthority, string> authorityDisplayNames = new Dictionary<CompetentAuthority, string>()
+    {
+        { CompetentAuthority.England, "Environment Agency" },
+        { CompetentAuthority.Scotland, "Scottish Environment Protection Agency" },
+        { CompetentAuthority.NorthernIreland, "Northern Ireland Environment Agency" },
+        { CompetentAuthority.Wales, "Natural Resources Wales" },
+    };
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">Issued Charges</h1>
+    </header>
+
+    <p>
+        <span class="bold-small">Appropriate Authority:</span>
+        @authorityDisplayNames[authority]
+    </p>
+
+    <p>Filter results to show only charges that match your criteria.</p>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedComplianceYear)">
+            @Html.Gds().LabelFor(m => m.SelectedComplianceYear)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedComplianceYear)
+            @Html.Gds().DropDownListFor(
+                m => m.SelectedComplianceYear,
+                Model.ComplianceYears.Select(x => new SelectListItem() { Text = x.ToString() }),
+                string.Empty,
+                new { autocomplete = "false" })
+        </div>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedSchemeName)">
+            @Html.Gds().LabelFor(m => m.SelectedSchemeName)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedSchemeName)
+            @Html.Gds().DropDownListFor(
+                m => m.SelectedSchemeName,
+                Model.SchemeNames.Select(x => new SelectListItem() { Text = x }),
+                string.Empty,
+                new { autocomplete = "false" })
+        </div>
+
+        @(this.WeeeGds().Submit("Download charges (CSV)", new { @class = "button" }))
+    }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+    <p>
+        <a href="javascript:history.back();">Back</a>
+    </p>
+}
+
+@section scripts
+{
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadIssuedChargesCsv", new { authority, complianceYear = Model.SelectedComplianceYear, schemeName = Model.SelectedSchemeName }))";
+        </script>
+    }
+}
+
