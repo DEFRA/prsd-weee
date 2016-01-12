@@ -74,7 +74,7 @@
         /// <summary>
         /// This test ensures that the CSV writer created for a B2C report contains
         /// the columns "Scheme Name", "Scheme approval No", "Quarter", "Category",
-        /// "DCF", "R43", "R50" and "Total AATF/AE", followed by a column for each
+        /// "DCF", "R43", "R52" and "Total AATF/AE", followed by a column for each
         /// AATF and a column for each AE.
         /// </summary>
         [Fact]
@@ -112,7 +112,7 @@
                 title => Assert.Equal("Category", title),
                 title => Assert.Equal("DCF", title),
                 title => Assert.Equal("R43", title),
-                title => Assert.Equal("R50", title),
+                title => Assert.Equal("R52", title),
                 title => Assert.Equal("Total AATF/AE", title),
                 title => Assert.Equal("AATF1", title),
                 title => Assert.Equal("AATF2", title),
@@ -307,77 +307,10 @@
 
         /// <summary>
         /// This test ensures that the CSV result for the R43 will be populated
-        /// if a collected amount with source type 2 is returned in the data.
-        /// </summary>
-        [Fact]
-        public void CreateResults_WithCollectedAmountWithSourceType2_PopulatesR43WithValue()
-        {
-            // Arrange
-            SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
-
-            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult()
-            {
-                SchemeId = new Guid("3E299215-BA37-403F-B398-EB345371F3D2")
-            });
-
-            data.CollectedAmounts.Add(new SpgSchemeWeeeCsvResult.CollectedAmountResult()
-            {
-                SchemeId = new Guid("3E299215-BA37-403F-B398-EB345371F3D2"),
-                QuarterType = 1,
-                WeeeCategory = 1,
-                SourceType = 2,
-                Tonnage = 123.456m
-            });
-
-            GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
-                A.Dummy<IWeeeAuthorization>(),
-                A.Dummy<CsvWriterFactory>());
-
-            // Act
-            IEnumerable<GetSchemeWeeeCsvHandler.CsvResult> results = handler.CreateResults(
-                data,
-                A.Dummy<IEnumerable<string>>(),
-                A.Dummy<IEnumerable<string>>());
-
-            // Assert
-            GetSchemeWeeeCsvHandler.CsvResult result1 = results.First();
-            Assert.Equal(123.456m, result1.R43);
-        }
-
-        /// <summary>
-        /// This test ensures that the CSV result for the R50 will be blank rather than 0
-        /// if no collected amounts are returned in the data.
-        /// </summary>
-        [Fact]
-        public void CreateResults_WithNoCollectedAmounts_PopulatesR50AsNull()
-        {
-            // Arrange
-            SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
-            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult());
-
-            GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
-                A.Dummy<WeeeContext>(),
-                A.Dummy<IWeeeAuthorization>(),
-                A.Dummy<CsvWriterFactory>());
-
-            // Act
-            IEnumerable<GetSchemeWeeeCsvHandler.CsvResult> results = handler.CreateResults(
-                data,
-                A.Dummy<IEnumerable<string>>(),
-                A.Dummy<IEnumerable<string>>());
-
-            // Assert
-            GetSchemeWeeeCsvHandler.CsvResult result1 = results.First();
-            Assert.Equal(null, result1.R50);
-        }
-
-        /// <summary>
-        /// This test ensures that the CSV result for the R50 will be populated
         /// if a collected amount with source type 1 is returned in the data.
         /// </summary>
         [Fact]
-        public void CreateResults_WithCollectedAmountWithSourceType1_PopulatesR50WithValue()
+        public void CreateResults_WithCollectedAmountWithSourceType1_PopulatesR43WithValue()
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
@@ -409,7 +342,74 @@
 
             // Assert
             GetSchemeWeeeCsvHandler.CsvResult result1 = results.First();
-            Assert.Equal(123.456m, result1.R50);
+            Assert.Equal(123.456m, result1.R43);
+        }
+
+        /// <summary>
+        /// This test ensures that the CSV result for the R52 will be blank rather than 0
+        /// if no collected amounts are returned in the data.
+        /// </summary>
+        [Fact]
+        public void CreateResults_WithNoCollectedAmounts_PopulatesR52AsNull()
+        {
+            // Arrange
+            SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
+            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult());
+
+            GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
+                A.Dummy<WeeeContext>(),
+                A.Dummy<IWeeeAuthorization>(),
+                A.Dummy<CsvWriterFactory>());
+
+            // Act
+            IEnumerable<GetSchemeWeeeCsvHandler.CsvResult> results = handler.CreateResults(
+                data,
+                A.Dummy<IEnumerable<string>>(),
+                A.Dummy<IEnumerable<string>>());
+
+            // Assert
+            GetSchemeWeeeCsvHandler.CsvResult result1 = results.First();
+            Assert.Equal(null, result1.R52);
+        }
+
+        /// <summary>
+        /// This test ensures that the CSV result for the R52 will be populated
+        /// if a collected amount with source type 2 is returned in the data.
+        /// </summary>
+        [Fact]
+        public void CreateResults_WithCollectedAmountWithSourceType2_PopulatesR52WithValue()
+        {
+            // Arrange
+            SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
+
+            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult()
+            {
+                SchemeId = new Guid("3E299215-BA37-403F-B398-EB345371F3D2")
+            });
+
+            data.CollectedAmounts.Add(new SpgSchemeWeeeCsvResult.CollectedAmountResult()
+            {
+                SchemeId = new Guid("3E299215-BA37-403F-B398-EB345371F3D2"),
+                QuarterType = 1,
+                WeeeCategory = 1,
+                SourceType = 2,
+                Tonnage = 123.456m
+            });
+
+            GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
+                A.Dummy<WeeeContext>(),
+                A.Dummy<IWeeeAuthorization>(),
+                A.Dummy<CsvWriterFactory>());
+
+            // Act
+            IEnumerable<GetSchemeWeeeCsvHandler.CsvResult> results = handler.CreateResults(
+                data,
+                A.Dummy<IEnumerable<string>>(),
+                A.Dummy<IEnumerable<string>>());
+
+            // Assert
+            GetSchemeWeeeCsvHandler.CsvResult result1 = results.First();
+            Assert.Equal(123.456m, result1.R52);
         }
 
         /// <summary>
