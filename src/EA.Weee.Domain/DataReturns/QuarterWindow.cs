@@ -4,15 +4,12 @@
 
     public class QuarterWindow
     {
-        public Quarter Quarter { get; private set; }
-
         public DateTime StartDate { get; private set; }
 
         public DateTime EndDate { get; private set; }
 
-        public QuarterWindow(Quarter quarter, DateTime startDate, DateTime endDate)
+        public QuarterWindow(DateTime startDate, DateTime endDate)
         {
-            Quarter = quarter;
             StartDate = startDate;
             EndDate = endDate;
         }

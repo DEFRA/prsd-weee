@@ -196,15 +196,28 @@
         [Fact]
         public async void HttpGet_ProducerEEEData_ShouldReturnsProducerEEEDataView()
         {
-            var controller = ReportsController();
+            // Arrange
+            List<int> years = new List<int>() { 2015, 2016 };
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAllComplianceYears>._))
-                .Returns(new List<int> { 2015, 2016 });
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllComplianceYears>._)).Returns(years);
 
-            var result = await controller.ProducerEEEData();
+            ReportsController controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
 
-            var viewResult = ((ViewResult)result);
-            Assert.Equal("ProducerEEEData", viewResult.ViewName);
+            // Act
+            ActionResult result = await controller.ProducerEEEData();
+
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "ProducerEEEData");
+
+            ProducersDataViewModel model = viewResult.Model as ProducersDataViewModel;
+            Assert.NotNull(model);
+            Assert.Collection(model.ComplianceYears,
+                y1 => Assert.Equal("2015", y1.Text),
+                y2 => Assert.Equal("2016", y2.Text));
         }
 
         [Fact]
