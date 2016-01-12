@@ -20,7 +20,7 @@
             PossibleValues = new List<Activity>()
             {
                 Activity.ManagePendingCharges,
-                //Activity.ManageIssuedCharges,
+                Activity.ManageIssuedCharges,
                 Activity.ViewInvoiceRunHistory
             };
         }

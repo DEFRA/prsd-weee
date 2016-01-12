@@ -87,7 +87,7 @@
                     return RedirectToAction("ManagePendingCharges", new { authority });
 
                 case Activity.ManageIssuedCharges:
-                    throw new NotImplementedException();
+                    return RedirectToAction("IssuedCharges", new { authority });
 
                 case Activity.ViewInvoiceRunHistory:
                     return RedirectToAction("InvoiceRuns", new { authority });
@@ -178,6 +178,12 @@
 
             byte[] data = new UTF8Encoding().GetBytes(csvFileData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileData.FileName));
+        }
+
+        [HttpGet]
+        public ActionResult IssuedCharges(CompetentAuthority authority)
+        {
+            throw new NotImplementedException();
         }
     }
 }
