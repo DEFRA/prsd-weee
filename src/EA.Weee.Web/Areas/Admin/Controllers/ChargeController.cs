@@ -181,9 +181,46 @@
         }
 
         [HttpGet]
-        public ActionResult IssuedCharges(CompetentAuthority authority)
+        public async Task<ActionResult> IssuedCharges(CompetentAuthority authority)
+        {
+            ViewBag.Authority = authority;
+            ViewBag.TriggerDownload = false;
+
+            IssuedChargesViewModel viewModel = new IssuedChargesViewModel();
+
+            viewModel.ComplianceYears = await GetComplianceYearsWithInvoices(authority);
+            viewModel.SchemeNames = await GetSchemesWithInvoices(authority);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> IssuedCharges(CompetentAuthority authority, IssuedChargesViewModel viewModel)
+        {
+            ViewBag.Authority = authority;
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            viewModel.ComplianceYears = await GetComplianceYearsWithInvoices(authority);
+            viewModel.SchemeNames = await GetSchemesWithInvoices(authority);
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public Task<ActionResult> DownloadIssuedChargesCsv(CompetentAuthority authority, int complianceYear, string schemeName)
         {
             throw new NotImplementedException();
+        }
+
+        private Task<IEnumerable<int>> GetComplianceYearsWithInvoices(CompetentAuthority authority)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task<IEnumerable<string>> GetSchemesWithInvoices(CompetentAuthority authority)
+        {
+            throw new NotImplementedException()
         }
     }
 }

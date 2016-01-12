@@ -225,6 +225,7 @@
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\Activity.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\ChooseActivityViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Charge\IssuedChargesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
@@ -568,6 +569,7 @@
     <Content Include="Areas\Admin\Views\Reports\ProducerEEEData.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\_ProducersDataReportFilters.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\SchemeWeeeData.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\IssuedCharges.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
