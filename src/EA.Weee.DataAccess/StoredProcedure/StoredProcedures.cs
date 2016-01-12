@@ -144,10 +144,10 @@
                     prnParameter).ToListAsync();
         }
 
-        public async Task<int> SpgNext1B1STransactionNumber()
+        public async Task<int> SpgNextIbisTransactionNumber()
         {
             return await context.Database
-                .SqlQuery<int>("[Charging].[SpgNext1B1STransactionNumber]")
+                .SqlQuery<int>("[Charging].[SpgNextIbisTransactionNumber]")
                 .SingleAsync();
         }
 
