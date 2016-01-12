@@ -75,7 +75,7 @@
 
                 if (value.Length > 18)
                 {
-                    throw new ArgumentException("The transaction reference cannot exceed 20 characters.");
+                    throw new ArgumentException("The transaction reference cannot exceed 18 characters.");
                 }
 
                 mTransactionReference = value; 
@@ -97,7 +97,7 @@
             {
                 if (value != null && value.Length > 18)
                 {
-                    throw new ArgumentException("The related transaction reference cannot exceed 20 characters.");
+                    throw new ArgumentException("The related transaction reference cannot exceed 18 characters.");
                 }
 
                 mRelatedTransactionReference = value;
