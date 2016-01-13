@@ -92,7 +92,7 @@
                     <ul>
                         @foreach (DataReturnError error in Model.DataReturn.Errors)
                         {
-                            <li class="error-list-item font-xsmall">@error.Description</li>
+                            <li class="error-list-item font-xsmall">@Html.Raw(error.Description)</li>
                         }
                     </ul>
                 </div>
