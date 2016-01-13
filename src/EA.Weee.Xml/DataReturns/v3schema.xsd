@@ -12,7 +12,7 @@
 =
 =   APPLICATION: Waste Electronic and Electrical Equipment Regulations 2013
 =   MODULE: Scheme Returns
-=   FILE: XSD Scheme Returns version 3.22.xsd
+=   FILE: XSD Scheme Returns version 3.23.xsd
 =   DESCRIPTION: Schema to validate WEEE Scheme Quarterly Returns Data
 =
 ================================================================================
@@ -41,7 +41,9 @@
                                                   - Remove unused SiteAddressDetailsType and operatorTypeType elements.
                                                   - Update regulation year to 2013 and correct file name.
 
-=   10/12/2015   Muhammad I         3.22          - Restrict the tonnage value to a maximum of 28 digits.
+=   08/01/2016   Muhammad I         3.22          - Restrict the tonnage value to a maximum of 28 digits.
+
+=   13/01/2016   Muhammad I         3.23          - Restrict the tonnage value to a maximum of 25 digits.
 ================================================================================
 -->
   <xs:element name="SchemeReturn">
@@ -50,7 +52,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="XSDVersion" default="3.22">
+        <xs:element name="XSDVersion" default="3.23">
           <xs:simpleType>
             <xs:restriction base="XSDVersionType"/>
           </xs:simpleType>
@@ -205,8 +207,8 @@
   </xs:element>
   <xs:simpleType name="XSDVersionType">
     <xs:restriction base="xs:decimal">
-      <xs:minInclusive value="3.22"/>
-      <xs:maxInclusive value="3.22"/>
+      <xs:minInclusive value="3.23"/>
+      <xs:maxInclusive value="3.23"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="approvalNoType">
@@ -248,7 +250,7 @@
     <xs:restriction base="xs:decimal">
       <xs:minInclusive value="0"/>
       <xs:fractionDigits value="3"/>
-      <xs:totalDigits value="28"/>
+      <xs:totalDigits value="25"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:complexType name="TonnageReturnType">
