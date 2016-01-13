@@ -88,11 +88,11 @@
         {
             List<CsvResult> csvResults = new List<CsvResult>();
 
-            foreach (int quarterType in Enumerable.Range(1, 4))
+            foreach (var scheme in results.Schemes.OrderBy(s => s.SchemeName))
             {
-                foreach (int category in Enumerable.Range(1, 14))
+                foreach (int quarterType in Enumerable.Range(1, 4))
                 {
-                    foreach (var scheme in results.Schemes.OrderBy(s => s.SchemeName))
+                    foreach (int category in Enumerable.Range(1, 14))
                     {
                         var collectedAmounts = results.CollectedAmounts
                             .Where(ca => ca.QuarterType == quarterType)
@@ -104,14 +104,14 @@
                             .Select(ca => (decimal?)ca.Tonnage)
                             .SingleOrDefault();
 
-                        // A source type of "Distributor" has ID 1 and is defined by regulation 43.
-                        decimal? r43 = collectedAmounts
+                        // A source type of "Distributor" has ID 1.
+                        decimal? distributors = collectedAmounts
                             .Where(ca => ca.SourceType == 1)
                             .Select(ca => (decimal?)ca.Tonnage)
                             .SingleOrDefault();
 
-                        // A source type of "Final Holder" has ID 2 and is defined by regulation 52.
-                        decimal? r52 = collectedAmounts
+                        // A source type of "Final Holder" has ID.
+                        decimal? finalHolders = collectedAmounts
                             .Where(ca => ca.SourceType == 2)
                             .Select(ca => (decimal?)ca.Tonnage)
                             .SingleOrDefault();
@@ -123,8 +123,8 @@
                         csvResult.QuarterType = quarterType;
                         csvResult.Category = category;
                         csvResult.Dcf = dcf;
-                        csvResult.R43 = r43;
-                        csvResult.R52 = r52;
+                        csvResult.Distributors = distributors;
+                        csvResult.FinalHolders = finalHolders;
 
                         var deliveredAmounts = results.DeliveredAmounts
                             .Where(da => da.QuarterType == quarterType)
@@ -174,7 +174,7 @@
         {
             CsvWriter<CsvResult> writer = csvWriterFactory.Create<CsvResult>();
 
-            writer.DefineColumn("Scheme Name", x => x.SchemeName);
+            writer.DefineColumn("Scheme name", x => x.SchemeName);
             writer.DefineColumn("Scheme approval No", x => x.SchemeApprovalNumber);
             writer.DefineColumn("Quarter", x => string.Format("Q{0}", x.QuarterType));
             writer.DefineColumn("Category", x => categoryDisplayNames[x.Category]);
@@ -182,8 +182,8 @@
 
             if (obligationType == ObligationType.B2C)
             {
-                writer.DefineColumn("R43", x => x.R43);
-                writer.DefineColumn("R52", x => x.R52);
+                writer.DefineColumn("Distributors", x => x.Distributors);
+                writer.DefineColumn("Final holders", x => x.FinalHolders);
             }
 
             writer.DefineColumn("Total AATF/AE", x => x.TotalDelivered);
@@ -225,8 +225,8 @@
             public int QuarterType { get; set; }
             public int Category { get; set; }
             public decimal? Dcf { get; set; }
-            public decimal? R43 { get; set; }
-            public decimal? R52 { get; set; }
+            public decimal? Distributors { get; set; }
+            public decimal? FinalHolders { get; set; }
             public decimal? TotalDelivered { get; set; }
             public Dictionary<string, decimal?> AatfTonnage { get; set; }
             public Dictionary<string, decimal?> AeTonnage { get; set; }

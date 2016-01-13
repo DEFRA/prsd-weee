@@ -34,7 +34,7 @@
             }
 
             var items = await context.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
-                       request.ComplianceYear, request.SchemeId, request.CompetentAuthorityId);
+                       request.ComplianceYear, request.IncludeRemovedProducer, request.SchemeId, request.CompetentAuthorityId);
 
             CsvWriter<MembersDetailsCSVData> csvWriter = csvWriterFactory.Create<MembersDetailsCSVData>();
             csvWriter.DefineColumn(@"PCS name", i => i.SchemeName);
@@ -118,6 +118,11 @@
             csvWriter.DefineColumn(@"Overseas producer administrative area", i => i.OverseasContactAdministrativeArea);
             csvWriter.DefineColumn(@"Overseas producer post code", i => i.OverseasContactPostcode);
             csvWriter.DefineColumn(@"Overseas producer country", i => i.OverseasContactCountry);
+
+            if (request.IncludeRemovedProducer)
+            {
+                csvWriter.DefineColumn(@"Removed from scheme", i => i.RemovedFromScheme);
+            }
 
             string fileContent = csvWriter.Write(items);
 
