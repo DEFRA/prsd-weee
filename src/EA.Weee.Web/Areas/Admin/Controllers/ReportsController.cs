@@ -315,7 +315,7 @@
             }
 
             var membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(),
-                new GetMemberDetailsCSV(model.SelectedYear, model.SelectedScheme, model.SelectedAA));
+                new GetMemberDetailsCSV(model.SelectedYear, model.IncludeRemovedProducer, model.SelectedScheme, model.SelectedAA));
 
             byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
