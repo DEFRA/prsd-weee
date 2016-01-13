@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchIssuedChargesCsv
 {
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -48,6 +49,17 @@
                 .ThenBy(ps => ps.MemberUpload.SubmittedDate)
                 .ThenBy(ps => ps.RegisteredProducer.ProducerRegistrationNumber)
                 .ToListAsync();
+        }
+
+        public async Task<Domain.Scheme.Scheme> FetchSchemeAsync(string schemeName)
+        {
+            var scheme = await Context.Schemes.SingleOrDefaultAsync(s => s.SchemeName == schemeName);
+
+            if (scheme != null)
+            {
+                return scheme;
+            }
+            throw new InvalidOperationException(string.Format("Scheme with name '{0}' does not exist", schemeName));      
         }
     }
 }
