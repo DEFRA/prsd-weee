@@ -39,13 +39,15 @@
 
             SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", DBNull.Value);
             SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", DBNull.Value);
+            SqlParameter includeRemovedProducerParameter = new SqlParameter("@IncludeRemovedProducer", false);
 
             return await context.Database
                 .SqlQuery<MembersDetailsCSVData>(
-                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @SchemeId, @CompetentAuthorityId",
+                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @SchemeId, @CompetentAuthorityId, @IncludeRemovedProducer",
                     complianceYearParameter,
                     schemeIdParameter,
-                     competentAuthorityIdParameter)
+                     competentAuthorityIdParameter,
+                     includeRemovedProducerParameter)
                 .ToListAsync();
         }
 
@@ -58,19 +60,21 @@
         /// <param name="schemeId"></param>
         /// <param name="competentAuthorityId"></param>
         /// <returns></returns>
-        public async Task<List<MembersDetailsCSVData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, Guid? schemeId, Guid? competentAuthorityId)
+        public async Task<List<MembersDetailsCSVData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, bool includeRemovedProducer, Guid? schemeId, Guid? competentAuthorityId)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
             SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
             SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", (object)competentAuthorityId ?? DBNull.Value);
+            SqlParameter includeRemovedProducerParameter = new SqlParameter("@IncludeRemovedProducer", includeRemovedProducer);
 
             return await context.Database
                 .SqlQuery<MembersDetailsCSVData>(
-                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @SchemeId, @CompetentAuthorityId",
+                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @SchemeId, @CompetentAuthorityId, @IncludeRemovedProducer",
                     complianceYearParameter,
                     schemeIdParameter,
-                     competentAuthorityIdParameter)
+                     competentAuthorityIdParameter,
+                     includeRemovedProducerParameter)
                 .ToListAsync();
         }
 
