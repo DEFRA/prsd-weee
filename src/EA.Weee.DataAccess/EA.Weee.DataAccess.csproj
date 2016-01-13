@@ -77,6 +77,7 @@
     <Compile Include="DataAccess\ISystemDataDataAccess.cs" />
     <Compile Include="DataAccess\QuarterWindowTemplateDataAccess.cs" />
     <Compile Include="DataAccess\SystemDataDataAccess.cs" />
+    <Compile Include="Extensions\RegisteredProducerExtensions.cs" />
     <Compile Include="EntityFrameworkModule.cs" />
     <Compile Include="DataAccess\IRegisteredProducerDataAccess.cs" />
     <Compile Include="DataAccess\RegisteredProducerDataAccess.cs" />
@@ -90,7 +91,7 @@
     <Compile Include="StoredProcedure\ProducerEEECSVData.cs" />
     <Compile Include="StoredProcedure\SpgSchemeWeeeCsvResult.cs" />
     <Compile Include="WeeeContext.Metadata.cs" />
-    <Compile Include="Extensions\ProducerExtensions.cs" />
+    <Compile Include="Extensions\ProducerSubmissionExtensions.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
     <Compile Include="Identity\WeeeIdentityContext.cs" />

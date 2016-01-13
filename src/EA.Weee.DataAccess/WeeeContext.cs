@@ -1,8 +1,11 @@
 ﻿namespace EA.Weee.DataAccess
 {
+    using System;
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.SqlClient;
+    using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
     using Domain;
@@ -15,6 +18,7 @@
     using Domain.Producer;
     using Domain.Scheme;
     using Domain.Unalignment;
+    using Extensions;
     using Prsd.Core;
     using Prsd.Core.DataAccess.Extensions;
     using Prsd.Core.Domain;
@@ -89,6 +93,21 @@
             Database.SetInitializer<WeeeContext>(null);
 
             StoredProcedures = new StoredProcedures(this);
+        }
+        public Task<T> RegisteredProducerQuery<T>(Expression<Func<IQueryable<RegisteredProducer>, Task<T>>> query)
+        {
+            return query.Compile()
+                .Invoke(RegisteredProducers
+                    .AsQueryable()
+                    .OnlyAlignedRegisteredProducers());
+        }
+
+        public Task<T> UnalignedProducersQuery<T>(Expression<Func<IQueryable<RegisteredProducer>, Task<T>>> query)
+        {
+            return query.Compile()
+                .Invoke(RegisteredProducers
+                    .AsQueryable()
+                    .OnlyUnalignedRegisteredProducers());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

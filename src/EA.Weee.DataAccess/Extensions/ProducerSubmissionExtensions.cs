@@ -4,7 +4,7 @@
     using System.Linq;
     using Domain.Producer;
 
-    public static class ProducerExtensions
+    public static class ProducerSubmissionExtensions
     {
         public static IQueryable<string> ProducerNames(this DbSet<ProducerSubmission> producers)
         {
