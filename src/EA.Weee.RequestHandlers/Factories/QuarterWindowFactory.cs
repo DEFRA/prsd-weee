@@ -16,12 +16,13 @@
 
         public async Task<QuarterWindow> GetQuarterWindow(Quarter quarter)
         {
+            // Otherwise calculate submission window
             var quarterWindowTemplate = await dataAccess.GetByQuarter((int)quarter.Q);
 
             var startDate = new DateTime(quarter.Year + quarterWindowTemplate.AddStartYears, quarterWindowTemplate.StartMonth, quarterWindowTemplate.StartDay);
             var endDate = new DateTime(quarter.Year + quarterWindowTemplate.AddEndYears, quarterWindowTemplate.EndMonth, quarterWindowTemplate.EndDay);
 
-            return new QuarterWindow(quarter, startDate, endDate);
+            return new QuarterWindow(startDate, endDate);
         }
     }
 }

@@ -164,6 +164,10 @@
                     friendlyMessageTemplate =
                         "The value '{0}' supplied for field '{1}' exceeds the maximum number of allowed decimal places";
                     break;
+                case "TotalDigits":
+                    friendlyMessageTemplate =
+                        "The value '{0}' supplied for field '{1}' exceeds the maximum number of allowed digits";
+                    break;
             }
 
             if (friendlyMessageTemplate != string.Empty)

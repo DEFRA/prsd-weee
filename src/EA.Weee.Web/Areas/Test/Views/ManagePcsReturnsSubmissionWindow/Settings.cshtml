@@ -20,19 +20,21 @@
     {
         @Html.AntiForgeryToken()
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.FixCurrentQuarterAndComplianceYear)">
-            @Html.Gds().ValidationMessageFor(m => m.FixCurrentQuarterAndComplianceYear)
-            @Html.Gds().CheckBoxFor(m => m.FixCurrentQuarterAndComplianceYear)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.FixCurrentDate)">
+            @Html.Gds().ValidationMessageFor(m => m.FixCurrentDate)
+            @Html.Gds().CheckBoxFor(m => m.FixCurrentDate)
         </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.CurrentComplianceYear)">
-            @Html.Gds().LabelFor(m => m.CurrentComplianceYear)
-            @Html.Gds().ValidationMessageFor(m => m.CurrentComplianceYear)
-            @Html.Gds().TextBoxFor(m => m.CurrentComplianceYear, new { @maxlength = CommonMaxFieldLengths.Year })
-        </div>
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedQuarter)">
-            @Html.Gds().LabelFor(m => m.SelectedQuarter)
-            @Html.Gds().ValidationMessageFor(m => m.SelectedQuarter)
-            @Html.Gds().DropDownListFor(m => m.SelectedQuarter, Model.Quarters)
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.CurrentDate)">
+            @Html.Gds().LabelFor(m => m.CurrentDate)
+            @Html.Gds().ValidationMessageFor(m => m.CurrentDate)
+            @if (Model.CurrentDate.HasValue)
+            {
+                <input id="CurrentDate" name="CurrentDate" type="date" value="@Model.CurrentDate.Value.ToString("yyyy-MM-dd")"/>
+            }
+            else
+            {
+                <input id="CurrentDate" name="CurrentDate" type="date" />
+            }
         </div>
 
         @(this.WeeeGds().Submit("Continue", new { @class = "button" }))

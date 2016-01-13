@@ -167,12 +167,6 @@
         }
 
         [HttpGet]
-        public Task<ActionResult> DownloadSummaryFile(CompetentAuthority authority, Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpGet]
         public async Task<ActionResult> DownloadChargeBreakdown(Guid id)
         {
             CSVFileData csvFileData;

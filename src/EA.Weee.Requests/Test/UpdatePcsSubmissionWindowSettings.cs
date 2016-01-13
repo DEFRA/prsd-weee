@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.Requests.Test
 {
+    using System;
     using Prsd.Core.Mediator;
 
     public class UpdatePcsSubmissionWindowSettings : IRequest<bool>
     {
-        public bool FixCurrentQuarterAndComplianceYear { get; set; }
+        public bool FixCurrentDate { get; set; }
 
-        public int? CurrentComplianceYear { get; set; }
-
-        public int? SelectedQuarter { get; set; }
+        public DateTime? CurrentDate { get; set; }
     }
 }
