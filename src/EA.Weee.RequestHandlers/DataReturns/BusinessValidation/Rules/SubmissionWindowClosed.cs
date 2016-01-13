@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.BusinessValidation.Rules
 {
-    using System;
     using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess.DataAccess;

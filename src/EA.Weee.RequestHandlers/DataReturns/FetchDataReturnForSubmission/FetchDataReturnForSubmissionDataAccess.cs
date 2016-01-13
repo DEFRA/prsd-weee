@@ -6,7 +6,6 @@
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.DataReturns;
-    using Domain.Scheme;
 
     public class FetchDataReturnForSubmissionDataAccess : IFetchDataReturnForSubmissionDataAccess
     {
