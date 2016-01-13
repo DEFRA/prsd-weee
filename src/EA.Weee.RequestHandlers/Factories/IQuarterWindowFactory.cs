@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Factories
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.DataReturns;
 
