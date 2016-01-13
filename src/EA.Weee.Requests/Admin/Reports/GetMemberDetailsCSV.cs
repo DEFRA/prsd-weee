@@ -12,11 +12,14 @@
 
         public Guid? CompetentAuthorityId { get; private set; }        
 
-        public GetMemberDetailsCSV(int complianceYear, Guid? schemeId = null, Guid? competentAuthorityId = null)
+        public bool IncludeRemovedProducer { get; private set; }
+
+        public GetMemberDetailsCSV(int complianceYear, bool includeRemovedProducer = false, Guid? schemeId = null, Guid? competentAuthorityId = null)
         {        
             CompetentAuthorityId = competentAuthorityId;
             SchemeId = schemeId;
             ComplianceYear = complianceYear;
+            IncludeRemovedProducer = includeRemovedProducer;
         }
     }
 }
