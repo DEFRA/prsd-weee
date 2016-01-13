@@ -44,11 +44,11 @@
 
             return await context.Database
                 .SqlQuery<MembersDetailsCSVData>(
-                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @SchemeId, @CompetentAuthorityId, @IncludeRemovedProducer",
+                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @IncludeRemovedProducer, @SchemeId, @CompetentAuthorityId",
                     complianceYearParameter,
+                     includeRemovedProducerParameter,
                     schemeIdParameter,
-                     competentAuthorityIdParameter,
-                     includeRemovedProducerParameter)
+                     competentAuthorityIdParameter)
                 .ToListAsync();
         }
 
@@ -71,11 +71,11 @@
 
             return await context.Database
                 .SqlQuery<MembersDetailsCSVData>(
-                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @SchemeId, @CompetentAuthorityId, @IncludeRemovedProducer",
+                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @IncludeRemovedProducer, @SchemeId, @CompetentAuthorityId",
                     complianceYearParameter,
+                     includeRemovedProducerParameter,
                     schemeIdParameter,
-                     competentAuthorityIdParameter,
-                     includeRemovedProducerParameter)
+                     competentAuthorityIdParameter)
                 .ToListAsync();
         }
 

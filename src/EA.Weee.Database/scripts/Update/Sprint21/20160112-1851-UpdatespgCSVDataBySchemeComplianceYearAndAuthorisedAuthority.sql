@@ -10,9 +10,9 @@ GO
  */
 ALTER PROCEDURE [Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority]
 		@ComplianceYear INT,
+		@IncludeRemovedProducer bit,
 		@SchemeId uniqueidentifier = null,
-		@CompetentAuthorityId uniqueidentifier = null,
-		@IncludeRemovedProducer bit
+		@CompetentAuthorityId uniqueidentifier = null
 AS
 BEGIN
 
