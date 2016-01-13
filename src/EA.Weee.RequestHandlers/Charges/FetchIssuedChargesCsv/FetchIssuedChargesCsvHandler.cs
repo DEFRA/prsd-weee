@@ -7,9 +7,11 @@
     using Domain.Producer;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
+    using Prsd.Core;
+    using Requests.Charges;
     using Security;
 
-    public class FetchIssuedChargesCsvHandler : IRequestHandler<Requests.Charges.FetchIssuedChargesCsv, FileInfo>
+    public class FetchIssuedChargesCsvHandler : IRequestHandler<FetchIssuedChargesCsv, FileInfo>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IFetchIssuedChargesCsvDataAccess dataAccess;
@@ -25,7 +27,7 @@
             this.csvWriterFactory = csvWriterFactory;
         }
 
-        public async Task<FileInfo> HandleAsync(Requests.Charges.FetchIssuedChargesCsv message)
+        public async Task<FileInfo> HandleAsync(FetchIssuedChargesCsv message)
         {
             authorization.EnsureCanAccessInternalArea();
 
@@ -44,15 +46,34 @@
             csvWriter.DefineColumn("Charge band", ps => ps.ChargeBandAmount.ChargeBand);
             csvWriter.DefineColumn("Issued date", ps => ps.MemberUpload.InvoiceRun.IssuedDate.ToString("dd/MM/yyyy HH:mm:ss"));
 
+            
             string content = csvWriter.Write(results);
             byte[] data = Encoding.UTF8.GetBytes(content);
 
-            // TODO: Do we need to add the scheme name or the current date to the file name?
-            string fileName = string.Format(
-                "issuedcharges_{0}_{1}.csv",
-                authority.Abbreviation,
-                message.ComplianceYear);
+            string schemeApprovalNumber = string.Empty;            
+            string fileName = string.Empty;
 
+            // TODO: Do we need to add the scheme name or the current date to the file name?
+            if (!string.IsNullOrEmpty(message.SchemeName))
+            {
+                //get approval number for scheme to display in the filename.
+                Domain.Scheme.Scheme scheme = await dataAccess.FetchSchemeAsync(message.SchemeName);
+                schemeApprovalNumber = scheme.ApprovalNumber;
+                fileName = string.Format(
+                    "issuedcharges_{0}_{1}_{2}_{3:ddMMyyyy_HHmm}.csv",
+                    authority.Abbreviation,
+                    schemeApprovalNumber,
+                    message.ComplianceYear,
+                    SystemTime.UtcNow);
+            }
+            else
+            {
+                fileName = string.Format(
+                    "issuedcharges_{0}_{1}_{2:ddMMyyyy_HHmm}.csv",
+                    authority.Abbreviation,
+                    message.ComplianceYear,
+                    SystemTime.UtcNow);
+            }
             return new FileInfo(fileName, data);
         }
     }
