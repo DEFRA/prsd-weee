@@ -3,7 +3,6 @@
     using System;
     using System.Data.Entity;
     using System.Linq;
-    using Core.Admin;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.Producer;

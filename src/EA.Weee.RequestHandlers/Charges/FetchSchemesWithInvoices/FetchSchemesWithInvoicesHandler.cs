@@ -1,9 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchSchemesWithInvoices
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain;
