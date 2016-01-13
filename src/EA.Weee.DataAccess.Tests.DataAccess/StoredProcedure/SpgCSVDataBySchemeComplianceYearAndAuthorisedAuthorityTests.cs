@@ -356,6 +356,10 @@
                 Assert.NotNull(results);
 
                 Assert.Equal(results.Count, 3);
+                Assert.Collection(results,
+                    (r1) => Assert.Equal("WEE/22AAAA22", r1.PRN),
+                    (r2) => Assert.Equal("WEE/33CCCC33", r2.PRN),
+                    (r3) => Assert.Equal("WEE/11BBBB11", r3.PRN));
             }
         }
 
@@ -399,6 +403,8 @@
                 Assert.NotNull(results);
 
                 Assert.Equal(results.Count, 1);
+                Assert.Collection(results,
+                   (r1) => Assert.Equal("WEE/33CCCC33", r1.PRN));
             }
         }
     }
