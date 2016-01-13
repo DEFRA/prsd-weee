@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.Charges;
     using EA.Weee.Ibis;

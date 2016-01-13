@@ -1,10 +1,6 @@
 ﻿namespace EA.Weee.Requests.Charges
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
 

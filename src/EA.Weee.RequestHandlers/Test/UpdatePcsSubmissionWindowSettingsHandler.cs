@@ -3,7 +3,6 @@
     using System;
     using System.Threading.Tasks;
     using Core.Configuration;
-    using Domain.DataReturns;
     using Factories;
     using Prsd.Core.Mediator;
     using Requests.Test;

@@ -55,7 +55,7 @@
     <Compile Include="Charges\FetchInvoiceRuns.cs" />
     <Compile Include="Charges\FetchIssuedChargesCsv.cs" />
     <Compile Include="Charges\FetchPendingCharges.cs" />
-    <Compile Include="Charges\FetchSchemsWithInvoices.cs" />
+    <Compile Include="Charges\FetchSchemesWithInvoices.cs" />
     <Compile Include="Charges\IssuePendingCharges.cs" />
     <Compile Include="Admin\RemoveProducer.cs" />
     <Compile Include="Admin\Reports\GetMemberDetailsCSV.cs" />
