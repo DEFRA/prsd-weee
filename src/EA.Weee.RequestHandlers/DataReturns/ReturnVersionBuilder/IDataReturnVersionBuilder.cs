@@ -11,6 +11,8 @@
     /// </summary>
     public interface IDataReturnVersionBuilder
     {
+        Task<DataReturnVersionBuilderResult> PreValidate();
+
         Scheme Scheme { get; }
 
         Quarter Quarter { get; }
