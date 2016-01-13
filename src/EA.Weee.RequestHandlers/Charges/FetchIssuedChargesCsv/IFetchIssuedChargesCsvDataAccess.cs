@@ -21,5 +21,6 @@
         /// <param name="schemeName"></param>
         /// <returns></returns>
         Task<IEnumerable<ProducerSubmission>> FetchInvoicedProducerSubmissionsAsync(UKCompetentAuthority authority, int complianceYear, string schemeName);
+        Task<Domain.Scheme.Scheme> FetchSchemeAsync(string schemeName);
     }
 }
