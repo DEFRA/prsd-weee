@@ -6,7 +6,7 @@
 
     public static class ProducerSubmissionExtensions
     {
-        public static IQueryable<string> ProducerNames(this DbSet<ProducerSubmission> producers)
+        public static IQueryable<string> ProducerNames(this IQueryable<ProducerSubmission> producers)
         {
             return producers.Select(p => p.ProducerBusiness != null
                 ? p.ProducerBusiness.CompanyDetails != null
