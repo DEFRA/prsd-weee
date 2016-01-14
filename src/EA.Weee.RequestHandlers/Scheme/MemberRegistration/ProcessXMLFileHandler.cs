@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
+    using DataAccess.DataAccess;
     using Domain;
     using Domain.Producer;
     using Domain.Scheme;
@@ -24,10 +25,11 @@
         private readonly IXmlConverter xmlConverter;
         private readonly IGenerateFromXml generateFromXml;
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
+        private readonly IProducerSubmissionDataAccess producerSubmissionDataAccess;
 
         public ProcessXMLFileHandler(WeeeContext context, IWeeeAuthorization authorization, 
             IXMLValidator xmlValidator, IGenerateFromXml generateFromXml, IXmlConverter xmlConverter, 
-            IXMLChargeBandCalculator xmlChargeBandCalculator)
+            IXMLChargeBandCalculator xmlChargeBandCalculator, IProducerSubmissionDataAccess producerSubmissionDataAccess)
         {
             this.context = context;
             this.authorization = authorization;
@@ -35,6 +37,7 @@
             this.xmlConverter = xmlConverter;
             this.xmlChargeBandCalculator = xmlChargeBandCalculator;
             this.generateFromXml = generateFromXml;
+            this.producerSubmissionDataAccess = producerSubmissionDataAccess;
         }
 
         public async Task<Guid> HandleAsync(ProcessXmlFile message)
@@ -82,7 +85,7 @@
             upload.SetProcessTime(stopwatch.Elapsed);
 
             context.MemberUploads.Add(upload);
-            context.ProducerSubmissions.AddRange(producers);
+            producerSubmissionDataAccess.AddRange(producers);
 
             await context.SaveChangesAsync();
             return upload.Id;
