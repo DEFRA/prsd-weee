@@ -4,9 +4,9 @@
     using Scheme;
     using System;
     using System.Collections.Generic;
-    using Unalignment;
+    using Prsd.Core.Domain;
 
-    public class RegisteredProducer : UnalignableEntity
+    public class RegisteredProducer : Entity
     {
         public RegisteredProducer(
             string producerRegistrationNumber,
@@ -19,14 +19,17 @@
             ComplianceYear = complianceYear;
             Scheme = scheme;
             CurrentSubmission = null;
+            IsAligned = true;
         }
 
         /// <summary>
         /// This constructor should only be used by Entity Framework.
         /// </summary>
         protected RegisteredProducer()
-        {
+        { 
         }
+
+        public virtual bool IsAligned { get; private set; }
 
         public virtual string ProducerRegistrationNumber { get; private set; }
 
@@ -47,6 +50,11 @@
                 throw new InvalidOperationException();
             }
             CurrentSubmission = producerSubmission;
+        }
+
+        public void Unalign()
+        {
+            IsAligned = false;
         }
     }
 }

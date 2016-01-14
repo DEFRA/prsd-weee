@@ -171,7 +171,7 @@
     <Content Include="DataReturns\XmlFiles\v3-ProducerList-DuplicateCategoryObligationType.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="DataReturns\XmlFiles\v3-Tonnage-WithMoreThan28Digits.xml">
+    <Content Include="DataReturns\XmlFiles\v3-Tonnage-WithMoreThan25Digits.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="DataReturns\XmlFiles\v3-ProducerList-DuplicateRegistrationNo.xml">

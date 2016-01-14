@@ -16,6 +16,11 @@
             this.context = context;
         }
 
+        public void Add(RegisteredProducer registeredProducer)
+        {
+            context.AllRegisteredProducers.Add(registeredProducer);
+        }
+
         public async Task<RegisteredProducer> GetProducerRegistration(Guid id)
         {
             var producer = await context.RegisteredProducers.SingleOrDefaultAsync(p => p.Id == id);
