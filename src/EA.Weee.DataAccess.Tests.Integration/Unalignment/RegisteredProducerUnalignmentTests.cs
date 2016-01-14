@@ -35,7 +35,7 @@
             await context.SaveChangesAsync();
 
             var producer = new RegisteredProducer("ABC12345", 2017, scheme);
-            context.RegisteredProducers.Add(producer);
+            context.AllRegisteredProducers.Add(producer);
             await context.SaveChangesAsync();
 
             producer = context.RegisteredProducers
@@ -59,7 +59,7 @@
             await context.SaveChangesAsync();
 
             var producer = new RegisteredProducer("ABC12345", 2017, scheme);
-            context.RegisteredProducers.Add(producer);
+            context.AllRegisteredProducers.Add(producer);
             await context.SaveChangesAsync();
 
             producer.Unalign();
@@ -86,18 +86,18 @@
             await context.SaveChangesAsync();
 
             var producer = new RegisteredProducer("ABC12345", 2017, scheme);
-            context.RegisteredProducers.Add(producer);
+            context.AllRegisteredProducers.Add(producer);
             await context.SaveChangesAsync();
 
             producer.Unalign();
             await context.SaveChangesAsync();
 
-            var alignroducer = new RegisteredProducer("ABC12345", 2017, scheme);
-            context.RegisteredProducers.Add(alignroducer);
+            var alignedProducer = new RegisteredProducer("ABC12345", 2017, scheme);
+            context.AllRegisteredProducers.Add(alignedProducer);
             await context.SaveChangesAsync();
 
             producer = context.RegisteredProducers
-                .SingleOrDefault(p => p.Id == alignroducer.Id);
+                .SingleOrDefault(p => p.Id == alignedProducer.Id);
 
             Assert.NotNull(producer);
             Assert.True(producer.IsAligned);

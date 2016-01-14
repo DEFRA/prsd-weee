@@ -1,10 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.BusinessValidation.Rules
 {
+    using System.Collections.Generic;
+    using Core.Shared;
     using Domain.Scheme;
-    using ReturnVersionBuilder;
 
     public interface ISchemeApprovalNumberMismatch
     {
-        DataReturnVersionBuilderResult Validate(string xmlSchemeApprovalNumber, Scheme scheme);
+        IEnumerable<ErrorData> Validate(string xmlSchemeApprovalNumber, Scheme scheme);
     }
 }
