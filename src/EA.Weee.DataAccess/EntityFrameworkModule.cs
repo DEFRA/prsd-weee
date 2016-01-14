@@ -20,6 +20,9 @@
 
             builder.RegisterType<SystemDataDataAccess>().As<ISystemDataDataAccess>()
                 .InstancePerRequest();
+
+            builder.RegisterType<ProducerSubmissionDataAccess>().As<IProducerSubmissionDataAccess>()
+                .InstancePerRequest();
         }
     }
 }

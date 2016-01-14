@@ -7,6 +7,8 @@
 
     public interface IRegisteredProducerDataAccess
     {
+        void Add(RegisteredProducer registeredProducer);
+
         Task<RegisteredProducer> GetProducerRegistration(Guid id);
 
         Task<IEnumerable<RegisteredProducer>> GetProducerRegistrations(string producerRegistrationNumber, int complianceYear);
