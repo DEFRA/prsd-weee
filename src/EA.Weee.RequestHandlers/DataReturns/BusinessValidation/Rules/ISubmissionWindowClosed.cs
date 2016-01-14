@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.BusinessValidation.Rules
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Core.Shared;
     using Domain.DataReturns;
-    using ReturnVersionBuilder;
 
     public interface ISubmissionWindowClosed
     {
-        Task<DataReturnVersionBuilderResult> Validate(Quarter quarter);
+        Task<IEnumerable<ErrorData>> Validate(Quarter quarter);
     }
 }

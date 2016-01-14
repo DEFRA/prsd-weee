@@ -73,8 +73,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAccess\IProducerSubmissionDataAccess.cs" />
     <Compile Include="DataAccess\IQuarterWindowTemplateDataAccess.cs" />
     <Compile Include="DataAccess\ISystemDataDataAccess.cs" />
+    <Compile Include="DataAccess\ProducerSubmissionDataAccess.cs" />
     <Compile Include="DataAccess\QuarterWindowTemplateDataAccess.cs" />
     <Compile Include="DataAccess\SystemDataDataAccess.cs" />
     <Compile Include="EntityFrameworkModule.cs" />
@@ -89,8 +91,7 @@
     <Compile Include="Mappings\WeeeDeliveredReturnVersionMapping.cs" />
     <Compile Include="StoredProcedure\ProducerEEECSVData.cs" />
     <Compile Include="StoredProcedure\SpgSchemeWeeeCsvResult.cs" />
-    <Compile Include="WeeeContext.Metadata.cs" />
-    <Compile Include="Extensions\ProducerExtensions.cs" />
+    <Compile Include="Extensions\ProducerSubmissionExtensions.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
     <Compile Include="Identity\WeeeIdentityContext.cs" />

@@ -67,7 +67,7 @@
         {
             XElement xmlXsdVersion = new XElement(XmlNamespace.DataReturns + "XSDVersion");
             xmlSchemeReturn.Add(xmlXsdVersion);
-            xmlXsdVersion.Value = "3.22";
+            xmlXsdVersion.Value = "3.23";
 
             XElement xmlApprovalNo = new XElement(XmlNamespace.DataReturns + "ApprovalNo");
             xmlSchemeReturn.Add(xmlApprovalNo);
