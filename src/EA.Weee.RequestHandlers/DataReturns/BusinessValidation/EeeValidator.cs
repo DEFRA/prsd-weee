@@ -64,14 +64,9 @@
 
             if (!string.Equals(producer.CurrentSubmission.OrganisationName, producerName, StringComparison.InvariantCultureIgnoreCase))
             {
-                string producerNameWithSpaces = producerName;
-                if (producerName.Any(x => Char.IsWhiteSpace(x)))
-                {
-                    producerNameWithSpaces = producerName.Replace(" ", "&nbsp;");
-                }
                 var errorMessage = string.Format(
                 "The producer name {0} registered for producer registration number {1} for {2} does not match the registered producer name of {3}. Ensure the registration number and producer name match the registered details.",
-                producerNameWithSpaces,
+                producerName,
                 producerRegistrationNumber,
                 quarter.Year,
                 producer.CurrentSubmission.OrganisationName);
