@@ -39,7 +39,7 @@
 
             string fileContent = await GetProducersEEEDataCSVContent(request.ComplianceYear, obligationType);
 
-            var fileName = string.Format("{0}_{1}_producerEEEData_{2:ddMMyyyy_HHmm}.csv",
+            var fileName = string.Format("{0}_{1}_producerEEE_{2:ddMMyyyy_HHmm}.csv",
                 request.ComplianceYear,
                 obligationType,
                 DateTime.UtcNow);
