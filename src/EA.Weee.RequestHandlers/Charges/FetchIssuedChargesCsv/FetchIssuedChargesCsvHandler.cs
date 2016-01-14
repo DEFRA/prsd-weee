@@ -45,7 +45,6 @@
             csvWriter.DefineColumn("Charge value", ps => ps.ChargeThisUpdate);
             csvWriter.DefineColumn("Charge band", ps => ps.ChargeBandAmount.ChargeBand);
             csvWriter.DefineColumn("Issued date", ps => ps.MemberUpload.InvoiceRun.IssuedDate.ToString("dd/MM/yyyy HH:mm:ss"));
-
             
             string content = csvWriter.Write(results);
             byte[] data = Encoding.UTF8.GetBytes(content);
@@ -53,24 +52,21 @@
             string schemeApprovalNumber = string.Empty;            
             string fileName = string.Empty;
 
-            // TODO: Do we need to add the scheme name or the current date to the file name?
             if (!string.IsNullOrEmpty(message.SchemeName))
             {
                 //get approval number for scheme to display in the filename.
                 Domain.Scheme.Scheme scheme = await dataAccess.FetchSchemeAsync(message.SchemeName);
-                schemeApprovalNumber = scheme.ApprovalNumber;
+                schemeApprovalNumber = scheme.ApprovalNumber.Replace("/", string.Empty);
                 fileName = string.Format(
-                    "issuedcharges_{0}_{1}_{2}_{3:ddMMyyyy_HHmm}.csv",
-                    authority.Abbreviation,
-                    schemeApprovalNumber,
-                    message.ComplianceYear,
+                    "{0}_{1}_issuedcharges_{2:ddMMyyyy_HHmm}.csv",
+                    message.ComplianceYear,                    
+                    schemeApprovalNumber,                   
                     SystemTime.UtcNow);
             }
             else
             {
                 fileName = string.Format(
-                    "issuedcharges_{0}_{1}_{2:ddMMyyyy_HHmm}.csv",
-                    authority.Abbreviation,
+                    "{0}_issuedcharges_{1:ddMMyyyy_HHmm}.csv",
                     message.ComplianceYear,
                     SystemTime.UtcNow);
             }
