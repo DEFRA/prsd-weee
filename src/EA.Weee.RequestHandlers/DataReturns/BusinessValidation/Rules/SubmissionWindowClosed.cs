@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.BusinessValidation.Rules
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Core.Shared;
     using DataAccess.DataAccess;
@@ -20,9 +21,9 @@
             this.systemDataDataAccess = systemDataDataAccess;
         }
 
-        public async Task<DataReturnVersionBuilderResult> Validate(Quarter quarter)
+        public async Task<IEnumerable<ErrorData>> Validate(Quarter quarter)
         {
-            var result = new DataReturnVersionBuilderResult();
+            var result = new List<ErrorData>();
 
             var currentDate = SystemTime.Now;
             var systemSettings = await systemDataDataAccess.Get();
@@ -40,7 +41,7 @@
                     "The submission window for {0} {1} has not yet opened.The submission window will open on the {2}, resubmit your file on or after this date.",
                     quarter.Q, quarter.Year, quarterWindow.StartDate.ToString("dd MMM yyyy"));
 
-                result.ErrorData.Add(new ErrorData(errorMessage, ErrorLevel.Error));
+                result.Add(new ErrorData(errorMessage, ErrorLevel.Error));
                 return result;
             }
 
@@ -50,7 +51,7 @@
                     "The window for resubmitting data returns for the {0} compliance period has closed. Contact your relevant agency.",
                     quarter.Year);
 
-                result.ErrorData.Add(new ErrorData(errorMessage, ErrorLevel.Error));
+                result.Add(new ErrorData(errorMessage, ErrorLevel.Error));
                 return result;
             }
 
