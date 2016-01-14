@@ -3,9 +3,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using Core.Shared;
-    using DataAccess;
     using FakeItEasy;
-    using RequestHandlers.Charges;
     using RequestHandlers.Charges.FetchIssuedChargesCsv;
     using RequestHandlers.Security;
     using Requests.Charges;
