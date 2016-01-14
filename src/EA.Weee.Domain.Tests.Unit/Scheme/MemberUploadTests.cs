@@ -149,7 +149,7 @@
             MemberUpload memberUpload = new MemberUpload(A.Dummy<Guid>(), "data", null, 100, 2015, scheme, "fileName");
 
             var registeredProducer = new RegisteredProducer("PRN", 2015, scheme);
-            registeredProducer.Unalign();
+            registeredProducer.Remove();
 
             var producer = new ProducerSubmission(
                 registeredProducer,
