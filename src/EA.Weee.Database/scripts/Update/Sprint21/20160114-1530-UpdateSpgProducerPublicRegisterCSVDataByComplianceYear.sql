@@ -1,4 +1,3 @@
-USE [EA.Weee]
 GO
 /****** Object:  StoredProcedure [Producer].[spgProducerPublicRegisterCSVDataByComplianceYear]    Script Date: 14/01/2016 15:30:09 ******/
 SET ANSI_NULLS ON
