@@ -48,7 +48,9 @@
             yield return Customer.Address.AddressLine4;
             yield return Customer.Address.AddressLine5;
             yield return Customer.Address.AddressLine6;
-            yield return Customer.Address.PostCode;
+            yield return Customer.Address.IsUKAddress ?
+                Customer.Address.PostCode :
+                string.Format("{0}  {1}", Customer.Address.PostCode.Trim(), Customer.Address.Country); // Include 2 blank spaces when concatenating the postcode and country.
         }
     }
 }
