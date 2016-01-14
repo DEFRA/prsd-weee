@@ -15,14 +15,6 @@
           <Property Name="UserStatus" Type="int" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="1B1STransactionNumberSequence">
-          <Key>
-            <PropertyRef Name="NextNumber" />
-          </Key>
-          <Property Name="NextNumber" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="IbisFileData">
           <Key>
             <PropertyRef Name="Id" />
@@ -481,7 +473,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="SchemeId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ComplianceYear" Type="int" Nullable="false" />
           <Property Name="CurrentSubmissionId" Type="uniqueidentifier" />
-          <Property Name="IsAligned" Type="bit" Nullable="false" />
+          <Property Name="Removed" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="SICCode">
           <Key>
@@ -1219,11 +1211,6 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <EntitySet Name="ProducerSubmission" EntityType="Self.ProducerSubmission" Schema="Producer" store:Type="Tables" />
           <EntitySet Name="RegisteredProducer" EntityType="Self.RegisteredProducer" Schema="Producer" store:Type="Tables" />
           <EntitySet Name="SICCode" EntityType="Self.SICCode" Schema="Producer" store:Type="Tables" />
-          <EntitySet Name="1B1STransactionNumberSequence" EntityType="Self.1B1STransactionNumberSequence" store:Type="Tables" store:Schema="Charging">
-            <DefiningQuery>SELECT 
-    [1B1STransactionNumberSequence].[NextNumber] AS [NextNumber]
-    FROM [Charging].[1B1STransactionNumberSequence] AS [1B1STransactionNumberSequence]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="FK_Address_Country" Association="Self.FK_Address_Country">
             <End Role="Country" EntitySet="Country" />
             <End Role="Address" EntitySet="Address" />
@@ -2250,7 +2237,6 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           </AssociationSet>
           <EntitySet Name="IbisFileDatas" EntityType="EA.Weee.TestModel.IbisFileData" />
           <EntitySet Name="InvoiceRuns" EntityType="EA.Weee.TestModel.InvoiceRun" />
-          <EntitySet Name="C1B1STransactionNumberSequence" EntityType="EA.Weee.TestModel.C1B1STransactionNumberSequence" />
           <AssociationSet Name="FK_InvoiceRun_IbisFileData" Association="EA.Weee.TestModel.FK_InvoiceRun_IbisFileData">
             <End Role="IbisFileData" EntitySet="IbisFileDatas" />
             <End Role="InvoiceRun" EntitySet="InvoiceRuns" />
@@ -2371,8 +2357,8 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <NavigationProperty Name="Scheme" Relationship="EA.Weee.TestModel.FK_RegisteredProducer_Scheme" FromRole="RegisteredProducer" ToRole="Scheme" />
           <NavigationProperty Name="ProducerSubmissions" Relationship="EA.Weee.TestModel.FK_ProducerSubmission_RegisteredProducer" FromRole="RegisteredProducer" ToRole="ProducerSubmission" />
           <NavigationProperty Name="CurrentSubmission" Relationship="EA.Weee.TestModel.FK_RegisteredProducer_ProducerSubmission" FromRole="RegisteredProducer" ToRole="ProducerSubmission" />
-          <Property Name="IsAligned" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="EeeOutputAmounts" Relationship="EA.Weee.TestModel.FK_EeeOutputAmount_RegisteredProducer" FromRole="RegisteredProducer" ToRole="EeeOutputAmount" />
+          <Property Name="Removed" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_ProducerSubmission_ChargeBandAmount">
           <End Type="EA.Weee.TestModel.ChargeBandAmount" Role="ChargeBandAmount" Multiplicity="1" />
@@ -2946,12 +2932,6 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <Property Name="IssuedByUserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetUser" Relationship="EA.Weee.TestModel.FK_InvoiceRun_AspNetUsers_IssuedBy" FromRole="InvoiceRun" ToRole="AspNetUser" />
         </EntityType>
-        <EntityType Name="C1B1STransactionNumberSequence">
-          <Key>
-            <PropertyRef Name="NextNumber" />
-          </Key>
-          <Property Name="NextNumber" Type="Int32" Nullable="false" />
-        </EntityType>
         <Association Name="FK_InvoiceRun_IbisFileData">
           <End Type="EA.Weee.TestModel.IbisFileData" Role="IbisFileData" Multiplicity="0..1" />
           <End Type="EA.Weee.TestModel.InvoiceRun" Role="InvoiceRun" Multiplicity="*" />
@@ -3325,7 +3305,7 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
           <EntitySetMapping Name="RegisteredProducers">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.RegisteredProducer">
               <MappingFragment StoreEntitySet="RegisteredProducer">
-                <ScalarProperty Name="IsAligned" ColumnName="IsAligned" />
+                <ScalarProperty Name="Removed" ColumnName="Removed" />
                 <ScalarProperty Name="CurrentSubmissionId" ColumnName="CurrentSubmissionId" />
                 <ScalarProperty Name="ComplianceYear" ColumnName="ComplianceYear" />
                 <ScalarProperty Name="SchemeId" ColumnName="SchemeId" />
@@ -3520,13 +3500,6 @@ warning 6002: The table/view 'EA.Weee.Charging.1B1STransactionNumberSequence' do
                 <ScalarProperty Name="CompetentAuthorityId" ColumnName="CompetentAuthorityId" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="C1B1STransactionNumberSequence">
-            <EntityTypeMapping TypeName="EA.Weee.TestModel.C1B1STransactionNumberSequence">
-              <MappingFragment StoreEntitySet="1B1STransactionNumberSequence">
-                <ScalarProperty Name="NextNumber" ColumnName="NextNumber" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.DataAccess.Tests.Integration.Unalignment
+﻿namespace EA.Weee.DataAccess.Tests.Integration.ProducerRemoval
 {
     using System;
     using System.Linq;
@@ -10,11 +10,11 @@
     using Prsd.Core.Domain;
     using Xunit;
 
-    public class RegisteredProducerUnalignmentTests
+    public class RegisteredProducerRemovalTests
     {
         private readonly IUserContext userContext;
 
-        public RegisteredProducerUnalignmentTests()
+        public RegisteredProducerRemovalTests()
         {
             userContext = A.Fake<IUserContext>();
             A.CallTo(() => userContext.UserId)
@@ -22,7 +22,7 @@
         }
 
         [Fact]
-        public async Task CreateRegisteredProducer_ProducerIsAligned()
+        public async Task CreateRegisteredProducer_ProducerIsNotRemoved()
         {
             var context = WeeeContext();
 
@@ -42,11 +42,20 @@
                 .SingleOrDefault(p => p.Id == producer.Id);
 
             Assert.NotNull(producer);
-            Assert.True(producer.IsAligned);
+            Assert.False(producer.Removed);
         }
 
         [Fact]
-        public async Task CreateRegisteredProducer_ProducerIsAligned_ThenUnlign_ProducerEntityNotInDbSet()
+        public async Task InvokeRemove_ForAlreadyRemovedProducer_ThrowsInvalidOperationException()
+        {
+            var producer = new RegisteredProducer("ABC12345", 2017, A.Dummy<Scheme>());
+            producer.Remove();
+
+            Assert.Throws<InvalidOperationException>(() => producer.Remove());
+        }
+
+        [Fact]
+        public async Task CreateRegisteredProducer_ProducerIsNotRemoved_ThenRemove_ProducerEntityNotInDbSet()
         {
             var context = WeeeContext();
 
@@ -62,7 +71,7 @@
             context.AllRegisteredProducers.Add(producer);
             await context.SaveChangesAsync();
 
-            producer.Unalign();
+            producer.Remove();
 
             await context.SaveChangesAsync();
 
@@ -73,7 +82,7 @@
         }
 
         [Fact]
-        public async Task CreateRegisteredProducer_ProducerIsAligned_ThenUnlign_ThenReRegister_ReturnsAlignedProducer()
+        public async Task CreateRegisteredProducer_ProducerIsNotRemoved_ThenRemoved_ThenReRegister_ReturnsNotRemovedProducer()
         {
             var context = WeeeContext();
 
@@ -89,18 +98,18 @@
             context.AllRegisteredProducers.Add(producer);
             await context.SaveChangesAsync();
 
-            producer.Unalign();
+            producer.Remove();
             await context.SaveChangesAsync();
 
-            var alignedProducer = new RegisteredProducer("ABC12345", 2017, scheme);
-            context.AllRegisteredProducers.Add(alignedProducer);
+            var notRemovedProducer = new RegisteredProducer("ABC12345", 2017, scheme);
+            context.AllRegisteredProducers.Add(notRemovedProducer);
             await context.SaveChangesAsync();
 
             producer = context.RegisteredProducers
-                .SingleOrDefault(p => p.Id == alignedProducer.Id);
+                .SingleOrDefault(p => p.Id == notRemovedProducer.Id);
 
             Assert.NotNull(producer);
-            Assert.True(producer.IsAligned);
+            Assert.False(producer.Removed);
         }
 
         private WeeeContext WeeeContext()
