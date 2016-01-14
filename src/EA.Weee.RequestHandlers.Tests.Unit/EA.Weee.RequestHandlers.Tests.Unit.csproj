@@ -106,6 +106,7 @@
     <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandlerTests.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile\FetchInvoiceRunIbisZipFileHandlerTests.cs" />
     <Compile Include="Charges\FetchInvoiceRuns\FetchInvoiceRunsHandlerTests.cs" />
+    <Compile Include="Charges\FetchIssuedChargesCsv\FetchIssuedChargesCsvHandlerTests.cs" />
     <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandlerTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGeneratorTests.cs" />
