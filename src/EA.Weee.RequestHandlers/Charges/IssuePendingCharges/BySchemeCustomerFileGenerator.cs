@@ -34,7 +34,9 @@
                         null,
                         scheme.Organisation.OrganisationAddress.TownOrCity,
                         scheme.Organisation.OrganisationAddress.CountyOrRegion,
-                        scheme.Organisation.OrganisationAddress.Postcode);
+                        scheme.Organisation.OrganisationAddress.Postcode,
+                        scheme.Organisation.OrganisationAddress.Country.Name,
+                        scheme.Organisation.OrganisationAddress.IsUkAddress());
                 }
                 catch (Exception ex)
                 {

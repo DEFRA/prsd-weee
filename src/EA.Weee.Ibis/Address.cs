@@ -43,6 +43,16 @@
         public string PostCode { get; private set; }
 
         /// <summary>
+        /// Country of the invoicee address.
+        /// </summary>
+        public string Country { get; private set; }
+
+        /// <summary>
+        /// Whether the invoicee address is UK-based.
+        /// </summary>
+        public bool IsUKAddress { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Address"/> class with the specified details.
         /// </summary>
         /// <param name="addressLine1">The first line of the invoicee's address.</param>
@@ -52,6 +62,8 @@
         /// <param name="addressLine5">Town (if this information can be directly mapped).</param>
         /// <param name="addressLine6">County (if this information can be directly mapped).</param>
         /// <param name="postCode">Post code of the invoicee address.</param>
+        /// <param name="country">Country of the invoicee address.</param>
+        /// <param name="isUKAddress">Whether the invoicee address is UK-based.</param>
         public Address(
             string addressLine1,
             string addressLine2,
@@ -59,7 +71,9 @@
             string addressLine4,
             string addressLine5,
             string addressLine6,
-            string postCode)
+            string postCode,
+            string country,
+            bool isUKAddress)
         {
             if (string.IsNullOrEmpty(addressLine1))
             {
@@ -113,6 +127,8 @@
             AddressLine5 = addressLine5;
             AddressLine6 = addressLine6;
             PostCode = postCode;
+            Country = country;
+            IsUKAddress = isUKAddress;
         }
     }
 }
