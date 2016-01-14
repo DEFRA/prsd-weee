@@ -43,7 +43,7 @@
                 SubmissionWindowClosed()
                     .Validate(new Quarter(2016, QuarterType.Q1));
 
-            Assert.Empty(result.ErrorData);
+            Assert.Empty(result);
         }
 
         [Fact]
@@ -71,7 +71,7 @@
 
             SystemTime.Unfreeze();
 
-            Assert.Empty(result.ErrorData);
+            Assert.Empty(result);
         }
 
         [Fact]
@@ -99,9 +99,9 @@
 
             SystemTime.Unfreeze();
 
-            Assert.Single(result.ErrorData);
+            Assert.Single(result);
 
-            var error = result.ErrorData.Single();
+            var error = result.Single();
 
             Assert.Equal(Core.Shared.ErrorLevel.Error, error.ErrorLevel);
             Assert.Contains("not yet opened", error.Description);
@@ -133,9 +133,9 @@
 
             SystemTime.Unfreeze();
 
-            Assert.Single(result.ErrorData);
+            Assert.Single(result);
 
-            var error = result.ErrorData.Single();
+            var error = result.Single();
 
             Assert.Equal(Core.Shared.ErrorLevel.Error, error.ErrorLevel);
             Assert.Contains("has closed", error.Description);
