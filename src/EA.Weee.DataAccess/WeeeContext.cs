@@ -33,7 +33,7 @@
         public virtual DbSet<User> Users { get; set; }
 
         public virtual DbSet<Country> Countries { get; set; }
-        
+
         public virtual DbSet<OrganisationUser> OrganisationUsers { get; set; }
 
         public virtual DbSet<UKCompetentAuthority> UKCompetentAuthorities { get; set; }
@@ -52,17 +52,17 @@
             {
                 return AllRegisteredProducers
                     .AsQueryable()
-                    .Where(rp => rp.IsAligned);
+                    .Where(rp => !rp.Removed);
             }
         }
 
-        public virtual IQueryable<RegisteredProducer> UnalignedRegisteredProducers
+        public virtual IQueryable<RegisteredProducer> RemovedRegisteredProducers
         {
             get
             {
                 return AllRegisteredProducers
                     .AsQueryable()
-                    .Where(rp => !rp.IsAligned);
+                    .Where(rp => rp.Removed);
             }
         }
 
@@ -74,17 +74,17 @@
             {
                 return AllProducerSubmissions
                     .AsQueryable()
-                    .Where(ps => ps.RegisteredProducer.IsAligned);
+                    .Where(ps => !ps.RegisteredProducer.Removed);
             }
         }
 
-        public virtual IQueryable<ProducerSubmission> UnalignedProducerSubmissions
+        public virtual IQueryable<ProducerSubmission> RemovedProducerSubmissions
         {
             get
             {
                 return AllProducerSubmissions
                     .AsQueryable()
-                    .Where(ps => !ps.RegisteredProducer.IsAligned);
+                    .Where(ps => ps.RegisteredProducer.Removed);
             }
         }
 

@@ -269,7 +269,7 @@
                     ComplianceYear = complianceYear,
                     ProducerRegistrationNumber = registrationNumber,
                     CurrentSubmissionId = null,
-                    IsAligned = true
+                    Removed = false
                 };
                 model.RegisteredProducers.Add(registeredProducer);
             }
