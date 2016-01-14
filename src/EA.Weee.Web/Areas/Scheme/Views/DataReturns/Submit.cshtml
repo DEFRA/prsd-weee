@@ -1,7 +1,7 @@
-﻿@using System.EnterpriseServices
-@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.DataReturns
+@using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.DataReturns.SubmitViewModel
 @{  
     ViewBag.Title = "Submit Data Return";
@@ -92,7 +92,7 @@
                     <ul>
                         @foreach (DataReturnError error in Model.DataReturn.Errors)
                         {
-                            <li class="error-list-item font-xsmall">@error.Description</li>
+                            <li class="error-list-item font-xsmall">@Html.Raw(error.Description.ReplaceConsecutiveWhiteSpacesWithNonBreakingSpace())</li>
                         }
                     </ul>
                 </div>
