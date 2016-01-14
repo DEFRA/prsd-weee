@@ -143,7 +143,7 @@
 
             foreach (var producer in ProducerSubmissions)
             {
-                if (producer.RegisteredProducer.IsAligned)
+                if (!producer.RegisteredProducer.Removed)
                 {
                     producer.SetAsInvoiced();
                 }
