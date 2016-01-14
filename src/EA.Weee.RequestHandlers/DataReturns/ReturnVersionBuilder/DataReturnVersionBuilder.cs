@@ -46,7 +46,7 @@
             Errors = new List<ErrorData>();
         }
 
-        public async Task<DataReturnVersionBuilderResult> PreValidate()
+        public async Task<IEnumerable<ErrorData>> PreValidate()
         {
             return await submissionWindowClosed.Validate(Quarter);
         }

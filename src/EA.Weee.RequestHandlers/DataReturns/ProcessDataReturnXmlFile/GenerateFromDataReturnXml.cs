@@ -30,7 +30,7 @@
 
             T deserialisedType = null;
 
-            string schemaVersion = "3.22";
+            string schemaVersion = "3.23";
 
             // Validate against the schema
             var validationErrors = schemaValidator
