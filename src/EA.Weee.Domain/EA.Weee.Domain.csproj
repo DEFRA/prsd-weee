@@ -53,7 +53,6 @@
     <Compile Include="DataReturns\WeeeCollectedReturnVersion.cs" />
     <Compile Include="DataReturns\WeeeDeliveredReturnVersion.cs" />
     <Compile Include="Lookup\QuarterWindowTemplate.cs" />
-    <Compile Include="Unalignment\UnalignableEntity.cs" />
     <Compile Include="Audit\AuditableEntity.cs" />
     <Compile Include="DataReturns\DataReturn.cs" />
     <Compile Include="DataReturns\DataReturnUpload.cs" />
