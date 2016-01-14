@@ -2,10 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Core.Shared;
-    using Domain;
     using Domain.DataReturns;
     using Domain.Lookup;
     using Domain.Producer;
