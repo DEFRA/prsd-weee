@@ -9908,3 +9908,8 @@ INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerN
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/HE5732WY', 'XYZPrinting Inc', NULL, 'ec3e18bc-b3c8-4d00-a10b-e853edba59c5')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/HG5732WY', 'JEDirect Corp', NULL, '9f3a3460-e1bb-434c-88ee-51fd7f361be9')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/HH5732WY', 'Rocket Production POP LLP', 'OC359998', '1bcd81d1-0bfa-438b-832a-899d57a08340')
+
+-- Latest updates 13/01/2016
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/JA5735XR', 'Code 42 Software UK Ltd', '8912337', 'c11cddb0-195c-43c6-b6aa-4d8f722d1f7b')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/JB5735XR', 'Code 42 Software, Inc.', NULL, 'dba88b1a-197e-4a94-871d-4de1864ac241')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/JD5736XS', '99p Stores Ltd', '4058808', '960a4688-21d1-4328-8411-cd4c847011c6')
