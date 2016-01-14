@@ -115,9 +115,6 @@
     <Compile Include="Model\Business.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\C1B1STransactionNumberSequence.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\ChargeBandAmount.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

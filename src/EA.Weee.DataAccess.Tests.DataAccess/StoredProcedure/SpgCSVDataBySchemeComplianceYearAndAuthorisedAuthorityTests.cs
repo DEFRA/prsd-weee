@@ -17,7 +17,7 @@
             {
                 // Arrange
                 ModelHelper helper = new ModelHelper(db.Model);
-               
+
                 Scheme scheme1 = helper.CreateScheme();
 
                 scheme1.CompetentAuthorityId = new Guid("4EEE5942-01B2-4A4D-855A-34DEE1BBBF26");
@@ -92,7 +92,7 @@
                 ModelHelper helper = new ModelHelper(db.Model);
 
                 Scheme scheme1 = helper.CreateScheme();
-                
+
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
@@ -104,7 +104,7 @@
 
                 // Act
                 List<MembersDetailsCSVData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, scheme1.Id, null);
-                    
+
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
@@ -129,7 +129,7 @@
                 ModelHelper helper = new ModelHelper(db.Model);
 
                 Scheme scheme1 = helper.CreateScheme();
-                
+
                 MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
@@ -141,7 +141,7 @@
 
                 // Act
                 List<MembersDetailsCSVData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, scheme1.Id, null);
-                    
+
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
@@ -309,7 +309,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-           
+
                 Assert.Collection(results,
                     (r1) => Assert.Equal("AAAA", r1.ProducerName),
                     (r2) => Assert.Equal("ABCD", r2.ProducerName),
@@ -338,11 +338,11 @@
 
                 ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11BBBB11");
                 producer1.Business.Partnership.Name = "ABCH";
-                producer1.RegisteredProducer.IsAligned = false;
+                producer1.RegisteredProducer.Removed = true;
 
                 ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload1, "WEE/22AAAA22");
                 producer2.Business.Company.Name = "AAAA";
-                producer2.RegisteredProducer.IsAligned = false;
+                producer2.RegisteredProducer.Removed = true;
 
                 ProducerSubmission producer3 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/33CCCC33");
                 producer3.Business.Partnership.Name = "ABCD";
@@ -384,15 +384,15 @@
 
                 ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11BBBB11");
                 producer1.Business.Partnership.Name = "ABCH";
-                producer1.RegisteredProducer.IsAligned = false;
+                producer1.RegisteredProducer.Removed = true;
 
                 ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload1, "WEE/22AAAA22");
                 producer2.Business.Company.Name = "AAAA";
-                producer2.RegisteredProducer.IsAligned = false;
+                producer2.RegisteredProducer.Removed = true;
 
                 ProducerSubmission producer3 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/33CCCC33");
                 producer3.Business.Partnership.Name = "ABCD";
-                producer3.RegisteredProducer.IsAligned = true;
+                producer3.RegisteredProducer.Removed = false;
 
                 db.Model.SaveChanges();
 
