@@ -38,7 +38,7 @@
 
             var producer = await removeProducerDataAccess.GetProducerRegistration(request.RegisteredProducerId);
 
-            producer.Unalign();
+            producer.Remove();
 
             await removeProducerDataAccess.SaveChangesAsync();
 
