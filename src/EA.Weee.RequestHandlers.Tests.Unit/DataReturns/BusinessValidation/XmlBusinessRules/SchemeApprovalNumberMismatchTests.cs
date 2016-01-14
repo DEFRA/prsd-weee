@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.BusinessValidation.XmlBusinessRules
 {
     using System;
+    using System.Linq;
     using Core.Shared;
     using Domain.Scheme;
     using RequestHandlers.DataReturns.BusinessValidation.Rules;
@@ -23,11 +24,9 @@
 
             var result = new SchemeApprovalNumberMismatch().Validate("WEE/ZZ9999ZZ/SCH", scheme);
 
-            Assert.NotNull(result);
-            Assert.Null(result.DataReturnVersion);
-            Assert.NotEmpty(result.ErrorData);
+            Assert.NotEmpty(result);
 
-            ErrorData firstError = result.ErrorData[0];
+            ErrorData firstError = result.ToArray()[0];
 
             Assert.NotNull(firstError);
             Assert.Equal(ErrorLevel.Error, firstError.ErrorLevel);

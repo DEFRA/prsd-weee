@@ -113,9 +113,9 @@
         }
 
         [Fact]
-        public void DataReturnSchemaValidation_TonnageWithMoreThan28Digits_ReturnsValidationError()
+        public void DataReturnSchemaValidation_TonnageWithMoreThan25Digits_ReturnsValidationError()
         {
-            var result = new XmlFileLoad().ValidateDataReturnXmlWithSingleResult(@"DataReturns\XmlFiles\v3-Tonnage-WithMoreThan28Digits.xml");
+            var result = new XmlFileLoad().ValidateDataReturnXmlWithSingleResult(@"DataReturns\XmlFiles\v3-Tonnage-WithMoreThan25Digits.xml");
 
             Assert.Equal(XmlSeverityType.Error, result.Severity);
             Assert.Contains("TotalDigits constraint failed", result.Message);
