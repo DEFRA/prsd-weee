@@ -1,12 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.IssuePendingCharges
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using EA.Weee.Domain.Charges;
-    using EA.Weee.Domain.Scheme;
     using EA.Weee.RequestHandlers.Charges.IssuePendingCharges;
     using FakeItEasy;
     using Ibis;
