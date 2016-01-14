@@ -106,7 +106,6 @@
     <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandlerTests.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile\FetchInvoiceRunIbisZipFileHandlerTests.cs" />
     <Compile Include="Charges\FetchInvoiceRuns\FetchInvoiceRunsHandlerTests.cs" />
-    <Compile Include="Charges\FetchIssuedChargesCsv\FetchIssuedChargesCsvHandlerTests.cs" />
     <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandlerTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGeneratorTests.cs" />
@@ -256,7 +255,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Charges\FetchIssuedChargesCsv\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
