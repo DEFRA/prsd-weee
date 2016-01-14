@@ -33,7 +33,7 @@
                 "Some town",
                 "Some county",
                 "Post code",
-                A.Dummy<Country>(),
+                new Country(Guid.NewGuid(), "UK - England"),
                 "01234 567890",
                 "someone@domain.com");
 
@@ -96,7 +96,7 @@
                 "Some town",
                 "Some county",
                 "Post code",
-                A.Dummy<Country>(),
+                new Country(Guid.NewGuid(), "UK - England"),
                 "01234 567890",
                 "someone@domain.com");
 
@@ -173,7 +173,7 @@
                 "Some town",
                 "Some county",
                 "Post code",
-                A.Dummy<Country>(),
+                new Country(Guid.NewGuid(), "UK - England"),
                 "01234 567890",
                 "someone@domain.com");
 
@@ -248,7 +248,7 @@
                 "Some town",
                 "Some county",
                 "Post code",
-                A.Dummy<Country>(),
+                new Country(Guid.NewGuid(), "UK - England"),
                 "01234 567890",
                 "someone@domain.com");
 
@@ -283,7 +283,7 @@
                 "Some town",
                 "Some county",
                 "Post code",
-                A.Dummy<Country>(),
+                new Country(Guid.NewGuid(), "UK - England"),
                 "01234 567890",
                 "someone@domain.com");
 
