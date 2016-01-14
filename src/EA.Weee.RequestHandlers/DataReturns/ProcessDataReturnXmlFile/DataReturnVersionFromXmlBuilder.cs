@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ProcessDataReturnXmlFile
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using BusinessValidation;
@@ -34,20 +35,20 @@
         public async Task<DataReturnVersionBuilderResult> Build(SchemeReturn schemeReturn)
         {
             // PreValidate (any validation before business validation)
-            var preValidationResult = await dataReturnVersionBuilder.PreValidate();
+            var preValidationErrors = await dataReturnVersionBuilder.PreValidate();
 
-            if (preValidationResult.ErrorData.Any())
-            {
-                return preValidationResult;
-            }
-
-            // Then process XML-specific validation
+            // And process XML-specific validation
             var schemeApprovalNumberMismatchResult = schemeApprovalNumberMismatch.Validate(schemeReturn.ApprovalNo,
                 dataReturnVersionBuilder.Scheme);
 
-            if (schemeApprovalNumberMismatchResult.ErrorData.Any())
+            var preBusinessValidationResult = new DataReturnVersionBuilderResult();
+            preBusinessValidationResult.ErrorData.AddRange(preValidationErrors);
+            preBusinessValidationResult.ErrorData.AddRange(schemeApprovalNumberMismatchResult);
+
+            // If there are any pre-business validation errors return them
+            if (preBusinessValidationResult.ErrorData.Any())
             {
-                return schemeApprovalNumberMismatchResult;
+                return preBusinessValidationResult;
             }
 
             // Then build the Data Return Version
