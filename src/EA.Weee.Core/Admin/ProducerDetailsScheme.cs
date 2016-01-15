@@ -31,6 +31,8 @@
 
         public int ComplianceYear { get; set; }
 
-        public string Prn { get; set; }
+        public string RegistrationNumber { get; set; }
+
+        public bool HasSubmittedEEE { get; set; }
     }
 }
