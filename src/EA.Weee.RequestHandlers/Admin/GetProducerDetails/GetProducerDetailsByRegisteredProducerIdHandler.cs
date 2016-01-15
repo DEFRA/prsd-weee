@@ -1,8 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin;
+    using Domain.DataReturns;
+    using Domain.Producer;
     using Prsd.Core.Mediator;
     using Security;
 
@@ -21,9 +25,9 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            var producer = await dataAccess.Fetch(request.RegisteredProducerId);
+            RegisteredProducer registeredProducer = await dataAccess.Fetch(request.RegisteredProducerId);
 
-            if (producer == null)
+            if (registeredProducer == null)
             {
                 string message = string.Format(
                     "No producer has been registered with the id \"{0}\".",
@@ -32,12 +36,28 @@
                 throw new Exception(message);
             }
 
+            bool hasSubmittedEee = false;
+            IEnumerable<DataReturn> dataReturns = await dataAccess.FetchDataReturns(registeredProducer.Scheme, registeredProducer.ComplianceYear);
+            foreach (DataReturn dataReturn in dataReturns)
+            {
+                if (dataReturn.CurrentVersion != null)
+                {
+                    ICollection<EeeOutputAmount> eeeOutputAmounts = dataReturn.CurrentVersion.EeeOutputReturnVersion.EeeOutputAmounts;
+                    if (eeeOutputAmounts.Any(a => a.RegisteredProducer == registeredProducer))
+                    {
+                        hasSubmittedEee = true;
+                        break;
+                    }
+                }
+            }
+
             return new ProducerDetailsScheme
             {
-                SchemeName = producer.Scheme.SchemeName,
-                ComplianceYear = producer.ComplianceYear,
-                ProducerName = producer.CurrentSubmission.OrganisationName,
-                Prn = producer.ProducerRegistrationNumber
+                SchemeName = registeredProducer.Scheme.SchemeName,
+                ComplianceYear = registeredProducer.ComplianceYear,
+                ProducerName = registeredProducer.CurrentSubmission.OrganisationName,
+                RegistrationNumber = registeredProducer.ProducerRegistrationNumber,
+                HasSubmittedEEE = hasSubmittedEee
             };
         }
     }
