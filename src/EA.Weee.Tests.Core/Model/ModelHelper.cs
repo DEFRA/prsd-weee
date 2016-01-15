@@ -544,6 +544,38 @@
             return dataReturnVersion;
         }
 
+        public EeeOutputAmount CreateEeeOutputAmount(DataReturnVersion dataReturnVersion, RegisteredProducer registeredProducer, string obligationType, int weeeCategory, decimal tonnage)
+        {
+            var eeeOutputAmount = new EeeOutputAmount();
+            eeeOutputAmount.Id = IntegerToGuid(GetNextId());
+            eeeOutputAmount.ObligationType = obligationType;
+            eeeOutputAmount.WeeeCategory = weeeCategory;
+            eeeOutputAmount.Tonnage = tonnage;
+            eeeOutputAmount.RegisteredProducer = registeredProducer;
+
+            if (dataReturnVersion.EeeOutputReturnVersion == null)
+            {
+                var eeeOutputReturnVersion = new EeeOutputReturnVersion();
+                eeeOutputReturnVersion.Id = IntegerToGuid(GetNextId());
+                eeeOutputReturnVersion.EeeOutputReturnVersionAmounts = new List<EeeOutputReturnVersionAmount>();
+
+                dataReturnVersion.EeeOutputReturnVersion = eeeOutputReturnVersion;
+            }
+
+            dataReturnVersion
+                .EeeOutputReturnVersion
+                .EeeOutputReturnVersionAmounts
+                .Add(new EeeOutputReturnVersionAmount
+                {
+                    EeeOuputAmountId = eeeOutputAmount.Id,
+                    EeeOutputAmount = eeeOutputAmount,
+                    EeeOutputReturnVersionId = dataReturnVersion.EeeOutputReturnVersion.Id,
+                    EeeOutputReturnVersion = dataReturnVersion.EeeOutputReturnVersion
+                });
+
+            return eeeOutputAmount;
+        }
+
         public InvoiceRun CreateInvoiceRun()
         {
             var compenentAuthority = model.CompetentAuthorities.First();
