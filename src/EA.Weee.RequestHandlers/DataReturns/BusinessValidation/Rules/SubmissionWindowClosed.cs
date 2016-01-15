@@ -38,7 +38,7 @@
             if (quarterWindow.IsBeforeWindow(currentDate))
             {
                 var errorMessage = string.Format(
-                    "The submission window for {0} {1} has not yet opened.The submission window will open on the {2}, resubmit your file on or after this date.",
+                    "The submission window for {0} {1} has not yet opened. The submission window will open on the {2}, resubmit your file on or after this date.",
                     quarter.Q, quarter.Year, quarterWindow.StartDate.ToString("dd MMM yyyy"));
 
                 result.Add(new ErrorData(errorMessage, ErrorLevel.Error));

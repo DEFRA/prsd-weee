@@ -27,6 +27,8 @@
                 Address address;
                 try
                 {
+                    var postCode = GetIbisPostCode(scheme.Organisation.OrganisationAddress);
+
                     address = new Address(
                         scheme.Organisation.Contact.FullName,
                         scheme.Organisation.OrganisationAddress.Address1,
@@ -34,9 +36,7 @@
                         null,
                         scheme.Organisation.OrganisationAddress.TownOrCity,
                         scheme.Organisation.OrganisationAddress.CountyOrRegion,
-                        scheme.Organisation.OrganisationAddress.Postcode,
-                        scheme.Organisation.OrganisationAddress.Country.Name,
-                        scheme.Organisation.OrganisationAddress.IsUkAddress());
+                        postCode);
                 }
                 catch (Exception ex)
                 {
@@ -69,6 +69,18 @@
             }
 
             return Task.FromResult(customerFile);
+        }
+
+        public string GetIbisPostCode(Domain.Organisation.Address address)
+        {
+            string postCode = null;
+
+            if (!string.IsNullOrEmpty(address.Postcode))
+            {
+                postCode = address.IsUkAddress() ? address.Postcode : string.Format("{0}  {1}", address.Postcode.Trim(), address.Country.Name);
+            }
+
+            return postCode;
         }
     }
 }
