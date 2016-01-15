@@ -19,17 +19,17 @@
             ComplianceYear = complianceYear;
             Scheme = scheme;
             CurrentSubmission = null;
-            IsAligned = true;
+            Removed = false;
         }
 
         /// <summary>
         /// This constructor should only be used by Entity Framework.
         /// </summary>
         protected RegisteredProducer()
-        { 
+        {
         }
 
-        public virtual bool IsAligned { get; private set; }
+        public virtual bool Removed { get; private set; }
 
         public virtual string ProducerRegistrationNumber { get; private set; }
 
@@ -52,9 +52,14 @@
             CurrentSubmission = producerSubmission;
         }
 
-        public void Unalign()
+        public void Remove()
         {
-            IsAligned = false;
+            if (Removed)
+            {
+                throw new InvalidOperationException("Cannot remove a producer which has previously been removed.");
+            }
+
+            Removed = true;
         }
     }
 }

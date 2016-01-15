@@ -26,7 +26,7 @@ namespace EA.Weee.Tests.Core.Model
         public System.Guid SchemeId { get; set; }
         public int ComplianceYear { get; set; }
         public Nullable<System.Guid> CurrentSubmissionId { get; set; }
-        public bool IsAligned { get; set; }
+        public bool Removed { get; set; }
     
         public virtual Scheme Scheme { get; set; }
         public virtual ICollection<ProducerSubmission> ProducerSubmissions { get; set; }
