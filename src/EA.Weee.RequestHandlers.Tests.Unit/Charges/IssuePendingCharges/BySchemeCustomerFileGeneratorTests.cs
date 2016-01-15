@@ -333,5 +333,93 @@
             Assert.NotNull(customer2);
             Assert.Equal("WEE00000002", customer2.CustomerReference);
         }
+
+        [Fact]
+        public async Task CreateCustomerFile_WithNonUkAddress_ConcatenatesPostCodeAndCountry()
+        {
+            // Arrange
+            UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
+
+            Address address = new Address(
+                "1 High Street",
+                null,
+                "Some town",
+                "Some county",
+                "AABB",
+                new Country(Guid.NewGuid(), "Netherlands"),
+                "01234 567890",
+                "someone@domain.com");
+
+            Contact contact = new Contact("John", "Smith", "Manager");
+
+            Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
+            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
+            organisation.AddOrUpdateMainContactPerson(contact);
+
+            Scheme scheme = new Scheme(organisation);
+            scheme.UpdateScheme(
+                "Test scheme",
+                "WEE/AA1111AA/SCH",
+                "WEE00000001",
+                A.Dummy<ObligationType>(),
+                authority);
+
+            int complianceYear = A.Dummy<int>();
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                complianceYear,
+                scheme,
+                A.Dummy<string>());
+
+            memberUpload.Submit(A.Dummy<User>());
+
+            List<MemberUpload> memberUploads = new List<MemberUpload>();
+            memberUploads.Add(memberUpload);
+
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
+
+            BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
+
+            // Act
+            CustomerFile customerFile = await generator.CreateAsync(0, invoiceRun);
+
+            // Assert
+            Assert.NotNull(customerFile);
+            Assert.Equal(1, customerFile.Customers.Count);
+
+            Customer customer = customerFile.Customers[0];
+            Assert.Equal("AABB  Netherlands", customer.Address.PostCode);
+        }
+
+        [Theory]
+        [InlineData("AABB", "UK - England", "AABB")]
+        [InlineData("AABB", "Netherlands", "AABB  Netherlands")]
+        [InlineData("  AABB  ", "Netherlands", "AABB  Netherlands")]
+        [InlineData(null, "UK - England", null)]
+        [InlineData(null, "Netherlands", null)]
+        public void GetIbisPostCode_WithNonUkAddress_ConcatenatesPostCodeAndCountry(string postCode, string countryName, string expectedResult)
+        {
+            Address address = new Address(
+                "1 High Street",
+                null,
+                "Some town",
+                "Some county",
+                postCode,
+                new Country(Guid.NewGuid(), countryName),
+                "01234 567890",
+                "someone@domain.com");
+
+            BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
+
+            // Act
+            var result = generator.GetIbisPostCode(address);
+
+            // Assert
+            Assert.Equal(expectedResult, result);
+        }
     }
 }
