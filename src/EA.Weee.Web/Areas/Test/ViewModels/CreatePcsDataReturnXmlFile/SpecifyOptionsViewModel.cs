@@ -20,12 +20,12 @@
         public QuarterType Quarter { get; set; }
 
         [Required]
-        [Range(0, 10000)]
+        [Range(0, 250)]
         [DisplayName("Number of AATFs")]
         public int NumberOfAatfs{ get; set; }
 
         [Required]
-        [Range(0, 10000)]
+        [Range(0, 50)]
         [DisplayName("Number of AEs")]
         public int NumberOfAes { get; set; }
 
