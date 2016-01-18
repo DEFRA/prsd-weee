@@ -176,6 +176,7 @@
     <Content Include="scripts\Update\Sprint20\20160105-1334-ModifyUniqueKeyConstraintforRegisteredProducers.sql" />
     <Content Include="scripts\Update\Sprint21\20160107-1545-AddIssuedByToInvoiceRun.sql" />
     <Content Include="scripts\Update\Sprint21\20160107-1600-AddInvoicedColumnToProducerSubmission.sql" />
+    <Content Include="scripts\Update\Sprint21\20160118-1253-UpdateCountryName.sql" />
     <Content Include="scripts\Update\Sprint21\20160115-1430-UpdateSpgProducerEEECSVDataByComplianceYearAndObligationType.sql" />
     <Content Include="scripts\Update\Sprint21\20160114-1530-UpdateSpgProducerPublicRegisterCSVDataByComplianceYear.sql" />
     <Content Include="scripts\Update\Sprint21\20160114-1530-UpdateSpgProducerAmendmentsCSVDataByPRN.sql" />
