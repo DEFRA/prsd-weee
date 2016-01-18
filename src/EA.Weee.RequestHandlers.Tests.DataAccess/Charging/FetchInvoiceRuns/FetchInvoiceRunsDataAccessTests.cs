@@ -2,12 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Charges.FetchInvoiceRuns;
     using Domain;
-    using FakeItEasy;
     using Weee.Tests.Core.Model;
     using Xunit;
 
