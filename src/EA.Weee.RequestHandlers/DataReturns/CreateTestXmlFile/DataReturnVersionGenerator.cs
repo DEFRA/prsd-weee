@@ -56,24 +56,42 @@
                                             returnItem.Tonnage));
             }
 
-            int aatfApprovalNumberSeedOffset = r.Next(250);
             int numberOfDeliveredToAatfs = settings.NumberOfAatfs;
+            int aatfApprovalNumberSeedOffset = r.Next(250);
+
+            List<string> aatfApprovalNumbers = new List<string>();
             for (int index = 0; index < numberOfDeliveredToAatfs; ++index)
             {
                 int approvalNumberSeed = (index + aatfApprovalNumberSeedOffset) % 250;
-                var deliveredToAatfs = CreateDeliveredToAatfs(approvalNumberSeed);
+                aatfApprovalNumbers.Add(GetAtfApprovalNumber(approvalNumberSeed));
+            }
+
+            IOrderedEnumerable<string> orderedAatfApprovalNumbers = aatfApprovalNumbers.OrderBy(x => x);
+
+            foreach (string approvalNumber in orderedAatfApprovalNumbers)
+            {
+                var deliveredToAatfs = CreateDeliveredToAatfs(approvalNumber);
                 foreach (var deliveredToAatf in deliveredToAatfs)
                 {
                     dataReturnVersion.WeeeDeliveredReturnVersion.AddWeeeDeliveredAmount(deliveredToAatf);
                 }
             }
 
-            int aaeApprovalNumberSeedOffset = r.Next(50);
             int numberOfDeliveredToAes = settings.NumberOfAes;
+            int aaeApprovalNumberSeedOffset = r.Next(50);
+
+            List<string> aaeApprovalNumbers = new List<string>();
             for (int index = 0; index < numberOfDeliveredToAes; ++index)
             {
-                int approvalNumberSeed = (index + aaeApprovalNumberSeedOffset) % 50;
-                var deliveredToAes = CreateDeliveredToAes(index);
+                int approvalNumberSeed = (index + aaeApprovalNumberSeedOffset) % 250;
+                aaeApprovalNumbers.Add(GetAeApprovalNumber(approvalNumberSeed));
+            }
+
+            IOrderedEnumerable<string> orderedAaeApprovalNumbers = aaeApprovalNumbers.OrderBy(x => x);
+
+            foreach (string approvalNumber in orderedAaeApprovalNumbers)
+            {
+                var deliveredToAes = CreateDeliveredToAes(approvalNumber);
                 foreach (var deliveredToAe in deliveredToAes)
                 {
                     dataReturnVersion.WeeeDeliveredReturnVersion.AddWeeeDeliveredAmount(deliveredToAe);
@@ -129,14 +147,13 @@
             return dataReturnVersion;
         }
 
-        private static IEnumerable<WeeeDeliveredAmount> CreateDeliveredToAatfs(int approvalNumberSeed)
+        private static IEnumerable<WeeeDeliveredAmount> CreateDeliveredToAatfs(string approvalNumber)
         {
             var deliveredToAatfs = new List<WeeeDeliveredAmount>();
 
-            string aatfApprovalNumber = GetAtfApprovalNumber(approvalNumberSeed);
             string facilityName = RandomHelper.CreateRandomString("Facility", 0, 250);
 
-            var deliveryLocation = new AatfDeliveryLocation(aatfApprovalNumber, facilityName);
+            var deliveryLocation = new AatfDeliveryLocation(approvalNumber, facilityName);
 
             IEnumerable<IReturnItem> returnItems = CreateReturnItems(null);
             foreach (IReturnItem returnItem in returnItems)
@@ -147,11 +164,10 @@
             return deliveredToAatfs;
         }
 
-        private static IEnumerable<WeeeDeliveredAmount> CreateDeliveredToAes(int approvalNumberSeed)
+        private static IEnumerable<WeeeDeliveredAmount> CreateDeliveredToAes(string approvalNumber)
         {
             var deliveredToAes = new List<WeeeDeliveredAmount>();
 
-            string approvalNumber = GetAeApprovalNumber(approvalNumberSeed);
             string operatorName = RandomHelper.CreateRandomString("Operator", 0, 250);
 
             var deliveryLocation = new AeDeliveryLocation(approvalNumber, operatorName);
