@@ -15,13 +15,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        @Html.HiddenFor(m => m.ComplianceYear)
-        @Html.HiddenFor(m => m.SchemeName)
-        @Html.HiddenFor(m => m.ProducerName)
-        @Html.HiddenFor(m => m.RegistrationNumber)
-        @Html.HiddenFor(m => m.RegisteredProducerId)
-
-        <p>The following producer will no longer be a member of @Model.SchemeName for @Model.ComplianceYear.</p>
+        <p>The following producer will no longer be a member of @Model.Producer.SchemeName for @Model.Producer.ComplianceYear.</p>
 
         <table>
             <thead>
@@ -32,15 +26,23 @@
             <tbody>
                 <tr>
                     <th>Producer name</th>
-                    <td>@Model.ProducerName</td>
+                    <td>@Model.Producer.ProducerName</td>
                 </tr>
                 <tr>
                     <th>Producer registration number</th>
-                    <td>@Model.RegistrationNumber</td>
+                    <td>@Model.Producer.RegistrationNumber</td>
                 </tr>
             </tbody>
         </table>
         <br/>
+
+        if(Model.Producer.HasSubmittedEEE)
+        {
+            <p class="important">
+                The scheme has already submitted a data return for this producer. If you remove this producer, their EEE data for the specified scheme and compliance year will be invalidated.
+            </p>
+        }
+
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmRemoval">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,

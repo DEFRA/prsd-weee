@@ -26,6 +26,16 @@
 
         public async Task<DataReturnVersion> GenerateAsync(TestFileSettings settings)
         {
+            if (settings.NumberOfAatfs < 0 || settings.NumberOfAatfs > 250)
+            {
+                throw new ArgumentOutOfRangeException("settings", "The number of AATFs specified in the settings number be in the range [0, 250].");
+            }
+
+            if (settings.NumberOfAes < 0 || settings.NumberOfAes > 50)
+            {
+                throw new ArgumentOutOfRangeException("settings", "The number of AEs specified in the settings number be in the range [0, 50].");
+            }
+
             Domain.Scheme.Scheme scheme = await dataAccess.FetchSchemeAsync(settings.OrganisationID);
 
             Quarter quarter = new Quarter(
@@ -46,20 +56,24 @@
                                             returnItem.Tonnage));
             }
 
+            int aatfApprovalNumberSeedOffset = r.Next(250);
             int numberOfDeliveredToAatfs = settings.NumberOfAatfs;
             for (int index = 0; index < numberOfDeliveredToAatfs; ++index)
             {
-                var deliveredToAatfs = CreateDeliveredToAatfs();
+                int approvalNumberSeed = (index + aatfApprovalNumberSeedOffset) % 250;
+                var deliveredToAatfs = CreateDeliveredToAatfs(approvalNumberSeed);
                 foreach (var deliveredToAatf in deliveredToAatfs)
                 {
                     dataReturnVersion.WeeeDeliveredReturnVersion.AddWeeeDeliveredAmount(deliveredToAatf);
                 }
             }
 
+            int aaeApprovalNumberSeedOffset = r.Next(50);
             int numberOfDeliveredToAes = settings.NumberOfAes;
             for (int index = 0; index < numberOfDeliveredToAes; ++index)
             {
-                var deliveredToAes = CreateDeliveredToAes();
+                int approvalNumberSeed = (index + aaeApprovalNumberSeedOffset) % 50;
+                var deliveredToAes = CreateDeliveredToAes(index);
                 foreach (var deliveredToAe in deliveredToAes)
                 {
                     dataReturnVersion.WeeeDeliveredReturnVersion.AddWeeeDeliveredAmount(deliveredToAe);
@@ -115,11 +129,11 @@
             return dataReturnVersion;
         }
 
-        private static IEnumerable<WeeeDeliveredAmount> CreateDeliveredToAatfs()
+        private static IEnumerable<WeeeDeliveredAmount> CreateDeliveredToAatfs(int approvalNumberSeed)
         {
             var deliveredToAatfs = new List<WeeeDeliveredAmount>();
 
-            string aatfApprovalNumber = GetRandomAtfApprovalNumber();
+            string aatfApprovalNumber = GetAtfApprovalNumber(approvalNumberSeed);
             string facilityName = RandomHelper.CreateRandomString("Facility", 0, 250);
 
             var deliveryLocation = new AatfDeliveryLocation(aatfApprovalNumber, facilityName);
@@ -133,11 +147,11 @@
             return deliveredToAatfs;
         }
 
-        private static IEnumerable<WeeeDeliveredAmount> CreateDeliveredToAes()
+        private static IEnumerable<WeeeDeliveredAmount> CreateDeliveredToAes(int approvalNumberSeed)
         {
             var deliveredToAes = new List<WeeeDeliveredAmount>();
 
-            string approvalNumber = GetRandomAeApprovalNumber();
+            string approvalNumber = GetAeApprovalNumber(approvalNumberSeed);
             string operatorName = RandomHelper.CreateRandomString("Operator", 0, 250);
 
             var deliveryLocation = new AeDeliveryLocation(approvalNumber, operatorName);
@@ -189,7 +203,9 @@
 
             return returnItems
                 .Shuffle()
-                .Take(numberOfResults);
+                .Take(numberOfResults)
+                .OrderBy(ri => ri.ObligationType)
+                .ThenBy(ri => ri.WeeeCategory);
         }
 
         private static decimal GetRandomReturnAmount()
@@ -199,23 +215,49 @@
             return Math.Round(amount, 3);
         }
 
-        private static string GetRandomAtfApprovalNumber()
+        /// <summary>
+        /// Deterministically creates a random-looking AATF approval number
+        /// using a given seed. The same will always produce the same result.
+        /// </summary>
+        /// <param name="seed">The non-negative seed value for the calculation.</param>
+        /// <returns></returns>
+        private static string GetAtfApprovalNumber(int seed)
         {
-            string letterPair1 = RandomHelper.CreateRandomString(string.Empty, 2, 2, false);
-            string number = RandomHelper.CreateRandomStringOfNumbers(4, 4);
-            string letterPair2 = RandomHelper.CreateRandomString(string.Empty, 2, 2, false);
+            if (seed < 0)
+            {
+                throw new ArgumentOutOfRangeException("seed");
+            }
 
-            return string.Format("WEE/{0}{1}{2}/ATF", letterPair1, number, letterPair2);
+            char letter1 = LetterFromSeed(seed, 7, 15);
+            char letter2 = LetterFromSeed(seed, 5, 11);
+            int number = ((seed + 511) * (seed + 739) * 17) % 10000;
+            char letter3 = LetterFromSeed(seed, 9, 17);
+            char letter4 = LetterFromSeed(seed, 13, 3);
+
+            return string.Format("WEE/{0}{1}{2:D4}{3}{4}/ATF", letter1, letter2, number, letter3, letter4);
         }
 
-        private static string GetRandomAeApprovalNumber()
+        /// <summary>
+        /// Deterministically creates a random-looking AE approval number
+        /// using a given seed. The same will always produce the same result.
+        /// </summary>
+        /// <param name="seed">The non-negative seed value for the calculation.</param>
+        /// <returns></returns>
+        private static string GetAeApprovalNumber(int seed)
         {
-            string letterPair1 = RandomHelper.CreateRandomString(string.Empty, 2, 2, false);
-            string number = RandomHelper.CreateRandomStringOfNumbers(4, 4);
-            string letterPair2 = RandomHelper.CreateRandomString(string.Empty, 2, 2, false);
+            if (seed < 0)
+            {
+                throw new ArgumentOutOfRangeException("seed");
+            }
+
+            char letter1 = LetterFromSeed(seed, 3, 17);
+            char letter2 = LetterFromSeed(seed, 19, 3);
+            int number = ((seed + 513) * (seed + 741) * 19) % 10000;
+            char letter3 = LetterFromSeed(seed, 7, 21);
+            char letter4 = LetterFromSeed(seed, 15, 7);
 
             string end;
-            if (RandomHelper.OneIn(2))
+            if (seed % 2 == 0)
             {
                 end = "AE";
             }
@@ -224,7 +266,53 @@
                 end = "EXP";
             }
 
-            return string.Format("WEE/{0}{1}{2}/{3}", letterPair1, number, letterPair2, end);
+            return string.Format("WEE/{0}{1}{2}{3:D4}{4}/{5}", letter1, letter2, number, letter3, letter4, end);
+        }
+
+        /// <summary>
+        /// Deterministically returns a seemingly random capital letter using a given
+        /// seed. The two offset values allow different sequences to be generated.
+        /// </summary>
+        /// <param name="seed">The non-negative seed value for the calculation.</param>
+        /// <param name="offset1">A positive offset.</param>
+        /// <param name="offset2">A positive offset. Ideally this offset should not share any factors with 26.</param>
+        /// <returns></returns>
+        private static char LetterFromSeed(int seed, int offset1, int offset2)
+        {
+            if (seed < 0)
+            {
+                throw new ArgumentOutOfRangeException("seed");
+            }
+
+            if (offset1 <= 0)
+            {
+                throw new ArgumentOutOfRangeException("offset1");
+            }
+
+            if (offset2 <= 0)
+            {
+                throw new ArgumentOutOfRangeException("offset2");
+            }
+
+            return NumberToLetter(((seed + offset1) * offset2) % 26);
+        }
+
+        /// <summary>
+        /// Converts a number in the range [0, 25] to a capital letter as follows:
+        /// 0 => 'A'
+        /// 1 => 'B'
+        /// etc.
+        /// </summary>
+        /// <param name="value">A number in the range [0, 25].</param>
+        /// <returns></returns>
+        private static char NumberToLetter(int value)
+        {
+            if (value < 0 || value > 25)
+            {
+                throw new ArgumentOutOfRangeException("value");
+            }
+
+            return (char)(value + 65);
         }
     }
 }
