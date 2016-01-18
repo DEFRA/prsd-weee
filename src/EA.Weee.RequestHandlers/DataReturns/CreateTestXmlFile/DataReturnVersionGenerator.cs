@@ -130,9 +130,10 @@
                 numberOfProducers = Math.Min(settings.NumberOfProduces, registeredProducers.Count);
             }
 
-            IEnumerable<RegisteredProducer> producersToInclude = registeredProducers
+            IOrderedEnumerable<RegisteredProducer> producersToInclude = registeredProducers
                 .Shuffle()
-                .Take(numberOfProducers);
+                .Take(numberOfProducers)
+                .OrderBy(x => x.ProducerRegistrationNumber);
 
             foreach (RegisteredProducer producerToInclude in producersToInclude)
             {
