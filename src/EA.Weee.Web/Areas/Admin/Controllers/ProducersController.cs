@@ -175,53 +175,69 @@
         public async Task<ActionResult> ConfirmRemoval(Guid registeredProducerId)
         {
             await SetBreadcrumb();
-            using (IWeeeClient client = apiClient())
-            {
-                ProducerDetailsScheme producer = await client.SendAsync(User.GetAccessToken(),
-                    new GetProducerDetailsByRegisteredProducerId(registeredProducerId));
 
-                return View(new ConfirmRemovalViewModel
-                {
-                    RegisteredProducerId = registeredProducerId,
-                    RegistrationNumber = producer.Prn,
-                    ComplianceYear = producer.ComplianceYear,
-                    ProducerName = producer.ProducerName,
-                    SchemeName = producer.SchemeName
-                });
-            }
+            ProducerDetailsScheme producerDetailsScheme = await FetchProducerDetailsScheme(registeredProducerId);
+
+            return View(new ConfirmRemovalViewModel
+            {
+                Producer = producerDetailsScheme
+            });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ConfirmRemoval(ConfirmRemovalViewModel model)
+        public async Task<ActionResult> ConfirmRemoval(Guid registeredProducerId, ConfirmRemovalViewModel model)
         {
             await SetBreadcrumb();
 
+            ProducerDetailsScheme producerDetailsScheme = await FetchProducerDetailsScheme(registeredProducerId);
+
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(new ConfirmRemovalViewModel
+                {
+                    Producer = producerDetailsScheme
+                });
             }
 
-            if (model.SelectedValue == "No")
-            {
-                return RedirectToAction("Details", new { model.RegistrationNumber });
-            }
             if (model.SelectedValue == "Yes")
             {
-                using (var client = apiClient())
+                RemoveProducerResult result;
+                using (IWeeeClient client = apiClient())
                 {
-                    var result = await client.SendAsync(User.GetAccessToken(), new RemoveProducer(model.RegisteredProducerId));
-
-                    if (result.InvalidateProducerSearchCache)
-                    {
-                        await cache.InvalidateProducerSearch();
-                    }
-
-                    return RedirectToAction("Removed",
-                            new { model.RegistrationNumber, model.ComplianceYear, model.SchemeName });
+                    result = await client.SendAsync(User.GetAccessToken(), new RemoveProducer(registeredProducerId));
                 }
+
+                if (result.InvalidateProducerSearchCache)
+                {
+                    await cache.InvalidateProducerSearch();
+                }
+
+                return RedirectToAction("Removed",
+                    new
+                    {
+                        producerDetailsScheme.RegistrationNumber,
+                        producerDetailsScheme.ComplianceYear,
+                        producerDetailsScheme.SchemeName
+                    });
             }
-            return View(model);
+            else
+            {
+                return RedirectToAction("Details",
+                    new
+                    {
+                        producerDetailsScheme.RegistrationNumber
+                    });
+            }
+        }
+
+        private async Task<ProducerDetailsScheme> FetchProducerDetailsScheme(Guid registeredProducerId)
+        {
+            using (IWeeeClient client = apiClient())
+            {
+                GetProducerDetailsByRegisteredProducerId request = new GetProducerDetailsByRegisteredProducerId(registeredProducerId);
+                return await client.SendAsync(User.GetAccessToken(), request);
+            }
         }
 
         [HttpGet]
