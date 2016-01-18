@@ -294,7 +294,7 @@
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetSchemeWeeeData_Always_SetsInternalBreadcrumbToSchemeWeeeData()
+        public async Task GetSchemeWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
             BreadcrumbService breadcrumb = new BreadcrumbService();
             
@@ -307,7 +307,7 @@
             ActionResult result = await controller.SchemeWeeeData();
 
             // Assert
-            Assert.Equal("Scheme WEEE data", breadcrumb.InternalActivity);
+            Assert.Equal("View Reports", breadcrumb.InternalActivity);
         }
 
         /// <summary>
@@ -402,7 +402,7 @@
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task PostSchemeWeeeData_Always_SetsInternalBreadcrumbToSchemeWeeeData()
+        public async Task PostSchemeWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
             BreadcrumbService breadcrumb = new BreadcrumbService();
 
@@ -415,7 +415,7 @@
             ActionResult result = await controller.SchemeWeeeData(A.Dummy<ProducersDataViewModel>());
 
             // Assert
-            Assert.Equal("Scheme WEEE data", breadcrumb.InternalActivity);
+            Assert.Equal("View Reports", breadcrumb.InternalActivity);
         }
 
         /// <summary>
