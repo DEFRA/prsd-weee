@@ -3,7 +3,7 @@
 @using EA.Weee.Core.DataReturns
 @using EA.Weee.Core.Helpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.DataReturns.SubmitViewModel
-@{  
+@{
     ViewBag.Title = "Submit Data Return";
 
     bool hasErrors = Model.DataReturn.Errors.Any();
@@ -116,51 +116,53 @@
 
         if (!hasErrors && Model.DataReturn.Year != null && Model.DataReturn.Quarter != null)
         {
-            <div class="highlight-section">
-                <div class="highlight-section-text">
-                    The XML file you are submitting is for:
-                </div>
-                <div class="highlight-section-amount">
-                    @{
-                        var quarterText = string.Empty;
-                        if (Model.DataReturn.Quarter.Value == QuarterType.Q1)
-                        {
-                            quarterText = "Quarter 1";
-                        }
-                        else if (Model.DataReturn.Quarter.Value == QuarterType.Q2)
-                        {
-                            quarterText = "Quarter 2";
-                        }
-                        else if (Model.DataReturn.Quarter.Value == QuarterType.Q3)
-                        {
-                            quarterText = "Quarter 3";
-                        }
-                        else if (Model.DataReturn.Quarter.Value == QuarterType.Q4)
-                        {
-                            quarterText = "Quarter 4";
-                        }
-                    }
-
-                    @Model.DataReturn.Year.Value @quarterText
-                </div>
-            </div>
+            <p>
+                <div class="highlight-section">
+                    <div class="highlight-section-text">
+                        The XML file you are submitting is for:
+                    </div>
+                    <div class="highlight-section-amount">
+                        @{
+                            var quarterText = string.Empty;
+                            if (Model.DataReturn.Quarter.Value == QuarterType.Q1)
+                            {
+                                quarterText = "Quarter 1";
+                            }
+                            else if (Model.DataReturn.Quarter.Value == QuarterType.Q2)
+                            {
+                                quarterText = "Quarter 2";
+                            }
+                            else if (Model.DataReturn.Quarter.Value == QuarterType.Q3)
+                            {
+                                quarterText = "Quarter 3";
+                            }
+                            else if (Model.DataReturn.Quarter.Value == QuarterType.Q4)
+                            {
+                                quarterText = "Quarter 4";
+                            }
                         }
 
-                        if (hasErrors)
-                        {
-                            <p>
-                                To see your XML file’s full list,
-                                @this.WeeeGds().ActionLinkWithEventTracking(
+                        @Model.DataReturn.Year.Value @quarterText
+                    </div>
+                </div>
+            </p>
+                            }
+
+                            if (hasErrors)
+                            {
+                                <p>
+                                    To see your XML file’s full list,
+                                    @this.WeeeGds().ActionLinkWithEventTracking(
                     "download your errors and warnings (CSV)",
                     "DownloadErrorsAndWarnings",
                     "DataReturns",
                     "Downloads",
                     "Errors and warnings",
                     routeValues: new RouteValueDictionary(new { dataReturnUploadId = Model.DataReturn.DataReturnUploadId })).
-                            </p>
+                                </p>
 
-                            <p>
-                                @this.WeeeGds().ActionLinkWithEventTracking(
+                                <p>
+                                    @this.WeeeGds().ActionLinkWithEventTracking(
                     "Upload a new file",
                     "Upload",
                     "DataReturns",
@@ -169,41 +171,41 @@
                     "Validation failed",
                     null,
                     new Dictionary<string, object> { { "class", "button" } })
-                            </p>
+                                </p>
 
-                            <div>
-                                @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
-                            </div>
-                        }
-                        else
-                        {
-                            <p>By submitting your XML file, you are confirming that the information you’ve provided is accurate and complete. The data you provide will be used to calculate your obligation and will contribute to public data reports.</p>
+                                <div>
+                                    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+                                </div>
+                            }
+                            else
+                            {
+                                <p>By submitting your XML file, you are confirming that the information you’ve provided is accurate and complete. The data you provide will be used to calculate your obligation and will contribute to public data reports.</p>
 
-            if (Model.DataReturn.IsResubmission)
-            {
-                <p class="important">
-                    Submitting this file will overwrite your existing data return for this period.
-                </p>
-            }
+                                if (Model.DataReturn.IsResubmission)
+                                {
+                                    <p class="important">
+                                        Submitting this file will overwrite your existing data return for this period.
+                                    </p>
+                                }
 
-                            <p>
-                                @this.WeeeGds().SubmitWithEventTracking(
+                                <p>
+                                    @this.WeeeGds().SubmitWithEventTracking(
                     "Submit",
                     "Uploads",
                     "XML submission",
                     htmlAttributes: new Dictionary<string, object> { { "class", "button" } })
-                            </p>
+                                </p>
 
-                            <p>
-                                Make changes and
-                                @this.WeeeGds().ActionLinkWithEventTracking(
+                                <p>
+                                    Make changes and
+                                    @this.WeeeGds().ActionLinkWithEventTracking(
                     "upload a new file",
                     "Upload",
                     "DataReturns",
                     "Data return loop",
                     "Upload a new file",
                     "Validation successful").
-                            </p>
+                                </p>
+                                }
                             }
-                        }
 }
