@@ -59,7 +59,7 @@
                 DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
 
                 var scheme = helper.CreateScheme();
-                helper.GerOrCreateRegisteredProducer(scheme, 2016, "AAAA");
+                helper.GetOrCreateRegisteredProducer(scheme, 2016, "AAAA");
 
                 database.Model.SaveChanges();
 
