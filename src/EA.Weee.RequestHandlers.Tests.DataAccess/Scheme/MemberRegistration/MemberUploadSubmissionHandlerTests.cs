@@ -27,7 +27,7 @@
                 string registrationNumber = "AAAA";
                 int complianceYear = 2016;
 
-                var registeredProducer = helper.GerOrCreateRegisteredProducer(scheme, complianceYear, registrationNumber);
+                var registeredProducer = helper.GetOrCreateRegisteredProducer(scheme, complianceYear, registrationNumber);
 
                 var memberUpload = helper.CreateMemberUpload(scheme);
                 memberUpload.ComplianceYear = complianceYear;
@@ -64,7 +64,7 @@
                 string registrationNumber = "AAAA";
                 int complianceYear = 2016;
 
-                var registeredProducer = helper.GerOrCreateRegisteredProducer(scheme, complianceYear, registrationNumber);
+                var registeredProducer = helper.GetOrCreateRegisteredProducer(scheme, complianceYear, registrationNumber);
 
                 var memberUpload1 = helper.CreateMemberUpload(scheme);
                 memberUpload1.ComplianceYear = complianceYear;
@@ -110,14 +110,14 @@
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
 
-                var registeredProducer1 = helper.GerOrCreateRegisteredProducer(scheme, 2016, registrationNumber);
+                var registeredProducer1 = helper.GetOrCreateRegisteredProducer(scheme, 2016, registrationNumber);
                 var producerSubmission1 = helper.CreateProducerAsCompany(memberUpload1, registrationNumber);
 
                 var memberUpload2 = helper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2017;
                 memberUpload2.IsSubmitted = false;
 
-                var registeredProducer2 = helper.GerOrCreateRegisteredProducer(scheme, 2017, registrationNumber);
+                var registeredProducer2 = helper.GetOrCreateRegisteredProducer(scheme, 2017, registrationNumber);
                 var producerSubmission2 = helper.CreateProducerAsCompany(memberUpload2, registrationNumber);
 
                 // At least one user is required in the database.
@@ -156,7 +156,7 @@
                 memberUpload1.ComplianceYear = complianceYear;
                 memberUpload1.IsSubmitted = true;
 
-                var registeredProducer1 = helper.GerOrCreateRegisteredProducer(scheme1, complianceYear, registrationNumber);
+                var registeredProducer1 = helper.GetOrCreateRegisteredProducer(scheme1, complianceYear, registrationNumber);
                 var producerSubmission1 = helper.CreateProducerAsCompany(memberUpload1, registrationNumber);
 
                 var scheme2 = helper.CreateScheme();
@@ -165,7 +165,7 @@
                 memberUpload2.ComplianceYear = complianceYear;
                 memberUpload2.IsSubmitted = false;
 
-                var registeredProducer2 = helper.GerOrCreateRegisteredProducer(scheme2, complianceYear, registrationNumber);
+                var registeredProducer2 = helper.GetOrCreateRegisteredProducer(scheme2, complianceYear, registrationNumber);
                 var producerSubmission2 = helper.CreateProducerAsCompany(memberUpload2, registrationNumber);
 
                 // At least one user is required in the database.

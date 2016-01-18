@@ -216,6 +216,7 @@
 
             memberUpload.IsSubmitted = true;
             memberUpload.SubmittedDate = DateTime.UtcNow;
+            memberUpload.TotalCharges = 30;
 
             if (invoiceRun != null)
             {
@@ -248,7 +249,7 @@
             return memberUploadError;
         }
 
-        public RegisteredProducer GerOrCreateRegisteredProducer(Scheme scheme, int complianceYear, string registrationNumber)
+        public RegisteredProducer GetOrCreateRegisteredProducer(Scheme scheme, int complianceYear, string registrationNumber)
         {
             // Try to find a RegisteredProducer that has already been created, otherwise create a new one.
             RegisteredProducer registeredProducer =
@@ -322,6 +323,47 @@
             return CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
         }
 
+        public ProducerSubmission CreateInvoicedProducer(MemberUpload memberUpload, string registrationNumber)
+        {
+            int businessId = GetNextId();
+            Business business = new Business
+            {
+                Id = IntegerToGuid(businessId),
+            };
+            model.Businesses.Add(business);
+
+            int producerSubmissionId = GetNextId();
+
+            RegisteredProducer registeredProducer = GetOrCreateRegisteredProducer(memberUpload.Scheme, memberUpload.ComplianceYear.Value, registrationNumber);
+
+            var chargeBandAmount = FetchChargeBandAmount(ChargeBand.A);
+            ProducerSubmission producerSubmission = new ProducerSubmission
+            {
+                Id = IntegerToGuid(producerSubmissionId),
+                RegisteredProducer = registeredProducer,
+                RegisteredProducerId = registeredProducer.Id,
+                MemberUpload = memberUpload,
+                MemberUploadId = memberUpload.Id,
+                TradingName = string.Format("Producer {0} Trading Name", producerSubmissionId),
+                UpdatedDate = new DateTime(2015, 1, 1, 0, 0, 0),
+                Business = business,
+                ProducerBusinessId = business.Id,
+                AuthorisedRepresentativeId = null,
+                ChargeBandAmountId = chargeBandAmount.Id,
+                ChargeThisUpdate = 30,
+                ObligationType = "B2B",
+                Invoiced = true
+            };
+            model.ProducerSubmissions.Add(producerSubmission);
+
+            if (memberUpload.IsSubmitted)
+            {
+                registeredProducer.CurrentSubmissionId = IntegerToGuid(producerSubmissionId);
+                registeredProducer.CurrentSubmission = producerSubmission;
+            }
+
+            return producerSubmission;
+        }
         private ProducerSubmission CreateProducerWithEmptyBusiness(MemberUpload memberUpload, string registrationNumber)
         {
             int businessId = GetNextId();
@@ -333,7 +375,7 @@
 
             int producerSubmissionId = GetNextId();
 
-            RegisteredProducer registeredProducer = GerOrCreateRegisteredProducer(memberUpload.Scheme, memberUpload.ComplianceYear.Value, registrationNumber);
+            RegisteredProducer registeredProducer = GetOrCreateRegisteredProducer(memberUpload.Scheme, memberUpload.ComplianceYear.Value, registrationNumber);
 
             var chargeBandAmount = FetchChargeBandAmount(ChargeBand.A);
             ProducerSubmission producerSubmission = new ProducerSubmission
