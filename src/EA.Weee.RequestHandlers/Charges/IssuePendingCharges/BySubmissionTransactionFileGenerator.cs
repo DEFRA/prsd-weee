@@ -20,9 +20,10 @@
             this.transactionReferenceGenerator = transactionReferenceGenerator;
         }
 
-        public async Task<TransactionFile> CreateAsync(ulong fileID, InvoiceRun invoiceRun)
+        public async Task<IbisFileGeneratorResult<TransactionFile>> CreateAsync(ulong fileID, InvoiceRun invoiceRun)
         {
             TransactionFile transactionFile = new TransactionFile("WEE", fileID);
+            var errors = new List<Exception>();
 
             foreach (MemberUpload memberUpload in invoiceRun.MemberUploads)
             {
@@ -30,48 +31,30 @@
 
                 string description = string.Format("Charge for producer registration submission made on {0:dd MMM yyyy}.",
                     submittedDate);
-
-                InvoiceLineItem lineItem;
                 try
                 {
-                    lineItem = new InvoiceLineItem(
-                        memberUpload.TotalCharges,
-                        description);
+                    InvoiceLineItem lineItem = new InvoiceLineItem(
+                            memberUpload.TotalCharges,
+                            description);
+
+                    string transactionReference = await transactionReferenceGenerator.GetNextTransactionReferenceAsync();
+
+                    Invoice invoice = new Invoice(
+                            memberUpload.Scheme.IbisCustomerReference,
+                            invoiceRun.IssuedDate,
+                            TransactionType.Invoice,
+                            transactionReference,
+                            new List<InvoiceLineItem>() { lineItem });
+
+                    transactionFile.AddInvoice(invoice);
                 }
                 catch (Exception ex)
                 {
-                    string errorMessage = string.Format(
-                        "An error occurred creating an 1B1S invoice line item to represent the member upload with ID \"{0}\". " +
-                        "See the inner exception for more details.",
-                        memberUpload.Id);
-                    throw new Exception(errorMessage, ex);
+                    errors.Add(ex);
                 }
-
-                string transactionReference = await transactionReferenceGenerator.GetNextTransactionReferenceAsync();
-
-                Invoice invoice;
-                try
-                {
-                    invoice = new Invoice(
-                        memberUpload.Scheme.IbisCustomerReference,
-                        invoiceRun.IssuedDate,
-                        TransactionType.Invoice,
-                        transactionReference,
-                        new List<InvoiceLineItem>() { lineItem });
-                }
-                catch (Exception ex)
-                {
-                    string errorMessage = string.Format(
-                        "An error occurred creating an 1B1S invoice to represent the member upload with ID \"{0}\". " +
-                        "See the inner exception for more details.",
-                        memberUpload.Id);
-                    throw new Exception(errorMessage, ex);
-                }
-
-                transactionFile.AddInvoice(invoice);
             }
 
-            return transactionFile;
+            return new IbisFileGeneratorResult<TransactionFile>(errors.Count == 0 ? transactionFile : null, errors);
         }
     }
 }
