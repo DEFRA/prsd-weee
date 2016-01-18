@@ -298,42 +298,129 @@
             Assert.IsType<FileContentResult>(result);
         }
 
+        /// <summary>
+        /// This test ensures that the GET "ConfirmRemoval" action always returns the "ConfirmRemoval" view.
+        /// </summary>
         [Fact]
-        public async void HttpGet_ConfirmRemoval_ShouldSendRequest_AndShouldReturnConfirmRemovalModel()
+        public async void GetConfirmRemoval_Always_ReturnsConfirmRemovalView()
         {
             // Arrange
-            var producerDetailsScheme = A.Dummy<ProducerDetailsScheme>();
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
-                .Returns(producerDetailsScheme);
-
-            var registeredProducerId = Guid.NewGuid();
+            ProducersController controller = new ProducersController(
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<ISearcher<ProducerSearchResult>>(),
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<IWeeeCache>());
 
             // Act
-            ActionResult result = await ProducersController().ConfirmRemoval(registeredProducerId);
+            ActionResult result = await controller.ConfirmRemoval(A.Dummy<Guid>());
 
             // Assert
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
 
-            Assert.IsType<ViewResult>(result);
-            Assert.IsType<ConfirmRemovalViewModel>(((ViewResult)result).Model);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "confirmremoval");
         }
 
+        /// <summary>
+        /// This test ensures that the GET "ConfirmRemoval" action always calls the
+        /// API to retrieve details about the specified registered producer which
+        /// are used to populate the view model.
+        /// </summary>
         [Fact]
-        public async Task HttpPost_ConfirmRemoval_WithInvalidModel_ReturnsConfirmRemovalModel()
+        public async void GetConfirmRemoval_Always_CallsApiAndPopulatesViewModel()
         {
             // Arrange
-            var controller = ProducersController();
-            var viewModel = new ConfirmRemovalViewModel();
+            Guid registeredProducerId = new Guid("9F253FE4-B644-4EA1-B58E-19C735512449");
+
+            ProducerDetailsScheme producerDetailsScheme = A.Dummy<ProducerDetailsScheme>();
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
+                .WhenArgumentsMatch(a => a.Get<GetProducerDetailsByRegisteredProducerId>("request").RegisteredProducerId == registeredProducerId)
+                .Returns(producerDetailsScheme);
+
+            ProducersController controller = new ProducersController(
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<ISearcher<ProducerSearchResult>>(),
+                () => weeeClient,
+                A.Dummy<IWeeeCache>());
+
+            // Act
+            ActionResult result = await controller.ConfirmRemoval(registeredProducerId);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            ConfirmRemovalViewModel viewModel = viewResult.Model as ConfirmRemovalViewModel;
+            Assert.NotNull(viewModel);
+
+            Assert.Equal(producerDetailsScheme, viewModel.Producer);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "ConfirmRemoval" action with an invalid model
+        /// returns the "ConfirmRemoval" view.
+        /// </summary>
+        [Fact]
+        public async Task PostConfirmRemoval_WithInvalidModel_ReturnsConfirmRemovalView()
+        {
+            // Arrange
+            ProducersController controller = new ProducersController(
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<ISearcher<ProducerSearchResult>>(),
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<IWeeeCache>());
+
             controller.ModelState.AddModelError("SomeProperty", "Exception");
 
             // Act
-            var result = await controller.ConfirmRemoval(viewModel);
+            ActionResult result = await controller.ConfirmRemoval(A.Dummy<Guid>(), A.Dummy<ConfirmRemovalViewModel>());
 
             // Assert
-            Assert.IsType<ViewResult>(result);
-            Assert.IsType<ConfirmRemovalViewModel>(((ViewResult)result).Model);
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "confirmremoval");
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "ConfirmRemoval" action with an invalid model calls the
+        /// API to retrieve details about the specified registered producer which
+        /// are used to populate the view model.
+        /// </summary>
+        [Fact]
+        public async Task PostConfirmRemoval_WithInvalidModel_CallsApiAndPopulatesViewModel()
+        {
+            // Arrange
+            Guid registeredProducerId = new Guid("9F253FE4-B644-4EA1-B58E-19C735512449");
+
+            ProducerDetailsScheme producerDetailsScheme = A.Dummy<ProducerDetailsScheme>();
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
+                .WhenArgumentsMatch(a => a.Get<GetProducerDetailsByRegisteredProducerId>("request").RegisteredProducerId == registeredProducerId)
+                .Returns(producerDetailsScheme);
+
+            ProducersController controller = new ProducersController(
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<ISearcher<ProducerSearchResult>>(),
+                () => weeeClient,
+                A.Dummy<IWeeeCache>());
+
+            controller.ModelState.AddModelError("SomeProperty", "Exception");
+
+            // Act
+            ActionResult result = await controller.ConfirmRemoval(registeredProducerId, A.Dummy<ConfirmRemovalViewModel>());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            ConfirmRemovalViewModel viewModel = viewResult.Model as ConfirmRemovalViewModel;
+            Assert.NotNull(viewModel);
+
+            Assert.Equal(producerDetailsScheme, viewModel.Producer);
         }
 
         [Fact]
@@ -345,7 +432,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveProducer>._))
                 .Returns(new RemoveProducerResult(true));
 
-            await ProducersController().ConfirmRemoval(viewModel);
+            await ProducersController().ConfirmRemoval(A.Dummy<Guid>(), viewModel);
 
             A.CallTo(() => cache.InvalidateProducerSearch())
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -360,7 +447,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveProducer>._))
                 .Returns(new RemoveProducerResult(false));
 
-            await ProducersController().ConfirmRemoval(viewModel);
+            await ProducersController().ConfirmRemoval(A.Dummy<Guid>(), viewModel);
 
             A.CallTo(() => cache.InvalidateProducerSearch())
                 .MustNotHaveHappened();
@@ -379,7 +466,7 @@
                 .Returns(new RemoveProducerResult(invalidateCache));
 
             // Act
-            var result = await ProducersController().ConfirmRemoval(viewModel);
+            var result = await ProducersController().ConfirmRemoval(A.Dummy<Guid>(), viewModel);
 
             // Assert
 
@@ -401,7 +488,7 @@
             viewModel.SelectedValue = "No";
 
             // Act
-            var result = await ProducersController().ConfirmRemoval(viewModel);
+            var result = await ProducersController().ConfirmRemoval(A.Dummy<Guid>(), viewModel);
 
             // Assert
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<RemoveProducer>._))
