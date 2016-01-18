@@ -177,6 +177,7 @@
     <Content Include="scripts\Update\Sprint21\20160107-1545-AddIssuedByToInvoiceRun.sql" />
     <Content Include="scripts\Update\Sprint21\20160107-1600-AddInvoicedColumnToProducerSubmission.sql" />
     <Content Include="scripts\Update\Sprint21\20160115-1430-UpdateSpgProducerEEECSVDataByComplianceYearAndObligationType.sql" />
+    <Content Include="scripts\Update\Sprint21\20160118-0920-UpdateSpgProducerEEECSVDataByComplianceYearAndObligationType.sql" />
     <Content Include="scripts\Update\Sprint21\20160114-1530-UpdateSpgProducerPublicRegisterCSVDataByComplianceYear.sql" />
     <Content Include="scripts\Update\Sprint21\20160114-1530-UpdateSpgProducerAmendmentsCSVDataByPRN.sql" />
     <Content Include="scripts\Update\Sprint21\20160114-1515-UpdateSpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority.sql" />

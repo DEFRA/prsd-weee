@@ -59,10 +59,12 @@
             CsvWriter<ProducerEEECSVData> csvWriter =
                 csvWriterFactory.Create<ProducerEEECSVData>();
 
+            csvWriter.DefineColumn(@"Scheme name", i => i.SchemeName);
+            csvWriter.DefineColumn(@"Scheme approval number", i => i.ApprovalNumber);
             csvWriter.DefineColumn(@"PRN", i => i.PRN);
             csvWriter.DefineColumn(@"Producer name", i => i.ProducerName);
             csvWriter.DefineColumn(@"Producer country", i => i.ProducerCountry);
-            csvWriter.DefineColumn(@"Scheme name", i => i.SchemeName);
+           
             string totalEEEtitle = string.Format("Total EEE ({0})", obligationType);
             csvWriter.DefineColumn(totalEEEtitle, i => i.TotalTonnage);
             

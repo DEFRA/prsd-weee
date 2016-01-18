@@ -10,6 +10,7 @@
         public string PRN { get; set; }
         public string ProducerName { get; set; }
         public string ProducerCountry { get; set; }
+        public string ApprovalNumber { get; set; }
         public string SchemeName { get; set; }
         public decimal TotalTonnage { get; set; }
         public decimal? Cat1Q1 { get; set; }
