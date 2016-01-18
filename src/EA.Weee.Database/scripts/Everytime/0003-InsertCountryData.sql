@@ -250,7 +250,7 @@ INSERT INTO @tempCountryTable([Id],[Name])VALUES('51480C7F-F5CB-4367-B571-61CD45
 INSERT INTO @tempCountryTable([Id],[Name])VALUES('92A1F401-59F0-4261-B734-E59CBDAB1113','Uruguay')
 INSERT INTO @tempCountryTable([Id],[Name])VALUES('50F8B792-99CE-41B1-A9A8-F3CC35911B48','Uzbekistan')
 INSERT INTO @tempCountryTable([Id],[Name])VALUES('F72AC676-5DDB-4054-85C5-3BF571FEC472','Vanuatu')
-INSERT INTO @tempCountryTable([Id],[Name])VALUES('EA42793C-DFB9-4A01-B2E9-D0F4956E4801','Venezuela (Bolivarian Repulic of)')
+INSERT INTO @tempCountryTable([Id],[Name])VALUES('EA42793C-DFB9-4A01-B2E9-D0F4956E4801','Venezuela (Bolivarian Republic of)')
 INSERT INTO @tempCountryTable([Id],[Name])VALUES('398E7572-D4CD-4FAC-8F59-EB890A7FE58C','Viet Nam')
 INSERT INTO @tempCountryTable([Id],[Name])VALUES('CC8D1A0F-33CC-4FF8-A9A5-1A6DBB7DC5CD','Virgin Islands (British)')
 INSERT INTO @tempCountryTable([Id],[Name])VALUES('9A496539-BDB1-4423-9F6B-8AB78AEE002A','Virgin Islands (U.S.)')

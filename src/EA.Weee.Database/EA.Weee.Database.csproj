@@ -196,6 +196,7 @@
     <None Include="packages.config" />
     <None Include="schema_compare.ps1" />
     <None Include="scripts\Update\Sprint17\20151120-165509-AddLineNumberToMemberUploadError.sql" />
+    <None Include="scripts\Update\Sprint21\20160118-171258-UpdateCRNLength.sql" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />

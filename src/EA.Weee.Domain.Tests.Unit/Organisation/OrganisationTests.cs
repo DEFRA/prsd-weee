@@ -57,10 +57,10 @@
         }
 
         [Fact]
-        public void CreateRegisteredCompany_RegistrationNumberIsMoreThan10Characters_ThrowsException()
+        public void CreateRegisteredCompany_RegistrationNumberIsMoreThan15Characters_ThrowsException()
         {
             const string companyName = "test company name";
-            const string companyRegistrationNumber = "12345678901";
+            const string companyRegistrationNumber = "1234567890ABCDEF";
 
             Assert.Throws<InvalidOperationException>(() => Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber));
         }
