@@ -290,11 +290,11 @@
 
         /// <summary>
         /// This test ensures that the GET "SchemeWeeeData" action sets
-        /// the breadcrumb's internal activity to "Scheme WEEE data".
+        /// the breadcrumb's internal activity to "View reports".
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetSchemeWeeeData_Always_SetsInternalBreadcrumbToSchemeWeeeData()
+        public async Task GetSchemeWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
             BreadcrumbService breadcrumb = new BreadcrumbService();
             
@@ -307,7 +307,7 @@
             ActionResult result = await controller.SchemeWeeeData();
 
             // Assert
-            Assert.Equal("Scheme WEEE data", breadcrumb.InternalActivity);
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
         }
 
         /// <summary>
@@ -398,11 +398,11 @@
 
         /// <summary>
         /// This test ensures that the POST "SchemeWeeeData" action sets
-        /// the breadcrumb's internal activity to "Scheme WEEE data".
+        /// the breadcrumb's internal activity to "View reports".
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task PostSchemeWeeeData_Always_SetsInternalBreadcrumbToSchemeWeeeData()
+        public async Task PostSchemeWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
             BreadcrumbService breadcrumb = new BreadcrumbService();
 
@@ -415,7 +415,7 @@
             ActionResult result = await controller.SchemeWeeeData(A.Dummy<ProducersDataViewModel>());
 
             // Assert
-            Assert.Equal("Scheme WEEE data", breadcrumb.InternalActivity);
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
         }
 
         /// <summary>
