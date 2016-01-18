@@ -394,17 +394,17 @@
 
         /// <summary>
         /// This test ensures that the POST "ManagePendingCharges" action will call the API to issue charges
-        /// amd then return a redirect to the "ChargesSuccessfullyIssued" action with the selected authority and the ID of
+        /// and then return a redirect to the "ChargesSuccessfullyIssued" action with the selected authority and the ID of
         /// the invoice run returned by the API.
         /// </summary>
         [Fact]
-        public async Task PostManagePendingCharges_Always_CallsApiAndRedirectsToChargesSuccessfullyIssuedActionWithAuthorityAndInvoiceRunId()
+        public async Task PostManagePendingCharges_CallsApiAndRedirectsToChargesSuccessfullyIssuedActionWithAuthorityAndInvoiceRunId()
         {
             Guid invoiceRunId = new Guid("FB95F6E7-8809-488A-B23B-5B3F5A9B3D5F");
 
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IssuePendingCharges>._))
-                .Returns(invoiceRunId);
+                .Returns(new IssuePendingChargesResult { Errors = new List<string>(), InvoiceRunId = invoiceRunId });
 
             // Arrange
             ChargeController controller = new ChargeController(
@@ -422,6 +422,36 @@
             Assert.Equal("ChargesSuccessfullyIssued", redirectResult.RouteValues["action"]);
             Assert.Equal(CompetentAuthority.NorthernIreland, redirectResult.RouteValues["authority"]);
             Assert.Equal(invoiceRunId, redirectResult.RouteValues["id"]);
+        }
+
+        [Fact]
+        public async Task PostManagePendingCharges_ReturnsIssueChargesErrorView_WhenErrorOccursWhenIssuingCharges()
+        {
+            Guid invoiceRunId = new Guid("FB95F6E7-8809-488A-B23B-5B3F5A9B3D5F");
+
+            var errors = new List<string> { "error" };
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IssuePendingCharges>._))
+                .Returns(new IssuePendingChargesResult { Errors = errors });
+
+            // Arrange
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => weeeClient);
+
+            // Act
+            ActionResult result = await controller.ManagePendingCharges(CompetentAuthority.NorthernIreland, A.Dummy<FormCollection>());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(viewResult.ViewName == string.Empty || viewResult.ViewName == "IssueChargesError");
+
+            var viewModel = viewResult.Model as List<string>;
+            Assert.Equal(errors, viewModel);
         }
 
         /// <summary>

@@ -570,6 +570,7 @@
     <Content Include="Areas\Admin\Views\Reports\_ProducersDataReportFilters.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\SchemeWeeeData.cshtml" />
     <Content Include="Areas\Admin\Views\Charge\IssuedCharges.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\IssueChargesError.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />

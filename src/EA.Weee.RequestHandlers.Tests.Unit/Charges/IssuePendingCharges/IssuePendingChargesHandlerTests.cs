@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Charges;
     using Core.Shared;
     using Domain;
     using Domain.Charges;
@@ -35,7 +36,7 @@
                 A.Dummy<IDomainUserContext>());
 
             // Act
-            Func<Task<Guid>> testCode = async () => await handler.HandleAsync(A.Dummy<Requests.Charges.IssuePendingCharges>());
+            Func<Task<IssuePendingChargesResult>> testCode = async () => await handler.HandleAsync(A.Dummy<Requests.Charges.IssuePendingCharges>());
 
             // Assert
             await Assert.ThrowsAsync<SecurityException>(testCode);
@@ -104,13 +105,69 @@
             Requests.Charges.IssuePendingCharges request = new Requests.Charges.IssuePendingCharges(CompetentAuthority.NorthernIreland);
 
             // Act
-            Guid invoiceRunId = await handler.HandleAsync(request);
+            var result = await handler.HandleAsync(request);
+            Guid invoiceRunId = result.InvoiceRunId.Value;
 
             // Assert
             Assert.NotNull(capturedInvoiceRun);
             Assert.Equal(capturedInvoiceRun.Id, invoiceRunId);
             Assert.Equal(2, capturedInvoiceRun.MemberUploads.Count);
             Assert.Equal(authority, capturedInvoiceRun.CompetentAuthority);
+        }
+
+        [Fact]
+        public async Task HandleAsync_WithErrorWhenGeneratingIbisFile_DoesNotSaveChanges_AndReturnsError()
+        {
+            // Arrange
+            UKCompetentAuthority authority = new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", A.Dummy<Country>());
+
+            Scheme scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.CompetentAuthority).Returns(authority);
+
+            List<MemberUpload> memberUploads = new List<MemberUpload>();
+
+            MemberUpload memberUpload1 = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                10,
+                2017,
+                scheme,
+                A.Dummy<string>());
+
+            memberUpload1.Submit(A.Dummy<User>());
+
+            memberUploads.Add(memberUpload1);
+
+            IIssuePendingChargesDataAccess dataAccess = A.Fake<IIssuePendingChargesDataAccess>();
+            A.CallTo(() => dataAccess.FetchCompetentAuthority(CompetentAuthority.England)).Returns(authority);
+            A.CallTo(() => dataAccess.FetchSubmittedNonInvoicedMemberUploadsAsync(authority))
+                .Returns(memberUploads);
+
+            var errors = new List<string> { "error" };
+            IbisFileDataGeneratorResult ibisFileDataGeneratorResult = new IbisFileDataGeneratorResult(null, errors);
+
+            IIbisFileDataGenerator ibisFileDataGenerator = A.Fake<IIbisFileDataGenerator>();
+            A.CallTo(() => ibisFileDataGenerator.CreateFileDataAsync(A<ulong>._, A<InvoiceRun>._))
+                .Returns(ibisFileDataGeneratorResult);
+
+            IssuePendingChargesHandler handler = new IssuePendingChargesHandler(
+                A.Dummy<IWeeeAuthorization>(),
+                dataAccess,
+                ibisFileDataGenerator,
+                A.Dummy<IDomainUserContext>());
+
+            Requests.Charges.IssuePendingCharges request = new Requests.Charges.IssuePendingCharges(CompetentAuthority.England);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            A.CallTo(() => dataAccess.SaveAsync(A<InvoiceRun>._))
+                .MustNotHaveHappened();
+
+            Assert.Null(result.InvoiceRunId);
+            Assert.NotEmpty(result.Errors);
         }
     }
 }
