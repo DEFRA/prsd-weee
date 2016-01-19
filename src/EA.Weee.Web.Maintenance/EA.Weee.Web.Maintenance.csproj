@@ -328,6 +328,8 @@
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\external-link-tracker.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\google-analytics-universal-tracker.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\print-intent.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\modules.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\modules\auto-track-event.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\multivariate-test.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\primary-links.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\selection-buttons.js" />
@@ -369,6 +371,7 @@
     <Content Include="Content\weee\_footer.scss" />
     <Content Include="Content\govuk_elements\_tables.scss" />
     <Content Include="Content\govuk_elements\_reset.scss" />
+    <Content Include="Content\govuk_elements\_phase-banner.scss" />
     <Content Include="Content\govuk_elements\_panels.scss" />
     <Content Include="Content\govuk_elements\_lists.scss" />
     <Content Include="Content\govuk_elements\_layout.scss" />
@@ -380,6 +383,7 @@
     <Content Include="Content\govuk_elements\_components.scss" />
     <Content Include="Content\govuk_elements\_buttons.scss" />
     <Content Include="Content\govuk_elements\_breadcrumb.scss" />
+    <Content Include="Content\govuk_elements\_base.scss" />
     <Content Include="Content\govuk_elements\forms\_form-validation.scss" />
     <Content Include="Content\govuk_elements\forms\_form-date.scss" />
     <Content Include="Content\govuk_elements\forms\_form-block-labels.scss" />
@@ -509,8 +513,7 @@
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie6.scss &gt; Content\weee-page-ie6.css" />
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie7.scss &gt; Content\weee-page-ie7.css" />
     <Exec Command="&quot;$(MSBuildProjectDirectory)\..\..\tools\sassc\sassc.exe&quot; -I Content\govuk_toolkit\stylesheets\ Content\weee-page-ie8.scss &gt; Content\weee-page-ie8.css" />
-    
-	<!-- Include css files as content -->
+    <!-- Include css files as content -->
     <CreateItem Include="Content\weee-page.css">
       <Output ItemName="Content" TaskParameter="Include" />
     </CreateItem>
