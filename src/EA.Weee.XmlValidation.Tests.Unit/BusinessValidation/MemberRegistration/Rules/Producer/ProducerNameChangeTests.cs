@@ -4,6 +4,7 @@
     using Domain;
     using FakeItEasy;
     using Weee.Domain;
+    using Weee.Domain.Obligation;
     using Weee.Domain.Producer;
     using Xml.MemberRegistration;
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Xml.Linq;
     using Domain;
+    using Domain.Error;
     using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;

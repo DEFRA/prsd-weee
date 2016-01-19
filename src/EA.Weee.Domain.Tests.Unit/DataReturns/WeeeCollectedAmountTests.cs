@@ -4,6 +4,7 @@
     using Domain.DataReturns;
     using FakeItEasy;
     using Lookup;
+    using Obligation;
     using Xunit;
 
     public class WeeeCollectedAmountTests
