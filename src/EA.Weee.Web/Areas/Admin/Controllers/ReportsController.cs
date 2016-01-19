@@ -13,6 +13,7 @@
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Services;
+    using ViewModels.Home;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
     using Weee.Requests.Admin.Reports;
@@ -105,7 +106,7 @@
             {
                 try
                 {
-                    ReportsFilterViewModel model = new ReportsFilterViewModel();                    
+                    ReportsFilterViewModel model = new ReportsFilterViewModel();
                     await SetReportsFilterLists(model, client);
                     return View("ProducerDetails", model);
                 }
@@ -164,7 +165,7 @@
                 }
             }
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> PCSCharges(ReportsFilterViewModel model)
@@ -222,7 +223,7 @@
                 {
                     return View(model);
                 }
-                
+
                 return await DownloadProducerPublicRegisterCSV(model, client);
             }
         }
@@ -230,7 +231,7 @@
         [HttpGet]
         public async Task<ActionResult> ProducerEEEData()
         {
-            SetBreadcrumb(Reports.ProducerEEEData);
+            SetBreadcrumb();
             List<int> years;
             try
             {
@@ -254,7 +255,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ProducerEEEData(ProducersDataViewModel model)
         {
-            SetBreadcrumb(Reports.ProducerEEEData);
+            SetBreadcrumb();
             List<int> years;
             try
             {
@@ -278,13 +279,13 @@
                     return View(model);
                 }
                 return await DownloadProducerEEEDataCSV(model, client);
-            }            
+            }
         }
 
         [HttpGet]
         public async Task<ActionResult> SchemeWeeeData()
         {
-            SetBreadcrumb(Reports.SchemeWeeeData);
+            SetBreadcrumb();
             ViewBag.TriggerDownload = false;
 
             List<int> years;
@@ -311,7 +312,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SchemeWeeeData(ProducersDataViewModel model)
         {
-            SetBreadcrumb(Reports.SchemeWeeeData);
+            SetBreadcrumb();
 
             List<int> years;
             try
@@ -369,7 +370,7 @@
             {
                 var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
                 model.SchemeNames = new SelectList(allSchemes, "Id", "SchemeName");
-            }           
+            }
         }
 
         private async Task SetReportsFilterLists(ProducerPublicRegisterViewModel model, IWeeeClient client)
@@ -378,9 +379,9 @@
             model.ComplianceYears = new SelectList(allYears);
         }
 
-        private void SetBreadcrumb(string reportName = null)
+        private void SetBreadcrumb()
         {
-            breadcrumb.InternalActivity = string.IsNullOrEmpty(reportName) ? "view reports" : reportName;
+            breadcrumb.InternalActivity = InternalUserActivity.ViewReports;
         }
 
         private async Task<ActionResult> DownloadMembersDetailsCSV(ReportsFilterViewModel model, IWeeeClient client)
