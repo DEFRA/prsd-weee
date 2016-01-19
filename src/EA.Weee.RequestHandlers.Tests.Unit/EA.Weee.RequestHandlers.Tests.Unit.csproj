@@ -95,7 +95,7 @@
     <Compile Include="Admin\Reports\GetPCSChargesCSVHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandlerTests.cs" />
     <Compile Include="Admin\GetAllApprovedSchemesHandlerTests.cs" />
-    <Compile Include="Admin\GetAllComplianceYearsHandlerTests.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandlerTests.cs" />
     <Compile Include="Admin\GetUserDataHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandlerTest.cs" />
