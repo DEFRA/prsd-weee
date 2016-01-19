@@ -79,10 +79,7 @@
             {
                 case Reports.ProducerDetails:
                     return RedirectToAction("ProducerDetails");
-
-                case Reports.PCSCharges:
-                    return RedirectToAction("PCSCharges");
-
+                    
                 case Reports.Producerpublicregister:
                     return RedirectToAction("ProducerPublicRegister");
 
@@ -138,50 +135,6 @@
 
                 //Download the csv based on the filters.
                 return await DownloadMembersDetailsCSV(model, client);
-            }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> PCSCharges()
-        {
-            SetBreadcrumb();
-
-            using (var client = apiClient())
-            {
-                try
-                {
-                    ReportsFilterViewModel model = new ReportsFilterViewModel(false);
-                    await SetReportsFilterLists(model, client);
-                    return View("PCSCharges", model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                    return View();
-                }
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> PCSCharges(ReportsFilterViewModel model)
-        {
-            SetBreadcrumb();
-
-            using (var client = apiClient())
-            {
-                await SetReportsFilterLists(model, client);
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
-
-                //Download the csv based on the filters.
-                return await DownloadPCSChargesCSV(model, client);
             }
         }
 
@@ -413,29 +366,7 @@
             byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
         }
-
-        private async Task<ActionResult> DownloadPCSChargesCSV(ReportsFilterViewModel model, IWeeeClient client)
-        {
-            string approvalnumber = string.Empty;
-            string csvFileName = string.Format("{0}_pcschargebreakdown_{1}.csv", model.SelectedYear, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-
-            if (model.SelectedAA.HasValue)
-            {
-                UKCompetentAuthorityData authorityData =
-                    await
-                        client.SendAsync(User.GetAccessToken(),
-                            new GetUKCompetentAuthorityById(model.SelectedAA.Value));
-                var authorisedAuthorityName = authorityData.Abbreviation;
-                csvFileName = string.Format("{0}_{1}_pcschargebreakdown_{2}.csv", model.SelectedYear, authorisedAuthorityName, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-            }
-
-            //TGet the data for PCS charge breakdown
-            var pcsChargesCsvData = await client.SendAsync(User.GetAccessToken(), new GetPCSChargesCSV(model.SelectedYear, model.SelectedAA));
-
-            byte[] data = new UTF8Encoding().GetBytes(pcsChargesCsvData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
-        }
-
+        
         private async Task<ActionResult> DownloadProducerPublicRegisterCSV(ProducerPublicRegisterViewModel model, IWeeeClient client)
         {
             var membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(),

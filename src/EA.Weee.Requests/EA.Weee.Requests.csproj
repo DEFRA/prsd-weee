@@ -59,7 +59,6 @@
     <Compile Include="Charges\IssuePendingCharges.cs" />
     <Compile Include="Admin\RemoveProducer.cs" />
     <Compile Include="Admin\Reports\GetMemberDetailsCSV.cs" />
-    <Compile Include="Admin\Reports\GetPCSChargesCSV.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSV.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSV.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile.cs" />
