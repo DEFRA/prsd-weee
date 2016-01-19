@@ -1,0 +1,31 @@
+﻿@using System
+@using System.Collections.Generic
+@model List<string>
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            The pending charges could not be issued
+        </h1>
+    </header>
+
+    <p>
+        <span class="bold-small"> The following must be fixed before charges can be issued.</span>
+    </p>
+
+    <table width="100%" class="">
+        <tbody>
+            @foreach (var error in Model)
+            {
+                <tr>
+                    <td>@error</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </br>
+    <p>
+        @Html.ActionLink("Continue", "Index", "Home", null, new { @class = "button" })
+    </p>
+}

@@ -71,7 +71,8 @@
             ulong id = 12345;
 
             // Act
-            CustomerFile customerFile = await generator.CreateAsync(id, invoiceRun);
+            var result = await generator.CreateAsync(id, invoiceRun);
+            CustomerFile customerFile = result.IbisFile;
 
             // Assert
             Assert.Equal((ulong)12345, customerFile.FileID);
@@ -133,7 +134,8 @@
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 
             // Act
-            CustomerFile customerFile = await generator.CreateAsync(0, invoiceRun);
+            var result = await generator.CreateAsync(0, invoiceRun);
+            CustomerFile customerFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(customerFile);
@@ -220,7 +222,8 @@
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 
             // Act
-            CustomerFile customerFile = await generator.CreateAsync(0, invoiceRun);
+            var result = await generator.CreateAsync(0, invoiceRun);
+            CustomerFile customerFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(customerFile);
@@ -319,7 +322,8 @@
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 
             // Act
-            CustomerFile customerFile = await generator.CreateAsync(0, invoiceRun);
+            var result = await generator.CreateAsync(0, invoiceRun);
+            CustomerFile customerFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(customerFile);
@@ -332,6 +336,64 @@
             Customer customer2 = customerFile.Customers[1];
             Assert.NotNull(customer2);
             Assert.Equal("WEE00000002", customer2.CustomerReference);
+        }
+
+        [Fact]
+        public async Task CreateCustomerFile_WithExceptionThrown_ReturnsError_AndNoCustomerFile()
+        {
+            // Arrange
+            UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
+
+            Address address = new Address(
+                "1 High Street",
+                null,
+                "Some town",
+                "Some county",
+                null, // A null value will cause the Ibis class to throw an exception.
+                new Country(Guid.NewGuid(), "UK - England"),
+                "01234 567890",
+                "someone@domain.com");
+
+            Contact contact = new Contact("John", "Smith", "Manager");
+
+            Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
+            organisation.AddOrUpdateAddress(AddressType.OrganisationAddress, address);
+            organisation.AddOrUpdateMainContactPerson(contact);
+
+            Scheme scheme = new Scheme(organisation);
+            scheme.UpdateScheme(
+                "Test scheme",
+                "WEE/AA1111AA/SCH",
+                "WEE00000001",
+                A.Dummy<ObligationType>(),
+                authority);
+
+            int complianceYear = A.Dummy<int>();
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                complianceYear,
+                scheme,
+                A.Dummy<string>());
+
+            memberUpload.Submit(A.Dummy<User>());
+
+            List<MemberUpload> memberUploads = new List<MemberUpload>();
+            memberUploads.Add(memberUpload);
+
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
+
+            BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
+
+            // Act
+            var result = await generator.CreateAsync(0, invoiceRun);
+
+            // Assert
+            Assert.Null(result.IbisFile);
+            Assert.NotEmpty(result.Errors);
         }
 
         [Fact]
@@ -385,7 +447,8 @@
             BySchemeCustomerFileGenerator generator = new BySchemeCustomerFileGenerator();
 
             // Act
-            CustomerFile customerFile = await generator.CreateAsync(0, invoiceRun);
+            var result = await generator.CreateAsync(0, invoiceRun);
+            CustomerFile customerFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(customerFile);
