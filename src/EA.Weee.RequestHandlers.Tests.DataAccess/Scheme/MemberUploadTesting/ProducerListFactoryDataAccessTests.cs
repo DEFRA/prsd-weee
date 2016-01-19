@@ -53,14 +53,14 @@
                 memberUpload1.ComplianceYear = complianceYear;
                 memberUpload1.IsSubmitted = true;
 
-                modelHelper.GerOrCreateRegisteredProducer(scheme, complianceYear, "1234");
+                modelHelper.GetOrCreateRegisteredProducer(scheme, complianceYear, "1234");
                 modelHelper.CreateProducerAsCompany(memberUpload1, "1234");
 
                 var memberUpload2 = modelHelper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = complianceYear;
                 memberUpload2.IsSubmitted = true;
 
-                modelHelper.GerOrCreateRegisteredProducer(scheme, complianceYear, "987");
+                modelHelper.GetOrCreateRegisteredProducer(scheme, complianceYear, "987");
                 modelHelper.CreateProducerAsCompany(memberUpload2, "987");
 
                 database.Model.SaveChanges();
@@ -95,14 +95,14 @@
                 memberUpload1.ComplianceYear = complianceYear;
                 memberUpload1.IsSubmitted = true;
 
-                modelHelper.GerOrCreateRegisteredProducer(scheme, complianceYear, "1234");
+                modelHelper.GetOrCreateRegisteredProducer(scheme, complianceYear, "1234");
                 modelHelper.CreateProducerAsCompany(memberUpload1, "1234");
 
                 var memberUpload2 = modelHelper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = complianceYear;
                 memberUpload2.IsSubmitted = true;
 
-                modelHelper.GerOrCreateRegisteredProducer(scheme, complianceYear, "987");
+                modelHelper.GetOrCreateRegisteredProducer(scheme, complianceYear, "987");
                 modelHelper.CreateProducerAsCompany(memberUpload2, "987");
 
                 database.Model.SaveChanges();
@@ -135,7 +135,7 @@
                 memberUpload1.ComplianceYear = complianceYear;
                 memberUpload1.IsSubmitted = true;
 
-                modelHelper.GerOrCreateRegisteredProducer(scheme1, complianceYear, "1234");
+                modelHelper.GetOrCreateRegisteredProducer(scheme1, complianceYear, "1234");
                 modelHelper.CreateProducerAsCompany(memberUpload1, "1234");
 
                 Guid organisationId2 = Guid.NewGuid();
@@ -146,7 +146,7 @@
                 memberUpload2.ComplianceYear = complianceYear;
                 memberUpload2.IsSubmitted = true;
 
-                modelHelper.GerOrCreateRegisteredProducer(scheme2, complianceYear, "987");
+                modelHelper.GetOrCreateRegisteredProducer(scheme2, complianceYear, "987");
                 modelHelper.CreateProducerAsCompany(memberUpload2, "987");
 
                 database.Model.SaveChanges();
@@ -178,14 +178,14 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                modelHelper.GerOrCreateRegisteredProducer(scheme, 2015, "1234");
+                modelHelper.GetOrCreateRegisteredProducer(scheme, 2015, "1234");
                 modelHelper.CreateProducerAsCompany(memberUpload1, "1234");
 
                 var memberUpload2 = modelHelper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;
 
-                modelHelper.GerOrCreateRegisteredProducer(scheme, 2016, "987");
+                modelHelper.GetOrCreateRegisteredProducer(scheme, 2016, "987");
                 modelHelper.CreateProducerAsCompany(memberUpload2, "987");
 
                 database.Model.SaveChanges();
@@ -219,14 +219,14 @@
                 memberUpload1.ComplianceYear = complianceYear;
                 memberUpload1.IsSubmitted = false;
 
-                modelHelper.GerOrCreateRegisteredProducer(scheme, complianceYear, "1234");
+                modelHelper.GetOrCreateRegisteredProducer(scheme, complianceYear, "1234");
                 modelHelper.CreateProducerAsCompany(memberUpload1, "1234");
 
                 var memberUpload2 = modelHelper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = complianceYear;
                 memberUpload2.IsSubmitted = true;
 
-                modelHelper.GerOrCreateRegisteredProducer(scheme, complianceYear, "987");
+                modelHelper.GetOrCreateRegisteredProducer(scheme, complianceYear, "987");
                 modelHelper.CreateProducerAsCompany(memberUpload2, "987");
 
                 database.Model.SaveChanges();
