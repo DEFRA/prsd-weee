@@ -16,6 +16,7 @@
     using ViewModels.Home;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
+    using Weee.Requests.Admin.GetActiveComplianceYears;
     using Weee.Requests.Admin.Reports;
     using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
@@ -353,7 +354,7 @@
 
         private async Task<List<int>> FetchComplianceYearsForDataReturns()
         {
-            GetAllComplianceYears request = new GetAllComplianceYears(ComplianceYearFor.DataReturns);
+            var request = new GetDataReturnsActiveComplianceYears();
             using (var client = apiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), request);
@@ -362,7 +363,7 @@
 
         private async Task SetReportsFilterLists(ReportsFilterViewModel model, IWeeeClient client)
         {
-            var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
+            var allYears = await client.SendAsync(User.GetAccessToken(), new GetMemberRegistrationsActiveComplianceYears());
             var appropriateAuthorities = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
             model.ComplianceYears = new SelectList(allYears);
             model.AppropriateAuthorities = new SelectList(appropriateAuthorities, "Id", "Abbreviation");
@@ -375,7 +376,7 @@
 
         private async Task SetReportsFilterLists(ProducerPublicRegisterViewModel model, IWeeeClient client)
         {
-            var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
+            var allYears = await client.SendAsync(User.GetAccessToken(), new GetMemberRegistrationsActiveComplianceYears());
             model.ComplianceYears = new SelectList(allYears);
         }
 

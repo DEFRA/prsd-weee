@@ -191,14 +191,11 @@
     <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheHandler.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\IFetchProducerSearchResultsForCacheDataAccess.cs" />
     <Compile Include="Admin\GetAllApprovedSchemesDataAccess.cs" />
-    <Compile Include="Admin\GetAllComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\FindMatchingUsersDataAccess.cs" />
     <Compile Include="Admin\GetAdminUserStatusHandler.cs" />
     <Compile Include="Admin\GetAdminUserDataAccess.cs" />
     <Compile Include="Admin\GetAllApprovedSchemesHandler.cs" />
-    <Compile Include="Admin\GetAllComplianceYearsHandler.cs" />
     <Compile Include="Admin\IGetAllApprovedSchemesDataAccess.cs" />
-    <Compile Include="Admin\IGetAllComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsDataAccess.cs" />

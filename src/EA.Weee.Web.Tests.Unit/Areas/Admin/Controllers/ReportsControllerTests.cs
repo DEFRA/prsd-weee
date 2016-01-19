@@ -12,6 +12,7 @@
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Reports;
     using Weee.Requests.Admin;
+    using Weee.Requests.Admin.GetActiveComplianceYears;
     using Weee.Requests.Admin.Reports;
     using Weee.Requests.Shared;
     using Xunit;
@@ -108,7 +109,7 @@
         {
             var controller = ReportsController();
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAllComplianceYears>._))
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetMemberRegistrationsActiveComplianceYears>._))
                 .Returns(new List<int> { 2015, 2016 });
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAllApprovedSchemes>._))
@@ -140,7 +141,7 @@
         {
             var controller = ReportsController();
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAllComplianceYears>._))
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetMemberRegistrationsActiveComplianceYears>._))
                 .Returns(new List<int> { 2015, 2016 });
 
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAllApprovedSchemes>._))
@@ -172,7 +173,7 @@
         {
             var controller = ReportsController();
 
-            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAllComplianceYears>._))
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetMemberRegistrationsActiveComplianceYears>._))
                 .Returns(new List<int> { 2015, 2016 });
             
             var result = await controller.ProducerPublicRegister();
@@ -200,7 +201,7 @@
             List<int> years = new List<int>() { 2015, 2016 };
 
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllComplianceYears>._)).Returns(years);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
             ReportsController controller = new ReportsController(
                 () => weeeClient,
@@ -245,7 +246,7 @@
             List<int> years = new List<int>() { 2001, 2002 };
 
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllComplianceYears>._)).Returns(years);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
             ReportsController controller = new ReportsController(
                 () => weeeClient,
@@ -323,7 +324,7 @@
             List<int> years = new List<int>() { 2001, 2002 };
 
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllComplianceYears>._)).Returns(years);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
             ReportsController controller = new ReportsController(
                 () => weeeClient,
