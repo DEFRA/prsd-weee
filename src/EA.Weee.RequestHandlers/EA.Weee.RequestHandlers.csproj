@@ -85,6 +85,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYearsHandler.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsHandler.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\IGetMemberRegistrationsActiveComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\IGetDataReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsByRegisteredProducerIdDataAccess.cs" />

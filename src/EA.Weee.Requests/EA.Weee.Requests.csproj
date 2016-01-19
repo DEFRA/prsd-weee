@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYears.cs" />
     <Compile Include="Admin\Reports\GetProducerEEEDataCSV.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsv.cs" />
     <Compile Include="Charges\FetchComplianceYearsWithInvoices.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="DataReturns\FetchDataReturnForSubmission.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile.cs" />
     <Compile Include="DataReturns\SubmitDataReturnUpload.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYears.cs" />
     <Compile Include="Organisations\GetOrganisationOverview.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFile.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache.cs" />
