@@ -114,10 +114,16 @@
     <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeTransactionFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\Errors\IbisFileDataErrorTranslator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\Errors\SchemeFieldException.cs" />
     <Compile Include="Charges\IssuePendingCharges\IbisFileDataGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySubmissionTransactionFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IbisFileDataGeneratorResult.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IbisFileGeneratorResult.cs" />
     <Compile Include="Charges\IssuePendingCharges\IIbisCustomerFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\Errors\IIbisFileDataErrorTranslator.cs" />
     <Compile Include="Charges\IssuePendingCharges\IIbisFileDataGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IIbisFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\IIbisTransactionFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\IIssuePendingChargesDataAccess.cs" />
     <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesDataAccess.cs" />

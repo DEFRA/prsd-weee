@@ -7,6 +7,7 @@
     using Domain.Charges;
     using EA.Weee.Domain.Scheme;
     using EA.Weee.Ibis;
+    using Errors;
 
     /// <summary>
     /// This 1B1S transaction file generator creates a transaction file with one
@@ -22,15 +23,17 @@
             this.transactionReferenceGenerator = transactionReferenceGenerator;
         }
 
-        public async Task<TransactionFile> CreateAsync(ulong fileID, InvoiceRun invoiceRun)
+        public async Task<IbisFileGeneratorResult<TransactionFile>> CreateAsync(ulong fileID, InvoiceRun invoiceRun)
         {
             TransactionFile transactionFile = new TransactionFile("WEE", fileID);
 
+            var errors = new List<Exception>();
             var groups = invoiceRun.MemberUploads.GroupBy(mu => mu.Scheme);
 
             foreach (var group in groups)
             {
                 List<InvoiceLineItem> lineItems = new List<InvoiceLineItem>();
+                var lineItemErrors = new List<Exception>();
 
                 foreach (MemberUpload memberUpload in group)
                 {
@@ -39,50 +42,45 @@
                     string description = string.Format("Charge for producer registration submission made on {0:dd MMM yyyy}.",
                         submittedDate);
 
-                    InvoiceLineItem lineItem;
                     try
                     {
-                        lineItem = new InvoiceLineItem(
+                        InvoiceLineItem lineItem = new InvoiceLineItem(
                             memberUpload.TotalCharges,
                             description);
+
+                        lineItems.Add(lineItem);
                     }
                     catch (Exception ex)
                     {
-                        string errorMessage = string.Format(
-                            "An error occurred creating an 1B1S invoice line item to represent the member upload with ID \"{0}\". " +
-                            "See the inner exception for more details.",
-                            memberUpload.Id);
-                        throw new Exception(errorMessage, ex);
+                        lineItemErrors.Add(new SchemeFieldException(group.Key, ex));
                     }
-
-                    lineItems.Add(lineItem);
                 }
+
+                errors.AddRange(lineItemErrors);
 
                 string transactionReference = await transactionReferenceGenerator.GetNextTransactionReferenceAsync();
 
-                Invoice invoice;
-                try
+                if (lineItemErrors.Count == 0)
                 {
-                    invoice = new Invoice(
-                        group.Key.IbisCustomerReference,
-                        invoiceRun.IssuedDate,
-                        TransactionType.Invoice,
-                        transactionReference,
-                        lineItems);
-                }
-                catch (Exception ex)
-                {
-                    string errorMessage = string.Format(
-                        "An error occurred creating an 1B1S invoice to represent the member uploads for scheme with ID \"{0}\". " +
-                        "See the inner exception for more details.",
-                        group.Key.Id);
-                    throw new Exception(errorMessage, ex);
-                }
+                    try
+                    {
+                        Invoice invoice = new Invoice(
+                            group.Key.IbisCustomerReference,
+                            invoiceRun.IssuedDate,
+                            TransactionType.Invoice,
+                            transactionReference,
+                            lineItems);
 
-                transactionFile.AddInvoice(invoice);
+                        transactionFile.AddInvoice(invoice);
+                    }
+                    catch (Exception ex)
+                    {
+                        errors.Add(new SchemeFieldException(group.Key, ex));
+                    }
+                }
             }
 
-            return transactionFile;
+            return new IbisFileGeneratorResult<TransactionFile>(errors.Count == 0 ? transactionFile : null, errors);
         }
     }
 }
