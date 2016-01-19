@@ -3,10 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using FakeItEasy;
-    using Weee.Domain;
     using Weee.Domain.Lookup;
+    using Weee.Domain.Obligation;
     using Weee.Domain.Producer;
+    using Weee.Domain.Producer.Classfication;
     using Weee.Domain.Scheme;
 
     public class FakeProducer
@@ -46,10 +46,10 @@
                 true,
                 null,
                 "trading name",
-                Weee.Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                Weee.Domain.SellingTechniqueType.Both,
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
                 obligationType,
-                Weee.Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 brandNames.Select(bn => new BrandName(bn)).ToList(),
                 new List<SICCode>(),
                 new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 123),

@@ -12,7 +12,7 @@
     using Requests.Scheme;
     using Weee.Tests.Core;
     using Xunit;
-    using ObligationType = Domain.ObligationType;
+    using ObligationType = Domain.Obligation.ObligationType;
 
     public class VerifyApprovalNumberExistsHandlerTests
     {

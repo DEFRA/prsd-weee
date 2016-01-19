@@ -13,7 +13,7 @@
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
     using Xml.DataReturns;
     using Xunit;
-    using ObligationType = Domain.ObligationType;
+    using ObligationType = Domain.Obligation.ObligationType;
     using Scheme = Domain.Scheme.Scheme;
 
     public class DataReturnVersionFromXmlBuilderTests

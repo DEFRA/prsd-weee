@@ -4,9 +4,11 @@
     using System.Collections.Generic;
     using Domain.Charges;
     using Domain.Producer;
+    using Domain.Producer.Classfication;
     using Domain.Scheme;
     using FakeItEasy;
     using Lookup;
+    using Obligation;
     using Xunit;
 
     public class MemberUploadTests

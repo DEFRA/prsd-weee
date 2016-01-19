@@ -6,6 +6,8 @@
     using Core.Helpers;
     using Domain;
     using Domain.DataReturns;
+    using Domain.Error;
+    using Domain.Obligation;
     using Domain.Scheme;
     using Weee.XmlValidation.Errors;
 

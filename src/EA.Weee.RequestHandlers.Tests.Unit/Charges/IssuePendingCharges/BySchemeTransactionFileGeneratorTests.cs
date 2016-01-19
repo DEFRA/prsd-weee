@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Domain;
     using Domain.Charges;
+    using Domain.Obligation;
     using Domain.Scheme;
     using FakeItEasy;
     using Ibis;

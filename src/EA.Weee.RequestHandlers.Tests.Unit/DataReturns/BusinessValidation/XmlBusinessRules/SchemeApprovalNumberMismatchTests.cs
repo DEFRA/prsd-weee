@@ -41,7 +41,7 @@
                 "Test scheme",
                 approvalNumber,
                 "1B1S",
-                Domain.ObligationType.Both,
+                Domain.Obligation.ObligationType.Both,
                 new Guid("C5D400BE-0CE7-43D7-BD7B-B7936967E500"));
 
             return scheme;
