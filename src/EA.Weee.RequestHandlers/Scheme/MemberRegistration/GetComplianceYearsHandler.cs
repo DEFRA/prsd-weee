@@ -39,7 +39,7 @@
                 .Where(mu => mu.ComplianceYear.HasValue)
                 .GroupBy(mu => (int)mu.ComplianceYear)
                 .Select(group => group.Key)
-                .OrderBy(year => year)
+                .OrderByDescending(year => year)
                 .ToListAsync();
         }
     }

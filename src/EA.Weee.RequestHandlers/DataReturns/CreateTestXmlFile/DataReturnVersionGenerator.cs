@@ -284,7 +284,7 @@
                 end = "EXP";
             }
 
-            return string.Format("WEE/{0}{1}{2}{3:D4}{4}/{5}", letter1, letter2, number, letter3, letter4, end);
+            return string.Format("WEE/{0}{1}{2:D4}{3}{4}/{5}", letter1, letter2, number, letter3, letter4, end);
         }
 
         /// <summary>
