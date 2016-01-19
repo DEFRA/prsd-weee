@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Domain;
+    using Domain.Obligation;
     using EA.Weee.Tests.Core.Model;
     using Weee.DataAccess;
     using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;

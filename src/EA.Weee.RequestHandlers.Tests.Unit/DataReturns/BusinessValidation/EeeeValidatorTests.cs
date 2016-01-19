@@ -12,7 +12,7 @@
     using RequestHandlers.DataReturns.BusinessValidation;
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
     using Xunit;
-    using ObligationType = Domain.ObligationType;
+    using ObligationType = Domain.Obligation.ObligationType;
     using Quarter = Domain.DataReturns.Quarter;
     using Scheme = Domain.Scheme.Scheme;
 

@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Domain
+﻿namespace EA.Weee.Domain.Producer.Classfication
 {
     using Prsd.Core.Domain;
 

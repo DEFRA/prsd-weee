@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Domain;
     using Domain.Lookup;
+    using Domain.Obligation;
     using Domain.Producer;
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Domain.DataReturns;
