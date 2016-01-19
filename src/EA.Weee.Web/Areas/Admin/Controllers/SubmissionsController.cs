@@ -20,6 +20,7 @@
     using ViewModels.Submissions;
     using Web.ViewModels.Shared.Submission;
     using Weee.Requests.Admin;
+    using Weee.Requests.Admin.GetActiveComplianceYears;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
     using Weee.Requests.Shared;
@@ -101,7 +102,7 @@
                 {
                     //Get all the compliance years currently in database and set it to latest one.
                     //Get all the approved PCSs
-                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
+                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetMemberRegistrationsActiveComplianceYears());
                     var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
                     SubmissionsHistoryViewModel model = new SubmissionsHistoryViewModel
                     {
@@ -192,7 +193,7 @@
                 {
                     //Get all the compliance years currently in database and set it to latest one.
                     //Get all the approved PCSs
-                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears(ComplianceYearFor.DataReturns));
+                    var allYears = await client.SendAsync(User.GetAccessToken(), new GetDataReturnsActiveComplianceYears());
                     var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
                     DataReturnSubmissionsHistoryViewModel model = new DataReturnSubmissionsHistoryViewModel
                     {
