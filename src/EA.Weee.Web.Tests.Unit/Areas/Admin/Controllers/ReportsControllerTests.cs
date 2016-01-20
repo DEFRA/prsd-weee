@@ -89,6 +89,7 @@
         [InlineData(Reports.Producerpublicregister, "ProducerPublicRegister")]
         [InlineData(Reports.ProducerEEEData, "ProducerEEEData")]
         [InlineData(Reports.SchemeWeeeData, "SchemeWeeeData")]
+        [InlineData(Reports.UKEEEData, "UKEEEData")]
         public void HttpPost_ChooseActivity_RedirectsToCorrectControllerAction(string selection, string action)
         {
             // Arrange
@@ -227,6 +228,32 @@
             controller.ModelState.AddModelError("Key", "Any error");
 
             var result = await controller.ProducerEEEData(new ProducersDataViewModel());
+
+            Assert.IsType<ViewResult>(result);
+            Assert.False(controller.ModelState.IsValid);
+        }
+
+        [Fact]
+        public async void HttpGet_UKEEEData_ShouldReturnsUKEEEDataView()
+        {
+            var controller = ReportsController();
+
+            A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetAllComplianceYears>._))
+                .Returns(new List<int> { 2015, 2016 });
+
+            var result = await controller.UKEEEData();
+
+            var viewResult = ((ViewResult)result);
+            Assert.Equal("UKEEEData", viewResult.ViewName);
+        }
+
+        [Fact]
+        public async void HttpPost_UKEEEData_ModelIsInvalid_ShouldRedirectViewWithError()
+        {
+            var controller = ReportsController();
+            controller.ModelState.AddModelError("Key", "Any error");
+
+            var result = await controller.UKEEEData(new UKEEEDataViewModel());
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);

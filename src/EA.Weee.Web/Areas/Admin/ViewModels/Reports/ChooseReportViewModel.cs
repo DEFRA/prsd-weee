@@ -11,6 +11,7 @@
             Reports.ProducerDetails,
             Reports.PCSCharges,
             Reports.Producerpublicregister,
+            Reports.UKEEEData,
             Reports.ProducerEEEData,
             Reports.SchemeWeeeData
         })
