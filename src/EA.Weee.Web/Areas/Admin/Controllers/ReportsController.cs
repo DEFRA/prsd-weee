@@ -92,6 +92,9 @@
                 case Reports.SchemeWeeeData:
                     return RedirectToAction("SchemeWeeeData");
 
+                case Reports.UKEEEData:
+                    return RedirectToAction("UKEEEData");
+
                 default:
                     throw new NotSupportedException();
             }
@@ -335,6 +338,64 @@
             ViewBag.TriggerDownload = ModelState.IsValid;
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> UKEEEData()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            List<int> years;
+            try
+            {
+                years = await FetchComplianceYearsForDataReturns();
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+                return View();
+            }
+
+            UKEEEDataViewModel model = new UKEEEDataViewModel();
+            model.ComplianceYears = new SelectList(years);
+            return View("UKEEEData", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UKEEEData(UKEEEDataViewModel model)
+        {
+            SetBreadcrumb();
+            List<int> years;
+            try
+            {
+                years = await FetchComplianceYearsForDataReturns();
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+                return View();
+            }
+
+            model.ComplianceYears = new SelectList(years);
+            using (var client = apiClient())
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+                //return await DownloadProducerEEEDataCSV(model, client);
+                return View(model);
+            }
         }
 
         [HttpGet]
