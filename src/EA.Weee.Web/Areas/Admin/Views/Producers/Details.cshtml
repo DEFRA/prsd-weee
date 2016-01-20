@@ -17,7 +17,30 @@
 
     @foreach (var scheme in Model.Details.Schemes)
     {
-        <table>
+        <div class="section-tabs">
+            <ul>
+                <li class="active">
+                    <a id="registration-details-tab" href="#">Registration details</a>
+                </li>
+                <li>
+                    <a id="total-eee-details-tab" href="#">Total EEE</a>
+                </li>
+                <li>
+                    <a id="q1-details-tab" href="#">Q1</a>
+                </li>
+                <li>
+                    <a id="q2-details-tab" href="#">Q2</a>
+                </li>
+                <li>
+                    <a id="q3-details-tab" href="#">Q3</a>
+                </li>
+                <li>
+                    <a id="q4-details-tab" href="#">Q4</a>
+                </li>
+            </ul>
+        </div>
+
+        <table id="registration-details-table">
             <thead>
                 <tr class="visuallyhidden">
                     <th colspan="2">Producer Details</th>
@@ -79,3 +102,27 @@
     </p>
 }
 
+@section scripts {
+    <script type="text/javascript">
+        $("a[id$='details-tab']").click(function () {
+
+            // Inactivate all tabs
+            $("a[id$='details-tab']").each(function () {
+                $(this).parent().removeClass();
+            });
+
+            // Except this tab
+            $(this).parent().addClass("active");
+
+            var tableIdentifier = $(this).attr('id').replace('details-tab', '');
+
+            // Hide all data tables
+            $("table[id$='details-table'").each(function() {
+                $(this).addClass('visually-hidden');
+            });
+
+            // Except for the table corresponding to this tab
+            $("table[id$='" + tableIdentifier + "details-table'").removeClass('visually-hidden');
+        })
+    </script>
+}
