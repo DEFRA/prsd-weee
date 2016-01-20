@@ -88,6 +88,7 @@
         [InlineData(Reports.ProducerDetails, "ProducerDetails")]
         [InlineData(Reports.PCSCharges, "PCSCharges")]
         [InlineData(Reports.Producerpublicregister, "ProducerPublicRegister")]
+        [InlineData(Reports.UKWeeeData, "UKWeeeData")]
         [InlineData(Reports.ProducerEEEData, "ProducerEEEData")]
         [InlineData(Reports.SchemeWeeeData, "SchemeWeeeData")]
         public void HttpPost_ChooseActivity_RedirectsToCorrectControllerAction(string selection, string action)
@@ -476,6 +477,255 @@
 
             // Act
             ActionResult result = await controller.DownloadSchemeWeeeDataCsv(2015, ObligationType.B2C);
+
+            // Assert
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+
+            Assert.Equal("text/plain", fileResult.ContentType);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "UKWeeeData" action calls the API to retrieve
+        /// the list of compliance years and returns the "UKWeeeData" view with 
+        /// a ProducerDataViewModel that has be populated with the list of years.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetUKWeeeData_Always_ReturnsUKWeeeDataProducerDataViewModel()
+        {
+            // Arrange
+            List<int> years = new List<int>() { 2001, 2002 };
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllComplianceYears>._)).Returns(years);
+
+            ReportsController controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            ActionResult result = await controller.UKWeeeData();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "UKWeeeData");
+
+            ProducersDataViewModel model = viewResult.Model as ProducersDataViewModel;
+            Assert.NotNull(model);
+            Assert.Collection(model.ComplianceYears,
+                y1 => Assert.Equal("2001", y1.Text),
+                y2 => Assert.Equal("2002", y2.Text));
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "UKWeeeData" action returns
+        /// a view with the ViewBag property "TriggerDownload" set to false.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetUKWeeeData_Always_SetsTriggerDownloadToFalse()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            ActionResult result = await controller.UKWeeeData();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "UKWeeeData" action sets
+        /// the breadcrumb's internal activity to "View reports".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetUKWeeeData_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            BreadcrumbService breadcrumb = new BreadcrumbService();
+
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                breadcrumb);
+
+            // Act
+            ActionResult result = await controller.UKWeeeData();
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "UKWeeeData" action with an invalid view model
+        /// calls the API to retrieve the list of compliance years and returns the "UKWeeeData"
+        /// view with a ProducerDataViewModel that has be populated with the list of years.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostUKWeeeData_WithInvalidViewModel_ReturnsUKWeeeDataProducerDataViewModel()
+        {
+            // Arrange
+            List<int> years = new List<int>() { 2001, 2002 };
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllComplianceYears>._)).Returns(years);
+
+            ReportsController controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            ProducersDataViewModel viewModel = new ProducersDataViewModel();
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.UKWeeeData(viewModel);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "UKWeeeData");
+
+            ProducersDataViewModel model = viewResult.Model as ProducersDataViewModel;
+            Assert.NotNull(model);
+            Assert.Collection(model.ComplianceYears,
+                y1 => Assert.Equal("2001", y1.Text),
+                y2 => Assert.Equal("2002", y2.Text));
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "UKWeeeData" action with an invalid view model
+        /// returns a view with the ViewBag property "TriggerDownload" set to false.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostUKWeeeData_WithInvalidViewModel_SetsTriggerDownloadToFalse()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            ProducersDataViewModel viewModel = new ProducersDataViewModel();
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.UKWeeeData(viewModel);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "UKWeeeData" action with a valid view model
+        /// returns a view with the ViewBag property "TriggerDownload" set to true.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostUKWeeeData_WithViewModel_SetsTriggerDownloadToTrue()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            ProducersDataViewModel viewModel = new ProducersDataViewModel();
+
+            // Act
+            ActionResult result = await controller.UKWeeeData(viewModel);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "UKWeeeData" action sets
+        /// the breadcrumb's internal activity to "View reports".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PostUKWeeeData_Always_SetsInternalBreadcrumbToViewReports()
+        {
+            BreadcrumbService breadcrumb = new BreadcrumbService();
+
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                breadcrumb);
+
+            // Act
+            ActionResult result = await controller.UKWeeeData(A.Dummy<ProducersDataViewModel>());
+
+            // Assert
+            Assert.Equal("View reports", breadcrumb.InternalActivity);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "DownloadUKWeeeDataCsv" action will
+        /// call the API to generate a CSV file which is returned with the correct file name.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetDownloadUKWeeeDataCsv_Always_CallsApiAndReturnsFileResultWithCorrectFileName()
+        {
+            // Arrange
+            FileInfo file = new FileInfo("TEST FILE.csv", new byte[] { 1, 2, 3 });
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKWeeeCsv>._))
+                .WhenArgumentsMatch(a => a.Get<GetUKWeeeCsv>("request").ComplianceYear == 2015)
+                .Returns(file);
+
+            ReportsController controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            ProducersDataViewModel viewModel = new ProducersDataViewModel();
+
+            // Act
+            ActionResult result = await controller.DownloadUKWeeeDataCsv(2015);
+
+            // Assert
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+
+            Assert.Equal("TEST FILE.csv", fileResult.FileDownloadName);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "DownloadUKWeeeDataCsv" action will
+        /// call the API to generate a CSV file which is returned with a content
+        /// type of "text/plain"
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetDownloadUKWeeeDataCsv_Always_CallsApiAndReturnsFileResultWithContentTypeOfTextPlain()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<GetUKWeeeCsv>._))
+                .WhenArgumentsMatch(a => a.Get<int>("complianceYear") == 2015)
+                .Returns(A.Dummy<FileInfo>());
+
+            ReportsController controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            ProducersDataViewModel viewModel = new ProducersDataViewModel();
+
+            // Act
+            ActionResult result = await controller.DownloadUKWeeeDataCsv(2015);
 
             // Assert
             FileResult fileResult = result as FileResult;

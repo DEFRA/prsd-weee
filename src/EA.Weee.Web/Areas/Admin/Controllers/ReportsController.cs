@@ -87,6 +87,9 @@
                 case Reports.Producerpublicregister:
                     return RedirectToAction("ProducerPublicRegister");
 
+                case Reports.UKWeeeData:
+                    return RedirectToAction("UKWeeeData");
+
                 case Reports.ProducerEEEData:
                     return RedirectToAction("ProducerEEEData");
 
@@ -344,6 +347,75 @@
             FileInfo file;
 
             GetSchemeWeeeCsv request = new GetSchemeWeeeCsv(complianceYear, obligationType);
+            using (var client = apiClient())
+            {
+                file = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            return File(file.Data, "text/plain", file.FileName);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> UKWeeeData()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            List<int> years;
+            try
+            {
+                years = await FetchComplianceYearsForDataReturns();
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+                return View();
+            }
+
+            ProducersDataViewModel model = new ProducersDataViewModel();
+            model.ComplianceYears = new SelectList(years);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UKWeeeData(ProducersDataViewModel model)
+        {
+            SetBreadcrumb();
+
+            List<int> years;
+            try
+            {
+                years = await FetchComplianceYearsForDataReturns();
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+                ViewBag.TriggerDownload = false;
+                return View();
+            }
+
+            model.ComplianceYears = new SelectList(years);
+
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadUKWeeeDataCsv(int complianceYear)
+        {
+            FileInfo file;
+
+            GetUKWeeeCsv request = new GetUKWeeeCsv(complianceYear);
             using (var client = apiClient())
             {
                 file = await client.SendAsync(User.GetAccessToken(), request);
