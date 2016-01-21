@@ -3,79 +3,93 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.MemberUploadResultViewModel
 @{
-    ViewBag.Title = "View any warnings";
+	ViewBag.Title = "View any warnings";
 }
 
 @section main_content {
-    <header class="hgroup">
-        <div>
-            <h1 class="heading-large">Your file has passed our validation checks</h1>
-        </div>
-    </header>
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
+	<header class="hgroup">
+		<div>
+			<h1 class="heading-large">Your file has passed our validation checks</h1>
+		</div>
+	</header>
+	@using (Html.BeginForm())
+	{
+		@Html.AntiForgeryToken()
+		@Html.Gds().ValidationSummary()
 
-        @Html.HiddenFor(m => m.TotalCharges)
-        
-        <p>Your XML file has passed our technical validation checks but we are unable to verify that all of the information in your file is correct.</p>
+		@Html.HiddenFor(m => m.TotalCharges)
 
-        int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
-        string warningText = numWarnings > 1 ? "warnings" : "warning";
+		<p>Your XML file has passed our technical validation checks but we are unable to verify that all of the information in your file is correct.</p>
 
-        if (@numWarnings > 0)
-        {
-            <p>
-                Your XML file contains @numWarnings @warningText.
-                Warnings are displayed when members details are changed or when your file contains an inconsistent value.
-                You must review all warnings and make any necessary corrections to your file before it is ready to be submitted. 
-                Or, if you are happy with its content, you can submit your file with warnings.
-            </p>
-            <details>
-                <summary class="warning-details-summary bold-small">View @numWarnings @warningText</summary>
-                <div class="warning-list-container">
-                    <ul>
-                        @foreach (var uploadError in Model.ErrorData)
-                        {
-                            if (uploadError.ErrorLevel == ErrorLevel.Warning)
-                            {
-                                <li class="warning-list-item font-xsmall">@uploadError.Description</li>
-                            }
-                        }
-                    </ul>
-                </div>
-            </details>
-        }
+		int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
+		string warningText = numWarnings > 1 ? "warnings" : "warning";
 
-        <div class="highlight-section">
-            <div class="highlight-section-text">
-                Based on the information provided in your XML, your charges are:
-            </div>
-            <div class="highlight-section-amount">
-                £@Model.TotalCharges.ToString("N2")
-            </div>
-        </div>
+		if (@numWarnings > 0)
+		{
+			<p>
+				Your XML file contains @numWarnings @warningText.
+				Warnings are displayed when members details are changed or when your file contains an inconsistent value.
+				You must review all warnings and make any necessary corrections to your file before it is ready to be submitted.
+				Or, if you are happy with its content, you can submit your file with warnings.
+			</p>
+			<details>
+				@{
+					string warningSummaryText = string.Format("View {0} {1}", numWarnings, warningText);
+					this.WeeeGds().SummaryEventTrackingFunction(warningSummaryText, "warning-details-summary bold-small", "Member registration warnings", "View member registration warnings", "Validation sucessful");
+				}
+				<div class="warning-list-container">
+					<ul>
+						@foreach (var uploadError in Model.ErrorData)
+						{
+							if (uploadError.ErrorLevel == ErrorLevel.Warning)
+							{
+								<li class="warning-list-item font-xsmall">@uploadError.Description</li>
+							}
+						}
+					</ul>
+				</div>
+			</details>
+		}
 
-        <p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete.</p>
+		<div class="highlight-section">
+			<div class="highlight-section-text">
+				Based on the information provided in your XML, your charges are:
+			</div>
+			<div class="highlight-section-amount">
+				£@Model.TotalCharges.ToString("N2")
+			</div>
+		</div>
 
-        @Html.Partial("_PrivacyPolicy");
+		<p>By submitting your XML, you are confirming that the information you’ve provided is accurate and complete.</p>
 
-        <div class="form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
-            @Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
-            <label class="block-label" for="PrivacyPolicy">
-                @Html.CheckBoxFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy" })
-                Confirm you have read our privacy policy
-            </label>
-        </div>
+		@Html.Partial("_PrivacyPolicy");
 
-        <p>
-            @this.WeeeGds().SubmitWithEventTracking("Submit", "Uploads", "XML submission", htmlAttributes: new Dictionary<string, object> { { "class", "button" } })
-        </p>
+		<div class="form-group @Html.Gds().FormGroupClass(m => m.PrivacyPolicy)">
+			@Html.Gds().ValidationMessageFor(m => m.PrivacyPolicy)
+			<label class="block-label" for="PrivacyPolicy">
+				@Html.CheckBoxFor(m => m.PrivacyPolicy, new { @id = "PrivacyPolicy" })
+				Confirm you have read our privacy policy
+			</label>
+		</div>
 
-        <p>
-            Make changes and @this.WeeeGds().ActionLinkWithEventTracking("upload a new file", "AddOrAmendMembers", "MemberRegistration",
-                     "Member registration loop", "Upload a new file", "Validation successful").
-        </p>
-    }
+		<p>
+			@this.WeeeGds().SubmitWithEventTracking(
+						"Submit",
+						"Uploads",
+						"XML submission",
+						htmlAttributes: new Dictionary<string, object> { { "class", "button" } }
+						)
+		</p>
+
+		<p>
+			Make changes and @this.WeeeGds().ActionLinkWithEventTracking(
+						"upload a new file",
+						"AddOrAmendMembers",
+						"MemberRegistration",
+						"Member registration loop",
+						"Upload a new file",
+						"Validation successful"
+						).
+		</p>
+	}
 }

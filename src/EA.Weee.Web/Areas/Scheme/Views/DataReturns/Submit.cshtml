@@ -87,21 +87,26 @@
         if (hasErrors)
         {
             <details>
-                <summary class="error-details-summary bold-small">View @errorCount @errorText</summary>
+                @{
+                    string errorSummaryText = string.Format("View {0} {1}", errorCount, errorText);
+                    this.WeeeGds().SummaryEventTrackingFunction(errorSummaryText, "error-details-summary bold-small", "Data return errors", "View data return errors");
+                }
                 <div class="error-list-container">
                     <ul>
                         @foreach (DataReturnError error in Model.DataReturn.Errors)
                         {
-                            <li class="error-list-item font-xsmall">@Html.Raw(error.Description.ReplaceConsecutiveWhiteSpacesWithNonBreakingSpace())</li>
+                        <li class="error-list-item font-xsmall">
+                            @Html.Raw(error.Description.ReplaceConsecutiveWhiteSpacesWithNonBreakingSpace())
+                        </li>
                         }
                     </ul>
                 </div>
             </details>
         }
 
-        if (hasWarnings)
-        {
-            <details>
+         if (hasWarnings)
+            {
+                <details>
                 <summary class="warning-details-summary bold-small">View @warningCount @warningText</summary>
                 <div class="warning-list-container">
                     <ul>
@@ -111,12 +116,12 @@
                         }
                     </ul>
                 </div>
-            </details>
-        }
+                </details>
+                }
 
-        if (!hasErrors && Model.DataReturn.Year != null && Model.DataReturn.Quarter != null)
-        {
-            <p>
+                if (!hasErrors && Model.DataReturn.Year != null && Model.DataReturn.Quarter != null)
+                {
+                <p>
                 <div class="highlight-section">
                     <div class="highlight-section-text">
                         The XML file you are submitting is for:
@@ -141,71 +146,72 @@
                                 quarterText = "Quarter 4";
                             }
                         }
-
                         @Model.DataReturn.Year.Value @quarterText
                     </div>
                 </div>
-            </p>
-                            }
+                </p>
+            }
 
-                            if (hasErrors)
-                            {
-                                <p>
-                                    To see your XML file’s full list,
-                                    @this.WeeeGds().ActionLinkWithEventTracking(
-                    "download your errors and warnings (CSV)",
-                    "DownloadErrorsAndWarnings",
-                    "DataReturns",
-                    "Downloads",
-                    "Errors and warnings",
-                    routeValues: new RouteValueDictionary(new { dataReturnUploadId = Model.DataReturn.DataReturnUploadId })).
-                                </p>
+            if (hasErrors)
+            {
+                <p>
+                    To see your XML file’s full list,
+                    @this.WeeeGds().ActionLinkWithEventTracking(
+                                "Download your errors and warnings (CSV)",
+                                "DownloadErrorsAndWarnings",
+                                "DataReturns",
+                                "Data return downloads",
+                                "Data return errors and warnings",
+                                routeValues: new RouteValueDictionary(new { dataReturnUploadId = Model.DataReturn.DataReturnUploadId })
+                                ).
+                </p>
+                <p>
+                    @this.WeeeGds().ActionLinkWithEventTracking(
+                                "Upload a new file",
+                                "Upload",
+                                "DataReturns",
+                                "Data return loop",
+                                "Upload a new data return file",
+                                "Data return validation failed",
+                                null,
+                                new Dictionary<string, object> { { "class", "button" } }
+                                )
+                </p>
 
-                                <p>
-                                    @this.WeeeGds().ActionLinkWithEventTracking(
-                    "Upload a new file",
-                    "Upload",
-                    "DataReturns",
-                    "Data return loop",
-                    "Upload a new file",
-                    "Validation failed",
-                    null,
-                    new Dictionary<string, object> { { "class", "button" } })
-                                </p>
+                <div>
+                    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+                </div>
+            }
+            else
+            {
+                <p>By submitting your XML file, you are confirming that the information you’ve provided is accurate and complete. The data you provide will be used to calculate your obligation and will contribute to public data reports.</p>
 
-                                <div>
-                                    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
-                                </div>
-                            }
-                            else
-                            {
-                                <p>By submitting your XML file, you are confirming that the information you’ve provided is accurate and complete. The data you provide will be used to calculate your obligation and will contribute to public data reports.</p>
+                if (Model.DataReturn.IsResubmission)
+                {
+                    <p class="important">
+                        Submitting this file will overwrite your existing data return for this period.
+                    </p>
+                }
 
-                                if (Model.DataReturn.IsResubmission)
-                                {
-                                    <p class="important">
-                                        Submitting this file will overwrite your existing data return for this period.
-                                    </p>
-                                }
+                <p>
+                    @this.WeeeGds().SubmitWithEventTracking(
+                                        "Submit",
+                                        "Data return Uploads",
+                                        "Data return XML submission",
+                                        htmlAttributes: new Dictionary<string, object> { { "class", "button" } }
+                                        )
+                </p>
 
-                                <p>
-                                    @this.WeeeGds().SubmitWithEventTracking(
-                    "Submit",
-                    "Uploads",
-                    "XML submission",
-                    htmlAttributes: new Dictionary<string, object> { { "class", "button" } })
-                                </p>
-
-                                <p>
-                                    Make changes and
-                                    @this.WeeeGds().ActionLinkWithEventTracking(
-                    "upload a new file",
-                    "Upload",
-                    "DataReturns",
-                    "Data return loop",
-                    "Upload a new file",
-                    "Validation successful").
-                                </p>
-                                }
-                            }
+                <p>
+                    Make changes and @this.WeeeGds().ActionLinkWithEventTracking(
+                                        "upload a new file",
+                                        "Upload",
+                                        "DataReturns",
+                                        "Data return loop",
+                                        "Upload a new data return file",
+                                        "Data return validation successful"
+                                        ).
+               </p>
+            }
+    }
 }
