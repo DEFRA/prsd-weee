@@ -24,7 +24,7 @@
 
         public async Task<int> UpdateCompetentAuthorityUserStatus(CompetentAuthorityUser user, UserStatus status)
         {
-            user.UpdateUserStatus(status.ToDomainEnumeration<Domain.UserStatus>());
+            user.UpdateUserStatus(status.ToDomainEnumeration<Domain.User.UserStatus>());
             return await context.SaveChangesAsync();
         }
     }
