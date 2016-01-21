@@ -12,6 +12,7 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
+    using Prsd.Core.Mapper;
     using Xunit;
 
     public class GetProducerDetailsHandlerTests
@@ -24,8 +25,9 @@
             // Arrange
             IGetProducerDetailsDataAccess dataAccess = A.Dummy<IGetProducerDetailsDataAccess>();
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
+            IMapper mapper = A.Fake<IMapper>();
 
-            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization);
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
 
             Requests.Admin.GetProducerDetails request = new Requests.Admin.GetProducerDetails()
             {
@@ -48,8 +50,9 @@
                 .Returns(new List<Domain.Producer.ProducerSubmission>());
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
+            IMapper mapper = A.Fake<IMapper>();
 
-            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization);
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
 
             Requests.Admin.GetProducerDetails request = new Requests.Admin.GetProducerDetails()
             {
@@ -111,8 +114,9 @@
                 .Returns(new List<Domain.Producer.ProducerSubmission>() { producer });
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
+            IMapper mapper = A.Fake<IMapper>();
 
-            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization);
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
 
             Requests.Admin.GetProducerDetails request = new Requests.Admin.GetProducerDetails()
             {
@@ -192,7 +196,9 @@
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization);
+            IMapper mapper = A.Fake<IMapper>();
+
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
 
             Requests.Admin.GetProducerDetails request = new Requests.Admin.GetProducerDetails()
             {
@@ -272,7 +278,9 @@
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization);
+            IMapper mapper = A.Fake<IMapper>();
+
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
 
             Requests.Admin.GetProducerDetails request = new Requests.Admin.GetProducerDetails()
             {
@@ -353,7 +361,9 @@
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization);
+            IMapper mapper = A.Fake<IMapper>();
+
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
 
             Requests.Admin.GetProducerDetails request = new Requests.Admin.GetProducerDetails()
             {
