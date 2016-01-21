@@ -1,0 +1,42 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Test.ViewModels.ManagePcsReturnsSubmissionWindow.SettingsModel
+@{
+    ViewBag.Title = "PCS submission window settings";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            PCS submission window settings
+        </h1>
+    </header>
+
+    <p>Use this page to manage the PCS submission window</p>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.FixCurrentDate)">
+            @Html.Gds().ValidationMessageFor(m => m.FixCurrentDate)
+            @Html.Gds().CheckBoxFor(m => m.FixCurrentDate)
+        </div>
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.CurrentDate)">
+            @Html.Gds().LabelFor(m => m.CurrentDate)
+            @Html.Gds().ValidationMessageFor(m => m.CurrentDate)
+            @if (Model.CurrentDate.HasValue)
+            {
+                <input id="CurrentDate" name="CurrentDate" type="date" value="@Model.CurrentDate.Value.ToString("yyyy-MM-dd")"/>
+            }
+            else
+            {
+                <input id="CurrentDate" name="CurrentDate" type="date" />
+            }
+        </div>
+
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+    }
+}

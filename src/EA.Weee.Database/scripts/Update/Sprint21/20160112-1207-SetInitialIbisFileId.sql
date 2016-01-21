@@ -1,0 +1,7 @@
+BEGIN TRANSACTION
+
+UPDATE SystemData
+SET InitialIbisFileId = 600
+WHERE InitialIbisFileId < 600
+
+COMMIT TRANSACTION

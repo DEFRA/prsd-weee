@@ -1,11 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin;
-    using DataAccess.DataAccess;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
@@ -38,7 +34,7 @@
 
             var producer = await removeProducerDataAccess.GetProducerRegistration(request.RegisteredProducerId);
 
-            producer.Unalign();
+            producer.Remove();
 
             await removeProducerDataAccess.SaveChangesAsync();
 

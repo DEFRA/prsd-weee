@@ -17,6 +17,8 @@
 
         [DisplayName("Appropriate authority")]
         public Guid? SelectedAA { get; set; }
+        
+        public bool IncludeRemovedProducer { get; set; }
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 

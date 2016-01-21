@@ -130,7 +130,7 @@
                 DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
 
                 var scheme = helper.CreateScheme();
-                helper.GerOrCreateRegisteredProducer(scheme, 2016, "BBBB");
+                helper.GetOrCreateRegisteredProducer(scheme, 2016, "BBBB");
 
                 database.Model.SaveChanges();
 
@@ -229,7 +229,7 @@
                 memberUpload1.IsSubmitted = true;
                 helper.CreateProducerAsCompany(memberUpload1, "AAAA");
 
-                var producer = helper.GerOrCreateRegisteredProducer(scheme, 2016, "BBBB");
+                var producer = helper.GetOrCreateRegisteredProducer(scheme, 2016, "BBBB");
                 var memberUpload2 = helper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;

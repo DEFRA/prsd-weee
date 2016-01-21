@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Domain
 {
+    using System;
     using Prsd.Core.Domain;
 
     public class SystemData : Entity
@@ -8,8 +9,22 @@
 
         public ulong InitialIbisFileId { get; private set; }
 
+        public bool UseFixedCurrentDate { get; private set; }
+
+        public DateTime FixedCurrentDate { get; private set; }
+
         protected SystemData()
         {
+        }
+
+        public void UpdateFixedCurrentDate(DateTime date)
+        {
+            FixedCurrentDate = date;
+        }
+
+        public void ToggleFixedCurrentDateUsage(bool enabled)
+        {
+            UseFixedCurrentDate = enabled;
         }
 
         /// <summary>

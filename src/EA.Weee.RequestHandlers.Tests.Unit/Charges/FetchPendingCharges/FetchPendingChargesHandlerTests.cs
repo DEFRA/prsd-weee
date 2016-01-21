@@ -1,11 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.FetchPendingCharges
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Core.Charges;
     using Domain;

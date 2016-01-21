@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.DataAccess
 {
-    using System.Data.Common;
+    using System;
     using System.Data.Entity;
-    using System.Data.SqlClient;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Domain;
@@ -14,14 +14,14 @@
     using Domain.Organisation;
     using Domain.Producer;
     using Domain.Scheme;
-    using Domain.Unalignment;
+    using Extensions;
     using Prsd.Core;
     using Prsd.Core.DataAccess.Extensions;
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
     using StoredProcedure;
 
-    public partial class WeeeContext : DbContext
+    public class WeeeContext : DbContext
     {
         private readonly IUserContext userContext;
         private readonly IEventDispatcher dispatcher;
@@ -33,7 +33,7 @@
         public virtual DbSet<User> Users { get; set; }
 
         public virtual DbSet<Country> Countries { get; set; }
-        
+
         public virtual DbSet<OrganisationUser> OrganisationUsers { get; set; }
 
         public virtual DbSet<UKCompetentAuthority> UKCompetentAuthorities { get; set; }
@@ -44,9 +44,49 @@
 
         public virtual DbSet<Scheme> Schemes { get; set; }
 
-        public virtual DbSet<RegisteredProducer> RegisteredProducers { get; set; }
+        internal virtual DbSet<RegisteredProducer> AllRegisteredProducers { get; set; }
 
-        public virtual DbSet<ProducerSubmission> ProducerSubmissions { get; set; }
+        public IQueryable<RegisteredProducer> RegisteredProducers
+        {
+            get
+            {
+                return AllRegisteredProducers
+                    .AsQueryable()
+                    .Where(rp => !rp.Removed);
+            }
+        }
+
+        public virtual IQueryable<RegisteredProducer> RemovedRegisteredProducers
+        {
+            get
+            {
+                return AllRegisteredProducers
+                    .AsQueryable()
+                    .Where(rp => rp.Removed);
+            }
+        }
+
+        internal virtual DbSet<ProducerSubmission> AllProducerSubmissions { get; set; }
+
+        public virtual IQueryable<ProducerSubmission> ProducerSubmissions
+        {
+            get
+            {
+                return AllProducerSubmissions
+                    .AsQueryable()
+                    .Where(ps => !ps.RegisteredProducer.Removed);
+            }
+        }
+
+        public virtual IQueryable<ProducerSubmission> RemovedProducerSubmissions
+        {
+            get
+            {
+                return AllProducerSubmissions
+                    .AsQueryable()
+                    .Where(ps => ps.RegisteredProducer.Removed);
+            }
+        }
 
         public virtual DbSet<SystemData> SystemData { get; set; }
 
@@ -76,6 +116,8 @@
 
         public virtual DbSet<InvoiceRun> InvoiceRuns { get; set; }
 
+        public virtual DbSet<QuarterWindowTemplate> QuarterWindowTemplates { get; set; }
+
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
         public WeeeContext(IUserContext userContext, IEventDispatcher dispatcher)
@@ -87,18 +129,10 @@
             Database.SetInitializer<WeeeContext>(null);
 
             StoredProcedures = new StoredProcedures(this);
-        }
 
-        /// <summary>
-        /// This constructor should only be used for integration testing.
-        /// </summary>
-        /// <param name="userContext"></param>
-        /// <param name="connection"></param>
-        public WeeeContext(IUserContext userContext, IEventDispatcher dispatcher, DbConnection connection)
-            : base(connection, false)
-        {
-            this.userContext = userContext;
-            this.dispatcher = dispatcher;
+            // Set internal db sets
+            AllRegisteredProducers = Set<RegisteredProducer>();
+            AllProducerSubmissions = Set<ProducerSubmission>();
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -120,7 +154,6 @@
             this.SetEntityId();
             this.AuditChanges(userContext.UserId);
             AuditEntities();
-            UnalignEntities();
 
             int result;
             if (alreadyHasTransaction)
@@ -151,7 +184,6 @@
             this.SetEntityId();
             this.AuditChanges(userContext.UserId);
             AuditEntities();
-            UnalignEntities();
 
             int result;
             if (alreadyHasTransaction)
@@ -202,26 +234,6 @@
                 {
                     auditableEntity.Entity.UpdatedById = userContext.UserId.ToString();
                     auditableEntity.Entity.UpdatedDate = SystemTime.UtcNow;
-                }
-            }
-        }
-
-        private void UnalignEntities()
-        {
-            foreach (var entry in ChangeTracker.Entries())
-            {
-                var unalignableEntity = entry.Entity as UnalignableEntity;
-                if (unalignableEntity != null 
-                    && !unalignableEntity.IsAligned)
-                {
-                    var entity = unalignableEntity;
-
-                    var tableName = GetTableName(entity.GetType());
-                    var primaryKeyName = GetPrimaryKeyName(entity.GetType());
-
-                    var sql = string.Format("UPDATE {0} SET IsAligned = 0 WHERE {1} = @id", tableName, primaryKeyName);
-
-                    Database.ExecuteSqlCommand(sql, new SqlParameter("@id", entry.OriginalValues[primaryKeyName]));
                 }
             }
         }

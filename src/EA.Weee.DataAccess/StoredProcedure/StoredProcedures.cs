@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Common;
     using System.Data.SqlClient;
     using System.Threading.Tasks;
 
@@ -39,11 +40,13 @@
 
             SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", DBNull.Value);
             SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", DBNull.Value);
-            
+            SqlParameter includeRemovedProducerParameter = new SqlParameter("@IncludeRemovedProducer", false);
+
             return await context.Database
                 .SqlQuery<MembersDetailsCSVData>(
-                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @SchemeId, @CompetentAuthorityId",
-                    complianceYearParameter,                                     
+                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @IncludeRemovedProducer, @SchemeId, @CompetentAuthorityId",
+                    complianceYearParameter,
+                     includeRemovedProducerParameter,
                     schemeIdParameter,
                      competentAuthorityIdParameter)
                 .ToListAsync();
@@ -58,17 +61,19 @@
         /// <param name="schemeId"></param>
         /// <param name="competentAuthorityId"></param>
         /// <returns></returns>
-        public async Task<List<MembersDetailsCSVData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, Guid? schemeId, Guid? competentAuthorityId)
+        public async Task<List<MembersDetailsCSVData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, bool includeRemovedProducer, Guid? schemeId, Guid? competentAuthorityId)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
             SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
             SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", (object)competentAuthorityId ?? DBNull.Value);
-            
+            SqlParameter includeRemovedProducerParameter = new SqlParameter("@IncludeRemovedProducer", includeRemovedProducer);
+
             return await context.Database
                 .SqlQuery<MembersDetailsCSVData>(
-                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @SchemeId, @CompetentAuthorityId",
-                    complianceYearParameter,                                     
+                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @IncludeRemovedProducer, @SchemeId, @CompetentAuthorityId",
+                    complianceYearParameter,
+                     includeRemovedProducerParameter,
                     schemeIdParameter,
                      competentAuthorityIdParameter)
                 .ToListAsync();
@@ -83,7 +88,7 @@
         public async Task<List<PCSChargesCSVData>> SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(int complianceYear, Guid? competentAuthorityId)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-            
+
             SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", (object)competentAuthorityId ?? DBNull.Value);
 
             return await context.Database
@@ -102,7 +107,7 @@
         public async Task<List<PCSChargesCSVData>> SpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority(int complianceYear)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-            
+
             SqlParameter competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", DBNull.Value);
 
             return await context.Database
@@ -143,11 +148,121 @@
                     prnParameter).ToListAsync();
         }
 
-        public async Task<int> SpgNext1B1STransactionNumber()
+        public async Task<int> SpgNextIbisTransactionNumber()
         {
             return await context.Database
-                .SqlQuery<int>("[Charging].[SpgNext1B1STransactionNumber]")
+                .SqlQuery<int>("[Charging].[SpgNextIbisTransactionNumber]")
                 .SingleAsync();
+        }
+
+        /// <summary>
+        /// Gets the details of the producers for an invoice run.
+        /// </summary>
+        /// <param name="invoiceRunId"></param>
+        /// <returns></returns>
+        public async Task<List<PCSChargesCSVData>> SpgInvoiceRunChargeBreakdown(Guid invoiceRunId)
+        {
+            var invoiceRunIdParameter = new SqlParameter("@InvoiceRunId", invoiceRunId);
+
+            return await context.Database
+                .SqlQuery<PCSChargesCSVData>(
+                    "[Charging].[SpgInvoiceRunChargeBreakdown] @InvoiceRunId",
+                    invoiceRunIdParameter)
+                .ToListAsync();
+        }
+
+        public async Task<SpgSchemeWeeeCsvResult> SpgSchemeWeeeCsvAsync(int complianceYear, string obligationType)
+        {
+            SpgSchemeWeeeCsvResult result = new SpgSchemeWeeeCsvResult();
+
+            var command = context.Database.Connection.CreateCommand();
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandText = "[PCS].[SpgSchemeWeeeCsv]";
+
+            DbParameter complianceYearParameter = command.CreateParameter();
+            complianceYearParameter.DbType = System.Data.DbType.Int32;
+            complianceYearParameter.Value = complianceYear;
+            complianceYearParameter.ParameterName = "@ComplianceYear";
+            command.Parameters.Add(complianceYearParameter);
+
+            DbParameter obligationTypeParameter = command.CreateParameter();
+            obligationTypeParameter.DbType = System.Data.DbType.String;
+            obligationTypeParameter.Value = obligationType;
+            obligationTypeParameter.ParameterName = "@ObligationType";
+            command.Parameters.Add(obligationTypeParameter);
+
+            await context.Database.Connection.OpenAsync();
+
+            DbDataReader dataReader = await command.ExecuteReaderAsync();
+
+            while (await dataReader.ReadAsync())
+            {
+                Guid schemeId = dataReader.GetGuid(dataReader.GetOrdinal("Id"));
+                string schemeName = dataReader.GetString(dataReader.GetOrdinal("SchemeName"));
+                string approvalNumber = dataReader.GetString(dataReader.GetOrdinal("ApprovalNumber"));
+
+                result.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult()
+                {
+                    SchemeId = schemeId,
+                    SchemeName = schemeName,
+                    ApprovalNumber = approvalNumber
+                });
+            }
+
+            await dataReader.NextResultAsync();
+
+            while (await dataReader.ReadAsync())
+            {
+                Guid schemeId = dataReader.GetGuid(dataReader.GetOrdinal("SchemeId"));
+                int quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
+                int weeeCategory = dataReader.GetInt32(dataReader.GetOrdinal("WeeeCategory"));
+                int sourceType = dataReader.GetInt32(dataReader.GetOrdinal("SourceType"));
+                decimal tonnage = dataReader.GetDecimal(dataReader.GetOrdinal("Tonnage"));
+
+                result.CollectedAmounts.Add(new SpgSchemeWeeeCsvResult.CollectedAmountResult()
+                {
+                    SchemeId = schemeId,
+                    QuarterType = quarter,
+                    WeeeCategory = weeeCategory,
+                    SourceType = sourceType,
+                    Tonnage = tonnage
+                });
+            }
+
+            await dataReader.NextResultAsync();
+
+            while (await dataReader.ReadAsync())
+            {
+                Guid schemeId = dataReader.GetGuid(dataReader.GetOrdinal("SchemeId"));
+                int quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
+                int weeeCategory = dataReader.GetInt32(dataReader.GetOrdinal("WeeeCategory"));
+                int locationType = dataReader.GetInt32(dataReader.GetOrdinal("LocationType"));
+                string locationApprovalNumber = dataReader.GetString(dataReader.GetOrdinal("LocationApprovalNumber"));
+                decimal tonnage = dataReader.GetDecimal(dataReader.GetOrdinal("Tonnage"));
+
+                result.DeliveredAmounts.Add(new SpgSchemeWeeeCsvResult.DeliveredAmountResult()
+                {
+                    SchemeId = schemeId,
+                    QuarterType = quarter,
+                    WeeeCategory = weeeCategory,
+                    LocationType = locationType,
+                    LocationApprovalNumber = locationApprovalNumber,
+                    Tonnage = tonnage
+                });
+            }
+
+            return result;
+        }
+
+        public async Task<List<ProducerEEECSVData>> SpgProducerEEECSVDataByComplianceYearAndObligationType(int complianceYear, string obligationtype)
+        {
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter obligationTypeParameter = new SqlParameter("@ObligationType", obligationtype);
+            return await context.Database
+                .SqlQuery<ProducerEEECSVData>(
+                    "[Producer].[spgProducerEEECSVDataByComplianceYearAndObligationType] @ComplianceYear, @ObligationType",
+                    complianceYearParameter,
+                    obligationTypeParameter).ToListAsync();
         }
     }
 }

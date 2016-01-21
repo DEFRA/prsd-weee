@@ -133,7 +133,21 @@
                 throw new InvalidOperationException(errorMessage);
             }
 
+            if (!IsSubmitted)
+            {
+                string errorMessage = "An unsubmitted member upload cannot be assigned to an invoice run.";
+                throw new InvalidOperationException(errorMessage);
+            }
+
             InvoiceRun = invoiceRun;
+
+            foreach (var producer in ProducerSubmissions)
+            {
+                if (!producer.RegisteredProducer.Removed)
+                {
+                    producer.SetAsInvoiced();
+                }
+            }
         }
     }
 }

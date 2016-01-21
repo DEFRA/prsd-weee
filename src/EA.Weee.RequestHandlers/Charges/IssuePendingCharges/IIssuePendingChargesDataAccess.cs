@@ -1,12 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using EA.Weee.Domain.Charges;
-    using EA.Weee.Domain.Scheme;
 
     public interface IIssuePendingChargesDataAccess : ICommonDataAccess
     {

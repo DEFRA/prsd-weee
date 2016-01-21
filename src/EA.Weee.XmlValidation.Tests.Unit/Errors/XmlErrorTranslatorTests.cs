@@ -278,6 +278,15 @@
         }
 
         [Fact]
+        public void XmlErrorTranslator_InvalidTotalDigits_CorrectMessage()
+        {
+            var providedException = string.Format("The '{0}' element is invalid - The value '{1}' is invalid according to its datatype '{2}' - The TotalDigits constraint failed.", TestField, TestValue, TestType);
+            string expectedFriendlyMessage = AddUniversalMessageParts(string.Format("The value '{0}' supplied for field '{1}' exceeds the maximum number of allowed digits.", TestValue, TestField));
+
+            CheckExceptionMessage(expectedFriendlyMessage, providedException);
+        }
+
+        [Fact]
         public void XmlErrorTranslator_InvalidChildElement_CorrectMessage()
         {
             string providedException = string.Format("The element 'TestParentElement' in namespace '{0}' has invalid child element '{1}' in namespace '{0}'. List of possible elements expected: '{2}' in namespace '{0}'.", TestNamespace, TestField, TestType);

@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Core.Shared;
     using Domain;
@@ -58,6 +57,25 @@
                 .Where(mu => mu.InvoiceRun == null)
                 .Where(mu => mu.Scheme.CompetentAuthority.Id == authority.Id)
                 .Where(mu => mu.TotalCharges > 0)
+                .OrderBy(mu => mu.Scheme.SchemeName)
+                .ThenByDescending(mu => mu.ComplianceYear)
+                .ToListAsync();
+        }
+
+        /// <summary>
+        /// Returns all member uploads for the specified authority which have been  assigned to an invoice run.
+        /// Results will be ordered by scheme name ascending and then compliance year descending.
+        /// The scheme and UK competent authority domain objects will be pre-loaded with each member upload returned.
+        /// </summary>
+        /// <param name="authority"></param>
+        /// <returns></returns>
+        public async Task<IReadOnlyList<MemberUpload>> FetchInvoicedMemberUploadsAsync(UKCompetentAuthority authority)
+        {
+            return await Context.MemberUploads
+                .Include(mu => mu.Scheme)
+                .Include(mu => mu.Scheme.CompetentAuthority)
+                .Where(mu => mu.InvoiceRun != null)
+                .Where(mu => mu.Scheme.CompetentAuthority.Id == authority.Id)
                 .OrderBy(mu => mu.Scheme.SchemeName)
                 .ThenByDescending(mu => mu.ComplianceYear)
                 .ToListAsync();

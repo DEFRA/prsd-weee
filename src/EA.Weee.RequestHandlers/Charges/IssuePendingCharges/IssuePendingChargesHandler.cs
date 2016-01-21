@@ -3,32 +3,35 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    using Core.Shared;
+    using Core.Charges;
     using Domain;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.Charges;
     using EA.Weee.Domain.Scheme;
     using Security;
+    using Shared.DomainUser;
 
-    public class IssuePendingChargesHandler : IRequestHandler<Requests.Charges.IssuePendingCharges, Guid>
+    public class IssuePendingChargesHandler : IRequestHandler<Requests.Charges.IssuePendingCharges, IssuePendingChargesResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IIssuePendingChargesDataAccess dataAccess;
         private readonly IIbisFileDataGenerator ibisFileDataGenerator;
+        private readonly IDomainUserContext domainUserContext;
 
         public IssuePendingChargesHandler(
             IWeeeAuthorization authorization,
             IIssuePendingChargesDataAccess dataAccess,
-            IIbisFileDataGenerator ibisFileGenerator)
+            IIbisFileDataGenerator ibisFileDataGenerator,
+            IDomainUserContext domainUserContext)
         {
             this.authorization = authorization;
             this.dataAccess = dataAccess;
-            this.ibisFileDataGenerator = ibisFileGenerator;
+            this.ibisFileDataGenerator = ibisFileDataGenerator;
+            this.domainUserContext = domainUserContext;
         }
 
-        public async Task<Guid> HandleAsync(Requests.Charges.IssuePendingCharges message)
+        public async Task<IssuePendingChargesResult> HandleAsync(Requests.Charges.IssuePendingCharges message)
         {
             authorization.EnsureCanAccessInternalArea(true);
 
@@ -36,20 +39,34 @@
 
             IReadOnlyList<MemberUpload> memberUploads = await dataAccess.FetchSubmittedNonInvoicedMemberUploadsAsync(authority);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            User issuingUser = await domainUserContext.GetCurrentUserAsync();
+
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, issuingUser);
+
+            var result = new IssuePendingChargesResult();
+            result.Errors = new List<string>();
 
             if (authority.Name == "Environment Agency")
             {
                 ulong fileId = await GetNextIbisFileId();
 
-                IbisFileData ibisFileData = await ibisFileDataGenerator.CreateFileDataAsync(fileId, invoiceRun);
+                IbisFileDataGeneratorResult ibisFileDataGeneratorResult = await ibisFileDataGenerator.CreateFileDataAsync(fileId, invoiceRun);
 
-                invoiceRun.SetIbisFileData(ibisFileData);
+                result.Errors.AddRange(ibisFileDataGeneratorResult.Errors);
+                if (result.Errors.Count == 0)
+                {
+                    IbisFileData ibisFileData = ibisFileDataGeneratorResult.IbisFileData;
+                    invoiceRun.SetIbisFileData(ibisFileData);
+                }
             }
 
-            await dataAccess.SaveAsync(invoiceRun);
+            if (result.Errors.Count == 0)
+            {
+                await dataAccess.SaveAsync(invoiceRun);
+                result.InvoiceRunId = invoiceRun.Id;
+            }
 
-            return invoiceRun.Id;
+            return result;
         }
 
         public async Task<ulong> GetNextIbisFileId()

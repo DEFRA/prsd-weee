@@ -112,6 +112,15 @@
             Assert.Equal("The value of the 'http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns:ObligationType' element does not equal its fixed value.", result.Message);
         }
 
+        [Fact]
+        public void DataReturnSchemaValidation_TonnageWithMoreThan25Digits_ReturnsValidationError()
+        {
+            var result = new XmlFileLoad().ValidateDataReturnXmlWithSingleResult(@"DataReturns\XmlFiles\v3-Tonnage-WithMoreThan25Digits.xml");
+
+            Assert.Equal(XmlSeverityType.Error, result.Severity);
+            Assert.Contains("TotalDigits constraint failed", result.Message);
+        }
+
         private class XmlFileLoad
         {
             private const string schemaFile = @"DataReturns\v3schema.xsd";
