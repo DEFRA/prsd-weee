@@ -498,7 +498,7 @@
             List<int> years = new List<int>() { 2001, 2002 };
 
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllComplianceYears>._)).Returns(years);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
             ReportsController controller = new ReportsController(
                 () => weeeClient,
@@ -576,7 +576,7 @@
             List<int> years = new List<int>() { 2001, 2002 };
 
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllComplianceYears>._)).Returns(years);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._)).Returns(years);
 
             ReportsController controller = new ReportsController(
                 () => weeeClient,
