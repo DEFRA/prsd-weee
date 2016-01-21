@@ -60,7 +60,8 @@
             ulong id = 12345;
 
             // Act
-            TransactionFile transactionFile = await generator.CreateAsync(id, invoiceRun);
+            var result = await generator.CreateAsync(id, invoiceRun);
+            TransactionFile transactionFile = result.IbisFile;
 
             // Assert
             Assert.Equal((ulong)12345, transactionFile.FileID);
@@ -116,7 +117,8 @@
             SystemTime.Unfreeze();
 
             // Act
-            TransactionFile transactionFile = await generator.CreateAsync(0, invoiceRun);
+            var result = await generator.CreateAsync(0, invoiceRun);
+            TransactionFile transactionFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -206,7 +208,8 @@
             BySubmissionTransactionFileGenerator generator = new BySubmissionTransactionFileGenerator(transactionReferenceGenerator);
 
             // Act
-            TransactionFile transactionFile = await generator.CreateAsync(0, invoiceRun);
+            var result = await generator.CreateAsync(0, invoiceRun);
+            TransactionFile transactionFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -219,6 +222,53 @@
             Invoice invoice2 = transactionFile.Invoices[1];
             Assert.NotNull(invoice2);
             Assert.Equal(200m, invoice2.TransactionTotal);
+        }
+
+        [Fact]
+        public async Task CreateTransactionFile_WithExceptionThrown_ReturnsError_AndNoTransactionFile()
+        {
+            // Arrange
+            UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
+
+            Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
+
+            Scheme scheme = new Scheme(organisation);
+            scheme.UpdateScheme(
+                "Test scheme",
+                "WEE/AA1111AA/SCH",
+                "WEE00000001",
+                A.Dummy<ObligationType>(),
+                authority);
+
+            int complianceYear = A.Dummy<int>();
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                123.45m,
+                complianceYear,
+                scheme,
+                A.Dummy<string>());
+
+            memberUpload.Submit(A.Dummy<User>());
+
+            List<MemberUpload> memberUploads = new List<MemberUpload>();
+            memberUploads.Add(memberUpload);
+
+            ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
+            A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns((string)null); // A null value will cause the Ibis object to throw an exception.
+
+            BySubmissionTransactionFileGenerator generator = new BySubmissionTransactionFileGenerator(transactionReferenceGenerator);
+
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
+
+            // Act
+            var result = await generator.CreateAsync(0, invoiceRun);
+
+            // Assert
+            Assert.Null(result.IbisFile);
+            Assert.NotEmpty(result.Errors);
         }
     }
 }
