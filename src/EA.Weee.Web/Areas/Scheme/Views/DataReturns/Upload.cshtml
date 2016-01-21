@@ -80,7 +80,7 @@
         {
             id = "form1",
             enctype = "multipart/form-data",
-            onsubmit = "return ajaxSubmit();",
+            onsubmit = string.Format("{0} return ajaxSubmit();", this.WeeeGds().EventTrackingFunction("Data return uploads", "Check data return file for errors")),         
             autocomplete = "off"
         }))
     {
