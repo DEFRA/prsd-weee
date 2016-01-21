@@ -12,27 +12,31 @@
       <TonnesReturnValue>1</TonnesReturnValue>
     </Return>
   </CollectedFromDCF>
-  <DeliveredToATF>
+  <DeliveredToAATF>
     <DeliveredToFacility>
       <AATFApprovalNo>WEE/TE0001ST/ATF</AATFApprovalNo>
       <FacilityName>Test 1</FacilityName>
+      <Returns>
+        <Return>
+          <CategoryName>Large Household Appliances</CategoryName>
+          <ObligationType>B2B</ObligationType>
+          <TonnesReturnValue>100</TonnesReturnValue>
+        </Return>
+      </Returns>
     </DeliveredToFacility>
-    <Return>
-      <CategoryName>Large Household Appliances</CategoryName>
-      <ObligationType>B2B</ObligationType>
-      <TonnesReturnValue>1</TonnesReturnValue>
-    </Return>
-  </DeliveredToATF>
+  </DeliveredToAATF>
   <DeliveredToAE>
     <DeliveredToOperator>
       <AEApprovalNo>WEE/AA0000AA/AE</AEApprovalNo>
       <OperatorName>Dummy</OperatorName>
+      <Returns>
+        <Return>
+          <CategoryName>Large Household Appliances</CategoryName>
+          <ObligationType>B2B</ObligationType>
+          <TonnesReturnValue>0</TonnesReturnValue>
+        </Return>
+      </Returns>
     </DeliveredToOperator>
-    <Return>
-      <CategoryName>Large Household Appliances</CategoryName>
-      <ObligationType>B2B</ObligationType>
-      <TonnesReturnValue>0</TonnesReturnValue>
-    </Return>
   </DeliveredToAE>
   <B2CWEEEFromDistributors>
     <Return>
@@ -57,11 +61,13 @@
     <Producer>
       <RegistrationNo>WEE/AA1111AA</RegistrationNo>
       <ProducerCompanyName>One</ProducerCompanyName>
-      <Return>
-        <CategoryName>Large Household Appliances</CategoryName>
-        <ObligationType>B2B</ObligationType>
-        <TonnesReturnValue>1</TonnesReturnValue>
-      </Return>
+      <Returns>
+        <Return>
+          <CategoryName>Large Household Appliances</CategoryName>
+          <ObligationType>B2B</ObligationType>
+          <TonnesReturnValue>1</TonnesReturnValue>
+        </Return>
+      </Returns>
     </Producer>
   </ProducerList>
 </SchemeReturn>

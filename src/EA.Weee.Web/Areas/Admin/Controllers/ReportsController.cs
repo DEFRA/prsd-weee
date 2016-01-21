@@ -16,6 +16,7 @@
     using ViewModels.Home;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
+    using Weee.Requests.Admin.GetActiveComplianceYears;
     using Weee.Requests.Admin.Reports;
     using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
@@ -85,6 +86,9 @@
 
                 case Reports.Producerpublicregister:
                     return RedirectToAction("ProducerPublicRegister");
+
+                case Reports.UKWeeeData:
+                    return RedirectToAction("UKWeeeData");
 
                 case Reports.ProducerEEEData:
                     return RedirectToAction("ProducerEEEData");
@@ -351,9 +355,78 @@
             return File(file.Data, "text/plain", file.FileName);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> UKWeeeData()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            List<int> years;
+            try
+            {
+                years = await FetchComplianceYearsForDataReturns();
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+                return View();
+            }
+
+            ProducersDataViewModel model = new ProducersDataViewModel();
+            model.ComplianceYears = new SelectList(years);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UKWeeeData(ProducersDataViewModel model)
+        {
+            SetBreadcrumb();
+
+            List<int> years;
+            try
+            {
+                years = await FetchComplianceYearsForDataReturns();
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+                ViewBag.TriggerDownload = false;
+                return View();
+            }
+
+            model.ComplianceYears = new SelectList(years);
+
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadUKWeeeDataCsv(int complianceYear)
+        {
+            FileInfo file;
+
+            GetUKWeeeCsv request = new GetUKWeeeCsv(complianceYear);
+            using (var client = apiClient())
+            {
+                file = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            return File(file.Data, "text/plain", file.FileName);
+        }
+
         private async Task<List<int>> FetchComplianceYearsForDataReturns()
         {
-            GetAllComplianceYears request = new GetAllComplianceYears(ComplianceYearFor.DataReturns);
+            var request = new GetDataReturnsActiveComplianceYears();
             using (var client = apiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), request);
@@ -362,7 +435,7 @@
 
         private async Task SetReportsFilterLists(ReportsFilterViewModel model, IWeeeClient client)
         {
-            var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
+            var allYears = await client.SendAsync(User.GetAccessToken(), new GetMemberRegistrationsActiveComplianceYears());
             var appropriateAuthorities = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
             model.ComplianceYears = new SelectList(allYears);
             model.AppropriateAuthorities = new SelectList(appropriateAuthorities, "Id", "Abbreviation");
@@ -375,7 +448,7 @@
 
         private async Task SetReportsFilterLists(ProducerPublicRegisterViewModel model, IWeeeClient client)
         {
-            var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
+            var allYears = await client.SendAsync(User.GetAccessToken(), new GetMemberRegistrationsActiveComplianceYears());
             model.ComplianceYears = new SelectList(allYears);
         }
 
