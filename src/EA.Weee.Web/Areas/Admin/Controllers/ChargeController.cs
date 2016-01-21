@@ -116,14 +116,20 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManagePendingCharges(CompetentAuthority authority, FormCollection formCollection)
         {
-            Guid invoiceRunId;
             using (IWeeeClient client = weeeClient())
             {
                 IssuePendingCharges request = new IssuePendingCharges(authority);
-                invoiceRunId = await client.SendAsync(User.GetAccessToken(), request);
-            }
+                IssuePendingChargesResult result = await client.SendAsync(User.GetAccessToken(), request);
 
-            return RedirectToAction("ChargesSuccessfullyIssued", new { authority, id = invoiceRunId });
+                if (result.Errors.Count == 0)
+                {
+                    return RedirectToAction("ChargesSuccessfullyIssued", new { authority, id = result.InvoiceRunId.Value });
+                }
+                else
+                {
+                    return View("IssueChargesError", result.Errors);
+                }
+            }
         }
 
         [HttpGet]

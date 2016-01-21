@@ -12,19 +12,19 @@
 =
 =   APPLICATION: Waste Electronic and Electrical Equipment Regulations 2013
 =   MODULE: Scheme Returns
-=   FILE: XSD Scheme Returns version 3.23.xsd
+=   FILE: XSD Scheme Returns version 3.35.xsd
 =   DESCRIPTION: Schema to validate WEEE Scheme Quarterly Returns Data
 =
 ================================================================================
 =
 =   CHANGE HISTORY
 =
-=   Date           Author    				Version  	Purpose of Change                           
+=   Date           Author    				Version  	Purpose of Change
 =_____________________________________________________________________________
 =
 =   7/09/2007    Jacqui Spencer  		1.0     	    Initial Draft.
 =   09/10/2007   Colin McDonald     1.1           Changed Return Period Values.
-=   23/10/2007   Colin McDonald     1.2           Amended return elements to enforce unique entry 
+=   23/10/2007   Colin McDonald     1.2           Amended return elements to enforce unique entry
 =                                                                     of a combination of category name and obligation type.
 =   15/02/2008   Colin McDonald     1.3           Minor amendments.
 =   29/01/2010   Jacqui Spencer			2.0           Amended due to 2010 regulation changes.
@@ -36,14 +36,31 @@
                                                   - Rename WEEETakenBackReg50 to B2CWEEEFromFinalHolders and enforce B2C obligation type for returns.
                                                   - Make DeliveredToAE optional.
                                                   - XSD version restriction changed.
-                                                  
-=   10/12/2015   Muhammad I         3.21          - Update compliance year restriction to have a minimum of 2016.
+
+=   02/12/2015   Muhammad I         3.3           - Enforce a single DeliveredToAATF element with multiple DeliveredToFacility child elements.
+                                                  - Enforce at most one DeliveredToAE element with multiple DeliveredToOperator child elements.
+                                                  - The Return elements within the DeliveredToFacility, DeliveredToOperator and Producer elements are now
+                                                    contained within a Returns element.
+                                                  - Refactor unique rules to follow the new schema structure.
+                                                  - Rename DeliveredToATF to DeliveredToAATF
+
+=   07/12/2015   Muhammad I         3.31          - Change the Return elements within CollectedFromDCF to be optional.
+                                                  - Change the DeliveredToFacility elements within DeliveredToAATF to be optional.
+                                                  - Change DeliveredToAE to be mandatory.
+                                                  - Change the DeliveredToOperator elements within DeliveredToAE to be optional.
+                                                  - Change the Return elements within B2CWEEEFromDistributors to be optional.
+                                                  - Change the Return elements within B2CWEEEFromFinalHolders to be optional.
+                                                  - Change the Producer elements within ProducerList to be optional.
+
+=   10/12/2015   Muhammad I         3.32          - Correct invalid selector for the uniqueCategoryCollectedFromDCF restriction.
                                                   - Remove unused SiteAddressDetailsType and operatorTypeType elements.
                                                   - Update regulation year to 2013 and correct file name.
+                                                  
+=   16/12/2015   Muhammad I         3.33          - Update compliance year restriction to have a minimum of 2016.
 
-=   08/01/2016   Muhammad I         3.22          - Restrict the tonnage value to a maximum of 28 digits.
+=   11/01/2016   Muhammad I         3.34          - Restrict the tonnage value to a maximum of 28 digits.
 
-=   13/01/2016   Muhammad I         3.23          - Restrict the tonnage value to a maximum of 25 digits.
+=   13/01/2016   Muhammad I         3.35          - Restrict the tonnage value to a maximum of 25 digits.
 ================================================================================
 -->
   <xs:element name="SchemeReturn">
@@ -52,7 +69,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="XSDVersion" default="3.23">
+        <xs:element name="XSDVersion" default="3.35">
           <xs:simpleType>
             <xs:restriction base="XSDVersionType"/>
           </xs:simpleType>
@@ -72,7 +89,7 @@
         <xs:element name="CollectedFromDCF">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Return" type="TonnageReturnType" maxOccurs="28"/>
+              <xs:element name="Return" type="TonnageReturnType" minOccurs="0" maxOccurs="28"/>
             </xs:sequence>
           </xs:complexType>
           <xs:unique name="uniqueCategoryCollectedFromDCF">
@@ -81,10 +98,10 @@
             <xs:field xpath="tns:ObligationType"/>
           </xs:unique>
         </xs:element>
-        <xs:element name="DeliveredToATF" maxOccurs="unbounded">
+        <xs:element name="DeliveredToAATF">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="DeliveredToFacility">
+              <xs:element name="DeliveredToFacility" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:sequence>
                     <xs:element name="AATFApprovalNo" type="atfApprovalNoType"/>
@@ -95,22 +112,26 @@
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:element>
+                    <xs:element name="Returns" type="TonnageReturnTypeList" />
                   </xs:sequence>
                 </xs:complexType>
+                <xs:unique name="uniqueCategoryDeliveredToATF">
+                  <xs:selector xpath="tns:Returns/tns:Return"/>
+                  <xs:field xpath="tns:CategoryName"/>
+                  <xs:field xpath="tns:ObligationType"/>
+                </xs:unique>
               </xs:element>
-              <xs:element name="Return" type="TonnageReturnType" maxOccurs="28"/>
             </xs:sequence>
           </xs:complexType>
-          <xs:unique name="uniqueCategoryDeliveredToATF">
-            <xs:selector xpath="tns:Return"/>
-            <xs:field xpath="tns:CategoryName"/>
-            <xs:field xpath="tns:ObligationType"/>
+          <xs:unique name="uniqueAATFApprovalNo">
+            <xs:selector xpath="tns:DeliveredToFacility"/>
+            <xs:field xpath="tns:AATFApprovalNo"/>
           </xs:unique>
         </xs:element>
-        <xs:element name="DeliveredToAE" minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DeliveredToAE">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="DeliveredToOperator">
+              <xs:element name="DeliveredToOperator" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:sequence>
                     <xs:element name="AEApprovalNo" type="aeApprovalNoType"/>
@@ -121,16 +142,20 @@
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:element>
+                    <xs:element name="Returns" type="TonnageReturnTypeList"/>
                   </xs:sequence>
                 </xs:complexType>
+                <xs:unique name="uniqueCategoryObligationDeliveredToAE">
+                  <xs:selector xpath="tns:Returns/tns:Return"/>
+                  <xs:field xpath="tns:CategoryName"/>
+                  <xs:field xpath="tns:ObligationType"/>
+                </xs:unique>
               </xs:element>
-              <xs:element name="Return" type="TonnageReturnType" maxOccurs="28"/>
             </xs:sequence>
           </xs:complexType>
-          <xs:unique name="uniqueCategoryObligationDeliveredToAE">
-            <xs:selector xpath="tns:Return"/>
-            <xs:field xpath="tns:CategoryName"/>
-            <xs:field xpath="tns:ObligationType"/>
+          <xs:unique name="uniqueAEApprovalNo">
+            <xs:selector xpath="tns:DeliveredToOperator"/>
+            <xs:field xpath="tns:AEApprovalNo"/>
           </xs:unique>
         </xs:element>
         <xs:element name="B2CWEEEFromDistributors">
@@ -139,7 +164,7 @@
           </xs:annotation>
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Return" type="B2CTonnageReturnType" maxOccurs="28"/>
+              <xs:element name="Return" type="B2CTonnageReturnType" minOccurs="0" maxOccurs="28"/>
             </xs:sequence>
           </xs:complexType>
           <xs:unique name="uniqueCategoryObligationB2CWEEEFromDistributors">
@@ -154,7 +179,7 @@
           </xs:annotation>
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Return" type="B2CTonnageReturnType" maxOccurs="28"/>
+              <xs:element name="Return" type="B2CTonnageReturnType" minOccurs="0" maxOccurs="28"/>
             </xs:sequence>
           </xs:complexType>
           <xs:unique name="uniqueCategoryObligationB2CWEEEFromFinalHolders">
@@ -169,12 +194,12 @@
           </xs:annotation>
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Producer" maxOccurs="unbounded">
+              <xs:element name="Producer" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:sequence>
                     <xs:element name="RegistrationNo" type="registrationNoType"/>
                     <xs:element name="ProducerCompanyName" type="mandatoryNameType"/>
-                    <xs:element name="Return" type="TonnageReturnType" maxOccurs="28">
+                    <xs:element name="Returns" type="TonnageReturnTypeList">
                       <xs:annotation>
                         <xs:documentation>Note that Non-Household EEE should only be reported annually in the Quarter 4 return. </xs:documentation>
                       </xs:annotation>
@@ -182,7 +207,7 @@
                   </xs:sequence>
                 </xs:complexType>
                 <xs:unique name="uniqueCategoryObligationProducerReturn">
-                  <xs:selector xpath="tns:Return"/>
+                  <xs:selector xpath="tns:Returns/tns:Return"/>
                   <xs:field xpath="tns:CategoryName"/>
                   <xs:field xpath="tns:ObligationType"/>
                 </xs:unique>
@@ -196,19 +221,11 @@
         </xs:element>
       </xs:sequence>
     </xs:complexType>
-    <xs:unique name="uniqueAATFApprovalNo">
-      <xs:selector xpath="tns:DeliveredToATF/tns:DeliveredToFacility"/>
-      <xs:field xpath="tns:AATFApprovalNo"/>
-    </xs:unique>
-    <xs:unique name="uniqueAEApprovalNo">
-      <xs:selector xpath="tns:DeliveredToAE/tns:DeliveredToOperator"/>
-      <xs:field xpath="tns:AEApprovalNo"/>
-    </xs:unique>
   </xs:element>
   <xs:simpleType name="XSDVersionType">
     <xs:restriction base="xs:decimal">
-      <xs:minInclusive value="3.23"/>
-      <xs:maxInclusive value="3.23"/>
+      <xs:minInclusive value="3.35"/>
+      <xs:maxInclusive value="3.35"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="approvalNoType">
@@ -270,6 +287,11 @@
         </xs:sequence>
       </xs:restriction>
     </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TonnageReturnTypeList">
+    <xs:sequence>
+      <xs:element name="Return" type="TonnageReturnType" maxOccurs="28" />
+    </xs:sequence>
   </xs:complexType>
   <xs:simpleType name="registrationNoType">
     <xs:restriction base="xs:string">
