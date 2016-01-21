@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using DataAccess;
 
-    public class GetDataReturnsActiveComplianceYearsDataAccess : IGetMemberRegistrationsActiveComplianceYearsDataAccess
+    public class GetDataReturnsActiveComplianceYearsDataAccess : IGetDataReturnsActiveComplianceYearsDataAccess
     {
         private readonly WeeeContext context;
 
