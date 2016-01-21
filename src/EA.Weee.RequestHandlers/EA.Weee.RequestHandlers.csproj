@@ -85,6 +85,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandler.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYearsHandler.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsHandler.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\IGetMemberRegistrationsActiveComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\IGetDataReturnsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
@@ -97,6 +103,9 @@
     <Compile Include="Admin\Reports\GetProducerEEEDataCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandler.cs" />
+    <Compile Include="Admin\Reports\GetUKWeeeCsv\GetUKWeeeCsvDataAccess.cs" />
+    <Compile Include="Admin\Reports\GetUKWeeeCsv\GetUKWeeeCsvHandler.cs" />
+    <Compile Include="Admin\Reports\GetUKWeeeCsv\IGetUKWeeeCsvDataAccess.cs" />
     <Compile Include="Charges\CommonDataAccess.cs" />
     <Compile Include="Charges\FetchComplianceYearsWithInvoices\FetchComplianceYearsWithInvoicesHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandler.cs" />
@@ -113,10 +122,16 @@
     <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeTransactionFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\Errors\IbisFileDataErrorTranslator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\Errors\SchemeFieldException.cs" />
     <Compile Include="Charges\IssuePendingCharges\IbisFileDataGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySubmissionTransactionFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IbisFileDataGeneratorResult.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IbisFileGeneratorResult.cs" />
     <Compile Include="Charges\IssuePendingCharges\IIbisCustomerFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\Errors\IIbisFileDataErrorTranslator.cs" />
     <Compile Include="Charges\IssuePendingCharges\IIbisFileDataGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IIbisFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\IIbisTransactionFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\IIssuePendingChargesDataAccess.cs" />
     <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesDataAccess.cs" />
@@ -184,14 +199,11 @@
     <Compile Include="Search\FetchProducerSearchResultsForCache\FetchProducerSearchResultsForCacheHandler.cs" />
     <Compile Include="Search\FetchProducerSearchResultsForCache\IFetchProducerSearchResultsForCacheDataAccess.cs" />
     <Compile Include="Admin\GetAllApprovedSchemesDataAccess.cs" />
-    <Compile Include="Admin\GetAllComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\FindMatchingUsersDataAccess.cs" />
     <Compile Include="Admin\GetAdminUserStatusHandler.cs" />
     <Compile Include="Admin\GetAdminUserDataAccess.cs" />
     <Compile Include="Admin\GetAllApprovedSchemesHandler.cs" />
-    <Compile Include="Admin\GetAllComplianceYearsHandler.cs" />
     <Compile Include="Admin\IGetAllApprovedSchemesDataAccess.cs" />
-    <Compile Include="Admin\IGetAllComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsDataAccess.cs" />

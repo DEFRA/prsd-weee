@@ -87,6 +87,7 @@
   <ItemGroup>
     <Compile Include="Admin\AddCompetentAuthorityUserHandlerTests.cs" />
     <Compile Include="Admin\FindMatchingUsersHandlerTests.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\GetAdminUserStatusHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\IsProducerRegisteredForComplianceYearTests.cs" />
@@ -94,11 +95,12 @@
     <Compile Include="Admin\Reports\GetProducerEEEDataCSVHandlerTest.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandlerTests.cs" />
     <Compile Include="Admin\GetAllApprovedSchemesHandlerTests.cs" />
-    <Compile Include="Admin\GetAllComplianceYearsHandlerTests.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandlerTests.cs" />
     <Compile Include="Admin\GetUserDataHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandlerTest.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandlerTests.cs" />
+    <Compile Include="Admin\Reports\GetUKWeeeCsv\GetUKWeeeCsvHandlerTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccessTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
     <Compile Include="Admin\UpdateUserHandlerTests.cs" />
@@ -112,12 +114,14 @@
     <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeTransactionFileGeneratorTests.cs" />
+    <Compile Include="Charges\IssuePendingCharges\Errors\IbisFileDataErrorTranslatorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\IbisFileDataGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySubmissionTransactionFileGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesHandlerTests.cs" />
     <Compile Include="DataReturns\BusinessValidation\EeeeValidatorTests.cs" />
     <Compile Include="DataReturns\BusinessValidation\XmlBusinessRules\SchemeApprovalNumberMismatchTests.cs" />
     <Compile Include="DataReturns\BusinessValidation\XmlBusinessRules\SubmissionWindowClosedTests.cs" />
+    <Compile Include="DataReturns\CreateTestXmlFile\XmlGeneratorTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandlerTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnVersionFromXmlBuilderTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\GenerateFromDataReturnXMLTests.cs" />
