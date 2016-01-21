@@ -15,12 +15,12 @@
         {
             // Arrange
             var scheme1 = A.Fake<Scheme>();
-            A.CallTo(() => scheme1.ApprovalNumber)
-                .Returns("WEEE/1234");
+            A.CallTo(() => scheme1.SchemeName)
+                .Returns("My scheme 1 name");
 
             var scheme2 = A.Fake<Scheme>();
-            A.CallTo(() => scheme2.ApprovalNumber)
-                .Returns("WEEE/987");
+            A.CallTo(() => scheme2.SchemeName)
+                .Returns("My scheme 2 name");
 
             var errors = new List<Exception>
             {
@@ -84,8 +84,8 @@
         {
             // Arrange
             var scheme = A.Fake<Scheme>();
-            A.CallTo(() => scheme.ApprovalNumber)
-                .Returns("WEEE/1234");
+            A.CallTo(() => scheme.SchemeName)
+                .Returns("My scheme name");
 
             var errors = new List<Exception>
             {
@@ -98,7 +98,7 @@
             var result = translator.MakeFriendlyErrorMessages(errors);
 
             // Assert
-            Assert.Equal("PCS WEEE/1234 is missing an organisation contact postcode.", result.Single());
+            Assert.Equal("PCS My scheme name is missing an organisation contact postcode.", result.Single());
         }
 
         [Fact]
@@ -106,8 +106,8 @@
         {
             // Arrange
             var scheme = A.Fake<Scheme>();
-            A.CallTo(() => scheme.ApprovalNumber)
-                .Returns("WEEE/1234");
+            A.CallTo(() => scheme.SchemeName)
+                .Returns("My scheme name");
 
             var errors = new List<Exception>
             {
@@ -120,7 +120,7 @@
             var result = translator.MakeFriendlyErrorMessages(errors);
 
             // Assert
-            Assert.Equal("PCS WEEE/1234 is missing a finance customer reference.", result.Single());
+            Assert.Equal("PCS My scheme name is missing a billing customer reference.", result.Single());
         }
     }
 }

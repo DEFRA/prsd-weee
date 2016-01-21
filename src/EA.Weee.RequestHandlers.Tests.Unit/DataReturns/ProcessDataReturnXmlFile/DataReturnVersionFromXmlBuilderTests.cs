@@ -47,11 +47,11 @@
                 {
                     new SchemeReturnProducer
                     {
-                        Return = new[] { A.Dummy<TonnageReturnType>(), A.Dummy<TonnageReturnType>() }
+                        Returns = new[] { A.Dummy<TonnageReturnType>(), A.Dummy<TonnageReturnType>() }
                     },
                     new SchemeReturnProducer
                     {
-                        Return = new[] { A.Dummy<TonnageReturnType>() }
+                        Returns = new[] { A.Dummy<TonnageReturnType>() }
                     }
                 }
             };
@@ -121,7 +121,7 @@
             var schemeReturn = new SchemeReturn()
             {
                 ApprovalNo = "WEE/AA1111AA/SCH",
-                B2CWEEEFromDistributors = new[] { A.Dummy<TonnageReturnType>(), A.Dummy<TonnageReturnType>() }
+                B2CWEEEFromDistributors = new[] { A.Dummy<B2CTonnageReturnType>(), A.Dummy<B2CTonnageReturnType>() }
             };
 
             await builder.Create().Build(schemeReturn);
@@ -155,7 +155,7 @@
             var schemeReturn = new SchemeReturn()
             {
                 ApprovalNo = "WEE/AA1111AA/SCH",
-                B2CWEEEFromFinalHolders = new[] { A.Dummy<TonnageReturnType>(), A.Dummy<TonnageReturnType>() }
+                B2CWEEEFromFinalHolders = new[] { A.Dummy<B2CTonnageReturnType>(), A.Dummy<B2CTonnageReturnType>() }
             };
 
             await builder.Create().Build(schemeReturn);
@@ -172,7 +172,7 @@
             var schemeReturn = new SchemeReturn()
             {
                 ApprovalNo = "WEE/AA1111AA/SCH",
-                DeliveredToATF = null
+                DeliveredToAATF = null
             };
 
             await builder.Create().Build(schemeReturn);
@@ -189,17 +189,15 @@
             var schemeReturn = new SchemeReturn()
             {
                 ApprovalNo = "WEE/AA1111AA/SCH",
-                DeliveredToATF = new[]
+                DeliveredToAATF = new[]
                 {
-                    new SchemeReturnDeliveredToATF
+                    new SchemeReturnDeliveredToFacility
                     {
-                        DeliveredToFacility = A.Dummy<SchemeReturnDeliveredToATFDeliveredToFacility>(),
-                        Return = new[] { A.Dummy<TonnageReturnType>(), A.Dummy<TonnageReturnType>() }
+                        Returns = new[] { A.Dummy<TonnageReturnType>(), A.Dummy<TonnageReturnType>() }
                     },
-                    new SchemeReturnDeliveredToATF
+                    new SchemeReturnDeliveredToFacility
                     {
-                        DeliveredToFacility = A.Dummy<SchemeReturnDeliveredToATFDeliveredToFacility>(),
-                        Return = new[] { A.Dummy<TonnageReturnType>() }
+                        Returns = new[] { A.Dummy<TonnageReturnType>() }
                     },
                 }
             };
@@ -237,15 +235,13 @@
                 ApprovalNo = "WEE/AA1111AA/SCH",
                 DeliveredToAE = new[]
                 {
-                    new SchemeReturnDeliveredToAE
+                    new SchemeReturnDeliveredToOperator
                     {
-                        DeliveredToOperator = A.Dummy<SchemeReturnDeliveredToAEDeliveredToOperator>(),
-                        Return = new[] { A.Dummy<TonnageReturnType>(), A.Dummy<TonnageReturnType>() }
+                        Returns = new[] { A.Dummy<TonnageReturnType>(), A.Dummy<TonnageReturnType>() }
                     },
-                    new SchemeReturnDeliveredToAE
+                    new SchemeReturnDeliveredToOperator
                     {
-                        DeliveredToOperator = A.Dummy<SchemeReturnDeliveredToAEDeliveredToOperator>(),
-                        Return = new[] { A.Dummy<TonnageReturnType>() }
+                        Returns = new[] { A.Dummy<TonnageReturnType>() }
                     },
                 }
             };
