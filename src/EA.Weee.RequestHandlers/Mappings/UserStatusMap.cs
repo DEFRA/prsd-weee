@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
-    using Domain;
+    using Domain.User;
     using Prsd.Core.Mapper;
 
     public class UserStatusMap : IMap<UserStatus, Core.Shared.UserStatus>

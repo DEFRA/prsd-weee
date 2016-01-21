@@ -8,6 +8,7 @@
     using Domain.Obligation;
     using Domain.Organisation;
     using Domain.Scheme;
+    using Domain.User;
     using FakeItEasy;
     using Ibis;
     using RequestHandlers.Charges.IssuePendingCharges;

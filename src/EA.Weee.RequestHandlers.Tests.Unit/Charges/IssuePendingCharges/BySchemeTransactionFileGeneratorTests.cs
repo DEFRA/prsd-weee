@@ -7,6 +7,7 @@
     using Domain.Charges;
     using Domain.Obligation;
     using Domain.Scheme;
+    using Domain.User;
     using FakeItEasy;
     using Ibis;
     using Prsd.Core;

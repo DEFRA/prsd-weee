@@ -2,7 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Domain;
+    using Domain.User;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Requests.Admin;

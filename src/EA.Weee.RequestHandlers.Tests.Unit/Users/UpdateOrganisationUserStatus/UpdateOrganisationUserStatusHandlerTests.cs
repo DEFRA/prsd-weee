@@ -112,7 +112,7 @@
                 return A.Fake<OrganisationUser>();
             }
 
-            return new OrganisationUser(userId ?? Guid.NewGuid(), organisationId.Value, userStatus.ToDomainEnumeration<Domain.UserStatus>());
+            return new OrganisationUser(userId ?? Guid.NewGuid(), organisationId.Value, userStatus.ToDomainEnumeration<Domain.User.UserStatus>());
         }
     }
 }
