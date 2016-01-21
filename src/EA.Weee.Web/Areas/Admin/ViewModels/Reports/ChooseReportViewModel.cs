@@ -10,7 +10,9 @@
         {
             Reports.ProducerDetails,
             Reports.PCSCharges,
-            Reports.Producerpublicregister
+            Reports.Producerpublicregister,
+            Reports.ProducerEEEData,
+            Reports.SchemeWeeeData
         })
         {
         }

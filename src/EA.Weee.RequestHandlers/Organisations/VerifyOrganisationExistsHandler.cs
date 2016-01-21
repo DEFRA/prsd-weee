@@ -6,7 +6,7 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Requests.Organisations;
     using Security;
-    
+
     internal class VerifyOrganisationExistsHandler : IRequestHandler<VerifyOrganisationExists, bool>
     {
         private readonly IWeeeAuthorization authorization;

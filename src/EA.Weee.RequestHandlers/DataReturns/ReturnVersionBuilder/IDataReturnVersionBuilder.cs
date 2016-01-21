@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ReturnVersionBuilder
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain;
+    using Core.Shared;
     using Domain.DataReturns;
     using Domain.Lookup;
+    using ObligationType = Domain.ObligationType;
     using Scheme = Domain.Scheme.Scheme;
 
     /// <summary>
@@ -11,6 +13,8 @@
     /// </summary>
     public interface IDataReturnVersionBuilder
     {
+        Task<IEnumerable<ErrorData>> PreValidate();
+
         Scheme Scheme { get; }
 
         Quarter Quarter { get; }

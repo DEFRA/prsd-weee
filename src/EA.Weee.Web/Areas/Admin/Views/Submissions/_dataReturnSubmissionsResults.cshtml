@@ -1,0 +1,34 @@
+﻿@using System.Globalization
+@using EA.Weee.Core.DataReturns
+@model IEnumerable<DataReturnSubmissionsHistoryResult>
+
+@if (Model.Any())
+{
+    <div class="table-hr"></div>
+    <table id="submissions" class="prsd-table">
+        <caption class="hidden-for-screen-reader">This table shows the data return submissions for the selected year and scheme.</caption>
+        <thead>
+            <tr>
+                <th>Date and time (GMT)</th>
+                <th>Quarter reported</th>
+                <th>Submitted by</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (DataReturnSubmissionsHistoryResult item in Model)
+        {
+            string datetimeValue = @item.SubmissionDateTime.ToString("dd MMM yyyy h:mm tt", CultureInfo.InvariantCulture);
+
+            <tr>
+                <td>@datetimeValue</td>
+                <td>@item.Quarter</td>
+                <td style="text-align:left">@item.SubmittedBy</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <span>We didn't find any data return submission that matched your criteria.</span>
+}

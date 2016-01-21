@@ -6,7 +6,6 @@
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.DataReturns;
-    using Domain.Scheme;
 
     public class FetchDataReturnForSubmissionDataAccess : IFetchDataReturnForSubmissionDataAccess
     {
@@ -16,11 +15,12 @@
         {
             this.context = dbContext;
         }
+
         public async Task<DataReturnUpload> FetchDataReturnUploadAsync(Guid dataReturnUploadId)
         {
-            var result = await context
+            DataReturnUpload result = await context
                 .DataReturnsUploads
-                //.Include(dru => dru.DataReturnsVersion)                
+                .Include(dru => dru.DataReturnVersion)                
                 .Include(dru => dru.Errors)
                 .Where(dru => dru.Id == dataReturnUploadId)
                 .SingleOrDefaultAsync();
@@ -34,6 +34,16 @@
             }
 
             return result;
+        }
+
+        public async Task<bool> CheckForExistingSubmissionAsync(Guid schemeId, int complianceYear, int quarterType)
+        {
+            return await context.DataReturns
+                .Where(dr => dr.Scheme.Id == schemeId)
+                .Where(dr => dr.Quarter.Year == complianceYear)
+                .Where(dr => (int)dr.Quarter.Q == quarterType)
+                .Where(dr => dr.CurrentVersion != null)
+                .AnyAsync();
         }
     }
 }

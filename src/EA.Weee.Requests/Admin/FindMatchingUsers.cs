@@ -3,7 +3,7 @@
     using System;
     using Core.Admin;
     using Prsd.Core.Mediator;
-     
+
     public class FindMatchingUsers : IRequest<UserSearchDataResult>
     {
         /// <summary>

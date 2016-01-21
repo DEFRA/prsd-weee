@@ -39,8 +39,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.15345-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.16015-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -91,6 +91,7 @@
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\IsProducerRegisteredForComplianceYearTests.cs" />
     <Compile Include="Admin\GetProducerDetails\RemoveProducerHandlerTests.cs" />
+    <Compile Include="Admin\Reports\GetProducerEEEDataCSVHandlerTest.cs" />
     <Compile Include="Admin\Reports\GetPCSChargesCSVHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandlerTests.cs" />
     <Compile Include="Admin\GetAllApprovedSchemesHandlerTests.cs" />
@@ -98,18 +99,27 @@
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandlerTests.cs" />
     <Compile Include="Admin\GetUserDataHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandlerTest.cs" />
+    <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandlerTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccessTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
     <Compile Include="Admin\UpdateUserHandlerTests.cs" />
+    <Compile Include="Charges\FetchComplianceYearsWithInvoices\FetchComplianceYearsWithInvoicesHandlerTests.cs" />
+    <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandlerTests.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile\FetchInvoiceRunIbisZipFileHandlerTests.cs" />
+    <Compile Include="Charges\FetchInvoiceRuns\FetchInvoiceRunsHandlerTests.cs" />
+    <Compile Include="Charges\FetchIssuedChargesCsv\FetchIssuedChargesCsvHandlerTests.cs" />
     <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandlerTests.cs" />
+    <Compile Include="Charges\FetchSchemesWithInvoices\FetchSchemesWithInvoicesHandlerTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeTransactionFileGeneratorTests.cs" />
+    <Compile Include="Charges\IssuePendingCharges\Errors\IbisFileDataErrorTranslatorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\IbisFileDataGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySubmissionTransactionFileGeneratorTests.cs" />
     <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesHandlerTests.cs" />
     <Compile Include="DataReturns\BusinessValidation\EeeeValidatorTests.cs" />
+    <Compile Include="DataReturns\BusinessValidation\XmlBusinessRules\SchemeApprovalNumberMismatchTests.cs" />
+    <Compile Include="DataReturns\BusinessValidation\XmlBusinessRules\SubmissionWindowClosedTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandlerTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnVersionFromXmlBuilderTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\GenerateFromDataReturnXMLTests.cs" />

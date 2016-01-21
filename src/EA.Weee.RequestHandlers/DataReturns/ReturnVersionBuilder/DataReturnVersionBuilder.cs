@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using BusinessValidation;
+    using BusinessValidation.Rules;
     using Core.Shared;
     using Domain.DataReturns;
     using Domain.Lookup;
@@ -20,8 +20,8 @@
         public Quarter Quarter { get; private set; }
 
         private readonly IEeeValidator eeeValidator;
-
         private readonly IDataReturnVersionBuilderDataAccess schemeQuarterDataAccess;
+        private readonly ISubmissionWindowClosed submissionWindowClosed;
 
         protected List<ErrorData> Errors { get; set; }
 
@@ -31,7 +31,8 @@
             Scheme scheme,
             Quarter quarter,
             Func<Scheme, Quarter, Func<Scheme, Quarter, IDataReturnVersionBuilderDataAccess>, IEeeValidator> eeeValidatorDelegate,
-            Func<Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate)
+            Func<Scheme, Quarter, IDataReturnVersionBuilderDataAccess> dataAccessDelegate,
+            ISubmissionWindowClosed submissionWindowClosed)
         {
             Guard.ArgumentNotNull(() => scheme, scheme);
             Guard.ArgumentNotNull(() => quarter, quarter);
@@ -40,8 +41,14 @@
             Quarter = quarter;
             eeeValidator = eeeValidatorDelegate(scheme, quarter, dataAccessDelegate);
             schemeQuarterDataAccess = dataAccessDelegate(scheme, quarter);
+            this.submissionWindowClosed = submissionWindowClosed;
 
             Errors = new List<ErrorData>();
+        }
+
+        public async Task<IEnumerable<ErrorData>> PreValidate()
+        {
+            return await submissionWindowClosed.Validate(Quarter);
         }
 
         private async Task CreateDataReturnVersion()

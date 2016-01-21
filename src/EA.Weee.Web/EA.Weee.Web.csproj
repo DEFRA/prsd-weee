@@ -70,20 +70,20 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15345-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.16015-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15310.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15310-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15345-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Web, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.16015-develop1\lib\net452\EA.Prsd.Core.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.15345-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Web.Mvc, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Web.Mvc.1.0.16015-develop1\lib\net452\EA.Prsd.Core.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
@@ -225,20 +225,25 @@
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\Activity.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\ChooseActivityViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Charge\IssuedChargesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ProducerPublicRegisterViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\ProducersDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Submissions\DataReturnSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\DataReturnsController.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessDataReturnXmlFileRequest.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessXmlFileRequest.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\ChooseSubmissionTypeViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturnSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
+    <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\ViewOrganisationDetails.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -412,6 +417,8 @@
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\external-link-tracker.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\google-analytics-universal-tracker.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\analytics\print-intent.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\modules.js" />
+    <Content Include="Scripts\govuk_toolkit\govuk\modules\auto-track-event.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\multivariate-test.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\primary-links.js" />
     <Content Include="Scripts\govuk_toolkit\govuk\selection-buttons.js" />
@@ -497,18 +504,48 @@
     <Content Include="Areas\Test\Views\ManageCache\CacheCleared.cshtml" />
     <Content Include="Content\weee\_footer.scss" />
     <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SubmitViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionType.cs" />
     <Compile Include="Areas\Test\Controllers\CreatePcsDataReturnXmlFileController.cs" />
+    <Compile Include="Areas\Test\Controllers\ManagePcsReturnsSubmissionWindowController.cs" />
     <Compile Include="Areas\Test\ViewModels\CreatePcsDataReturnXmlFile\SelectOrganisationViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\CreatePcsDataReturnXmlFile\SpecifyOptionsViewModel.cs" />
+    <Compile Include="Areas\Test\ViewModels\ManagePcsReturnsSubmissionWindow\SettingsModel.cs" />
     <Compile Include="Infrastructure\CsvFilenameFormat.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
+    <Content Include="Content\weee\_footer.scss" />
+    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\PCSCharges.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\Upload.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ProducerPublicRegister.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\Submit.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\SuccessfulSubmission.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\AuthorisationRequired.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\DownloadFile.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\SelectOrganisation.cshtml" />
+    <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\SpecifyOptions.cshtml" />
+    <Content Include="Areas\Admin\Views\Producers\ConfirmRemoval.cshtml" />
+    <Content Include="Areas\Admin\Views\Producers\Removed.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\SelectAuthority.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\ChooseActivity.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\ManagePendingCharges.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\ChargesSuccessfullyIssued.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\ChooseSubmissionType.cshtml" />
+    <Content Include="Areas\Scheme\Views\Home\ViewDataReturnSubmissionHistory.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\InvoiceRuns.cshtml" />
+    <Content Include="Areas\Admin\Views\Submissions\ChooseSubmissionType.cshtml" />
+    <Content Include="Areas\Admin\Views\Submissions\DataReturnSubmissionHistory.cshtml" />
+    <Content Include="Areas\Test\Views\ManagePcsReturnsSubmissionWindow\Settings.cshtml" />
+    <Content Include="Areas\Test\Views\ManagePcsReturnsSubmissionWindow\SettingsUpdated.cshtml" />
+    <Content Include="Areas\Admin\Views\Submissions\_dataReturnSubmissionsResults.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ProducerEEEData.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\_ProducersDataReportFilters.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\SchemeWeeeData.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\IssuedCharges.cshtml" />
+	<Content Include="Areas\Admin\Views\Charge\IssueChargesError.cshtml" />
     <Content Include="Content\govuk_elements\_tables.scss" />
     <Content Include="Content\govuk_elements\_reset.scss" />
+    <Content Include="Content\govuk_elements\_phase-banner.scss" />
     <Content Include="Content\govuk_elements\_panels.scss" />
     <Content Include="Content\govuk_elements\_lists.scss" />
     <Content Include="Content\govuk_elements\_layout.scss" />
@@ -520,12 +557,7 @@
     <Content Include="Content\govuk_elements\_components.scss" />
     <Content Include="Content\govuk_elements\_buttons.scss" />
     <Content Include="Content\govuk_elements\_breadcrumb.scss" />
-    <Content Include="Content\weee\_footer.scss" />
-    <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ProducerDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\_ReportSearchFilters.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\PCSCharges.cshtml" />
+    <Content Include="Content\govuk_elements\_base.scss" />
     <Content Include="Content\govuk_elements\forms\_form-validation.scss" />
     <Content Include="Content\govuk_elements\forms\_form-date.scss" />
     <Content Include="Content\govuk_elements\forms\_form-block-labels.scss" />
@@ -543,22 +575,6 @@
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_media-player.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
-    <Content Include="Areas\Scheme\Views\DataReturns\Upload.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ProducerPublicRegister.cshtml" />
-    <Content Include="Areas\Scheme\Views\DataReturns\Submit.cshtml" />
-    <Content Include="Areas\Scheme\Views\DataReturns\SuccessfulSubmission.cshtml" />
-    <Content Include="Areas\Scheme\Views\DataReturns\AuthorisationRequired.cshtml" />
-    <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\DownloadFile.cshtml" />
-    <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\SelectOrganisation.cshtml" />
-    <Content Include="Areas\Test\Views\CreatePcsDataReturnXmlFile\SpecifyOptions.cshtml" />
-    <Content Include="Areas\Admin\Views\Producers\ConfirmRemoval.cshtml" />
-    <Content Include="Areas\Admin\Views\Producers\Removed.cshtml" />
-    <Content Include="Areas\Admin\Views\Charge\SelectAuthority.cshtml" />
-    <Content Include="Areas\Admin\Views\Charge\ChooseActivity.cshtml" />
-    <Content Include="Areas\Admin\Views\Charge\ManagePendingCharges.cshtml" />
-    <Content Include="Areas\Admin\Views\Charge\ChargesSuccessfullyIssued.cshtml" />
-    <Content Include="Areas\Scheme\Views\Home\ChooseSubmissionType.cshtml" />
-    <Content Include="Areas\Scheme\Views\Home\ViewDataReturnSubmissionHistory.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
@@ -804,6 +820,7 @@
     <Compile Include="ViewModels\Shared\AddressViewModel.cs" />
     <Compile Include="ViewModels\Shared\RadioButtonStringCollectionOptionalViewModel.cs" />
     <Compile Include="ViewModels\Shared\StringGuidRadioButtons.cs" />
+    <Compile Include="ViewModels\Shared\Submission\ChooseSubmissionTypeViewModel.cs" />
     <Compile Include="ViewModels\Shared\TitleViewModel.cs" />
     <Compile Include="ViewModels\Shared\YesNoChoiceViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\MemberUploadResultViewModel.cs" />

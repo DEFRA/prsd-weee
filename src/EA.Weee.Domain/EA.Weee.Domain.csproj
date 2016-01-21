@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.15345-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.16015-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -49,9 +49,10 @@
     <Compile Include="Charges\InvoiceRun.cs" />
     <Compile Include="Charges\IbisFileData.cs" />
     <Compile Include="DataReturns\EeeOutputReturnVersion.cs" />
+    <Compile Include="DataReturns\QuarterWindow.cs" />
     <Compile Include="DataReturns\WeeeCollectedReturnVersion.cs" />
     <Compile Include="DataReturns\WeeeDeliveredReturnVersion.cs" />
-    <Compile Include="Unalignment\UnalignableEntity.cs" />
+    <Compile Include="Lookup\QuarterWindowTemplate.cs" />
     <Compile Include="Audit\AuditableEntity.cs" />
     <Compile Include="DataReturns\DataReturn.cs" />
     <Compile Include="DataReturns\DataReturnUpload.cs" />

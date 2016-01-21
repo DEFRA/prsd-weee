@@ -39,8 +39,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.15345-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.16015-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FakeItEasy, Version=1.25.3.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
@@ -85,6 +85,7 @@
     <Compile Include="DataReturns\AeDeliveryLocationTests.cs" />
     <Compile Include="DataReturns\EeeOutputAmountTests.cs" />
     <Compile Include="DataReturns\EeeOutputReturnVersionTests.cs" />
+    <Compile Include="DataReturns\QuarterWindowTests.cs" />
     <Compile Include="DataReturns\ReturnItemTests.cs" />
     <Compile Include="DataReturns\WeeeCollectedAmountTests.cs" />
     <Compile Include="DataReturns\WeeeCollectedReturnVersionTests.cs" />
@@ -107,13 +108,14 @@
     <Compile Include="Producer\ProducerAddressTests.cs" />
     <Compile Include="Producer\ProducerBusinessTests.cs" />
     <Compile Include="Producer\ProducerContactTests.cs" />
-    <Compile Include="Producer\ProducerTests.cs" />
+    <Compile Include="Producer\ProducerSubmissionTests.cs" />
     <Compile Include="Producer\SICCodeTests.cs" />
     <Compile Include="Scheme\MemberUploadTests.cs" />
     <Compile Include="Scheme\SchemeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

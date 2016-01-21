@@ -6,6 +6,7 @@
     using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
+    using DataAccess.DataAccess;
     using Domain;
     using Domain.Lookup;
     using Domain.Producer;
@@ -34,6 +35,7 @@
         private readonly IXMLValidator xmlValidator;
         private readonly IXmlConverter xmlConverter;
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
+        private readonly IProducerSubmissionDataAccess producerSubmissionDataAccess;
         private static readonly Guid organisationId = Guid.NewGuid();
         private static readonly ProcessXmlFile Message = new ProcessXmlFile(organisationId, new byte[1], "File name");
 
@@ -42,6 +44,7 @@
             memberUploadsDbSet = A.Fake<DbSet<MemberUpload>>();
             producersDbSet = A.Fake<DbSet<ProducerSubmission>>();
             xmlConverter = A.Fake<IXmlConverter>();
+            producerSubmissionDataAccess = A.Fake<IProducerSubmissionDataAccess>();
             var schemes = new[]
             {
                 FakeSchemeData()
@@ -57,13 +60,13 @@
             generator = A.Fake<IGenerateFromXml>();
             xmlValidator = A.Fake<IXMLValidator>();
             xmlChargeBandCalculator = A.Fake<IXMLChargeBandCalculator>();
-            handler = new ProcessXMLFileHandler(context, permissiveAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator);
+            handler = new ProcessXMLFileHandler(context, permissiveAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess);
         }
 
         [Fact]
         public async void NotOrganisationUser_ThrowsSecurityException()
         {
-            var authorisationDeniedHandler = new ProcessXMLFileHandler(context, denyingAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator);
+            var authorisationDeniedHandler = new ProcessXMLFileHandler(context, denyingAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess);
 
             await
                 Assert.ThrowsAsync<SecurityException>(
@@ -80,7 +83,7 @@
 
             await handler.HandleAsync(Message);
 
-            A.CallTo(() => producersDbSet.AddRange(generatedProducers)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => producerSubmissionDataAccess.AddRange(generatedProducers)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened();
         }
 

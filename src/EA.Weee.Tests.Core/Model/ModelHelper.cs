@@ -174,7 +174,7 @@
         }
 
         /// <summary>
-        /// Cretates a member upload associated with the specified scheme.
+        /// Creates a member upload associated with the specified scheme.
         /// After creation, the ComplianceYear and IsSubmitted properties
         /// should be explicitly set by the test.
         /// </summary>
@@ -203,6 +203,31 @@
         }
 
         /// <summary>
+        /// Creates a member upload associated with the specified scheme and sets the member
+        /// upload as being submitted. An invoice run can optionally be assigned to the submitted
+        /// member upload.
+        /// </summary>
+        /// <param name="scheme"></param>
+        /// <param name="invoiceRun"></param>
+        /// <returns></returns>
+        public MemberUpload CreateSubmittedMemberUpload(Scheme scheme, InvoiceRun invoiceRun = null)
+        {
+            var memberUpload = CreateMemberUpload(scheme);
+
+            memberUpload.IsSubmitted = true;
+            memberUpload.SubmittedDate = DateTime.UtcNow;
+            memberUpload.TotalCharges = 30;
+
+            if (invoiceRun != null)
+            {
+                memberUpload.InvoiceRun = invoiceRun;
+                memberUpload.InvoiceRunId = invoiceRun.Id;
+            }
+
+            return memberUpload;
+        }
+
+        /// <summary>
         /// Creates memberupload errors and warnings
         /// </summary>
         /// <param name="memberUpload"></param>
@@ -224,7 +249,7 @@
             return memberUploadError;
         }
 
-        public RegisteredProducer GerOrCreateRegisteredProducer(Scheme scheme, int complianceYear, string registrationNumber)
+        public RegisteredProducer GetOrCreateRegisteredProducer(Scheme scheme, int complianceYear, string registrationNumber)
         {
             // Try to find a RegisteredProducer that has already been created, otherwise create a new one.
             RegisteredProducer registeredProducer =
@@ -245,7 +270,7 @@
                     ComplianceYear = complianceYear,
                     ProducerRegistrationNumber = registrationNumber,
                     CurrentSubmissionId = null,
-                    IsAligned = true
+                    Removed = false
                 };
                 model.RegisteredProducers.Add(registeredProducer);
             }
@@ -298,6 +323,47 @@
             return CreateProducerWithEmptyBusiness(memberUpload, registrationNumber);
         }
 
+        public ProducerSubmission CreateInvoicedProducer(MemberUpload memberUpload, string registrationNumber)
+        {
+            int businessId = GetNextId();
+            Business business = new Business
+            {
+                Id = IntegerToGuid(businessId),
+            };
+            model.Businesses.Add(business);
+
+            int producerSubmissionId = GetNextId();
+
+            RegisteredProducer registeredProducer = GetOrCreateRegisteredProducer(memberUpload.Scheme, memberUpload.ComplianceYear.Value, registrationNumber);
+
+            var chargeBandAmount = FetchChargeBandAmount(ChargeBand.A);
+            ProducerSubmission producerSubmission = new ProducerSubmission
+            {
+                Id = IntegerToGuid(producerSubmissionId),
+                RegisteredProducer = registeredProducer,
+                RegisteredProducerId = registeredProducer.Id,
+                MemberUpload = memberUpload,
+                MemberUploadId = memberUpload.Id,
+                TradingName = string.Format("Producer {0} Trading Name", producerSubmissionId),
+                UpdatedDate = new DateTime(2015, 1, 1, 0, 0, 0),
+                Business = business,
+                ProducerBusinessId = business.Id,
+                AuthorisedRepresentativeId = null,
+                ChargeBandAmountId = chargeBandAmount.Id,
+                ChargeThisUpdate = 30,
+                ObligationType = "B2B",
+                Invoiced = true
+            };
+            model.ProducerSubmissions.Add(producerSubmission);
+
+            if (memberUpload.IsSubmitted)
+            {
+                registeredProducer.CurrentSubmissionId = IntegerToGuid(producerSubmissionId);
+                registeredProducer.CurrentSubmission = producerSubmission;
+            }
+
+            return producerSubmission;
+        }
         private ProducerSubmission CreateProducerWithEmptyBusiness(MemberUpload memberUpload, string registrationNumber)
         {
             int businessId = GetNextId();
@@ -309,7 +375,7 @@
 
             int producerSubmissionId = GetNextId();
 
-            RegisteredProducer registeredProducer = GerOrCreateRegisteredProducer(memberUpload.Scheme, memberUpload.ComplianceYear.Value, registrationNumber);
+            RegisteredProducer registeredProducer = GetOrCreateRegisteredProducer(memberUpload.Scheme, memberUpload.ComplianceYear.Value, registrationNumber);
 
             var chargeBandAmount = FetchChargeBandAmount(ChargeBand.A);
             ProducerSubmission producerSubmission = new ProducerSubmission
@@ -326,7 +392,8 @@
                 AuthorisedRepresentativeId = null,
                 ChargeBandAmountId = chargeBandAmount.Id,
                 ChargeThisUpdate = 0,
-                ObligationType = "B2B"
+                ObligationType = "B2B",
+                Invoiced = false
             };
             model.ProducerSubmissions.Add(producerSubmission);
 
@@ -366,7 +433,7 @@
             Partnership partnership = new Partnership
             {
                 Id = IntegerToGuid(partnershipId),
-                Name = string.Format("Partnership {0} Name",  CreatePartnershipNameFromId(partnershipId)),
+                Name = string.Format("Partnership {0} Name", CreatePartnershipNameFromId(partnershipId)),
                 Contact1 = contact,
                 PrincipalPlaceOfBusinessId = contact.Id,
             };
@@ -517,6 +584,70 @@
             model.DataReturnVersions.Add(dataReturnVersion);
 
             return dataReturnVersion;
+        }
+
+        public EeeOutputAmount CreateEeeOutputAmount(DataReturnVersion dataReturnVersion, RegisteredProducer registeredProducer, string obligationType, int weeeCategory, decimal tonnage)
+        {
+            var eeeOutputAmount = new EeeOutputAmount();
+            eeeOutputAmount.Id = IntegerToGuid(GetNextId());
+            eeeOutputAmount.ObligationType = obligationType;
+            eeeOutputAmount.WeeeCategory = weeeCategory;
+            eeeOutputAmount.Tonnage = tonnage;
+            eeeOutputAmount.RegisteredProducer = registeredProducer;
+
+            if (dataReturnVersion.EeeOutputReturnVersion == null)
+            {
+                var eeeOutputReturnVersion = new EeeOutputReturnVersion();
+                eeeOutputReturnVersion.Id = IntegerToGuid(GetNextId());
+                eeeOutputReturnVersion.EeeOutputReturnVersionAmounts = new List<EeeOutputReturnVersionAmount>();
+
+                dataReturnVersion.EeeOutputReturnVersion = eeeOutputReturnVersion;
+            }
+
+            dataReturnVersion
+                .EeeOutputReturnVersion
+                .EeeOutputReturnVersionAmounts
+                .Add(new EeeOutputReturnVersionAmount
+                {
+                    EeeOuputAmountId = eeeOutputAmount.Id,
+                    EeeOutputAmount = eeeOutputAmount,
+                    EeeOutputReturnVersionId = dataReturnVersion.EeeOutputReturnVersion.Id,
+                    EeeOutputReturnVersion = dataReturnVersion.EeeOutputReturnVersion
+                });
+
+            return eeeOutputAmount;
+        }
+
+        public InvoiceRun CreateInvoiceRun()
+        {
+            var compenentAuthority = model.CompetentAuthorities.First();
+
+            var ibisFileData = new IbisFileData
+            {
+                Id = IntegerToGuid(GetNextId()),
+                FileId = GetNextId(),
+                CustomerFileData = "Customer file data",
+                CustomerFileName = "Customer file name",
+                TransactionFileData = "Transaction file data",
+                TransactionFileName = "Transaction file name"
+            };
+
+            var user = GetOrCreateUser("Invoice Run User");
+
+            var invoiceRun = new InvoiceRun
+            {
+                Id = IntegerToGuid(GetNextId()),
+                IssuedDate = DateTime.UtcNow,
+                IssuedByUserId = user.Id,
+                CompetentAuthority = compenentAuthority,
+                CompetentAuthorityId = compenentAuthority.Id,
+                IbisFileData = ibisFileData,
+                IbisFileDataId = ibisFileData.Id
+            };
+
+            model.InvoiceRuns.Add(invoiceRun);
+
+            return invoiceRun;
         }
     }
 }

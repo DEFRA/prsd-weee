@@ -172,5 +172,7 @@
         public string OverseasContactPostcode { get; set; }
 
         public string OverseasContactCountry { get; set; }
+
+        public string RemovedFromScheme { get; set; }
     }
 }

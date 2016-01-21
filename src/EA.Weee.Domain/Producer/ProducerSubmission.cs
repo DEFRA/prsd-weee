@@ -109,7 +109,10 @@
 
         public virtual decimal ChargeThisUpdate { get; private set; }
 
+        public virtual bool Invoiced { get; private set; }
+
         private string organisationName;
+
         public virtual string OrganisationName
         {
             get
@@ -172,6 +175,16 @@
         {
             get { return ObligationType.ToString(); }
             set { ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), value); }
+        }
+
+        internal void SetAsInvoiced()
+        {
+            if (Invoiced)
+            {
+                throw new InvalidOperationException("The producer submission is already set as being invoiced.");
+            }
+
+            Invoiced = true;
         }
     }
 }

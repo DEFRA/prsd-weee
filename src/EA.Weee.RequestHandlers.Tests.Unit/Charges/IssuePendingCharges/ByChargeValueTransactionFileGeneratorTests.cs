@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Domain;
     using Domain.Charges;
@@ -53,7 +51,7 @@
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
@@ -63,7 +61,8 @@
             ulong id = 12345;
 
             // Act
-            TransactionFile transactionFile = await generator.CreateAsync(id, invoiceRun);
+            var result = await generator.CreateAsync(id, invoiceRun);
+            TransactionFile transactionFile = result.IbisFile;
 
             // Assert
             Assert.Equal((ulong)12345, transactionFile.FileID);
@@ -129,13 +128,14 @@
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator(
                 A.Dummy<ITransactionReferenceGenerator>());
 
             // Act
-            TransactionFile transactionFile = await generator.CreateAsync(0, invoiceRun);
+            var result = await generator.CreateAsync(0, invoiceRun);
+            TransactionFile transactionFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -144,11 +144,11 @@
 
         /// <summary>
         /// This test ensures that creating a transaction file from one member upload with
-        /// a single producer submission, where the producer's registration has been unaligned,
+        /// a single producer submission, where the producer is marked as not being invoiced,
         /// will result in no invoices being added to the file.
         /// </summary>
         [Fact]
-        public async Task CreateTransactionFile_ProducerSubmissionWithUnalignedRegistration_NotIncludedInTransactionFile()
+        public async Task CreateTransactionFile_ProducerSubmissionMarkedAsNotInvoiced_NotIncludedInTransactionFile()
         {
             // Arrange
             UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
@@ -174,43 +174,26 @@
                 scheme,
                 A.Dummy<string>());
 
-            RegisteredProducer registeredProducer = new RegisteredProducer("WEE/11AAAA11", complianceYear, scheme);
-
-            ProducerSubmission producerSubmission = new ProducerSubmission(
-                registeredProducer,
-                memberUpload,
-                A.Dummy<ProducerBusiness>(),
-                A.Dummy<AuthorisedRepresentative>(),
-                A.Dummy<DateTime>(),
-                A.Dummy<decimal>(),
-                A.Dummy<bool>(),
-                A.Dummy<DateTime?>(),
-                A.Dummy<string>(),
-                A.Dummy<EEEPlacedOnMarketBandType>(),
-                A.Dummy<SellingTechniqueType>(),
-                A.Dummy<ObligationType>(),
-                A.Dummy<AnnualTurnOverBandType>(),
-                A.Dummy<List<BrandName>>(),
-                A.Dummy<List<SICCode>>(),
-                A.Dummy<Domain.Lookup.ChargeBandAmount>(),
-                123.45m);
+            var producerSubmission = A.Fake<ProducerSubmission>();
+            A.CallTo(() => producerSubmission.ChargeThisUpdate)
+                .Returns(123.45m);
+            A.CallTo(() => producerSubmission.Invoiced)
+                .Returns(false);
 
             memberUpload.ProducerSubmissions.Add(producerSubmission);
-
             memberUpload.Submit(A.Dummy<User>());
-
-            registeredProducer.Unalign();
 
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator(
                 A.Dummy<ITransactionReferenceGenerator>());
 
             // Act
-            TransactionFile transactionFile = await generator.CreateAsync(0, invoiceRun);
+            var result = await generator.CreateAsync(0, invoiceRun);
+            TransactionFile transactionFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -278,7 +261,7 @@
             memberUploads.Add(memberUpload);
 
             SystemTime.Freeze(new DateTime(2015, 12, 31));
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
             SystemTime.Unfreeze();
 
             ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
@@ -287,7 +270,8 @@
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator(transactionReferenceGenerator);
 
             // Act
-            TransactionFile transactionFile = await generator.CreateAsync(0, invoiceRun);
+            var result = await generator.CreateAsync(0, invoiceRun);
+            TransactionFile transactionFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -402,7 +386,7 @@
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
@@ -410,7 +394,8 @@
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator(transactionReferenceGenerator);
 
             // Act
-            TransactionFile transactionFile = await generator.CreateAsync(0, invoiceRun);
+            var result = await generator.CreateAsync(0, invoiceRun);
+            TransactionFile transactionFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -515,7 +500,7 @@
             List<MemberUpload> memberUploads = new List<MemberUpload>();
             memberUploads.Add(memberUpload);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
@@ -523,7 +508,8 @@
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator(transactionReferenceGenerator);
 
             // Act
-            TransactionFile transactionFile = await generator.CreateAsync(0, invoiceRun);
+            var result = await generator.CreateAsync(0, invoiceRun);
+            TransactionFile transactionFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -636,7 +622,7 @@
             memberUploads.Add(memberUpload1);
             memberUploads.Add(memberUpload2);
 
-            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads);
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
 
             ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
@@ -644,7 +630,8 @@
             ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator(transactionReferenceGenerator);
 
             // Act
-            TransactionFile transactionFile = await generator.CreateAsync(0, invoiceRun);
+            var result = await generator.CreateAsync(0, invoiceRun);
+            TransactionFile transactionFile = result.IbisFile;
 
             // Assert
             Assert.NotNull(transactionFile);
@@ -657,6 +644,77 @@
             Invoice invoice2 = transactionFile.Invoices[1];
             Assert.NotNull(invoice2);
             Assert.Equal(100m, invoice2.TransactionTotal);
+        }
+
+        [Fact]
+        public async Task CreateTransactionFile_WithExceptionThrown_ReturnsError_AndNoTransactionFile()
+        {
+            // Arrange
+            UKCompetentAuthority authority = A.Dummy<UKCompetentAuthority>();
+
+            Organisation organisation = Organisation.CreateSoleTrader("Test organisation");
+
+            Scheme scheme = new Scheme(organisation);
+            scheme.UpdateScheme(
+                "Test scheme",
+                "WEE/AA1111AA/SCH",
+                "WEE00000001",
+                A.Dummy<ObligationType>(),
+                authority);
+
+            int complianceYear = A.Dummy<int>();
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                complianceYear,
+                scheme,
+                A.Dummy<string>());
+
+            RegisteredProducer registeredProducer = new RegisteredProducer("WEE/11AAAA11", complianceYear, scheme);
+
+            ProducerSubmission producerSubmission = new ProducerSubmission(
+                registeredProducer,
+                memberUpload,
+                A.Dummy<ProducerBusiness>(),
+                A.Dummy<AuthorisedRepresentative>(),
+                A.Dummy<DateTime>(),
+                A.Dummy<decimal>(),
+                A.Dummy<bool>(),
+                A.Dummy<DateTime?>(),
+                A.Dummy<string>(),
+                A.Dummy<EEEPlacedOnMarketBandType>(),
+                A.Dummy<SellingTechniqueType>(),
+                A.Dummy<ObligationType>(),
+                A.Dummy<AnnualTurnOverBandType>(),
+                A.Dummy<List<BrandName>>(),
+                A.Dummy<List<SICCode>>(),
+                A.Dummy<Domain.Lookup.ChargeBandAmount>(),
+                100M);
+
+            memberUpload.ProducerSubmissions.Add(producerSubmission);
+
+            memberUpload.Submit(A.Dummy<User>());
+
+            List<MemberUpload> memberUploads = new List<MemberUpload>();
+            memberUploads.Add(memberUpload);
+
+            InvoiceRun invoiceRun = new InvoiceRun(authority, memberUploads, A.Dummy<User>());
+
+            ITransactionReferenceGenerator transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
+            A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns((string)null); // A null value will cause the Ibis object to throw an exception.
+
+            ByChargeValueTransactionFileGenerator generator = new ByChargeValueTransactionFileGenerator(
+                transactionReferenceGenerator);
+
+            // Act
+            var result = await generator.CreateAsync(0, invoiceRun);
+
+            // Assert
+            Assert.Null(result.IbisFile);
+            Assert.NotEmpty(result.Errors);
         }
     }
 }
