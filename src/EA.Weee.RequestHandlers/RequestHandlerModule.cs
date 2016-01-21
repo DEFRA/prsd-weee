@@ -2,6 +2,7 @@
 {
     using Autofac;
     using Charges.IssuePendingCharges;
+    using Charges.IssuePendingCharges.Errors;
     using Prsd.Core.Autofac;
     using Prsd.Core.Decorators;
     using Prsd.Core.Mediator;
@@ -45,6 +46,10 @@
                 .Where(t => t.Namespace.Contains("DataReturns"))
                 .AsImplementedInterfaces();
 
+            builder.RegisterAssemblyTypes(GetType().Assembly)
+                .Where(t => t.Namespace.Contains("Factories"))
+                .AsImplementedInterfaces();
+
             // Register singleton types relating to PCS member upload testing.
             builder.RegisterType<ProducerListFactory>().As<IProducerListFactory>();
             builder.RegisterType<XmlGenerator>().As<IXmlGenerator>();
@@ -54,6 +59,7 @@
             builder.RegisterType<BySchemeCustomerFileGenerator>().As<IIbisCustomerFileGenerator>();
             builder.RegisterType<BySchemeTransactionFileGenerator>().As<IIbisTransactionFileGenerator>();
             builder.RegisterType<TransactionReferenceGenerator>().As<ITransactionReferenceGenerator>();
+            builder.RegisterType<IbisFileDataErrorTranslator>().As<IIbisFileDataErrorTranslator>();
 
             // Register the DomainUserContext which may be used by all request handlers to get the current domain user.
             builder.RegisterType<DomainUserContext>().As<IDomainUserContext>();

@@ -61,13 +61,22 @@
             @Html.AntiForgeryToken()
             @(this.WeeeGds().Submit("Issue Charges", new { @class = "button" }))
         }
+
+        <p>
+            @Html.ActionLink("Perform another activity", "Index", "Home")
+        </p>
     }
     else
     {
         <p>
             There are no pending charges.
         </p>
+        <p>
+            @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "button" })
+        </p>
     }
 
-    @Html.ActionLink("Manage more PCS charges", "SelectAuthority")
+    <p>
+        <a href="javascript:history.back();">Back</a>
+    </p>
 }

@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Core.Shared;
     using Domain;
@@ -28,6 +26,15 @@
         /// <param name="authority"></param>
         /// <returns></returns>
         Task<IReadOnlyList<MemberUpload>> FetchSubmittedNonInvoicedMemberUploadsAsync(UKCompetentAuthority authority);
+
+        /// <summary>
+        /// Returns all member uploads for the specified authority which have been  assigned to an invoice run.
+        /// Results will be ordered by scheme name ascending and then compliance year descending.
+        /// The scheme and UK competent authority domain objects will be pre-loaded with each member upload returned.
+        /// </summary>
+        /// <param name="authority"></param>
+        /// <returns></returns>
+        Task<IReadOnlyList<MemberUpload>> FetchInvoicedMemberUploadsAsync(UKCompetentAuthority authority);
 
         /// <summary>
         /// Returns th invoice run with the specified ID.

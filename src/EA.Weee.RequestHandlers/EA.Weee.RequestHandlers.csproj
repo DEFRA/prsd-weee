@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>15bc679f</NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,12 +43,12 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15345-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16015-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.15345-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16015-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -94,18 +95,35 @@
     <Compile Include="Admin\Reports\GetPCSChargesCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandler.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
+    <Compile Include="Admin\Reports\GetProducerEEEDataCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
+    <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandler.cs" />
     <Compile Include="Charges\CommonDataAccess.cs" />
+    <Compile Include="Charges\FetchComplianceYearsWithInvoices\FetchComplianceYearsWithInvoicesHandler.cs" />
+    <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile\FetchInvoiceRunIbisZipFileHandler.cs" />
+    <Compile Include="Charges\FetchInvoiceRuns\FetchInvoiceRunsDataAccess.cs" />
+    <Compile Include="Charges\FetchInvoiceRuns\FetchInvoiceRunsHandler.cs" />
+    <Compile Include="Charges\FetchInvoiceRuns\IFetchInvoiceRunsDataAccess.cs" />
+    <Compile Include="Charges\FetchIssuedChargesCsv\FetchIssuedChargesCsvDataAccess.cs" />
+    <Compile Include="Charges\FetchIssuedChargesCsv\FetchIssuedChargesCsvHandler.cs" />
+    <Compile Include="Charges\FetchIssuedChargesCsv\IFetchIssuedChargesCsvDataAccess.cs" />
     <Compile Include="Charges\FetchPendingCharges\FetchPendingChargesHandler.cs" />
+    <Compile Include="Charges\FetchSchemesWithInvoices\FetchSchemesWithInvoicesHandler.cs" />
     <Compile Include="Charges\ICommonDataAccess.cs" />
     <Compile Include="Charges\IssuePendingCharges\ByChargeValueTransactionFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeCustomerFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySchemeTransactionFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\Errors\IbisFileDataErrorTranslator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\Errors\SchemeFieldException.cs" />
     <Compile Include="Charges\IssuePendingCharges\IbisFileDataGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\BySubmissionTransactionFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IbisFileDataGeneratorResult.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IbisFileGeneratorResult.cs" />
     <Compile Include="Charges\IssuePendingCharges\IIbisCustomerFileGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\Errors\IIbisFileDataErrorTranslator.cs" />
     <Compile Include="Charges\IssuePendingCharges\IIbisFileDataGenerator.cs" />
+    <Compile Include="Charges\IssuePendingCharges\IIbisFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\IIbisTransactionFileGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\IIssuePendingChargesDataAccess.cs" />
     <Compile Include="Charges\IssuePendingCharges\IssuePendingChargesDataAccess.cs" />
@@ -113,6 +131,10 @@
     <Compile Include="Charges\IssuePendingCharges\ITransactionReferenceGenerator.cs" />
     <Compile Include="Charges\IssuePendingCharges\TransactionReferenceGenerator.cs" />
     <Compile Include="DataReturns\BusinessValidation\EeeValidator.cs" />
+    <Compile Include="DataReturns\BusinessValidation\Rules\ISchemeApprovalNumberMismatch.cs" />
+    <Compile Include="DataReturns\BusinessValidation\Rules\ISubmissionWindowClosed.cs" />
+    <Compile Include="DataReturns\BusinessValidation\Rules\SchemeApprovalNumberMismatch.cs" />
+    <Compile Include="DataReturns\BusinessValidation\Rules\SubmissionWindowClosed.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderResult.cs" />
     <Compile Include="DataReturns\BusinessValidation\IEeeValidator.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\CreateTestXmlFileHandler.cs" />
@@ -153,6 +175,10 @@
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryDataAccess.cs" />
     <Compile Include="Scheme\MemberUploadTesting\SchemeInfo.cs" />
     <Compile Include="Scheme\MemberUploadTesting\XmlGenerator.cs" />
+    <Compile Include="Factories\IQuarterWindowFactory.cs" />
+    <Compile Include="Factories\QuarterWindowFactory.cs" />
+    <Compile Include="Factories\DateFactory.cs" />
+    <Compile Include="Factories\IDateFactory.cs" />
     <Compile Include="Shared\DomainUser\DomainUserContext.cs" />
     <Compile Include="Shared\DomainUser\IDomainUserContext.cs" />
     <Compile Include="Shared\Extensions.cs" />
@@ -268,6 +294,8 @@
     <Compile Include="Security\WeeeAuthorization.cs" />
     <Compile Include="Shared\GetCountriesHandler.cs" />
     <Compile Include="Shared\GetUKCompetentAuthoritiesHandler.cs" />
+    <Compile Include="Test\GetPcsSubmissionWindowSettingsHandler.cs" />
+    <Compile Include="Test\UpdatePcsSubmissionWindowSettingsHandler.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsersDataAccess.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\IGetManageableOrganisationUsersDataAccess.cs" />
     <Compile Include="Users\GetOrganisationUserHandler.cs" />

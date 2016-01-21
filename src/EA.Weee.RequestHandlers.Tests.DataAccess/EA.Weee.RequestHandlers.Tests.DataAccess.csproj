@@ -38,8 +38,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EA.Prsd.Core, Version=1.0.15345.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.1.0.15345-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.1.0.16015-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -87,6 +87,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Admin\FindMatchingUsersDataAccessTests.cs" />
+    <Compile Include="Charging\CommonDataAccessTests.cs" />
+    <Compile Include="Charging\FetchInvoiceRuns\FetchInvoiceRunsDataAccessTests.cs" />
+    <Compile Include="Admin\GetAllComplianceYearsDataAccessTests.cs" />
+    <Compile Include="Charging\FetchIssuedChargesCsv\FetchIssuedChargesCsvDataAccessTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileHandlerDataAccessTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileHandlerTests.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderDataAccessTests.cs" />

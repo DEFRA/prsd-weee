@@ -1,16 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchPendingCharges
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    using Core.Charges;
     using Core.Shared;
-    using Domain;
     using Domain.Charges;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Domain.Scheme;
     using Ionic.Zip;
     using Security;
 
@@ -46,7 +40,7 @@
             string fileName = string.Format(
                 "WEEE invoice files {0:D5} {1:yyyy-MM-dd}.zip",
                 invoiceRun.IbisFileData.FileId,
-                invoiceRun.CreatedDate);
+                invoiceRun.IssuedDate);
 
             byte[] data = null;
             using (var stream = new System.IO.MemoryStream())

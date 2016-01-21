@@ -4,9 +4,9 @@
     using Scheme;
     using System;
     using System.Collections.Generic;
-    using Unalignment;
+    using Prsd.Core.Domain;
 
-    public class RegisteredProducer : UnalignableEntity
+    public class RegisteredProducer : Entity
     {
         public RegisteredProducer(
             string producerRegistrationNumber,
@@ -19,6 +19,7 @@
             ComplianceYear = complianceYear;
             Scheme = scheme;
             CurrentSubmission = null;
+            Removed = false;
         }
 
         /// <summary>
@@ -27,6 +28,8 @@
         protected RegisteredProducer()
         {
         }
+
+        public virtual bool Removed { get; private set; }
 
         public virtual string ProducerRegistrationNumber { get; private set; }
 
@@ -47,6 +50,16 @@
                 throw new InvalidOperationException();
             }
             CurrentSubmission = producerSubmission;
+        }
+
+        public void Remove()
+        {
+            if (Removed)
+            {
+                throw new InvalidOperationException("Cannot remove a producer which has previously been removed.");
+            }
+
+            Removed = true;
         }
     }
 }

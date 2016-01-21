@@ -59,7 +59,7 @@
                 throw new ArgumentException("The file source must be exactly 3 characters.");
             }
 
-            if (fileID < 0 || fileID > 99999)
+            if (fileID > 99999)
             {
                 throw new ArgumentOutOfRangeException("The file ID must be between 0 and 99999.");
             }

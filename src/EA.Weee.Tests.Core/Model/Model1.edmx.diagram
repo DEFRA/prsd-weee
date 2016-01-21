@@ -99,10 +99,11 @@
         <AssociationConnector Association="EA.Weee.TestModel.FK_MemberUpload_User_SubmittedBy" />
         <EntityTypeShape EntityType="EA.Weee.TestModel.IbisFileData" Width="1.5" PointX="6" PointY="36.125" />
         <EntityTypeShape EntityType="EA.Weee.TestModel.InvoiceRun" Width="1.5" PointX="8.25" PointY="9.125" />
-        <EntityTypeShape EntityType="EA.Weee.TestModel.C1B1STransactionNumberSequence" Width="1.5" PointX="5.375" PointY="6.75" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_InvoiceRun_IbisFileData" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_InvoiceRun_CompetentAuthority" />
         <AssociationConnector Association="EA.Weee.TestModel.FK_MemberUpload_InvoiceRun" />
+        <EntityTypeShape EntityType="EA.Weee.TestModel.QuarterWindowTemplate" Width="1.5" PointX="7.375" PointY="0.75" />
+        <AssociationConnector Association="EA.Weee.TestModel.FK_InvoiceRun_AspNetUsers_IssuedBy" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

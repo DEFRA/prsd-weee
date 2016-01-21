@@ -22,7 +22,7 @@
         {
             authorization.EnsureInternalOrOrganisationAccess(request.OrganisationId);
 
-            return await dataAccess.GetDataReturnSubmissionsHistory(request.SchemeId);
+            return await dataAccess.GetDataReturnSubmissionsHistory(request.SchemeId, request.ComplianceYear);
         }
     }
 }

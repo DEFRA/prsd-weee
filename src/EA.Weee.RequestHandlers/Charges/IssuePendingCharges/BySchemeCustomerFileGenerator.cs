@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Domain.Charges;
+    using Errors;
     using Ibis;
     using Scheme = EA.Weee.Domain.Scheme.Scheme;
 
@@ -15,9 +15,11 @@
     /// </summary>
     public class BySchemeCustomerFileGenerator : IIbisCustomerFileGenerator
     {
-        public Task<CustomerFile> CreateAsync(ulong fileID, InvoiceRun invoiceRun)
+        public Task<IbisFileGeneratorResult<CustomerFile>> CreateAsync(ulong fileID, InvoiceRun invoiceRun)
         {
             CustomerFile customerFile = new CustomerFile("WEE", fileID);
+
+            var errors = new List<Exception>();
 
             IEnumerable<Scheme> schemes = invoiceRun.MemberUploads
                 .Select(mu => mu.Scheme)
@@ -25,49 +27,46 @@
 
             foreach (Scheme scheme in schemes)
             {
-                Address address;
                 try
                 {
-                    address = new Address(
+                    var postCode = GetIbisPostCode(scheme.Organisation.OrganisationAddress);
+
+                    Address address = new Address(
                         scheme.Organisation.Contact.FullName,
                         scheme.Organisation.OrganisationAddress.Address1,
                         scheme.Organisation.OrganisationAddress.Address2,
                         null,
                         scheme.Organisation.OrganisationAddress.TownOrCity,
                         scheme.Organisation.OrganisationAddress.CountyOrRegion,
-                        scheme.Organisation.OrganisationAddress.Postcode);
+                        postCode);
+
+                    Customer customer = new Customer(
+                            scheme.IbisCustomerReference,
+                            scheme.Organisation.OrganisationName,
+                            address);
+
+                    customerFile.AddCustomer(customer);
                 }
                 catch (Exception ex)
                 {
-                    string errorMessage = string.Format(
-                        "An error occured creating an 1B1S address to represent the scheme with ID \"{0}\". " +
-                        "See the inner exception for more details.",
-                        scheme.Id);
-                    throw new Exception(errorMessage, ex);
+                    errors.Add(new SchemeFieldException(scheme, ex));
                 }
-
-                Customer customer;
-
-                try
-                {
-                    customer = new Customer(
-                        scheme.IbisCustomerReference,
-                        scheme.Organisation.OrganisationName,
-                        address);
-                }
-                catch (Exception ex)
-                {
-                    string errorMessage = string.Format(
-                        "An error occured creating an 1B1S customer to represent the scheme with ID \"{0}\". " +
-                        "See the inner exception for more details.",
-                        scheme.Id);
-                    throw new Exception(errorMessage, ex);
-                }
-
-                customerFile.AddCustomer(customer);
             }
 
-            return Task.FromResult(customerFile);
+            var ibisFileGeneratorResult = new IbisFileGeneratorResult<CustomerFile>(errors.Count == 0 ? customerFile : null, errors);
+            return Task.FromResult(ibisFileGeneratorResult);
+        }
+
+        public string GetIbisPostCode(Domain.Organisation.Address address)
+        {
+            string postCode = null;
+
+            if (!string.IsNullOrEmpty(address.Postcode))
+            {
+                postCode = address.IsUkAddress() ? address.Postcode : string.Format("{0}  {1}", address.Postcode.Trim(), address.Country.Name);
+            }
+
+            return postCode;
         }
     }
 }

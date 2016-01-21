@@ -335,6 +335,12 @@ th.sorted-descending:after {
 	background-repeat: no-repeat;
 }
 
+p.important {
+    @extend .bold-small;
+    padding-left: 50px;
+    background: url(govuk_toolkit/images/icon-important.png) no-repeat 0% 50%;
+    min-height:35px;
+}
 
 // 5. Data
 // ==========================================================================
@@ -531,9 +537,12 @@ input[type="file"].form-control {
     width: $two-thirds;
 }
 
-.important-image {
+.spinner-image {
     vertical-align: middle;
     margin-right: 20px;
+    margin-left: 20px;
+    margin-top: 20px;
+    display:none;
 }
 
 .panel-indent-danger {

@@ -238,7 +238,7 @@
 
                 var scheme = helper.CreateScheme();
 
-                helper.GerOrCreateRegisteredProducer(scheme, 2015, "1234");
+                helper.GetOrCreateRegisteredProducer(scheme, 2015, "1234");
 
                 database.Model.SaveChanges();
 
