@@ -77,6 +77,7 @@
     <Compile Include="ObligationType.cs" />
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
+    <Compile Include="Producer\ProducerEeeByQuarter.cs" />
     <Compile Include="Producer\RegisteredProducer.cs" />
     <Compile Include="Scheme\MemberUploadRawData.cs" />
     <Compile Include="UploadErrorType.cs" />
