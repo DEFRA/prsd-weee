@@ -542,7 +542,7 @@
     <Content Include="Areas\Admin\Views\Reports\_ProducersDataReportFilters.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\SchemeWeeeData.cshtml" />
     <Content Include="Areas\Admin\Views\Charge\IssuedCharges.cshtml" />
-	<Content Include="Areas\Admin\Views\Charge\IssueChargesError.cshtml" />
+    <Content Include="Areas\Admin\Views\Charge\IssueChargesError.cshtml" />
     <Content Include="Content\govuk_elements\_tables.scss" />
     <Content Include="Content\govuk_elements\_reset.scss" />
     <Content Include="Content\govuk_elements\_phase-banner.scss" />
@@ -709,6 +709,7 @@
     <Compile Include="Areas\Scheme\ViewModels\OrganisationUserViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\SchemeViewModel.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.Summary.cs" />
     <Compile Include="ViewModels\Shared\Scheme\ViewOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\ManageCacheController.cs" />
     <Compile Include="Areas\Test\Controllers\CreatePcsMemberXmlFileController.cs" />
