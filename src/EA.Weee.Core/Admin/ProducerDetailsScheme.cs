@@ -1,6 +1,8 @@
 ﻿namespace EA.Weee.Core.Admin
 {
     using System;
+    using System.Collections.Generic;
+    using DataReturns;
     using EA.Weee.Core.Shared;
 
     /// <summary>
@@ -12,17 +14,17 @@
         public Guid RegisteredProducerId { get; set; }
 
         public string SchemeName { get; set; }
-        
+
         public string ProducerName { get; set; }
-        
+
         public string TradingName { get; set; }
-        
+
         public string CompanyNumber { get; set; }
-        
+
         public DateTime RegistrationDate { get; set; }
-        
+
         public ObligationType ObligationType { get; set; }
-        
+
         public ChargeBandType ChargeBandType { get; set; }
 
         public DateTime? CeasedToExist { get; set; }
@@ -34,5 +36,7 @@
         public string RegistrationNumber { get; set; }
 
         public bool HasSubmittedEEE { get; set; }
+
+        public ProducerEeeDetails ProducerEeeDetails { get; set; }
     }
 }
