@@ -4,17 +4,21 @@
     ViewBag.Title = "Producer Public Register";
 }
 
-@section main_content {
-
+@section main_content
+{
     <header class="hgroup">
         <h1 class="heading-large">Download producer public register</h1>
     </header>
+
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+
         <p>Your report will contain the latest details registered for each producer within the chosen compliance year.</p>
+
         <p>Your results will be provided as a CSV file download.</p>
+
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
             @Html.Gds().LabelFor(m => m.SelectedYear)
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
@@ -31,3 +35,12 @@
     </p>
 }
 
+@section scripts
+{
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadProducerPublicRegisterCsv", new { complianceYear = Model.SelectedYear }))";
+        </script>
+    }
+}

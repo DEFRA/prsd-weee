@@ -4,15 +4,17 @@
     ViewBag.Title = "Download Producer EEE Data";
 }
 
-@section main_content {
-
+@section main_content
+{
     <header class="hgroup">
         <h1 class="heading-large">Download producer EEE data</h1>
     </header>
+
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
+
         <p>Filter the report to download entries that match your criteria.</p>
         
         @Html.Partial("_ProducersDataReportFilters")
@@ -27,3 +29,16 @@
     </p>
 }
 
+@section scripts
+{
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadProducerEeeDataCSV", new
+                          {
+                              complianceYear = Model.SelectedYear,
+                              obligationType = Model.SelectedObligationType
+                          }))";
+        </script>
+    }
+}

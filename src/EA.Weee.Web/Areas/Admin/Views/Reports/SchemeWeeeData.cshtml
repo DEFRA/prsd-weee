@@ -35,8 +35,11 @@
     @if (ViewBag.TriggerDownload)
     {
         <script type="text/javascript">
-            window.location = "@Html.Raw(@Url.Action("DownloadSchemeWeeeDataCsv", new { complianceYear = Model.SelectedYear, obligationType = Model.SelectedObligationtype }))";
+            window.location = "@Html.Raw(@Url.Action("DownloadSchemeWeeeDataCsv", new
+                          {
+                              complianceYear = Model.SelectedYear,
+                              obligationType = Model.SelectedObligationtype
+                          }))";
         </script>
     }
 }
-
