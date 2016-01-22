@@ -538,7 +538,7 @@
     <Content Include="Areas\Test\Views\ManagePcsReturnsSubmissionWindow\Settings.cshtml" />
     <Content Include="Areas\Test\Views\ManagePcsReturnsSubmissionWindow\SettingsUpdated.cshtml" />
     <Content Include="Areas\Admin\Views\Submissions\_dataReturnSubmissionsResults.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ProducerEEEData.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ProducerEeeData.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\_ProducersDataReportFilters.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\SchemeWeeeData.cshtml" />
     <Content Include="Areas\Admin\Views\Charge\IssuedCharges.cshtml" />
