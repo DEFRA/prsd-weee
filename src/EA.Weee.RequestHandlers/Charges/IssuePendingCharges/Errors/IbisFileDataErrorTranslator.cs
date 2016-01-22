@@ -36,11 +36,11 @@
             {
                 case "The post code is mandatory.":
                     translatedMessage = string.Format("PCS {0} is missing an organisation contact postcode.",
-                        schemeFieldException.Scheme.ApprovalNumber);
+                        schemeFieldException.Scheme.SchemeName);
                     break;
                 case "The customer reference is mandatory.":
-                    translatedMessage = string.Format("PCS {0} is missing a finance customer reference.",
-                        schemeFieldException.Scheme.ApprovalNumber);
+                    translatedMessage = string.Format("PCS {0} is missing a billing customer reference.",
+                        schemeFieldException.Scheme.SchemeName);
                     break;
                 default:
                     ThrowUnableToTranslateError(schemeFieldException);
