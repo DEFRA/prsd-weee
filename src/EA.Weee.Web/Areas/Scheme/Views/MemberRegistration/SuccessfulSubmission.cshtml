@@ -22,10 +22,17 @@
         <p>If you have finished performing tasks you can <input type="submit" value="sign out" class="link-submit" /> or proceed to perform more activities.</p>
     }
 
-    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
-
     <p>
-        @this.WeeeGds().ActionLinkWithEventTracking("What did you think of this service?", "Feedback", "NewUser", "Feedback", "Successful XML submission", "What did you think of this service?", new RouteValueDictionary { { "area", string.Empty } }, newTab: true)
+    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
+    </p>
+    <p>
+        @this.WeeeGds().ActionLinkWithEventTracking(
+           "What did you think of this service?", 
+           "Feedback", 
+           "NewUser", 
+           "Feedback", 
+           "Successful XML submission", 
+           "What did you think of this service?", new RouteValueDictionary { { "area", string.Empty } }, newTab: true)
         (takes 30 seconds)
     </p>
 }
