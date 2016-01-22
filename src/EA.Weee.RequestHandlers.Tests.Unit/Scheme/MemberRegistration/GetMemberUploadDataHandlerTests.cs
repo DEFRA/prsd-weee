@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using DataAccess;
     using Domain;
+    using Domain.Error;
     using Domain.Scheme;
     using FakeItEasy;
     using Mappings;

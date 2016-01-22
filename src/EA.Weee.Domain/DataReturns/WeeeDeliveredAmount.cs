@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Lookup;
+    using Obligation;
     using Prsd.Core;
 
     public class WeeeDeliveredAmount : ReturnItem

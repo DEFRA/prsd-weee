@@ -8,7 +8,7 @@
     using System.Threading.Tasks;
     using DataAccess;
     using DataAccess.DataAccess;
-    using Domain;
+    using Domain.Error;
     using Domain.Producer;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Mappings
 {
     using Core.Users;
-    using Domain;
+    using Domain.User;
     using Prsd.Core.Mapper;
 
     public class UserMap : IMap<User, UserData>

@@ -3,6 +3,7 @@
     using System;
     using BusinessValidation;
     using Domain;
+    using Domain.Obligation;
     using QuerySets;
     using Xml.MemberRegistration;
 

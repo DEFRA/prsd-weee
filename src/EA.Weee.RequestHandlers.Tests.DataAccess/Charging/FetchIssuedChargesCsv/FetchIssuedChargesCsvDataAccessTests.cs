@@ -40,7 +40,6 @@
 
                 var scheme = helper.CreateScheme();
                 string registrationNumber = "AAAA";
-                int complianceYear = 2016;
 
                 scheme.CompetentAuthorityId = databaseAuthority1.Id;
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme, invoiceRunForAuthority1);

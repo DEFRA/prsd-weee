@@ -10,7 +10,7 @@
     using ReturnVersionBuilder;
     using Shared;
     using ErrorLevel = Core.Shared.ErrorLevel;
-    using ObligationType = Domain.ObligationType;
+    using ObligationType = Domain.Obligation.ObligationType;
     using Scheme = Domain.Scheme.Scheme;
 
     public class EeeValidator : IEeeValidator
