@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
-    using Domain;
+    using Domain.User;
     using Weee.DataAccess;
 
     public class GetOrganisationOverviewDataAccess : IGetOrganisationOverviewDataAccess

@@ -33,7 +33,7 @@
                                      DateTime = mu.SubmittedDate.Value,
                                      TotalCharges = mu.TotalCharges,
                                      NoOfWarnings = (from me in context.MemberUploadErrors
-                                                     where me.MemberUploadId == mu.Id && (me.ErrorLevel.Value == Domain.ErrorLevel.Warning.Value)
+                                                     where me.MemberUploadId == mu.Id && (me.ErrorLevel.Value == Domain.Error.ErrorLevel.Warning.Value)
                                                      select me).Count(),
                                      FileName = mu.FileName
                                  }).OrderByDescending(s => s.DateTime).ToListAsync();
