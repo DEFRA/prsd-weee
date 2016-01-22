@@ -47,7 +47,9 @@
   <ItemGroup>
     <Compile Include="Admin\GetProducerDetailsByRegisteredProducerId.cs" />
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYears.cs" />
     <Compile Include="Admin\Reports\GetProducerEEEDataCSV.cs" />
+    <Compile Include="Admin\Reports\GetUKWeeeCsv.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsv.cs" />
     <Compile Include="Charges\FetchComplianceYearsWithInvoices.cs" />
     <Compile Include="Charges\FetchInvoiceRunCsv.cs" />
@@ -59,13 +61,13 @@
     <Compile Include="Charges\IssuePendingCharges.cs" />
     <Compile Include="Admin\RemoveProducer.cs" />
     <Compile Include="Admin\Reports\GetMemberDetailsCSV.cs" />
-    <Compile Include="Admin\Reports\GetPCSChargesCSV.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSV.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSV.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile.cs" />
     <Compile Include="DataReturns\SubmitDataReturnUpload.cs" />
+    <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYears.cs" />
     <Compile Include="Organisations\GetOrganisationOverview.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFile.cs" />
     <Compile Include="Search\FetchOrganisationSearchResultsForCache.cs" />
@@ -74,7 +76,6 @@
     <Compile Include="Admin\AddCompetentAuthorityUser.cs" />
     <Compile Include="Admin\GetAdminUserStatus.cs" />
     <Compile Include="Admin\GetAllApprovedSchemes.cs" />
-    <Compile Include="Admin\GetAllComplianceYears.cs" />
     <Compile Include="Admin\GetProducerDetails.cs" />
     <Compile Include="Admin\GetUserData.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus.cs" />
