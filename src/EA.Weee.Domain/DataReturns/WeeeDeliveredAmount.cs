@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Lookup;
     using Prsd.Core;
 
-    public class WeeeDeliveredAmount : ReturnItem
+    public class WeeeDeliveredAmount : ReturnItem, IEquatable<WeeeDeliveredAmount>
     {
         public virtual AatfDeliveryLocation AatfDeliveryLocation { get; private set; }
 
@@ -44,6 +45,25 @@
         public bool IsAeDeliveredAmount
         {
             get { return AeDeliveryLocation != null; }
+        }
+
+        public bool Equals(WeeeDeliveredAmount other)
+        {
+            return Equals((ReturnItem)other) &&
+                   Equals(AatfDeliveryLocation, other.AatfDeliveryLocation) &&
+                   Equals(AeDeliveryLocation, other.AeDeliveryLocation);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as WeeeDeliveredAmount);
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = base.GetHashCode();
+
+            return IsAatfDeliveredAmount ? hash ^ AatfDeliveryLocation.GetHashCode() : hash ^ AeDeliveryLocation.GetHashCode();
         }
     }
 }

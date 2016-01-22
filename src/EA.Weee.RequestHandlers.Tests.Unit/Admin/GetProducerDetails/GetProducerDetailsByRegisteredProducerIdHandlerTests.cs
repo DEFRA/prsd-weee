@@ -91,8 +91,8 @@
                 registeredProducer,
                 memberUpload,
                 new EA.Weee.Domain.Producer.ProducerBusiness(
-                    new Company("CompanyName", "RegisteredNo", 
-                    new ProducerContact(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), 
+                    new Company("CompanyName", "RegisteredNo",
+                    new ProducerContact(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(),
                     new ProducerAddress(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(),
                     new Country(Guid.NewGuid(), A.Dummy<string>()), A.Dummy<string>())))),
                 null,
@@ -111,7 +111,7 @@
                 0);
 
             registeredProducer.SetCurrentSubmission(producer);
-            
+
             registeredProducer.Scheme.UpdateScheme("SchemeName", "WEE/FA9999KE/SCH", "test", ObligationType.B2B, Guid.NewGuid());
 
             IGetProducerDetailsByRegisteredProducerIdDataAccess dataAccess = A.Fake<IGetProducerDetailsByRegisteredProducerIdDataAccess>();
@@ -189,7 +189,8 @@
 
             DataReturn dataReturn = new DataReturn(scheme, new Quarter(2016, QuarterType.Q4));
 
-            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
+            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn,
+                 new WeeeCollectedReturnVersion(), new WeeeDeliveredReturnVersion(), new EeeOutputReturnVersion());
 
             EeeOutputAmount eeeOutputAmount = new EeeOutputAmount(
                 ObligationType.B2C,
@@ -199,7 +200,7 @@
             dataReturnVersion.EeeOutputReturnVersion.AddEeeOutputAmount(eeeOutputAmount);
 
             dataReturnVersion.Submit("UserID");
-            
+
             IGetProducerDetailsByRegisteredProducerIdDataAccess dataAccess = A.Fake<IGetProducerDetailsByRegisteredProducerIdDataAccess>();
 
             A.CallTo(() => dataAccess.Fetch(registeredProducerId)).Returns(registeredProducer);
@@ -269,7 +270,8 @@
             registeredProducer.SetCurrentSubmission(producerSubmission);
             DataReturn dataReturn = new DataReturn(scheme, new Quarter(2016, QuarterType.Q4));
 
-            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
+            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn,
+                 new WeeeCollectedReturnVersion(), new WeeeDeliveredReturnVersion(), new EeeOutputReturnVersion());
 
             EeeOutputAmount eeeOutputAmount = new EeeOutputAmount(
                 ObligationType.B2C,
@@ -346,7 +348,8 @@
             registeredProducer.SetCurrentSubmission(producerSubmission);
             DataReturn dataReturn = new DataReturn(scheme, new Quarter(2016, QuarterType.Q4));
 
-            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
+            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn,
+                 new WeeeCollectedReturnVersion(), new WeeeDeliveredReturnVersion(), new EeeOutputReturnVersion());
 
             dataReturnVersion.Submit("UserID");
 

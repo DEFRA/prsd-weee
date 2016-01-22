@@ -25,7 +25,9 @@
 
         protected List<ErrorData> Errors { get; set; }
 
-        private DataReturnVersion dataReturnVersion;
+        private WeeeCollectedReturnVersion weeeCollectedReturnVersion;
+        private WeeeDeliveredReturnVersion weeeDeliveredReturnVersion;
+        private EeeOutputReturnVersion eeeOutputReturnVersion;
 
         public DataReturnVersionBuilder(
             Scheme scheme,
@@ -46,42 +48,41 @@
             Errors = new List<ErrorData>();
         }
 
-        public async Task<IEnumerable<ErrorData>> PreValidate()
+        public Task<IEnumerable<ErrorData>> PreValidate()
         {
-            return await submissionWindowClosed.Validate(Quarter);
+            return submissionWindowClosed.Validate(Quarter);
         }
 
-        private async Task CreateDataReturnVersion()
+        public Task AddAatfDeliveredAmount(string aatfApprovalNumber, string facilityName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
         {
-            if (dataReturnVersion == null)
+            if (weeeDeliveredReturnVersion == null)
             {
-                var dataReturn = await schemeQuarterDataAccess.FetchDataReturnOrDefault();
-                if (dataReturn == null)
-                {
-                    dataReturn = new DataReturn(Scheme, Quarter);
-                }
-
-                dataReturnVersion = new DataReturnVersion(dataReturn);
+                weeeDeliveredReturnVersion = new WeeeDeliveredReturnVersion();
             }
+
+            weeeDeliveredReturnVersion.AddWeeeDeliveredAmount(new WeeeDeliveredAmount(obligationType, category, tonnage, new AatfDeliveryLocation(aatfApprovalNumber, facilityName)));
+
+            return Task.Delay(0);
         }
 
-        public async Task AddAatfDeliveredAmount(string aatfApprovalNumber, string facilityName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
+        public Task AddAeDeliveredAmount(string approvalNumber, string operatorName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
         {
-            await CreateDataReturnVersion();
+            if (weeeDeliveredReturnVersion == null)
+            {
+                weeeDeliveredReturnVersion = new WeeeDeliveredReturnVersion();
+            }
 
-            dataReturnVersion.WeeeDeliveredReturnVersion.AddWeeeDeliveredAmount(new WeeeDeliveredAmount(obligationType, category, tonnage, new AatfDeliveryLocation(aatfApprovalNumber, facilityName)));
-        }
+            weeeDeliveredReturnVersion.AddWeeeDeliveredAmount(new WeeeDeliveredAmount(obligationType, category, tonnage, new AeDeliveryLocation(approvalNumber, operatorName)));
 
-        public async Task AddAeDeliveredAmount(string approvalNumber, string operatorName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
-        {
-            await CreateDataReturnVersion();
-
-            dataReturnVersion.WeeeDeliveredReturnVersion.AddWeeeDeliveredAmount(new WeeeDeliveredAmount(obligationType, category, tonnage, new AeDeliveryLocation(approvalNumber, operatorName)));
+            return Task.Delay(0);
         }
 
         public async Task AddEeeOutputAmount(string producerRegistrationNumber, string producerName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
         {
-            await CreateDataReturnVersion();
+            if (eeeOutputReturnVersion == null)
+            {
+                eeeOutputReturnVersion = new EeeOutputReturnVersion();
+            }
 
             var validationResult = await eeeValidator.Validate(producerRegistrationNumber, producerName, category, obligationType, tonnage);
 
@@ -89,29 +90,42 @@
             {
                 var registeredProducer = await schemeQuarterDataAccess.GetRegisteredProducer(producerRegistrationNumber);
 
-                dataReturnVersion.EeeOutputReturnVersion.AddEeeOutputAmount(new EeeOutputAmount(obligationType, category, tonnage, registeredProducer));
+                eeeOutputReturnVersion.AddEeeOutputAmount(new EeeOutputAmount(obligationType, category, tonnage, registeredProducer));
             }
 
             Errors.AddRange(validationResult);
         }
 
-        public async Task AddWeeeCollectedAmount(WeeeCollectedAmountSourceType sourceType, WeeeCategory category, ObligationType obligationType, decimal tonnage)
+        public Task AddWeeeCollectedAmount(WeeeCollectedAmountSourceType sourceType, WeeeCategory category, ObligationType obligationType, decimal tonnage)
         {
-            await CreateDataReturnVersion();
-
-            dataReturnVersion.WeeeCollectedReturnVersion.AddWeeeCollectedAmount(new WeeeCollectedAmount(sourceType, obligationType, category, tonnage));
-        }
-
-        public DataReturnVersionBuilderResult Build()
-        {
-            if (dataReturnVersion == null)
+            if (weeeCollectedReturnVersion == null)
             {
-                throw new InvalidOperationException("Return data has not been provided.");
+                weeeCollectedReturnVersion = new WeeeCollectedReturnVersion();
             }
 
+            weeeCollectedReturnVersion.AddWeeeCollectedAmount(new WeeeCollectedAmount(sourceType, obligationType, category, tonnage));
+
+            return Task.Delay(0);
+        }
+
+        public async Task<DataReturnVersionBuilderResult> Build()
+        {
+            DataReturnVersion dataReturnVersion = null;
             List<ErrorData> uniqueErrors = Errors.Distinct().ToList();
 
-            return new DataReturnVersionBuilderResult(ConsideredValid(Errors) ? dataReturnVersion : null, uniqueErrors);
+            if (ConsideredValid(Errors))
+            {
+                var dataReturn = await schemeQuarterDataAccess.FetchDataReturnOrDefault();
+                if (dataReturn == null)
+                {
+                    dataReturn = new DataReturn(Scheme, Quarter);
+                }
+
+                dataReturnVersion = new DataReturnVersion(dataReturn,
+                    weeeCollectedReturnVersion, weeeDeliveredReturnVersion, eeeOutputReturnVersion);
+            }
+
+            return new DataReturnVersionBuilderResult(dataReturnVersion, uniqueErrors);
         }
 
         private static bool ConsideredValid(ICollection<ErrorData> errorData)

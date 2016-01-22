@@ -33,7 +33,8 @@
                  A.Dummy<int>(),
                  A.Dummy<int>());
 
-            dataReturnUpload.SetDataReturnVersion(new DataReturnVersion(A.Dummy<DataReturn>()));
+            dataReturnUpload.SetDataReturnVersion(new DataReturnVersion(A.Dummy<DataReturn>(),
+                A.Dummy<WeeeCollectedReturnVersion>(), A.Dummy<WeeeDeliveredReturnVersion>(), A.Dummy<EeeOutputReturnVersion>()));
             dataReturnUpload.Submit("test@co.uk");
 
             // Act

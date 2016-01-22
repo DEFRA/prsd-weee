@@ -27,6 +27,6 @@
 
         Task AddAeDeliveredAmount(string approvalNumber, string operatorName, WeeeCategory category, ObligationType obligationType, decimal tonnage);
 
-        DataReturnVersionBuilderResult Build();
+        Task<DataReturnVersionBuilderResult> Build();
     }
 }

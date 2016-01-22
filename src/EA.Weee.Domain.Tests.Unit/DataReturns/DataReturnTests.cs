@@ -13,7 +13,7 @@
         {
             // Arrange            
             Quarter quarter = new Quarter(2016, QuarterType.Q1);
-            
+
             // Assert
             Assert.Throws<ArgumentNullException>(() => new DataReturn(null, quarter));
         }
@@ -23,7 +23,7 @@
         {
             // Arrange
             Scheme scheme = new Scheme(Guid.NewGuid());
-           
+
             // Assert
             Assert.Throws<ArgumentNullException>(() => new DataReturn(scheme, null));
         }
@@ -35,7 +35,6 @@
             Scheme scheme = new Scheme(Guid.NewGuid());
             Quarter quarter = new Quarter(2016, QuarterType.Q1);
             DataReturn dataReturn = new DataReturn(scheme, quarter);
-            DataReturnVersion version = new DataReturnVersion(new DataReturn(scheme, quarter));
 
             // Act
             Action action = () => dataReturn.SetCurrentVersion(null);
@@ -51,7 +50,8 @@
             Scheme scheme = new Scheme(Guid.NewGuid());
             Quarter quarter = new Quarter(2016, QuarterType.Q1);
             DataReturn dataReturn = new DataReturn(scheme, quarter);
-            DataReturnVersion version = new DataReturnVersion(new DataReturn(scheme, quarter));
+            DataReturnVersion version = new DataReturnVersion(new DataReturn(scheme, quarter),
+                A.Dummy<WeeeCollectedReturnVersion>(), A.Dummy<WeeeDeliveredReturnVersion>(), A.Dummy<EeeOutputReturnVersion>());
 
             // Act
             Action action = () => dataReturn.SetCurrentVersion(version);
