@@ -16,7 +16,9 @@
         <p>If you have finished performing tasks you can <input type="submit" value="sign out" class="link-submit" /> or proceed to perform more activities.</p>
     }
 
-    @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
+    </p>   
 
     <p>
         @this.WeeeGds().ActionLinkWithEventTracking(

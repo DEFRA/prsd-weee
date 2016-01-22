@@ -56,7 +56,7 @@
             {
                 foreach (var producer in schemeReturn.ProducerList)
                 {
-                    foreach (var tonnageReturn in producer.Return)
+                    foreach (var tonnageReturn in producer.Returns)
                     {
                         await dataReturnVersionBuilder.AddEeeOutputAmount(producer.RegistrationNo,
                               producer.ProducerCompanyName, tonnageReturn.CategoryName.ToDomainWeeeCategory(),
@@ -92,15 +92,13 @@
                 }
             }
 
-            if (schemeReturn.DeliveredToATF != null)
+            if (schemeReturn.DeliveredToAATF != null)
             {
-                foreach (var deliveredToAatf in schemeReturn.DeliveredToATF)
+                foreach (var deliveredToAatf in schemeReturn.DeliveredToAATF)
                 {
-                    var facility = deliveredToAatf.DeliveredToFacility;
-
-                    foreach (var tonnageReturn in deliveredToAatf.Return)
+                    foreach (var tonnageReturn in deliveredToAatf.Returns)
                     {
-                        await dataReturnVersionBuilder.AddAatfDeliveredAmount(facility.AATFApprovalNo, facility.FacilityName, tonnageReturn.CategoryName.ToDomainWeeeCategory(),
+                        await dataReturnVersionBuilder.AddAatfDeliveredAmount(deliveredToAatf.AATFApprovalNo, deliveredToAatf.FacilityName, tonnageReturn.CategoryName.ToDomainWeeeCategory(),
                                      tonnageReturn.ObligationType.ToDomainObligationType(), tonnageReturn.TonnesReturnValue);
                     }
                 }
@@ -110,11 +108,9 @@
             {
                 foreach (var deliveredToAe in schemeReturn.DeliveredToAE)
                 {
-                    var deliveredToOperator = deliveredToAe.DeliveredToOperator;
-
-                    foreach (var tonnageReturn in deliveredToAe.Return)
+                    foreach (var tonnageReturn in deliveredToAe.Returns)
                     {
-                        await dataReturnVersionBuilder.AddAeDeliveredAmount(deliveredToOperator.AEApprovalNo, deliveredToOperator.OperatorName, tonnageReturn.CategoryName.ToDomainWeeeCategory(),
+                        await dataReturnVersionBuilder.AddAeDeliveredAmount(deliveredToAe.AEApprovalNo, deliveredToAe.OperatorName, tonnageReturn.CategoryName.ToDomainWeeeCategory(),
                                          tonnageReturn.ObligationType.ToDomainObligationType(), tonnageReturn.TonnesReturnValue);
                     }
                 }
