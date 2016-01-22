@@ -45,7 +45,7 @@
 	<details>
 		@{
 			string errorSummaryText = string.Format("View {0} {1}",numOfErrors, errorText);
-			this.WeeeGds().SummaryEventTrackingFunction(errorSummaryText, "error-details-summary bold-small", "Member registration errors", "View member registration errors");
+			this.WeeeGds().SummaryExpansion(errorSummaryText, "error-details-summary bold-small", "Member registration errors", "View member registration errors");
 		}
 		<div class="error-list-container">
 			<ul>
@@ -67,7 +67,7 @@
 		<details>
 			@{
 				string warningSummaryText = string.Format("View {0} {1}", numWarnings, errorText);
-				this.WeeeGds().SummaryEventTrackingFunction(warningSummaryText, "warning-details-summary bold-small", "Member registration warnings", "View member registration warnings");
+				this.WeeeGds().SummaryExpansion(warningSummaryText, "warning-details-summary bold-small", "Member registration warnings", "View member registration warnings");
 			}
 			<div class="warning-list-container">
 				<ul>
