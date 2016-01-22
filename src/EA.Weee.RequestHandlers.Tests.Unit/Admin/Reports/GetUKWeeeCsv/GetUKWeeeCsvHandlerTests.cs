@@ -16,6 +16,7 @@
     using FakeItEasy;
     using RequestHandlers.Admin.Reports.GetUKWeeeCsv;
     using Xunit;
+    using DomainObligationType = Domain.Obligation.ObligationType;
 
     public class GetUKWeeeCsvHandlerTests
     {
@@ -137,34 +138,34 @@
             // Assert
             Assert.Equal(28, results.Count());
             Assert.Collection(results,
-                r => { Assert.Equal(WeeeCategory.LargeHouseholdAppliances, r.Category); Assert.Equal(Domain.ObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.SmallHouseholdAppliances, r.Category); Assert.Equal(Domain.ObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.ITAndTelecommsEquipment, r.Category); Assert.Equal(Domain.ObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.ConsumerEquipment, r.Category); Assert.Equal(Domain.ObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.LightingEquipment, r.Category); Assert.Equal(Domain.ObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.ElectricalAndElectronicTools, r.Category); Assert.Equal(Domain.ObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.ToysLeisureAndSports, r.Category); Assert.Equal(Domain.ObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.MedicalDevices, r.Category); Assert.Equal(Domain.ObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.MonitoringAndControlInstruments, r.Category); Assert.Equal(Domain.ObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.AutomaticDispensers, r.Category); Assert.Equal(Domain.ObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.DisplayEquipment, r.Category); Assert.Equal(Domain.ObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.CoolingApplicancesContainingRefrigerants, r.Category); Assert.Equal(Domain.ObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.GasDischargeLampsAndLedLightSources, r.Category); Assert.Equal(Domain.ObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(Domain.ObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.LargeHouseholdAppliances, r.Category); Assert.Equal(Domain.ObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.SmallHouseholdAppliances, r.Category); Assert.Equal(Domain.ObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.ITAndTelecommsEquipment, r.Category); Assert.Equal(Domain.ObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.ConsumerEquipment, r.Category); Assert.Equal(Domain.ObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.LightingEquipment, r.Category); Assert.Equal(Domain.ObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.ElectricalAndElectronicTools, r.Category); Assert.Equal(Domain.ObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.ToysLeisureAndSports, r.Category); Assert.Equal(Domain.ObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.MedicalDevices, r.Category); Assert.Equal(Domain.ObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.MonitoringAndControlInstruments, r.Category); Assert.Equal(Domain.ObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.AutomaticDispensers, r.Category); Assert.Equal(Domain.ObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.DisplayEquipment, r.Category); Assert.Equal(Domain.ObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.CoolingApplicancesContainingRefrigerants, r.Category); Assert.Equal(Domain.ObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.GasDischargeLampsAndLedLightSources, r.Category); Assert.Equal(Domain.ObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(Domain.ObligationType.B2C, r.ObligationType); });
+                r => { Assert.Equal(WeeeCategory.LargeHouseholdAppliances, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.SmallHouseholdAppliances, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.ITAndTelecommsEquipment, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.ConsumerEquipment, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.LightingEquipment, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.ElectricalAndElectronicTools, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.ToysLeisureAndSports, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.MedicalDevices, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.MonitoringAndControlInstruments, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.AutomaticDispensers, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.DisplayEquipment, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.CoolingApplicancesContainingRefrigerants, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.GasDischargeLampsAndLedLightSources, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.LargeHouseholdAppliances, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.SmallHouseholdAppliances, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.ITAndTelecommsEquipment, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.ConsumerEquipment, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.LightingEquipment, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.ElectricalAndElectronicTools, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.ToysLeisureAndSports, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.MedicalDevices, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.MonitoringAndControlInstruments, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.AutomaticDispensers, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.DisplayEquipment, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.CoolingApplicancesContainingRefrigerants, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.GasDischargeLampsAndLedLightSources, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); });
         }
 
         /// <summary>
@@ -222,7 +223,7 @@
 
             WeeeCollectedAmount weeeCollectedAmount = new WeeeCollectedAmount(
                 WeeeCollectedAmountSourceType.Dcf,
-                Domain.ObligationType.B2C,
+                DomainObligationType.B2C,
                 WeeeCategory.LargeHouseholdAppliances,
                 0);
 
@@ -240,7 +241,7 @@
 
             // Assert
             GetUKWeeeCsvHandler.CsvResult result = results
-                .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == Domain.ObligationType.B2C);
+                .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == DomainObligationType.B2C);
             Assert.NotNull(result);
 
             Assert.Equal(0, result.DcfQ1);
@@ -265,7 +266,7 @@
 
             WeeeCollectedAmount weeeCollectedAmount = new WeeeCollectedAmount(
                 WeeeCollectedAmountSourceType.Distributor,
-                Domain.ObligationType.B2C,
+                DomainObligationType.B2C,
                 WeeeCategory.LargeHouseholdAppliances,
                 0);
 
@@ -283,7 +284,7 @@
 
             // Assert
             GetUKWeeeCsvHandler.CsvResult result = results
-                .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == Domain.ObligationType.B2C);
+                .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == DomainObligationType.B2C);
             Assert.NotNull(result);
 
             Assert.Equal(0, result.DistributorQ1);
@@ -308,7 +309,7 @@
 
             WeeeCollectedAmount weeeCollectedAmount = new WeeeCollectedAmount(
                 WeeeCollectedAmountSourceType.FinalHolder,
-                Domain.ObligationType.B2C,
+                Domain.Obligation.ObligationType.B2C,
                 WeeeCategory.LargeHouseholdAppliances,
                 0);
 
@@ -326,7 +327,7 @@
 
             // Assert
             GetUKWeeeCsvHandler.CsvResult result = results
-                .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == Domain.ObligationType.B2C);
+                .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == DomainObligationType.B2C);
             Assert.NotNull(result);
 
             Assert.Equal(0, result.FinalHolderQ1);
@@ -350,7 +351,7 @@
             DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
 
             WeeeDeliveredAmount weeeDeliveredAmount = new WeeeDeliveredAmount(
-                Domain.ObligationType.B2C,
+                DomainObligationType.B2C,
                 WeeeCategory.LargeHouseholdAppliances,
                 0,
                 new AatfDeliveryLocation("WEE/AA1234AA/ATF", "Facility Name"));
@@ -369,7 +370,7 @@
 
             // Assert
             GetUKWeeeCsvHandler.CsvResult result = results
-                .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == Domain.ObligationType.B2C);
+                .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == DomainObligationType.B2C);
             Assert.NotNull(result);
 
             Assert.Equal(0, result.DeliveredQ1);
@@ -393,7 +394,7 @@
 
             WeeeCollectedAmount weeeCollectedAmount1 = new WeeeCollectedAmount(
                 WeeeCollectedAmountSourceType.Dcf,
-                Domain.ObligationType.B2C,
+                DomainObligationType.B2C,
                 WeeeCategory.LargeHouseholdAppliances,
                 100);
 
@@ -407,7 +408,7 @@
 
             WeeeCollectedAmount weeeCollectedAmount2 = new WeeeCollectedAmount(
                 WeeeCollectedAmountSourceType.Dcf,
-                Domain.ObligationType.B2C,
+                DomainObligationType.B2C,
                 WeeeCategory.LargeHouseholdAppliances,
                 200);
 
@@ -425,7 +426,7 @@
 
             // Assert
             GetUKWeeeCsvHandler.CsvResult result = results
-                .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == Domain.ObligationType.B2C);
+                .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == DomainObligationType.B2C);
             Assert.NotNull(result);
 
             Assert.Equal(300, result.DcfQ1);
@@ -445,7 +446,7 @@
 
             WeeeCollectedAmount weeeCollectedAmount1 = new WeeeCollectedAmount(
                 WeeeCollectedAmountSourceType.Dcf,
-                Domain.ObligationType.B2C,
+                DomainObligationType.B2C,
                 WeeeCategory.LargeHouseholdAppliances,
                 100);
 
@@ -459,7 +460,7 @@
 
             WeeeCollectedAmount weeeCollectedAmount2 = new WeeeCollectedAmount(
                 WeeeCollectedAmountSourceType.Dcf,
-                Domain.ObligationType.B2C,
+                DomainObligationType.B2C,
                 WeeeCategory.LargeHouseholdAppliances,
                 200);
 
@@ -477,7 +478,7 @@
 
             // Assert
             GetUKWeeeCsvHandler.CsvResult result = results
-                .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == Domain.ObligationType.B2C);
+                .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == DomainObligationType.B2C);
             Assert.NotNull(result);
 
             Assert.Equal(300, result.DcfTotal);
