@@ -6,7 +6,7 @@
     using System.Collections.Generic;
     using Prsd.Core.Domain;
 
-    public class RegisteredProducer : Entity
+    public class RegisteredProducer : Entity, IEquatable<RegisteredProducer>
     {
         public RegisteredProducer(
             string producerRegistrationNumber,
@@ -60,6 +60,30 @@
             }
 
             Removed = true;
+        }
+
+        public virtual bool Equals(RegisteredProducer other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return ProducerRegistrationNumber == other.ProducerRegistrationNumber &&
+                   ComplianceYear == other.ComplianceYear &&
+                   Scheme.ApprovalNumber == other.Scheme.ApprovalNumber &&
+                   Removed == other.Removed;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as RegisteredProducer);
+        }
+
+        public override int GetHashCode()
+        {
+            return ProducerRegistrationNumber.GetHashCode() ^ ComplianceYear.GetHashCode() ^
+                   Scheme.ApprovalNumber.GetHashCode() ^ Removed.GetHashCode();
         }
     }
 }

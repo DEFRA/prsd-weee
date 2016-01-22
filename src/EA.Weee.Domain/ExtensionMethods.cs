@@ -11,15 +11,13 @@
         {
             bool result;
 
-            if (object.ReferenceEquals(first, second))
+            if (ReferenceEquals(first, second))
             {
                 result = true;
             }
-            else if (first == null || second == null)
-            {
-                result = false;
-            }
-            else if (first.Count != second.Count)
+            else if (first == null ||
+                     second == null ||
+                     first.Count != second.Count)
             {
                 result = false;
             }
@@ -35,6 +33,26 @@
             }
 
             return result;
+        }
+
+        public static bool UnorderedEqual<T>(this IEnumerable<T> a, IEnumerable<T> b)
+            where T : IEquatable<T>
+        {
+            if (ReferenceEquals(a, b))
+            {
+                return true;
+            }
+            else if (a == null ||
+                     b == null ||
+                     a.Count() != b.Count())
+            {
+                return false;
+            }
+            else
+            {
+                return !a.Except(b).Any() &&
+                       !b.Except(a).Any();
+            }
         }
     }
 }

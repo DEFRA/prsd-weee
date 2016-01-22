@@ -14,30 +14,16 @@
     public class EeeOutputReturnVersionTests
     {
         [Fact]
-        public void ConstructsEeeOutputReturnVersion_WithNullDataReturnVersion_ThrowsArgumentNullException()
-        {
-            Assert.Throws<ArgumentNullException>(() => new EeeOutputReturnVersion(null));
-        }
-
-        [Fact]
-        public void ConstructEeeOutputReturnVersion_AddsDataReturnVersion_ToDataReturnVersionsList()
-        {
-            // Arrange
-            var dataReturnVersion = new DataReturnVersion(A.Dummy<DataReturn>());
-
-            // Act
-            var eeeOutputReturnVersion = new EeeOutputReturnVersion(dataReturnVersion);
-
-            // Assert
-            Assert.Contains(dataReturnVersion, eeeOutputReturnVersion.DataReturnVersions);
-        }
-
-        [Fact]
         public void AddEeeOutputAmount_AddsToEeeOutputAmounts()
         {
             // Arrange
-            var eeeOutputReturnVersion = new EeeOutputReturnVersion(A.Fake<DataReturnVersion>());
-            var eeeOutputAmount = new EeeOutputAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, A.Fake<RegisteredProducer>());
+            var eeeOutputReturnVersion = new EeeOutputReturnVersion();
+
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => registeredProducer.Equals(A<RegisteredProducer>._))
+                .Returns(true);
+
+            var eeeOutputAmount = new EeeOutputAmount(ObligationType.B2B, A<WeeeCategory>._, A<decimal>._, registeredProducer);
 
             // Act
             eeeOutputReturnVersion.AddEeeOutputAmount(eeeOutputAmount);

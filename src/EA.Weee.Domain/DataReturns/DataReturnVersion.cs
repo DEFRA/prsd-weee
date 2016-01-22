@@ -29,15 +29,16 @@
 
         public virtual EeeOutputReturnVersion EeeOutputReturnVersion { get; private set; }
 
-        public DataReturnVersion(DataReturn dataReturn)
+        public DataReturnVersion(DataReturn dataReturn, WeeeCollectedReturnVersion weeeCollectedReturnVersion,
+            WeeeDeliveredReturnVersion weeeDeliveredReturnVersion, EeeOutputReturnVersion eeeOutputReturnVersion)
         {
             Guard.ArgumentNotNull(() => dataReturn, dataReturn);
 
             DataReturn = dataReturn;
 
-            WeeeCollectedReturnVersion = new WeeeCollectedReturnVersion(this);
-            WeeeDeliveredReturnVersion = new WeeeDeliveredReturnVersion(this);
-            EeeOutputReturnVersion = new EeeOutputReturnVersion(this);
+            WeeeCollectedReturnVersion = weeeCollectedReturnVersion;
+            WeeeDeliveredReturnVersion = weeeDeliveredReturnVersion;
+            EeeOutputReturnVersion = eeeOutputReturnVersion;
         }
 
         /// <summary>
