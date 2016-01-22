@@ -76,7 +76,7 @@
             byte[] data = Encoding.UTF8.GetBytes(contents);
 
             string fileName = string.Format(
-                "{0}_{1}_schemeWEEEE_{2:ddMMyyyy_HHmm}.csv",
+                "{0}_{1}_schemeWEEE_{2:ddMMyyyy_HHmm}.csv",
                 message.ComplianceYear,
                 message.ObligationType,
                 SystemTime.UtcNow);
