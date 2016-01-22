@@ -94,6 +94,7 @@
     <Compile Include="StoredProcedure\SpgProducerAmendmentsCSVDataByPRNTests.cs" />
     <Compile Include="StoredProcedure\SpgProducerEEECSVDataByComplianceYearAndObligationTypeTests.cs" />
     <Compile Include="StoredProcedure\SpgProducerPublicRegisterCSVDataByComplianceYearTests.cs" />
+    <Compile Include="StoredProcedure\SpgUKEEEDataByComplianceYearTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.DataAccess\EA.Weee.DataAccess.csproj">

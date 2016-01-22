@@ -49,6 +49,7 @@
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
     <Compile Include="Admin\Reports\GetProducerEEEDataCSV.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsv.cs" />
+    <Compile Include="Admin\Reports\GetUkEeeDataCsv.cs" />
     <Compile Include="Charges\FetchComplianceYearsWithInvoices.cs" />
     <Compile Include="Charges\FetchInvoiceRunCsv.cs" />
     <Compile Include="Charges\FetchInvoiceRunIbisZipFile.cs" />
