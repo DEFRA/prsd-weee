@@ -89,7 +89,7 @@
             <details>
                 @{
                     string errorSummaryText = string.Format("View {0} {1}", errorCount, errorText);
-                    this.WeeeGds().SummaryEventTrackingFunction(errorSummaryText, "error-details-summary bold-small", "Data return errors", "View data return errors");
+                    this.WeeeGds().SummaryExpansion(errorSummaryText, "error-details-summary bold-small", "Data return errors", "View data return errors");
                 }
                 <div class="error-list-container">
                     <ul>

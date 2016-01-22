@@ -2,11 +2,11 @@
 {
     using System;
 
-    public class SummaryEventTrackingFunction<TModel> : IDisposable
+    public class SummaryExpansion<TModel> : IDisposable
     {
         private readonly WeeeGds<TModel> gdsHelper;
 
-        public SummaryEventTrackingFunction(WeeeGds<TModel> gdsHelper, string summaryText, string htmlclass, string eventCategory, string eventAction, string eventLabel = null)
+        public SummaryExpansion(WeeeGds<TModel> gdsHelper, string summaryText, string htmlclass, string eventCategory, string eventAction, string eventLabel = null)
         {
             this.gdsHelper = gdsHelper;
 
