@@ -14,7 +14,7 @@
             var obligationTypeNone = ObligationType.None.ToString();
             var obligationTypeBoth = ObligationType.Both.ToString();
             var allObligationTypes = new SelectList(EnumHelper.GetValues(typeof(ObligationType)), "Key", "Value");
-            Obligationtypes = new SelectList(allObligationTypes.Where(x => (x.Text != obligationTypeNone && x.Text != obligationTypeBoth)).ToList(), "Value", "Text");
+            ObligationTypes = new SelectList(allObligationTypes.Where(x => (x.Text != obligationTypeNone && x.Text != obligationTypeBoth)).ToList(), "Value", "Text");
         }
 
         [Required]
@@ -25,8 +25,8 @@
 
         [Required]
         [Display(Name = "Obligation type")]
-        public ObligationType SelectedObligationtype { get; set; }
+        public ObligationType SelectedObligationType { get; set; }
 
-        public IEnumerable<SelectListItem> Obligationtypes { get; set; }
+        public IEnumerable<SelectListItem> ObligationTypes { get; set; }
     }
 }

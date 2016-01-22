@@ -515,7 +515,6 @@
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\weee\_footer.scss" />
     <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\PCSCharges.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\Upload.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\ProducerPublicRegister.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\Submit.cshtml" />
@@ -538,7 +537,7 @@
     <Content Include="Areas\Test\Views\ManagePcsReturnsSubmissionWindow\Settings.cshtml" />
     <Content Include="Areas\Test\Views\ManagePcsReturnsSubmissionWindow\SettingsUpdated.cshtml" />
     <Content Include="Areas\Admin\Views\Submissions\_dataReturnSubmissionsResults.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\ProducerEEEData.cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\ProducerEeeData.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\_ProducersDataReportFilters.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\SchemeWeeeData.cshtml" />
     <Content Include="Areas\Admin\Views\Charge\IssuedCharges.cshtml" />
