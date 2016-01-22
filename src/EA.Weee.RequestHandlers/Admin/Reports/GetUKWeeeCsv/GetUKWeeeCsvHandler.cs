@@ -102,7 +102,8 @@
 
         public IEnumerable<CsvResult> CreateResults(IEnumerable<DataReturn> dataReturns)
         {
-            foreach (Domain.ObligationType obligationType in new List<Domain.ObligationType>() { Domain.ObligationType.B2B, Domain.ObligationType.B2C })
+            foreach (Domain.Obligation.ObligationType obligationType in 
+                new List<Domain.Obligation.ObligationType>() { Domain.Obligation.ObligationType.B2B, Domain.Obligation.ObligationType.B2C })
             {
                 foreach (WeeeCategory category in Enum.GetValues(typeof(WeeeCategory)))
                 {
@@ -171,7 +172,7 @@
 
         private void GetCollectedTotals(
             IEnumerable<DataReturn> dataReturns,
-            Domain.ObligationType obligationType,
+            Domain.Obligation.ObligationType obligationType,
             WeeeCategory category,
             WeeeCollectedAmountSourceType source,
             out decimal? totalQ1,
@@ -233,7 +234,7 @@
 
         private void GetDeliveredTotals(
             IEnumerable<DataReturn> dataReturns,
-            Domain.ObligationType obligationType,
+            Domain.Obligation.ObligationType obligationType,
             WeeeCategory category,
             out decimal? totalQ1,
             out decimal? totalQ2,
@@ -294,7 +295,7 @@
 
         private IEnumerable<WeeeCollectedAmount> GetCollectedAmounts(
             IEnumerable<DataReturn> dataReturns,
-            Domain.ObligationType obligationType,
+            Domain.Obligation.ObligationType obligationType,
             WeeeCategory category,
             WeeeCollectedAmountSourceType source,
             QuarterType quarter)
@@ -309,7 +310,7 @@
 
         private IEnumerable<WeeeDeliveredAmount> GetDeliveredAmounts(
             IEnumerable<DataReturn> dataReturns,
-            Domain.ObligationType obligationType,
+            Domain.Obligation.ObligationType obligationType,
             WeeeCategory category,
             QuarterType quarter)
         {
@@ -323,7 +324,7 @@
         public class CsvResult
         {
             public WeeeCategory Category { get; private set; }
-            public Domain.ObligationType ObligationType { get; private set; }
+            public Domain.Obligation.ObligationType ObligationType { get; private set; }
             public decimal? DcfTotal { get; private set; }
             public decimal? DcfQ1 { get; private set; }
             public decimal? DcfQ2 { get; private set; }
@@ -347,7 +348,7 @@
 
             public CsvResult(
                 WeeeCategory category,
-                Domain.ObligationType obligationType,
+                Domain.Obligation.ObligationType obligationType,
                 decimal? dcfTotal,
                 decimal? dcfQ1,
                 decimal? dcfQ2,
