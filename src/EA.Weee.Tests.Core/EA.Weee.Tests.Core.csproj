@@ -244,6 +244,7 @@
     <Compile Include="TestDbAsyncEnumerator.cs" />
     <Compile Include="TestDbAsyncQueryProvider.cs" />
     <Compile Include="UserHelper.cs" />
+    <Compile Include="Xml\XmlSchemaHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Weee.DataAccess\EA.Weee.DataAccess.csproj">
