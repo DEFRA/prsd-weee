@@ -15,7 +15,8 @@
         {
             // Arrange
             var dataReturn = new DataReturn(A.Dummy<Scheme>(), A.Dummy<Quarter>());
-            var dataReturnVersion = new DataReturnVersion(dataReturn);
+            var dataReturnVersion = new DataReturnVersion(dataReturn,
+                A.Dummy<WeeeCollectedReturnVersion>(), A.Dummy<WeeeDeliveredReturnVersion>(), A.Dummy<EeeOutputReturnVersion>());
 
             // Act
             dataReturnVersion.Submit("test@co.uk");
@@ -23,7 +24,7 @@
             // Assert
             Assert.True(dataReturnVersion.IsSubmitted);
             Assert.Equal(dataReturnVersion.SubmittingUserId, "test@co.uk");
-            Assert.Equal(dataReturnVersion.DataReturn.Id, dataReturn.Id);           
+            Assert.Equal(dataReturnVersion.DataReturn.Id, dataReturn.Id);
         }
 
         [Fact]
@@ -31,7 +32,8 @@
         {
             // Arrange
             var dataReturn = new DataReturn(A.Dummy<Scheme>(), A.Dummy<Quarter>());
-            var dataReturnVersion = new DataReturnVersion(dataReturn);
+            var dataReturnVersion = new DataReturnVersion(dataReturn,
+                A.Dummy<WeeeCollectedReturnVersion>(), A.Dummy<WeeeDeliveredReturnVersion>(), A.Dummy<EeeOutputReturnVersion>());
 
             // Act
             dataReturnVersion.Submit("test@co.uk");
@@ -42,11 +44,12 @@
             // Assert
             Assert.Throws<InvalidOperationException>(action);
         }
-                   
+
         [Fact]
         public void ConstructsDataReturnVersion_WithNullDataReturn_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new DataReturnVersion(null));
+            Assert.Throws<ArgumentNullException>(() => new DataReturnVersion(null,
+                A.Dummy<WeeeCollectedReturnVersion>(), A.Dummy<WeeeDeliveredReturnVersion>(), A.Dummy<EeeOutputReturnVersion>()));
         }
     }
 }

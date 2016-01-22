@@ -116,7 +116,7 @@
                 }
             }
 
-            return dataReturnVersionBuilder.Build();
+            return await dataReturnVersionBuilder.Build();
         }
     }
 }

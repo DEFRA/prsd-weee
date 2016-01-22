@@ -15,21 +15,10 @@
 
         public virtual ICollection<WeeeDeliveredAmount> WeeeDeliveredAmounts { get; private set; }
 
-        /// <summary>
-        /// This constructor is used by Entity Framework.
-        /// </summary>
-        protected WeeeDeliveredReturnVersion()
+        public WeeeDeliveredReturnVersion()
         {
-        }
-
-        public WeeeDeliveredReturnVersion(DataReturnVersion dataReturnVersion)
-        {
-            Guard.ArgumentNotNull(() => dataReturnVersion, dataReturnVersion);
-
             DataReturnVersions = new List<DataReturnVersion>();
             WeeeDeliveredAmounts = new List<WeeeDeliveredAmount>();
-
-            DataReturnVersions.Add(dataReturnVersion);
         }
 
         public void AddWeeeDeliveredAmount(WeeeDeliveredAmount weeeDeliveredAmount)

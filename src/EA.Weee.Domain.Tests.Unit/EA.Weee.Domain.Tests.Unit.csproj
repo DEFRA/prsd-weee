@@ -109,6 +109,7 @@
     <Compile Include="Producer\ProducerBusinessTests.cs" />
     <Compile Include="Producer\ProducerContactTests.cs" />
     <Compile Include="Producer\ProducerSubmissionTests.cs" />
+    <Compile Include="Producer\RegisteredProducerTests.cs" />
     <Compile Include="Producer\SICCodeTests.cs" />
     <Compile Include="Scheme\MemberUploadTests.cs" />
     <Compile Include="Scheme\SchemeTests.cs" />

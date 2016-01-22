@@ -17,20 +17,12 @@
     public class DataReturnVersionBuilderTests
     {
         [Fact]
-        public void InvokeBuild_WithoutAddingAnyReturns_ThrowsInvalidOperationException()
-        {
-            var builder = new DataReturnVersionBuilderHelper().Create();
-
-            Assert.Throws<InvalidOperationException>(() => builder.Build());
-        }
-
-        [Fact]
         public async Task Build_ReturnsDataReturnVersionWhenNoErrors()
         {
             var builder = new DataReturnVersionBuilderHelper().CreateWithErrorData(new List<ErrorData>());
             await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
 
-            var result = builder.Build();
+            var result = await builder.Build();
 
             Assert.NotNull(result.DataReturnVersion);
         }
@@ -43,7 +35,7 @@
             var builder = new DataReturnVersionBuilderHelper().CreateWithErrorData(warnings);
             await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
 
-            var result = builder.Build();
+            var result = await builder.Build();
 
             Assert.NotNull(result.DataReturnVersion);
             Assert.Equal(warnings, result.ErrorData);
@@ -56,7 +48,7 @@
             var builder = new DataReturnVersionBuilderHelper().CreateWithErrorData(errors);
             await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
 
-            var result = builder.Build();
+            var result = await builder.Build();
 
             Assert.Null(result.DataReturnVersion);
             Assert.Equal(errors, result.ErrorData);
@@ -73,7 +65,7 @@
             var builder = helper.Create();
             await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
 
-            var result = builder.Build();
+            var result = await builder.Build();
 
             Assert.NotNull(result.DataReturnVersion.DataReturn);
         }
@@ -91,7 +83,7 @@
             var builder = helper.Create();
             await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
 
-            var result = builder.Build();
+            var result = await builder.Build();
 
             Assert.Equal(dataReturn, result.DataReturnVersion.DataReturn);
         }
@@ -102,7 +94,7 @@
             var builder = new DataReturnVersionBuilderHelper().Create();
             await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
 
-            var result = builder.Build();
+            var result = await builder.Build();
 
             Assert.Equal(1, result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Count);
             Assert.Collection(result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts,
@@ -115,7 +107,7 @@
             var builder = new DataReturnVersionBuilderHelper().Create();
             await builder.AddAeDeliveredAmount("Approval Number", "Operator name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
 
-            var result = builder.Build();
+            var result = await builder.Build();
 
             Assert.Equal(1, result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Count);
             Assert.Collection(result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts,
@@ -130,7 +122,7 @@
             var builder = new DataReturnVersionBuilderHelper().Create();
             await builder.AddWeeeCollectedAmount(type, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
 
-            var result = builder.Build();
+            var result = await builder.Build();
 
             Assert.Equal(1, result.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts.Count);
 
@@ -152,7 +144,7 @@
             var builder = helper.Create();
             await builder.AddEeeOutputAmount("Registration Number", A<string>._, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
 
-            var result = builder.Build();
+            var result = await builder.Build();
 
             Assert.Equal(1, result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts.Count);
             Assert.Collection(result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts,
@@ -173,7 +165,7 @@
             var builder = helper.Create();
             await builder.AddEeeOutputAmount("Registration Number", A<string>._, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
 
-            var result = builder.Build();
+            var result = await builder.Build();
 
             Assert.Equal(1, result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts.Count);
             Assert.Collection(result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts,
@@ -191,7 +183,7 @@
             var builder = helper.Create();
             await builder.AddEeeOutputAmount("Registration Number", A<string>._, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
 
-            builder.Build();
+            await builder.Build();
 
             A.CallTo(() => helper.DataAccess.GetRegisteredProducer(A<string>._))
                 .MustNotHaveHappened();
@@ -210,7 +202,7 @@
             var builder = helper.Create();
             await builder.AddEeeOutputAmount("Registration Number", A<string>._, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
 
-            var result = builder.Build();
+            var result = await builder.Build();
 
             Assert.Equal(2, result.ErrorData.Count);
             Assert.Contains(result.ErrorData, r => r.ErrorLevel == ErrorLevel.Warning);
@@ -257,7 +249,7 @@
             await builder.AddEeeOutputAmount(reg2Prn, A<string>._, A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
 
             // Act
-            var result = builder.Build();
+            var result = await builder.Build();
 
             // Assert
             // Only outputs one of each duplicate error/warning
