@@ -6,7 +6,10 @@
     using System.Threading.Tasks;
     using System.Xml.Serialization;
     using Domain;
+    using Domain.Error;
+    using Domain.Obligation;
     using Domain.Producer;
+    using Domain.Producer.Classfication;
     using Domain.Scheme;
     using GenerateDomainObjects.DataAccess;
     using Interfaces;

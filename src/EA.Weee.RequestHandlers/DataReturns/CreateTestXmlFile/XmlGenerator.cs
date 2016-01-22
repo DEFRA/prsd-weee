@@ -6,6 +6,7 @@
     using System.Xml.Linq;
     using Domain;
     using Domain.Lookup;
+    using Domain.Obligation;
     using Domain.Producer;
     using EA.Weee.Domain.DataReturns;
     using Prsd.Core;

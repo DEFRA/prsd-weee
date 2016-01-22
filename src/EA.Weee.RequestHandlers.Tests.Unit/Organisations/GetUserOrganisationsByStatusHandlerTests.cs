@@ -130,10 +130,10 @@
 
             return helper.GetAsyncEnabledDbSet(new[]
             {   
-                orgUserHelper.GetOrganisationUser(userID, Domain.UserStatus.Active),
-                orgUserHelper.GetOrganisationUser(userID, Domain.UserStatus.Pending),
-                orgUserHelper.GetOrganisationUser(userID, Domain.UserStatus.Rejected),
-                orgUserHelper.GetOrganisationUser(otherUserID, Domain.UserStatus.Active)
+                orgUserHelper.GetOrganisationUser(userID, Domain.User.UserStatus.Active),
+                orgUserHelper.GetOrganisationUser(userID, Domain.User.UserStatus.Pending),
+                orgUserHelper.GetOrganisationUser(userID, Domain.User.UserStatus.Rejected),
+                orgUserHelper.GetOrganisationUser(otherUserID, Domain.User.UserStatus.Active)
             });
         }
 
@@ -143,14 +143,14 @@
 
             return helper.GetAsyncEnabledDbSet(new[]
             {
-                MakeOrganisationUserWithOrganisation(userGuid, Domain.UserStatus.Active, Domain.Organisation.OrganisationStatus.Complete),
-                MakeOrganisationUserWithOrganisation(userGuid, Domain.UserStatus.Active, Domain.Organisation.OrganisationStatus.Incomplete),
-                MakeOrganisationUserWithOrganisation(userGuid, Domain.UserStatus.Rejected, Domain.Organisation.OrganisationStatus.Complete),
-                MakeOrganisationUserWithOrganisation(otherUserID, Domain.UserStatus.Active, Domain.Organisation.OrganisationStatus.Complete)
+                MakeOrganisationUserWithOrganisation(userGuid, Domain.User.UserStatus.Active, Domain.Organisation.OrganisationStatus.Complete),
+                MakeOrganisationUserWithOrganisation(userGuid, Domain.User.UserStatus.Active, Domain.Organisation.OrganisationStatus.Incomplete),
+                MakeOrganisationUserWithOrganisation(userGuid, Domain.User.UserStatus.Rejected, Domain.Organisation.OrganisationStatus.Complete),
+                MakeOrganisationUserWithOrganisation(otherUserID, Domain.User.UserStatus.Active, Domain.Organisation.OrganisationStatus.Complete)
             });
         }
 
-        private OrganisationUser MakeOrganisationUserWithOrganisation(Guid userGuid, Domain.UserStatus userStatus, Domain.Organisation.OrganisationStatus organisationStatus)
+        private OrganisationUser MakeOrganisationUserWithOrganisation(Guid userGuid, Domain.User.UserStatus userStatus, Domain.Organisation.OrganisationStatus organisationStatus)
         {
             var fakeOrganisation = A.Fake<Organisation>();
             A.CallTo(() => fakeOrganisation.OrganisationStatus).Returns(organisationStatus);

@@ -1,9 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.DataReturns.CreateTestXmlFile
 {
     using System.Diagnostics.CodeAnalysis;
-    using Domain;
     using Domain.DataReturns;
     using Domain.Lookup;
+    using Domain.Obligation;
     using Domain.Producer;
     using FakeItEasy;
     using RequestHandlers.DataReturns.CreateTestXmlFile;

@@ -6,8 +6,8 @@
     using System.Linq;
     using Core.Helpers;
     using DataAccess;
-    using Domain;
     using Domain.Organisation;
+    using Domain.User;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Users.GetManageableOrganisationUsers;

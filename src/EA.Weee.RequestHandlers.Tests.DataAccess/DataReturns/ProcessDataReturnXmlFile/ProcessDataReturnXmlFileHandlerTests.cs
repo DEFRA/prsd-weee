@@ -179,9 +179,9 @@
                 var dataReturnUpload = domainHelper.GetDataReturnUpload(dataReturnUploadId);
 
                 Assert.Equal(2, dataReturnUpload.Errors.Count);
-                Assert.All(dataReturnUpload.Errors, e => Assert.Equal(Domain.UploadErrorType.Schema, e.ErrorType));
-                Assert.Contains(dataReturnUpload.Errors, p => p.ErrorLevel == Domain.ErrorLevel.Error && p.Description == "Error text1");
-                Assert.Contains(dataReturnUpload.Errors, p => p.ErrorLevel == Domain.ErrorLevel.Error && p.Description == "Error text2");
+                Assert.All(dataReturnUpload.Errors, e => Assert.Equal(Domain.Error.UploadErrorType.Schema, e.ErrorType));
+                Assert.Contains(dataReturnUpload.Errors, p => p.ErrorLevel == Domain.Error.ErrorLevel.Error && p.Description == "Error text1");
+                Assert.Contains(dataReturnUpload.Errors, p => p.ErrorLevel == Domain.Error.ErrorLevel.Error && p.Description == "Error text2");
             }
         }
 
@@ -235,9 +235,9 @@
                 var dataReturnUpload = domainHelper.GetDataReturnUpload(dataReturnUploadId);
 
                 Assert.Equal(2, dataReturnUpload.Errors.Count);
-                Assert.All(dataReturnUpload.Errors, e => Assert.Equal(Domain.UploadErrorType.Business, e.ErrorType));
-                Assert.Contains(dataReturnUpload.Errors, p => p.ErrorLevel == Domain.ErrorLevel.Error && p.Description == "Error text");
-                Assert.Contains(dataReturnUpload.Errors, p => p.ErrorLevel == Domain.ErrorLevel.Warning && p.Description == "Warning text");
+                Assert.All(dataReturnUpload.Errors, e => Assert.Equal(Domain.Error.UploadErrorType.Business, e.ErrorType));
+                Assert.Contains(dataReturnUpload.Errors, p => p.ErrorLevel == Domain.Error.ErrorLevel.Error && p.Description == "Error text");
+                Assert.Contains(dataReturnUpload.Errors, p => p.ErrorLevel == Domain.Error.ErrorLevel.Warning && p.Description == "Warning text");
             }
         }
 

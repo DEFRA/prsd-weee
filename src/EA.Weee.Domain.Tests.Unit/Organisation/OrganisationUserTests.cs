@@ -2,6 +2,7 @@
 {
     using System;
     using Domain.Organisation;
+    using Domain.User;
     using Xunit;
 
     public class OrganisationUserTests

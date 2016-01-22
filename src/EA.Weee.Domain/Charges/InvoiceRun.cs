@@ -2,12 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using Domain.Scheme;
+    using Domain.User;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
-    using EA.Weee.Domain.Scheme;
 
     /// <summary>
     /// An invoice run is a collection of member uploads which have been grouped

@@ -10,7 +10,7 @@
     using Domain.DataReturns;
     using Domain.Lookup;
     using Prsd.Core;
-    using ObligationType = Domain.ObligationType;
+    using ObligationType = Domain.Obligation.ObligationType;
     using Scheme = Domain.Scheme.Scheme;
 
     public class DataReturnVersionBuilder : IDataReturnVersionBuilder
