@@ -22,7 +22,7 @@
         /// <returns></returns>
         Task<List<ProducerSubmission>> Fetch(string registrationNumber);
 
-        Task<IEnumerable<ProducerEeeByQuarter>> EeeOutputForComplianceYear(string registrationNumber, int complianceYear,
+        Task<IEnumerable<ProducerEeeByQuarter>> EeeOutputBySchemeAndComplianceYear(string registrationNumber, int complianceYear,
             Guid schemeId);
     }
 }

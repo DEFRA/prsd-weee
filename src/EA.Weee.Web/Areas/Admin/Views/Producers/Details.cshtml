@@ -24,27 +24,27 @@
         <div class="section-tabs">
             <ul>
                 <li class="active">
-                    <a id="registration-details-tab" href="#">Registration details</a>
+                    <a href="#" id="@(scheme.ChargeBandType)-registration-details-tab">Registration details</a>
+                </li>
+                <li >
+                    <a href="#" id="@(scheme.ChargeBandType)-total-eee-details-tab">Total EEE</a>
+                </li>
+                <li >
+                    <a href="#" id="@(scheme.ChargeBandType)-q1-details-tab">Q1</a>
+                </li>
+                <li >
+                    <a href="#" id="@(scheme.ChargeBandType)-q2-details-tab">Q2</a>
                 </li>
                 <li>
-                    <a id="total-eee-details-tab" href="#">Total EEE</a>
+                    <a href="#" id="@(scheme.ChargeBandType)-q3-details-tab">Q3</a>
                 </li>
                 <li>
-                    <a id="q1-details-tab" href="#">Q1</a>
-                </li>
-                <li>
-                    <a id="q2-details-tab" href="#">Q2</a>
-                </li>
-                <li>
-                    <a id="q3-details-tab" href="#">Q3</a>
-                </li>
-                <li>
-                    <a id="q4-details-tab" href="#">Q4</a>
+                    <a href="#" id="q4-details-tab">Q4</a>
                 </li>
             </ul>
         </div>
 
-        <table id="registration-details-table">
+        <table id="@(scheme.ChargeBandType)-registration-details-table">
             <thead>
                 <tr class="visuallyhidden">
                     <th colspan="2">Producer Details</th>
@@ -96,7 +96,7 @@
             </tbody>
         </table>
 
-        <table id="total-eee-details-table" class="visually-hidden">
+        <table id="@(scheme.ChargeBandType)-total-eee-details-table" class="visually-hidden">
             <thead>
                 <tr class="visuallyhidden">
                     <th colspan="3">Total EEE</th>
@@ -183,7 +183,7 @@
             </tbody>
         </table>
 
-        <table id="q1-details-table" class="visually-hidden">
+        <table id="@(scheme.ChargeBandType)-q1-details-table" class="visually-hidden">
             <thead>
             <tr class="visuallyhidden">
                 <th colspan="3">Q1 EEE</th>
@@ -268,7 +268,7 @@
             </tbody>
         </table>
 
-        <table id="q2-details-table" class="visually-hidden">
+        <table id="@(scheme.ChargeBandType)-q2-details-table" class="visually-hidden">
             <thead>
             <tr class="visuallyhidden">
                 <th colspan="3">Q2 EEE</th>
@@ -354,7 +354,7 @@
         </table>
 
 
-        <table id="q3-details-table" class="visually-hidden">
+        <table id="@(scheme.ChargeBandType)-q3-details-table" class="visually-hidden">
             <thead>
                 <tr class="visuallyhidden">
                     <th colspan="3">Q3 EEE</th>
@@ -440,7 +440,7 @@
         </table>
 
 
-        <table id="q4-details-table" class="visually-hidden">
+        <table id="@(scheme.ChargeBandType)-q4-details-table" class="visually-hidden">
             <thead>
                 <tr class="visuallyhidden">
                     <th colspan="3">Q4 EEE</th>
@@ -537,7 +537,8 @@
 
 @section scripts {
     <script type="text/javascript">
-        $("a[id$='details-tab']").click(function () {
+        $("a[id$='details-tab']").click(function (event) {
+            event.preventDefault();
 
             // Inactivate all tabs
             $("a[id$='details-tab']").each(function () {

@@ -44,7 +44,7 @@
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<ProducerEeeByQuarter>> EeeOutputForComplianceYear(string registrationNumber, int complianceYear, Guid schemeId)
+        public async Task<IEnumerable<ProducerEeeByQuarter>> EeeOutputBySchemeAndComplianceYear(string registrationNumber, int complianceYear, Guid schemeId)
         {
             return await
                 context.DataReturns
