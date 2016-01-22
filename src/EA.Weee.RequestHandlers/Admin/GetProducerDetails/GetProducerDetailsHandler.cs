@@ -93,7 +93,7 @@
                     ProducerEeeDetails =
                         mapper.Map<IEnumerable<ProducerEeeByQuarter>, ProducerEeeDetails>(
                             (await
-                                dataAccess.EeeOutputForComplianceYear(request.RegistrationNumber, complianceYear,
+                                dataAccess.EeeOutputBySchemeAndComplianceYear(request.RegistrationNumber, complianceYear,
                                     schemeGroup.Key.Id)))
                 };
 
