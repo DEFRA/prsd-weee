@@ -393,8 +393,7 @@
                 {
                     return View(model);
                 }
-                //return await DownloadProducerEEEDataCSV(model, client);
-                return View(model);
+                return await DownloadUkEeeDataCsv(model, client);
             }
         }
 
@@ -513,6 +512,15 @@
 
             byte[] data = new UTF8Encoding().GetBytes(producerEEECsvData.FileContent);
             return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerEEECsvData.FileName));
+        }
+
+        private async Task<ActionResult> DownloadUkEeeDataCsv(UKEEEDataViewModel model, IWeeeClient client)
+        {
+            var ukEeeCsvData = await client.SendAsync(User.GetAccessToken(),
+               new GetUkEeeDataCsv(model.SelectedYear));
+
+            byte[] data = new UTF8Encoding().GetBytes(ukEeeCsvData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(ukEeeCsvData.FileName));
         }
     }
 }
