@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Domain;
+    using Domain.Error;
     using Domain.Lookup;
 
     /// <summary>
@@ -520,6 +520,11 @@
             {
                 dataReturnUpload.DataReturnVersionId = dataReturnVersion.Id;
                 dataReturnUpload.DataReturnVersion = dataReturnVersion;
+
+                if (dataReturnVersion.DataReturn != null)
+                {
+                    dataReturnUpload.ComplianceYear = dataReturnVersion.DataReturn.ComplianceYear;
+                }
             }
 
             model.DataReturnUploads.Add(dataReturnUpload);
@@ -561,9 +566,12 @@
             return dataReturn;
         }
 
-        public DataReturnVersion CreateDataReturnVersion(Scheme scheme, int complianceYear, int quarter, bool isSubmitted = true)
+        public DataReturnVersion CreateDataReturnVersion(Scheme scheme, int complianceYear, int quarter, bool isSubmitted = true, DataReturn dataReturn = null)
         {
-            var dataReturn = GetOrCreateDataReturn(scheme, complianceYear, quarter);
+            if (dataReturn == null)
+            {
+                dataReturn = GetOrCreateDataReturn(scheme, complianceYear, quarter);
+            }
 
             Guid dataReturnVersionId = IntegerToGuid(GetNextId());
 

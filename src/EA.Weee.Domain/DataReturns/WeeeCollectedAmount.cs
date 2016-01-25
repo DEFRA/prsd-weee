@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using Lookup;
+    using Obligation;
     using Prsd.Core;
 
     public class WeeeCollectedAmount : ReturnItem

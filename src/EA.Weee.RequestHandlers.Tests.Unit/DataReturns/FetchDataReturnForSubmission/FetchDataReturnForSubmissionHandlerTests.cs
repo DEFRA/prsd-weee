@@ -9,6 +9,7 @@
     using Core.DataReturns;
     using Domain;
     using Domain.DataReturns;
+    using Domain.Error;
     using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.DataReturns.FetchDataReturnForSubmission;

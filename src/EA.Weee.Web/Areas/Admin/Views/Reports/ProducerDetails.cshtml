@@ -4,17 +4,20 @@
     ViewBag.Title = "Producer details";
 }
 
-@section main_content {
-
-<header class="hgroup">
+@section main_content
+{
+    <header class="hgroup">
         <h1 class="heading-large">Download producer details</h1>
     </header>
+
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
-        @Html.HiddenFor(m => m.FilterbyScheme)
+        @Html.HiddenFor(m => m.FilterByScheme)
+
         <p>Your report will contain the latest details registered for each producer based on the criteria you select. All producer details provided by the PCS in their XML file will be available.</p>
+        
         <p>Select the relevant criteria for your report. Your results will be provided as a CSV file download.</p>
 
         @Html.Partial("_ReportSearchFilters")
@@ -25,10 +28,27 @@
 
         @(this.WeeeGds().Submit("Download", new { @class = "button" }))
     }
+
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
     </p>
     <p>
-        <a href="javascript:history.back();">Back</a>
+        @Html.ActionLink("Back", "ChooseReport")
     </p>
+}
+
+@section scripts
+{
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadProducerDetailsCsv", new
+                          {
+                              complianceYear = Model.SelectedYear,
+                              schemeId = Model.SelectedScheme,
+                              authorityId = Model.SelectedAA,
+                              includeRemovedProducers = Model.IncludeRemovedProducer
+                          }))";
+        </script>
+    }
 }

@@ -5,8 +5,8 @@
     @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
     @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
 </div>
-<div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedObligationtype)">
-    @Html.Gds().LabelFor(m => m.SelectedObligationtype)
-    @Html.Gds().ValidationMessageFor(m => m.SelectedObligationtype)
-    @Html.Gds().DropDownListFor(m => m.SelectedObligationtype, Model.Obligationtypes, string.Empty, new { autocomplete = "false" })
+<div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedObligationType)">
+    @Html.Gds().LabelFor(m => m.SelectedObligationType)
+    @Html.Gds().ValidationMessageFor(m => m.SelectedObligationType)
+    @Html.Gds().DropDownListFor(m => m.SelectedObligationType, Model.ObligationTypes, string.Empty, new { autocomplete = "false" })
 </div>

@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using Core.Shared;
     using Domain.Lookup;
-    using ObligationType = Domain.ObligationType;
+    using ObligationType = Domain.Obligation.ObligationType;
 
     public interface IEeeValidator
     {

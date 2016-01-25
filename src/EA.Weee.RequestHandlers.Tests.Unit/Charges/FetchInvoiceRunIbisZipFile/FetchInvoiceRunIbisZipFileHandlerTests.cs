@@ -8,6 +8,7 @@
     using Domain;
     using Domain.Charges;
     using Domain.Scheme;
+    using Domain.User;
     using FakeItEasy;
     using Prsd.Core;
     using RequestHandlers.Charges;
