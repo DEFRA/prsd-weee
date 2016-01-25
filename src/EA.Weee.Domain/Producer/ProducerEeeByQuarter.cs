@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using DataReturns;
-    using Scheme;
 
     public class ProducerEeeByQuarter
     {
