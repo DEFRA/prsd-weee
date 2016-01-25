@@ -48,7 +48,7 @@
             if (quarterWindow.IsAfterWindow(currentDate))
             {
                 var errorMessage = string.Format(
-                    "The window for resubmitting data returns for the {0} compliance period has closed. Contact your relevant agency.",
+                    "The window for resubmitting data returns for the {0} compliance period has closed.",
                     quarter.Year);
 
                 result.Add(new ErrorData(errorMessage, ErrorLevel.Error));
