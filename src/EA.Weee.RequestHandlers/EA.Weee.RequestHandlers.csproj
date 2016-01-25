@@ -106,6 +106,7 @@
     <Compile Include="Admin\Reports\GetUKWeeeCsv\GetUKWeeeCsvDataAccess.cs" />
     <Compile Include="Admin\Reports\GetUKWeeeCsv\GetUKWeeeCsvHandler.cs" />
     <Compile Include="Admin\Reports\GetUKWeeeCsv\IGetUKWeeeCsvDataAccess.cs" />
+    <Compile Include="Admin\Reports\GetUkEeeDataCsvHandler.cs" />
     <Compile Include="Charges\CommonDataAccess.cs" />
     <Compile Include="Charges\FetchComplianceYearsWithInvoices\FetchComplianceYearsWithInvoicesHandler.cs" />
     <Compile Include="Charges\FetchInvoiceRunCsv\FetchInvoiceRunCsvHandler.cs" />
