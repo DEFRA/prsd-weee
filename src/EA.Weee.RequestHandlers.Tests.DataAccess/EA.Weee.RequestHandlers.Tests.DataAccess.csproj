@@ -92,6 +92,7 @@
     <Compile Include="Charging\FetchInvoiceRuns\FetchInvoiceRunsDataAccessTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationActiveComplianceYearsDataAccessTests.cs" />
     <Compile Include="Charging\FetchIssuedChargesCsv\FetchIssuedChargesCsvDataAccessTests.cs" />
+    <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeDataAccessTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileHandlerDataAccessTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXmlFileHandlerTests.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderDataAccessTests.cs" />
