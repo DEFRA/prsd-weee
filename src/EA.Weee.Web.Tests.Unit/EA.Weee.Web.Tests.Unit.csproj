@@ -189,6 +189,7 @@
     <Compile Include="Controllers\ErrorsControllerTests.cs" />
     <Compile Include="Controllers\OrganisationControllerTests.cs" />
     <Compile Include="Controllers\OrganisationRegistrationControllerTests.cs" />
+    <Compile Include="Extensions\ProducerEeeDetailsExtensionsTests.cs" />
     <Compile Include="Requests\RequestCreatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers\ActionExecutingContextHelper.cs" />

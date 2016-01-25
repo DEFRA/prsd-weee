@@ -10,13 +10,6 @@
 
     public class ProducerEeeMap : IMap<IEnumerable<ProducerEeeByQuarter>, ProducerEeeDetails>
     {
-        private readonly IMapper mapper;
-
-        public ProducerEeeMap(IMapper mapper)
-        {
-            this.mapper = mapper;
-        }
-
         public ProducerEeeDetails Map(IEnumerable<ProducerEeeByQuarter> source)
         {
             return new ProducerEeeDetails
@@ -25,7 +18,7 @@
                 Q2EEE = FilterEeeByQuarter(source, QuarterSelection.Q2).ToList(),
                 Q3EEE = FilterEeeByQuarter(source, QuarterSelection.Q3).ToList(),
                 Q4EEE = FilterEeeByQuarter(source, QuarterSelection.Q4).ToList(),
-                TotalEEE = FilterEeeByQuarter(source, QuarterSelection.All).ToList()
+                TotalEee = FilterEeeByQuarter(source, QuarterSelection.All).ToList()
             };
         }
 
@@ -34,26 +27,35 @@
             switch (quarterSelection)
             {
                 case QuarterSelection.All:
-                    break;
+
+                    if (source.Any())
+                    {
+                        return source
+                        .Select(eee => eee.Eee)
+                        .Aggregate((prev, curr) => prev.Concat(curr))
+                        .GroupBy(eee => new { eee.ObligationType, eee.WeeeCategory })
+                        .Select(g => new Eee(g.Sum(eee => eee.Tonnage),
+                            (WeeeCategory)(int)g.Key.WeeeCategory,
+                            (ObligationType)(int)g.Key.ObligationType));
+                    }
+
+                    return new List<Eee>();
+
                 default:
-                   source = source
-                        .Where(s => (int)s.Quarter.Q == (int)quarterSelection)
-                        .ToList();
-                    break;
-            }
+                    source = source
+                        .Where(s => (int)s.Quarter.Q == (int)quarterSelection);
 
-            if (!source.Any())
-            {
-                return new List<Eee>();
-            }
+                    if (source.Any())
+                    {
+                        return source.Select(eee => eee.Eee)
+                        .Aggregate((prev, curr) => prev.Concat(curr))
+                        .Select(eee => new Eee(eee.Tonnage,
+                            (WeeeCategory)(int)eee.WeeeCategory,
+                            (ObligationType)(int)eee.ObligationType));
+                    }
 
-            return source
-                .Select(eee => eee.Eee)
-                .Aggregate((prev, curr) => prev.Concat(curr))
-                .Select(
-                    eee =>
-                        new Eee(eee.Tonnage, mapper.Map<Domain.Lookup.WeeeCategory, WeeeCategory>(eee.WeeeCategory),
-                            mapper.Map<Domain.ObligationType, ObligationType>(eee.ObligationType)));
+                    return new List<Eee>();
+            }      
         }
     }
 }

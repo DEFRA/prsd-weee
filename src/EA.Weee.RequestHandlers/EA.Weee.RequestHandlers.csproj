@@ -163,9 +163,7 @@
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandler.cs" />
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitReturnVersionDataAccess.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
-    <Compile Include="Mappings\ObligationTypeMap.cs" />
     <Compile Include="Mappings\ProducerEeeMap.cs" />
-    <Compile Include="Mappings\WeeeCategoryMapping.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
