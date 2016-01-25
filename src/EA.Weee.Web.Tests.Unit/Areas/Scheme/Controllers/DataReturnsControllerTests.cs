@@ -635,6 +635,27 @@
             Assert.Equal(new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"), redirectToRouteResult.RouteValues["pcsId"]);
         }
 
+        [Fact]
+        public async void Manage_ManageOfLatestDataReturnUploads()
+        {
+            await DataReturnsController().Manage(A<Guid>._);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnComplianceYearsForScheme>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+       
+        [Fact]
+        public async void Manage_HasUploadForThisScheme_ReturnsViewWithManageModel()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnComplianceYearsForScheme>._))
+                .Returns(new List<int>() { 2015, 2016 });
+
+            var result = await DataReturnsController().Manage(A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.IsType<List<int>>(((ViewResult)result).Model);
+        }
+
         private DataReturnsController GetRealDataReturnsControllerWithFakeContext()
         {
             var controller = DataReturnsController();
