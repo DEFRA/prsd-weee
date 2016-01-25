@@ -23,6 +23,11 @@
             return new ProgressiveDisclosure<TModel>(this, linkText);
         }
 
+        public SummaryExpansion<TModel> SummaryExpansion(string summaryText, string htmlclass, string eventCategory, string eventAction, string eventLabel = null)
+        {
+            return new SummaryExpansion<TModel>(this, summaryText, htmlclass, eventCategory, eventAction, eventLabel);
+        }
+
         public string EventTrackingFunction(string eventCategory, string eventAction, string eventLabel = null)
         {
             string result;

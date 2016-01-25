@@ -46,7 +46,7 @@
         }
 
         [Fact]
-        public async Task InvokeRemove_ForAlreadyRemovedProducer_ThrowsInvalidOperationException()
+        public void InvokeRemove_ForAlreadyRemovedProducer_ThrowsInvalidOperationException()
         {
             var producer = new RegisteredProducer("ABC12345", 2017, A.Dummy<Scheme>());
             producer.Remove();
