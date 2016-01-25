@@ -1,0 +1,24 @@
+﻿@model EA.Weee.Web.Areas.Scheme.ViewModels.ChooseActivityViewModel
+@{
+    ViewBag.Title = "Cannot Submit DataReturn";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="heading-large">
+            You cannot submit an EEE/WEEE data return
+        </h1>
+    </header>
+
+    @Html.HiddenFor(m => m.OrganisationId)
+
+    <p>The submission window for 2016 data returns is now closed.</p>
+
+    <p>You can submit a return for 2017 from 1 April 2017.</p>
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @area = "Scheme" }, new { @class = "button" })
+    </p>
+}
+
