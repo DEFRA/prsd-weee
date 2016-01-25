@@ -225,5 +225,15 @@
                     complianceYearParameter,
                     obligationTypeParameter).ToListAsync();
         }
+
+        public async Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear)
+        {
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+
+            return await context.Database
+                .SqlQuery<UkEeeCsvData>(
+                    "[Producer].[SpgUKEEEDataByComplianceYear] @ComplianceYear",
+                    complianceYearParameter).ToListAsync();
+        }
     }
 }

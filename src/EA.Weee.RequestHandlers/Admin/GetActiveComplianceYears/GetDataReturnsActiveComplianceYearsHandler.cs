@@ -7,7 +7,7 @@
     using Requests.Admin.GetActiveComplianceYears;
     using Security;
 
-    public class GetDataReturnsActiveComplianceYearsHandler : IRequestHandler<GetDataReturnsActiveComplianceYears, List<int>>
+    internal class GetDataReturnsActiveComplianceYearsHandler : IRequestHandler<GetDataReturnsActiveComplianceYears, List<int>>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGetDataReturnsActiveComplianceYearsDataAccess dataAccess;
