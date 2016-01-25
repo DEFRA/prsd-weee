@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets
 {
-    using Domain;
     using Domain.Producer;
     using System;
     using System.Collections.Generic;
-
+    using Domain.Obligation;
     public interface IProducerQuerySet
     {
         ProducerSubmission GetLatestProducerForComplianceYearAndScheme(string registrationNo, string schemeComplianceYear, Guid organisationId);

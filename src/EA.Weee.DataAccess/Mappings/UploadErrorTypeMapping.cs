@@ -1,8 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
     using System.Data.Entity.ModelConfiguration;
-    using Domain;
-
+    using Domain.Error;
     internal class UploadErrorTypeMapping : ComplexTypeConfiguration<UploadErrorType>
     {
         public UploadErrorTypeMapping()

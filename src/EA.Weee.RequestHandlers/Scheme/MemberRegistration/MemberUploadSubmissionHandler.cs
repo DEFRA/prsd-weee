@@ -4,7 +4,7 @@
     using System.Data.Entity;
     using System.Threading.Tasks;
     using DataAccess;
-    using Domain;
+    using Domain.User;
     using Prsd.Core.Mediator;
     using Requests.Scheme.MemberRegistration;
     using Security;
