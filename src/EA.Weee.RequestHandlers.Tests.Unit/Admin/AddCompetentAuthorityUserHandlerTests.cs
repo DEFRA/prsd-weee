@@ -7,6 +7,7 @@
     using DataAccess;
     using Domain;
     using Domain.Admin;
+    using Domain.User;
     using FakeItEasy;
     using RequestHandlers.Admin;
     using Requests.Admin;

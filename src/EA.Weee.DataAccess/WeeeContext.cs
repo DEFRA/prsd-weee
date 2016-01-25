@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.DataAccess
 {
-    using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading;
@@ -14,7 +13,7 @@
     using Domain.Organisation;
     using Domain.Producer;
     using Domain.Scheme;
-    using Extensions;
+    using Domain.User;
     using Prsd.Core;
     using Prsd.Core.DataAccess.Extensions;
     using Prsd.Core.Domain;

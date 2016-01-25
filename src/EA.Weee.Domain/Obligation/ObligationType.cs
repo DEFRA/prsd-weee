@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Domain
+﻿namespace EA.Weee.Domain.Obligation
 {
     using System;
     using System.ComponentModel.DataAnnotations;

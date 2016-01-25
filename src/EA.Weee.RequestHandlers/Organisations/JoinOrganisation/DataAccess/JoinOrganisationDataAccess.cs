@@ -3,8 +3,8 @@
     using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
-    using Domain;
     using Domain.Organisation;
+    using Domain.User;
     using Weee.DataAccess;
 
     public class JoinOrganisationDataAccess : IJoinOrganisationDataAccess

@@ -2,91 +2,114 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.MemberUploadResultViewModel
 @{
-    ViewBag.Title = "View errors and warnings";
+	ViewBag.Title = "View errors and warnings";
 }
 
 @section main_content {
 
-    <header class="hgroup">
-        <div>
-            @{
-                int numOfErrors = @Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal);
-                int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
-                string errorText = (numOfErrors > 1 ? "errors" : "error");
-                string warningText = (numWarnings > 1 ? "warnings" : "warning");
-            }
+	<header class="hgroup">
+		<div>
+			@{
+				int numOfErrors = @Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Error || e.ErrorLevel == ErrorLevel.Fatal);
+				int numWarnings = Model.ErrorData.Count(e => e.ErrorLevel == ErrorLevel.Warning);
+				string errorText = (numOfErrors > 1 ? "errors" : "error");
+				string warningText = (numWarnings > 1 ? "warnings" : "warning");
+			}
 
-            @if (numWarnings > 0)
-            {
-                <h1 class="heading-large">
-                    Your XML file contains @numOfErrors @errorText and @numWarnings @warningText
-                </h1>
-            }
-            else
-            {
-                <h1 class="heading-large">
-                    Your XML file contains @numOfErrors @errorText
-                </h1>
-            }
-        </div>
-    </header>
-    <h2 class="heading-medium">You must rectify all errors in order to successfully upload your file.</h2>
-    <p>
-        Errors are problems with the XML file structure and content, which prevent our system from validating your file. You must rectify all errors before we can continue our validation process. You may see several error messages before your file is ready to be submitted.
-    </p>
+			@if (numWarnings > 0)
+			{
+				<h1 class="heading-large">
+					Your XML file contains @numOfErrors @errorText and @numWarnings @warningText
+				</h1>
+			}
+			else
+			{
+				<h1 class="heading-large">
+					Your XML file contains @numOfErrors @errorText
+				</h1>
+			}
+		</div>
+	</header>
+	<h2 class="heading-medium">You must rectify all errors in order to successfully upload your file.</h2>
+	<p>
+		Errors are problems with the XML file structure and content, which prevent our system from validating your file. You must rectify all errors before we can continue our validation process. You may see several error messages before your file is ready to be submitted.
+	</p>
 
-    @if (numWarnings > 0)
-    {
-        <p>
-            Warnings are displayed when members details are changed or when your file contains an inconsistent value. You must review all warnings and make any necessary corrections to your file before it is ready to be submitted. Or, if you are happy with its content, you can submit your file with warnings.
-        </p>
-    }
+	@if (numWarnings > 0)
+	{
+		<p>
+			Warnings are displayed when members details are changed or when your file contains an inconsistent value. You must review all warnings and make any necessary corrections to your file before it is ready to be submitted. Or, if you are happy with its content, you can submit your file with warnings.
+		</p>
+	}
 
-    <details>
-        <summary class="error-details-summary bold-small">View @numOfErrors @errorText</summary>
-        <div class="error-list-container">
-            <ul>
-                @foreach (var uploadError in Model.ErrorData)
-                {
-                    if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
-                    {
-                        <li class="error-list-item font-xsmall">@uploadError.Description</li>
-                    }
-                }
-            </ul>
-        </div>
-    </details>
+	<details>
+		@{
+			string errorSummaryText = string.Format("View {0} {1}",numOfErrors, errorText);
+			this.WeeeGds().SummaryExpansion(errorSummaryText, "error-details-summary bold-small", "Member registration errors", "View member registration errors");
+		}
+		<div class="error-list-container">
+			<ul>
+				@foreach (var uploadError in Model.ErrorData)
+				{
+					if (uploadError.ErrorLevel == ErrorLevel.Error || uploadError.ErrorLevel == ErrorLevel.Fatal)
+					{
+				<li class="error-list-item font-xsmall">
+					@uploadError.Description
+				</li>
+					}
+				}
+			</ul>
+		</div>
+	</details>
 
-    @if (numWarnings > 0)
-    {
-        <details>
-            <summary class="warning-details-summary bold-small">View @numWarnings @warningText</summary>
-            <div class="warning-list-container">
-                <ul>
-                    @foreach (var uploadError in Model.ErrorData)
-                    {
-                        if (uploadError.ErrorLevel == ErrorLevel.Warning)
-                        {
-                            <li class="warning-list-item font-xsmall">@uploadError.Description</li>
-                        }
-                    }
-                </ul>
-            </div>
-        </details>
-    }
+	@if (numWarnings > 0)
+	{
+		<details>
+			@{
+				string warningSummaryText = string.Format("View {0} {1}", numWarnings, errorText);
+				this.WeeeGds().SummaryExpansion(warningSummaryText, "warning-details-summary bold-small", "Member registration warnings", "View member registration warnings");
+			}
+			<div class="warning-list-container">
+				<ul>
+					@foreach (var uploadError in Model.ErrorData)
+					{
+						if (uploadError.ErrorLevel == ErrorLevel.Warning)
+						{
+					<li class="warning-list-item font-xsmall">
+						@uploadError.Description
+					</li>
+						}
+					}
+				</ul>
+			</div>
+		</details>
+	}
 
-    <p>
-        To see your XML file’s full list,
-        @this.WeeeGds().ActionLinkWithEventTracking("download your errors and warnings (CSV)", "DownloadErrorsAndWarnings", "MemberRegistration",
-            "Downloads", "Errors and warnings").
-    </p>
+	<p>
+		To see your XML file’s full list,
+		@this.WeeeGds().ActionLinkWithEventTracking(
+									"Download your errors and warnings (CSV)",
+									"DownloadErrorsAndWarnings",
+									"MemberRegistration",
+									"Downloads",
+									"Errors and warnings"
+									).
+	</p>
 
-    <p>
-        @this.WeeeGds().ActionLinkWithEventTracking("Upload a new file", "AddOrAmendMembers", "MemberRegistration",
-             "Member registration loop", "Upload a new file", "Validation failed", null, new Dictionary<string, object>{{ "class", "button" }})
-    </p>
+	<p>
+		@this.WeeeGds().ActionLinkWithEventTracking(
+								   "Upload a new file",
+								   "AddOrAmendMembers",
+								   "MemberRegistration",
+								   "Member registration loop",
+								   "Upload a new file",
+								   "Validation failed",
+								   null,
+								   new Dictionary<string, object>{{ "class", "button" }}
+								   )
+	</p>
 
-    <div>
-        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
-    </div>
+	<div>
+		@Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+	</div>
 }

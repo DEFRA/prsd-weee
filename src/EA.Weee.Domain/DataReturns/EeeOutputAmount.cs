@@ -4,7 +4,7 @@
     using EA.Prsd.Core;
     using EA.Weee.Domain.Producer;
     using Lookup;
-
+    using Obligation;
     public class EeeOutputAmount : ReturnItem
     {
         public virtual RegisteredProducer RegisteredProducer { get; private set; }

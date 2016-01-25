@@ -4,10 +4,10 @@
     using System.Collections.Generic;
     using Audit;
     using Charges;
-    using Events;
     using Organisation;
     using Producer;
     using Prsd.Core;
+    using User;
 
     public class MemberUpload : AuditableEntity
     {

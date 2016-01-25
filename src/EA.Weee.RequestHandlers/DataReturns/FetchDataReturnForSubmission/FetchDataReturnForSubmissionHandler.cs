@@ -5,8 +5,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Core.DataReturns;
-    using Domain;
     using Domain.DataReturns;
+    using Domain.Error;
     using EA.Prsd.Core.Mediator;
     using Security;
     using QuarterType = EA.Weee.Core.DataReturns.QuarterType;

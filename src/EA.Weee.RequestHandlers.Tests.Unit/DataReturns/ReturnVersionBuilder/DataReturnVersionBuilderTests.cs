@@ -12,7 +12,7 @@
     using RequestHandlers.DataReturns.BusinessValidation.Rules;
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
     using Xunit;
-    using ObligationType = Domain.ObligationType;
+    using ObligationType = Domain.Obligation.ObligationType;
 
     public class DataReturnVersionBuilderTests
     {

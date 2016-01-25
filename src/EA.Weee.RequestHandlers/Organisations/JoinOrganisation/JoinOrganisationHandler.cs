@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.Organisation;
+    using Domain.User;
     using Prsd.Core.Domain;
     using Prsd.Core.Mediator;
     using Requests.Organisations;
@@ -40,7 +41,7 @@
             }
 
             var organisationUser = new OrganisationUser(userId, message.OrganisationId,
-                Domain.UserStatus.Pending);
+                Domain.User.UserStatus.Pending);
 
             var result = await dataAccess.JoinOrganisation(organisationUser);
 

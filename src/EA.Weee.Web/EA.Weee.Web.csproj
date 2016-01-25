@@ -711,6 +711,7 @@
     <Compile Include="Areas\Scheme\ViewModels\OrganisationUserViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\SchemeViewModel.cs" />
+    <Compile Include="RazorHelpers\WeeeGds.Summary.cs" />
     <Compile Include="ViewModels\Shared\Scheme\ViewOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\ManageCacheController.cs" />
     <Compile Include="Areas\Test\Controllers\CreatePcsMemberXmlFileController.cs" />
