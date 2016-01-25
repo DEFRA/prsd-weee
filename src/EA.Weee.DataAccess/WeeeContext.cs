@@ -113,8 +113,6 @@
 
         public virtual DbSet<WeeeCollectedAmount> WeeeCollectedAmounts { get; set; }
 
-        public virtual DbSet<EeeOutputAmount> EeeOutputAmounts { get; set; }
-
         public virtual DbSet<InvoiceRun> InvoiceRuns { get; set; }
 
         public virtual DbSet<QuarterWindowTemplate> QuarterWindowTemplates { get; set; }
