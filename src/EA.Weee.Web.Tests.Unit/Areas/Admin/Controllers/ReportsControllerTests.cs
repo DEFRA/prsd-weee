@@ -260,7 +260,7 @@
             Assert.NotNull(viewResult);
             Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
         }
-       
+
         /// <summary>
         /// This test ensures that the GET "ProducerDetails" action sets
         /// the breadcrumb's internal activity to "View reports".
@@ -275,7 +275,7 @@
             ReportsController controller = new ReportsController(
                 () => A.Dummy<IWeeeClient>(),
                 breadcrumb);
-            
+
             // Act
             ActionResult result = await controller.ProducerDetails();
 
@@ -615,6 +615,23 @@
         }
 
         [Fact]
+        public async Task GetUKEeeData_Always_SetsTriggerDownloadToFalse()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            ActionResult result = await controller.UKEEEData();
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
         public async void HttpPost_UKEEEData_ModelIsInvalid_ShouldRedirectViewWithError()
         {
             IWeeeClient client = A.Fake<IWeeeClient>();
@@ -627,6 +644,69 @@
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
+        }
+
+        [Fact]
+        public async Task PostUKEeeData_ModelIsInvalid_SetsTriggerDownloadToFalse()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            UKEEEDataViewModel viewModel = new UKEEEDataViewModel();
+
+            // Act
+            controller.ModelState.AddModelError("Key", "Error");
+            ActionResult result = await controller.UKEEEData(viewModel);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(false, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async Task PostUKEeeData_ValidModel_SetsTriggerDownloadToTrue()
+        {
+            // Arrange
+            ReportsController controller = new ReportsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<BreadcrumbService>());
+
+            UKEEEDataViewModel viewModel = new UKEEEDataViewModel();
+
+            // Act
+            ActionResult result = await controller.UKEEEData(viewModel);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.Equal(true, viewResult.ViewBag.TriggerDownload);
+        }
+
+        [Fact]
+        public async Task GetDownloadUkEeeDataCsv_ReturnsFileResultWithContentTypeOfTextCsv()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUkEeeDataCsv>._)).Returns(new CSVFileData
+            {
+                FileContent = "UK EEE DATA REPORT",
+                FileName = "test.csv"
+            });
+            
+            ReportsController controller = new ReportsController(
+                () => weeeClient,
+                A.Dummy<BreadcrumbService>());
+
+            // Act
+            ActionResult result = await controller.DownloadUkEeeDataCsv(2015);
+
+            // Assert
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+            Assert.Equal("text/csv", fileResult.ContentType);
         }
 
         /// <summary>
@@ -694,7 +774,7 @@
         public async Task GetSchemeWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
             BreadcrumbService breadcrumb = new BreadcrumbService();
-            
+
             // Arrange
             ReportsController controller = new ReportsController(
                 () => A.Dummy<IWeeeClient>(),
@@ -828,7 +908,7 @@
 
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeWeeeCsv>._))
-                .WhenArgumentsMatch(a => 
+                .WhenArgumentsMatch(a =>
                     a.Get<GetSchemeWeeeCsv>("request").ComplianceYear == 2015 &&
                     a.Get<GetSchemeWeeeCsv>("request").ObligationType == ObligationType.B2C)
                 .Returns(file);
