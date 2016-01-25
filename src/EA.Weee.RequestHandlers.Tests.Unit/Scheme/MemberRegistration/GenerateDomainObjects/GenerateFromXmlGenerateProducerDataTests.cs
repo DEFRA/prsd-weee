@@ -195,7 +195,7 @@
 
             var result = await builder.InvokeGenerateProducerDataWithSingleResult();
 
-            Assert.Equal(Domain.ObligationType.B2B, result.ObligationType);
+            Assert.Equal(Domain.Obligation.ObligationType.B2B, result.ObligationType);
         }
 
         [Fact]

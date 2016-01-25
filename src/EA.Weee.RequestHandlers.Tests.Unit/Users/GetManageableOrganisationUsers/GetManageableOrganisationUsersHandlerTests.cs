@@ -5,8 +5,8 @@
     using System.Security;
     using System.Threading.Tasks;
     using Core.Organisations;
-    using Domain;
     using Domain.Organisation;
+    using Domain.User;
     using FakeItEasy;
     using Prsd.Core.Mapper;
     using RequestHandlers.Security;

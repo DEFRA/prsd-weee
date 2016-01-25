@@ -14,153 +14,181 @@
 namespace EA.Weee.Xml.DataReturns
 {
 
-
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns", IsNullable=false)]
-    public partial class SchemeReturn {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns", IsNullable = false)]
+    public partial class SchemeReturn
+    {
         private string approvalNoField;
-        
+
         private string complianceYearField;
-        
+
         private SchemeReturnReturnPeriod returnPeriodField;
-        
+
         private TonnageReturnType[] collectedFromDCFField;
-        
-        private SchemeReturnDeliveredToATF[] deliveredToATFField;
-        
-        private SchemeReturnDeliveredToAE[] deliveredToAEField;
-        
-        private TonnageReturnType[] b2CWEEEFromDistributorsField;
-        
-        private TonnageReturnType[] b2CWEEEFromFinalHoldersField;
-        
+
+        private SchemeReturnDeliveredToFacility[] deliveredToAATFField;
+
+        private SchemeReturnDeliveredToOperator[] deliveredToAEField;
+
+        private B2CTonnageReturnType[] b2CWEEEFromDistributorsField;
+
+        private B2CTonnageReturnType[] b2CWEEEFromFinalHoldersField;
+
         private SchemeReturnProducer[] producerListField;
-        
-        public SchemeReturn() {
+
+        public SchemeReturn()
+        {
         }
-     
+
         /// <remarks/>
-        public string ApprovalNo {
-            get {
+        public string ApprovalNo
+        {
+            get
+            {
                 return this.approvalNoField;
             }
-            set {
+            set
+            {
                 this.approvalNoField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="positiveInteger")]
-        public string ComplianceYear {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "positiveInteger")]
+        public string ComplianceYear
+        {
+            get
+            {
                 return this.complianceYearField;
             }
-            set {
+            set
+            {
                 this.complianceYearField = value;
             }
         }
-        
+
         /// <remarks/>
-        public SchemeReturnReturnPeriod ReturnPeriod {
-            get {
+        public SchemeReturnReturnPeriod ReturnPeriod
+        {
+            get
+            {
                 return this.returnPeriodField;
             }
-            set {
+            set
+            {
                 this.returnPeriodField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("Return", IsNullable=false)]
-        public TonnageReturnType[] CollectedFromDCF {
-            get {
+        [System.Xml.Serialization.XmlArrayItemAttribute("Return", IsNullable = false)]
+        public TonnageReturnType[] CollectedFromDCF
+        {
+            get
+            {
                 return this.collectedFromDCFField;
             }
-            set {
+            set
+            {
                 this.collectedFromDCFField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("DeliveredToATF")]
-        public SchemeReturnDeliveredToATF[] DeliveredToATF {
-            get {
-                return this.deliveredToATFField;
+        [System.Xml.Serialization.XmlArrayItemAttribute("DeliveredToFacility", IsNullable = false)]
+        public SchemeReturnDeliveredToFacility[] DeliveredToAATF
+        {
+            get
+            {
+                return this.deliveredToAATFField;
             }
-            set {
-                this.deliveredToATFField = value;
+            set
+            {
+                this.deliveredToAATFField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("DeliveredToAE")]
-        public SchemeReturnDeliveredToAE[] DeliveredToAE {
-            get {
+        [System.Xml.Serialization.XmlArrayItemAttribute("DeliveredToOperator", IsNullable = false)]
+        public SchemeReturnDeliveredToOperator[] DeliveredToAE
+        {
+            get
+            {
                 return this.deliveredToAEField;
             }
-            set {
+            set
+            {
                 this.deliveredToAEField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("Return", IsNullable=false)]
-        public TonnageReturnType[] B2CWEEEFromDistributors {
-            get {
+        [System.Xml.Serialization.XmlArrayItemAttribute("Return", IsNullable = false)]
+        public B2CTonnageReturnType[] B2CWEEEFromDistributors
+        {
+            get
+            {
                 return this.b2CWEEEFromDistributorsField;
             }
-            set {
+            set
+            {
                 this.b2CWEEEFromDistributorsField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("Return", IsNullable=false)]
-        public TonnageReturnType[] B2CWEEEFromFinalHolders {
-            get {
+        [System.Xml.Serialization.XmlArrayItemAttribute("Return", IsNullable = false)]
+        public B2CTonnageReturnType[] B2CWEEEFromFinalHolders
+        {
+            get
+            {
                 return this.b2CWEEEFromFinalHoldersField;
             }
-            set {
+            set
+            {
                 this.b2CWEEEFromFinalHoldersField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("Producer", IsNullable=false)]
-        public SchemeReturnProducer[] ProducerList {
-            get {
+        [System.Xml.Serialization.XmlArrayItemAttribute("Producer", IsNullable = false)]
+        public SchemeReturnProducer[] ProducerList
+        {
+            get
+            {
                 return this.producerListField;
             }
-            set {
+            set
+            {
                 this.producerListField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
-    public enum SchemeReturnReturnPeriod {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
+    public enum SchemeReturnReturnPeriod
+    {
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Quarter 1: January - March")]
         Quarter1JanuaryMarch,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Quarter 2: April - June")]
         Quarter2AprilJune,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Quarter 3: July - September")]
         Quarter3JulySeptember,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Quarter 4: October - December")]
         Quarter4OctoberDecember,
@@ -172,118 +200,130 @@ namespace EA.Weee.Xml.DataReturns
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
-    public partial class TonnageReturnType {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
+    public partial class TonnageReturnType
+    {
+
         private categoryNameType categoryNameField;
-        
+
         private obligationTypeType obligationTypeField;
-        
+
         private decimal tonnesReturnValueField;
-        
+
         /// <remarks/>
-        public categoryNameType CategoryName {
-            get {
+        public categoryNameType CategoryName
+        {
+            get
+            {
                 return this.categoryNameField;
             }
-            set {
+            set
+            {
                 this.categoryNameField = value;
             }
         }
-        
+
         /// <remarks/>
-        public obligationTypeType ObligationType {
-            get {
+        public obligationTypeType ObligationType
+        {
+            get
+            {
                 return this.obligationTypeField;
             }
-            set {
+            set
+            {
                 this.obligationTypeField = value;
             }
         }
-        
+
         /// <remarks/>
-        public decimal TonnesReturnValue {
-            get {
+        public decimal TonnesReturnValue
+        {
+            get
+            {
                 return this.tonnesReturnValueField;
             }
-            set {
+            set
+            {
                 this.tonnesReturnValueField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
-    public enum categoryNameType {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
+    public enum categoryNameType
+    {
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Large Household Appliances")]
         LargeHouseholdAppliances,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Small Household Appliances")]
         SmallHouseholdAppliances,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("IT and Telecomms Equipment")]
         ITandTelecommsEquipment,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Consumer Equipment")]
         ConsumerEquipment,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Lighting Equipment")]
         LightingEquipment,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Electrical and Electronic Tools")]
         ElectricalandElectronicTools,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Toys Leisure and Sports")]
         ToysLeisureandSports,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Medical Devices")]
         MedicalDevices,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Monitoring and Control Instruments")]
         MonitoringandControlInstruments,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Automatic Dispensers")]
         AutomaticDispensers,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Display Equipment")]
         DisplayEquipment,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Cooling Appliances Containing Refrigerants")]
         CoolingAppliancesContainingRefrigerants,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Gas Discharge Lamps and LED light sources")]
         GasDischargeLampsandLEDlightsources,
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Photovoltaic Panels")]
         PhotovoltaicPanels,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
-    public enum obligationTypeType {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
+    public enum obligationTypeType
+    {
+
         /// <remarks/>
         B2B,
-        
+
         /// <remarks/>
         B2C,
     }
@@ -303,178 +343,166 @@ namespace EA.Weee.Xml.DataReturns
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
-    public partial class SchemeReturnDeliveredToATF {
-        
-        private SchemeReturnDeliveredToATFDeliveredToFacility deliveredToFacilityField;
-        
-        private TonnageReturnType[] returnField;
-        
-        /// <remarks/>
-        public SchemeReturnDeliveredToATFDeliveredToFacility DeliveredToFacility {
-            get {
-                return this.deliveredToFacilityField;
-            }
-            set {
-                this.deliveredToFacilityField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Return")]
-        public TonnageReturnType[] Return {
-            get {
-                return this.returnField;
-            }
-            set {
-                this.returnField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
-    public partial class SchemeReturnDeliveredToATFDeliveredToFacility {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
+    public partial class SchemeReturnDeliveredToFacility
+    {
+
         private string aATFApprovalNoField;
-        
+
         private string facilityNameField;
-        
+
+        private TonnageReturnType[] returnsField;
+
         /// <remarks/>
-        public string AATFApprovalNo {
-            get {
+        public string AATFApprovalNo
+        {
+            get
+            {
                 return this.aATFApprovalNoField;
             }
-            set {
+            set
+            {
                 this.aATFApprovalNoField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string FacilityName {
-            get {
+        public string FacilityName
+        {
+            get
+            {
                 return this.facilityNameField;
             }
-            set {
+            set
+            {
                 this.facilityNameField = value;
             }
         }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("Return", IsNullable = false)]
+        public TonnageReturnType[] Returns
+        {
+            get
+            {
+                return this.returnsField;
+            }
+            set
+            {
+                this.returnsField = value;
+            }
+        }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
-    public partial class SchemeReturnDeliveredToAE {
-        
-        private SchemeReturnDeliveredToAEDeliveredToOperator deliveredToOperatorField;
-        
-        private TonnageReturnType[] returnField;
-        
-        /// <remarks/>
-        public SchemeReturnDeliveredToAEDeliveredToOperator DeliveredToOperator {
-            get {
-                return this.deliveredToOperatorField;
-            }
-            set {
-                this.deliveredToOperatorField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Return")]
-        public TonnageReturnType[] Return {
-            get {
-                return this.returnField;
-            }
-            set {
-                this.returnField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
-    public partial class SchemeReturnDeliveredToAEDeliveredToOperator {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
+    public partial class SchemeReturnDeliveredToOperator
+    {
+
         private string aEApprovalNoField;
-        
+
         private string operatorNameField;
-        
+
+        private TonnageReturnType[] returnsField;
+
         /// <remarks/>
-        public string AEApprovalNo {
-            get {
+        public string AEApprovalNo
+        {
+            get
+            {
                 return this.aEApprovalNoField;
             }
-            set {
+            set
+            {
                 this.aEApprovalNoField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string OperatorName {
-            get {
+        public string OperatorName
+        {
+            get
+            {
                 return this.operatorNameField;
             }
-            set {
+            set
+            {
                 this.operatorNameField = value;
             }
         }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("Return", IsNullable = false)]
+        public TonnageReturnType[] Returns
+        {
+            get
+            {
+                return this.returnsField;
+            }
+            set
+            {
+                this.returnsField = value;
+            }
+        }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
-    public partial class SchemeReturnProducer {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.environment-agency.gov.uk/WEEE/XMLSchema/SchemeReturns")]
+    public partial class SchemeReturnProducer
+    {
+
         private string registrationNoField;
-        
+
         private string producerCompanyNameField;
-        
-        private TonnageReturnType[] returnField;
-        
+
+        private TonnageReturnType[] returnsField;
+
         /// <remarks/>
-        public string RegistrationNo {
-            get {
+        public string RegistrationNo
+        {
+            get
+            {
                 return this.registrationNoField;
             }
-            set {
+            set
+            {
                 this.registrationNoField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="token")]
-        public string ProducerCompanyName {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "token")]
+        public string ProducerCompanyName
+        {
+            get
+            {
                 return this.producerCompanyNameField;
             }
-            set {
+            set
+            {
                 this.producerCompanyNameField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Return")]
-        public TonnageReturnType[] Return {
-            get {
-                return this.returnField;
+        [System.Xml.Serialization.XmlArrayItemAttribute("Return", IsNullable = false)]
+        public TonnageReturnType[] Returns
+        {
+            get
+            {
+                return this.returnsField;
             }
-            set {
-                this.returnField = value;
+            set
+            {
+                this.returnsField = value;
             }
         }
     }
