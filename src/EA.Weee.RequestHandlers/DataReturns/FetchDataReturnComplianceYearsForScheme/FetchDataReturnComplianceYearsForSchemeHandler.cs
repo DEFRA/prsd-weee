@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.DataReturns.FetchDataReturnForSubmission
+﻿namespace EA.Weee.RequestHandlers.DataReturns.FetchDataReturnComplianceYearsForScheme
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
