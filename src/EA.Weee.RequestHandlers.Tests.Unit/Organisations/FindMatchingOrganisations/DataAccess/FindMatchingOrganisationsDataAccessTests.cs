@@ -4,8 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core.Helpers;
-    using Domain;
     using Domain.Organisation;
+    using Domain.User;
     using FakeItEasy;
     using RequestHandlers.Organisations.FindMatchingOrganisations.DataAccess;
     using Weee.DataAccess;

@@ -5,8 +5,8 @@
     using System.Threading.Tasks;
     using Core.Helpers;
     using DataAccess;
-    using Domain;
     using Domain.Organisation;
+    using Domain.User;
 
     public class UpdateOrganisationUserStatusDataAccess : IUpdateOrganisationUserStatusDataAccess
     {

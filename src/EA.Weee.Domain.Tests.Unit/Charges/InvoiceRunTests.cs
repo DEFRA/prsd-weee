@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using Domain.Charges;
     using Domain.Scheme;
+    using Domain.User;
     using FakeItEasy;
     using Prsd.Core;
     using Xunit;

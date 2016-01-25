@@ -1,14 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.IssuePendingCharges
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Core.Charges;
     using Domain;
+    using Domain.Charges;
+    using Domain.Scheme;
+    using Domain.User;
     using EA.Prsd.Core.Mediator;
-    using EA.Weee.Domain.Charges;
-    using EA.Weee.Domain.Scheme;
     using Security;
     using Shared.DomainUser;
 

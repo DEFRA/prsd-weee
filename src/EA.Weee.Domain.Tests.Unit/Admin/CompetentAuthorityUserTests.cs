@@ -2,6 +2,7 @@
 {
     using System;
     using Domain.Admin;
+    using User;
     using Xunit;
 
     public class CompetentAuthorityUserTests

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.Xml.MemberRegistration
 {
     using Domain;
-    
+    using Domain.Obligation;
     public static class Extensions
     {
         public static string GetProducerName(this producerType producer)

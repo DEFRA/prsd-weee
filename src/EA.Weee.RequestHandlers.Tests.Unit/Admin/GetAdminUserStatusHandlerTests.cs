@@ -32,7 +32,7 @@
                 .AllowInternalAreaAccess()
                 .Build();
 
-            var userMap = A.Fake<IMap<Domain.UserStatus, UserStatus>>();
+            var userMap = A.Fake<IMap<Domain.User.UserStatus, UserStatus>>();
             
             A.CallTo(() => userMap.Map(user.UserStatus)).Returns(UserStatus.Active);
 
@@ -65,7 +65,7 @@
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
 
-            var userMap = A.Fake<IMap<Domain.UserStatus, Core.Shared.UserStatus>>();
+            var userMap = A.Fake<IMap<Domain.User.UserStatus, Core.Shared.UserStatus>>();
             A.CallTo(() => userMap.Map(user.UserStatus)).Returns(UserStatus.Inactive);
 
             GetAdminUserStatusHandler handler = new GetAdminUserStatusHandler(dataAccess, userMap, authorization);
@@ -96,7 +96,7 @@
                 .AllowInternalAreaAccess()
                 .Build();
 
-            var userMap = A.Fake<IMap<Domain.UserStatus, UserStatus>>();
+            var userMap = A.Fake<IMap<Domain.User.UserStatus, UserStatus>>();
 
             GetAdminUserStatusHandler handler = new GetAdminUserStatusHandler(dataAccess, userMap, authorization);
 
