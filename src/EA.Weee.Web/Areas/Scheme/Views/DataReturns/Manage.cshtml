@@ -1,0 +1,43 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model List<Int32>
+@{
+    ViewBag.Title = "Manage EEE/WEEE data return";
+}
+
+@section main_content {
+    <header class="hgroup">
+        <div>
+            <h1 class="heading-large">Manage EEE/WEEE data return</h1>
+        </div>
+    </header>
+
+    <div>
+        <h2 class="heading-medium">Files available for download</h2>
+    </div>
+    <div class="form-group">
+        @{
+            if (Model.Count > 0)
+            {
+                foreach (int complianceYear in Model)
+                {
+                    var csvFileName = "Overview of current EEE and WEEE data for " + complianceYear + " (CSV)";
+
+                @(this.WeeeGds().ActionLinkWithEventTracking(csvFileName, "GetEeeWeeeDataReturnCSV", "DataReturns",
+                                        "Download data return", "Overview of current EEE and WEEE data", "Compliance year: " + complianceYear, new RouteValueDictionary(new { complianceYear = complianceYear })))
+                }
+            }
+            else
+            {
+            <p>You have not yet submitted any data.</p>
+            }
+        }
+    </div>
+
+    <p>
+        @Html.ActionLink("Upload data return", "Upload", "DataReturns", new { @area = "Scheme" }, new { @class = "button" })
+    </p>
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+}
