@@ -442,53 +442,5 @@
         {
             breadcrumb.InternalActivity = InternalUserActivity.ViewReports;
         }
-
-        private async Task<ActionResult> DownloadMembersDetailsCSV(ReportsFilterViewModel model, IWeeeClient client)
-        {
-            string approvalnumber = string.Empty;
-            string csvFileName = string.Format("{0}_producerdetails_{1}.csv", model.SelectedYear, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-            if (model.SelectedScheme.HasValue)
-            {
-                SchemeData scheme =
-                    await client.SendAsync(User.GetAccessToken(), new GetSchemeById(model.SelectedScheme.Value));
-                approvalnumber = scheme.ApprovalName;
-                csvFileName = string.Format("{0}_{1}_producerdetails_{2}.csv", model.SelectedYear,
-                approvalnumber, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-            }
-            if (model.SelectedAA.HasValue)
-            {
-                UKCompetentAuthorityData authorityData =
-                    await
-                        client.SendAsync(User.GetAccessToken(),
-                            new GetUKCompetentAuthorityById(model.SelectedAA.Value));
-                var authorisedAuthorityName = authorityData.Abbreviation;
-                csvFileName = string.Format("{0}_{1}_{2}_producerdetails_{3}.csv", model.SelectedYear,
-               approvalnumber, authorisedAuthorityName, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-            }
-
-            var membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(),
-                new GetMemberDetailsCSV(model.SelectedYear, model.IncludeRemovedProducer, model.SelectedScheme, model.SelectedAA));
-
-            byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
-        }
-
-        private async Task<ActionResult> DownloadProducerPublicRegisterCSV(ProducerPublicRegisterViewModel model, IWeeeClient client)
-        {
-            var membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(),
-               new GetProducerPublicRegisterCSV(model.SelectedYear));
-
-            byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(membersDetailsCsvData.FileName));
-        }
-
-        private async Task<ActionResult> DownloadProducerEEEDataCSV(ProducersDataViewModel model, IWeeeClient client)
-        {
-            var producerEEECsvData = await client.SendAsync(User.GetAccessToken(),
-               new GetProducerEEEDataCSV(model.SelectedYear, model.SelectedObligationType));
-
-            byte[] data = new UTF8Encoding().GetBytes(producerEEECsvData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerEEECsvData.FileName));
-        }
     }
 }
