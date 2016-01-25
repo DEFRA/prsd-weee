@@ -93,9 +93,9 @@
             Assert.NotNull(yearsList);
             Assert.Equal(3, yearsList.Count);
             Assert.Collection(yearsList,
-                r1 => Assert.Equal("2015", r1.ToString()),
+                r1 => Assert.Equal("2017", r1.ToString()),
                 r2 => Assert.Equal("2016", r2.ToString()),
-                r3 => Assert.Equal("2017", r3.ToString()));
+                r3 => Assert.Equal("2015", r3.ToString()));
         }
     }
 }
