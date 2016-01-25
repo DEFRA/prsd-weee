@@ -7,5 +7,6 @@
         public const string UKWeeeData = "UK WEEE data";
         public const string ProducerEeeData = "Producer EEE data";
         public const string SchemeWeeeData = "Scheme WEEE data";
+        public const string UKEEEData = "UK EEE data";
     }
 }
