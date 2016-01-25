@@ -1,0 +1,45 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Reports.UKEEEDataViewModel
+@{
+    ViewBag.Title = "UK EEE Data";
+}
+
+@section main_content {
+
+    <header class="hgroup">
+        <h1 class="heading-large">Download UK EEE data</h1>
+    </header>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <p>Filter the report to download entries that match your criteria.</p>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+            @Html.Gds().LabelFor(m => m.SelectedYear)
+            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
+        </div>
+
+        @(this.WeeeGds().Submit("Download", new { @class = "button" }))
+    }
+
+    <p>
+        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
+    </p>
+
+    <p>
+        @Html.ActionLink("Back", "ChooseReport")
+    </p>
+}
+
+@section scripts
+{
+    @if (ViewBag.TriggerDownload)
+    {
+        <script type="text/javascript">
+            window.location = "@Html.Raw(@Url.Action("DownloadUkEeeDataCsv", new { complianceYear = Model.SelectedYear }))";
+        </script>
+    }
+}
