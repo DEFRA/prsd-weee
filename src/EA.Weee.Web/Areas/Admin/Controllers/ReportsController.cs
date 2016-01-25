@@ -12,6 +12,8 @@
     using Core.Shared;
     using Infrastructure;
     using Prsd.Core;
+    using Prsd.Core.Web.ApiClient;
+    using Prsd.Core.Web.Mvc.Extensions;
     using Services;
     using ViewModels.Home;
     using ViewModels.Reports;
@@ -93,6 +95,9 @@
 
                 case Reports.SchemeWeeeData:
                     return RedirectToAction("SchemeWeeeData");
+
+                case Reports.UKEEEData:
+                    return RedirectToAction("UKEEEData");
 
                 default:
                     throw new NotSupportedException();
@@ -312,6 +317,8 @@
 
             model.ComplianceYears = new SelectList(years);
 
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
             return View(model);
         }
 
@@ -327,6 +334,70 @@
             }
 
             return File(file.Data, "text/csv", file.FileName);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> UKEEEData()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            List<int> years;
+            try
+            {
+                years = await FetchComplianceYearsForDataReturns();
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+                return View();
+            }
+
+            UKEEEDataViewModel model = new UKEEEDataViewModel();
+            model.ComplianceYears = new SelectList(years);
+            return View("UKEEEData", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UKEEEData(UKEEEDataViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+            List<int> years;
+            try
+            {
+                years = await FetchComplianceYearsForDataReturns();
+            }
+            catch (ApiBadRequestException ex)
+            {
+                this.HandleBadRequest(ex);
+                if (ModelState.IsValid)
+                {
+                    throw;
+                }
+                return View();
+            }
+
+            model.ComplianceYears = new SelectList(years);
+            ViewBag.TriggerDownload = ModelState.IsValid;
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadUkEeeDataCsv(int complianceYear)
+        {   
+            using (var client = apiClient())
+            {
+                var ukEeeCsvData = await client.SendAsync(User.GetAccessToken(),
+                    new GetUkEeeDataCsv(complianceYear));
+                byte[] data = new UTF8Encoding().GetBytes(ukEeeCsvData.FileContent);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(ukEeeCsvData.FileName));
+            }
         }
 
         private async Task<List<int>> FetchComplianceYearsForDataReturns()
