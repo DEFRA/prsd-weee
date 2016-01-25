@@ -638,6 +638,9 @@
         [Fact]
         public async void Manage_ManageOfLatestDataReturnUploads()
         {
+             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+
             await DataReturnsController().Manage(A<Guid>._);
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnComplianceYearsForScheme>._))
@@ -647,6 +650,9 @@
         [Fact]
         public async void Manage_HasUploadForThisScheme_ReturnsViewWithManageModel()
         {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+               .Returns(true);
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnComplianceYearsForScheme>._))
                 .Returns(new List<int>() { 2015, 2016 });
 
