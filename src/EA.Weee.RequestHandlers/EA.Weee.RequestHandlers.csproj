@@ -147,6 +147,9 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandler.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\IFetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
+    <Compile Include="DataReturns\FetchSummaryCsv\FetchSummaryCsvDataAccess.cs" />
+    <Compile Include="DataReturns\FetchSummaryCsv\FetchSummaryCsvHandler.cs" />
+    <Compile Include="DataReturns\FetchSummaryCsv\IFetchSummaryCsvDataAccess.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderResult.cs" />
     <Compile Include="DataReturns\BusinessValidation\IEeeValidator.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\CreateTestXmlFileHandler.cs" />

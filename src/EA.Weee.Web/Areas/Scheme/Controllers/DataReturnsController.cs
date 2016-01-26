@@ -275,7 +275,7 @@
                 file = await client.SendAsync(User.GetAccessToken(), fetchSummaryCsv);
             }
 
-            return File(file.Data, "text/csv", file.FileName);
+            return File(file.Data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
