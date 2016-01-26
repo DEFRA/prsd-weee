@@ -8,12 +8,16 @@
 
     public partial class WeeeGds<TModel>
     {
-        public MvcHtmlString ActionLinkToNewTab(string linkText, string actionName, string controllerName, object routeValues = null)
+        public MvcHtmlString ActionLinkToNewTab(string url)
         {
-            string span = "<span class=\"hidden-for-screen-reader\">This link opens in a new browser window</span>";
-            string link = HtmlHelper.ActionLink(linkText, actionName, controllerName, routeValues, new { @target = "_blank" }).ToString();
+            var span = "<span class=\"hidden-for-screen-reader\">This link opens in a new browser window</span>";
 
-            return new MvcHtmlString(span + link);
+            var tagBuilder = new TagBuilder("a");
+            tagBuilder.Attributes.Add("href", url);
+            tagBuilder.Attributes.Add("target", "_blank");
+            tagBuilder.InnerHtml = span;
+
+            return new MvcHtmlString(tagBuilder.ToString(TagRenderMode.Normal));
         }
 
         public MvcHtmlString ActionLinkWithEventTracking(string linkText,
