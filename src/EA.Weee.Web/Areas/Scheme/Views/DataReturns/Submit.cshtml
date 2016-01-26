@@ -2,6 +2,8 @@
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Core.DataReturns
 @using EA.Weee.Core.Helpers
+@using EA.Weee.Web.Areas.Scheme.Controllers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.DataReturns.SubmitViewModel
 @{
     ViewBag.Title = "Submit Data Return";
@@ -156,26 +158,18 @@
             {
                 <p>
                     To see your XML file’s full list,
-                    @this.WeeeGds().ActionLinkWithEventTracking(
-                                "Download your errors and warnings (CSV)",
-                                "DownloadErrorsAndWarnings",
-                                "DataReturns",
-                                "Data return downloads",
-                                "Data return errors and warnings",
-                                routeValues: new RouteValueDictionary(new { dataReturnUploadId = Model.DataReturn.DataReturnUploadId })
-                                ).
+                    @(this.WeeeGds().ActionLinkWithEventTracking("Download your errors and warnings (CSV)",
+                        Url.UrlFor<DataReturnsController>(c => c.DownloadErrorsAndWarnings(Model.PcsId, Model.DataReturn.DataReturnUploadId)),
+                        "DataReturns",
+                        "Data return downloads",
+                        "Data return errors and warnings")).
                 </p>
                 <p>
-                    @this.WeeeGds().ActionLinkWithEventTracking(
-                                "Upload a new file",
-                                "Upload",
-                                "DataReturns",
-                                "Data return loop",
-                                "Upload a new data return file",
-                                "Data return validation failed",
-                                null,
-                                new Dictionary<string, object> { { "class", "button" } }
-                                )
+                    @(this.WeeeGds().ActionLinkWithEventTracking("Upload a new file",
+                        Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
+                        "Data return loop",
+                        "Upload a new data return file",
+                        "Data return validation failed"))
                 </p>
 
                 <div>
@@ -203,15 +197,12 @@
                 </p>
 
                 <p>
-                    Make changes and @this.WeeeGds().ActionLinkWithEventTracking(
-                                        "upload a new file",
-                                        "Upload",
-                                        "DataReturns",
-                                        "Data return loop",
-                                        "Upload a new data return file",
-                                        "Data return validation successful"
-                                        ).
-               </p>
+                    Make changes and @(this.WeeeGds().ActionLinkWithEventTracking("upload a new file",
+                        Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
+                        "Data return loop",
+                        "Upload a new data return file",
+                        "Data return validation successful")).
+                </p>
             }
     }
 }

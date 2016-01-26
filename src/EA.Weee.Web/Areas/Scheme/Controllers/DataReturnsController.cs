@@ -84,7 +84,7 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> Upload(Guid pcsId)
+        public async Task<ActionResult> Upload(Guid pcsId)
         {
             if (!configService.CurrentConfiguration.EnableDataReturns)
             {
@@ -178,7 +178,8 @@
 
             SubmitViewModel viewModel = new SubmitViewModel()
             {
-                DataReturn = dataReturn
+                DataReturn = dataReturn,
+                PcsId = pcsId
             };
 
             return View(viewModel);
