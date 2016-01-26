@@ -86,14 +86,16 @@
 	}
 
 	<p>
-		To see your XML file’s full list,
-		@this.WeeeGds().ActionLinkWithEventTracking(
-									"Download your errors and warnings (CSV)",
-									"DownloadErrorsAndWarnings",
-									"MemberRegistration",
-									"Downloads",
-									"Errors and warnings"
-									).
+	    To see your XML file’s full list,
+	    @this.WeeeGds().ActionLinkWithEventTracking(
+                                    "Download your errors and warnings (CSV)",
+                                    "DownloadErrorsAndWarnings",
+                                    "MemberRegistration",
+                                    "Downloads",
+                                    "Errors and warnings",
+                                    null,
+                                    new RouteValueDictionary {{ "memberUploadId", Model.MemberUploadId }}
+                                    )
 	</p>
 
 	<p>
