@@ -247,5 +247,146 @@
                 Assert.Equal(producer.Id, result.Id);
             }
         }
+
+        [Fact]
+        public async Task GetLatestDataReturnVersionOrDefault_ReturnsDataReturnVersionForSpecifiedSchemeOnly()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+
+                var scheme1 = helper.CreateScheme();
+                var dataReturnVersion = helper.CreateDataReturnVersion(scheme1, 2016, 1, true);
+
+                var scheme2 = helper.CreateScheme();
+                helper.CreateDataReturnVersion(scheme2, 2016, 1, true);
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new DataReturnVersionBuilderDataAccess(domainHelper.GetScheme(scheme1.Id), new Quarter(2016, QuarterType.Q1), database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.GetLatestDataReturnVersionOrDefault();
+
+                // Assert
+                Assert.Equal(scheme1.Id, result.DataReturn.Scheme.Id);
+                Assert.Equal(dataReturnVersion.Id, result.Id);
+            }
+        }
+
+        [Fact]
+        public async Task GetLatestDataReturnVersionOrDefault_ReturnsDataReturnVersionForSpecifiedComplianceYearOnly()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+
+                var scheme = helper.CreateScheme();
+                helper.CreateDataReturnVersion(scheme, 2016, 1, true);
+
+                var dataReturnVersion = helper.CreateDataReturnVersion(scheme, 2017, 1, true);
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new DataReturnVersionBuilderDataAccess(domainHelper.GetScheme(scheme.Id), new Quarter(2017, QuarterType.Q1), database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.GetLatestDataReturnVersionOrDefault();
+
+                // Assert
+                Assert.Equal(2017, result.DataReturn.Quarter.Year);
+                Assert.Equal(dataReturnVersion.Id, result.Id);
+            }
+        }
+
+        [Fact]
+        public async Task GetLatestDataReturnVersionOrDefault_ReturnsDataReturnVersionForSpecifiedQuarterOnly()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+
+                var scheme = helper.CreateScheme();
+                helper.CreateDataReturnVersion(scheme, 2016, 1, true);
+
+                var dataReturnVersion = helper.CreateDataReturnVersion(scheme, 2016, 2, true);
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new DataReturnVersionBuilderDataAccess(domainHelper.GetScheme(scheme.Id), new Quarter(2016, QuarterType.Q2), database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.GetLatestDataReturnVersionOrDefault();
+
+                // Assert
+                Assert.Equal(QuarterType.Q2, result.DataReturn.Quarter.Q);
+                Assert.Equal(dataReturnVersion.Id, result.Id);
+            }
+        }
+
+        [Fact]
+        public async Task GetLatestDataReturnVersionOrDefault_ResultIncludesUnsubmittedDataReturnVersion()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+
+                var scheme = helper.CreateScheme();
+                var dataReturn = helper.CreateDataReturn(scheme, 2016, 1);
+                var dataReturnVersion = helper.CreateDataReturnVersion(scheme, 2016, 1, false, dataReturn);
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new DataReturnVersionBuilderDataAccess(domainHelper.GetScheme(scheme.Id), new Quarter(2016, QuarterType.Q1), database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.GetLatestDataReturnVersionOrDefault();
+
+                // Assert
+                Assert.Equal(dataReturnVersion.Id, result.Id);
+                Assert.Null(result.SubmittedDate);
+            }
+        }
+
+        [Fact]
+        public async Task GetLatestDataReturnVersionOrDefault_ReturnsLatestDataReturnVersion()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(database.Model);
+                DomainHelper domainHelper = new DomainHelper(database.WeeeContext);
+
+                var scheme = helper.CreateScheme();
+                var dataReturn = helper.CreateDataReturn(scheme, 2016, 1);
+
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, 2016, 1, true, dataReturn);
+                dataReturnVersion1.CreatedDate = new DateTime(2016, 1, 31);
+
+                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, 2016, 1, true, dataReturn);
+                dataReturnVersion2.CreatedDate = new DateTime(2016, 2, 1);
+
+                var dataReturnVersion3 = helper.CreateDataReturnVersion(scheme, 2016, 1, true, dataReturn);
+                dataReturnVersion3.CreatedDate = new DateTime(2016, 1, 30);
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new DataReturnVersionBuilderDataAccess(domainHelper.GetScheme(scheme.Id), new Quarter(2016, QuarterType.Q1), database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.GetLatestDataReturnVersionOrDefault();
+
+                // Assert
+                Assert.Equal(dataReturnVersion2.Id, result.Id);
+            }
+        }
     }
 }

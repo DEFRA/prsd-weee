@@ -228,6 +228,7 @@
     <Compile Include="Areas\Admin\ViewModels\Charge\IssuedChargesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
+    <Compile Include="Extensions\ProducerEeeDetailsExtensions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ChooseReportViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ProducerPublicRegisterViewModel.cs" />
@@ -512,6 +513,7 @@
     <Compile Include="Areas\Test\ViewModels\CreatePcsDataReturnXmlFile\SelectOrganisationViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\CreatePcsDataReturnXmlFile\SpecifyOptionsViewModel.cs" />
     <Compile Include="Areas\Test\ViewModels\ManagePcsReturnsSubmissionWindow\SettingsModel.cs" />
+    <Compile Include="Extensions\DisplayExtensions.cs" />
     <Compile Include="Infrastructure\CsvFilenameFormat.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\weee\_footer.scss" />
