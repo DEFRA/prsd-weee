@@ -93,8 +93,8 @@
                 registeredProducer,
                 memberUpload,
                 new EA.Weee.Domain.Producer.ProducerBusiness(
-                    new Company("CompanyName", "RegisteredNo", 
-                    new ProducerContact(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), 
+                    new Company("CompanyName", "RegisteredNo",
+                    new ProducerContact(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(),
                     new ProducerAddress(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(),
                     new Country(Guid.NewGuid(), A.Dummy<string>()), A.Dummy<string>())))),
                 null,
@@ -113,7 +113,7 @@
                 0);
 
             registeredProducer.SetCurrentSubmission(producer);
-            
+
             registeredProducer.Scheme.UpdateScheme("SchemeName", "WEE/FA9999KE/SCH", "test", ObligationType.B2B, Guid.NewGuid());
 
             IGetProducerDetailsByRegisteredProducerIdDataAccess dataAccess = A.Fake<IGetProducerDetailsByRegisteredProducerIdDataAccess>();
@@ -201,7 +201,7 @@
             dataReturnVersion.EeeOutputReturnVersion.AddEeeOutputAmount(eeeOutputAmount);
 
             dataReturnVersion.Submit("UserID");
-            
+
             IGetProducerDetailsByRegisteredProducerIdDataAccess dataAccess = A.Fake<IGetProducerDetailsByRegisteredProducerIdDataAccess>();
 
             A.CallTo(() => dataAccess.Fetch(registeredProducerId)).Returns(registeredProducer);
