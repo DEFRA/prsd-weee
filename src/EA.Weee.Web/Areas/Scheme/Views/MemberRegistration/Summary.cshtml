@@ -1,5 +1,7 @@
-﻿@using EA.Weee.Web.RazorHelpers
-@model List<Int32>
+﻿@using EA.Weee.Web.Areas.Scheme.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.SummaryViewModel
 @{
     ViewBag.Title = "Summary";
 }
@@ -15,12 +17,15 @@
         <h2 class="heading-medium">Files available for download</h2>
     </div>
     <div class="form-group">
-        @foreach (int complianceYear in Model)
+        @foreach (int complianceYear in Model.Years)
         {
             var csvFileName = "Overview of current members for " + complianceYear + " (CSV, less than 500KB)";
 
-            @(this.WeeeGds().ActionLinkWithEventTracking(csvFileName, "GetProducerCSV", "MemberRegistration",
-                "Downloads", "Overview of current members", "Compliance year: " + complianceYear, new RouteValueDictionary(new { complianceYear = complianceYear })))
+            @(this.WeeeGds().ActionLinkWithEventTracking(csvFileName,
+                Url.UrlFor<MemberRegistrationController>(c => c.GetProducerCSV(Model.PcsId, complianceYear)),
+                 "Downloads", 
+                 "Overview of current members", 
+                 "Compliance year: " + complianceYear))
             <br />
         }
     </div>
