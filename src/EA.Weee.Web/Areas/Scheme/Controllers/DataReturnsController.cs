@@ -104,12 +104,6 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetEeeWeeeDataReturnCSV(Guid pcsId, int complianceYear)
-        {
-            throw new NotImplementedException("Download not implemented yet.");          
-        }
-
-        [HttpGet]
         public async Task<ActionResult> Upload(Guid pcsId)
         {
             if (!configService.CurrentConfiguration.EnableDataReturns)
@@ -269,6 +263,19 @@
             byte[] fileContent = Encoding.UTF8.GetBytes(csv);
 
             return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(filename));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadEeeWeeeData(Guid pcsId, int complianceYear)
+        {
+            FileInfo file;
+            using (IWeeeClient client = apiClient())
+            {
+                FetchSummaryCsv fetchSummaryCsv = new FetchSummaryCsv(pcsId, complianceYear);
+                file = await client.SendAsync(User.GetAccessToken(), fetchSummaryCsv);
+            }
+
+            return File(file.Data, "text/csv", file.FileName);
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
