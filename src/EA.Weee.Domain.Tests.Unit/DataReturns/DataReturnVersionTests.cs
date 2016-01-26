@@ -15,8 +15,7 @@
         {
             // Arrange
             var dataReturn = new DataReturn(A.Dummy<Scheme>(), A.Dummy<Quarter>());
-            var dataReturnVersion = new DataReturnVersion(dataReturn,
-                A.Dummy<WeeeCollectedReturnVersion>(), A.Dummy<WeeeDeliveredReturnVersion>(), A.Dummy<EeeOutputReturnVersion>());
+            var dataReturnVersion = new DataReturnVersion(dataReturn);
 
             // Act
             dataReturnVersion.Submit("test@co.uk");
@@ -32,8 +31,7 @@
         {
             // Arrange
             var dataReturn = new DataReturn(A.Dummy<Scheme>(), A.Dummy<Quarter>());
-            var dataReturnVersion = new DataReturnVersion(dataReturn,
-                A.Dummy<WeeeCollectedReturnVersion>(), A.Dummy<WeeeDeliveredReturnVersion>(), A.Dummy<EeeOutputReturnVersion>());
+            var dataReturnVersion = new DataReturnVersion(dataReturn);
 
             // Act
             dataReturnVersion.Submit("test@co.uk");
@@ -48,8 +46,7 @@
         [Fact]
         public void ConstructsDataReturnVersion_WithNullDataReturn_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new DataReturnVersion(null,
-                A.Dummy<WeeeCollectedReturnVersion>(), A.Dummy<WeeeDeliveredReturnVersion>(), A.Dummy<EeeOutputReturnVersion>()));
+            Assert.Throws<ArgumentNullException>(() => new DataReturnVersion(null));
         }
     }
 }

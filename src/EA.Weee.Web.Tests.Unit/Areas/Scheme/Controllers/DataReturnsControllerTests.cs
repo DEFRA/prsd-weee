@@ -46,7 +46,7 @@
             {
                 await DataReturnsController().Upload(A<Guid>._);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 
