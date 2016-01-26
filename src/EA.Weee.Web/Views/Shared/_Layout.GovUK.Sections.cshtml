@@ -97,8 +97,7 @@
             </li>
         }
         <li>
-            @this.WeeeGds().ActionLinkToNewTab("Cookies",
-                "Cookies", "NewUser", new { area = string.Empty })
+            @(this.WeeeGds().ActionLinkToNewTab(Url.UrlFor<NewUserController>(c => c.Cookies())))
         </li>
     </ul>
 }
