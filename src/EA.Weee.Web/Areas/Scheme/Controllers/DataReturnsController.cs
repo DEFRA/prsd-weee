@@ -84,7 +84,7 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> Manage(Guid pcsId)
+        public async Task<ActionResult> Manage(Guid pcsId)
         {
             if (!configService.CurrentConfiguration.EnableDataReturns)
             {
@@ -97,7 +97,7 @@
                 {                   
                     List<int> years = await client.SendAsync(User.GetAccessToken(), new FetchDataReturnComplianceYearsForScheme(pcsId));
                    await SetBreadcrumb(pcsId);
-                   return View(years);               
+                    return View(new ManageViewModel { PcsId = pcsId, Years = years });                                 
                 }
                 throw new InvalidOperationException(string.Format("'{0}' is not a valid organisation Id", pcsId));
             }            
