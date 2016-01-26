@@ -5,7 +5,7 @@
     using Obligation;
     using Prsd.Core.Domain;
 
-    public class ReturnItem : Entity, IReturnItem
+    public class ReturnItem : Entity, IReturnItem, IEquatable<ReturnItem>
     {
         public virtual ObligationType ObligationType { get; private set; }
 
@@ -47,6 +47,28 @@
         {
             get { return ObligationType.ToString(); }
             set { ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), value); }
+        }
+
+        public bool Equals(ReturnItem other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return ObligationType == other.ObligationType &&
+                   WeeeCategory == other.WeeeCategory &&
+                   Tonnage == other.Tonnage;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ReturnItem);
+        }
+
+        public override int GetHashCode()
+        {
+            return ObligationType.GetHashCode() ^ WeeeCategory.GetHashCode() ^ Tonnage.GetHashCode();
         }
     }
 }
