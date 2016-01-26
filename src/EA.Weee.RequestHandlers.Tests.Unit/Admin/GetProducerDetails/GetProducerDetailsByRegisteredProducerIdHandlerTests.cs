@@ -189,8 +189,7 @@
 
             DataReturn dataReturn = new DataReturn(scheme, new Quarter(2016, QuarterType.Q4));
 
-            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn,
-                 new WeeeCollectedReturnVersion(), new WeeeDeliveredReturnVersion(), new EeeOutputReturnVersion());
+            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
 
             EeeOutputAmount eeeOutputAmount = new EeeOutputAmount(
                 ObligationType.B2C,
@@ -270,8 +269,7 @@
             registeredProducer.SetCurrentSubmission(producerSubmission);
             DataReturn dataReturn = new DataReturn(scheme, new Quarter(2016, QuarterType.Q4));
 
-            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn,
-                 new WeeeCollectedReturnVersion(), new WeeeDeliveredReturnVersion(), new EeeOutputReturnVersion());
+            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
 
             EeeOutputAmount eeeOutputAmount = new EeeOutputAmount(
                 ObligationType.B2C,
@@ -348,8 +346,7 @@
             registeredProducer.SetCurrentSubmission(producerSubmission);
             DataReturn dataReturn = new DataReturn(scheme, new Quarter(2016, QuarterType.Q4));
 
-            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn,
-                 new WeeeCollectedReturnVersion(), new WeeeDeliveredReturnVersion(), new EeeOutputReturnVersion());
+            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
 
             dataReturnVersion.Submit("UserID");
 
