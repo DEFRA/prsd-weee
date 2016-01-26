@@ -80,6 +80,7 @@
     <Compile Include="CountryTests.cs" />
     <Compile Include="DataReturns\DataReturnTests.cs" />
     <Compile Include="DataReturns\DataReturnUploadTests.cs" />
+    <Compile Include="DataReturns\DataReturnVersionAssociativeEntityTests.cs" />
     <Compile Include="DataReturns\DataReturnVersionTests.cs" />
     <Compile Include="DataReturns\AatfDeliveryLocationTests.cs" />
     <Compile Include="DataReturns\AeDeliveryLocationTests.cs" />

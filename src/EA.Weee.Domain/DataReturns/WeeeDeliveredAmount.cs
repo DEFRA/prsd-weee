@@ -61,9 +61,9 @@
 
         public override int GetHashCode()
         {
-            int hash = base.GetHashCode();
+            int baseHash = base.GetHashCode();
 
-            return IsAatfDeliveredAmount ? hash ^ AatfDeliveryLocation.GetHashCode() : hash ^ AeDeliveryLocation.GetHashCode();
+            return IsAatfDeliveredAmount ? baseHash ^ AatfDeliveryLocation.GetHashCode() : baseHash ^ AeDeliveryLocation.GetHashCode();
         }
     }
 }

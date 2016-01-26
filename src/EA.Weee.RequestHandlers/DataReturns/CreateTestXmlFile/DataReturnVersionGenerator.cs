@@ -44,8 +44,7 @@
 
             DataReturn dataReturn = new DataReturn(scheme, quarter);
 
-            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn,
-                 new WeeeCollectedReturnVersion(), new WeeeDeliveredReturnVersion(), new EeeOutputReturnVersion());
+            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn);
 
             IEnumerable<ReturnItem> returnItemsCollectedFromDcf = CreateReturnItems(null);
             foreach (var returnItem in returnItemsCollectedFromDcf)

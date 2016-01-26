@@ -23,7 +23,7 @@
                 .Returns("WEE/SC0001ST/SCH");
 
             var dataReturn = new DataReturn(scheme, new Quarter(2016, QuarterType.Q2));
-            var dataReturnVersion = new DataReturnVersion(dataReturn, new WeeeCollectedReturnVersion(), new WeeeDeliveredReturnVersion(), new EeeOutputReturnVersion());
+            var dataReturnVersion = new DataReturnVersion(dataReturn);
 
             // WEEE collected
             dataReturnVersion.WeeeCollectedReturnVersion.AddWeeeCollectedAmount(

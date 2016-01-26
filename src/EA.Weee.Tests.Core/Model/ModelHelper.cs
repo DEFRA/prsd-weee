@@ -579,7 +579,8 @@
             {
                 Id = dataReturnVersionId,
                 DataReturn = dataReturn,
-                DataReturnId = dataReturn.Id
+                DataReturnId = dataReturn.Id,
+                CreatedDate = DateTime.UtcNow
             };
 
             if (isSubmitted)

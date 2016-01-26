@@ -3,18 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using EA.Prsd.Core.Domain;
     using Prsd.Core;
 
-    public class WeeeCollectedReturnVersion : Entity
+    public class WeeeCollectedReturnVersion : DataReturnVersionAssociativeEntity
     {
-        public virtual ICollection<DataReturnVersion> DataReturnVersions { get; private set; }
-
         public virtual ICollection<WeeeCollectedAmount> WeeeCollectedAmounts { get; private set; }
 
         public WeeeCollectedReturnVersion()
         {
-            DataReturnVersions = new List<DataReturnVersion>();
             WeeeCollectedAmounts = new List<WeeeCollectedAmount>();
         }
 
