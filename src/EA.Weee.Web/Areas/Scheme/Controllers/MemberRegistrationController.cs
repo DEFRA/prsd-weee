@@ -164,7 +164,7 @@
                     await SetBreadcrumb(pcsId, ManageMembersActivity);
 
                     return View("ViewErrorsAndWarnings",
-                        new MemberUploadResultViewModel { ErrorData = errors, TotalCharges = memberUpload.TotalCharges });
+                        new MemberUploadResultViewModel { ErrorData = errors, TotalCharges = memberUpload.TotalCharges, MemberUploadId = memberUploadId });
                 }
 
                 return RedirectToAction("XmlHasNoErrors", new { pcsId, memberUploadId });
