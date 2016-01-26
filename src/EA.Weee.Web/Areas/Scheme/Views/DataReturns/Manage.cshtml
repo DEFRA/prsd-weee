@@ -24,7 +24,7 @@
                 {
                     var csvFileName = "Overview of current EEE and WEEE data for " + complianceYear + " (CSV)";
                     @(this.WeeeGds().ActionLinkWithEventTracking(csvFileName,
-                            Url.UrlFor<DataReturnsController>(c => c.GetEeeWeeeDataReturnCSV(Model.PcsId, complianceYear)),
+                            Url.UrlFor<DataReturnsController>(c => c.DownloadEeeWeeeData(Model.PcsId, complianceYear)),
                              "Downloads",
                              "Overview of EEE and WEEE data",
                              "Compliance year: " + complianceYear))
