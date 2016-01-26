@@ -67,6 +67,7 @@
     <Compile Include="DataReturns\CreateTestXmlFile.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme.cs" />
+    <Compile Include="DataReturns\FetchSummaryCsv.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile.cs" />
     <Compile Include="DataReturns\SubmitDataReturnUpload.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYears.cs" />

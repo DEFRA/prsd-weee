@@ -662,6 +662,71 @@
             Assert.IsType<ManageViewModel>(((ViewResult)result).Model);         
         }
 
+        /// <summary>
+        /// This test ensures that the GET "DownloadEeeWeeeData" action calls the
+        /// API to retrieve the file data for the specified organisation and compliance
+        /// year and provides the data in the result.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetDownloadEeeWeeeData_Always_CallsApiAndReturnsFileContents()
+        {
+            // Arrange
+            Guid organisationId = new Guid("ADED8BDE-CF03-4696-B972-DDAB9306A6DD");
+
+            FileInfo fileInfo = new FileInfo("Test file.csv", A.Dummy<byte[]>());
+
+            IWeeeClient client = A.Fake<IWeeeClient>();
+            A.CallTo(() => client.SendAsync(A<string>._, A<FetchSummaryCsv>._))
+                .WhenArgumentsMatch(a => a.Get<FetchSummaryCsv>("request").OrganisationId == organisationId
+                    && a.Get<FetchSummaryCsv>("request").ComplianceYear == 2017)
+                .Returns(fileInfo);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => client,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                A.Dummy<ConfigurationService>());
+
+            // Act
+            ActionResult result = await controller.DownloadEeeWeeeData(organisationId, 2017);
+
+            // Assert
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+
+            Assert.Equal("Test file.csv", fileResult.FileDownloadName);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "DownloadEeeWeeeData" returns
+        /// a FileResult with a content type of "text/csv".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetDownloadEeeWeeeData_Always_ReturnsFileWithContentTypeTextCsv()
+        {
+            // Arrange
+            DataReturnsController controller = new DataReturnsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                A.Dummy<ConfigurationService>());
+
+            // Act
+            ActionResult result = await controller.DownloadEeeWeeeData(A.Dummy<Guid>(), A.Dummy<int>());
+
+            // Assert
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+
+            Assert.Equal("text/csv", fileResult.ContentType);
+        }
+
         private DataReturnsController GetRealDataReturnsControllerWithFakeContext()
         {
             var controller = DataReturnsController();
