@@ -28,6 +28,7 @@ namespace EA.Weee.Tests.Core.Model
         public Nullable<System.Guid> EeeOutputReturnVersionId { get; set; }
         public Nullable<System.Guid> WeeeDeliveredReturnVersionId { get; set; }
         public Nullable<System.Guid> WeeeCollectedReturnVersionId { get; set; }
+        public System.DateTime CreatedDate { get; set; }
     
         public virtual ICollection<DataReturn> DataReturns { get; set; }
         public virtual DataReturn DataReturn { get; set; }

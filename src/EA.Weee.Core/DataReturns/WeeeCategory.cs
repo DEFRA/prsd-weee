@@ -1,7 +1,6 @@
-﻿namespace EA.Weee.Domain.Lookup
+﻿namespace EA.Weee.Core.DataReturns
 {
     using System.ComponentModel.DataAnnotations;
-    using Prsd.Core.Domain;
 
     public enum WeeeCategory
     {
@@ -45,6 +44,6 @@
         GasDischargeLampsAndLedLightSources = 13,
 
         [Display(Name = "Photovoltaic Panels")]
-        PhotovoltaicPanels = 14,
+        PhotovoltaicPanels = 14
     }
 }

@@ -16,11 +16,11 @@
                  null,
                  A.Dummy<string>(),
                  A.Dummy<List<DataReturnUploadError>>(),
-                 A.Dummy<string>(),                 
+                 A.Dummy<string>(),
                  A.Dummy<int>(),
                  A.Dummy<int>()));
         }
-        
+
         [Fact]
         public void Submit_WhenAlreadySubmitted_ThrowInvalidOperationException()
         {
@@ -29,7 +29,7 @@
                  A.Dummy<Scheme>(),
                  A.Dummy<string>(),
                  A.Dummy<List<DataReturnUploadError>>(),
-                 A.Dummy<string>(),                
+                 A.Dummy<string>(),
                  A.Dummy<int>(),
                  A.Dummy<int>());
 
@@ -37,7 +37,7 @@
             dataReturnUpload.Submit("test@co.uk");
 
             // Act
-            Action action = () => dataReturnUpload.Submit("test@co.uk"); 
+            Action action = () => dataReturnUpload.Submit("test@co.uk");
 
             // Assert
             Assert.Throws<InvalidOperationException>(action);
@@ -51,7 +51,7 @@
                  A.Dummy<Scheme>(),
                  A.Dummy<string>(),
                  A.Dummy<List<DataReturnUploadError>>(),
-                 A.Dummy<string>(),                 
+                 A.Dummy<string>(),
                  A.Dummy<int>(),
                  A.Dummy<int>());
 
@@ -70,7 +70,7 @@
                  A.Dummy<Scheme>(),
                  A.Dummy<string>(),
                  A.Dummy<List<DataReturnUploadError>>(),
-                 A.Dummy<string>(),                 
+                 A.Dummy<string>(),
                  A.Dummy<int>(),
                  A.Dummy<int>());
 
@@ -89,7 +89,7 @@
                  A.Dummy<Scheme>(),
                  A.Dummy<string>(),
                  A.Dummy<List<DataReturnUploadError>>(),
-                 A.Dummy<string>(),                
+                 A.Dummy<string>(),
                  A.Dummy<int>(),
                  A.Dummy<int>());
 
