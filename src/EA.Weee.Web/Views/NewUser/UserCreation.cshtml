@@ -1,5 +1,7 @@
 ﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Controllers
 @using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.ViewModels.NewUser.UserCreationViewModel
 @{
     ViewBag.Title = "Register";
@@ -45,8 +47,13 @@
             <fieldset>
                 @Html.Gds().ValidationMessageFor(m => m.TermsAndConditions)
                 <p>
-                    @this.WeeeGds().ActionLinkWithEventTracking("Read full terms and conditions of use", "TermsAndConditions", "NewUser",
-                         "Policies", "Terms and conditions", routeValues: new RouteValueDictionary { { "area", string.Empty } }, newTab: true)
+                    @(this.WeeeGds().ActionLinkWithEventTracking("Read full terms and conditions of use", 
+                        Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
+                        "Policies", 
+                        "Terms and conditions",
+                        null, 
+                        null, 
+                        true))
                 </p>
                 <label class="block-label" for="TermsAndConditions">
                     @Html.CheckBoxFor(m => m.TermsAndConditions, new { @id = "TermsAndConditions" })

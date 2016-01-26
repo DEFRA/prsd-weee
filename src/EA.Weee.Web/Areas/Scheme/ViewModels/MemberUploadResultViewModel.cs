@@ -9,6 +9,8 @@
     {
         public Guid MemberUploadId { get; set; }
 
+        public Guid PcsId { get; set; }
+
         public List<ErrorData> ErrorData { get; set; }
 
         public decimal TotalCharges { get; set; }
