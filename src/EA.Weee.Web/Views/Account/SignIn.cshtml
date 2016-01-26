@@ -1,4 +1,6 @@
-﻿@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.ViewModels.Account.LoginViewModel
 
 @section main_content {
@@ -33,7 +35,10 @@
         @Html.ActionLink("Create a user account", "UserCreation", "NewUser")
     </p>
     <p>
-        @this.WeeeGds().ActionLinkWithEventTracking("Reset password", "ResetPasswordRequest", "Account",
-          "User account", "Reset password", "External")
+        @this.WeeeGds().ActionLinkWithEventTracking("Reset password", 
+            Url.UrlFor<AccountController>(c => c.ResetPasswordRequest()),
+            "User account", 
+            "Reset password", 
+            "External")
     </p>
 }

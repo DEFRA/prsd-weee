@@ -5,7 +5,6 @@
     using System.Text;
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
-    using System.Web.Routing;
 
     public partial class WeeeGds<TModel>
     {
@@ -17,9 +16,13 @@
             return new MvcHtmlString(span + link);
         }
 
-        public MvcHtmlString ActionLinkWithEventTracking(string linkText, string actionName, string controllerName,
-                 string eventCategory, string eventAction, string eventLabel = null, RouteValueDictionary routeValues = null,
-                 IDictionary<string, object> htmlAttributes = null, bool newTab = false)
+        public MvcHtmlString ActionLinkWithEventTracking(string linkText,
+               string url,
+               string eventCategory,
+               string eventAction,
+               string eventLabel = null,
+               IDictionary<string, object> htmlAttributes = null,
+               bool newTab = false)
         {
             StringBuilder attributes = new StringBuilder();
             string additionalOnclickContent = string.Empty;
@@ -51,8 +54,7 @@
 
             attributes.AppendFormat(@"onclick=""{0}{1}""", EventTrackingFunction(eventCategory, eventAction, eventLabel), additionalOnclickContent);
 
-            var action = UrlHelper.Action(actionName, controllerName, routeValues);
-            string link = string.Format(@"<a href=""{0}"" {1}>{2}</a>", action, attributes.ToString(), linkText);
+            string link = string.Format(@"<a href=""{0}"" {1}>{2}</a>", url, attributes.ToString(), linkText);
 
             return new MvcHtmlString(link);
         }
