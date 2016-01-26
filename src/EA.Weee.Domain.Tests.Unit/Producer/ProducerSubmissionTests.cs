@@ -2,10 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using Domain.Producer.Classfication;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Scheme;
     using FakeItEasy;
     using Lookup;
+    using Obligation;
     using Xunit;
 
     public class ProducerSubmissionTests

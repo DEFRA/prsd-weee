@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using Domain.DataReturns;
     using Lookup;
+    using Obligation;
     using Xunit;
 
     public class ExtensionMethodsTests

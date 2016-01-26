@@ -5,6 +5,7 @@
     using Domain.DataReturns;
     using FakeItEasy;
     using Lookup;
+    using Obligation;
     using Xunit;
 
     [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Variable name aeDeliveryLocation is valid.")]

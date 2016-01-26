@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
     using System;
+    using Error;
     using Prsd.Core.Domain;
 
     public class DataReturnUploadError : Entity

@@ -8,8 +8,10 @@
     using Domain;
     using Domain.DataReturns;
     using Domain.Lookup;
+    using Domain.Obligation;
     using Domain.Organisation;
     using Domain.Producer;
+    using Domain.Producer.Classfication;
     using Domain.Scheme;
     using FakeItEasy;
     using Prsd.Core.Domain;
@@ -101,10 +103,10 @@
                 false,
                 null,
                 "Trading Name 1",
-                Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                Domain.SellingTechniqueType.Both,
-                Domain.ObligationType.Both,
-                Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),

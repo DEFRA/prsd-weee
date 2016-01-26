@@ -6,12 +6,14 @@
     using System.Threading.Tasks;
     using Domain.Lookup;
     using Domain.Producer;
+    using Domain.Producer.Classfication;
     using Domain.Scheme;
     using EA.Weee.Core.Admin;
     using EA.Weee.RequestHandlers.Admin.GetProducerDetails;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
+    using Prsd.Core.Mapper;
     using Xunit;
 
     public class GetProducerDetailsHandlerTests
@@ -24,8 +26,9 @@
             // Arrange
             IGetProducerDetailsDataAccess dataAccess = A.Dummy<IGetProducerDetailsDataAccess>();
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateFromUserType(userType);
+            IMapper mapper = A.Fake<IMapper>();
 
-            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization);
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
 
             Requests.Admin.GetProducerDetails request = new Requests.Admin.GetProducerDetails()
             {
@@ -48,8 +51,9 @@
                 .Returns(new List<Domain.Producer.ProducerSubmission>());
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
+            IMapper mapper = A.Fake<IMapper>();
 
-            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization);
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
 
             Requests.Admin.GetProducerDetails request = new Requests.Admin.GetProducerDetails()
             {
@@ -95,10 +99,10 @@
                 false,
                 null,
                 "Trading Name 1",
-                Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                Domain.SellingTechniqueType.Both,
-                Domain.ObligationType.Both,
-                Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
@@ -111,8 +115,9 @@
                 .Returns(new List<Domain.Producer.ProducerSubmission>() { producer });
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
+            IMapper mapper = A.Fake<IMapper>();
 
-            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization);
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
 
             Requests.Admin.GetProducerDetails request = new Requests.Admin.GetProducerDetails()
             {
@@ -151,10 +156,10 @@
                 false,
                 null,
                 "Trading Name 1",
-                Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                Domain.SellingTechniqueType.Both,
-                Domain.ObligationType.Both,
-                Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
@@ -174,10 +179,10 @@
                 false,
                 null,
                 "Trading Name 1",
-                Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                Domain.SellingTechniqueType.Both,
-                Domain.ObligationType.Both,
-                Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
@@ -192,7 +197,9 @@
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization);
+            IMapper mapper = A.Fake<IMapper>();
+
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
 
             Requests.Admin.GetProducerDetails request = new Requests.Admin.GetProducerDetails()
             {
@@ -231,10 +238,10 @@
                 false,
                 null,
                 "Trading Name 1",
-                Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                Domain.SellingTechniqueType.Both,
-                Domain.ObligationType.Both,
-                Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
@@ -254,10 +261,10 @@
                 false,
                 null,
                 "Trading Name 2",
-                Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                Domain.SellingTechniqueType.Both,
-                Domain.ObligationType.Both,
-                Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
@@ -272,7 +279,9 @@
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization);
+            IMapper mapper = A.Fake<IMapper>();
+
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
 
             Requests.Admin.GetProducerDetails request = new Requests.Admin.GetProducerDetails()
             {
@@ -309,10 +318,10 @@
                 false,
                 null,
                 "Trading Name 1",
-                Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                Domain.SellingTechniqueType.Both,
-                Domain.ObligationType.B2B,
-                Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.B2B,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
@@ -335,10 +344,10 @@
                 false,
                 null,
                 "Trading Name 2",
-                Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                Domain.SellingTechniqueType.Both,
-                Domain.ObligationType.B2C,
-                Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.B2C,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
@@ -353,7 +362,9 @@
 
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization);
+            IMapper mapper = A.Fake<IMapper>();
+
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
 
             Requests.Admin.GetProducerDetails request = new Requests.Admin.GetProducerDetails()
             {

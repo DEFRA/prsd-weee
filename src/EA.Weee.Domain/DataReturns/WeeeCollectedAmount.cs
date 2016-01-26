@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Lookup;
-    using Prsd.Core;
+    using Obligation;
 
     public class WeeeCollectedAmount : ReturnItem, IEquatable<WeeeCollectedAmount>
     {

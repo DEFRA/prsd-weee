@@ -192,6 +192,7 @@
     <Content Include="scripts\Update\Sprint21\20160112-1608-Rename1B1STransactionNumberSequenceTable.sql" />
     <None Include="scripts\Update\Sprint21\20160125-1200-AddCreateDateToDataReturnVersion.sql" />
     <None Include="scripts\Update\Sprint21\20160119-1306-RemoveSpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority.sql" />
+    <None Include="scripts\Update\Sprint22\20160121-1440-CreateSpgUKEEEDataByComplianceYear.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

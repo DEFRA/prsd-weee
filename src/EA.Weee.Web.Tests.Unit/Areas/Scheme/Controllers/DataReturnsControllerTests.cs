@@ -41,14 +41,11 @@
         [Fact]
         public async void GetUpload_ChecksForValidityOfOrganisation()
         {
+            //Arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+            
             // Act           
-            try
-            {
-                await DataReturnsController().Upload(A<Guid>._);
-            }
-            catch (Exception)
-            {
-            }
+            await DataReturnsController().Upload(new Guid());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .MustHaveHappened(Repeated.Exactly.Once);

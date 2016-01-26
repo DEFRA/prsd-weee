@@ -2,6 +2,7 @@
 {
     using System;
     using Prsd.Core.Domain;
+    using User;
 
     public abstract class AuditableEntity : Entity
     {

@@ -11,7 +11,7 @@
     using Domain.Lookup;
     using Prsd.Core;
     using ErrorData = Core.Shared.ErrorData;
-    using ObligationType = Domain.ObligationType;
+    using ObligationType = Domain.Obligation.ObligationType;
     using Scheme = Domain.Scheme.Scheme;
 
     public class DataReturnVersionBuilder : IDataReturnVersionBuilder
@@ -64,14 +64,14 @@
         }
 
         public Task AddAeDeliveredAmount(string approvalNumber, string operatorName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
-        {
+            {
             weeeDeliveredAmounts.Add(new WeeeDeliveredAmount(obligationType, category, tonnage, new AeDeliveryLocation(approvalNumber, operatorName)));
 
             return Task.Delay(0);
         }
 
         public async Task AddEeeOutputAmount(string producerRegistrationNumber, string producerName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
-        {
+                {
             var validationResult = await eeeValidator.Validate(producerRegistrationNumber, producerName, category, obligationType, tonnage);
 
             if (ConsideredValid(validationResult))
@@ -79,10 +79,10 @@
                 var registeredProducer = await schemeQuarterDataAccess.GetRegisteredProducer(producerRegistrationNumber);
 
                 eeeOutputAmounts.Add(new EeeOutputAmount(obligationType, category, tonnage, registeredProducer));
-            }
+                }
 
             Errors.AddRange(validationResult);
-        }
+            }
 
         public Task AddWeeeCollectedAmount(WeeeCollectedAmountSourceType sourceType, WeeeCategory category, ObligationType obligationType, decimal tonnage)
         {
@@ -113,7 +113,7 @@
                 // Retrieve the latest data return version stored in the database.
                 var latestDataReturnVersion = await schemeQuarterDataAccess.GetLatestDataReturnVersionOrDefault();
                 if (latestDataReturnVersion == null)
-                {
+        {
                     // No latest data return version is available, therefore create new returns data.
                     mergedWeeeCollectedAmounts = weeeCollectedAmounts;
                     mergedWeeeDeliveredAmounts = weeeDeliveredAmounts;
@@ -140,7 +140,7 @@
                 {
                     weeeDeliveredReturnVersion = new WeeeDeliveredReturnVersion();
                     foreach (var weeeDeliveredAmount in mergedWeeeDeliveredAmounts)
-                    {
+            {
                         weeeDeliveredReturnVersion.AddWeeeDeliveredAmount(weeeDeliveredAmount);
                     }
                 }
@@ -156,7 +156,7 @@
                     {
                         weeeCollectedReturnVersion.AddWeeeCollectedAmount(weeeCollectedAmount);
                     }
-                }
+            }
 
                 if (reuseLatestEeeOutputReturnVersion)
                 {
@@ -169,11 +169,11 @@
                     {
                         eeeOutputReturnVersion.AddEeeOutputAmount(eeeOutputAmount);
                     }
-                }
+        }
 
                 var dataReturn = await schemeQuarterDataAccess.FetchDataReturnOrDefault();
                 if (dataReturn == null)
-                {
+        {
                     dataReturn = new DataReturn(Scheme, Quarter);
                 }
 
@@ -184,9 +184,9 @@
         }
 
         private static bool ConsideredValid(ICollection<ErrorData> errorData)
-        {
+            {
             return !errorData.Any(e => e.ErrorLevel == Core.Shared.ErrorLevel.Error);
-        }
+            }
 
         private static bool ReplaceEqualItems<T>(ICollection<T> replaceableItems, ICollection<T> availableItems, out ICollection<T> result)
             where T : class, IEquatable<T>
@@ -202,13 +202,13 @@
             else if (availableItems == null)
             {
                 result = replaceableItems;
-            }
+        }
             else
             {
                 result = new List<T>();
 
                 foreach (var replaceableItem in replaceableItems)
-                {
+        {
                     var availableItem = availableItems.FirstOrDefault(x => x.Equals(replaceableItem));
                     result.Add(availableItem ?? replaceableItem);
                 }
