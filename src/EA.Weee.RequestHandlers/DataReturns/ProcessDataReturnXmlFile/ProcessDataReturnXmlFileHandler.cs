@@ -64,7 +64,7 @@
                 var dataReturnVersionBuilderResult = await dataReturnVersionFromXmlBuilder.Build(xmlGeneratorResult.DeserialisedType);
 
                 var allErrors = (dataReturnVersionBuilderResult.ErrorData
-                    .Select(e => new DataReturnUploadError(e.ErrorLevel.ToDomainErrorLevel(), Domain.UploadErrorType.Business, e.Description)))
+                    .Select(e => new DataReturnUploadError(e.ErrorLevel.ToDomainErrorLevel(), Domain.Error.UploadErrorType.Business, e.Description)))
                     .ToList();
 
                 dataReturnUpload = new DataReturnUpload(scheme, xmlGeneratorResult.XmlString, allErrors, message.FileName, complianceYear, Convert.ToInt32(quarter));

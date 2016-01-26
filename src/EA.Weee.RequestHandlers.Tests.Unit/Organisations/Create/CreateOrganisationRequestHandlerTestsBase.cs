@@ -3,8 +3,8 @@
     using System;
     using System.Data.Entity;
     using DataAccess;
-    using Domain;
     using Domain.Organisation;
+    using Domain.User;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Security;

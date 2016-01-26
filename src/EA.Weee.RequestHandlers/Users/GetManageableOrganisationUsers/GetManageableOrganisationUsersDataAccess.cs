@@ -6,8 +6,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
-    using Domain;
     using Domain.Organisation;
+    using Domain.User;
 
     public class GetManageableOrganisationUsersDataAccess : IGetManageableOrganisationUsersDataAccess
     {

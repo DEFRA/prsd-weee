@@ -106,7 +106,7 @@
         {
             if (userId.HasValue)
             {
-                return new CompetentAuthorityUser(userId.Value.ToString(), Guid.NewGuid(), Domain.UserStatus.Pending);
+                return new CompetentAuthorityUser(userId.Value.ToString(), Guid.NewGuid(), Domain.User.UserStatus.Pending);
             }
 
             return A.Fake<CompetentAuthorityUser>();

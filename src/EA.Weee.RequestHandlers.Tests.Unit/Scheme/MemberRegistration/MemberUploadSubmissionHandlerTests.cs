@@ -6,8 +6,8 @@
     using System.Security;
     using System.Threading.Tasks;
     using DataAccess;
-    using Domain;
     using Domain.Scheme;
+    using Domain.User;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
     using RequestHandlers.Shared.DomainUser;

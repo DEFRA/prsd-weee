@@ -5,7 +5,7 @@
     using System.Linq;
     using Core.Helpers;
     using Core.Scheme;
-    using Domain;
+    using Domain.Error;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;

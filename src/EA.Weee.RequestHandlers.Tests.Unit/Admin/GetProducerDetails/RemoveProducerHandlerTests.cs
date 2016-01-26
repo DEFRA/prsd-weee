@@ -6,6 +6,7 @@
     using Domain.Charges;
     using Domain.Producer;
     using Domain.Scheme;
+    using Domain.User;
     using FakeItEasy;
     using RequestHandlers.Admin.GetProducerDetails;
     using RequestHandlers.Security;

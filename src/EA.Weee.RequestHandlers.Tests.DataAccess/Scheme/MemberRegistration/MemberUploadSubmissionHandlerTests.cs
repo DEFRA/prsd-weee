@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Domain.User;
     using FakeItEasy;
     using RequestHandlers.Scheme.MemberRegistration;
     using RequestHandlers.Shared.DomainUser;
@@ -40,7 +41,7 @@
 
                 database.Model.SaveChanges();
 
-                Domain.User user = await database.WeeeContext.Users.FirstAsync();
+                User user = await database.WeeeContext.Users.FirstAsync();
                 IDomainUserContext domainUserContext = A.Fake<IDomainUserContext>();
                 A.CallTo(() => domainUserContext.GetCurrentUserAsync()).Returns(user);
 
@@ -83,7 +84,7 @@
 
                 database.Model.SaveChanges();
 
-                Domain.User user = await database.WeeeContext.Users.FirstAsync();
+                User user = await database.WeeeContext.Users.FirstAsync();
                 IDomainUserContext domainUserContext = A.Fake<IDomainUserContext>();
                 A.CallTo(() => domainUserContext.GetCurrentUserAsync()).Returns(user);
 
@@ -125,7 +126,7 @@
 
                 database.Model.SaveChanges();
 
-                Domain.User user = await database.WeeeContext.Users.FirstAsync();
+                User user = await database.WeeeContext.Users.FirstAsync();
                 IDomainUserContext domainUserContext = A.Fake<IDomainUserContext>();
                 A.CallTo(() => domainUserContext.GetCurrentUserAsync()).Returns(user);
 
@@ -173,7 +174,7 @@
 
                 database.Model.SaveChanges();
 
-                Domain.User user = await database.WeeeContext.Users.FirstAsync();
+                User user = await database.WeeeContext.Users.FirstAsync();
                 IDomainUserContext domainUserContext = A.Fake<IDomainUserContext>();
                 A.CallTo(() => domainUserContext.GetCurrentUserAsync()).Returns(user);
 

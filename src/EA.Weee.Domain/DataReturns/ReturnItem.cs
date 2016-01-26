@@ -2,6 +2,7 @@
 {
     using System;
     using Lookup;
+    using Obligation;
     using Prsd.Core.Domain;
 
     public class ReturnItem : Entity, IReturnItem, IEquatable<ReturnItem>

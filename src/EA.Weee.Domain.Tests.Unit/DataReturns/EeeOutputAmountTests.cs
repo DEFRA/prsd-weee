@@ -1,10 +1,11 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.DataReturns
 {
     using System;
+    using Domain.DataReturns;
     using Domain.Producer;
-    using EA.Weee.Domain.DataReturns;
     using FakeItEasy;
     using Lookup;
+    using Obligation;
     using Xunit;
 
     public class EeeOutputAmountTests

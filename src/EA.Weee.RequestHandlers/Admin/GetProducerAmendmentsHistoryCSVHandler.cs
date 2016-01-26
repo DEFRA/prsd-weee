@@ -122,7 +122,7 @@
 
             string fileContent = csvWriter.Write(items);
 
-            var fileName = string.Format("{0}_producerhistory_{1:ddMMyyyy_HHmm}.csv",
+            var fileName = string.Format("{0}_producerregistrationhistory_{1:ddMMyyyy_HHmm}.csv",
                 request.PRN,
                 DateTime.UtcNow);
 
