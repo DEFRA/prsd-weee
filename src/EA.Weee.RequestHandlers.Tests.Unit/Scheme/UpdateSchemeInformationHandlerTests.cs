@@ -82,7 +82,7 @@
             var schemeInfo = schemes.FirstOrDefault();
 
             Assert.NotNull(schemeInfo);
-            Assert.Equal(schemeInfo.ObligationType, Domain.ObligationType.B2B);
+            Assert.Equal(schemeInfo.ObligationType, Domain.Obligation.ObligationType.B2B);
             Assert.Equal(schemeInfo.ApprovalNumber, approvalNumber);
             Assert.Equal(schemeInfo.SchemeName, schemeName);
             Assert.Equal(schemeInfo.IbisCustomerReference, ibisCustomerReference);
@@ -132,7 +132,7 @@
         private static Scheme CreateScheme()
         {
             var scheme = new Scheme(Guid.NewGuid());
-            scheme.UpdateScheme("Any value", "WEE/AB1234CD/SCH", "Any value", Domain.ObligationType.B2B, Guid.NewGuid());
+            scheme.UpdateScheme("Any value", "WEE/AB1234CD/SCH", "Any value", Domain.Obligation.ObligationType.B2B, Guid.NewGuid());
             return scheme;
         }
     }

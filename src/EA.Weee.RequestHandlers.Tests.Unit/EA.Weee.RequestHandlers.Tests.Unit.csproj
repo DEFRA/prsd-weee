@@ -101,6 +101,7 @@
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandlerTest.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetUKWeeeCsv\GetUKWeeeCsvHandlerTests.cs" />
+    <Compile Include="Admin\Reports\GetUkEeeDataCsvHandlerTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccessTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
     <Compile Include="Admin\UpdateUserHandlerTests.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandlerTests.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderTests.cs" />
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandlerTests.cs" />
+    <Compile Include="Mapping\ProducerEeeMapTests.cs" />
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\AddContactPersonToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\CompleteRegistrationHandlerTests.cs" />

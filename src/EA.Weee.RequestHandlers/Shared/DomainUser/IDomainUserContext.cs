@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared.DomainUser
 {
     using System.Threading.Tasks;
-    using EA.Weee.Domain;
+    using Domain.User;
 
     /// <summary>
     /// Provides methods for fetching objects representing domain users.

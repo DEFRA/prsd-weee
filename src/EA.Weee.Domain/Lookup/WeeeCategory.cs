@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.Lookup
 {
     using System.ComponentModel.DataAnnotations;
+    using Prsd.Core.Domain;
 
     public enum WeeeCategory
     {

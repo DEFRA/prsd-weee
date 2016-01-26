@@ -5,6 +5,7 @@
     using Core.Helpers;
     using Domain;
     using Domain.Organisation;
+    using Domain.User;
     using FakeItEasy;
     using RequestHandlers.Organisations.JoinOrganisation.DataAccess;
     using Weee.DataAccess;

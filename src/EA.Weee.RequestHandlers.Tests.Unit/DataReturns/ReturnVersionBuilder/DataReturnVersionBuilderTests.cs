@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Core.Shared;
     using Domain.DataReturns;
@@ -13,7 +12,7 @@
     using RequestHandlers.DataReturns.BusinessValidation.Rules;
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
     using Xunit;
-    using ObligationType = Domain.ObligationType;
+    using ObligationType = Domain.Obligation.ObligationType;
     using Scheme = Domain.Scheme.Scheme;
 
     public class DataReturnVersionBuilderTests

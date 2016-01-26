@@ -6,8 +6,8 @@
     using System.Security.Claims;
     using Core;
     using DataAccess;
-    using Domain;
     using Domain.Organisation;
+    using Domain.User;
     using EA.Weee.Domain.Admin;
     using FakeItEasy;
     using Prsd.Core.Domain;

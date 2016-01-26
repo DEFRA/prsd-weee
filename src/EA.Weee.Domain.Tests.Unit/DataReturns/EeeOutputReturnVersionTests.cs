@@ -1,14 +1,11 @@
 ﻿namespace EA.Weee.Domain.Tests.Unit.DataReturns
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Domain.DataReturns;
     using Domain.Producer;
     using FakeItEasy;
     using Lookup;
+    using Obligation;
     using Xunit;
     using Scheme = Domain.Scheme.Scheme;
 
