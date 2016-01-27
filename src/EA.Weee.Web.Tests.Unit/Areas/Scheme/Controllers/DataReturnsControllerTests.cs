@@ -659,8 +659,7 @@
             var result = await DataReturnsController().Manage(A<Guid>._);
 
             Assert.IsType<ViewResult>(result);
-            Assert.IsType<ManageViewModel>(((ViewResult)result).Model);
-           // Assert.IsType<List<int>>(((ViewResult)result).Model);
+            Assert.IsType<ManageViewModel>(((ViewResult)result).Model);         
         }
 
         private DataReturnsController GetRealDataReturnsControllerWithFakeContext()
