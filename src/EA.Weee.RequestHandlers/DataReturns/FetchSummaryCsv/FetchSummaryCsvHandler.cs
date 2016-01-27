@@ -59,29 +59,11 @@
 
             csvRows.Add(new CsvRow()
             {
-                Description = "WEEE from distributors",
-                ObligationType = ObligationType.B2B,
-                Selector = drv => drv.WeeeCollectedReturnVersion.WeeeCollectedAmounts
-                    .Where(wca => wca.SourceType == WeeeCollectedAmountSourceType.Distributor)
-                    .Where(wca => wca.ObligationType == Domain.Obligation.ObligationType.B2B)
-            });
-
-            csvRows.Add(new CsvRow()
-            {
                 Description = "WEEE from final holders",
                 ObligationType = ObligationType.B2C,
                 Selector = drv => drv.WeeeCollectedReturnVersion.WeeeCollectedAmounts
                     .Where(wca => wca.SourceType == WeeeCollectedAmountSourceType.FinalHolder)
                     .Where(wca => wca.ObligationType == Domain.Obligation.ObligationType.B2C)
-            });
-
-            csvRows.Add(new CsvRow()
-            {
-                Description = "WEEE from final holders",
-                ObligationType = ObligationType.B2B,
-                Selector = drv => drv.WeeeCollectedReturnVersion.WeeeCollectedAmounts
-                    .Where(wca => wca.SourceType == WeeeCollectedAmountSourceType.FinalHolder)
-                    .Where(wca => wca.ObligationType == Domain.Obligation.ObligationType.B2B)
             });
 
             csvRows.Add(new CsvRow()
@@ -182,7 +164,7 @@
             string fileName = string.Format("{0}_EEE_WEEE_data_{1}_{2:ddMMyyyy_HHmm}.csv",
                 scheme.ApprovalNumber,
                 message.ComplianceYear,
-                SystemTime.UtcNow);
+                SystemTime.Now);
 
             return new FileInfo(fileName, data);
         }
@@ -196,7 +178,7 @@
             public Func<DataReturnVersion, IEnumerable<ReturnItem>> Selector { get; set; }
         }
 
-        private IEnumerable<CsvResult> CreateResults(DataReturn dataReturn)
+        public IEnumerable<CsvResult> CreateResults(DataReturn dataReturn)
         {
             if (dataReturn.CurrentVersion == null)
             {
@@ -236,7 +218,7 @@
             }
         }
 
-        private CsvWriter<CsvResult> CreateWriter()
+        public CsvWriter<CsvResult> CreateWriter()
         {
             CsvWriter<CsvResult> writer = csvWriterFactory.Create<CsvResult>();
 
