@@ -759,7 +759,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ManageEeeWeeeDataApprovedStatus_RedirectsToDataReturnManageView()
+        public async void PostChooseActivity_ManageEeeWeeeDataApprovedStatus_RedirectsToDataReturnsIndex()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Approved);
 
@@ -772,7 +772,7 @@
 
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("Manage", routeValues["action"]);
+            Assert.Equal("Index", routeValues["action"]);
             Assert.Equal("DataReturns", routeValues["controller"]);
         }
 
