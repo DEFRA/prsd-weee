@@ -91,6 +91,7 @@
     <Compile Include="Mappings\WeeeDeliveredReturnVersionMapping.cs" />
     <Compile Include="StoredProcedure\PCSChargesCSVData.cs" />
     <Compile Include="StoredProcedure\ProducerEEECSVData.cs" />
+    <Compile Include="StoredProcedure\ProducerEeeHistoryCsvData.cs" />
     <Compile Include="StoredProcedure\SpgSchemeWeeeCsvResult.cs" />
     <Compile Include="Extensions\ProducerSubmissionExtensions.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />

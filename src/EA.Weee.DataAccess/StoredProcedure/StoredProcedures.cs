@@ -235,5 +235,15 @@
                     "[Producer].[SpgUKEEEDataByComplianceYear] @ComplianceYear",
                     complianceYearParameter).ToListAsync();
         }
+
+        public async Task<List<ProducerEeeHistoryCsvData>> SpgProducerEeeHistoryCsvData(string prn)
+        {
+            var prnParameter = new SqlParameter("@PRN", prn);
+
+            return await context.Database
+                .SqlQuery<ProducerEeeHistoryCsvData>(
+                    "[Producer].[spg<ProducerEeeHistoryCsvDataByPRN] @PRN",
+                    prnParameter).ToListAsync();
+        }
     }
 }
