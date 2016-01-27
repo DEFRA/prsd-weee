@@ -91,7 +91,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StoredProcedure\SpgInvoiceRunChargeBreakdownTests.cs" />
     <Compile Include="StoredProcedure\SpgProducerAmendmentsCSVDataByPRNTests.cs" />
-    <Compile Include="StoredProcedure\SpgProducerEEECSVDataByComplianceYearAndObligationTypeTests.cs" />
+    <Compile Include="StoredProcedure\SpgProducerEeeCsvDataByComplianceYearAndObligationTypeTests.cs" />
     <Compile Include="StoredProcedure\SpgProducerPublicRegisterCSVDataByComplianceYearTests.cs" />
     <Compile Include="StoredProcedure\SpgUKEEEDataByComplianceYearTests.cs" />
   </ItemGroup>

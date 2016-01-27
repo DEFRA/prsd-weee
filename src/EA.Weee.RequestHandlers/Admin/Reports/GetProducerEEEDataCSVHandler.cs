@@ -11,13 +11,13 @@
     using Requests.Admin.Reports;
     using Security;
 
-    internal class GetProducerEEEDataCSVHandler : IRequestHandler<GetProducerEEEDataCSV, CSVFileData>
+    internal class GetProducerEeeDataCsvHandler : IRequestHandler<GetProducerEeeDataCsv, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
         private readonly CsvWriterFactory csvWriterFactory;
 
-        public GetProducerEEEDataCSVHandler(IWeeeAuthorization authorization, WeeeContext context,
+        public GetProducerEeeDataCsvHandler(IWeeeAuthorization authorization, WeeeContext context,
             CsvWriterFactory csvWriterFactory)
         {
             this.authorization = authorization;
@@ -25,7 +25,7 @@
             this.csvWriterFactory = csvWriterFactory;
         }
 
-        public async Task<CSVFileData> HandleAsync(GetProducerEEEDataCSV request)
+        public async Task<CSVFileData> HandleAsync(GetProducerEeeDataCsv request)
         {
             authorization.EnsureCanAccessInternalArea();
 
@@ -53,11 +53,11 @@
 
         private async Task<string> GetProducersEEEDataCSVContent(int complianceYear, string obligationType)
         {
-            var items = await context.StoredProcedures.SpgProducerEEECSVDataByComplianceYearAndObligationType(
+            var items = await context.StoredProcedures.SpgProducerEeeCsvDataByComplianceYearAndObligationType(
                 complianceYear, obligationType);
 
-            CsvWriter<ProducerEEECSVData> csvWriter =
-                csvWriterFactory.Create<ProducerEEECSVData>();
+            CsvWriter<ProducerEeeCsvData> csvWriter =
+                csvWriterFactory.Create<ProducerEeeCsvData>();
 
             csvWriter.DefineColumn(@"Scheme name", i => i.SchemeName);
             csvWriter.DefineColumn(@"Scheme approval number", i => i.ApprovalNumber);

@@ -238,15 +238,15 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadProducerEeeDataCSV(int complianceYear, ObligationType obligationType)
+        public async Task<ActionResult> DownloadProducerEeeDataCsv(int complianceYear, ObligationType obligationType)
         {
             using (IWeeeClient client = apiClient())
             {
-                var producerEEECsvData = await client.SendAsync(User.GetAccessToken(),
-                   new GetProducerEEEDataCSV(complianceYear, obligationType));
+                var producerEeeCsvData = await client.SendAsync(User.GetAccessToken(),
+                   new GetProducerEeeDataCsv(complianceYear, obligationType));
 
-                byte[] data = new UTF8Encoding().GetBytes(producerEEECsvData.FileContent);
-                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerEEECsvData.FileName));
+                byte[] data = new UTF8Encoding().GetBytes(producerEeeCsvData.FileContent);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerEeeCsvData.FileName));
             }
         }
 
