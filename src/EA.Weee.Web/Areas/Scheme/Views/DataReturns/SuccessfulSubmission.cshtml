@@ -1,6 +1,8 @@
-﻿@using EA.Weee.Web.Controllers
+﻿@using EA.Weee.Web.Areas.Scheme.Controllers
+@using EA.Weee.Web.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.DataReturns.SuccessfulSubmissionViewModel
 @{
     ViewBag.Title = "Data Return Submitted";
 }
@@ -11,6 +13,8 @@
             <h1 class="heading-large">You have successfully submitted your XML file</h1>
         </div>
     </header>
+
+    <p>To view your organisation’s latest data, <a href="@(Url.UrlFor<DataReturnsController>(c => c.Index(Model.PcsId)))">manage EEE/WEEE data</a>.</p>
 
     @using (Html.BeginForm("SignOut", "Account", new { Area = "" }, FormMethod.Post))
     {
