@@ -1,4 +1,6 @@
-﻿@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @{
     ViewBag.Title = "Data Return Submitted";
 }
@@ -18,16 +20,14 @@
 
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
-    </p>   
+    </p>
 
     <p>
-        @this.WeeeGds().ActionLinkWithEventTracking(
-            "What did you think of this service?",
-            "Feedback",
-            "NewUser",
+        @(this.WeeeGds().ActionLinkWithEventTracking("What did you think of this service?",
+            Url.UrlFor<NewUserController>(c => c.Feedback()),
             "Data return feedback",
             "Successful data return submission",
-            "What did you think of this service?", new RouteValueDictionary { { "area", string.Empty } }, newTab: true)
-        (takes 30 seconds)
+            "What did you think of this service?",
+            newTab: true)) (takes 30 seconds)
     </p>
 }
