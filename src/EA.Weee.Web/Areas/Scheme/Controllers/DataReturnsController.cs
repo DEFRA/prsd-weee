@@ -205,7 +205,8 @@
 
             SubmitViewModel viewModel = new SubmitViewModel()
             {
-                DataReturn = dataReturn
+                DataReturn = dataReturn,
+                PcsId = pcsId
             };
 
             return View(viewModel);
