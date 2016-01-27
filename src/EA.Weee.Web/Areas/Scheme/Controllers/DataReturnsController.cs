@@ -88,7 +88,7 @@
         {
             if (!configService.CurrentConfiguration.EnableDataReturns)
             {
-                throw new InvalidOperationException("Unable to manage EEE/WEEE data return.");
+                throw new InvalidOperationException("Unable to manage EEE/WEEE data.");
             }
             using (var client = apiClient())
             {
@@ -319,7 +319,7 @@
         private async Task SetBreadcrumb(Guid organisationId)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
-            breadcrumb.ExternalActivity = "Manage EEE/WEEE data return";
+            breadcrumb.ExternalActivity = "Manage EEE/WEEE data";
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
 
