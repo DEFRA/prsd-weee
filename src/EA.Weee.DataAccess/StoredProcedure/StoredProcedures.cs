@@ -242,7 +242,7 @@
 
             return await context.Database
                 .SqlQuery<ProducerEeeHistoryCsvData>(
-                    "[Producer].[spg<ProducerEeeHistoryCsvDataByPRN] @PRN",
+                    "[Producer].[SpgProducerEeeHistoryCsvDataByPRN] @PRN",
                     prnParameter).ToListAsync();
         }
     }
