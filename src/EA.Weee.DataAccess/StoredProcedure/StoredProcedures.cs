@@ -215,12 +215,12 @@
             return result;
         }
 
-        public async Task<List<ProducerEEECSVData>> SpgProducerEEECSVDataByComplianceYearAndObligationType(int complianceYear, string obligationtype)
+        public async Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvDataByComplianceYearAndObligationType(int complianceYear, string obligationtype)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
             SqlParameter obligationTypeParameter = new SqlParameter("@ObligationType", obligationtype);
             return await context.Database
-                .SqlQuery<ProducerEEECSVData>(
+                .SqlQuery<ProducerEeeCsvData>(
                     "[Producer].[spgProducerEEECSVDataByComplianceYearAndObligationType] @ComplianceYear, @ObligationType",
                     complianceYearParameter,
                     obligationTypeParameter).ToListAsync();

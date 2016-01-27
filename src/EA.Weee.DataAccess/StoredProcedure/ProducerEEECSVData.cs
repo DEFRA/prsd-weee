@@ -3,7 +3,7 @@
     /// <summary>
     /// This class maps to the results of [Producer].[spgCSVDataByComplianceYearAndObligationType].
     /// </summary>
-    public class ProducerEEECSVData
+    public class ProducerEeeCsvData
     {
         public string PRN { get; set; }
         public string ProducerName { get; set; }
