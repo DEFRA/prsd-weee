@@ -83,7 +83,7 @@
                 activities.Add(PcsAction.ManagePcsMembers);
                 if (configurationService.CurrentConfiguration.EnableDataReturns)
                 {
-                    activities.Add(PcsAction.ManageEeeWeeeDataReturn);
+                    activities.Add(PcsAction.ManageEeeWeeeData);
                 }
                 if (organisationOverview.HasMemberSubmissions)
                 {
@@ -145,7 +145,7 @@
                         return RedirectToAction("ViewSubmissionHistory", new { pcsId = viewModel.OrganisationId });
                     }
                 }
-                if (viewModel.SelectedValue == PcsAction.ManageEeeWeeeDataReturn)
+                if (viewModel.SelectedValue == PcsAction.ManageEeeWeeeData)
                 {
                     using (var client = apiClient())
                     {

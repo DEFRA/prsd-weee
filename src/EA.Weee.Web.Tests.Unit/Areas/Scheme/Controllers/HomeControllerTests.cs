@@ -759,13 +759,13 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ManageEeeWeeeDataReturnApprovedStatus_RedirectsToDataReturnManageView()
+        public async void PostChooseActivity_ManageEeeWeeeDataApprovedStatus_RedirectsToDataReturnManageView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Approved);
 
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                SelectedValue = PcsAction.ManageEeeWeeeDataReturn
+                SelectedValue = PcsAction.ManageEeeWeeeData
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
@@ -777,13 +777,13 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ManageEeeWeeeDataReturnPendingStatus_RedirectsToAuthorisationRequired()
+        public async void PostChooseActivity_ManageEeeWeeeDataPendingStatus_RedirectsToAuthorisationRequired()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Pending);
 
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                SelectedValue = PcsAction.ManageEeeWeeeDataReturn
+                SelectedValue = PcsAction.ManageEeeWeeeData
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
@@ -795,13 +795,13 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ManageEeeWeeeDataReturnRejectedStatus_RedirectsToAuthorisationRequired()
+        public async void PostChooseActivity_ManageEeeWeeeDataRejectedStatus_RedirectsToAuthorisationRequired()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Rejected);
 
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                SelectedValue = PcsAction.ManageEeeWeeeDataReturn
+                SelectedValue = PcsAction.ManageEeeWeeeData
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
