@@ -12,10 +12,10 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class GetProducerEEEDataCSVHandlerTest
+    public class GetProducerEeeDataCsvHandlerTest
     {
         [Fact]
-        public async Task GetProducerEEEDataCSVHandler_NotInternalUser_ThrowsSecurityException()
+        public async Task GetProducerEeeDataCsvHandler_NotInternalUser_ThrowsSecurityException()
         {
             // Arrange
             var complianceYear = 2016;
@@ -24,8 +24,8 @@
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetProducerEEEDataCSVHandler(authorization, context, csvWriterFactory);
-            var request = new GetProducerEEEDataCSV(complianceYear, ObligationType.B2B);
+            var handler = new GetProducerEeeDataCsvHandler(authorization, context, csvWriterFactory);
+            var request = new GetProducerEeeDataCsv(complianceYear, ObligationType.B2B);
 
             // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
@@ -35,7 +35,7 @@
         }
 
         [Fact]
-        public async Task GetProducerEEEDataCSVHandler_NoComplianceYear_ThrowsArgumentException()
+        public async Task GetProducerEeeDataCsvHandler_NoComplianceYear_ThrowsArgumentException()
         {
             // Arrange
             var complianceYear = 0;
@@ -44,8 +44,8 @@
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetProducerEEEDataCSVHandler(authorization, context, csvWriterFactory);
-            var request = new GetProducerEEEDataCSV(complianceYear, ObligationType.B2B);
+            var handler = new GetProducerEeeDataCsvHandler(authorization, context, csvWriterFactory);
+            var request = new GetProducerEeeDataCsv(complianceYear, ObligationType.B2B);
 
             // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
@@ -55,7 +55,7 @@
         }
 
         [Fact]
-        public async Task GetProducerEEEDataCSVHandler_ComplianceYear_B2B_ReturnsFileContent()
+        public async Task GetProducerEeeDataCsvHandler_ComplianceYear_B2B_ReturnsFileContent()
         {
             // Arrange
             var complianceYear = 2016;
@@ -64,8 +64,8 @@
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetProducerEEEDataCSVHandler(authorization, context, csvWriterFactory);
-            var request = new GetProducerEEEDataCSV(complianceYear, ObligationType.B2B);
+            var handler = new GetProducerEeeDataCsvHandler(authorization, context, csvWriterFactory);
+            var request = new GetProducerEeeDataCsv(complianceYear, ObligationType.B2B);
 
             // Act
             CSVFileData data = await handler.HandleAsync(request);
@@ -75,17 +75,17 @@
         }
 
         [Fact]
-        public async Task GetProducerEEEDataCSVHandler_ComplianceYear_B2C_ReturnsFileContent()
+        public async Task GetProducerEeeDataCsvHandler_ComplianceYear_B2C_ReturnsFileContent()
         {
             // Arrange
-            var complianceYear = 2016;
+            var complianceYear = 2006;
 
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetProducerEEEDataCSVHandler(authorization, context, csvWriterFactory);
-            var request = new GetProducerEEEDataCSV(complianceYear, ObligationType.B2C);
+            var handler = new GetProducerEeeDataCsvHandler(authorization, context, csvWriterFactory);
+            var request = new GetProducerEeeDataCsv(complianceYear, ObligationType.B2C);
 
             // Act
             CSVFileData data = await handler.HandleAsync(request);
