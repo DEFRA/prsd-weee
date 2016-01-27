@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.DataAccess.StoredProcedure
 {
-    using System;
-
     /// <summary>
     /// This class maps to the results of [Producer].[spgCSVDataByComplianceYearAndObligationType].
     /// </summary>
