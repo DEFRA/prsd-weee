@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels.DataReturns
 {
     using System;
-    using Core.DataReturns;
+    using System.Collections.Generic;
 
-    public class SubmitViewModel
+    public class ManageViewModel
     {
+        public List<int> Years { get; set; }
         public Guid PcsId { get; set; }
-
-        public DataReturnForSubmission DataReturn { get; set; }
     }
-}
+} 

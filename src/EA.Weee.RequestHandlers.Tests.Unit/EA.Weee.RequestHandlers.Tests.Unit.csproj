@@ -123,6 +123,7 @@
     <Compile Include="DataReturns\BusinessValidation\XmlBusinessRules\SchemeApprovalNumberMismatchTests.cs" />
     <Compile Include="DataReturns\BusinessValidation\XmlBusinessRules\SubmissionWindowClosedTests.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile\XmlGeneratorTests.cs" />
+    <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandlerTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandlerTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnVersionFromXmlBuilderTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\GenerateFromDataReturnXMLTests.cs" />

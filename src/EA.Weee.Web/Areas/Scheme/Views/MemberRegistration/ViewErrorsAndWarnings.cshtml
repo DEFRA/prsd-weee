@@ -1,5 +1,7 @@
 ﻿@using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Scheme.Controllers
 @using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.MemberUploadResultViewModel
 @{
 	ViewBag.Title = "View errors and warnings";
@@ -86,28 +88,23 @@
 	}
 
 	<p>
-		To see your XML file’s full list,
-		@this.WeeeGds().ActionLinkWithEventTracking(
-									"Download your errors and warnings (CSV)",
-									"DownloadErrorsAndWarnings",
-									"MemberRegistration",
-									"Downloads",
-									"Errors and warnings"
-									).
+	    To see your XML file’s full list,
+
+        @(this.WeeeGds().ActionLinkWithEventTracking("download your errors and warnings (CSV)", 
+            Url.UrlFor<MemberRegistrationController>(c => c.DownloadErrorsAndWarnings(Model.PcsId, Model.MemberUploadId)),
+            "Downloads",
+            "Errors and warnings"))
 	</p>
 
-	<p>
-		@this.WeeeGds().ActionLinkWithEventTracking(
-								   "Upload a new file",
-								   "AddOrAmendMembers",
-								   "MemberRegistration",
-								   "Member registration loop",
-								   "Upload a new file",
-								   "Validation failed",
-								   null,
-								   new Dictionary<string, object>{{ "class", "button" }}
-								   )
-	</p>
+    <p>
+        @(this.WeeeGds().ActionLinkWithEventTracking("Upload a new file",
+            Url.UrlFor<MemberRegistrationController>(c => c.AddOrAmendMembers(Model.PcsId)),
+            "Member registration loop",
+            "Upload a new file",
+            "Validation failed",
+            new Dictionary<string, object> { { "class", "button" } }
+            ))
+    </p>
 
 	<div>
 		@Html.ActionLink("Perform another activity", "ChooseActivity", "Home")

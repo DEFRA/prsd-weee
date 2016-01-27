@@ -96,7 +96,7 @@
                 </tr>
                 <tr>
                     <th>Charge band type</th>
-                    <td>@scheme.ObligationType</td>
+                    <td>@scheme.ChargeBandType</td>
                 </tr>
                 <tr>
                     <th>Authorised representative</th>
@@ -553,9 +553,20 @@
         $("a[id$='details-tab']").click(function (event) {
             event.preventDefault();
 
-            // Inactivate all tabs
+            var schemeIdentifier = $(this).attr('id')
+                .replace('registration', '')
+                .replace('total-eee', '')
+                .replace('q1', '')
+                .replace('q2', '')
+                .replace('q3', '')
+                .replace('q4', '')
+                .replace('-details-tab', '');
+
+            // Inactivate scheme tags
             $("a[id$='details-tab']").each(function () {
-                $(this).parent().removeClass();
+                if ($(this).attr('id').indexOf(schemeIdentifier) !== -1) {
+                    $(this).parent().removeClass();
+                }
             });
 
             // Except this tab
@@ -563,9 +574,11 @@
 
             var tableIdentifier = $(this).attr('id').replace('details-tab', '');
 
-            // Hide all data tables
+            // Hide all data tables in scheme
             $("table[id$='details-table'").each(function () {
-                $(this).addClass('visually-hidden');
+                if ($(this).attr('id').indexOf(schemeIdentifier) !== -1) {
+                    $(this).addClass('visually-hidden');
+                }
             });
 
             // Except for the table corresponding to this tab

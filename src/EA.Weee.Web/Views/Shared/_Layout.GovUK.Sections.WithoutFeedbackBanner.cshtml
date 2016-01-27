@@ -1,4 +1,6 @@
-﻿@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @{
     Layout = "~/Views/Shared/_Layout.GovUK.cshtml";
     ViewBag.HeaderClass = "with-proposition";
@@ -49,18 +51,23 @@
         @if (ViewBag.ShowLinksToAgencies ?? true)
         {
             <li>
-                @this.WeeeGds().ActionLinkWithEventTracking("Terms and conditions", "TermsAndConditions", "NewUser",
-                     "Policies", "Terms and conditions", routeValues: new RouteValueDictionary { { "area", string.Empty } }, newTab: true)
+                @(this.WeeeGds().ActionLinkWithEventTracking("Terms and conditions",
+                    Url.UrlFor<NewUserController>(c => c.TermsAndConditions()),
+                    "Policies",
+                    "Terms and conditions",
+                    newTab: true))
             </li>
             <li>
-                @this.WeeeGds().ActionLinkWithEventTracking("Privacy", "Privacy", "NewUser",
-                     "Policies", "Privacy", routeValues: new RouteValueDictionary { { "area", string.Empty } }, newTab: true)
+                @(this.WeeeGds().ActionLinkWithEventTracking("Privacy",
+                    Url.UrlFor<NewUserController>(c => c.Privacy()),
+                    "Policies",
+                    "Privacy",
+                    newTab: true))
             </li>
         }
        
         <li>
-            @this.WeeeGds().ActionLinkToNewTab("Cookies",
-                "Cookies", "NewUser", new { area = string.Empty })
+            @(this.WeeeGds().ActionLinkToNewTab(Url.UrlFor<NewUserController>(c => c.Cookies())))
         </li>
     </ul>
 }
