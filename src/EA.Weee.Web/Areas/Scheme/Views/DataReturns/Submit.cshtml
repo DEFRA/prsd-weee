@@ -169,7 +169,8 @@
                         Url.UrlFor<DataReturnsController>(c => c.Upload(Model.PcsId)),
                         "Data return loop",
                         "Upload a new data return file",
-                        "Data return validation failed"))
+                        "Data return validation failed",
+                        new Dictionary<string, object> { { "class", "button" } }))
                 </p>
 
                 <div>

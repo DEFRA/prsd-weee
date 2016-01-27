@@ -159,7 +159,8 @@
 
             SubmitViewModel viewModel = new SubmitViewModel()
             {
-                DataReturn = dataReturn
+                DataReturn = dataReturn,
+                PcsId = pcsId
             };
 
             return View("Submit", viewModel);
@@ -195,6 +196,7 @@
             {
                 DataReturnForSubmission dataReturn = await FetchDataReturnUpload(pcsId, dataReturnUploadId);
                 viewModel.DataReturn = dataReturn;
+                viewModel.PcsId = pcsId;
 
                 return View(viewModel);
             }
