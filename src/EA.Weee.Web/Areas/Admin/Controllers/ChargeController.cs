@@ -121,13 +121,26 @@
                 IssuePendingCharges request = new IssuePendingCharges(authority);
                 IssuePendingChargesResult result = await client.SendAsync(User.GetAccessToken(), request);
 
-                if (result.Errors.Count == 0)
+                if (Request.IsAjaxRequest())
                 {
-                    return RedirectToAction("ChargesSuccessfullyIssued", new { authority, id = result.InvoiceRunId.Value });
+                    var jsonResult = new
+                    {
+                        Success = result.Errors.Count == 0,
+                        InvoiceRunId = result.InvoiceRunId,
+                        Errors = result.Errors
+                    };
+                    return Json(jsonResult);
                 }
                 else
                 {
-                    return View("IssueChargesError", result.Errors);
+                    if (result.Errors.Count == 0)
+                    {
+                        return RedirectToAction("ChargesSuccessfullyIssued", new { authority, id = result.InvoiceRunId.Value });
+                    }
+                    else
+                    {
+                        return View("IssueChargesError", result.Errors);
+                    }
                 }
             }
         }
