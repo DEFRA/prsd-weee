@@ -84,23 +84,34 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Manage(Guid pcsId)
+        public async Task<ActionResult> Index(Guid pcsId)
         {
+            await SetBreadcrumb(pcsId);
+
             if (!configService.CurrentConfiguration.EnableDataReturns)
             {
                 throw new InvalidOperationException("Unable to manage EEE/WEEE data.");
             }
+
+            bool organisationExists;
             using (var client = apiClient())
             {
-                var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
-                if (orgExists)
-                {                   
-                    List<int> years = await client.SendAsync(User.GetAccessToken(), new FetchDataReturnComplianceYearsForScheme(pcsId));
-                   await SetBreadcrumb(pcsId);
-                    return View(new ManageViewModel { PcsId = pcsId, Years = years });                                 
-                }
+                organisationExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
+            }
+
+            if (!organisationExists)
+            {
                 throw new InvalidOperationException(string.Format("'{0}' is not a valid organisation Id", pcsId));
-            }            
+            }
+
+            List<int> complianceYears;
+            using (var client = apiClient())
+            {
+                complianceYears = await client.SendAsync(User.GetAccessToken(), new FetchDataReturnComplianceYearsForScheme(pcsId));
+            }
+
+            IndexViewModel viewModel = new IndexViewModel(pcsId, complianceYears);
+            return View(viewModel);
         }
 
         [HttpGet]

@@ -39,101 +39,6 @@
         }
 
         [Fact]
-        public async void GetUpload_ChecksForValidityOfOrganisation()
-        {
-            //Arrange
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
-            
-            // Act           
-            await DataReturnsController().Upload(new Guid());
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
-
-        public async void GetUpload_IdDoesBelongToAnExistingOrganisation_ReturnsView()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-                .Returns(true);
-
-            var result = await DataReturnsController().Upload(A<Guid>._);
-
-            Assert.IsType<ViewResult>(result);
-        }
-
-        [Fact]
-        public async void GetAuthorisationRequired_ChecksStatusOfScheme()
-        {
-            await DataReturnsController().AuthorisationRequired(A<Guid>._);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
-        public async void GetAuthorizationRequired_SchemeIsPendingApproval_ReturnsViewWithPendingStatus()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
-                .Returns(SchemeStatus.Pending);
-
-            var result = await DataReturnsController().AuthorisationRequired(A<Guid>._);
-
-            Assert.IsType<ViewResult>(result);
-
-            var view = ((AuthorizationRequiredViewModel)((ViewResult)result).Model);
-
-            Assert.Equal(SchemeStatus.Pending, view.Status);
-        }
-
-        [Fact]
-        public async void GetAuthorizationRequired_SchemeIsRejected_ReturnsViewWithRejectedStatus()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
-                .Returns(SchemeStatus.Rejected);
-
-            var result = await DataReturnsController().AuthorisationRequired(A<Guid>._);
-
-            Assert.IsType<ViewResult>(result);
-
-            var view = ((AuthorizationRequiredViewModel)((ViewResult)result).Model);
-
-            Assert.Equal(SchemeStatus.Rejected, view.Status);
-        }
-
-        [Fact]
-        public async void GetAuthorizationRequired_SchemeIsApproved_RedirectsToPcsMemberSummary()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
-                .Returns(SchemeStatus.Approved);
-
-            var result = await DataReturnsController().AuthorisationRequired(A<Guid>._);
-
-            Assert.IsType<RedirectToRouteResult>(result);
-
-            var routeValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("Upload", routeValues["action"]);
-            Assert.Equal("DataReturns", routeValues["controller"]);
-        }
-
-        [Fact]
-
-        public async void GetSubmitDataReturns_ConfigSettingIsFalse_ThrowsException()
-        {
-            await Assert.ThrowsAnyAsync<InvalidOperationException>(() => DataReturnsController().Upload(A<Guid>._));
-        }
-
-        [Fact]
-        public async void GetUpload_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-                .Returns(false);
-
-            await Assert.ThrowsAnyAsync<Exception>(() => DataReturnsController().Upload(A<Guid>._));
-        }
-        [Fact]
         public void OnActionExecuting_ActionAuthorizationRequired_DoesNotCheckPcsId()
         {
             var fakeController = BuildFakeDataReturnsController();
@@ -206,6 +111,170 @@
                 .MustHaveHappened();
 
             Assert.Null(context.Result);
+        }
+
+        [Fact]
+        public async void GetAuthorisationRequired_ChecksStatusOfScheme()
+        {
+            await DataReturnsController().AuthorisationRequired(A<Guid>._);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void GetAuthorizationRequired_SchemeIsPendingApproval_ReturnsViewWithPendingStatus()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .Returns(SchemeStatus.Pending);
+
+            var result = await DataReturnsController().AuthorisationRequired(A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+
+            var view = ((AuthorizationRequiredViewModel)((ViewResult)result).Model);
+
+            Assert.Equal(SchemeStatus.Pending, view.Status);
+        }
+
+        [Fact]
+        public async void GetAuthorizationRequired_SchemeIsRejected_ReturnsViewWithRejectedStatus()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .Returns(SchemeStatus.Rejected);
+
+            var result = await DataReturnsController().AuthorisationRequired(A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+
+            var view = ((AuthorizationRequiredViewModel)((ViewResult)result).Model);
+
+            Assert.Equal(SchemeStatus.Rejected, view.Status);
+        }
+
+        [Fact]
+        public async void GetAuthorizationRequired_SchemeIsApproved_RedirectsToPcsMemberSummary()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .Returns(SchemeStatus.Approved);
+
+            var result = await DataReturnsController().AuthorisationRequired(A<Guid>._);
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Upload", routeValues["action"]);
+            Assert.Equal("DataReturns", routeValues["controller"]);
+        }
+        
+        /// <summary>
+        /// This test ensures that the GET "Index" action returns the "Index" view.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetIndex_Always_ReturnsIndexView()
+        {
+            // Arrange
+            DataReturnsController controller = new DataReturnsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                A.Dummy<ConfigurationService>());
+
+            // Act
+            ActionResult result = await controller.Index(A.Dummy<Guid>());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals("Index", viewResult.ViewName, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "Index" action calls the API to fetch summary
+        /// data about the data returns for the specified organisation. It ensures that
+        /// this information is populated into the IndexViewModel provided with the
+        /// result.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetIndex_CallsApiToFetchSummary_AndPopulatesViewModel()
+        {
+            IWeeeClient client = A.Fake<IWeeeClient>();
+
+            List<int> complianceYearsForScheme = new List<int>() { 2016, 2017, 2018 };
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<FetchDataReturnComplianceYearsForScheme>._))
+                .WhenArgumentsMatch(a => a.Get<FetchDataReturnComplianceYearsForScheme>("request").PcsId == new Guid("BA7F772F-626D-4CBD-8D50-50A7B852A9AC"))
+                .Returns(complianceYearsForScheme);
+
+            // Arrange
+            DataReturnsController controller = new DataReturnsController(
+                () => client,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                A.Dummy<ConfigurationService>());
+
+            // Act
+            ActionResult result = await controller.Index(new Guid("BA7F772F-626D-4CBD-8D50-50A7B852A9AC"));
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            IndexViewModel viewModel = viewResult.Model as IndexViewModel;
+            Assert.NotNull(viewModel);
+
+            Assert.Equal(new Guid("BA7F772F-626D-4CBD-8D50-50A7B852A9AC"), viewModel.OrganisationId);
+            Assert.Collection(viewModel.ComplianceYears,
+                r1 => Assert.Equal(2016, r1),
+                r2 => Assert.Equal(2017, r2),
+                r3 => Assert.Equal(2018, r3));
+        }
+
+        [Fact]
+        public async void GetUpload_ConfigSettingIsFalse_ThrowsException()
+        {
+            await Assert.ThrowsAnyAsync<InvalidOperationException>(() => DataReturnsController().Upload(A<Guid>._));
+        }
+
+        [Fact]
+        public async void GetUpload_ChecksForValidityOfOrganisation()
+        {
+            //Arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
+
+            // Act           
+            await DataReturnsController().Upload(new Guid());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public async void GetUpload_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+
+            var result = await DataReturnsController().Upload(A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public async void GetUpload_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(false);
+
+            await Assert.ThrowsAnyAsync<Exception>(() => DataReturnsController().Upload(A<Guid>._));
         }
 
         /// <summary>
@@ -633,33 +702,6 @@
 
             Assert.Equal("SuccessfulSubmission", redirectToRouteResult.RouteValues["action"]);
             Assert.Equal(new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"), redirectToRouteResult.RouteValues["pcsId"]);
-        }
-
-        [Fact]
-        public async void Manage_ManageOfLatestDataReturnUploads()
-        {
-             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-                .Returns(true);
-
-            await DataReturnsController().Manage(A<Guid>._);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnComplianceYearsForScheme>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-        }
-       
-        [Fact]
-        public async void Manage_HasUploadForThisScheme_ReturnsViewWithManageModel()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-               .Returns(true);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<FetchDataReturnComplianceYearsForScheme>._))
-                .Returns(new List<int>() { 2015, 2016 });
-
-            var result = await DataReturnsController().Manage(A<Guid>._);
-
-            Assert.IsType<ViewResult>(result);
-            Assert.IsType<ManageViewModel>(((ViewResult)result).Model);         
         }
 
         /// <summary>
