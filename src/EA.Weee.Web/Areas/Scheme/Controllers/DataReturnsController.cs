@@ -222,6 +222,7 @@
             {
                 DataReturnForSubmission dataReturn = await FetchDataReturnUpload(pcsId, dataReturnUploadId);
                 viewModel.DataReturn = dataReturn;
+                viewModel.PcsId = pcsId;
 
                 return View(viewModel);
             }
