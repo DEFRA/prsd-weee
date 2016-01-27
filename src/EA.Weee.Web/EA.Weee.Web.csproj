@@ -232,7 +232,7 @@
     <Compile Include="Areas\Admin\ViewModels\Charge\IssuedChargesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
-    <Compile Include="Areas\Scheme\ViewModels\DataReturns\ManageViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\DataReturns\IndexViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SummaryViewModel.cs" />
     <Compile Include="Extensions\ProducerEeeDetailsExtensions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
@@ -584,7 +584,7 @@
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
     <Content Include="Areas\Admin\Views\Reports\UKWeeeData.cshtml" />
-    <Content Include="Areas\Scheme\Views\DataReturns\Manage.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\UKEEEData.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />

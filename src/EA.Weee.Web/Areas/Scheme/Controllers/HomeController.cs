@@ -153,7 +153,7 @@
 
                         if (status == SchemeStatus.Approved)
                         {
-                            return RedirectToAction("Manage", "DataReturns", new { pcsId = viewModel.OrganisationId });
+                            return RedirectToAction("Index", "DataReturns", new { pcsId = viewModel.OrganisationId });
                         }
                         else
                         {
