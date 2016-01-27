@@ -91,9 +91,11 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsHandler.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetMemberRegistrationsActiveComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\IGetDataReturnsActiveComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\GetProducerEeeDataHistoryCsvHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsByRegisteredProducerIdHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsByRegisteredProducerIdDataAccess.cs" />
+    <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\IRemoveProducerDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\IsProducerRegisteredForComplianceYearHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\RemoveProducerDataAccess.cs" />
@@ -208,7 +210,6 @@
     <Compile Include="Admin\IGetAllApprovedSchemesDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandler.cs" />
-    <Compile Include="Admin\GetProducerDetails\IGetProducerDetailsDataAccess.cs" />
     <Compile Include="Admin\IFindMatchingUsersDataAccess.cs" />
     <Compile Include="Admin\IGetAdminUserDataAccess.cs" />
     <Compile Include="Admin\GetManageUserDataAccess.cs" />
