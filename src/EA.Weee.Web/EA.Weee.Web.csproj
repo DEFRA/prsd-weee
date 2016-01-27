@@ -126,10 +126,6 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MvcNavigationHelpers, Version=0.0.0.5, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MvcNavigationHelpers.0.0.0.5\lib\net45\MvcNavigationHelpers.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -157,6 +153,10 @@
     </Reference>
     <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvcNavigationHelpers, Version=0.0.0.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcNavigationHelpers.0.0.0.5\lib\net45\MvcNavigationHelpers.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
@@ -232,6 +232,7 @@
     <Compile Include="Areas\Admin\ViewModels\Charge\IssuedChargesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\DataReturns\ManageViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SummaryViewModel.cs" />
     <Compile Include="Extensions\ProducerEeeDetailsExtensions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
@@ -583,6 +584,7 @@
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
     <Content Include="Areas\Admin\Views\Reports\UKWeeeData.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\Manage.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\UKEEEData.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
