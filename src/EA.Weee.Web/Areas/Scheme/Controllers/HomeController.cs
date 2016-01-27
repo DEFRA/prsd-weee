@@ -147,19 +147,7 @@
                 }
                 if (viewModel.SelectedValue == PcsAction.ManageEeeWeeeData)
                 {
-                    using (var client = apiClient())
-                    {
-                        var status = await client.SendAsync(User.GetAccessToken(), new GetSchemeStatus(viewModel.OrganisationId));
-
-                        if (status == SchemeStatus.Approved)
-                        {
-                            return RedirectToAction("Index", "DataReturns", new { pcsId = viewModel.OrganisationId });
-                        }
-                        else
-                        {
-                            return RedirectToAction("AuthorisationRequired", "DataReturns", new { pcsId = viewModel.OrganisationId });
-                        }
-                    }
+                    return RedirectToAction("Index", "DataReturns", new { pcsId = viewModel.OrganisationId });
                 }
             }
 
