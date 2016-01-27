@@ -90,10 +90,10 @@
 	<p>
 	    To see your XML file’s full list,
 
-        @(this.WeeeGds().ActionLinkWithEventTracking("Download your errors and warnings (CSV)", 
+        @(this.WeeeGds().ActionLinkWithEventTracking("download your errors and warnings (CSV)", 
             Url.UrlFor<MemberRegistrationController>(c => c.DownloadErrorsAndWarnings(Model.PcsId, Model.MemberUploadId)),
             "Downloads",
-            "Errors and warnings")))
+            "Errors and warnings"))
 	</p>
 
     <p>
