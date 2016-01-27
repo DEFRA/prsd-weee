@@ -239,7 +239,10 @@
         public async Task<ActionResult> SuccessfulSubmission(Guid pcsId)
         {
             await SetBreadcrumb(pcsId);
-            return View();
+            return View(new ViewModels.DataReturns.SuccessfulSubmissionViewModel
+            {
+                PcsId = pcsId
+            });
         }
 
         [HttpGet]
