@@ -270,6 +270,19 @@
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> DownloadProducerEeeDataHistoryCsv(string registrationNumber)
+        {
+            using (IWeeeClient client = apiClient())
+            {
+                var producerEeeCsvData = await client.SendAsync(User.GetAccessToken(),
+                    new GetProducerEeeDataHistoryCsv(registrationNumber));
+
+                byte[] data = new UTF8Encoding().GetBytes(producerEeeCsvData.FileContent);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerEeeCsvData.FileName));
+            }
+        }
+
         private async Task SetBreadcrumb()
         {
             breadcrumb.InternalActivity = "Producer details";
