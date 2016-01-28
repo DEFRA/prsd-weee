@@ -54,7 +54,7 @@ INTO #EEETable
     INNER JOIN [Producer].RegisteredProducer RP
         on EEOA.RegisteredProducerId = RP.Id
     where 
-        RP.ProducerRegistrationNumber = 'WEE/MM0169AA'	
+        RP.ProducerRegistrationNumber = @PRN
 
 SELECT DISTINCT 
 ROW_NUMBER() over
