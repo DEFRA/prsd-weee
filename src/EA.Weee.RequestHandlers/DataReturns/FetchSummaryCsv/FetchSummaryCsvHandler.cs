@@ -34,7 +34,7 @@
             {
                 Description = "WEEE collected from DCFs",
                 ObligationType = ObligationType.B2C,
-                Selector = drv => drv.WeeeCollectedReturnVersion.WeeeCollectedAmounts
+                Selector = drv => (drv.WeeeCollectedReturnVersion ?? new WeeeCollectedReturnVersion()).WeeeCollectedAmounts
                     .Where(wca => wca.SourceType == WeeeCollectedAmountSourceType.Dcf)
                     .Where(wca => wca.ObligationType == Domain.Obligation.ObligationType.B2C)
             });
@@ -43,7 +43,7 @@
             {
                 Description = "WEEE collected from DCFs",
                 ObligationType = ObligationType.B2B,
-                Selector = drv => drv.WeeeCollectedReturnVersion.WeeeCollectedAmounts
+                Selector = drv => (drv.WeeeCollectedReturnVersion ?? new WeeeCollectedReturnVersion()).WeeeCollectedAmounts
                     .Where(wca => wca.SourceType == WeeeCollectedAmountSourceType.Dcf)
                     .Where(wca => wca.ObligationType == Domain.Obligation.ObligationType.B2B)
             });
@@ -52,7 +52,7 @@
             {
                 Description = "WEEE from distributors",
                 ObligationType = ObligationType.B2C,
-                Selector = drv => drv.WeeeCollectedReturnVersion.WeeeCollectedAmounts
+                Selector = drv => (drv.WeeeCollectedReturnVersion ?? new WeeeCollectedReturnVersion()).WeeeCollectedAmounts
                     .Where(wca => wca.SourceType == WeeeCollectedAmountSourceType.Distributor)
                     .Where(wca => wca.ObligationType == Domain.Obligation.ObligationType.B2C)
             });
@@ -61,7 +61,7 @@
             {
                 Description = "WEEE from final holders",
                 ObligationType = ObligationType.B2C,
-                Selector = drv => drv.WeeeCollectedReturnVersion.WeeeCollectedAmounts
+                Selector = drv => (drv.WeeeCollectedReturnVersion ?? new WeeeCollectedReturnVersion()).WeeeCollectedAmounts
                     .Where(wca => wca.SourceType == WeeeCollectedAmountSourceType.FinalHolder)
                     .Where(wca => wca.ObligationType == Domain.Obligation.ObligationType.B2C)
             });
@@ -70,7 +70,7 @@
             {
                 Description = "WEEE sent to AATFs",
                 ObligationType = ObligationType.B2C,
-                Selector = drv => drv.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts
+                Selector = drv => (drv.WeeeDeliveredReturnVersion ?? new WeeeDeliveredReturnVersion()).WeeeDeliveredAmounts
                     .Where(wda => wda.IsAatfDeliveredAmount)
                     .Where(wda => wda.ObligationType == Domain.Obligation.ObligationType.B2C)
             });
@@ -79,7 +79,7 @@
             {
                 Description = "WEEE sent to AATFs",
                 ObligationType = ObligationType.B2B,
-                Selector = drv => drv.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts
+                Selector = drv => (drv.WeeeDeliveredReturnVersion ?? new WeeeDeliveredReturnVersion()).WeeeDeliveredAmounts
                     .Where(wda => wda.IsAatfDeliveredAmount)
                     .Where(wda => wda.ObligationType == Domain.Obligation.ObligationType.B2B)
             });
@@ -88,7 +88,7 @@
             {
                 Description = "WEEE sent to AEs",
                 ObligationType = ObligationType.B2C,
-                Selector = drv => drv.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts
+                Selector = drv => (drv.WeeeDeliveredReturnVersion ?? new WeeeDeliveredReturnVersion()).WeeeDeliveredAmounts
                     .Where(wda => wda.IsAeDeliveredAmount)
                     .Where(wda => wda.ObligationType == Domain.Obligation.ObligationType.B2C)
             });
@@ -97,7 +97,7 @@
             {
                 Description = "WEEE sent to AEs",
                 ObligationType = ObligationType.B2B,
-                Selector = drv => drv.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts
+                Selector = drv => (drv.WeeeDeliveredReturnVersion ?? new WeeeDeliveredReturnVersion()).WeeeDeliveredAmounts
                     .Where(wda => wda.IsAeDeliveredAmount)
                     .Where(wda => wda.ObligationType == Domain.Obligation.ObligationType.B2B)
             });
@@ -106,7 +106,7 @@
             {
                 Description = "EEE placed on market",
                 ObligationType = ObligationType.B2C,
-                Selector = drv => drv.EeeOutputReturnVersion.EeeOutputAmounts
+                Selector = drv => (drv.EeeOutputReturnVersion ?? new EeeOutputReturnVersion()).EeeOutputAmounts
                     .Where(eoa => eoa.ObligationType == Domain.Obligation.ObligationType.B2C)
             });
 
@@ -114,7 +114,7 @@
             {
                 Description = "EEE placed on market",
                 ObligationType = ObligationType.B2B,
-                Selector = drv => drv.EeeOutputReturnVersion.EeeOutputAmounts
+                Selector = drv => (drv.EeeOutputReturnVersion ?? new EeeOutputReturnVersion()).EeeOutputAmounts
                     .Where(eoa => eoa.ObligationType == Domain.Obligation.ObligationType.B2B)
             });
         }

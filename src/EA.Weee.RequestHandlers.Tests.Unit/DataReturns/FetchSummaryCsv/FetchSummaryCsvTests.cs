@@ -555,5 +555,35 @@
             Assert.Equal("EEE placed on market", result.Description);
             Assert.Equal(ObligationType.B2B, result.ObligationType);
         }
+
+        /// <summary>
+        /// This test ensures that a data reutrn where the current version has a null
+        /// for the WeeeCollectedReturnVersion, WeeeDeliveredReturnVersion and EeeOutputReturnVersion
+        /// properties returns no results (i.e. handles the null and doesn't throw an exception).
+        /// </summary>
+        [Fact]
+        public void CreateResults_WithDataReturnWithNullCollections_ReturnsNoResults()
+        {
+            // Arrange
+            DataReturn dataReturn = new DataReturn(
+                A.Dummy<Domain.Scheme.Scheme>(),
+                new Domain.DataReturns.Quarter(2016, Domain.DataReturns.QuarterType.Q1));
+
+            DataReturnVersion dataReturnVersion = new DataReturnVersion(dataReturn, null, null, null);
+
+            dataReturn.SetCurrentVersion(dataReturnVersion);
+
+            FetchSummaryCsvHandler handler = new FetchSummaryCsvHandler(
+                A.Dummy<IWeeeAuthorization>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IFetchSummaryCsvDataAccess>());
+
+            // Act
+            IEnumerable<FetchSummaryCsvHandler.CsvResult> results = handler.CreateResults(dataReturn);
+
+            // Assert
+            Assert.NotNull(results);
+            Assert.Equal(0, results.Count());
+        }
     }
 }
