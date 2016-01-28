@@ -85,11 +85,37 @@
         }
 
         [HttpGet]
+        public async Task<ActionResult> Manage(Guid pcsId)
+        {
+            if (!configService.CurrentConfiguration.EnableDataReturns)
+            {
+                throw new InvalidOperationException("Unable to manage EEE/WEEE data return.");
+            }
+            using (var client = apiClient())
+            {
+                var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
+                if (orgExists)
+                {                   
+                    List<int> years = await client.SendAsync(User.GetAccessToken(), new FetchDataReturnComplianceYearsForScheme(pcsId));
+                   await SetBreadcrumb(pcsId);
+                    return View(new ManageViewModel { PcsId = pcsId, Years = years });                                 
+                }
+                throw new InvalidOperationException(string.Format("'{0}' is not a valid organisation Id", pcsId));
+            }            
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetEeeWeeeDataReturnCSV(Guid pcsId, int complianceYear)
+        {
+            throw new NotImplementedException("Download not implemented yet.");          
+        }
+
+        [HttpGet]
         public async Task<ActionResult> Upload(Guid pcsId)
         {
             if (!configService.CurrentConfiguration.EnableDataReturns)
             {
-                throw new InvalidOperationException("Unable to submit data returns.");
+                throw new InvalidOperationException("Unable to submit data return.");
             }
             using (var client = apiClient())
             {
@@ -102,13 +128,13 @@
 
                     if (isSubmissionWindowOpen)
                     {
-                        return View();
-                    }
+                    return View();
+                }
                     else
                     {   
                         return RedirectToAction("CannotSubmitDataReturn", new { pcsId });
                     }
-                }
+            }
             }
 
             throw new InvalidOperationException(string.Format("'{0}' is not a valid organisation Id", pcsId));
@@ -183,7 +209,8 @@
 
             SubmitViewModel viewModel = new SubmitViewModel()
             {
-                DataReturn = dataReturn
+                DataReturn = dataReturn,
+                PcsId = pcsId
             };
 
             return View("Submit", viewModel);
@@ -202,7 +229,8 @@
 
             SubmitViewModel viewModel = new SubmitViewModel()
             {
-                DataReturn = dataReturn
+                DataReturn = dataReturn,
+                PcsId = pcsId
             };
 
             return View(viewModel);
@@ -218,6 +246,7 @@
             {
                 DataReturnForSubmission dataReturn = await FetchDataReturnUpload(pcsId, dataReturnUploadId);
                 viewModel.DataReturn = dataReturn;
+                viewModel.PcsId = pcsId;
 
                 return View(viewModel);
             }
@@ -234,7 +263,10 @@
         public async Task<ActionResult> SuccessfulSubmission(Guid pcsId)
         {
             await SetBreadcrumb(pcsId);
-            return View();
+            return View(new ViewModels.DataReturns.SuccessfulSubmissionViewModel
+            {
+                PcsId = pcsId
+            });
         }
 
         [HttpGet]
@@ -307,7 +339,7 @@
         private async Task SetBreadcrumb(Guid organisationId)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
-            breadcrumb.ExternalActivity = "Submit a data return";
+            breadcrumb.ExternalActivity = "Manage EEE/WEEE data return";
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
 

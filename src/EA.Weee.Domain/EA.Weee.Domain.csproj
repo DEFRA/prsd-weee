@@ -48,6 +48,7 @@
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
     <Compile Include="Charges\InvoiceRun.cs" />
     <Compile Include="Charges\IbisFileData.cs" />
+    <Compile Include="DataReturns\DataReturnVersionAssociativeEntity.cs" />
     <Compile Include="DataReturns\EeeOutputReturnVersion.cs" />
     <Compile Include="DataReturns\QuarterWindow.cs" />
     <Compile Include="DataReturns\WeeeCollectedReturnVersion.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Obligation\ObligationType.cs" />
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
+    <Compile Include="Producer\ProducerEeeByQuarter.cs" />
     <Compile Include="Producer\RegisteredProducer.cs" />
     <Compile Include="Scheme\MemberUploadRawData.cs" />
     <Compile Include="Error\UploadErrorType.cs" />

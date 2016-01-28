@@ -80,6 +80,7 @@
     <Compile Include="CountryTests.cs" />
     <Compile Include="DataReturns\DataReturnTests.cs" />
     <Compile Include="DataReturns\DataReturnUploadTests.cs" />
+    <Compile Include="DataReturns\DataReturnVersionAssociativeEntityTests.cs" />
     <Compile Include="DataReturns\DataReturnVersionTests.cs" />
     <Compile Include="DataReturns\AatfDeliveryLocationTests.cs" />
     <Compile Include="DataReturns\AeDeliveryLocationTests.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Producer\ProducerBusinessTests.cs" />
     <Compile Include="Producer\ProducerContactTests.cs" />
     <Compile Include="Producer\ProducerSubmissionTests.cs" />
+    <Compile Include="Producer\RegisteredProducerTests.cs" />
     <Compile Include="Producer\SICCodeTests.cs" />
     <Compile Include="Scheme\MemberUploadTests.cs" />
     <Compile Include="Scheme\SchemeTests.cs" />

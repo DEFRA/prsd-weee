@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EA.Weee.TestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="EA.Weee.TestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="CompetentAuthorityUser">
           <Key>
             <PropertyRef Name="Id" />
@@ -129,7 +129,7 @@
           <Property Name="OrganisationType" Type="int" Nullable="false" />
           <Property Name="OrganisationStatus" Type="int" Nullable="false" />
           <Property Name="TradingName" Type="nvarchar" MaxLength="256" />
-          <Property Name="CompanyRegistrationNumber" Type="nvarchar" MaxLength="64" />
+          <Property Name="CompanyRegistrationNumber" Type="nvarchar" MaxLength="15" />
           <Property Name="ContactId" Type="uniqueidentifier" />
           <Property Name="OrganisationAddressId" Type="uniqueidentifier" />
           <Property Name="BusinessAddressId" Type="uniqueidentifier" />
@@ -213,6 +213,7 @@
           <Property Name="EeeOutputReturnVersionId" Type="uniqueidentifier" />
           <Property Name="WeeeDeliveredReturnVersionId" Type="uniqueidentifier" />
           <Property Name="WeeeCollectedReturnVersionId" Type="uniqueidentifier" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="EeeOutputAmount">
           <Key>
@@ -1518,7 +1519,7 @@
           <Property Name="OrganisationType" Type="Int32" Nullable="false" />
           <Property Name="OrganisationStatus" Type="Int32" Nullable="false" />
           <Property Name="TradingName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="CompanyRegistrationNumber" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyRegistrationNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="ContactId" Type="Guid" />
           <Property Name="OrganisationAddressId" Type="Guid" />
           <Property Name="BusinessAddressId" Type="Guid" />
@@ -2531,6 +2532,7 @@
           <NavigationProperty Name="EeeOutputReturnVersion" Relationship="EA.Weee.TestModel.FK_DataReturnVersion_EeeOutputReturnVersion" FromRole="DataReturnVersion" ToRole="EeeOutputReturnVersion" />
           <NavigationProperty Name="WeeeCollectedReturnVersion" Relationship="EA.Weee.TestModel.FK_DataReturnVersion_WeeeCollectedReturnVersion" FromRole="DataReturnVersion" ToRole="WeeeCollectedReturnVersion" />
           <NavigationProperty Name="WeeeDeliveredReturnVersion" Relationship="EA.Weee.TestModel.FK_DataReturnVersion_WeeeDeliveredReturnVersion" FromRole="DataReturnVersion" ToRole="WeeeDeliveredReturnVersion" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="EeeOutputAmount">
           <Key>
@@ -3359,6 +3361,7 @@
           <EntitySetMapping Name="DataReturnVersions">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.DataReturnVersion">
               <MappingFragment StoreEntitySet="DataReturnVersion">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="WeeeCollectedReturnVersionId" ColumnName="WeeeCollectedReturnVersionId" />
                 <ScalarProperty Name="WeeeDeliveredReturnVersionId" ColumnName="WeeeDeliveredReturnVersionId" />
                 <ScalarProperty Name="EeeOutputReturnVersionId" ColumnName="EeeOutputReturnVersionId" />

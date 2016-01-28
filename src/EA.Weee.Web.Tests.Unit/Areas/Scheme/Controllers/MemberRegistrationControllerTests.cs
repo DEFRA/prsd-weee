@@ -286,7 +286,7 @@
             var result = await MemberRegistrationController().Summary(A<Guid>._);
 
             Assert.IsType<ViewResult>(result);
-            Assert.IsType<List<int>>(((ViewResult)result).Model);
+            Assert.IsType<SummaryViewModel>(((ViewResult)result).Model);
         }
 
         [Fact]

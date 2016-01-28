@@ -51,7 +51,7 @@
 
             Assert.Equal(data, result.MemberUpload.RawData.Data);
             Assert.Equal(fileName, result.MemberUpload.FileName);
-            Assert.True(ReferenceEquals(memberUpload, result.MemberUpload));
+            Assert.Same(memberUpload, result.MemberUpload);
         }
 
         [Fact]
