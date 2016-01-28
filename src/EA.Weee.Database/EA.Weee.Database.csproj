@@ -190,6 +190,9 @@
     <Content Include="scripts\Update\Sprint21\20160111-1800-AlterSystemDataFixedDateColumns.sql" />
     <Content Include="scripts\Update\Sprint21\20160112-1207-SetInitialIbisFileId.sql" />
     <Content Include="scripts\Update\Sprint21\20160112-1608-Rename1B1STransactionNumberSequenceTable.sql" />
+    <Content Include="scripts\Update\Sprint22\20160125-1200-AddCreateDateToDataReturnVersion.sql" />
+    <Content Include="scripts\Update\Sprint22\20160126-1400-AddConstraintToAatfDeliveryLocation.sql" />
+    <Content Include="scripts\Update\Sprint22\20160126-1400-AddConstraintToAeDeliveryLocation.sql" />
     <Content Include="scripts\Update\Sprint22\20160128-1428-CreateSpgforProducerEeeDataHistory.sql" />
     <None Include="scripts\Update\Sprint21\20160125-1200-AddCreateDateToDataReturnVersion.sql" />
     <None Include="scripts\Update\Sprint21\20160119-1306-RemoveSpgPCSChargesCSVDataByComplianceYearAndAuthorisedAuthority.sql" />

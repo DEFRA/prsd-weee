@@ -3,16 +3,20 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Reflection;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Api.Client;
     using Core.Admin;
     using Core.Charges;
     using Core.Shared;
     using FakeItEasy;
     using Services;
+    using TestHelpers;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Charge;
     using Weee.Requests.Charges;
@@ -398,7 +402,7 @@
         /// the invoice run returned by the API.
         /// </summary>
         [Fact]
-        public async Task PostManagePendingCharges_CallsApiAndRedirectsToChargesSuccessfullyIssuedActionWithAuthorityAndInvoiceRunId()
+        public async Task PostManagePendingCharges_NonAjaxWithNoError_CallsApiAndRedirectsToChargesSuccessfullyIssuedActionWithAuthorityAndInvoiceRunId()
         {
             Guid invoiceRunId = new Guid("FB95F6E7-8809-488A-B23B-5B3F5A9B3D5F");
 
@@ -411,6 +415,11 @@
                 A.Dummy<IAppConfiguration>(),
                 A.Dummy<BreadcrumbService>(),
                 () => weeeClient);
+
+            HttpContextBase httpContext = A.Fake<HttpContextBase>();
+            HttpRequestBase httpRequest = A.Fake<HttpRequestBase>();
+            A.CallTo(() => httpContext.Request).Returns(httpRequest);
+            controller.ControllerContext = new ControllerContext(httpContext, new RouteData(), controller);
 
             // Act
             ActionResult result = await controller.ManagePendingCharges(CompetentAuthority.NorthernIreland, A.Dummy<FormCollection>());
@@ -425,7 +434,7 @@
         }
 
         [Fact]
-        public async Task PostManagePendingCharges_ReturnsIssueChargesErrorView_WhenErrorOccursWhenIssuingCharges()
+        public async Task PostManagePendingCharges_NonAjaxWithError_ReturnsIssueChargesErrorView()
         {
             Guid invoiceRunId = new Guid("FB95F6E7-8809-488A-B23B-5B3F5A9B3D5F");
 
@@ -441,6 +450,11 @@
                 A.Dummy<BreadcrumbService>(),
                 () => weeeClient);
 
+            HttpContextBase httpContext = A.Fake<HttpContextBase>();
+            HttpRequestBase httpRequest = A.Fake<HttpRequestBase>();
+            A.CallTo(() => httpContext.Request).Returns(httpRequest);
+            controller.ControllerContext = new ControllerContext(httpContext, new RouteData(), controller);
+
             // Act
             ActionResult result = await controller.ManagePendingCharges(CompetentAuthority.NorthernIreland, A.Dummy<FormCollection>());
 
@@ -452,6 +466,82 @@
 
             var viewModel = viewResult.Model as List<string>;
             Assert.Equal(errors, viewModel);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "ManagePendingCharges" action when called via AJAX will call the API to issue charges
+        /// and then return a JSON object containing the ID of the invoice run.
+        /// </summary>
+        [Fact]
+        public async Task PostManagePendingCharges_AjaxWithNoError_ReturnsJsonWithInvoiceRunId()
+        {
+            Guid invoiceRunId = new Guid("FB95F6E7-8809-488A-B23B-5B3F5A9B3D5F");
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IssuePendingCharges>._))
+                .Returns(new IssuePendingChargesResult { Errors = new List<string>(), InvoiceRunId = invoiceRunId });
+
+            // Arrange
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => weeeClient);
+
+            HttpContextBase httpContext = A.Fake<HttpContextBase>();
+            HttpRequestBase httpRequest = A.Fake<HttpRequestBase>();
+            A.CallTo(() => httpRequest.Headers).Returns(new WebHeaderCollection { { "X-Requested-With", "XMLHttpRequest" } });
+            A.CallTo(() => httpContext.Request).Returns(httpRequest);
+            controller.ControllerContext = new ControllerContext(httpContext, new RouteData(), controller);
+
+            // Act
+            ActionResult result = await controller.ManagePendingCharges(CompetentAuthority.NorthernIreland, A.Dummy<FormCollection>());
+
+            // Assert
+            JsonResult jsonResult = result as JsonResult;
+            Assert.NotNull(jsonResult);
+
+            Type type = jsonResult.Data.GetType();
+            Assert.Equal(true, (bool)type.GetProperty("Success").GetValue(jsonResult.Data));
+            Assert.Equal(invoiceRunId, (Guid?)type.GetProperty("InvoiceRunId").GetValue(jsonResult.Data));
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "ManagePendingCharges" action when called via AJAX will
+        /// return a JSON object containing the list of errors when the issuing is unsuccessful.
+        /// </summary>
+        [Fact]
+        public async Task PostManagePendingCharges_AjaxWithError_ReturnsJsonWithErrors()
+        {
+            Guid invoiceRunId = new Guid("FB95F6E7-8809-488A-B23B-5B3F5A9B3D5F");
+
+            var errors = new List<string> { "error" };
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IssuePendingCharges>._))
+                .Returns(new IssuePendingChargesResult { Errors = errors });
+
+            // Arrange
+            ChargeController controller = new ChargeController(
+                A.Dummy<IAppConfiguration>(),
+                A.Dummy<BreadcrumbService>(),
+                () => weeeClient);
+
+            HttpContextBase httpContext = A.Fake<HttpContextBase>();
+            HttpRequestBase httpRequest = A.Fake<HttpRequestBase>();
+            A.CallTo(() => httpRequest.Headers).Returns(new WebHeaderCollection { { "X-Requested-With", "XMLHttpRequest" } });
+            A.CallTo(() => httpContext.Request).Returns(httpRequest);
+            controller.ControllerContext = new ControllerContext(httpContext, new RouteData(), controller);
+
+            // Act
+            ActionResult result = await controller.ManagePendingCharges(CompetentAuthority.NorthernIreland, A.Dummy<FormCollection>());
+
+            // Assert
+            JsonResult jsonResult = result as JsonResult;
+            Assert.NotNull(jsonResult);
+
+            Type type = jsonResult.Data.GetType();
+            Assert.Equal(false, (bool)type.GetProperty("Success").GetValue(jsonResult.Data));
+            Assert.Equal(errors, (List<string>)type.GetProperty("Errors").GetValue(jsonResult.Data));
         }
 
         /// <summary>
