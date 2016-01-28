@@ -10,6 +10,7 @@
     using Core.Scheme;
     using Core.Shared;
     using Infrastructure;
+    using Prsd.Core;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
@@ -84,7 +85,7 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> Upload(Guid pcsId)
+        public async Task<ActionResult> Upload(Guid pcsId)
         {
             if (!configService.CurrentConfiguration.EnableDataReturns)
             {
@@ -96,11 +97,34 @@
                 if (orgExists)
                 {
                     await SetBreadcrumb(pcsId);
-                    return View();
+
+                    var isSubmissionWindowOpen = await client.SendAsync(User.GetAccessToken(), new IsSubmissionWindowOpen());
+
+                    if (isSubmissionWindowOpen)
+                    {
+                        return View();
+                    }
+                    else
+                    {   
+                        return RedirectToAction("CannotSubmitDataReturn", new { pcsId });
+                    }
                 }
             }
 
             throw new InvalidOperationException(string.Format("'{0}' is not a valid organisation Id", pcsId));
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> CannotSubmitDataReturn(Guid pcsId)
+        {
+            var currentDate = SystemTime.Now;
+            
+            await SetBreadcrumbWithoutSchemeInfo(pcsId);
+            return View(new CannotSubmitDataReturnViewModel
+            {
+                OrganisationId = pcsId,
+                CurrentYear = currentDate.Year
+            });
         }
 
         [HttpPost]
@@ -285,6 +309,12 @@
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = "Submit a data return";
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
+        }
+
+        private async Task SetBreadcrumbWithoutSchemeInfo(Guid organisationId)
+        {
+            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
+            breadcrumb.ExternalActivity = "Submit a data return";
         }
 
         private async Task<DataReturnForSubmission> FetchDataReturnUpload(Guid pcsId, Guid dataReturnUploadId)
