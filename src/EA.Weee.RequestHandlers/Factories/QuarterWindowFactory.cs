@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Factories
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using DataAccess.DataAccess;
     using Domain.DataReturns;
@@ -23,6 +24,26 @@
             var endDate = new DateTime(quarter.Year + quarterWindowTemplate.AddEndYears, quarterWindowTemplate.EndMonth, quarterWindowTemplate.EndDay);
 
             return new QuarterWindow(startDate, endDate);
+        }
+
+        public async Task<List<QuarterWindow>> GetPossibleQuarterWindow(int complianceYear)
+        {
+            var possibleComplianceYears = new int[] { complianceYear - 1, complianceYear, complianceYear + 1 };
+            var possibleQuarterWindows = new List<QuarterWindow>();
+
+            var allQuarterWindowTemplates = await dataAccess.GetAll();
+
+            foreach (var possibleComplianceYear in possibleComplianceYears)
+            {
+                foreach (var item in allQuarterWindowTemplates)
+                {
+                    var startDate = new DateTime(possibleComplianceYear + item.AddStartYears, item.StartMonth, item.StartDay);
+                    var endDate = new DateTime(possibleComplianceYear + item.AddEndYears, item.EndMonth, item.EndDay);
+
+                    possibleQuarterWindows.Add(new QuarterWindow(startDate, endDate));
+                }
+            }
+            return possibleQuarterWindows;
         }
     }
 }

@@ -53,14 +53,34 @@
 
         [Fact]
 
-        public async void GetUpload_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        public async void GetUpload_IdDoesBelongToAnExistingOrganisationAndSubmissionWindowIsOpen_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsSubmissionWindowOpen>._))
                 .Returns(true);
 
             var result = await DataReturnsController().Upload(A<Guid>._);
 
             Assert.IsType<ViewResult>(result);
+        }
+
+        public async void GetUpload_IdDoesBelongToAnExistingOrganisationAndSubmissionWindowIsClose_RedirectToCannotSubmitDataReturn()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsSubmissionWindowOpen>._))
+                .Returns(false);
+
+            var result = await DataReturnsController().Upload(A<Guid>._);
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var redirectValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("CannotSubmitDataReturn", redirectValues["action"]);
         }
 
         [Fact]

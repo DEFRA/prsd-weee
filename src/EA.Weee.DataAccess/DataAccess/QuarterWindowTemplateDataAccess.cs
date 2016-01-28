@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
+    using Domain.Lookup;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Threading.Tasks;
-    using Domain.Lookup;
 
     public class QuarterWindowTemplateDataAccess : IQuarterWindowTemplateDataAccess
     {
@@ -16,6 +17,11 @@
         public async Task<QuarterWindowTemplate> GetByQuarter(int quarter)
         {
             return await context.QuarterWindowTemplates.SingleAsync(qw => qw.Quarter == quarter);
+        }
+
+        public async Task<List<QuarterWindowTemplate>> GetAll()
+        {
+            return await context.QuarterWindowTemplates.ToListAsync();
         }
     }
 }
