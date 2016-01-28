@@ -759,7 +759,7 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ManageEeeWeeeDataApprovedStatus_RedirectsToDataReturnsIndex()
+        public async void PostChooseActivity_ManageEeeWeeeData_RedirectsToDataReturnsIndex()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Approved);
 
@@ -773,42 +773,6 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("Index", routeValues["action"]);
-            Assert.Equal("DataReturns", routeValues["controller"]);
-        }
-
-        [Fact]
-        public async void PostChooseActivity_ManageEeeWeeeDataPendingStatus_RedirectsToAuthorisationRequired()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Pending);
-
-            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
-            {
-                SelectedValue = PcsAction.ManageEeeWeeeData
-            });
-
-            Assert.IsType<RedirectToRouteResult>(result);
-
-            var routeValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("AuthorisationRequired", routeValues["action"]);
-            Assert.Equal("DataReturns", routeValues["controller"]);
-        }
-
-        [Fact]
-        public async void PostChooseActivity_ManageEeeWeeeDataRejectedStatus_RedirectsToAuthorisationRequired()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Rejected);
-
-            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
-            {
-                SelectedValue = PcsAction.ManageEeeWeeeData
-            });
-
-            Assert.IsType<RedirectToRouteResult>(result);
-
-            var routeValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("AuthorisationRequired", routeValues["action"]);
             Assert.Equal("DataReturns", routeValues["controller"]);
         }
     }
