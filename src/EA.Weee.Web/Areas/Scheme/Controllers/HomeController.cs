@@ -83,7 +83,7 @@
                 activities.Add(PcsAction.ManagePcsMembers);
                 if (configurationService.CurrentConfiguration.EnableDataReturns)
                 {
-                    activities.Add(PcsAction.SubmitPcsDataReturns);
+                    activities.Add(PcsAction.ManageEeeWeeeDataReturn);
                 }
                 if (organisationOverview.HasMemberSubmissions)
                 {
@@ -145,7 +145,7 @@
                         return RedirectToAction("ViewSubmissionHistory", new { pcsId = viewModel.OrganisationId });
                     }
                 }
-                if (viewModel.SelectedValue == PcsAction.SubmitPcsDataReturns)
+                if (viewModel.SelectedValue == PcsAction.ManageEeeWeeeDataReturn)
                 {
                     using (var client = apiClient())
                     {
@@ -153,7 +153,7 @@
 
                         if (status == SchemeStatus.Approved)
                         {
-                            return RedirectToAction("Upload", "DataReturns", new { pcsId = viewModel.OrganisationId });
+                            return RedirectToAction("Manage", "DataReturns", new { pcsId = viewModel.OrganisationId });
                         }
                         else
                         {
