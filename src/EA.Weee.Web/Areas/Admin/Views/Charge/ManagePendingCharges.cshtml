@@ -20,63 +20,175 @@
 
 @section main_content
 {
-    <header class="hgroup">
-        <h1 class="heading-large">
-            Pending Charges
-        </h1>
-    </header>
+    <div id="pendingChargesView">
+        <header class="hgroup">
+            <h1 class="heading-large">
+                Pending Charges
+            </h1>
+        </header>
 
-    <p>
-        <span class="bold-small">Appropriate Authority:</span>
-        @authorityDisplayNames[authority]
-    </p>
+        <p>
+            <span class="bold-small">Appropriate Authority:</span>
+            @authorityDisplayNames[authority]
+        </p>
 
-    @if (Model.Count > 0)
-    {
-        <table width="100%" class="">
-            <thead>
-                <tr>
-                    <th>PCS name</th>
-                    <th>Approval number</th>
-                    <th>Compliance year</th>
-                    <th class="numeric">Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (PendingCharge pendingCharge in Model)
-                {
-                    <tr>
-                        <td>@pendingCharge.SchemeName</td>
-                        <td>@pendingCharge.SchemeApprovalNumber</td>
-                        <td>@pendingCharge.ComplianceYear</td>
-                        <td class="numeric">@pendingCharge.TotalGBP.ToString("C")</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <br />
-
-        using (Html.BeginForm())
+        @if (Model.Count > 0)
         {
-            @Html.AntiForgeryToken()
-            @(this.WeeeGds().Submit("Issue Charges", new { @class = "button" }))
+            <table width="100%" class="">
+                <thead>
+                    <tr>
+                        <th>PCS name</th>
+                        <th>Approval number</th>
+                        <th>Compliance year</th>
+                        <th class="numeric">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (PendingCharge pendingCharge in Model)
+                    {
+                        <tr>
+                            <td>@pendingCharge.SchemeName</td>
+                            <td>@pendingCharge.SchemeApprovalNumber</td>
+                            <td>@pendingCharge.ComplianceYear</td>
+                            <td class="numeric">@pendingCharge.TotalGBP.ToString("C")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+
+            using (Html.BeginForm("ManagePendingCharges", "Charge", FormMethod.Post,
+                new
+                {
+                    id = "form1",
+                    onsubmit = "return ajaxSubmit();",
+                    autocomplete = "off"
+                }))
+            {
+                @Html.AntiForgeryToken()
+                @(this.WeeeGds().Submit("Issue Charges", new { id = "submitButton", @class = "button", style = "margin-top: 20px" }, true))
+            }
+
+            <p>
+                @Html.ActionLink("Perform another activity", "Index", "Home")
+            </p>
+
+            <noscript>
+                <p class="bold-small">
+                    It may take a minute or two to issue the charges, so please bear with us.
+                </p>
+            </noscript>
+
+            <p class="bold-small" style="display: none;" id="processingTimeMessage" aria-live="polite">
+                It may take a minute or two to issue the charges, so please bear with us.
+            </p>
+        }
+        else
+        {
+            <p>
+                There are no pending charges.
+            </p>
+            <p>
+                @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "button" })
+            </p>
         }
 
         <p>
-            @Html.ActionLink("Perform another activity", "Index", "Home")
+            <a href="javascript:history.back();">Back</a>
         </p>
-    }
-    else
-    {
-        <p>
-            There are no pending charges.
-        </p>
-        <p>
-            @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "button" })
-        </p>
-    }
+    </div>
 
-    <p>
-        <a href="javascript:history.back();">Back</a>
-    </p>
+    <div id="ajaxErrorView" style="display: none">
+        <header class="hgroup">
+            <h1 class="heading-large">
+                The pending charges could not be issued
+            </h1>
+        </header>
+
+        <p>
+            <span class="bold-small"> The following must be fixed before charges can be issued.</span>
+        </p>
+
+        <table width="100%" class="">
+            <tbody>
+                @* Rows added here by JavaScript *@
+            </tbody>
+        </table>
+        <br/>
+        <p>
+            @Html.ActionLink("Continue", "Index", "Home", null, new { @class = "button" })
+        </p>
+    </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+    {
+        @*
+        Prevent FireFox from using it's bfcache for this page
+        by adding an empty event handler to the "beforeunload"
+        window event.
+        *@
+        if (window.addEventListener) {
+            window.addEventListener("beforeunload", function () { });
+        }
+
+        function ajaxSubmit() {
+
+            if (!$("#form1").valid()) {
+                return false;
+            }
+
+            $("#preSubmissionContent")
+                .hide();
+
+            $("#anotherActivitylink")
+                .hide();
+
+            $("#submitButton")
+                .prop('disabled', true)
+                .prop('value', 'Issuing Charges...');
+
+            setTimeout(function () {
+                $("#processingTimeMessage")
+                    .fadeIn("slow");
+            }, 5000);
+
+            $("#spinner")
+                .show();
+
+            $.ajax({
+                url: "@Url.Action("ManagePendingCharges", "Charge", new { authority })",
+                data: $("#form1").serialize(),
+                type: "POST",
+                success: function (response) {
+                    if (response.Success) {
+                        var placeHolderLocation = "@Url.Action("ChargesSuccessfullyIssued", "Charge", new { authority, id = Guid.Empty })";
+                        window.location = placeHolderLocation.replace("@Guid.Empty", response.InvoiceRunId);
+                    } else {
+                        @* Populate the table in the ajaxErrorView *@
+                        for (i = 0; i < response.Errors.length; ++i) {
+                            var tr = $("<tr/>");
+                            var td = $("<td/>");
+                            td.text(response.Errors[i]);
+                            tr.append(td);
+                            $("#ajaxErrorView table tbody").append(tr);
+                        }
+
+                        $("#pendingChargesView").hide();
+                        $("#ajaxErrorView").show();
+                    };
+                },
+                statusCode: {
+                    500: function (response) {
+                        window.location = "@Url.Action("InternalError", "Errors", new { area = string.Empty })";
+                    }
+                },
+            });
+
+            return false;
+        }
+    }
+    </script>
 }
