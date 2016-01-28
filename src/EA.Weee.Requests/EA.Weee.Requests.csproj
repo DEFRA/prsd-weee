@@ -66,6 +66,7 @@
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSV.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission.cs" />
+    <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme.cs" />
     <Compile Include="DataReturns\IsSubmissionWindowOpen.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile.cs" />
     <Compile Include="DataReturns\SubmitDataReturnUpload.cs" />

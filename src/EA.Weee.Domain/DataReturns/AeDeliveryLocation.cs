@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
+    using System;
     using EA.Prsd.Core.Domain;
     using Prsd.Core;
 
-    public class AeDeliveryLocation : Entity
+    public class AeDeliveryLocation : Entity, IEquatable<AeDeliveryLocation>
     {
         public string ApprovalNumber { get; private set; }
 
@@ -23,6 +24,27 @@
 
             ApprovalNumber = approvalNumber;
             OperatorName = operatorName;
+        }
+
+        public bool Equals(AeDeliveryLocation other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return ApprovalNumber == other.ApprovalNumber &&
+                   OperatorName == other.OperatorName;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as AeDeliveryLocation);
+        }
+
+        public override int GetHashCode()
+        {
+            return ApprovalNumber.GetHashCode() ^ OperatorName.GetHashCode();
         }
     }
 }
