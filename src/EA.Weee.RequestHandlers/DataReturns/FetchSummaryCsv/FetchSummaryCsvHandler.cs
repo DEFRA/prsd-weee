@@ -233,7 +233,7 @@
 
                 writer.DefineColumn(
                     string.Format("Cat {0} (t)", j),
-                    r => r.Amounts[(WeeeCategory)j]);
+                    r => string.Format("{0:N3}", r.Amounts[(WeeeCategory)j]));
             }
 
             return writer;
