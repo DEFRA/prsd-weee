@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ReturnVersionBuilder
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Domain.DataReturns;
     using Domain.Producer;
@@ -11,5 +12,9 @@
         Task<RegisteredProducer> GetRegisteredProducer(string producerRegistrationNumber);
 
         Task<DataReturnVersion> GetLatestDataReturnVersionOrDefault();
+
+        Task<AatfDeliveryLocation> GetOrAddAatfDeliveryLocation(string approvalNumber, string facilityName);
+
+        Task<AeDeliveryLocation> GetOrAddAeDeliveryLocation(string approvalNumber, string operatorName);
     }
 }
