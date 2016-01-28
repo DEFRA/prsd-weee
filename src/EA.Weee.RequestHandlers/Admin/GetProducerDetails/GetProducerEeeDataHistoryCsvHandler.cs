@@ -53,12 +53,12 @@
             CsvWriter<ProducerEeeHistoryCsvData> csvWriter =
                 csvWriterFactory.Create<ProducerEeeHistoryCsvData>();
 
-            csvWriter.DefineColumn(@"Scheme name", i => i.SchemeName);
-            csvWriter.DefineColumn(@"Scheme approval number", i => i.ApprovalNumber);
-            csvWriter.DefineColumn(@"Compliance year", i => i.Year);
-            csvWriter.DefineColumn(@"Date and time (GMT) data submitted", i => i.DateSumbitted);
-            csvWriter.DefineColumn(@"Quarter", i => i.QuarterType);
-            csvWriter.DefineColumn(@"Latest submission(Yes/No)", i => i.LatestSubmission);
+            csvWriter.DefineColumn(@"PCS name", i => i.SchemeName);
+            csvWriter.DefineColumn(@"PCS approval number", i => i.ApprovalNumber);
+            csvWriter.DefineColumn(@"Compliance year", i => i.ComplianceYear);
+            csvWriter.DefineColumn(@"Date and time (GMT) data submitted", i => i.SubmittedDate);
+            csvWriter.DefineColumn(@"Quarter", i => i.Quarter);
+            csvWriter.DefineColumn(@"Latest data(Yes/No)", i => i.LatestData);
             foreach (int category in Enumerable.Range(1, 14))
             {
                     string title = string.Format("Cat{0} B2C", category);
