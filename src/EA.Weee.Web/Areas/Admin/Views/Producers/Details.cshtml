@@ -575,14 +575,14 @@
             var tableIdentifier = $(this).attr('id').replace('details-tab', '');
 
             // Hide all data tables in scheme
-            $("table[id$='details-table'").each(function () {
+            $("table[id$='details-table']").each(function () {
                 if ($(this).attr('id').indexOf(schemeIdentifier) !== -1) {
                     $(this).addClass('visually-hidden');
                 }
             });
 
             // Except for the table corresponding to this tab
-            $("table[id$='" + tableIdentifier + "details-table'").removeClass('visually-hidden');
+            $("table[id$='" + tableIdentifier + "details-table']").removeClass('visually-hidden');
         })
     </script>
 }

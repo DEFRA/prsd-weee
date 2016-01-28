@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Threading.Tasks;
     using Core.Shared;
     using Domain.DataReturns;
@@ -55,6 +57,10 @@
             Assert.Equal(errors, result.ErrorData);
         }
 
+        /// <summary>
+        /// This test ensures that a <see cref="DataReturn"/> is created if none is currently available
+        /// for the same scheme, compliance year and quarter.
+        /// </summary>
         [Fact]
         public async Task Build_NoExistingDataReturn_CreatesNewDataReturn()
         {
@@ -71,6 +77,11 @@
             Assert.NotNull(result.DataReturnVersion.DataReturn);
         }
 
+        /// <summary>
+        /// This test ensures that an existing <see cref="DataReturn"/> is reused if
+        /// it has the matching scheme, compliance year and quarter for the <see cref="DataReturnVersion"/>
+        /// being built.
+        /// </summary>
         [Fact]
         public async Task Build_ExistingDataReturn_ReturnsDataReturnVersionWithExistingDataReturn()
         {
@@ -89,6 +100,10 @@
             Assert.Equal(dataReturn, result.DataReturnVersion.DataReturn);
         }
 
+        /// <summary>
+        /// This test ensures that new data properties (WeeeCollectedReturnVersion, WeeeDeliveredReturnVersion, EeeOutputReturnVersion)
+        /// are created when no <see cref="DataReturnVersion"/> currently exists in the database.
+        /// </summary>
         [Fact]
         public async Task Build_NoExistingLatestDataReturnVersion_ReturnsDataReturnVersionWithNewData()
         {
@@ -110,8 +125,91 @@
             Assert.NotNull(result.DataReturnVersion.WeeeDeliveredReturnVersion);
         }
 
+        /// <summary>
+        /// This test ensures that a new <see cref="WeeeCollectedReturnVersion"/> is created when the existing <see cref="DataReturnVersion"/>
+        /// from the database has a null value for the same property.
+        /// </summary>
         [Fact]
-        public async Task Build_ExistingLatestDataReturnVersion_WithAllExistingWeeeCollectedReturnVersion_ReturnsDataReturnVersionWithExistingWeeeCollectedReturnVersion()
+        public async Task Build_ExistingLatestDataReturnVersion_WithNoExistingWeeeCollectedReturnVersion_ReturnsDataReturnVersionWithNewWeeeCollectedReturnVersion()
+        {
+            var dataReturn = new DataReturn(A.Dummy<Scheme>(), A.Dummy<Quarter>());
+            var dataReturnVersion = new DataReturnVersion(dataReturn, null,
+                A.Dummy<WeeeDeliveredReturnVersion>(), A.Dummy<EeeOutputReturnVersion>());
+
+            var helper = new DataReturnVersionBuilderHelper();
+
+            A.CallTo(() => helper.DataAccess.GetLatestDataReturnVersionOrDefault())
+                .Returns(dataReturnVersion);
+
+            var builder = helper.Create();
+            await builder.AddWeeeCollectedAmount(WeeeCollectedAmountSourceType.Dcf, WeeeCategory.ConsumerEquipment, ObligationType.B2C, 100);
+
+            var result = await builder.Build();
+
+            Assert.NotNull(result.DataReturnVersion.WeeeCollectedReturnVersion);
+            Assert.Equal(1, result.DataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts.Count);
+        }
+
+        /// <summary>
+        /// This test ensures that a new <see cref="WeeeDeliveredReturnVersion"/> is created when the existing <see cref="DataReturnVersion"/> 
+        /// from the database has a null value for the same property.
+        /// </summary>
+        [Fact]
+        public async Task Build_ExistingLatestDataReturnVersion_WithNoExistingWeeeDeliveredReturnVersion_ReturnsDataReturnVersionWithNewWeeeDeliveredReturnVersion()
+        {
+            var dataReturn = new DataReturn(A.Dummy<Scheme>(), A.Dummy<Quarter>());
+            var dataReturnVersion = new DataReturnVersion(dataReturn, A.Dummy<WeeeCollectedReturnVersion>(),
+                null, A.Dummy<EeeOutputReturnVersion>());
+
+            var helper = new DataReturnVersionBuilderHelper();
+
+            A.CallTo(() => helper.DataAccess.GetLatestDataReturnVersionOrDefault())
+                .Returns(dataReturnVersion);
+
+            var builder = helper.Create();
+            await builder.AddAatfDeliveredAmount("ApprovalNumber", "FacilityName", WeeeCategory.ConsumerEquipment, ObligationType.B2C, 100);
+
+            var result = await builder.Build();
+
+            Assert.NotNull(result.DataReturnVersion.WeeeDeliveredReturnVersion);
+            Assert.Equal(1, result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Count);
+        }
+
+        /// <summary>
+        /// This test ensures that a new <see cref="EeeOutputReturnVersion"/> is created when the existing <see cref="DataReturnVersion"/>
+        /// from the database has a null value for the same property.
+        /// </summary>
+        [Fact]
+        public async Task Build_ExistingLatestDataReturnVersion_WithNoExistingEeeOutputReturnVersion_ReturnsDataReturnVersionWithNewEeeOutputReturnVersion()
+        {
+            var dataReturn = new DataReturn(A.Dummy<Scheme>(), A.Dummy<Quarter>());
+            var dataReturnVersion = new DataReturnVersion(dataReturn, A.Dummy<WeeeCollectedReturnVersion>(),
+                A.Dummy<WeeeDeliveredReturnVersion>(), null);
+
+            var helper = new DataReturnVersionBuilderHelper();
+
+            A.CallTo(() => helper.DataAccess.GetLatestDataReturnVersionOrDefault())
+                .Returns(dataReturnVersion);
+
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => helper.DataAccess.GetRegisteredProducer(A<string>._))
+                .Returns(registeredProducer);
+
+            var builder = helper.Create();
+            await builder.AddEeeOutputAmount("PRN", "ProducerName", WeeeCategory.ConsumerEquipment, ObligationType.B2C, 100);
+
+            var result = await builder.Build();
+
+            Assert.NotNull(result.DataReturnVersion.EeeOutputReturnVersion);
+            Assert.Equal(1, result.DataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts.Count);
+        }
+
+        /// <summary>
+        /// This test ensures that the <see cref="WeeeCollectedReturnVersion"/> of the existing <see cref="DataReturnVersion"/> is reused when the <see cref="WeeeCollectedAmount"/>
+        /// items for the new and existing data return versions are all equal. 
+        /// </summary>
+        [Fact]
+        public async Task Build_ExistingLatestDataReturnVersion_WithAllExistingWeeeCollectedAmounts_ReturnsDataReturnVersionWithExistingWeeeCollectedReturnVersion()
         {
             var weeeCollectedReturnVersion = new WeeeCollectedReturnVersion();
             weeeCollectedReturnVersion.AddWeeeCollectedAmount(
@@ -134,12 +232,18 @@
             Assert.Same(weeeCollectedReturnVersion, result.DataReturnVersion.WeeeCollectedReturnVersion);
         }
 
+        /// <summary>
+        /// This test ensures that the <see cref="WeeeDeliveredReturnVersion"/> of the existing <see cref="DataReturnVersion"/> is reused when the <see cref="WeeeDeliveredAmount"/>
+        /// items for the new and existing data return versions are all equal. 
+        /// </summary>
         [Fact]
         public async Task Build_ExistingLatestDataReturnVersion_WithAllExistingWeeeDeliveredAmounts_ReturnsDataReturnVersionWithExistingWeeeDeliveredReturnVersion()
         {
+            var aatfDeliveryLocation = new AatfDeliveryLocation("ApprovalNumber", "FacilityName");
+
             var weeeDeliveredReturnVersion = new WeeeDeliveredReturnVersion();
             weeeDeliveredReturnVersion.AddWeeeDeliveredAmount(
-                new WeeeDeliveredAmount(ObligationType.B2C, WeeeCategory.ConsumerEquipment, 100, new AatfDeliveryLocation("ApprovalNumber", "FacilityName")));
+                new WeeeDeliveredAmount(ObligationType.B2C, WeeeCategory.ConsumerEquipment, 100, aatfDeliveryLocation));
 
             var dataReturn = new DataReturn(A.Dummy<Scheme>(), A.Dummy<Quarter>());
             var dataReturnVersion = new DataReturnVersion(dataReturn, A.Dummy<WeeeCollectedReturnVersion>(),
@@ -150,6 +254,9 @@
             A.CallTo(() => helper.DataAccess.GetLatestDataReturnVersionOrDefault())
                 .Returns(dataReturnVersion);
 
+            A.CallTo(() => helper.DataAccess.GetOrAddAatfDeliveryLocation(A<string>._, A<string>._))
+                .Returns(aatfDeliveryLocation);
+
             var builder = helper.Create();
             await builder.AddAatfDeliveredAmount("ApprovalNumber", "FacilityName", WeeeCategory.ConsumerEquipment, ObligationType.B2C, 100);
 
@@ -158,6 +265,10 @@
             Assert.Same(weeeDeliveredReturnVersion, result.DataReturnVersion.WeeeDeliveredReturnVersion);
         }
 
+        /// <summary>
+        /// This test ensures that the <see cref="EeeOutputReturnVersion"/> of the existing <see cref="DataReturnVersion"/> is reused when the <see cref="EeeOutputAmount"/>
+        /// items for the new and existing data return versions are all equal. 
+        /// </summary>
         [Fact]
         public async Task Build_ExistingLatestDataReturnVersion_WithAllExistingEeeOutputAmounts_ReturnsDataReturnVersionWithExistingEeeOutputReturnVersion()
         {
@@ -189,8 +300,11 @@
             Assert.Same(eeeOutputReturnVersion, result.DataReturnVersion.EeeOutputReturnVersion);
         }
 
+        /// <summary>
+        /// This test ensures that equal <see cref="WeeeCollectedAmount"/> items from the existing <see cref="DataReturnVersion"/> are reused.
+        /// </summary>
         [Fact]
-        public async Task Build_ExistingLatestDataReturnVersion_WithSomeWeeeCollectedAmounts_ReturnsDataReturnVersionWithExistingWeeeCollectedAmounts()
+        public async Task Build_ExistingLatestDataReturnVersion_WithSomeExistingWeeeCollectedAmounts_ReturnsDataReturnVersionWithExistingWeeeCollectedAmounts()
         {
             var weeeCollectedAmount1 = new WeeeCollectedAmount(WeeeCollectedAmountSourceType.Dcf, ObligationType.B2C, WeeeCategory.DisplayEquipment, 100);
             var weeeCollectedAmount2 = new WeeeCollectedAmount(WeeeCollectedAmountSourceType.Dcf, ObligationType.B2C, WeeeCategory.ConsumerEquipment, 100);
@@ -224,6 +338,9 @@
                 r2 => Assert.Same(weeeCollectedAmount3, r2));
         }
 
+        /// <summary>
+        /// This test ensures that equal <see cref="WeeeDeliveredAmount"/> items from the existing <see cref="DataReturnVersion"/> are reused.
+        /// </summary>
         [Fact]
         public async Task Build_ExistingLatestDataReturnVersion_WithSomeExistingWeeeDeliveredAmounts_ReturnsDataReturnVersionWithExistingWeeeDeliveredAmounts()
         {
@@ -247,6 +364,11 @@
             A.CallTo(() => helper.DataAccess.GetLatestDataReturnVersionOrDefault())
                 .Returns(dataReturnVersion);
 
+            A.CallTo(() => helper.DataAccess.GetOrAddAatfDeliveryLocation(A<string>._, A<string>._))
+                .Returns(new AatfDeliveryLocation("ApprovalNumber", "FacilityName"));
+            A.CallTo(() => helper.DataAccess.GetOrAddAeDeliveryLocation(A<string>._, A<string>._))
+                .Returns(new AeDeliveryLocation("ApprovalNumber", "OperatorName"));
+
             var builder = helper.Create();
             await builder.AddAatfDeliveredAmount("ApprovalNumber", "FacilityName", WeeeCategory.ConsumerEquipment, ObligationType.B2C, 100);
             await builder.AddAeDeliveredAmount("ApprovalNumber", "OperatorName", WeeeCategory.LargeHouseholdAppliances, ObligationType.B2C, 300);
@@ -259,6 +381,9 @@
                 r2 => Assert.Same(weeeDeliveredAmount4, r2));
         }
 
+        /// <summary>
+        /// This test ensures that equal <see cref="EeeOutputAmount"/> items from the existing <see cref="DataReturnVersion"/> are reused.
+        /// </summary>
         [Fact]
         public async Task Build_ExistingLatestDataReturnVersion_WithSomeExistingEeeOutputAmounts_ReturnsDataReturnVersionWithExistingEeeOutputAmounts()
         {
@@ -312,12 +437,91 @@
                 r2 => Assert.Same(eeeOutputAmount3, r2));
         }
 
+        /// <summary>
+        /// Consider the following scenario: A <see cref="DataReturnVersion"/> exists in the database with all of the properties
+        /// (WeeeCollectedReturnVersion, WeeeDeliveredReturnVersion and EeeOutputReturnVersion) having values (i.e. they are not null).
+        /// The <see cref="DataReturnVersionBuilder"/> is used to build a new <see cref="DataReturnVersion"/> but values are not specified for any of the
+        /// return version properties. The test ensures that the properties of the generated object will have null values.
+        /// </summary>
+        [Fact]
+        public async Task Build_ExistingLatestDataReturnVersion_ContainsReturnData_WithNoDataForNewReturn_ReturnsNullReturnVersions()
+        {
+            var dataReturn = new DataReturn(A.Dummy<Scheme>(), A.Dummy<Quarter>());
+            var dataReturnVersion = new DataReturnVersion(dataReturn, A.Dummy<WeeeCollectedReturnVersion>(),
+                A.Dummy<WeeeDeliveredReturnVersion>(), A.Dummy<EeeOutputReturnVersion>());
+
+            var helper = new DataReturnVersionBuilderHelper();
+
+            A.CallTo(() => helper.DataAccess.GetLatestDataReturnVersionOrDefault())
+                .Returns(dataReturnVersion);
+
+            var builder = helper.Create();
+
+            var result = await builder.Build();
+
+            Assert.Null(result.DataReturnVersion.WeeeCollectedReturnVersion);
+            Assert.Null(result.DataReturnVersion.WeeeDeliveredReturnVersion);
+            Assert.Null(result.DataReturnVersion.EeeOutputReturnVersion);
+        }
+
+        /// <summary>
+        /// Consider the following scenario: A <see cref="DataReturnVersion"/> exists in the database with null values for
+        /// its WeeeCollectedReturnVersion, WeeeDeliveredReturnVersion and EeeOutputReturnVersion. The <see cref="DataReturnVersionBuilder"/>
+        /// is used to build a new <see cref="DataReturnVersion"/> but values are not specified for any of the return version properties. The test ensures
+        /// that the properties of the generated object will have null values.
+        /// </summary>
+        [Fact]
+        public async Task Build_ExistingLatestDataReturnVersion_DoesNotContainReturnData_WithNoDataForNewReturn_ReturnsNullReturnVersions()
+        {
+            var dataReturn = new DataReturn(A.Dummy<Scheme>(), A.Dummy<Quarter>());
+            var dataReturnVersion = new DataReturnVersion(dataReturn, null, null, null);
+
+            var helper = new DataReturnVersionBuilderHelper();
+
+            A.CallTo(() => helper.DataAccess.GetLatestDataReturnVersionOrDefault())
+                .Returns(dataReturnVersion);
+
+            var builder = helper.Create();
+
+            var result = await builder.Build();
+
+            Assert.Null(result.DataReturnVersion.WeeeCollectedReturnVersion);
+            Assert.Null(result.DataReturnVersion.WeeeDeliveredReturnVersion);
+            Assert.Null(result.DataReturnVersion.EeeOutputReturnVersion);
+        }
+
+        /// <summary>
+        /// Consider the following scenario: A <see cref="DataReturnVersion"/> does not exist. The <see cref="DataReturnVersionBuilder"/>
+        /// is used to build a new <see cref="DataReturnVersion"/> but values are not specified for any of the return version properties. The test ensures
+        /// that the properties of the generated object will have null values.
+        /// </summary>
+        [Fact]
+        public async Task Build_NoExistingLatestDataReturnVersion_WithNoDataForNewReturn_ReturnsNullReturnVersions()
+        {
+            var helper = new DataReturnVersionBuilderHelper();
+
+            A.CallTo(() => helper.DataAccess.GetLatestDataReturnVersionOrDefault())
+                .Returns((DataReturnVersion)null);
+
+            var builder = helper.Create();
+
+            var result = await builder.Build();
+
+            Assert.Null(result.DataReturnVersion.WeeeCollectedReturnVersion);
+            Assert.Null(result.DataReturnVersion.WeeeDeliveredReturnVersion);
+            Assert.Null(result.DataReturnVersion.EeeOutputReturnVersion);
+        }
+
         [Fact]
         public async Task AddAatfDeliveredAmount_CreatesAatfDeliveredAmountDomainObject()
         {
             var helper = new DataReturnVersionBuilderHelper();
             A.CallTo(() => helper.DataAccess.GetLatestDataReturnVersionOrDefault())
                 .Returns((DataReturnVersion)null);
+
+            var aatfDeliveryLocation = new AatfDeliveryLocation("Approval Number", "Facility name");
+            A.CallTo(() => helper.DataAccess.GetOrAddAatfDeliveryLocation(A<string>._, A<string>._))
+                .Returns(aatfDeliveryLocation);
 
             var builder = helper.Create();
             await builder.AddAatfDeliveredAmount("Approval Number", "Facility name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
@@ -327,14 +531,20 @@
             Assert.Equal(1, result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Count);
             Assert.Collection(result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts,
                 r => Assert.Equal("Approval Number", r.AatfDeliveryLocation.ApprovalNumber));
+            Assert.Same(aatfDeliveryLocation, result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Single().AatfDeliveryLocation);
         }
 
         [Fact]
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "aeDeliveryLocation is valid.")]
         public async Task AddAeDeliveredAmount_CreatesAeDeliveredAmountDomainObject()
         {
             var helper = new DataReturnVersionBuilderHelper();
             A.CallTo(() => helper.DataAccess.GetLatestDataReturnVersionOrDefault())
                 .Returns((DataReturnVersion)null);
+
+            var aeDeliveryLocation = new AeDeliveryLocation("Approval Number", "Operator name");
+            A.CallTo(() => helper.DataAccess.GetOrAddAeDeliveryLocation(A<string>._, A<string>._))
+                .Returns(aeDeliveryLocation);
 
             var builder = helper.Create();
             await builder.AddAeDeliveredAmount("Approval Number", "Operator name", A<WeeeCategory>._, ObligationType.B2C, A<decimal>._);
@@ -344,6 +554,7 @@
             Assert.Equal(1, result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Count);
             Assert.Collection(result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts,
                 r => Assert.Equal("Approval Number", r.AeDeliveryLocation.ApprovalNumber));
+            Assert.Same(aeDeliveryLocation, result.DataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts.Single().AeDeliveryLocation);
         }
 
         [Fact]
