@@ -9,10 +9,10 @@
         {
             public string SchemeName { get; set; }
             public string ApprovalNumber { get; set; }
-            public int Year { get; set; }
-            public DateTime DateSumbitted { get; set; }
-            public int QuarterType { get; set; }
-            public bool LatestSubmission { get; set; }
+            public int ComplianceYear { get; set; }
+            public DateTime SubmittedDate { get; set; }
+            public int Quarter { get; set; }
+            public string LatestData { get; set; }
             public decimal? Cat1B2C { get; set; }
             public decimal? Cat2B2C { get; set; }
             public decimal? Cat3B2C { get; set; }
