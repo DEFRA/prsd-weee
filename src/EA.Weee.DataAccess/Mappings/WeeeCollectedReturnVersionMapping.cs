@@ -10,7 +10,7 @@
             ToTable("WeeeCollectedReturnVersion", "PCS");
 
             HasMany(r => r.DataReturnVersions)
-                .WithRequired(e => e.WeeeCollectedReturnVersion);
+                .WithOptional(e => e.WeeeCollectedReturnVersion);
 
             HasMany(e => e.WeeeCollectedAmounts)
                 .WithMany(r => r.WeeeCollectedReturnVersions)
