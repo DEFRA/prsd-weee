@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
+    using System;
     using System.Collections.Generic;
     using EA.Prsd.Core;
     using EA.Weee.Domain.Producer;
     using Lookup;
     using Obligation;
-    public class EeeOutputAmount : ReturnItem
+
+    public class EeeOutputAmount : ReturnItem, IEquatable<EeeOutputAmount>
     {
         public virtual RegisteredProducer RegisteredProducer { get; private set; }
 
@@ -24,6 +26,27 @@
             Guard.ArgumentNotNull(() => registeredProducer, registeredProducer);
 
             RegisteredProducer = registeredProducer;
+        }
+
+        public bool Equals(EeeOutputAmount other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return Equals((ReturnItem)other) &&
+                   RegisteredProducer.Equals(other.RegisteredProducer);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as EeeOutputAmount);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode() ^ RegisteredProducer.GetHashCode();
         }
     }
 }

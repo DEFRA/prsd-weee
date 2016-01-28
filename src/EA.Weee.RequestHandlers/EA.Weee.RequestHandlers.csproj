@@ -144,6 +144,9 @@
     <Compile Include="DataReturns\BusinessValidation\Rules\ISubmissionWindowClosed.cs" />
     <Compile Include="DataReturns\BusinessValidation\Rules\SchemeApprovalNumberMismatch.cs" />
     <Compile Include="DataReturns\BusinessValidation\Rules\SubmissionWindowClosed.cs" />
+    <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
+    <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandler.cs" />
+    <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\IFetchDataReturnComplianceYearsForSchemeDataAccess.cs" />
     <Compile Include="DataReturns\IsSubmissionWindowOpenHandler.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderResult.cs" />
     <Compile Include="DataReturns\BusinessValidation\IEeeValidator.cs" />
@@ -173,6 +176,7 @@
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandler.cs" />
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitReturnVersionDataAccess.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
+    <Compile Include="Mappings\ProducerEeeMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />

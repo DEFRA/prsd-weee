@@ -9,16 +9,19 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.Producer;
     using EA.Weee.RequestHandlers.Security;
+    using Prsd.Core.Mapper;
 
     public class GetProducerDetailsHandler : IRequestHandler<Requests.Admin.GetProducerDetails, ProducerDetails>
     {
         private readonly IGetProducerDetailsDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
+        private readonly IMapper mapper;
 
-        public GetProducerDetailsHandler(IGetProducerDetailsDataAccess dataAccess, IWeeeAuthorization authorization)
+        public GetProducerDetailsHandler(IGetProducerDetailsDataAccess dataAccess, IWeeeAuthorization authorization, IMapper mapper)
         {
             this.dataAccess = dataAccess;
             this.authorization = authorization;
+            this.mapper = mapper;
         }
 
         public async Task<ProducerDetails> HandleAsync(Requests.Admin.GetProducerDetails request)
@@ -86,7 +89,12 @@
                     ObligationType = (ObligationType)latestDetails.ObligationType,
                     ChargeBandType = (ChargeBandType)latestDetails.ChargeBandAmount.ChargeBand,
                     CeasedToExist = latestDetails.CeaseToExist,
-                    IsAuthorisedRepresentative = isAuthorisedRepresentative
+                    IsAuthorisedRepresentative = isAuthorisedRepresentative,
+                    ProducerEeeDetails =
+                        mapper.Map<IEnumerable<ProducerEeeByQuarter>, ProducerEeeDetails>(
+                            (await
+                                dataAccess.EeeOutputBySchemeAndComplianceYear(request.RegistrationNumber, complianceYear,
+                                    schemeGroup.Key.Id)))
                 };
 
                 producerDetails.Schemes.Add(producerSchemeDetails);

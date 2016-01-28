@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ReturnVersionBuilder
 {
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -7,15 +8,16 @@
     using DataAccess;
     using Domain.DataReturns;
     using Domain.Producer;
+    using Scheme = Domain.Scheme.Scheme;
 
     public class DataReturnVersionBuilderDataAccess : IDataReturnVersionBuilderDataAccess
     {
         private readonly WeeeContext context;
-        private readonly Domain.Scheme.Scheme scheme;
+        private readonly Scheme scheme;
         private readonly Quarter quarter;
         private ICollection<RegisteredProducer> schemeYearProducers;
 
-        public DataReturnVersionBuilderDataAccess(Domain.Scheme.Scheme scheme, Quarter quarter, WeeeContext context)
+        public DataReturnVersionBuilderDataAccess(Scheme scheme, Quarter quarter, WeeeContext context)
         {
             this.context = context;
             this.scheme = scheme;
@@ -48,6 +50,16 @@
                 .ToListAsync();
             }
             return schemeYearProducers;
+        }
+
+        public async Task<DataReturnVersion> GetLatestDataReturnVersionOrDefault()
+        {
+            return await context.DataReturnVersions
+                .Where(rv => rv.DataReturn.Scheme.Id == scheme.Id)
+                .Where(rv => rv.DataReturn.Quarter.Year == quarter.Year)
+                .Where(rv => rv.DataReturn.Quarter.Q == quarter.Q)
+                .OrderByDescending(rv => rv.CreatedDate)
+                .FirstOrDefaultAsync();
         }
     }
 }

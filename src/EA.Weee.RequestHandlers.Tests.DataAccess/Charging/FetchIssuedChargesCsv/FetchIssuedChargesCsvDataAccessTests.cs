@@ -43,9 +43,9 @@
 
                 scheme.CompetentAuthorityId = databaseAuthority1.Id;
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme, invoiceRunForAuthority1);
-               
+
                 var producerSubmission = helper.CreateInvoicedProducer(memberUpload, registrationNumber);
-               
+
                 database.Model.SaveChanges();
                 UKCompetentAuthority domainAuthority1 = database.WeeeContext.UKCompetentAuthorities.Find(databaseAuthority1.Id);
                 FetchIssuedChargesCsvDataAccess dataAccess = new FetchIssuedChargesCsvDataAccess(database.WeeeContext);
@@ -58,8 +58,8 @@
                 // Assert
                 Assert.NotNull(producer);
                 Assert.Equal(producerSubmission.RegisteredProducer.ProducerRegistrationNumber, producer.RegisteredProducer.ProducerRegistrationNumber);
-                Assert.Equal(1, producerSubmissionList.Count);                    
+                Assert.Equal(1, producerSubmissionList.Count);
             }
-        }        
+        }
     }
 }

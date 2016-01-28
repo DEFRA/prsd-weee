@@ -1,6 +1,8 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Scheme.Controllers
 @using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.MemberUploadResultViewModel
 @{
 	ViewBag.Title = "View any warnings";
@@ -82,14 +84,11 @@
 		</p>
 
 		<p>
-			Make changes and @this.WeeeGds().ActionLinkWithEventTracking(
-						"upload a new file",
-						"AddOrAmendMembers",
-						"MemberRegistration",
-						"Member registration loop",
-						"Upload a new file",
-						"Validation successful"
-						).
+		    Make changes and @(this.WeeeGds().ActionLinkWithEventTracking("upload a new file",
+                             Url.UrlFor<MemberRegistrationController>(c => c.AddOrAmendMembers(Model.PcsId)),
+                             "Member registration loop",
+                             "Upload a new file",
+                             "Validation successful")).
 		</p>
 	}
 }
