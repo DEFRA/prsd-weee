@@ -1,4 +1,4 @@
-﻿@model EA.Weee.Web.Areas.Scheme.ViewModels.ChooseActivityViewModel
+﻿@model EA.Weee.Web.Areas.Scheme.ViewModels.DataReturns.CannotSubmitDataReturnViewModel
 @{
     ViewBag.Title = "Cannot Submit DataReturn";
 }
@@ -13,9 +13,9 @@
 
     @Html.HiddenFor(m => m.OrganisationId)
 
-    <p>The submission window for 2016 data returns is now closed.</p>
+    <p>The submission window for @Model.CurrentYear data returns is now closed.</p>
 
-    <p>You can submit a return for 2017 from 1 April 2017.</p>
+    <p>You can submit a return for @(Model.CurrentYear + 1) from 1 April @(Model.CurrentYear + 1).</p>
 
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @area = "Scheme" }, new { @class = "button" })

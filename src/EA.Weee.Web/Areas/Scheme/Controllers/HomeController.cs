@@ -154,14 +154,6 @@
 
                         if (status == SchemeStatus.Approved)
                         {
-                            var currentDate = SystemTime.Now;
-
-                            if (currentDate >= new DateTime(DateTime.UtcNow.Year, 3, 17) && currentDate <= new DateTime(DateTime.UtcNow.Year, 3, 31))
-                            {
-                                return RedirectToAction("CannotSubmitDataReturn", "Home",
-                                    new { pcsId = viewModel.OrganisationId });
-                            }
-
                             return RedirectToAction("Upload", "DataReturns", new { pcsId = viewModel.OrganisationId });
                         }
                         else
@@ -176,23 +168,6 @@
             viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId);
             await SetShowLinkToCreateOrJoinOrganisation(viewModel);
             return View(viewModel);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> CannotSubmitDataReturn(Guid pcsId)
-        {
-            using (var client = apiClient())
-            {
-                var organisationExists =
-                    await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
-
-                if (!organisationExists)
-                {
-                    throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
-                }
-                await SetBreadcrumb(pcsId, "Submit a data return");
-                return View();
-            }
         }
 
         [HttpGet]
