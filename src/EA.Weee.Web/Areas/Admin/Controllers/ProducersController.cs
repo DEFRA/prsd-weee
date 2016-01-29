@@ -275,11 +275,11 @@
         {
             using (IWeeeClient client = apiClient())
             {
-                var producerEeeCsvData = await client.SendAsync(User.GetAccessToken(),
+                var producerEeeDataHistoryCsv = await client.SendAsync(User.GetAccessToken(),
                     new GetProducerEeeDataHistoryCsv(registrationNumber));
 
-                byte[] data = new UTF8Encoding().GetBytes(producerEeeCsvData.FileContent);
-                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerEeeCsvData.FileName));
+                byte[] data = new UTF8Encoding().GetBytes(producerEeeDataHistoryCsv.FileContent);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerEeeDataHistoryCsv.FileName));
             }
         }
 
