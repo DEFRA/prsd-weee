@@ -2,8 +2,9 @@
 GO
 SET QUOTED_IDENTIFIER ON
 GO
--- Create date: 2016 Jan 11
--- Modified date: 2016 Jan 18
+-- =============================================
+-- Author:		Priety Mahajan
+-- Create date: 2016 Jan 28
 -- Description:	This stored procedure is used to provide the EEE data history for producer.
 -- =============================================
 ALTER PROCEDURE [Producer].[spgProducerEeeHistoryCsvDataByPRN]
