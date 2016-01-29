@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Domain.Error;
     using Domain.Lookup;
@@ -657,6 +658,35 @@
             model.InvoiceRuns.Add(invoiceRun);
 
             return invoiceRun;
+        }
+
+        public AatfDeliveryLocation CreateAatfDeliveryLocation(string approvalNumber, string facilityName)
+        {
+            var aatfDeliveryLocation = new AatfDeliveryLocation
+            {
+                Id = IntegerToGuid(GetNextId()),
+                ApprovalNumber = approvalNumber,
+                FacilityName = facilityName
+            };
+
+            model.AatfDeliveryLocations.Add(aatfDeliveryLocation);
+
+            return aatfDeliveryLocation;
+        }
+
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "aeDeliveryLocation is valid.")]
+        public AeDeliveryLocation CreateAeDeliveryLocation(string approvalNumber, string operatorName)
+        {
+            var aeDeliveryLocation = new AeDeliveryLocation
+            {
+                Id = IntegerToGuid(GetNextId()),
+                ApprovalNumber = approvalNumber,
+                OperatorName = operatorName
+            };
+
+            model.AeDeliveryLocations.Add(aeDeliveryLocation);
+
+            return aeDeliveryLocation;
         }
     }
 }

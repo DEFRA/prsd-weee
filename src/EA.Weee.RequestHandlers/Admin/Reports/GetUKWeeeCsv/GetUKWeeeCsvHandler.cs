@@ -102,7 +102,7 @@
 
         public IEnumerable<CsvResult> CreateResults(IEnumerable<DataReturn> dataReturns)
         {
-            foreach (Domain.Obligation.ObligationType obligationType in 
+            foreach (Domain.Obligation.ObligationType obligationType in
                 new List<Domain.Obligation.ObligationType>() { Domain.Obligation.ObligationType.B2B, Domain.Obligation.ObligationType.B2C })
             {
                 foreach (WeeeCategory category in Enum.GetValues(typeof(WeeeCategory)))
@@ -302,6 +302,8 @@
         {
             return dataReturns
                 .Where(dr => dr.Quarter.Q == quarter)
+                .Where(dr => dr.CurrentVersion != null)
+                .Where(dr => dr.CurrentVersion.WeeeCollectedReturnVersion != null)
                 .SelectMany(dr => dr.CurrentVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts)
                 .Where(wca => wca.ObligationType == obligationType)
                 .Where(wca => wca.WeeeCategory == category)
@@ -316,6 +318,8 @@
         {
             return dataReturns
                 .Where(dr => dr.Quarter.Q == quarter)
+                .Where(dr => dr.CurrentVersion != null)
+                .Where(dr => dr.CurrentVersion.WeeeDeliveredReturnVersion != null)
                 .SelectMany(dr => dr.CurrentVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts)
                 .Where(wca => wca.ObligationType == obligationType)
                 .Where(wca => wca.WeeeCategory == category);

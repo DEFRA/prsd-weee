@@ -125,11 +125,13 @@
     <Compile Include="DataReturns\CreateTestXmlFile\XmlGeneratorTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandlerTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandlerTests.cs" />
+    <Compile Include="DataReturns\FetchSummaryCsv\FetchSummaryCsvTests.cs" />
     <Compile Include="DataReturns\IsSubmissionWindowOpenHandlerTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnVersionFromXmlBuilderTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\GenerateFromDataReturnXMLTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXMLFileHandlerTests.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandlerTests.cs" />
+    <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderDataAccessTests.cs" />
     <Compile Include="DataReturns\ReturnVersionBuilder\DataReturnVersionBuilderTests.cs" />
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitDataReturnUploadHandlerTests.cs" />
     <Compile Include="Mapping\ProducerEeeMapTests.cs" />
