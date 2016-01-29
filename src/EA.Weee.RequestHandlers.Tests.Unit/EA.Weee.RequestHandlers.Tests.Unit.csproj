@@ -99,7 +99,7 @@
     <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandlerTests.cs" />
     <Compile Include="Admin\GetUserDataHandlerTests.cs" />
-    <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandlerTest.cs" />
+    <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetUKWeeeCsv\GetUKWeeeCsvHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsvHandlerTests.cs" />
