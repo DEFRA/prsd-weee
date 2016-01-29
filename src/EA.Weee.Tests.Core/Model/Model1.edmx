@@ -14,6 +14,7 @@
           <Property Name="CompetentAuthorityId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="UserStatus" Type="int" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="RoleId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="IbisFileData">
           <Key>
@@ -1456,6 +1457,7 @@
           <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="CompetentAuthority" Relationship="Self.FK_CompetentAuthorityUser_CompetentAuthority" FromRole="CompetentAuthorityUser" ToRole="CompetentAuthority" />
           <NavigationProperty Name="AspNetUser" Relationship="EA.Weee.TestModel.FK_CompetentAuthorityUser_AspNetUsers" FromRole="CompetentAuthorityUser" ToRole="AspNetUser" />
+          <Property Name="RoleId" Type="Guid" Nullable="false" />
         </EntityType>
         <EntityType Name="CompetentAuthority">
           <Key>
@@ -3004,6 +3006,7 @@
           <EntitySetMapping Name="CompetentAuthorityUsers">
             <EntityTypeMapping TypeName="EA.Weee.TestModel.CompetentAuthorityUser">
               <MappingFragment StoreEntitySet="CompetentAuthorityUser">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="CompetentAuthorityId" ColumnName="CompetentAuthorityId" />
