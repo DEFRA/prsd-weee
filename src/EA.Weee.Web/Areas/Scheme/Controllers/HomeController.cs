@@ -14,6 +14,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
+    using Prsd.Core;
     using Prsd.Core.Extensions;
     using ViewModels;
     using Web.Controllers.Base;
