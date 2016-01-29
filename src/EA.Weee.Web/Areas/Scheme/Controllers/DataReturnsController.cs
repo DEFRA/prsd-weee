@@ -145,7 +145,7 @@
         {
             var currentDate = SystemTime.Now;
             
-            await SetBreadcrumbWithoutSchemeInfo(pcsId);
+            await SetBreadcrumb(pcsId);
             return View(new CannotSubmitDataReturnViewModel
             {
                 OrganisationId = pcsId,
@@ -341,12 +341,6 @@
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
             breadcrumb.ExternalActivity = "Manage EEE/WEEE data return";
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
-        }
-
-        private async Task SetBreadcrumbWithoutSchemeInfo(Guid organisationId)
-        {
-            breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
-            breadcrumb.ExternalActivity = "Submit a data return";
         }
 
         private async Task<DataReturnForSubmission> FetchDataReturnUpload(Guid pcsId, Guid dataReturnUploadId)

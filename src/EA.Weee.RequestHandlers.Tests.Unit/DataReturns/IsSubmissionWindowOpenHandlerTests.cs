@@ -37,11 +37,10 @@
             var windowStart = new DateTime(2016, 4, 1, 0, 0, 0);
             var windowEnd = new DateTime(2017, 3, 16, 0, 0, 0);
 
-            A.CallTo(() => quarterWindowFactory.GetPossibleQuarterWindow(A<int>._))
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._))
                 .Returns(new List<QuarterWindow>
                 {
-                    new QuarterWindow(windowStart, windowEnd),
-                    new QuarterWindow(windowStart.AddMonths(3), windowEnd)
+                    new QuarterWindow(windowStart, windowEnd)
                 });
 
             SystemTime.Freeze(timeNow, true);
@@ -65,18 +64,9 @@
                 .Returns(systemData);
 
             var timeNow = new DateTime(2016, 3, 25, 0, 0, 0);
-
-            var windowStart = new DateTime(2016, 4, 1, 0, 0, 0);
-            var windowEnd = new DateTime(2017, 3, 16, 0, 0, 0);
-
-            A.CallTo(() => quarterWindowFactory.GetPossibleQuarterWindow(A<int>._))
-                .Returns(new List<QuarterWindow>
-                {
-                    new QuarterWindow(windowStart, windowEnd),
-                    new QuarterWindow(windowStart.AddMonths(3), windowEnd),
-                    new QuarterWindow(windowStart.AddMonths(6), windowEnd),
-                    new QuarterWindow(windowStart.AddMonths(9), windowEnd)
-                });
+            
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._))
+                .Returns(new List<QuarterWindow>());
 
             SystemTime.Freeze(timeNow, true);
 
