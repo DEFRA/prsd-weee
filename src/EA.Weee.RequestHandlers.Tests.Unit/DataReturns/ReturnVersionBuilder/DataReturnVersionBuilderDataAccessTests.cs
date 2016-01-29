@@ -26,14 +26,14 @@
             A.CallTo(() => context.AatfDeliveryLocations)
                 .Returns(aatfDeliveryLocations);
 
-            var dataAccess = new DataReturnVersionBuilderDataAccessExtension(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
+            var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
 
             // Act
             await dataAccess.GetOrAddAatfDeliveryLocation("AAA", "BBB");
 
             // Assert
-            Assert.Equal(1, dataAccess.GetCachedAatfDeliveryLocations().Count);
-            Assert.Contains(aatfDeliveryLocationDb, dataAccess.GetCachedAatfDeliveryLocations().Values);
+            Assert.Equal(1, dataAccess.CachedAatfDeliveryLocations.Count);
+            Assert.Contains(aatfDeliveryLocationDb, dataAccess.CachedAatfDeliveryLocations.Values);
         }
 
         [Fact]
@@ -48,13 +48,13 @@
             A.CallTo(() => context.AatfDeliveryLocations)
                 .Returns(aatfDeliveryLocations);
 
-            var dataAccess = new DataReturnVersionBuilderDataAccessExtension(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
+            var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
 
             // Act
             var result = await dataAccess.GetOrAddAatfDeliveryLocation("AAA", "BBB");
 
             // Assert
-            Assert.Equal(1, dataAccess.GetCachedAatfDeliveryLocations().Count);
+            Assert.Equal(1, dataAccess.CachedAatfDeliveryLocations.Count);
             A.CallTo(() => aatfDeliveryLocations.Add(result))
                 .MustNotHaveHappened();
         }
@@ -71,7 +71,7 @@
             A.CallTo(() => context.AatfDeliveryLocations)
                 .Returns(aatfDeliveryLocations);
 
-            var dataAccess = new DataReturnVersionBuilderDataAccessExtension(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
+            var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
 
             // Act
             var result = await dataAccess.GetOrAddAatfDeliveryLocation("AAA", "BBB");
@@ -81,7 +81,7 @@
             Assert.NotSame(aatfDeliveryLocationDb, result);
             Assert.Equal("AAA", result.ApprovalNumber);
             Assert.Equal("BBB", result.FacilityName);
-            Assert.Contains(result, dataAccess.GetCachedAatfDeliveryLocations().Values);
+            Assert.Contains(result, dataAccess.CachedAatfDeliveryLocations.Values);
             A.CallTo(() => aatfDeliveryLocations.Add(result))
                 .MustHaveHappened();
         }
@@ -98,7 +98,7 @@
             A.CallTo(() => context.AatfDeliveryLocations)
                 .Returns(aatfDeliveryLocations);
 
-            var dataAccess = new DataReturnVersionBuilderDataAccessExtension(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
+            var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
 
             // Act
             var result = await dataAccess.GetOrAddAatfDeliveryLocation("AAA", "BBB");
@@ -108,7 +108,7 @@
             Assert.NotSame(aatfDeliveryLocationDb, result);
             Assert.Equal("AAA", result.ApprovalNumber);
             Assert.Equal("BBB", result.FacilityName);
-            Assert.Contains(result, dataAccess.GetCachedAatfDeliveryLocations().Values);
+            Assert.Contains(result, dataAccess.CachedAatfDeliveryLocations.Values);
             A.CallTo(() => aatfDeliveryLocations.Add(result))
                 .MustHaveHappened();
         }
@@ -124,7 +124,7 @@
             A.CallTo(() => context.AatfDeliveryLocations)
                 .Returns(aatfDeliveryLocations);
 
-            var dataAccess = new DataReturnVersionBuilderDataAccessExtension(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
+            var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
 
             // Act
             var result = await dataAccess.GetOrAddAatfDeliveryLocation("AAA", "BBB");
@@ -133,7 +133,7 @@
             Assert.NotNull(result);
             Assert.Equal("AAA", result.ApprovalNumber);
             Assert.Equal("BBB", result.FacilityName);
-            Assert.Contains(result, dataAccess.GetCachedAatfDeliveryLocations().Values);
+            Assert.Contains(result, dataAccess.CachedAatfDeliveryLocations.Values);
             A.CallTo(() => aatfDeliveryLocations.Add(result))
                 .MustHaveHappened();
         }
@@ -150,14 +150,14 @@
             A.CallTo(() => context.AeDeliveryLocations)
                 .Returns(aeDeliveryLocations);
 
-            var dataAccess = new DataReturnVersionBuilderDataAccessExtension(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
+            var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
 
             // Act
             await dataAccess.GetOrAddAeDeliveryLocation("AAA", "BBB");
 
             // Assert
-            Assert.Equal(1, dataAccess.GetCachedAeDeliveryLocations().Count);
-            Assert.Contains(aeDeliveryLocationDb, dataAccess.GetCachedAeDeliveryLocations().Values);
+            Assert.Equal(1, dataAccess.CachedAeDeliveryLocations.Count);
+            Assert.Contains(aeDeliveryLocationDb, dataAccess.CachedAeDeliveryLocations.Values);
         }
 
         [Fact]
@@ -172,13 +172,13 @@
             A.CallTo(() => context.AeDeliveryLocations)
                 .Returns(aeDeliveryLocations);
 
-            var dataAccess = new DataReturnVersionBuilderDataAccessExtension(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
+            var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
 
             // Act
             var result = await dataAccess.GetOrAddAeDeliveryLocation("AAA", "BBB");
 
             // Assert
-            Assert.Equal(1, dataAccess.GetCachedAeDeliveryLocations().Count);
+            Assert.Equal(1, dataAccess.CachedAeDeliveryLocations.Count);
             A.CallTo(() => aeDeliveryLocations.Add(result))
                 .MustNotHaveHappened();
         }
@@ -195,7 +195,7 @@
             A.CallTo(() => context.AeDeliveryLocations)
                 .Returns(aeDeliveryLocations);
 
-            var dataAccess = new DataReturnVersionBuilderDataAccessExtension(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
+            var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
 
             // Act
             var result = await dataAccess.GetOrAddAeDeliveryLocation("AAA", "BBB");
@@ -205,7 +205,7 @@
             Assert.NotSame(aeDeliveryLocationDb, result);
             Assert.Equal("AAA", result.ApprovalNumber);
             Assert.Equal("BBB", result.OperatorName);
-            Assert.Contains(result, dataAccess.GetCachedAeDeliveryLocations().Values);
+            Assert.Contains(result, dataAccess.CachedAeDeliveryLocations.Values);
             A.CallTo(() => aeDeliveryLocations.Add(result))
                 .MustHaveHappened();
         }
@@ -222,7 +222,7 @@
             A.CallTo(() => context.AeDeliveryLocations)
                 .Returns(aeDeliveryLocations);
 
-            var dataAccess = new DataReturnVersionBuilderDataAccessExtension(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
+            var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
 
             // Act
             var result = await dataAccess.GetOrAddAeDeliveryLocation("AAA", "BBB");
@@ -232,7 +232,7 @@
             Assert.NotSame(aeDeliveryLocationDb, result);
             Assert.Equal("AAA", result.ApprovalNumber);
             Assert.Equal("BBB", result.OperatorName);
-            Assert.Contains(result, dataAccess.GetCachedAeDeliveryLocations().Values);
+            Assert.Contains(result, dataAccess.CachedAeDeliveryLocations.Values);
             A.CallTo(() => aeDeliveryLocations.Add(result))
                 .MustHaveHappened();
         }
@@ -248,7 +248,7 @@
             A.CallTo(() => context.AeDeliveryLocations)
                 .Returns(aeDeliveryLocations);
 
-            var dataAccess = new DataReturnVersionBuilderDataAccessExtension(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
+            var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
 
             // Act
             var result = await dataAccess.GetOrAddAeDeliveryLocation("AAA", "BBB");
@@ -257,27 +257,9 @@
             Assert.NotNull(result);
             Assert.Equal("AAA", result.ApprovalNumber);
             Assert.Equal("BBB", result.OperatorName);
-            Assert.Contains(result, dataAccess.GetCachedAeDeliveryLocations().Values);
+            Assert.Contains(result, dataAccess.CachedAeDeliveryLocations.Values);
             A.CallTo(() => aeDeliveryLocations.Add(result))
                 .MustHaveHappened();
-        }
-
-        private class DataReturnVersionBuilderDataAccessExtension : DataReturnVersionBuilderDataAccess
-        {
-            public DataReturnVersionBuilderDataAccessExtension(Scheme scheme, Quarter quarter, WeeeContext context)
-                : base(scheme, quarter, context)
-            {
-            }
-
-            public Dictionary<string, AatfDeliveryLocation> GetCachedAatfDeliveryLocations()
-            {
-                return CachedAatfDeliveryLocations;
-            }
-
-            public Dictionary<string, AeDeliveryLocation> GetCachedAeDeliveryLocations()
-            {
-                return CachedAeDeliveryLocations;
-            }
         }
     }
 }
