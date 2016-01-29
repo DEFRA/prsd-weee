@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ReturnVersionBuilder
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -16,9 +17,24 @@
         private readonly Scheme scheme;
         private readonly Quarter quarter;
         private ICollection<RegisteredProducer> schemeYearProducers;
+        private Dictionary<string, AatfDeliveryLocation> cachedAatfDeliveryLocations;
+        private Dictionary<string, AeDeliveryLocation> cachedAeDeliveryLocations;
 
-        protected Dictionary<string, AatfDeliveryLocation> CachedAatfDeliveryLocations { get; private set; }
-        protected Dictionary<string, AeDeliveryLocation> CachedAeDeliveryLocations { get; private set; }
+        public ReadOnlyDictionary<string, AatfDeliveryLocation> CachedAatfDeliveryLocations
+        {
+            get
+            {
+                return new ReadOnlyDictionary<string, AatfDeliveryLocation>(cachedAatfDeliveryLocations);
+            }
+        }
+
+        public ReadOnlyDictionary<string, AeDeliveryLocation> CachedAeDeliveryLocations
+        {
+            get
+            {
+                return new ReadOnlyDictionary<string, AeDeliveryLocation>(cachedAeDeliveryLocations);
+            }
+        }
 
         public DataReturnVersionBuilderDataAccess(Scheme scheme, Quarter quarter, WeeeContext context)
         {
@@ -57,20 +73,20 @@
 
         public async Task<AatfDeliveryLocation> GetOrAddAatfDeliveryLocation(string approvalNumber, string facilityName)
         {
-            if (CachedAatfDeliveryLocations == null)
+            if (cachedAatfDeliveryLocations == null)
             {
-                CachedAatfDeliveryLocations =
+                cachedAatfDeliveryLocations =
                     await context.AatfDeliveryLocations
                     .ToDictionaryAsync(aatf => string.Format("{0}{1}", aatf.ApprovalNumber, aatf.FacilityName));
             }
 
             var key = string.Format("{0}{1}", approvalNumber, facilityName);
             AatfDeliveryLocation aatfDeliveryLocation;
-            if (!CachedAatfDeliveryLocations.TryGetValue(key, out aatfDeliveryLocation))
+            if (!cachedAatfDeliveryLocations.TryGetValue(key, out aatfDeliveryLocation))
             {
                 aatfDeliveryLocation = new AatfDeliveryLocation(approvalNumber, facilityName);
 
-                CachedAatfDeliveryLocations.Add(key, aatfDeliveryLocation);
+                cachedAatfDeliveryLocations.Add(key, aatfDeliveryLocation);
                 context.AatfDeliveryLocations.Add(aatfDeliveryLocation);
             }
 
@@ -80,20 +96,20 @@
         [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Variable name aeDeliveryLocation is valid.")]
         public async Task<AeDeliveryLocation> GetOrAddAeDeliveryLocation(string approvalNumber, string operatorName)
         {
-            if (CachedAeDeliveryLocations == null)
+            if (cachedAeDeliveryLocations == null)
             {
-                CachedAeDeliveryLocations =
+                cachedAeDeliveryLocations =
                     await context.AeDeliveryLocations
                     .ToDictionaryAsync(ae => string.Format("{0}{1}", ae.ApprovalNumber, ae.OperatorName));
             }
 
             var key = string.Format("{0}{1}", approvalNumber, operatorName);
             AeDeliveryLocation aeDeliveryLocation;
-            if (!CachedAeDeliveryLocations.TryGetValue(key, out aeDeliveryLocation))
+            if (!cachedAeDeliveryLocations.TryGetValue(key, out aeDeliveryLocation))
             {
                 aeDeliveryLocation = new AeDeliveryLocation(approvalNumber, operatorName);
 
-                CachedAeDeliveryLocations.Add(key, aeDeliveryLocation);
+                cachedAeDeliveryLocations.Add(key, aeDeliveryLocation);
                 context.AeDeliveryLocations.Add(aeDeliveryLocation);
             }
 
