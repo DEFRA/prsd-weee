@@ -102,7 +102,7 @@
     <Compile Include="Admin\GetProducerDetails\RemoveProducerHandler.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCSVHandler.cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
-    <Compile Include="Admin\Reports\GetProducerEeeDataCsvHandler.cs" />
+    <Compile Include="Admin\Reports\GetProducerEeeDataCsvHandler .cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandler.cs" />
     <Compile Include="Admin\Reports\GetUKWeeeCsv\GetUKWeeeCsvDataAccess.cs" />
