@@ -10,6 +10,7 @@
     using Core.Scheme;
     using Core.Shared;
     using Infrastructure;
+    using Prsd.Core;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
@@ -98,7 +99,32 @@
         public async Task<ActionResult> Upload(Guid pcsId)
         {
             await SetBreadcrumb(pcsId);
-            return View();
+            using (var client = apiClient())
+            {
+                var isSubmissionWindowOpen = await client.SendAsync(User.GetAccessToken(), new IsSubmissionWindowOpen());
+
+                if (isSubmissionWindowOpen)
+                {
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("CannotSubmitDataReturn", new { pcsId });
+                }
+            }
+        }
+
+        [HttpGet]
+        public async Task<ViewResult> CannotSubmitDataReturn(Guid pcsId)
+        {
+            var currentDate = SystemTime.Now;
+
+            await SetBreadcrumb(pcsId);
+            return View(new CannotSubmitDataReturnViewModel
+            {
+                OrganisationId = pcsId,
+                CurrentYear = currentDate.Year
+            });
         }
 
         [HttpPost]
