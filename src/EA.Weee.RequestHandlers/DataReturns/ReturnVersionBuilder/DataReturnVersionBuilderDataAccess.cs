@@ -17,6 +17,9 @@
         private readonly Quarter quarter;
         private ICollection<RegisteredProducer> schemeYearProducers;
 
+        protected Dictionary<string, AatfDeliveryLocation> CachedAatfDeliveryLocations { get; private set; }
+        protected Dictionary<string, AeDeliveryLocation> CachedAeDeliveryLocations { get; private set; }
+
         public DataReturnVersionBuilderDataAccess(Scheme scheme, Quarter quarter, WeeeContext context)
         {
             this.context = context;
@@ -54,21 +57,20 @@
 
         public async Task<AatfDeliveryLocation> GetOrAddAatfDeliveryLocation(string approvalNumber, string facilityName)
         {
-            var aatfDeliveryLocation =
-                // Read from the local collection to retrieve items that have been added but not yet saved to the database.
-                context.AatfDeliveryLocations.Local
-                .Where(aatf => aatf.ApprovalNumber == approvalNumber)
-                .Where(aatf => aatf.FacilityName == facilityName)
-                .SingleOrDefault()
-                ??
-                await context.AatfDeliveryLocations
-                .Where(aatf => aatf.ApprovalNumber == approvalNumber)
-                .Where(aatf => aatf.FacilityName == facilityName)
-                .SingleOrDefaultAsync();
+            if (CachedAatfDeliveryLocations == null)
+            {
+                CachedAatfDeliveryLocations =
+                    await context.AatfDeliveryLocations
+                    .ToDictionaryAsync(aatf => string.Format("{0}{1}", aatf.ApprovalNumber, aatf.FacilityName));
+            }
 
-            if (aatfDeliveryLocation == null)
+            var key = string.Format("{0}{1}", approvalNumber, facilityName);
+            AatfDeliveryLocation aatfDeliveryLocation;
+            if (!CachedAatfDeliveryLocations.TryGetValue(key, out aatfDeliveryLocation))
             {
                 aatfDeliveryLocation = new AatfDeliveryLocation(approvalNumber, facilityName);
+
+                CachedAatfDeliveryLocations.Add(key, aatfDeliveryLocation);
                 context.AatfDeliveryLocations.Add(aatfDeliveryLocation);
             }
 
@@ -78,21 +80,20 @@
         [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Variable name aeDeliveryLocation is valid.")]
         public async Task<AeDeliveryLocation> GetOrAddAeDeliveryLocation(string approvalNumber, string operatorName)
         {
-            var aeDeliveryLocation =
-                // Read from the local collection to retrieve items that have been added but not yet saved to the database.
-                context.AeDeliveryLocations.Local
-                .Where(ae => ae.ApprovalNumber == approvalNumber)
-                .Where(ae => ae.OperatorName == operatorName)
-                .SingleOrDefault()
-                ??
-                await context.AeDeliveryLocations
-                .Where(ae => ae.ApprovalNumber == approvalNumber)
-                .Where(ae => ae.OperatorName == operatorName)
-                .SingleOrDefaultAsync();
+            if (CachedAeDeliveryLocations == null)
+            {
+                CachedAeDeliveryLocations =
+                    await context.AeDeliveryLocations
+                    .ToDictionaryAsync(ae => string.Format("{0}{1}", ae.ApprovalNumber, ae.OperatorName));
+            }
 
-            if (aeDeliveryLocation == null)
+            var key = string.Format("{0}{1}", approvalNumber, operatorName);
+            AeDeliveryLocation aeDeliveryLocation;
+            if (!CachedAeDeliveryLocations.TryGetValue(key, out aeDeliveryLocation))
             {
                 aeDeliveryLocation = new AeDeliveryLocation(approvalNumber, operatorName);
+
+                CachedAeDeliveryLocations.Add(key, aeDeliveryLocation);
                 context.AeDeliveryLocations.Add(aeDeliveryLocation);
             }
 
