@@ -26,9 +26,9 @@
             return new QuarterWindow(startDate, endDate);
         }
 
-        public async Task<List<QuarterWindow>> GetPossibleQuarterWindow(int complianceYear)
+        public async Task<List<QuarterWindow>> GetQuarterWindowsForDate(DateTime date)
         {
-            var possibleComplianceYears = new int[] { complianceYear - 1, complianceYear, complianceYear + 1 };
+            var possibleComplianceYears = new int[] { date.Year - 1, date.Year, date.Year + 1 };
             var possibleQuarterWindows = new List<QuarterWindow>();
 
             var allQuarterWindowTemplates = await dataAccess.GetAll();
@@ -40,7 +40,12 @@
                     var startDate = new DateTime(possibleComplianceYear + item.AddStartYears, item.StartMonth, item.StartDay);
                     var endDate = new DateTime(possibleComplianceYear + item.AddEndYears, item.EndMonth, item.EndDay);
 
-                    possibleQuarterWindows.Add(new QuarterWindow(startDate, endDate));
+                    var quarterWindow = new QuarterWindow(startDate, endDate);
+
+                    if (quarterWindow.IsInWindow(date))
+                    {
+                        possibleQuarterWindows.Add(new QuarterWindow(startDate, endDate));
+                    }
                 }
             }
             return possibleQuarterWindows;

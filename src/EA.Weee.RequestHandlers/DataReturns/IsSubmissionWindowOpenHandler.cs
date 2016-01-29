@@ -28,16 +28,9 @@
                 currentDate = systemSettings.FixedCurrentDate;
             }
 
-            var possibleQuarterWindows = await quarterWindowFactory.GetPossibleQuarterWindow(currentDate.Year);
+            var possibleQuarterWindows = await quarterWindowFactory.GetQuarterWindowsForDate(currentDate);
 
-            foreach (var possibleQuarterWindow in possibleQuarterWindows)
-            {
-                if (currentDate >= possibleQuarterWindow.StartDate && currentDate <= possibleQuarterWindow.EndDate)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return possibleQuarterWindows.Count > 0;
         }
     }
 }
