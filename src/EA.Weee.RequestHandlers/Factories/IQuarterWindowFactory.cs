@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Factories
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.DataReturns;
@@ -8,6 +9,6 @@
     {
         Task<QuarterWindow> GetQuarterWindow(Quarter quarter);
 
-        Task<List<QuarterWindow>> GetPossibleQuarterWindow(int complianceYear);
+        Task<List<QuarterWindow>> GetQuarterWindowsForDate(DateTime date);
     }
 }

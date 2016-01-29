@@ -13,9 +13,9 @@
 
     @Html.HiddenFor(m => m.OrganisationId)
 
-    <p>The submission window for @Model.CurrentYear data returns is now closed.</p>
+    <p>The submission window for @(Model.CurrentYear -1) data returns is now closed.</p>
 
-    <p>You can submit a return for @(Model.CurrentYear + 1) from 1 April @(Model.CurrentYear + 1).</p>
+    <p>You can submit a return for @Model.CurrentYear from 1 April @Model.CurrentYear.</p>
 
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @area = "Scheme" }, new { @class = "button" })
