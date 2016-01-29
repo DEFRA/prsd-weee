@@ -62,7 +62,7 @@
     <Compile Include="Charges\FetchSchemesWithInvoices.cs" />
     <Compile Include="Charges\IssuePendingCharges.cs" />
     <Compile Include="Admin\RemoveProducer.cs" />
-    <Compile Include="Admin\Reports\GetMemberDetailsCsv.cs" />
+    <Compile Include="Admin\Reports\GetMemberDetailsCsv .cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSV.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSV.cs" />
     <Compile Include="DataReturns\CreateTestXmlFile.cs" />

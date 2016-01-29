@@ -422,7 +422,7 @@
             IWeeeClient client = A.Fake<IWeeeClient>();
 
             CSVFileData file = new CSVFileData() { FileContent = "Content" };
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCSV>._))
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCsv>._))
                 .Returns(file);
 
             ReportsController controller = new ReportsController(
@@ -455,7 +455,7 @@
             IWeeeClient client = A.Fake<IWeeeClient>();
 
             CSVFileData file = new CSVFileData() { FileContent = "Content" };
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCSV>._))
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCsv>._))
                 .Returns(file);
 
             SchemeData schemeData = new SchemeData() { ApprovalName = "WEE/AA1111AA/SCH" };
@@ -493,7 +493,7 @@
             IWeeeClient client = A.Fake<IWeeeClient>();
 
             CSVFileData file = new CSVFileData() { FileContent = "Content" };
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCSV>._))
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCsv>._))
                 .Returns(file);
 
             SchemeData schemeData = new SchemeData() { ApprovalName = "WEE/AA1111AA/SCH" };
@@ -539,7 +539,7 @@
             IWeeeClient client = A.Fake<IWeeeClient>();
 
             CSVFileData file = new CSVFileData() { FileContent = "Content" };
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCSV>._))
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCsv>._))
                 .Returns(file);
 
             UKCompetentAuthorityData authorityData = new UKCompetentAuthorityData() { Abbreviation = "AA" };
@@ -579,7 +579,7 @@
             IWeeeClient client = A.Fake<IWeeeClient>();
 
             CSVFileData file = new CSVFileData() { FileContent = "Content" };
-            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCSV>._))
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCsv>._))
                 .Returns(file);
 
             ReportsController controller = new ReportsController(

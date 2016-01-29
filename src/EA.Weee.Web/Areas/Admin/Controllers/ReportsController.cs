@@ -163,7 +163,7 @@
             CSVFileData membersDetailsCsvData;
             using (IWeeeClient client = apiClient())
             {
-                GetMemberDetailsCSV request = new GetMemberDetailsCSV(complianceYear, includeRemovedProducers, schemeId, authorityId);
+                GetMemberDetailsCsv request = new GetMemberDetailsCsv(complianceYear, includeRemovedProducers, schemeId, authorityId);
                 membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(), request);
             }
 
