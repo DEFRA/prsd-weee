@@ -24,6 +24,32 @@
         }
 
         [Fact]
+        public async void UsingFixedDate_DateIsWithinOneOfTheQuarterWindow_ReturnTrue()
+        {
+            var systemData = new SubmissionWindowClosedTests.TestSystemData();
+            systemData.UpdateFixedCurrentDate(new DateTime(2016, 4, 10, 0, 0, 0));
+            systemData.ToggleFixedCurrentDateUsage(true);
+
+            A.CallTo(() => systemDataDataAccess.Get())
+                .Returns(systemData);
+
+            var windowStart = new DateTime(2016, 4, 1, 0, 0, 0);
+            var windowEnd = new DateTime(2017, 3, 16, 0, 0, 0);
+
+            A.CallTo(() => quarterWindowFactory.GetQuarterWindowsForDate(A<DateTime>._))
+                .Returns(new List<QuarterWindow>
+                {
+                    new QuarterWindow(windowStart, windowEnd)
+                });
+
+            var handler = new IsSubmissionWindowOpenHandler(quarterWindowFactory, systemDataDataAccess);
+
+            var result = await handler.HandleAsync(A.Dummy<IsSubmissionWindowOpen>());
+
+            Assert.True(result);
+        }
+
+        [Fact]
         public async void NotUsingFixedDate_TimeNowIsWithinOneOfTheQuarterWindow_ReturnTrue()
         {
             var systemData = new SubmissionWindowClosedTests.TestSystemData();

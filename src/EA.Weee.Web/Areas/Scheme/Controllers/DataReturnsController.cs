@@ -89,7 +89,7 @@
             using (var client = apiClient())
             {
                 complianceYears = await client.SendAsync(User.GetAccessToken(), new FetchDataReturnComplianceYearsForScheme(pcsId));
-                }
+            }
 
             IndexViewModel viewModel = new IndexViewModel(pcsId, complianceYears);
             return View(viewModel);
@@ -98,29 +98,27 @@
         [HttpGet]
         public async Task<ActionResult> Upload(Guid pcsId)
         {
-                    await SetBreadcrumb(pcsId);
+            await SetBreadcrumb(pcsId);
+            using (var client = apiClient())
+            {
+                var isSubmissionWindowOpen = await client.SendAsync(User.GetAccessToken(), new IsSubmissionWindowOpen());
 
-                    var isSubmissionWindowOpen = await client.SendAsync(User.GetAccessToken(), new IsSubmissionWindowOpen());
-
-                    if (isSubmissionWindowOpen)
-                    {
+                if (isSubmissionWindowOpen)
+                {
                     return View();
                 }
-                    else
-                    {   
-                        return RedirectToAction("CannotSubmitDataReturn", new { pcsId });
-                    }
+                else
+                {
+                    return RedirectToAction("CannotSubmitDataReturn", new { pcsId });
+                }
             }
-            }
-
-            throw new InvalidOperationException(string.Format("'{0}' is not a valid organisation Id", pcsId));
         }
 
         [HttpGet]
         public async Task<ViewResult> CannotSubmitDataReturn(Guid pcsId)
         {
             var currentDate = SystemTime.Now;
-            
+
             await SetBreadcrumb(pcsId);
             return View(new CannotSubmitDataReturnViewModel
             {
@@ -285,42 +283,42 @@
             }
 
             return File(file.Data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
-            }
+        }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
-            {
+        {
             // Ensure that Data Returns are enabled.
             if (!configService.CurrentConfiguration.EnableDataReturns)
-                {
+            {
                 throw new InvalidOperationException("Data returns are not enabled.");
             }
 
             // Ensure a organisation ID has been provided and that the organisation exists.
             object organisationIdActionParameter;
             if (!filterContext.ActionParameters.TryGetValue("pcsId", out organisationIdActionParameter))
-                    {
+            {
                 throw new ArgumentException("No organisation ID was specified.");
             }
 
             if (!(organisationIdActionParameter is Guid))
             {
                 throw new ArgumentException("The specified organisation ID is not valid.");
-                    }
+            }
 
             Guid organisationId = (Guid)organisationIdActionParameter;
 
             bool organisationExists;
             using (IWeeeClient client = apiClient())
-                    {
+            {
                 Task<bool> task = Task.Run(() => client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(organisationId)));
                 task.Wait();
                 organisationExists = task.Result;
-                    }
+            }
 
             if (!organisationExists)
-                    {
+            {
                 throw new ArgumentException(string.Format("'{0}' is not a valid organisation Id.", organisationId));
-                    }
+            }
 
             /* Check whether the scheme representing the organisation has a status of "Approved".
              * If not, redirect the user to the "AuthorisationRequired" action (unless they are
