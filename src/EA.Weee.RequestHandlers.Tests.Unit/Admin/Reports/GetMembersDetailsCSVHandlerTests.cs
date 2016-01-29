@@ -12,7 +12,7 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class GetMembersDetailsCSVHandlerTests
+    public class GetMembersDetailsCsvHandlerTests
     {
         [Fact]
         public async Task GetMembersDetailsCSVHandler_NotInternalUser_ThrowsSecurityException()
