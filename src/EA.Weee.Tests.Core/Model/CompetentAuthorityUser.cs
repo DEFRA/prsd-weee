@@ -19,6 +19,7 @@ namespace EA.Weee.Tests.Core.Model
         public System.Guid CompetentAuthorityId { get; set; }
         public int UserStatus { get; set; }
         public byte[] RowVersion { get; set; }
+        public System.Guid RoleId { get; set; }
     
         public virtual CompetentAuthority CompetentAuthority { get; set; }
         public virtual AspNetUser AspNetUser { get; set; }
