@@ -3,6 +3,7 @@
     using System;
     using Domain.User;
     using Prsd.Core.Domain;
+    using Security;
 
     public class CompetentAuthorityUser : Entity
     {
@@ -13,6 +14,8 @@
         public UserStatus UserStatus { get; private set; }
 
         public virtual UKCompetentAuthority CompetentAuthority { get; private set; }
+
+        public virtual Role Role { get; private set; }
 
         protected CompetentAuthorityUser()
         {

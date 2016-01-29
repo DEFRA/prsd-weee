@@ -87,6 +87,7 @@
     <Compile Include="Mappings\IbisFileDataMapping.cs" />
     <Compile Include="Mappings\InvoiceRunMapping.cs" />
     <Compile Include="Mappings\QuarterWindowTemplateMapping.cs" />
+    <Compile Include="Mappings\RoleMapping.cs" />
     <Compile Include="Mappings\WeeeCollectedReturnVersionMapping.cs" />
     <Compile Include="Mappings\WeeeDeliveredReturnVersionMapping.cs" />
     <Compile Include="StoredProcedure\PCSChargesCSVData.cs" />
