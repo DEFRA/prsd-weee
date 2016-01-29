@@ -14,6 +14,7 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
+    using Prsd.Core;
     using Prsd.Core.Extensions;
     using ViewModels;
     using Web.Controllers.Base;
@@ -83,7 +84,7 @@
                 activities.Add(PcsAction.ManagePcsMembers);
                 if (configurationService.CurrentConfiguration.EnableDataReturns)
                 {
-                    activities.Add(PcsAction.ManageEeeWeeeDataReturn);
+                    activities.Add(PcsAction.ManageEeeWeeeData);
                 }
                 if (organisationOverview.HasMemberSubmissions)
                 {
@@ -145,21 +146,9 @@
                         return RedirectToAction("ViewSubmissionHistory", new { pcsId = viewModel.OrganisationId });
                     }
                 }
-                if (viewModel.SelectedValue == PcsAction.ManageEeeWeeeDataReturn)
+                if (viewModel.SelectedValue == PcsAction.ManageEeeWeeeData)
                 {
-                    using (var client = apiClient())
-                    {
-                        var status = await client.SendAsync(User.GetAccessToken(), new GetSchemeStatus(viewModel.OrganisationId));
-
-                        if (status == SchemeStatus.Approved)
-                        {
-                            return RedirectToAction("Manage", "DataReturns", new { pcsId = viewModel.OrganisationId });
-                        }
-                        else
-                        {
-                            return RedirectToAction("AuthorisationRequired", "DataReturns", new { pcsId = viewModel.OrganisationId });
-                        }
-                    }
+                    return RedirectToAction("Index", "DataReturns", new { pcsId = viewModel.OrganisationId });
                 }
             }
 

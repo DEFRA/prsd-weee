@@ -23,5 +23,10 @@
         {
             return date.Date.ToUniversalTime() > EndDate.Date.ToUniversalTime();
         }
+
+        public bool IsInWindow(DateTime date)
+        {
+            return (!IsBeforeWindow(date) && !IsAfterWindow(date));
+        }
     }
 }
