@@ -52,16 +52,6 @@
             return schemeYearProducers;
         }
 
-        public Task<DataReturnVersion> GetLatestDataReturnVersionOrDefault()
-        {
-            return context.DataReturnVersions
-                .Where(rv => rv.DataReturn.Scheme.Id == scheme.Id)
-                .Where(rv => rv.DataReturn.Quarter.Year == quarter.Year)
-                .Where(rv => rv.DataReturn.Quarter.Q == quarter.Q)
-                .OrderByDescending(rv => rv.CreatedDate)
-                .FirstOrDefaultAsync();
-        }
-
         public async Task<AatfDeliveryLocation> GetOrAddAatfDeliveryLocation(string approvalNumber, string facilityName)
         {
             var aatfDeliveryLocation =
