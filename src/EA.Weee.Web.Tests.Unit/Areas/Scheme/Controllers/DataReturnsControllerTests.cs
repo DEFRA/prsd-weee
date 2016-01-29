@@ -469,26 +469,28 @@
                 r3 => Assert.Equal(2018, r3));
         }
 
-        /// <summary>
-        /// This test ensures that the GET "Upload" action returns the "Upload" view.
-        /// </summary>
-        /// <returns></returns>
         [Fact]
-        public async Task GetUpload_Always_ReturnsUploadView()
+        public async void GetUpload_IdDoesBelongToAnExistingOrganisationAndSubmissionWindowIsClose_RedirectToCannotSubmitDataReturn()
+        {   
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsSubmissionWindowOpen>._))
+                .Returns(false);
+
+            var result = await DataReturnsController().Upload(A<Guid>._);
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var redirectValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("CannotSubmitDataReturn", redirectValues["action"]);
+        }
+
+        [Fact]
+        public async void GetUpload_IdDoesBelongToAnExistingOrganisationAndSubmissionWindowIsOpen_ReturnsView()
         {
-            // Arrange
-            DataReturnsController controller = new DataReturnsController(
-                () => A.Dummy<IWeeeClient>(),
-                A.Dummy<IWeeeCache>(),
-                A.Dummy<BreadcrumbService>(),
-                A.Dummy<CsvWriterFactory>(),
-                A.Dummy<IMapper>(),
-                A.Dummy<ConfigurationService>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsSubmissionWindowOpen>._))
+            .Returns(true);
 
-            // Act
-            ActionResult result = await controller.Upload(A.Dummy<Guid>());
-
-            // Assert
+            var result = await DataReturnsController().Upload(A<Guid>._);
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
 
