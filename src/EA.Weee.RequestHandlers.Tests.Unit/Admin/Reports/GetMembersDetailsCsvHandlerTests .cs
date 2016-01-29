@@ -25,7 +25,7 @@
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
             var handler = new GetMembersDetailsCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetMemberDetailsCSV(complianceYear);
+            var request = new GetMemberDetailsCsv(complianceYear);
 
             // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
@@ -45,7 +45,7 @@
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
             var handler = new GetMembersDetailsCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetMemberDetailsCSV(complianceYear);
+            var request = new GetMemberDetailsCsv(complianceYear);
 
             // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
@@ -65,7 +65,7 @@
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
             var handler = new GetMembersDetailsCsvHandler(authorization, context, csvWriterFactory);
-            var request = new GetMemberDetailsCSV(complianceYear);
+            var request = new GetMemberDetailsCsv(complianceYear);
 
             // Act
             CSVFileData data = await handler.HandleAsync(request);
