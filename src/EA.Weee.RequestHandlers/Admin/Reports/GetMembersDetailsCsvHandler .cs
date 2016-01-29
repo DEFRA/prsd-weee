@@ -11,13 +11,13 @@
     using Requests.Admin; 
     using Security;
 
-    internal class GetMembersDetailsCSVHandler : IRequestHandler<GetMemberDetailsCSV, CSVFileData>
+    internal class GetMembersDetailsCsvHandler : IRequestHandler<GetMemberDetailsCSV, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly WeeeContext context;
         private readonly CsvWriterFactory csvWriterFactory;
 
-        public GetMembersDetailsCSVHandler(IWeeeAuthorization authorization, WeeeContext context, CsvWriterFactory csvWriterFactory)
+        public GetMembersDetailsCsvHandler(IWeeeAuthorization authorization, WeeeContext context, CsvWriterFactory csvWriterFactory)
         {
             this.authorization = authorization;
             this.context = context;
@@ -36,7 +36,7 @@
             var items = await context.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
                        request.ComplianceYear, request.IncludeRemovedProducer, request.SchemeId, request.CompetentAuthorityId);
 
-            CsvWriter<MembersDetailsCSVData> csvWriter = csvWriterFactory.Create<MembersDetailsCSVData>();
+            CsvWriter<MembersDetailsCsvData> csvWriter = csvWriterFactory.Create<MembersDetailsCsvData>();
             csvWriter.DefineColumn(@"PCS name", i => i.SchemeName);
             csvWriter.DefineColumn(@"PCS approval number", i => i.ApprovalNumber);
             csvWriter.DefineColumn(@"Producer name", i => i.ProducerName);
