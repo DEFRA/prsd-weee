@@ -13,15 +13,6 @@ AS
 BEGIN
 SET NOCOUNT ON;
 
-If(OBJECT_ID('tempdb..#EEETable') Is Not Null)
-Begin
-    Drop Table #EEETable
-End
-If(OBJECT_ID('tempdb..#ProducerEEEData') Is Not Null)
-Begin
-    Drop Table #ProducerEEEData
-End
-
 SELECT DISTINCT 
         RP.ProducerRegistrationNumber as 'PRN',
         S.SchemeName,
