@@ -100,18 +100,17 @@
 
             if (ConsideredValid(Errors))
             {
-                // Retrieve the latest data return version stored in the database.
-                var latestDataReturnVersion = await schemeQuarterDataAccess.GetLatestDataReturnVersionOrDefault();
-
-                var weeeCollectedReturnVersion = BuildWeeeCollectedReturnVersion(latestDataReturnVersion);
-                var weeeDeliveredReturnVersion = BuildWeeeDeliveredReturnVersion(latestDataReturnVersion);
-                var eeeOutputReturnVersion = BuildEeeOutputReturnVersion(latestDataReturnVersion);
-
                 var dataReturn = await schemeQuarterDataAccess.FetchDataReturnOrDefault();
                 if (dataReturn == null)
                 {
                     dataReturn = new DataReturn(Scheme, Quarter);
                 }
+
+                DataReturnVersion latestSubmittedDataReturnVersion = dataReturn.CurrentVersion;
+
+                var weeeCollectedReturnVersion = BuildWeeeCollectedReturnVersion(latestSubmittedDataReturnVersion);
+                var weeeDeliveredReturnVersion = BuildWeeeDeliveredReturnVersion(latestSubmittedDataReturnVersion);
+                var eeeOutputReturnVersion = BuildEeeOutputReturnVersion(latestSubmittedDataReturnVersion);
 
                 dataReturnVersion = new DataReturnVersion(dataReturn, weeeCollectedReturnVersion, weeeDeliveredReturnVersion, eeeOutputReturnVersion);
             }
@@ -119,21 +118,21 @@
             return new DataReturnVersionBuilderResult(dataReturnVersion, uniqueErrors);
         }
 
-        private WeeeCollectedReturnVersion BuildWeeeCollectedReturnVersion(DataReturnVersion latestDataReturnVersion)
+        private WeeeCollectedReturnVersion BuildWeeeCollectedReturnVersion(DataReturnVersion submittedDataReturnVersion)
         {
             WeeeCollectedReturnVersion weeeCollectedReturnVersion = null;
 
-            // Unchanged data from the latest data return version can be reused. Check whether all or some of them can be reused.
+            // Unchanged data from the latest submitted data return version can be reused. Check whether all or some of them can be reused.
             if (weeeCollectedAmounts.Any())
             {
                 ICollection<WeeeCollectedAmount> mergedWeeeCollectedAmounts;
                 bool reuseLatestWeeeCollectedReturnVersion = false;
 
-                if (latestDataReturnVersion != null &&
-                    latestDataReturnVersion.WeeeCollectedReturnVersion != null)
+                if (submittedDataReturnVersion != null &&
+                    submittedDataReturnVersion.WeeeCollectedReturnVersion != null)
                 {
                     reuseLatestWeeeCollectedReturnVersion =
-                        ReuseEqualItems(weeeCollectedAmounts, latestDataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts, out mergedWeeeCollectedAmounts);
+                        ReuseEqualItems(weeeCollectedAmounts, submittedDataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts, out mergedWeeeCollectedAmounts);
                 }
                 else
                 {
@@ -142,7 +141,7 @@
 
                 if (reuseLatestWeeeCollectedReturnVersion)
                 {
-                    weeeCollectedReturnVersion = latestDataReturnVersion.WeeeCollectedReturnVersion;
+                    weeeCollectedReturnVersion = submittedDataReturnVersion.WeeeCollectedReturnVersion;
                 }
                 else
                 {
@@ -157,21 +156,21 @@
             return weeeCollectedReturnVersion;
         }
 
-        private WeeeDeliveredReturnVersion BuildWeeeDeliveredReturnVersion(DataReturnVersion latestDataReturnVersion)
+        private WeeeDeliveredReturnVersion BuildWeeeDeliveredReturnVersion(DataReturnVersion submittedDataReturnVersion)
         {
             WeeeDeliveredReturnVersion weeeDeliveredReturnVersion = null;
 
-            // Unchanged data from the latest data return version can be reused. Check whether all or some of them can be reused.
+            // Unchanged data from the latest submitted data return version can be reused. Check whether all or some of them can be reused.
             if (weeeDeliveredAmounts.Any())
             {
                 ICollection<WeeeDeliveredAmount> mergedWeeeDeliveredAmounts;
                 bool reuseLatestWeeeDeliveredReturnVerion = false;
 
-                if (latestDataReturnVersion != null &&
-                    latestDataReturnVersion.WeeeDeliveredReturnVersion != null)
+                if (submittedDataReturnVersion != null &&
+                    submittedDataReturnVersion.WeeeDeliveredReturnVersion != null)
                 {
                     reuseLatestWeeeDeliveredReturnVerion =
-                        ReuseEqualItems(weeeDeliveredAmounts, latestDataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts, out mergedWeeeDeliveredAmounts);
+                        ReuseEqualItems(weeeDeliveredAmounts, submittedDataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts, out mergedWeeeDeliveredAmounts);
                 }
                 else
                 {
@@ -180,7 +179,7 @@
 
                 if (reuseLatestWeeeDeliveredReturnVerion)
                 {
-                    weeeDeliveredReturnVersion = latestDataReturnVersion.WeeeDeliveredReturnVersion;
+                    weeeDeliveredReturnVersion = submittedDataReturnVersion.WeeeDeliveredReturnVersion;
                 }
                 else
                 {
@@ -195,21 +194,21 @@
             return weeeDeliveredReturnVersion;
         }
 
-        private EeeOutputReturnVersion BuildEeeOutputReturnVersion(DataReturnVersion latestDataReturnVersion)
+        private EeeOutputReturnVersion BuildEeeOutputReturnVersion(DataReturnVersion submittedDataReturnVersion)
         {
             EeeOutputReturnVersion eeeOutputReturnVersion = null;
 
-            // Unchanged data from the latest data return version can be reused. Check whether all or some of them can be reused.
+            // Unchanged data from the latest submitted data return version can be reused. Check whether all or some of them can be reused.
             if (eeeOutputAmounts.Any())
             {
                 bool reuseLatestEeeOutputReturnVersion = false;
                 ICollection<EeeOutputAmount> mergedEeeOutputAmounts;
 
-                if (latestDataReturnVersion != null &&
-                    latestDataReturnVersion.EeeOutputReturnVersion != null)
+                if (submittedDataReturnVersion != null &&
+                    submittedDataReturnVersion.EeeOutputReturnVersion != null)
                 {
                     reuseLatestEeeOutputReturnVersion =
-                        ReuseEqualItems(eeeOutputAmounts, latestDataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts, out mergedEeeOutputAmounts);
+                        ReuseEqualItems(eeeOutputAmounts, submittedDataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts, out mergedEeeOutputAmounts);
                 }
                 else
                 {
@@ -218,7 +217,7 @@
 
                 if (reuseLatestEeeOutputReturnVersion)
                 {
-                    eeeOutputReturnVersion = latestDataReturnVersion.EeeOutputReturnVersion;
+                    eeeOutputReturnVersion = submittedDataReturnVersion.EeeOutputReturnVersion;
                 }
                 else
                 {
