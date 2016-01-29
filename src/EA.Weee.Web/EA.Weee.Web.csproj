@@ -248,6 +248,7 @@
     <Compile Include="Areas\Scheme\Requests\ProcessDataReturnXmlFileRequest.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessXmlFileRequest.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturnSubmissionHistoryViewModel.cs" />
+    <Compile Include="Areas\Scheme\ViewModels\DataReturns\CannotSubmitDataReturnViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
@@ -587,6 +588,7 @@
     <Content Include="Areas\Admin\Views\Reports\UKWeeeData.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\UKEEEData.cshtml" />
+    <Content Include="Areas\Scheme\Views\DataReturns\CannotSubmitDataReturn.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
