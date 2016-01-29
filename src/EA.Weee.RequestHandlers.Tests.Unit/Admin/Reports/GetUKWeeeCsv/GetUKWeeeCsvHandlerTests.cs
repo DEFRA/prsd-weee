@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Security;
-    using System.Text;
     using System.Threading.Tasks;
     using Domain.DataReturns;
     using Domain.Lookup;
@@ -482,6 +481,75 @@
             Assert.NotNull(result);
 
             Assert.Equal(300, result.DcfTotal);
+        }
+
+        [Fact]
+        public void CreateResults_ForDataReturnWithNullCurrentDataReturnVersion_DoesNotIncludeDataReturnItemsInResults()
+        {
+            // Arrange
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
+
+            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+                authorization,
+                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<CsvWriterFactory>());
+
+            var dataReturn = new DataReturn(A.Fake<Domain.Scheme.Scheme>(), new Quarter(2016, QuarterType.Q1));
+
+            // Act
+            var result = handler.CreateResults(new List<DataReturn> { dataReturn });
+
+            // Assert
+            Assert.All(result, r => Assert.Null(r.DcfQ1));
+            Assert.All(result, r => Assert.Null(r.DistributorQ1));
+            Assert.All(result, r => Assert.Null(r.FinalHolderQ1));
+            Assert.All(result, r => Assert.Null(r.DeliveredQ1));
+        }
+
+        [Fact]
+        public void CreateResults_ForDataReturnVersionWithNullWeeeCollectedDataReturnVersion_DoesNotIncludeWeeeCollectedDataReturnVersionItemsInResults()
+        {
+            // Arrange
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
+
+            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+                authorization,
+                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<CsvWriterFactory>());
+
+            var dataReturn = new DataReturn(A.Fake<Domain.Scheme.Scheme>(), new Quarter(2016, QuarterType.Q1));
+            var dataReturnVersion = new DataReturnVersion(dataReturn, null, A.Dummy<WeeeDeliveredReturnVersion>(), A.Dummy<EeeOutputReturnVersion>());
+            dataReturn.SetCurrentVersion(dataReturnVersion);
+
+            // Act
+            var result = handler.CreateResults(new List<DataReturn> { dataReturn });
+
+            // Assert
+            Assert.All(result, r => Assert.Null(r.DcfQ1));
+            Assert.All(result, r => Assert.Null(r.DistributorQ1));
+            Assert.All(result, r => Assert.Null(r.FinalHolderQ1));
+        }
+
+        [Fact]
+        public void CreateResults_ForDataReturnVersionWithNullWeeeDeliveredDataReturnVersion_DoesNotIncludeWeeeDeliveredDataReturnVersionItemsInResults()
+        {
+            // Arrange
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
+
+            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+                authorization,
+                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<CsvWriterFactory>());
+
+            var dataReturn = new DataReturn(A.Fake<Domain.Scheme.Scheme>(), new Quarter(2016, QuarterType.Q1));
+            var dataReturnVersion = new DataReturnVersion(dataReturn, A.Dummy<WeeeCollectedReturnVersion>(), null, A.Dummy<EeeOutputReturnVersion>());
+            dataReturn.SetCurrentVersion(dataReturnVersion);
+
+            // Act
+            var result = handler.CreateResults(new List<DataReturn> { dataReturn });
+
+            // Assert
+            Assert.All(result, r => Assert.Null(r.DeliveredQ1));
         }
     }
 }
