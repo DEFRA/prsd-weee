@@ -759,56 +759,20 @@
         }
 
         [Fact]
-        public async void PostChooseActivity_ManageEeeWeeeDataReturnApprovedStatus_RedirectsToDataReturnManageView()
+        public async void PostChooseActivity_ManageEeeWeeeData_RedirectsToDataReturnsIndex()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Approved);
 
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {
-                SelectedValue = PcsAction.ManageEeeWeeeDataReturn
+                SelectedValue = PcsAction.ManageEeeWeeeData
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
 
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("Manage", routeValues["action"]);
-            Assert.Equal("DataReturns", routeValues["controller"]);
-        }
-
-        [Fact]
-        public async void PostChooseActivity_ManageEeeWeeeDataReturnPendingStatus_RedirectsToAuthorisationRequired()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Pending);
-
-            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
-            {
-                SelectedValue = PcsAction.ManageEeeWeeeDataReturn
-            });
-
-            Assert.IsType<RedirectToRouteResult>(result);
-
-            var routeValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("AuthorisationRequired", routeValues["action"]);
-            Assert.Equal("DataReturns", routeValues["controller"]);
-        }
-
-        [Fact]
-        public async void PostChooseActivity_ManageEeeWeeeDataReturnRejectedStatus_RedirectsToAuthorisationRequired()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Rejected);
-
-            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
-            {
-                SelectedValue = PcsAction.ManageEeeWeeeDataReturn
-            });
-
-            Assert.IsType<RedirectToRouteResult>(result);
-
-            var routeValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("AuthorisationRequired", routeValues["action"]);
+            Assert.Equal("Index", routeValues["action"]);
             Assert.Equal("DataReturns", routeValues["controller"]);
         }
     }
