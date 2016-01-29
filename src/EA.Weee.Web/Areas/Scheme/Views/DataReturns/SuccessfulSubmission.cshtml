@@ -14,7 +14,7 @@
         </div>
     </header>
 
-    <p>To view your organisation’s latest data, <a href="@(Url.UrlFor<DataReturnsController>(c => c.Manage(Model.PcsId)))">manage EEE/WEEE data</a>.</p>
+    <p>To view your organisation’s latest data, <a href="@(Url.UrlFor<DataReturnsController>(c => c.Index(Model.PcsId)))">manage EEE/WEEE data</a>.</p>
 
     @using (Html.BeginForm("SignOut", "Account", new { Area = "" }, FormMethod.Post))
     {

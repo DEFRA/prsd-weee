@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ReturnVersionBuilder
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
@@ -24,9 +24,9 @@
             this.quarter = quarter;
         }
 
-        public async Task<DataReturn> FetchDataReturnOrDefault()
+        public Task<DataReturn> FetchDataReturnOrDefault()
         {
-            return await context.DataReturns
+            return context.DataReturns
                 .Where(dr => dr.Scheme.Id == scheme.Id)
                 .Where(dr => dr.Quarter.Year == quarter.Year)
                 .Where(dr => dr.Quarter.Q == quarter.Q)
@@ -52,14 +52,61 @@
             return schemeYearProducers;
         }
 
-        public async Task<DataReturnVersion> GetLatestDataReturnVersionOrDefault()
+        public Task<DataReturnVersion> GetLatestDataReturnVersionOrDefault()
         {
-            return await context.DataReturnVersions
+            return context.DataReturnVersions
                 .Where(rv => rv.DataReturn.Scheme.Id == scheme.Id)
                 .Where(rv => rv.DataReturn.Quarter.Year == quarter.Year)
                 .Where(rv => rv.DataReturn.Quarter.Q == quarter.Q)
                 .OrderByDescending(rv => rv.CreatedDate)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<AatfDeliveryLocation> GetOrAddAatfDeliveryLocation(string approvalNumber, string facilityName)
+        {
+            var aatfDeliveryLocation =
+                // Read from the local collection to retrieve items that have been added but not yet saved to the database.
+                context.AatfDeliveryLocations.Local
+                .Where(aatf => aatf.ApprovalNumber == approvalNumber)
+                .Where(aatf => aatf.FacilityName == facilityName)
+                .SingleOrDefault()
+                ??
+                await context.AatfDeliveryLocations
+                .Where(aatf => aatf.ApprovalNumber == approvalNumber)
+                .Where(aatf => aatf.FacilityName == facilityName)
+                .SingleOrDefaultAsync();
+
+            if (aatfDeliveryLocation == null)
+            {
+                aatfDeliveryLocation = new AatfDeliveryLocation(approvalNumber, facilityName);
+                context.AatfDeliveryLocations.Add(aatfDeliveryLocation);
+            }
+
+            return aatfDeliveryLocation;
+        }
+
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Variable name aeDeliveryLocation is valid.")]
+        public async Task<AeDeliveryLocation> GetOrAddAeDeliveryLocation(string approvalNumber, string operatorName)
+        {
+            var aeDeliveryLocation =
+                // Read from the local collection to retrieve items that have been added but not yet saved to the database.
+                context.AeDeliveryLocations.Local
+                .Where(ae => ae.ApprovalNumber == approvalNumber)
+                .Where(ae => ae.OperatorName == operatorName)
+                .SingleOrDefault()
+                ??
+                await context.AeDeliveryLocations
+                .Where(ae => ae.ApprovalNumber == approvalNumber)
+                .Where(ae => ae.OperatorName == operatorName)
+                .SingleOrDefaultAsync();
+
+            if (aeDeliveryLocation == null)
+            {
+                aeDeliveryLocation = new AeDeliveryLocation(approvalNumber, operatorName);
+                context.AeDeliveryLocations.Add(aeDeliveryLocation);
+            }
+
+            return aeDeliveryLocation;
         }
     }
 }
