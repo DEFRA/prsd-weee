@@ -50,7 +50,8 @@
 
                 ProducerEeeHistoryCsvData b2cProducer = results.Find(x => (x.ApprovalNumber == "WEE/TE0000S1/SCH"));
                 Assert.NotNull(b2cProducer);
-                Assert.Equal(2000, b2cProducer.ComplianceYear);                
+                Assert.Equal(2000, b2cProducer.ComplianceYear);
+                Assert.Equal(1000, b2cProducer.Cat2B2C);
                 Assert.Equal("Yes", b2cProducer.LatestData);
 
                 ProducerEeeHistoryCsvData b2bProducer = results.Find(x => (x.ApprovalNumber == "WEE/TE0000ST/SCH"));

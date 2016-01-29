@@ -100,7 +100,7 @@
     <Compile Include="Admin\GetProducerDetails\IsProducerRegisteredForComplianceYearHandler.cs" />
     <Compile Include="Admin\GetProducerDetails\RemoveProducerDataAccess.cs" />
     <Compile Include="Admin\GetProducerDetails\RemoveProducerHandler.cs" />
-    <Compile Include="Admin\Reports\GetMembersDetailsCSVHandler.cs" />
+    <Compile Include="Admin\Reports\GetMembersDetailsCsvHandler .cs" />
     <Compile Include="Admin\GetProducerAmendmentsHistoryCSVHandler.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsvHandler.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandler.cs" />
@@ -273,7 +273,7 @@
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadByIdHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\GetMemberUploadDataHandler.cs" />
     <Compile Include="Scheme\Interfaces\IXMLChargeBandCalculator.cs" />
-    <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandler.cs" />
+    <Compile Include="Scheme\MemberRegistration\GetProducerCSVHandler .cs" />
     <Compile Include="Scheme\MemberRegistration\IProducerChargeCalculator.cs" />
     <Compile Include="Scheme\MemberRegistration\MemberUploadSubmissionHandler.cs" />
     <Compile Include="Scheme\MemberRegistration\ProcessXMLFileHandler.cs" />

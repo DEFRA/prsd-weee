@@ -137,9 +137,9 @@
     <Compile Include="Mappings\WeeeDeliveredAmountMapping.cs" />
     <Compile Include="RelationshipExtensions.cs" />
     <Compile Include="StoredProcedure\IStoredProcedures.cs" />
-    <Compile Include="StoredProcedure\MembersDetailsCSVData.cs" />
+    <Compile Include="StoredProcedure\MembersDetailsCsvData.cs" />
     <Compile Include="StoredProcedure\ProducerAmendmentsHistoryCSVData.cs" />
-    <Compile Include="StoredProcedure\ProducerCSVData.cs" />
+    <Compile Include="StoredProcedure\ProducerCsvData.cs" />
     <Compile Include="StoredProcedure\ProducerPublicRegisterCSVData.cs" />
     <Compile Include="StoredProcedure\StoredProcedures.cs" />
     <Compile Include="StoredProcedure\UkEeeCsvData.cs" />

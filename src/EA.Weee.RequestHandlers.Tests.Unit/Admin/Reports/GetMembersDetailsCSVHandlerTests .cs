@@ -24,7 +24,7 @@
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetMembersDetailsCSVHandler(authorization, context, csvWriterFactory);
+            var handler = new GetMembersDetailsCsvHandler(authorization, context, csvWriterFactory);
             var request = new GetMemberDetailsCSV(complianceYear);
 
             // Act
@@ -44,7 +44,7 @@
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetMembersDetailsCSVHandler(authorization, context, csvWriterFactory);
+            var handler = new GetMembersDetailsCsvHandler(authorization, context, csvWriterFactory);
             var request = new GetMemberDetailsCSV(complianceYear);
 
             // Act
@@ -64,7 +64,7 @@
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetMembersDetailsCSVHandler(authorization, context, csvWriterFactory);
+            var handler = new GetMembersDetailsCsvHandler(authorization, context, csvWriterFactory);
             var request = new GetMemberDetailsCSV(complianceYear);
 
             // Act
