@@ -21,11 +21,12 @@
         {
         }
 
-        public CompetentAuthorityUser(string userId, Guid competentAuthorityId, UserStatus userStatus)
+        public CompetentAuthorityUser(string userId, Guid competentAuthorityId, UserStatus userStatus, Role role)
         {
             UserId = userId;
             CompetentAuthorityId = competentAuthorityId;
             UserStatus = userStatus;
+            Role = role;
         }
 
         public void UpdateUserStatus(UserStatus userStatus)
@@ -64,6 +65,11 @@
             }
 
             UserStatus = userStatus;
+        }
+
+        public void UpdateRole(Role role)
+        {
+            Role = role;
         }
     }
 }

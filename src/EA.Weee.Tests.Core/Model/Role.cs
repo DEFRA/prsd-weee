@@ -12,17 +12,17 @@ namespace EA.Weee.Tests.Core.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class CompetentAuthorityUser
+    public partial class Role
     {
-        public System.Guid Id { get; set; }
-        public string UserId { get; set; }
-        public System.Guid CompetentAuthorityId { get; set; }
-        public int UserStatus { get; set; }
-        public byte[] RowVersion { get; set; }
-        public System.Guid RoleId { get; set; }
+        public Role()
+        {
+            this.CompetentAuthorityUsers = new HashSet<CompetentAuthorityUser>();
+        }
     
-        public virtual CompetentAuthority CompetentAuthority { get; set; }
-        public virtual AspNetUser AspNetUser { get; set; }
-        public virtual Role Role { get; set; }
+        public System.Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    
+        public virtual ICollection<CompetentAuthorityUser> CompetentAuthorityUsers { get; set; }
     }
 }

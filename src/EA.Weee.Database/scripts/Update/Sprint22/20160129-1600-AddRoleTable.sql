@@ -22,7 +22,7 @@ GO
 INSERT [Security].[Role]
 VALUES
 ('1E23EF8A-5E91-47CD-889F-A556263A5F3F', 'InternalAdmin', 'Administrator'),
-('B673CD78-0C47-4C1C-BD0E-BF366A344EC6', 'InternalUser', 'Standard user');
+('B673CD78-0C47-4C1C-BD0E-BF366A344EC6', 'InternalUser', 'Standard');
 
 GO
 

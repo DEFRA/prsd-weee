@@ -7,6 +7,7 @@
     using Core;
     using DataAccess;
     using Domain.Organisation;
+    using Domain.Security;
     using Domain.User;
     using EA.Weee.Domain.Admin;
     using FakeItEasy;
@@ -80,7 +81,7 @@
 
             // Act
             var ex = Record.Exception(() => authorization.EnsureCanAccessInternalArea(false));
-            
+
             // Assert
             Assert.Null(ex);
             A.CallTo(() => weeeContext.CompetentAuthorityUsers).MustNotHaveHappened();
@@ -141,7 +142,7 @@
 
             ClaimsIdentity identity = new ClaimsIdentity();
             identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, Claims.CanAccessInternalArea));
-            
+
             ClaimsPrincipal principal = new ClaimsPrincipal(identity);
             A.CallTo(() => userContext.Principal).Returns(principal);
 
@@ -465,23 +466,95 @@
             Assert.Equal(true, result);
         }
 
+        [Fact]
+        [Trait("Area", "Security")]
+        public void CheckUserInRole_ReturnsFalse_WhenUserIsNotInRole()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            IUserContext userContext = A.Fake<IUserContext>();
+
+            var competentAuthorityUsers = new List<CompetentAuthorityUser>
+            {
+                new CompetentAuthorityUser(userId.ToString(), Guid.NewGuid(), UserStatus.Active, new Role("InternalUser", "Standard user"))
+            };
+
+            WeeeContext weeeContext = MakeFakeWeeeContext(userContext, userId: userId, competentAuthorityUsers: competentAuthorityUsers);
+
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
+
+            // Act
+            bool result = authorization.CheckUserInRole("InternalAdmin");
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        [Trait("Area", "Security")]
+        public void CheckUserInRole_ReturnsTrue_WhenUserIsInRole()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            IUserContext userContext = A.Fake<IUserContext>();
+
+            var competentAuthorityUsers = new List<CompetentAuthorityUser>
+            {
+                new CompetentAuthorityUser(userId.ToString(), Guid.NewGuid(), UserStatus.Active, new Role("InternalAdmin", "Administrator"))
+            };
+
+            WeeeContext weeeContext = MakeFakeWeeeContext(userContext, userId: userId, competentAuthorityUsers: competentAuthorityUsers);
+
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
+
+            // Act
+            bool result = authorization.CheckUserInRole("InternalAdmin");
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void EnsureUserInRole_ThrowsSecurityException_WhenUserIsNotInRole()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            IUserContext userContext = A.Fake<IUserContext>();
+
+            var competentAuthorityUsers = new List<CompetentAuthorityUser>
+            {
+                new CompetentAuthorityUser(userId.ToString(), Guid.NewGuid(), UserStatus.Active, new Role("InternalUser", "Standard user"))
+            };
+
+            WeeeContext weeeContext = MakeFakeWeeeContext(userContext, userId: userId, competentAuthorityUsers: competentAuthorityUsers);
+
+            WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
+
+            // Act, Assert
+            Assert.Throws<SecurityException>(() => authorization.EnsureUserInRole("InternalAdmin"));
+        }
+
         private WeeeContext MakeFakeWeeeContext(IUserContext userContext,
                                                 Guid? userId = null,
                                                 List<OrganisationUser> organisationUsers = null,
                                                 List<Domain.Scheme.Scheme> schemes = null,
-                                                bool userStatusActive = true)
+                                                bool userStatusActive = true,
+                                                List<CompetentAuthorityUser> competentAuthorityUsers = null)
         {
             userId = userId ?? Guid.NewGuid();
 
             organisationUsers = organisationUsers ?? new List<OrganisationUser>();
             schemes = schemes ?? new List<Domain.Scheme.Scheme>();
-            var competentAuthorityUser = new CompetentAuthorityUser(userId.ToString(), Guid.NewGuid(), userStatusActive ? UserStatus.Active : UserStatus.Inactive);
+            competentAuthorityUsers = competentAuthorityUsers ?? new List<CompetentAuthorityUser>
+            {
+                new CompetentAuthorityUser(userId.ToString(), Guid.NewGuid(), userStatusActive ? UserStatus.Active : UserStatus.Inactive, A.Dummy<Role>())
+            };
 
             var dbHelper = new DbContextHelper();
             WeeeContext weeeContext = A.Fake<WeeeContext>();
             A.CallTo(() => weeeContext.OrganisationUsers).Returns(dbHelper.GetAsyncEnabledDbSet(organisationUsers));
             A.CallTo(() => weeeContext.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(schemes));
-            A.CallTo(() => weeeContext.CompetentAuthorityUsers).Returns(dbHelper.GetAsyncEnabledDbSet(new List<CompetentAuthorityUser>() { competentAuthorityUser }));
+            A.CallTo(() => weeeContext.CompetentAuthorityUsers).Returns(dbHelper.GetAsyncEnabledDbSet(competentAuthorityUsers));
 
             A.CallTo(() => userContext.UserId).Returns(userId.Value);
 
