@@ -1,15 +1,23 @@
 ﻿namespace EA.Weee.Domain.Security
 {
-    using Prsd.Core.Domain;
+    using System;
 
-    public class Role : Entity
+    public class Role
     {
+        public Guid Id { get; private set; }
+
         public string Name { get; private set; }
 
         public string Description { get; private set; }
 
         protected Role()
         {
+        }
+
+        public Role(string name, string description)
+        {
+            Name = name;
+            Description = description;
         }
     }
 }
