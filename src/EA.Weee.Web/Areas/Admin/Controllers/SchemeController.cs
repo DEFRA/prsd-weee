@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -82,11 +83,21 @@
                         SchemeName = scheme.SchemeName,
                         ObligationType = scheme.ObligationType,
                         Status = scheme.SchemeStatus,
-                        IsUnchangeableStatus = scheme.SchemeStatus == SchemeStatus.Approved || scheme.SchemeStatus == SchemeStatus.Rejected,
+                        IsUnchangeableStatus = scheme.SchemeStatus == SchemeStatus.Rejected || scheme.SchemeStatus == SchemeStatus.Withdrawn,
                         OrganisationId = scheme.OrganisationId,
                         SchemeId = schemeId.Value,
                         ComplianceYears = years
                     };
+
+                    if (scheme.SchemeStatus == SchemeStatus.Pending)
+                    {   
+                        model.StatusSelectList = new SelectList(model.StatusSelectList.Where(x => x.Text != SchemeStatus.Withdrawn.ToString()).ToList(), "Value", "Text");
+                    }
+
+                    if (scheme.SchemeStatus == SchemeStatus.Approved)
+                    {
+                        model.StatusSelectList = new SelectList(model.StatusSelectList.Where(x => x.Text != SchemeStatus.Pending.ToString() && x.Text != SchemeStatus.Rejected.ToString()).ToList(), "Value", "Text");
+                    }
 
                     await SetBreadcrumb(schemeId);
                     return View(model);
