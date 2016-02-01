@@ -126,6 +126,8 @@
     <Compile Include="DataReturns\CreateTestXmlFile\XmlGeneratorTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme\FetchDataReturnComplianceYearsForSchemeHandlerTests.cs" />
     <Compile Include="DataReturns\FetchDataReturnForSubmission\FetchDataReturnForSubmissionHandlerTests.cs" />
+    <Compile Include="DataReturns\FetchSummaryCsv\FetchSummaryCsvTests.cs" />
+    <Compile Include="DataReturns\IsSubmissionWindowOpenHandlerTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\DataReturnVersionFromXmlBuilderTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\GenerateFromDataReturnXMLTests.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile\ProcessDataReturnXMLFileHandlerTests.cs" />
@@ -153,6 +155,7 @@
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXmlGenerateProducerDataTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\XmlGeneratorTests.cs" />
+    <Compile Include="Shared\GetApiDateHandlerTests.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXmlTests.cs" />
