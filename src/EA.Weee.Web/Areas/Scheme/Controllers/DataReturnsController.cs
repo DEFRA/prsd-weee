@@ -10,6 +10,7 @@
     using Core.Scheme;
     using Core.Shared;
     using Infrastructure;
+    using Prsd.Core;
     using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
@@ -19,6 +20,7 @@
     using Weee.Requests.DataReturns;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
+    using Weee.Requests.Shared;
 
     public class DataReturnsController : ExternalSiteController
     {
@@ -48,29 +50,25 @@
         [HttpGet]
         public async Task<ActionResult> AuthorisationRequired(Guid pcsId)
         {
-            using (var client = apiClient())
+            using (IWeeeClient client = apiClient())
             {
-                var status = await client.SendAsync(User.GetAccessToken(), new GetSchemeStatus(pcsId));
+                SchemeStatus status = await client.SendAsync(User.GetAccessToken(), new GetSchemeStatus(pcsId));
 
                 if (status == SchemeStatus.Approved)
                 {
-                    return RedirectToAction("Upload", "DataReturns");
+                    return RedirectToAction("Index", new { pcsId });
                 }
 
-                var userIdString = User.GetUserId();
-                var showLinkToSelectOrganisation = false;
+                string userIdString = User.GetUserId();
+                bool showLinkToSelectOrganisation = false;
 
                 if (userIdString != null)
                 {
-                    var userId = new Guid(userIdString);
+                    Guid userId = new Guid(userIdString);
 
-                    var task = Task.Run(async () =>
-                    {
-                        return await cache.FetchUserActiveCompleteOrganisationCount(userId);
-                    });
-                    task.Wait();
+                    int activeUserCompleteOrganisationCount = await cache.FetchUserActiveCompleteOrganisationCount(userId);
 
-                    showLinkToSelectOrganisation = (task.Result > 1);
+                    showLinkToSelectOrganisation = (activeUserCompleteOrganisationCount > 1);
                 }
 
                 await SetBreadcrumb(pcsId);
@@ -84,49 +82,53 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Manage(Guid pcsId)
+        public async Task<ActionResult> Index(Guid pcsId)
         {
-            if (!configService.CurrentConfiguration.EnableDataReturns)
-            {
-                throw new InvalidOperationException("Unable to manage EEE/WEEE data return.");
-            }
+            await SetBreadcrumb(pcsId);
+
+            List<int> complianceYears;
             using (var client = apiClient())
             {
-                var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
-                if (orgExists)
-                {                   
-                    List<int> years = await client.SendAsync(User.GetAccessToken(), new FetchDataReturnComplianceYearsForScheme(pcsId));
-                   await SetBreadcrumb(pcsId);
-                    return View(new ManageViewModel { PcsId = pcsId, Years = years });                                 
-                }
-                throw new InvalidOperationException(string.Format("'{0}' is not a valid organisation Id", pcsId));
-            }            
-        }
+                complianceYears = await client.SendAsync(User.GetAccessToken(), new FetchDataReturnComplianceYearsForScheme(pcsId));
+            }
 
-        [HttpGet]
-        public async Task<ActionResult> GetEeeWeeeDataReturnCSV(Guid pcsId, int complianceYear)
-        {
-            throw new NotImplementedException("Download not implemented yet.");          
+            IndexViewModel viewModel = new IndexViewModel(pcsId, complianceYears);
+            return View(viewModel);
         }
 
         [HttpGet]
         public async Task<ActionResult> Upload(Guid pcsId)
         {
-            if (!configService.CurrentConfiguration.EnableDataReturns)
-            {
-                throw new InvalidOperationException("Unable to submit data return.");
-            }
+            await SetBreadcrumb(pcsId);
             using (var client = apiClient())
             {
-                var orgExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
-                if (orgExists)
+                var isSubmissionWindowOpen = await client.SendAsync(User.GetAccessToken(), new IsSubmissionWindowOpen());
+
+                if (isSubmissionWindowOpen)
                 {
-                    await SetBreadcrumb(pcsId);
                     return View();
                 }
+                else
+                {
+                    return RedirectToAction("CannotSubmitDataReturn", new { pcsId });
+                }
             }
+        }
 
-            throw new InvalidOperationException(string.Format("'{0}' is not a valid organisation Id", pcsId));
+        [HttpGet]
+        public async Task<ViewResult> CannotSubmitDataReturn(Guid pcsId)
+        {
+            using (var client = apiClient())
+            {
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiDate());
+
+                await SetBreadcrumb(pcsId);
+                return View(new CannotSubmitDataReturnViewModel
+                {
+                    OrganisationId = pcsId,
+                    CurrentYear = currentDate.Year
+                });
+            }
         }
 
         [HttpPost]
@@ -274,48 +276,82 @@
             return File(fileContent, "text/csv", CsvFilenameFormat.FormatFileName(filename));
         }
 
+        [HttpGet]
+        public async Task<ActionResult> DownloadEeeWeeeData(Guid pcsId, int complianceYear)
+        {
+            FileInfo file;
+            using (IWeeeClient client = apiClient())
+            {
+                FetchSummaryCsv fetchSummaryCsv = new FetchSummaryCsv(pcsId, complianceYear);
+                file = await client.SendAsync(User.GetAccessToken(), fetchSummaryCsv);
+            }
+
+            return File(file.Data, "text/csv", CsvFilenameFormat.FormatFileName(file.FileName));
+        }
+
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext.ActionDescriptor.ActionName == "AuthorisationRequired")
+            // Ensure that Data Returns are enabled.
+            if (!configService.CurrentConfiguration.EnableDataReturns)
             {
-                base.OnActionExecuting(filterContext);
+                throw new InvalidOperationException("Data returns are not enabled.");
             }
-            else
+
+            // Ensure a organisation ID has been provided and that the organisation exists.
+            object organisationIdActionParameter;
+            if (!filterContext.ActionParameters.TryGetValue("pcsId", out organisationIdActionParameter))
             {
-                object pcsIdObject;
-                if (filterContext.ActionParameters.TryGetValue("pcsId", out pcsIdObject))
+                throw new ArgumentException("No organisation ID was specified.");
+            }
+
+            if (!(organisationIdActionParameter is Guid))
+            {
+                throw new ArgumentException("The specified organisation ID is not valid.");
+            }
+
+            Guid organisationId = (Guid)organisationIdActionParameter;
+
+            bool organisationExists;
+            using (IWeeeClient client = apiClient())
+            {
+                Task<bool> task = Task.Run(() => client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(organisationId)));
+                task.Wait();
+                organisationExists = task.Result;
+            }
+
+            if (!organisationExists)
+            {
+                throw new ArgumentException(string.Format("'{0}' is not a valid organisation Id.", organisationId));
+            }
+
+            /* Check whether the scheme representing the organisation has a status of "Approved".
+             * If not, redirect the user to the "AuthorisationRequired" action (unless they are
+             * already executing that action).
+             */
+            if (filterContext.ActionDescriptor.ActionName != "AuthorisationRequired")
+            {
+                SchemeStatus status;
+                using (IWeeeClient client = apiClient())
                 {
-                    SchemeStatus status;
-                    Guid pcsId = (Guid)pcsIdObject;
-
-                    using (var client = apiClient())
-                    {
-                        var schemeStatusTask = Task<SchemeStatus>.Run(() => client.SendAsync(User.GetAccessToken(), new GetSchemeStatus(pcsId)));
-                        schemeStatusTask.Wait();
-
-                        status = schemeStatusTask.Result;
-                    }
-
-                    if (status != SchemeStatus.Approved)
-                    {
-                        filterContext.Result = RedirectToAction("AuthorisationRequired", new { pcsID = pcsId });
-                    }
-                    else
-                    {
-                        base.OnActionExecuting(filterContext);
-                    }
+                    Task<SchemeStatus> schemeStatusTask = Task.Run(() => client.SendAsync(User.GetAccessToken(), new GetSchemeStatus(organisationId)));
+                    schemeStatusTask.Wait();
+                    status = schemeStatusTask.Result;
                 }
-                else
+
+                if (status != SchemeStatus.Approved)
                 {
-                    throw new InvalidOperationException("The PCS ID could not be retrieved.");
+                    filterContext.Result = RedirectToAction("AuthorisationRequired", new { organisationId });
+                    return;
                 }
             }
+
+            base.OnActionExecuting(filterContext);
         }
 
         private async Task SetBreadcrumb(Guid organisationId)
         {
             breadcrumb.ExternalOrganisation = await cache.FetchOrganisationName(organisationId);
-            breadcrumb.ExternalActivity = "Manage EEE/WEEE data return";
+            breadcrumb.ExternalActivity = "Manage EEE/WEEE data";
             breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
         }
 
