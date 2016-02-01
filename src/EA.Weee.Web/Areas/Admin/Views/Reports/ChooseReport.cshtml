@@ -30,7 +30,7 @@
         @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
 
         <p>
-            <a href="javascript:history.back();">Back</a>
+            @Html.ActionLink("Perform another activity", "ChooseActivity", "Home")
         </p>
     }
 }
