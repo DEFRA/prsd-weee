@@ -11,8 +11,6 @@
 
         Task<RegisteredProducer> GetRegisteredProducer(string producerRegistrationNumber);
 
-        Task<DataReturnVersion> GetLatestDataReturnVersionOrDefault();
-
         Task<AatfDeliveryLocation> GetOrAddAatfDeliveryLocation(string approvalNumber, string facilityName);
 
         Task<AeDeliveryLocation> GetOrAddAeDeliveryLocation(string approvalNumber, string operatorName);

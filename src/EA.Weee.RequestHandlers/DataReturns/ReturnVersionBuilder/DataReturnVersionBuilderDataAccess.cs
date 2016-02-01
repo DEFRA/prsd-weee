@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ReturnVersionBuilder
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -16,6 +17,24 @@
         private readonly Scheme scheme;
         private readonly Quarter quarter;
         private ICollection<RegisteredProducer> schemeYearProducers;
+        private Dictionary<string, AatfDeliveryLocation> cachedAatfDeliveryLocations;
+        private Dictionary<string, AeDeliveryLocation> cachedAeDeliveryLocations;
+
+        public ReadOnlyDictionary<string, AatfDeliveryLocation> CachedAatfDeliveryLocations
+        {
+            get
+            {
+                return new ReadOnlyDictionary<string, AatfDeliveryLocation>(cachedAatfDeliveryLocations);
+            }
+        }
+
+        public ReadOnlyDictionary<string, AeDeliveryLocation> CachedAeDeliveryLocations
+        {
+            get
+            {
+                return new ReadOnlyDictionary<string, AeDeliveryLocation>(cachedAeDeliveryLocations);
+            }
+        }
 
         public DataReturnVersionBuilderDataAccess(Scheme scheme, Quarter quarter, WeeeContext context)
         {
@@ -52,33 +71,22 @@
             return schemeYearProducers;
         }
 
-        public Task<DataReturnVersion> GetLatestDataReturnVersionOrDefault()
-        {
-            return context.DataReturnVersions
-                .Where(rv => rv.DataReturn.Scheme.Id == scheme.Id)
-                .Where(rv => rv.DataReturn.Quarter.Year == quarter.Year)
-                .Where(rv => rv.DataReturn.Quarter.Q == quarter.Q)
-                .OrderByDescending(rv => rv.CreatedDate)
-                .FirstOrDefaultAsync();
-        }
-
         public async Task<AatfDeliveryLocation> GetOrAddAatfDeliveryLocation(string approvalNumber, string facilityName)
         {
-            var aatfDeliveryLocation =
-                // Read from the local collection to retrieve items that have been added but not yet saved to the database.
-                context.AatfDeliveryLocations.Local
-                .Where(aatf => aatf.ApprovalNumber == approvalNumber)
-                .Where(aatf => aatf.FacilityName == facilityName)
-                .SingleOrDefault()
-                ??
-                await context.AatfDeliveryLocations
-                .Where(aatf => aatf.ApprovalNumber == approvalNumber)
-                .Where(aatf => aatf.FacilityName == facilityName)
-                .SingleOrDefaultAsync();
+            if (cachedAatfDeliveryLocations == null)
+            {
+                cachedAatfDeliveryLocations =
+                    await context.AatfDeliveryLocations
+                    .ToDictionaryAsync(aatf => string.Format("{0}{1}", aatf.ApprovalNumber, aatf.FacilityName));
+            }
 
-            if (aatfDeliveryLocation == null)
+            var key = string.Format("{0}{1}", approvalNumber, facilityName);
+            AatfDeliveryLocation aatfDeliveryLocation;
+            if (!cachedAatfDeliveryLocations.TryGetValue(key, out aatfDeliveryLocation))
             {
                 aatfDeliveryLocation = new AatfDeliveryLocation(approvalNumber, facilityName);
+
+                cachedAatfDeliveryLocations.Add(key, aatfDeliveryLocation);
                 context.AatfDeliveryLocations.Add(aatfDeliveryLocation);
             }
 
@@ -88,21 +96,20 @@
         [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Variable name aeDeliveryLocation is valid.")]
         public async Task<AeDeliveryLocation> GetOrAddAeDeliveryLocation(string approvalNumber, string operatorName)
         {
-            var aeDeliveryLocation =
-                // Read from the local collection to retrieve items that have been added but not yet saved to the database.
-                context.AeDeliveryLocations.Local
-                .Where(ae => ae.ApprovalNumber == approvalNumber)
-                .Where(ae => ae.OperatorName == operatorName)
-                .SingleOrDefault()
-                ??
-                await context.AeDeliveryLocations
-                .Where(ae => ae.ApprovalNumber == approvalNumber)
-                .Where(ae => ae.OperatorName == operatorName)
-                .SingleOrDefaultAsync();
+            if (cachedAeDeliveryLocations == null)
+            {
+                cachedAeDeliveryLocations =
+                    await context.AeDeliveryLocations
+                    .ToDictionaryAsync(ae => string.Format("{0}{1}", ae.ApprovalNumber, ae.OperatorName));
+            }
 
-            if (aeDeliveryLocation == null)
+            var key = string.Format("{0}{1}", approvalNumber, operatorName);
+            AeDeliveryLocation aeDeliveryLocation;
+            if (!cachedAeDeliveryLocations.TryGetValue(key, out aeDeliveryLocation))
             {
                 aeDeliveryLocation = new AeDeliveryLocation(approvalNumber, operatorName);
+
+                cachedAeDeliveryLocations.Add(key, aeDeliveryLocation);
                 context.AeDeliveryLocations.Add(aeDeliveryLocation);
             }
 
