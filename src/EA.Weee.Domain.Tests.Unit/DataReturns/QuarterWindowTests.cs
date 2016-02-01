@@ -58,5 +58,33 @@
 
             Assert.True(result);
         }
+
+        [Fact]
+        public void CurrentDateTimeWithinStartDateAndEndDate_IsInWindow()
+        {
+            var startDate = new DateTime(2016, 04, 01, 0, 0, 0);
+            var endDate = new DateTime(2016, 07, 01, 0, 0, 0);
+            var currentDate = new DateTime(2016, 05, 02, 0, 0, 0);
+
+            var quarterWindow = new QuarterWindow(startDate, endDate);
+
+            var result = quarterWindow.IsInWindow(currentDate);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void CurrentDateTimeNotWithinStartDateAndEndDate_IsNotInWindow()
+        {
+            var startDate = new DateTime(2016, 04, 01, 0, 0, 0);
+            var endDate = new DateTime(2016, 07, 01, 0, 0, 0);
+            var currentDate = new DateTime(2016, 03, 02, 0, 0, 0);
+
+            var quarterWindow = new QuarterWindow(startDate, endDate);
+
+            var result = quarterWindow.IsInWindow(currentDate);
+
+            Assert.False(result);
+        }
     }
 }
