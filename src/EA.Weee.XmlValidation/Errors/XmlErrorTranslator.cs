@@ -131,7 +131,7 @@
         private string MakeFriendlyErrorUniqueKeyMessage(XElement sender, string message)
         {
             var element = sender.Descendants().First();
-            return string.Format("There is duplicate value '{0}' for field '{1}' of parent field '{2}'. Remove one of the duplicate entries", element.Value, element.Name.LocalName, sender.Name.LocalName);
+            return string.Format("There is a duplicate value '{0}' for field '{1}' of parent field '{2}'. Remove one of the duplicate entries", element.Value, element.Name.LocalName, sender.Name.LocalName);
         }
 
         private static bool TestRegex(string message, Regex regex, out Match match)
