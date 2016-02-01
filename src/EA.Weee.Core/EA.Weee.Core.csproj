@@ -156,6 +156,7 @@
     <Compile Include="Search\Simple\SimpleSearcher.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Security\Role.cs" />
     <Compile Include="Shared\ChargeBandType.cs" />
     <Compile Include="Shared\CsvWriter.cs" />
     <Compile Include="Shared\CsvWriterFactory.cs" />

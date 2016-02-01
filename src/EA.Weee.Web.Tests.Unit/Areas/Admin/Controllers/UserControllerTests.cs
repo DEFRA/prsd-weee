@@ -45,7 +45,7 @@
 
         [Fact]
         public async Task EditUserGet_ReturnsView()
-        {   
+        {
             var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))
@@ -59,7 +59,7 @@
                     LastName = "Lastname",
                     Email = "test@ea.com",
                     IsCompetentAuthorityUser = true,
-                    OrganisationName = "test ltd." 
+                    OrganisationName = "test ltd."
                 });
 
             var result = await controller.EditUser(Guid.NewGuid());
@@ -67,6 +67,8 @@
             var model = ((ViewResult)result).Model;
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserData>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetRoles>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.NotNull(result);
@@ -89,7 +91,7 @@
         }
 
         [Fact]
-        public async Task EditUserPost_CompetentAuthorityUser_UpdateUserAndCompetentAuthorityUserStatusAndRedirectToManageUser()
+        public async Task EditUserPost_CompetentAuthorityUser_UpdateUserAndCompetentAuthorityUserRoleAndStatus_AndRedirectToManageUser()
         {
             var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
 
@@ -103,7 +105,8 @@
                 LastName = "Lastname",
                 Email = "test@ea.com",
                 IsCompetentAuthorityUser = true,
-                OrganisationName = "test ltd."
+                OrganisationName = "test ltd.",
+                Role = new Core.Security.Role { Name = "InternalAdmin", Description = "Administrator" }
             };
 
             var result = await controller.EditUser(model);
@@ -111,7 +114,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateUser>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateCompetentAuthorityUserStatus>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateCompetentAuthorityUserRoleAndStatus>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             Assert.NotNull(result);
@@ -155,7 +158,7 @@
         }
 
         [Fact]
-        public async Task EditUserPost_OrganisationUser_UpdateUserAndDoesNotUpdateCompetentAuthorityUserStatusIfCurrentUser_AndRedirectToManageUser()
+        public async Task EditUserPost_OrganisationUser_UpdateUserAndDoesNotUpdateCompetentAuthorityUserRoleAndStatusIfCurrentUser_AndRedirectToManageUser()
         {
             var controller = new UserController(apiClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
 
@@ -177,7 +180,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateUser>._))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateCompetentAuthorityUserStatus>._))
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateCompetentAuthorityUserRoleAndStatus>._))
                 .MustNotHaveHappened();
 
             Assert.NotNull(result);
