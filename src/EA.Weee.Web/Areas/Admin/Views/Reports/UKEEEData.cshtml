@@ -21,7 +21,7 @@
             @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
             @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
         </div>
-
+        
         @(this.WeeeGds().Submit("Download", new { @class = "button" }))
     }
 
