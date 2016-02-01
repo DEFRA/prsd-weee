@@ -9,12 +9,12 @@
     using Weee.Tests.Core;
     using Xunit;
 
-    public class UpdateCompetentAuthorityUserStatusDataAccessTests
+    public class UpdateCompetentAuthorityUserRoleAndStatusDataAccessTests
     {
         private readonly WeeeContext context;
         private readonly DbContextHelper helper;
 
-        public UpdateCompetentAuthorityUserStatusDataAccessTests()
+        public UpdateCompetentAuthorityUserRoleAndStatusDataAccessTests()
         {
             context = A.Fake<WeeeContext>();
             helper = new DbContextHelper();

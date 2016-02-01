@@ -218,9 +218,9 @@
     <Compile Include="Admin\GetManageUserDataAccess.cs" />
     <Compile Include="Admin\GetUserDataHandler.cs" />
     <Compile Include="Admin\IGetManageUserDataAccess.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\UpdateCompetentAuthorityUserStatusDataAccess.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\IUpdateCompetentAuthorityUserStatusDataAccess.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\UpdateCompetentAuthorityUserStatusHandler.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\UpdateCompetentAuthorityUserRoleAndStatusDataAccess.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\IUpdateCompetentAuthorityUserRoleAndStatusDataAccess.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\UpdateCompetentAuthorityUserRoleAndStatusHandler.cs" />
     <Compile Include="Admin\UpdateUserHandler.cs" />
     <Compile Include="Mappings\AddressMap.cs" />
     <Compile Include="Mappings\CompetentAuthorityUserMap.cs" />
