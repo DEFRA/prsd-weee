@@ -23,7 +23,7 @@
                 .DenyInternalAreaAccess()
                 .Build();
 
-            var handler = new UpdateCompetentAuthorityUserStatusHandler(A.Dummy<IUserContext>(), A.Dummy<IUpdateCompetentAuthorityUserRoleAndStatusDataAccess>(),
+            var handler = new UpdateCompetentAuthorityUserRoleAndStatusHandler(A.Dummy<IUserContext>(), A.Dummy<IUpdateCompetentAuthorityUserRoleAndStatusDataAccess>(),
                 authorization);
 
             await Assert.ThrowsAsync<SecurityException>(() => handler.HandleAsync(A.Dummy<UpdateCompetentAuthorityUserRoleAndStatus>()));
@@ -36,7 +36,7 @@
             A.CallTo(() => dataAccess.GetCompetentAuthorityUser(A<Guid>._))
                 .Returns((CompetentAuthorityUser)null);
 
-            var handler = new UpdateCompetentAuthorityUserStatusHandler(A.Dummy<IUserContext>(), dataAccess, A.Dummy<IWeeeAuthorization>());
+            var handler = new UpdateCompetentAuthorityUserRoleAndStatusHandler(A.Dummy<IUserContext>(), dataAccess, A.Dummy<IWeeeAuthorization>());
 
             await Assert.ThrowsAsync<InvalidOperationException>(() => handler.HandleAsync(A.Dummy<UpdateCompetentAuthorityUserRoleAndStatus>()));
         }
@@ -56,7 +56,7 @@
             A.CallTo(() => userContext.UserId)
                 .Returns(userId);
 
-            var handler = new UpdateCompetentAuthorityUserStatusHandler(userContext, dataAccess, A.Dummy<IWeeeAuthorization>());
+            var handler = new UpdateCompetentAuthorityUserRoleAndStatusHandler(userContext, dataAccess, A.Dummy<IWeeeAuthorization>());
 
             await Assert.ThrowsAsync<InvalidOperationException>(() => handler.HandleAsync(
                 new UpdateCompetentAuthorityUserRoleAndStatus(competentAuthorityUserId, A.Dummy<UserStatus>(), A<string>._)));
@@ -72,7 +72,7 @@
             A.CallTo(() => dataAccess.GetRoleOrDefaultAsync(A<string>._))
                 .Returns((Role)null);
 
-            var handler = new UpdateCompetentAuthorityUserStatusHandler(A.Dummy<IUserContext>(), dataAccess, A.Dummy<IWeeeAuthorization>());
+            var handler = new UpdateCompetentAuthorityUserRoleAndStatusHandler(A.Dummy<IUserContext>(), dataAccess, A.Dummy<IWeeeAuthorization>());
 
             await Assert.ThrowsAsync<InvalidOperationException>(() => handler.HandleAsync(A.Dummy<UpdateCompetentAuthorityUserRoleAndStatus>()));
         }
@@ -94,7 +94,7 @@
             A.CallTo(() => dataAccess.GetRoleOrDefaultAsync(roleName))
                 .Returns(role);
 
-            var handler = new UpdateCompetentAuthorityUserStatusHandler(A.Dummy<IUserContext>(), dataAccess, A.Dummy<IWeeeAuthorization>());
+            var handler = new UpdateCompetentAuthorityUserRoleAndStatusHandler(A.Dummy<IUserContext>(), dataAccess, A.Dummy<IWeeeAuthorization>());
 
             await handler.HandleAsync(new UpdateCompetentAuthorityUserRoleAndStatus(userId, userStatus, roleName));
 
