@@ -7,13 +7,13 @@
     using Requests.Admin;
     using Security;
 
-    internal class UpdateCompetentAuthorityUserStatusHandler : IRequestHandler<UpdateCompetentAuthorityUserRoleAndStatus, Guid>
+    internal class UpdateCompetentAuthorityUserRoleAndStatusHandler : IRequestHandler<UpdateCompetentAuthorityUserRoleAndStatus, Guid>
     {
         private readonly IUpdateCompetentAuthorityUserRoleAndStatusDataAccess dataAccess;
         private readonly IWeeeAuthorization authorization;
         private readonly IUserContext userContext;
 
-        public UpdateCompetentAuthorityUserStatusHandler(IUserContext userContext, IUpdateCompetentAuthorityUserRoleAndStatusDataAccess dataAccess, IWeeeAuthorization authorization)
+        public UpdateCompetentAuthorityUserRoleAndStatusHandler(IUserContext userContext, IUpdateCompetentAuthorityUserRoleAndStatusDataAccess dataAccess, IWeeeAuthorization authorization)
         {
             this.userContext = userContext;
             this.dataAccess = dataAccess;
