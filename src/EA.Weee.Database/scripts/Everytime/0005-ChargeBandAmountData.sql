@@ -21,6 +21,12 @@ FROM @tblTempChargeBandAmountTable tmp
 LEFT JOIN [Lookup].[ChargeBandAmount] tbl ON tbl.[Id] = tmp.[Id]
 WHERE tbl.[Id] IS NULL
 
+UPDATE LiveTable SET
+LiveTable.[ChargeBand] = tmp.[ChargeBand],
+LiveTable.[Amount] = tmp.[Amount]
+FROM [Lookup].[ChargeBandAmount] LiveTable 
+INNER JOIN @tblTempChargeBandAmountTable tmp ON LiveTable.[Id] = tmp.[Id]
+
 GO
 PRINT N'Update complete.';
 
