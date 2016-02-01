@@ -68,11 +68,8 @@ ROW_NUMBER() over
                     for p.WeeeCategory in ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12],[13],[14]) 	
               ) as EeeData
 
-
-
 SELECT DISTINCT 
-        --Producers.Id,Producers.PRN, 
-        Producers.ApprovalNumber, Producers.SchemeName, Producers.ComplianceYear, 		
+	    Producers.ApprovalNumber, Producers.SchemeName, Producers.ComplianceYear, 		
                         Producers.SubmittedDate,Producers.Quarter,
                             case LatestRecord.SubmissionRecordRank  
                                     WHEN 1 then 'Yes' ELSE 'No' END as 'LatestData',				 
