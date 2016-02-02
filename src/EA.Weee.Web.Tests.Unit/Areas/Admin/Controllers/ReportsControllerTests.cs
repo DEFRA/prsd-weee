@@ -140,10 +140,10 @@
         [Theory]
         [InlineData(Reports.ProducerDetails, "ProducerDetails")]
         [InlineData(Reports.ProducerPublicRegister, "ProducerPublicRegister")]
-        [InlineData(Reports.UKWeeeData, "UKWeeeData")]
+        [InlineData(Reports.UkWeeeData, "UkWeeeData")]
         [InlineData(Reports.ProducerEeeData, "ProducerEeeData")]
         [InlineData(Reports.SchemeWeeeData, "SchemeWeeeData")]
-        [InlineData(Reports.UKEEEData, "UKEEEData")]
+        [InlineData(Reports.UkEeeData, "UkEeeData")]
         public void PostChooseReport_WithSelectedValue_RedirectsToExpectedAction(string selectedValue, string expectedAction)
         {
             // Arrange
