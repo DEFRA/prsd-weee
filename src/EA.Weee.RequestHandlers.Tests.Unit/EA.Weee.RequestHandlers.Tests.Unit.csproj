@@ -155,6 +155,7 @@
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXmlGenerateProducerDataTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\ProducerListFactoryTests.cs" />
     <Compile Include="Scheme\MemberUploadTesting\XmlGeneratorTests.cs" />
+    <Compile Include="Shared\GetApiDateHandlerTests.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandlerTests.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXmlTests.cs" />
