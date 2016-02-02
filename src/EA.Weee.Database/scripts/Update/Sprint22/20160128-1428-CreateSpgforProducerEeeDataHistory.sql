@@ -7,7 +7,7 @@ GO
 -- Create date: 2016 Jan 28
 -- Description:	This stored procedure is used to provide the EEE data history for producer.
 -- =============================================
-ALTER PROCEDURE [Producer].[spgProducerEeeHistoryCsvDataByPRN]
+CREATE PROCEDURE [Producer].[spgProducerEeeHistoryCsvDataByPRN]
     @PRN  NVARCHAR(50)
 AS
 BEGIN
@@ -69,7 +69,7 @@ ROW_NUMBER() over
               ) as EeeData
 
 SELECT DISTINCT 
-	    Producers.ApprovalNumber, Producers.SchemeName, Producers.ComplianceYear, 		
+        Producers.ApprovalNumber, Producers.SchemeName, Producers.ComplianceYear, 		
                         Producers.SubmittedDate,Producers.Quarter,
                             case LatestRecord.SubmissionRecordRank  
                                     WHEN 1 then 'Yes' ELSE 'No' END as 'LatestData',				 
