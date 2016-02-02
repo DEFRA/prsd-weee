@@ -101,7 +101,7 @@
     <Compile Include="Admin\GetUserDataHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetProducerPublicRegisterCSVHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandlerTests.cs" />
-    <Compile Include="Admin\Reports\GetUKWeeeCsv\GetUKWeeeCsvHandlerTests.cs" />
+    <Compile Include="Admin\Reports\GetUkWeeeCsv\GetUkWeeeCsvHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsvHandlerTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccessTests.cs" />
     <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandlerTests.cs" />
