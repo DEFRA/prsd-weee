@@ -39,7 +39,7 @@
     @if (ViewBag.TriggerDownload)
     {
         <script type="text/javascript">
-            window.location = "@Html.Raw(@Url.Action("DownloadUKWeeeDataCsv", new { complianceYear = Model.SelectedYear }))";
+            window.location = "@Html.Raw(@Url.Action("DownloadUkWeeeDataCsv", new { complianceYear = Model.SelectedYear }))";
         </script>
     }
 }
