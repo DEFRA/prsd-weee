@@ -9,14 +9,13 @@
     using FakeItEasy;
     using RequestHandlers.Admin.Reports;
     using Requests.Admin;
-    using Requests.Admin.Reports;
     using Weee.Tests.Core;
     using Xunit;
 
-    public class GetProducerPublicRegisterCSVHandlerTest
+    public class GetMembersDetailsCsvHandlerTests
     {
         [Fact]
-        public async Task GetProducerPublicRegisterCSVHandler_NotInternalUser_ThrowsSecurityException()
+        public async Task GetMembersDetailsCSVHandler_NotInternalUser_ThrowsSecurityException()
         {
             // Arrange
             var complianceYear = 2016;
@@ -25,8 +24,8 @@
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetProducerPublicRegisterCSVHandler(authorization, context, csvWriterFactory);
-            var request = new GetProducerPublicRegisterCSV(complianceYear);
+            var handler = new GetMembersDetailsCsvHandler(authorization, context, csvWriterFactory);
+            var request = new GetMemberDetailsCsv(complianceYear);
 
             // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
@@ -36,7 +35,7 @@
         }
 
         [Fact]
-        public async Task GetProducerPublicRegisterCSVHandler_NoComplianceYear_ThrowsArgumentException()
+        public async Task GetMembersDetailsCSVHandler_NoComplianceYear_ThrowsArgumentException()
         {
             // Arrange
             var complianceYear = 0;
@@ -45,8 +44,8 @@
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetProducerPublicRegisterCSVHandler(authorization, context, csvWriterFactory);
-            var request = new GetProducerPublicRegisterCSV(complianceYear);
+            var handler = new GetMembersDetailsCsvHandler(authorization, context, csvWriterFactory);
+            var request = new GetMemberDetailsCsv(complianceYear);
 
             // Act
             Func<Task> action = async () => await handler.HandleAsync(request);
@@ -54,9 +53,9 @@
             // Assert
             await Assert.ThrowsAsync<ArgumentException>(action);
         }
-
+        
         [Fact]
-        public async Task GetProducerPublicRegisterCSVHandler_ComplianceYear_ReturnsFileContent()
+        public async Task GetMembersDetailsCSVHandler_ComplianceYear_ReturnsFileContent()
         {
             // Arrange
             var complianceYear = 2016;
@@ -65,8 +64,8 @@
             var context = A.Fake<WeeeContext>();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            var handler = new GetProducerPublicRegisterCSVHandler(authorization, context, csvWriterFactory);
-            var request = new GetProducerPublicRegisterCSV(complianceYear);
+            var handler = new GetMembersDetailsCsvHandler(authorization, context, csvWriterFactory);
+            var request = new GetMemberDetailsCsv(complianceYear);
 
             // Act
             CSVFileData data = await handler.HandleAsync(request);

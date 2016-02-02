@@ -1,13 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports.GetUKWeeeCsv
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using EA.Weee.Domain.DataReturns;
 
-    public interface IGetUKWeeeCsvDataAccess
+    public interface IGetUkWeeeCsvDataAccess
     {
         /// <summary>
         /// Returns all data returns for the specified compliance year.
