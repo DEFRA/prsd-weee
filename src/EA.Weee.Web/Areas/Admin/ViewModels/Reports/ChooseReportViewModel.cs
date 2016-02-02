@@ -10,8 +10,8 @@
             {
                 Reports.ProducerDetails,
             Reports.ProducerPublicRegister,
-            Reports.UKEEEData,
-                Reports.UKWeeeData,
+            Reports.UkEeeData,
+                Reports.UkWeeeData,
             Reports.ProducerEeeData,
                 Reports.SchemeWeeeData
             })
