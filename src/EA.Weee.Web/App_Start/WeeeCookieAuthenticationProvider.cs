@@ -5,6 +5,7 @@
     using System.Web;
     using System.Web.Routing;
     using Microsoft.Owin.Security.Cookies;
+    using Prsd.Core.Web.Mvc.Owin;
 
     /// <summary>
     /// This cookie authentication provider overrides the default "redirect to login page" behaviour.
@@ -42,6 +43,8 @@
 
             AdminAreaName = "admin";
             AdminLoginPath = "/admin/account/sign-in";
+
+            OnValidateIdentity = context => IdentityValidationHelper.OnValidateIdentity(context);
 
             // Add our custom login to the redirect before applying the deafult implementation.
             OnApplyRedirect = (context) =>
