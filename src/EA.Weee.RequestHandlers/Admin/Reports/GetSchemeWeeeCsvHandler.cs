@@ -8,6 +8,7 @@
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
+    using GetUKWeeeCsv;
     using Prsd.Core;
     using Prsd.Core.Mediator;
     using Requests.Admin.Reports;
@@ -86,88 +87,95 @@
 
         public IEnumerable<CsvResult> CreateResults(SpgSchemeWeeeCsvResult results, IEnumerable<string> aatfLocations, IEnumerable<string> aaeLocations)
         {
-            List<CsvResult> csvResults = new List<CsvResult>();
+            var csvResults = new List<CsvResult>();
 
-            foreach (var scheme in results.Schemes.OrderBy(s => s.SchemeName))
+            var collectedAmountsDictionary = new Dictionary<WeeeAmountKey, IEnumerable<SpgSchemeWeeeCsvResult.CollectedAmountResult>>();
+            var deliveredAmountsDictionary = new Dictionary<WeeeAmountKey, IEnumerable<SpgSchemeWeeeCsvResult.DeliveredAmountResult>>();
+
+            foreach (var quarterType in Enumerable.Range(1, 4))
             {
-                foreach (int quarterType in Enumerable.Range(1, 4))
+                foreach (var category in Enumerable.Range(1, 14))
                 {
-                    foreach (int category in Enumerable.Range(1, 14))
+                    foreach (var scheme in results.Schemes)
                     {
-                        var collectedAmounts = results.CollectedAmounts
-                            .Where(ca => ca.QuarterType == quarterType)
-                            .Where(ca => ca.WeeeCategory == category)
-                            .Where(ca => ca.SchemeId == scheme.SchemeId);
+                        var key = new WeeeAmountKey(category, quarterType, scheme.SchemeId);
 
-                        decimal? dcf = collectedAmounts
-                            .Where(ca => ca.SourceType == 0)
-                            .Select(ca => (decimal?)ca.Tonnage)
-                            .SingleOrDefault();
+                        collectedAmountsDictionary.Add(key, results.CollectedAmounts
+                            .Where(ca => ca.QuarterType == key.QuarterType 
+                            && ca.WeeeCategory == key.Category
+                            && ca.SchemeId == key.SchemeId));
 
-                        // A source type of "Distributor" has ID 1.
-                        decimal? distributors = collectedAmounts
-                            .Where(ca => ca.SourceType == 1)
-                            .Select(ca => (decimal?)ca.Tonnage)
-                            .SingleOrDefault();
-
-                        // A source type of "Final Holder" has ID.
-                        decimal? finalHolders = collectedAmounts
-                            .Where(ca => ca.SourceType == 2)
-                            .Select(ca => (decimal?)ca.Tonnage)
-                            .SingleOrDefault();
-
-                        CsvResult csvResult = new CsvResult();
-
-                        csvResult.SchemeName = scheme.SchemeName;
-                        csvResult.SchemeApprovalNumber = scheme.ApprovalNumber;
-                        csvResult.QuarterType = quarterType;
-                        csvResult.Category = category;
-                        csvResult.Dcf = dcf;
-                        csvResult.Distributors = distributors;
-                        csvResult.FinalHolders = finalHolders;
-
-                        var deliveredAmounts = results.DeliveredAmounts
-                            .Where(da => da.QuarterType == quarterType)
-                            .Where(da => da.WeeeCategory == category)
-                            .Where(da => da.SchemeId == scheme.SchemeId);
-
-                        decimal? totalDelivered = null;
-
-                        if (deliveredAmounts.Any())
-                        {
-                            totalDelivered = deliveredAmounts.Sum(da => da.Tonnage);
-                        }
-
-                        csvResult.TotalDelivered = totalDelivered;
-
-                        foreach (string aatfLocation in aatfLocations)
-                        {
-                            decimal? aatfTonnage = deliveredAmounts
-                                .Where(da => da.LocationType == 0)
-                                .Where(da => da.LocationApprovalNumber == aatfLocation)
-                                .Select(da => (decimal?)da.Tonnage)
-                                .SingleOrDefault();
-
-                            csvResult.AatfTonnage[aatfLocation] = aatfTonnage;
-                        }
-
-                        foreach (string aaeLocation in aaeLocations)
-                        {
-                            decimal? aaeTonnage = deliveredAmounts
-                                .Where(da => da.LocationType == 1)
-                                .Where(da => da.LocationApprovalNumber == aaeLocation)
-                                .Select(da => (decimal?)da.Tonnage)
-                                .SingleOrDefault();
-
-                            csvResult.AeTonnage[aaeLocation] = aaeTonnage;
-                        }
-
-                        csvResults.Add(csvResult);
+                        deliveredAmountsDictionary.Add(key, results.DeliveredAmounts
+                            .Where(ca => ca.QuarterType == key.QuarterType 
+                            && ca.WeeeCategory == key.Category
+                            && ca.SchemeId == key.SchemeId));
                     }
                 }
             }
 
-            return csvResults;
+            foreach (var key in collectedAmountsDictionary.Keys)
+            {
+                var collectedAmounts = collectedAmountsDictionary[key].ToList();
+                var deliveredAmounts = deliveredAmountsDictionary[key].ToList();
+                var scheme = results.Schemes.Single(s => s.SchemeId == key.SchemeId);
+
+                var aatfTonnage = aatfLocations
+                    .Select(l => new
+                    {
+                        Location = l,
+                        Tonnage = deliveredAmounts
+                            .Where(da => da.LocationType == 0)
+                            .Where(da => da.LocationApprovalNumber == l)
+                            .Select(da => (decimal?)da.Tonnage)
+                            .SingleOrDefault()
+                    })
+                    .ToDictionary(a => a.Location, a => a.Tonnage);
+
+                var aaeTonnage = aaeLocations
+                    .Select(l => new
+                    {
+                        Location = l,
+                        Tonnage = deliveredAmounts
+                            .Where(da => da.LocationType == 1)
+                            .Where(da => da.LocationApprovalNumber == l)
+                            .Select(da => (decimal?)da.Tonnage)
+                            .SingleOrDefault()
+                    })
+                    .ToDictionary(a => a.Location, a => a.Tonnage);
+
+                var dcf = collectedAmounts
+                    .Where(ca => ca.SourceType == 0)
+                    .Select(ca => (decimal?)ca.Tonnage)
+                    .SingleOrDefault();
+
+                var distributors = collectedAmounts
+                    .Where(ca => ca.SourceType == 1)
+                    .Select(ca => (decimal?)ca.Tonnage)
+                    .SingleOrDefault();
+
+                var finalHolders = collectedAmounts
+                    .Where(ca => ca.SourceType == 2)
+                    .Select(ca => (decimal?)ca.Tonnage)
+                    .SingleOrDefault();
+
+                csvResults.Add(new CsvResult
+                {
+                    AatfTonnage = aatfTonnage,
+                    AeTonnage = aaeTonnage,
+                    QuarterType = key.QuarterType,
+                    Category = key.Category,
+                    Dcf = dcf,
+                    Distributors = distributors,
+                    FinalHolders = finalHolders,
+                    SchemeName = scheme.SchemeName,
+                    SchemeApprovalNumber = scheme.ApprovalNumber,
+                    TotalDelivered = deliveredAmounts.Any()
+                        ? deliveredAmounts.Sum(da => da.Tonnage)
+                        : (decimal?)null
+                });
+            }
+
+            return csvResults.OrderBy(r => r.SchemeName);
         }
 
         public CsvWriter<CsvResult> CreateWriter(ObligationType obligationType, IEnumerable<string> aatfLocations, IEnumerable<string> aaeLocations)
@@ -235,6 +243,64 @@
             {
                 AatfTonnage = new Dictionary<string, decimal?>();
                 AeTonnage = new Dictionary<string, decimal?>();
+            }
+        }
+
+        public class WeeeAmountKey : IEquatable<WeeeAmountKey>
+        {
+            private readonly int hashBase;
+
+            private readonly int category;
+            private readonly int quarterType;
+            private readonly Guid schemeId;
+
+            public int Category
+            {
+                get { return category; }
+            }
+
+            public int QuarterType
+            {
+                get { return quarterType; }
+            }
+
+            public Guid SchemeId
+            {
+                get { return schemeId; }
+            }
+
+            public WeeeAmountKey(int category, int quarterType, Guid schemeId)
+            {
+                Guard.ArgumentNotDefaultValue(() => schemeId, schemeId);
+
+                this.category = category;
+                this.quarterType = quarterType;
+                this.schemeId = schemeId;
+
+                hashBase = 13;
+            }
+
+            public bool Equals(WeeeAmountKey other)
+            {
+                if (other == null)
+                {
+                    return false;
+                }
+
+                return QuarterType == other.QuarterType
+                       && Category == other.Category
+                       && SchemeId == other.SchemeId;
+            }
+
+            public override int GetHashCode()
+            {
+                var hash = hashBase;
+
+                hash = (hashBase * 7) + Category;
+                hash = (hash * 7) + QuarterType;
+                hash = (hash * 7) + SchemeId.GetHashCode();
+
+                return hash;
             }
         }
     }

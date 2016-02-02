@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="Admin\FindMatchingUsersDataAccessTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsDataAccessTests.cs" />
+    <Compile Include="Admin\Reports\GetSchemeWeeeCsvHandlerTests.cs" />
     <Compile Include="Admin\Submissions\GetSubmissionsHistoryResultsDataAccessTests.cs" />
     <Compile Include="Charging\CommonDataAccessTests.cs" />
     <Compile Include="Charging\FetchInvoiceRuns\FetchInvoiceRunsDataAccessTests.cs" />
