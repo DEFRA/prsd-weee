@@ -52,7 +52,7 @@ SELECT DISTINCT
 ROW_NUMBER() over
                     (
                     partition by (EeeData.Id)
-                    Order by ComplianceYear desc, SubmittedDate desc
+                    Order by ComplianceYear desc, SubmittedDate 
                     ) as RowNumber, 
             EeeData.Id, 
             EeeData.PRN,EeeData.ApprovalNumber, EeeData.SchemeName, EeeData.ComplianceYear, EeeData.SubmittedDate, EeeData.Quarter, EeeData.ObligationType,

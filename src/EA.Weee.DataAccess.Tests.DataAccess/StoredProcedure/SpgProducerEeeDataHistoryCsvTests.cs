@@ -236,6 +236,9 @@
                 Assert.NotNull(results);
                //Only shows entries for tonnage value changes and ignores the ones with no change.
                 Assert.Equal(2, results.Count);
+                Assert.Collection(results,
+                   (r1) => Assert.Equal(new DateTime(2015, 1, 3), r1.SubmittedDate),
+                   (r2) => Assert.Equal(new DateTime(2015, 1, 1), r2.SubmittedDate));
             }
         }
 
