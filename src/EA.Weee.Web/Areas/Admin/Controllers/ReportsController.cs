@@ -323,7 +323,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadUKWeeeDataCsv(int complianceYear)
+        public async Task<ActionResult> DownloadUkWeeeDataCsv(int complianceYear)
         {
             FileInfo file;
 
@@ -337,7 +337,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> UKEEEData()
+        public async Task<ActionResult> UkEeeData()
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
@@ -364,7 +364,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UKEEEData(UKEEEDataViewModel model)
+        public async Task<ActionResult> UkEeeData(UKEEEDataViewModel model)
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
