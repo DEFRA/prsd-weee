@@ -20,6 +20,7 @@
     using Weee.Requests.DataReturns;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
+    using Weee.Requests.Shared;
 
     public class DataReturnsController : ExternalSiteController
     {
@@ -117,14 +118,17 @@
         [HttpGet]
         public async Task<ViewResult> CannotSubmitDataReturn(Guid pcsId)
         {
-            var currentDate = SystemTime.Now;
-
-            await SetBreadcrumb(pcsId);
-            return View(new CannotSubmitDataReturnViewModel
+            using (var client = apiClient())
             {
-                OrganisationId = pcsId,
-                CurrentYear = currentDate.Year
-            });
+                var currentDate = await client.SendAsync(User.GetAccessToken(), new GetApiDate());
+
+                await SetBreadcrumb(pcsId);
+                return View(new CannotSubmitDataReturnViewModel
+                {
+                    OrganisationId = pcsId,
+                    CurrentYear = currentDate.Year
+                });
+            }
         }
 
         [HttpPost]

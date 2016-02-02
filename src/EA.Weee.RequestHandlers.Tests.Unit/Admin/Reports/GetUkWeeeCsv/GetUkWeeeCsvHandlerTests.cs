@@ -17,7 +17,7 @@
     using Xunit;
     using DomainObligationType = Domain.Obligation.ObligationType;
 
-    public class GetUKWeeeCsvHandlerTests
+    public class GetUkWeeeCsvHandlerTests
     {
         /// <summary>
         /// This test ensures that the handler throws a security exception if used by
@@ -30,12 +30,12 @@
             // Arrange
             IWeeeAuthorization authorization = new AuthorizationBuilder().DenyInternalAreaAccess().Build();
 
-            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+            GetUkWeeeCsvHandler handler = new GetUkWeeeCsvHandler(
                 authorization,
-                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<IGetUkWeeeCsvDataAccess>(),
                 A.Dummy<CsvWriterFactory>());
 
-            GetUKWeeeCsv request = new GetUKWeeeCsv(A.Dummy<int>());
+            GetUkWeeeCsv request = new GetUkWeeeCsv(A.Dummy<int>());
 
             // Act
             Func<Task<FileInfo>> testCode = async () => await handler.HandleAsync(request);
@@ -55,12 +55,12 @@
             // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+            GetUkWeeeCsvHandler handler = new GetUkWeeeCsvHandler(
                 authorization,
-                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<IGetUkWeeeCsvDataAccess>(),
                 A.Dummy<CsvWriterFactory>());
 
-            GetUKWeeeCsv request = new GetUKWeeeCsv(2016);
+            GetUkWeeeCsv request = new GetUkWeeeCsv(2016);
 
             // Act
             SystemTime.Freeze(new DateTime(2016, 12, 31, 23, 59, 0));
@@ -84,13 +84,13 @@
         public void CreateWriter_Always_CreatesExpectedColumns()
         {
             // Arrange
-            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+            GetUkWeeeCsvHandler handler = new GetUkWeeeCsvHandler(
                 A.Dummy<IWeeeAuthorization>(),
-                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<IGetUkWeeeCsvDataAccess>(),
                 A.Dummy<CsvWriterFactory>());
 
             // Act
-            CsvWriter<GetUKWeeeCsvHandler.CsvResult> result = handler.CreateWriter();
+            CsvWriter<GetUkWeeeCsvHandler.CsvResult> result = handler.CreateWriter();
 
             // Assert
             Assert.Collection(result.ColumnTitles,
@@ -126,13 +126,13 @@
         public void CreateResults_Always_CreatesAResultForEachCategoryAndEachObligationType()
         {
             // Arrange
-            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+            GetUkWeeeCsvHandler handler = new GetUkWeeeCsvHandler(
                 A.Dummy<IWeeeAuthorization>(),
-                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<IGetUkWeeeCsvDataAccess>(),
                 A.Dummy<CsvWriterFactory>());
 
             // Act
-            IEnumerable<GetUKWeeeCsvHandler.CsvResult> results = handler.CreateResults(A.Dummy<IEnumerable<DataReturn>>());
+            IEnumerable<GetUkWeeeCsvHandler.CsvResult> results = handler.CreateResults(A.Dummy<IEnumerable<DataReturn>>());
 
             // Assert
             Assert.Equal(28, results.Count());
@@ -175,16 +175,16 @@
         public void CreateResults_WithNoAmounts_PopulatesAllValuesAsNull()
         {
             // Arrange
-            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+            GetUkWeeeCsvHandler handler = new GetUkWeeeCsvHandler(
                 A.Dummy<IWeeeAuthorization>(),
-                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<IGetUkWeeeCsvDataAccess>(),
                 A.Dummy<CsvWriterFactory>());
 
             // Act
-            IEnumerable<GetUKWeeeCsvHandler.CsvResult> results = handler.CreateResults(A.Dummy<IEnumerable<DataReturn>>());
+            IEnumerable<GetUkWeeeCsvHandler.CsvResult> results = handler.CreateResults(A.Dummy<IEnumerable<DataReturn>>());
 
             // Assert
-            GetUKWeeeCsvHandler.CsvResult result1 = results.First();
+            GetUkWeeeCsvHandler.CsvResult result1 = results.First();
             Assert.Equal(null, result1.DcfTotal);
             Assert.Equal(null, result1.DcfQ1);
             Assert.Equal(null, result1.DcfQ2);
@@ -230,16 +230,16 @@
 
             dataReturn.SetCurrentVersion(dataReturnVersion);
 
-            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+            GetUkWeeeCsvHandler handler = new GetUkWeeeCsvHandler(
                 A.Dummy<IWeeeAuthorization>(),
-                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<IGetUkWeeeCsvDataAccess>(),
                 A.Dummy<CsvWriterFactory>());
 
             // Act
-            IEnumerable<GetUKWeeeCsvHandler.CsvResult> results = handler.CreateResults(new List<DataReturn>() { dataReturn });
+            IEnumerable<GetUkWeeeCsvHandler.CsvResult> results = handler.CreateResults(new List<DataReturn>() { dataReturn });
 
             // Assert
-            GetUKWeeeCsvHandler.CsvResult result = results
+            GetUkWeeeCsvHandler.CsvResult result = results
                 .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == DomainObligationType.B2C);
             Assert.NotNull(result);
 
@@ -273,16 +273,16 @@
 
             dataReturn.SetCurrentVersion(dataReturnVersion);
 
-            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+            GetUkWeeeCsvHandler handler = new GetUkWeeeCsvHandler(
                 A.Dummy<IWeeeAuthorization>(),
-                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<IGetUkWeeeCsvDataAccess>(),
                 A.Dummy<CsvWriterFactory>());
 
             // Act
-            IEnumerable<GetUKWeeeCsvHandler.CsvResult> results = handler.CreateResults(new List<DataReturn>() { dataReturn });
+            IEnumerable<GetUkWeeeCsvHandler.CsvResult> results = handler.CreateResults(new List<DataReturn>() { dataReturn });
 
             // Assert
-            GetUKWeeeCsvHandler.CsvResult result = results
+            GetUkWeeeCsvHandler.CsvResult result = results
                 .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == DomainObligationType.B2C);
             Assert.NotNull(result);
 
@@ -316,16 +316,16 @@
 
             dataReturn.SetCurrentVersion(dataReturnVersion);
 
-            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+            GetUkWeeeCsvHandler handler = new GetUkWeeeCsvHandler(
                 A.Dummy<IWeeeAuthorization>(),
-                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<IGetUkWeeeCsvDataAccess>(),
                 A.Dummy<CsvWriterFactory>());
 
             // Act
-            IEnumerable<GetUKWeeeCsvHandler.CsvResult> results = handler.CreateResults(new List<DataReturn>() { dataReturn });
+            IEnumerable<GetUkWeeeCsvHandler.CsvResult> results = handler.CreateResults(new List<DataReturn>() { dataReturn });
 
             // Assert
-            GetUKWeeeCsvHandler.CsvResult result = results
+            GetUkWeeeCsvHandler.CsvResult result = results
                 .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == DomainObligationType.B2C);
             Assert.NotNull(result);
 
@@ -359,16 +359,16 @@
 
             dataReturn.SetCurrentVersion(dataReturnVersion);
 
-            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+            GetUkWeeeCsvHandler handler = new GetUkWeeeCsvHandler(
                 A.Dummy<IWeeeAuthorization>(),
-                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<IGetUkWeeeCsvDataAccess>(),
                 A.Dummy<CsvWriterFactory>());
 
             // Act
-            IEnumerable<GetUKWeeeCsvHandler.CsvResult> results = handler.CreateResults(new List<DataReturn>() { dataReturn });
+            IEnumerable<GetUkWeeeCsvHandler.CsvResult> results = handler.CreateResults(new List<DataReturn>() { dataReturn });
 
             // Assert
-            GetUKWeeeCsvHandler.CsvResult result = results
+            GetUkWeeeCsvHandler.CsvResult result = results
                 .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == DomainObligationType.B2C);
             Assert.NotNull(result);
 
@@ -415,16 +415,16 @@
 
             dataReturn2.SetCurrentVersion(dataReturnVersion2);
 
-            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+            GetUkWeeeCsvHandler handler = new GetUkWeeeCsvHandler(
                 A.Dummy<IWeeeAuthorization>(),
-                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<IGetUkWeeeCsvDataAccess>(),
                 A.Dummy<CsvWriterFactory>());
 
             // Act
-            IEnumerable<GetUKWeeeCsvHandler.CsvResult> results = handler.CreateResults(new List<DataReturn>() { dataReturn1, dataReturn2 });
+            IEnumerable<GetUkWeeeCsvHandler.CsvResult> results = handler.CreateResults(new List<DataReturn>() { dataReturn1, dataReturn2 });
 
             // Assert
-            GetUKWeeeCsvHandler.CsvResult result = results
+            GetUkWeeeCsvHandler.CsvResult result = results
                 .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == DomainObligationType.B2C);
             Assert.NotNull(result);
 
@@ -467,16 +467,16 @@
 
             dataReturn2.SetCurrentVersion(dataReturnVersion2);
 
-            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+            GetUkWeeeCsvHandler handler = new GetUkWeeeCsvHandler(
                 A.Dummy<IWeeeAuthorization>(),
-                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<IGetUkWeeeCsvDataAccess>(),
                 A.Dummy<CsvWriterFactory>());
 
             // Act
-            IEnumerable<GetUKWeeeCsvHandler.CsvResult> results = handler.CreateResults(new List<DataReturn>() { dataReturn1, dataReturn2 });
+            IEnumerable<GetUkWeeeCsvHandler.CsvResult> results = handler.CreateResults(new List<DataReturn>() { dataReturn1, dataReturn2 });
 
             // Assert
-            GetUKWeeeCsvHandler.CsvResult result = results
+            GetUkWeeeCsvHandler.CsvResult result = results
                 .Single(r => r.Category == WeeeCategory.LargeHouseholdAppliances && r.ObligationType == DomainObligationType.B2C);
             Assert.NotNull(result);
 
@@ -489,9 +489,9 @@
             // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+            GetUkWeeeCsvHandler handler = new GetUkWeeeCsvHandler(
                 authorization,
-                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<IGetUkWeeeCsvDataAccess>(),
                 A.Dummy<CsvWriterFactory>());
 
             var dataReturn = new DataReturn(A.Fake<Domain.Scheme.Scheme>(), new Quarter(2016, QuarterType.Q1));
@@ -512,9 +512,9 @@
             // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+            GetUkWeeeCsvHandler handler = new GetUkWeeeCsvHandler(
                 authorization,
-                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<IGetUkWeeeCsvDataAccess>(),
                 A.Dummy<CsvWriterFactory>());
 
             var dataReturn = new DataReturn(A.Fake<Domain.Scheme.Scheme>(), new Quarter(2016, QuarterType.Q1));
@@ -536,9 +536,9 @@
             // Arrange
             IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
 
-            GetUKWeeeCsvHandler handler = new GetUKWeeeCsvHandler(
+            GetUkWeeeCsvHandler handler = new GetUkWeeeCsvHandler(
                 authorization,
-                A.Dummy<IGetUKWeeeCsvDataAccess>(),
+                A.Dummy<IGetUkWeeeCsvDataAccess>(),
                 A.Dummy<CsvWriterFactory>());
 
             var dataReturn = new DataReturn(A.Fake<Domain.Scheme.Scheme>(), new Quarter(2016, QuarterType.Q1));

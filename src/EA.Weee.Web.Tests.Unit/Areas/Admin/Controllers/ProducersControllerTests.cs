@@ -565,6 +565,35 @@
             Assert.Equal("Search", routeValues["action"]);
         }
 
+        [Fact]
+        public async void HttpGet_DownloadProducerEeeHistoryCsv_ShouldReturnFileContentType()
+        {
+            // Arrange
+            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
+            ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            CSVFileData csvData = A.Dummy<CSVFileData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerEeeDataHistoryCsv>._))
+                .Returns(new CSVFileData
+                {
+                    FileName = "test.csv",
+                    FileContent = "123,abc"
+                });
+
+            Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
+            A.CallTo(() => weeeClientFunc())
+                .Returns(weeeClient);
+
+            ProducersController controller = new ProducersController(breadcrumb, producerSearcher, weeeClientFunc, cache);
+
+            //Act
+            var result = await controller.DownloadProducerEeeDataHistoryCsv("WEE/AA1111AA");
+
+            //Assert
+            Assert.IsType<FileContentResult>(result);
+        }
+
         private ProducersController ProducersController()
         {
             return new ProducersController(breadcumbService, producerSearcher, () => weeeClient, cache);

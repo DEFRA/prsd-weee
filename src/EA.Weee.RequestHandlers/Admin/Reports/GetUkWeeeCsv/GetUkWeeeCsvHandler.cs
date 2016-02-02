@@ -2,11 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using DataAccess;
     using Domain.DataReturns;
     using Domain.Lookup;
     using EA.Prsd.Core.Mediator;
@@ -15,10 +13,10 @@
     using Prsd.Core;
     using Security;
 
-    public class GetUKWeeeCsvHandler : IRequestHandler<Requests.Admin.Reports.GetUKWeeeCsv, FileInfo>
+    public class GetUkWeeeCsvHandler : IRequestHandler<Requests.Admin.Reports.GetUkWeeeCsv, FileInfo>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IGetUKWeeeCsvDataAccess dataAccess;
+        private readonly IGetUkWeeeCsvDataAccess dataAccess;
         private readonly CsvWriterFactory csvWriterFactory;
 
         private readonly Dictionary<WeeeCategory, string> categoryDisplayNames = new Dictionary<WeeeCategory, string>()
@@ -39,9 +37,9 @@
             { WeeeCategory.PhotovoltaicPanels, "14. Photovoltaic Panels" },
         };
 
-        public GetUKWeeeCsvHandler(
+        public GetUkWeeeCsvHandler(
             IWeeeAuthorization authorization,
-            IGetUKWeeeCsvDataAccess dataAccess,
+            IGetUkWeeeCsvDataAccess dataAccess,
             CsvWriterFactory csvWriterFactory)
         {
             this.authorization = authorization;
@@ -49,7 +47,7 @@
             this.csvWriterFactory = csvWriterFactory;
         }
 
-        public async Task<FileInfo> HandleAsync(GetUKWeeeCsv message)
+        public async Task<FileInfo> HandleAsync(GetUkWeeeCsv message)
         {
             authorization.EnsureCanAccessInternalArea();
 
