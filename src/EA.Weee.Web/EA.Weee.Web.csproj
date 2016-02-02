@@ -242,7 +242,7 @@
     <Compile Include="Areas\Admin\ViewModels\Reports\ProducersDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\UkEeeDataViewModel .cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\UkEeeDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\DataReturnSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\DataReturnsController.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessDataReturnXmlFileRequest.cs" />

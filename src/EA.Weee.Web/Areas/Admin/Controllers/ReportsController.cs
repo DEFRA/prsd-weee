@@ -87,7 +87,7 @@
                 case Reports.ProducerPublicRegister:
                     return RedirectToAction("ProducerPublicRegister");
 
-                case Reports.UKWeeeData:
+                case Reports.UkWeeeData:
                     return RedirectToAction("UkWeeeData");
 
                 case Reports.ProducerEeeData:
@@ -96,7 +96,7 @@
                 case Reports.SchemeWeeeData:
                     return RedirectToAction("SchemeWeeeData");
 
-                case Reports.UKEEEData:
+                case Reports.UkEeeData:
                     return RedirectToAction("UkEeeData");
 
                 default:
