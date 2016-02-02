@@ -261,6 +261,7 @@
     <Compile Include="Scheme\GetSchemePublicInfo\IGetSchemePublicInfoDataAccess.cs" />
     <Compile Include="Scheme\GetSchemesDataAccess.cs" />
     <Compile Include="Scheme\GetSchemeStatusHandler.cs" />
+    <Compile Include="Shared\GetApiDateHandler.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsDataAccess.cs" />

@@ -69,6 +69,7 @@
     <Compile Include="DataReturns\FetchDataReturnForSubmission.cs" />
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
+    <Compile Include="Shared\GetApiDate.cs" />
     <Compile Include="DataReturns\IsSubmissionWindowOpen.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile.cs" />
     <Compile Include="DataReturns\SubmitDataReturnUpload.cs" />
