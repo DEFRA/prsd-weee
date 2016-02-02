@@ -88,7 +88,7 @@
                     return RedirectToAction("ProducerPublicRegister");
 
                 case Reports.UKWeeeData:
-                    return RedirectToAction("UKWeeeData");
+                    return RedirectToAction("UkWeeeData");
 
                 case Reports.ProducerEeeData:
                     return RedirectToAction("ProducerEeeData");
@@ -97,7 +97,7 @@
                     return RedirectToAction("SchemeWeeeData");
 
                 case Reports.UKEEEData:
-                    return RedirectToAction("UKEEEData");
+                    return RedirectToAction("UkEeeData");
 
                 default:
                     throw new NotSupportedException();
@@ -292,7 +292,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> UKWeeeData()
+        public async Task<ActionResult> UkWeeeData()
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
@@ -308,7 +308,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UKWeeeData(ProducersDataViewModel model)
+        public async Task<ActionResult> UkWeeeData(ProducersDataViewModel model)
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
@@ -327,7 +327,7 @@
         {
             FileInfo file;
 
-            GetUKWeeeCsv request = new GetUKWeeeCsv(complianceYear);
+            GetUkWeeeCsv request = new GetUkWeeeCsv(complianceYear);
             using (var client = apiClient())
             {
                 file = await client.SendAsync(User.GetAccessToken(), request);
@@ -357,14 +357,14 @@
                 return View();
             }
 
-            UKEEEDataViewModel model = new UKEEEDataViewModel();
+            UkEeeDataViewModel model = new UkEeeDataViewModel();
             model.ComplianceYears = new SelectList(years);
-            return View("UKEEEData", model);
+            return View("UkEeeData", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UkEeeData(UKEEEDataViewModel model)
+        public async Task<ActionResult> UkEeeData(UkEeeDataViewModel model)
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;

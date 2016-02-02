@@ -1,19 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports.GetUKWeeeCsv
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.DataReturns;
 
-    public class GetUKWeeeCsvDataAccess : IGetUKWeeeCsvDataAccess
+    public class GetUkWeeeCsvDataAccess : IGetUkWeeeCsvDataAccess
     {
         private readonly WeeeContext context;
 
-        public GetUKWeeeCsvDataAccess(WeeeContext context)
+        public GetUkWeeeCsvDataAccess(WeeeContext context)
         {
             this.context = context;
         }
