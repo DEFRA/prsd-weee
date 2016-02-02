@@ -50,7 +50,7 @@
     <Compile Include="Admin\IsProducerRegisteredForComplianceYear.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetMemberRegistrationsActiveComplianceYears.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsv.cs" />
-    <Compile Include="Admin\Reports\GetUKWeeeCsv.cs" />
+    <Compile Include="Admin\Reports\GetUkWeeeCsv .cs" />
     <Compile Include="Admin\Reports\GetSchemeWeeeCsv.cs" />
     <Compile Include="Admin\Reports\GetUkEeeDataCsv.cs" />
     <Compile Include="Charges\FetchComplianceYearsWithInvoices.cs" />

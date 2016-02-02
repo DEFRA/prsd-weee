@@ -242,7 +242,7 @@
     <Compile Include="Areas\Admin\ViewModels\Reports\ProducersDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Reports\UKEEEDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Reports\UkEeeDataViewModel .cs" />
     <Compile Include="Areas\Admin\ViewModels\Submissions\DataReturnSubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\Scheme\Controllers\DataReturnsController.cs" />
     <Compile Include="Areas\Scheme\Requests\ProcessDataReturnXmlFileRequest.cs" />
@@ -585,9 +585,9 @@
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_media-player.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_buttons.scss" />
     <Content Include="Content\govuk_toolkit\stylesheets\design-patterns\_alpha-beta.scss" />
-    <Content Include="Areas\Admin\Views\Reports\UkWeeeData .cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\UkWeeeData.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Reports\UkEeeData .cshtml" />
+    <Content Include="Areas\Admin\Views\Reports\UkEeeData.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\CannotSubmitDataReturn.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />

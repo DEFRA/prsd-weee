@@ -597,10 +597,9 @@
         }
 
         [Fact]
-        public async void HttpGet_UKEEEData_ShouldReturnsUKEEEDataView()
+        public async void HttpGet_UkEeeData_ShouldReturnsUkEeeDataView()
         {
             IWeeeClient client = A.Fake<IWeeeClient>();
-            //var controller = ReportsController();
             ReportsController controller = new ReportsController(
                 () => client,
                 A.Dummy<BreadcrumbService>());
@@ -608,10 +607,10 @@
             A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
                 .Returns(new List<int> { 2015, 2016 });
 
-            var result = await controller.UKEEEData();
+            var result = await controller.UkEeeData();
 
             var viewResult = ((ViewResult)result);
-            Assert.Equal("UKEEEData", viewResult.ViewName);
+            Assert.Equal("UkEeeData", viewResult.ViewName);
         }
 
         [Fact]
@@ -623,7 +622,7 @@
                 A.Dummy<BreadcrumbService>());
 
             // Act
-            ActionResult result = await controller.UKEEEData();
+            ActionResult result = await controller.UkEeeData();
 
             // Assert
             ViewResult viewResult = result as ViewResult;
@@ -632,7 +631,7 @@
         }
 
         [Fact]
-        public async void HttpPost_UKEEEData_ModelIsInvalid_ShouldRedirectViewWithError()
+        public async void HttpPost_UkEeeData_ModelIsInvalid_ShouldRedirectViewWithError()
         {
             IWeeeClient client = A.Fake<IWeeeClient>();
             ReportsController controller = new ReportsController(
@@ -640,25 +639,25 @@
                 A.Dummy<BreadcrumbService>());
             controller.ModelState.AddModelError("Key", "Any error");
 
-            var result = await controller.UKEEEData(new UKEEEDataViewModel());
+            var result = await controller.UkEeeData(new UkEeeDataViewModel());
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
         }
 
         [Fact]
-        public async Task PostUKEeeData_ModelIsInvalid_SetsTriggerDownloadToFalse()
+        public async Task PostUkEeeData_ModelIsInvalid_SetsTriggerDownloadToFalse()
         {
             // Arrange
             ReportsController controller = new ReportsController(
                 () => A.Dummy<IWeeeClient>(),
                 A.Dummy<BreadcrumbService>());
 
-            UKEEEDataViewModel viewModel = new UKEEEDataViewModel();
+            UkEeeDataViewModel viewModel = new UkEeeDataViewModel();
 
             // Act
             controller.ModelState.AddModelError("Key", "Error");
-            ActionResult result = await controller.UKEEEData(viewModel);
+            ActionResult result = await controller.UkEeeData(viewModel);
 
             // Assert
             ViewResult viewResult = result as ViewResult;
@@ -674,10 +673,10 @@
                 () => A.Dummy<IWeeeClient>(),
                 A.Dummy<BreadcrumbService>());
 
-            UKEEEDataViewModel viewModel = new UKEEEDataViewModel();
+            UkEeeDataViewModel viewModel = new UkEeeDataViewModel();
 
             // Act
-            ActionResult result = await controller.UKEEEData(viewModel);
+            ActionResult result = await controller.UkEeeData(viewModel);
 
             // Assert
             ViewResult viewResult = result as ViewResult;
@@ -967,7 +966,7 @@
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetUKWeeeData_Always_ReturnsUKWeeeDataProducerDataViewModel()
+        public async Task GetUkWeeeData_Always_ReturnsUKWeeeDataProducerDataViewModel()
         {
             // Arrange
             List<int> years = new List<int>() { 2001, 2002 };
@@ -980,12 +979,12 @@
                 A.Dummy<BreadcrumbService>());
 
             // Act
-            ActionResult result = await controller.UKWeeeData();
+            ActionResult result = await controller.UkWeeeData();
 
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "UKWeeeData");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "UkWeeeData");
 
             ProducersDataViewModel model = viewResult.Model as ProducersDataViewModel;
             Assert.NotNull(model);
@@ -1000,7 +999,7 @@
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetUKWeeeData_Always_SetsTriggerDownloadToFalse()
+        public async Task GetUkWeeeData_Always_SetsTriggerDownloadToFalse()
         {
             // Arrange
             ReportsController controller = new ReportsController(
@@ -1008,7 +1007,7 @@
                 A.Dummy<BreadcrumbService>());
 
             // Act
-            ActionResult result = await controller.UKWeeeData();
+            ActionResult result = await controller.UkWeeeData();
 
             // Assert
             ViewResult viewResult = result as ViewResult;
@@ -1022,7 +1021,7 @@
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetUKWeeeData_Always_SetsInternalBreadcrumbToViewReports()
+        public async Task GetUkWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
             BreadcrumbService breadcrumb = new BreadcrumbService();
 
@@ -1032,20 +1031,20 @@
                 breadcrumb);
 
             // Act
-            ActionResult result = await controller.UKWeeeData();
+            ActionResult result = await controller.UkWeeeData();
 
             // Assert
             Assert.Equal("View reports", breadcrumb.InternalActivity);
         }
 
         /// <summary>
-        /// This test ensures that the POST "UKWeeeData" action with an invalid view model
-        /// calls the API to retrieve the list of compliance years and returns the "UKWeeeData"
+        /// This test ensures that the POST "UkWeeeData" action with an invalid view model
+        /// calls the API to retrieve the list of compliance years and returns the "UkWeeeData"
         /// view with a ProducerDataViewModel that has be populated with the list of years.
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task PostUKWeeeData_WithInvalidViewModel_ReturnsUKWeeeDataProducerDataViewModel()
+        public async Task PostUkWeeeData_WithInvalidViewModel_ReturnsUkWeeeDataProducerDataViewModel()
         {
             // Arrange
             List<int> years = new List<int>() { 2001, 2002 };
@@ -1061,12 +1060,12 @@
 
             // Act
             controller.ModelState.AddModelError("Key", "Error");
-            ActionResult result = await controller.UKWeeeData(viewModel);
+            ActionResult result = await controller.UkWeeeData(viewModel);
 
             // Assert
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
-            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "UKWeeeData");
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName == "UkWeeeData");
 
             ProducersDataViewModel model = viewResult.Model as ProducersDataViewModel;
             Assert.NotNull(model);
@@ -1076,12 +1075,12 @@
         }
 
         /// <summary>
-        /// This test ensures that the POST "UKWeeeData" action with an invalid view model
+        /// This test ensures that the POST "UkWeeeData" action with an invalid view model
         /// returns a view with the ViewBag property "TriggerDownload" set to false.
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task PostUKWeeeData_WithInvalidViewModel_SetsTriggerDownloadToFalse()
+        public async Task PostUkWeeeData_WithInvalidViewModel_SetsTriggerDownloadToFalse()
         {
             // Arrange
             ReportsController controller = new ReportsController(
@@ -1092,7 +1091,7 @@
 
             // Act
             controller.ModelState.AddModelError("Key", "Error");
-            ActionResult result = await controller.UKWeeeData(viewModel);
+            ActionResult result = await controller.UkWeeeData(viewModel);
 
             // Assert
             ViewResult viewResult = result as ViewResult;
@@ -1101,12 +1100,12 @@
         }
 
         /// <summary>
-        /// This test ensures that the POST "UKWeeeData" action with a valid view model
+        /// This test ensures that the POST "UkWeeeData" action with a valid view model
         /// returns a view with the ViewBag property "TriggerDownload" set to true.
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task PostUKWeeeData_WithViewModel_SetsTriggerDownloadToTrue()
+        public async Task PostUkWeeeData_WithViewModel_SetsTriggerDownloadToTrue()
         {
             // Arrange
             ReportsController controller = new ReportsController(
@@ -1116,7 +1115,7 @@
             ProducersDataViewModel viewModel = new ProducersDataViewModel();
 
             // Act
-            ActionResult result = await controller.UKWeeeData(viewModel);
+            ActionResult result = await controller.UkWeeeData(viewModel);
 
             // Assert
             ViewResult viewResult = result as ViewResult;
@@ -1125,12 +1124,12 @@
         }
 
         /// <summary>
-        /// This test ensures that the POST "UKWeeeData" action sets
+        /// This test ensures that the POST "UkWeeeData" action sets
         /// the breadcrumb's internal activity to "View reports".
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task PostUKWeeeData_Always_SetsInternalBreadcrumbToViewReports()
+        public async Task PostUkWeeeData_Always_SetsInternalBreadcrumbToViewReports()
         {
             BreadcrumbService breadcrumb = new BreadcrumbService();
 
@@ -1140,26 +1139,26 @@
                 breadcrumb);
 
             // Act
-            ActionResult result = await controller.UKWeeeData(A.Dummy<ProducersDataViewModel>());
+            ActionResult result = await controller.UkWeeeData(A.Dummy<ProducersDataViewModel>());
 
             // Assert
             Assert.Equal("View reports", breadcrumb.InternalActivity);
         }
 
         /// <summary>
-        /// This test ensures that the GET "DownloadUKWeeeDataCsv" action will
+        /// This test ensures that the GET "DownloadUkWeeeDataCsv" action will
         /// call the API to generate a CSV file which is returned with the correct file name.
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetDownloadUKWeeeDataCsv_Always_CallsApiAndReturnsFileResultWithCorrectFileName()
+        public async Task GetDownloadUkWeeeDataCsv_Always_CallsApiAndReturnsFileResultWithCorrectFileName()
         {
             // Arrange
             FileInfo file = new FileInfo("TEST FILE.csv", new byte[] { 1, 2, 3 });
 
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKWeeeCsv>._))
-                .WhenArgumentsMatch(a => a.Get<GetUKWeeeCsv>("request").ComplianceYear == 2015)
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUkWeeeCsv>._))
+                .WhenArgumentsMatch(a => a.Get<GetUkWeeeCsv>("request").ComplianceYear == 2015)
                 .Returns(file);
 
             ReportsController controller = new ReportsController(
@@ -1169,7 +1168,7 @@
             ProducersDataViewModel viewModel = new ProducersDataViewModel();
 
             // Act
-            ActionResult result = await controller.DownloadUKWeeeDataCsv(2015);
+            ActionResult result = await controller.DownloadUkWeeeDataCsv(2015);
 
             // Assert
             FileResult fileResult = result as FileResult;
@@ -1179,17 +1178,17 @@
         }
 
         /// <summary>
-        /// This test ensures that the GET "DownloadUKWeeeDataCsv" action will
+        /// This test ensures that the GET "DownloadUkWeeeDataCsv" action will
         /// call the API to generate a CSV file which is returned with a content
         /// type of "text/csv"
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetDownloadUKWeeeDataCsv_Always_CallsApiAndReturnsFileResultWithContentTypeOfTextCsv()
+        public async Task GetDownloadUkWeeeDataCsv_Always_CallsApiAndReturnsFileResultWithContentTypeOfTextCsv()
         {
             // Arrange
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
-            A.CallTo(() => weeeClient.SendAsync(A<GetUKWeeeCsv>._))
+            A.CallTo(() => weeeClient.SendAsync(A<GetUkWeeeCsv>._))
                 .WhenArgumentsMatch(a => a.Get<int>("complianceYear") == 2015)
                 .Returns(A.Dummy<FileInfo>());
 
@@ -1200,7 +1199,7 @@
             ProducersDataViewModel viewModel = new ProducersDataViewModel();
 
             // Act
-            ActionResult result = await controller.DownloadUKWeeeDataCsv(2015);
+            ActionResult result = await controller.DownloadUkWeeeDataCsv(2015);
 
             // Assert
             FileResult fileResult = result as FileResult;
