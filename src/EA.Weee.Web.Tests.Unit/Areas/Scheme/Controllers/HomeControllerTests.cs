@@ -176,10 +176,12 @@
             Assert.Equal("MemberRegistration", routeValues["controller"]);
         }
 
-        [Fact]
-        public async void PostChooseActivity_ManagePcsMembersRejectedStatus_RedirectsToAuthorisationRequired()
+        [Theory]
+        [InlineData(SchemeStatus.Rejected)]
+        [InlineData(SchemeStatus.Withdrawn)]
+        public async void PostChooseActivity_ManagePcsMembersRejectedOrWithdrawnStatus_RedirectsToAuthorisationRequired(SchemeStatus status)
         {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Rejected);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(status);
 
             var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
             {

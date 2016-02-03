@@ -24,7 +24,7 @@
 
     @Html.Gds().ValidationSummary()
 
-    if (Model.Status != SchemeStatus.Rejected)
+    if (Model.Status != SchemeStatus.Rejected && Model.Status != SchemeStatus.Withdrawn)
     {
     @Html.HiddenFor(m => m.OldApprovalNumber)
 
@@ -88,7 +88,7 @@
             }
         }
     </p>
-    if (Model.Status != SchemeStatus.Rejected)
+    if (Model.Status != SchemeStatus.Rejected && Model.Status != SchemeStatus.Withdrawn)
     {
         @(this.WeeeGds().Submit("Save and Continue", new { @class = "button" }))
     }
@@ -102,6 +102,10 @@
     <script>
         $("#Status").change(function () {
             if ($(this).val() === "3") /* Rejected status */ {
+                document.forms[1].submit(); // Submit the form immediately
+            }
+
+            if ($(this).val() === "4") /* Withdrawn status */ {
                 document.forms[1].submit(); // Submit the form immediately
             }
         });

@@ -118,6 +118,11 @@
                 return RedirectToAction("ConfirmRejection", new { schemeId });
             }
 
+            if (model.Status == SchemeStatus.Withdrawn)
+            {
+                return RedirectToAction("ConfirmWithdrawn", new { schemeId });
+            }
+
             model.CompetentAuthorities = await GetCompetentAuthorities();
 
             if (!ModelState.IsValid)
@@ -271,6 +276,40 @@
                 using (var client = apiClient())
                 {
                     await client.SendAsync(User.GetAccessToken(), new SetSchemeStatus(schemeId, SchemeStatus.Rejected));
+                }
+            }
+
+            return RedirectToAction("ManageSchemes");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ConfirmWithdrawn(Guid schemeId)
+        {
+            var model = new ConfirmWithdrawnViewModel();
+            await SetBreadcrumb(schemeId);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ConfirmWithdrawn(Guid schemeId, ConfirmWithdrawnViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                await SetBreadcrumb(schemeId);
+                return View(model);
+            }
+
+            if (model.SelectedValue == ConfirmSchemeWithdrawOptions.No)
+            {
+                return RedirectToAction("EditScheme", new { schemeId });
+            }
+
+            if (model.SelectedValue == ConfirmSchemeWithdrawOptions.Yes)
+            {
+                using (var client = apiClient())
+                {
+                    await client.SendAsync(User.GetAccessToken(), new SetSchemeStatus(schemeId, SchemeStatus.Withdrawn));
                 }
             }
 
