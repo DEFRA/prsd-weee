@@ -2,9 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Provides the data from the three result sets of the [PCS].[SpgSchemeWeeeCsv] stored procedure.

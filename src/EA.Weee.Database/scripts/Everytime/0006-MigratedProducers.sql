@@ -9921,3 +9921,10 @@ INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerN
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/AD5747YS', 'Bruel & Kjaer VTS Ltd', '1539186', '09070fb1-6266-492c-8190-72006e31ccfa')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/BB5753YY', 'Lightsource Renewable Energy Holdings Limited', '09496737', 'e5b5d8c2-2365-4c5e-abe7-5c7708b65015')
 INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/AF5748YT', 'Health eMarkets Ltd', '04378370', '29de40e5-a8b2-4d80-85be-525d7009644d')
+
+-- Latest updates 01/02/2016
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/BD5754ZQ', 'SMS Data Management Ltd', 'SC367412', 'b30b1cba-23e7-46fd-ad09-c8e91a97dcb1')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/BF5755ZR', 'Vida XL International BV', NULL, '6cfd7726-434f-423d-8aed-4f383e7c969a')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/BG5755ZR', 'Panono GmbH', NULL, 'fd36a357-c039-4770-9be1-6d3e3fe4163e')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/CA5758ZU', 'Cavey Laboratory Engineering Co Ltd', '9520969', 'f3cbadc1-2e3d-4d6d-b28a-689a145627f3')
+INSERT INTO [Producer].[MigratedProducer] (ProducerRegistrationNumber, ProducerName, CompanyNumber, Id) VALUES ('WEE/CF5762ZY', 'Actemium UK Ltd', '65493', '528a4f80-d564-4449-8a60-894ac85adb71')
