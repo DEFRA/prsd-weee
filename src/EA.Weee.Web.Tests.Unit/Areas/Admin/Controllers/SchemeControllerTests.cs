@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -94,9 +95,9 @@
         }
 
         [Theory]
-        [InlineData(SchemeStatus.Approved)]
+        [InlineData(SchemeStatus.Withdrawn)]
         [InlineData(SchemeStatus.Rejected)]
-        public async void GetEditScheme_StatusIsRejectedOrApproved_StatusIsUnchangable(SchemeStatus status)
+        public async void GetEditScheme_StatusIsRejectedOrWithdrawn_StatusIsUnchangable(SchemeStatus status)
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
@@ -108,6 +109,43 @@
             var model = (SchemeViewModel)((ViewResult)result).Model;
 
             Assert.Equal(true, model.IsUnchangeableStatus);
+        }
+
+        [Fact]
+        public async void GetEditScheme_StatusIsApproved_AvailableStatusToChangeIsWithdrawn()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
+                .Returns(new SchemeData
+                {
+                    SchemeStatus = SchemeStatus.Approved
+                });
+
+            var result = await SchemeController().EditScheme(Guid.NewGuid());
+            var model = (SchemeViewModel)((ViewResult)result).Model;
+
+            var statuses = model.StatusSelectList.ToList();
+
+            Assert.Equal(statuses.Count(), 2);
+            Assert.True(statuses.Exists(r => r.Text == SchemeStatus.Withdrawn.ToString()));
+            Assert.True(statuses.Exists(r => r.Text == SchemeStatus.Approved.ToString()));
+        }
+
+        [Fact]
+        public async void GetEditScheme_StatusIsPending_DoesNotProvideWithdrawnStatus()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
+                .Returns(new SchemeData
+                {
+                    SchemeStatus = SchemeStatus.Pending
+                });
+
+            var result = await SchemeController().EditScheme(Guid.NewGuid());
+            var model = (SchemeViewModel)((ViewResult)result).Model;
+
+            var statuses = model.StatusSelectList.ToList();
+
+            Assert.Equal(statuses.Count(), 3);
+            Assert.False(statuses.Exists(r => r.Text == SchemeStatus.Withdrawn.ToString()));
         }
 
         [Fact]
@@ -285,6 +323,65 @@
             {
                 PossibleValues = new[] { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No },
                 SelectedValue = ConfirmSchemeRejectionOptions.No
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("EditScheme", routeValues["action"]);
+        }
+
+        [Fact]
+        public async void PostEditScheme_SchemeIsWithdrawn_RedirectsToWithdrawnConfirmation_WithSchemeId()
+        {
+            var controller = SchemeController();
+            var schemeId = Guid.NewGuid();
+            var result = await controller.EditScheme(schemeId, new SchemeViewModel
+            {
+                Status = SchemeStatus.Withdrawn,
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ConfirmWithdrawn", routeValues["action"]);
+            Assert.Equal(schemeId, routeValues["schemeId"]);
+        }
+
+        [Fact]
+        public async void PostEditScheme_ConfirmWithdrawnWithYesOption_SendsSetStatusRequest_WithWithdrawnStatus_AndRedirectsToManageSchemes()
+        {
+            var status = SchemeStatus.Approved;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
+                .Invokes((string t, IRequest<Guid> s) => status = ((SetSchemeStatus)s).Status)
+                .Returns(Guid.NewGuid());
+
+            var result = await SchemeController().ConfirmWithdrawn(Guid.Empty, new ConfirmWithdrawnViewModel
+            {
+                PossibleValues = new[] { ConfirmSchemeWithdrawOptions.Yes, ConfirmSchemeWithdrawOptions.No },
+                SelectedValue = ConfirmSchemeWithdrawOptions.Yes
+            });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+            Assert.Equal(SchemeStatus.Withdrawn, status);
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ManageSchemes", routeValues["action"]);
+        }
+
+        [Fact]
+        public async void PostEditScheme_ConfirmWithdrawnWithNoOption_AndRedirectsToEditScheme()
+        {
+            var result = await SchemeController().ConfirmWithdrawn(Guid.Empty, new ConfirmWithdrawnViewModel
+            {
+                PossibleValues = new[] { ConfirmSchemeWithdrawOptions.Yes, ConfirmSchemeWithdrawOptions.No },
+                SelectedValue = ConfirmSchemeWithdrawOptions.No
             });
 
             Assert.IsType<RedirectToRouteResult>(result);
