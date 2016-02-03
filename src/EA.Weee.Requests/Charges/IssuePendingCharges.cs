@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Requests.Charges
 {
-    using System;
     using Core.Charges;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;

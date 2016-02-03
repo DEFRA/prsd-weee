@@ -4,7 +4,7 @@
     using Core.Admin;
     using Prsd.Core.Mediator;
 
-    public class GetMemberDetailsCSV : IRequest<CSVFileData>
+    public class GetMemberDetailsCsv : IRequest<CSVFileData>
    {
         public int ComplianceYear { get; private set; }
 
@@ -14,7 +14,7 @@
 
         public bool IncludeRemovedProducer { get; private set; }
 
-        public GetMemberDetailsCSV(int complianceYear, bool includeRemovedProducer = false, Guid? schemeId = null, Guid? competentAuthorityId = null)
+        public GetMemberDetailsCsv(int complianceYear, bool includeRemovedProducer = false, Guid? schemeId = null, Guid? competentAuthorityId = null)
         {        
             CompetentAuthorityId = competentAuthorityId;
             SchemeId = schemeId;

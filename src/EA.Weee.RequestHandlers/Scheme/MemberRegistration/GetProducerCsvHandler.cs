@@ -42,7 +42,7 @@
                 request.OrganisationId,
                 request.ComplianceYear);
 
-            CsvWriter<ProducerCSVData> csvWriter = csvWriterFactory.Create<ProducerCSVData>();
+            CsvWriter<ProducerCsvData> csvWriter = csvWriterFactory.Create<ProducerCsvData>();
             csvWriter.DefineColumn("Producer name", i => i.OrganisationName);
             csvWriter.DefineColumn("Trading name", i => i.TradingName);
             csvWriter.DefineColumn("Producer registration number", i => i.RegistrationNumber);
