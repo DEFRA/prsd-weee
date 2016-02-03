@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.DataReturns;
     using EA.Weee.Domain.Producer;
 
     public interface IGetProducerDetailsDataAccess

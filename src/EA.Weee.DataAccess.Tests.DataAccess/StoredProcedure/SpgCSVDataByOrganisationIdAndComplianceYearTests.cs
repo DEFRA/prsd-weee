@@ -37,14 +37,14 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerCSVData> results =
+                List<ProducerCsvData> results =
                     await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
 
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
 
-                ProducerCSVData result = results[0];
+                ProducerCsvData result = results[0];
 
                 Assert.Equal(producer1.Business.Company.Name, result.OrganisationName);
                 Assert.Equal(producer1.TradingName, result.TradingName);
@@ -81,7 +81,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerCSVData> results =
+                List<ProducerCsvData> results =
                     await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
 
                 // Assert
@@ -115,14 +115,14 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerCSVData> results =
+                List<ProducerCsvData> results =
                     await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
                     
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
 
-                ProducerCSVData result = results[0];
+                ProducerCsvData result = results[0];
 
                 Assert.Equal(producer1.Business.Company.Name, result.OrganisationName);
             }
@@ -153,14 +153,14 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerCSVData> results =
+                List<ProducerCsvData> results =
                     await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
                     
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
 
-                ProducerCSVData result = results[0];
+                ProducerCsvData result = results[0];
 
                 Assert.Equal(producer1.Business.Partnership.Name, result.OrganisationName);
             }
@@ -191,14 +191,14 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerCSVData> results =
+                List<ProducerCsvData> results =
                     await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
 
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
 
-                ProducerCSVData result = results[0];
+                ProducerCsvData result = results[0];
 
                 Assert.Equal(string.Empty, result.OrganisationName);
             }
@@ -243,14 +243,14 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerCSVData> results =
+                List<ProducerCsvData> results =
                     await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
 
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
 
-                ProducerCSVData result = results[0];
+                ProducerCsvData result = results[0];
 
                 Assert.Equal("WEE/11AAAA11", result.RegistrationNumber);
                 Assert.Equal(new DateTime(2015, 1, 1), result.DateRegistered);
@@ -290,14 +290,14 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerCSVData> results =
+                List<ProducerCsvData> results =
                     await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
 
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
 
-                ProducerCSVData result = results[0];
+                ProducerCsvData result = results[0];
 
                 Assert.Equal(producer1.Business.Partnership.Name, result.OrganisationName);
             }
@@ -336,7 +336,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerCSVData> results =
+                List<ProducerCsvData> results =
                     await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
 
                 // Assert
@@ -375,7 +375,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerCSVData> results =
+                List<ProducerCsvData> results =
                     await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
 
                 // Assert
@@ -427,7 +427,7 @@
                     db.Model.SaveChanges();
 
                     // Act
-                    List<ProducerCSVData> results =
+                    List<ProducerCsvData> results =
                         await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
 
                     // Assert
@@ -478,14 +478,14 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerCSVData> results =
+                List<ProducerCsvData> results =
                     await db.StoredProcedures.SpgCSVDataByOrganisationIdAndComplianceYear(scheme1.OrganisationId, 2016);
 
                 // Assert
                 Assert.NotNull(results);
                 Assert.Equal(1, results.Count);
 
-                ProducerCSVData result = results[0];
+                ProducerCsvData result = results[0];
 
                 Assert.Equal("No", result.AuthorisedRepresentative);
                 Assert.Equal("Overseas Producer Name", result.OverseasProducer);
