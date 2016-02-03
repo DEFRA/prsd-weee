@@ -8,6 +8,7 @@
     using Core.Shared;
     using DataAccess;
     using DataAccess.StoredProcedure;
+    using Domain.DataReturns;
     using GetUKWeeeCsv;
     using Prsd.Core;
     using Prsd.Core.Mediator;
@@ -144,17 +145,17 @@
                     .ToDictionary(a => a.Location, a => a.Tonnage);
 
                 var dcf = collectedAmounts
-                    .Where(ca => ca.SourceType == 0)
+                    .Where(ca => ca.SourceType == (int)WeeeCollectedAmountSourceType.Dcf)
                     .Select(ca => (decimal?)ca.Tonnage)
                     .SingleOrDefault();
 
                 var distributors = collectedAmounts
-                    .Where(ca => ca.SourceType == 1)
+                    .Where(ca => ca.SourceType == (int)WeeeCollectedAmountSourceType.Distributor)
                     .Select(ca => (decimal?)ca.Tonnage)
                     .SingleOrDefault();
 
                 var finalHolders = collectedAmounts
-                    .Where(ca => ca.SourceType == 2)
+                    .Where(ca => ca.SourceType == (int)WeeeCollectedAmountSourceType.FinalHolder)
                     .Select(ca => (decimal?)ca.Tonnage)
                     .SingleOrDefault();
 
