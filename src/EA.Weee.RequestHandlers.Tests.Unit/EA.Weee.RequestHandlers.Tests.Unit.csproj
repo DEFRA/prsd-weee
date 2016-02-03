@@ -179,7 +179,7 @@
     <Compile Include="Scheme\PrnGeneration\QuadraticResidueTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheme\MemberRegistration\XMLChargeBandCalculatorTests.cs" />
-    <Compile Include="Scheme\UpdateSchemeInformationHandlerTests.cs" />
+    <Compile Include="Scheme\UpdateSchemeInformation\UpdateSchemeInformationHandlerTests.cs" />
     <Compile Include="Scheme\VerifyApprovalNumberExistsHandlerTests.cs" />
     <Compile Include="Scheme\SetSchemeStatusHandlerTests.cs" />
     <Compile Include="Security\WeeeAuthorizationTests.cs" />
