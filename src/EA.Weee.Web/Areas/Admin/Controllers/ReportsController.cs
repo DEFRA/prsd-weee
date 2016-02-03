@@ -87,8 +87,8 @@
                 case Reports.ProducerPublicRegister:
                     return RedirectToAction("ProducerPublicRegister");
 
-                case Reports.UKWeeeData:
-                    return RedirectToAction("UKWeeeData");
+                case Reports.UkWeeeData:
+                    return RedirectToAction("UkWeeeData");
 
                 case Reports.ProducerEeeData:
                     return RedirectToAction("ProducerEeeData");
@@ -96,8 +96,8 @@
                 case Reports.SchemeWeeeData:
                     return RedirectToAction("SchemeWeeeData");
 
-                case Reports.UKEEEData:
-                    return RedirectToAction("UKEEEData");
+                case Reports.UkEeeData:
+                    return RedirectToAction("UkEeeData");
 
                 default:
                     throw new NotSupportedException();
@@ -163,7 +163,7 @@
             CSVFileData membersDetailsCsvData;
             using (IWeeeClient client = apiClient())
             {
-                GetMemberDetailsCSV request = new GetMemberDetailsCSV(complianceYear, includeRemovedProducers, schemeId, authorityId);
+                GetMemberDetailsCsv request = new GetMemberDetailsCsv(complianceYear, includeRemovedProducers, schemeId, authorityId);
                 membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(), request);
             }
 
@@ -238,15 +238,15 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadProducerEeeDataCSV(int complianceYear, ObligationType obligationType)
+        public async Task<ActionResult> DownloadProducerEeeDataCsv(int complianceYear, ObligationType obligationType)
         {
             using (IWeeeClient client = apiClient())
             {
-                var producerEEECsvData = await client.SendAsync(User.GetAccessToken(),
-                   new GetProducerEEEDataCSV(complianceYear, obligationType));
+                var producerEeeCsvData = await client.SendAsync(User.GetAccessToken(),
+                   new GetProducerEeeDataCsv(complianceYear, obligationType));
 
-                byte[] data = new UTF8Encoding().GetBytes(producerEEECsvData.FileContent);
-                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerEEECsvData.FileName));
+                byte[] data = new UTF8Encoding().GetBytes(producerEeeCsvData.FileContent);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerEeeCsvData.FileName));
             }
         }
 
@@ -292,7 +292,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> UKWeeeData()
+        public async Task<ActionResult> UkWeeeData()
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
@@ -308,7 +308,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UKWeeeData(ProducersDataViewModel model)
+        public async Task<ActionResult> UkWeeeData(ProducersDataViewModel model)
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
@@ -323,11 +323,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadUKWeeeDataCsv(int complianceYear)
+        public async Task<ActionResult> DownloadUkWeeeDataCsv(int complianceYear)
         {
             FileInfo file;
 
-            GetUKWeeeCsv request = new GetUKWeeeCsv(complianceYear);
+            GetUkWeeeCsv request = new GetUkWeeeCsv(complianceYear);
             using (var client = apiClient())
             {
                 file = await client.SendAsync(User.GetAccessToken(), request);
@@ -337,7 +337,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> UKEEEData()
+        public async Task<ActionResult> UkEeeData()
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
@@ -357,14 +357,14 @@
                 return View();
             }
 
-            UKEEEDataViewModel model = new UKEEEDataViewModel();
+            UkEeeDataViewModel model = new UkEeeDataViewModel();
             model.ComplianceYears = new SelectList(years);
-            return View("UKEEEData", model);
+            return View("UkEeeData", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UKEEEData(UKEEEDataViewModel model)
+        public async Task<ActionResult> UkEeeData(UkEeeDataViewModel model)
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;

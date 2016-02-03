@@ -3,11 +3,11 @@
     using Core.Shared;
     using Prsd.Core.Mediator;
 
-    public class GetUKWeeeCsv : IRequest<FileInfo>
+    public class GetUkWeeeCsv : IRequest<FileInfo>
     {
         public int ComplianceYear { get; private set; }
 
-        public GetUKWeeeCsv(int complianceYear)
+        public GetUkWeeeCsv(int complianceYear)
         {
             ComplianceYear = complianceYear;
         }

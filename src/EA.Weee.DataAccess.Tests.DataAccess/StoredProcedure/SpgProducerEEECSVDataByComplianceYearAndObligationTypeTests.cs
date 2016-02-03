@@ -6,7 +6,7 @@
     using Weee.Tests.Core.Model;
     using Xunit;
 
-    public class SpgProducerEEECSVDataByComplianceYearAndObligationTypeTests
+    public class SpgProducerEeeCsvDataByComplianceYearAndObligationTypeTests
     {
         [Fact]
         public async Task Execute_HappyPath_ReturnsProducerEeeWithSelectedYearAndObligationType()
@@ -34,16 +34,16 @@
                 db.Model.SaveChanges();
 
                 // Act
-                var results = await db.StoredProcedures.SpgProducerEEECSVDataByComplianceYearAndObligationType(2000, "B2C");
+                var results = await db.StoredProcedures.SpgProducerEeeCsvDataByComplianceYearAndObligationType(2000, "B2C");
 
                 //Assert
                 Assert.NotNull(results);
 
                 //Data return with obliation type B2B should not be there in the result.
-                ProducerEEECSVData b2bProducer = results.Find(x => (x.PRN == "PRN456"));
+                ProducerEeeCsvData b2bProducer = results.Find(x => (x.PRN == "PRN456"));
                 Assert.Null(b2bProducer);
 
-                ProducerEEECSVData result = results[0];
+                ProducerEeeCsvData result = results[0];
                 Assert.Equal("test scheme name", result.SchemeName);
                 Assert.Equal("WEE/TE0000ST/SCH", result.ApprovalNumber);
                 Assert.Equal("PRN123", result.PRN);
@@ -80,7 +80,7 @@
 
                 // Act
                 var results =
-                    await db.StoredProcedures.SpgProducerEEECSVDataByComplianceYearAndObligationType(2000, "B2C");
+                    await db.StoredProcedures.SpgProducerEeeCsvDataByComplianceYearAndObligationType(2000, "B2C");
 
                 // Assert
                 Assert.Equal(1, results.Count);

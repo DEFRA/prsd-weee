@@ -24,6 +24,17 @@ FROM @tblTempQuarterWindowTemplate tmp
 LEFT JOIN [Lookup].[QuarterWindowTemplate] tbl ON tbl.[Id] = tmp.[Id]
 WHERE tbl.[Id] IS NULL
 
+UPDATE LiveTable SET
+LiveTable.Quarter = tmp.Quarter,
+LiveTable.AddStartYears = tmp.AddStartYears,
+LiveTable.StartMonth = tmp.StartMonth,
+LiveTable.StartDay = tmp.StartDay,
+LiveTable.AddEndYears = tmp.AddEndYears,
+LiveTable.EndMonth = tmp.EndMonth,
+LiveTable.EndDay = tmp.EndDay
+FROM [Lookup].[QuarterWindowTemplate] LiveTable 
+INNER JOIN @tblTempQuarterWindowTemplate tmp ON LiveTable.[Id] = tmp.[Id]
+
 GO
 PRINT N'Update complete.';
 

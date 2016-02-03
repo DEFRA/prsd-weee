@@ -5,8 +5,6 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.DataReturns;
-    using Domain.Scheme;
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Producer;
 
