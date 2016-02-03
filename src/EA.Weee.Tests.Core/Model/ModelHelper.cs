@@ -6,6 +6,7 @@
     using System.Linq;
     using Domain.Error;
     using Domain.Lookup;
+    using Domain.Obligation;
 
     /// <summary>
     /// This class provides helper methods for deterministically seeding a database.
@@ -567,7 +568,7 @@
             return dataReturn;
         }
 
-        public DataReturnVersion CreateDataReturnVersion(Scheme scheme, int complianceYear, int quarter, bool isSubmitted = true, DataReturn dataReturn = null)
+        public DataReturnVersion CreateDataReturnVersion(Scheme scheme, int complianceYear, int quarter, bool isSubmitted = true, DataReturn dataReturn = null, WeeeCollectedReturnVersion weeeCollectedReturnVersion = null)
         {
             if (dataReturn == null)
             {
@@ -589,6 +590,11 @@
                 dataReturnVersion.SubmittedDate = DateTime.UtcNow;
                 dataReturnVersion.SubmittingUserId = GetOrCreateUser("Testuser").Id;
                 dataReturn.CurrentDataReturnVersionId = dataReturnVersionId;
+            }
+
+            if (weeeCollectedReturnVersion != null)
+            {
+                dataReturnVersion.WeeeCollectedReturnVersion = weeeCollectedReturnVersion;
             }
 
             model.DataReturnVersions.Add(dataReturnVersion);
@@ -687,6 +693,46 @@
             model.AeDeliveryLocations.Add(aeDeliveryLocation);
 
             return aeDeliveryLocation;
+        }
+
+        public WeeeCollectedAmount CreateWeeeCollectedAmount(ObligationType obligationType, decimal tonnage, WeeeCategory category)
+        {
+            var weeeCollectedAmount = new WeeeCollectedAmount
+            {
+                Id = IntegerToGuid(GetNextId()),
+                ObligationType = obligationType.ToString(),
+                Tonnage = tonnage,
+                WeeeCategory = (int)category
+            };
+
+            model.WeeeCollectedAmounts.Add(weeeCollectedAmount);
+
+            return weeeCollectedAmount;
+        }
+
+        public WeeeCollectedReturnVersionAmount CreateWeeeCollectedReturnVersionAmount(WeeeCollectedAmount weeeCollectedAmount, WeeeCollectedReturnVersion weeeCollectedReturnVersion)
+        {
+            var weeeCollectedReturnVersionAmount = new WeeeCollectedReturnVersionAmount
+            {
+                WeeeCollectedAmount = weeeCollectedAmount,
+                WeeeCollectedReturnVersion = weeeCollectedReturnVersion
+            };
+
+            model.WeeeCollectedReturnVersionAmounts.Add(weeeCollectedReturnVersionAmount);
+
+            return weeeCollectedReturnVersionAmount;
+        }
+
+        public WeeeCollectedReturnVersion CreateWeeeCollectedReturnVersion()
+        {
+            var weeeCollectedReturnVersion = new WeeeCollectedReturnVersion
+            {
+                Id = IntegerToGuid(GetNextId())
+            };
+
+            model.WeeeCollectedReturnVersions.Add(weeeCollectedReturnVersion);
+
+            return weeeCollectedReturnVersion;
         }
     }
 }
