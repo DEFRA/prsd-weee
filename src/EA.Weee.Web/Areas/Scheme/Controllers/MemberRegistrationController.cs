@@ -188,7 +188,9 @@
                      new MemberUploadResultViewModel
                      {
                          ErrorData = errors,
-                         TotalCharges = memberUpload.TotalCharges
+                         TotalCharges = memberUpload.TotalCharges,
+                         MemberUploadId = memberUploadId,
+                         PcsId = pcsId
                      });
             }
         }
