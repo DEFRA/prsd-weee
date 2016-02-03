@@ -14,7 +14,7 @@
 
     public class GetSchemeWeeeCsvHandlerTests
     {
-        [Theory(Skip = "This should be used only to test the processing time of this handler")]
+        [Theory(Skip = "This should be used only to test the processing time of this handler when a full dataset is present")]
         [InlineData(2017, ObligationType.B2B)]
         [InlineData(2017, ObligationType.B2C)]
         [InlineData(2016, ObligationType.B2B)]
