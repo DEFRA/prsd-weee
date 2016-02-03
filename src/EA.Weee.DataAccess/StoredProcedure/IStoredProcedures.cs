@@ -6,10 +6,10 @@
 
     public interface IStoredProcedures
     {
-        Task<List<ProducerCSVData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId, int complianceYear);
+        Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId, int complianceYear);
 
-        Task<List<MembersDetailsCSVData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear);
-        Task<List<MembersDetailsCSVData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, bool includeRemovedProducer, Guid? schemeId, Guid? competentAuthorityId);
+        Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear);
+        Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, bool includeRemovedProducer, Guid? schemeId, Guid? competentAuthorityId);
 
         Task<int> SpgNextIbisTransactionNumber();
         
@@ -20,8 +20,11 @@
         Task<List<PCSChargesCSVData>> SpgInvoiceRunChargeBreakdown(Guid invoiceRunId);
 
         Task<SpgSchemeWeeeCsvResult> SpgSchemeWeeeCsvAsync(int complianceYear, string obligationType);
-        Task<List<ProducerEEECSVData>> SpgProducerEEECSVDataByComplianceYearAndObligationType(int complianceYear, string obligationtype);
+
+        Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvDataByComplianceYearAndObligationType(int complianceYear, string obligationtype);
 
         Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear);
+
+        Task<List<ProducerEeeHistoryCsvData>> SpgProducerEeeHistoryCsvData(string prn);
     }
 }
