@@ -7,15 +7,18 @@
     using System.Web.Mvc;
     using Api.Client;
     using Base;
+    using Core.Admin;
     using Core.Scheme;
     using Core.Shared;
     using Infrastructure;
+    using Prsd.Core;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
     using Services;
     using ViewModels.Home;
     using ViewModels.Reports;
     using Weee.Requests.Admin;
+    using Weee.Requests.Admin.GetActiveComplianceYears;
     using Weee.Requests.Admin.Reports;
     using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
@@ -61,7 +64,8 @@
             SetBreadcrumb();
 
             var model = new ChooseReportViewModel();
-            return View("ChooseReport", model);
+
+            return View(model);
         }
 
         [HttpPost]
@@ -80,17 +84,20 @@
                 case Reports.ProducerDetails:
                     return RedirectToAction("ProducerDetails");
 
-                case Reports.PCSCharges:
-                    return RedirectToAction("PCSCharges");
-
-                case Reports.Producerpublicregister:
+                case Reports.ProducerPublicRegister:
                     return RedirectToAction("ProducerPublicRegister");
 
-                case Reports.ProducerEEEData:
-                    return RedirectToAction("ProducerEEEData");
+                case Reports.UkWeeeData:
+                    return RedirectToAction("UkWeeeData");
+
+                case Reports.ProducerEeeData:
+                    return RedirectToAction("ProducerEeeData");
 
                 case Reports.SchemeWeeeData:
                     return RedirectToAction("SchemeWeeeData");
+
+                case Reports.UkEeeData:
+                    return RedirectToAction("UkEeeData");
 
                 default:
                     throw new NotSupportedException();
@@ -101,25 +108,13 @@
         public async Task<ActionResult> ProducerDetails()
         {
             SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
 
-            using (var client = apiClient())
-            {
-                try
-                {
-                    ReportsFilterViewModel model = new ReportsFilterViewModel();
-                    await SetReportsFilterLists(model, client);
-                    return View("ProducerDetails", model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                    return View();
-                }
-            }
+            ReportsFilterViewModel model = new ReportsFilterViewModel();
+
+            await SetReportsFilterLists(model);
+
+            return View(model);
         }
 
         [HttpPost]
@@ -127,87 +122,67 @@
         public async Task<ActionResult> ProducerDetails(ReportsFilterViewModel model)
         {
             SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
 
-            using (var client = apiClient())
-            {
-                await SetReportsFilterLists(model, client);
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
+            await SetReportsFilterLists(model);
 
-                //Download the csv based on the filters.
-                return await DownloadMembersDetailsCSV(model, client);
-            }
+            return View(model);
         }
 
         [HttpGet]
-        public async Task<ActionResult> PCSCharges()
+        public async Task<ActionResult> DownloadProducerDetailsCsv(int complianceYear, Guid? schemeId, Guid? authorityId, bool includeRemovedProducers)
         {
-            SetBreadcrumb();
+            StringBuilder fileName = new StringBuilder();
 
-            using (var client = apiClient())
+            fileName.AppendFormat("{0:D4}", complianceYear);
+
+            if (schemeId != null)
             {
-                try
+                using (IWeeeClient client = apiClient())
                 {
-                    ReportsFilterViewModel model = new ReportsFilterViewModel(false);
-                    await SetReportsFilterLists(model, client);
-                    return View("PCSCharges", model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                    return View();
+                    GetSchemeById requestScheme = new GetSchemeById(schemeId.Value);
+                    SchemeData scheme = await client.SendAsync(User.GetAccessToken(), requestScheme);
+
+                    fileName.AppendFormat("_{0}", scheme.ApprovalName);
                 }
             }
-        }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> PCSCharges(ReportsFilterViewModel model)
-        {
-            SetBreadcrumb();
-
-            using (var client = apiClient())
+            if (authorityId != null)
             {
-                await SetReportsFilterLists(model, client);
-                if (!ModelState.IsValid)
+                using (IWeeeClient client = apiClient())
                 {
-                    return View(model);
-                }
+                    GetUKCompetentAuthorityById requestAuthority = new GetUKCompetentAuthorityById(authorityId.Value);
+                    UKCompetentAuthorityData authorityData = await client.SendAsync(User.GetAccessToken(), requestAuthority);
 
-                //Download the csv based on the filters.
-                return await DownloadPCSChargesCSV(model, client);
+                    fileName.AppendFormat("_{0}", authorityData.Abbreviation);
+                }
             }
+
+            fileName.AppendFormat("_producerdetails_{0:ddMMyyyy_HHmm}.csv", SystemTime.UtcNow);
+
+            CSVFileData membersDetailsCsvData;
+            using (IWeeeClient client = apiClient())
+            {
+                GetMemberDetailsCsv request = new GetMemberDetailsCsv(complianceYear, includeRemovedProducers, schemeId, authorityId);
+                membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
+
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileName.ToString()));
         }
 
         [HttpGet]
         public async Task<ActionResult> ProducerPublicRegister()
         {
             SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
 
-            using (var client = apiClient())
-            {
-                try
-                {
-                    ProducerPublicRegisterViewModel model = new ProducerPublicRegisterViewModel();
-                    await SetReportsFilterLists(model, client);
-                    return View("ProducerPublicRegister", model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                    return View();
-                }
-            }
+            ProducerPublicRegisterViewModel model = new ProducerPublicRegisterViewModel();
+
+            await SetReportsFilterLists(model);
+
+            return View(model);
         }
 
         [HttpPost]
@@ -215,37 +190,34 @@
         public async Task<ActionResult> ProducerPublicRegister(ProducerPublicRegisterViewModel model)
         {
             SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
 
-            using (var client = apiClient())
+            await SetReportsFilterLists(model);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadProducerPublicRegisterCsv(int complianceYear)
+        {
+            using (IWeeeClient client = apiClient())
             {
-                await SetReportsFilterLists(model, client);
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
+                var membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(),
+                   new GetProducerPublicRegisterCSV(complianceYear));
 
-                return await DownloadProducerPublicRegisterCSV(model, client);
+                byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(membersDetailsCsvData.FileName));
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult> ProducerEEEData()
+        public async Task<ActionResult> ProducerEeeData()
         {
             SetBreadcrumb();
-            List<int> years;
-            try
-            {
-                years = await FetchComplianceYearsForDataReturns();
-            }
-            catch (ApiBadRequestException ex)
-            {
-                this.HandleBadRequest(ex);
-                if (ModelState.IsValid)
-                {
-                    throw;
-                }
-                return View();
-            }
+            ViewBag.TriggerDownload = false;
+
+            List<int> years = await FetchComplianceYearsForDataReturns();
+
             ProducersDataViewModel model = new ProducersDataViewModel();
             model.ComplianceYears = new SelectList(years);
             return View(model);
@@ -253,37 +225,119 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ProducerEEEData(ProducersDataViewModel model)
+        public async Task<ActionResult> ProducerEeeData(ProducersDataViewModel model)
         {
             SetBreadcrumb();
-            List<int> years;
-            try
-            {
-                years = await FetchComplianceYearsForDataReturns();
-            }
-            catch (ApiBadRequestException ex)
-            {
-                this.HandleBadRequest(ex);
-                if (ModelState.IsValid)
-                {
-                    throw;
-                }
-                return View();
-            }
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            List<int> years = await FetchComplianceYearsForDataReturns();
 
             model.ComplianceYears = new SelectList(years);
-            using (var client = apiClient())
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadProducerEeeDataCsv(int complianceYear, ObligationType obligationType)
+        {
+            using (IWeeeClient client = apiClient())
             {
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
-                return await DownloadProducerEEEDataCSV(model, client);
+                var producerEeeCsvData = await client.SendAsync(User.GetAccessToken(),
+                   new GetProducerEeeDataCsv(complianceYear, obligationType));
+
+                byte[] data = new UTF8Encoding().GetBytes(producerEeeCsvData.FileContent);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerEeeCsvData.FileName));
             }
         }
 
         [HttpGet]
         public async Task<ActionResult> SchemeWeeeData()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            List<int> years = await FetchComplianceYearsForDataReturns();
+
+            ProducersDataViewModel model = new ProducersDataViewModel();
+            model.ComplianceYears = new SelectList(years);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SchemeWeeeData(ProducersDataViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            List<int> years = await FetchComplianceYearsForDataReturns();
+
+            model.ComplianceYears = new SelectList(years);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadSchemeWeeeDataCsv(int complianceYear, ObligationType obligationType)
+        {
+            FileInfo file;
+
+            GetSchemeWeeeCsv request = new GetSchemeWeeeCsv(complianceYear, obligationType);
+            using (var client = apiClient())
+            {
+                file = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            return File(file.Data, "text/csv", file.FileName);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> UkWeeeData()
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = false;
+
+            List<int> years = await FetchComplianceYearsForDataReturns();
+
+            ProducersDataViewModel model = new ProducersDataViewModel();
+
+            model.ComplianceYears = new SelectList(years);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UkWeeeData(ProducersDataViewModel model)
+        {
+            SetBreadcrumb();
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            List<int> years = await FetchComplianceYearsForDataReturns();
+
+            model.ComplianceYears = new SelectList(years);
+
+            ViewBag.TriggerDownload = ModelState.IsValid;
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadUkWeeeDataCsv(int complianceYear)
+        {
+            FileInfo file;
+
+            GetUkWeeeCsv request = new GetUkWeeeCsv(complianceYear);
+            using (var client = apiClient())
+            {
+                file = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            return File(file.Data, "text/csv", file.FileName);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> UkEeeData()
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
@@ -303,17 +357,17 @@
                 return View();
             }
 
-            ProducersDataViewModel model = new ProducersDataViewModel();
+            UkEeeDataViewModel model = new UkEeeDataViewModel();
             model.ComplianceYears = new SelectList(years);
-            return View(model);
+            return View("UkEeeData", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SchemeWeeeData(ProducersDataViewModel model)
+        public async Task<ActionResult> UkEeeData(UkEeeDataViewModel model)
         {
             SetBreadcrumb();
-
+            ViewBag.TriggerDownload = ModelState.IsValid;
             List<int> years;
             try
             {
@@ -326,132 +380,67 @@
                 {
                     throw;
                 }
-                ViewBag.TriggerDownload = false;
                 return View();
             }
 
             model.ComplianceYears = new SelectList(years);
-
             ViewBag.TriggerDownload = ModelState.IsValid;
-
             return View(model);
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadSchemeWeeeDataCsv(int complianceYear, ObligationType obligationType)
-        {
-            FileInfo file;
-
-            GetSchemeWeeeCsv request = new GetSchemeWeeeCsv(complianceYear, obligationType);
+        public async Task<ActionResult> DownloadUkEeeDataCsv(int complianceYear)
+        {   
             using (var client = apiClient())
             {
-                file = await client.SendAsync(User.GetAccessToken(), request);
+                var ukEeeCsvData = await client.SendAsync(User.GetAccessToken(),
+                    new GetUkEeeDataCsv(complianceYear));
+                byte[] data = new UTF8Encoding().GetBytes(ukEeeCsvData.FileContent);
+                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(ukEeeCsvData.FileName));
             }
-
-            return File(file.Data, "text/plain", file.FileName);
         }
 
         private async Task<List<int>> FetchComplianceYearsForDataReturns()
         {
-            GetAllComplianceYears request = new GetAllComplianceYears(ComplianceYearFor.DataReturns);
+            var request = new GetDataReturnsActiveComplianceYears();
             using (var client = apiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), request);
             }
         }
 
-        private async Task SetReportsFilterLists(ReportsFilterViewModel model, IWeeeClient client)
+        private async Task SetReportsFilterLists(ReportsFilterViewModel model)
         {
-            var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
-            var appropriateAuthorities = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
-            model.ComplianceYears = new SelectList(allYears);
-            model.AppropriateAuthorities = new SelectList(appropriateAuthorities, "Id", "Abbreviation");
-            if (model.FilterbyScheme)
+            using (IWeeeClient client = apiClient())
             {
-                var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
-                model.SchemeNames = new SelectList(allSchemes, "Id", "SchemeName");
+                var allYears = await client.SendAsync(User.GetAccessToken(), new GetMemberRegistrationsActiveComplianceYears());
+
+                var appropriateAuthorities = await client.SendAsync(User.GetAccessToken(), new GetUKCompetentAuthorities());
+
+                model.ComplianceYears = new SelectList(allYears);
+
+                model.AppropriateAuthorities = new SelectList(appropriateAuthorities, "Id", "Abbreviation");
+
+                if (model.FilterByScheme)
+                {
+                    var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
+                    model.SchemeNames = new SelectList(allSchemes, "Id", "SchemeName");
+                }
             }
         }
 
-        private async Task SetReportsFilterLists(ProducerPublicRegisterViewModel model, IWeeeClient client)
+        private async Task SetReportsFilterLists(ProducerPublicRegisterViewModel model)
         {
-            var allYears = await client.SendAsync(User.GetAccessToken(), new GetAllComplianceYears());
-            model.ComplianceYears = new SelectList(allYears);
+            using (IWeeeClient client = apiClient())
+            {
+                var allYears = await client.SendAsync(User.GetAccessToken(), new GetMemberRegistrationsActiveComplianceYears());
+                model.ComplianceYears = new SelectList(allYears);
+            }
         }
 
         private void SetBreadcrumb()
         {
             breadcrumb.InternalActivity = InternalUserActivity.ViewReports;
-        }
-
-        private async Task<ActionResult> DownloadMembersDetailsCSV(ReportsFilterViewModel model, IWeeeClient client)
-        {
-            string approvalnumber = string.Empty;
-            string csvFileName = string.Format("{0}_producerdetails_{1}.csv", model.SelectedYear, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-            if (model.SelectedScheme.HasValue)
-            {
-                SchemeData scheme =
-                    await client.SendAsync(User.GetAccessToken(), new GetSchemeById(model.SelectedScheme.Value));
-                approvalnumber = scheme.ApprovalName;
-                csvFileName = string.Format("{0}_{1}_producerdetails_{2}.csv", model.SelectedYear,
-                approvalnumber, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-            }
-            if (model.SelectedAA.HasValue)
-            {
-                UKCompetentAuthorityData authorityData =
-                    await
-                        client.SendAsync(User.GetAccessToken(),
-                            new GetUKCompetentAuthorityById(model.SelectedAA.Value));
-                var authorisedAuthorityName = authorityData.Abbreviation;
-                csvFileName = string.Format("{0}_{1}_{2}_producerdetails_{3}.csv", model.SelectedYear,
-               approvalnumber, authorisedAuthorityName, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-            }
-
-            var membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(),
-                new GetMemberDetailsCSV(model.SelectedYear, model.IncludeRemovedProducer, model.SelectedScheme, model.SelectedAA));
-
-            byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
-        }
-
-        private async Task<ActionResult> DownloadPCSChargesCSV(ReportsFilterViewModel model, IWeeeClient client)
-        {
-            string approvalnumber = string.Empty;
-            string csvFileName = string.Format("{0}_pcschargebreakdown_{1}.csv", model.SelectedYear, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-
-            if (model.SelectedAA.HasValue)
-            {
-                UKCompetentAuthorityData authorityData =
-                    await
-                        client.SendAsync(User.GetAccessToken(),
-                            new GetUKCompetentAuthorityById(model.SelectedAA.Value));
-                var authorisedAuthorityName = authorityData.Abbreviation;
-                csvFileName = string.Format("{0}_{1}_pcschargebreakdown_{2}.csv", model.SelectedYear, authorisedAuthorityName, DateTime.Now.ToString("ddMMyyyy_HHmm"));
-            }
-
-            //TGet the data for PCS charge breakdown
-            var pcsChargesCsvData = await client.SendAsync(User.GetAccessToken(), new GetPCSChargesCSV(model.SelectedYear, model.SelectedAA));
-
-            byte[] data = new UTF8Encoding().GetBytes(pcsChargesCsvData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(csvFileName));
-        }
-
-        private async Task<ActionResult> DownloadProducerPublicRegisterCSV(ProducerPublicRegisterViewModel model, IWeeeClient client)
-        {
-            var membersDetailsCsvData = await client.SendAsync(User.GetAccessToken(),
-               new GetProducerPublicRegisterCSV(model.SelectedYear));
-
-            byte[] data = new UTF8Encoding().GetBytes(membersDetailsCsvData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(membersDetailsCsvData.FileName));
-        }
-
-        private async Task<ActionResult> DownloadProducerEEEDataCSV(ProducersDataViewModel model, IWeeeClient client)
-        {
-            var producerEEECsvData = await client.SendAsync(User.GetAccessToken(),
-               new GetProducerEEEDataCSV(model.SelectedYear, model.SelectedObligationtype));
-
-            byte[] data = new UTF8Encoding().GetBytes(producerEEECsvData.FileContent);
-            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerEEECsvData.FileName));
         }
     }
 }

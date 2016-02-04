@@ -6,8 +6,8 @@
     using Domain;
     using Domain.Organisation;
     using AddressType = Domain.AddressType;
-    using ObligationType = Domain.ObligationType;
-    using UserStatus = Domain.UserStatus;
+    using ObligationType = Domain.Obligation.ObligationType;
+    using UserStatus = Domain.User.UserStatus;
 
     internal class ValueObjectInitializer
     {

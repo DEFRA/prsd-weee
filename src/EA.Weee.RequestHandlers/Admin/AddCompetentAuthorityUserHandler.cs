@@ -5,8 +5,8 @@
     using System.Threading.Tasks;
     using Core.Configuration;
     using DataAccess;
-    using Domain;
     using Domain.Admin;
+    using Domain.User;
     using Prsd.Core.Mediator;
     using Requests.Admin;
 

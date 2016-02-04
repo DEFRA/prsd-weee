@@ -23,6 +23,8 @@
 
         public virtual bool IsSubmitted { get; private set; }
 
+        public DateTime CreatedDate { get; private set; }
+
         public virtual WeeeCollectedReturnVersion WeeeCollectedReturnVersion { get; private set; }
 
         public virtual WeeeDeliveredReturnVersion WeeeDeliveredReturnVersion { get; private set; }
@@ -30,14 +32,23 @@
         public virtual EeeOutputReturnVersion EeeOutputReturnVersion { get; private set; }
 
         public DataReturnVersion(DataReturn dataReturn)
+            : this(dataReturn, new WeeeCollectedReturnVersion(), new WeeeDeliveredReturnVersion(),
+                   new EeeOutputReturnVersion())
+        {
+        }
+
+        public DataReturnVersion(DataReturn dataReturn, WeeeCollectedReturnVersion weeeCollectedReturnVersion,
+            WeeeDeliveredReturnVersion weeeDeliveredReturnVersion, EeeOutputReturnVersion eeeOutputReturnVersion)
         {
             Guard.ArgumentNotNull(() => dataReturn, dataReturn);
 
             DataReturn = dataReturn;
 
-            WeeeCollectedReturnVersion = new WeeeCollectedReturnVersion(this);
-            WeeeDeliveredReturnVersion = new WeeeDeliveredReturnVersion(this);
-            EeeOutputReturnVersion = new EeeOutputReturnVersion(this);
+            WeeeCollectedReturnVersion = weeeCollectedReturnVersion;
+            WeeeDeliveredReturnVersion = weeeDeliveredReturnVersion;
+            EeeOutputReturnVersion = eeeOutputReturnVersion;
+
+            CreatedDate = SystemTime.UtcNow;
         }
 
         /// <summary>

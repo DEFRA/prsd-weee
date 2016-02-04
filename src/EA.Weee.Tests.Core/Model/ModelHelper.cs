@@ -2,8 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Domain;
+    using Domain.Error;
     using Domain.Lookup;
 
     /// <summary>
@@ -520,6 +521,11 @@
             {
                 dataReturnUpload.DataReturnVersionId = dataReturnVersion.Id;
                 dataReturnUpload.DataReturnVersion = dataReturnVersion;
+
+                if (dataReturnVersion.DataReturn != null)
+                {
+                    dataReturnUpload.ComplianceYear = dataReturnVersion.DataReturn.ComplianceYear;
+                }
             }
 
             model.DataReturnUploads.Add(dataReturnUpload);
@@ -561,9 +567,12 @@
             return dataReturn;
         }
 
-        public DataReturnVersion CreateDataReturnVersion(Scheme scheme, int complianceYear, int quarter, bool isSubmitted = true)
+        public DataReturnVersion CreateDataReturnVersion(Scheme scheme, int complianceYear, int quarter, bool isSubmitted = true, DataReturn dataReturn = null)
         {
-            var dataReturn = GetOrCreateDataReturn(scheme, complianceYear, quarter);
+            if (dataReturn == null)
+            {
+                dataReturn = GetOrCreateDataReturn(scheme, complianceYear, quarter);
+            }
 
             Guid dataReturnVersionId = IntegerToGuid(GetNextId());
 
@@ -571,7 +580,8 @@
             {
                 Id = dataReturnVersionId,
                 DataReturn = dataReturn,
-                DataReturnId = dataReturn.Id
+                DataReturnId = dataReturn.Id,
+                CreatedDate = DateTime.UtcNow
             };
 
             if (isSubmitted)
@@ -648,6 +658,35 @@
             model.InvoiceRuns.Add(invoiceRun);
 
             return invoiceRun;
+        }
+
+        public AatfDeliveryLocation CreateAatfDeliveryLocation(string approvalNumber, string facilityName)
+        {
+            var aatfDeliveryLocation = new AatfDeliveryLocation
+            {
+                Id = IntegerToGuid(GetNextId()),
+                ApprovalNumber = approvalNumber,
+                FacilityName = facilityName
+            };
+
+            model.AatfDeliveryLocations.Add(aatfDeliveryLocation);
+
+            return aatfDeliveryLocation;
+        }
+
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "aeDeliveryLocation is valid.")]
+        public AeDeliveryLocation CreateAeDeliveryLocation(string approvalNumber, string operatorName)
+        {
+            var aeDeliveryLocation = new AeDeliveryLocation
+            {
+                Id = IntegerToGuid(GetNextId()),
+                ApprovalNumber = approvalNumber,
+                OperatorName = operatorName
+            };
+
+            model.AeDeliveryLocations.Add(aeDeliveryLocation);
+
+            return aeDeliveryLocation;
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Web.Areas.Scheme.Controllers
+@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.SuccessfulSubmissionViewModel
 @{
     ViewBag.Title = "Successful Submission";
@@ -14,10 +17,11 @@
     @using (Html.BeginForm("SignOut", "Account", new { Area = "" }, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        <p>You can now download an overview of your 
-           @(this.WeeeGds().ActionLinkWithEventTracking("current members (CSV, less than 500KB)", "GetProducerCSV", "MemberRegistration",
-                           "Downloads", "Registered members CSV", routeValues: new RouteValueDictionary(new { pcsId = @Model.PcsId, complianceYear = @Model.ComplianceYear }))).
-            In it you'll find the notification of all your registered PCS members and their producer registration numbers.</p>
+        <p>You can now download an overview of your
+            @(this.WeeeGds().ActionLinkWithEventTracking("current members (CSV, less than 500KB)", 
+                Url.UrlFor<MemberRegistrationController>(c => c.GetProducerCSV(Model.PcsId, Model.ComplianceYear)),
+                "Downloads", 
+                "Registered members CSV")). In it you'll find the notification of all your registered PCS members and their producer registration numbers.</p>
         <p>We will send an invoice for any producer registration charges to your organisation's contact.</p>
         <p>If you have finished performing tasks you can <input type="submit" value="sign out" class="link-submit" /> or proceed to perform more activities.</p>
     }
@@ -26,13 +30,12 @@
     @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
     </p>
     <p>
-        @this.WeeeGds().ActionLinkWithEventTracking(
-           "What did you think of this service?", 
-           "Feedback", 
-           "NewUser", 
-           "Feedback", 
-           "Successful XML submission", 
-           "What did you think of this service?", new RouteValueDictionary { { "area", string.Empty } }, newTab: true)
-        (takes 30 seconds)
+        @this.WeeeGds().ActionLinkWithEventTracking("What did you think of this service?",
+            Url.UrlFor<NewUserController>(c => c.Feedback()),
+            "Feedback",
+            "Successful XML submission",
+            "What did you think of this service?",
+            null, 
+            true) (takes 30 seconds)
     </p>
 }

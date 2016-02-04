@@ -1,4 +1,8 @@
-﻿@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Web.Areas.Scheme.Controllers
+@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Scheme.ViewModels.DataReturns.SuccessfulSubmissionViewModel
 @{
     ViewBag.Title = "Data Return Submitted";
 }
@@ -10,6 +14,8 @@
         </div>
     </header>
 
+    <p>To view your organisation’s latest data, <a href="@(Url.UrlFor<DataReturnsController>(c => c.Index(Model.PcsId)))">manage EEE/WEEE data</a>.</p>
+
     @using (Html.BeginForm("SignOut", "Account", new { Area = "" }, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
@@ -18,16 +24,14 @@
 
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
-    </p>   
+    </p>
 
     <p>
-        @this.WeeeGds().ActionLinkWithEventTracking(
-            "What did you think of this service?",
-            "Feedback",
-            "NewUser",
-            "Feedback",
+        @(this.WeeeGds().ActionLinkWithEventTracking("What did you think of this service?",
+            Url.UrlFor<NewUserController>(c => c.Feedback()),
+            "Data return feedback",
             "Successful data return submission",
-            "What did you think of this service?", new RouteValueDictionary { { "area", string.Empty } }, newTab: true)
-        (takes 30 seconds)
+            "What did you think of this service?",
+            newTab: true)) (takes 30 seconds)
     </p>
 }

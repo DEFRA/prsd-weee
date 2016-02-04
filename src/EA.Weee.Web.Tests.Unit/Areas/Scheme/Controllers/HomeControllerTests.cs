@@ -757,5 +757,23 @@
 
             Assert.IsType<ViewResult>(result);
         }
+
+        [Fact]
+        public async void PostChooseActivity_ManageEeeWeeeData_RedirectsToDataReturnsIndex()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._)).Returns(SchemeStatus.Approved);
+
+            var result = await HomeController().ChooseActivity(new ChooseActivityViewModel
+            {
+                SelectedValue = PcsAction.ManageEeeWeeeData
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("Index", routeValues["action"]);
+            Assert.Equal("DataReturns", routeValues["controller"]);
+        }
     }
 }

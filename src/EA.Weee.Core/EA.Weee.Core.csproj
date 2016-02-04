@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\CompetentAuthorityUserData.cs" />
+    <Compile Include="Admin\ProducerEeeDetails.cs" />
     <Compile Include="Charges\InvoiceRunInfo.cs" />
     <Compile Include="Charges\IssuePendingChargesResult.cs" />
     <Compile Include="DataReturns\DataReturnSubmissionsHistoryResult.cs" />
@@ -96,6 +97,9 @@
     <Compile Include="DataReturns\DataReturnError.cs" />
     <Compile Include="DataReturns\DataReturnForSubmission.cs" />
     <Compile Include="DataReturns\DataReturnWarning.cs" />
+    <Compile Include="DataReturns\Eee.cs" />
+    <Compile Include="DataReturns\QuarterSelection.cs" />
+    <Compile Include="DataReturns\WeeeCategory.cs" />
     <Compile Include="DataReturns\IErrorOrWarning.cs" />
     <Compile Include="DataReturns\Quarter.cs" />
     <Compile Include="DataReturns\QuarterType.cs" />
@@ -153,7 +157,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Shared\ChargeBandType.cs" />
-    <Compile Include="Shared\ComplianceYearFor.cs" />
     <Compile Include="Shared\CsvWriter.cs" />
     <Compile Include="Shared\CsvWriterFactory.cs" />
     <Compile Include="Shared\FileInfo.cs" />

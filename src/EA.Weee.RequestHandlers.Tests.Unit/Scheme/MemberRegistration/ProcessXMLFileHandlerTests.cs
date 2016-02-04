@@ -8,8 +8,11 @@
     using DataAccess;
     using DataAccess.DataAccess;
     using Domain;
+    using Domain.Error;
     using Domain.Lookup;
+    using Domain.Obligation;
     using Domain.Producer;
+    using Domain.Producer.Classfication;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using FakeItEasy;

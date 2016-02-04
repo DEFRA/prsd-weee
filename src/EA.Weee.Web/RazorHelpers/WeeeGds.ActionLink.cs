@@ -5,21 +5,28 @@
     using System.Text;
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
-    using System.Web.Routing;
 
     public partial class WeeeGds<TModel>
     {
-        public MvcHtmlString ActionLinkToNewTab(string linkText, string actionName, string controllerName, object routeValues = null)
+        public MvcHtmlString ActionLinkToNewTab(string url)
         {
-            string span = "<span class=\"hidden-for-screen-reader\">This link opens in a new browser window</span>";
-            string link = HtmlHelper.ActionLink(linkText, actionName, controllerName, routeValues, new { @target = "_blank" }).ToString();
+            var span = "<span class=\"hidden-for-screen-reader\">This link opens in a new browser window</span>";
 
-            return new MvcHtmlString(span + link);
+            var tagBuilder = new TagBuilder("a");
+            tagBuilder.Attributes.Add("href", url);
+            tagBuilder.Attributes.Add("target", "_blank");
+            tagBuilder.InnerHtml = span;
+
+            return new MvcHtmlString(tagBuilder.ToString(TagRenderMode.Normal));
         }
 
-        public MvcHtmlString ActionLinkWithEventTracking(string linkText, string actionName, string controllerName,
-                 string eventCategory, string eventAction, string eventLabel = null, RouteValueDictionary routeValues = null,
-                 IDictionary<string, object> htmlAttributes = null, bool newTab = false)
+        public MvcHtmlString ActionLinkWithEventTracking(string linkText,
+               string url,
+               string eventCategory,
+               string eventAction,
+               string eventLabel = null,
+               IDictionary<string, object> htmlAttributes = null,
+               bool newTab = false)
         {
             StringBuilder attributes = new StringBuilder();
             string additionalOnclickContent = string.Empty;
@@ -51,8 +58,7 @@
 
             attributes.AppendFormat(@"onclick=""{0}{1}""", EventTrackingFunction(eventCategory, eventAction, eventLabel), additionalOnclickContent);
 
-            var action = UrlHelper.Action(actionName, controllerName, routeValues);
-            string link = string.Format(@"<a href=""{0}"" {1}>{2}</a>", action, attributes.ToString(), linkText);
+            string link = string.Format(@"<a href=""{0}"" {1}>{2}</a>", url, attributes.ToString(), linkText);
 
             return new MvcHtmlString(link);
         }

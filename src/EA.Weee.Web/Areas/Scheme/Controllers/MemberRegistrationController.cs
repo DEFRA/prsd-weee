@@ -89,7 +89,7 @@
                 if (years.Count > 0)
                 {
                     await SetBreadcrumb(pcsId, ManageMembersActivity);
-                    return View(years);
+                    return View(new SummaryViewModel { PcsId = pcsId, Years = years});
                 }
             }
 
@@ -97,7 +97,7 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> AddOrAmendMembers(Guid pcsId)
+        public async Task<ActionResult> AddOrAmendMembers(Guid pcsId)
         {
             using (var client = apiClient())
             {
@@ -164,7 +164,7 @@
                     await SetBreadcrumb(pcsId, ManageMembersActivity);
 
                     return View("ViewErrorsAndWarnings",
-                        new MemberUploadResultViewModel { ErrorData = errors, TotalCharges = memberUpload.TotalCharges });
+                        new MemberUploadResultViewModel { ErrorData = errors, TotalCharges = memberUpload.TotalCharges, MemberUploadId = memberUploadId, PcsId = pcsId });
                 }
 
                 return RedirectToAction("XmlHasNoErrors", new { pcsId, memberUploadId });
@@ -188,7 +188,9 @@
                      new MemberUploadResultViewModel
                      {
                          ErrorData = errors,
-                         TotalCharges = memberUpload.TotalCharges
+                         TotalCharges = memberUpload.TotalCharges,
+                         MemberUploadId = memberUploadId,
+                         PcsId = pcsId
                      });
             }
         }

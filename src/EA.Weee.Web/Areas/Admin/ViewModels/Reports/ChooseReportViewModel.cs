@@ -7,13 +7,14 @@
     {
         public ChooseReportViewModel()
             : base(new List<string>
-        {
-            Reports.ProducerDetails,
-            Reports.PCSCharges,
-            Reports.Producerpublicregister,
-            Reports.ProducerEEEData,
-            Reports.SchemeWeeeData
-        })
+            {
+                Reports.ProducerDetails,
+            Reports.ProducerPublicRegister,
+            Reports.UkEeeData,
+                Reports.UkWeeeData,
+            Reports.ProducerEeeData,
+                Reports.SchemeWeeeData
+            })
         {
         }
     }

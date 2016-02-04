@@ -266,6 +266,11 @@ FROM @tempCountryTable tmp
 LEFT JOIN [Lookup].[Country] tbl ON tbl.[Id] = tmp.[Id]
 WHERE tbl.[Id] IS NULL
 
+UPDATE LiveTable SET
+LiveTable.[Name] = tmp.[Name]
+FROM [Lookup].[Country] LiveTable 
+INNER JOIN @tempCountryTable tmp ON LiveTable.[Id] = tmp.[Id]
+
 GO
 PRINT N'Update complete.';
 

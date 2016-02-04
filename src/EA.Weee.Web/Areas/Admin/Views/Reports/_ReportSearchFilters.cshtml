@@ -6,7 +6,7 @@
     @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
     @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, string.Empty, new { autocomplete = "false" })
 </div>
-@if (Model.FilterbyScheme)
+@if (Model.FilterByScheme)
 {
 <div class="form-group  @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
     @Html.Gds().LabelFor(m => m.SelectedScheme)
@@ -17,7 +17,7 @@
     @Html.Gds().LabelFor(m => m.SelectedAA)
     @Html.Gds().DropDownListFor(m => m.SelectedAA, Model.AppropriateAuthorities, string.Empty, new { autocomplete = "false" })
 </div>
-@if (Model.FilterbyScheme)
+@if (Model.FilterByScheme)
 {
     <div class="form-group @Html.Gds().FormGroupClass(m => m.IncludeRemovedProducer)">
         <fieldset>

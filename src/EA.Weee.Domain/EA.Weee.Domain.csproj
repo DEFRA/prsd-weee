@@ -48,6 +48,7 @@
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
     <Compile Include="Charges\InvoiceRun.cs" />
     <Compile Include="Charges\IbisFileData.cs" />
+    <Compile Include="DataReturns\DataReturnVersionAssociativeEntity.cs" />
     <Compile Include="DataReturns\EeeOutputReturnVersion.cs" />
     <Compile Include="DataReturns\QuarterWindow.cs" />
     <Compile Include="DataReturns\WeeeCollectedReturnVersion.cs" />
@@ -74,16 +75,17 @@
     <Compile Include="Lookup\ChargeBand.cs" />
     <Compile Include="Lookup\ChargeBandAmount.cs" />
     <Compile Include="Lookup\WeeeCategory.cs" />
-    <Compile Include="ObligationType.cs" />
+    <Compile Include="Obligation\ObligationType.cs" />
     <Compile Include="Organisation\Address.cs" />
     <Compile Include="AddressType.cs" />
+    <Compile Include="Producer\ProducerEeeByQuarter.cs" />
     <Compile Include="Producer\RegisteredProducer.cs" />
     <Compile Include="Scheme\MemberUploadRawData.cs" />
-    <Compile Include="UploadErrorType.cs" />
+    <Compile Include="Error\UploadErrorType.cs" />
     <Compile Include="Scheme\SchemeStatus.cs" />
     <Compile Include="Producer\MigratedProducer.cs" />
     <Compile Include="Producer\ProducerAddress.cs" />
-    <Compile Include="AnnualTurnOverBandType.cs" />
+    <Compile Include="Producer\Classification\AnnualTurnOverBandType.cs" />
     <Compile Include="Producer\AuthorisedRepresentative.cs" />
     <Compile Include="Producer\BrandName.cs" />
     <Compile Include="Organisation\Contact.cs" />
@@ -91,8 +93,8 @@
     <Compile Include="Producer\Business.cs" />
     <Compile Include="Producer\Company.cs" />
     <Compile Include="Producer\ProducerContact.cs" />
-    <Compile Include="EEEPlacedOnMarketBandType.cs" />
-    <Compile Include="ErrorLevel.cs" />
+    <Compile Include="Producer\Classification\EEEPlacedOnMarketBandType.cs" />
+    <Compile Include="Error\ErrorLevel.cs" />
     <Compile Include="Scheme\MemberUpload.cs" />
     <Compile Include="Scheme\MemberUploadError.cs" />
     <Compile Include="Organisation\Organisation.cs" />
@@ -101,16 +103,16 @@
     <Compile Include="Organisation\OrganisationStatus.cs" />
     <Compile Include="Organisation\OrganisationType.cs" />
     <Compile Include="Organisation\OrganisationUser.cs" />
-    <Compile Include="UserStatus.cs" />
+    <Compile Include="User\UserStatus.cs" />
     <Compile Include="Producer\Partner.cs" />
     <Compile Include="Scheme\Scheme.cs" />
     <Compile Include="Producer\Partnership.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SellingTechniqueType.cs" />
+    <Compile Include="Producer\Classification\SellingTechniqueType.cs" />
     <Compile Include="Producer\SICCode.cs" />
     <Compile Include="SystemData.cs" />
     <Compile Include="UKCompetentAuthority.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="User\User.cs" />
     <Compile Include="DataReturns\WeeeDeliveredAmount.cs" />
   </ItemGroup>
   <ItemGroup>

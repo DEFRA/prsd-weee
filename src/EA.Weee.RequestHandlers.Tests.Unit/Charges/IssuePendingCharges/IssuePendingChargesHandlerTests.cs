@@ -9,6 +9,7 @@
     using Domain;
     using Domain.Charges;
     using Domain.Scheme;
+    using Domain.User;
     using FakeItEasy;
     using RequestHandlers.Charges.IssuePendingCharges;
     using RequestHandlers.Security;

@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Core.Charges;
     using Domain;
+    using Domain.Obligation;
     using Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.Charges;

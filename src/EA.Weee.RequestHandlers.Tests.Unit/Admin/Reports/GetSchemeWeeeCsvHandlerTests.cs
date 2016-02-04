@@ -46,7 +46,7 @@
 
         /// <summary>
         /// This test ensures that the handler generates a file with a name in the following
-        /// format: "2016_B2C_schemeWEEEE_31122016_2359.csv".
+        /// format: "2016_B2C_schemeWEEE_31122016_2359.csv".
         /// </summary>
         /// <returns></returns>
         [Fact]
@@ -68,7 +68,7 @@
             SystemTime.Unfreeze();
 
             // Assert
-            Assert.Equal("2016_B2C_schemeWEEEE_31122016_2359.csv", result.FileName);
+            Assert.Equal("2016_B2C_schemeWEEE_31122016_2359.csv", result.FileName);
         }
 
         /// <summary>

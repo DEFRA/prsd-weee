@@ -1,30 +1,51 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ReturnVersionBuilder
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
     using DataAccess;
     using Domain.DataReturns;
     using Domain.Producer;
+    using Scheme = Domain.Scheme.Scheme;
 
     public class DataReturnVersionBuilderDataAccess : IDataReturnVersionBuilderDataAccess
     {
         private readonly WeeeContext context;
-        private readonly Domain.Scheme.Scheme scheme;
+        private readonly Scheme scheme;
         private readonly Quarter quarter;
         private ICollection<RegisteredProducer> schemeYearProducers;
+        private Dictionary<string, AatfDeliveryLocation> cachedAatfDeliveryLocations;
+        private Dictionary<string, AeDeliveryLocation> cachedAeDeliveryLocations;
 
-        public DataReturnVersionBuilderDataAccess(Domain.Scheme.Scheme scheme, Quarter quarter, WeeeContext context)
+        public ReadOnlyDictionary<string, AatfDeliveryLocation> CachedAatfDeliveryLocations
+        {
+            get
+            {
+                return new ReadOnlyDictionary<string, AatfDeliveryLocation>(cachedAatfDeliveryLocations);
+            }
+        }
+
+        public ReadOnlyDictionary<string, AeDeliveryLocation> CachedAeDeliveryLocations
+        {
+            get
+            {
+                return new ReadOnlyDictionary<string, AeDeliveryLocation>(cachedAeDeliveryLocations);
+            }
+        }
+
+        public DataReturnVersionBuilderDataAccess(Scheme scheme, Quarter quarter, WeeeContext context)
         {
             this.context = context;
             this.scheme = scheme;
             this.quarter = quarter;
         }
 
-        public async Task<DataReturn> FetchDataReturnOrDefault()
+        public Task<DataReturn> FetchDataReturnOrDefault()
         {
-            return await context.DataReturns
+            return context.DataReturns
                 .Where(dr => dr.Scheme.Id == scheme.Id)
                 .Where(dr => dr.Quarter.Year == quarter.Year)
                 .Where(dr => dr.Quarter.Q == quarter.Q)
@@ -48,6 +69,51 @@
                 .ToListAsync();
             }
             return schemeYearProducers;
+        }
+
+        public async Task<AatfDeliveryLocation> GetOrAddAatfDeliveryLocation(string approvalNumber, string facilityName)
+        {
+            if (cachedAatfDeliveryLocations == null)
+            {
+                cachedAatfDeliveryLocations =
+                    await context.AatfDeliveryLocations
+                    .ToDictionaryAsync(aatf => string.Format("{0}{1}", aatf.ApprovalNumber, aatf.FacilityName));
+            }
+
+            var key = string.Format("{0}{1}", approvalNumber, facilityName);
+            AatfDeliveryLocation aatfDeliveryLocation;
+            if (!cachedAatfDeliveryLocations.TryGetValue(key, out aatfDeliveryLocation))
+            {
+                aatfDeliveryLocation = new AatfDeliveryLocation(approvalNumber, facilityName);
+
+                cachedAatfDeliveryLocations.Add(key, aatfDeliveryLocation);
+                context.AatfDeliveryLocations.Add(aatfDeliveryLocation);
+            }
+
+            return aatfDeliveryLocation;
+        }
+
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Variable name aeDeliveryLocation is valid.")]
+        public async Task<AeDeliveryLocation> GetOrAddAeDeliveryLocation(string approvalNumber, string operatorName)
+        {
+            if (cachedAeDeliveryLocations == null)
+            {
+                cachedAeDeliveryLocations =
+                    await context.AeDeliveryLocations
+                    .ToDictionaryAsync(ae => string.Format("{0}{1}", ae.ApprovalNumber, ae.OperatorName));
+            }
+
+            var key = string.Format("{0}{1}", approvalNumber, operatorName);
+            AeDeliveryLocation aeDeliveryLocation;
+            if (!cachedAeDeliveryLocations.TryGetValue(key, out aeDeliveryLocation))
+            {
+                aeDeliveryLocation = new AeDeliveryLocation(approvalNumber, operatorName);
+
+                cachedAeDeliveryLocations.Add(key, aeDeliveryLocation);
+                context.AeDeliveryLocations.Add(aeDeliveryLocation);
+            }
+
+            return aeDeliveryLocation;
         }
     }
 }

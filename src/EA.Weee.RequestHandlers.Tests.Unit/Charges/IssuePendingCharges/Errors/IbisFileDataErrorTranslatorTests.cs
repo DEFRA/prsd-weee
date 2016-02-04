@@ -120,7 +120,7 @@
             var result = translator.MakeFriendlyErrorMessages(errors);
 
             // Assert
-            Assert.Equal("PCS My scheme name is missing a billing customer reference.", result.Single());
+            Assert.Equal("PCS My scheme name is missing a billing reference.", result.Single());
         }
     }
 }

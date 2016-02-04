@@ -5,6 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Net;
+    using System.Reflection;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
@@ -38,32 +39,310 @@
             configService = A.Fake<ConfigurationService>();
         }
 
+        /// <summary>
+        /// This test ensures that the OnActionExecuting method will throw an
+        /// InvalidOperationException if the application configuration has "EnableDataReturns"
+        /// set to false.
+        /// </summary>
         [Fact]
-        public async void GetUpload_ChecksForValidityOfOrganisation()
+        public void OnActionExecuting_ConfigDisabled_ThrowsException()
         {
-            // Act           
-            try
-            {
-                await DataReturnsController().Upload(A<Guid>._);
-            }
-            catch (Exception ex)
-            {
-            }
+            // Arrange
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnableDataReturns).Returns(false);
+            
+            ConfigurationService configurationService = A.Fake<ConfigurationService>();
+            A.CallTo(() => configurationService.CurrentConfiguration).Returns(configuration);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            DataReturnsController controller = new DataReturnsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                configurationService);
+
+            // Act           
+            MethodInfo onActionExecutingMethod = typeof(DataReturnsController).GetMethod(
+                "OnActionExecuting",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+
+            Action testCode = () =>
+            {
+                object[] args = new object[] { A.Dummy<ActionExecutingContext>() };
+                try
+                {
+                    onActionExecutingMethod.Invoke(controller, args);
+                }
+                catch (TargetInvocationException ex)
+                {
+                    throw ex.InnerException;
+                }
+            };
+
+            // Assert
+            Assert.Throws<InvalidOperationException>(testCode);
         }
 
         [Fact]
-
-        public async void GetUpload_IdDoesBelongToAnExistingOrganisation_ReturnsView()
+        public void OnActionExecuting_ConfigEnabledAndPcsIdNotSpecified_ThrowsArgumentException()
         {
+            // Arrange
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnableDataReturns).Returns(true);
+
+            ConfigurationService configurationService = A.Fake<ConfigurationService>();
+            A.CallTo(() => configurationService.CurrentConfiguration).Returns(configuration);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                configurationService);
+
+            // Act
+            ActionExecutingContext actionExecutingContext = new ActionExecutingContext();
+            actionExecutingContext.ActionParameters = new Dictionary<string, object>();
+
+            MethodInfo onActionExecutingMethod = typeof(DataReturnsController).GetMethod(
+                "OnActionExecuting",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+
+            Action testCode = () =>
+            {
+                object[] args = new object[] { actionExecutingContext };
+                try
+                {
+                    onActionExecutingMethod.Invoke(controller, args);
+                }
+                catch (TargetInvocationException ex)
+                {
+                    throw ex.InnerException;
+                }
+            };
+
+            // Assert
+            Assert.Throws<ArgumentException>(testCode);
+        }
+
+        [Fact]
+        public void OnActionExecuting_ConfigEnabledAndSpecifiedPcsIdNotAGuid_ThrowsArgumentException()
+        {
+            // Arrange
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnableDataReturns).Returns(true);
+
+            ConfigurationService configurationService = A.Fake<ConfigurationService>();
+            A.CallTo(() => configurationService.CurrentConfiguration).Returns(configuration);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                configurationService);
+
+            // Act
+            ActionExecutingContext actionExecutingContext = new ActionExecutingContext();
+            actionExecutingContext.ActionParameters = new Dictionary<string, object>();
+            actionExecutingContext.ActionParameters["pcsId"] = 12345;
+
+            MethodInfo onActionExecutingMethod = typeof(DataReturnsController).GetMethod(
+                "OnActionExecuting",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+
+            Action testCode = () =>
+            {
+                object[] args = new object[] { actionExecutingContext };
+                try
+                {
+                    onActionExecutingMethod.Invoke(controller, args);
+                }
+                catch (TargetInvocationException ex)
+                {
+                    throw ex.InnerException;
+                }
+            };
+
+            // Assert
+            Assert.Throws<ArgumentException>(testCode);
+        }
+
+        [Fact]
+        public void OnActionExecuting_ConfigEnabledAndSpecifiedPcsIdDoesNotExist_ThrowsArgumentException()
+        {
+            // Arrange
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnableDataReturns).Returns(true);
+
+            ConfigurationService configurationService = A.Fake<ConfigurationService>();
+            A.CallTo(() => configurationService.CurrentConfiguration).Returns(configuration);
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .WhenArgumentsMatch(a => a.Get<VerifyOrganisationExists>("request").OrganisationId == new Guid("51254A73-D885-4F9A-BC47-2787CB1416B9"))
+                .Returns(false);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                configurationService);
+
+            // Act
+            ActionExecutingContext actionExecutingContext = new ActionExecutingContext();
+            actionExecutingContext.ActionParameters = new Dictionary<string, object>();
+            actionExecutingContext.ActionParameters["pcsId"] = new Guid("51254A73-D885-4F9A-BC47-2787CB1416B9");
+
+            MethodInfo onActionExecutingMethod = typeof(DataReturnsController).GetMethod(
+                "OnActionExecuting",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+
+            Action testCode = () =>
+            {
+                object[] args = new object[] { actionExecutingContext };
+                try
+                {
+                    onActionExecutingMethod.Invoke(controller, args);
+                }
+                catch (TargetInvocationException ex)
+                {
+                    throw ex.InnerException;
+        }
+            };
+
+            // Assert
+            Assert.Throws<ArgumentException>(testCode);
+        }
+
+        /// <summary>
+        /// This test ensures that the OnActionExecuting filter doesn't interupt the action when the configuration
+        /// has data returns enabled, the specified "pcsId" parameter is for a non-approved scheme and the user
+        /// is requesting the "AuthorisationRequired" action. This prevents an infinite loop from occuring.
+        /// </summary>
+        public void OnActionExecuting_ConfigEnabledAndSpecifiedSchemeIsNotApprovedAndActionIsAuthorisationRequired_DoesNothing()
+        {
+            // Arrange
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnableDataReturns).Returns(true);
+
+            ConfigurationService configurationService = A.Fake<ConfigurationService>();
+            A.CallTo(() => configurationService.CurrentConfiguration).Returns(configuration);
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .WhenArgumentsMatch(a => a.Get<VerifyOrganisationExists>("request").OrganisationId == new Guid("51254A73-D885-4F9A-BC47-2787CB1416B9"))
                 .Returns(true);
 
-            var result = await DataReturnsController().Upload(A<Guid>._);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .WhenArgumentsMatch(a => a.Get<GetSchemeStatus>("request").PcsId == new Guid("51254A73-D885-4F9A-BC47-2787CB1416B9"))
+                .Returns(SchemeStatus.Pending);
 
-            Assert.IsType<ViewResult>(result);
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                configurationService);
+
+            // Act
+            ActionDescriptor actionDescriptor = A.Fake<ActionDescriptor>();
+            A.CallTo(() => actionDescriptor.ActionName == "AuthorisationRequired");
+
+            ActionExecutingContext actionExecutingContext = new ActionExecutingContext();
+            actionExecutingContext.ActionParameters = new Dictionary<string, object>();
+            actionExecutingContext.ActionParameters["pcsId"] = new Guid("51254A73-D885-4F9A-BC47-2787CB1416B9");
+            actionExecutingContext.ActionDescriptor = actionDescriptor;
+
+            MethodInfo onActionExecutingMethod = typeof(DataReturnsController).GetMethod(
+                "OnActionExecuting",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+
+            Action testCode = () =>
+            {
+                object[] args = new object[] { actionExecutingContext };
+                try
+                {
+                    onActionExecutingMethod.Invoke(controller, args);
+                }
+                catch (TargetInvocationException ex)
+                {
+                    throw ex.InnerException;
+                }
+            };
+
+            // Assert
+            Assert.Null(actionExecutingContext.Result);
+        }
+
+        /// <summary>
+        /// This test ensures that the OnActionExecuting filter redirects the user to the "AuthorisationRequired" action
+        /// when the configuration has data returns enabled, the specified "pcsId" parameter is for a non-approved scheme and the user
+        /// is not already requesting the "AuthorizationRequired" action.
+        /// </summary>
+        public void OnActionExecuting_ConfigEnabledAndSpecifiedSchemeIsNotApprovedAndActionIsNotAuthorisationRequired_RedirectsToAuthorisationRequired()
+        {
+            // Arrange
+            IAppConfiguration configuration = A.Fake<IAppConfiguration>();
+            A.CallTo(() => configuration.EnableDataReturns).Returns(true);
+
+            ConfigurationService configurationService = A.Fake<ConfigurationService>();
+            A.CallTo(() => configurationService.CurrentConfiguration).Returns(configuration);
+
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .WhenArgumentsMatch(a => a.Get<VerifyOrganisationExists>("request").OrganisationId == new Guid("51254A73-D885-4F9A-BC47-2787CB1416B9"))
+                .Returns(true);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .WhenArgumentsMatch(a => a.Get<GetSchemeStatus>("request").PcsId == new Guid("51254A73-D885-4F9A-BC47-2787CB1416B9"))
+                .Returns(SchemeStatus.Pending);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => weeeClient,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                configurationService);
+
+            // Act
+            ActionDescriptor actionDescriptor = A.Fake<ActionDescriptor>();
+            A.CallTo(() => actionDescriptor.ActionName == "SomeOtherAction");
+
+            ActionExecutingContext actionExecutingContext = new ActionExecutingContext();
+            actionExecutingContext.ActionParameters = new Dictionary<string, object>();
+            actionExecutingContext.ActionParameters["pcsId"] = new Guid("51254A73-D885-4F9A-BC47-2787CB1416B9");
+            actionExecutingContext.ActionDescriptor = actionDescriptor;
+
+            MethodInfo onActionExecutingMethod = typeof(DataReturnsController).GetMethod(
+                "OnActionExecuting",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+
+            Action testCode = () =>
+            {
+                object[] args = new object[] { actionExecutingContext };
+                try
+                {
+                    onActionExecutingMethod.Invoke(controller, args);
+        }
+                catch (TargetInvocationException ex)
+                {
+                    throw ex.InnerException;
+                }
+            };
+
+            // Assert
+            RedirectToRouteResult redirectResult = actionExecutingContext.Result as RedirectToRouteResult;
+            Assert.NotNull(redirectResult);
+
+            Assert.Equal("AuthorisationRequired", redirectResult.RouteValues["action"]);
         }
 
         [Fact]
@@ -106,7 +385,7 @@
         }
 
         [Fact]
-        public async void GetAuthorizationRequired_SchemeIsApproved_RedirectsToPcsMemberSummary()
+        public async void GetAuthorizationRequired_SchemeIsApproved_RedirectsToIndex()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Approved);
@@ -117,98 +396,105 @@
 
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("Upload", routeValues["action"]);
-            Assert.Equal("DataReturns", routeValues["controller"]);
+            Assert.Equal("Index", routeValues["action"]);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "Index" action returns the "Index" view.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetIndex_Always_ReturnsIndexView()
+        {
+            // Arrange
+            DataReturnsController controller = new DataReturnsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                A.Dummy<ConfigurationService>());
+
+            // Act
+            ActionResult result = await controller.Index(A.Dummy<Guid>());
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals("Index", viewResult.ViewName, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "Index" action calls the API to fetch summary
+        /// data about the data returns for the specified organisation. It ensures that
+        /// this information is populated into the IndexViewModel provided with the
+        /// result.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetIndex_CallsApiToFetchSummary_AndPopulatesViewModel()
+        {
+            IWeeeClient client = A.Fake<IWeeeClient>();
+
+            List<int> complianceYearsForScheme = new List<int>() { 2016, 2017, 2018 };
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<FetchDataReturnComplianceYearsForScheme>._))
+                .WhenArgumentsMatch(a => a.Get<FetchDataReturnComplianceYearsForScheme>("request").PcsId == new Guid("BA7F772F-626D-4CBD-8D50-50A7B852A9AC"))
+                .Returns(complianceYearsForScheme);
+
+            // Arrange
+            DataReturnsController controller = new DataReturnsController(
+                () => client,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                A.Dummy<ConfigurationService>());
+
+            // Act
+            ActionResult result = await controller.Index(new Guid("BA7F772F-626D-4CBD-8D50-50A7B852A9AC"));
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            IndexViewModel viewModel = viewResult.Model as IndexViewModel;
+            Assert.NotNull(viewModel);
+
+            Assert.Equal(new Guid("BA7F772F-626D-4CBD-8D50-50A7B852A9AC"), viewModel.OrganisationId);
+            Assert.Collection(viewModel.ComplianceYears,
+                r1 => Assert.Equal(2016, r1),
+                r2 => Assert.Equal(2017, r2),
+                r3 => Assert.Equal(2018, r3));
         }
 
         [Fact]
-
-        public async void GetSubmitDataReturns_ConfigSettingIsFalse_ThrowsException()
-        {
-            await Assert.ThrowsAnyAsync<InvalidOperationException>(() => DataReturnsController().Upload(A<Guid>._));
-        }
-
-        [Fact]
-        public async void GetUpload_IdDoesNotBelongToAnExistingOrganisation_ThrowsException()
-        {
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+        public async void GetUpload_IdDoesBelongToAnExistingOrganisationAndSubmissionWindowIsClose_RedirectToCannotSubmitDataReturn()
+        {   
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsSubmissionWindowOpen>._))
                 .Returns(false);
 
-            await Assert.ThrowsAnyAsync<Exception>(() => DataReturnsController().Upload(A<Guid>._));
-        }
-        [Fact]
-        public void OnActionExecuting_ActionAuthorizationRequired_DoesNotCheckPcsId()
-        {
-            var fakeController = BuildFakeDataReturnsController();
-            var fakeActionParameters = ActionExecutingContextHelper.FakeActionParameters();
-            var fakeActionDescriptor = ActionExecutingContextHelper.FakeActionDescriptorWithActionName("AuthorisationRequired");
+            var result = await DataReturnsController().Upload(A<Guid>._);
 
-            ActionExecutingContext context = new ActionExecutingContext();
-            context.ActionParameters = fakeActionParameters;
-            context.ActionDescriptor = fakeActionDescriptor;
+            Assert.IsType<RedirectToRouteResult>(result);
 
-            fakeController.InvokeOnActionExecuting(context);
+            var redirectValues = ((RedirectToRouteResult)result).RouteValues;
 
-            A.CallTo(() => fakeActionDescriptor.ActionName).MustHaveHappened(Repeated.Exactly.Once);
-
-            object dummyObject;
-            A.CallTo(() => fakeActionParameters.TryGetValue(A<string>._, out dummyObject)).MustNotHaveHappened();
+            Assert.Equal("CannotSubmitDataReturn", redirectValues["action"]);
         }
 
         [Fact]
-        public void OnActionExecuting_NotActionAuthorizationRequiredNoPcs_ThrowsInvalidOperationException()
+        public async void GetUpload_IdDoesBelongToAnExistingOrganisationAndSubmissionWindowIsOpen_ReturnsView()
         {
-            var fakeController = BuildFakeDataReturnsController();
-            var fakeActionParameters = ActionExecutingContextHelper.FakeActionParameters(false, A.Dummy<Guid>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsSubmissionWindowOpen>._))
+            .Returns(true);
 
-            ActionExecutingContext context = new ActionExecutingContext();
-            context.ActionParameters = fakeActionParameters;
-            context.ActionDescriptor = ActionExecutingContextHelper.FakeActionDescriptorWithActionName("TestAction");
+            var result = await DataReturnsController().Upload(A<Guid>._);
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
 
-            Assert.Throws(typeof(InvalidOperationException), () => fakeController.InvokeOnActionExecuting(context));
-        }
-
-        [Fact]
-        public void OnActionExecuting_NotActionAuthorizationRequiredNotApprovedPcs_ResultsToAuthorizationRequired()
-        {
-            var pcsId = Guid.NewGuid();
-            var fakeController = BuildFakeDataReturnsController();
-            var fakeActionParameters = ActionExecutingContextHelper.FakeActionParameters(true, pcsId);
-
-            ActionExecutingContext context = new ActionExecutingContext();
-            context.ActionParameters = fakeActionParameters;
-            context.ActionDescriptor = ActionExecutingContextHelper.FakeActionDescriptorWithActionName("TestAction");
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
-                .Returns(SchemeStatus.Pending);
-
-            fakeController.InvokeOnActionExecuting(context);
-
-            var redirect = (RedirectToRouteResult)context.Result;
-
-            Assert.Equal("AuthorisationRequired", redirect.RouteValues["action"]);
-            Assert.Equal(pcsId, redirect.RouteValues["pcsId"]);
-        }
-
-        [Fact]
-        public void OnActionExecuting_NotActionAuthorizationRequiredApprovedPcs_ResultsToNoRedirection()
-        {
-            var fakeController = BuildFakeDataReturnsController();
-            var fakeActionParameters = ActionExecutingContextHelper.FakeActionParameters(true, A.Dummy<Guid>());
-
-            ActionExecutingContext context = new ActionExecutingContext();
-            context.ActionParameters = fakeActionParameters;
-            context.ActionDescriptor = ActionExecutingContextHelper.FakeActionDescriptorWithActionName("TestAction");
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
-                .Returns(SchemeStatus.Approved);
-
-            fakeController.InvokeOnActionExecuting(context);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
-                .MustHaveHappened();
-
-            Assert.Null(context.Result);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals("Upload", viewResult.ViewName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>
@@ -636,6 +922,71 @@
 
             Assert.Equal("SuccessfulSubmission", redirectToRouteResult.RouteValues["action"]);
             Assert.Equal(new Guid("AA7DA88A-19AF-4130-A24D-45389D97B274"), redirectToRouteResult.RouteValues["pcsId"]);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "DownloadEeeWeeeData" action calls the
+        /// API to retrieve the file data for the specified organisation and compliance
+        /// year and provides the data in the result.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetDownloadEeeWeeeData_Always_CallsApiAndReturnsFileContents()
+        {
+            // Arrange
+            Guid organisationId = new Guid("ADED8BDE-CF03-4696-B972-DDAB9306A6DD");
+
+            FileInfo fileInfo = new FileInfo("Test file.csv", A.Dummy<byte[]>());
+
+            IWeeeClient client = A.Fake<IWeeeClient>();
+            A.CallTo(() => client.SendAsync(A<string>._, A<FetchSummaryCsv>._))
+                .WhenArgumentsMatch(a => a.Get<FetchSummaryCsv>("request").OrganisationId == organisationId
+                    && a.Get<FetchSummaryCsv>("request").ComplianceYear == 2017)
+                .Returns(fileInfo);
+
+            DataReturnsController controller = new DataReturnsController(
+                () => client,
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                A.Dummy<ConfigurationService>());
+
+            // Act
+            ActionResult result = await controller.DownloadEeeWeeeData(organisationId, 2017);
+
+            // Assert
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+
+            Assert.Equal("Test file.csv", fileResult.FileDownloadName);
+        }
+       
+        /// <summary>
+        /// This test ensures that the GET "DownloadEeeWeeeData" returns
+        /// a FileResult with a content type of "text/csv".
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetDownloadEeeWeeeData_Always_ReturnsFileWithContentTypeTextCsv()
+        {
+            // Arrange
+            DataReturnsController controller = new DataReturnsController(
+                () => A.Dummy<IWeeeClient>(),
+                A.Dummy<IWeeeCache>(),
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<CsvWriterFactory>(),
+                A.Dummy<IMapper>(),
+                A.Dummy<ConfigurationService>());
+
+            // Act
+            ActionResult result = await controller.DownloadEeeWeeeData(A.Dummy<Guid>(), A.Dummy<int>());
+
+            // Assert
+            FileResult fileResult = result as FileResult;
+            Assert.NotNull(fileResult);
+
+            Assert.Equal("text/csv", fileResult.ContentType);
         }
 
         private DataReturnsController GetRealDataReturnsControllerWithFakeContext()

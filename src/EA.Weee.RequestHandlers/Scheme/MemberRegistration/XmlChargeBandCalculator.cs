@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using Domain;
+    using Domain.Error;
     using Domain.Scheme;
     using Interfaces;
     using Requests.Scheme.MemberRegistration;

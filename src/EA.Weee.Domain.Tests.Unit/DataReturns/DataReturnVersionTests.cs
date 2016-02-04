@@ -23,7 +23,7 @@
             // Assert
             Assert.True(dataReturnVersion.IsSubmitted);
             Assert.Equal(dataReturnVersion.SubmittingUserId, "test@co.uk");
-            Assert.Equal(dataReturnVersion.DataReturn.Id, dataReturn.Id);           
+            Assert.Equal(dataReturnVersion.DataReturn.Id, dataReturn.Id);
         }
 
         [Fact]
@@ -42,7 +42,7 @@
             // Assert
             Assert.Throws<InvalidOperationException>(action);
         }
-                   
+
         [Fact]
         public void ConstructsDataReturnVersion_WithNullDataReturn_ThrowsArgumentNullException()
         {
