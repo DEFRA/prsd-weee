@@ -198,6 +198,7 @@
     <Compile Include="Factories\QuarterWindowFactory.cs" />
     <Compile Include="Factories\DateFactory.cs" />
     <Compile Include="Factories\IDateFactory.cs" />
+    <Compile Include="Admin\GetRolesHandler.cs" />
     <Compile Include="Shared\DomainUser\DomainUserContext.cs" />
     <Compile Include="Shared\DomainUser\IDomainUserContext.cs" />
     <Compile Include="Shared\Extensions.cs" />
@@ -222,9 +223,9 @@
     <Compile Include="Admin\GetManageUserDataAccess.cs" />
     <Compile Include="Admin\GetUserDataHandler.cs" />
     <Compile Include="Admin\IGetManageUserDataAccess.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccess.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\IUpdateCompetentAuthorityUserStatusDataAccess.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandler.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\UpdateCompetentAuthorityUserRoleAndStatusDataAccess.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\IUpdateCompetentAuthorityUserRoleAndStatusDataAccess.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\UpdateCompetentAuthorityUserRoleAndStatusHandler.cs" />
     <Compile Include="Admin\UpdateUserHandler.cs" />
     <Compile Include="Mappings\AddressMap.cs" />
     <Compile Include="Mappings\CompetentAuthorityUserMap.cs" />

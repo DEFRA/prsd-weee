@@ -212,6 +212,9 @@
     <Compile Include="Model\RegisteredProducer.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\Role.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Scheme.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

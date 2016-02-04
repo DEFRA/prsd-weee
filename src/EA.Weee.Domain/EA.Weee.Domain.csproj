@@ -103,6 +103,8 @@
     <Compile Include="Organisation\OrganisationStatus.cs" />
     <Compile Include="Organisation\OrganisationType.cs" />
     <Compile Include="Organisation\OrganisationUser.cs" />
+    <Compile Include="Security\Role.cs" />
+    <Compile Include="Security\RoleNames.cs" />
     <Compile Include="User\UserStatus.cs" />
     <Compile Include="Producer\Partner.cs" />
     <Compile Include="Scheme\Scheme.cs" />
