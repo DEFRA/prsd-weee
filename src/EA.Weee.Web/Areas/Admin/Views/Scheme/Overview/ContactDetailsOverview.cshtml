@@ -1,0 +1,26 @@
+﻿@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview.ContactDetails.ContactDetailsOverviewViewModel
+
+@section main_content {
+    @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
+
+    <table id="pcs-details-table">
+        <thead>
+        <tr class="visuallyhidden">
+            <th colspan="2">Contact Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th></th>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br />
+    <p>
+        <a href="@(Url.UrlFor<SchemeController>(a => a.ManageContactDetails(Model.SchemeId, Model.OrganisationId)))">Edit contact details</a>
+    </p>
+}
