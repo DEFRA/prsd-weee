@@ -119,6 +119,80 @@
         }
 
         /// <summary>
+        /// This test ensures that the results are sorted by role in the order "Administrator",
+        /// "Standard" and "N/A" when the ordering is set to "RoleDescending".
+        /// After being sorted by role, users should be sorted by full name ascending and
+        /// then by user ID.
+        /// </summary>
+        [Fact]
+        public async void HandleAsync_WithOrderByRoleDescending_ReturnsSortedResults()
+        {
+            // Arrage
+            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess();
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
+
+            FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
+
+            FindMatchingUsers request = new FindMatchingUsers(1, 1000, FindMatchingUsers.OrderBy.RoleDescending);
+
+            // Act
+            UserSearchDataResult response = await handler.HandleAsync(request);
+
+            // Check the first and last results have the correct roles.
+            Assert.NotNull(response);
+            Assert.Equal(10, response.Results.Count);
+
+            Assert.Collection(response.Results,
+                u => Assert.Equal("User 7", u.Id),
+                u => Assert.Equal("User 9", u.Id),
+                u => Assert.Equal("User 6", u.Id),
+                u => Assert.Equal("User 8", u.Id),
+                u => Assert.Equal("User 10", u.Id),
+                u => Assert.Equal("User 3", u.Id),
+                u => Assert.Equal("User 5", u.Id),
+                u => Assert.Equal("User 4", u.Id),
+                u => Assert.Equal("User 2", u.Id),
+                u => Assert.Equal("User 1", u.Id));
+        }
+
+        /// <summary>
+        /// This test ensures that the results are sorted by role in the order "N/A",
+        /// "Standard" and "Administrator" when the ordering is set to "RoleAscending".
+        /// After being sorted by role, users should be sorted by full name ascending and
+        /// then by user ID.
+        /// </summary>
+        [Fact]
+        public async void HandleAsync_WithOrderByRoleAscending_ReturnsSortedResults()
+        {
+            // Arrage
+            IFindMatchingUsersDataAccess dataAccess = CreateFakeDataAccess();
+            IWeeeAuthorization authorization = AuthorizationBuilder.CreateUserWithAllRights();
+
+            FindMatchingUsersHandler handler = new FindMatchingUsersHandler(authorization, dataAccess);
+
+            FindMatchingUsers request = new FindMatchingUsers(1, 1000, FindMatchingUsers.OrderBy.RoleAscending);
+
+            // Act
+            UserSearchDataResult response = await handler.HandleAsync(request);
+
+            // Check the first and last results have the correct roles.
+            Assert.NotNull(response);
+            Assert.Equal(10, response.Results.Count);
+
+            Assert.Collection(response.Results,
+                u => Assert.Equal("User 3", u.Id),
+                u => Assert.Equal("User 5", u.Id),
+                u => Assert.Equal("User 4", u.Id),
+                u => Assert.Equal("User 2", u.Id),
+                u => Assert.Equal("User 1", u.Id),
+                u => Assert.Equal("User 6", u.Id),
+                u => Assert.Equal("User 8", u.Id),
+                u => Assert.Equal("User 10", u.Id),
+                u => Assert.Equal("User 7", u.Id),
+                u => Assert.Equal("User 9", u.Id));
+        }
+
+        /// <summary>
         /// Creates a fake data access that returns 5 organisation users and 5 competent authority users.
         /// </summary>
         /// <returns></returns>
@@ -128,22 +202,22 @@
 
             List<UserSearchData> organisationUsers = new List<UserSearchData>()
                 {
-                    new UserSearchData() { Id = "User 1", FirstName = "XGF", LastName = "RYH" },
-                    new UserSearchData() { Id = "User 2", FirstName = "RHY", LastName = "EGJ" },
-                    new UserSearchData() { Id = "User 3", FirstName = "GDR", LastName = "FDV" },
-                    new UserSearchData() { Id = "User 4", FirstName = "JUK", LastName = "EEE" },
-                    new UserSearchData() { Id = "User 5", FirstName = "HBN", LastName = "UTL" },
+                    new UserSearchData() { Id = "User 1", FirstName = "XGF", LastName = "RYH", Role = "N/A" },
+                    new UserSearchData() { Id = "User 2", FirstName = "RHY", LastName = "EGJ", Role = "N/A" },
+                    new UserSearchData() { Id = "User 3", FirstName = "GDR", LastName = "FDV", Role = "N/A" },
+                    new UserSearchData() { Id = "User 4", FirstName = "JUK", LastName = "EEE", Role = "N/A" },
+                    new UserSearchData() { Id = "User 5", FirstName = "HBN", LastName = "UTL", Role = "N/A" },
                 };
 
             A.CallTo(() => dataAccess.GetOrganisationUsers()).Returns(organisationUsers.ToArray());
 
             List<UserSearchData> competentAuthorityUsers = new List<UserSearchData>()
                 {
-                    new UserSearchData() { Id = "User 6", FirstName = "AGF", LastName = "GUI" },
-                    new UserSearchData() { Id = "User 7", FirstName = "HTF", LastName = "HBG" },
-                    new UserSearchData() { Id = "User 8", FirstName = "VFE", LastName = "RDE" },
-                    new UserSearchData() { Id = "User 9", FirstName = "TED", LastName = "SWR" },
-                    new UserSearchData() { Id = "User 10", FirstName = "YGR", LastName = "FTW" },
+                    new UserSearchData() { Id = "User 6", FirstName = "AGF", LastName = "GUI", Role = "Standard" },
+                    new UserSearchData() { Id = "User 7", FirstName = "HTF", LastName = "HBG", Role = "Administrator" },
+                    new UserSearchData() { Id = "User 8", FirstName = "VFE", LastName = "RDE", Role = "Standard" },
+                    new UserSearchData() { Id = "User 9", FirstName = "TED", LastName = "SWR", Role = "Administrator" },
+                    new UserSearchData() { Id = "User 10", FirstName = "YGR", LastName = "FTW", Role = "Standard" },
                 };
 
             A.CallTo(() => dataAccess.GetCompetentAuthorityUsers()).Returns(competentAuthorityUsers.ToArray());
