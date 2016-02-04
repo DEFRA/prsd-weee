@@ -196,6 +196,20 @@
             return this;
         }
 
+        public AuthorizationBuilder AllowAnyRole()
+        {
+            A.CallTo(() => fake.EnsureUserInRole(A<string>._)).DoesNothing();
+            A.CallTo(() => fake.CheckUserInRole(A<string>._)).Returns(true);
+            return this;
+        }
+
+        public AuthorizationBuilder DenyAnyRole()
+        {
+            A.CallTo(() => fake.EnsureUserInRole(A<string>._)).Throws<SecurityException>();
+            A.CallTo(() => fake.CheckUserInRole(A<string>._)).Returns(false);
+            return this;
+        }
+
         public IWeeeAuthorization Build()
         {
             return fake;

@@ -96,7 +96,7 @@
         }
 
         [Fact]
-        public async void OrganisationUserExists_AndMatchesCurrentUserId_ChangesManageUserDataToNotAllowStatusChange()
+        public async void OrganisationUserExists_AndMatchesCurrentUserId_ChangesManageUserDataToNotAllowRoleAndStatusChange()
         {
             var userId = Guid.NewGuid();
             var organisationUserId = Guid.NewGuid();
@@ -114,7 +114,7 @@
 
             var result = await GetUserDataHandler().HandleAsync(new GetUserData(organisationUserId));
 
-            Assert.False(result.CanManageStatus);
+            Assert.False(result.CanManageRoleAndStatus);
         }
 
         private GetUserDataHandler GetUserDataHandler()
