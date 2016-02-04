@@ -177,7 +177,10 @@
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
-            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult());
+            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult
+            {
+                SchemeId = Guid.NewGuid()
+            });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
                 A.Dummy<WeeeContext>(),
@@ -220,7 +223,10 @@
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
-            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult());
+            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult
+            {
+                SchemeId = Guid.NewGuid()
+            });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
                 A.Dummy<WeeeContext>(),
@@ -287,7 +293,10 @@
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
-            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult());
+            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult
+            {
+                SchemeId = Guid.NewGuid()
+            });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
                 A.Dummy<WeeeContext>(),
@@ -354,7 +363,10 @@
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
-            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult());
+            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult
+            {
+                SchemeId = Guid.NewGuid()
+            });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
                 A.Dummy<WeeeContext>(),
@@ -421,7 +433,10 @@
         {
             // Arrange
             SpgSchemeWeeeCsvResult data = new SpgSchemeWeeeCsvResult();
-            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult());
+            data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult
+            {
+                SchemeId = Guid.NewGuid()
+            });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
                 A.Dummy<WeeeContext>(),
@@ -623,17 +638,20 @@
 
             data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult()
             {
-                SchemeName = "Scheme B"
+                SchemeName = "Scheme B",
+                SchemeId = Guid.NewGuid()
             });
 
             data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult()
             {
-                SchemeName = "Scheme A"
+                SchemeName = "Scheme A",
+                SchemeId = Guid.NewGuid()
             });
 
             data.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult()
             {
-                SchemeName = "Scheme C"
+                SchemeName = "Scheme C",
+                SchemeId = Guid.NewGuid()
             });
 
             GetSchemeWeeeCsvHandler handler = new GetSchemeWeeeCsvHandler(
