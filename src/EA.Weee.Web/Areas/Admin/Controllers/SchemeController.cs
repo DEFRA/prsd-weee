@@ -15,7 +15,9 @@
     using Services.Caching;
     using ViewModels.Scheme;
     using ViewModels.Scheme.Overview;
+    using ViewModels.Scheme.Overview.ContactDetails;
     using ViewModels.Scheme.Overview.MembersData;
+    using ViewModels.Scheme.Overview.OrganisationDetails;
     using ViewModels.Scheme.Overview.PcsDetails;
     using Web.ViewModels.Shared.Scheme;
     using Weee.Requests.Organisations;
@@ -77,8 +79,8 @@
             switch (overviewDisplayOption.Value)
             {
                 case OverviewDisplayOption.MembersData:
-                    // Replace with call to get members data
-                    return View("Overview/MembersDataOverview", new MembersDataOverviewViewModel(Guid.NewGuid(), "ABC123452", schemeId, "Test")
+                    // TODO: Replace with call to get members data
+                    return View("Overview/MembersDataOverview", new MembersDataOverviewViewModel(schemeId, string.Empty, schemeId, string.Empty)
                     {
                         DownloadsByYear = new List<YearlyDownloads>
                         {
@@ -90,13 +92,17 @@
                             }
                         }
                     });
-
-                case OverviewDisplayOption.PcsDetails:
                 case OverviewDisplayOption.OrganisationDetails:
+                // TODO:  Replace with call to get organisation details, and select correct view based on organisation type
+                    return View("Overview/RegisteredCompanyDetailsOverview",
+                        new RegisteredCompanyDetailsOverviewViewModel(schemeId, string.Empty));
                 case OverviewDisplayOption.ContactDetails:
+                    // TODO: Replace with call to get contact details
+                    return View("Overview/ContactDetailsOverview",
+                        new ContactDetailsOverviewViewModel(schemeId, string.Empty));
                 default:
-                    // Replace with call to get PCS details
-                    return View("Overview/PcsDetailsOverview", new PcsDetailsOverviewViewModel(schemeId, "Test 2"));
+                    // TODO:  Replace with call to get PCS details
+                    return View("Overview/PcsDetailsOverview", new PcsDetailsOverviewViewModel(schemeId, string.Empty));
             }
         }
 
