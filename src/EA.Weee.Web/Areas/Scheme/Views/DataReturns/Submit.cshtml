@@ -67,7 +67,7 @@
         else
         {
             <p>
-                Your XML file has passed our technical validation checks but we are unable to verify that all of the information in your file is correct.
+                Your XML file has passed our technical validation checks but it is your responsibility to ensure all of the information in your file is correct.
             </p>
         }
 
@@ -152,11 +152,11 @@
                                 </div>
                                 
                                     @if (Model.DataReturn.IsResubmission)
-                                    {   
-                                        <div class="highlight-section-text highlight-section-warning">
-                                            <p class="important">
-                                                Submitting this file will overwrite all of your existing data for this period.
-                                            </p>
+                                    {
+
+                                        <div class="highlight-section-text negative-margin">
+                                            <img src="~/Content/govuk_toolkit/images/icon-important.png" alt="important" style="vertical-align: middle;margin-right: 20px;">
+                                            Submitting this file will overwrite all of your<br><span style="padding-left: 30px;">existing data for this period.</span>
                                         </div>
                                     }
                                 
