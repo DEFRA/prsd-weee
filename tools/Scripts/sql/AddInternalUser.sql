@@ -39,12 +39,14 @@ BEGIN
 	, UserId
 	, CompetentAuthorityId
 	, UserStatus
+	, RoleId
 	)
 	VALUES (
 	NEWID()
 	, @UserId
 	, (SELECT TOP 1 Id FROM [Lookup].[CompetentAuthority])
 	, 2
+	, (SELECT Id FROM [Security].[Role] WHERE Name = 'InternalAdmin')
 	)
 
 	INSERT INTO [Identity].[AspNetUserClaims] (

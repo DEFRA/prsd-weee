@@ -72,5 +72,17 @@
         /// granting them access to the specified scheme.
         /// </summary>
         bool CheckSchemeAccess(Guid schemeId);
+
+        /// <summary>
+        /// Checks that the principal represents a user with
+        /// the specified role.
+        /// </summary>
+        bool CheckUserInRole(string roleName);
+
+        /// <summary>
+        /// Ensures that the principal represents a user with
+        /// the specified role.
+        /// </summary>
+        void EnsureUserInRole(string roleName);
     }
 }
