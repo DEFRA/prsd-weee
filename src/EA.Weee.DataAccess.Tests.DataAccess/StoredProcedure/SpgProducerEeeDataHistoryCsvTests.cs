@@ -143,21 +143,53 @@
 
                 var producer1 = helper.CreateProducerAsCompany(memberUpload1, "PRN567");
                 producer1.ObligationType = "B2B";
+
                 var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
+                dataReturnVersion1.SubmittedDate = new DateTime(2015, 1, 1);
 
-                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 1, 100);
+                EeeOutputAmount eeeOutputAmount = new EeeOutputAmount();
+                eeeOutputAmount.Id = Guid.NewGuid();
+                eeeOutputAmount.RegisteredProducer = producer1.RegisteredProducer;
+                eeeOutputAmount.WeeeCategory = 1;
+                eeeOutputAmount.Tonnage = 100;
+                eeeOutputAmount.ObligationType = "B2B";
 
+                EeeOutputReturnVersion version = new EeeOutputReturnVersion();
+                version.Id = Guid.NewGuid();
+
+                EeeOutputReturnVersionAmount versionAmount = new EeeOutputReturnVersionAmount();
+
+                versionAmount.EeeOutputAmount = eeeOutputAmount;
+                versionAmount.EeeOutputReturnVersion = version;
+
+                version.EeeOutputReturnVersionAmounts.Add(versionAmount);
+                dataReturnVersion1.EeeOutputReturnVersion = version;
+                
                 var scheme2 = helper.CreateScheme();
                 scheme2.ApprovalNumber = "WEE/TE2345ST/SCH";
                 var memberUpload2 = helper.CreateSubmittedMemberUpload(scheme2);
                 memberUpload2.ComplianceYear = 2000;
-
-                var producer2 = helper.CreateProducerAsCompany(memberUpload1, "PRN567");
+                var producer2 = helper.CreateProducerAsCompany(memberUpload2, "PRN567");
                 producer2.ObligationType = "B2C";
+
                 var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme2, 2000, 1);
+                dataReturnVersion2.SubmittedDate = new DateTime(2015, 1, 2);
+                EeeOutputAmount eeeOutputAmount1 = new EeeOutputAmount();
+                eeeOutputAmount1.Id = Guid.NewGuid();
+                eeeOutputAmount1.RegisteredProducer = producer2.RegisteredProducer;
+                eeeOutputAmount1.WeeeCategory = 1;
+                eeeOutputAmount1.Tonnage = 200;
+                eeeOutputAmount1.ObligationType = "B2C";
 
-                helper.CreateEeeOutputAmount(dataReturnVersion2, producer2.RegisteredProducer, "B2C", 1, 100);
+                EeeOutputReturnVersion version1 = new EeeOutputReturnVersion();
+                version1.Id = Guid.NewGuid();
 
+                EeeOutputReturnVersionAmount versionAmount1 = new EeeOutputReturnVersionAmount();
+
+                versionAmount1.EeeOutputAmount = eeeOutputAmount1;
+                versionAmount1.EeeOutputReturnVersion = version1;
+                version1.EeeOutputReturnVersionAmounts.Add(versionAmount1);                
+                dataReturnVersion2.EeeOutputReturnVersion = version1;
                 db.Model.SaveChanges();
 
                 // Act
@@ -165,10 +197,11 @@
 
                 //Assert
                 Assert.NotNull(results);
-                Assert.Equal("Yes", results[0].LatestData);
-                Assert.Equal("Yes", results[1].LatestData);
-              
                 Assert.Equal(2, results.Count);
+                Assert.Equal("WEE/TE2345ST/SCH", results[0].ApprovalNumber);
+                Assert.Equal("Yes", results[0].LatestData);
+                Assert.Equal("WEE/TE1234ST/SCH", results[1].ApprovalNumber);
+                Assert.Equal("Yes", results[1].LatestData);
             }
         }
 
@@ -209,9 +242,6 @@
                 versionAmount.EeeOutputReturnVersion = version;
 
                 version.EeeOutputReturnVersionAmounts.Add(versionAmount);
-                dataReturnVersion1.EeeOutputReturnVersion = version;
-                dataReturnVersion2.EeeOutputReturnVersion = version;
-
                 EeeOutputAmount eeeOutputAmount1 = new EeeOutputAmount();
                 eeeOutputAmount1.Id = Guid.NewGuid();
                 eeeOutputAmount1.RegisteredProducer = producer1.RegisteredProducer;
@@ -225,6 +255,9 @@
                 versionAmount1.EeeOutputReturnVersion = version1;
 
                 version1.EeeOutputReturnVersionAmounts.Add(versionAmount1);
+
+                dataReturnVersion1.EeeOutputReturnVersion = version;
+                dataReturnVersion2.EeeOutputReturnVersion = version;
                 dataReturnVersion3.EeeOutputReturnVersion = version1;                
 
                 db.Model.SaveChanges();
@@ -236,9 +269,14 @@
                 Assert.NotNull(results);
                //Only shows entries for tonnage value changes and ignores the ones with no change.
                 Assert.Equal(2, results.Count);
+                
                 Assert.Collection(results,
                    (r1) => Assert.Equal(new DateTime(2015, 1, 3), r1.SubmittedDate),
                    (r2) => Assert.Equal(new DateTime(2015, 1, 1), r2.SubmittedDate));
+
+                Assert.Collection(results,
+                  (r1) => Assert.Equal("Yes", r1.LatestData),
+                  (r2) => Assert.Equal("No", r2.LatestData));
             }
         }
 
@@ -284,6 +322,236 @@
                     (r3) => Assert.Equal(2001, r3.ComplianceYear),
                     (r4) => Assert.Equal(2000, r4.ComplianceYear),
                     (r5) => Assert.Equal(1999, r5.ComplianceYear));
+            }
+        }
+
+        [Fact]
+        public async Task SpgProducerEeeDataHistoryCsvTests_EEEDataHistory_OmitsDataReturnsNotChanged()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                //Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+                var scheme1 = helper.CreateScheme();
+                scheme1.ApprovalNumber = "WEE/TE3334ST/SCH";
+                var memberUpload1 = helper.CreateSubmittedMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2000;
+
+                var producer1 = helper.CreateProducerAsCompany(memberUpload1, "PRN897");
+                producer1.ObligationType = "B2B";
+
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
+                dataReturnVersion1.SubmittedDate = new DateTime(2015, 1, 1);
+
+                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
+                dataReturnVersion2.SubmittedDate = new DateTime(2015, 1, 2);
+
+                var dataReturnVersion3 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
+                dataReturnVersion3.SubmittedDate = new DateTime(2015, 1, 3);
+
+                EeeOutputAmount eeeOutputAmount = new EeeOutputAmount();
+                eeeOutputAmount.Id = Guid.NewGuid();
+                eeeOutputAmount.RegisteredProducer = producer1.RegisteredProducer;
+                eeeOutputAmount.WeeeCategory = 1;
+                eeeOutputAmount.Tonnage = 100;
+                eeeOutputAmount.ObligationType = "B2B";
+
+                EeeOutputReturnVersion version = new EeeOutputReturnVersion();
+                version.Id = Guid.NewGuid();
+
+                EeeOutputReturnVersionAmount versionAmount = new EeeOutputReturnVersionAmount();
+
+                versionAmount.EeeOutputAmount = eeeOutputAmount;
+                versionAmount.EeeOutputReturnVersion = version;
+
+                version.EeeOutputReturnVersionAmounts.Add(versionAmount);
+
+                EeeOutputAmount eeeOutputAmount1 = new EeeOutputAmount();
+                eeeOutputAmount1.Id = Guid.NewGuid();
+                eeeOutputAmount1.RegisteredProducer = producer1.RegisteredProducer;
+                eeeOutputAmount1.WeeeCategory = 1;
+                eeeOutputAmount1.Tonnage = 200;
+                eeeOutputAmount1.ObligationType = "B2B";
+
+                EeeOutputReturnVersion version1 = new EeeOutputReturnVersion();
+                version1.Id = Guid.NewGuid();
+                EeeOutputReturnVersionAmount versionAmount1 = new EeeOutputReturnVersionAmount();
+                versionAmount1.EeeOutputAmount = eeeOutputAmount1;
+                versionAmount1.EeeOutputReturnVersion = version1;
+
+                version1.EeeOutputReturnVersionAmounts.Add(versionAmount1);
+
+                dataReturnVersion1.EeeOutputReturnVersion = version;
+                dataReturnVersion2.EeeOutputReturnVersion = version1;
+                dataReturnVersion3.EeeOutputReturnVersion = version1;
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<ProducerEeeHistoryCsvData> results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN897");
+
+                //Assert
+                Assert.NotNull(results);
+                //Only shows entries for tonnage value changes and ignores the ones with no change.
+                Assert.Equal(2, results.Count);
+
+                Assert.Collection(results,
+                   (r1) => Assert.Equal(new DateTime(2015, 1, 2), r1.SubmittedDate),
+                   (r2) => Assert.Equal(new DateTime(2015, 1, 1), r2.SubmittedDate));
+
+                Assert.Collection(results,
+                  (r1) => Assert.Equal("Yes", r1.LatestData),
+                  (r2) => Assert.Equal("No", r2.LatestData));
+            }
+        }
+
+        [Fact]
+        public async Task SpgProducerEeeDataHistoryCsvTests_EEEDataHistory_JustOneProducerUploadForTheScheme()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                //Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+                var scheme1 = helper.CreateScheme();
+                scheme1.ApprovalNumber = "WEE/TE3334ST/SCH";
+                var memberUpload1 = helper.CreateSubmittedMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2000;
+
+                var producer1 = helper.CreateProducerAsCompany(memberUpload1, "PRN897");
+                producer1.ObligationType = "B2B";
+
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
+                dataReturnVersion1.SubmittedDate = new DateTime(2015, 1, 1);
+                dataReturnVersion1.DataReturn.Quarter = 4;
+                
+                EeeOutputAmount eeeOutputAmount = new EeeOutputAmount();
+                eeeOutputAmount.Id = Guid.NewGuid();
+                eeeOutputAmount.RegisteredProducer = producer1.RegisteredProducer;
+                eeeOutputAmount.WeeeCategory = 1;
+                eeeOutputAmount.Tonnage = 100;
+                eeeOutputAmount.ObligationType = "B2B";
+
+                EeeOutputReturnVersion version = new EeeOutputReturnVersion();
+                version.Id = Guid.NewGuid();
+
+                EeeOutputReturnVersionAmount versionAmount = new EeeOutputReturnVersionAmount();
+
+                versionAmount.EeeOutputAmount = eeeOutputAmount;
+                versionAmount.EeeOutputReturnVersion = version;
+
+                version.EeeOutputReturnVersionAmounts.Add(versionAmount);
+
+                dataReturnVersion1.EeeOutputReturnVersion = version;
+                
+                db.Model.SaveChanges();
+
+                // Act
+                List<ProducerEeeHistoryCsvData> results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN897");
+
+                //Assert
+                Assert.NotNull(results);
+                Assert.Equal(1, results.Count);
+                Assert.Equal("PRN897", results[0].PRN);
+                Assert.Equal("WEE/TE3334ST/SCH", results[0].ApprovalNumber);
+                Assert.Equal("Yes", results[0].LatestData);
+                Assert.Equal(4, results[0].Quarter);
+            }
+        }
+
+        [Fact]
+        public async Task SpgProducerEeeDataHistoryCsvTests_EEEDataHistory_SchemeWith2ProducersRemovesProducer1_ReturnsLatestEntryWithNULLTonnageValues()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                //Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+                var scheme1 = helper.CreateScheme();
+                scheme1.ApprovalNumber = "WEE/TE3334ST/SCH";
+                var memberUpload1 = helper.CreateSubmittedMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2000;
+
+                var producer1 = helper.CreateProducerAsCompany(memberUpload1, "PRN897");
+                producer1.ObligationType = "B2B";
+
+                var producer2 = helper.CreateProducerAsCompany(memberUpload1, "PRN123");
+                producer2.ObligationType = "B2B";
+
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
+                dataReturnVersion1.SubmittedDate = new DateTime(2015, 1, 1);
+                
+                EeeOutputAmount eeeOutputAmount = new EeeOutputAmount();
+                eeeOutputAmount.Id = Guid.NewGuid();
+                eeeOutputAmount.RegisteredProducer = producer1.RegisteredProducer;
+                eeeOutputAmount.WeeeCategory = 1;
+                eeeOutputAmount.Tonnage = 100;
+                eeeOutputAmount.ObligationType = "B2B";
+
+                EeeOutputAmount eeeOutputAmount1 = new EeeOutputAmount();
+                eeeOutputAmount1.Id = Guid.NewGuid();
+                eeeOutputAmount1.RegisteredProducer = producer2.RegisteredProducer;
+                eeeOutputAmount1.WeeeCategory = 1;
+                eeeOutputAmount1.Tonnage = 200;
+                eeeOutputAmount1.ObligationType = "B2B";
+
+                EeeOutputReturnVersion version = new EeeOutputReturnVersion();
+                version.Id = Guid.NewGuid();
+
+                EeeOutputReturnVersionAmount versionAmount1 = new EeeOutputReturnVersionAmount();
+
+                versionAmount1.EeeOutputAmount = eeeOutputAmount;
+                versionAmount1.EeeOutputReturnVersion = version;
+
+                version.EeeOutputReturnVersionAmounts.Add(versionAmount1);
+
+                EeeOutputReturnVersionAmount versionAmount2 = new EeeOutputReturnVersionAmount();
+
+                versionAmount2.EeeOutputAmount = eeeOutputAmount1;
+                versionAmount2.EeeOutputReturnVersion = version;
+                version.EeeOutputReturnVersionAmounts.Add(versionAmount2);
+
+                dataReturnVersion1.EeeOutputReturnVersion = version;
+                
+                //Second data return version with producer 1 removed and only producer 2 data
+                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
+                dataReturnVersion2.SubmittedDate = new DateTime(2015, 1, 2);
+
+                EeeOutputAmount eeeOutputAmount3 = new EeeOutputAmount();
+                eeeOutputAmount3.Id = Guid.NewGuid();
+                eeeOutputAmount3.RegisteredProducer = producer2.RegisteredProducer;
+                eeeOutputAmount3.WeeeCategory = 1;
+                eeeOutputAmount3.Tonnage = 300;
+                eeeOutputAmount3.ObligationType = "B2B";
+
+                EeeOutputReturnVersion version1 = new EeeOutputReturnVersion();
+                version1.Id = Guid.NewGuid();
+                EeeOutputReturnVersionAmount versionAmount3 = new EeeOutputReturnVersionAmount();
+                versionAmount3.EeeOutputAmount = eeeOutputAmount3;
+                versionAmount3.EeeOutputReturnVersion = version1;
+
+                version1.EeeOutputReturnVersionAmounts.Add(versionAmount3);                
+                dataReturnVersion2.EeeOutputReturnVersion = version1;               
+
+                db.Model.SaveChanges();
+
+                // Act
+                List<ProducerEeeHistoryCsvData> results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN897");
+
+                //Assert
+                Assert.NotNull(results);
+                //Only shows entries for tonnage value changes and ignores the ones with no change.
+                Assert.Equal(2, results.Count);
+
+                Assert.Collection(results,
+                   (r1) => Assert.Equal(new DateTime(2015, 1, 2), r1.SubmittedDate),
+                   (r2) => Assert.Equal(new DateTime(2015, 1, 1), r2.SubmittedDate));
+
+                Assert.Collection(results,
+                  (r1) => Assert.Equal("Yes", r1.LatestData),
+                  (r2) => Assert.Equal("No", r2.LatestData));
+
+                Assert.Collection(results,
+                 (r1) => Assert.Null(r1.Cat1B2B),
+                 (r2) => Assert.Equal(100, r2.Cat1B2B));
             }
         }
     }

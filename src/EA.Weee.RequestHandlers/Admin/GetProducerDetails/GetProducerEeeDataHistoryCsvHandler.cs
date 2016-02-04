@@ -35,7 +35,7 @@
 
             string fileContent = await GetProducersEeeHistoryCsvContent(request.PRN);
 
-            var fileName = string.Format("{0}_producerEeehistory_{1:ddMMyyyy_HHmm}.csv",
+            var fileName = string.Format("{0}_producerEEEhistory_{1:ddMMyyyy_HHmm}.csv",
                 request.PRN,
                 DateTime.UtcNow);
 
@@ -53,12 +53,13 @@
             CsvWriter<ProducerEeeHistoryCsvData> csvWriter =
                 csvWriterFactory.Create<ProducerEeeHistoryCsvData>();
 
+            csvWriter.DefineColumn(@"PRN", i => i.PRN);
             csvWriter.DefineColumn(@"PCS name", i => i.SchemeName);
             csvWriter.DefineColumn(@"PCS approval number", i => i.ApprovalNumber);
             csvWriter.DefineColumn(@"Compliance year", i => i.ComplianceYear);
             csvWriter.DefineColumn(@"Date and time (GMT) data submitted", i => i.SubmittedDate);
             csvWriter.DefineColumn(@"Quarter", i => i.Quarter);
-            csvWriter.DefineColumn(@"Latest data(Yes/No)", i => i.LatestData);
+            csvWriter.DefineColumn(@"Latest data", i => i.LatestData);
             foreach (int category in Enumerable.Range(1, 14))
             {
                     string title = string.Format("Cat{0} B2C", category);
