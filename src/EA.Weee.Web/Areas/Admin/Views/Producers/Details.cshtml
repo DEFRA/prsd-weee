@@ -1,7 +1,10 @@
 ﻿@using EA.Weee.Core.DataReturns
+@using EA.Weee.Core.Search
 @using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.Areas.Admin.ViewModels.Home
 @using EA.Weee.Web.Extensions
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Producers.DetailsViewModel
 @{
     string schemePlural = Model.Details.Schemes.Count != 1 ? "PCSs" : "PCS";
@@ -547,6 +550,9 @@
     </p>
     <p>
         @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "button" })
+    </p>
+    <p>
+        <a href="@(Url.UrlFor<ProducersController>(a => a.Search()))">Back</a>
     </p>
 }
 
