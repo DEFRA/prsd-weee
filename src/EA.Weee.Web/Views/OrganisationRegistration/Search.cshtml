@@ -19,22 +19,22 @@
         <p>
             Search for your registered company, partnership or sole trader name. If it is not listed, create a new organisation.
         </p>
-        
+
         <div class="form-group @Html.Gds().FormGroupClass(m => m.SearchTerm) form-search">
             @Html.Gds().LabelFor(m => m.SearchTerm, new { @class = "visuallyhidden" })
             @Html.Gds().ValidationMessageFor(m => m.SearchTerm)
-            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { @class = "form-control", @maxLength=CommonMaxFieldLengths.DefaultString })
+            @Html.Gds().TextBoxFor(m => m.SearchTerm, new { @class = "form-control", @maxLength = CommonMaxFieldLengths.DefaultString })
             <button type="submit" class="button">
-                <img src="@Url.Content("~/Content/govuk_toolkit/images/icon-search.png")" alt="Search" />
+                <img src="@Url.Content("~/Content/govuk_toolkit/images/icon-search.png")" alt="Search"/>
             </button>
         </div>
-    }
 
-    @if (Model.ShowPerformAnotherActivityLink)
-    {
-        <p>
-            @Html.ActionLink("Perform another activity", "Index", "Organisation")
-        </p>
+        if (Model.ShowPerformAnotherActivityLink)
+        {
+            <p>
+                @Html.ActionLink("Perform another activity", "Index", "Organisation")
+            </p>
+        }
     }
 }
 
