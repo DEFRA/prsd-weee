@@ -9,7 +9,7 @@
 
     <header class="hgroup">
         <div>
-            <h1 class="heading-large">Would you like to change the status, or manage the user’s details?</h1>
+            <h1 class="heading-large">Would you like to change the status, or manage the user's details?</h1>
         </div>
     </header>
 
@@ -55,6 +55,19 @@
 
         if (Model.CanManageStatus)
         {
+            if (Model.IsCompetentAuthorityUser)
+            {
+                <div class="form-group @Html.Gds().FormGroupClass(m => m.Role)">
+                    @Html.Gds().LabelFor(m => m.Role)
+                    @Html.Gds().ValidationMessageFor(m => m.Role)
+                    @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { autocomplete = "false" })
+                </div>
+            }
+            else
+            {
+                @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { hidden = "true" })
+            }
+
             <div class="form-group @Html.Gds().FormGroupClass(m => m.UserStatus)">
                 @Html.Gds().LabelFor(m => m.UserStatus)
                 @Html.Gds().ValidationMessageFor(m => m.UserStatus)
@@ -63,6 +76,7 @@
         }
         else
         {
+            @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { hidden = "true" })
             @Html.Gds().DropDownListFor(m => m.UserStatus, Model.UserStatusSelectList, new { hidden = "true" })
         }
 

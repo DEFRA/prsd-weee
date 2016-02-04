@@ -84,7 +84,7 @@
     <Compile Include="Admin\GetAllApprovedSchemes.cs" />
     <Compile Include="Admin\GetProducerDetails.cs" />
     <Compile Include="Admin\GetUserData.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus.cs" />
     <Compile Include="Admin\UpdateUser.cs" />
     <Compile Include="Organisations\AddAddressToOrganisation.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationId.cs" />
@@ -93,6 +93,7 @@
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncomplete.cs" />
     <Compile Include="Scheme\GetSchemeById.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo.cs" />
+    <Compile Include="Admin\GetRoles.cs" />
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResults.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResults.cs" />
     <Compile Include="Scheme\MemberRegistration\GetComplianceYears.cs" />
