@@ -102,6 +102,12 @@
             {
                 model.UserStatusSelectList = FilterUserStatus(model.UserStatus, model.UserStatusSelectList);
 
+                using (var client = apiClient())
+                {
+                    var roles = await client.SendAsync(User.GetAccessToken(), new GetRoles());
+                    model.UserRoleSelectList = new SelectList(roles, "Name", "Description");
+                }
+
                 SetBreadcrumb();
                 return View(model);
             }
