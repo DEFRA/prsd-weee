@@ -2,10 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using Domain.Producer.Classfication;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Scheme;
     using FakeItEasy;
     using Lookup;
+    using Obligation;
     using Xunit;
 
     public class ProducerSubmissionTests
@@ -148,6 +150,75 @@
             Assert.NotEqual(producer, producer2);
         }
 
+        /// <summary>
+        /// This test ensures that two producer submissions are considered equal if the cease to exist date
+        /// for each producer submission is null, given that all other details are the same.
+        /// </summary>
+        [Fact]
+        public void Equals_ProducerSubmissionsWithNullCeaseToExistDates_ReturnsTrue()
+        {
+            ProducerSubmission producer1 = ProducerBuilder.WithCeaseToExist(null);
+            ProducerSubmission producer2 = ProducerBuilder.WithCeaseToExist(null);
+
+            Assert.Equal(producer1, producer2);
+        }
+
+        /// <summary>
+        /// This test ensures that two producer submissions are considered unequal if the cease to exist date
+        /// for one producer submission has a value and the other is null, given that all other details
+        /// are the same.
+        /// </summary>
+        [Fact]
+        public void Equals_ProducerSubmissionWithCeaseToExistDateAndProducerSubmissionWithNullCeaseToExistDate_ReturnsFalse()
+        {
+            ProducerSubmission producer1 = ProducerBuilder.WithCeaseToExist(A.Dummy<DateTime>());
+            ProducerSubmission producer2 = ProducerBuilder.WithCeaseToExist(null);
+
+            Assert.NotEqual(producer1, producer2);
+        }
+
+        /// <summary>
+        /// This test ensures that two producer submissions are considered unequal if the cease to exist date
+        /// for one producer submission is null and the other is has a value, given that all other details
+        /// are the same.
+        /// </summary>
+        [Fact]
+        public void Equals_ProducerSubmissionWithNullCeaseToExistDateAndProducerSubmissionWithCeaseToExistDate_ReturnsFalse()
+        {
+            ProducerSubmission producer1 = ProducerBuilder.WithCeaseToExist(null);
+            ProducerSubmission producer2 = ProducerBuilder.WithCeaseToExist(A.Dummy<DateTime>());
+
+            Assert.NotEqual(producer1, producer2);
+        }
+
+        /// <summary>
+        /// This test ensures that two producer submissions are considered unequal if the cease to exist date
+        /// for one producer submission is different to the other producer submission's cease to exist date,
+        /// given that all other details are the same.
+        /// </summary>
+        [Fact]
+        public void Equals_ProducerSubmissionsWithDifferentCeaseToExistDates_ReturnsFalse()
+        {
+            ProducerSubmission producer1 = ProducerBuilder.WithCeaseToExist(new DateTime(2016, 1, 1));
+            ProducerSubmission producer2 = ProducerBuilder.WithCeaseToExist(new DateTime(2016, 1, 2));
+
+            Assert.NotEqual(producer1, producer2);
+        }
+
+        /// <summary>
+        /// This test ensures that two producer submissions are considered equal if the cease to exist date
+        /// for one producer submission is the same as the other producer submission's cease to exist date,
+        /// given that all other details are the same.
+        /// </summary>
+        [Fact]
+        public void Equals_ProducerSubmissionsWithSameCeaseToExistDates_ReturnsTrue()
+        {
+            ProducerSubmission producer1 = ProducerBuilder.WithCeaseToExist(new DateTime(2016, 1, 1));
+            ProducerSubmission producer2 = ProducerBuilder.WithCeaseToExist(new DateTime(2016, 1, 1));
+
+            Assert.Equal(producer1, producer2);
+        }
+
         [Fact]
         public void Producer_SetAsInvoiced_UpdatesInvoicedProperty()
         {
@@ -239,6 +310,7 @@
             private ProducerBusiness producerBusiness = new AlwaysEqualProducerBusiness();
             private List<BrandName> brandNames;
             private List<SICCode> sicCodes;
+            private DateTime? ceaseToExist = null;
 
             private ProducerBuilder()
             {
@@ -267,7 +339,6 @@
                     A.Dummy<string>());
 
                 var updatedDate = A.Dummy<DateTime>();
-                var ceaseToExist = A.Dummy<DateTime?>();
 
                 RegisteredProducer registeredProducer = new RegisteredProducer(
                     registrationNumber,
@@ -387,6 +458,14 @@
             {
                 var builder = new ProducerBuilder();
                 builder.sicCodes = sicCodes;
+
+                return builder.Build();
+            }
+
+            public static ProducerSubmission WithCeaseToExist(DateTime? ceaseToExist)
+            {
+                var builder = new ProducerBuilder();
+                builder.ceaseToExist = ceaseToExist;
 
                 return builder.Build();
             }

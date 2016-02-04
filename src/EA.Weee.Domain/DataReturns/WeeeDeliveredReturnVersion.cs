@@ -4,32 +4,16 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using Obligation;
     using Prsd.Core;
-    using Prsd.Core.Domain;
 
-    public class WeeeDeliveredReturnVersion : Entity
+    public class WeeeDeliveredReturnVersion : DataReturnVersionAssociativeEntity
     {
-        public virtual ICollection<DataReturnVersion> DataReturnVersions { get; private set; }
-
         public virtual ICollection<WeeeDeliveredAmount> WeeeDeliveredAmounts { get; private set; }
 
-        /// <summary>
-        /// This constructor is used by Entity Framework.
-        /// </summary>
-        protected WeeeDeliveredReturnVersion()
+        public WeeeDeliveredReturnVersion()
         {
-        }
-
-        public WeeeDeliveredReturnVersion(DataReturnVersion dataReturnVersion)
-        {
-            Guard.ArgumentNotNull(() => dataReturnVersion, dataReturnVersion);
-
-            DataReturnVersions = new List<DataReturnVersion>();
             WeeeDeliveredAmounts = new List<WeeeDeliveredAmount>();
-
-            DataReturnVersions.Add(dataReturnVersion);
         }
 
         public void AddWeeeDeliveredAmount(WeeeDeliveredAmount weeeDeliveredAmount)

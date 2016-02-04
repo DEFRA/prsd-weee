@@ -5,7 +5,7 @@
     using System.Security;
     using System.Security.Claims;
     using DataAccess;
-    using Domain;
+    using Domain.User;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
     using EA.Weee.Core;

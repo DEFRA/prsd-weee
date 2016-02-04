@@ -10,7 +10,7 @@
     using ReturnVersionBuilder;
     using Shared;
     using ErrorLevel = Core.Shared.ErrorLevel;
-    using ObligationType = Domain.ObligationType;
+    using ObligationType = Domain.Obligation.ObligationType;
     using Scheme = Domain.Scheme.Scheme;
 
     public class EeeValidator : IEeeValidator
@@ -63,7 +63,7 @@
             if (!string.Equals(producer.CurrentSubmission.OrganisationName, producerName, StringComparison.InvariantCultureIgnoreCase))
             {
                 var errorMessage = string.Format(
-                "The producer name {0} registered for producer registration number {1} for {2} does not match the registered producer name of {3}. Ensure the registration number and producer name match the registered details.",
+                "The producer name {0} registered with producer registration number {1} for {2} does not match the registered producer name of {3}. Ensure the registration number and producer name match the registered details.",
                 producerName,
                 producerRegistrationNumber,
                 quarter.Year,

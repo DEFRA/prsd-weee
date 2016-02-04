@@ -6,6 +6,7 @@
     using System.Xml.Linq;
     using Domain;
     using Domain.Lookup;
+    using Domain.Obligation;
     using Domain.Producer;
     using EA.Weee.Domain.DataReturns;
     using Prsd.Core;
@@ -67,7 +68,7 @@
         {
             XElement xmlXsdVersion = new XElement(XmlNamespace.DataReturns + "XSDVersion");
             xmlSchemeReturn.Add(xmlXsdVersion);
-            xmlXsdVersion.Value = "3.23";
+            xmlXsdVersion.Value = "3.35";
 
             XElement xmlApprovalNo = new XElement(XmlNamespace.DataReturns + "ApprovalNo");
             xmlSchemeReturn.Add(xmlApprovalNo);
@@ -93,17 +94,20 @@
                 PopulateReturn(returnItem, xmlReturn);
             }
 
+            XElement xmlDeliveredToAATF = new XElement(XmlNamespace.DataReturns + "DeliveredToAATF");
+            xmlSchemeReturn.Add(xmlDeliveredToAATF);
+
             var aatfDeliveredAmounts = dataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts
                 .Where(x => x.IsAatfDeliveredAmount)
                 .GroupBy(x => x.AatfDeliveryLocation);
 
             foreach (var aatfDeliveredAmount in aatfDeliveredAmounts)
             {
-                XElement xmlDeliveredToATF = new XElement(XmlNamespace.DataReturns + "DeliveredToATF");
-                xmlSchemeReturn.Add(xmlDeliveredToATF);
-
-                PopulateDeliveredToAatf(aatfDeliveredAmount, xmlDeliveredToATF);
+                PopulateDeliveredToAatf(aatfDeliveredAmount, xmlDeliveredToAATF);
             }
+
+            XElement xmlDeliveredToAE = new XElement(XmlNamespace.DataReturns + "DeliveredToAE");
+            xmlSchemeReturn.Add(xmlDeliveredToAE);
 
             var aeDeliveredAmounts = dataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts
                 .Where(x => x.IsAeDeliveredAmount)
@@ -111,9 +115,6 @@
 
             foreach (var aeDeliveredAmount in aeDeliveredAmounts)
             {
-                XElement xmlDeliveredToAE = new XElement(XmlNamespace.DataReturns + "DeliveredToAE");
-                xmlSchemeReturn.Add(xmlDeliveredToAE);
-
                 PopulateDeliveredToAE(aeDeliveredAmount, xmlDeliveredToAE);
             }
 
@@ -168,10 +169,13 @@
             xmlDeliveredToFacility.Add(xmlFacilityName);
             xmlFacilityName.Value = deliveredToAatfs.Key.FacilityName;
 
+            XElement xmlReturns = new XElement(XmlNamespace.DataReturns + "Returns");
+            xmlDeliveredToFacility.Add(xmlReturns);
+
             foreach (IReturnItem returnItem in deliveredToAatfs)
             {
                 XElement xmlReturn = new XElement(XmlNamespace.DataReturns + "Return");
-                xmlDeliveredToAtf.Add(xmlReturn);
+                xmlReturns.Add(xmlReturn);
 
                 PopulateReturn(returnItem, xmlReturn);
             }
@@ -190,10 +194,13 @@
             xmlDeliveredToOperator.Add(xmlOperatorName);
             xmlOperatorName.Value = deliveredToAes.Key.OperatorName;
 
+            XElement xmlReturns = new XElement(XmlNamespace.DataReturns + "Returns");
+            xmlDeliveredToOperator.Add(xmlReturns);
+
             foreach (IReturnItem returnItem in deliveredToAes)
             {
                 XElement xmlReturn = new XElement(XmlNamespace.DataReturns + "Return");
-                xmlDeliveredToAE.Add(xmlReturn);
+                xmlReturns.Add(xmlReturn);
 
                 PopulateReturn(returnItem, xmlReturn);
             }
@@ -209,10 +216,13 @@
             xmlProducer.Add(xmlProducerCompanyName);
             xmlProducerCompanyName.Value = registeredProducer.CurrentSubmission.OrganisationName;
 
+            XElement xmlReturns = new XElement(XmlNamespace.DataReturns + "Returns");
+            xmlProducer.Add(xmlReturns);
+
             foreach (var eeeOutputAmount in eeeOutputAmounts)
             {
                 XElement xmlReturn = new XElement(XmlNamespace.DataReturns + "Return");
-                xmlProducer.Add(xmlReturn);
+                xmlReturns.Add(xmlReturn);
 
                 PopulateReturn(eeeOutputAmount, xmlReturn);
             }

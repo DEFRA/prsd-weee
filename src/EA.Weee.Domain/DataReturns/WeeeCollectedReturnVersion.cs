@@ -3,27 +3,16 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using EA.Prsd.Core.Domain;
+    using Obligation;
     using Prsd.Core;
 
-    public class WeeeCollectedReturnVersion : Entity
+    public class WeeeCollectedReturnVersion : DataReturnVersionAssociativeEntity
     {
-        public virtual ICollection<DataReturnVersion> DataReturnVersions { get; private set; }
-
         public virtual ICollection<WeeeCollectedAmount> WeeeCollectedAmounts { get; private set; }
 
-        protected WeeeCollectedReturnVersion()
+        public WeeeCollectedReturnVersion()
         {
-        }
-
-        public WeeeCollectedReturnVersion(DataReturnVersion dataReturnVersion)
-        {
-            Guard.ArgumentNotNull(() => dataReturnVersion, dataReturnVersion);
-
-            DataReturnVersions = new List<DataReturnVersion>();
             WeeeCollectedAmounts = new List<WeeeCollectedAmount>();
-
-            DataReturnVersions.Add(dataReturnVersion);
         }
 
         public void AddWeeeCollectedAmount(WeeeCollectedAmount weeeCollectedAmount)

@@ -5,8 +5,11 @@
     using System.Threading.Tasks;
     using Domain;
     using Domain.Charges;
+    using Domain.Obligation;
     using Domain.Producer;
+    using Domain.Producer.Classfication;
     using Domain.Scheme;
+    using Domain.User;
     using FakeItEasy;
     using Ibis;
     using Prsd.Core;

@@ -40,6 +40,23 @@
                 IOAuthClient client = new OAuthClient(baseUrl, clientId, clientSecret);
                 var tokenResponse = await client.GetAccessTokenAsync(username, password);
 
+                if (tokenResponse.AccessToken == null)
+                {
+                    if (tokenResponse.IsHttpError)
+                    {
+                        throw new Exception(string.Format("Request for access token returned HttpError: Status - {0}, Reason - {1}, Error - {2}",
+                            tokenResponse.HttpErrorStatusCode, tokenResponse.HttpErrorReason, tokenResponse.Error));
+                    }
+                    else if (tokenResponse.IsError)
+                    {
+                        throw new Exception(string.Format("Request for access token returned Error: {0}", tokenResponse.Error));
+                    }
+                    else
+                    {
+                        throw new Exception("Request for access token returned null.");
+                    }
+                }
+
                 // Fetch the user info for the warm-up user.
                 IUserInfoClient userInfoClient = new UserInfoClient(baseUrl);
                 var userInfo = await userInfoClient.GetUserInfoAsync(tokenResponse.AccessToken);

@@ -2,7 +2,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.PCSFileUploadViewModel
 @{
-    ViewBag.Title = "Submit data returns";
+    ViewBag.Title = "Submit EEE/WEEE data return";
     HtmlHelper.ClientValidationEnabled = true;
     HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
 }
@@ -80,13 +80,13 @@
         {
             id = "form1",
             enctype = "multipart/form-data",
-            onsubmit = "return ajaxSubmit();",
+            onsubmit = string.Format("{0} return ajaxSubmit();", this.WeeeGds().EventTrackingFunction("Data return uploads", "Check data return file for errors")),         
             autocomplete = "off"
         }))
     {
         <header class="hgroup">
             <h1 id="title" class="heading-large" aria-live="off">
-                Submit a data return
+                Submit EEE/WEEE data return
             </h1>
         </header>
 
@@ -101,7 +101,7 @@
             
             <p>To submit your data return, upload an XML file.</p>
             <p class="important">
-                Your XML file must use the version 3.23 schema.
+                Your XML file must use the version 3.35 schema.
             </p>
             <div class="form-group @Html.Gds().FormGroupClass(m => m.File)">
                 @(this.WeeeGds().ScreenReaderLabelFor(m => m.File))

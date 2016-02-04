@@ -32,7 +32,7 @@
             return invoicedMemberUploads
                 .Select(mu => mu.ComplianceYear.Value)
                 .Distinct()
-                .OrderBy(x => x)
+                .OrderByDescending(x => x)
                 .ToList();
         }
     }

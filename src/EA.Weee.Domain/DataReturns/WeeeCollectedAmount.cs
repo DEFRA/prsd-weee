@@ -1,10 +1,11 @@
 ﻿namespace EA.Weee.Domain.DataReturns
 {
+    using System;
     using System.Collections.Generic;
     using Lookup;
-    using Prsd.Core;
+    using Obligation;
 
-    public class WeeeCollectedAmount : ReturnItem
+    public class WeeeCollectedAmount : ReturnItem, IEquatable<WeeeCollectedAmount>
     {
         public virtual WeeeCollectedAmountSourceType SourceType { get; private set; }
 
@@ -24,10 +25,30 @@
         {
         }
 
-        public void AddWeeeCollectedReturnVersion(WeeeCollectedReturnVersion version)
+        public bool Equals(WeeeCollectedAmount other)
         {
-            Guard.ArgumentNotNull(() => version, version);
-            WeeeCollectedReturnVersions.Add(version);
+            if (other == null)
+            {
+                return false;
+            }
+
+            return Equals((ReturnItem)other) &&
+                   SourceType == other.SourceType;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode() ^ SourceType.GetHashCode();
         }
     }
 }

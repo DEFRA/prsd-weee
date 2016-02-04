@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -39,6 +40,22 @@
                 .Include(p => p.ProducerBusiness.Partnership)
                 .AsNoTracking()
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ProducerEeeByQuarter>> EeeOutputBySchemeAndComplianceYear(string registrationNumber, int complianceYear, Guid schemeId)
+        {
+            return await
+                context.DataReturns
+                    .Where(dr => dr.Quarter.Year == complianceYear)
+                    .Where(dr => dr.CurrentVersion != null)
+                    .Select(dr => new ProducerEeeByQuarter
+                    {
+                        Quarter = dr.Quarter,
+                        Eee = dr.CurrentVersion.EeeOutputReturnVersion.EeeOutputAmounts
+                            .Where(eee => eee.RegisteredProducer.ProducerRegistrationNumber == registrationNumber 
+                            && eee.RegisteredProducer.Scheme.Id == schemeId)
+                    })
+                    .ToListAsync();
         }
     }
 }

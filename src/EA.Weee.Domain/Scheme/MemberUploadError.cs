@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Domain.Scheme
 {
     using System;
+    using Error;
     using Prsd.Core.Domain;
 
     public class MemberUploadError : Entity

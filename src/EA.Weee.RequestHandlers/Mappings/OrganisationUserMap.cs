@@ -3,8 +3,8 @@
     using System;
     using Core.Organisations;
     using Core.Users;
-    using Domain;
     using Domain.Organisation;
+    using Domain.User;
     using Prsd.Core.Mapper;
     using OrganisationUserStatus = Core.Shared.UserStatus;
 

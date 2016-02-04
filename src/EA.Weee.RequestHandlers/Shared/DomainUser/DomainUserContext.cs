@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
     using DataAccess;
-    using Domain;
+    using Domain.User;
 
     /// <summary>
     /// Provides methods for fetching objects representing domain users.

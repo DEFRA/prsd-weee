@@ -5,7 +5,7 @@
     using Core.Shared;
     using Domain.DataReturns;
     using Domain.Lookup;
-    using ObligationType = Domain.ObligationType;
+    using ObligationType = Domain.Obligation.ObligationType;
     using Scheme = Domain.Scheme.Scheme;
 
     /// <summary>
@@ -23,10 +23,10 @@
 
         Task AddWeeeCollectedAmount(WeeeCollectedAmountSourceType sourceType, WeeeCategory category, ObligationType obligationType, decimal tonnage);
 
-        Task AddAatfDeliveredAmount(string aatfApprovalNumber, string facilityName, WeeeCategory category, ObligationType obligationType, decimal tonnage);
+        Task AddAatfDeliveredAmount(string approvalNumber, string facilityName, WeeeCategory category, ObligationType obligationType, decimal tonnage);
 
         Task AddAeDeliveredAmount(string approvalNumber, string operatorName, WeeeCategory category, ObligationType obligationType, decimal tonnage);
 
-        DataReturnVersionBuilderResult Build();
+        Task<DataReturnVersionBuilderResult> Build();
     }
 }

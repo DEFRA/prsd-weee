@@ -1,14 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Scheme.ViewModels.DataReturns
 {
-    using Core.DataReturns;
-    using Prsd.Core.Validation;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
+    using Core.DataReturns;
 
     public class SubmitViewModel
     {
+        public Guid PcsId { get; set; }
+
         public DataReturnForSubmission DataReturn { get; set; }
     }
 }
