@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.UpdateCompetentAuthorityUserStatus
+﻿namespace EA.Weee.RequestHandlers.Admin.UpdateCompetentAuthorityUserRoleAndStatus
 {
     using System;
     using System.Data.Entity;
@@ -7,12 +7,13 @@
     using Core.Shared;
     using DataAccess;
     using Domain.Admin;
+    using Domain.Security;
 
-    public class UpdateCompetentAuthorityUserStatusDataAccess : IUpdateCompetentAuthorityUserStatusDataAccess
+    public class UpdateCompetentAuthorityUserRoleAndStatusDataAccess : IUpdateCompetentAuthorityUserRoleAndStatusDataAccess
     {
         private readonly WeeeContext context;
 
-        public UpdateCompetentAuthorityUserStatusDataAccess(WeeeContext context)
+        public UpdateCompetentAuthorityUserRoleAndStatusDataAccess(WeeeContext context)
         {
             this.context = context;
         }
@@ -22,9 +23,16 @@
             return await context.CompetentAuthorityUsers.SingleOrDefaultAsync(u => u.Id == competentAuthorityUserId);
         }
 
-        public async Task<int> UpdateCompetentAuthorityUserStatus(CompetentAuthorityUser user, UserStatus status)
+        public Task<Role> GetRoleOrDefaultAsync(string roleName)
+        {
+            return context.Roles.SingleOrDefaultAsync(r => r.Name == roleName);
+        }
+
+        public async Task<int> UpdateUserRoleAndStatus(CompetentAuthorityUser user, Role role, UserStatus status)
         {
             user.UpdateUserStatus(status.ToDomainEnumeration<Domain.User.UserStatus>());
+            user.UpdateRole(role);
+
             return await context.SaveChangesAsync();
         }
     }

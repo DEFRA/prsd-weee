@@ -35,7 +35,7 @@
         // GET: Admin/User
         [HttpGet]
         public async Task<ActionResult> ManageUsers(FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending, int page = 1)
-        {   
+        {
             SetBreadcrumb();
 
             if (page < 1)
@@ -46,11 +46,11 @@
             using (var client = apiClient())
             {
                 FindMatchingUsers query = new FindMatchingUsers(page, DefaultPageSize, orderBy);
-                
+
                 UserSearchDataResult usersSearchResultData = await client.SendAsync(User.GetAccessToken(), query);
-                
+
                 ManageUsersViewModel model = new ManageUsersViewModel();
-                
+
                 model.Users = usersSearchResultData.Results.ToPagedList(page - 1, DefaultPageSize, usersSearchResultData.UsersCount);
                 model.OrderBy = orderBy;
 
@@ -78,9 +78,12 @@
                 using (var client = apiClient())
                 {
                     var editUserData = await client.SendAsync(User.GetAccessToken(), new GetUserData(orgUserId.Value));
+                    var roles = await client.SendAsync(User.GetAccessToken(), new GetRoles());
+
                     var model = new EditUserViewModel(editUserData);
                     model.UserStatusSelectList = FilterUserStatus(model.UserStatus, model.UserStatusSelectList);
-                    Guid userId = new Guid(editUserData.UserId);
+                    model.UserRoleSelectList = new SelectList(roles, "Name", "Description");
+
                     SetBreadcrumb();
                     return View(model);
                 }
@@ -98,7 +101,7 @@
             if (!ModelState.IsValid)
             {
                 model.UserStatusSelectList = FilterUserStatus(model.UserStatus, model.UserStatusSelectList);
-                Guid userId = new Guid(model.UserId);
+
                 SetBreadcrumb();
                 return View(model);
             }
@@ -111,7 +114,7 @@
                 {
                     if (User.GetUserId() != model.UserId)
                     {
-                        await client.SendAsync(User.GetAccessToken(), new UpdateCompetentAuthorityUserStatus(model.Id, model.UserStatus));
+                        await client.SendAsync(User.GetAccessToken(), new UpdateCompetentAuthorityUserRoleAndStatus(model.Id, model.UserStatus, model.Role.Name));
                     }
                 }
                 else
