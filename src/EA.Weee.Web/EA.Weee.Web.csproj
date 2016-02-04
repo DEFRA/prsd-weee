@@ -232,11 +232,6 @@
     <Compile Include="Areas\Admin\ViewModels\Charge\IssuedChargesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\SelectAuthorityViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\MembersData\YearlyDownloads.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\MembersData\MembersDataOverviewViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\OverviewDisplayOption.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\OverviewViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\PcsDetails\PcsDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\IndexViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\DataReturns\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\Scheme\ViewModels\SummaryViewModel.cs" />
@@ -594,9 +589,6 @@
     <Content Include="Areas\Scheme\Views\DataReturns\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Reports\UkEeeData.cshtml" />
     <Content Include="Areas\Scheme\Views\DataReturns\CannotSubmitDataReturn.cshtml" />
-    <Content Include="Areas\Admin\Views\Scheme\Overview\PcsDetailsOverview.cshtml" />
-    <Content Include="Areas\Admin\Views\Scheme\Overview\_OverviewHeaderAndTabs.cshtml" />
-    <Content Include="Areas\Admin\Views\Scheme\Overview\MembersDataOverview.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
@@ -732,7 +724,6 @@
     <Compile Include="Areas\Scheme\ViewModels\SuccessfulSubmissionViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\SchemeViewModel.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Summary.cs" />
-    <Compile Include="RazorHelpers\WeeeGds.Tab.cs" />
     <Compile Include="ViewModels\Shared\Scheme\ViewOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Test\Controllers\ManageCacheController.cs" />
     <Compile Include="Areas\Test\Controllers\CreatePcsMemberXmlFileController.cs" />
