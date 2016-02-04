@@ -51,7 +51,7 @@
 
             Assert.Equal(data, result.MemberUpload.RawData.Data);
             Assert.Equal(fileName, result.MemberUpload.FileName);
-            Assert.True(ReferenceEquals(memberUpload, result.MemberUpload));
+            Assert.Same(memberUpload, result.MemberUpload);
         }
 
         [Fact]
@@ -195,7 +195,7 @@
 
             var result = await builder.InvokeGenerateProducerDataWithSingleResult();
 
-            Assert.Equal(Domain.ObligationType.B2B, result.ObligationType);
+            Assert.Equal(Domain.Obligation.ObligationType.B2B, result.ObligationType);
         }
 
         [Fact]

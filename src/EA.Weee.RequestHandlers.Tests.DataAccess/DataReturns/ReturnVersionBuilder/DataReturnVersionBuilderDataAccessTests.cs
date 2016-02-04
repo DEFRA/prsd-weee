@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.DataReturns;
+    using FakeItEasy;
     using RequestHandlers.DataReturns.ReturnVersionBuilder;
     using Weee.DataAccess;
     using Weee.Tests.Core;
@@ -245,6 +246,106 @@
                 // Assert
                 Assert.Equal("BBBB", result.ProducerRegistrationNumber);
                 Assert.Equal(producer.Id, result.Id);
+            }
+        }
+
+        [Fact]
+        public async Task GetOrAddAatfDeliveryLocation_ReturnsAatfDeliveryLocation_ForMatchingApprovalNumber()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(database.Model);
+
+                helper.CreateAatfDeliveryLocation("APR1", "Facility Name");
+                var location = helper.CreateAatfDeliveryLocation("APR2", "Facility Name");
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Domain.Scheme.Scheme>(), A.Dummy<Quarter>(), database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.GetOrAddAatfDeliveryLocation("APR2", "Facility Name");
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal("APR2", result.ApprovalNumber);
+                Assert.Equal(location.Id, result.Id);
+            }
+        }
+
+        [Fact]
+        public async Task GetOrAddAatfDeliveryLocation_ReturnsAatfDeliveryLocation_ForMatchingFacilityName()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(database.Model);
+
+                helper.CreateAatfDeliveryLocation("APR", "Facility Name1");
+                var location = helper.CreateAatfDeliveryLocation("APR", "Facility Name2");
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Domain.Scheme.Scheme>(), A.Dummy<Quarter>(), database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.GetOrAddAatfDeliveryLocation("APR", "Facility Name2");
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal("Facility Name2", result.FacilityName);
+                Assert.Equal(location.Id, result.Id);
+            }
+        }
+
+        [Fact]
+        public async Task GetOrAddAeDeliveryLocation_ReturnsAeDeliveryLocation_ForMatchingApprovalNumber()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(database.Model);
+
+                helper.CreateAeDeliveryLocation("APR1", "Operator Name");
+                var location = helper.CreateAeDeliveryLocation("APR2", "Operator Name");
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Domain.Scheme.Scheme>(), A.Dummy<Quarter>(), database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.GetOrAddAeDeliveryLocation("APR2", "Operator Name");
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal("APR2", result.ApprovalNumber);
+                Assert.Equal(location.Id, result.Id);
+            }
+        }
+
+        [Fact]
+        public async Task GetOrAddAeDeliveryLocation_ReturnsAeDeliveryLocation_ForMatchingOperatorName()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                // Arrange
+                ModelHelper helper = new ModelHelper(database.Model);
+
+                helper.CreateAeDeliveryLocation("APR", "Operator Name1");
+                var location = helper.CreateAeDeliveryLocation("APR", "Operator Name2");
+
+                database.Model.SaveChanges();
+
+                var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Domain.Scheme.Scheme>(), A.Dummy<Quarter>(), database.WeeeContext);
+
+                // Act
+                var result = await dataAccess.GetOrAddAeDeliveryLocation("APR", "Operator Name2");
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal("Operator Name2", result.OperatorName);
+                Assert.Equal(location.Id, result.Id);
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
     using System.Data.Entity.ModelConfiguration;
-    using Domain;
+    using Domain.User;
 
     internal class UserMapping : EntityTypeConfiguration<User>
     {

@@ -4,15 +4,16 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.DataReturns;
     using Domain;
-    using Domain.Lookup;
+    using Domain.Obligation;
     using Domain.Producer;
-    using EA.Weee.Core.DataReturns;
     using EA.Weee.Domain.DataReturns;
     using Shared;
     using Quarter = EA.Weee.Domain.DataReturns.Quarter;
     using QuarterType = EA.Weee.Domain.DataReturns.QuarterType;
     using RandomHelper = Core.Scheme.MemberUploadTesting.RandomHelper;
+    using WeeeCategory = Domain.Lookup.WeeeCategory;
 
     public class DataReturnVersionGenerator : IDataReturnVersionGenerator
     {

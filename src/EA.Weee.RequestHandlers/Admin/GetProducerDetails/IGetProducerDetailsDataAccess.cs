@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetProducerDetails
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using EA.Weee.Domain.Producer;
@@ -19,5 +20,8 @@
         /// <param name="registrationNumber"></param>
         /// <returns></returns>
         Task<List<ProducerSubmission>> Fetch(string registrationNumber);
+
+        Task<IEnumerable<ProducerEeeByQuarter>> EeeOutputBySchemeAndComplianceYear(string registrationNumber, int complianceYear,
+            Guid schemeId);
     }
 }

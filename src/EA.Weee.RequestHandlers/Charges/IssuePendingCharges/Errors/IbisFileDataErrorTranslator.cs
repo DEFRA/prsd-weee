@@ -39,7 +39,7 @@
                         schemeFieldException.Scheme.SchemeName);
                     break;
                 case "The customer reference is mandatory.":
-                    translatedMessage = string.Format("PCS {0} is missing a billing customer reference.",
+                    translatedMessage = string.Format("PCS {0} is missing a billing reference.",
                         schemeFieldException.Scheme.SchemeName);
                     break;
                 default:

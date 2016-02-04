@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.DataAccess.Extensions
 {
-    using System.Data.Entity;
     using System.Linq;
     using Domain.Producer;
 

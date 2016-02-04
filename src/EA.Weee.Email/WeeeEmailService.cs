@@ -2,7 +2,7 @@
 {
     using System.Net.Mail;
     using System.Threading.Tasks;
-    using Domain;
+    using Domain.User;
     using Prsd.Email;
 
     public class WeeeEmailService : IWeeeEmailService

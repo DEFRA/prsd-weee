@@ -8,8 +8,10 @@
     using Domain;
     using Domain.DataReturns;
     using Domain.Lookup;
+    using Domain.Obligation;
     using Domain.Organisation;
     using Domain.Producer;
+    using Domain.Producer.Classfication;
     using Domain.Scheme;
     using FakeItEasy;
     using Prsd.Core.Domain;
@@ -91,8 +93,8 @@
                 registeredProducer,
                 memberUpload,
                 new EA.Weee.Domain.Producer.ProducerBusiness(
-                    new Company("CompanyName", "RegisteredNo", 
-                    new ProducerContact(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), 
+                    new Company("CompanyName", "RegisteredNo",
+                    new ProducerContact(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(),
                     new ProducerAddress(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>(),
                     new Country(Guid.NewGuid(), A.Dummy<string>()), A.Dummy<string>())))),
                 null,
@@ -101,17 +103,17 @@
                 false,
                 null,
                 "Trading Name 1",
-                Domain.EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                Domain.SellingTechniqueType.Both,
-                Domain.ObligationType.Both,
-                Domain.AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<Domain.Producer.BrandName>(),
                 new List<Domain.Producer.SICCode>(),
                 A.Dummy<ChargeBandAmount>(),
                 0);
 
             registeredProducer.SetCurrentSubmission(producer);
-            
+
             registeredProducer.Scheme.UpdateScheme("SchemeName", "WEE/FA9999KE/SCH", "test", ObligationType.B2B, Guid.NewGuid());
 
             IGetProducerDetailsByRegisteredProducerIdDataAccess dataAccess = A.Fake<IGetProducerDetailsByRegisteredProducerIdDataAccess>();
@@ -199,7 +201,7 @@
             dataReturnVersion.EeeOutputReturnVersion.AddEeeOutputAmount(eeeOutputAmount);
 
             dataReturnVersion.Submit("UserID");
-            
+
             IGetProducerDetailsByRegisteredProducerIdDataAccess dataAccess = A.Fake<IGetProducerDetailsByRegisteredProducerIdDataAccess>();
 
             A.CallTo(() => dataAccess.Fetch(registeredProducerId)).Returns(registeredProducer);

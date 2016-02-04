@@ -2,15 +2,17 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
     using BusinessValidation;
     using BusinessValidation.Rules;
-    using Core.Shared;
+    using Domain;
     using Domain.DataReturns;
     using Domain.Lookup;
     using Prsd.Core;
-    using ObligationType = Domain.ObligationType;
+    using ErrorData = Core.Shared.ErrorData;
+    using ObligationType = Domain.Obligation.ObligationType;
     using Scheme = Domain.Scheme.Scheme;
 
     public class DataReturnVersionBuilder : IDataReturnVersionBuilder
@@ -22,10 +24,11 @@
         private readonly IEeeValidator eeeValidator;
         private readonly IDataReturnVersionBuilderDataAccess schemeQuarterDataAccess;
         private readonly ISubmissionWindowClosed submissionWindowClosed;
+        private readonly List<WeeeCollectedAmount> weeeCollectedAmounts;
+        private readonly List<WeeeDeliveredAmount> weeeDeliveredAmounts;
+        private readonly List<EeeOutputAmount> eeeOutputAmounts;
 
         protected List<ErrorData> Errors { get; set; }
-
-        private DataReturnVersion dataReturnVersion;
 
         public DataReturnVersionBuilder(
             Scheme scheme,
@@ -44,16 +47,58 @@
             this.submissionWindowClosed = submissionWindowClosed;
 
             Errors = new List<ErrorData>();
+            weeeCollectedAmounts = new List<WeeeCollectedAmount>();
+            weeeDeliveredAmounts = new List<WeeeDeliveredAmount>();
+            eeeOutputAmounts = new List<EeeOutputAmount>();
         }
 
-        public async Task<IEnumerable<ErrorData>> PreValidate()
+        public Task<IEnumerable<ErrorData>> PreValidate()
         {
-            return await submissionWindowClosed.Validate(Quarter);
+            return submissionWindowClosed.Validate(Quarter);
         }
 
-        private async Task CreateDataReturnVersion()
+        public async Task AddAatfDeliveredAmount(string approvalNumber, string facilityName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
         {
-            if (dataReturnVersion == null)
+            var aatfDeliveryLocation = await schemeQuarterDataAccess.GetOrAddAatfDeliveryLocation(approvalNumber, facilityName);
+
+            weeeDeliveredAmounts.Add(new WeeeDeliveredAmount(obligationType, category, tonnage, aatfDeliveryLocation));
+        }
+
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "aeDeliveryLocation is valid.")]
+        public async Task AddAeDeliveredAmount(string approvalNumber, string operatorName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
+        {
+            var aeDeliveryLocation = await schemeQuarterDataAccess.GetOrAddAeDeliveryLocation(approvalNumber, operatorName);
+
+            weeeDeliveredAmounts.Add(new WeeeDeliveredAmount(obligationType, category, tonnage, aeDeliveryLocation));
+        }
+
+        public async Task AddEeeOutputAmount(string producerRegistrationNumber, string producerName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
+        {
+            var validationResult = await eeeValidator.Validate(producerRegistrationNumber, producerName, category, obligationType, tonnage);
+
+            if (ConsideredValid(validationResult))
+            {
+                var registeredProducer = await schemeQuarterDataAccess.GetRegisteredProducer(producerRegistrationNumber);
+
+                eeeOutputAmounts.Add(new EeeOutputAmount(obligationType, category, tonnage, registeredProducer));
+            }
+
+            Errors.AddRange(validationResult);
+        }
+
+        public Task AddWeeeCollectedAmount(WeeeCollectedAmountSourceType sourceType, WeeeCategory category, ObligationType obligationType, decimal tonnage)
+        {
+            weeeCollectedAmounts.Add(new WeeeCollectedAmount(sourceType, obligationType, category, tonnage));
+
+            return Task.Delay(0);
+        }
+
+        public async Task<DataReturnVersionBuilderResult> Build()
+        {
+            DataReturnVersion dataReturnVersion = null;
+            List<ErrorData> uniqueErrors = Errors.Distinct().ToList();
+
+            if (ConsideredValid(Errors))
             {
                 var dataReturn = await schemeQuarterDataAccess.FetchDataReturnOrDefault();
                 if (dataReturn == null)
@@ -61,62 +106,166 @@
                     dataReturn = new DataReturn(Scheme, Quarter);
                 }
 
-                dataReturnVersion = new DataReturnVersion(dataReturn);
+                DataReturnVersion latestSubmittedDataReturnVersion = dataReturn.CurrentVersion;
+
+                var weeeCollectedReturnVersion = BuildWeeeCollectedReturnVersion(latestSubmittedDataReturnVersion);
+                var weeeDeliveredReturnVersion = BuildWeeeDeliveredReturnVersion(latestSubmittedDataReturnVersion);
+                var eeeOutputReturnVersion = BuildEeeOutputReturnVersion(latestSubmittedDataReturnVersion);
+
+                dataReturnVersion = new DataReturnVersion(dataReturn, weeeCollectedReturnVersion, weeeDeliveredReturnVersion, eeeOutputReturnVersion);
             }
+
+            return new DataReturnVersionBuilderResult(dataReturnVersion, uniqueErrors);
         }
 
-        public async Task AddAatfDeliveredAmount(string aatfApprovalNumber, string facilityName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
+        private WeeeCollectedReturnVersion BuildWeeeCollectedReturnVersion(DataReturnVersion submittedDataReturnVersion)
         {
-            await CreateDataReturnVersion();
+            WeeeCollectedReturnVersion weeeCollectedReturnVersion = null;
 
-            dataReturnVersion.WeeeDeliveredReturnVersion.AddWeeeDeliveredAmount(new WeeeDeliveredAmount(obligationType, category, tonnage, new AatfDeliveryLocation(aatfApprovalNumber, facilityName)));
-        }
-
-        public async Task AddAeDeliveredAmount(string approvalNumber, string operatorName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
-        {
-            await CreateDataReturnVersion();
-
-            dataReturnVersion.WeeeDeliveredReturnVersion.AddWeeeDeliveredAmount(new WeeeDeliveredAmount(obligationType, category, tonnage, new AeDeliveryLocation(approvalNumber, operatorName)));
-        }
-
-        public async Task AddEeeOutputAmount(string producerRegistrationNumber, string producerName, WeeeCategory category, ObligationType obligationType, decimal tonnage)
-        {
-            await CreateDataReturnVersion();
-
-            var validationResult = await eeeValidator.Validate(producerRegistrationNumber, producerName, category, obligationType, tonnage);
-
-            if (ConsideredValid(validationResult))
+            // Unchanged data from the latest submitted data return version can be reused. Check whether all or some of them can be reused.
+            if (weeeCollectedAmounts.Any())
             {
-                var registeredProducer = await schemeQuarterDataAccess.GetRegisteredProducer(producerRegistrationNumber);
+                ICollection<WeeeCollectedAmount> mergedWeeeCollectedAmounts;
+                bool reuseLatestWeeeCollectedReturnVersion = false;
 
-                dataReturnVersion.EeeOutputReturnVersion.AddEeeOutputAmount(new EeeOutputAmount(obligationType, category, tonnage, registeredProducer));
+                if (submittedDataReturnVersion != null &&
+                    submittedDataReturnVersion.WeeeCollectedReturnVersion != null)
+                {
+                    reuseLatestWeeeCollectedReturnVersion =
+                        ReuseEqualItems(weeeCollectedAmounts, submittedDataReturnVersion.WeeeCollectedReturnVersion.WeeeCollectedAmounts, out mergedWeeeCollectedAmounts);
+                }
+                else
+                {
+                    mergedWeeeCollectedAmounts = weeeCollectedAmounts;
+                }
+
+                if (reuseLatestWeeeCollectedReturnVersion)
+                {
+                    weeeCollectedReturnVersion = submittedDataReturnVersion.WeeeCollectedReturnVersion;
+                }
+                else
+                {
+                    weeeCollectedReturnVersion = new WeeeCollectedReturnVersion();
+                    foreach (var weeeCollectedAmount in mergedWeeeCollectedAmounts)
+                    {
+                        weeeCollectedReturnVersion.AddWeeeCollectedAmount(weeeCollectedAmount);
+                    }
+                }
             }
 
-            Errors.AddRange(validationResult);
+            return weeeCollectedReturnVersion;
         }
 
-        public async Task AddWeeeCollectedAmount(WeeeCollectedAmountSourceType sourceType, WeeeCategory category, ObligationType obligationType, decimal tonnage)
+        private WeeeDeliveredReturnVersion BuildWeeeDeliveredReturnVersion(DataReturnVersion submittedDataReturnVersion)
         {
-            await CreateDataReturnVersion();
+            WeeeDeliveredReturnVersion weeeDeliveredReturnVersion = null;
 
-            dataReturnVersion.WeeeCollectedReturnVersion.AddWeeeCollectedAmount(new WeeeCollectedAmount(sourceType, obligationType, category, tonnage));
-        }
-
-        public DataReturnVersionBuilderResult Build()
-        {
-            if (dataReturnVersion == null)
+            // Unchanged data from the latest submitted data return version can be reused. Check whether all or some of them can be reused.
+            if (weeeDeliveredAmounts.Any())
             {
-                throw new InvalidOperationException("Return data has not been provided.");
+                ICollection<WeeeDeliveredAmount> mergedWeeeDeliveredAmounts;
+                bool reuseLatestWeeeDeliveredReturnVerion = false;
+
+                if (submittedDataReturnVersion != null &&
+                    submittedDataReturnVersion.WeeeDeliveredReturnVersion != null)
+                {
+                    reuseLatestWeeeDeliveredReturnVerion =
+                        ReuseEqualItems(weeeDeliveredAmounts, submittedDataReturnVersion.WeeeDeliveredReturnVersion.WeeeDeliveredAmounts, out mergedWeeeDeliveredAmounts);
+                }
+                else
+                {
+                    mergedWeeeDeliveredAmounts = weeeDeliveredAmounts;
+                }
+
+                if (reuseLatestWeeeDeliveredReturnVerion)
+                {
+                    weeeDeliveredReturnVersion = submittedDataReturnVersion.WeeeDeliveredReturnVersion;
+                }
+                else
+                {
+                    weeeDeliveredReturnVersion = new WeeeDeliveredReturnVersion();
+                    foreach (var weeeDeliveredAmount in mergedWeeeDeliveredAmounts)
+                    {
+                        weeeDeliveredReturnVersion.AddWeeeDeliveredAmount(weeeDeliveredAmount);
+                    }
+                }
             }
 
-            List<ErrorData> uniqueErrors = Errors.Distinct().ToList();
+            return weeeDeliveredReturnVersion;
+        }
 
-            return new DataReturnVersionBuilderResult(ConsideredValid(Errors) ? dataReturnVersion : null, uniqueErrors);
+        private EeeOutputReturnVersion BuildEeeOutputReturnVersion(DataReturnVersion submittedDataReturnVersion)
+        {
+            EeeOutputReturnVersion eeeOutputReturnVersion = null;
+
+            // Unchanged data from the latest submitted data return version can be reused. Check whether all or some of them can be reused.
+            if (eeeOutputAmounts.Any())
+            {
+                bool reuseLatestEeeOutputReturnVersion = false;
+                ICollection<EeeOutputAmount> mergedEeeOutputAmounts;
+
+                if (submittedDataReturnVersion != null &&
+                    submittedDataReturnVersion.EeeOutputReturnVersion != null)
+                {
+                    reuseLatestEeeOutputReturnVersion =
+                        ReuseEqualItems(eeeOutputAmounts, submittedDataReturnVersion.EeeOutputReturnVersion.EeeOutputAmounts, out mergedEeeOutputAmounts);
+                }
+                else
+                {
+                    mergedEeeOutputAmounts = eeeOutputAmounts;
+                }
+
+                if (reuseLatestEeeOutputReturnVersion)
+                {
+                    eeeOutputReturnVersion = submittedDataReturnVersion.EeeOutputReturnVersion;
+                }
+                else
+                {
+                    eeeOutputReturnVersion = new EeeOutputReturnVersion();
+                    foreach (var eeeOutputAmount in mergedEeeOutputAmounts)
+                    {
+                        eeeOutputReturnVersion.AddEeeOutputAmount(eeeOutputAmount);
+                    }
+                }
+            }
+
+            return eeeOutputReturnVersion;
         }
 
         private static bool ConsideredValid(ICollection<ErrorData> errorData)
         {
-            return !errorData.Any(e => e.ErrorLevel == ErrorLevel.Error);
+            return !errorData.Any(e => e.ErrorLevel == Core.Shared.ErrorLevel.Error);
+        }
+
+        private static bool ReuseEqualItems<T>(ICollection<T> newItems, ICollection<T> reusableItems, out ICollection<T> result)
+            where T : class, IEquatable<T>
+        {
+            var allItemsReused = false;
+
+            if (newItems == null ||
+                !newItems.Any() ||
+                reusableItems == null)
+            {
+                result = newItems;
+            }
+            else if (newItems.UnorderedEqual(reusableItems))
+            {
+                // If all the items are equal, reuse the entire collection
+                result = reusableItems;
+                allItemsReused = true;
+            }
+            else
+            {
+                result = new List<T>();
+
+                foreach (var newItem in newItems)
+                {
+                    var reusableItem = reusableItems.FirstOrDefault(x => x.Equals(newItem));
+                    result.Add(reusableItem ?? newItem);
+                }
+            }
+
+            return allItemsReused;
         }
     }
 }

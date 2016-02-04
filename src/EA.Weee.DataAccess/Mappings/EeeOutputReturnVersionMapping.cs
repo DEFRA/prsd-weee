@@ -10,7 +10,7 @@
             ToTable("EeeOutputReturnVersion", "PCS");
 
             HasMany(r => r.DataReturnVersions)
-                .WithRequired(e => e.EeeOutputReturnVersion);
+                .WithOptional(e => e.EeeOutputReturnVersion);
 
             HasMany(e => e.EeeOutputAmounts)
                 .WithMany(r => r.EeeOutputReturnVersions)
