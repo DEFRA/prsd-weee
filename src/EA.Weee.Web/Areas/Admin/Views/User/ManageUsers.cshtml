@@ -80,6 +80,28 @@
                 }
                 @switch (@Model.OrderBy)
                 {
+                    case FindMatchingUsers.OrderBy.RoleAscending:
+                        <th class="sorted-ascending">
+                            <a href="@Url.Action("ManageUsers", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending })">Role</a>
+                            <span class="visuallyhidden">Sorted with the lowest rank role first.</span>
+                        </th>
+                        break;
+
+                    case FindMatchingUsers.OrderBy.RoleDescending:
+                        <th class="sorted-descending">
+                            <a href="@Url.Action("ManageUsers", new { OrderBy = FindMatchingUsers.OrderBy.RoleAscending })">Role</a>
+                            <span class="visuallyhidden">Sorted with the highest rank role first.</span>
+                        </th>
+                        break;
+
+                    default:
+                        <th>
+                            <a href="@Url.Action("ManageUsers", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending })">Role</a>
+                        </th>
+                        break;
+                }
+                @switch (@Model.OrderBy)
+                {
                     case FindMatchingUsers.OrderBy.StatusAscending:
                         <th class="sorted-ascending">
                             <a href="@Url.Action("ManageUsers", new { OrderBy = FindMatchingUsers.OrderBy.StatusDescending })">Status</a>
@@ -110,6 +132,7 @@
                     <td width="100%">@user.FullName</td>
                     <td>@user.Email</td>
                     <td>@user.OrganisationName</td>
+                    <td>@user.Role</td>
                     <td>@user.Status</td>
                     <td>
                         @Html.RadioButtonFor(m => m.SelectedUserId, @user.OrganisationUserId)
