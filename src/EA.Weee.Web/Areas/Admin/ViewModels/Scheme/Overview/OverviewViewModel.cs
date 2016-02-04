@@ -8,7 +8,7 @@
 
         public string SchemeName { get; set; }
 
-        public OverviewDisplayOption ActiveOverviewDisplayOption { get; set; }
+        public OverviewDisplayOption ActiveOverviewDisplayOption { get; private set; }
 
         protected OverviewViewModel(Guid schemeId, string schemeName, OverviewDisplayOption activeOverviewDisplayOption)
         {
