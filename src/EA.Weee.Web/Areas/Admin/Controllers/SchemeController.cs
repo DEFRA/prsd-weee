@@ -14,9 +14,6 @@
     using Services;
     using Services.Caching;
     using ViewModels.Scheme;
-    using ViewModels.Scheme.Overview;
-    using ViewModels.Scheme.Overview.MembersData;
-    using ViewModels.Scheme.Overview.PcsDetails;
     using Web.ViewModels.Shared.Scheme;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
@@ -37,7 +34,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ManageSchemes()
+        public async Task<ViewResult> ManageSchemes()
         {
             await SetBreadcrumb(null);
             return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
@@ -61,42 +58,6 @@
             using (var client = apiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), new GetSchemes());
-            }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> Overview(Guid schemeId, OverviewDisplayOption? overviewDisplayOption = null)
-        {
-            await Task.Yield();
-
-            if (overviewDisplayOption == null)
-            {
-                overviewDisplayOption = OverviewDisplayOption.PcsDetails;
-            }
-
-            switch (overviewDisplayOption.Value)
-            {
-                case OverviewDisplayOption.MembersData:
-                    // Replace with call to get members data
-                    return View("Overview/MembersDataOverview", new MembersDataOverviewViewModel(Guid.NewGuid(), "ABC123452", schemeId, "Test")
-                    {
-                        DownloadsByYear = new List<YearlyDownloads>
-                        {
-                            new YearlyDownloads
-                            {
-                                Year = 2016, 
-                                IsMembersDownloadAvailable = true,
-                                IsDataReturnsDownloadAvailable = true
-                            }
-                        }
-                    });
-
-                case OverviewDisplayOption.PcsDetails:
-                case OverviewDisplayOption.OrganisationDetails:
-                case OverviewDisplayOption.ContactDetails:
-                default:
-                    // Replace with call to get PCS details
-                    return View("Overview/PcsDetailsOverview", new PcsDetailsOverviewViewModel(schemeId, "Test 2"));
             }
         }
 
