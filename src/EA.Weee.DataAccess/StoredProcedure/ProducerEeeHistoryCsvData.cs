@@ -7,6 +7,7 @@
     /// </summary>
     public class ProducerEeeHistoryCsvData
         {
+            public string PRN { get; set; }
             public string SchemeName { get; set; }
             public string ApprovalNumber { get; set; }
             public int ComplianceYear { get; set; }
