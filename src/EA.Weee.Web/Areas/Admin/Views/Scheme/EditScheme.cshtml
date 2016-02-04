@@ -1,7 +1,9 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModel
 @{
     ViewBag.Title = "Edit PCS";
@@ -93,7 +95,7 @@
         @(this.WeeeGds().Submit("Save and Continue", new { @class = "button" }))
     }
     <p>
-        <a href="javascript:history.back();">Back</a>
+        <a href="@(Url.UrlFor<SchemeController>(a => a.ManageSchemes()))">Back</a>
     </p>
     }
 

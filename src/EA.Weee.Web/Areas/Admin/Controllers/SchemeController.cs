@@ -34,7 +34,7 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> ManageSchemes()
+        public async Task<ActionResult> ManageSchemes()
         {
             await SetBreadcrumb(null);
             return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
