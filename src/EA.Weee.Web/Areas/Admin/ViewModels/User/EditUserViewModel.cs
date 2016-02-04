@@ -6,6 +6,7 @@
     using System.Web.Mvc;
     using Core.Admin;
     using Core.DataStandards;
+    using Core.Security;
     using Core.Shared;
     using Prsd.Core.Helpers;
 
@@ -48,6 +49,11 @@
 
         public IEnumerable<SelectListItem> UserStatusSelectList { get; set; }
 
+        [Required]
+        public Role Role { get; set; }
+
+        public IEnumerable<SelectListItem> UserRoleSelectList { get; set; }
+
         public EditUserViewModel(ManageUserData manageUser)
         {
             Id = manageUser.Id;
@@ -60,7 +66,8 @@
             IsCompetentAuthorityUser = manageUser.IsCompetentAuthorityUser;
             UserStatus = manageUser.UserStatus;
             UserStatusSelectList = new SelectList(EnumHelper.GetValues(typeof(UserStatus)), "Key", "Value");
-            CanManageStatus = manageUser.CanManageStatus;
+            CanManageStatus = manageUser.CanManageRoleAndStatus;
+            Role = manageUser.Role;
         }
     }
 }
