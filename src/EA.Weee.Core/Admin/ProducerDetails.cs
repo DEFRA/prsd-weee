@@ -9,8 +9,10 @@
     public class ProducerDetails
     {
         public string RegistrationNumber { get; set; }
-        
+
         public int ComplianceYear { get; set; }
+
+        public bool CanRemoveProducer { get; set; }
 
         public List<ProducerDetailsScheme> Schemes { get; set; }
     }

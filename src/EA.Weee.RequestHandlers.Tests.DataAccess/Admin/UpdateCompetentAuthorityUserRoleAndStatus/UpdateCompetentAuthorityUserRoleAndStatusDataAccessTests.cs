@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Security;
     using Domain.Security;
     using Domain.User;
     using RequestHandlers.Admin.UpdateCompetentAuthorityUserRoleAndStatus;
@@ -31,10 +32,10 @@
             {
                 var dataAccess = new UpdateCompetentAuthorityUserRoleAndStatusDataAccess(databaseWrapper.WeeeContext);
 
-                var result = await dataAccess.GetRoleOrDefaultAsync(RoleNames.InternalAdmin);
+                var result = await dataAccess.GetRoleOrDefaultAsync("InternalAdmin");
 
                 Assert.NotNull(result);
-                Assert.Equal(RoleNames.InternalAdmin, result.Name);
+                Assert.Equal("InternalAdmin", result.Name);
             }
         }
 
@@ -46,20 +47,20 @@
                 ModelHelper modelHelper = new ModelHelper(databaseWrapper.Model);
                 DomainHelper domainHelper = new DomainHelper(databaseWrapper.WeeeContext);
 
-                var userRole = databaseWrapper.Model.Roles.Single(r => r.Name == RoleNames.InternalUser);
+                var userRole = databaseWrapper.Model.Roles.Single(r => r.Name == "InternalUser");
                 var user = modelHelper.GetOrCreateCompetentAuthorityUser("TestUser", 1, userRole);
 
                 databaseWrapper.Model.SaveChanges();
 
                 var competentAuthorityUser = domainHelper.GetCompetentAuthorityUser(user.Id);
-                var adminRole = domainHelper.GetRole(RoleNames.InternalAdmin);
+                var adminRole = domainHelper.GetRole("InternalAdmin");
 
                 var dataAccess = new UpdateCompetentAuthorityUserRoleAndStatusDataAccess(databaseWrapper.WeeeContext);
 
                 await dataAccess.UpdateUserRoleAndStatus(competentAuthorityUser, adminRole, Core.Shared.UserStatus.Active);
 
                 Assert.Equal(UserStatus.Active, competentAuthorityUser.UserStatus);
-                Assert.Equal(RoleNames.InternalAdmin, competentAuthorityUser.Role.Name);
+                Assert.Equal("InternalAdmin", competentAuthorityUser.Role.Name);
             }
         }
     }
