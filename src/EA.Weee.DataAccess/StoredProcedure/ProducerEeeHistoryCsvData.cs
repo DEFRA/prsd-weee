@@ -1,11 +1,14 @@
 ﻿namespace EA.Weee.DataAccess.StoredProcedure
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// This class maps to the results of [Producer].[spgProducerEeeHistoryCsvData].
     /// </summary>
     public class ProducerEeeHistoryCsvData
+    {
+        public class ProducerInReturnsResult
         {
             public string PRN { get; set; }
             public string SchemeName { get; set; }
@@ -31,7 +34,7 @@
             public decimal? Cat1B2B { get; set; }
             public decimal? Cat2B2B { get; set; }
             public decimal? Cat3B2B { get; set; }
-            public decimal? Cat4B2B{ get; set; }
+            public decimal? Cat4B2B { get; set; }
             public decimal? Cat5B2B { get; set; }
             public decimal? Cat6B2B { get; set; }
             public decimal? Cat7B2B { get; set; }
@@ -42,5 +45,23 @@
             public decimal? Cat12B2B { get; set; }
             public decimal? Cat13B2B { get; set; }
             public decimal? Cat14B2B { get; set; }
+        }
+
+        public class ProducerRemovedFromReturnsResult
+        {
+            public string ApprovalNumber { get; set; }
+            public int ComplianceYear { get; set; }
+            public DateTime SubmittedDate { get; set; }
+            public int Quarter { get; set; }
+        }
+
+        public List<ProducerInReturnsResult> ProducerReturnsHistoryData { get; private set; }
+
+        public List<ProducerRemovedFromReturnsResult> ProducerRemovedFromReturnsData { get; private set; }
+        public ProducerEeeHistoryCsvData()
+        {
+            ProducerReturnsHistoryData = new List<ProducerInReturnsResult>();
+            ProducerRemovedFromReturnsData = new List<ProducerRemovedFromReturnsResult>();
+        }
     }
-    }
+ }

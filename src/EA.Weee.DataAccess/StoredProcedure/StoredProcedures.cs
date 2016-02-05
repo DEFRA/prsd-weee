@@ -236,14 +236,132 @@
                     complianceYearParameter).ToListAsync();
         }
 
-        public async Task<List<ProducerEeeHistoryCsvData>> SpgProducerEeeHistoryCsvData(string prn)
+        public async Task<ProducerEeeHistoryCsvData> SpgProducerEeeHistoryCsvData(string prn)
         {
-            var prnParameter = new SqlParameter("@PRN", prn);
+            ProducerEeeHistoryCsvData result = new ProducerEeeHistoryCsvData();
 
-            return await context.Database
-                .SqlQuery<ProducerEeeHistoryCsvData>(
-                    "[Producer].[spgProducerEeeHistoryCsvDataByPRN] @PRN",
-                    prnParameter).ToListAsync();
+            var command = context.Database.Connection.CreateCommand();
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandText = "[Producer].[spgProducerEeeHistoryCsvDataByPRN]";
+
+            DbParameter prnParameter = command.CreateParameter();
+            prnParameter.DbType = System.Data.DbType.String;
+            prnParameter.Value = prn;
+            prnParameter.ParameterName = "@PRN";
+            command.Parameters.Add(prnParameter);
+
+            await context.Database.Connection.OpenAsync();
+
+            DbDataReader dataReader = await command.ExecuteReaderAsync();
+
+            while (await dataReader.ReadAsync())
+            {
+                string prnValue = dataReader.GetString(dataReader.GetOrdinal("PRN"));
+                string schemeName = dataReader.GetString(dataReader.GetOrdinal("SchemeName"));
+                string approvalNumber = dataReader.GetString(dataReader.GetOrdinal("ApprovalNumber"));
+                int year = dataReader.GetInt32(dataReader.GetOrdinal("ComplianceYear"));
+                int quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
+                DateTime date = dataReader.GetDateTime(dataReader.GetOrdinal("SubmittedDate"));
+                string latest = dataReader.GetString(dataReader.GetOrdinal("LatestData"));
+                //B2C categories
+                decimal? cat1b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT3B2C"));
+                decimal? cat2b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT2B2C"));
+                decimal? cat3b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT3B2C"));
+                decimal? cat4b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT4B2C"));
+                decimal? cat5b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT5B2C"));
+                decimal? cat6b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT6B2C"));
+                decimal? cat7b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT7B2C"));
+                decimal? cat8b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT8B2C"));
+                decimal? cat9b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT9B2C"));
+                decimal? cat10b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT10B2C"));
+                decimal? cat11b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT11B2C"));
+                decimal? cat12b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT12B2C"));
+                decimal? cat13b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT13B2C"));
+                decimal? cat14b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT14B2C"));
+                //B2B categories
+                decimal? cat1b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT1B2B"));
+                decimal? cat2b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT2B2B"));
+                decimal? cat3b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT3B2B"));
+                decimal? cat4b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT4B2B"));
+                decimal? cat5b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT5B2B"));
+                decimal? cat6b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT6B2B"));
+                decimal? cat7b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT7B2B"));
+                decimal? cat8b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT8B2B"));
+                decimal? cat9b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT9B2B"));
+                decimal? cat10b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT10B2B"));
+                decimal? cat11b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT11B2B"));
+                decimal? cat12b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT12B2B"));
+                decimal? cat13b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT13B2B"));
+                decimal? cat14b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT14B2B"));
+
+                result.ProducerReturnsHistoryData.Add(new ProducerEeeHistoryCsvData.ProducerInReturnsResult()
+                {
+                    PRN = prnValue,
+                    SchemeName = schemeName,
+                    ApprovalNumber = approvalNumber,
+                    ComplianceYear = year,
+                    SubmittedDate = date,
+                    Quarter = quarter,
+                    LatestData = latest,
+                    Cat1B2C = cat1b2c,
+                    Cat2B2C = cat2b2c,
+                    Cat3B2C = cat3b2c,
+                    Cat4B2C = cat4b2c,
+                    Cat5B2C = cat5b2c,
+                    Cat6B2C = cat6b2c,
+                    Cat7B2C = cat7b2c,
+                    Cat8B2C = cat8b2c,
+                    Cat9B2C = cat9b2c,
+                    Cat10B2C = cat10b2c,
+                    Cat11B2C = cat11b2c,
+                    Cat12B2C = cat12b2c,
+                    Cat13B2C = cat13b2c,
+                    Cat14B2C = cat14b2c,
+                    Cat1B2B = cat1b2b,
+                    Cat2B2B = cat2b2b,
+                    Cat3B2B = cat3b2b,
+                    Cat4B2B = cat4b2b,
+                    Cat5B2B = cat5b2b,
+                    Cat6B2B = cat6b2b,
+                    Cat7B2B = cat7b2b,
+                    Cat8B2B = cat8b2b,
+                    Cat9B2B = cat9b2b,
+                    Cat10B2B = cat10b2b,
+                    Cat11B2B = cat11b2b,
+                    Cat12B2B = cat12b2b,
+                    Cat13B2B = cat13b2b,
+                    Cat14B2B = cat14b2b
+                });
+            }
+
+            await dataReader.NextResultAsync();
+
+            while (await dataReader.ReadAsync())
+            {
+                string approvalNumber = dataReader.GetString(dataReader.GetOrdinal("ApprovalNumber"));
+                int year = dataReader.GetInt32(dataReader.GetOrdinal("ComplianceYear"));
+                int quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
+                DateTime date = dataReader.GetDateTime(dataReader.GetOrdinal("SubmittedDate"));
+
+                result.ProducerRemovedFromReturnsData.Add(new ProducerEeeHistoryCsvData.ProducerRemovedFromReturnsResult()
+                {
+                    ApprovalNumber = approvalNumber,
+                    ComplianceYear = year,
+                    SubmittedDate = date,
+                    Quarter = quarter
+                });
+            }
+            return result;
+        }
+
+        private static decimal? GetDecimalValue(DbDataReader dataReader, int index)
+        {
+            decimal? value = null;
+            if (!dataReader.IsDBNull(index))
+            {
+                value = dataReader.GetDecimal(index);
+            }
+            return value;
         }
     }
 }
