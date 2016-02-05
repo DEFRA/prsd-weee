@@ -220,6 +220,24 @@
                 throw new SecurityException(message);
             }
         }
+        public void EnsureInternalOrSchemeAccess(Guid schemeId)
+        {
+            bool access = CheckInternalOrSchemeAccess(schemeId);
+
+            if (!access)
+            {
+                string message = string.Format(
+                    "The user does not have access to the internal area or the scheme with ID \"{0}\".",
+                    schemeId);
+
+                throw new SecurityException(message);
+            }
+        }
+
+        public bool CheckInternalOrSchemeAccess(Guid schemeId)
+        {
+            return CheckCanAccessInternalArea() || CheckSchemeAccess(schemeId);
+        }
 
         private bool HasClaim(Claim claim)
         {

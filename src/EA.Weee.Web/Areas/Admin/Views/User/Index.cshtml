@@ -1,8 +1,10 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Admin
 @using EA.Weee.Requests.Admin
+@using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.Infrastructure.Paging
 @using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.User.ManageUsersViewModel
 @{
     ViewBag.Title = "Choose Users";
@@ -78,6 +80,28 @@
                 }
                 @switch (@Model.OrderBy)
                 {
+                    case FindMatchingUsers.OrderBy.RoleAscending:
+                        <th class="sorted-ascending">
+                            <a href="@Url.Action("ManageUsers", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending })">Role</a>
+                            <span class="visuallyhidden">Sorted with the lowest rank role first.</span>
+                        </th>
+                        break;
+
+                    case FindMatchingUsers.OrderBy.RoleDescending:
+                        <th class="sorted-descending">
+                            <a href="@Url.Action("ManageUsers", new { OrderBy = FindMatchingUsers.OrderBy.RoleAscending })">Role</a>
+                            <span class="visuallyhidden">Sorted with the highest rank role first.</span>
+                        </th>
+                        break;
+
+                    default:
+                        <th>
+                            <a href="@Url.Action("ManageUsers", new { OrderBy = FindMatchingUsers.OrderBy.RoleDescending })">Role</a>
+                        </th>
+                        break;
+                }
+                @switch (@Model.OrderBy)
+                {
                     case FindMatchingUsers.OrderBy.StatusAscending:
                         <th class="sorted-ascending">
                             <a href="@Url.Action("ManageUsers", new { OrderBy = FindMatchingUsers.OrderBy.StatusDescending })">Status</a>
@@ -108,6 +132,7 @@
                     <td width="100%">@user.FullName</td>
                     <td>@user.Email</td>
                     <td>@user.OrganisationName</td>
+                    <td>@user.Role</td>
                     <td>@user.Status</td>
                     <td>
                         @Html.RadioButtonFor(m => m.SelectedUserId, @user.OrganisationUserId)
@@ -131,7 +156,7 @@
     @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
 
     <p>
-        <a href="javascript:history.back();">Back</a>
+        <a href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Back</a>
     </p>
 }
 

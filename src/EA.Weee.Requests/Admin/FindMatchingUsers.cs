@@ -85,7 +85,23 @@
             /// where full name is a concatenation of "[First name] [Surname]".
             /// Results with the order by criteria will sorted deterministically by user ID.
             /// </summary>
-            StatusDescending
+            StatusDescending,
+
+            /// <summary>
+            /// Order results by role in the following order: "Administrator", "Standard", "N/A".
+            /// Results with the same role will be sorted by full name from A to Z,
+            /// where full name is a concatenation of "[First name] [Surname]".
+            /// Results with the order by criteria will sorted deterministically by user ID.
+            /// </summary>
+            RoleAscending,
+
+            /// <summary>
+            /// Order results by role in the following order: "N/A", "Standard", "Administrator".
+            /// Results with the same role will be sorted by full name from A to Z,
+            /// where full name is a concatenation of "[First name] [Surname]".
+            /// Results with the order by criteria will sorted deterministically by user ID.
+            /// </summary>
+            RoleDescending,
         }
     }
 }
