@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Security
 {
     using System;
+    using Core.Security;
 
     /// <summary>
     /// Provides evaluation of claims-based authorisation for WEEE resources.
@@ -77,12 +78,12 @@
         /// Checks that the principal represents a user with
         /// the specified role.
         /// </summary>
-        bool CheckUserInRole(string roleName);
+        bool CheckUserInRole(Roles role);
 
         /// <summary>
         /// Ensures that the principal represents a user with
         /// the specified role.
         /// </summary>
-        void EnsureUserInRole(string roleName);
+        void EnsureUserInRole(Roles role);
     }
 }

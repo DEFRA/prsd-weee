@@ -53,7 +53,7 @@
 
             var roles = new[]
             {
-                new Role(RoleNames.InternalUser, "Standard user")
+                new Role("InternalUser", "Standard user")
             };
 
             configurationManagerWrapper = A.Fake<IConfigurationManagerWrapper>();

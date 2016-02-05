@@ -2,6 +2,8 @@
 {
     using System;
     using System.Security;
+    using System.Threading.Tasks;
+    using Core.Security;
     using Domain;
     using Domain.Charges;
     using Domain.Producer;
@@ -11,12 +13,38 @@
     using RequestHandlers.Admin.GetProducerDetails;
     using RequestHandlers.Security;
     using Requests.Admin;
+    using Weee.Tests.Core;
     using Xunit;
 
     public class RemoveProducerHandlerTests
     {
         [Fact]
-        public async void WhenUserIsUnauthorised_ShouldNotGetProducer_OrSaveChanges()
+        public async Task HandleAsync_WithNonInternalUser_ThrowsSecurityException()
+        {
+            var authorization = new AuthorizationBuilder()
+                .DenyInternalAreaAccess()
+                .Build();
+
+            var handler = new RemoveProducerHandler(authorization, A.Dummy<IRemoveProducerDataAccess>());
+
+            await Assert.ThrowsAsync<SecurityException>(() => handler.HandleAsync(A<RemoveProducer>._));
+        }
+
+        [Fact]
+        public async Task HandleAsync_WithNonInternalAdministratorRole_ThrowsSecurityException()
+        {
+            var authorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .DenyRole(Roles.InternalAdmin)
+                .Build();
+
+            var handler = new RemoveProducerHandler(authorization, A.Dummy<IRemoveProducerDataAccess>());
+
+            await Assert.ThrowsAsync<SecurityException>(() => handler.HandleAsync(A<RemoveProducer>._));
+        }
+
+        [Fact]
+        public async void WhenUserIsUnauthorised_DoesNotGetProducer_OrSaveChanges()
         {
             // Arrange
             var builder = new RemoveProducerHandlerBuilder();
@@ -38,7 +66,7 @@
         }
 
         [Fact]
-        public async void WhenUserIsAuthorised_ShouldGetProducer_AndProducerSubmissions_AndSaveChanges()
+        public async void WhenUserIsAuthorised_GetsProducer_AndProducerSubmissions_AndSaveChanges()
         {
             // Arrange
             var builder = new RemoveProducerHandlerBuilder();
