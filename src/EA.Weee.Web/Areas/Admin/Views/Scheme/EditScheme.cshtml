@@ -24,7 +24,7 @@
 
     @Html.Gds().ValidationSummary()
 
-    if (Model.Status != SchemeStatus.Rejected && Model.Status != SchemeStatus.Withdrawn)
+    if (!Model.IsUnchangeableStatus)
     {
     <div class="form-group @Html.Gds().FormGroupClass(m => m.SchemeName)">
         @Html.Gds().LabelFor(m => m.SchemeName)
@@ -86,7 +86,7 @@
             }
         }
     </p>
-    if (Model.Status != SchemeStatus.Rejected && Model.Status != SchemeStatus.Withdrawn)
+    if (!Model.IsUnchangeableStatus)
     {
         @(this.WeeeGds().Submit("Save and Continue", new { @class = "button" }))
     }

@@ -58,12 +58,13 @@
         }
 
         [Fact]
-        public void UpdateSchemeStatus_NoChangeOfWithdrawnStatus_IsOk()
+        public void UpdateSchemeStatus_NoChangeOfWithdrawnStatus_ThrowsInvalidOperationException()
         {
             var scheme = GetTestScheme();
             scheme.SetStatus(SchemeStatus.Approved);
             scheme.SetStatus(SchemeStatus.Withdrawn);
-            scheme.SetStatus(SchemeStatus.Withdrawn);
+
+            Assert.Throws<InvalidOperationException>(() => scheme.SetStatus(SchemeStatus.Withdrawn));
         }
 
         [Fact]
@@ -72,6 +73,16 @@
             var scheme = GetTestScheme();
             scheme.SetStatus(SchemeStatus.Approved);
             scheme.SetStatus(SchemeStatus.Withdrawn);
+        }
+
+        [Fact]
+        public void UpdateSchemeStatus_ApprovedToPendingOrRejected_ThrowsInvalidOperationException()
+        {
+            var scheme = GetTestScheme();
+            scheme.SetStatus(SchemeStatus.Approved);
+
+            Assert.Throws<InvalidOperationException>(() => scheme.SetStatus(SchemeStatus.Pending));
+            Assert.Throws<InvalidOperationException>(() => scheme.SetStatus(SchemeStatus.Rejected));
         }
 
         [Fact]

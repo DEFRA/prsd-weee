@@ -126,6 +126,7 @@
             var statuses = model.StatusSelectList.ToList();
 
             Assert.Equal(statuses.Count(), 2);
+           
             Assert.True(statuses.Exists(r => r.Text == SchemeStatus.Withdrawn.ToString()));
             Assert.True(statuses.Exists(r => r.Text == SchemeStatus.Approved.ToString()));
         }
@@ -144,7 +145,6 @@
 
             var statuses = model.StatusSelectList.ToList();
 
-            Assert.Equal(statuses.Count(), 3);
             Assert.False(statuses.Exists(r => r.Text == SchemeStatus.Withdrawn.ToString()));
         }
 
