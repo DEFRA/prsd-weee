@@ -1,7 +1,9 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModel
 @{
     ViewBag.Title = "Edit PCS";
@@ -70,30 +72,12 @@
         }
     </div>
 
-    <p>
-        @Html.ActionLink("View organisation details", "ViewOrganisationDetails", "Scheme", new { schemeId = @Model.SchemeId, orgId = @Model.OrganisationId }, null)
-    </p>
-    <p>
-        @Html.ActionLink("View or edit organisation contact details", "ManageContactDetails", "Scheme", new { schemeId = @Model.SchemeId, orgId = @Model.OrganisationId }, null)
-    </p>
-
-    <p>
-        @if (Model.ComplianceYears != null)
-        {
-            foreach (int complianceYear in Model.ComplianceYears)
-            {
-                var linkText = "Overview of current members " + complianceYear + ".csv";
-                <a href="@Url.Action("GetProducerCSV", "Scheme", new { orgId = @Model.OrganisationId, complianceYear, approvalNumber = @Model.ApprovalNumber })">@(linkText)</a><span style="color: #6f777b"> (less than 500KB).</span>
-                <br />
-            }
-        }
-    </p>
     if (Model.Status != SchemeStatus.Rejected)
     {
         @(this.WeeeGds().Submit("Save and Continue", new { @class = "button" }))
     }
     <p>
-        <a href="javascript:history.back();">Back</a>
+        <a href="@(Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, null)))">Back</a>
     </p>
     }
 

@@ -11,6 +11,7 @@
     using Core.Scheme;
     using Core.Shared;
     using Infrastructure;
+    using Prsd.Core.Mapper;
     using Services;
     using Services.Caching;
     using ViewModels.Scheme;
@@ -30,12 +31,14 @@
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly BreadcrumbService breadcrumb;
+        private readonly IMapper mapper;
 
-        public SchemeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb)
+        public SchemeController(Func<IWeeeClient> apiClient, IWeeeCache cache, BreadcrumbService breadcrumb, IMapper mapper)
         {
             this.apiClient = apiClient;
             this.cache = cache;
             this.breadcrumb = breadcrumb;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -55,7 +58,7 @@
                 return View(new ManageSchemesViewModel { Schemes = await GetSchemes() });
             }
 
-            return RedirectToAction("EditScheme", new { schemeId = viewModel.Selected.Value });
+            return RedirectToAction("Overview", new { schemeId = viewModel.Selected.Value });
         }
 
         private async Task<List<SchemeData>> GetSchemes()
@@ -69,40 +72,66 @@
         [HttpGet]
         public async Task<ActionResult> Overview(Guid schemeId, OverviewDisplayOption? overviewDisplayOption = null)
         {
-            await Task.Yield();
+            await SetBreadcrumb(schemeId);
 
             if (overviewDisplayOption == null)
             {
                 overviewDisplayOption = OverviewDisplayOption.PcsDetails;
             }
 
-            switch (overviewDisplayOption.Value)
+            using (var client = apiClient())
             {
-                case OverviewDisplayOption.MembersData:
-                    // TODO: Replace with call to get members data
-                    return View("Overview/MembersDataOverview", new MembersDataOverviewViewModel(schemeId, string.Empty, schemeId, string.Empty)
-                    {
-                        DownloadsByYear = new List<YearlyDownloads>
+                var scheme = await client.SendAsync(User.GetAccessToken(), new GetSchemeById(schemeId));
+
+                switch (overviewDisplayOption.Value)
+                {
+                    case OverviewDisplayOption.MembersData:
+
+                        // TODO: Extend GetSchemeById request (above) to include WEEE/EEE as well as members download information, and create a mapping
+                        var membersDataModel = new MembersDataOverviewViewModel();
+                        membersDataModel.SchemeId = schemeId;
+                        membersDataModel.SchemeName = scheme.SchemeName;
+                        return View("Overview/MembersDataOverview", membersDataModel);
+
+                    case OverviewDisplayOption.OrganisationDetails:
+
+                        var orgDetails = await client.SendAsync(User.GetAccessToken(), new OrganisationBySchemeId(schemeId));
+                        switch (orgDetails.OrganisationType)
                         {
-                            new YearlyDownloads
-                            {
-                                Year = 2016, 
-                                IsMembersDownloadAvailable = true,
-                                IsDataReturnsDownloadAvailable = true
-                            }
+                            case OrganisationType.SoleTraderOrIndividual:
+                                var soleTraderModel = mapper.Map<SoleTraderDetailsOverviewViewModel>(orgDetails);
+                                soleTraderModel.SchemeId = schemeId;
+                                soleTraderModel.SchemeName = scheme.SchemeName;
+                                return View("Overview/SoleTraderDetailsOverview", soleTraderModel);
+
+                            case OrganisationType.Partnership:
+                                var partnershipModel = mapper.Map<PartnershipDetailsOverviewViewModel>(orgDetails);
+                                partnershipModel.SchemeId = schemeId;
+                                partnershipModel.SchemeName = scheme.SchemeName;
+                                return View("Overview/PartnershipDetailsOverview", partnershipModel);
+
+                            case OrganisationType.RegisteredCompany:
+                            default:
+                                var registeredCompanyModel = mapper.Map<RegisteredCompanyDetailsOverviewViewModel>(orgDetails);
+                                registeredCompanyModel.SchemeId = schemeId;
+                                registeredCompanyModel.SchemeName = scheme.SchemeName;
+                                return View("Overview/RegisteredCompanyDetailsOverview", registeredCompanyModel);
                         }
-                    });
-                case OverviewDisplayOption.OrganisationDetails:
-                // TODO:  Replace with call to get organisation details, and select correct view based on organisation type
-                    return View("Overview/RegisteredCompanyDetailsOverview",
-                        new RegisteredCompanyDetailsOverviewViewModel(schemeId, string.Empty));
-                case OverviewDisplayOption.ContactDetails:
-                    // TODO: Replace with call to get contact details
-                    return View("Overview/ContactDetailsOverview",
-                        new ContactDetailsOverviewViewModel(schemeId, string.Empty));
-                default:
-                    // TODO:  Replace with call to get PCS details
-                    return View("Overview/PcsDetailsOverview", new PcsDetailsOverviewViewModel(schemeId, string.Empty));
+
+                    case OverviewDisplayOption.ContactDetails:
+
+                        var organisationData =
+                            await client.SendAsync(User.GetAccessToken(), new OrganisationBySchemeId(schemeId));
+                        var contactDetailsModel = mapper.Map<ContactDetailsOverviewViewModel>(organisationData);
+                        contactDetailsModel.SchemeName = scheme.SchemeName;
+                        contactDetailsModel.SchemeId = scheme.Id;
+                        return View("Overview/ContactDetailsOverview", contactDetailsModel);
+
+                    case OverviewDisplayOption.PcsDetails:
+                    default:
+
+                        return View("Overview/PcsDetailsOverview", mapper.Map<PcsDetailsOverviewViewModel>(scheme));
+                }
             }
         }
 
@@ -182,7 +211,7 @@
                             model.IbisCustomerReference,
                             model.ObligationType.Value, model.CompetentAuthorityId, model.Status));
 
-                return RedirectToAction("ManageSchemes");
+                return RedirectToAction("Overview", new { schemeId });
             }
         }
 
@@ -248,7 +277,7 @@
                 await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationContactDetails(orgData));
             }
 
-            return RedirectToAction("EditScheme", new { schemeId = model.SchemeId });
+            return RedirectToAction("Overview", new { schemeId = model.SchemeId, overviewDisplayOption = OverviewDisplayOption.ContactDetails });
         }
 
         [HttpGet]
@@ -308,7 +337,7 @@
                 }
             }
 
-            return RedirectToAction("ManageSchemes");
+            return RedirectToAction("Overview", new { schemeId });
         }
 
         private async Task SetBreadcrumb(Guid? schemeId)

@@ -11,12 +11,9 @@
 
         public IList<YearlyDownloads> DownloadsByYear { get; set; }
 
-        public MembersDataOverviewViewModel(Guid organisationId, string approvalNumber, Guid schemeId, string schemeName)
-            : base(schemeId, schemeName, OverviewDisplayOption.MembersData)
+        public MembersDataOverviewViewModel() : base(OverviewDisplayOption.MembersData)
         {
             DownloadsByYear = new List<YearlyDownloads>();
-            OrganisationId = organisationId;
-            ApprovalNumber = approvalNumber;
         }
     }
 }

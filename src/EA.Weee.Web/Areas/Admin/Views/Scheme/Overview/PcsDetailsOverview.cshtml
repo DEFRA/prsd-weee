@@ -12,35 +12,43 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th>PCS name</th>
-            <td>@Model.SchemeName</td>
-        </tr>
-        <tr>
-            <th>Approval number</th>
-            <td>@Model.ApprovalNumber</td>
-        </tr>
-        <tr>
-            <th>Billing reference (optional)</th>
-            <td>@Model.BillingReference</td>
-        </tr>
-        <tr>
-            <th>Obligation type</th>
-            <td>@Model.ObligationType</td>
-        </tr>
-        <tr>
-            <th>Appropriate Authority</th>
-            <td>@Model.AppropriateAuthority</td>
-        </tr>
+        @if (!Model.IsRejected)
+        {
+            <tr>
+                <th>PCS name</th>
+                <td>@Model.SchemeName</td>
+            </tr>
+            <tr>
+                <th>Approval number</th>
+                <td>@Model.ApprovalNumber</td>
+            </tr>
+            <tr>
+                <th>Billing reference (optional)</th>
+                <td>@Model.BillingReference</td>
+            </tr>
+            <tr>
+                <th>Obligation type</th>
+                <td>@Model.ObligationType</td>
+            </tr>
+            <tr>
+                <th>Appropriate Authority</th>
+                <td>@Model.AppropriateAuthority</td>
+            </tr>
+        }
         <tr>
             <th>Status</th>
             <td>@Model.Status</td>
         </tr>
         </tbody>
     </table>
-
     <br />
+    @if (!Model.IsRejected)
+    {
+        <p>
+            <a href="@(Url.UrlFor<SchemeController>(a => a.EditScheme(Model.SchemeId)))">Edit PCS details</a>
+        </p>
+    }
     <p>
-        <a href="@(Url.UrlFor<SchemeController>(a => a.EditScheme(Model.SchemeId)))">Edit PCS details</a>
+        <a href="@(Url.UrlFor<SchemeController>(u => u.ManageSchemes()))">Back</a>
     </p>
 }

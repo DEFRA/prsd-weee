@@ -5,12 +5,8 @@
 
 @model OverviewViewModel
 <header class="hgroup">
-    <h1 class="heading-large">@Model.SchemeName</h1>
+    <h1 class="heading-xlarge">@Model.SchemeName</h1>
 </header>
-
-<p>
-    <a href="@(Url.UrlFor<SchemeController>(u => u.ManageSchemes()))">Select a different PCS</a>
-</p>
 
 <div class="section-tabs">
     <ul>

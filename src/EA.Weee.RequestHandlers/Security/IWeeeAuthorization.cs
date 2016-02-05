@@ -72,5 +72,18 @@
         /// granting them access to the specified scheme.
         /// </summary>
         bool CheckSchemeAccess(Guid schemeId);
+
+        /// <summary>
+        /// Ensures that the principal represents a user with a claim
+        /// granting them access to the specified scheme.
+        /// </summary>
+        /// <param name="schemeId"></param>
+        void EnsureInternalOrSchemeAccess(Guid schemeId);
+
+        /// <summary>
+        /// Checks that the principal represents a user with a claim
+        /// granting them access to the specified scheme.
+        /// </summary>
+        bool CheckInternalOrSchemeAccess(Guid schemeId);
     }
 }
