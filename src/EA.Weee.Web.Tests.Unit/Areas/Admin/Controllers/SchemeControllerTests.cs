@@ -57,7 +57,7 @@
         }
 
         [Fact]
-        public async Task ManageSchemesPost_AllGood_ReturnsManageSchemeRedirect()
+        public async Task ManageSchemesPost_AllGood_ReturnsOverviewRedirect()
         {
             var selectedGuid = Guid.NewGuid();
             var controller = SchemeController();
@@ -68,7 +68,7 @@
             Assert.IsType<RedirectToRouteResult>(result);
 
             var redirectValues = ((RedirectToRouteResult)result).RouteValues;
-            Assert.Equal("EditScheme", redirectValues["action"]);
+            Assert.Equal("Overview", redirectValues["action"]);
             Assert.Equal(selectedGuid, redirectValues["schemeId"]);
         }
 
@@ -246,10 +246,10 @@
 
         /// <summary>
         /// This test ensures that the POST "EditScheme" action will redirect the user to the
-        /// "ManageSchemes" action following a successful update.
+        /// "Overview" action following a successful update.
         /// </summary>
         [Fact]
-        public async Task PostEditScheme_WithApiReturningSuccess_RedirectsToManageSchemes()
+        public async Task PostEditScheme_WithApiReturningSuccess_RedirectsToSchemeOverview()
         {
             // Arrange
             UpdateSchemeInformationResult apiResult = new UpdateSchemeInformationResult()
@@ -273,7 +273,7 @@
             RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
             Assert.NotNull(redirectResult);
 
-            Assert.Equal("ManageSchemes", redirectResult.RouteValues["action"]);
+            Assert.Equal("Overview", redirectResult.RouteValues["action"]);
         }
 
         /// <summary>
@@ -358,7 +358,7 @@
         }
 
         [Fact]
-        public async void HttpPost_ConfirmRejectionWithYesOption_SendsSetStatusRequest_WithRejectedStatus_AndRedirectsToManageSchemes()
+        public async void HttpPost_ConfirmRejectionWithYesOption_SendsSetStatusRequest_WithRejectedStatus_AndRedirectsToOverview()
         {
             var status = SchemeStatus.Pending;
 
@@ -379,7 +379,7 @@
 
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
-            Assert.Equal("ManageSchemes", routeValues["action"]);
+            Assert.Equal("Overview", routeValues["action"]);
         }
 
         [Fact]
@@ -528,7 +528,7 @@
         }
 
         [Fact]
-        public async Task PostManageContactDetails_WithNoModelErrors_UpdatesDetailsAndRedirectsToEditScheme()
+        public async Task PostManageContactDetails_WithNoModelErrors_UpdatesDetailsAndRedirectsToSchemeOverview()
         {
             var manageContactDetailsViewModel = new ManageContactDetailsViewModel
             {
@@ -551,7 +551,7 @@
             Assert.IsType(typeof(RedirectToRouteResult), result);
 
             RedirectToRouteResult redirectResult = (RedirectToRouteResult)result;
-            Assert.Equal("EditScheme", redirectResult.RouteValues["Action"]);
+            Assert.Equal("Overview", redirectResult.RouteValues["Action"]);
         }
 
         [Fact]

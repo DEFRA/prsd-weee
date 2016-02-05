@@ -239,7 +239,6 @@
             return CheckCanAccessInternalArea() || CheckSchemeAccess(schemeId);
         }
 
-
         private bool HasClaim(Claim claim)
         {
             foreach (ClaimsIdentity identity in userContext.Principal.Identities)
