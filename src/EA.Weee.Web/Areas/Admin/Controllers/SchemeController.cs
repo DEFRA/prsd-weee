@@ -77,7 +77,6 @@
                     {
                         CompetentAuthorities = await GetCompetentAuthorities(),
                         ApprovalNumber = scheme.ApprovalName,
-                        OldApprovalNumber = scheme.ApprovalName,
                         IbisCustomerReference = scheme.IbisCustomerReference,
                         CompetentAuthorityId = scheme.CompetentAuthorityId ?? Guid.Empty,
                         SchemeName = scheme.SchemeName,
@@ -128,32 +127,56 @@
             if (!ModelState.IsValid)
             {
                 await SetBreadcrumb(schemeId);
+                model.CompetentAuthorities = await GetCompetentAuthorities();
                 return View(model);
             }
 
+            UpdateSchemeInformationResult result;
             using (var client = apiClient())
             {
-                if (model.OldApprovalNumber != model.ApprovalNumber)
-                {
-                    var approvalNumberExists = await
-                        client.SendAsync(User.GetAccessToken(),
-                            new VerifyApprovalNumberExists(model.ApprovalNumber));
+                UpdateSchemeInformation request = new UpdateSchemeInformation(
+                    schemeId,
+                    model.SchemeName,
+                    model.ApprovalNumber,
+                    model.IbisCustomerReference,
+                    model.ObligationType.Value,
+                    model.CompetentAuthorityId,
+                    model.Status);
 
-                    if (approvalNumberExists)
+                result = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            switch (result.Result)
+                {
+                case UpdateSchemeInformationResult.ResultType.Success:
+                    return RedirectToAction("ManageSchemes");
+
+                case UpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure:
                     {
                         ModelState.AddModelError("ApprovalNumber", "Approval number already exists.");
+
                         await SetBreadcrumb(schemeId);
+                        model.CompetentAuthorities = await GetCompetentAuthorities();
                         return View(model);
                     }
-                }
 
-                await
-                    client.SendAsync(User.GetAccessToken(),
-                        new UpdateSchemeInformation(schemeId, model.SchemeName, model.ApprovalNumber,
-                            model.IbisCustomerReference,
-                            model.ObligationType.Value, model.CompetentAuthorityId, model.Status));
+                case UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure:
+                    {
+                        string errorMessage = string.Format(
+                            "Billing reference \"{0}\" already exists for scheme \"{1}\" ({2}).",
+                            result.IbisCustomerReferenceUniquenessFailure.IbisCustomerReference,
+                            result.IbisCustomerReferenceUniquenessFailure.OtherSchemeName,
+                            result.IbisCustomerReferenceUniquenessFailure.OtherSchemeApprovalNumber);
 
-                return RedirectToAction("ManageSchemes");
+                        ModelState.AddModelError("IbisCustomerReference", errorMessage);
+
+                        await SetBreadcrumb(schemeId);
+                        model.CompetentAuthorities = await GetCompetentAuthorities();
+                        return View(model);
+                    }
+
+                default:
+                    throw new NotSupportedException();
             }
         }
 

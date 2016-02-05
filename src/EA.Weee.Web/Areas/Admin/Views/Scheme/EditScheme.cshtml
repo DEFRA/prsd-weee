@@ -26,8 +26,6 @@
 
     if (Model.Status != SchemeStatus.Rejected && Model.Status != SchemeStatus.Withdrawn)
     {
-    @Html.HiddenFor(m => m.OldApprovalNumber)
-
     <div class="form-group @Html.Gds().FormGroupClass(m => m.SchemeName)">
         @Html.Gds().LabelFor(m => m.SchemeName)
         @Html.Gds().ValidationMessageFor(m => m.SchemeName)

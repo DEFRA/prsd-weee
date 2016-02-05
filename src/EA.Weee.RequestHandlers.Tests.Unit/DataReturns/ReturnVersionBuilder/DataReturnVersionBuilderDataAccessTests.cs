@@ -139,6 +139,34 @@
         }
 
         [Fact]
+        public async Task GetOrAddAatfDeliveryLocation_IgnoresCaseOfApprovalNumberAndFacilityName()
+        {
+            // Arrange
+            var dbContextHelper = new DbContextHelper();
+            var context = A.Fake<WeeeContext>();
+
+            var aatfDeliveryLocations = dbContextHelper.GetAsyncEnabledDbSet(new List<AatfDeliveryLocation>());
+            A.CallTo(() => context.AatfDeliveryLocations)
+                .Returns(aatfDeliveryLocations);
+
+            var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
+
+            // Act
+            var result1 = await dataAccess.GetOrAddAatfDeliveryLocation("AAA", "BBB");
+            var result2 = await dataAccess.GetOrAddAatfDeliveryLocation("aaa", "BBB");
+            var result3 = await dataAccess.GetOrAddAatfDeliveryLocation("AAA", "bbb");
+            var result4 = await dataAccess.GetOrAddAatfDeliveryLocation("aaa", "bbb");
+
+            // Assert
+            Assert.Contains(result1, dataAccess.CachedAatfDeliveryLocations.Values);
+            Assert.Same(result1, result2);
+            Assert.Same(result1, result3);
+            Assert.Same(result1, result4);
+            A.CallTo(() => aatfDeliveryLocations.Add(A<AatfDeliveryLocation>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
         public async Task GetOrAddAeDeliveryLocation_PopulatesCacheWithDatabaseValues()
         {
             // Arrange
@@ -260,6 +288,34 @@
             Assert.Contains(result, dataAccess.CachedAeDeliveryLocations.Values);
             A.CallTo(() => aeDeliveryLocations.Add(result))
                 .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task GetOrAddAeDeliveryLocation_IgnoresCaseOfApprovalNumberAndOperatorName()
+        {
+            // Arrange
+            var dbContextHelper = new DbContextHelper();
+            var context = A.Fake<WeeeContext>();
+
+            var aeDeliveryLocations = dbContextHelper.GetAsyncEnabledDbSet(new List<AeDeliveryLocation>());
+            A.CallTo(() => context.AeDeliveryLocations)
+                .Returns(aeDeliveryLocations);
+
+            var dataAccess = new DataReturnVersionBuilderDataAccess(A.Dummy<Scheme>(), A.Dummy<Quarter>(), context);
+
+            // Act
+            var result1 = await dataAccess.GetOrAddAeDeliveryLocation("AAA", "BBB");
+            var result2 = await dataAccess.GetOrAddAeDeliveryLocation("aaa", "BBB");
+            var result3 = await dataAccess.GetOrAddAeDeliveryLocation("AAA", "bbb");
+            var result4 = await dataAccess.GetOrAddAeDeliveryLocation("aaa", "bbb");
+
+            // Assert
+            Assert.Contains(result1, dataAccess.CachedAeDeliveryLocations.Values);
+            Assert.Same(result1, result2);
+            Assert.Same(result1, result3);
+            Assert.Same(result1, result4);
+            A.CallTo(() => aeDeliveryLocations.Add(A<AeDeliveryLocation>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
