@@ -3,6 +3,7 @@
     using System;
     using System.CodeDom;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
@@ -119,9 +120,9 @@
         }
 
         [Theory]
-        [InlineData(SchemeStatus.Approved)]
+        [InlineData(SchemeStatus.Withdrawn)]
         [InlineData(SchemeStatus.Rejected)]
-        public async void GetEditScheme_StatusIsRejectedOrApproved_StatusIsUnchangable(SchemeStatus status)
+        public async void GetEditScheme_StatusIsRejectedOrWithdrawn_IsChangeableStatusIsFalse(SchemeStatus status)
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
@@ -132,7 +133,44 @@
             var result = await SchemeController().EditScheme(Guid.NewGuid());
             var model = (SchemeViewModel)((ViewResult)result).Model;
 
-            Assert.Equal(true, model.IsUnchangeableStatus);
+            Assert.Equal(false, model.IsChangeableStatus);
+        }
+
+        [Fact]
+        public async void GetEditScheme_StatusIsApproved_AvailableStatusToChangeIsWithdrawn()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
+                .Returns(new SchemeData
+                {
+                    SchemeStatus = SchemeStatus.Approved
+                });
+
+            var result = await SchemeController().EditScheme(Guid.NewGuid());
+            var model = (SchemeViewModel)((ViewResult)result).Model;
+
+            var statuses = model.StatusSelectList.ToList();
+
+            Assert.Equal(statuses.Count(), 2);
+           
+            Assert.True(statuses.Exists(r => r.Text == SchemeStatus.Withdrawn.ToString()));
+            Assert.True(statuses.Exists(r => r.Text == SchemeStatus.Approved.ToString()));
+        }
+
+        [Fact]
+        public async void GetEditScheme_StatusIsPending_DoesNotProvideWithdrawnStatus()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
+                .Returns(new SchemeData
+                {
+                    SchemeStatus = SchemeStatus.Pending
+                });
+
+            var result = await SchemeController().EditScheme(Guid.NewGuid());
+            var model = (SchemeViewModel)((ViewResult)result).Model;
+
+            var statuses = model.StatusSelectList.ToList();
+
+            Assert.False(statuses.Exists(r => r.Text == SchemeStatus.Withdrawn.ToString()));
         }
 
         [Fact]
@@ -167,78 +205,6 @@
             });
 
             Assert.IsType<ViewResult>(result);
-        }
-
-        [Fact]
-        public async void PostEditScheme_OldApprovalNumberAndApprovalNumberNotMatch_MustVerifyApprovalNumberExists()
-        {
-            var controller = SchemeController();
-
-            var scheme = new SchemeViewModel
-            {
-                OldApprovalNumber = "WEE/AD1234DC/SCH",
-                ApprovalNumber = "WEE/ZZ3456EE/SCH",
-                SchemeName = "Any value",
-                ObligationType = ObligationType.B2B,
-                CompetentAuthorityId = Guid.NewGuid(),
-                IbisCustomerReference = "Any value"
-            };
-
-            await controller.EditScheme(Guid.NewGuid(), scheme);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyApprovalNumberExists>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeInformation>._))
-                .MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Fact]
-        public async void PostEditScheme_OldApprovalNumberAndApprovalNumberNotMatchAndApprovalNumberAlreadyExist_ReturnsViewWithError()
-        {
-            var controller = SchemeController();
-
-            var scheme = new SchemeViewModel
-            {
-                OldApprovalNumber = "WEE/AD1234DC/SCH",
-                ApprovalNumber = "WEE/ZZ3456EE/SCH",
-                SchemeName = "Any value",
-                ObligationType = ObligationType.B2B,
-                CompetentAuthorityId = Guid.NewGuid(),
-                IbisCustomerReference = "Any value"
-            };
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyApprovalNumberExists>._)).Returns(true);
-
-            var result = await controller.EditScheme(Guid.NewGuid(), scheme);
-
-            Assert.IsType<ViewResult>(result);
-            Assert.False(controller.ModelState.IsValid);
-        }
-
-        [Fact]
-        public async void PostEditScheme_OldApprovalNumberAndApprovalNumberAreSame_ReturnToManageScheme()
-        {
-            var controller = SchemeController();
-
-            var scheme = new SchemeViewModel
-            {
-                OldApprovalNumber = "WEE/AD1234DC/SCH",
-                ApprovalNumber = "WEE/AD1234DC/SCH",
-                SchemeName = "Any value",
-                ObligationType = ObligationType.B2B,
-                CompetentAuthorityId = Guid.NewGuid(),
-                IbisCustomerReference = "Any value"
-            };
-
-            var result = await controller.EditScheme(Guid.NewGuid(), scheme);
-
-            Assert.IsType<RedirectToRouteResult>(result);
-            Assert.True(controller.ModelState.IsValid);
-
-            var routeValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("ManageSchemes", routeValues["action"]);
         }
 
         [Fact]
@@ -278,6 +244,119 @@
             Assert.Equal(schemeId, routeValues["schemeId"]);
         }
 
+        /// <summary>
+        /// This test ensures that the POST "EditScheme" action will redirect the user to the
+        /// "ManageSchemes" action following a successful update.
+        /// </summary>
+        [Fact]
+        public async Task PostEditScheme_WithApiReturningSuccess_RedirectsToManageSchemes()
+        {
+            // Arrange
+            UpdateSchemeInformationResult apiResult = new UpdateSchemeInformationResult()
+            {
+                Result = UpdateSchemeInformationResult.ResultType.Success
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeInformation>._)).Returns(apiResult);
+
+            SchemeController controller = SchemeController();
+
+            // Act
+            SchemeViewModel model = new SchemeViewModel
+            {
+                ObligationType = ObligationType.Both,
+                Status = SchemeStatus.Approved,
+            };
+
+            ActionResult result = await controller.EditScheme(A.Dummy<Guid>(), model);
+
+            // Assert
+            RedirectToRouteResult redirectResult = result as RedirectToRouteResult;
+            Assert.NotNull(redirectResult);
+
+            Assert.Equal("ManageSchemes", redirectResult.RouteValues["action"]);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "EditScheme" action will return the "EditScheme"
+        /// view with a model error for the ApprovaNumber property of "Approval number already exists."
+        /// if the API reports that the update failed due to a violation of the approval number
+        /// uniqueness constraint.
+        /// </summary>
+        [Fact]
+        public async Task PostEditScheme_WithApiReturningApprovalNumberUniquenessFailure_ReturnsViewWithModelError()
+        {
+            // Arrange
+            UpdateSchemeInformationResult apiResult = new UpdateSchemeInformationResult()
+            {
+                Result = UpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeInformation>._)).Returns(apiResult);
+
+            SchemeController controller = SchemeController();
+
+            // Act
+            SchemeViewModel model = new SchemeViewModel
+            {
+                ObligationType = ObligationType.Both,
+                Status = SchemeStatus.Approved,
+            };
+
+            ActionResult result = await controller.EditScheme(A.Dummy<Guid>(), model);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals(viewResult.ViewName, "EditScheme", StringComparison.InvariantCultureIgnoreCase));
+
+            Assert.Equal(1, controller.ModelState["ApprovalNumber"].Errors.Count);
+            Assert.Equal("Approval number already exists.", controller.ModelState["ApprovalNumber"].Errors[0].ErrorMessage);
+        }
+
+        /// <summary>
+        /// This test ensures that the POST "EditScheme" action will return the "EditScheme"
+        /// view with a model error for the IbisCustomerReference property of:
+        ///     Billing reference [1B1S customer reference] already exists for scheme "[Scheme name]" ([Approval number]).
+        /// if the API reports that the update failed due to a violation of the 1B1S customer
+        /// reference uniqueness constraint.
+        /// </summary>
+        [Fact]
+        public async Task PostEditScheme_WithApiReturningIbisCustomerReferenceUniquenessFailure_ReturnsViewWithModelError()
+        {
+            // Arrange
+            UpdateSchemeInformationResult apiResult = new UpdateSchemeInformationResult()
+            {
+                Result = UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure,
+                IbisCustomerReferenceUniquenessFailure = new UpdateSchemeInformationResult.IbisCustomerReferenceUniquenessFailureInfo()
+                {
+                    IbisCustomerReference = "WEE1234567",
+                    OtherSchemeName = "Big Waste Co.",
+                    OtherSchemeApprovalNumber = "WEE/AB1234CD/SCH"
+                }
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateSchemeInformation>._)).Returns(apiResult);
+
+            SchemeController controller = SchemeController();
+
+            // Act
+            SchemeViewModel model = new SchemeViewModel
+            {
+                ObligationType = ObligationType.Both,
+                Status = SchemeStatus.Approved,
+            };
+
+            ActionResult result = await controller.EditScheme(A.Dummy<Guid>(), model);
+
+            // Assert
+            ViewResult viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || string.Equals(viewResult.ViewName, "EditScheme", StringComparison.InvariantCultureIgnoreCase));
+
+            Assert.Equal(1, controller.ModelState["IbisCustomerReference"].Errors.Count);
+            Assert.Equal(
+                "Billing reference \"WEE1234567\" already exists for scheme \"Big Waste Co.\" (WEE/AB1234CD/SCH).",
+                controller.ModelState["IbisCustomerReference"].Errors[0].ErrorMessage);
+        }
+
         [Fact]
         public async void HttpPost_ConfirmRejectionWithYesOption_SendsSetStatusRequest_WithRejectedStatus_AndRedirectsToManageSchemes()
         {
@@ -310,6 +389,65 @@
             {
                 PossibleValues = new[] { ConfirmSchemeRejectionOptions.Yes, ConfirmSchemeRejectionOptions.No },
                 SelectedValue = ConfirmSchemeRejectionOptions.No
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("EditScheme", routeValues["action"]);
+        }
+
+        [Fact]
+        public async void PostEditScheme_SchemeIsWithdrawn_RedirectsToWithdrawnConfirmation_WithSchemeId()
+        {
+            var controller = SchemeController();
+            var schemeId = Guid.NewGuid();
+            var result = await controller.EditScheme(schemeId, new SchemeViewModel
+            {
+                Status = SchemeStatus.Withdrawn,
+            });
+
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ConfirmWithdrawn", routeValues["action"]);
+            Assert.Equal(schemeId, routeValues["schemeId"]);
+        }
+
+        [Fact]
+        public async void PostEditScheme_ConfirmWithdrawnWithYesOption_SendsSetStatusRequest_WithWithdrawnStatus_AndRedirectsToManageSchemes()
+        {
+            var status = SchemeStatus.Approved;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
+                .Invokes((string t, IRequest<Guid> s) => status = ((SetSchemeStatus)s).Status)
+                .Returns(Guid.NewGuid());
+
+            var result = await SchemeController().ConfirmWithdrawn(Guid.Empty, new ConfirmWithdrawnViewModel
+            {
+                PossibleValues = new[] { ConfirmSchemeWithdrawOptions.Yes, ConfirmSchemeWithdrawOptions.No },
+                SelectedValue = ConfirmSchemeWithdrawOptions.Yes
+            });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<Guid>>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+            Assert.Equal(SchemeStatus.Withdrawn, status);
+            Assert.IsType<RedirectToRouteResult>(result);
+
+            var routeValues = ((RedirectToRouteResult)result).RouteValues;
+
+            Assert.Equal("ManageSchemes", routeValues["action"]);
+        }
+
+        [Fact]
+        public async void PostEditScheme_ConfirmWithdrawnWithNoOption_AndRedirectsToEditScheme()
+        {
+            var result = await SchemeController().ConfirmWithdrawn(Guid.Empty, new ConfirmWithdrawnViewModel
+            {
+                PossibleValues = new[] { ConfirmSchemeWithdrawOptions.Yes, ConfirmSchemeWithdrawOptions.No },
+                SelectedValue = ConfirmSchemeWithdrawOptions.No
             });
 
             Assert.IsType<RedirectToRouteResult>(result);

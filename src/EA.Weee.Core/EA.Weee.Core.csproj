@@ -38,12 +38,12 @@
     <Reference Include="Autofac.Integration.Mvc">
       <HintPath>..\packages\Autofac.Mvc5.3.3.4\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16015-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16027.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16027-develop2\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16015-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16027.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16027-develop2\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -109,6 +109,7 @@
     <Compile Include="Helpers\Extensions.Strings.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
     <Compile Include="Scheme\MemberRegistrationSchemaVersion.cs" />
+    <Compile Include="Scheme\UpdateSchemeInformationResult.cs" />
     <Compile Include="Search\Fuzzy\CommonTerm.cs" />
     <Compile Include="Search\Fuzzy\FuzzyOrganisationSearcher.cs">
       <SubType>Code</SubType>
@@ -156,6 +157,7 @@
     <Compile Include="Search\Simple\SimpleSearcher.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Security\Role.cs" />
     <Compile Include="Shared\ChargeBandType.cs" />
     <Compile Include="Shared\CsvWriter.cs" />
     <Compile Include="Shared\CsvWriterFactory.cs" />
