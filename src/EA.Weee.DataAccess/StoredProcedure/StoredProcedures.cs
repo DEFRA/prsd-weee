@@ -363,5 +363,18 @@
             }
             return value;
         }
+
+        public async Task<List<DataReturnSummaryCsvData>> SpgDataReturnSummaryCsv(Guid schemeId, int complianceYear)
+        {
+            SqlParameter schemeIdParameter = new SqlParameter("@SchemeID", schemeId);
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+
+            return await context.Database
+                .SqlQuery<DataReturnSummaryCsvData>(
+                    "[PCS].[spgDataReturnSummaryCsv] @SchemeID, @ComplianceYear",
+                    schemeIdParameter,
+                    complianceYearParameter)
+                .ToListAsync();
+        }
     }
 }

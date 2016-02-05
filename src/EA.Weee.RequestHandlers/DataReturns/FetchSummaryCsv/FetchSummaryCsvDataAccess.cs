@@ -7,6 +7,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using DataAccess;
+    using DataAccess.StoredProcedure;
     using EA.Weee.Domain.DataReturns;
 
     public class FetchSummaryCsvDataAccess : IFetchSummaryCsvDataAccess
@@ -25,13 +26,17 @@
                 .SingleAsync();
         }
 
-        public async Task<DataReturn> FetchDataReturnOrDefaultAsync(Guid organisationId, int complianceYear, QuarterType quarterType)
+        /// <summary>
+        /// Fetches the aggregated data from the database.
+        /// </summary>
+        /// <param name="schemeId"></param>
+        /// <param name="complianceYear"></param>
+        /// <returns></returns>
+        public async Task<List<DataReturnSummaryCsvData>> FetchResultsAsync(Guid schemeId, int complianceYear)
         {
-            return await context.DataReturns
-                .Where(dr => dr.Scheme.Organisation.Id == organisationId)
-                .Where(dr => dr.Quarter.Year == complianceYear)
-                .Where(dr => dr.Quarter.Q == quarterType)
-                .SingleOrDefaultAsync();
+            return await context.StoredProcedures.SpgDataReturnSummaryCsv(
+                schemeId,
+                complianceYear);
         }
     }
 }
