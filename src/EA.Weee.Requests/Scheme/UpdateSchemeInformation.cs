@@ -1,10 +1,11 @@
 ﻿namespace EA.Weee.Requests.Scheme
 {
     using System;
+    using Core.Scheme;
     using Core.Shared;
     using Prsd.Core.Mediator;
 
-    public class UpdateSchemeInformation : IRequest<Guid>
+    public class UpdateSchemeInformation : IRequest<UpdateSchemeInformationResult>
     {
         public UpdateSchemeInformation(Guid schemeId, string schemeName, string approvalNumber, string ibisCustomerReference, ObligationType obligationType, Guid competentAuthorityId, SchemeStatus status)
         {

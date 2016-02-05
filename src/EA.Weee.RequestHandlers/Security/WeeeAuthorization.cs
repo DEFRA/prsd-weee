@@ -197,6 +197,29 @@
             return CheckCanAccessInternalArea() || CheckOrganisationAccess(organisationId);
         }
 
+        /// <summary>
+        /// Checks that the principal represents a user with the specified role.
+        /// </summary>
+        public bool CheckUserInRole(string roleName)
+        {
+            var userId = userContext.UserId.ToString();
+
+            return context.CompetentAuthorityUsers.Single(u => u.UserId == userId).Role.Name == roleName;
+        }
+
+        /// <summary>
+        /// Ensures that the principal represents a user with the specified role.
+        /// </summary>
+        public void EnsureUserInRole(string roleName)
+        {
+            bool isInRole = CheckUserInRole(roleName);
+
+            if (!isInRole)
+            {
+                string message = "The user is not associated with the specified role.";
+                throw new SecurityException(message);
+            }
+        }
         public void EnsureInternalOrSchemeAccess(Guid schemeId)
         {
             bool access = CheckInternalOrSchemeAccess(schemeId);
@@ -215,6 +238,7 @@
         {
             return CheckCanAccessInternalArea() || CheckSchemeAccess(schemeId);
         }
+
 
         private bool HasClaim(Claim claim)
         {
