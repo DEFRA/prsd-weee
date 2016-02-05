@@ -9,8 +9,8 @@
 
         public AddressViewModel Address { get; set; }
 
-        protected OrganisationDetailsOverviewViewModel(Guid schemeId, string schemeName)
-            : base(schemeId, schemeName, OverviewDisplayOption.OrganisationDetails)
+        protected OrganisationDetailsOverviewViewModel()
+            : base(OverviewDisplayOption.OrganisationDetails)
         {
             Address = new AddressViewModel();
         }

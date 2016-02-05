@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System;
+    using System.CodeDom;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -11,10 +12,16 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
+    using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using TestHelpers;
     using Web.Areas.Admin.Controllers;
     using Web.Areas.Admin.ViewModels.Scheme;
+    using Web.Areas.Admin.ViewModels.Scheme.Overview;
+    using Web.Areas.Admin.ViewModels.Scheme.Overview.ContactDetails;
+    using Web.Areas.Admin.ViewModels.Scheme.Overview.MembersData;
+    using Web.Areas.Admin.ViewModels.Scheme.Overview.OrganisationDetails;
+    using Web.Areas.Admin.ViewModels.Scheme.Overview.PcsDetails;
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
@@ -24,10 +31,28 @@
     public class SchemeControllerTests
     {
         private readonly IWeeeClient weeeClient;
+        private readonly IWeeeCache weeeCache;
+        private readonly BreadcrumbService breadcrumbService;
+        private readonly IMapper mapper;
 
         public SchemeControllerTests()
         {
             weeeClient = A.Fake<IWeeeClient>();
+            weeeCache = A.Fake<IWeeeCache>();
+            breadcrumbService = A.Fake<BreadcrumbService>();
+            mapper = A.Fake<IMapper>();
+
+            // By default all mappings will return a concrete instance, rather than faked
+            A.CallTo(() => mapper.Map<PcsDetailsOverviewViewModel>(A<SchemeData>._))
+                .Returns(new PcsDetailsOverviewViewModel());
+            A.CallTo(() => mapper.Map<SoleTraderDetailsOverviewViewModel>(A<OrganisationData>._))
+                .Returns(new SoleTraderDetailsOverviewViewModel());
+            A.CallTo(() => mapper.Map<PartnershipDetailsOverviewViewModel>(A<OrganisationData>._))
+                .Returns(new PartnershipDetailsOverviewViewModel());
+            A.CallTo(() => mapper.Map<RegisteredCompanyDetailsOverviewViewModel>(A<OrganisationData>._))
+                .Returns(new RegisteredCompanyDetailsOverviewViewModel());
+            A.CallTo(() => mapper.Map<ContactDetailsOverviewViewModel>(A<OrganisationData>._))
+                .Returns(new ContactDetailsOverviewViewModel());
         }
 
         [Fact]
@@ -406,9 +431,61 @@
             Assert.Equal(((ViewResult)result).ViewName, "ViewOrganisationDetails");
         }
 
+        [Fact]
+        public async void HttpGet_Overview_WithNullOverviewDisplayOption_ShouldDefaultToPcsDetailsViewModel()
+        {
+            var result = await SchemeController().Overview(Guid.NewGuid());
+
+            Assert.IsType<ViewResult>(result);
+
+            var viewResult = ((ViewResult)result);
+
+            Assert.IsType<PcsDetailsOverviewViewModel>(viewResult.Model);
+            Assert.Equal("Overview/PcsDetailsOverview", viewResult.ViewName);
+        }
+
+        [Theory]
+        [InlineData(OverviewDisplayOption.PcsDetails, typeof(PcsDetailsOverviewViewModel), "Overview/PcsDetailsOverview")]
+        [InlineData(OverviewDisplayOption.ContactDetails, typeof(ContactDetailsOverviewViewModel), "Overview/ContactDetailsOverview")]
+        [InlineData(OverviewDisplayOption.MembersData, typeof(MembersDataOverviewViewModel), "Overview/MembersDataOverview")]
+        [InlineData(OverviewDisplayOption.OrganisationDetails, typeof(RegisteredCompanyDetailsOverviewViewModel), "Overview/RegisteredCompanyDetailsOverview") /* This is the expected default organisation type */]
+        public async void HttpGet_Overview_WithSetDisplayOption_ShouldDirectToCorrectViewAndModel(OverviewDisplayOption displayOption, Type expectedViewModelType, string expectedViewName)
+        {
+            var result = await SchemeController().Overview(Guid.NewGuid(), displayOption);
+
+            Assert.IsType<ViewResult>(result);
+
+            var viewResult = ((ViewResult)result);
+
+            Assert.IsType(expectedViewModelType, viewResult.Model);
+            Assert.Equal(expectedViewName, viewResult.ViewName);
+        }
+
+        [Theory]
+        [InlineData(OrganisationType.RegisteredCompany, typeof(RegisteredCompanyDetailsOverviewViewModel), "Overview/RegisteredCompanyDetailsOverview")]
+        [InlineData(OrganisationType.Partnership, typeof(PartnershipDetailsOverviewViewModel), "Overview/PartnershipDetailsOverview")]
+        [InlineData(OrganisationType.SoleTraderOrIndividual, typeof(SoleTraderDetailsOverviewViewModel), "Overview/SoleTraderDetailsOverview")]
+        public async void HttpGet_Overview_WithOrganisationDetailsDisplayOption_ShouldDirectToCorrectOrganisationViewAndModel(OrganisationType organisationType, Type expectedViewModelType, string expectedViewName)
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<OrganisationData>>._))
+                .Returns(new OrganisationData
+                {
+                    OrganisationType = organisationType
+                });
+
+            var result = await SchemeController().Overview(Guid.NewGuid(), OverviewDisplayOption.OrganisationDetails);
+
+            Assert.IsType<ViewResult>(result);
+
+            var viewResult = ((ViewResult)result);
+
+            Assert.IsType(expectedViewModelType, viewResult.Model);
+            Assert.Equal(expectedViewName, viewResult.ViewName);
+        }
+
         private SchemeController SchemeController()
         {
-            return new SchemeController(() => weeeClient, A.Fake<IWeeeCache>(), A.Fake<BreadcrumbService>());
+            return new SchemeController(() => weeeClient, weeeCache, breadcrumbService, mapper);
         }
     }
 }

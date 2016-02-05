@@ -4,18 +4,28 @@
 
     public abstract class OverviewViewModel
     {
+        private string schemeName;
+
         public Guid SchemeId { get; set; }
 
-        public string SchemeName { get; set; }
+        public string SchemeName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(schemeName))
+                {
+                    return "-";
+                }
+
+                return schemeName;
+            }
+            set { schemeName = value; }
+        }
 
         public OverviewDisplayOption ActiveOverviewDisplayOption { get; private set; }
 
-        protected OverviewViewModel(Guid schemeId, string schemeName, OverviewDisplayOption activeOverviewDisplayOption)
+        protected OverviewViewModel(OverviewDisplayOption activeOverviewDisplayOption)
         {
-            SchemeId = schemeId;
-            SchemeName = string.IsNullOrEmpty(schemeName)
-                ? "-"
-                : schemeName;
             ActiveOverviewDisplayOption = activeOverviewDisplayOption;
         }
     }

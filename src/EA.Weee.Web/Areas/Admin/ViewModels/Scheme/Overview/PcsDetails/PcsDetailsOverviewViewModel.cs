@@ -14,8 +14,10 @@
 
         public string Status { get; set; }
 
-        public PcsDetailsOverviewViewModel(Guid schemeId, string schemeName) 
-            : base(schemeId, schemeName, OverviewDisplayOption.PcsDetails)
+        public bool IsRejected { get; set; }
+
+        public PcsDetailsOverviewViewModel() 
+            : base(OverviewDisplayOption.PcsDetails)
         {
         }
     }
