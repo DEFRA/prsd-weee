@@ -1,0 +1,35 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.ConfirmWithdrawnViewModel
+@{
+    ViewBag.Title = "Confirm Withdrawn";
+}
+
+@section main_content {
+    <header class="hgroup">
+        <div>
+            <h1 class="heading-large">Are you sure you want to withdraw this PCS?</h1>
+        </div>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div class="form-group">
+            <p>Once withdrawn, PCS users will no longer be able to perform PCS activities. Please note that this change, once saved, cannot be undone.</p>
+        </div>
+
+        <div class="form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ConfirmWithdrawnOptions">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Are you sure you want to withdraw this PCS?",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Inline)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue", new { @class = "button" }))
+    }
+}
