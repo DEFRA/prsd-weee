@@ -17,6 +17,11 @@
                 return Core.Shared.SchemeStatus.Rejected;
             }
 
+            if (source == SchemeStatus.Withdrawn)
+            {
+                return Core.Shared.SchemeStatus.Withdrawn;
+            }
+
             return Core.Shared.SchemeStatus.Pending;
         }
     }
