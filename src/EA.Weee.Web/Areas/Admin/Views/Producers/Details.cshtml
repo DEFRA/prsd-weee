@@ -1,17 +1,17 @@
 ﻿@using EA.Weee.Core.DataReturns
 @using EA.Weee.Core.Shared
-@using EA.Weee.Web.Areas.Admin.ViewModels.Producers
+@using EA.Weee.Web.Areas.Admin.ViewModels.Home
 @using EA.Weee.Web.Extensions
 @model EA.Weee.Web.Areas.Admin.ViewModels.Producers.DetailsViewModel
 @{
     string schemePlural = Model.Details.Schemes.Count != 1 ? "PCSs" : "PCS";
-    ViewBag.Title = "Details";
+    ViewBag.Title = @InternalUserActivity.ProducerDetails;
 }
 
 @section main_content {
 
     <header class="hgroup">
-        <h1 class="heading-large">Producer details</h1>
+        <h1 class="heading-large">@InternalUserActivity.ProducerDetails</h1>
     </header>
 
     <p>
