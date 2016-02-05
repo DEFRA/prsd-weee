@@ -93,6 +93,8 @@
             {
                 string prn = set.PRN;
                 string schemeName = set.SchemeName;
+                List<ProducerEeeHistoryCsvData.ProducerRemovedFromReturnsResult> removedList = new List<ProducerEeeHistoryCsvData.ProducerRemovedFromReturnsResult>();
+
                 //for each (scheme, year and quarter) combination in ProducerEEEHisory resultset
                 //get the earliest date, discards the results from removed producers result set which are less than earliest set
                 var resultforHistoryDataSet = results.ProducerReturnsHistoryData.Where(p => (p.ApprovalNumber == set.ApprovalNumber 
@@ -105,26 +107,47 @@
 
                 var earliestDateForSet = resultforHistoryDataSet.Min(d => d.SubmittedDate);
                 var maxDateForSet = resultforHistoryDataSet.Max(d => d.SubmittedDate);
-                
-                //discard for all records from removedproducer result set where date is less than earliestDate for this set
-                var newRemovedResultSet = resultforRemovedDataSet.Where(r => (r.SubmittedDate > earliestDateForSet));
-                List<ProducerEeeHistoryCsvData.ProducerRemovedFromReturnsResult> removedList = new List<ProducerEeeHistoryCsvData.ProducerRemovedFromReturnsResult>();
-
-                if (newRemovedResultSet.Any())
+                if (resultforRemovedDataSet.Any())
                 {
-                    var newRemovedProducerResultSet = newRemovedResultSet.Where(p => p.SubmittedDate > maxDateForSet);
-                    if (newRemovedProducerResultSet.Any())
+                    //discard for all records from removedproducer result set where date is less than earliestDate for this set
+                    var newRemovedResultSet = resultforRemovedDataSet.Where(r => (r.SubmittedDate > earliestDateForSet));
+                    
+                    //removed duplicate submissions which happened after the producer was removed
+                    if (newRemovedResultSet.Any())
                     {
-                        removedList.Add(newRemovedProducerResultSet.First());
-                        removedList.AddRange(newRemovedResultSet.Where(d => d.SubmittedDate < newRemovedProducerResultSet.First().SubmittedDate));
+                        var newRemovedProducerResultSet = newRemovedResultSet.Where(p => p.SubmittedDate > maxDateForSet);
+                        if (newRemovedProducerResultSet.Any())
+                        {
+                            removedList.Add(newRemovedProducerResultSet.First());
+                            removedList.AddRange(newRemovedResultSet.Where(d => d.SubmittedDate < newRemovedProducerResultSet.First().SubmittedDate));
+                        }
+                        else
+                        {
+                            removedList.AddRange(newRemovedResultSet);
+                        }
                     }
-                    else
+                }
+                List<ProducerEeeHistoryCsvData.ProducerRemovedFromReturnsResult> duplicateItemsToRemove = new List<ProducerEeeHistoryCsvData.ProducerRemovedFromReturnsResult>();
+                for (int i = 0; i < resultforHistoryDataSet.Count(); i++)
+                {                    
+                    var item = resultforHistoryDataSet.ElementAt(i);
+                    var nextItem = resultforHistoryDataSet.ElementAtOrDefault(i + 1);
+
+                    //remove duplicate submission between 2 submission in case where producer was removed and and then added back after few submissions.
+                    if (removedList.Any())
                     {
-                        removedList.AddRange(newRemovedResultSet);
+                        if (removedList.Count > 1 && item != null && nextItem != null)
+                        {
+                            var duplicates = removedList.Where(p => p.SubmittedDate > item.SubmittedDate && p.SubmittedDate < nextItem.SubmittedDate).Skip(1);
+                            if (duplicates.Any())
+                            {
+                                foreach (var it in duplicates)
+                                {
+                                    duplicateItemsToRemove.Add(it);
+                                }
+                            }
+                        }
                     }
-                } 
-                foreach (var item in resultforHistoryDataSet)
-                {                   
                     EeeHistoryCsvResult row = new EeeHistoryCsvResult(item.PRN, item.ApprovalNumber, item.SchemeName, item.ComplianceYear,
                                                                      item.Quarter, item.SubmittedDate, item.LatestData,
                                                                      item.Cat1B2C, item.Cat2B2C, item.Cat3B2C, item.Cat4B2C,
@@ -137,7 +160,11 @@
                                                                      item.Cat13B2B, item.Cat14B2B);
                     csvResults.Add(row);
                 }
-
+                //remove consecutive items from removed list 
+                foreach (var duplicateItem in duplicateItemsToRemove)
+                {
+                    removedList.Remove(duplicateItem);
+                }
                 //add all the records for the returns in which producer was removed.
                 foreach (var item in removedList)
                 {
