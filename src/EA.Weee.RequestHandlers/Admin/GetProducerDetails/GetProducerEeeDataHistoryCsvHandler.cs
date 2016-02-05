@@ -139,7 +139,7 @@
                 }
             }
            
-            return csvResults.OrderByDescending(r => r.SubmittedDate);
+            return csvResults.OrderByDescending(r => r.ComplianceYear).ThenByDescending(r => r.SubmittedDate);
         }
 
         public class EeeHistoryCsvResult
