@@ -113,8 +113,15 @@
                 if (newRemovedResultSet.Any())
                 {
                     var newRemovedProducerResultSet = newRemovedResultSet.Where(p => p.SubmittedDate > maxDateForSet);
-                    removedList.Add(newRemovedProducerResultSet.First());
-                    removedList.AddRange(newRemovedResultSet.Where(d => d.SubmittedDate < newRemovedProducerResultSet.First().SubmittedDate));
+                    if (newRemovedProducerResultSet.Any())
+                    {
+                        removedList.Add(newRemovedProducerResultSet.First());
+                        removedList.AddRange(newRemovedResultSet.Where(d => d.SubmittedDate < newRemovedProducerResultSet.First().SubmittedDate));
+                    }
+                    else
+                    {
+                        removedList.AddRange(newRemovedResultSet);
+                    }
                 } 
                 foreach (var item in resultforHistoryDataSet)
                 {                   
