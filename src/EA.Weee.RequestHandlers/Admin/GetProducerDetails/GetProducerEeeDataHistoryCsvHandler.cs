@@ -108,7 +108,14 @@
                 
                 //discard for all records from removedproducer result set where date is less than earliestDate for this set
                 var newRemovedResultSet = resultforRemovedDataSet.Where(r => (r.SubmittedDate > earliestDateForSet));
+                List<ProducerEeeHistoryCsvData.ProducerRemovedFromReturnsResult> removedList = new List<ProducerEeeHistoryCsvData.ProducerRemovedFromReturnsResult>();
 
+                if (newRemovedResultSet.Any())
+                {
+                    var newRemovedProducerResultSet = newRemovedResultSet.Where(p => p.SubmittedDate > maxDateForSet);
+                    removedList.Add(newRemovedProducerResultSet.First());
+                    removedList.AddRange(newRemovedResultSet.Where(d => d.SubmittedDate < newRemovedProducerResultSet.First().SubmittedDate));
+                } 
                 foreach (var item in resultforHistoryDataSet)
                 {                   
                     EeeHistoryCsvResult row = new EeeHistoryCsvResult(item.PRN, item.ApprovalNumber, item.SchemeName, item.ComplianceYear,
@@ -125,7 +132,7 @@
                 }
 
                 //add all the records for the returns in which producer was removed.
-                foreach (var item in newRemovedResultSet)
+                foreach (var item in removedList)
                 {
                     string latestData = (item.SubmittedDate > maxDateForSet) ? "Yes" : "No";
                     if (latestData == "Yes")
@@ -133,6 +140,7 @@
                         //Set "no" for the max date data from producer history result set
                         csvResults.Single(s => s.SubmittedDate == maxDateForSet).LatestData = "No";
                     }
+                    
                     EeeHistoryCsvResult row = new EeeHistoryCsvResult(prn, item.ApprovalNumber, schemeName, item.ComplianceYear,
                                                                      item.Quarter, item.SubmittedDate, latestData);
                     csvResults.Add(row);
