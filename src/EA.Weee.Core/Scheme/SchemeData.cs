@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Core.Scheme
 {
     using System;
+    using System.Collections.Generic;
     using Shared;
 
     public class SchemeData
