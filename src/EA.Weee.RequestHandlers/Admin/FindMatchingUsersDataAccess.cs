@@ -34,7 +34,8 @@
                         OrganisationName = ca.Abbreviation,
                         Status = (UserStatus)caUser.UserStatus.Value,
                         OrganisationUserId = caUser.Id,
-                        IsCompetentAuthorityUser = true
+                        IsCompetentAuthorityUser = true,
+                        Role = caUser.Role.Description
                     }).ToArrayAsync();
 
             return competentAuthorityUsers;
@@ -58,7 +59,8 @@
                         Status = (UserStatus)orgUser.UserStatus.Value,
                         OrganisationUserId = orgUser.Id,
                         IsCompetentAuthorityUser = false,
-                        OrganisationId = org.Id
+                        OrganisationId = org.Id,
+                        Role = "N/A"
                     }).ToListAsync();
 
             // If a user has been rejected previously, there can be multiple organisation user records for the same user and organisation
