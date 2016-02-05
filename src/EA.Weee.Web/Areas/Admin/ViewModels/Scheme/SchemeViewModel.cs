@@ -29,8 +29,6 @@
         [Display(Name = "Approval number")]
         public string ApprovalNumber { get; set; }
 
-        public string OldApprovalNumber { get; set; }
-
         [Required]
         [StringLength(EnvironmentAgencyMaxFieldLengths.SchemeName)]
         [DataType(DataType.Text)]
