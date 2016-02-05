@@ -153,7 +153,11 @@
         {
             var deliveredToAatfs = new List<WeeeDeliveredAmount>();
 
-            string facilityName = RandomHelper.CreateRandomString("Facility", 0, 250);
+            string facilityName = string.Empty;
+            if (RandomHelper.OneIn(2))
+            {
+                facilityName = RandomHelper.CreateRandomString("Facility", 0, 250);
+            }
 
             var deliveryLocation = new AatfDeliveryLocation(approvalNumber, facilityName);
 
@@ -170,7 +174,11 @@
         {
             var deliveredToAes = new List<WeeeDeliveredAmount>();
 
-            string operatorName = RandomHelper.CreateRandomString("Operator", 0, 250);
+            string operatorName = string.Empty;
+            if (RandomHelper.OneIn(2))
+            {
+                operatorName = RandomHelper.CreateRandomString("Operator", 0, 250);
+            }
 
             var deliveryLocation = new AeDeliveryLocation(approvalNumber, operatorName);
 

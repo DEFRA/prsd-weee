@@ -43,12 +43,12 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16015-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16027.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16027-develop2\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16015-develop1\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.Autofac, Version=1.0.16027.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.Autofac.1.0.16027-develop2\lib\net452\EA.Prsd.Core.Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -198,6 +198,9 @@
     <Compile Include="Factories\QuarterWindowFactory.cs" />
     <Compile Include="Factories\DateFactory.cs" />
     <Compile Include="Factories\IDateFactory.cs" />
+    <Compile Include="Admin\GetRolesHandler.cs" />
+    <Compile Include="Scheme\UpdateSchemeInformation\IUpdateSchemeInformationDataAccess.cs" />
+    <Compile Include="Scheme\UpdateSchemeInformation\UpdateSchemeInformationDataAccess.cs" />
     <Compile Include="Shared\DomainUser\DomainUserContext.cs" />
     <Compile Include="Shared\DomainUser\IDomainUserContext.cs" />
     <Compile Include="Shared\Extensions.cs" />
@@ -222,9 +225,9 @@
     <Compile Include="Admin\GetManageUserDataAccess.cs" />
     <Compile Include="Admin\GetUserDataHandler.cs" />
     <Compile Include="Admin\IGetManageUserDataAccess.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusDataAccess.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\IUpdateCompetentAuthorityUserStatusDataAccess.cs" />
-    <Compile Include="Admin\UpdateCompetentAuthorityUserStatus\UpdateCompetentAuthorityUserStatusHandler.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\UpdateCompetentAuthorityUserRoleAndStatusDataAccess.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\IUpdateCompetentAuthorityUserRoleAndStatusDataAccess.cs" />
+    <Compile Include="Admin\UpdateCompetentAuthorityUserRoleAndStatus\UpdateCompetentAuthorityUserRoleAndStatusHandler.cs" />
     <Compile Include="Admin\UpdateUserHandler.cs" />
     <Compile Include="Mappings\AddressMap.cs" />
     <Compile Include="Mappings\CompetentAuthorityUserMap.cs" />
@@ -303,7 +306,7 @@
     <Compile Include="Scheme\MemberRegistration\XmlValidation\XMLValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestHandlerModule.cs" />
-    <Compile Include="Scheme\UpdateSchemeInformationHandler.cs" />
+    <Compile Include="Scheme\UpdateSchemeInformation\UpdateSchemeInformationHandler.cs" />
     <Compile Include="Scheme\VerifyApprovalNumberExistsHandler.cs" />
     <Compile Include="Scheme\SetSchemeStatusHandler.cs" />
     <Compile Include="Security\IWeeeAuthorization.cs" />

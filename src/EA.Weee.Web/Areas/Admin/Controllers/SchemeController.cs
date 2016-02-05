@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -11,6 +12,7 @@
     using Core.Scheme;
     using Core.Shared;
     using Infrastructure;
+    using Prsd.Core.Helpers;
     using Services;
     using Services.Caching;
     using ViewModels.Scheme;
@@ -18,7 +20,7 @@
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
-    using Weee.Requests.Shared;    
+    using Weee.Requests.Shared;
 
     public class SchemeController : AdminController
     {
@@ -76,17 +78,31 @@
                     {
                         CompetentAuthorities = await GetCompetentAuthorities(),
                         ApprovalNumber = scheme.ApprovalName,
-                        OldApprovalNumber = scheme.ApprovalName,
                         IbisCustomerReference = scheme.IbisCustomerReference,
                         CompetentAuthorityId = scheme.CompetentAuthorityId ?? Guid.Empty,
                         SchemeName = scheme.SchemeName,
                         ObligationType = scheme.ObligationType,
                         Status = scheme.SchemeStatus,
-                        IsUnchangeableStatus = scheme.SchemeStatus == SchemeStatus.Approved || scheme.SchemeStatus == SchemeStatus.Rejected,
+                        IsChangeableStatus = scheme.SchemeStatus != SchemeStatus.Rejected && scheme.SchemeStatus != SchemeStatus.Withdrawn,
                         OrganisationId = scheme.OrganisationId,
                         SchemeId = schemeId.Value,
                         ComplianceYears = years
                     };
+
+                    if (scheme.SchemeStatus == SchemeStatus.Pending)
+                    {
+                        var statuses = EnumHelper.GetValues(typeof(SchemeStatus));
+                        statuses.Remove((int)SchemeStatus.Withdrawn);
+                        model.StatusSelectList = new SelectList(statuses, "Key", "Value");
+                    }
+
+                    if (scheme.SchemeStatus == SchemeStatus.Approved)
+                    {
+                        var statuses = EnumHelper.GetValues(typeof(SchemeStatus));
+                        statuses.Remove((int)SchemeStatus.Pending);
+                        statuses.Remove((int)SchemeStatus.Rejected);
+                        model.StatusSelectList = new SelectList(statuses, "Key", "Value");
+                    }
 
                     await SetBreadcrumb(schemeId);
                     return View(model);
@@ -107,37 +123,66 @@
                 return RedirectToAction("ConfirmRejection", new { schemeId });
             }
 
+            if (model.Status == SchemeStatus.Withdrawn)
+            {
+                return RedirectToAction("ConfirmWithdrawn", new { schemeId });
+            }
+
             model.CompetentAuthorities = await GetCompetentAuthorities();
 
             if (!ModelState.IsValid)
             {
                 await SetBreadcrumb(schemeId);
+                model.CompetentAuthorities = await GetCompetentAuthorities();
                 return View(model);
             }
 
+            UpdateSchemeInformationResult result;
             using (var client = apiClient())
             {
-                if (model.OldApprovalNumber != model.ApprovalNumber)
-                {
-                    var approvalNumberExists = await
-                        client.SendAsync(User.GetAccessToken(),
-                            new VerifyApprovalNumberExists(model.ApprovalNumber));
+                UpdateSchemeInformation request = new UpdateSchemeInformation(
+                    schemeId,
+                    model.SchemeName,
+                    model.ApprovalNumber,
+                    model.IbisCustomerReference,
+                    model.ObligationType.Value,
+                    model.CompetentAuthorityId,
+                    model.Status);
 
-                    if (approvalNumberExists)
+                result = await client.SendAsync(User.GetAccessToken(), request);
+            }
+
+            switch (result.Result)
+            {
+                case UpdateSchemeInformationResult.ResultType.Success:
+                    return RedirectToAction("ManageSchemes");
+
+                case UpdateSchemeInformationResult.ResultType.ApprovalNumberUniquenessFailure:
                     {
                         ModelState.AddModelError("ApprovalNumber", "Approval number already exists.");
+
                         await SetBreadcrumb(schemeId);
+                        model.CompetentAuthorities = await GetCompetentAuthorities();
                         return View(model);
                     }
-                }
 
-                await
-                    client.SendAsync(User.GetAccessToken(),
-                        new UpdateSchemeInformation(schemeId, model.SchemeName, model.ApprovalNumber,
-                            model.IbisCustomerReference,
-                            model.ObligationType.Value, model.CompetentAuthorityId, model.Status));
+                case UpdateSchemeInformationResult.ResultType.IbisCustomerReferenceUniquenessFailure:
+                    {
+                        string errorMessage = string.Format(
+                            "Billing reference \"{0}\" already exists for scheme \"{1}\" ({2}).",
+                            result.IbisCustomerReferenceUniquenessFailure.IbisCustomerReference,
+                            result.IbisCustomerReferenceUniquenessFailure.OtherSchemeName,
+                            result.IbisCustomerReferenceUniquenessFailure.OtherSchemeApprovalNumber);
 
-                return RedirectToAction("ManageSchemes");
+                        ModelState.AddModelError("IbisCustomerReference", errorMessage);
+
+                        await SetBreadcrumb(schemeId);
+                        model.CompetentAuthorities = await GetCompetentAuthorities();
+                        return View(model);
+                    }
+
+                default:
+                    throw new NotSupportedException();
             }
         }
 
@@ -147,7 +192,7 @@
             using (var client = apiClient())
             {
                 var csvFileName = approvalNumber + "_fullmemberlist_" + complianceYear + "_" + DateTime.Now.ToString("ddMMyyyy_HHmm") + ".csv";
-                
+
                 var producerCSVData = await client.SendAsync(User.GetAccessToken(),
                     new GetProducerCSV(orgId, complianceYear));
 
@@ -260,6 +305,40 @@
                 using (var client = apiClient())
                 {
                     await client.SendAsync(User.GetAccessToken(), new SetSchemeStatus(schemeId, SchemeStatus.Rejected));
+                }
+            }
+
+            return RedirectToAction("ManageSchemes");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ConfirmWithdrawn(Guid schemeId)
+        {
+            var model = new ConfirmWithdrawnViewModel();
+            await SetBreadcrumb(schemeId);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ConfirmWithdrawn(Guid schemeId, ConfirmWithdrawnViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                await SetBreadcrumb(schemeId);
+                return View(model);
+            }
+
+            if (model.SelectedValue == ConfirmSchemeWithdrawOptions.No)
+            {
+                return RedirectToAction("EditScheme", new { schemeId });
+            }
+
+            if (model.SelectedValue == ConfirmSchemeWithdrawOptions.Yes)
+            {
+                using (var client = apiClient())
+                {
+                    await client.SendAsync(User.GetAccessToken(), new SetSchemeStatus(schemeId, SchemeStatus.Withdrawn));
                 }
             }
 

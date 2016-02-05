@@ -1,20 +1,20 @@
-﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.UpdateCompetentAuthorityUserStatus
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.UpdateCompetentAuthorityUserRoleAndStatus
 {
     using System;
     using System.Collections.Generic;
     using DataAccess;
     using Domain.Admin;
     using FakeItEasy;
-    using RequestHandlers.Admin.UpdateCompetentAuthorityUserStatus;
+    using RequestHandlers.Admin.UpdateCompetentAuthorityUserRoleAndStatus;
     using Weee.Tests.Core;
     using Xunit;
 
-    public class UpdateCompetentAuthorityUserStatusDataAccessTests
+    public class UpdateCompetentAuthorityUserRoleAndStatusDataAccessTests
     {
         private readonly WeeeContext context;
         private readonly DbContextHelper helper;
 
-        public UpdateCompetentAuthorityUserStatusDataAccessTests()
+        public UpdateCompetentAuthorityUserRoleAndStatusDataAccessTests()
         {
             context = A.Fake<WeeeContext>();
             helper = new DbContextHelper();
@@ -46,9 +46,9 @@
             Assert.Null(result);
         }
 
-        private UpdateCompetentAuthorityUserStatusDataAccess UpdateCompetentAuthorityUserStatusDataAccess()
+        private UpdateCompetentAuthorityUserRoleAndStatusDataAccess UpdateCompetentAuthorityUserStatusDataAccess()
         {
-            return new UpdateCompetentAuthorityUserStatusDataAccess(context);
+            return new UpdateCompetentAuthorityUserRoleAndStatusDataAccess(context);
         }
 
         private CompetentAuthorityUser CompetentAuthorityUser()

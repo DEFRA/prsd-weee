@@ -18,7 +18,7 @@
             ObligationTypeSelectList = new SelectList(allObligationTypes.Where(x => x.Text != obligationTypeNone).ToList(), "Value", "Text");
             StatusSelectList = new SelectList(EnumHelper.GetValues(typeof(SchemeStatus)), "Key", "Value");
             Status = SchemeStatus.Pending;
-            IsUnchangeableStatus = false;
+            IsChangeableStatus = false;
         }
 
         [Required]
@@ -28,8 +28,6 @@
         [DataType(DataType.Text)]
         [Display(Name = "Approval number")]
         public string ApprovalNumber { get; set; }
-
-        public string OldApprovalNumber { get; set; }
 
         [Required]
         [StringLength(EnvironmentAgencyMaxFieldLengths.SchemeName)]
@@ -57,7 +55,7 @@
         [Display(Name = "Status")]
         public SchemeStatus Status { get; set; }
 
-        public bool IsUnchangeableStatus { get; set; }
+        public bool IsChangeableStatus { get; set; }
 
         public Guid SchemeId { get; set; }
 
