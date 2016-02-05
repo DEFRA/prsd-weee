@@ -385,6 +385,21 @@
         }
 
         [Fact]
+        public async void GetAuthorizationRequired_SchemeIsWithdrawn_ReturnsViewWithWithdrawnStatus()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
+                .Returns(SchemeStatus.Withdrawn);
+
+            var result = await DataReturnsController().AuthorisationRequired(A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+
+            var view = ((AuthorizationRequiredViewModel)((ViewResult)result).Model);
+
+            Assert.Equal(SchemeStatus.Withdrawn, view.Status);
+        }
+
+        [Fact]
         public async void GetAuthorizationRequired_SchemeIsApproved_RedirectsToIndex()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
