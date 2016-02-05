@@ -97,7 +97,7 @@
         [Theory]
         [InlineData(SchemeStatus.Withdrawn)]
         [InlineData(SchemeStatus.Rejected)]
-        public async void GetEditScheme_StatusIsRejectedOrWithdrawn_StatusIsUnchangable(SchemeStatus status)
+        public async void GetEditScheme_StatusIsRejectedOrWithdrawn_IsChangeableStatusIsFalse(SchemeStatus status)
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<SchemeData>>._))
                 .Returns(new SchemeData
@@ -108,7 +108,7 @@
             var result = await SchemeController().EditScheme(Guid.NewGuid());
             var model = (SchemeViewModel)((ViewResult)result).Model;
 
-            Assert.Equal(true, model.IsUnchangeableStatus);
+            Assert.Equal(false, model.IsChangeableStatus);
         }
 
         [Fact]

@@ -73,6 +73,8 @@
             var scheme = GetTestScheme();
             scheme.SetStatus(SchemeStatus.Approved);
             scheme.SetStatus(SchemeStatus.Withdrawn);
+
+            Assert.Equal(scheme.SchemeStatus, SchemeStatus.Withdrawn);
         }
 
         [Fact]
