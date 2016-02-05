@@ -101,6 +101,18 @@
                     string.Format("Scheme cannot transition scheme status '{0}' to '{1}'", SchemeStatus, status));
             }
 
+            if (SchemeStatus == SchemeStatus.Approved && (status == SchemeStatus.Pending || status == SchemeStatus.Rejected))
+            {
+                throw new InvalidOperationException(
+                    string.Format("Scheme cannot transition scheme status '{0}' to '{1}'", SchemeStatus, status));
+            }
+
+            if (SchemeStatus == SchemeStatus.Withdrawn && status == SchemeStatus.Withdrawn)
+            {
+                throw new InvalidOperationException(
+                    string.Format("Scheme cannot transition scheme status '{0}' to '{1}'", SchemeStatus, status));
+            }
+
             SchemeStatus = status;
         }
     }
