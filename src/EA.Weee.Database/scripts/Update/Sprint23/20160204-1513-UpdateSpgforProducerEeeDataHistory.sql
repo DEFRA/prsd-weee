@@ -206,6 +206,6 @@ AND (DRV.EeeOutputReturnVersionId IS NULL
 Select * from @ProducerEEEHistoryReturns P
 order by ComplianceYear, SubmittedDate
 
---Result set 2 for EEE hisoty where producer was not included in the submission
+--Result set 2 for EEE history where producer was not included in the data returns
 Select * from @ProducerNotInSchemeReturns
 END
