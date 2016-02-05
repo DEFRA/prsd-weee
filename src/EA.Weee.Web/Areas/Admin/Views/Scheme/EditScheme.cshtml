@@ -1,7 +1,9 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Core.Shared
+@using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.SchemeViewModel
 @{
     ViewBag.Title = "Edit PCS";
@@ -10,7 +12,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    @Html.HiddenFor(m => m.IsUnchangeableStatus)
+    @Html.HiddenFor(m => m.IsChangeableStatus)
     @Html.HiddenFor(m => m.OrganisationId)
     @Html.HiddenFor(m => m.SchemeId)
 
@@ -24,7 +26,7 @@
 
     @Html.Gds().ValidationSummary()
 
-    if (Model.Status != SchemeStatus.Rejected)
+    if (Model.IsChangeableStatus)
     {
     <div class="form-group @Html.Gds().FormGroupClass(m => m.SchemeName)">
         @Html.Gds().LabelFor(m => m.SchemeName)
@@ -55,7 +57,7 @@
     <div class="form-group @Html.Gds().FormGroupClass(m => m.Status)">
         @Html.Gds().LabelFor(m => m.Status)
         @Html.Gds().ValidationMessageFor(m => m.Status)
-        @if (Model.IsUnchangeableStatus)
+        @if (!Model.IsChangeableStatus)
         {
             <select class="form-control" disabled="disabled">
                 <option>@Model.Status</option>
@@ -68,30 +70,12 @@
         }
     </div>
 
-    <p>
-        @Html.ActionLink("View organisation details", "ViewOrganisationDetails", "Scheme", new { schemeId = @Model.SchemeId, orgId = @Model.OrganisationId }, null)
-    </p>
-    <p>
-        @Html.ActionLink("View or edit organisation contact details", "ManageContactDetails", "Scheme", new { schemeId = @Model.SchemeId, orgId = @Model.OrganisationId }, null)
-    </p>
-
-    <p>
-        @if (Model.ComplianceYears != null)
-        {
-            foreach (int complianceYear in Model.ComplianceYears)
-            {
-                var linkText = "Overview of current members " + complianceYear + ".csv";
-                <a href="@Url.Action("GetProducerCSV", "Scheme", new { orgId = @Model.OrganisationId, complianceYear, approvalNumber = @Model.ApprovalNumber })">@(linkText)</a><span style="color: #6f777b"> (less than 500KB).</span>
-                <br />
-            }
-        }
-    </p>
-    if (Model.Status != SchemeStatus.Rejected)
+    if (Model.IsChangeableStatus)
     {
         @(this.WeeeGds().Submit("Save and Continue", new { @class = "button" }))
     }
     <p>
-        <a href="javascript:history.back();">Back</a>
+        <a href="@(Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, null)))">Back</a>
     </p>
     }
 
@@ -100,6 +84,10 @@
     <script>
         $("#Status").change(function () {
             if ($(this).val() === "3") /* Rejected status */ {
+                document.forms[1].submit(); // Submit the form immediately
+            }
+
+            if ($(this).val() === "4") /* Withdrawn status */ {
                 document.forms[1].submit(); // Submit the form immediately
             }
         });
