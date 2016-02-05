@@ -12,6 +12,7 @@
     using Core.Scheme;
     using Core.Shared;
     using Infrastructure;
+    using Prsd.Core.Helpers;
     using Services;
     using Services.Caching;
     using ViewModels.Scheme;
@@ -19,7 +20,7 @@
     using Weee.Requests.Organisations;
     using Weee.Requests.Scheme;
     using Weee.Requests.Scheme.MemberRegistration;
-    using Weee.Requests.Shared;    
+    using Weee.Requests.Shared;
 
     public class SchemeController : AdminController
     {
@@ -82,20 +83,25 @@
                         SchemeName = scheme.SchemeName,
                         ObligationType = scheme.ObligationType,
                         Status = scheme.SchemeStatus,
-                        IsUnchangeableStatus = scheme.SchemeStatus == SchemeStatus.Rejected || scheme.SchemeStatus == SchemeStatus.Withdrawn,
+                        IsChangeableStatus = scheme.SchemeStatus != SchemeStatus.Rejected && scheme.SchemeStatus != SchemeStatus.Withdrawn,
                         OrganisationId = scheme.OrganisationId,
                         SchemeId = schemeId.Value,
                         ComplianceYears = years
                     };
 
                     if (scheme.SchemeStatus == SchemeStatus.Pending)
-                    {   
-                        model.StatusSelectList = new SelectList(model.StatusSelectList.Where(x => x.Text != SchemeStatus.Withdrawn.ToString()).ToList(), "Value", "Text");
+                    {
+                        var statuses = EnumHelper.GetValues(typeof(SchemeStatus));
+                        statuses.Remove((int)SchemeStatus.Withdrawn);
+                        model.StatusSelectList = new SelectList(statuses, "Key", "Value");
                     }
 
                     if (scheme.SchemeStatus == SchemeStatus.Approved)
                     {
-                        model.StatusSelectList = new SelectList(model.StatusSelectList.Where(x => x.Text != SchemeStatus.Pending.ToString() && x.Text != SchemeStatus.Rejected.ToString()).ToList(), "Value", "Text");
+                        var statuses = EnumHelper.GetValues(typeof(SchemeStatus));
+                        statuses.Remove((int)SchemeStatus.Pending);
+                        statuses.Remove((int)SchemeStatus.Rejected);
+                        model.StatusSelectList = new SelectList(statuses, "Key", "Value");
                     }
 
                     await SetBreadcrumb(schemeId);
@@ -147,7 +153,7 @@
             }
 
             switch (result.Result)
-                {
+            {
                 case UpdateSchemeInformationResult.ResultType.Success:
                     return RedirectToAction("ManageSchemes");
 
@@ -186,7 +192,7 @@
             using (var client = apiClient())
             {
                 var csvFileName = approvalNumber + "_fullmemberlist_" + complianceYear + "_" + DateTime.Now.ToString("ddMMyyyy_HHmm") + ".csv";
-                
+
                 var producerCSVData = await client.SendAsync(User.GetAccessToken(),
                     new GetProducerCSV(orgId, complianceYear));
 
