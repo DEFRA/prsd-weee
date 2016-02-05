@@ -10,7 +10,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    @Html.HiddenFor(m => m.IsUnchangeableStatus)
+    @Html.HiddenFor(m => m.IsChangeableStatus)
     @Html.HiddenFor(m => m.OrganisationId)
     @Html.HiddenFor(m => m.SchemeId)
 
@@ -24,10 +24,8 @@
 
     @Html.Gds().ValidationSummary()
 
-    if (Model.Status != SchemeStatus.Rejected)
+    if (Model.IsChangeableStatus)
     {
-    @Html.HiddenFor(m => m.OldApprovalNumber)
-
     <div class="form-group @Html.Gds().FormGroupClass(m => m.SchemeName)">
         @Html.Gds().LabelFor(m => m.SchemeName)
         @Html.Gds().ValidationMessageFor(m => m.SchemeName)
@@ -57,7 +55,7 @@
     <div class="form-group @Html.Gds().FormGroupClass(m => m.Status)">
         @Html.Gds().LabelFor(m => m.Status)
         @Html.Gds().ValidationMessageFor(m => m.Status)
-        @if (Model.IsUnchangeableStatus)
+        @if (!Model.IsChangeableStatus)
         {
             <select class="form-control" disabled="disabled">
                 <option>@Model.Status</option>
@@ -88,7 +86,7 @@
             }
         }
     </p>
-    if (Model.Status != SchemeStatus.Rejected)
+    if (Model.IsChangeableStatus)
     {
         @(this.WeeeGds().Submit("Save and Continue", new { @class = "button" }))
     }
@@ -102,6 +100,10 @@
     <script>
         $("#Status").change(function () {
             if ($(this).val() === "3") /* Rejected status */ {
+                document.forms[1].submit(); // Submit the form immediately
+            }
+
+            if ($(this).val() === "4") /* Withdrawn status */ {
                 document.forms[1].submit(); // Submit the form immediately
             }
         });

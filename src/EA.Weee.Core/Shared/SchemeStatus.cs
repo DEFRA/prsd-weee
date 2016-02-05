@@ -10,5 +10,7 @@
         Approved = 2, 
         [Display(Name = "Rejected")]
         Rejected = 3,
+        [Display(Name = "Withdrawn")]
+        Withdrawn = 4
     }
 }

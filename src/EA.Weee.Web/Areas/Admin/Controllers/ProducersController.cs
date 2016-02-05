@@ -14,6 +14,7 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using Services.Caching;
+    using ViewModels.Home;
 
     public class ProducersController : AdminController
     {
@@ -285,7 +286,7 @@
 
         private async Task SetBreadcrumb()
         {
-            breadcrumb.InternalActivity = "Producer details";
+            breadcrumb.InternalActivity = InternalUserActivity.ProducerDetails;
 
             await Task.Yield();
         }
