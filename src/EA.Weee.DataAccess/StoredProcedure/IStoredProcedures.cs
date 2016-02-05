@@ -25,6 +25,6 @@
 
         Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear);
 
-        Task<List<ProducerEeeHistoryCsvData>> SpgProducerEeeHistoryCsvData(string prn);
+        Task<ProducerEeeHistoryCsvData> SpgProducerEeeHistoryCsvData(string prn);
     }
 }

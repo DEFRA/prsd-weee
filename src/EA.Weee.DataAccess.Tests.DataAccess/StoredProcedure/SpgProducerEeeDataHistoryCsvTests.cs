@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Weee.DataAccess.StoredProcedure;
     using Weee.Tests.Core.Model;
@@ -39,7 +38,9 @@
                 var producer2 = helper.CreateProducerAsCompany(memberUpload2, "PRN123");
                 producer2.ObligationType = "B2C";
                 var dataReturnVersion3 = helper.CreateDataReturnVersion(scheme2, 2000, 1);
+                dataReturnVersion1.SubmittedDate = new System.DateTime(2015, 1, 9);
                 var dataReturnVersion4 = helper.CreateDataReturnVersion(scheme2, 2000, 2);
+                dataReturnVersion4.SubmittedDate = new System.DateTime(2015, 1, 10);
 
                 helper.CreateEeeOutputAmount(dataReturnVersion3, producer2.RegisteredProducer, "B2C", 1, 40);
                 helper.CreateEeeOutputAmount(dataReturnVersion4, producer2.RegisteredProducer, "B2C", 2, 1000);
@@ -52,20 +53,20 @@
                 //Assert
                 Assert.NotNull(results);
 
-                ProducerEeeHistoryCsvData b2cProducer = results.Find(x => (x.ApprovalNumber == "WEE/TE0000S1/SCH"));
+                ProducerEeeHistoryCsvData.ProducerInReturnsResult b2cProducer = results.ProducerReturnsHistoryData.Find(x => (x.ApprovalNumber == "WEE/TE0000S1/SCH"));
                 Assert.NotNull(b2cProducer);
                 Assert.Equal(2000, b2cProducer.ComplianceYear);
                 Assert.Equal(1000, b2cProducer.Cat2B2C);
                 Assert.Equal("Yes", b2cProducer.LatestData);
 
-                ProducerEeeHistoryCsvData b2bProducer = results.Find(x => (x.ApprovalNumber == "WEE/TE0000ST/SCH"));
+                ProducerEeeHistoryCsvData.ProducerInReturnsResult b2bProducer = results.ProducerReturnsHistoryData.Find(x => (x.ApprovalNumber == "WEE/TE0000ST/SCH"));
                 Assert.NotNull(b2bProducer);
                 Assert.Equal(2000, b2bProducer.ComplianceYear);
                 Assert.Equal(200, b2bProducer.Cat2B2B);
                 Assert.Null(b2bProducer.Cat2B2C);
                 Assert.Equal("Yes", b2bProducer.LatestData);
 
-                Assert.Equal(4, results.Count);                
+                Assert.Equal(4, results.ProducerReturnsHistoryData.Count);
             }
         }
 
@@ -106,26 +107,26 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerEeeHistoryCsvData> results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN345");
+                var results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN345");
 
                 //Assert
                 Assert.NotNull(results);
-                Assert.Equal("Yes", results[0].LatestData);
-                Assert.Equal(600, results[0].Cat13B2B);
+                Assert.Equal("Yes", results.ProducerReturnsHistoryData[4].LatestData);
+                Assert.Equal(600, results.ProducerReturnsHistoryData[4].Cat13B2B);
 
-                Assert.Equal("No", results[1].LatestData);
-                Assert.Equal(100, results[1].Cat10B2B);
+                Assert.Equal("No", results.ProducerReturnsHistoryData[3].LatestData);
+                Assert.Equal(100, results.ProducerReturnsHistoryData[3].Cat10B2B);
 
-                Assert.Equal("Yes", results[2].LatestData);
-                Assert.Equal(200, results[2].Cat11B2B);
+                Assert.Equal("Yes", results.ProducerReturnsHistoryData[2].LatestData);
+                Assert.Equal(200, results.ProducerReturnsHistoryData[2].Cat11B2B);
 
-                Assert.Equal("Yes", results[3].LatestData);
-                Assert.Equal(300, results[3].Cat12B2B);
+                Assert.Equal("Yes", results.ProducerReturnsHistoryData[1].LatestData);
+                Assert.Equal(300, results.ProducerReturnsHistoryData[1].Cat12B2B);
 
-                Assert.Equal("Yes", results[4].LatestData);
-                Assert.Equal(500, results[4].Cat13B2B);
+                Assert.Equal("Yes", results.ProducerReturnsHistoryData[0].LatestData);
+                Assert.Equal(500, results.ProducerReturnsHistoryData[0].Cat13B2B);
 
-                Assert.Equal(5, results.Count);
+                Assert.Equal(5, results.ProducerReturnsHistoryData.Count);
             }
         }
 
@@ -164,7 +165,7 @@
 
                 version.EeeOutputReturnVersionAmounts.Add(versionAmount);
                 dataReturnVersion1.EeeOutputReturnVersion = version;
-                
+
                 var scheme2 = helper.CreateScheme();
                 scheme2.ApprovalNumber = "WEE/TE2345ST/SCH";
                 var memberUpload2 = helper.CreateSubmittedMemberUpload(scheme2);
@@ -188,20 +189,20 @@
 
                 versionAmount1.EeeOutputAmount = eeeOutputAmount1;
                 versionAmount1.EeeOutputReturnVersion = version1;
-                version1.EeeOutputReturnVersionAmounts.Add(versionAmount1);                
+                version1.EeeOutputReturnVersionAmounts.Add(versionAmount1);
                 dataReturnVersion2.EeeOutputReturnVersion = version1;
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerEeeHistoryCsvData> results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN567");
+                var results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN567");
 
                 //Assert
                 Assert.NotNull(results);
-                Assert.Equal(2, results.Count);
-                Assert.Equal("WEE/TE2345ST/SCH", results[0].ApprovalNumber);
-                Assert.Equal("Yes", results[0].LatestData);
-                Assert.Equal("WEE/TE1234ST/SCH", results[1].ApprovalNumber);
-                Assert.Equal("Yes", results[1].LatestData);
+                Assert.Equal(2, results.ProducerReturnsHistoryData.Count);
+                Assert.Equal("WEE/TE2345ST/SCH", results.ProducerReturnsHistoryData[1].ApprovalNumber);
+                Assert.Equal("Yes", results.ProducerReturnsHistoryData[1].LatestData);
+                Assert.Equal("WEE/TE1234ST/SCH", results.ProducerReturnsHistoryData[0].ApprovalNumber);
+                Assert.Equal("Yes", results.ProducerReturnsHistoryData[0].LatestData);
             }
         }
 
@@ -237,7 +238,7 @@
                 version.Id = Guid.NewGuid();
 
                 EeeOutputReturnVersionAmount versionAmount = new EeeOutputReturnVersionAmount();
-                
+
                 versionAmount.EeeOutputAmount = eeeOutputAmount;
                 versionAmount.EeeOutputReturnVersion = version;
 
@@ -258,30 +259,30 @@
 
                 dataReturnVersion1.EeeOutputReturnVersion = version;
                 dataReturnVersion2.EeeOutputReturnVersion = version;
-                dataReturnVersion3.EeeOutputReturnVersion = version1;                
+                dataReturnVersion3.EeeOutputReturnVersion = version1;
 
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerEeeHistoryCsvData> results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN897");
+                var results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN897");
 
                 //Assert
                 Assert.NotNull(results);
-               //Only shows entries for tonnage value changes and ignores the ones with no change.
-                Assert.Equal(2, results.Count);
-                
-                Assert.Collection(results,
-                   (r1) => Assert.Equal(new DateTime(2015, 1, 3), r1.SubmittedDate),
-                   (r2) => Assert.Equal(new DateTime(2015, 1, 1), r2.SubmittedDate));
+                //Only shows entries for tonnage value changes and ignores the ones with no change.
+                Assert.Equal(2, results.ProducerReturnsHistoryData.Count);
 
-                Assert.Collection(results,
-                  (r1) => Assert.Equal("Yes", r1.LatestData),
-                  (r2) => Assert.Equal("No", r2.LatestData));
+                Assert.Collection(results.ProducerReturnsHistoryData,
+                   (r1) => Assert.Equal(new DateTime(2015, 1, 1), r1.SubmittedDate),
+                   (r2) => Assert.Equal(new DateTime(2015, 1, 3), r2.SubmittedDate));
+
+                Assert.Collection(results.ProducerReturnsHistoryData,
+                  (r1) => Assert.Equal("No", r1.LatestData),
+                  (r2) => Assert.Equal("Yes", r2.LatestData));
             }
         }
 
         [Fact]
-        public async Task SpgProducerEeeDataHistoryCsvTests_EEEDataHistory_ReturnsProducerEeeDataHistoryOrderByCYDescending()
+        public async Task SpgProducerEeeDataHistoryCsvTests_EEEDataHistory_ReturnsProducerEeeDataHistoryOrderByCYAscending()
         {
             using (DatabaseWrapper db = new DatabaseWrapper())
             {
@@ -306,22 +307,22 @@
                 helper.CreateEeeOutputAmount(dataReturnVersion3, producer1.RegisteredProducer, "B2B", 1, 300);
                 helper.CreateEeeOutputAmount(dataReturnVersion4, producer1.RegisteredProducer, "B2B", 4, 400);
                 helper.CreateEeeOutputAmount(dataReturnVersion5, producer1.RegisteredProducer, "B2B", 4, 500);
-             
+
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerEeeHistoryCsvData> results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN111");
+                var results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN111");
 
                 //Assert
-                Assert.NotNull(results);                
-                Assert.Equal(5, results.Count);
+                Assert.NotNull(results);
+                Assert.Equal(5, results.ProducerReturnsHistoryData.Count);
 
-                Assert.Collection(results,
-                    (r1) => Assert.Equal(2005, r1.ComplianceYear),
-                    (r2) => Assert.Equal(2004, r2.ComplianceYear),
+                Assert.Collection(results.ProducerReturnsHistoryData,
+                    (r1) => Assert.Equal(1999, r1.ComplianceYear),
+                    (r2) => Assert.Equal(2000, r2.ComplianceYear),
                     (r3) => Assert.Equal(2001, r3.ComplianceYear),
-                    (r4) => Assert.Equal(2000, r4.ComplianceYear),
-                    (r5) => Assert.Equal(1999, r5.ComplianceYear));
+                    (r4) => Assert.Equal(2004, r4.ComplianceYear),
+                    (r5) => Assert.Equal(2005, r5.ComplianceYear));
             }
         }
 
@@ -388,20 +389,20 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerEeeHistoryCsvData> results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN897");
+                var results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN897");
 
                 //Assert
                 Assert.NotNull(results);
                 //Only shows entries for tonnage value changes and ignores the ones with no change.
-                Assert.Equal(2, results.Count);
+                Assert.Equal(2, results.ProducerReturnsHistoryData.Count);
 
-                Assert.Collection(results,
-                   (r1) => Assert.Equal(new DateTime(2015, 1, 2), r1.SubmittedDate),
-                   (r2) => Assert.Equal(new DateTime(2015, 1, 1), r2.SubmittedDate));
+                Assert.Collection(results.ProducerReturnsHistoryData,
+                   (r1) => Assert.Equal(new DateTime(2015, 1, 1), r1.SubmittedDate),
+                   (r2) => Assert.Equal(new DateTime(2015, 1, 2), r2.SubmittedDate));
 
-                Assert.Collection(results,
-                  (r1) => Assert.Equal("Yes", r1.LatestData),
-                  (r2) => Assert.Equal("No", r2.LatestData));
+                Assert.Collection(results.ProducerReturnsHistoryData,
+                  (r1) => Assert.Equal("No", r1.LatestData),
+                  (r2) => Assert.Equal("Yes", r2.LatestData));
             }
         }
 
@@ -423,7 +424,7 @@
                 var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
                 dataReturnVersion1.SubmittedDate = new DateTime(2015, 1, 1);
                 dataReturnVersion1.DataReturn.Quarter = 4;
-                
+
                 EeeOutputAmount eeeOutputAmount = new EeeOutputAmount();
                 eeeOutputAmount.Id = Guid.NewGuid();
                 eeeOutputAmount.RegisteredProducer = producer1.RegisteredProducer;
@@ -442,19 +443,19 @@
                 version.EeeOutputReturnVersionAmounts.Add(versionAmount);
 
                 dataReturnVersion1.EeeOutputReturnVersion = version;
-                
+
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerEeeHistoryCsvData> results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN897");
+                var results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN897");
 
                 //Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
-                Assert.Equal("PRN897", results[0].PRN);
-                Assert.Equal("WEE/TE3334ST/SCH", results[0].ApprovalNumber);
-                Assert.Equal("Yes", results[0].LatestData);
-                Assert.Equal(4, results[0].Quarter);
+                Assert.Equal(1, results.ProducerReturnsHistoryData.Count);
+                Assert.Equal("PRN897", results.ProducerReturnsHistoryData[0].PRN);
+                Assert.Equal("WEE/TE3334ST/SCH", results.ProducerReturnsHistoryData[0].ApprovalNumber);
+                Assert.Equal("Yes", results.ProducerReturnsHistoryData[0].LatestData);
+                Assert.Equal(4, results.ProducerReturnsHistoryData[0].Quarter);
             }
         }
 
@@ -478,7 +479,7 @@
 
                 var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
                 dataReturnVersion1.SubmittedDate = new DateTime(2015, 1, 1);
-                
+
                 EeeOutputAmount eeeOutputAmount = new EeeOutputAmount();
                 eeeOutputAmount.Id = Guid.NewGuid();
                 eeeOutputAmount.RegisteredProducer = producer1.RegisteredProducer;
@@ -510,7 +511,7 @@
                 version.EeeOutputReturnVersionAmounts.Add(versionAmount2);
 
                 dataReturnVersion1.EeeOutputReturnVersion = version;
-                
+
                 //Second data return version with producer 1 removed and only producer 2 data
                 var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
                 dataReturnVersion2.SubmittedDate = new DateTime(2015, 1, 2);
@@ -528,30 +529,27 @@
                 versionAmount3.EeeOutputAmount = eeeOutputAmount3;
                 versionAmount3.EeeOutputReturnVersion = version1;
 
-                version1.EeeOutputReturnVersionAmounts.Add(versionAmount3);                
-                dataReturnVersion2.EeeOutputReturnVersion = version1;               
+                version1.EeeOutputReturnVersionAmounts.Add(versionAmount3);
+                dataReturnVersion2.EeeOutputReturnVersion = version1;
 
                 db.Model.SaveChanges();
 
                 // Act
-                List<ProducerEeeHistoryCsvData> results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN897");
+                var results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN897");
 
                 //Assert
                 Assert.NotNull(results);
-                //Only shows entries for tonnage value changes and ignores the ones with no change.
-                Assert.Equal(2, results.Count);
+                
+                Assert.Equal(1, results.ProducerRemovedFromReturnsData.Count);
 
-                Assert.Collection(results,
-                   (r1) => Assert.Equal(new DateTime(2015, 1, 2), r1.SubmittedDate),
-                   (r2) => Assert.Equal(new DateTime(2015, 1, 1), r2.SubmittedDate));
+                Assert.Collection(results.ProducerRemovedFromReturnsData,
+                   (r1) => Assert.Equal(new DateTime(2015, 1, 2), r1.SubmittedDate));
 
-                Assert.Collection(results,
-                  (r1) => Assert.Equal("Yes", r1.LatestData),
-                  (r2) => Assert.Equal("No", r2.LatestData));
+                Assert.Collection(results.ProducerRemovedFromReturnsData,
+                  (r1) => Assert.Equal("WEE/TE3334ST/SCH", r1.ApprovalNumber));
 
-                Assert.Collection(results,
-                 (r1) => Assert.Null(r1.Cat1B2B),
-                 (r2) => Assert.Equal(100, r2.Cat1B2B));
+                Assert.Collection(results.ProducerRemovedFromReturnsData,
+                   (r1) => Assert.Equal(1, r1.Quarter));
             }
         }
     }
