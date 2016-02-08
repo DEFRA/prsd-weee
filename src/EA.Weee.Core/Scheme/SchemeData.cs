@@ -15,5 +15,7 @@
         public EA.Weee.Core.Shared.ObligationType? ObligationType { get; set; }
         public Guid? CompetentAuthorityId { get; set; }
         public UKCompetentAuthorityData CompetentAuthority { get; set; }
+
+        public SchemeDownloadsByYears SchemeDownloadsByYears { get; set; }
     }
 }
