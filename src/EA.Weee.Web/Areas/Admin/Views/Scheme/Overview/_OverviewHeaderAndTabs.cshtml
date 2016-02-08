@@ -13,7 +13,7 @@
         @this.WeeeGds().Tab("PCS details",
             Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, OverviewDisplayOption.PcsDetails)),
             Model.ActiveOverviewDisplayOption == OverviewDisplayOption.PcsDetails)
-        @this.WeeeGds().Tab("Members/data",
+        @this.WeeeGds().Tab("Members and data",
             Url.UrlFor<SchemeController>(a => a.Overview(Model.SchemeId, OverviewDisplayOption.MembersData)),
             Model.ActiveOverviewDisplayOption == OverviewDisplayOption.MembersData)
         @this.WeeeGds().Tab("Organisation details",
