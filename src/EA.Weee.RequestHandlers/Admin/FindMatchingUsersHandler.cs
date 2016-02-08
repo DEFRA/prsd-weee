@@ -16,6 +16,7 @@
         private readonly IFindMatchingUsersDataAccess dataAccess;
 
         private static readonly StatusComparer statusComparer = new StatusComparer();
+        private static readonly RoleComparer roleComparer = new RoleComparer();
 
         public FindMatchingUsersHandler(IWeeeAuthorization authorization, IFindMatchingUsersDataAccess dataAccess)
         {
@@ -77,6 +78,20 @@
                         .ThenBy(u => u.Id);
                     break;
 
+                case FindMatchingUsers.OrderBy.RoleAscending:
+                    orderedResults = results
+                        .OrderBy(u => u.Role, roleComparer)
+                        .ThenBy(u => u.FullName)
+                        .ThenBy(u => u.Id);
+                    break;
+
+                case FindMatchingUsers.OrderBy.RoleDescending:
+                    orderedResults = results
+                        .OrderByDescending(u => u.Role, roleComparer)
+                        .ThenBy(u => u.FullName)
+                        .ThenBy(u => u.Id);
+                    break;
+
                 default:
                     throw new NotSupportedException();
             }
@@ -100,6 +115,24 @@
             };
 
             public int Compare(UserStatus x, UserStatus y)
+            {
+                int rankX = ranks[x];
+                int rankY = ranks[y];
+
+                return rankX.CompareTo(rankY);
+            }
+        }
+
+        private class RoleComparer : IComparer<string>
+        {
+            private Dictionary<string, int> ranks = new Dictionary<string, int>()
+            {
+                { "N/A", 0},
+                { "Standard", 1},
+                { "Administrator", 2},
+            };
+
+            public int Compare(string x, string y)
             {
                 int rankX = ranks[x];
                 int rankY = ranks[y];
