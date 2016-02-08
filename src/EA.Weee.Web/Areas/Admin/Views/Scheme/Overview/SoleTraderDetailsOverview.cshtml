@@ -1,6 +1,4 @@
-﻿@using EA.Weee.Web.Areas.Admin.Controllers
-@using MvcNavigationHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview.OrganisationDetails.SoleTraderDetailsOverviewViewModel
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview.OrganisationDetails.SoleTraderDetailsOverviewViewModel
 
 @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
 
@@ -41,8 +39,6 @@
         </tr>
         </tbody>
     </table>
-    <br/>
-    <p>
-        <a href="@(Url.UrlFor<SchemeController>(u => u.ManageSchemes()))">Back</a>
-    </p>
+
+    @Html.Partial("Overview/_OverviewAvailableActions")
 }
