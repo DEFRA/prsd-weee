@@ -20,7 +20,6 @@
         public AeDeliveryLocation(string approvalNumber, string operatorName)
         {
             Guard.ArgumentNotNullOrEmpty(() => approvalNumber, approvalNumber);
-            Guard.ArgumentNotNullOrEmpty(() => operatorName, operatorName);
 
             ApprovalNumber = approvalNumber;
             OperatorName = operatorName;
@@ -44,7 +43,14 @@
 
         public override int GetHashCode()
         {
-            return ApprovalNumber.GetHashCode() ^ OperatorName.GetHashCode();
+            int hashCode = ApprovalNumber.GetHashCode();
+
+            if (!string.IsNullOrEmpty(OperatorName))
+            {
+                hashCode ^= OperatorName.GetHashCode();
+            }
+
+            return hashCode;
         }
     }
 }

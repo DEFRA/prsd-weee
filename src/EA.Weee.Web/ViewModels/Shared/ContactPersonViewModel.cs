@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.ViewModels.OrganisationRegistration
+﻿namespace EA.Weee.Web.ViewModels.Shared
 {
     using System;
     using System.ComponentModel.DataAnnotations;
