@@ -37,12 +37,12 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.16015-develop1\lib\net452\EA.Prsd.Core.dll</HintPath>
+    <Reference Include="EA.Prsd.Core, Version=1.0.16027.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.16027-develop2\lib\net452\EA.Prsd.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EA.Prsd.Core.DataAccess, Version=1.0.16015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.16015-develop1\lib\net452\EA.Prsd.Core.DataAccess.dll</HintPath>
+    <Reference Include="EA.Prsd.Core.DataAccess, Version=1.0.16027.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EA.Prsd.Core.DataAccess.1.0.16027-develop2\lib\net452\EA.Prsd.Core.DataAccess.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -59,9 +59,9 @@
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -75,9 +75,11 @@
   <ItemGroup>
     <Compile Include="DataAccess\IProducerSubmissionDataAccess.cs" />
     <Compile Include="DataAccess\IQuarterWindowTemplateDataAccess.cs" />
+    <Compile Include="DataAccess\IOrganisationDataAccess.cs" />
     <Compile Include="DataAccess\ISystemDataDataAccess.cs" />
     <Compile Include="DataAccess\ProducerSubmissionDataAccess.cs" />
     <Compile Include="DataAccess\QuarterWindowTemplateDataAccess.cs" />
+    <Compile Include="DataAccess\OrganisationDataAccess.cs" />
     <Compile Include="DataAccess\SystemDataDataAccess.cs" />
     <Compile Include="EntityFrameworkModule.cs" />
     <Compile Include="DataAccess\IRegisteredProducerDataAccess.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="Mappings\IbisFileDataMapping.cs" />
     <Compile Include="Mappings\InvoiceRunMapping.cs" />
     <Compile Include="Mappings\QuarterWindowTemplateMapping.cs" />
+    <Compile Include="Mappings\RoleMapping.cs" />
     <Compile Include="Mappings\WeeeCollectedReturnVersionMapping.cs" />
     <Compile Include="Mappings\WeeeDeliveredReturnVersionMapping.cs" />
     <Compile Include="StoredProcedure\PCSChargesCSVData.cs" />

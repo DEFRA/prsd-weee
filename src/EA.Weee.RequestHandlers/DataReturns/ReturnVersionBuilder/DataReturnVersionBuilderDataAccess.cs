@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.DataReturns.ReturnVersionBuilder
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity;
@@ -73,11 +74,14 @@
 
         public async Task<AatfDeliveryLocation> GetOrAddAatfDeliveryLocation(string approvalNumber, string facilityName)
         {
+            // Replace empty strings with null
+            facilityName = string.IsNullOrEmpty(facilityName) ? null : facilityName;
+
             if (cachedAatfDeliveryLocations == null)
             {
                 cachedAatfDeliveryLocations =
                     await context.AatfDeliveryLocations
-                    .ToDictionaryAsync(aatf => string.Format("{0}{1}", aatf.ApprovalNumber, aatf.FacilityName));
+                    .ToDictionaryAsync(aatf => string.Format("{0}{1}", aatf.ApprovalNumber, aatf.FacilityName), StringComparer.OrdinalIgnoreCase);
             }
 
             var key = string.Format("{0}{1}", approvalNumber, facilityName);
@@ -96,11 +100,14 @@
         [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Variable name aeDeliveryLocation is valid.")]
         public async Task<AeDeliveryLocation> GetOrAddAeDeliveryLocation(string approvalNumber, string operatorName)
         {
+            // Replace empty strings with null
+            operatorName = string.IsNullOrEmpty(operatorName) ? null : operatorName;
+
             if (cachedAeDeliveryLocations == null)
             {
                 cachedAeDeliveryLocations =
                     await context.AeDeliveryLocations
-                    .ToDictionaryAsync(ae => string.Format("{0}{1}", ae.ApprovalNumber, ae.OperatorName));
+                    .ToDictionaryAsync(ae => string.Format("{0}{1}", ae.ApprovalNumber, ae.OperatorName), StringComparer.OrdinalIgnoreCase);
             }
 
             var key = string.Format("{0}{1}", approvalNumber, operatorName);

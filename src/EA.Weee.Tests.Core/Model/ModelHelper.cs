@@ -89,6 +89,33 @@
             return user;
         }
 
+        public CompetentAuthorityUser GetOrCreateCompetentAuthorityUser(string userName, int status = 2, Role role = null)
+        {
+            var competentAuthorityUser = model.CompetentAuthorityUsers.SingleOrDefault(c => c.AspNetUser.UserName == userName);
+            if (competentAuthorityUser == null)
+            {
+                var user = CreateUser(userName);
+                var competentAuthority = model.CompetentAuthorities.First();
+                role = role ?? model.Roles.First();
+
+                competentAuthorityUser = new CompetentAuthorityUser
+                {
+                    Id = IntegerToGuid(GetNextId()),
+                    AspNetUser = user,
+                    UserId = user.Id,
+                    CompetentAuthority = competentAuthority,
+                    CompetentAuthorityId = competentAuthority.Id,
+                    Role = role,
+                    RoleId = role.Id,
+                    UserStatus = status
+                };
+
+                model.CompetentAuthorityUsers.Add(competentAuthorityUser);
+            }
+
+            return competentAuthorityUser;
+        }
+
         /// <summary>
         /// Creates an organisation and a scheme.
         /// </summary>

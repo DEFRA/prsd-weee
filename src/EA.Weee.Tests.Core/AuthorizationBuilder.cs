@@ -4,6 +4,7 @@
     using System.Security;
     using FakeItEasy;
     using RequestHandlers.Security;
+    using Weee.Core.Security;
 
     /// <summary>
     /// This helper class creates a fake instance of an IWeeeAutorization
@@ -193,6 +194,34 @@
         {
             A.CallTo(() => fake.EnsureSchemeAccess(A.Dummy<Guid>())).WithAnyArguments().Throws<SecurityException>();
             A.CallTo(() => fake.CheckSchemeAccess(A.Dummy<Guid>())).WithAnyArguments().Returns(false);
+            return this;
+        }
+
+        public AuthorizationBuilder AllowRole(Roles role)
+        {
+            A.CallTo(() => fake.EnsureUserInRole(role)).DoesNothing();
+            A.CallTo(() => fake.CheckUserInRole(role)).Returns(true);
+            return this;
+        }
+
+        public AuthorizationBuilder AllowAnyRole()
+        {
+            A.CallTo(() => fake.EnsureUserInRole(A<Roles>._)).DoesNothing();
+            A.CallTo(() => fake.CheckUserInRole(A<Roles>._)).Returns(true);
+            return this;
+        }
+
+        public AuthorizationBuilder DenyRole(Roles role)
+        {
+            A.CallTo(() => fake.EnsureUserInRole(role)).Throws<SecurityException>();
+            A.CallTo(() => fake.CheckUserInRole(role)).Returns(false);
+            return this;
+        }
+
+        public AuthorizationBuilder DenyAnyRole()
+        {
+            A.CallTo(() => fake.EnsureUserInRole(A<Roles>._)).Throws<SecurityException>();
+            A.CallTo(() => fake.CheckUserInRole(A<Roles>._)).Returns(false);
             return this;
         }
 

@@ -9,18 +9,17 @@
 
     <header class="hgroup">
         <div>
-            <h1 class="heading-large">Would you like to change the status, or manage the user’s details?</h1>
+            <h1 class="heading-large">User details</h1>
         </div>
     </header>
 
-    @using (Html.BeginForm(actionName: "EditUser", controllerName: "User", method: FormMethod.Post))
+    @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
         @Html.HiddenFor(m => m.Email)
         @Html.HiddenFor(m => m.OrganisationName)
-        @Html.HiddenFor(m => m.Id)
         @Html.HiddenFor(m => m.UserId)
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.IsCompetentAuthorityUser)
@@ -28,25 +27,25 @@
 
         <div class="form-group">
             <table title="This table contains the organisation user details.">
-                <thead>
-                    <tr>
-                        <th>Company</th>
-                        <th>Email</th>
-                    </tr>
-                </thead>
                 <tbody>
                     <tr>
+                        <th>Company</th>
                         <td>@Model.OrganisationName</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
                         <td><a href="mailto:@Html.DisplayFor(m => m.Email)" target="_top">@Html.DisplayFor(m => m.Email)</a></td>
                     </tr>
                 </tbody>
             </table>
         </div>
+
         <div class="form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
             @Html.Gds().LabelFor(m => m.FirstName)
             @Html.Gds().ValidationMessageFor(m => m.FirstName)
             @Html.Gds().TextBoxFor(m => m.FirstName, new { @maxlength = CommonMaxFieldLengths.FirstName })
         </div>
+
         <div class="form-group @Html.Gds().FormGroupClass(m => m.LastName)">
             @Html.Gds().LabelFor(m => m.LastName)
             @Html.Gds().ValidationMessageFor(m => m.LastName)
@@ -55,6 +54,19 @@
 
         if (Model.CanManageStatus)
         {
+            if (Model.IsCompetentAuthorityUser)
+            {
+                <div class="form-group @Html.Gds().FormGroupClass(m => m.Role)">
+                    @Html.Gds().LabelFor(m => m.Role)
+                    @Html.Gds().ValidationMessageFor(m => m.Role)
+                    @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { autocomplete = "false" })
+                </div>
+            }
+            else
+            {
+                @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { hidden = "true" })
+            }
+
             <div class="form-group @Html.Gds().FormGroupClass(m => m.UserStatus)">
                 @Html.Gds().LabelFor(m => m.UserStatus)
                 @Html.Gds().ValidationMessageFor(m => m.UserStatus)
@@ -63,6 +75,7 @@
         }
         else
         {
+            @Html.Gds().DropDownListFor(m => m.Role.Name, Model.UserRoleSelectList, new { hidden = "true" })
             @Html.Gds().DropDownListFor(m => m.UserStatus, Model.UserStatusSelectList, new { hidden = "true" })
         }
 
@@ -70,7 +83,7 @@
             <button class="button" type="submit">Save and continue</button>
         </div>
         <p>
-            <a href="javascript:history.back();">Back</a>
+            @Html.ActionLink("Back", "View", new { id = Model.Id })
         </p>
     }
 }

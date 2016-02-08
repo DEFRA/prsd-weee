@@ -2,9 +2,11 @@
 {
     using System;
     using System.IO;
+    using System.Net;
     using System.Web;
     using System.Web.Routing;
     using Microsoft.Owin.Security.Cookies;
+    using Prsd.Core.Web.Mvc.Owin;
 
     /// <summary>
     /// This cookie authentication provider overrides the default "redirect to login page" behaviour.
@@ -43,13 +45,24 @@
             AdminAreaName = "admin";
             AdminLoginPath = "/admin/account/sign-in";
 
+            OnValidateIdentity = context => IdentityValidationHelper.OnValidateIdentity(context);
+
             // Add our custom login to the redirect before applying the deafult implementation.
             OnApplyRedirect = (context) =>
             {
+                ErrorIfAlreadyAuthenticated(context);
                 UpdateRedirectUrlToAdminLoginPageIfNecessary(context);
                 ApplyReturnUrlMapping(context);
                 defaultImplementation.ApplyRedirect(context);
             };
+        }
+
+        private void ErrorIfAlreadyAuthenticated(CookieApplyRedirectContext context)
+        {
+            if (context.Request.User.Identity.IsAuthenticated)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+            }
         }
 
         public void UpdateRedirectUrlToAdminLoginPageIfNecessary(CookieApplyRedirectContext context)
