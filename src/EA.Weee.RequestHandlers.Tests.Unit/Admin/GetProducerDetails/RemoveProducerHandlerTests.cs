@@ -31,7 +31,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync_WithNonInternalAdministratorRole_ThrowsSecurityException()
+        public async Task HandleAsync_WithNonInternalAdminRole_ThrowsSecurityException()
         {
             var authorization = new AuthorizationBuilder()
                 .AllowInternalAreaAccess()
