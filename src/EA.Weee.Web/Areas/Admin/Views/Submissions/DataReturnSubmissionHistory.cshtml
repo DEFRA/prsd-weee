@@ -1,4 +1,6 @@
-﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Submissions.DataReturnSubmissionsHistoryViewModel
+﻿@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Submissions.DataReturnSubmissionsHistoryViewModel
 @{
     ViewBag.Title = "Data Return submissions history";
 }
@@ -26,7 +28,7 @@
     <div class="form-group" id="submissionResults"></div>
 
     <p>
-        <a href="javascript:history.back();">Back</a>
+        <a href="@(Url.UrlFor<SubmissionsController>(a => a.ChooseSubmissionType()))">Back</a>
     </p>
 }
 
