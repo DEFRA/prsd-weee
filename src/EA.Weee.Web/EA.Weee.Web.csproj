@@ -231,6 +231,7 @@
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToPartnershipDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToSoleTraderDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\OrganisationDataToRegisteredCompanyDetailsOverviewViewModel.cs" />
+    <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToMembersDataOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Account\AccountActivationRequestViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\Activity.cs" />
     <Compile Include="Areas\Admin\ViewModels\Charge\ChooseActivityViewModel.cs" />
@@ -240,7 +241,6 @@
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmWithdrawnViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmSchemeWithdrawOptions.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\ContactDetails\ContactDetailsOverviewViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\MembersData\YearlyDownloads.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\MembersData\MembersDataOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\OrganisationDetails\OrganisationDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\OrganisationDetails\SoleTraderDetailsOverviewViewModel.cs" />

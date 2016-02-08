@@ -89,10 +89,7 @@
                 {
                     case OverviewDisplayOption.MembersData:
 
-                        // TODO: Extend GetSchemeById request (above) to include WEEE/EEE as well as members download information, and create a mapping
-                        var membersDataModel = new MembersDataOverviewViewModel();
-                        membersDataModel.SchemeId = schemeId;
-                        membersDataModel.SchemeName = scheme.SchemeName;
+                        var membersDataModel = mapper.Map<MembersDataOverviewViewModel>(scheme);
                         return View("Overview/MembersDataOverview", membersDataModel);
 
                     case OverviewDisplayOption.OrganisationDetails:

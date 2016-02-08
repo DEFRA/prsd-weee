@@ -182,6 +182,8 @@
     <Compile Include="DataReturns\SubmitReturnVersion\SubmitReturnVersionDataAccess.cs" />
     <Compile Include="Mappings\MemberUploadErrorMap.cs" />
     <Compile Include="Mappings\ProducerEeeMap.cs" />
+    <Compile Include="Mappings\SchemeDownloadsByYearMap.cs" />
+    <Compile Include="Mappings\SchemeDownloadsByYearsMap.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\GetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
@@ -258,7 +260,6 @@
     <Compile Include="Organisations\UpdateOrganisationContactDetailsHandler.cs" />
     <Compile Include="Organisations\UpdateOrganisationTypeDetailsHandler.cs" />
     <Compile Include="Organisations\VerifyOrganisationExistsAndIncompleteHandler.cs" />
-    <Compile Include="Scheme\GetSchemeByIdDataAccess.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandler.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo\GetSchemePublicInfoDataAccess.cs" />
     <Compile Include="Scheme\GetSchemePublicInfo\GetSchemePublicInfoHandler.cs" />
@@ -270,7 +271,6 @@
     <Compile Include="Shared\GetDataReturnSubmissionsHistoryResultsHandler.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Shared\GetSubmissionsHistoryResultsHandler.cs" />
-    <Compile Include="Scheme\IGetSchemeByIdDataAccess.cs" />
     <Compile Include="Scheme\IGetSchemesDataAccess.cs" />
     <Compile Include="Shared\GetUKCompetentAuthorityByIdHandler.cs" />
     <Compile Include="Shared\IGetDataReturnSubmissionsHistoryResultsDataAccess.cs" />
