@@ -7,6 +7,7 @@
     using System.Web.Mvc;
     using Api.Client;
     using Base;
+    using Core.Security;
     using Core.Shared;
     using Core.Shared.Paging;
     using EA.Weee.Core.Admin;
@@ -32,10 +33,15 @@
             this.breadcrumb = breadcrumb;
         }
 
-        // GET: Admin/User
+        /// <summary>
+        /// Get a list of organisation-users and authority-users with optional paging and ordering.
+        /// </summary>
+        /// <param name="orderBy"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult> ManageUsers(FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending, int page = 1)
-        {   
+        public async Task<ActionResult> Index(FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending, int page = 1)
+        {
             SetBreadcrumb();
 
             if (page < 1)
@@ -46,11 +52,11 @@
             using (var client = apiClient())
             {
                 FindMatchingUsers query = new FindMatchingUsers(page, DefaultPageSize, orderBy);
-                
+
                 UserSearchDataResult usersSearchResultData = await client.SendAsync(User.GetAccessToken(), query);
-                
+
                 ManageUsersViewModel model = new ManageUsersViewModel();
-                
+
                 model.Users = usersSearchResultData.Results.ToPagedList(page - 1, DefaultPageSize, usersSearchResultData.UsersCount);
                 model.OrderBy = orderBy;
 
@@ -58,47 +64,99 @@
             }
         }
 
+        /// <summary>
+        /// Select a user from the list.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ManageUsers(ManageUsersViewModel model, FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending, int page = 1)
+        public async Task<ActionResult> Index(ManageUsersViewModel model, FindMatchingUsers.OrderBy orderBy = FindMatchingUsers.OrderBy.FullNameAscending, int page = 1)
         {
             if (!ModelState.IsValid)
             {
-                return await ManageUsers(orderBy, page);
+                return await Index(orderBy, page);
             }
 
-            return RedirectToAction("EditUser", "User", new { orgUserId = model.SelectedUserId });
+            return RedirectToAction("View", new { id = model.SelectedUserId });
         }
 
+        /// <summary>
+        /// Get a page where the details of an organisation-user or authority-user can be viewed.
+        /// </summary>
+        /// <param name="id">
+        /// For internal users, this is the CompetentAuthorityUserId.
+        /// For external users, this is the OrganisationUserId.
+        /// </param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult> EditUser(Guid? orgUserId)
+        public async Task<ActionResult> View(Guid id)
         {
-            if (orgUserId.HasValue)
+            ManageUserData editUserData;
+            using (var client = apiClient())
             {
+                editUserData = await client.SendAsync(User.GetAccessToken(), new GetUserData(id));
+            }
+
+            EditUserViewModel model = new EditUserViewModel(editUserData);
+
+            SetBreadcrumb();
+            return View(model);
+        }
+
+        /// <summary>
+        /// Get a page where the details of an organisation-user or authority-user can be edited.
+        /// </summary>
+        /// <param name="id">
+        /// For internal users, this is the CompetentAuthorityUserId.
+        /// For external users, this is the OrganisationUserId.
+        /// </param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ActionResult> Edit(Guid id)
+        {
+            ManageUserData editUserData;
+            List<Role> roles;
+            using (var client = apiClient())
+            {
+                editUserData = await client.SendAsync(User.GetAccessToken(), new GetUserData(id));
+                roles = await client.SendAsync(User.GetAccessToken(), new GetRoles());
+            }
+
+            EditUserViewModel model = new EditUserViewModel(editUserData);
+            model.UserStatusSelectList = FilterUserStatus(model.UserStatus, model.UserStatusSelectList);
+            model.UserRoleSelectList = new SelectList(roles, "Name", "Description");
+
+            SetBreadcrumb();
+            return View(model);
+        }
+
+        /// <summary>
+        /// Make changes to the details of an organisation-user or authority-user.
+        /// </summary>
+        /// <param name="id">
+        /// For internal users, this is the CompetentAuthorityUserId.
+        /// For external users, this is the OrganisationUserId.
+        /// </param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(Guid id, EditUserViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                List<Role> roles;
                 using (var client = apiClient())
                 {
-                    var editUserData = await client.SendAsync(User.GetAccessToken(), new GetUserData(orgUserId.Value));
-                    var model = new EditUserViewModel(editUserData);
-                    model.UserStatusSelectList = FilterUserStatus(model.UserStatus, model.UserStatusSelectList);
-                    Guid userId = new Guid(editUserData.UserId);
-                    SetBreadcrumb();
-                    return View(model);
+                    roles = await client.SendAsync(User.GetAccessToken(), new GetRoles());
                 }
-            }
-            else
-            {
-                return RedirectToAction("ManageUsers");
-            }
-        }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditUser(EditUserViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
                 model.UserStatusSelectList = FilterUserStatus(model.UserStatus, model.UserStatusSelectList);
-                Guid userId = new Guid(model.UserId);
+                model.UserRoleSelectList = new SelectList(roles, "Name", "Description");
+
                 SetBreadcrumb();
                 return View(model);
             }
@@ -111,16 +169,16 @@
                 {
                     if (User.GetUserId() != model.UserId)
                     {
-                        await client.SendAsync(User.GetAccessToken(), new UpdateCompetentAuthorityUserStatus(model.Id, model.UserStatus));
+                        await client.SendAsync(User.GetAccessToken(), new UpdateCompetentAuthorityUserRoleAndStatus(id, model.UserStatus, model.Role.Name));
                     }
                 }
                 else
                 {
-                    await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationUserStatus(model.Id, model.UserStatus));
+                    await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationUserStatus(id, model.UserStatus));
                 }
             }
 
-            return RedirectToAction("ManageUsers", "User");
+            return RedirectToAction("View", new { id });
         }
 
         private void SetBreadcrumb()

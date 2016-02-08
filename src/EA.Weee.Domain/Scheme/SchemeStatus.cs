@@ -7,6 +7,7 @@
         public static readonly SchemeStatus Pending = new SchemeStatus(1, "Pending");
         public static readonly SchemeStatus Approved = new SchemeStatus(2, "Approved");
         public static readonly SchemeStatus Rejected = new SchemeStatus(3, "Rejected");
+        public static readonly SchemeStatus Withdrawn = new SchemeStatus(4, "Withdrawn");
 
         protected SchemeStatus()
         {

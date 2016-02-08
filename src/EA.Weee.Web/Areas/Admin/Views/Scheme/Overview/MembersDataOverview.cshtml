@@ -1,0 +1,30 @@
+﻿@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview.MembersData.MembersDataOverviewViewModel
+
+@section main_content {
+    @Html.Partial("Overview/_OverviewHeaderAndTabs", Model)
+
+    @foreach (var yearlyDownloads in Model.DownloadsByYear.OrderByDescending(yd => yd.Year))
+    {
+        <h2 class="heading-medium">@yearlyDownloads.Year</h2>
+
+        if (yearlyDownloads.IsMembersDownloadAvailable)
+        {
+            <p>
+                <a href="@(Url.UrlFor<SchemeController>(a => a.GetProducerCSV(Model.OrganisationId, yearlyDownloads.Year, Model.ApprovalNumber)))">Members overview.csv</a>
+                <span style="color: #6f777b"> (less than 500KB).</span>
+            </p>
+        }
+
+        if (yearlyDownloads.IsDataReturnsDownloadAvailable)
+        {
+            <p>
+                <a href="@(Url.UrlFor<SchemeController>(a => a.GetProducerCSV(Model.OrganisationId, yearlyDownloads.Year, Model.ApprovalNumber)))">EEE/WEEE data overview.csv</a>
+                <span style="color: #6f777b"> (less than 500KB).</span>
+            </p>
+        }
+    }
+
+    @Html.Partial("Overview/_OverviewAvailableActions")
+}

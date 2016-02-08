@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Core.Security;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Shared;
@@ -44,6 +45,7 @@
             ProducerDetails producerDetails = new ProducerDetails();
             producerDetails.RegistrationNumber = request.RegistrationNumber;
             producerDetails.ComplianceYear = complianceYear;
+            producerDetails.CanRemoveProducer = authorization.CheckUserInRole(Roles.InternalAdmin);
             producerDetails.Schemes = new List<ProducerDetailsScheme>();
 
             var schemeGroups = producers

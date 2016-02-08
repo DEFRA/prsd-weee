@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Security;
     using Domain.Lookup;
     using Domain.Producer;
     using Domain.Producer.Classfication;
@@ -15,6 +17,7 @@
     using FakeItEasy;
     using Prsd.Core.Mapper;
     using Xunit;
+    using GetProducerDetails = Requests.Admin.GetProducerDetails;
 
     public class GetProducerDetailsHandlerTests
     {
@@ -189,7 +192,7 @@
                 0);
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
-            A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA")).Returns(new List<Domain.Producer.ProducerSubmission>() 
+            A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA")).Returns(new List<Domain.Producer.ProducerSubmission>()
             {
                 producer1,
                 producer2
@@ -271,7 +274,7 @@
                 0);
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
-            A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA")).Returns(new List<Domain.Producer.ProducerSubmission>() 
+            A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA")).Returns(new List<Domain.Producer.ProducerSubmission>()
             {
                 producer1,
                 producer2
@@ -354,7 +357,7 @@
                 0);
 
             IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
-            A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA")).Returns(new List<Domain.Producer.ProducerSubmission>() 
+            A.CallTo(() => dataAccess.Fetch("WEE/AA1111AA")).Returns(new List<Domain.Producer.ProducerSubmission>()
             {
                 producer1,
                 producer2
@@ -380,6 +383,124 @@
             Assert.Collection(result.Schemes,
                 r1 => Assert.Equal("Scheme Name 1", r1.SchemeName),
                 r2 => Assert.Equal("Scheme Name 2", r2.SchemeName));
+        }
+
+        [Fact]
+        public async Task HandleAync_ReturnsTrueForCanRemoveProducer_WhenCurrentUserIsInternalAdmin()
+        {
+            Scheme scheme = new Scheme(A.Dummy<Guid>());
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                2017,
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>());
+
+            RegisteredProducer registeredProducer = new RegisteredProducer(
+                "WEE/AA1111AA",
+                2017,
+                scheme);
+
+            var producer = new ProducerSubmission(
+                registeredProducer,
+                memberUpload,
+                new ProducerBusiness(),
+                null,
+                new DateTime(2015, 1, 1),
+                0,
+                false,
+                null,
+                "Trading Name 1",
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                new List<BrandName>(),
+                new List<SICCode>(),
+                A.Dummy<ChargeBandAmount>(),
+                0);
+
+            registeredProducer.SetCurrentSubmission(producer);
+
+            IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
+            A.CallTo(() => dataAccess.Fetch(A<string>._))
+                .Returns(new List<ProducerSubmission> { producer });
+
+            IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
+            A.CallTo(() => authorization.CheckUserInRole(Roles.InternalAdmin))
+                .Returns(true);
+
+            IMapper mapper = A.Fake<IMapper>();
+
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
+
+            var result = await handler.HandleAsync(A.Dummy<GetProducerDetails>());
+
+            Assert.True(result.CanRemoveProducer);
+            A.CallTo(() => authorization.CheckUserInRole(Roles.InternalAdmin))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task HandleAync_ReturnsFalseForCanRemoveProducer_WhenCurrentUserIsNotInternalAdmin()
+        {
+            Scheme scheme = new Scheme(A.Dummy<Guid>());
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                2017,
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>());
+
+            RegisteredProducer registeredProducer = new RegisteredProducer(
+                "WEE/AA1111AA",
+                2017,
+                scheme);
+
+            var producer = new ProducerSubmission(
+                registeredProducer,
+                memberUpload,
+                new ProducerBusiness(),
+                null,
+                new DateTime(2015, 1, 1),
+                0,
+                false,
+                null,
+                "Trading Name 1",
+                EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+                SellingTechniqueType.Both,
+                Domain.Obligation.ObligationType.Both,
+                AnnualTurnOverBandType.Greaterthanonemillionpounds,
+                new List<BrandName>(),
+                new List<SICCode>(),
+                A.Dummy<ChargeBandAmount>(),
+                0);
+
+            IGetProducerDetailsDataAccess dataAccess = A.Fake<IGetProducerDetailsDataAccess>();
+            A.CallTo(() => dataAccess.Fetch(A<string>._))
+                .Returns(new List<ProducerSubmission> { producer });
+
+            IWeeeAuthorization authorization = A.Fake<IWeeeAuthorization>();
+            A.CallTo(() => authorization.CheckUserInRole(Roles.InternalAdmin))
+                .Returns(false);
+
+            IMapper mapper = A.Fake<IMapper>();
+
+            GetProducerDetailsHandler handler = new GetProducerDetailsHandler(dataAccess, authorization, mapper);
+
+            var result = await handler.HandleAsync(A.Dummy<GetProducerDetails>());
+
+            Assert.False(result.CanRemoveProducer);
+            A.CallTo(() => authorization.CheckUserInRole(Roles.InternalAdmin))
+                .MustHaveHappened();
         }
     }
 }

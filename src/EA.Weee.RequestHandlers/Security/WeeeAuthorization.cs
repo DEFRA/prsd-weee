@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Security;
     using System.Security.Claims;
+    using Core.Security;
     using DataAccess;
     using Domain.User;
     using EA.Prsd.Core;
@@ -195,6 +196,48 @@
         public bool CheckInternalOrOrganisationAccess(Guid organisationId)
         {
             return CheckCanAccessInternalArea() || CheckOrganisationAccess(organisationId);
+        }
+
+        /// <summary>
+        /// Checks that the principal represents a user with the specified role.
+        /// </summary>
+        public bool CheckUserInRole(Roles role)
+        {
+            var userId = userContext.UserId.ToString();
+
+            return context.CompetentAuthorityUsers.Single(u => u.UserId == userId).Role.Name == role.ToString();
+        }
+
+        /// <summary>
+        /// Ensures that the principal represents a user with the specified role.
+        /// </summary>
+        public void EnsureUserInRole(Roles role)
+        {
+            bool isInRole = CheckUserInRole(role);
+
+            if (!isInRole)
+            {
+                string message = "The user is not associated with the specified role.";
+                throw new SecurityException(message);
+            }
+        }
+        public void EnsureInternalOrSchemeAccess(Guid schemeId)
+        {
+            bool access = CheckInternalOrSchemeAccess(schemeId);
+
+            if (!access)
+            {
+                string message = string.Format(
+                    "The user does not have access to the internal area or the scheme with ID \"{0}\".",
+                    schemeId);
+
+                throw new SecurityException(message);
+            }
+        }
+
+        public bool CheckInternalOrSchemeAccess(Guid schemeId)
+        {
+            return CheckCanAccessInternalArea() || CheckSchemeAccess(schemeId);
         }
 
         private bool HasClaim(Claim claim)

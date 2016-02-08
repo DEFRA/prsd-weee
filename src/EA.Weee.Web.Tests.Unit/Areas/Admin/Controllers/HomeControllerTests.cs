@@ -80,7 +80,7 @@
         }
 
         [Theory]
-        [InlineData(InternalUserActivity.ManageUsers, "ManageUsers")]
+        [InlineData(InternalUserActivity.ManageUsers, "Index")]
         [InlineData(InternalUserActivity.ManageScheme, "ManageSchemes")]
         [InlineData(InternalUserActivity.ProducerDetails, "Search")]
         [InlineData(InternalUserActivity.SubmissionsHistory, "ChooseSubmissionType")]

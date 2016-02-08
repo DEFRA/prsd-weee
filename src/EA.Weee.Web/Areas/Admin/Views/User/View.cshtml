@@ -1,0 +1,59 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@model EA.Weee.Web.Areas.Admin.ViewModels.User.EditUserViewModel
+@{
+    ViewBag.Title = "View User";
+}
+
+@section main_content {
+
+    <header class="hgroup">
+        <div>
+            <h1 class="heading-large">User details</h1>
+        </div>
+    </header>
+
+    <div class="form-group">
+        <table title="This table contains the organisation user details.">
+            <tbody>
+                <tr>
+                    <th>Company</th>
+                    <td>@Model.OrganisationName</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td><a href="mailto:@Html.DisplayFor(m => m.Email)" target="_top">@Html.DisplayFor(m => m.Email)</a></td>
+                </tr>
+                <tr>
+                    <th>First name</th>
+                    <td>@Model.FirstName</td>
+                </tr>
+                <tr>
+                    <th>Last name</th>
+                    <td>@Model.LastName</td>
+                </tr>
+                @if (Model.IsCompetentAuthorityUser)
+                {
+                    <tr>
+                        <th>Role</th>
+                        <td>@Model.Role.Description</td>
+                    </tr>
+                }
+                <tr>
+                    <th>Current status</th>
+                    <td>@Model.UserStatus</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>
+        @Html.ActionLink("Edit user details", "Edit", new { id = Model.Id })
+    </p>
+    <p>
+        @Html.ActionLink("Perform another activity", "Index", "Home", null, new { @class = "button" })
+    </p>
+    <p>
+        @Html.ActionLink("Back", "Index")
+    </p>
+}
