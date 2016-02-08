@@ -4,6 +4,7 @@
     using System.Data.Entity;
     using System.Threading.Tasks;
     using Core.Configuration;
+    using Core.Security;
     using DataAccess;
     using Domain.Admin;
     using Domain.Security;
@@ -42,10 +43,10 @@
                 throw new InvalidOperationException(string.Format("Could not find the competent authority with name: {0}", authorityName));
             }
 
-            var standardRole = await context.Roles.SingleOrDefaultAsync(r => r.Name == RoleNames.InternalUser);
+            var standardRole = await context.Roles.SingleOrDefaultAsync(r => r.Name == Roles.InternalUser.ToString());
             if (standardRole == null)
             {
-                throw new InvalidOperationException(string.Format("Could not find the role name with: {0}", RoleNames.InternalUser));
+                throw new InvalidOperationException(string.Format("Could not find the role name with: {0}", Roles.InternalUser));
             }
 
             CompetentAuthorityUser competentAuthorityUser = new CompetentAuthorityUser(user.Id, competentAuthority.Id, UserStatus.Pending, standardRole);

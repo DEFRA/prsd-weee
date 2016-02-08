@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin;
+    using Core.Security;
     using Domain.DataReturns;
     using Domain.Producer;
     using Prsd.Core.Mediator;
@@ -51,13 +52,16 @@
                 }
             }
 
+            var canRemoveProducer = authorization.CheckUserInRole(Roles.InternalAdmin);
+
             return new ProducerDetailsScheme
             {
                 SchemeName = registeredProducer.Scheme.SchemeName,
                 ComplianceYear = registeredProducer.ComplianceYear,
                 ProducerName = registeredProducer.CurrentSubmission.OrganisationName,
                 RegistrationNumber = registeredProducer.ProducerRegistrationNumber,
-                HasSubmittedEEE = hasSubmittedEee
+                HasSubmittedEEE = hasSubmittedEee,
+                CanRemoveProducer = canRemoveProducer
             };
         }
     }
