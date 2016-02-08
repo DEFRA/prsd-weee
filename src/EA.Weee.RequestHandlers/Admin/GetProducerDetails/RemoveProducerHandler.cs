@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using Core.Admin;
+    using Core.Security;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
@@ -20,6 +21,7 @@
         public async Task<RemoveProducerResult> HandleAsync(RemoveProducer request)
         {
             authorization.EnsureCanAccessInternalArea();
+            authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             var producerSubmissions =
                 await removeProducerDataAccess.GetProducerSubmissionsForRegisteredProducer(request.RegisteredProducerId);

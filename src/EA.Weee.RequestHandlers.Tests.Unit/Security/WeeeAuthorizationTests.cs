@@ -5,16 +5,17 @@
     using System.Security;
     using System.Security.Claims;
     using Core;
+    using Core.Security;
     using DataAccess;
+    using Domain.Admin;
     using Domain.Organisation;
-    using Domain.Security;
     using Domain.User;
-    using EA.Weee.Domain.Admin;
     using FakeItEasy;
     using Prsd.Core.Domain;
     using RequestHandlers.Security;
     using Weee.Tests.Core;
     using Xunit;
+    using Role = Domain.Security.Role;
 
     public class WeeeAuthorizationTests
     {
@@ -484,7 +485,7 @@
             WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act
-            bool result = authorization.CheckUserInRole("InternalAdmin");
+            bool result = authorization.CheckUserInRole(Roles.InternalAdmin);
 
             // Assert
             Assert.False(result);
@@ -508,7 +509,7 @@
             WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act
-            bool result = authorization.CheckUserInRole("InternalAdmin");
+            bool result = authorization.CheckUserInRole(Roles.InternalAdmin);
 
             // Assert
             Assert.True(result);
@@ -531,7 +532,7 @@
             WeeeAuthorization authorization = new WeeeAuthorization(weeeContext, userContext);
 
             // Act, Assert
-            Assert.Throws<SecurityException>(() => authorization.EnsureUserInRole("InternalAdmin"));
+            Assert.Throws<SecurityException>(() => authorization.EnsureUserInRole(Roles.InternalAdmin));
         }
 
         private WeeeContext MakeFakeWeeeContext(IUserContext userContext,
