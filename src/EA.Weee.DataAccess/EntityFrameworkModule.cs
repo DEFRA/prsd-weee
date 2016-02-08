@@ -23,6 +23,9 @@
 
             builder.RegisterType<ProducerSubmissionDataAccess>().As<IProducerSubmissionDataAccess>()
                 .InstancePerRequest();
+
+            builder.RegisterType<OrganisationDataAccess>().As<IOrganisationDataAccess>()
+                .InstancePerRequest();
         }
     }
 }

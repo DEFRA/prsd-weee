@@ -74,6 +74,9 @@
 
         public async Task<AatfDeliveryLocation> GetOrAddAatfDeliveryLocation(string approvalNumber, string facilityName)
         {
+            // Replace empty strings with null
+            facilityName = string.IsNullOrEmpty(facilityName) ? null : facilityName;
+
             if (cachedAatfDeliveryLocations == null)
             {
                 cachedAatfDeliveryLocations =
@@ -97,6 +100,9 @@
         [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Variable name aeDeliveryLocation is valid.")]
         public async Task<AeDeliveryLocation> GetOrAddAeDeliveryLocation(string approvalNumber, string operatorName)
         {
+            // Replace empty strings with null
+            operatorName = string.IsNullOrEmpty(operatorName) ? null : operatorName;
+
             if (cachedAeDeliveryLocations == null)
             {
                 cachedAeDeliveryLocations =
