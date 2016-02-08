@@ -185,7 +185,7 @@
                    FileContent = "test,test,test"
                });
 
-            var result = await SchemeController().GetProducerCSV(Guid.NewGuid(), 2016, "WEE/FA9999KE/SCH");
+            var result = await SchemeController().GetProducerCsv(Guid.NewGuid(), 2016, "WEE/FA9999KE/SCH");
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerCSV>._))
                .MustHaveHappened(Repeated.Exactly.Once);
