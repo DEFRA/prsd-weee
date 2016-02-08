@@ -109,7 +109,9 @@
     <Compile Include="Helpers\Extensions.Strings.cs" />
     <Compile Include="Organisations\OrganisationOverview.cs" />
     <Compile Include="Scheme\MemberRegistrationSchemaVersion.cs" />
+    <Compile Include="Scheme\SchemeDownloadsByYears.cs" />
     <Compile Include="Scheme\UpdateSchemeInformationResult.cs" />
+    <Compile Include="Scheme\SchemeDownloadsByYear.cs" />
     <Compile Include="Search\Fuzzy\CommonTerm.cs" />
     <Compile Include="Search\Fuzzy\FuzzyOrganisationSearcher.cs">
       <SubType>Code</SubType>

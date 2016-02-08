@@ -54,6 +54,8 @@
                 .Returns(new RegisteredCompanyDetailsOverviewViewModel());
             A.CallTo(() => mapper.Map<ContactDetailsOverviewViewModel>(A<OrganisationData>._))
                 .Returns(new ContactDetailsOverviewViewModel());
+            A.CallTo(() => mapper.Map<MembersDataOverviewViewModel>(A<SchemeData>._))
+                .Returns(new MembersDataOverviewViewModel());
         }
 
         [Fact]
