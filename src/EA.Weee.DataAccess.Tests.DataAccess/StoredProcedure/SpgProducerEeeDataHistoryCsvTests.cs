@@ -552,5 +552,111 @@
                    (r1) => Assert.Equal(1, r1.Quarter));
             }
         }
+
+        [Fact]
+        public async Task SpgProducerEeeDataHistoryCsvTests_EEEDataHistory_SchemeRemovesProducerAfterFirstUploadandAddlateronInthirdUpload_Returns3RowEvenIfDataIsSame()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                //Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+                var scheme1 = helper.CreateScheme();
+                scheme1.ApprovalNumber = "WEE/TE3334ST/SCH";
+                var memberUpload1 = helper.CreateSubmittedMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2000;
+
+                var producer1 = helper.CreateProducerAsCompany(memberUpload1, "PRN897");
+                producer1.ObligationType = "B2B";
+
+                var producer2 = helper.CreateProducerAsCompany(memberUpload1, "PRN123");
+                producer2.ObligationType = "B2B";
+
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
+                dataReturnVersion1.SubmittedDate = new DateTime(2015, 1, 1);
+
+                EeeOutputAmount eeeOutputAmount = new EeeOutputAmount();
+                eeeOutputAmount.Id = Guid.NewGuid();
+                eeeOutputAmount.RegisteredProducer = producer1.RegisteredProducer;
+                eeeOutputAmount.WeeeCategory = 1;
+                eeeOutputAmount.Tonnage = 100;
+                eeeOutputAmount.ObligationType = "B2B";
+
+                EeeOutputAmount eeeOutputAmount1 = new EeeOutputAmount();
+                eeeOutputAmount1.Id = Guid.NewGuid();
+                eeeOutputAmount1.RegisteredProducer = producer2.RegisteredProducer;
+                eeeOutputAmount1.WeeeCategory = 1;
+                eeeOutputAmount1.Tonnage = 200;
+                eeeOutputAmount1.ObligationType = "B2B";
+
+                EeeOutputReturnVersion version1 = new EeeOutputReturnVersion();
+                version1.Id = Guid.NewGuid();
+
+                EeeOutputReturnVersionAmount versionAmount1 = new EeeOutputReturnVersionAmount();
+
+                versionAmount1.EeeOutputAmount = eeeOutputAmount;
+                versionAmount1.EeeOutputReturnVersion = version1;
+
+                version1.EeeOutputReturnVersionAmounts.Add(versionAmount1);
+                dataReturnVersion1.EeeOutputReturnVersion = version1;
+
+                //Second data return version with producer 1 removed 
+                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
+                dataReturnVersion2.SubmittedDate = new DateTime(2015, 1, 2);
+                
+                EeeOutputReturnVersion version2 = new EeeOutputReturnVersion();
+                version2.Id = Guid.NewGuid();
+                EeeOutputReturnVersionAmount versionAmount2 = new EeeOutputReturnVersionAmount();
+                versionAmount2.EeeOutputAmount = eeeOutputAmount1;
+                versionAmount2.EeeOutputReturnVersion = version2;
+
+                version2.EeeOutputReturnVersionAmounts.Add(versionAmount2);
+                dataReturnVersion2.EeeOutputReturnVersion = version2;               
+               
+                //third data return version with producer 1 added back again
+                var dataReturnVersion3 = helper.CreateDataReturnVersion(scheme1, 2000, 1);
+                dataReturnVersion3.SubmittedDate = new DateTime(2015, 1, 3);
+
+                EeeOutputAmount eeeOutputAmount2 = new EeeOutputAmount();
+                eeeOutputAmount2.Id = Guid.NewGuid();
+                eeeOutputAmount2.RegisteredProducer = producer1.RegisteredProducer;
+                eeeOutputAmount2.WeeeCategory = 1;
+                eeeOutputAmount2.Tonnage = 100;
+                eeeOutputAmount2.ObligationType = "B2B";
+
+                EeeOutputReturnVersion version3 = new EeeOutputReturnVersion();
+                version3.Id = Guid.NewGuid();
+                EeeOutputReturnVersionAmount versionAmount3 = new EeeOutputReturnVersionAmount();
+                versionAmount3.EeeOutputAmount = eeeOutputAmount2;
+                versionAmount3.EeeOutputReturnVersion = version3;
+
+                version3.EeeOutputReturnVersionAmounts.Add(versionAmount3);
+                dataReturnVersion3.EeeOutputReturnVersion = version3;
+
+                db.Model.SaveChanges();
+
+                // Act
+                var results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN897");
+
+                //Assert
+                Assert.NotNull(results);
+
+                Assert.Equal(2, results.ProducerReturnsHistoryData.Count);
+
+                Assert.Collection(results.ProducerReturnsHistoryData,
+                   (r1) => Assert.Equal(new DateTime(2015, 1, 1), r1.SubmittedDate),
+                   (r2) => Assert.Equal(new DateTime(2015, 1, 3), r2.SubmittedDate));
+             
+                Assert.Equal(1, results.ProducerRemovedFromReturnsData.Count);
+
+                Assert.Collection(results.ProducerRemovedFromReturnsData,
+                   (r1) => Assert.Equal(new DateTime(2015, 1, 2), r1.SubmittedDate));
+
+                Assert.Collection(results.ProducerRemovedFromReturnsData,
+                  (r1) => Assert.Equal("WEE/TE3334ST/SCH", r1.ApprovalNumber));
+
+                Assert.Collection(results.ProducerRemovedFromReturnsData,
+                   (r1) => Assert.Equal(1, r1.Quarter));
+            }
+        }
     }
 }
