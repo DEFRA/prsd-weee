@@ -1,4 +1,6 @@
 ﻿@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Producers.SearchViewModel
 @{
     ViewBag.Title = "Find producer";
@@ -36,7 +38,7 @@
     }
 
     <p>
-        <a href="javascript:history.back();">Back</a>
+        <a href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Back</a>
     </p>
 }
 

@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Security
 {
     using System;
+    using Core.Security;
 
     /// <summary>
     /// Provides evaluation of claims-based authorisation for WEEE resources.
@@ -72,5 +73,30 @@
         /// granting them access to the specified scheme.
         /// </summary>
         bool CheckSchemeAccess(Guid schemeId);
+
+        /// <summary>
+        /// Checks that the principal represents a user with
+        /// the specified role.
+        /// </summary>
+        bool CheckUserInRole(Roles role);
+
+        /// <summary>
+        /// Ensures that the principal represents a user with
+        /// the specified role.
+        /// </summary>
+        void EnsureUserInRole(Roles role);
+
+        /// <summary>
+        /// Ensures that the principal represents a user with a claim
+        /// granting them access to the specified scheme.
+        /// </summary>
+        /// <param name="schemeId"></param>
+        void EnsureInternalOrSchemeAccess(Guid schemeId);
+
+        /// <summary>
+        /// Checks that the principal represents a user with a claim
+        /// granting them access to the specified scheme.
+        /// </summary>
+        bool CheckInternalOrSchemeAccess(Guid schemeId);
     }
 }

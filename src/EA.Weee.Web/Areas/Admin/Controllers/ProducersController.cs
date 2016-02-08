@@ -14,6 +14,7 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using Services.Caching;
+    using ViewModels.Home;
 
     public class ProducersController : AdminController
     {
@@ -178,6 +179,11 @@
 
             ProducerDetailsScheme producerDetailsScheme = await FetchProducerDetailsScheme(registeredProducerId);
 
+            if (!producerDetailsScheme.CanRemoveProducer)
+            {
+                return new HttpForbiddenResult();
+            }
+
             return View(new ConfirmRemovalViewModel
             {
                 Producer = producerDetailsScheme
@@ -285,7 +291,7 @@
 
         private async Task SetBreadcrumb()
         {
-            breadcrumb.InternalActivity = "Producer details";
+            breadcrumb.InternalActivity = InternalUserActivity.ProducerDetails;
 
             await Task.Yield();
         }
