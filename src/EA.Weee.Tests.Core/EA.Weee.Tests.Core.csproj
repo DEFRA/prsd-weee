@@ -250,6 +250,10 @@
     <Compile Include="Xml\XmlSchemaHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
+      <Project>{75efee66-9358-4de4-9a84-e7191eec7db8}</Project>
+      <Name>EA.Weee.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.DataAccess\EA.Weee.DataAccess.csproj">
       <Project>{46300373-d7ae-40aa-bf96-3fc3889825a4}</Project>
       <Name>EA.Weee.DataAccess</Name>
