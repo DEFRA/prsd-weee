@@ -48,7 +48,6 @@
             <a href="@(Url.UrlFor<SchemeController>(a => a.EditScheme(Model.SchemeId)))">Edit PCS details</a>
         </p>
     }
-    <p>
-        <a href="@(Url.UrlFor<SchemeController>(u => u.ManageSchemes()))">Back</a>
-    </p>
+
+    @Html.Partial("Overview/_OverviewAvailableActions")
 }
