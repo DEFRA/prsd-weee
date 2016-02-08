@@ -21,18 +21,6 @@
         }
 
         [Fact]
-        public void ConstructsAeDeliveryLocation_WithNullOperatorName_ThrowsArgumentNullException()
-        {
-            Assert.Throws<ArgumentNullException>(() => new AeDeliveryLocation("Test", null));
-        }
-
-        [Fact]
-        public void ConstructsAeDeliveryLocation_WithEmptyOperatorName_ThrowsArgumentException()
-        {
-            Assert.Throws<ArgumentException>(() => new AeDeliveryLocation("Test", string.Empty));
-        }
-
-        [Fact]
         public void AeDeliveryLocation_EqualsNullParameter_ReturnsFalse()
         {
             var aeDeliveryLocation = AeDeliveryLocationBuilder.NewAeDeliveryLocation;

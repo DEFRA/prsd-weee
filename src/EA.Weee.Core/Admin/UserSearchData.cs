@@ -23,6 +23,13 @@
 
         public bool IsCompetentAuthorityUser { get; set; }
 
+        /// <summary>
+        /// The display name of the user's role.
+        /// For internal users this could be "Administrator" or "Standard".
+        /// For external users this will be "N/A".
+        /// </summary>
+        public string Role { get; set; }
+
         public string FullName
         {
             get { return string.Format("{0} {1}", FirstName, LastName); }
