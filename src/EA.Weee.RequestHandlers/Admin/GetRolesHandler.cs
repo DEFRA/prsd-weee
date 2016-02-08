@@ -24,6 +24,7 @@
         public async Task<List<Role>> HandleAsync(GetRoles message)
         {
             authorization.EnsureCanAccessInternalArea();
+            authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             return await weeeContext.Roles
                 .Select(r => new Role { Name = r.Name, Description = r.Description })
