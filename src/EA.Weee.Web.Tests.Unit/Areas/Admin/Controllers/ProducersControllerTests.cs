@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Admin;
@@ -12,6 +13,7 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Services;
     using FakeItEasy;
+    using Infrastructure;
     using Services.Caching;
     using Xunit;
 
@@ -154,7 +156,7 @@
             Assert.NotNull(viewResult);
 
             Assert.True(string.IsNullOrEmpty(viewResult.ViewName) || viewResult.ViewName.ToLowerInvariant() == "searchresults");
-            
+
             SearchResultsViewModel viewModel = viewResult.Model as SearchResultsViewModel;
             Assert.NotNull(viewModel);
 
@@ -243,7 +245,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetails>._))
                 .WhenArgumentsMatch(a => ((GetProducerDetails)a[1]).RegistrationNumber == "WEE/AA1111AA")
                 .Returns(producerDetails);
-            
+
             Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
             A.CallTo(() => weeeClientFunc())
                 .Returns(weeeClient);
@@ -257,7 +259,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetails>._))
                 .WhenArgumentsMatch(a => ((GetProducerDetails)a[1]).RegistrationNumber == "WEE/AA1111AA")
                 .MustHaveHappened();
-            
+
             ViewResult viewResult = result as ViewResult;
             Assert.NotNull(viewResult);
 
@@ -277,7 +279,7 @@
             ISearcher<ProducerSearchResult> producerSearcher = A.Dummy<ISearcher<ProducerSearchResult>>();
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
             CSVFileData csvData = A.Dummy<CSVFileData>();
-            
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerAmendmentsHistoryCSV>._))
                 .Returns(new CSVFileData
                 {
@@ -299,17 +301,27 @@
         }
 
         /// <summary>
-        /// This test ensures that the GET "ConfirmRemoval" action always returns the "ConfirmRemoval" view.
+        /// This test ensures that the GET "ConfirmRemoval" action returns the "ConfirmRemoval" view
+        /// when the current user is allowed to remove producers.
         /// </summary>
         [Fact]
-        public async void GetConfirmRemoval_Always_ReturnsConfirmRemovalView()
+        public async void GetConfirmRemoval_ReturnsConfirmRemovalView_WhenCanRemoveProducerIsTrue()
         {
             // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
             ProducersController controller = new ProducersController(
                 A.Dummy<BreadcrumbService>(),
                 A.Dummy<ISearcher<ProducerSearchResult>>(),
-                () => A.Dummy<IWeeeClient>(),
+                () => weeeClient,
                 A.Dummy<IWeeeCache>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
+                .Returns(
+                new ProducerDetailsScheme
+                {
+                    CanRemoveProducer = true
+                });
 
             // Act
             ActionResult result = await controller.ConfirmRemoval(A.Dummy<Guid>());
@@ -327,17 +339,20 @@
         /// are used to populate the view model.
         /// </summary>
         [Fact]
-        public async void GetConfirmRemoval_Always_CallsApiAndPopulatesViewModel()
+        public async void GetConfirmRemoval_CallsApiForSpecifiedRegisteredProducer_AndPopulatesViewModel()
         {
             // Arrange
             Guid registeredProducerId = new Guid("9F253FE4-B644-4EA1-B58E-19C735512449");
 
-            ProducerDetailsScheme producerDetailsScheme = A.Dummy<ProducerDetailsScheme>();
+            ProducerDetailsScheme producerDetailsScheme = new ProducerDetailsScheme
+            {
+                CanRemoveProducer = true
+            };
 
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
-                .WhenArgumentsMatch(a => a.Get<GetProducerDetailsByRegisteredProducerId>("request").RegisteredProducerId == registeredProducerId)
-                .Returns(producerDetailsScheme);
+                    .WhenArgumentsMatch(a => a.Get<GetProducerDetailsByRegisteredProducerId>("request").RegisteredProducerId == registeredProducerId)
+                    .Returns(producerDetailsScheme);
 
             ProducersController controller = new ProducersController(
                 A.Dummy<BreadcrumbService>(),
@@ -356,6 +371,36 @@
             Assert.NotNull(viewModel);
 
             Assert.Equal(producerDetailsScheme, viewModel.Producer);
+        }
+
+        /// <summary>
+        /// This test ensures that the GET "ConfirmRemoval" action returns the HTTP Forbidden code
+        /// when the current user is not allowed to remove producers.
+        /// </summary>
+        [Fact]
+        public async void GetConfirmRemoval_ReturnsHttpForbiddenResult_WhenCanRemoveProducerIsFalse()
+        {
+            // Arrange
+            IWeeeClient weeeClient = A.Fake<IWeeeClient>();
+
+            ProducersController controller = new ProducersController(
+                A.Dummy<BreadcrumbService>(),
+                A.Dummy<ISearcher<ProducerSearchResult>>(),
+                () => weeeClient,
+                A.Dummy<IWeeeCache>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetProducerDetailsByRegisteredProducerId>._))
+                .Returns(
+                new ProducerDetailsScheme
+                {
+                    CanRemoveProducer = false
+                });
+
+            // Act
+            var result = await controller.ConfirmRemoval(A<Guid>._);
+
+            // Assert
+            Assert.IsType<HttpForbiddenResult>(result);
         }
 
         /// <summary>
@@ -533,7 +578,7 @@
                 .MustHaveHappened();
 
             Assert.IsType<RedirectToRouteResult>(result);
-            
+
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("Details", routeValues["action"]);

@@ -38,5 +38,7 @@
         public bool HasSubmittedEEE { get; set; }
 
         public ProducerEeeDetails ProducerEeeDetails { get; set; }
+
+        public bool CanRemoveProducer { get; set; }
     }
 }
