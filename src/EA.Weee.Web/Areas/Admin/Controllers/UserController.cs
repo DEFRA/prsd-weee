@@ -122,6 +122,12 @@
             using (var client = apiClient())
             {
                 editUserData = await client.SendAsync(User.GetAccessToken(), new GetUserData(id));
+
+                if (!editUserData.CanEditUser)
+                {
+                    return new HttpForbiddenResult();
+                }
+
                 roles = await client.SendAsync(User.GetAccessToken(), new GetRoles());
             }
 
