@@ -22,6 +22,7 @@
     using Weee.Requests.Admin.Reports;
     using Weee.Requests.Scheme;
     using Weee.Requests.Shared;
+    using GetSchemes = Weee.Requests.Admin.GetSchemes;
 
     public class ReportsController : AdminController
     {
@@ -423,8 +424,9 @@
 
                 if (model.FilterByScheme)
                 {
-                    var allSchemes = await client.SendAsync(User.GetAccessToken(), new GetAllApprovedSchemes());
-                    model.SchemeNames = new SelectList(allSchemes, "Id", "SchemeName");
+                    GetSchemes request = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
+                    List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), request);
+                    model.SchemeNames = new SelectList(schemes, "Id", "SchemeName");
                 }
             }
         }
