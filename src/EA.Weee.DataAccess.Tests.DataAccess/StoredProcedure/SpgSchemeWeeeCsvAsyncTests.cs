@@ -41,7 +41,7 @@
                 await dbWrapper.Model.SaveChangesAsync();
 
                 var results =
-                    await dbWrapper.StoredProcedures.SpgSchemeWeeeCsvAsync(complianceYear, obligationType.ToString());
+                    await dbWrapper.StoredProcedures.SpgSchemeWeeeCsvAsync(complianceYear, null, obligationType.ToString());
 
                 Assert.NotEmpty(results.CollectedAmounts);
 
