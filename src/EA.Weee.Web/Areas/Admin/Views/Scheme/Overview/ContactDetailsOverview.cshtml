@@ -46,7 +46,6 @@
     <p>
         <a href="@(Url.UrlFor<SchemeController>(a => a.ManageContactDetails(Model.SchemeId, Model.Contact.OrganisationId)))">Edit contact details</a>
     </p>
-    <p>
-        <a href="@(Url.UrlFor<SchemeController>(u => u.ManageSchemes()))">Back</a>
-    </p>
+
+    @Html.Partial("Overview/_OverviewAvailableActions")
 }
