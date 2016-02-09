@@ -186,6 +186,7 @@
     <Compile Include="Organisations\GetOrganisationOverview\GetOrganisationOverviewHandler.cs" />
     <Compile Include="Organisations\GetOrganisationOverview\DataAccess\IGetOrganisationOverviewDataAccess.cs" />
     <Compile Include="Organisations\OrganisationBySchemeIdHandler.cs" />
+    <Compile Include="Organisations\UpdateOrganisationDetailsHandler.cs" />
     <Compile Include="Scheme\MemberUploadTesting\BrokenXmlWriter.cs" />
     <Compile Include="Scheme\MemberUploadTesting\GeneratePcsXmlFileHandler.cs" />
     <Compile Include="Scheme\MemberUploadTesting\IProducerListFactory.cs" />
@@ -250,7 +251,7 @@
     <Compile Include="Organisations\FindMatchingOrganisations\DataAccess\IFindMatchingOrganisationsDataAccess.cs" />
     <Compile Include="Organisations\GetContactPersonByOrganisationIdHandler.cs" />
     <Compile Include="Organisations\GetPublicOrganisationInfoHandler.cs" />
-    <Compile Include="Organisations\IUpdateOrganisationContactDetailsDataAccess.cs" />
+    <Compile Include="Organisations\IOrganisationDetailsDataAccess.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\IJoinOrganisationDataAccess.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationDataAccess.cs" />
     <Compile Include="Organisations\JoinOrganisation\DataAccess\JoinOrganisationResult.cs" />

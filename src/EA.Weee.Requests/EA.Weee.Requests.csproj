@@ -70,6 +70,7 @@
     <Compile Include="DataReturns\FetchDataReturnComplianceYearsForScheme.cs" />
     <Compile Include="DataReturns\FetchSummaryCsv.cs" />
     <Compile Include="Organisations\OrganisationBySchemeId.cs" />
+    <Compile Include="Organisations\UpdateOrganisationDetails.cs" />
     <Compile Include="Shared\GetApiDate.cs" />
     <Compile Include="DataReturns\IsSubmissionWindowOpen.cs" />
     <Compile Include="DataReturns\ProcessDataReturnXmlFile.cs" />
