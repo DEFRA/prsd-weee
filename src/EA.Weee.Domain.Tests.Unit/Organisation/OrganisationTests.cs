@@ -64,5 +64,54 @@
 
             Assert.Throws<InvalidOperationException>(() => Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber));
         }
+
+        [Fact]
+        public void UpdateRegisteredCompanyDetails_CompanyNameIsNull_ThrowsArgumentNullException()
+        {
+            const string companyName = "Company name";
+            const string companyRegistrationNumber = "123456789";
+            const string tradingName = "Trading name";
+
+            var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
+
+            Assert.Throws<ArgumentNullException>(() => organisation.UpdateRegisteredCompanyDetails(null, companyRegistrationNumber, tradingName));
+        }
+
+        [Fact]
+        public void UpdateRegisteredCompanyDetails_HappyPath_UpdatedDetails()
+        {
+            const string companyName = "Company name";
+            const string companyRegistrationNumber = "123456789";
+            const string tradingName = "Trading name";
+
+            var organisation = Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber, tradingName);
+
+            organisation.UpdateRegisteredCompanyDetails("SFW Ltd.", "999999999", tradingName);
+
+            Assert.Equal(organisation.Name, "SFW Ltd.");
+            Assert.Equal(organisation.CompanyRegistrationNumber, "999999999");
+        }
+
+        [Fact]
+        public void UpdateSoleTraderOrIndividualDetails_TradingNameIsNull_ThrowsArgumentNullException()
+        {
+            const string tradingName = "Trading name";
+
+            var organisation = Organisation.CreateSoleTrader(tradingName);
+
+            Assert.Throws<ArgumentNullException>(() => organisation.UpdateSoleTraderOrIndividualDetails(null));
+        }
+
+        [Fact]
+        public void UpdateSoleTraderOrIndividualDetails_HappyPath_UpdatedDetails()
+        {
+            const string tradingName = "Trading name";
+
+            var organisation = Organisation.CreateSoleTrader(tradingName);
+
+            organisation.UpdateSoleTraderOrIndividualDetails("SFW Ltd.");
+
+            Assert.Equal(organisation.TradingName, "SFW Ltd.");
+        }
     }
 }

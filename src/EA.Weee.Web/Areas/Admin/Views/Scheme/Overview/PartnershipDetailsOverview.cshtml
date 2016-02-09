@@ -40,7 +40,10 @@
     </tr>
     </tbody>
 </table>
-<br />
+<br/>
+<p>
+    <a href="@(Url.UrlFor<SchemeController>(a => a.EditSoleTraderOrIndividualOrganisationDetails(Model.SchemeId, Model.Address.OrganisationId)))">Edit organisation details</a>
+</p>
 <p>
     <a href="@(Url.UrlFor<SchemeController>(u => u.ManageSchemes()))">Back</a>
 </p>
