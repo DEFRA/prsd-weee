@@ -179,6 +179,11 @@
 
             ProducerDetailsScheme producerDetailsScheme = await FetchProducerDetailsScheme(registeredProducerId);
 
+            if (!producerDetailsScheme.CanRemoveProducer)
+            {
+                return new HttpForbiddenResult();
+            }
+
             return View(new ConfirmRemovalViewModel
             {
                 Producer = producerDetailsScheme

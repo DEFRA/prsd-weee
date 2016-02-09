@@ -543,6 +543,7 @@
     <Compile Include="Extensions\DisplayExtensions.cs" />
     <Compile Include="Infrastructure\CsvFilenameFormat.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\SchemeDataToPcsDetailsOverviewViewModel.cs" />
+    <Compile Include="Infrastructure\HttpForbiddenResult.cs" />
     <Compile Include="RazorHelpers\WeeeGds.Forms.cs" />
     <Content Include="Content\weee\_footer.scss" />
     <Content Include="Areas\Scheme\Views\Home\ViewSubmissionHistory.cshtml" />
@@ -618,6 +619,7 @@
     <Content Include="Areas\Admin\Views\Scheme\Overview\PartnershipDetailsOverview.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\Overview\RegisteredCompanyDetailsOverview.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\Overview\ContactDetailsOverview.cshtml" />
+    <Content Include="Areas\Admin\Views\Scheme\Overview\_OverviewAvailableActions.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\EditRegisteredCompanyOrganisationDetails.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\EditSoleTraderOrIndividualOrganisationDetails.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
