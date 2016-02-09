@@ -221,15 +221,18 @@
             return result;
         }
 
-        public async Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvDataByComplianceYearAndObligationType(int complianceYear, string obligationtype)
+        public async Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationtype)
         {
-            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+            SqlParameter schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
             SqlParameter obligationTypeParameter = new SqlParameter("@ObligationType", obligationtype);
+
             return await context.Database
-                .SqlQuery<ProducerEeeCsvData>(
-                    "[Producer].[spgProducerEEECSVDataByComplianceYearAndObligationType] @ComplianceYear, @ObligationType",
+                .SqlQuery<ProducerEeeCsvData>("[Producer].[spgProducerEeeCsvData] @ComplianceYear, @SchemeId, @ObligationType",
                     complianceYearParameter,
-                    obligationTypeParameter).ToListAsync();
+                    schemeIdParameter,
+                    obligationTypeParameter)
+                .ToListAsync();
         }
 
         public async Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear)
