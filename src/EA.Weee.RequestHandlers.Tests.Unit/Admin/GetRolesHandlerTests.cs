@@ -4,23 +4,42 @@
     using System.Collections.Generic;
     using System.Security;
     using System.Threading.Tasks;
+    using Core.Security;
     using DataAccess;
-    using Domain.Security;
     using FakeItEasy;
     using RequestHandlers.Admin;
     using RequestHandlers.Security;
     using Requests.Admin;
     using Weee.Tests.Core;
     using Xunit;
+    using Role = Domain.Security.Role;
 
     public class GetRolesHandlerTests
     {
         [Fact]
-        public async Task HandleAsync_WithNonInternalUser_ThrowSecurityException()
+        public async Task HandleAsync_WithNonInternalAccess_ThrowsSecurityException()
         {
             // Arrange
             IWeeeAuthorization authorization = new AuthorizationBuilder()
                 .DenyInternalAreaAccess()
+                .Build();
+
+            var handler = new GetRolesHandler(authorization, A.Dummy<WeeeContext>());
+
+            // Act
+            Func<Task> action = async () => await handler.HandleAsync(A.Dummy<GetRoles>());
+
+            // Assert
+            await Assert.ThrowsAsync<SecurityException>(action);
+        }
+
+        [Fact]
+        public async Task HandleAsync_WithNonInternalAdminRole_ThrowsSecurityException()
+        {
+            // Arrange
+            IWeeeAuthorization authorization = new AuthorizationBuilder()
+                .AllowInternalAreaAccess()
+                .DenyRole(Roles.InternalAdmin)
                 .Build();
 
             var handler = new GetRolesHandler(authorization, A.Dummy<WeeeContext>());

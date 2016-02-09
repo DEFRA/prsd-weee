@@ -11,16 +11,19 @@
  
         public virtual Country Country { get; protected set; }
 
+        public string Email { get; protected set; }
+
         protected UKCompetentAuthority()
         {
         }
 
-        public UKCompetentAuthority(Guid id, string name, string abbreviation, Country country)
+        public UKCompetentAuthority(Guid id, string name, string abbreviation, Country country, string email)
         {
             Id = id;
             Name = name;
             Abbreviation = abbreviation;
             Country = country;
+            Email = email;
         }
     }
 }

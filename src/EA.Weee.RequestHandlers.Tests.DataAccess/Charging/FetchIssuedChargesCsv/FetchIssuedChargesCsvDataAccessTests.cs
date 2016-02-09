@@ -29,6 +29,7 @@
                 databaseAuthority1.Name = "Test Authority 1";
                 databaseAuthority1.Abbreviation = "T1";
                 databaseAuthority1.Country = country;
+                databaseAuthority1.Email = "TestEmailAddress";
                 database.Model.CompetentAuthorities.Add(databaseAuthority1);
 
                 InvoiceRun invoiceRunForAuthority1 = new InvoiceRun();
