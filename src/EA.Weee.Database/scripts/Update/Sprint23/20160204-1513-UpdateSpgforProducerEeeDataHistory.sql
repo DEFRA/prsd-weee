@@ -49,7 +49,7 @@ SELECT  EEORVA.EeeOutputReturnVersionId as 'Id',
         EEOA.WeeeCategory,
         EEOA.Tonnage
 INTO #EEETable
-	FROM [EA.Weee].[PCS].[EeeOutputAmount] EEOA
+	FROM [PCS].[EeeOutputAmount] EEOA
    
     inner JOIN [PCS].[EeeOutputReturnVersionAmount] EEORVA
         on EEOA.Id = EEORVA.EeeOuputAmountId
