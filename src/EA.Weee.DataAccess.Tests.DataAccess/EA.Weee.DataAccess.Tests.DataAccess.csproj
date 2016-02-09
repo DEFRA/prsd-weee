@@ -92,7 +92,7 @@
     <Compile Include="StoredProcedure\SpgInvoiceRunChargeBreakdownTests.cs" />
     <Compile Include="StoredProcedure\SpgProducerAmendmentsCSVDataByPRNTests.cs" />
     <Compile Include="StoredProcedure\SpgProducerEeeDataHistoryCsvTests.cs" />
-    <Compile Include="StoredProcedure\SpgProducerEeeCsvDataByComplianceYearAndObligationTypeTests.cs" />
+    <Compile Include="StoredProcedure\SpgProducerEeeCsvDataTests.cs" />
     <Compile Include="StoredProcedure\SpgProducerPublicRegisterCSVDataByComplianceYearTests.cs" />
     <Compile Include="StoredProcedure\SpgSchemeWeeeCsvAsyncTests.cs" />
     <Compile Include="StoredProcedure\SpgUKEEEDataByComplianceYearTests.cs" />
