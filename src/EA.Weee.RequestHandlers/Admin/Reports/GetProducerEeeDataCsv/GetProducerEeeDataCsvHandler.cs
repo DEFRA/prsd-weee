@@ -1,6 +1,7 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.Reports
+﻿namespace EA.Weee.RequestHandlers.Admin.Reports.GetProducerEeeDataCsv
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Core.Admin;
@@ -14,14 +15,16 @@
     internal class GetProducerEeeDataCsvHandler : IRequestHandler<GetProducerEeeDataCsv, CSVFileData>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly WeeeContext context;
+        private readonly IGetProducerEeeDataCsvDataAccess dataAccess;
         private readonly CsvWriterFactory csvWriterFactory;
 
-        public GetProducerEeeDataCsvHandler(IWeeeAuthorization authorization, WeeeContext context,
+        public GetProducerEeeDataCsvHandler(
+            IWeeeAuthorization authorization,
+            IGetProducerEeeDataCsvDataAccess dataAccess,
             CsvWriterFactory csvWriterFactory)
         {
             this.authorization = authorization;
-            this.context = context;
+            this.dataAccess = dataAccess;
             this.csvWriterFactory = csvWriterFactory;
         }
 
@@ -31,12 +34,34 @@
 
             string obligationType = ConvertEnumToDatabaseString(request.ObligationType);
 
-            string fileContent = await GetProducersEEEDataCSVContent(request.ComplianceYear, obligationType);
+            CsvWriter<ProducerEeeCsvData> csvWriter = CreateWriter(obligationType);
 
-            var fileName = string.Format("{0}_{1}_producerEEE_{2:ddMMyyyy_HHmm}.csv",
+            List<ProducerEeeCsvData> items = await dataAccess.GetItemsAsync(
                 request.ComplianceYear,
-                obligationType,
-                DateTime.UtcNow);
+                request.SchemeId,
+                obligationType);
+
+            string fileContent = csvWriter.Write(items);
+
+            string fileName;
+
+            if (request.SchemeId == null)
+            {
+                fileName = string.Format("{0}_{1}_producerEEE_{2:ddMMyyyy_HHmm}.csv",
+                    request.ComplianceYear,
+                    obligationType,
+                    DateTime.UtcNow);
+            }
+            else
+            {
+                Domain.Scheme.Scheme scheme = await dataAccess.GetSchemeAsync(request.SchemeId.Value);
+
+                fileName = string.Format("{0}_{1}_{2}_producerEEE_{3:ddMMyyyy_HHmm}.csv",
+                    request.ComplianceYear,
+                    scheme.ApprovalNumber.Replace("/", string.Empty),
+                    obligationType,
+                    DateTime.UtcNow);
+            }
 
             return new CSVFileData
             {
@@ -45,13 +70,9 @@
             };
         }
 
-        private async Task<string> GetProducersEEEDataCSVContent(int complianceYear, string obligationType)
+        public CsvWriter<ProducerEeeCsvData> CreateWriter(string obligationType)
         {
-            var items = await context.StoredProcedures.SpgProducerEeeCsvDataByComplianceYearAndObligationType(
-                complianceYear, obligationType);
-
-            CsvWriter<ProducerEeeCsvData> csvWriter =
-                csvWriterFactory.Create<ProducerEeeCsvData>();
+            CsvWriter<ProducerEeeCsvData> csvWriter = csvWriterFactory.Create<ProducerEeeCsvData>();
 
             csvWriter.DefineColumn(@"Scheme name", i => i.SchemeName);
             csvWriter.DefineColumn(@"Scheme approval number", i => i.ApprovalNumber);
@@ -72,9 +93,9 @@
                 }
             }
 
-            string fileContent = csvWriter.Write(items);
-            return fileContent;
+            return csvWriter;
         }
+
         private static string ConvertEnumToDatabaseString(ObligationType obligationType)
         {
             switch (obligationType)

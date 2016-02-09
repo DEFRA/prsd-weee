@@ -6,7 +6,7 @@
     using Weee.Tests.Core.Model;
     using Xunit;
 
-    public class SpgProducerEeeCsvDataByComplianceYearAndObligationTypeTests
+    public class SpgProducerEeeCsvDataTests
     {
         [Fact]
         public async Task Execute_HappyPath_ReturnsProducerEeeWithSelectedYearAndObligationType()
@@ -34,7 +34,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                var results = await db.StoredProcedures.SpgProducerEeeCsvDataByComplianceYearAndObligationType(2000, "B2C");
+                var results = await db.StoredProcedures.SpgProducerEeeCsvData(2000, null, "B2C");
 
                 //Assert
                 Assert.NotNull(results);
@@ -80,7 +80,7 @@
 
                 // Act
                 var results =
-                    await db.StoredProcedures.SpgProducerEeeCsvDataByComplianceYearAndObligationType(2000, "B2C");
+                    await db.StoredProcedures.SpgProducerEeeCsvData(2000, null, "B2C");
 
                 // Assert
                 Assert.Equal(1, results.Count);
