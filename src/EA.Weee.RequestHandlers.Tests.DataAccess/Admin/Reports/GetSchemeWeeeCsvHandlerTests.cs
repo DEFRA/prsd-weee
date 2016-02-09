@@ -28,7 +28,7 @@
                 var stopWatch = Stopwatch.StartNew();
                     await
                         Handler(databaseWrapper.WeeeContext)
-                            .HandleAsync(new GetSchemeWeeeCsv(complianceYear, obligationType));
+                            .HandleAsync(new GetSchemeWeeeCsv(complianceYear, null, obligationType));
                 stopWatch.Stop();
                 processingTime = stopWatch.ElapsedMilliseconds;
             }
