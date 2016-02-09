@@ -343,6 +343,120 @@
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> EditSoleTraderOrIndividualOrganisationDetails(Guid schemeId, Guid orgId)
+        {
+            await SetBreadcrumb(schemeId);
+
+            using (var client = apiClient())
+            {
+                var organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(orgId));
+                var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+
+                var model = new EditSoleTraderOrIndividualOrganisationDetailsViewModel
+                {
+                    OrganisationType = organisationData.OrganisationType,
+                    BusinessTradingName = organisationData.TradingName,
+                    BusinesAddress = organisationData.BusinessAddress
+                };
+
+                model.BusinesAddress.Countries = countries;
+                model.SchemeId = schemeId;
+                model.OrgId = orgId;
+
+                return View("EditSoleTraderOrIndividualOrganisationDetails", model);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> EditRegisteredCompanyOrganisationDetails(Guid schemeId, Guid orgId)
+        {
+            await SetBreadcrumb(schemeId);
+
+            using (var client = apiClient())
+            {
+                var organisationData = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(orgId));
+                var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+
+                var model = new EditRegisteredCompanyOrganisationDetailsViewModel
+                {
+                    OrganisationType = organisationData.OrganisationType,
+                    CompanyName = organisationData.OrganisationName,
+                    BusinessTradingName = organisationData.TradingName,
+                    CompaniesRegistrationNumber = organisationData.CompanyRegistrationNumber,
+                    BusinesAddress = organisationData.BusinessAddress
+                };
+
+                model.BusinesAddress.Countries = countries;
+                model.SchemeId = schemeId;
+                model.OrgId = orgId;
+
+                return View("EditRegisteredCompanyOrganisationDetails", model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditRegisteredCompanyOrganisationDetails(EditRegisteredCompanyOrganisationDetailsViewModel model)
+        {
+            await SetBreadcrumb(model.SchemeId);
+
+            if (!ModelState.IsValid)
+            {
+                using (var client = apiClient())
+                {
+                    model.BusinesAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                }
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                var orgData = new OrganisationData
+                {
+                    Id = model.OrgId,
+                    OrganisationType = model.OrganisationType,
+                    CompanyRegistrationNumber = model.CompaniesRegistrationNumber,
+                    TradingName = model.BusinessTradingName,
+                    Name = model.CompanyName,
+                    BusinessAddress = model.BusinesAddress,
+                };
+                await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationDetails(orgData));
+            }
+
+            return RedirectToAction("Overview", new { schemeId = model.SchemeId, overviewDisplayOption = OverviewDisplayOption.OrganisationDetails });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditSoleTraderOrIndividualOrganisationDetails(EditSoleTraderOrIndividualOrganisationDetailsViewModel model)
+        {
+            await SetBreadcrumb(model.SchemeId);
+
+            if (!ModelState.IsValid)
+            {
+                using (var client = apiClient())
+                {
+                    model.BusinesAddress.Countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                }
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                var orgData = new OrganisationData
+                {
+                    Id = model.OrgId,
+                    OrganisationType = model.OrganisationType,
+                    TradingName = model.BusinessTradingName,
+                    BusinessAddress = model.BusinesAddress,
+                };
+                await client.SendAsync(User.GetAccessToken(), new UpdateOrganisationDetails(orgData));
+            }
+
+            return RedirectToAction("Overview", new { schemeId = model.SchemeId, overviewDisplayOption = OverviewDisplayOption.OrganisationDetails });
+        }
+
         private async Task<IEnumerable<UKCompetentAuthorityData>> GetCompetentAuthorities()
         {
             using (var client = apiClient())

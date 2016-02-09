@@ -112,6 +112,21 @@
             TradingName = tradingName;
         }
 
+        public void UpdateSoleTraderOrIndividualDetails(string tradingName)
+        {
+            Guard.ArgumentNotNullOrEmpty(() => tradingName, tradingName);
+            TradingName = tradingName;
+        }
+
+        public void UpdateRegisteredCompanyDetails(string companyName, string companyRegNumber, string tradingName)
+        {
+            Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
+            Guard.ArgumentNotNullOrEmpty(() => companyRegNumber, companyRegNumber);
+            Name = companyName;
+            CompanyRegistrationNumber = companyRegNumber;
+            TradingName = tradingName;
+        }
+
         public void CompleteRegistration()
         {
             ToComplete();

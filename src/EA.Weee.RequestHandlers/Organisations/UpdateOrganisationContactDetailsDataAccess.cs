@@ -6,7 +6,7 @@
     using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
 
-    public class UpdateOrganisationContactDetailsDataAccess : IUpdateOrganisationContactDetailsDataAccess
+    public class UpdateOrganisationContactDetailsDataAccess : IOrganisationDetailsDataAccess
     {
         private readonly WeeeContext context;
         

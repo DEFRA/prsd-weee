@@ -239,6 +239,8 @@
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmRemovalViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmWithdrawnViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\ConfirmSchemeWithdrawOptions.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Scheme\EditSoleTraderOrIndividualOrganisationDetailsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Scheme\EditRegisteredCompanyOrganisationDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\ContactDetails\ContactDetailsOverviewViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\MembersData\YearlyDownloads.cs" />
     <Compile Include="Areas\Admin\ViewModels\Scheme\Overview\MembersData\MembersDataOverviewViewModel.cs" />
@@ -616,6 +618,8 @@
     <Content Include="Areas\Admin\Views\Scheme\Overview\PartnershipDetailsOverview.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\Overview\RegisteredCompanyDetailsOverview.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\Overview\ContactDetailsOverview.cshtml" />
+    <Content Include="Areas\Admin\Views\Scheme\EditRegisteredCompanyOrganisationDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Scheme\EditSoleTraderOrIndividualOrganisationDetails.cshtml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />

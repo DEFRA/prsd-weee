@@ -570,6 +570,186 @@
         }
 
         [Fact]
+        public async void GetEditSoleTraderOrIndividualOrganisationDetails_ReturnsView()
+        {   
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(new List<CountryData>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData
+                {
+                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                    TradingName = "TradingName",
+                    BusinessAddress = new AddressData()
+                });
+
+            var result = await SchemeController().EditSoleTraderOrIndividualOrganisationDetails(A<Guid>._, A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(((ViewResult)result).ViewName, "EditSoleTraderOrIndividualOrganisationDetails");
+        }
+
+        [Fact]
+        public async void PostEditSoleTraderOrIndividualOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
+        {
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            var schemeController = SchemeController();
+
+            new HttpContextMocker().AttachToController(schemeController);
+
+            schemeController.ModelState.AddModelError("SomeProperty", "IsInvalid");
+
+            var viewModel = new EditSoleTraderOrIndividualOrganisationDetailsViewModel
+            {
+                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                BusinesAddress = new AddressData(),
+                BusinessTradingName = "TradingName",
+                OrgId = Guid.NewGuid(),
+                SchemeId = Guid.NewGuid()
+            };
+            ActionResult result = await schemeController.EditSoleTraderOrIndividualOrganisationDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.Equal(countries, viewModel.BusinesAddress.Countries);
+
+            Assert.NotNull(result);
+            Assert.IsType(typeof(ViewResult), result);
+
+            ViewResult viewResult = (ViewResult)result;
+
+            Assert.Equal(String.Empty, viewResult.ViewName);
+            Assert.Equal(viewModel, viewResult.Model);
+        }
+
+        [Fact]
+        public async Task PostEditSoleTraderOrIndividualOrganisationDetails_ModelIsValid_UpdatesDetailsAndRedirectsToSchemeOverview()
+        {
+            var viewModel = new EditSoleTraderOrIndividualOrganisationDetailsViewModel
+            {
+                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                BusinesAddress = new AddressData(),
+                BusinessTradingName = "TradingName",
+                OrgId = Guid.NewGuid(),
+                SchemeId = Guid.NewGuid()
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
+                .Returns(true);
+            var schemeController = SchemeController();
+            new HttpContextMocker().AttachToController(schemeController);
+
+            ActionResult result = await schemeController.EditSoleTraderOrIndividualOrganisationDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.NotNull(result);
+            Assert.IsType(typeof(RedirectToRouteResult), result);
+
+            RedirectToRouteResult redirectResult = (RedirectToRouteResult)result;
+            Assert.Equal("Overview", redirectResult.RouteValues["Action"]);
+            Assert.Equal(OverviewDisplayOption.OrganisationDetails, redirectResult.RouteValues["overviewDisplayOption"]);
+        }
+
+        [Fact]
+        public async void GetEditRegisteredCompanyOrganisationDetails_ReturnsView()
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(new List<CountryData>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(new OrganisationData
+                {
+                    OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                    TradingName = "TradingName",
+                    Name = "CompanyName",
+                    CompanyRegistrationNumber = "123456789",
+                    BusinessAddress = new AddressData()
+                });
+
+            var result = await SchemeController().EditRegisteredCompanyOrganisationDetails(A<Guid>._, A<Guid>._);
+
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(((ViewResult)result).ViewName, "EditRegisteredCompanyOrganisationDetails");
+        }
+
+        [Fact]
+        public async void PostEditRegisteredCompanyOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
+        {
+            List<CountryData> countries = new List<CountryData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            var schemeController = SchemeController();
+
+            new HttpContextMocker().AttachToController(schemeController);
+
+            schemeController.ModelState.AddModelError("SomeProperty", "IsInvalid");
+
+            var viewModel = new EditRegisteredCompanyOrganisationDetailsViewModel
+            {
+                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                BusinesAddress = new AddressData(),
+                CompanyName = "CompanyName",
+                CompaniesRegistrationNumber = "123456789",
+                BusinessTradingName = "TradingName",
+                OrgId = Guid.NewGuid(),
+                SchemeId = Guid.NewGuid()
+            };
+            ActionResult result = await schemeController.EditRegisteredCompanyOrganisationDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.Equal(countries, viewModel.BusinesAddress.Countries);
+
+            Assert.NotNull(result);
+            Assert.IsType(typeof(ViewResult), result);
+
+            ViewResult viewResult = (ViewResult)result;
+
+            Assert.Equal(String.Empty, viewResult.ViewName);
+            Assert.Equal(viewModel, viewResult.Model);
+        }
+
+        [Fact]
+        public async Task PostEditRegisteredCompanyOrganisationDetails_ModelIsValid_UpdatesDetailsAndRedirectsToSchemeOverview()
+        {
+            var viewModel = new EditRegisteredCompanyOrganisationDetailsViewModel
+            {
+                OrganisationType = OrganisationType.SoleTraderOrIndividual,
+                BusinesAddress = new AddressData(),
+                CompanyName = "CompanyName",
+                CompaniesRegistrationNumber = "123456789",
+                BusinessTradingName = "TradingName",
+                OrgId = Guid.NewGuid(),
+                SchemeId = Guid.NewGuid()
+            };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
+                .Returns(true);
+            var schemeController = SchemeController();
+            new HttpContextMocker().AttachToController(schemeController);
+
+            ActionResult result = await schemeController.EditRegisteredCompanyOrganisationDetails(viewModel);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<UpdateOrganisationDetails>._))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            Assert.NotNull(result);
+            Assert.IsType(typeof(RedirectToRouteResult), result);
+
+            RedirectToRouteResult redirectResult = (RedirectToRouteResult)result;
+            Assert.Equal("Overview", redirectResult.RouteValues["Action"]);
+            Assert.Equal(OverviewDisplayOption.OrganisationDetails, redirectResult.RouteValues["overviewDisplayOption"]);
+        }
+
+        [Fact]
         public async void HttpGet_Overview_WithNullOverviewDisplayOption_ShouldDefaultToPcsDetailsViewModel()
         {
             var result = await SchemeController().Overview(Guid.NewGuid());
