@@ -13,7 +13,8 @@
                 Name = source.Name,
                 Abbreviation = source.Abbreviation,
                 CountryId = source.Country.Id,
-                Id = source.Id
+                Id = source.Id,
+                Email = source.Email
             };
         }
     }
