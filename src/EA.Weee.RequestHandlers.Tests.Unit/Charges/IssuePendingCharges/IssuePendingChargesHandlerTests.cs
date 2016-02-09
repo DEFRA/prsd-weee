@@ -120,7 +120,8 @@
         public async Task HandleAsync_WithErrorWhenGeneratingIbisFile_DoesNotSaveChanges_AndReturnsError()
         {
             // Arrange
-            UKCompetentAuthority authority = new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", A.Dummy<Country>());
+            UKCompetentAuthority authority = 
+                new UKCompetentAuthority(Guid.NewGuid(), "Environment Agency", "EA", A.Dummy<Country>(), "test@sfwltd.co.uk");
 
             Scheme scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.CompetentAuthority).Returns(authority);
