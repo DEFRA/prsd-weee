@@ -96,7 +96,7 @@
     <Compile Include="Admin\GetRolesHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetProducerEeeDataCsvHandlerTests.cs" />
     <Compile Include="Admin\Reports\GetMembersDetailsCsvHandlerTests.cs" />
-    <Compile Include="Admin\GetAllApprovedSchemesHandlerTests.cs" />
+    <Compile Include="Admin\GetSchemes\GetSchemesHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetDataReturnsActiveComplianceYearsHandlerTests.cs" />
     <Compile Include="Admin\GetProducerDetails\GetProducerDetailsHandlerTests.cs" />
     <Compile Include="Admin\GetUserDataHandlerTests.cs" />
