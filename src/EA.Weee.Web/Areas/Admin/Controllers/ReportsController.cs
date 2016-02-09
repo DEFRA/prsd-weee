@@ -216,7 +216,7 @@
             ViewBag.TriggerDownload = false;
 
             ProducersDataViewModel model = new ProducersDataViewModel();
-            await PopulateFilters(model);
+            await PopulateFilters(model, true);
 
             return View(model);
         }
@@ -228,22 +228,24 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
-            await PopulateFilters(model);
+            await PopulateFilters(model, true);
 
             return View(model);
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadProducerEeeDataCsv(int complianceYear, ObligationType obligationType)
+        public async Task<ActionResult> DownloadProducerEeeDataCsv(int complianceYear, Guid? schemeId, ObligationType obligationType)
         {
+            CSVFileData fileData;
+
+            GetProducerEeeDataCsv request = new GetProducerEeeDataCsv(complianceYear, schemeId, obligationType);
             using (IWeeeClient client = apiClient())
             {
-                var producerEeeCsvData = await client.SendAsync(User.GetAccessToken(),
-                   new GetProducerEeeDataCsv(complianceYear, obligationType));
-
-                byte[] data = new UTF8Encoding().GetBytes(producerEeeCsvData.FileContent);
-                return File(data, "text/csv", CsvFilenameFormat.FormatFileName(producerEeeCsvData.FileName));
+                fileData = await client.SendAsync(User.GetAccessToken(), request);
             }
+
+            byte[] data = new UTF8Encoding().GetBytes(fileData.FileContent);
+            return File(data, "text/csv", CsvFilenameFormat.FormatFileName(fileData.FileName));
         }
 
         [HttpGet]
@@ -253,7 +255,7 @@
             ViewBag.TriggerDownload = false;
 
             ProducersDataViewModel model = new ProducersDataViewModel();
-            await PopulateFilters(model);
+            await PopulateFilters(model, true);
 
             return View(model);
         }
@@ -265,17 +267,17 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
-            await PopulateFilters(model);
+            await PopulateFilters(model, true);
 
             return View(model);
         }
 
         [HttpGet]
-        public async Task<ActionResult> DownloadSchemeWeeeDataCsv(int complianceYear, ObligationType obligationType)
+        public async Task<ActionResult> DownloadSchemeWeeeDataCsv(int complianceYear, Guid? schemeId, ObligationType obligationType)
         {
             FileInfo file;
 
-            GetSchemeWeeeCsv request = new GetSchemeWeeeCsv(complianceYear, obligationType);
+            GetSchemeWeeeCsv request = new GetSchemeWeeeCsv(complianceYear, schemeId, obligationType);
             using (var client = apiClient())
             {
                 file = await client.SendAsync(User.GetAccessToken(), request);
@@ -291,7 +293,7 @@
             ViewBag.TriggerDownload = false;
 
             ProducersDataViewModel model = new ProducersDataViewModel();
-            await PopulateFilters(model);
+            await PopulateFilters(model, false);
 
             return View(model);
         }
@@ -303,7 +305,7 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
-            await PopulateFilters(model);
+            await PopulateFilters(model, false);
 
             return View(model);
         }
@@ -383,11 +385,16 @@
             model.ComplianceYears = new SelectList(years);
         }
 
-        private async Task PopulateFilters(ProducersDataViewModel model)
+        private async Task PopulateFilters(ProducersDataViewModel model, bool populateSchemes)
         {
             List<int> years = await FetchComplianceYearsForDataReturns();
-
             model.ComplianceYears = new SelectList(years);
+
+            if (populateSchemes)
+            {
+                List<SchemeData> schemes = await FetchSchemes();
+                model.Schemes = new SelectList(schemes, "Id", "SchemeName");
+            }
         }
 
         private async Task<List<int>> FetchComplianceYearsForDataReturns()
