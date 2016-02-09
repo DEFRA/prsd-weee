@@ -26,16 +26,8 @@
 
         public IEnumerable<SelectListItem> AppropriateAuthorities { get; set; }
 
-        public bool FilterByScheme { get; private set; }
-
         public ReportsFilterViewModel()
-            : this(true)
         {
-        }
-
-        public ReportsFilterViewModel(bool filterByScheme)
-        {
-            FilterByScheme = filterByScheme;
         }
     }
 }
