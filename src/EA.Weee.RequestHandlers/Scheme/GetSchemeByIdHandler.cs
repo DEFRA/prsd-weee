@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using Core.Scheme;
+    using Core.Security;
     using Domain.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using Prsd.Core.Mapper;
@@ -31,14 +32,15 @@
             authorization.EnsureCanAccessInternalArea();
 
             var scheme = await dataAccess.GetSchemeOrDefault(request.SchemeId);
-
+            
             if (scheme == null)
             {
                 string message = string.Format("No scheme was found with id \"{0}\".", request.SchemeId);
                 throw new ArgumentException(message);
             }
-
-            return schemeMap.Map(scheme);
+            SchemeData schemeData = schemeMap.Map(scheme);
+            schemeData.CanEditPcs = authorization.CheckUserInRole(Roles.InternalAdmin);
+            return schemeData;
         }
     }
 }
