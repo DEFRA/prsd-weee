@@ -211,7 +211,7 @@
                 SchemeName = "Test Scheme"
             };
             List<SchemeData> schemes = new List<SchemeData>() { scheme1 };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllApprovedSchemes>._)).Returns(schemes);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
             ReportsController controller = new ReportsController(
                 () => weeeClient,
@@ -311,7 +311,7 @@
                 SchemeName = "Test Scheme"
             };
             List<SchemeData> schemes = new List<SchemeData>() { scheme1 };
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAllApprovedSchemes>._)).Returns(schemes);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
             ReportsController controller = new ReportsController(
                 () => weeeClient,
