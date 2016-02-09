@@ -132,7 +132,7 @@
                 .ToListAsync();
         }
 
-        public async Task<SpgSchemeWeeeCsvResult> SpgSchemeWeeeCsvAsync(int complianceYear, string obligationType)
+        public async Task<SpgSchemeWeeeCsvResult> SpgSchemeWeeeCsvAsync(int complianceYear, Guid? schemeId, string obligationType)
         {
             SpgSchemeWeeeCsvResult result = new SpgSchemeWeeeCsvResult();
 
@@ -146,6 +146,12 @@
             complianceYearParameter.ParameterName = "@ComplianceYear";
             command.Parameters.Add(complianceYearParameter);
 
+            DbParameter schemeIdParameter = command.CreateParameter();
+            schemeIdParameter.DbType = System.Data.DbType.Guid;
+            schemeIdParameter.Value = schemeId;
+            schemeIdParameter.ParameterName = "@SchemeId";
+            command.Parameters.Add(schemeIdParameter);
+
             DbParameter obligationTypeParameter = command.CreateParameter();
             obligationTypeParameter.DbType = System.Data.DbType.String;
             obligationTypeParameter.Value = obligationType;
@@ -158,13 +164,13 @@
 
             while (await dataReader.ReadAsync())
             {
-                Guid schemeId = dataReader.GetGuid(dataReader.GetOrdinal("Id"));
+                Guid id = dataReader.GetGuid(dataReader.GetOrdinal("Id"));
                 string schemeName = dataReader.GetString(dataReader.GetOrdinal("SchemeName"));
                 string approvalNumber = dataReader.GetString(dataReader.GetOrdinal("ApprovalNumber"));
 
                 result.Schemes.Add(new SpgSchemeWeeeCsvResult.SchemeResult()
                 {
-                    SchemeId = schemeId,
+                    SchemeId = id,
                     SchemeName = schemeName,
                     ApprovalNumber = approvalNumber
                 });
@@ -174,7 +180,7 @@
 
             while (await dataReader.ReadAsync())
             {
-                Guid schemeId = dataReader.GetGuid(dataReader.GetOrdinal("SchemeId"));
+                Guid id = dataReader.GetGuid(dataReader.GetOrdinal("SchemeId"));
                 int quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
                 int weeeCategory = dataReader.GetInt32(dataReader.GetOrdinal("WeeeCategory"));
                 int sourceType = dataReader.GetInt32(dataReader.GetOrdinal("SourceType"));
@@ -182,7 +188,7 @@
 
                 result.CollectedAmounts.Add(new SpgSchemeWeeeCsvResult.CollectedAmountResult()
                 {
-                    SchemeId = schemeId,
+                    SchemeId = id,
                     QuarterType = quarter,
                     WeeeCategory = weeeCategory,
                     SourceType = sourceType,
@@ -194,7 +200,7 @@
 
             while (await dataReader.ReadAsync())
             {
-                Guid schemeId = dataReader.GetGuid(dataReader.GetOrdinal("SchemeId"));
+                Guid id = dataReader.GetGuid(dataReader.GetOrdinal("SchemeId"));
                 int quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
                 int weeeCategory = dataReader.GetInt32(dataReader.GetOrdinal("WeeeCategory"));
                 int locationType = dataReader.GetInt32(dataReader.GetOrdinal("LocationType"));
@@ -203,7 +209,7 @@
 
                 result.DeliveredAmounts.Add(new SpgSchemeWeeeCsvResult.DeliveredAmountResult()
                 {
-                    SchemeId = schemeId,
+                    SchemeId = id,
                     QuarterType = quarter,
                     WeeeCategory = weeeCategory,
                     LocationType = locationType,
