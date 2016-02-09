@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Core.Security;
     using EA.Weee.DataAccess.Identity;
     using Microsoft.AspNet.Identity;
     using Prsd.Core.Mediator;
@@ -22,6 +23,7 @@
         public async Task<Guid> HandleAsync(UpdateUser query)
         {
             authorization.EnsureCanAccessInternalArea();
+            authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             var user = await userManager.FindByIdAsync(query.UserId);
 
