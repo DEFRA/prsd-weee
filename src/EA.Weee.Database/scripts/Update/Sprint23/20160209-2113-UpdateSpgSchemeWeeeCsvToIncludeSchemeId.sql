@@ -1,7 +1,4 @@
-﻿USE [EA.Weee]
-GO
-/****** Object:  StoredProcedure [PCS].[SpgSchemeWeeeCsv]    Script Date: 02/09/2016 21:13:45 ******/
-SET ANSI_NULLS ON
+﻿SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
